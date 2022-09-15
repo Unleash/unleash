@@ -181,9 +181,6 @@ module.exports = {
                 },
             },
         ],
-        // NOTE: activate this when we sort out the enterprise / open
-        // source API situation
-        //
         [
             'docusaurus-plugin-openapi-docs',
             {
@@ -191,9 +188,10 @@ module.exports = {
                 docsPluginId: 'classic',
                 config: {
                     server: {
-                        specPath: process.env.NODE_ENV === 'development'  ?
-                            'http://localhost:4242/docs/openapi.json'
-                            : './openapi-spec.generated.json',
+                        specPath:
+                            process.env.NODE_ENV === 'development'
+                                ? 'http://localhost:4242/docs/openapi.json'
+                                : './openapi-spec.generated.json',
                         outputDir: 'docs/reference/apis/unleash',
                         sidebarOptions: {
                             groupPathsBy: 'tag',

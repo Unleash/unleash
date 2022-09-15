@@ -173,8 +173,6 @@ module.exports = {
                                 'api/internal/health',
                             ],
                         },
-                        // NOTE: activate this when we're ready to integrate generated OpenAPI docs
-                        //
                         {
                             label: 'OpenAPI docs',
                             collapsed: true,

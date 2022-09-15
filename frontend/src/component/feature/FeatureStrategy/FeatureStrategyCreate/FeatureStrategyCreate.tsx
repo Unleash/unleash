@@ -104,6 +104,8 @@ export const FeatureStrategyCreate = () => {
         }
     };
 
+    if (!data) return null;
+
     return (
         <FormTemplate
             modal

@@ -27,4 +27,8 @@ export default class FakePatStore implements IPatStore {
     getAll(query?: Object): Promise<IPat[]> {
         throw new Error('Method not implemented.');
     }
+
+    getAllByUser(userId: number): Promise<IPat[]> {
+        throw new Error('Method not implemented.');
+    }
 }

@@ -78,7 +78,6 @@ export default class PatController extends Controller {
 
     async createPat(req: IAuthRequest, res: Response): Promise<void> {
         const pat = req.body;
-
         const createdPat = await this.patService.createPat(pat, req.user);
         this.openApiService.respondWithValidation(
             201,

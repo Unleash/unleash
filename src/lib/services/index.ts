@@ -36,6 +36,7 @@ import { GroupService } from './group-service';
 import { ProxyService } from './proxy-service';
 import EdgeService from './edge-service';
 import PatService from './pat-service';
+import { PublicSignupTokenService } from './public-signup-token-service';
 export const createServices = (
     stores: IUnleashStores,
     config: IUnleashConfig,
@@ -104,6 +105,12 @@ export const createServices = (
 
     const patService = new PatService(stores, config);
 
+    const publicSignupTokenService = new PublicSignupTokenService(
+        stores,
+        config,
+        userService,
+    );
+
     return {
         accessService,
         addonService,
@@ -140,6 +147,7 @@ export const createServices = (
         proxyService,
         edgeService,
         patService,
+        publicSignupTokenService,
     };
 };
 

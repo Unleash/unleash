@@ -77,7 +77,11 @@ export const CLIENT_METRICS = 'client-metrics';
 export const CLIENT_REGISTER = 'client-register';
 
 export const PAT_CREATED = 'pat-created';
-export const PAT_DELETED = 'pat-deleted';
+
+export const PUBLIC_SIGNUP_TOKEN_CREATED = 'public-signup-token-created';
+export const PUBLIC_SIGNUP_TOKEN_USER_ADDED = 'public-signup-token-user-added';
+export const PUBLIC_SIGNUP_TOKEN_MANUALLY_EXPIRED =
+    'public-signup-token-manually-expired';
 
 export interface IBaseEvent {
     type: string;
@@ -531,6 +535,33 @@ export class SettingUpdatedEvent extends BaseEvent {
 
     constructor(eventData: { createdBy: string; data: any }) {
         super(SETTING_UPDATED, eventData.createdBy);
+        this.data = eventData.data;
+    }
+}
+
+export class PublicSignupTokenCreatedEvent extends BaseEvent {
+    readonly data: any;
+
+    constructor(eventData: { createdBy: string; data: any }) {
+        super(PUBLIC_SIGNUP_TOKEN_CREATED, eventData.createdBy);
+        this.data = eventData.data;
+    }
+}
+
+export class PublicSignupTokenManuallyExpiredEvent extends BaseEvent {
+    readonly data: any;
+
+    constructor(eventData: { createdBy: string; data: any }) {
+        super(PUBLIC_SIGNUP_TOKEN_MANUALLY_EXPIRED, eventData.createdBy);
+        this.data = eventData.data;
+    }
+}
+
+export class PublicSignupTokenUserAddedEvent extends BaseEvent {
+    readonly data: any;
+
+    constructor(eventData: { createdBy: string; data: any }) {
+        super(PUBLIC_SIGNUP_TOKEN_USER_ADDED, eventData.createdBy);
         this.data = eventData.data;
     }
 }

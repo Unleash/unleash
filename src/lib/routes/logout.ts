@@ -1,4 +1,5 @@
 import { Response } from 'express';
+import { promisify } from 'util';
 import { IUnleashConfig } from '../types/option';
 import Controller from './controller';
 import { IAuthRequest } from './unleash-types';
@@ -25,14 +26,23 @@ class LogoutController extends Controller {
                 res.redirect(req.session.logoutUrl);
                 return;
             }
-
-            req.session.destroy();
         }
 
         if (req.logout) {
-            req.logout();
+            if (this.isReqLogoutWithoutCallback(req.logout)) {
+                // passport < 0.6.0
+                req.logout();
+            } else {
+                // for passport >= 0.6.0, a callback function is expected as first argument.
+                // to reuse controller error handling, function is turned into a promise
+                const logoutAsyncFn = promisify(req.logout).bind(req);
+                await logoutAsyncFn();
+            }
         }
 
+        if (req.session) {
+            req.session.destroy();
+        }
         res.clearCookie(this.cookieName);
 
         if (this.clearSiteDataOnLogout) {
@@ -40,6 +50,12 @@ class LogoutController extends Controller {
         }
 
         res.redirect(`${this.baseUri}/`);
+    }
+
+    private isReqLogoutWithoutCallback(
+        logout: IAuthRequest['logout'],
+    ): logout is () => void {
+        return logout.length === 0;
     }
 }
 

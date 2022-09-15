@@ -30,7 +30,7 @@ export const useFeatureImmutable = (
     }, [mutate, refetchFeature]);
 
     return {
-        feature: data?.body || null,
+        feature: data?.body || emptyFeature,
         refetchFeature: refetch,
         loading: !error && !data,
         status: data?.status,

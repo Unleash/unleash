@@ -24,7 +24,7 @@ import { useFeatureImmutable } from 'hooks/api/getters/useFeature/useFeatureImmu
 import { useFormErrors } from 'hooks/useFormErrors';
 import { createFeatureStrategy } from 'utils/createFeatureStrategy';
 import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
-import useCollaborateData from 'hooks/useCollaborateData';
+import { useCollaborateData } from 'hooks/useCollaborateData';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { IFeatureToggle } from 'interfaces/featureToggle';
 
@@ -50,7 +50,7 @@ export const FeatureStrategyCreate = () => {
         featureId
     );
 
-    const { data, Notification } = useCollaborateData(
+    const { data, staleDataNotification } = useCollaborateData<IFeatureToggle>(
         {
             unleashGetter: useFeature,
             params: [projectId, featureId],
@@ -124,7 +124,7 @@ export const FeatureStrategyCreate = () => {
                 permission={CREATE_FEATURE_STRATEGY}
                 errors={errors}
             />
-            {Notification}
+            {staleDataNotification}
         </FormTemplate>
     );
 };

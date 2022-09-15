@@ -22,7 +22,7 @@ import { useFeatureImmutable } from 'hooks/api/getters/useFeature/useFeatureImmu
 import { useFormErrors } from 'hooks/useFormErrors';
 import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
 import { sortStrategyParameters } from 'utils/sortStrategyParameters';
-import useCollaborateData from 'hooks/useCollaborateData';
+import { useCollaborateData } from 'hooks/useCollaborateData';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { IFeatureToggle } from 'interfaces/featureToggle';
 
@@ -48,7 +48,7 @@ export const FeatureStrategyEdit = () => {
         featureId
     );
 
-    const { data, Notification } = useCollaborateData(
+    const { data, staleDataNotification } = useCollaborateData<IFeatureToggle>(
         {
             unleashGetter: useFeature,
             params: [projectId, featureId],
@@ -65,7 +65,7 @@ export const FeatureStrategyEdit = () => {
     } = useSegments(strategyId);
 
     useEffect(() => {
-        const savedStrategy = data.environments
+        const savedStrategy = data?.environments
             .flatMap(environment => environment.strategies)
             .find(strategy => strategy.id === strategyId);
         setStrategy(prev => ({ ...prev, ...savedStrategy }));
@@ -110,6 +110,8 @@ export const FeatureStrategyEdit = () => {
         return null;
     }
 
+    if (!data) return null;
+
     return (
         <FormTemplate
             modal
@@ -129,7 +131,7 @@ export const FeatureStrategyEdit = () => {
             }
         >
             <FeatureStrategyForm
-                feature={data as IFeatureToggle}
+                feature={data}
                 strategy={strategy}
                 setStrategy={setStrategy}
                 segments={segments}
@@ -140,7 +142,7 @@ export const FeatureStrategyEdit = () => {
                 permission={UPDATE_FEATURE_STRATEGY}
                 errors={errors}
             />
-            {Notification}
+            {staleDataNotification}
         </FormTemplate>
     );
 };

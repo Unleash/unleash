@@ -3,13 +3,18 @@ import { SWRConfiguration, SWRResponse } from 'swr';
 import { dequal } from 'dequal';
 import { StaleDataNotification } from 'component/common/StaleDataNotification/StaleDataNotification';
 
-const formatUnleashGetter = ({
+interface IFormatUnleashGetterOutput<Type> {
+    data: Type;
+    refetch: () => void;
+}
+
+const formatUnleashGetter = <Type,>({
     unleashGetter,
     dataKey = '',
     refetchFunctionKey = '',
     options = {},
     params = [],
-}: IGetterOptions): { [key: string]: unknown } => {
+}: IGetterOptions): IFormatUnleashGetterOutput<Type> => {
     const result = unleashGetter(...params, { ...options, refreshInterval: 5 });
 
     return { data: result[dataKey], refetch: result[refetchFunctionKey] };
@@ -23,12 +28,18 @@ interface IGetterOptions {
     params: string[];
 }
 
-const useCollaborateData = (
+interface ICollaborateDataOutput<Type> {
+    staleDataNotification: JSX.Element;
+    data: Type | null;
+    refetch: () => void;
+}
+
+export const useCollaborateData = <Type,>(
     getterOptions: IGetterOptions,
-    initialData: unknown
-) => {
-    const { data, refetch } = formatUnleashGetter(getterOptions);
-    const [cache, setCache] = useState(initialData || null);
+    initialData: Type
+): ICollaborateDataOutput<Type> => {
+    const { data, refetch } = formatUnleashGetter<Type>(getterOptions);
+    const [cache, setCache] = useState<Type | null>(initialData || null);
     const [dataModified, setDataModified] = useState(false);
 
     const refreshCachedData = () => {
@@ -53,7 +64,7 @@ const useCollaborateData = (
     return {
         data: cache,
         refetch,
-        Notification: (
+        staleDataNotification: (
             <StaleDataNotification
                 refresh={refreshCachedData}
                 show={dataModified}
@@ -61,5 +72,3 @@ const useCollaborateData = (
         ),
     };
 };
-
-export default useCollaborateData;

@@ -130,11 +130,14 @@
     "ts-toolbelt": "^9.6.0",
     "type-is": "^1.6.18",
     "unleash-client": "3.15.0",
+    "use-deep-compare-effect": "^1.8.1",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@apidevtools/swagger-parser": "10.1.0",
     "@babel/core": "7.18.13",
+    "@swc/core": "1.2.246",
+    "@swc/jest": "0.2.22",
     "@types/bcryptjs": "2.4.2",
     "@types/cors": "2.8.12",
     "@types/express": "4.17.13",
@@ -176,8 +179,6 @@
     "source-map-support": "0.5.21",
     "superagent": "8.0.0",
     "supertest": "6.2.4",
-    "@swc/core": "1.2.246",
-    "@swc/jest": "0.2.22",
     "ts-node": "10.9.1",
     "tsc-watch": "5.0.3",
     "typescript": "4.8.2"

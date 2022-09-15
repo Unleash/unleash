@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useRequiredQueryParam } from 'hooks/useRequiredQueryParam';
 import { FeatureStrategyForm } from 'component/feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyForm';
@@ -45,21 +45,30 @@ export const FeatureStrategyCreate = () => {
     const { unleashUrl } = uiConfig;
     const navigate = useNavigate();
 
-    const { feature, refetchFeature } = useFeatureImmutable(
-        projectId,
-        featureId
-    );
+    const { feature, refetchFeature } = useFeature(projectId, featureId);
+    const ref = useRef<IFeatureToggle>(feature);
 
-    const { data, staleDataNotification } = useCollaborateData<IFeatureToggle>(
-        {
-            unleashGetter: useFeature,
-            params: [projectId, featureId],
-            dataKey: 'feature',
-            refetchFunctionKey: 'refetchFeature',
-            options: {},
-        },
-        feature
-    );
+    const { data, staleDataNotification, forceRefreshCache } =
+        useCollaborateData<IFeatureToggle>(
+            {
+                unleashGetter: useFeature,
+                params: [projectId, featureId],
+                dataKey: 'feature',
+                refetchFunctionKey: 'refetchFeature',
+                options: {},
+            },
+            feature,
+            {
+                afterSubmitAction: refetchFeature,
+            }
+        );
+
+    useEffect(() => {
+        if (ref.current.name === '' && feature.name) {
+            forceRefreshCache(feature);
+            ref.current = feature;
+        }
+    }, [feature]);
 
     useEffect(() => {
         if (strategyDefinition) {

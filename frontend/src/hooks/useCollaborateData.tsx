@@ -13,7 +13,7 @@ const formatUnleashGetter = <Type,>({
     dataKey = '',
     refetchFunctionKey = '',
     options = {},
-    params = [],
+    params = [''],
 }: IGetterOptions): IFormatUnleashGetterOutput<Type> => {
     const result = unleashGetter(...params, { ...options, refreshInterval: 5 });
 
@@ -32,17 +32,23 @@ interface ICollaborateDataOutput<Type> {
     staleDataNotification: JSX.Element;
     data: Type | null;
     refetch: () => void;
+    forceRefreshCache: (data: Type) => void;
+}
+
+interface IStaleNotificationOptions {
+    afterSubmitAction: Function;
 }
 
 export const useCollaborateData = <Type,>(
     getterOptions: IGetterOptions,
-    initialData: Type
+    initialData: Type,
+    notificationOptions: IStaleNotificationOptions
 ): ICollaborateDataOutput<Type> => {
     const { data, refetch } = formatUnleashGetter<Type>(getterOptions);
     const [cache, setCache] = useState<Type | null>(initialData || null);
     const [dataModified, setDataModified] = useState(false);
-
-    const refreshCachedData = () => {
+    console.log(initialData);
+    const forceRefreshCache = (data: Type) => {
         setCache(data);
         setDataModified(false);
     };
@@ -66,9 +72,11 @@ export const useCollaborateData = <Type,>(
         refetch,
         staleDataNotification: (
             <StaleDataNotification
-                refresh={refreshCachedData}
+                refresh={() => forceRefreshCache(data)}
                 show={dataModified}
+                afterSubmitAction={notificationOptions.afterSubmitAction}
             />
         ),
+        forceRefreshCache,
     };
 };

@@ -1,7 +1,12 @@
 import { Box, Typography, Button } from '@mui/material';
 import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
 
-export const StaleDataNotification = ({ refresh, show }: any) => {
+export const StaleDataNotification = ({
+    refresh,
+    show,
+    afterSubmitAction,
+}: any) => {
+    console.log(afterSubmitAction);
     return (
         <ConditionallyRender
             condition={show}
@@ -31,7 +36,10 @@ export const StaleDataNotification = ({ refresh, show }: any) => {
                     <Button
                         variant="contained"
                         color="primary"
-                        onClick={refresh}
+                        onClick={() => {
+                            refresh();
+                            afterSubmitAction();
+                        }}
                     >
                         Refresh data
                     </Button>

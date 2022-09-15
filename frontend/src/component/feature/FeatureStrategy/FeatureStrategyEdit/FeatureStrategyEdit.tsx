@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { FeatureStrategyForm } from 'component/feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyForm';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -18,7 +18,6 @@ import { ISegment } from 'interfaces/segment';
 import { useSegmentsApi } from 'hooks/api/actions/useSegmentsApi/useSegmentsApi';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { formatStrategyName } from 'utils/strategyNames';
-import { useFeatureImmutable } from 'hooks/api/getters/useFeature/useFeatureImmutable';
 import { useFormErrors } from 'hooks/useFormErrors';
 import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
 import { sortStrategyParameters } from 'utils/sortStrategyParameters';
@@ -43,21 +42,31 @@ export const FeatureStrategyEdit = () => {
     const { unleashUrl } = uiConfig;
     const navigate = useNavigate();
 
-    const { feature, refetchFeature } = useFeatureImmutable(
-        projectId,
-        featureId
-    );
+    const { feature, refetchFeature } = useFeature(projectId, featureId);
 
-    const { data, staleDataNotification } = useCollaborateData<IFeatureToggle>(
-        {
-            unleashGetter: useFeature,
-            params: [projectId, featureId],
-            dataKey: 'feature',
-            refetchFunctionKey: 'refetchFeature',
-            options: {},
-        },
-        feature
-    );
+    const ref = useRef<IFeatureToggle>(feature);
+
+    const { data, staleDataNotification, forceRefreshCache } =
+        useCollaborateData<IFeatureToggle>(
+            {
+                unleashGetter: useFeature,
+                params: [projectId, featureId],
+                dataKey: 'feature',
+                refetchFunctionKey: 'refetchFeature',
+                options: {},
+            },
+            feature,
+            {
+                afterSubmitAction: refetchFeature,
+            }
+        );
+
+    useEffect(() => {
+        if (ref.current.name === '' && feature.name) {
+            forceRefreshCache(feature);
+            ref.current = feature;
+        }
+    }, [feature]);
 
     const {
         segments: savedStrategySegments,

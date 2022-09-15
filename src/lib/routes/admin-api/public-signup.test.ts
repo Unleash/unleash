@@ -73,27 +73,22 @@ describe('Public Signup API', () => {
     });
 
     test('should create a token', async () => {
-        expect.assertions(4);
         const appName = '123!23';
 
         stores.clientApplicationsStore.upsert({ appName });
         stores.roleStore.create({ name: RoleName.VIEWER });
         const bodyCreate = createBody();
 
-        return request
+        const res = await request
             .post('/api/admin/invite-link/tokens')
             .send(bodyCreate)
-            .expect(201)
-            .expect(async (res) => {
-                const token = res.body;
-                expect(token.name).toBe(bodyCreate.name);
-                expect(token.secret).not.toBeNull();
-                expect(token.expiresAt).toBe(
-                    bodyCreate.expiresAt.toISOString(),
-                );
-                const eventCount = await stores.eventStore.count();
-                expect(eventCount).toBe(1); //PUBLIC_SIGNUP_TOKEN_CREATED
-            });
+            .expect(201);
+        const token = res.body;
+        expect(token.name).toBe(bodyCreate.name);
+        expect(token.secret).not.toBeNull();
+        expect(token.expiresAt).toBe(bodyCreate.expiresAt.toISOString());
+        const eventCount = await stores.eventStore.count();
+        expect(eventCount).toBe(1); //PUBLIC_SIGNUP_TOKEN_CREATED
     });
 
     test('should get All', async () => {

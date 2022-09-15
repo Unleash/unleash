@@ -14,66 +14,112 @@ Returns a list of _public signup tokens_
 **Example response:**
 
 ```json
-[
-  {
-    "secret": "ew395up3o39ncc9oqr",
-    "name": "shared",
-    "expiresAt": "2022-09-15T09:09:09.194Z",
-    "createdAt": "2022-08-15T09:09:09.194Z",
-    "createdBy": "Jack Doe",
-    "users": [
-      {
+{
+  "tokens": [
+    {
+      "secret": "ew395up3o39ncc9oew395up3o39ncc9o",
+      "name": "shared",
+      "expiresAt": "2022-09-15T09:09:09.194Z",
+      "createdAt": "2022-08-15T09:09:09.194Z",
+      "createdBy": "Jack Doe",
+      "users": [
+        {
+          "id": 0,
+          "isAPI": true,
+          "name": "John Doe",
+          "email": "john@example.com",
+          "username": "BigJ",
+          "imageUrl": "https://gravatar.com/avatar/222f2ab70c039dda12e3d11acdcebd02?size=42&default=retro",
+          "inviteLink": "",
+          "loginAttempts": 0,
+          "emailSent": true,
+          "rootRole": 0,
+          "seenAt": "2022-09-15T09:09:09.194Z",
+          "createdAt": "2022-09-15T09:09:09.194Z"
+        }
+      ],
+      "role": {
         "id": 0,
-        "isAPI": true,
-        "name": "John Doe",
-        "email": "john@example.com",
-        "username": "BigJ",
-        "imageUrl": "https://image.com/0",
-        "inviteLink": "",
-        "loginAttempts": 0,
-        "emailSent": true,
-        "rootRole": 0,
-        "seenAt": "2022-09-15T09:09:09.194Z",
-        "createdAt": "2022-09-15T09:09:09.194Z"
+        "type": "root",
+        "name": "Viewer",
+        "description": "Allows users to view"
       }
-    ],
-    "role": {
-      "id": 0,
-      "type": "root",
-      "name": "Viewer",
-      "description": "Allows users to read"
     }
-  }
-]
+  ]
+}
 ```
 
-### Create a new public signup token {#crea}
+### Create a new public signup token {#create-public-signup-token}
 
-`POST https://unleash.host.com/api/addons`
+`POST https://unleash.host.com/api/admin/tokens`
 
-Creates an addon configuration for an addon provider.
+Creates a public signup token
 
 **Body**
 
 ```json
 {
-  "provider": "webhook",
-  "description": "Optional description",
-  "enabled": true,
-  "parameters": {
-    "url": "http://localhost:4242/webhook"
-  },
-  "events": ["feature-created", "feature-updated"]
+  "name": "shared",
+  "expiresAt": "2022-09-15T09:09:09.194Z"
 }
 ```
 
-### Notes {#notes}
+### Add user {#add-user-to-token}
 
-- `provider` must be a valid addon provider
+`POST https://unleash.host.com/api/admin/tokens/ew395up3o39ncc9oew395up3o39ncc9o/signup`
 
-### Update new addon configuration {#update-new-addon-configuration}
+Creates a user with _Viewer_ root role and links them to the signup token
 
-`POST https://unleash.host.com/api/addons/:id`
+**Payload properties**
+
+:::info Requirements
+
+The payload **must** contain **at least one of** the `name` and `email` properties, though which one is up to you. For the user to be able to log in to the system, the user **must** have an email.
+
+:::
+
+| Property name | Required | Description | Example value(s) |
+| --- | --- | --- | --- |
+| `email` | No | The user's email address. Must be provided if `username` is not provided. | `"user@getunleash.io"` |
+| `username` | No | The user's username. Must be provided if `email` is not provided. | `"Baz the Beholder"` |
+| `rootRole` | Yes | The role to assign to the user. Can be either the role's ID or its unique name. | `3`, `"Viewer"` |
+| `sendEmail` | No | Whether to send a welcome email with a login link to the user or not. Defaults to `true`. | `false` |
+| `name` | No | The user's name (**not** the user's _username_). | `"Sam Seawright" ` |
+
+**Body**
+
+```json
+{
+  "email": "some-email@getunleash.io",
+  "username": "Baz the Beholder",
+  "rootRole": "Viewer",
+  "sendEmail": true
+}
+```
+
+#### Return values: {#return-values}
+
+`201: Created`
+
+```json
+{
+  "createdAt": "2021-05-18T10:28:23.067Z",
+  "email": "some-email@getunleash.io",
+  "emailSent": true,
+  "id": 1337,
+  "imageUrl": "https://gravatar.com/avatar/222f2ab70c039dda12e3d11acdcebd02?size=42&default=retro",
+  "inviteLink": "http://localhost:4242/new-user?token=123",
+  "isAPI": false,
+  "loginAttempts": 0,
+  "name": "Some Name",
+  "rootRole": 2,
+  "seenAt": null
+}
+```
+
+### Update public signup token {#update-public-signup-token}
+
+`PUT https://unleash.host.com/api/invite-link/tokens/:token`
 
 Updates an addon configuration.
 
@@ -81,22 +127,16 @@ Updates an addon configuration.
 
 ```json
 {
-  "provider": "webhook",
-  "description": "Optional updated description",
-  "enabled": true,
-  "parameters": {
-    "url": "http://localhost:4242/webhook"
-  },
-  "events": ["feature-created", "feature-updated"]
+  "expiresAt": "2022-10-15T09:09:09.194Z"
 }
 ```
 
-### Notes {#notes-1}
+### Notes {#notes}
 
-- `provider` can not be changed.
+- `name` can not be changed.
 
-### Delete an addon configuration {#delete-an-addon-configuration}
+### Delete an addon configuration {#delete-public-signup-token}
 
-`DELETE https://unleash.host.com/api/admin/addons/:id`
+`DELETE https://unleash.host.com/api/admin/invite-lint/tokens/:token`
 
-Deletes the addon with id=`id`.
+Expires the token with secret=`token`.

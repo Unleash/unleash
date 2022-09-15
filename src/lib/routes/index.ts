@@ -1,8 +1,7 @@
 import { BackstageController } from './backstage';
 import ResetPasswordController from './auth/reset-password-controller';
 import { SimplePasswordProvider } from './auth/simple-password-provider';
-import { IUnleashConfig } from '../types/option';
-import { IUnleashServices } from '../types/services';
+import { IUnleashConfig, IUnleashServices } from '../types';
 import LogoutController from './logout';
 
 const AdminApi = require('./admin-api');
@@ -12,7 +11,6 @@ import { HealthCheckController } from './health-check';
 import ProxyController from './proxy-api';
 import { conditionalMiddleware } from '../middleware/conditional-middleware';
 import EdgeController from './edge-api';
-import PatController from './user/pat-controller';
 
 class IndexRouter extends Controller {
     constructor(config: IUnleashConfig, services: IUnleashServices) {
@@ -29,8 +27,6 @@ class IndexRouter extends Controller {
             '/auth/reset',
             new ResetPasswordController(config, services).router,
         );
-
-        this.use('/api/user/token', new PatController(config, services).router);
 
         this.use('/api/admin', new AdminApi(config, services).router);
         this.use('/api/client', new ClientApi(config, services).router);

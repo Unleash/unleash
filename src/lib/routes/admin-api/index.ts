@@ -1,6 +1,5 @@
 import Controller from '../controller';
-import { IUnleashServices } from '../../types/services';
-import { IUnleashConfig } from '../../types/option';
+import { IUnleashServices, IUnleashConfig } from '../../types';
 import FeatureController from './feature';
 import { FeatureTypeController } from './feature-type';
 import ArchiveController from './archive';
@@ -8,7 +7,7 @@ import StrategyController from './strategy';
 import EventController from './event';
 import PlaygroundController from './playground';
 import MetricsController from './metrics';
-import UserController from './user';
+import UserController from './user/user';
 import ConfigController from './config';
 import { ContextController } from './context';
 import ClientMetricsController from './client-metrics';
@@ -24,6 +23,7 @@ import UserSplashController from './user-splash';
 import ProjectApi from './project';
 import { EnvironmentsController } from './environments';
 import ConstraintsController from './constraints';
+import PatController from './user/pat';
 
 class AdminApi extends Controller {
     constructor(config: IUnleashConfig, services: IUnleashServices) {
@@ -60,6 +60,10 @@ class AdminApi extends Controller {
             new ClientMetricsController(config, services).router,
         );
         this.app.use('/user', new UserController(config, services).router);
+        this.app.use(
+            '/user/tokens',
+            new PatController(config, services).router,
+        );
         this.app.use(
             '/ui-config',
             new ConfigController(config, services).router,

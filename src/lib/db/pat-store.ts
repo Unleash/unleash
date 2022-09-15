@@ -76,4 +76,12 @@ export default class PatStore implements IPatStore {
         const groups = await this.db.select(PAT_COLUMNS).from(TABLE);
         return groups.map(fromRow);
     }
+
+    async getAllByUser(userId: number): Promise<Pat[]> {
+        const groups = await this.db
+            .select(PAT_COLUMNS)
+            .from(TABLE)
+            .where('user_id', userId);
+        return groups.map(fromRow);
+    }
 }

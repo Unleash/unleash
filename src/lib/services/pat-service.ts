@@ -30,6 +30,9 @@ export default class PatService {
     }
 
     async createPat(pat: IPat, user: User): Promise<IPat> {
+        if (new Date(pat.expiresAt) < new Date()) {
+            throw new Error('The expiry date should be in future.');
+        }
         pat.secret = this.generateSecretKey();
         pat.userId = user.id;
         const newPat = await this.patStore.create(pat);
@@ -43,9 +46,8 @@ export default class PatService {
         return newPat;
     }
 
-    async getAll(): Promise<IPat[]> {
-        const pats = await this.patStore.getAll();
-        return pats;
+    async getAll(user: User): Promise<IPat[]> {
+        return this.patStore.getAllByUser(user.id);
     }
 
     async deletePat(secret: string): Promise<void> {

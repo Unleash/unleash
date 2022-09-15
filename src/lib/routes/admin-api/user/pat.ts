@@ -1,21 +1,18 @@
-import { Request, Response } from 'express';
-import Controller from '../controller';
-import { Logger } from '../../logger';
-import { IUnleashConfig } from '../../types/option';
-import { IUnleashServices } from '../../types';
-import { createRequestSchema } from '../../openapi/util/create-request-schema';
-import { createResponseSchema } from '../../openapi/util/create-response-schema';
-import { OpenApiService } from '../../services/openapi-service';
-import { emptyResponse } from '../../openapi/util/standard-responses';
+import { Response } from 'express';
+import Controller from '../../controller';
+import { Logger } from '../../../logger';
+import { IUnleashConfig, IUnleashServices } from '../../../types';
+import { createRequestSchema } from '../../../openapi/util/create-request-schema';
+import { createResponseSchema } from '../../../openapi/util/create-response-schema';
+import { OpenApiService } from '../../../services/openapi-service';
+import { emptyResponse } from '../../../openapi/util/standard-responses';
 
-import PatService from '../../services/pat-service';
-import { NONE } from '../../types/permissions';
-import { IAuthRequest } from '../unleash-types';
-import { serializeDates } from '../../types/serialize-dates';
-import NameExistsError from '../../error/name-exists-error';
-import BadDataError from '../../error/bad-data-error';
-import { PatSchema, patSchema } from '../../openapi/spec/pat-schema';
-import { patsSchema } from '../../openapi/spec/pats-schema';
+import PatService from '../../../services/pat-service';
+import { NONE } from '../../../types/permissions';
+import { IAuthRequest } from '../../unleash-types';
+import { serializeDates } from '../../../types/serialize-dates';
+import { PatSchema, patSchema } from '../../../openapi/spec/pat-schema';
+import { patsSchema } from '../../../openapi/spec/pats-schema';
 
 export default class PatController extends Controller {
     private patService: PatService;
@@ -50,7 +47,7 @@ export default class PatController extends Controller {
         });
         this.route({
             method: 'post',
-            path: '/',
+            path: '',
             handler: this.createPat,
             permission: NONE,
             middleware: [
@@ -65,7 +62,7 @@ export default class PatController extends Controller {
 
         this.route({
             method: 'delete',
-            path: '/:patId',
+            path: '/:secret',
             acceptAnyContentType: true,
             handler: this.deletePat,
             permission: NONE,
@@ -82,26 +79,17 @@ export default class PatController extends Controller {
     async createPat(req: IAuthRequest, res: Response): Promise<void> {
         const pat = req.body;
 
-        try {
-            const createdPat = await this.patService.createPat(pat, req.user);
-            this.openApiService.respondWithValidation(
-                201,
-                res,
-                patSchema.$id,
-                serializeDates(createdPat),
-            );
-        } catch (e: unknown) {
-            if (e instanceof NameExistsError || BadDataError) {
-                res.status(400).send(e);
-            } else {
-                this.logger.error(e);
-                res.status(500).send(e);
-            }
-        }
+        const createdPat = await this.patService.createPat(pat, req.user);
+        this.openApiService.respondWithValidation(
+            201,
+            res,
+            patSchema.$id,
+            serializeDates(createdPat),
+        );
     }
 
-    async getPats(req: Request, res: Response<PatSchema>): Promise<void> {
-        const pats = await this.patService.getAll();
+    async getPats(req: IAuthRequest, res: Response<PatSchema>): Promise<void> {
+        const pats = await this.patService.getAll(req.user);
         this.openApiService.respondWithValidation(200, res, patsSchema.$id, {
             pats: serializeDates(pats),
         });

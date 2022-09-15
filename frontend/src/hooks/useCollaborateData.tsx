@@ -47,7 +47,7 @@ export const useCollaborateData = <Type,>(
     const { data, refetch } = formatUnleashGetter<Type>(getterOptions);
     const [cache, setCache] = useState<Type | null>(initialData || null);
     const [dataModified, setDataModified] = useState(false);
-    console.log(initialData);
+
     const forceRefreshCache = (data: Type) => {
         setCache(data);
         setDataModified(false);
@@ -72,6 +72,8 @@ export const useCollaborateData = <Type,>(
         refetch,
         staleDataNotification: (
             <StaleDataNotification
+                cache={cache}
+                data={data}
                 refresh={() => forceRefreshCache(data)}
                 show={dataModified}
                 afterSubmitAction={notificationOptions.afterSubmitAction}

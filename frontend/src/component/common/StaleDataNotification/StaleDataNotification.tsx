@@ -1,50 +1,75 @@
-import { Box, Typography, Button } from '@mui/material';
-import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
+import { Typography, Button, useTheme, useMediaQuery } from '@mui/material';
+import EventDiff from 'component/events/EventDiff/EventDiff';
+import { useThemeStyles } from 'themes/themeStyles';
+import AnimateOnMount from '../AnimateOnMount/AnimateOnMount';
+
+interface IStaleDataNotification {
+    refresh: () => void;
+    afterSubmitAction: Function;
+    data: unknown;
+    cache: unknown;
+    show: boolean;
+}
 
 export const StaleDataNotification = ({
     refresh,
     show,
     afterSubmitAction,
-}: any) => {
-    console.log(afterSubmitAction);
+    data,
+    cache,
+}: IStaleDataNotification) => {
+    const { classes: themeStyles } = useThemeStyles();
+    const theme = useTheme();
+    const smallScreen = useMediaQuery(`(max-width:${600}px)`);
+
+    const getStyles = () => {
+        const base = {
+            padding: `${theme.spacing(3)} ${theme.spacing(4)}`,
+            boxShadow: theme.boxShadows.elevated,
+            borderRadius: theme.shape.borderRadiusLarge,
+            backgroundColor: theme.palette.background.paper,
+            maxWidth: '600px',
+            zIndex: 1000,
+        };
+        if (smallScreen) {
+            return {
+                ...base,
+                right: 0,
+                left: 0,
+                bottom: 0,
+                borderRadius: 0,
+            };
+        }
+        return base;
+    };
+
     return (
-        <ConditionallyRender
-            condition={show}
-            show={
-                <Box
-                    sx={{
-                        position: 'fixed',
-                        right: '20px',
-                        bottom: '20px',
-                        padding: '25px',
-                        boxShadow: '1px 1px 2px rgba(0,0,0, 0.4)',
-                        borderRadius: '12px',
-                        backgroundColor: '#fff',
-                        maxWidth: '400px',
-                        zIndex: 1000,
-                    }}
-                >
-                    <Typography variant="h5" sx={{ my: 2, mb: 2 }}>
-                        Your data is stale
-                    </Typography>
-                    <Typography variant="body1" sx={{ my: 2, mb: 3 }}>
-                        The data you have been working on is stale, would you
-                        like to refresh your data? This may happen if someone
-                        has been making changes to the data while you were
-                        working.
-                    </Typography>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={() => {
-                            refresh();
-                            afterSubmitAction();
-                        }}
-                    >
-                        Refresh data
-                    </Button>
-                </Box>
-            }
-        />
+        <AnimateOnMount
+            mounted={show}
+            start={themeStyles.fadeInBottomStartWithoutFixed}
+            enter={themeStyles.fadeInBottomEnter}
+            style={getStyles()}
+        >
+            <Typography variant="h5" sx={{ my: 2, mb: 2 }}>
+                Your data is stale
+            </Typography>
+            <Typography variant="body1" sx={{ my: 2, mb: 3 }}>
+                The data you have been working on is stale, would you like to
+                refresh your data? This may happen if someone has been making
+                changes to the data while you were working.
+            </Typography>
+            <EventDiff entry={{ preData: cache, data }} />
+            <Button
+                sx={{ mb: 2 }}
+                variant="contained"
+                color="primary"
+                onClick={() => {
+                    refresh();
+                    afterSubmitAction();
+                }}
+            >
+                Refresh data
+            </Button>
+        </AnimateOnMount>
     );
 };

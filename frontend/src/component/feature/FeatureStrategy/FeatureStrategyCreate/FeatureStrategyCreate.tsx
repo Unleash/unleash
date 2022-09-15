@@ -122,7 +122,7 @@ export const FeatureStrategyCreate = () => {
             }
         >
             <FeatureStrategyForm
-                feature={data as IFeatureToggle}
+                feature={data}
                 strategy={strategy}
                 setStrategy={setStrategy}
                 segments={segments}

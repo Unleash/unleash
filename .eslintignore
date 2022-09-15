@@ -3,6 +3,7 @@ docker
 bundle.js
 website/blog
 website/build
+website/docs
 website/node_modules
 website/i18n/*.js
 website/translated_docs

@@ -7,8 +7,8 @@ website/core
 website/docs
 website/node_modules
 website/i18n/*.js
-website/translated_docs
 website/pages
+website/translated_docs
 website
 setupJest.js
 frontend

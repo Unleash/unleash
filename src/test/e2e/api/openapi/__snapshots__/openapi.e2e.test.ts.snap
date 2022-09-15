@@ -4442,11 +4442,11 @@ If the provided project does not exist, the list of events will be empty.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/publicSignupTokenSchema",
+                  "$ref": "#/components/schemas/publicSignupTokensSchema",
                 },
               },
             },
-            "description": "publicSignupTokenSchema",
+            "description": "publicSignupTokensSchema",
           },
         },
         "tags": [

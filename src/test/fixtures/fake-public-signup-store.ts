@@ -53,7 +53,7 @@ export default class FakePublicSignupStore implements IPublicSignupTokenStore {
                 type: '',
                 id: 1,
             },
-            createdBy: null,
+            createdBy: newToken.createdBy,
         };
         this.tokens.push(token);
         return Promise.resolve(token);

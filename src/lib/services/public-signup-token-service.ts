@@ -81,7 +81,7 @@ export class PublicSignupTokenService {
         await this.store.addTokenUser(secret, user.id);
         await this.eventStore.store(
             new PublicSignupTokenUserAddedEvent({
-                createdBy: 'userId',
+                createdBy: 'System',
                 data: { secret, userId: user.id },
             }),
         );

@@ -25,6 +25,7 @@ import { PublicSignupTokenCreateSchema } from '../../openapi/spec/public-signup-
 import { PublicSignupTokenUpdateSchema } from '../../openapi/spec/public-signup-token-update-schema';
 import { CreateUserSchema } from '../../openapi/spec/create-user-schema';
 import { UserSchema, userSchema } from '../../openapi/spec/user-schema';
+import { extractUsername } from '../../util/extract-user';
 
 interface TokenParam {
     token: string;
@@ -73,7 +74,7 @@ export class PublicSignupController extends Controller {
                     tags: ['Public signup tokens'],
                     operationId: 'getAllPublicSignupTokens',
                     responses: {
-                        200: createResponseSchema('publicSignupTokenSchema'),
+                        200: createResponseSchema('publicSignupTokensSchema'),
                     },
                 }),
             ],
@@ -245,10 +246,11 @@ export class PublicSignupController extends Controller {
         req: IAuthRequest<void, void, PublicSignupTokenCreateSchema>,
         res: Response<PublicSignupTokenSchema>,
     ): Promise<void> {
+        const userName = extractUsername(req);
         const token =
             await this.publicSignupTokenService.createNewPublicSignupToken(
                 req.body,
-                req.user.name,
+                userName,
             );
         this.openApiService.respondWithValidation(
             201,
@@ -282,8 +284,9 @@ export class PublicSignupController extends Controller {
         res: Response,
     ): Promise<void> {
         const { token } = req.params;
+        const userName = extractUsername(req);
 
-        await this.publicSignupTokenService.delete(token, req.user.name);
+        await this.publicSignupTokenService.delete(token, userName);
         res.status(200).end();
     }
 }

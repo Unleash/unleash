@@ -1,7 +1,6 @@
 import crypto from 'crypto';
 import { Logger } from '../logger';
 import { IUnleashConfig, IUnleashStores } from '../types';
-import { minutesToMilliseconds } from 'date-fns';
 import { IPublicSignupTokenStore } from '../types/stores/public-signup-token-store';
 import { PublicSignupTokenSchema } from '../openapi/spec/public-signup-token-schema';
 import { IRoleStore } from '../types/stores/role-store';
@@ -30,8 +29,6 @@ export class PublicSignupTokenService {
 
     private timer: NodeJS.Timeout;
 
-    private activeTokens: PublicSignupTokenSchema[] = [];
-
     constructor(
         {
             publicSignupTokenStore,
@@ -51,15 +48,6 @@ export class PublicSignupTokenService {
         this.logger = config.getLogger(
             '/services/public-signup-token-service.ts',
         );
-        this.fetchActiveTokens();
-        this.timer = setInterval(
-            () => this.fetchActiveTokens(),
-            minutesToMilliseconds(1),
-        ).unref();
-    }
-
-    async fetchActiveTokens(): Promise<void> {
-        this.activeTokens = await this.getAllActiveTokens();
     }
 
     public async get(secret: string): Promise<PublicSignupTokenSchema> {
@@ -129,7 +117,6 @@ export class PublicSignupTokenService {
             createdBy: createdBy,
         };
         const token = await this.store.insert(newToken);
-        this.activeTokens.push(token);
 
         await this.eventStore.store(
             new PublicSignupTokenCreatedEvent({

@@ -18,6 +18,7 @@ Have questions that you can't find the answer to in these docs? You can always t
 ## Documentation structure
 
 Our documentation is split into four parts, using the [Diátaxis documentation framework](https://diataxis.fr/):
+
 - [tutorials and introductory material](#tutorials)
 - [how-to guides](#how-to-guides)
 - [reference documentation](#reference-documentation)
@@ -26,6 +27,7 @@ Our documentation is split into four parts, using the [Diátaxis documentation f
 ### Tutorials and introductory material {#tutorials}
 
 New to Unleash? Not sure where to get started? The tutorials guide you through your first steps with Unleash:
+
 - [Unleash introductory overview](unleash_overview.md)
 - [Important Unleash concepts](important-concepts.md)
 - [Quickstart guides](quickstart.md)
@@ -35,6 +37,7 @@ New to Unleash? Not sure where to get started? The tutorials guide you through y
 Our how-to guides show you how to perform a number of common tasks that you'll want to do. Think of them as recipes. They are more advanced than the tutorials and assume you have some working knowledge of Unleash.
 
 The guides are organized into the following categories:
+
 - [API how-tos](/how-to/api)
 - [Feature toggles, strategies, context, and general how-tos](/how-to/misc)
 - [Users and permissions how-tos](/how-to/users-and-permissions)
@@ -45,9 +48,10 @@ The guides are organized into the following categories:
 The reference docs contain technical reference for Unleash and the API. Go here to find out how Unleash works and what configuration options are available. They're like an Unleash encyclopedia and assume you have a grip on key Unleash concepts.
 
 The reference docs are organized into the following topics:
+
 - [Addons](/addons)
 - [API documentation](/api)
-- [Unleash Client SDKs](/sdks)
+- [Unleash SDKs](/sdks)
 - [Deployment and management of Unleash](/deploy)
 - [Integrations with other systems](/integrations)
 - [Unleash concepts](/reference/concepts)
@@ -58,8 +62,8 @@ The reference docs are organized into the following topics:
 
 ## Other resources and communities
 
-💻 The core of Unleash is all open source and [hosted on GitHub](https://www.heroku.com/deploy/?template=https://github.com/Unleash/unleash "Unleash on GitHub").
+💻 The core of Unleash is all open source and [hosted on GitHub](https://www.heroku.com/deploy/?template=https://github.com/Unleash/unleash 'Unleash on GitHub').
 
 💬 If you've got questions or just wanna chat to the team and other Unleash users, come [join our Slack community](https://slack.unleash.run/)
 
-🐦 You can also follow us [on Twitter](https://twitter.com/getunleash "Unleash on Twitter"), [LinkedIn](https://www.linkedin.com/company/getunleash/ "Unleash on LinkedIn"), or [Instagram](https://www.instagram.com/getunleash/ "Unleash on Instagram") for more updates and extra content.
+🐦 You can also follow us [on Twitter](https://twitter.com/getunleash 'Unleash on Twitter'), [LinkedIn](https://www.linkedin.com/company/getunleash/ 'Unleash on LinkedIn'), or [Instagram](https://www.instagram.com/getunleash/ 'Unleash on Instagram') for more updates and extra content.

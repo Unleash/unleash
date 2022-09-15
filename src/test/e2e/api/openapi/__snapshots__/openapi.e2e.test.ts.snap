@@ -4453,7 +4453,7 @@ If the provided project does not exist, the list of events will be empty.",
         ],
       },
       "post": {
-        "operationId": "createApiToken",
+        "operationId": "createPublicSignupToken",
         "requestBody": {
           "content": {
             "application/json": {
@@ -4501,7 +4501,7 @@ If the provided project does not exist, the list of events will be empty.",
           },
         },
         "tags": [
-          "API tokens",
+          "Public signup tokens",
         ],
       },
       "get": {
@@ -4608,7 +4608,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/invite-link/tokens/{token}/validate": {
       "post": {
-        "operationId": "validateSignupToken",
+        "operationId": "validatePublicSignupToken",
         "parameters": [
           {
             "in": "path",
@@ -4623,12 +4623,12 @@ If the provided project does not exist, the list of events will be empty.",
           "200": {
             "description": "This response has no body.",
           },
-          "404": {
+          "401": {
             "description": "This response has no body.",
           },
         },
         "tags": [
-          "API tokens",
+          "Public signup tokens",
         ],
       },
     },

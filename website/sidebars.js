@@ -192,7 +192,7 @@ module.exports = {
                 },
                 {
                     type: 'category',
-                    label: 'Client SDKs',
+                    label: 'Application SDKs',
                     link: { type: 'doc', id: 'sdks/index' },
                     items: [
                         {
@@ -289,6 +289,7 @@ module.exports = {
                         'reference/feature-toggles',
                         'advanced/feature_toggle_types',
                         'advanced/toggle_variants',
+                        'reference/front-end-api',
                         'reference/playground',
                         'user_guide/projects',
                         'user_guide/rbac',

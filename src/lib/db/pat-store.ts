@@ -4,7 +4,7 @@ import { IPatStore } from '../types/stores/pat-store';
 import Pat, { IPat } from '../types/models/pat';
 import NotFoundError from '../error/notfound-error';
 
-const TABLE = 'pat_tokens';
+const TABLE = 'personal_access_tokens';
 
 const PAT_COLUMNS = [
     'secret',

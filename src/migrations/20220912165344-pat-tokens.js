@@ -3,7 +3,7 @@
 exports.up = function (db, cb) {
     db.runSql(
         `
-        CREATE TABLE pat_tokens (
+        CREATE TABLE personal_access_tokens (
             secret text not null primary key,
             user_id integer not null references users (id) ON DELETE CASCADE,
             expires_at  timestamp with time zone NOT NULL,
@@ -15,5 +15,5 @@ exports.up = function (db, cb) {
 };
 
 exports.down = function (db, cb) {
-    db.runSql(`drop table pat_tokens`, cb);
+    db.runSql(`drop table personal_access_tokens`, cb);
 };

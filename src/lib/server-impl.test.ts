@@ -38,6 +38,7 @@ jest.mock('./db', () => ({
             clientInstanceStore: { destroy: noop },
             clientMetricsStore: { destroy: noop, on: noop },
             eventStore,
+            publicSignupTokenStore: { destroy: noop, on: noop },
             settingStore,
         };
     },

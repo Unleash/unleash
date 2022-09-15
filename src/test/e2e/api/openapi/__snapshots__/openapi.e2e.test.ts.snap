@@ -4623,7 +4623,7 @@ If the provided project does not exist, the list of events will be empty.",
           "200": {
             "description": "This response has no body.",
           },
-          "404": {
+          "401": {
             "description": "This response has no body.",
           },
         },

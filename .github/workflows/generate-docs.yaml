@@ -7,6 +7,10 @@ on:
     paths:
       - website/**
 
+  workflow_dispatch:
+    schedule:
+      - cron: '@daily'
+
 jobs:
   build:
     runs-on: ubuntu-latest

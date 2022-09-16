@@ -20,7 +20,7 @@ export const StaleDataNotification = ({
 }: IStaleDataNotification) => {
     const { classes: themeStyles } = useThemeStyles();
     const theme = useTheme();
-    const smallScreen = useMediaQuery(`(max-width:${600}px)`);
+    const isExtraSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
     const getStyles = () => {
         const base = {

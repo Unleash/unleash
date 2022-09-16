@@ -122,20 +122,21 @@ export class PublicSignupTokenService {
     ): Promise<PublicSignupTokenSchema> {
         const viewerRole = await this.roleStore.getRoleByName(RoleName.VIEWER);
         const secret = this.generateSecretKey();
+        const url = this.getUrl(secret);
         const newToken: IPublicSignupTokenCreate = {
             name: tokenCreate.name,
             expiresAt: new Date(tokenCreate.expiresAt),
             secret: secret,
             roleId: viewerRole ? viewerRole.id : -1,
             createdBy: createdBy,
-            url: this.getUrl(secret),
+            url: url,
         };
         const token = await this.store.insert(newToken);
 
         await this.eventStore.store(
             new PublicSignupTokenCreatedEvent({
                 createdBy: createdBy,
-                data: newToken,
+                data: token,
             }),
         );
         return token;

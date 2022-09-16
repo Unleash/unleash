@@ -47,6 +47,7 @@ export default class FakePublicSignupStore implements IPublicSignupTokenStore {
             expiresAt: newToken.expiresAt.toISOString(),
             createdAt: new Date().toISOString(),
             users: [],
+            url: 'some=url',
             name: newToken.name,
             role: {
                 name: 'Viewer',
@@ -80,6 +81,6 @@ export default class FakePublicSignupStore implements IPublicSignupTokenStore {
 
     // eslint-disable-next-line no-unused-vars,@typescript-eslint/no-unused-vars
     async getAll(query?: Object): Promise<PublicSignupTokenSchema[]> {
-        return Promise.resolve([]);
+        return Promise.resolve(this.tokens);
     }
 }

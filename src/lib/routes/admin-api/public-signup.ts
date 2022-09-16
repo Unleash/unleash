@@ -287,9 +287,9 @@ export class PublicSignupController extends Controller {
         res: Response,
     ): Promise<void> {
         const { token } = req.params;
-        const userName = extractUsername(req);
+        const username = extractUsername(req);
 
-        await this.publicSignupTokenService.delete(token, userName);
+        await this.publicSignupTokenService.delete(token, username);
         res.status(200).end();
     }
 }

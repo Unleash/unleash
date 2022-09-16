@@ -49,8 +49,8 @@ export const useCollaborateData = <Type,>(
     const [dataModified, setDataModified] = useState(false);
 
     const forceRefreshCache = (data: Type) => {
-        setCache(data);
         setDataModified(false);
+        setCache(data);
     };
 
     useEffect(() => {

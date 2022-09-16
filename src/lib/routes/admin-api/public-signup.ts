@@ -249,11 +249,11 @@ export class PublicSignupController extends Controller {
         req: IAuthRequest<void, void, PublicSignupTokenCreateSchema>,
         res: Response<PublicSignupTokenSchema>,
     ): Promise<void> {
-        const userName = extractUsername(req);
+        const username = extractUsername(req);
         const token =
             await this.publicSignupTokenService.createNewPublicSignupToken(
                 req.body,
-                userName,
+                username,
             );
         this.openApiService.respondWithValidation(
             201,

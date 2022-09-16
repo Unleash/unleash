@@ -183,10 +183,10 @@ export class PublicSignupTokenStore implements IPublicSignupTokenStore {
             key,
         );
 
-        if (!rows[0])
-            throw new NotFoundError('Could not find a token with that key');
-
-        return toTokens(rows)[0];
+        if (rows.length > 0) {
+            return toTokens(rows)[0];
+        }
+        throw new NotFoundError('Could not find public signup token.');
     }
 
     async delete(secret: string): Promise<void> {

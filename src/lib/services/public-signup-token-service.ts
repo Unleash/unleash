@@ -15,6 +15,7 @@ import {
 } from '../types/events';
 import UserService, { ICreateUser } from './user-service';
 import { IUser } from '../types/user';
+import { URL } from 'url';
 
 export class PublicSignupTokenService {
     private store: IPublicSignupTokenStore;
@@ -29,6 +30,8 @@ export class PublicSignupTokenService {
 
     private timer: NodeJS.Timeout;
 
+    private readonly unleashBase: string;
+
     constructor(
         {
             publicSignupTokenStore,
@@ -38,7 +41,7 @@ export class PublicSignupTokenService {
             IUnleashStores,
             'publicSignupTokenStore' | 'roleStore' | 'eventStore'
         >,
-        config: Pick<IUnleashConfig, 'getLogger' | 'authentication'>,
+        config: Pick<IUnleashConfig, 'getLogger' | 'authentication' | 'server'>,
         userService: UserService,
     ) {
         this.store = publicSignupTokenStore;
@@ -48,6 +51,13 @@ export class PublicSignupTokenService {
         this.logger = config.getLogger(
             '/services/public-signup-token-service.ts',
         );
+        this.unleashBase = config.server.unleashUrl;
+    }
+
+    private getUrl(secret: string): string {
+        return new URL(
+            `${this.unleashBase}/invite-link/${secret}/signup`,
+        ).toString();
     }
 
     public async get(secret: string): Promise<PublicSignupTokenSchema> {
@@ -111,12 +121,14 @@ export class PublicSignupTokenService {
         createdBy: string,
     ): Promise<PublicSignupTokenSchema> {
         const viewerRole = await this.roleStore.getRoleByName(RoleName.VIEWER);
+        const secret = this.generateSecretKey();
         const newToken: IPublicSignupTokenCreate = {
             name: tokenCreate.name,
             expiresAt: new Date(tokenCreate.expiresAt),
-            secret: this.generateSecretKey(),
+            secret: secret,
             roleId: viewerRole ? viewerRole.id : -1,
             createdBy: createdBy,
+            url: this.getUrl(secret),
         };
         const token = await this.store.insert(newToken);
 
@@ -130,7 +142,7 @@ export class PublicSignupTokenService {
     }
 
     private generateSecretKey(): string {
-        return crypto.randomBytes(32).toString('hex');
+        return crypto.randomBytes(16).toString('hex');
     }
 
     destroy(): void {

@@ -30,6 +30,7 @@ interface ITokenUserRow {
     user_id: number;
     created_at: Date;
 }
+
 const tokenRowReducer = (acc, tokenRow) => {
     const { userId, userName, userUsername, roleId, roleName, ...token } =
         tokenRow;
@@ -37,6 +38,7 @@ const tokenRowReducer = (acc, tokenRow) => {
         acc[tokenRow.secret] = {
             secret: token.secret,
             name: token.name,
+            url: token.url,
             expiresAt: token.expires_at,
             createdAt: token.created_at,
             createdBy: token.created_by,
@@ -112,6 +114,7 @@ export class PublicSignupTokenStore implements IPublicSignupTokenStore {
                 'tokens.expires_at',
                 'tokens.created_at',
                 'tokens.created_by',
+                'tokens.url',
                 'token_project_users.user_id as userId',
                 'users.name as userName',
                 'users.username as userUsername',

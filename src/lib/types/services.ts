@@ -31,6 +31,7 @@ import { PlaygroundService } from 'lib/services/playground-service';
 import { GroupService } from '../services/group-service';
 import { ProxyService } from '../services/proxy-service';
 import EdgeService from '../services/edge-service';
+import PatService from '../services/pat-service';
 import { PublicSignupTokenService } from '../services/public-signup-token-service';
 
 export interface IUnleashServices {
@@ -69,4 +70,5 @@ export interface IUnleashServices {
     segmentService: SegmentService;
     openApiService: OpenApiService;
     clientSpecService: ClientSpecService;
+    patService: PatService;
 }

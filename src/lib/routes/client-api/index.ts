@@ -2,8 +2,7 @@ import Controller from '../controller';
 import FeatureController from './feature';
 import MetricsController from './metrics';
 import RegisterController from './register';
-import { IUnleashConfig } from '../../types/option';
-import { IUnleashServices } from '../../types';
+import { IUnleashConfig, IUnleashServices } from '../../types';
 
 export default class ClientApi extends Controller {
     constructor(config: IUnleashConfig, services: IUnleashServices) {

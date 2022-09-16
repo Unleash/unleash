@@ -27,6 +27,7 @@ import FakeUserSplashStore from './fake-user-splash-store';
 import FakeRoleStore from './fake-role-store';
 import FakeSegmentStore from './fake-segment-store';
 import FakeGroupStore from './fake-group-store';
+import FakePatStore from './fake-pat-store';
 import FakePublicSignupStore from './fake-public-signup-store';
 
 const createStores: () => IUnleashStores = () => {
@@ -66,6 +67,7 @@ const createStores: () => IUnleashStores = () => {
         roleStore: new FakeRoleStore(),
         segmentStore: new FakeSegmentStore(),
         groupStore: new FakeGroupStore(),
+        patStore: new FakePatStore(),
         publicSignupTokenStore: new FakePublicSignupStore(),
     };
 };

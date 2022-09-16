@@ -1,7 +1,7 @@
 import { Typography, Button, useTheme, useMediaQuery } from '@mui/material';
 import EventDiff from 'component/events/EventDiff/EventDiff';
 import { useThemeStyles } from 'themes/themeStyles';
-import AnimateOnMount from '../AnimateOnMount/AnimateOnMount';
+import AnimateOnMount from 'component/common/AnimateOnMount/AnimateOnMount';
 
 interface IStaleDataNotification {
     refresh: () => void;

@@ -45,21 +45,25 @@ const apiAccessMiddleware = (
         }
 
         try {
-            const apiToken = req.header('authorization');
-            const apiUser = apiTokenService.getUserForToken(apiToken);
-            const { CLIENT, FRONTEND } = ApiTokenType;
+            const apiToken = req.header('authorization') as string;
+            if (!apiToken?.startsWith('user')) {
+                const apiUser = apiTokenService.getUserForToken(apiToken);
+                const { CLIENT, FRONTEND } = ApiTokenType;
 
-            if (apiUser) {
-                if (
-                    (apiUser.type === CLIENT && !isClientApi(req)) ||
-                    (apiUser.type === FRONTEND && !isProxyApi(req)) ||
-                    (apiUser.type === FRONTEND &&
-                        !flagResolver.isEnabled('embedProxy'))
-                ) {
-                    res.status(403).send({ message: TOKEN_TYPE_ERROR_MESSAGE });
-                    return;
+                if (apiUser) {
+                    if (
+                        (apiUser.type === CLIENT && !isClientApi(req)) ||
+                        (apiUser.type === FRONTEND && !isProxyApi(req)) ||
+                        (apiUser.type === FRONTEND &&
+                            !flagResolver.isEnabled('embedProxy'))
+                    ) {
+                        res.status(403).send({
+                            message: TOKEN_TYPE_ERROR_MESSAGE,
+                        });
+                        return;
+                    }
+                    req.user = apiUser;
                 }
-                req.user = apiUser;
             }
         } catch (error) {
             logger.error(error);

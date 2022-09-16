@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useRequiredQueryParam } from 'hooks/useRequiredQueryParam';
 import { FeatureStrategyForm } from 'component/feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyForm';
@@ -24,6 +24,9 @@ import { useFeatureImmutable } from 'hooks/api/getters/useFeature/useFeatureImmu
 import { useFormErrors } from 'hooks/useFormErrors';
 import { createFeatureStrategy } from 'utils/createFeatureStrategy';
 import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
+import { useCollaborateData } from 'hooks/useCollaborateData';
+import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
+import { IFeatureToggle } from 'interfaces/featureToggle';
 
 export const FeatureStrategyCreate = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -42,10 +45,30 @@ export const FeatureStrategyCreate = () => {
     const { unleashUrl } = uiConfig;
     const navigate = useNavigate();
 
-    const { feature, refetchFeature } = useFeatureImmutable(
-        projectId,
-        featureId
-    );
+    const { feature, refetchFeature } = useFeature(projectId, featureId);
+    const ref = useRef<IFeatureToggle>(feature);
+
+    const { data, staleDataNotification, forceRefreshCache } =
+        useCollaborateData<IFeatureToggle>(
+            {
+                unleashGetter: useFeature,
+                params: [projectId, featureId],
+                dataKey: 'feature',
+                refetchFunctionKey: 'refetchFeature',
+                options: {},
+            },
+            feature,
+            {
+                afterSubmitAction: refetchFeature,
+            }
+        );
+
+    useEffect(() => {
+        if (ref.current.name === '' && feature.name) {
+            forceRefreshCache(feature);
+            ref.current = feature;
+        }
+    }, [feature]);
 
     useEffect(() => {
         if (strategyDefinition) {
@@ -81,6 +104,8 @@ export const FeatureStrategyCreate = () => {
         }
     };
 
+    if (!data) return null;
+
     return (
         <FormTemplate
             modal
@@ -99,7 +124,7 @@ export const FeatureStrategyCreate = () => {
             }
         >
             <FeatureStrategyForm
-                feature={feature}
+                feature={data}
                 strategy={strategy}
                 setStrategy={setStrategy}
                 segments={segments}
@@ -110,6 +135,7 @@ export const FeatureStrategyCreate = () => {
                 permission={CREATE_FEATURE_STRATEGY}
                 errors={errors}
             />
+            {staleDataNotification}
         </FormTemplate>
     );
 };

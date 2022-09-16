@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { FeatureStrategyForm } from 'component/feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyForm';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -18,10 +18,12 @@ import { ISegment } from 'interfaces/segment';
 import { useSegmentsApi } from 'hooks/api/actions/useSegmentsApi/useSegmentsApi';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { formatStrategyName } from 'utils/strategyNames';
-import { useFeatureImmutable } from 'hooks/api/getters/useFeature/useFeatureImmutable';
 import { useFormErrors } from 'hooks/useFormErrors';
 import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
 import { sortStrategyParameters } from 'utils/sortStrategyParameters';
+import { useCollaborateData } from 'hooks/useCollaborateData';
+import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
+import { IFeatureToggle } from 'interfaces/featureToggle';
 
 export const FeatureStrategyEdit = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -40,10 +42,31 @@ export const FeatureStrategyEdit = () => {
     const { unleashUrl } = uiConfig;
     const navigate = useNavigate();
 
-    const { feature, refetchFeature } = useFeatureImmutable(
-        projectId,
-        featureId
-    );
+    const { feature, refetchFeature } = useFeature(projectId, featureId);
+
+    const ref = useRef<IFeatureToggle>(feature);
+
+    const { data, staleDataNotification, forceRefreshCache } =
+        useCollaborateData<IFeatureToggle>(
+            {
+                unleashGetter: useFeature,
+                params: [projectId, featureId],
+                dataKey: 'feature',
+                refetchFunctionKey: 'refetchFeature',
+                options: {},
+            },
+            feature,
+            {
+                afterSubmitAction: refetchFeature,
+            }
+        );
+
+    useEffect(() => {
+        if (ref.current.name === '' && feature.name) {
+            forceRefreshCache(feature);
+            ref.current = feature;
+        }
+    }, [feature]);
 
     const {
         segments: savedStrategySegments,
@@ -51,11 +74,11 @@ export const FeatureStrategyEdit = () => {
     } = useSegments(strategyId);
 
     useEffect(() => {
-        const savedStrategy = feature.environments
+        const savedStrategy = data?.environments
             .flatMap(environment => environment.strategies)
             .find(strategy => strategy.id === strategyId);
         setStrategy(prev => ({ ...prev, ...savedStrategy }));
-    }, [strategyId, feature]);
+    }, [strategyId, data]);
 
     useEffect(() => {
         // Fill in the selected segments once they've been fetched.
@@ -96,6 +119,8 @@ export const FeatureStrategyEdit = () => {
         return null;
     }
 
+    if (!data) return null;
+
     return (
         <FormTemplate
             modal
@@ -115,7 +140,7 @@ export const FeatureStrategyEdit = () => {
             }
         >
             <FeatureStrategyForm
-                feature={feature}
+                feature={data}
                 strategy={strategy}
                 setStrategy={setStrategy}
                 segments={segments}
@@ -126,6 +151,7 @@ export const FeatureStrategyEdit = () => {
                 permission={UPDATE_FEATURE_STRATEGY}
                 errors={errors}
             />
+            {staleDataNotification}
         </FormTemplate>
     );
 };

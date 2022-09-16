@@ -29,7 +29,7 @@ export const StaleDataNotification = ({
             borderRadius: theme.shape.borderRadiusLarge,
             backgroundColor: theme.palette.background.paper,
             maxWidth: '600px',
-            zIndex: 1000,
+            zIndex: theme.zIndex.mobileStepper,
         };
         if (smallScreen) {
             return {

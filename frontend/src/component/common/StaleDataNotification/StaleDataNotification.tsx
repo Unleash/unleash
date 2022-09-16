@@ -28,7 +28,7 @@ export const StaleDataNotification = ({
             boxShadow: theme.boxShadows.elevated,
             borderRadius: theme.shape.borderRadiusLarge,
             backgroundColor: theme.palette.background.paper,
-            maxWidth: '600px',
+            maxWidth: theme.spacing(75),
             zIndex: theme.zIndex.mobileStepper,
         };
         if (smallScreen) {

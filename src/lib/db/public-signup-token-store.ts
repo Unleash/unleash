@@ -179,7 +179,7 @@ export class PublicSignupTokenStore implements IPublicSignupTokenStore {
             key,
         );
 
-        if (!rows)
+        if (!rows[0])
             throw new NotFoundError('Could not find a token with that key');
 
         return toTokens(rows)[0];

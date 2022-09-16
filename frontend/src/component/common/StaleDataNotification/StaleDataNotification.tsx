@@ -5,7 +5,7 @@ import AnimateOnMount from 'component/common/AnimateOnMount/AnimateOnMount';
 
 interface IStaleDataNotification {
     refresh: () => void;
-    afterSubmitAction: Function;
+    afterSubmitAction: () => void;
     data: unknown;
     cache: unknown;
     show: boolean;

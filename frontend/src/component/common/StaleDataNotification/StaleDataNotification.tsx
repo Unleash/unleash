@@ -31,7 +31,7 @@ export const StaleDataNotification = ({
             maxWidth: theme.spacing(75),
             zIndex: theme.zIndex.mobileStepper,
         };
-        if (smallScreen) {
+        if (isExtraSmallScreen) {
             return {
                 ...base,
                 right: 0,

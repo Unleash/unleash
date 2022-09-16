@@ -1,5 +1,5 @@
-import { useState, useLayoutEffect, useEffect } from 'react';
-import { SWRConfiguration, SWRResponse } from 'swr';
+import { useState, useEffect } from 'react';
+import { SWRConfiguration } from 'swr';
 import { dequal } from 'dequal';
 import { StaleDataNotification } from 'component/common/StaleDataNotification/StaleDataNotification';
 
@@ -15,7 +15,7 @@ const formatUnleashGetter = <Type,>({
     options = {},
     params = [''],
 }: IGetterOptions): IFormatUnleashGetterOutput<Type> => {
-    const result = unleashGetter(...params, { ...options, refreshInterval: 5 });
+    const result = unleashGetter(...params, { refreshInterval: 5, ...options });
 
     return { data: result[dataKey], refetch: result[refetchFunctionKey] };
 };
@@ -36,7 +36,7 @@ interface ICollaborateDataOutput<Type> {
 }
 
 interface IStaleNotificationOptions {
-    afterSubmitAction: Function;
+    afterSubmitAction: () => void;
 }
 
 export const useCollaborateData = <Type,>(

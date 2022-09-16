@@ -204,7 +204,7 @@ export class ContextController extends Controller {
             userName,
         );
         res.status(201)
-            .header('location', `context/${result.name}`) // todo: how to ensure that the location is (and stays) correct?
+            .header('location', `context/${result.name}`)
             .json(serializeDates(result))
             .end();
     }

@@ -59,7 +59,15 @@ test('the generated OpenAPI spec is valid', async () => {
         fullResult: true,
         componentOptions: {
             exceptionSkipCodes: [
-                'WSCH001', // allow non-standard formats for strings (including 'uri')
+                // allow non-standard formats for strings (including 'uri')
+                'WSCH001',
+
+                // Schemas with an indeterminable type cannot serialize,
+                // deserialize, or validate values. [WSCH005]
+                //
+                // This allows specifying the 'any' type for schemas (such as the
+                // patchSchema)
+                'WSCH005',
             ],
         },
     });

@@ -1675,19 +1675,7 @@ exports[`should serve the OpenAPI spec 1`] = `
           "path": {
             "type": "string",
           },
-          "value": {
-            "oneOf": [
-              {
-                "type": "object",
-              },
-              {
-                "items": {
-                  "type": "object",
-                },
-                "type": "array",
-              },
-            ],
-          },
+          "value": {},
         },
         "required": [
           "path",

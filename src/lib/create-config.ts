@@ -184,6 +184,10 @@ const defaultVersionOption: IVersionOption = {
 
 const defaultAuthentication: IAuthOption = {
     enableApiToken: parseEnvVarBoolean(process.env.AUTH_ENABLE_API_TOKEN, true),
+    enablePersonalAccessToken: parseEnvVarBoolean(
+        process.env.AUTH_ENABLE_PERSONAL_ACCESS_TOKEN,
+        true,
+    ),
     type: authTypeFromString(process.env.AUTH_TYPE),
     customAuthHandler: defaultCustomAuthDenyAll,
     createAdminUser: true,

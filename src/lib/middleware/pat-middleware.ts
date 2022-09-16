@@ -1,14 +1,19 @@
-import { IUnleashConfig } from '../types/option';
-import { IUnleashServices } from '../types';
+import { IUnleashConfig } from '../types';
 
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 const patMiddleware = (
     {
         getLogger,
+        authentication,
     }: Pick<IUnleashConfig, 'getLogger' | 'authentication' | 'flagResolver'>,
-    { userService }: IUnleashServices,
+    { userService }: any,
 ): any => {
     const logger = getLogger('/middleware/pat-middleware.ts');
-    logger.debug('Enabling api-token middleware');
+    logger.debug('Enabling PAT middleware');
+
+    if (!authentication.enablePersonalAccessToken) {
+        return (req, res, next) => next();
+    }
 
     return (req, res, next) => {
         if (req.user) {

@@ -87,7 +87,7 @@ export class PublicSignupController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Public signup tokens'],
-                    operationId: 'createApiToken',
+                    operationId: 'createPublicSignupToken',
                     requestBody: createRequestSchema(
                         'publicSignupTokenCreateSchema',
                     ),
@@ -158,7 +158,7 @@ export class PublicSignupController extends Controller {
             permission: ADMIN,
             middleware: [
                 openApiService.validPath({
-                    tags: ['API tokens'],
+                    tags: ['Public signup tokens'],
                     operationId: 'deletePublicSignupToken',
                     responses: {
                         200: emptyResponse,
@@ -175,8 +175,8 @@ export class PublicSignupController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['API tokens'],
-                    operationId: 'validateSignupToken',
+                    tags: ['Public signup tokens'],
+                    operationId: 'validatePublicSignupToken',
                     responses: {
                         200: emptyResponse,
                         401: emptyResponse,

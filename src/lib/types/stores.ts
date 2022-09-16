@@ -26,6 +26,7 @@ import { IUserSplashStore } from './stores/user-splash-store';
 import { IRoleStore } from './stores/role-store';
 import { ISegmentStore } from './stores/segment-store';
 import { IGroupStore } from './stores/group-store';
+import { IPatStore } from './stores/pat-store';
 import { IPublicSignupTokenStore } from './stores/public-signup-token-store';
 
 export interface IUnleashStores {
@@ -57,5 +58,6 @@ export interface IUnleashStores {
     userSplashStore: IUserSplashStore;
     roleStore: IRoleStore;
     segmentStore: ISegmentStore;
+    patStore: IPatStore;
     publicSignupTokenStore: IPublicSignupTokenStore;
 }

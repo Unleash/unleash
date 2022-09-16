@@ -1,6 +1,4 @@
-import { IUnleashConfig } from '../types/option';
-import { IUnleashStores } from '../types/stores';
-import { IUnleashServices } from '../types/services';
+import { IUnleashConfig, IUnleashStores, IUnleashServices } from '../types';
 import FeatureTypeService from './feature-type-service';
 import EventService from './event-service';
 import HealthService from './health-service';
@@ -35,6 +33,7 @@ import { PlaygroundService } from './playground-service';
 import { GroupService } from './group-service';
 import { ProxyService } from './proxy-service';
 import EdgeService from './edge-service';
+import PatService from './pat-service';
 import { PublicSignupTokenService } from './public-signup-token-service';
 export const createServices = (
     stores: IUnleashStores,
@@ -102,6 +101,8 @@ export const createServices = (
 
     const edgeService = new EdgeService(stores, config);
 
+    const patService = new PatService(stores, config);
+
     const publicSignupTokenService = new PublicSignupTokenService(
         stores,
         config,
@@ -143,6 +144,7 @@ export const createServices = (
         groupService,
         proxyService,
         edgeService,
+        patService,
         publicSignupTokenService,
     };
 };

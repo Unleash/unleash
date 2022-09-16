@@ -1649,6 +1649,29 @@ exports[`should serve the OpenAPI spec 1`] = `
         ],
         "type": "object",
       },
+      "patSchema": {
+        "properties": {
+          "createdAt": {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string",
+          },
+          "expiresAt": {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string",
+          },
+          "secret": {
+            "type": "string",
+          },
+          "seenAt": {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string",
+          },
+        },
+        "type": "object",
+      },
       "patchSchema": {
         "properties": {
           "from": {
@@ -1680,6 +1703,17 @@ exports[`should serve the OpenAPI spec 1`] = `
           "$ref": "#/components/schemas/patchSchema",
         },
         "type": "array",
+      },
+      "patsSchema": {
+        "properties": {
+          "pats": {
+            "items": {
+              "$ref": "#/components/schemas/patSchema",
+            },
+            "type": "array",
+          },
+        },
+        "type": "object",
       },
       "permissionSchema": {
         "additionalProperties": false,
@@ -3403,6 +3437,7 @@ exports[`should serve the OpenAPI spec 1`] = `
   },
   "info": {
     "title": "Unleash API",
+    "version": "4.15.1",
   },
   "openapi": "3.0.3",
   "paths": {
@@ -4453,7 +4488,7 @@ If the provided project does not exist, the list of events will be empty.",
         ],
       },
       "post": {
-        "operationId": "createApiToken",
+        "operationId": "createPublicSignupToken",
         "requestBody": {
           "content": {
             "application/json": {
@@ -4501,7 +4536,7 @@ If the provided project does not exist, the list of events will be empty.",
           },
         },
         "tags": [
-          "API tokens",
+          "Public signup tokens",
         ],
       },
       "get": {
@@ -4608,7 +4643,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/invite-link/tokens/{token}/validate": {
       "post": {
-        "operationId": "validateSignupToken",
+        "operationId": "validatePublicSignupToken",
         "parameters": [
           {
             "in": "path",
@@ -4628,7 +4663,7 @@ If the provided project does not exist, the list of events will be empty.",
           },
         },
         "tags": [
-          "API tokens",
+          "Public signup tokens",
         ],
       },
     },
@@ -6882,6 +6917,78 @@ If the provided project does not exist, the list of events will be empty.",
         },
         "tags": [
           "Users",
+        ],
+      },
+    },
+    "/api/admin/user/tokens": {
+      "get": {
+        "operationId": "getPats",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/patsSchema",
+                },
+              },
+            },
+            "description": "patsSchema",
+          },
+        },
+        "tags": [
+          "admin",
+        ],
+      },
+      "post": {
+        "operationId": "createPat",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/patSchema",
+              },
+            },
+          },
+          "description": "patSchema",
+          "required": true,
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/patSchema",
+                },
+              },
+            },
+            "description": "patSchema",
+          },
+        },
+        "tags": [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/user/tokens/{secret}": {
+      "delete": {
+        "operationId": "deletePat",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "secret",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": {
+          "200": {
+            "description": "This response has no body.",
+          },
+        },
+        "tags": [
+          "admin",
         ],
       },
     },

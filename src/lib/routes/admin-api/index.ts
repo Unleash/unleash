@@ -7,7 +7,7 @@ import StrategyController from './strategy';
 import EventController from './event';
 import PlaygroundController from './playground';
 import MetricsController from './metrics';
-import UserController from './user';
+import UserController from './user/user';
 import ConfigController from './config';
 import { ContextController } from './context';
 import ClientMetricsController from './client-metrics';
@@ -23,6 +23,7 @@ import UserSplashController from './user-splash';
 import ProjectApi from './project';
 import { EnvironmentsController } from './environments';
 import ConstraintsController from './constraints';
+import PatController from './user/pat';
 import { PublicSignupController } from './public-signup';
 import { conditionalMiddleware } from '../../middleware/conditional-middleware';
 
@@ -61,6 +62,10 @@ class AdminApi extends Controller {
             new ClientMetricsController(config, services).router,
         );
         this.app.use('/user', new UserController(config, services).router);
+        this.app.use(
+            '/user/tokens',
+            new PatController(config, services).router,
+        );
         this.app.use(
             '/ui-config',
             new ConfigController(config, services).router,

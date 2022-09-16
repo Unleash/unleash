@@ -76,6 +76,8 @@ export const SETTING_DELETED = 'setting-deleted';
 export const CLIENT_METRICS = 'client-metrics';
 export const CLIENT_REGISTER = 'client-register';
 
+export const PAT_CREATED = 'pat-created';
+
 export const PUBLIC_SIGNUP_TOKEN_CREATED = 'public-signup-token-created';
 export const PUBLIC_SIGNUP_TOKEN_USER_ADDED = 'public-signup-token-user-added';
 export const PUBLIC_SIGNUP_TOKEN_MANUALLY_EXPIRED =

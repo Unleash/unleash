@@ -51,7 +51,8 @@ test('the generated OpenAPI spec is valid', async () => {
         await SwaggerParser.validate(body);
     } catch (err) {
         console.error(err);
-        throw err;
+        // there's an error here, so let's exit after showing it in the console.
+        expect(true).toBe(false);
     }
 
     const [, enforcerError, enforcerWarning] = await enforcer(body, {

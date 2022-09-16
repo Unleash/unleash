@@ -17,7 +17,8 @@ Returns a list of _public signup tokens_
 {
   "tokens": [
     {
-      "secret": "ew395up3o39ncc9oew395up3o39ncc9o",
+      "secret": "ew395up3o39ncc9o",
+      "url": "http://localhost:4242/invite-link/ew395up3o39ncc9o/signup",
       "name": "shared",
       "expiresAt": "2022-09-15T09:09:09.194Z",
       "createdAt": "2022-08-15T09:09:09.194Z",
@@ -63,6 +64,75 @@ Creates a public signup token
   "expiresAt": "2022-09-15T09:09:09.194Z"
 }
 ```
+
+#### Return values: {#return-values}
+
+`200: Ok`
+
+```json
+{
+  "secret": "ew395up3o39ncc9o",
+  "url": "http://localhost:4242/invite-link/ew395up3o39ncc9o/signup",
+  "name": "shared",
+  "expiresAt": "2022-09-15T09:09:09.194Z",
+  "createdAt": "2022-08-15T09:09:09.194Z",
+  "createdBy": "Jack Doe",
+  "users": [
+    {
+      "id": 0,
+      "isAPI": true,
+      "name": "John Doe",
+      "email": "john@example.com",
+      "username": "BigJ",
+      "imageUrl": "https://gravatar.com/avatar/222f2ab70c039dda12e3d11acdcebd02?size=42&default=retro",
+      "inviteLink": "",
+      "loginAttempts": 0,
+      "emailSent": true,
+      "rootRole": 0,
+      "seenAt": "2022-09-15T09:09:09.194Z",
+      "createdAt": "2022-09-15T09:09:09.194Z"
+    }
+  ],
+  "role": {
+    "id": 0,
+    "type": "root",
+    "name": "Viewer",
+    "description": "Allows users to view"
+  }
+}
+```
+
+#### Return values: {#return-values}
+
+`201: Created`
+
+```json
+{
+  "secret": "ew395up3o39ncc9o",
+  "url": "http://localhost:4242/invite-link/ew395up3o39ncc9o/signup",
+  "name": "shared",
+  "expiresAt": "2022-09-15T09:09:09.194Z",
+  "createdAt": "2022-08-15T09:09:09.194Z",
+  "createdBy": "Jack Doe",
+  "users": [],
+  "role": {
+    "id": 0,
+    "type": "root",
+    "name": "Viewer",
+    "description": "Allows users to view"
+  }
+}
+```
+
+### Validate new public signup token {#create-public-signup-token}
+
+`POST https://unleash.host.com/api/admin/tokens/:token/validate`
+
+Validates a public signup token exists and has not expired
+
+#### Return values: {#return-values}
+
+`200: Ok` `401: Unauthorized`
 
 ### Add user {#add-user-to-token}
 
@@ -135,7 +205,7 @@ Updates an addon configuration.
 
 - `name` can not be changed.
 
-### Delete an addon configuration {#delete-public-signup-token}
+### Delete a public signup token {#delete-public-signup-token}
 
 `DELETE https://unleash.host.com/api/admin/invite-lint/tokens/:token`
 

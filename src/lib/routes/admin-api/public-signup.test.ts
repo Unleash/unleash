@@ -102,7 +102,7 @@ describe('Public Signup API', () => {
             createdBy: 'johnDoe',
         });
 
-        const req = request
+        return request
             .get('/api/admin/invite-link/tokens')
             .expect(200)
             .expect((res) => {
@@ -110,8 +110,6 @@ describe('Public Signup API', () => {
                 expect(tokens[0].name).toBe('some-name');
                 expect(tokens[0].createdBy).toBe('johnDoe');
             });
-        req.user = { username: 'johnDoe', name: 'John Doe' };
-        return req;
     });
 
     test('should get token', async () => {

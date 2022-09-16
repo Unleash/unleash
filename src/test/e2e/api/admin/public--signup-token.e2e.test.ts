@@ -17,18 +17,21 @@ jest.mock('../../../../lib/util/flag-resolver', () => {
     });
 });
 
-beforeAll(async () => {
+beforeEach(async () => {
     db = await dbInit('test', getLogger);
     stores = db.stores;
+});
+
+afterEach(async () => {
+    await stores.publicSignupTokenStore.deleteAll();
+    await stores.eventStore.deleteAll();
+    await stores.userStore.deleteAll();
 });
 
 afterAll(async () => {
     if (db) {
         await db.destroy();
     }
-});
-afterEach(async () => {
-    await stores.publicSignupTokenStore.deleteAll();
 });
 
 const expireAt = (addDays: number = 7): Date => {

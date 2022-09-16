@@ -195,7 +195,7 @@ export class PublicSignupController extends Controller {
         req: IAuthRequest,
         res: Response<PublicSignupTokensSchema>,
     ): Promise<void> {
-        const tokens = await this.publicSignupTokenService.getAllActiveTokens();
+        const tokens = await this.publicSignupTokenService.getAllTokens();
         this.openApiService.respondWithValidation(
             200,
             res,

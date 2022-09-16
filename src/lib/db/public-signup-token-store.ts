@@ -31,7 +31,8 @@ interface ITokenUserRow {
     created_at: Date;
 }
 const tokenRowReducer = (acc, tokenRow) => {
-    const { userId, name, ...token } = tokenRow;
+    const { userId, userName, userUsername, roleId, roleName, ...token } =
+        tokenRow;
     if (!acc[tokenRow.secret]) {
         acc[tokenRow.secret] = {
             secret: token.secret,
@@ -39,13 +40,20 @@ const tokenRowReducer = (acc, tokenRow) => {
             expiresAt: token.expires_at,
             createdAt: token.created_at,
             createdBy: token.created_by,
-            roleId: token.role_id,
+            role: {
+                id: roleId,
+                name: roleName,
+            },
             users: [],
         };
     }
     const currentToken = acc[tokenRow.secret];
     if (userId) {
-        currentToken.users.push({ userId, name });
+        currentToken.users.push({
+            id: userId,
+            name: userName,
+            username: userUsername,
+        });
     }
     return acc;
 };
@@ -97,15 +105,18 @@ export class PublicSignupTokenStore implements IPublicSignupTokenStore {
                 'token_project_users.secret',
             )
             .leftJoin(`users`, 'token_project_users.user_id', 'users.id')
+            .leftJoin(`roles`, 'tokens.role_id', 'roles.id')
             .select(
                 'tokens.secret',
                 'tokens.name',
                 'tokens.expires_at',
                 'tokens.created_at',
                 'tokens.created_by',
-                'tokens.role_id',
-                'token_project_users.user_id',
-                'users.name',
+                'token_project_users.user_id as userId',
+                'users.name as userName',
+                'users.username as userUsername',
+                'roles.id as roleId',
+                'roles.name as roleName',
             );
     }
 
@@ -137,9 +148,9 @@ export class PublicSignupTokenStore implements IPublicSignupTokenStore {
     ): Promise<PublicSignupTokenSchema> {
         const response = await this.db<ITokenRow>(TABLE).insert(
             toRow(newToken),
-            ['created_at'],
+            ['*'],
         );
-        return toTokens([response])[0];
+        return toTokens(response)[0];
     }
 
     async isValid(secret: string): Promise<boolean> {
@@ -163,14 +174,15 @@ export class PublicSignupTokenStore implements IPublicSignupTokenStore {
     }
 
     async get(key: string): Promise<PublicSignupTokenSchema> {
-        const row = await this.makeTokenUsersQuery()
-            .where('secret', key)
-            .first();
+        const rows = await this.makeTokenUsersQuery().where(
+            'tokens.secret',
+            key,
+        );
 
-        if (!row)
+        if (!rows)
             throw new NotFoundError('Could not find a token with that key');
 
-        return toTokens([row])[0];
+        return toTokens(rows)[0];
     }
 
     async delete(secret: string): Promise<void> {

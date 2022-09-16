@@ -77,6 +77,8 @@ export class PublicSignupTokenService {
         secret: string,
         createUser: ICreateUser,
     ): Promise<IUser> {
+        const token = await this.get(secret);
+        createUser.rootRole = token.role.id;
         const user = await this.userService.createUser(createUser);
         await this.store.addTokenUser(secret, user.id);
         await this.eventStore.store(

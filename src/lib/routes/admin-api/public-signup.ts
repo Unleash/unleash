@@ -10,7 +10,10 @@ import { OpenApiService } from '../../services/openapi-service';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import { serializeDates } from '../../types/serialize-dates';
-import { emptyResponse } from '../../openapi/util/standard-responses';
+import {
+    emptyResponse,
+    getStandardResponses,
+} from '../../openapi/util/standard-responses';
 import { PublicSignupTokenService } from '../../services/public-signup-token-service';
 import UserService from '../../services/user-service';
 import {
@@ -111,6 +114,7 @@ export class PublicSignupController extends Controller {
                     requestBody: createRequestSchema('createUserSchema'),
                     responses: {
                         200: createResponseSchema('userSchema'),
+                        ...getStandardResponses(409),
                     },
                 }),
             ],
@@ -233,7 +237,6 @@ export class PublicSignupController extends Controller {
             token,
             req.body,
         );
-
         this.openApiService.respondWithValidation(
             201,
             res,
@@ -255,7 +258,7 @@ export class PublicSignupController extends Controller {
         this.openApiService.respondWithValidation(
             201,
             res,
-            publicSignupTokensSchema.$id,
+            publicSignupTokenSchema.$id,
             serializeDates(token),
         );
     }

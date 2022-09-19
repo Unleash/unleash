@@ -42,6 +42,17 @@ test('should serve the OpenAPI spec', async () => {
         });
 });
 
+test('should serve the OpenAPI spec with a `version` property', async () => {
+    return app.request
+        .get('/docs/openapi.json')
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect((res) => {
+            // ensure that the version field is present
+            expect(res.body.info.version).toBeTruthy();
+        });
+});
+
 test('the generated OpenAPI spec is valid', async () => {
     const { body } = await app.request
         .get('/docs/openapi.json')

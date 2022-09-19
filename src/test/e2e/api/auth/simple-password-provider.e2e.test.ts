@@ -77,7 +77,7 @@ test('Can log in', async () => {
 });
 
 test('Gets rate limited after 5 tries', async () => {
-    for (let statusCode of [200, 200, 200, 200, 429]) {
+    for (let statusCode of [200, 200, 200, 200, 200, 429]) {
         await app.request
             .post('/auth/simple/login')
             .send({

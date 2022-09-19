@@ -11,7 +11,7 @@
     "build": "docusaurus gen-api-docs all && docusaurus build",
     "swizzle": "docusaurus swizzle",
     "generate": "docusaurus gen-api-docs all",
-    "deploy": "docusaurus deploy",
+    "deploy": "docusaurus gen-api-docs all && docusaurus deploy",
     "clear": "docusaurus clear",
     "serve": "docusaurus serve",
     "write-translations": "docusaurus write-translations",

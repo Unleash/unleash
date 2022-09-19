@@ -32,6 +32,7 @@ test('should serve the OpenAPI spec', async () => {
         .expect((res) => {
             // This test will fail whenever there's a change to the API spec.
             // If the change is intended, update the snapshot with `jest -u`.
+            delete res.body.info.version;
             expect(res.body).toMatchSnapshot();
         });
 });

@@ -3316,7 +3316,7 @@ exports[`should serve the OpenAPI spec 1`] = `
   },
   "info": {
     "title": "Unleash API",
-    "version": "4.15.1",
+    "version": "4.15.3",
   },
   "openapi": "3.0.3",
   "paths": {

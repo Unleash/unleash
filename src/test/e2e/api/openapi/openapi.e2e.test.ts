@@ -33,8 +33,9 @@ test('should serve the OpenAPI spec', async () => {
         .expect((res) => {
             // Don't use the version field in snapshot tests. Having the version
             // listed in automated testing causes issues when trying to deploy
-            // new versions of the API (dueto mismatch between new tag versions etc).
+            // new versions of the API (due to mismatch between new tag versions etc).
             delete res.body.info.version;
+
             // This test will fail whenever there's a change to the API spec.
             // If the change is intended, update the snapshot with `jest -u`.
             expect(res.body).toMatchSnapshot();

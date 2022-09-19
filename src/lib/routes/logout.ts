@@ -49,6 +49,11 @@ class LogoutController extends Controller {
         }
 
         if (req.session) {
+            if (req.session.user?.id) {
+                await this.sessionService.deleteSessionsForUser(
+                    req.session.user.id,
+                );
+            }
             req.session.destroy();
         }
         res.clearCookie(this.cookieName);
@@ -56,7 +61,9 @@ class LogoutController extends Controller {
         if (this.clearSiteDataOnLogout) {
             res.set('Clear-Site-Data', '"cookies", "storage"');
         }
-        await this.sessionService.deleteSessionsForUser(req.user.id);
+        if (req.user?.id) {
+            await this.sessionService.deleteSessionsForUser(req.user.id);
+        }
         res.redirect(`${this.baseUri}/`);
     }
 

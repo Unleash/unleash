@@ -190,28 +190,26 @@ module.exports = {
                 },
             },
         ],
-        // NOTE: activate this when we sort out the enterprise / open
-        // source API situation
-        //
-        // [
-        //     'docusaurus-plugin-openapi-docs',
-        //     {
-        //         id: 'api-operations',
-        //         docsPluginId: 'classic',
-        //         config: {
-        //             server: {
-        //                 specPath: process.env.NODE_ENV === 'development'  ?
-        //                     'http://localhost:4242/docs/openapi.json'
-        //                     : './openapi-spec.generated.json',
-        //                 outputDir: 'docs/reference/apis/unleash',
-        //                 sidebarOptions: {
-        //                     groupPathsBy: 'tag',
-        //                     categoryLinkSource: 'tag',
-        //                 },
-        //             },
-        //         },
-        //     },
-        // ],
+        [
+            'docusaurus-plugin-openapi-docs',
+            {
+                id: 'api-operations',
+                docsPluginId: 'classic',
+                config: {
+                    server: {
+                        specPath:
+                            process.env.NODE_ENV === 'development'
+                                ? 'http://localhost:4242/docs/openapi.json'
+                                : 'https://us.app.unleash-hosted.com/ushosted/docs/openapi.json',
+                        outputDir: 'docs/reference/api/unleash',
+                        sidebarOptions: {
+                            groupPathsBy: 'tag',
+                            categoryLinkSource: 'tag',
+                        },
+                    },
+                },
+            },
+        ],
     ],
     themes: ['docusaurus-theme-openapi-docs'], // Allows use of @theme/ApiItem and other components
 };

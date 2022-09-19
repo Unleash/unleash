@@ -191,7 +191,7 @@ module.exports = {
                         specPath:
                             process.env.NODE_ENV === 'development'
                                 ? 'http://localhost:4242/docs/openapi.json'
-                                : './openapi-spec.generated.json',
+                                : 'https://us.app.unleash-hosted.com/ushosted/docs/openapi.json',
                         outputDir: 'docs/reference/apis/unleash',
                         sidebarOptions: {
                             groupPathsBy: 'tag',

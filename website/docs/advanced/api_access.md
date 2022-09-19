@@ -27,7 +27,7 @@ curl -X POST -H "Content-Type: application/json" \
      https://app.unleash-hosted.com/demo/api/admin/features/Demo/toggle/on
 ```
 
-**Great success!** We have now enabled the feature toggle. We can also verify that it was actually changed by the API user by navigating to the history (audit log) for this feature toggle.
+**Great success!** We have now enabled the feature toggle. We can also verify that it was actually changed by the API user by navigating to the Event log (history) for this feature toggle.
 
 ![A feature toggle's event log showing that it was last updated by \"admin-api\".](/img/api_access_history.png)
 

@@ -190,7 +190,7 @@ module.exports = {
                 },
                 {
                     type: 'category',
-                    label: 'Client SDKs',
+                    label: 'Application SDKs',
                     link: { type: 'doc', id: 'sdks/index' },
                     items: [
                         {
@@ -280,13 +280,14 @@ module.exports = {
                         'user_guide/activation_strategy',
                         'reference/api-tokens-and-client-keys',
                         'advanced/archived_toggles',
-                        'advanced/audit_log',
+                        'reference/event-log',
                         'advanced/impression-data',
                         'advanced/custom_activation_strategy',
                         'user_guide/environments',
                         'reference/feature-toggles',
                         'advanced/feature_toggle_types',
                         'advanced/toggle_variants',
+                        'reference/front-end-api',
                         'reference/playground',
                         'user_guide/projects',
                         'user_guide/rbac',

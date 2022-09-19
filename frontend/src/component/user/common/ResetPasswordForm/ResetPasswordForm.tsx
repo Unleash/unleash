@@ -74,7 +74,7 @@ const ResetPasswordForm = ({ token, setLoading }: IResetPasswordProps) => {
             const res = await makeResetPasswordReq();
             setLoading(false);
             if (res.status === OK) {
-                navigate('login?reset=true');
+                navigate('/login?reset=true');
                 setApiError(false);
             } else {
                 setApiError(true);

@@ -1649,6 +1649,29 @@ exports[`should serve the OpenAPI spec 1`] = `
         ],
         "type": "object",
       },
+      "patSchema": {
+        "properties": {
+          "createdAt": {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string",
+          },
+          "expiresAt": {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string",
+          },
+          "secret": {
+            "type": "string",
+          },
+          "seenAt": {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string",
+          },
+        },
+        "type": "object",
+      },
       "patchSchema": {
         "properties": {
           "from": {
@@ -1680,6 +1703,17 @@ exports[`should serve the OpenAPI spec 1`] = `
           "$ref": "#/components/schemas/patchSchema",
         },
         "type": "array",
+      },
+      "patsSchema": {
+        "properties": {
+          "pats": {
+            "items": {
+              "$ref": "#/components/schemas/patSchema",
+            },
+            "type": "array",
+          },
+        },
+        "type": "object",
       },
       "permissionSchema": {
         "additionalProperties": false,
@@ -2350,6 +2384,93 @@ exports[`should serve the OpenAPI spec 1`] = `
           "appName",
           "instanceId",
           "bucket",
+        ],
+        "type": "object",
+      },
+      "publicSignupTokenCreateSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "expiresAt": {
+            "format": "date-time",
+            "type": "string",
+          },
+          "name": {
+            "type": "string",
+          },
+        },
+        "required": [
+          "name",
+          "expiresAt",
+        ],
+        "type": "object",
+      },
+      "publicSignupTokenSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+          },
+          "createdBy": {
+            "nullable": true,
+            "type": "string",
+          },
+          "expiresAt": {
+            "format": "date-time",
+            "type": "string",
+          },
+          "name": {
+            "type": "string",
+          },
+          "role": {
+            "$ref": "#/components/schemas/roleSchema",
+          },
+          "secret": {
+            "type": "string",
+          },
+          "users": {
+            "items": {
+              "$ref": "#/components/schemas/userSchema",
+            },
+            "nullable": true,
+            "type": "array",
+          },
+        },
+        "required": [
+          "secret",
+          "name",
+          "expiresAt",
+          "createdAt",
+          "createdBy",
+          "role",
+        ],
+        "type": "object",
+      },
+      "publicSignupTokenUpdateSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "expiresAt": {
+            "format": "date-time",
+            "type": "string",
+          },
+        },
+        "required": [
+          "expiresAt",
+        ],
+        "type": "object",
+      },
+      "publicSignupTokensSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "tokens": {
+            "items": {
+              "$ref": "#/components/schemas/publicSignupTokenSchema",
+            },
+            "type": "array",
+          },
+        },
+        "required": [
+          "tokens",
         ],
         "type": "object",
       },
@@ -3169,18 +3290,16 @@ exports[`should serve the OpenAPI spec 1`] = `
         "additionalProperties": false,
         "properties": {
           "tokens": {
-            "anyOf": [
-              {
-                "items": {
+            "items": {
+              "anyOf": [
+                {
                   "$ref": "#/components/schemas/edgeTokenSchema",
                 },
-              },
-              {
-                "items": {
+                {
                   "type": "string",
                 },
-              },
-            ],
+              ],
+            },
             "type": "array",
           },
         },
@@ -4345,6 +4464,205 @@ If the provided project does not exist, the list of events will be empty.",
         },
         "tags": [
           "Admin UI",
+        ],
+      },
+    },
+    "/api/admin/invite-link/tokens": {
+      "get": {
+        "operationId": "getAllPublicSignupTokens",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/publicSignupTokenSchema",
+                },
+              },
+            },
+            "description": "publicSignupTokenSchema",
+          },
+        },
+        "tags": [
+          "Public signup tokens",
+        ],
+      },
+      "post": {
+        "operationId": "createPublicSignupToken",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/publicSignupTokenCreateSchema",
+              },
+            },
+          },
+          "description": "publicSignupTokenCreateSchema",
+          "required": true,
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/publicSignupTokenSchema",
+                },
+              },
+            },
+            "description": "publicSignupTokenSchema",
+          },
+        },
+        "tags": [
+          "Public signup tokens",
+        ],
+      },
+    },
+    "/api/admin/invite-link/tokens/{token}": {
+      "delete": {
+        "operationId": "deletePublicSignupToken",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "token",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": {
+          "200": {
+            "description": "This response has no body.",
+          },
+        },
+        "tags": [
+          "Public signup tokens",
+        ],
+      },
+      "get": {
+        "operationId": "getPublicSignupToken",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "token",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/publicSignupTokenSchema",
+                },
+              },
+            },
+            "description": "publicSignupTokenSchema",
+          },
+        },
+        "tags": [
+          "Public signup tokens",
+        ],
+      },
+      "put": {
+        "operationId": "updatePublicSignupToken",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "token",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/publicSignupTokenUpdateSchema",
+              },
+            },
+          },
+          "description": "publicSignupTokenUpdateSchema",
+          "required": true,
+        },
+        "responses": {
+          "200": {
+            "description": "This response has no body.",
+          },
+        },
+        "tags": [
+          "Public signup tokens",
+        ],
+      },
+    },
+    "/api/admin/invite-link/tokens/{token}/signup": {
+      "post": {
+        "operationId": "addPublicSignupTokenUser",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "token",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/createUserSchema",
+              },
+            },
+          },
+          "description": "createUserSchema",
+          "required": true,
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/userSchema",
+                },
+              },
+            },
+            "description": "userSchema",
+          },
+        },
+        "tags": [
+          "Public signup tokens",
+        ],
+      },
+    },
+    "/api/admin/invite-link/tokens/{token}/validate": {
+      "post": {
+        "operationId": "validatePublicSignupToken",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "token",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": {
+          "200": {
+            "description": "This response has no body.",
+          },
+          "401": {
+            "description": "This response has no body.",
+          },
+        },
+        "tags": [
+          "Public signup tokens",
         ],
       },
     },
@@ -6601,6 +6919,78 @@ If the provided project does not exist, the list of events will be empty.",
         ],
       },
     },
+    "/api/admin/user/tokens": {
+      "get": {
+        "operationId": "getPats",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/patsSchema",
+                },
+              },
+            },
+            "description": "patsSchema",
+          },
+        },
+        "tags": [
+          "admin",
+        ],
+      },
+      "post": {
+        "operationId": "createPat",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/patSchema",
+              },
+            },
+          },
+          "description": "patSchema",
+          "required": true,
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/patSchema",
+                },
+              },
+            },
+            "description": "patSchema",
+          },
+        },
+        "tags": [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/user/tokens/{secret}": {
+      "delete": {
+        "operationId": "deletePat",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "secret",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": {
+          "200": {
+            "description": "This response has no body.",
+          },
+        },
+        "tags": [
+          "admin",
+        ],
+      },
+    },
     "/api/client/features": {
       "get": {
         "operationId": "getAllClientFeatures",
@@ -7029,6 +7419,10 @@ If the provided project does not exist, the list of events will be empty.",
     {
       "description": "Create, update, and delete [Unleash projects](https://docs.getunleash.io/user_guide/projects).",
       "name": "Projects",
+    },
+    {
+      "description": "Create, update, and delete [Unleash Public Signup tokens](https://docs.getunleash.io/reference/public-signup-tokens).",
+      "name": "Public signup tokens",
     },
     {
       "description": "Create, update, delete, manage [custom strategies](https://docs.getunleash.io/advanced/custom_activation_strategy).",

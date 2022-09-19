@@ -1,8 +1,7 @@
 import { BackstageController } from './backstage';
 import ResetPasswordController from './auth/reset-password-controller';
 import { SimplePasswordProvider } from './auth/simple-password-provider';
-import { IUnleashConfig } from '../types/option';
-import { IUnleashServices } from '../types/services';
+import { IUnleashConfig, IUnleashServices } from '../types';
 import LogoutController from './logout';
 
 const AdminApi = require('./admin-api');
@@ -28,6 +27,7 @@ class IndexRouter extends Controller {
             '/auth/reset',
             new ResetPasswordController(config, services).router,
         );
+
         this.use('/api/admin', new AdminApi(config, services).router);
         this.use('/api/client', new ClientApi(config, services).router);
 

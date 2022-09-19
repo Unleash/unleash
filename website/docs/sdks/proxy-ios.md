@@ -3,7 +3,7 @@ id: proxy-ios
 title: iOS Proxy SDK
 ---
 
-In this guide we explain how to use feature toggles in Swift applications via [The Unleash Proxy](./unleash-proxy). You can also checkout the source code for the [iOS Proxy SDK](https://github.com/Unleash/unleash-proxy-client-swift).
+In this guide we explain how to use feature toggles in Swift applications via the [Unleash Proxy](./unleash-proxy.md). You can also check out the [source code for the iOS Proxy SDK](https://github.com/Unleash/unleash-proxy-client-swift).
 
 ## Introduction {#introduction}
 

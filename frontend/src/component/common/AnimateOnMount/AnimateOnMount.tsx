@@ -5,7 +5,7 @@ interface IAnimateOnMountProps {
     mounted: boolean;
     enter: string;
     start: string;
-    leave: string;
+    leave?: string;
     container?: string;
     style?: React.CSSProperties;
     onStart?: () => void;
@@ -39,7 +39,7 @@ const AnimateOnMount: FC<IAnimateOnMountProps> = ({
                 if (!leave) {
                     setShow(false);
                 }
-                setStyles(leave);
+                setStyles(leave || '');
             }
         }
     }, [mounted, enter, onStart, leave]);

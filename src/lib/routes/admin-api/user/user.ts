@@ -1,21 +1,21 @@
 import { Response } from 'express';
-import { IAuthRequest } from '../unleash-types';
-import Controller from '../controller';
-import { AccessService } from '../../services/access-service';
-import { IAuthType, IUnleashConfig } from '../../types/option';
-import { IUnleashServices } from '../../types/services';
-import UserService from '../../services/user-service';
-import UserFeedbackService from '../../services/user-feedback-service';
-import UserSplashService from '../../services/user-splash-service';
-import { ADMIN, NONE } from '../../types/permissions';
-import { OpenApiService } from '../../services/openapi-service';
-import { createRequestSchema } from '../../openapi/util/create-request-schema';
-import { createResponseSchema } from '../../openapi/util/create-response-schema';
-import { meSchema, MeSchema } from '../../openapi/spec/me-schema';
-import { serializeDates } from '../../types/serialize-dates';
-import { IUserPermission } from '../../types/stores/access-store';
-import { PasswordSchema } from '../../openapi/spec/password-schema';
-import { emptyResponse } from '../../openapi/util/standard-responses';
+import { IAuthRequest } from '../../unleash-types';
+import Controller from '../../controller';
+import { AccessService } from '../../../services/access-service';
+import { IAuthType, IUnleashConfig } from '../../../types/option';
+import { IUnleashServices } from '../../../types/services';
+import UserService from '../../../services/user-service';
+import UserFeedbackService from '../../../services/user-feedback-service';
+import UserSplashService from '../../../services/user-splash-service';
+import { ADMIN, NONE } from '../../../types/permissions';
+import { OpenApiService } from '../../../services/openapi-service';
+import { createRequestSchema } from '../../../openapi/util/create-request-schema';
+import { createResponseSchema } from '../../../openapi/util/create-response-schema';
+import { meSchema, MeSchema } from '../../../openapi/spec/me-schema';
+import { serializeDates } from '../../../types/serialize-dates';
+import { IUserPermission } from '../../../types/stores/access-store';
+import { PasswordSchema } from '../../../openapi/spec/password-schema';
+import { emptyResponse } from '../../../openapi/util/standard-responses';
 
 class UserController extends Controller {
     private accessService: AccessService;

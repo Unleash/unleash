@@ -3,6 +3,8 @@ import { promisify } from 'util';
 import { IUnleashConfig } from '../types/option';
 import Controller from './controller';
 import { IAuthRequest } from './unleash-types';
+import { IUnleashServices } from '../types';
+import SessionService from '../services/session-service';
 
 class LogoutController extends Controller {
     private clearSiteDataOnLogout: boolean;
@@ -11,8 +13,14 @@ class LogoutController extends Controller {
 
     private baseUri: string;
 
-    constructor(config: IUnleashConfig) {
+    private sessionService: SessionService;
+
+    constructor(
+        config: IUnleashConfig,
+        { sessionService }: Pick<IUnleashServices, 'sessionService'>,
+    ) {
         super(config);
+        this.sessionService = sessionService;
         this.baseUri = config.server.baseUriPath;
         this.clearSiteDataOnLogout = config.session.clearSiteDataOnLogout;
         this.cookieName = config.session.cookieName;
@@ -48,7 +56,7 @@ class LogoutController extends Controller {
         if (this.clearSiteDataOnLogout) {
             res.set('Clear-Site-Data', '"cookies", "storage"');
         }
-
+        await this.sessionService.deleteSessionsForUser(req.user.id);
         res.redirect(`${this.baseUri}/`);
     }
 

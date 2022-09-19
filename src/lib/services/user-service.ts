@@ -340,14 +340,15 @@ class UserService {
                 throw e;
             }
         }
-        this.store.successfullyLogin(user);
+        await this.store.successfullyLogin(user);
         return user;
     }
 
     async changePassword(userId: number, password: string): Promise<void> {
         this.validatePassword(password);
         const passwordHash = await bcrypt.hash(password, saltRounds);
-        return this.store.setPasswordHash(userId, passwordHash);
+        await this.store.setPasswordHash(userId, passwordHash);
+        await this.sessionService.deleteSessionsForUser(userId);
     }
 
     async getUserForToken(token: string): Promise<TokenUserSchema> {

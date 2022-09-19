@@ -18,7 +18,7 @@ class IndexRouter extends Controller {
 
         this.use('/health', new HealthCheckController(config, services).router);
         this.use('/internal-backstage', new BackstageController(config).router);
-        this.use('/logout', new LogoutController(config).router);
+        this.use('/logout', new LogoutController(config, services).router);
         this.use(
             '/auth/simple',
             new SimplePasswordProvider(config, services).router,

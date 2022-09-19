@@ -201,7 +201,7 @@ module.exports = {
                             process.env.NODE_ENV === 'development'
                                 ? 'http://localhost:4242/docs/openapi.json'
                                 : 'https://us.app.unleash-hosted.com/ushosted/docs/openapi.json',
-                        outputDir: 'docs/reference/apis/unleash',
+                        outputDir: 'docs/reference/api/unleash',
                         sidebarOptions: {
                             groupPathsBy: 'tag',
                             categoryLinkSource: 'tag',

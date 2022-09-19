@@ -30,6 +30,12 @@ test('should serve the OpenAPI spec', async () => {
         .expect('Content-Type', /json/)
         .expect(200)
         .expect((res) => {
+            // remove the version from the received specification. The version
+            // _is_ a required field, but having the version listed in automated
+            // testing causes issues when trying to deploy new versions of the
+            // API (due to mismatch between new tag versions etc). That's why we
+            // remove it.
+            delete res.body.info.version;
             // This test will fail whenever there's a change to the API spec.
             // If the change is intended, update the snapshot with `jest -u`.
             expect(res.body).toMatchSnapshot();

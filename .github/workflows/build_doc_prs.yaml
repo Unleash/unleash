@@ -17,4 +17,4 @@ jobs:
           UNLEASH_PROXY_URL: ${{ secrets.UNLEASH_PROXY_URL_DEVELOPMENT }}
         run: |
           # Build the site
-          cd website && yarn && yarn generate && yarn build
+          cd website && yarn && yarn build

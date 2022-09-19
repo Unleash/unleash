@@ -8,7 +8,7 @@
   "scripts": {
     "docusaurus": "docusaurus",
     "start": "docusaurus start",
-    "build": "docusaurus build",
+    "build": "docusaurus gen-api-docs all && docusaurus build",
     "swizzle": "docusaurus swizzle",
     "generate": "docusaurus gen-api-docs all",
     "deploy": "docusaurus deploy",

@@ -2,6 +2,7 @@ import { setupApp } from '../../helpers/test-helper';
 import dbInit from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import SwaggerParser from '@apidevtools/swagger-parser';
+import semver from 'semver';
 
 let app;
 let db;
@@ -30,11 +31,9 @@ test('should serve the OpenAPI spec', async () => {
         .expect('Content-Type', /json/)
         .expect(200)
         .expect((res) => {
-            // remove the version from the received specification. The version
-            // _is_ a required field, but having the version listed in automated
-            // testing causes issues when trying to deploy new versions of the
-            // API (due to mismatch between new tag versions etc). That's why we
-            // remove it.
+            // Don't use the version field in snapshot tests. Having the version
+            // listed in automated testing causes issues when trying to deploy
+            // new versions of the API (dueto mismatch between new tag versions etc).
             delete res.body.info.version;
             // This test will fail whenever there's a change to the API spec.
             // If the change is intended, update the snapshot with `jest -u`.
@@ -48,8 +47,12 @@ test('should serve the OpenAPI spec with a `version` property', async () => {
         .expect('Content-Type', /json/)
         .expect(200)
         .expect((res) => {
-            // ensure that the version field is present
-            expect(res.body.info.version).toBeTruthy();
+            const { version } = res.body.info;
+            // ensure there's no whitespace or leading `v`
+            expect(semver.clean(version)).toStrictEqual(version);
+
+            // ensure the version listed is valid semver
+            expect(semver.parse(version, { loose: false })).toBeTruthy();
         });
 });
 

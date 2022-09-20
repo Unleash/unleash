@@ -24,7 +24,7 @@ const options = {
         '"https://us.app.unleash-hosted.com"',
         '"path":["ushosted","api"',
     ],
-    to: ['/api', '"<your-unleash-instance-url>"', '"path":["api"'],
+    to: ['/api', '"<your-unleash-url>"', '"path":["api"'],
 };
 
 replace(options);

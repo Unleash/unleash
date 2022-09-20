@@ -20,11 +20,11 @@ const replace = require('replace-in-file');
 const options = {
     files: 'docs/reference/api/**/*.api.mdx',
     from: [
-        /\/ushosted\/api/,
+        /\/ushosted/,
         '"https://us.app.unleash-hosted.com"',
         '"path":["ushosted","api"',
     ],
-    to: ['/api', '"<your-unleash-url>"', '"path":["api"'],
+    to: ['', '"<your-unleash-url>"', '"path":["api"'],
 };
 
 replace(options);

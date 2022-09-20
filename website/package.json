@@ -8,10 +8,10 @@
   "scripts": {
     "docusaurus": "docusaurus",
     "start": "docusaurus start",
-    "build": "docusaurus gen-api-docs all && docusaurus build",
+    "build": "yarn generate && docusaurus build",
     "swizzle": "docusaurus swizzle",
     "generate": "docusaurus gen-api-docs all && node clean-generated-docs.js",
-    "deploy": "docusaurus gen-api-docs all && docusaurus deploy",
+    "deploy": "yarn generate && docusaurus deploy",
     "clear": "docusaurus clear",
     "serve": "docusaurus serve",
     "write-translations": "docusaurus write-translations",

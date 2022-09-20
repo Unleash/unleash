@@ -45,13 +45,22 @@ describe('createOpenApiSchema', () => {
         ).toEqual('https://example.com');
     });
 
-    test('if baseurl is set strips from serverUrl', () => {
+    test('does not strip baseUri from serverUrl', () => {
         expect(
             createOpenApiSchema({
                 unleashUrl: 'https://example.com/demo2',
                 baseUriPath: '/demo2',
             }).servers[0].url,
-        ).toEqual('https://example.com');
+        ).toEqual('https://example.com/demo2');
+    });
+
+    test('adds baseurl serverUrl if it is not already there', () => {
+        expect(
+            createOpenApiSchema({
+                unleashUrl: 'https://example.com',
+                baseUriPath: '/demo2',
+            }).servers[0].url,
+        ).toEqual('https://example.com/demo2');
     });
 
     test('if baseurl does not end with suffix, cowardly refuses to strip', () => {
@@ -74,6 +83,12 @@ describe('createOpenApiSchema', () => {
             createOpenApiSchema({
                 unleashUrl: 'https://example.com/example/',
                 baseUriPath: '/example',
+            }).servers[0].url,
+        ).toEqual('https://example.com');
+        expect(
+            createOpenApiSchema({
+                unleashUrl: 'https://example.com/example/',
+                baseUriPath: '/example/',
             }).servers[0].url,
         ).toEqual('https://example.com');
     });

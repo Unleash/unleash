@@ -266,11 +266,12 @@ const findRootUrl: (unleashUrl: string, baseUriPath: string) => string = (
     if (!baseUriPath) {
         return unleashUrl;
     }
+
     const baseUrl = new URL(unleashUrl);
     if (baseUrl.pathname.indexOf(baseUriPath) >= 0) {
         return `${baseUrl.protocol}//${baseUrl.host}`;
     }
-    return baseUrl.toString();
+    return new URL(baseUriPath, unleashUrl).toString();
 };
 
 export const createOpenApiSchema = ({

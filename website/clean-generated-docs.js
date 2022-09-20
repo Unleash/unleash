@@ -22,9 +22,9 @@ const options = {
     from: [
         /\/ushosted/g,
         /"https:\/\/us.app.unleash-hosted.com(\/ushosted)?"/g,
-        '"path":["ushosted","api"',
+        '"path":["ushosted",',
     ],
-    to: ['', '"<your-unleash-url>"', '"path":["api"'],
+    to: ['', '"<your-unleash-url>"', '"path":['],
 };
 
 replace(options);

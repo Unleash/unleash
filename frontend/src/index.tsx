@@ -12,6 +12,7 @@ import { basePath } from 'utils/formatPath';
 import { FeedbackCESProvider } from 'component/feedback/FeedbackCESContext/FeedbackCESProvider';
 import { AnnouncerProvider } from 'component/common/Announcer/AnnouncerProvider/AnnouncerProvider';
 import { InstanceStatus } from 'component/common/InstanceStatus/InstanceStatus';
+import { NetworkStatus } from 'component/common/NetworkStatus/NetworkStatus';
 import { UIProviderContainer } from 'component/providers/UIProvider/UIProviderContainer';
 
 ReactDOM.render(
@@ -22,6 +23,7 @@ ReactDOM.render(
                     <AnnouncerProvider>
                         <FeedbackCESProvider>
                             <InstanceStatus>
+                                <NetworkStatus />
                                 <ScrollTop />
                                 <App />
                             </InstanceStatus>

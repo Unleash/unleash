@@ -76,6 +76,7 @@
     "react-chartjs-2": "4.3.1",
     "react-dom": "17.0.2",
     "react-hooks-global-state": "2.0.0",
+    "react-mermaid2": "^0.1.4",
     "react-router-dom": "6.3.0",
     "react-table": "7.8.0",
     "react-test-renderer": "17.0.2",

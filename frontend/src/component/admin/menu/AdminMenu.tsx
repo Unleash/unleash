@@ -150,6 +150,19 @@ function AdminMenu() {
                         }
                     />
                 )}
+                <Tab
+                    value="/admin/network"
+                    label={
+                        <NavLink
+                            to="/admin/network"
+                            style={({ isActive }) =>
+                                createNavLinkStyle({ isActive, theme })
+                            }
+                        >
+                            Network
+                        </NavLink>
+                    }
+                />
             </Tabs>
         </Paper>
     );

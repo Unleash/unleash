@@ -52,6 +52,7 @@ import { SegmentTable } from 'component/segments/SegmentTable/SegmentTable';
 import FlaggedBillingRedirect from 'component/admin/billing/FlaggedBillingRedirect/FlaggedBillingRedirect';
 import { FeaturesArchiveTable } from '../archive/FeaturesArchiveTable';
 import { Billing } from 'component/admin/billing/Billing';
+import { Network } from 'component/admin/network/Network';
 import { Group } from 'component/admin/groups/Group/Group';
 import { CreateGroup } from 'component/admin/groups/CreateGroup/CreateGroup';
 import { EditGroup } from 'component/admin/groups/EditGroup/EditGroup';
@@ -506,6 +507,14 @@ export const routes: IRoute[] = [
         component: Billing,
         type: 'protected',
         menu: {},
+    },
+    {
+        path: '/admin/network',
+        parent: '/admin',
+        title: 'Network',
+        component: Network,
+        type: 'protected',
+        menu: { adminSettings: true },
     },
     {
         path: '/admin-invoices',

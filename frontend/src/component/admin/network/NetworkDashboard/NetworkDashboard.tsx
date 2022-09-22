@@ -32,12 +32,7 @@ interface IEdgeStatus {
     status: statusCode;
 }
 
-interface IUnleashStatus {
-    status: statusCode;
-}
-
 interface INetworkStatus {
-    unleash: IUnleashStatus;
     clients: IClientStatus[];
     edges: IEdgeStatus[];
 }
@@ -51,7 +46,7 @@ const buildGraph = (status: INetworkStatus): string => {
 
     status.clients.forEach(client => {
         graph.push(
-            `client${client.id}(("${client.appName}")):::${client.status}`
+            `client${client.id}(("${client.appName}"<br />${client.status})):::${client.status}`
         );
         graph.push(`--${client.sdk}-->edge${client.edgeConnection}`);
     });
@@ -62,7 +57,7 @@ const buildGraph = (status: INetworkStatus): string => {
                 edge.status
             }<br />${getDateString(edge.lastFetch)}):::${edge.status}`
         );
-        graph.push(`-->unleash{{Unleash<br />${status.unleash.status}}}`);
+        graph.push(`-->unleash{{Unleash}}`);
     });
 
     graph.push('classDef OK fill:#00bfa5,stroke:#00bfa5,stroke-width:1px');
@@ -77,9 +72,6 @@ export const NetworkDashboard: FC<INetworkDashboardProps> = ({
 }) => {
     // TODO: Grab this from something like instanceStatus?
     const mockNetworkStatus: INetworkStatus = {
-        unleash: {
-            status: 'OK',
-        },
         clients: [
             {
                 id: 'app-1',

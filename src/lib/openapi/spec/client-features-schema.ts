@@ -14,6 +14,9 @@ export const clientFeaturesSchema = {
     type: 'object',
     required: ['version', 'features'],
     properties: {
+        backOff: {
+            type: 'number',
+        },
         version: {
             type: 'number',
         },

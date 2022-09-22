@@ -1,21 +1,16 @@
-datefns;
-
 export default class RequestCounter {
     private requestCache: Object;
     private longTermCache: Object;
     private interval: number;
 
     constructor() {
-        this.requestCache = {};
+        this.requestCache = this.createBucket();
         this.longTermCache = [];
 
         this.interval = setInterval(() => {
             this.requestCache.endTime = new Date();
 
-            const longTermCacheObject = {
-                ...this.requestCache,
-                rps: this.calculateRPS(),
-            };
+            const longTermCacheObject = this.calculateRPS(this.requestCache);
 
             this.longTermCache.push(longTermCacheObject);
 
@@ -25,23 +20,36 @@ export default class RequestCounter {
 
     createBucket = () => {
         const bucket = {
-            count: 0,
+            apps: {},
             startTime: new Date(),
             endTime: null,
         };
         return bucket;
     };
 
-    recordRequest = (appName: string): Promise<void> => {
-        if (this.requestCache[appName]) {
-            this.requestCache[count] += 1;
+    recordRequest = (appName: string): void => {
+        if (this.requestCache['apps'][appName]) {
+            this.requestCache['apps'][appName].count += 1;
         } else {
-            this.requestCache[appName] = { count: 1 };
+            this.requestCache['apps'][appName] = { count: 1 };
         }
     };
 
-    calculateRPS = () => {
-        const { count } = this.requestCache;
-        return count / 300;
+    getBuckets = (): Object => {
+        return this.longTermCache;
+    };
+
+    calculateRPS = (requestCache: Object) => {
+        Object.keys(requestCache.apps).forEach((appName) => {
+            const app = requestCache.apps[appName];
+            const rps = app.count / 300;
+            app.rps = rps;
+        });
+
+        return requestCache;
+    };
+
+    isRPSOverTresholdForApp = (appName: string) => {
+        return true;
     };
 }

@@ -25,6 +25,7 @@ import {
     clientFeaturesSchema,
     ClientFeaturesSchema,
 } from '../../openapi/spec/client-features-schema';
+import RequestCounter from './request-counter';
 
 const version = 2;
 
@@ -45,6 +46,8 @@ export default class FeatureController extends Controller {
     private openApiService: OpenApiService;
 
     private readonly cache: boolean;
+
+    private requestCounter: RequestCounter;
 
     private cachedFeatures: any;
 
@@ -70,6 +73,7 @@ export default class FeatureController extends Controller {
         this.clientSpecService = clientSpecService;
         this.openApiService = openApiService;
         this.logger = config.getLogger('client-api/feature.js');
+        this.requestCounter = new RequestCounter();
 
         this.route({
             method: 'get',
@@ -201,23 +205,35 @@ export default class FeatureController extends Controller {
     ): Promise<void> {
         const query = await this.resolveQuery(req);
 
+        const { appName } = req.body;
+
+        if (appName) {
+            this.requestCounter.recordRequest(appName);
+        }
+
         const [features, segments] = this.cache
             ? await this.cachedFeatures(query)
             : await this.resolveFeaturesAndSegments(query);
+
+        let commonFields = { features, version };
+
+        if (this.requestCounter.isRPSOverTresholdForApp(appName)) {
+            commonFields.backOff = 10;
+        }
 
         if (this.clientSpecService.requestSupportsSpec(req, 'segments')) {
             this.openApiService.respondWithValidation(
                 200,
                 res,
                 clientFeaturesSchema.$id,
-                { version, features, query: { ...query }, segments },
+                { ...commonFields, query: { ...query }, segments },
             );
         } else {
             this.openApiService.respondWithValidation(
                 200,
                 res,
                 clientFeaturesSchema.$id,
-                { version, features, query },
+                { ...commonFields, query },
             );
         }
     }

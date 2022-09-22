@@ -1,13 +1,26 @@
+interface IRequestBucket {
+    apps: IRequestBucketApps;
+    startTime: Date;
+    endTime?: Date;
+}
+
+interface IRequestBucketApps {
+    [appName: string]: {
+        count: number;
+        rps?: number;
+    };
+}
+
 export default class RequestCounter {
-    private requestCache: Object;
-    private longTermCache: Object;
-    private interval: number;
+    private requestCache: IRequestBucket;
+
+    private longTermCache: IRequestBucket[];
 
     constructor() {
         this.requestCache = this.createBucket();
         this.longTermCache = [];
 
-        this.interval = setInterval(() => {
+        setInterval(() => {
             this.requestCache.endTime = new Date();
 
             const longTermCacheObject = this.calculateRPS(this.requestCache);
@@ -18,7 +31,7 @@ export default class RequestCounter {
         }, 300000).unref();
     }
 
-    createBucket = () => {
+    createBucket = (): IRequestBucket => {
         const bucket = {
             apps: {},
             startTime: new Date(),
@@ -28,10 +41,10 @@ export default class RequestCounter {
     };
 
     recordRequest = (appName: string): void => {
-        if (this.requestCache['apps'][appName]) {
-            this.requestCache['apps'][appName].count += 1;
+        if (this.requestCache.apps[appName]) {
+            this.requestCache.apps[appName].count += 1;
         } else {
-            this.requestCache['apps'][appName] = { count: 1 };
+            this.requestCache.apps[appName] = { count: 1 };
         }
     };
 
@@ -39,7 +52,7 @@ export default class RequestCounter {
         return this.longTermCache;
     };
 
-    calculateRPS = (requestCache: Object) => {
+    calculateRPS = (requestCache: IRequestBucket): IRequestBucket => {
         Object.keys(requestCache.apps).forEach((appName) => {
             const app = requestCache.apps[appName];
             const rps = app.count / 300;
@@ -49,7 +62,8 @@ export default class RequestCounter {
         return requestCache;
     };
 
-    isRPSOverTresholdForApp = (appName: string) => {
+    // @ts-ignore
+    isRPSOverTresholdForApp = (appName: string): Boolean => {
         return true;
     };
 }

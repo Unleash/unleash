@@ -218,6 +218,7 @@ export default class FeatureController extends Controller {
         let commonFields = { features, version };
 
         if (this.requestCounter.isRPSOverTresholdForApp(appName)) {
+            // @ts-ignore
             commonFields.backOff = 10;
         }
 

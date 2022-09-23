@@ -30,7 +30,7 @@ export const createApiTokenSchema = {
         },
         type: {
             type: 'string',
-            enum: Object.values(ApiTokenType),
+            description: `One of ${Object.values(ApiTokenType).join(', ')}`,
         },
         environment: {
             type: 'string',

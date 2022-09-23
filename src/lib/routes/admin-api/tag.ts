@@ -10,7 +10,10 @@ import { NONE, UPDATE_FEATURE } from '../../types/permissions';
 import { extractUsername } from '../../util/extract-user';
 import { IAuthRequest } from '../unleash-types';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
-import { createResponseSchema } from '../../openapi/util/create-response-schema';
+import {
+    createResponseSchema,
+    resourceCreatedResponseSchema,
+} from '../../openapi/util/create-response-schema';
 import { tagsSchema, TagsSchema } from '../../openapi/spec/tags-schema';
 import { TagSchema } from '../../openapi/spec/tag-schema';
 import { OpenApiService } from '../../services/openapi-service';
@@ -64,7 +67,9 @@ class TagController extends Controller {
                     tags: ['Tags'],
                     operationId: 'createTag',
                     responses: {
-                        201: emptyResponse,
+                        201: resourceCreatedResponseSchema(
+                            'tagWithVersionSchema',
+                        ),
                     },
                     requestBody: createRequestSchema('tagSchema'),
                 }),
@@ -157,11 +162,14 @@ class TagController extends Controller {
 
     async createTag(
         req: IAuthRequest<unknown, unknown, TagSchema>,
-        res: Response,
+        res: Response<TagWithVersionSchema>,
     ): Promise<void> {
         const userName = extractUsername(req);
-        await this.tagService.createTag(req.body, userName);
-        res.status(201).end();
+        const tag = await this.tagService.createTag(req.body, userName);
+        res.status(201)
+            .header('location', `tags/${tag.type}/${tag.value}`)
+            .json({ version, tag })
+            .end();
     }
 
     async deleteTag(

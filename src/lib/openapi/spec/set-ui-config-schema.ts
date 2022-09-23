@@ -12,7 +12,6 @@ export const setUiConfigSchema = {
             properties: {
                 frontendApiOrigins: {
                     type: 'array',
-                    additionalProperties: false,
                     items: { type: 'string' },
                 },
             },

@@ -14,3 +14,27 @@ export const createResponseSchema = (
         },
     };
 };
+
+export const resourceCreatedResponseSchema = (
+    schemaName: string,
+): OpenAPIV3.ResponseObject => {
+    return {
+        headers: {
+            location: {
+                description: 'The location of the newly created resource.',
+                schema: {
+                    type: 'string',
+                    format: 'uri',
+                },
+            },
+        },
+        description: `The resource was successfully created.`,
+        content: {
+            'application/json': {
+                schema: {
+                    $ref: `#/components/schemas/${schemaName}`,
+                },
+            },
+        },
+    };
+};

@@ -13,6 +13,7 @@ import { RoleName } from '../../../../lib/types/model';
 import { IRoleStore } from 'lib/types/stores/role-store';
 import { randomId } from '../../../../lib/util/random-id';
 import { omitKeys } from '../../../../lib/util/omit-keys';
+import { ISessionStore } from '../../../../lib/types/stores/session-store';
 
 let stores;
 let db;
@@ -21,6 +22,7 @@ let app;
 let userStore: IUserStore;
 let eventStore: IEventStore;
 let roleStore: IRoleStore;
+let sessionStore: ISessionStore;
 let editorRole: IRole;
 let adminRole: IRole;
 
@@ -32,6 +34,7 @@ beforeAll(async () => {
     userStore = stores.userStore;
     eventStore = stores.eventStore;
     roleStore = stores.roleStore;
+    sessionStore = stores.sessionStore;
     const roles = await roleStore.getRootRoles();
     editorRole = roles.find((r) => r.name === RoleName.EDITOR);
     adminRole = roles.find((r) => r.name === RoleName.ADMIN);
@@ -231,11 +234,12 @@ test('validator should accept strong password', async () => {
 
 test('should change password', async () => {
     const user = await userStore.insert({ email: 'some@mail.com' });
-
-    return app.request
+    const spy = jest.spyOn(sessionStore, 'deleteSessionsForUser');
+    await app.request
         .post(`/api/admin/user-admin/${user.id}/change-password`)
         .send({ password: 'simple123-_ASsad' })
         .expect(200);
+    expect(spy).toHaveBeenCalled();
 });
 
 test('should search for users', async () => {

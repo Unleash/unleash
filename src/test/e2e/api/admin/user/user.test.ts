@@ -1,6 +1,6 @@
-import dbInit from '../../helpers/database-init';
-import getLogger from '../../../fixtures/no-logger';
-import { setupAppWithAuth } from '../../helpers/test-helper';
+import dbInit from '../../../helpers/database-init';
+import getLogger from '../../../../fixtures/no-logger';
+import { setupAppWithAuth } from '../../../helpers/test-helper';
 
 let app;
 let db;

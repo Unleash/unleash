@@ -11,7 +11,7 @@ const DIFF_PREFIXES: Record<string, string> = {
 };
 
 interface IEventDiffProps {
-    entry: IEvent;
+    entry: Partial<IEvent>;
 }
 
 const EventDiff = ({ entry }: IEventDiffProps) => {

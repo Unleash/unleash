@@ -3,6 +3,7 @@ import dbInit from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import SwaggerParser from '@apidevtools/swagger-parser';
 import enforcer from 'openapi-enforcer';
+import semver from 'semver';
 
 let app;
 let db;
@@ -31,11 +32,29 @@ test('should serve the OpenAPI spec', async () => {
         .expect('Content-Type', /json/)
         .expect(200)
         .expect((res) => {
-            // The version field is not set when running jest without yarn/npm.
+            // Don't use the version field in snapshot tests. Having the version
+            // listed in automated testing causes issues when trying to deploy
+            // new versions of the API (due to mismatch between new tag versions etc).
             delete res.body.info.version;
+
             // This test will fail whenever there's a change to the API spec.
             // If the change is intended, update the snapshot with `jest -u`.
             expect(res.body).toMatchSnapshot();
+        });
+});
+
+test('should serve the OpenAPI spec with a `version` property', async () => {
+    return app.request
+        .get('/docs/openapi.json')
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect((res) => {
+            const { version } = res.body.info;
+            // ensure there's no whitespace or leading `v`
+            expect(semver.clean(version)).toStrictEqual(version);
+
+            // ensure the version listed is valid semver
+            expect(semver.parse(version, { loose: false })).toBeTruthy();
         });
 });
 

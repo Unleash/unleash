@@ -115,6 +115,7 @@ export interface IUnleashOptions {
     disableLegacyFeaturesApi?: boolean;
     inlineSegmentConstraints?: boolean;
     clientFeatureCaching?: Partial<IClientCachingOption>;
+    flagResolver?: IFlagResolver;
 }
 
 export interface IEmailOption {

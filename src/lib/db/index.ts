@@ -30,6 +30,8 @@ import UserSplashStore from './user-splash-store';
 import RoleStore from './role-store';
 import SegmentStore from './segment-store';
 import GroupStore from './group-store';
+import PatStore from './pat-store';
+import { PublicSignupTokenStore } from './public-signup-token-store';
 
 export const createStores = (
     config: IUnleashConfig,
@@ -84,6 +86,12 @@ export const createStores = (
         roleStore: new RoleStore(db, eventBus, getLogger),
         segmentStore: new SegmentStore(db, eventBus, getLogger),
         groupStore: new GroupStore(db),
+        publicSignupTokenStore: new PublicSignupTokenStore(
+            db,
+            eventBus,
+            getLogger,
+        ),
+        patStore: new PatStore(db, getLogger),
     };
 };
 

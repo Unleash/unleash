@@ -4,8 +4,8 @@ import { Logger, LogProvider } from '../logger';
 import { Knex } from 'knex';
 import EventEmitter from 'events';
 import NotFoundError from '../error/notfound-error';
-import User from '../types/user';
 import { PartialSome } from '../types/partial';
+import User from '../types/user';
 
 const T = {
     segments: 'segments',

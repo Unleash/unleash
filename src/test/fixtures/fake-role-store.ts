@@ -8,6 +8,8 @@ import {
 } from 'lib/types/stores/role-store';
 
 export default class FakeRoleStore implements IRoleStore {
+    roles: ICustomRole[] = [];
+
     getGroupRolesForProject(projectId: string): Promise<IRole[]> {
         throw new Error('Method not implemented.');
     }
@@ -16,12 +18,14 @@ export default class FakeRoleStore implements IRoleStore {
         throw new Error('Method not implemented.');
     }
 
-    getAll(): Promise<ICustomRole[]> {
-        throw new Error('Method not implemented.');
+    async getAll(): Promise<ICustomRole[]> {
+        return this.roles;
     }
 
-    create(role: ICustomRoleInsert): Promise<ICustomRole> {
-        throw new Error('Method not implemented.');
+    async create(role: ICustomRoleInsert): Promise<ICustomRole> {
+        const roleCreated = { ...role, id: 1, type: 'some-type' };
+        this.roles.push(roleCreated);
+        return Promise.resolve(roleCreated);
     }
 
     update(role: ICustomRoleUpdate): Promise<ICustomRole> {
@@ -36,8 +40,8 @@ export default class FakeRoleStore implements IRoleStore {
         throw new Error('Method not implemented.');
     }
 
-    getRoleByName(name: string): Promise<IRole> {
-        throw new Error('Method not implemented.');
+    async getRoleByName(name: string): Promise<IRole> {
+        return this.roles.find((r) => (r.name = name));
     }
 
     getRolesForProject(projectId: string): Promise<IRole[]> {
@@ -52,8 +56,8 @@ export default class FakeRoleStore implements IRoleStore {
         throw new Error('Method not implemented.');
     }
 
-    getRootRoles(): Promise<IRole[]> {
-        throw new Error('Method not implemented.');
+    async getRootRoles(): Promise<IRole[]> {
+        return this.roles;
     }
 
     getRootRoleForAllUsers(): Promise<IUserRole[]> {

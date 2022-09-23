@@ -62,7 +62,7 @@ async function createApp(
     if (typeof config.eventHook === 'function') {
         addEventHook(config.eventHook, stores.eventStore);
     }
-    metricsMonitor.startMonitoring(
+    await metricsMonitor.startMonitoring(
         config,
         stores,
         serverVersion,

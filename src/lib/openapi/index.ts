@@ -113,6 +113,13 @@ import { proxyMetricsSchema } from './spec/proxy-metrics-schema';
 import { setUiConfigSchema } from './spec/set-ui-config-schema';
 import { edgeTokenSchema } from './spec/edge-token-schema';
 import { validateEdgeTokensSchema } from './spec/validate-edge-tokens-schema';
+import { patsSchema } from './spec/pats-schema';
+import { patSchema } from './spec/pat-schema';
+import { publicSignupTokenCreateSchema } from './spec/public-signup-token-create-schema';
+import { publicSignupTokenSchema } from './spec/public-signup-token-schema';
+import { publicSignupTokensSchema } from './spec/public-signup-tokens-schema';
+import { publicSignupTokenUpdateSchema } from './spec/public-signup-token-update-schema';
+import apiVersion from '../util/version';
 
 // All schemas in `openapi/spec` should be listed here.
 export const schemas = {
@@ -140,6 +147,7 @@ export const schemas = {
     createUserSchema,
     dateSchema,
     emailSchema,
+    edgeTokenSchema,
     environmentSchema,
     environmentsSchema,
     eventSchema,
@@ -172,6 +180,8 @@ export const schemas = {
     overrideSchema,
     parametersSchema,
     passwordSchema,
+    patSchema,
+    patsSchema,
     patchesSchema,
     patchSchema,
     permissionSchema,
@@ -182,6 +192,14 @@ export const schemas = {
     playgroundRequestSchema,
     playgroundResponseSchema,
     projectEnvironmentSchema,
+    publicSignupTokenCreateSchema,
+    publicSignupTokenUpdateSchema,
+    publicSignupTokensSchema,
+    publicSignupTokenSchema,
+    proxyClientSchema,
+    proxyFeaturesSchema,
+    proxyFeatureSchema,
+    proxyMetricsSchema,
     projectSchema,
     projectsSchema,
     resetPasswordSchema,
@@ -219,11 +237,6 @@ export const schemas = {
     variantSchema,
     variantsSchema,
     versionSchema,
-    proxyClientSchema,
-    proxyFeaturesSchema,
-    proxyFeatureSchema,
-    proxyMetricsSchema,
-    edgeTokenSchema,
     validateEdgeTokensSchema,
 };
 
@@ -273,7 +286,7 @@ export const createOpenApiSchema = ({
         servers: url ? [{ url }] : [],
         info: {
             title: 'Unleash API',
-            version: process.env.npm_package_version!,
+            version: apiVersion,
         },
         security: [{ apiKey: [] }],
         components: {

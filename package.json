@@ -130,6 +130,7 @@
     "ts-toolbelt": "^9.6.0",
     "type-is": "^1.6.18",
     "unleash-client": "3.15.0",
+    "use-deep-compare-effect": "^1.8.1",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

@@ -173,26 +173,24 @@ module.exports = {
                                 'api/internal/health',
                             ],
                         },
-                        // NOTE: activate this when we're ready to integrate generated OpenAPI docs
-                        //
-                        // {
-                        //     label: 'OpenAPI docs',
-                        //     collapsed: true,
-                        //     type: 'category',
-                        //     link: {
-                        //         title: 'Unleash Server APIs',
-                        //         type: 'generated-index',
-                        //         description:
-                        //             'Generated API docs based on the Unleash OpenAPI schema. For the time being, some additional info can also be found in the older API docs.',
-                        //         slug: '/reference/apis/unleash',
-                        //     },
-                        //     items: require('./docs/reference/apis/unleash/sidebar.js'),
-                        // },
+                        {
+                            label: 'OpenAPI docs',
+                            collapsed: true,
+                            type: 'category',
+                            link: {
+                                title: 'Unleash Server APIs',
+                                type: 'generated-index',
+                                description:
+                                    'Generated API docs based on the Unleash OpenAPI schema. For the time being, some additional info can also be found in the older API docs.',
+                                slug: '/reference/api/unleash',
+                            },
+                            items: require('./docs/reference/api/unleash/sidebar.js'),
+                        },
                     ],
                 },
                 {
                     type: 'category',
-                    label: 'Client SDKs',
+                    label: 'Application SDKs',
                     link: { type: 'doc', id: 'sdks/index' },
                     items: [
                         {
@@ -282,13 +280,14 @@ module.exports = {
                         'user_guide/activation_strategy',
                         'reference/api-tokens-and-client-keys',
                         'advanced/archived_toggles',
-                        'advanced/audit_log',
+                        'reference/event-log',
                         'advanced/impression-data',
                         'advanced/custom_activation_strategy',
                         'user_guide/environments',
                         'reference/feature-toggles',
                         'advanced/feature_toggle_types',
                         'advanced/toggle_variants',
+                        'reference/front-end-api',
                         'reference/playground',
                         'user_guide/projects',
                         'user_guide/rbac',

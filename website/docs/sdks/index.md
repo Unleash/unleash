@@ -1,6 +1,6 @@
 ---
 id: index
-title: Client SDK overview
+title: SDK overview
 slug: /sdks
 ---
 
@@ -23,9 +23,9 @@ Server-side clients run on your server and communicate directly with your Unleas
 - [Rust SDK](https://github.com/unleash/unleash-client-rust)
 - [.NET SDK](/sdks/dot_net_sdk)
 
-### Front-end SDKs
+### Client-side SDKs
 
-For security and performance reasons, the front-end SDKs do not communicate directly with your Unleash instance. Instead, they go via the [Unleash Proxy](unleash-proxy.md).
+Client-side SDKs can connect to the [Unleash Proxy](unleash-proxy.md) or to the [Unleash front-end API](../reference/front-end-api.md), but _not_ to the regular Unleash client API.
 
 - [Android SDK](/sdks/android_proxy_sdk)
 - [iOS Proxy SDK](/sdks/proxy-ios)
@@ -98,10 +98,10 @@ If you see an item marked with a ❌ that you would find useful, feel free to re
 | Can disable metrics | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Client registration | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Basic usage metrics (yes/no) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| [Impression data](../advanced/impression-data.md) | ⭕ | ⭕ | ⭕ | ⭕ | ⭕ | ⭕ | ✅ | ⭕ | N/A |
+| [Impression data](../advanced/impression-data.md) | ⭕ | ✅ | ⭕ | ⭕ | ⭕ | ⭕ | ✅ | ⭕ | N/A |
 | **Category: Bootstrap (beta)** |  |  |  |  |  |  |  |  |  |
-| Bootstrap from file | ✅ | ✅ | ✅ | ⭕ | ✅ | ⭕ | ✅ | ⭕ | ✅ |
-| Custom Bootstrap implementation | ✅ | ✅ | ✅ | ⭕ | ✅ | ⭕ | ✅ | ⭕ | ✅ |
+| Bootstrap from file | ✅ | ✅ | ✅ | ⭕ | ✅ | ✅ | ✅ | ⭕ | ✅ |
+| Custom Bootstrap implementation | ✅ | ✅ | ✅ | ⭕ | ✅ | ✅ | ✅ | ⭕ | ✅ |
 
 ## Community SDKs ❤️ {#community-sdks}
 

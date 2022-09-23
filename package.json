@@ -40,7 +40,7 @@
     "build": "yarn run copy-templates && tsc --pretty",
     "prepare": "node scripts/husky-install && cd frontend && yarn && cd .. && yarn run build",
     "test": "NODE_ENV=test PORT=4243 jest",
-    "test:unit": "NODE_ENV=test PORT=4243 jest --testPathIgnorePatterns=src/test/e2e/**",
+    "test:unit": "NODE_ENV=test PORT=4243 jest --testPathIgnorePatterns=src/test/e2e --testPathIgnorePatterns=dist",
     "test:docker": "./scripts/docker-postgres.sh",
     "test:docker:cleanup": "docker rm -f unleash-postgres",
     "test:watch": "yarn test --watch",

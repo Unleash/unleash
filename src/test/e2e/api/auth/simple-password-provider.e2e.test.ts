@@ -58,10 +58,6 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-    await stores.resetTokenStore.deleteAll();
-});
-
-afterAll(async () => {
     await app.destroy();
     await db.destroy();
 });

@@ -4,6 +4,7 @@ import {
     IContextField,
     IContextFieldDto,
     IContextFieldStore,
+    ILegalValue,
 } from '../types/stores/context-field-store';
 
 const COLUMNS = [
@@ -16,7 +17,16 @@ const COLUMNS = [
 ];
 const TABLE = 'context_fields';
 
-const mapRow: (object) => IContextField = (row) => ({
+type ContextFieldDB = {
+    name: string;
+    description: string;
+    stickiness: boolean;
+    sort_order: number;
+    legal_values: ILegalValue[];
+    created_at: Date;
+};
+
+const mapRow = (row: ContextFieldDB): IContextField => ({
     name: row.name,
     description: row.description,
     stickiness: row.stickiness,
@@ -88,15 +98,17 @@ class ContextFieldStore implements IContextFieldStore {
         return present;
     }
 
+    // TODO: write tests for the changes you made here?
     async create(contextField: IContextFieldDto): Promise<IContextField> {
-        const row = await this.db(TABLE)
+        const [row] = await this.db(TABLE)
             .insert(this.fieldToRow(contextField))
             .returning('*');
+
         return mapRow(row);
     }
 
     async update(data: IContextFieldDto): Promise<IContextField> {
-        const row = await this.db(TABLE)
+        const [row] = await this.db(TABLE)
             .where({ name: data.name })
             .update(this.fieldToRow(data))
             .returning('*');

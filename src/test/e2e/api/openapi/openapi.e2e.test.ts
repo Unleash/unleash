@@ -2,6 +2,7 @@ import { setupApp } from '../../helpers/test-helper';
 import dbInit from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import SwaggerParser from '@apidevtools/swagger-parser';
+import enforcer from 'openapi-enforcer';
 import semver from 'semver';
 
 let app;
@@ -69,6 +70,33 @@ test('the generated OpenAPI spec is valid', async () => {
         await SwaggerParser.validate(body);
     } catch (err) {
         console.error(err);
-        return false;
+        // there's an error here, so let's exit after showing it in the console.
+        expect(true).toBe(false);
     }
+
+    const [, enforcerError, enforcerWarning] = await enforcer(body, {
+        fullResult: true,
+        componentOptions: {
+            exceptionSkipCodes: [
+                // allow non-standard formats for strings (including 'uri')
+                'WSCH001',
+
+                // Schemas with an indeterminable type cannot serialize,
+                // deserialize, or validate values. [WSCH005]
+                //
+                // This allows specifying the 'any' type for schemas (such as the
+                // patchSchema)
+                'WSCH005',
+            ],
+        },
+    });
+
+    if (enforcerWarning !== undefined) {
+        console.warn(enforcerWarning);
+    }
+    if (enforcerError !== undefined) {
+        console.error(enforcerError);
+    }
+
+    expect(enforcerWarning ?? enforcerError).toBe(undefined);
 });

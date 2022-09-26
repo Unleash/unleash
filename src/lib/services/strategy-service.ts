@@ -101,7 +101,7 @@ class StrategyService {
     async createStrategy(
         value: IMinimalStrategy,
         userName: string,
-    ): Promise<void> {
+    ): Promise<IStrategy> {
         const strategy = await strategySchema.validateAsync(value);
         strategy.deprecated = false;
         await this._validateStrategyName(strategy);
@@ -111,6 +111,7 @@ class StrategyService {
             createdBy: userName,
             data: strategy,
         });
+        return this.strategyStore.get(strategy.name);
     }
 
     async updateStrategy(

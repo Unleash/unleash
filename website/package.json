@@ -8,9 +8,10 @@
   "scripts": {
     "docusaurus": "docusaurus",
     "start": "docusaurus start",
-    "build": "docusaurus build",
+    "build": "yarn generate && docusaurus build",
     "swizzle": "docusaurus swizzle",
-    "deploy": "docusaurus deploy",
+    "generate": "docusaurus gen-api-docs all && node clean-generated-docs.js",
+    "deploy": "yarn generate && docusaurus deploy",
     "clear": "docusaurus clear",
     "serve": "docusaurus serve",
     "write-translations": "docusaurus write-translations",
@@ -73,6 +74,7 @@
     "babel-loader": "8.2.5",
     "enhanced-resolve": "5.10.0",
     "react-router": "6.3.0",
+    "replace-in-file": "^6.3.5",
     "storybook-addon-root-attribute": "1.0.2",
     "typescript": "4.8.2"
   }

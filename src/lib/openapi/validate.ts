@@ -1,5 +1,4 @@
 import Ajv, { ErrorObject } from 'ajv';
-import addFormats from 'ajv-formats';
 import { SchemaId, schemas } from './index';
 import { omitKeys } from '../util/omit-keys';
 
@@ -12,13 +11,15 @@ const ajv = new Ajv({
     schemas: Object.values(schemas).map((schema) =>
         omitKeys(schema, 'components'),
     ),
+
+    // example was superseded by examples in openapi 3.1, but we're still on 3.0, so
+    // let's add it back in!
+    keywords: ['example'],
+    formats: {
+        'date-time': true,
+        uri: true,
+    },
 });
-
-addFormats(ajv, ['date-time']);
-
-// example was superseded by examples in openapi 3.1, but we're still on 3.0, so
-// let's add it back in!
-ajv.addKeyword('example');
 
 export const validateSchema = (
     schema: SchemaId,

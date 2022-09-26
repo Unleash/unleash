@@ -82,6 +82,8 @@ export default async function getApp(
         ),
     );
 
+    app.use(baseUriPath, patMiddleware(config, services));
+
     switch (config.authentication.type) {
         case IAuthType.OPEN_SOURCE: {
             app.use(baseUriPath, apiTokenMiddleware(config, services));
@@ -132,7 +134,6 @@ export default async function getApp(
     app.use(
         baseUriPath,
         rbacMiddleware(config, stores, services.accessService),
-        patMiddleware(config, services),
     );
 
     if (typeof config.preRouterHook === 'function') {

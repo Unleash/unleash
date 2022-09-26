@@ -15,7 +15,7 @@ const patMiddleware = (
         return (req, res, next) => next();
     }
 
-    return (req, res, next) => {
+    return async (req, res, next) => {
         if (req.user) {
             return next();
         }
@@ -23,7 +23,9 @@ const patMiddleware = (
         try {
             const apiToken = req.header('authorization') as string;
             if (apiToken?.startsWith('user')) {
-                const user = userService.getUserByPersonalAccessToken(apiToken);
+                const user = await userService.getUserByPersonalAccessToken(
+                    apiToken,
+                );
                 req.session.user = user;
             }
         } catch (error) {

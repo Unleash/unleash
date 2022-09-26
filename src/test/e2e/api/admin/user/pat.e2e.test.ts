@@ -116,11 +116,21 @@ test('should fail creation of PAT with passed expiry', async () => {
 });
 
 test('should get user id 1', async () => {
+    await app.request.get('/logout').expect(302);
     await app.request
         .get('/api/admin/user')
         .set('Authorization', firstSecret)
         .expect(200)
         .expect((res) => {
             expect(res.body.user.email).toBe('user@getunleash.io');
+            expect(res.body.user.id).toBe(1);
         });
+});
+
+test('should not get user with invalid token', async () => {
+    await app.request.get('/logout').expect(302);
+    await app.request
+        .get('/api/admin/user')
+        .set('Authorization', 'randomtoken')
+        .expect(401);
 });

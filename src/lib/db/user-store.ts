@@ -207,7 +207,7 @@ class UserStore implements IUserStore {
 
     async getUserByPersonalAccessToken(secret: string): Promise<User> {
         const row = await this.db
-            .select(USER_COLUMNS)
+            .select(USER_COLUMNS.map((column) => `${TABLE}.${column}`))
             .from(TABLE)
             .leftJoin(
                 'personal_access_tokens',

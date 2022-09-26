@@ -152,9 +152,9 @@ export class PublicSignupTokenStore implements IPublicSignupTokenStore {
     ): Promise<PublicSignupTokenSchema> {
         const response = await this.db<ITokenRow>(TABLE).insert(
             toRow(newToken),
-            ['*'],
+            ['secret'],
         );
-        return toTokens(response)[0];
+        return this.get(response[0].secret);
     }
 
     async isValid(secret: string): Promise<boolean> {

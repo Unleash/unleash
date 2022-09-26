@@ -5,6 +5,7 @@ test('publicSignupTokenSchema', () => {
     const data: PublicSignupTokenSchema = {
         name: 'Default',
         secret: 'some-secret',
+        url: 'http://localhost:4242/invite-link/some-secret',
         expiresAt: new Date().toISOString(),
         users: [],
         role: { name: 'Viewer ', type: 'type', id: 1 },

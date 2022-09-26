@@ -71,6 +71,7 @@ exports[`should create default config 1`] = `
       "batchMetrics": false,
       "embedProxy": false,
       "embedProxyFrontend": false,
+      "publicSignup": false,
     },
   },
   "flagResolver": FlagResolver {
@@ -80,6 +81,7 @@ exports[`should create default config 1`] = `
       "batchMetrics": false,
       "embedProxy": false,
       "embedProxyFrontend": false,
+      "publicSignup": false,
     },
     "externalResolver": {
       "isEnabled": [Function],

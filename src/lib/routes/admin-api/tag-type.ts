@@ -13,7 +13,10 @@ import TagTypeService from '../../services/tag-type-service';
 import { Logger } from '../../logger';
 import { IAuthRequest } from '../unleash-types';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
-import { createResponseSchema } from '../../openapi/util/create-response-schema';
+import {
+    createResponseSchema,
+    resourceCreatedResponseSchema,
+} from '../../openapi/util/create-response-schema';
 import { TagTypesSchema } from '../../openapi/spec/tag-types-schema';
 import { ValidateTagTypeSchema } from '../../openapi/spec/validate-tag-type-schema';
 import {
@@ -66,7 +69,9 @@ class TagTypeController extends Controller {
                 openApiService.validPath({
                     tags: ['Tags'],
                     operationId: 'createTagType',
-                    responses: { 201: createResponseSchema('tagTypeSchema') },
+                    responses: {
+                        201: resourceCreatedResponseSchema('tagTypeSchema'),
+                    },
                     requestBody: createRequestSchema('tagTypeSchema'),
                 }),
             ],
@@ -164,7 +169,9 @@ class TagTypeController extends Controller {
             req.body,
             userName,
         );
-        res.status(201).json(tagType);
+        res.status(201)
+            .header('location', `tag-types/${tagType.name}`)
+            .json(tagType);
     }
 
     async updateTagType(

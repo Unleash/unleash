@@ -6,6 +6,7 @@ export interface IPublicSignupTokenCreate {
     roleId: number;
     secret: string;
     createdBy: string;
+    url: string;
 }
 
 export interface IPublicSignupToken extends IPublicSignupTokenCreate {

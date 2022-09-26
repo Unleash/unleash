@@ -18,3 +18,8 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# OpenAPI docusaurus generated stuff
+docs/reference/apis/**/sidebar.js
+*.api.mdx
+*.tag.mdx

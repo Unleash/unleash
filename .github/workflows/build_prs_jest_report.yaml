@@ -3,6 +3,9 @@ name: PR -> Test & Coverage
 on:
   pull_request:
 
+permissions:
+  pull-requests: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -38,7 +41,6 @@ jobs:
         with:
           annotations: none
           package-manager: yarn
-          github-token: ${{ secrets.GITHUB_TOKEN }}
           test-script: yarn run test:coverage:jest
           base-coverage-file: ./coverage/report.json
           output: report-markdown

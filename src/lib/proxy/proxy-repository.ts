@@ -40,7 +40,9 @@ export class ProxyRepository
 
     private segments: Segment[];
 
-    private timer: NodeJS.Timeout;
+    private interval: number;
+
+    private timer: NodeJS.Timer;
 
     constructor(
         config: Config,
@@ -55,6 +57,7 @@ export class ProxyRepository
         this.services = services;
         this.token = token;
         this.onAnyEvent = this.onAnyEvent.bind(this);
+        this.interval = 5000;
     }
 
     getSegment(id: number): Segment | undefined {
@@ -76,23 +79,30 @@ export class ProxyRepository
         // For now, simply reload all the data on any EventStore event.
         this.stores.eventStore.on(ANY_EVENT, this.onAnyEvent);
 
-        // Reload from DB every 5 seconds
-        this.timer = setInterval(() => {
-            this.loadDataForToken();
-        }, 5000).unref();
-
         this.emit(UnleashEvents.Ready);
         this.emit(UnleashEvents.Changed);
     }
 
     stop(): void {
         this.stores.eventStore.off(ANY_EVENT, this.onAnyEvent);
-        clearInterval(this.timer);
+        clearTimeout(this.timer);
     }
 
     private async loadDataForToken() {
-        this.features = await this.featuresForToken();
-        this.segments = await this.segmentsForToken();
+        this.timer = setTimeout(async () => {
+            await this.loadDataForToken();
+        }, this.randomizeDelay(this.interval, this.interval * 2)).unref();
+
+        try {
+            this.features = await this.featuresForToken();
+            this.segments = await this.segmentsForToken();
+        } catch (e) {
+            this.logger.error(e);
+        }
+    }
+
+    private randomizeDelay(floor: number, ceiling: number): number {
+        return Math.floor(Math.random() * (ceiling - floor) + floor);
     }
 
     private async onAnyEvent() {

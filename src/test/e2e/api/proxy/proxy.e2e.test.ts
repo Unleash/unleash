@@ -9,7 +9,7 @@ import {
 } from '../../../../lib/types/models/api-token';
 import { startOfHour } from 'date-fns';
 import { IConstraint, IStrategyConfig } from '../../../../lib/types/model';
-import { ANY_EVENT } from '../../../../lib/util/anyEventEmitter';
+import { ProxyRepository } from '../../../../lib/proxy/proxy-repository';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -19,6 +19,10 @@ beforeAll(async () => {
     app = await setupAppWithAuth(db.stores, {
         frontendApiOrigins: ['https://example.com'],
     });
+});
+
+afterEach(() => {
+    app.services.proxyService.stopAll();
 });
 
 afterAll(async () => {
@@ -792,96 +796,32 @@ test('should filter features by segment', async () => {
         .expect((res) => expect(res.body).toEqual({ toggles: [] }));
 });
 
-test('Should synchronize toggle updates across instances', async () => {
-    await createFeatureToggle({
-        name: 'featureToggleSynchronized',
-        enabled: true,
-        strategies: [{ name: 'default', parameters: {} }],
-    });
+test('Should sync proxy for keys on an interval', async () => {
+    jest.useFakeTimers();
 
-    const frontendToken = await createApiToken(ApiTokenType.FRONTEND, {
-        projects: ['*'],
-    });
-
-    const secondApp = await setupAppWithAuth(db.stores, {
-        frontendApiOrigins: ['https://example.com'],
-        server: {
-            unleashUrl: 'http://localhost:4243',
-        },
-    });
-
-    await app.request
-        .get('/api/frontend')
-        .set('Authorization', frontendToken.secret)
-        .expect('Content-Type', /json/)
-        .expect(200)
-        .expect((res) => {
-            expect(res.body).toEqual({
-                toggles: [
-                    {
-                        name: 'featureToggleSynchronized',
-                        enabled: true,
-                        variant: { enabled: false, name: 'disabled' },
-                        impressionData: false,
-                    },
-                ],
-            });
-        });
-
-    await secondApp.request
-        .get('/api/frontend')
-        .set('Authorization', frontendToken.secret)
-        .expect('Content-Type', /json/)
-        .expect(200)
-        .expect((res) => {
-            expect(res.body).toEqual({
-                toggles: [
-                    {
-                        name: 'featureToggleSynchronized',
-                        enabled: true,
-                        variant: { enabled: false, name: 'disabled' },
-                        impressionData: false,
-                    },
-                ],
-            });
-        });
-
-    await app.services.featureToggleService.updateEnabled(
-        'default',
-        'featureToggleSynchronized',
-        'default',
-        false,
-        'userName',
+    const frontendToken = await createApiToken(ApiTokenType.FRONTEND);
+    const user = await app.services.apiTokenService.getUserForToken(
+        frontendToken.secret,
     );
 
-    await new Promise((resolve) => {
-        db.stores.eventStore.on(ANY_EVENT, () => {});
-        setTimeout(() => {
-            resolve(null);
-        }, 100);
-    });
+    const spy = jest.spyOn(
+        ProxyRepository.prototype as any,
+        'featuresForToken',
+    );
+    const proxyRepository = new ProxyRepository(
+        {
+            getLogger,
+        },
+        db.stores,
+        app.services,
+        user,
+    );
 
-    await app.request
-        .get('/api/frontend')
-        .set('Authorization', frontendToken.secret)
-        .expect('Content-Type', /json/)
-        .expect(200)
-        .expect((res) => {
-            expect(res.body).toEqual({
-                toggles: [],
-            });
-        });
+    await proxyRepository.start();
 
-    await secondApp.request
-        .get('/api/frontend')
-        .set('Authorization', frontendToken.secret)
-        .expect('Content-Type', /json/)
-        .expect(200)
-        .expect((res) => {
-            expect(res.body).toEqual({
-                toggles: [],
-            });
-        });
+    jest.advanceTimersByTime(60000);
 
-    await secondApp.destroy();
+    proxyRepository.stop();
+    expect(spy.mock.calls.length > 6).toBe(true);
+    jest.useRealTimers();
 });

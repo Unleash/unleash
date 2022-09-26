@@ -118,6 +118,10 @@ export class ProxyService {
         this.clients.delete(secret);
     }
 
+    stopAll(): void {
+        this.clients.forEach((client) => client.destroy());
+    }
+
     private static assertExpectedTokenType({ type }: ApiUser) {
         assert(type === ApiTokenType.FRONTEND || type === ApiTokenType.ADMIN);
     }

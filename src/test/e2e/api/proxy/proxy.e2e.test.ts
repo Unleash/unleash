@@ -9,6 +9,7 @@ import {
 } from '../../../../lib/types/models/api-token';
 import { startOfHour } from 'date-fns';
 import { IConstraint, IStrategyConfig } from '../../../../lib/types/model';
+import { ANY_EVENT } from '../../../../lib/util/anyEventEmitter';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -789,4 +790,98 @@ test('should filter features by segment', async () => {
         .expect('Content-Type', /json/)
         .expect(200)
         .expect((res) => expect(res.body).toEqual({ toggles: [] }));
+});
+
+test('Should synchronize toggle updates across instances', async () => {
+    await createFeatureToggle({
+        name: 'featureToggleSynchronized',
+        enabled: true,
+        strategies: [{ name: 'default', parameters: {} }],
+    });
+
+    const frontendToken = await createApiToken(ApiTokenType.FRONTEND, {
+        projects: ['*'],
+    });
+
+    const secondApp = await setupAppWithAuth(db.stores, {
+        frontendApiOrigins: ['https://example.com'],
+        server: {
+            unleashUrl: 'http://localhost:4243',
+        },
+    });
+
+    await app.request
+        .get('/api/frontend')
+        .set('Authorization', frontendToken.secret)
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect((res) => {
+            expect(res.body).toEqual({
+                toggles: [
+                    {
+                        name: 'featureToggleSynchronized',
+                        enabled: true,
+                        variant: { enabled: false, name: 'disabled' },
+                        impressionData: false,
+                    },
+                ],
+            });
+        });
+
+    await secondApp.request
+        .get('/api/frontend')
+        .set('Authorization', frontendToken.secret)
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect((res) => {
+            expect(res.body).toEqual({
+                toggles: [
+                    {
+                        name: 'featureToggleSynchronized',
+                        enabled: true,
+                        variant: { enabled: false, name: 'disabled' },
+                        impressionData: false,
+                    },
+                ],
+            });
+        });
+
+    await app.services.featureToggleService.updateEnabled(
+        'default',
+        'featureToggleSynchronized',
+        'default',
+        false,
+        'userName',
+    );
+
+    await new Promise((resolve) => {
+        db.stores.eventStore.on(ANY_EVENT, () => {});
+        setTimeout(() => {
+            resolve(null);
+        }, 100);
+    });
+
+    await app.request
+        .get('/api/frontend')
+        .set('Authorization', frontendToken.secret)
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect((res) => {
+            expect(res.body).toEqual({
+                toggles: [],
+            });
+        });
+
+    await secondApp.request
+        .get('/api/frontend')
+        .set('Authorization', frontendToken.secret)
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect((res) => {
+            expect(res.body).toEqual({
+                toggles: [],
+            });
+        });
+
+    await secondApp.destroy();
 });

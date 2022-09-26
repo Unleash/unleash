@@ -40,6 +40,8 @@ export class ProxyRepository
 
     private segments: Segment[];
 
+    private timer: NodeJS.Timeout;
+
     constructor(
         config: Config,
         stores: Stores,
@@ -74,12 +76,18 @@ export class ProxyRepository
         // For now, simply reload all the data on any EventStore event.
         this.stores.eventStore.on(ANY_EVENT, this.onAnyEvent);
 
+        // Reload from DB every 5 seconds
+        this.timer = setInterval(() => {
+            this.loadDataForToken();
+        }, 5000).unref();
+
         this.emit(UnleashEvents.Ready);
         this.emit(UnleashEvents.Changed);
     }
 
     stop(): void {
         this.stores.eventStore.off(ANY_EVENT, this.onAnyEvent);
+        clearInterval(this.timer);
     }
 
     private async loadDataForToken() {

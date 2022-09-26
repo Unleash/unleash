@@ -86,7 +86,7 @@ export class TagsApi extends runtime.BaseAPI {
 
     /**
      */
-    async createTagRaw(requestParameters: CreateTagRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+    async createTagRaw(requestParameters: CreateTagRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<TagWithVersionSchema>> {
         if (requestParameters.tagSchema === null || requestParameters.tagSchema === undefined) {
             throw new runtime.RequiredError('tagSchema','Required parameter requestParameters.tagSchema was null or undefined when calling createTag.');
         }
@@ -109,13 +109,14 @@ export class TagsApi extends runtime.BaseAPI {
             body: TagSchemaToJSON(requestParameters.tagSchema),
         }, initOverrides);
 
-        return new runtime.VoidApiResponse(response);
+        return new runtime.JSONApiResponse(response, (jsonValue) => TagWithVersionSchemaFromJSON(jsonValue));
     }
 
     /**
      */
-    async createTag(requestParameters: CreateTagRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.createTagRaw(requestParameters, initOverrides);
+    async createTag(requestParameters: CreateTagRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<TagWithVersionSchema> {
+        const response = await this.createTagRaw(requestParameters, initOverrides);
+        return await response.value();
     }
 
     /**

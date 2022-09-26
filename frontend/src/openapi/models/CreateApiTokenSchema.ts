@@ -32,7 +32,7 @@ export interface CreateApiTokenSchema {
      */
     username: string;
     /**
-     * client, admin, frontend.
+     * One of client, admin, frontend
      * @type {string}
      * @memberof CreateApiTokenSchema
      */

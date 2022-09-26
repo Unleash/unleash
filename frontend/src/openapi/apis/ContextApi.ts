@@ -56,7 +56,7 @@ export class ContextApi extends runtime.BaseAPI {
 
     /**
      */
-    async createContextFieldRaw(requestParameters: CreateContextFieldRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+    async createContextFieldRaw(requestParameters: CreateContextFieldRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ContextFieldSchema>> {
         if (requestParameters.upsertContextFieldSchema === null || requestParameters.upsertContextFieldSchema === undefined) {
             throw new runtime.RequiredError('upsertContextFieldSchema','Required parameter requestParameters.upsertContextFieldSchema was null or undefined when calling createContextField.');
         }
@@ -79,13 +79,14 @@ export class ContextApi extends runtime.BaseAPI {
             body: UpsertContextFieldSchemaToJSON(requestParameters.upsertContextFieldSchema),
         }, initOverrides);
 
-        return new runtime.VoidApiResponse(response);
+        return new runtime.JSONApiResponse(response, (jsonValue) => ContextFieldSchemaFromJSON(jsonValue));
     }
 
     /**
      */
-    async createContextField(requestParameters: CreateContextFieldRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.createContextFieldRaw(requestParameters, initOverrides);
+    async createContextField(requestParameters: CreateContextFieldRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ContextFieldSchema> {
+        const response = await this.createContextFieldRaw(requestParameters, initOverrides);
+        return await response.value();
     }
 
     /**

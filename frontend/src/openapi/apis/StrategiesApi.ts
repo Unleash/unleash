@@ -60,7 +60,7 @@ export class StrategiesApi extends runtime.BaseAPI {
 
     /**
      */
-    async createStrategyRaw(requestParameters: CreateStrategyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+    async createStrategyRaw(requestParameters: CreateStrategyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<StrategySchema>> {
         if (requestParameters.upsertStrategySchema === null || requestParameters.upsertStrategySchema === undefined) {
             throw new runtime.RequiredError('upsertStrategySchema','Required parameter requestParameters.upsertStrategySchema was null or undefined when calling createStrategy.');
         }
@@ -83,13 +83,14 @@ export class StrategiesApi extends runtime.BaseAPI {
             body: UpsertStrategySchemaToJSON(requestParameters.upsertStrategySchema),
         }, initOverrides);
 
-        return new runtime.VoidApiResponse(response);
+        return new runtime.JSONApiResponse(response, (jsonValue) => StrategySchemaFromJSON(jsonValue));
     }
 
     /**
      */
-    async createStrategy(requestParameters: CreateStrategyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.createStrategyRaw(requestParameters, initOverrides);
+    async createStrategy(requestParameters: CreateStrategyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<StrategySchema> {
+        const response = await this.createStrategyRaw(requestParameters, initOverrides);
+        return await response.value();
     }
 
     /**

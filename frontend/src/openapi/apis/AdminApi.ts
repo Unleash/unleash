@@ -28,6 +28,8 @@ import type {
   NameSchema,
   OidcSettingsSchema,
   PasswordAuthSchema,
+  PatSchema,
+  PatsSchema,
   ProjectAccessSchema,
   ProjectUsers,
   RoleWithPermissionsSchema,
@@ -68,6 +70,10 @@ import {
     OidcSettingsSchemaToJSON,
     PasswordAuthSchemaFromJSON,
     PasswordAuthSchemaToJSON,
+    PatSchemaFromJSON,
+    PatSchemaToJSON,
+    PatsSchemaFromJSON,
+    PatsSchemaToJSON,
     ProjectAccessSchemaFromJSON,
     ProjectAccessSchemaToJSON,
     ProjectUsersFromJSON,
@@ -131,6 +137,10 @@ export interface CreateGroupRequest {
     requestBody: { [key: string]: any; };
 }
 
+export interface CreatePatRequest {
+    patSchema: PatSchema;
+}
+
 export interface CreateProjectRequest {
     createProjectSchema: CreateProjectSchema;
 }
@@ -145,6 +155,10 @@ export interface CreateSegmentRequest {
 
 export interface DeleteGroupRequest {
     groupId: string;
+}
+
+export interface DeletePatRequest {
+    secret: string;
 }
 
 export interface DeleteProjectRequest {
@@ -538,6 +552,41 @@ export class AdminApi extends runtime.BaseAPI {
 
     /**
      */
+    async createPatRaw(requestParameters: CreatePatRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PatSchema>> {
+        if (requestParameters.patSchema === null || requestParameters.patSchema === undefined) {
+            throw new runtime.RequiredError('patSchema','Required parameter requestParameters.patSchema was null or undefined when calling createPat.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // apiKey authentication
+        }
+
+        const response = await this.request({
+            path: `/api/admin/user/tokens`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: PatSchemaToJSON(requestParameters.patSchema),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PatSchemaFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async createPat(requestParameters: CreatePatRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PatSchema> {
+        const response = await this.createPatRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
     async createProjectRaw(requestParameters: CreateProjectRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters.createProjectSchema === null || requestParameters.createProjectSchema === undefined) {
             throw new runtime.RequiredError('createProjectSchema','Required parameter requestParameters.createProjectSchema was null or undefined when calling createProject.');
@@ -672,6 +721,37 @@ export class AdminApi extends runtime.BaseAPI {
      */
     async deleteGroup(requestParameters: DeleteGroupRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.deleteGroupRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     */
+    async deletePatRaw(requestParameters: DeletePatRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters.secret === null || requestParameters.secret === undefined) {
+            throw new runtime.RequiredError('secret','Required parameter requestParameters.secret was null or undefined when calling deletePat.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // apiKey authentication
+        }
+
+        const response = await this.request({
+            path: `/api/admin/user/tokens/{secret}`.replace(`{${"secret"}}`, encodeURIComponent(String(requestParameters.secret))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async deletePat(requestParameters: DeletePatRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.deletePatRaw(requestParameters, initOverrides);
     }
 
     /**
@@ -849,6 +929,34 @@ export class AdminApi extends runtime.BaseAPI {
      */
     async getOidcSettings(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<OidcSettingsSchema> {
         const response = await this.getOidcSettingsRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async getPatsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PatsSchema>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // apiKey authentication
+        }
+
+        const response = await this.request({
+            path: `/api/admin/user/tokens`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PatsSchemaFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async getPats(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PatsSchema> {
+        const response = await this.getPatsRaw(initOverrides);
         return await response.value();
     }
 

@@ -32,11 +32,11 @@ export interface ApiTokenSchema {
      */
     username: string;
     /**
-     * client, admin, frontend.
+     * 
      * @type {string}
      * @memberof ApiTokenSchema
      */
-    type: string;
+    type: ApiTokenSchemaTypeEnum;
     /**
      * 
      * @type {string}
@@ -80,6 +80,18 @@ export interface ApiTokenSchema {
      */
     alias?: string | null;
 }
+
+
+/**
+ * @export
+ */
+export const ApiTokenSchemaTypeEnum = {
+    Client: 'client',
+    Admin: 'admin',
+    Frontend: 'frontend'
+} as const;
+export type ApiTokenSchemaTypeEnum = typeof ApiTokenSchemaTypeEnum[keyof typeof ApiTokenSchemaTypeEnum];
+
 
 /**
  * Check if a given object implements the ApiTokenSchema interface.

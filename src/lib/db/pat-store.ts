@@ -8,6 +8,7 @@ const TABLE = 'personal_access_tokens';
 
 const PAT_COLUMNS = [
     'secret',
+    'description',
     'user_id',
     'expires_at',
     'created_at',
@@ -21,16 +22,18 @@ const fromRow = (row) => {
     return new Pat({
         secret: row.secret,
         userId: row.user_id,
+        description: row.description,
         createdAt: row.created_at,
         seenAt: row.seen_at,
         expiresAt: row.expires_at,
     });
 };
 
-const toRow = (user: IPat) => ({
-    secret: user.secret,
-    user_id: user.userId,
-    expires_at: user.expiresAt,
+const toRow = (pat: IPat) => ({
+    secret: pat.secret,
+    description: pat.description,
+    user_id: pat.userId,
+    expires_at: pat.expiresAt,
 });
 
 export default class PatStore implements IPatStore {

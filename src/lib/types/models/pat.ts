@@ -1,5 +1,6 @@
 export interface IPat {
     secret: string;
+    description: string;
     userId: number;
     expiresAt?: Date;
     createdAt?: Date;
@@ -9,6 +10,8 @@ export interface IPat {
 export default class Pat implements IPat {
     secret: string;
 
+    description: string;
+
     userId: number;
 
     expiresAt: Date;
@@ -17,11 +20,19 @@ export default class Pat implements IPat {
 
     createdAt: Date;
 
-    constructor({ secret, userId, expiresAt, seenAt, createdAt }: IPat) {
+    constructor({
+        secret,
+        userId,
+        expiresAt,
+        seenAt,
+        createdAt,
+        description,
+    }: IPat) {
         this.secret = secret;
         this.userId = userId;
         this.expiresAt = expiresAt;
         this.seenAt = seenAt;
         this.createdAt = createdAt;
+        this.description = description;
     }
 }

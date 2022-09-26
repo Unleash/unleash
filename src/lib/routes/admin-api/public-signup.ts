@@ -13,7 +13,10 @@ import {
     resourceCreatedResponseSchema,
 } from '../../openapi/util/create-response-schema';
 import { serializeDates } from '../../types/serialize-dates';
-import { emptyResponse } from '../../openapi/util/standard-responses';
+import {
+    emptyResponse,
+    getStandardResponses,
+} from '../../openapi/util/standard-responses';
 import { PublicSignupTokenService } from '../../services/public-signup-token-service';
 import UserService from '../../services/user-service';
 import {
@@ -28,6 +31,7 @@ import { PublicSignupTokenCreateSchema } from '../../openapi/spec/public-signup-
 import { PublicSignupTokenUpdateSchema } from '../../openapi/spec/public-signup-token-update-schema';
 import { CreateUserSchema } from '../../openapi/spec/create-user-schema';
 import { UserSchema, userSchema } from '../../openapi/spec/user-schema';
+import { extractUsername } from '../../util/extract-user';
 
 interface TokenParam {
     token: string;
@@ -76,7 +80,7 @@ export class PublicSignupController extends Controller {
                     tags: ['Public signup tokens'],
                     operationId: 'getAllPublicSignupTokens',
                     responses: {
-                        200: createResponseSchema('publicSignupTokenSchema'),
+                        200: createResponseSchema('publicSignupTokensSchema'),
                     },
                 }),
             ],
@@ -115,6 +119,7 @@ export class PublicSignupController extends Controller {
                     requestBody: createRequestSchema('createUserSchema'),
                     responses: {
                         200: createResponseSchema('userSchema'),
+                        ...getStandardResponses(409),
                     },
                 }),
             ],
@@ -195,7 +200,7 @@ export class PublicSignupController extends Controller {
         req: IAuthRequest,
         res: Response<PublicSignupTokensSchema>,
     ): Promise<void> {
-        const tokens = await this.publicSignupTokenService.getAllActiveTokens();
+        const tokens = await this.publicSignupTokenService.getAllTokens();
         this.openApiService.respondWithValidation(
             200,
             res,
@@ -237,7 +242,6 @@ export class PublicSignupController extends Controller {
             token,
             req.body,
         );
-
         this.openApiService.respondWithValidation(
             201,
             res,
@@ -250,15 +254,16 @@ export class PublicSignupController extends Controller {
         req: IAuthRequest<void, void, PublicSignupTokenCreateSchema>,
         res: Response<PublicSignupTokenSchema>,
     ): Promise<void> {
+        const username = extractUsername(req);
         const token =
             await this.publicSignupTokenService.createNewPublicSignupToken(
                 req.body,
-                req.user.name,
+                username,
             );
         this.openApiService.respondWithValidation(
             201,
             res,
-            publicSignupTokensSchema.$id,
+            publicSignupTokenSchema.$id,
             serializeDates(token),
             { location: `tokens/${token.secret}` },
         );
@@ -288,8 +293,9 @@ export class PublicSignupController extends Controller {
         res: Response,
     ): Promise<void> {
         const { token } = req.params;
+        const username = extractUsername(req);
 
-        await this.publicSignupTokenService.delete(token, req.user.name);
+        await this.publicSignupTokenService.delete(token, username);
         res.status(200).end();
     }
 }

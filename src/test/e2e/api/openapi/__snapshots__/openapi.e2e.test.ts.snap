@@ -2432,6 +2432,9 @@ exports[`should serve the OpenAPI spec 1`] = `
           "secret": {
             "type": "string",
           },
+          "url": {
+            "type": "string",
+          },
           "users": {
             "items": {
               "$ref": "#/components/schemas/userSchema",
@@ -2442,6 +2445,7 @@ exports[`should serve the OpenAPI spec 1`] = `
         },
         "required": [
           "secret",
+          "url",
           "name",
           "expiresAt",
           "createdAt",
@@ -4512,11 +4516,11 @@ If the provided project does not exist, the list of events will be empty.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/publicSignupTokenSchema",
+                  "$ref": "#/components/schemas/publicSignupTokensSchema",
                 },
               },
             },
-            "description": "publicSignupTokenSchema",
+            "description": "publicSignupTokensSchema",
           },
         },
         "tags": [
@@ -4679,6 +4683,9 @@ If the provided project does not exist, the list of events will be empty.",
               },
             },
             "description": "userSchema",
+          },
+          "409": {
+            "description": "The provided resource can not be created or updated because it would conflict with the current state of the resource or with an already existing resource, respectively.",
           },
         },
         "tags": [

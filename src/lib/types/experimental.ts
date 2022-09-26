@@ -18,7 +18,10 @@ export const defaultExperimentalOptions = {
             process.env.UNLEASH_EXPERIMENTAL_BATCH_METRICS,
             false,
         ),
-        publicSignup: parseEnvVarBoolean(process.env.PUBLIC_SIGNUP, false),
+        publicSignup: parseEnvVarBoolean(
+            process.env.UNLEASH_EXPERIMENTAL_PUBLIC_SIGNUP,
+            false,
+        ),
     },
     externalResolver: { isEnabled: (): boolean => false },
 };

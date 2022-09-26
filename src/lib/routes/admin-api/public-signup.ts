@@ -8,7 +8,10 @@ import { IAuthRequest } from '../unleash-types';
 import { IUnleashConfig, IUnleashServices } from '../../types';
 import { OpenApiService } from '../../services/openapi-service';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
-import { createResponseSchema } from '../../openapi/util/create-response-schema';
+import {
+    createResponseSchema,
+    resourceCreatedResponseSchema,
+} from '../../openapi/util/create-response-schema';
 import { serializeDates } from '../../types/serialize-dates';
 import { emptyResponse } from '../../openapi/util/standard-responses';
 import { PublicSignupTokenService } from '../../services/public-signup-token-service';
@@ -92,7 +95,9 @@ export class PublicSignupController extends Controller {
                         'publicSignupTokenCreateSchema',
                     ),
                     responses: {
-                        201: createResponseSchema('publicSignupTokenSchema'),
+                        201: resourceCreatedResponseSchema(
+                            'publicSignupTokenSchema',
+                        ),
                     },
                 }),
             ],
@@ -255,6 +260,7 @@ export class PublicSignupController extends Controller {
             res,
             publicSignupTokensSchema.$id,
             serializeDates(token),
+            { location: `tokens/${token.secret}` },
         );
     }
 

@@ -198,7 +198,7 @@ module.exports = {
                 config: {
                     server: {
                         specPath:
-                            process.env.NODE_ENV === 'development'
+                            process.env.OPENAPI_SOURCE === 'localhost'
                                 ? 'http://localhost:4242/docs/openapi.json'
                                 : 'https://us.app.unleash-hosted.com/ushosted/docs/openapi.json',
                         outputDir: 'docs/reference/api/unleash',

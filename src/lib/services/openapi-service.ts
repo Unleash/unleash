@@ -69,12 +69,17 @@ export class OpenApiService {
         res: Response<T>,
         schema: SchemaId,
         data: T,
+        headers: { [header: string]: string } = {},
     ): void {
         const errors = validateSchema(schema, data);
 
         if (errors) {
             this.logger.debug('Invalid response:', errors);
         }
+
+        Object.entries(headers).forEach(([header, value]) =>
+            res.header(header, value),
+        );
 
         res.status(status).json(data);
     }

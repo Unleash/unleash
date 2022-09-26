@@ -52,26 +52,6 @@ Each custom project role consists of:
 - a set of **project permissions** (optional)
 - a set of **environment permissions** (optional)
 
-## User Groups
-
-:::info availability
-
-User groups are available to Unleash Enterprise users since **Unleash 4.14**.
-
-:::
-
-User groups allow you to assign roles to a group of users within a project, rather than to a user directly. This allows you to manage your user permissions more easily when there's lots of users in the system. For a guide on how to create and manage user groups see [_how to create and manage user groups_](../how-to/how-to-create-and-manage-user-groups.md).
-
-A user group consists of the following:
-
-- a **name** (required)
-- a **description** (optional)
-- a list of users (optional)
-
-Groups do nothing on their own. They must be given a role on a project to assign permissions.
-
-While a user can only have one role in a given project, a user may belong to multiple groups, and each of those groups may be given a role on a project. In the case where a given user is given permissions to a project through more than one group, the user will inherit most permissive permissions of all their groups in that project.
-
 ### Project permissions
 
 You can assign the following project permissions. The permissions will be valid across all of the project's environments.
@@ -123,3 +103,23 @@ You can assign the following permissions on a per-environment level within the p
 - **enable/disable toggles**
 
   Lets the user enable and disable toggles within the environment.
+
+## User Groups
+
+:::info availability
+
+User groups are available to Unleash Enterprise users since **Unleash 4.14**.
+
+:::
+
+User groups allow you to assign roles to a group of users within a project, rather than to a user directly. This allows you to manage your user permissions more easily when there's lots of users in the system. For a guide on how to create and manage user groups see [_how to create and manage user groups_](../how-to/how-to-create-and-manage-user-groups.md).
+
+A user group consists of the following:
+
+- a **name** (required)
+- a **description** (optional)
+- a list of users (optional)
+
+Groups do nothing on their own. They must be given a role on a project to assign permissions. You can assign both standard roles and custom project roles to groups.
+
+While a user can only have one role in a given project, a user may belong to multiple groups, and each of those groups may be given a role on a project. In the case where a given user is given permissions to a project through more than one group, the user will inherit most permissive permissions of all their groups in that project.

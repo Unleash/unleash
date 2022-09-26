@@ -227,7 +227,11 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "string",
           },
           "type": {
-            "description": "client, admin, frontend.",
+            "enum": [
+              "client",
+              "admin",
+              "frontend",
+            ],
             "type": "string",
           },
           "username": {
@@ -664,7 +668,7 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "string",
           },
           "type": {
-            "description": "client, admin, frontend.",
+            "description": "One of client, admin, frontend",
             "type": "string",
           },
           "username": {
@@ -2651,7 +2655,6 @@ exports[`should serve the OpenAPI spec 1`] = `
             "additionalProperties": false,
             "properties": {
               "frontendApiOrigins": {
-                "additionalProperties": false,
                 "items": {
                   "type": "string",
                 },
@@ -3620,7 +3623,16 @@ exports[`should serve the OpenAPI spec 1`] = `
                 },
               },
             },
-            "description": "apiTokenSchema",
+            "description": "The resource was successfully created.",
+            "headers": {
+              "location": {
+                "description": "The location of the newly created resource.",
+                "schema": {
+                  "format": "uri",
+                  "type": "string",
+                },
+              },
+            },
           },
         },
         "tags": [
@@ -3902,7 +3914,23 @@ exports[`should serve the OpenAPI spec 1`] = `
         },
         "responses": {
           "201": {
-            "description": "This response has no body.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/contextFieldSchema",
+                },
+              },
+            },
+            "description": "The resource was successfully created.",
+            "headers": {
+              "location": {
+                "description": "The location of the newly created resource.",
+                "schema": {
+                  "format": "uri",
+                  "type": "string",
+                },
+              },
+            },
           },
         },
         "tags": [
@@ -4348,7 +4376,16 @@ If the provided project does not exist, the list of events will be empty.",
                 },
               },
             },
-            "description": "tagSchema",
+            "description": "The resource was successfully created.",
+            "headers": {
+              "location": {
+                "description": "The location of the newly created resource.",
+                "schema": {
+                  "format": "uri",
+                  "type": "string",
+                },
+              },
+            },
           },
         },
         "tags": [
@@ -4508,7 +4545,16 @@ If the provided project does not exist, the list of events will be empty.",
                 },
               },
             },
-            "description": "publicSignupTokenSchema",
+            "description": "The resource was successfully created.",
+            "headers": {
+              "location": {
+                "description": "The location of the newly created resource.",
+                "schema": {
+                  "format": "uri",
+                  "type": "string",
+                },
+              },
+            },
           },
         },
         "tags": [
@@ -6121,7 +6167,23 @@ If the provided project does not exist, the list of events will be empty.",
         },
         "responses": {
           "201": {
-            "description": "This response has no body.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/strategySchema",
+                },
+              },
+            },
+            "description": "The resource was successfully created.",
+            "headers": {
+              "location": {
+                "description": "The location of the newly created resource.",
+                "schema": {
+                  "format": "uri",
+                  "type": "string",
+                },
+              },
+            },
           },
         },
         "tags": [
@@ -6301,7 +6363,16 @@ If the provided project does not exist, the list of events will be empty.",
                 },
               },
             },
-            "description": "tagTypeSchema",
+            "description": "The resource was successfully created.",
+            "headers": {
+              "location": {
+                "description": "The location of the newly created resource.",
+                "schema": {
+                  "format": "uri",
+                  "type": "string",
+                },
+              },
+            },
           },
         },
         "tags": [
@@ -6457,7 +6528,23 @@ If the provided project does not exist, the list of events will be empty.",
         },
         "responses": {
           "201": {
-            "description": "This response has no body.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/tagWithVersionSchema",
+                },
+              },
+            },
+            "description": "The resource was successfully created.",
+            "headers": {
+              "location": {
+                "description": "The location of the newly created resource.",
+                "schema": {
+                  "format": "uri",
+                  "type": "string",
+                },
+              },
+            },
           },
         },
         "tags": [

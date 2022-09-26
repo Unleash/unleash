@@ -3190,6 +3190,11 @@ expect@^29.0.0, expect@^29.0.1:
     jest-message-util "^29.0.1"
     jest-util "^29.0.1"
 
+express-rate-limit@^6.6.0:
+  version "6.6.0"
+  resolved "https://registry.yarnpkg.com/express-rate-limit/-/express-rate-limit-6.6.0.tgz#3bbc2546540d327b1b0bfa9ab5f1b2c49075af98"
+  integrity sha512-HFN2+4ZGdkQOS8Qli4z6knmJFnw6lZed67o6b7RGplWeb1Z0s8VXaj3dUgPIdm9hrhZXTRpCTHXA0/2Eqex0vA==
+
 express-session@^1.17.1:
   version "1.17.2"
   resolved "https://registry.npmjs.org/express-session/-/express-session-1.17.2.tgz"

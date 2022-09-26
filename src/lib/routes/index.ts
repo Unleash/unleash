@@ -3,6 +3,7 @@ import ResetPasswordController from './auth/reset-password-controller';
 import { SimplePasswordProvider } from './auth/simple-password-provider';
 import { IUnleashConfig, IUnleashServices } from '../types';
 import LogoutController from './logout';
+import rateLimit from 'express-rate-limit';
 
 const AdminApi = require('./admin-api');
 const ClientApi = require('./client-api');
@@ -19,9 +20,15 @@ class IndexRouter extends Controller {
         this.use('/health', new HealthCheckController(config, services).router);
         this.use('/internal-backstage', new BackstageController(config).router);
         this.use('/logout', new LogoutController(config, services).router);
-        this.use(
+        this.useWithMiddleware(
             '/auth/simple',
             new SimplePasswordProvider(config, services).router,
+            rateLimit({
+                windowMs: 1 * 60 * 1000,
+                max: 5,
+                standardHeaders: true,
+                legacyHeaders: false,
+            }),
         );
         this.use(
             '/auth/reset',

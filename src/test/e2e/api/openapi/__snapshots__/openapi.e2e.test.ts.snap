@@ -668,11 +668,7 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "string",
           },
           "type": {
-            "enum": [
-              "client",
-              "admin",
-              "frontend",
-            ],
+            "description": "One of client, admin, frontend",
             "type": "string",
           },
           "username": {

@@ -1,4 +1,5 @@
 import { IUnleashConfig } from '../types';
+import { IAuthRequest } from '../routes/unleash-types';
 
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 const patMiddleware = (
@@ -15,13 +16,13 @@ const patMiddleware = (
         return (req, res, next) => next();
     }
 
-    return async (req, res, next) => {
+    return async (req: IAuthRequest, res, next) => {
         if (req.user) {
             return next();
         }
 
         try {
-            const apiToken = req.header('authorization') as string;
+            const apiToken = req.header('authorization');
             if (apiToken?.startsWith('user')) {
                 const user = await userService.getUserByPersonalAccessToken(
                     apiToken,

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { ApiTokenType } from '../types/models/api-token';
 import { IUnleashConfig } from '../types/option';
+import { IAuthRequest } from '../routes/unleash-types';
 
 const isClientApi = ({ path }) => {
     return path && path.startsWith('/api/client');
@@ -39,13 +40,13 @@ const apiAccessMiddleware = (
         return (req, res, next) => next();
     }
 
-    return (req, res, next) => {
+    return (req: IAuthRequest, res, next) => {
         if (req.user) {
             return next();
         }
 
         try {
-            const apiToken = req.header('authorization') as string;
+            const apiToken = req.header('authorization');
             if (!apiToken?.startsWith('user')) {
                 const apiUser = apiTokenService.getUserForToken(apiToken);
                 const { CLIENT, FRONTEND } = ApiTokenType;

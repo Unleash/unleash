@@ -6,14 +6,19 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { AdminAlert } from 'component/common/AdminAlert/AdminAlert';
 import { InviteLinkBar } from './InviteLinkBar/InviteLinkBar';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const UsersAdmin = () => {
     const { hasAccess } = useContext(AccessContext);
+    const { uiConfig } = useUiConfig();
 
     return (
         <div>
             <AdminMenu />
-            <InviteLinkBar />
+            <ConditionallyRender
+                condition={Boolean(uiConfig?.flags?.publicSignup)}
+                show={<InviteLinkBar />}
+            />
             <ConditionallyRender
                 condition={hasAccess(ADMIN)}
                 show={<UsersList />}

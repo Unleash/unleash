@@ -63,7 +63,7 @@ Example with curl:
 ```sh
 curl -X GET -H "Content-Type: application/json" \
   -H "Authorization: Basic YWRtaW46" \
-  http://unleash.herokuapp.com/api/admin/state/export?&featureToggles=1&strategies=0 > export.json
+  https://unleash.example.com/api/admin/state/export?&featureToggles=1&strategies=0 > export.json
 ```
 
 ### API Import {#api-import}

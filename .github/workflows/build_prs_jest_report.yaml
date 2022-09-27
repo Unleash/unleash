@@ -47,8 +47,8 @@ jobs:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
           NODE_ENV: test
           PORT: 4243
-      - name: Report coverage on ${{ matrix.node-version }}
-        uses: marocchino/sticky-pull-request-comment@v2
-        with:
-          # pass output from the previous step by id.
-          message: ${{ steps.coverage.outputs.report }}
+      # - name: Report coverage on ${{ matrix.node-version }}
+      #   uses: marocchino/sticky-pull-request-comment@v2
+      #   with:
+      #     # pass output from the previous step by id.
+      #     message: ${{ steps.coverage.outputs.report }}

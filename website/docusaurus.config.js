@@ -179,6 +179,10 @@ module.exports = {
                         from: '/advanced/audit_log',
                         to: '/reference/event-log',
                     },
+                    {
+                        from: '/api/open_api',
+                        to: '/reference/api/unleash',
+                    },
                 ],
                 createRedirects: function (toPath) {
                     if (

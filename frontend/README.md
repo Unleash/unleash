@@ -15,7 +15,9 @@ yarn run start
 
 ## Run with a heroku-hosted instance of unleash-api
 
-Alternatively, instead of running unleash-api on localhost, use a remote instance:
+<!-- todo: update this after updating the package.json -->
+
+Alternatively, instead of running unleash-api on localhost, you can use a remote instance:
 
 ```
 cd ~/frontend

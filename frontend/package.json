@@ -13,7 +13,7 @@
     "build": "vite build",
     "lint": "eslint src --max-warnings 0",
     "start": "vite",
-    "start:heroku": "UNLEASH_API=https://unleash.herokuapp.com yarn run start",
+    "start:heroku": "UNLEASH_API=https://unleash.herokuapp.com yarn run start", // <— what do we here?
     "start:enterprise": "UNLEASH_API=https://unleash4.herokuapp.com yarn run start",
     "start:demo": "UNLEASH_BASE_PATH=/demo/ yarn start",
     "test": "tsc && vitest run",

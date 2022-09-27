@@ -1,15 +1,15 @@
 {
   "rewrites": [
     {
-      "source": "/selfhosted/api/:match*",
+      "source": "/api/:match*",
       "destination": "https://sandbox.getunleash.io/selfhosted/api/:match*"
     },
     {
-      "source": "/selfhosted/logout",
+      "source": "/logout",
       "destination": "https://sandbox.getunleash.io/selfhosted/logout"
     },
     {
-      "source": "/selfhosted/auth/:match*",
+      "source": "/auth/:match*",
       "destination": "https://sandbox.getunleash.io/selfhosted/auth/:match*"
     },
     { "source": "/(.*)", "destination": "/index.html" }

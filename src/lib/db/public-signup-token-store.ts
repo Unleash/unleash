@@ -159,7 +159,7 @@ export class PublicSignupTokenStore implements IPublicSignupTokenStore {
 
     async isValid(secret: string): Promise<boolean> {
         const result = await this.db.raw(
-            `SELECT EXISTS (SELECT 1 FROM ${TABLE} WHERE secret = ? AND expires_at::date > ?) AS valid`,
+            `SELECT EXISTS (SELECT 1 FROM ${TABLE} WHERE secret = ? AND expires_at::date > ?) AND enabled == TRUE AS valid`,
             [secret, new Date()],
         );
         const { valid } = result.rows[0];
@@ -197,12 +197,12 @@ export class PublicSignupTokenStore implements IPublicSignupTokenStore {
         return this.db<ITokenInsert>(TABLE).del();
     }
 
-    async setExpiry(
+    async update(
         secret: string,
-        expiresAt: Date,
+        { expiresAt, enabled }: { expiresAt?: Date; enabled?: boolean },
     ): Promise<PublicSignupTokenSchema> {
         const rows = await this.makeTokenUsersQuery()
-            .update({ expires_at: expiresAt })
+            .update({ expires_at: expiresAt, enabled })
             .where('secret', secret)
             .returning('*');
         if (rows.length > 0) {

@@ -154,24 +154,7 @@ export class PublicSignupController extends Controller {
                         'publicSignupTokenUpdateSchema',
                     ),
                     responses: {
-                        200: emptyResponse,
-                    },
-                }),
-            ],
-        });
-
-        this.route({
-            method: 'delete',
-            path: '/tokens/:token',
-            handler: this.deletePublicSignupToken,
-            acceptAnyContentType: true,
-            permission: ADMIN,
-            middleware: [
-                openApiService.validPath({
-                    tags: ['Public signup tokens'],
-                    operationId: 'deletePublicSignupToken',
-                    responses: {
-                        200: emptyResponse,
+                        200: createResponseSchema('publicSignupTokenSchema'),
                     },
                 }),
             ],
@@ -229,8 +212,10 @@ export class PublicSignupController extends Controller {
     ): Promise<void> {
         const { token } = req.params;
         const valid = await this.publicSignupTokenService.validate(token);
-        if (valid) return res.status(200).end();
-        else return res.status(401).end();
+        if (valid) {
+            return res.status(200).end();
+        }
+        return res.status(401).end();
     }
 
     async addTokenUser(
@@ -238,6 +223,11 @@ export class PublicSignupController extends Controller {
         res: Response<UserSchema>,
     ): Promise<void> {
         const { token } = req.params;
+        const valid = await this.publicSignupTokenService.validate(token);
+        console.log('addTokenUser', valid);
+        if (!valid) {
+            return res.status(400).end();
+        }
         const user = await this.publicSignupTokenService.addTokenUser(
             token,
             req.body,
@@ -274,28 +264,27 @@ export class PublicSignupController extends Controller {
         res: Response,
     ): Promise<any> {
         const { token } = req.params;
-        const { expiresAt } = req.body;
+        const { expiresAt, enabled } = req.body;
 
-        if (!expiresAt) {
+        if (!expiresAt && enabled === undefined) {
             this.logger.error(req.body);
             return res.status(400).send();
         }
 
-        await this.publicSignupTokenService.setExpiry(
+        const result = await this.publicSignupTokenService.update(
             token,
-            new Date(expiresAt),
+            {
+                ...(enabled === undefined ? {} : { enabled }),
+                ...(expiresAt ? { expiresAt: new Date(expiresAt) } : {}),
+            },
+            extractUsername(req),
         );
-        return res.status(200).end();
-    }
 
-    async deletePublicSignupToken(
-        req: IAuthRequest<TokenParam>,
-        res: Response,
-    ): Promise<void> {
-        const { token } = req.params;
-        const username = extractUsername(req);
-
-        await this.publicSignupTokenService.delete(token, username);
-        res.status(200).end();
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            publicSignupTokenSchema.$id,
+            serializeDates(result),
+        );
     }
 }

@@ -10,7 +10,7 @@ import { RoleName } from '../types/model';
 import { IEventStore } from '../types/stores/event-store';
 import {
     PublicSignupTokenCreatedEvent,
-    PublicSignupTokenManuallyExpiredEvent,
+    PublicSignupTokenUpdatedEvent,
     PublicSignupTokenUserAddedEvent,
 } from '../types/events';
 import UserService, { ICreateUser } from './user-service';
@@ -76,11 +76,19 @@ export class PublicSignupTokenService {
         return this.store.isValid(secret);
     }
 
-    public async setExpiry(
+    public async update(
         secret: string,
-        expireAt: Date,
+        { expiresAt, enabled }: { expiresAt?: Date; enabled?: boolean },
+        createdBy: string,
     ): Promise<PublicSignupTokenSchema> {
-        return this.store.setExpiry(secret, expireAt);
+        const result = await this.store.update(secret, { expiresAt, enabled });
+        await this.eventStore.store(
+            new PublicSignupTokenUpdatedEvent({
+                createdBy,
+                data: { secret, enabled, expiresAt },
+            }),
+        );
+        return result;
     }
 
     public async addTokenUser(
@@ -98,22 +106,6 @@ export class PublicSignupTokenService {
             }),
         );
         return user;
-    }
-
-    public async delete(secret: string, expiredBy: string): Promise<void> {
-        await this.expireToken(secret);
-        await this.eventStore.store(
-            new PublicSignupTokenManuallyExpiredEvent({
-                createdBy: expiredBy,
-                data: { secret },
-            }),
-        );
-    }
-
-    private async expireToken(
-        secret: string,
-    ): Promise<PublicSignupTokenSchema> {
-        return this.store.setExpiry(secret, new Date());
     }
 
     public async createNewPublicSignupToken(

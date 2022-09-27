@@ -51,6 +51,15 @@ describe('Public Signup API', () => {
     let request;
     let destroy;
 
+    const user: CreateUserSchema = {
+        username: 'some-username',
+        email: 'someEmail@example.com',
+        name: 'some-name',
+        password: null,
+        rootRole: 1,
+        sendEmail: false,
+    };
+
     beforeEach(async () => {
         const setup = await getSetup();
         stores = setup.stores;
@@ -132,6 +141,30 @@ describe('Public Signup API', () => {
     });
 
     test('should expire token', async () => {
+        expect.assertions(2);
+        const appName = '123!23';
+
+        stores.clientApplicationsStore.upsert({ appName });
+        stores.publicSignupTokenStore.create({
+            name: 'some-name',
+            expiresAt: expireAt(),
+        });
+
+        const expireNow = expireAt(0);
+
+        return request
+            .put('/api/admin/invite-link/tokens/some-secret')
+            .send({ expiresAt: expireNow.toISOString() })
+            .expect(200)
+            .expect(async (res) => {
+                const token = res.body;
+                expect(token.expiresAt).toBe(expireNow.toISOString());
+                const eventCount = await stores.eventStore.count();
+                expect(eventCount).toBe(1); // PUBLIC_SIGNUP_TOKEN_TOKEN_UPDATED
+            });
+    });
+
+    test('should disable the token', async () => {
         expect.assertions(1);
         const appName = '123!23';
 
@@ -142,11 +175,12 @@ describe('Public Signup API', () => {
         });
 
         return request
-            .delete('/api/admin/invite-link/tokens/some-secret')
+            .put('/api/admin/invite-link/tokens/some-secret')
+            .send({ enabled: false })
             .expect(200)
-            .expect(async () => {
-                const eventCount = await stores.eventStore.count();
-                expect(eventCount).toBe(1); // PUBLIC_SIGNUP_TOKEN_MANUALLY_EXPIRED
+            .expect(async (res) => {
+                const token = res.body;
+                expect(token.enabled).toBe(false);
             });
     });
 
@@ -160,15 +194,6 @@ describe('Public Signup API', () => {
             expiresAt: expireAt(),
         });
 
-        const user: CreateUserSchema = {
-            username: 'some-username',
-            email: 'someEmail@example.com',
-            name: 'some-name',
-            password: null,
-            rootRole: 1,
-            sendEmail: false,
-        };
-
         return request
             .post('/api/admin/invite-link/tokens/some-secret/signup')
             .send(user)
@@ -180,6 +205,37 @@ describe('Public Signup API', () => {
                 expect(eventCount).toBe(2); //USER_CREATED && PUBLIC_SIGNUP_TOKEN_USER_ADDED
                 expect(res.body.username).toBe(user.username);
             });
+    });
+
+    test('should not allow a user to register with expired token', async () => {
+        const appName = '123!23';
+
+        stores.clientApplicationsStore.upsert({ appName });
+        stores.publicSignupTokenStore.create({
+            name: 'some-name',
+            expiresAt: expireAt(-1),
+        });
+
+        return request
+            .post('/api/admin/invite-link/tokens/some-secret/signup')
+            .send(user)
+            .expect(400);
+    });
+
+    test('should not allow a user to register disabled token', async () => {
+        const appName = '123!23';
+
+        stores.clientApplicationsStore.upsert({ appName });
+        stores.publicSignupTokenStore.create({
+            name: 'some-name',
+            expiresAt: expireAt(),
+        });
+        stores.publicSignupTokenStore.update('some-secret', { enabled: false });
+
+        return request
+            .post('/api/admin/invite-link/tokens/some-secret/signup')
+            .send(user)
+            .expect(400);
     });
 
     test('should return 200 if token is valid', async () => {

@@ -10,9 +10,9 @@ export interface IPublicSignupTokenStore
     ): Promise<PublicSignupTokenSchema>;
     addTokenUser(secret: string, userId: number): Promise<void>;
     isValid(secret): Promise<boolean>;
-    setExpiry(
+    update(
         secret: string,
-        expiresAt: Date,
+        value: { expiresAt?: Date; enabled?: boolean },
     ): Promise<PublicSignupTokenSchema>;
     delete(secret: string): Promise<void>;
     count(): Promise<number>;

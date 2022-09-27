@@ -8,9 +8,6 @@ let config: any;
 beforeEach(() => {
     config = {
         getLogger,
-        authentication: {
-            enablePersonalAccessToken: true,
-        },
         flagResolver: {
             isEnabled: jest.fn().mockReturnValue(true),
         },
@@ -28,16 +25,14 @@ test('should not set user if unknown token', async () => {
 
     const req = {
         header: jest.fn().mockReturnValue('user:some-token'),
-        session: {
-            user: undefined,
-        },
+        user: undefined,
     };
 
     await func(req, undefined, cb);
 
     expect(cb).toHaveBeenCalled();
     expect(req.header).toHaveBeenCalled();
-    expect(req.session.user).toBeFalsy();
+    expect(req.user).toBeFalsy();
 });
 
 test('should not set user if token wrong format', async () => {
@@ -51,9 +46,7 @@ test('should not set user if token wrong format', async () => {
 
     const req = {
         header: jest.fn().mockReturnValue('token-not-starting-with-user'),
-        session: {
-            user: undefined,
-        },
+        user: undefined,
     };
 
     await func(req, undefined, cb);
@@ -61,7 +54,7 @@ test('should not set user if token wrong format', async () => {
     expect(userService.getUserByPersonalAccessToken).not.toHaveBeenCalled();
     expect(cb).toHaveBeenCalled();
     expect(req.header).toHaveBeenCalled();
-    expect(req.session.user).toBeFalsy();
+    expect(req.user).toBeFalsy();
 });
 
 test('should add user if known token', async () => {
@@ -79,9 +72,7 @@ test('should add user if known token', async () => {
 
     const req = {
         header: jest.fn().mockReturnValue('user:some-known-token'),
-        session: {
-            user: undefined,
-        },
+        user: undefined,
         path: '/api/client',
     };
 
@@ -89,7 +80,7 @@ test('should add user if known token', async () => {
 
     expect(cb).toHaveBeenCalled();
     expect(req.header).toHaveBeenCalled();
-    expect(req.session.user).toBe(apiUser);
+    expect(req.user).toBe(apiUser);
 });
 
 test('should not add user if disabled', async () => {
@@ -103,8 +94,10 @@ test('should not add user if disabled', async () => {
 
     const disabledConfig = createTestConfig({
         getLogger,
-        authentication: {
-            enablePersonalAccessToken: false,
+        experimental: {
+            flags: {
+                personalAccessTokens: false,
+            },
         },
     });
 
@@ -114,15 +107,13 @@ test('should not add user if disabled', async () => {
 
     const req = {
         header: jest.fn().mockReturnValue('user:some-known-token'),
-        session: {
-            user: undefined,
-        },
+        user: undefined,
     };
 
     await func(req, undefined, cb);
 
     expect(cb).toHaveBeenCalled();
-    expect(req.session.user).toBeFalsy();
+    expect(req.user).toBeFalsy();
 });
 
 test('should call next if userService throws exception', async () => {
@@ -139,9 +130,7 @@ test('should call next if userService throws exception', async () => {
 
     const req = {
         header: jest.fn().mockReturnValue('user:some-token'),
-        session: {
-            user: undefined,
-        },
+        user: undefined,
     };
 
     await func(req, undefined, cb);

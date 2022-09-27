@@ -12,7 +12,7 @@ export const defaultExperimentalOptions = {
         ),
         personalAccessTokens: parseEnvVarBoolean(
             process.env.UNLEASH_EXPERIMENTAL_PERSONAL_ACCESS_TOKENS,
-            false,
+            true,
         ),
         embedProxyFrontend: parseEnvVarBoolean(
             process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY_FRONTEND,

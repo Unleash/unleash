@@ -47,7 +47,7 @@ const apiAccessMiddleware = (
 
         try {
             const apiToken = req.header('authorization');
-            if (!apiToken?.startsWith('user')) {
+            if (!apiToken?.startsWith('user:')) {
                 const apiUser = apiTokenService.getUserForToken(apiToken);
                 const { CLIENT, FRONTEND } = ApiTokenType;
 

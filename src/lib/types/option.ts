@@ -57,7 +57,6 @@ export enum IAuthType {
 
 export interface IAuthOption {
     enableApiToken: boolean;
-    enablePersonalAccessToken: boolean;
     type: IAuthType;
     customAuthHandler?: Function;
     createAdminUser: boolean;

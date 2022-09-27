@@ -5,33 +5,25 @@ import { IAuthRequest } from '../routes/unleash-types';
 const patMiddleware = (
     {
         getLogger,
-        authentication,
         flagResolver,
-    }: Pick<IUnleashConfig, 'getLogger' | 'authentication' | 'flagResolver'>,
+    }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>,
     { userService }: any,
 ): any => {
     const logger = getLogger('/middleware/pat-middleware.ts');
     logger.debug('Enabling PAT middleware');
 
-    if (
-        !authentication.enablePersonalAccessToken ||
-        !flagResolver.isEnabled('personalAccessTokens')
-    ) {
+    if (!flagResolver.isEnabled('personalAccessTokens')) {
         return (req, res, next) => next();
     }
 
     return async (req: IAuthRequest, res, next) => {
-        if (req.user) {
-            return next();
-        }
-
         try {
             const apiToken = req.header('authorization');
-            if (apiToken?.startsWith('user')) {
+            if (apiToken?.startsWith('user:')) {
                 const user = await userService.getUserByPersonalAccessToken(
                     apiToken,
                 );
-                req.session.user = user;
+                req.user = user;
             }
         } catch (error) {
             logger.error(error);

@@ -132,8 +132,25 @@ test('should get user id 1', async () => {
         });
 });
 
+test('should be able to get projects', async () => {
+    await app.request
+        .get('/api/admin/projects')
+        .set('Authorization', firstSecret)
+        .expect(200);
+});
+
+test('should be able to create a toggle', async () => {
+    await app.request
+        .post('/api/admin/projects/default/features')
+        .set('Authorization', firstSecret)
+        .send({
+            name: 'test-toggle',
+            type: 'release',
+        })
+        .expect(201);
+});
+
 test('should not get user with invalid token', async () => {
-    await app.request.get('/logout').expect(302);
     await app.request
         .get('/api/admin/user')
         .set('Authorization', 'randomtoken')

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 
 const getFetcher = (token: string) => () => {
+    if (!token) return Promise.resolve({ name: INVALID_TOKEN_ERROR });
     const path = formatApiPath(`auth/reset/validate?token=${token}`);
     // Don't use handleErrorResponses here, because we need to read the error.
     return fetch(path, {

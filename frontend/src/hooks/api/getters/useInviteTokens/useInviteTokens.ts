@@ -6,19 +6,19 @@ import {
 } from 'openapi';
 import { formatApiPath } from 'utils/formatPath';
 
-const url = 'api/admin/invite-link/tokens';
+export const url = 'api/admin/invite-link/tokens';
 
 const fetcher = () => {
     const path = formatApiPath(url);
     return fetch(path, {
-        method: 'GET',
+        method: 'GET', // FIXME: POST?
     })
         .then(res => res.json())
         .then(PublicSignupTokensSchemaFromJSON);
 };
 
 export const useInviteTokens = (options: SWRConfiguration = {}) => {
-    const { data, error } = useSWR<PublicSignupTokensSchema>(
+    const { data, error, mutate } = useSWR<PublicSignupTokensSchema>(
         url,
         fetcher,
         options
@@ -29,5 +29,11 @@ export const useInviteTokens = (options: SWRConfiguration = {}) => {
         setLoading(!error && !data);
     }, [data, error]);
 
-    return { data, error, loading };
+    return {
+        data: data
+            ? { tokens: data.tokens.filter(token => token.enabled) }
+            : undefined,
+        error,
+        loading,
+    };
 };

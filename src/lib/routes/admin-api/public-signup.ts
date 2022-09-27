@@ -224,7 +224,6 @@ export class PublicSignupController extends Controller {
     ): Promise<void> {
         const { token } = req.params;
         const valid = await this.publicSignupTokenService.validate(token);
-        console.log('addTokenUser', valid);
         if (!valid) {
             return res.status(400).end();
         }

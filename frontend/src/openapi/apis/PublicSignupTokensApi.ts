@@ -46,10 +46,6 @@ export interface CreatePublicSignupTokenRequest {
     publicSignupTokenCreateSchema: PublicSignupTokenCreateSchema;
 }
 
-export interface DeletePublicSignupTokenRequest {
-    token: string;
-}
-
 export interface GetPublicSignupTokenRequest {
     token: string;
 }
@@ -144,37 +140,6 @@ export class PublicSignupTokensApi extends runtime.BaseAPI {
 
     /**
      */
-    async deletePublicSignupTokenRaw(requestParameters: DeletePublicSignupTokenRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
-        if (requestParameters.token === null || requestParameters.token === undefined) {
-            throw new runtime.RequiredError('token','Required parameter requestParameters.token was null or undefined when calling deletePublicSignupToken.');
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // apiKey authentication
-        }
-
-        const response = await this.request({
-            path: `/api/admin/invite-link/tokens/{token}`.replace(`{${"token"}}`, encodeURIComponent(String(requestParameters.token))),
-            method: 'DELETE',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.VoidApiResponse(response);
-    }
-
-    /**
-     */
-    async deletePublicSignupToken(requestParameters: DeletePublicSignupTokenRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.deletePublicSignupTokenRaw(requestParameters, initOverrides);
-    }
-
-    /**
-     */
     async getAllPublicSignupTokensRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PublicSignupTokensSchema>> {
         const queryParameters: any = {};
 
@@ -235,7 +200,7 @@ export class PublicSignupTokensApi extends runtime.BaseAPI {
 
     /**
      */
-    async updatePublicSignupTokenRaw(requestParameters: UpdatePublicSignupTokenRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+    async updatePublicSignupTokenRaw(requestParameters: UpdatePublicSignupTokenRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PublicSignupTokenSchema>> {
         if (requestParameters.token === null || requestParameters.token === undefined) {
             throw new runtime.RequiredError('token','Required parameter requestParameters.token was null or undefined when calling updatePublicSignupToken.');
         }
@@ -262,13 +227,14 @@ export class PublicSignupTokensApi extends runtime.BaseAPI {
             body: PublicSignupTokenUpdateSchemaToJSON(requestParameters.publicSignupTokenUpdateSchema),
         }, initOverrides);
 
-        return new runtime.VoidApiResponse(response);
+        return new runtime.JSONApiResponse(response, (jsonValue) => PublicSignupTokenSchemaFromJSON(jsonValue));
     }
 
     /**
      */
-    async updatePublicSignupToken(requestParameters: UpdatePublicSignupTokenRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.updatePublicSignupTokenRaw(requestParameters, initOverrides);
+    async updatePublicSignupToken(requestParameters: UpdatePublicSignupTokenRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PublicSignupTokenSchema> {
+        const response = await this.updatePublicSignupTokenRaw(requestParameters, initOverrides);
+        return await response.value();
     }
 
     /**

@@ -52,6 +52,12 @@ export interface PublicSignupTokenSchema {
     name: string;
     /**
      * 
+     * @type {boolean}
+     * @memberof PublicSignupTokenSchema
+     */
+    enabled: boolean;
+    /**
+     * 
      * @type {Date}
      * @memberof PublicSignupTokenSchema
      */
@@ -90,6 +96,7 @@ export function instanceOfPublicSignupTokenSchema(value: object): boolean {
     isInstance = isInstance && "secret" in value;
     isInstance = isInstance && "url" in value;
     isInstance = isInstance && "name" in value;
+    isInstance = isInstance && "enabled" in value;
     isInstance = isInstance && "expiresAt" in value;
     isInstance = isInstance && "createdAt" in value;
     isInstance = isInstance && "createdBy" in value;
@@ -111,6 +118,7 @@ export function PublicSignupTokenSchemaFromJSONTyped(json: any, ignoreDiscrimina
         'secret': json['secret'],
         'url': json['url'],
         'name': json['name'],
+        'enabled': json['enabled'],
         'expiresAt': (new Date(json['expiresAt'])),
         'createdAt': (new Date(json['createdAt'])),
         'createdBy': json['createdBy'],
@@ -131,6 +139,7 @@ export function PublicSignupTokenSchemaToJSON(value?: PublicSignupTokenSchema | 
         'secret': value.secret,
         'url': value.url,
         'name': value.name,
+        'enabled': value.enabled,
         'expiresAt': (value.expiresAt.toISOString()),
         'createdAt': (value.createdAt.toISOString()),
         'createdBy': value.createdBy,

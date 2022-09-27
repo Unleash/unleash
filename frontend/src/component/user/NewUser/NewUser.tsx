@@ -1,10 +1,10 @@
 import { Box, TextField, Typography } from '@mui/material';
 import useResetPassword from 'hooks/api/getters/useResetPassword/useResetPassword';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+// import useUserInvite from 'hooks/api/getters/useUserInvite/useUserInvite';
 import AuthOptions from '../common/AuthOptions/AuthOptions';
 import DividerText from 'component/common/DividerText/DividerText';
 import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';
-// import { useInviteTokens } from 'hooks/api/getters/useInviteTokens/useInviteTokens'; // FIXME: remove
 import ResetPasswordForm from '../common/ResetPasswordForm/ResetPasswordForm';
 import InvalidToken from '../common/InvalidToken/InvalidToken';
 import { NewUserWrapper } from './NewUserWrapper/NewUserWrapper';
@@ -18,12 +18,13 @@ export const NewUser = () => {
         setLoading,
         invalidToken,
     } = useResetPassword();
-    // const { loading: inviteLoading } = useInviteTokens();
-    const invite = false; // FIXME: validate token
     const inviteLoading = false;
     const passwordDisabled = authDetails?.defaultHidden === true;
+    // const inviteData = useUserInvite();
+    // console.log(inviteData);
 
-    if (invalidToken && !invite) {
+    const invite = false;
+    if (invalidToken && invite == false) {
         return (
             <NewUserWrapper loading={resetLoading || inviteLoading}>
                 <InvalidToken />

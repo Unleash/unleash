@@ -62,7 +62,7 @@ export const InviteLink: VFC<ICreateInviteLinkProps> = () => {
 
     const [isSending, setIsSending] = useState(false);
     const { setToastApiError } = useToast();
-    const { createToken, updateToken, deleteToken } = useInviteTokenApi();
+    const { createToken, updateToken } = useInviteTokenApi();
 
     const handleSubmit: FormEventHandler<HTMLFormElement> = async e => {
         e.preventDefault();
@@ -70,7 +70,9 @@ export const InviteLink: VFC<ICreateInviteLinkProps> = () => {
 
         try {
             if (isUpdating) {
-                await updateToken(defaultToken!.secret, parseISO(expiry));
+                await updateToken(defaultToken!.secret, {
+                    expiresAt: parseISO(expiry),
+                });
                 setInviteLink(defaultToken!.url);
             } else {
                 const response = await createToken({
@@ -87,10 +89,13 @@ export const InviteLink: VFC<ICreateInviteLinkProps> = () => {
         }
     };
 
-    const onDeleteClick = async () => {
+    const onDisableClick = async () => {
+        // FIXME: confirm dialog
         setIsSending(true);
         try {
-            await deleteToken(defaultToken!.secret);
+            await updateToken(defaultToken!.secret, {
+                enabled: false,
+            });
             navigate(GO_BACK);
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
@@ -181,7 +186,7 @@ export const InviteLink: VFC<ICreateInviteLinkProps> = () => {
                         show={
                             <Button
                                 sx={{ ml: 2 }}
-                                onClick={onDeleteClick}
+                                onClick={onDisableClick}
                                 color="error"
                             >
                                 Delete link
@@ -210,7 +215,7 @@ export const InviteLink: VFC<ICreateInviteLinkProps> = () => {
                         them with the following link to get started:
                     </Typography>
                     <LinkField
-                        inviteLink={`${uiConfig.unleashUrl}/new-user?invite=${inviteLink}`}
+                        inviteLink={inviteLink}
                     />
 
                     <Typography variant="body1">

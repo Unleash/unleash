@@ -40,6 +40,7 @@ const tokenRowReducer = (acc, tokenRow) => {
             name: token.name,
             url: token.url,
             expiresAt: token.expires_at,
+            enabled: token.enabled,
             createdAt: token.created_at,
             createdBy: token.created_by,
             role: {
@@ -113,6 +114,7 @@ export class PublicSignupTokenStore implements IPublicSignupTokenStore {
                 'tokens.secret',
                 'tokens.name',
                 'tokens.expires_at',
+                'tokens.enabled',
                 'tokens.created_at',
                 'tokens.created_by',
                 'tokens.url',
@@ -159,7 +161,7 @@ export class PublicSignupTokenStore implements IPublicSignupTokenStore {
 
     async isValid(secret: string): Promise<boolean> {
         const result = await this.db.raw(
-            `SELECT EXISTS (SELECT 1 FROM ${TABLE} WHERE secret = ? AND expires_at::date > ?) AND enabled == TRUE AS valid`,
+            `SELECT EXISTS (SELECT 1 FROM ${TABLE} WHERE secret = ? AND expires_at::date > ? AND enabled = true) AS valid`,
             [secret, new Date()],
         );
         const { valid } = result.rows[0];

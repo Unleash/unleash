@@ -24,7 +24,13 @@ export interface PublicSignupTokenUpdateSchema {
      * @type {Date}
      * @memberof PublicSignupTokenUpdateSchema
      */
-    expiresAt: Date;
+    expiresAt?: Date;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PublicSignupTokenUpdateSchema
+     */
+    enabled?: boolean;
 }
 
 /**
@@ -32,7 +38,6 @@ export interface PublicSignupTokenUpdateSchema {
  */
 export function instanceOfPublicSignupTokenUpdateSchema(value: object): boolean {
     let isInstance = true;
-    isInstance = isInstance && "expiresAt" in value;
 
     return isInstance;
 }
@@ -47,7 +52,8 @@ export function PublicSignupTokenUpdateSchemaFromJSONTyped(json: any, ignoreDisc
     }
     return {
         
-        'expiresAt': (new Date(json['expiresAt'])),
+        'expiresAt': !exists(json, 'expiresAt') ? undefined : (new Date(json['expiresAt'])),
+        'enabled': !exists(json, 'enabled') ? undefined : json['enabled'],
     };
 }
 
@@ -60,7 +66,8 @@ export function PublicSignupTokenUpdateSchemaToJSON(value?: PublicSignupTokenUpd
     }
     return {
         
-        'expiresAt': (value.expiresAt.toISOString()),
+        'expiresAt': value.expiresAt === undefined ? undefined : (value.expiresAt.toISOString()),
+        'enabled': value.enabled,
     };
 }
 

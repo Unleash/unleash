@@ -56,7 +56,7 @@ export class PublicSignupTokenService {
 
     private getUrl(secret: string): string {
         return new URL(
-            `${this.unleashBase}/invite-link/${secret}/signup`,
+            `${this.unleashBase}/new-user?invite=${secret}`,
         ).toString();
     }
 

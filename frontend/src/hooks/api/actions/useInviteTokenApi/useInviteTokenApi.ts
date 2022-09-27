@@ -26,8 +26,33 @@ export const useInviteTokenApi = () => {
         [createRequest, makeRequest]
     );
 
+    const updateToken = useCallback(
+        async (tokenName: string, expiresAt: Date) => {
+            const req = createRequest(`${URI}/${tokenName}`, {
+                method: 'PUT',
+                body: JSON.stringify({ expiresAt: expiresAt.toISOString() }),
+            });
+
+            return makeRequest(req.caller, req.id);
+        },
+        [createRequest, makeRequest]
+    );
+
+    const deleteToken = useCallback(
+        async (tokenName: string) => {
+            const req = createRequest(`${URI}/${tokenName}`, {
+                method: 'DELETE',
+            });
+
+            return makeRequest(req.caller, req.id);
+        },
+        [createRequest, makeRequest]
+    );
+
     return {
         createToken,
+        updateToken,
+        deleteToken,
         errors,
         loading,
     };

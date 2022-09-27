@@ -1,18 +1,20 @@
 import { FormEventHandler, useState, VFC } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CreateButton } from 'component/common/CreateButton/CreateButton';
+import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
-import Input from 'component/common/Input/Input';
 import { Box, Button, styled, Typography } from '@mui/material';
 import { add, parseISO } from 'date-fns';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { GO_BACK } from 'constants/navigate';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import { LinkField } from '../LinkField/LinkField';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useInviteTokenApi } from 'hooks/api/actions/useInviteTokenApi/useInviteTokenApi';
+import { useInviteTokens } from 'hooks/api/getters/useInviteTokens/useInviteTokens';
+import { LinkField } from '../LinkField/LinkField';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface ICreateInviteLinkProps {}
 
@@ -31,35 +33,69 @@ const expiryOptions = [
     },
 ];
 
-const StyledInput = styled(Input)(() => ({
-    width: '100%',
-}));
-
 export const InviteLink: VFC<ICreateInviteLinkProps> = () => {
     const navigate = useNavigate();
+    const { data, loading } = useInviteTokens();
     const [inviteLink, setInviteLink] = useState('');
     const [expiry, setExpiry] = useState(expiryOptions[0].key);
-    const formatApiCode = () => `curl ??? TODO`; // TODO: code
-    const [loading, setLoading] = useState(false);
-    const { setToastData, setToastApiError } = useToast();
-    const { createToken } = useInviteTokenApi();
+    const { uiConfig } = useUiConfig();
+    const defaultToken = data?.tokens?.find(token => token.name === 'default');
+    const isUpdating = Boolean(defaultToken);
+    const formatApiCode = () =>
+        isUpdating
+            ? `curl --location --request PUT '${
+                  uiConfig.unleashUrl
+              }/api/admin/invite-link/tokens/default' \\
+--header 'Authorization: INSERT_API_KEY' \\
+--header 'Content-Type: application/json' \\
+--data-raw '${JSON.stringify({ expiresAt: expiry }, undefined, 2)}'`
+            : `curl --location --request POST '${
+                  uiConfig.unleashUrl
+              }/api/admin/invite-link/tokens' \\
+--header 'Authorization: INSERT_API_KEY' \\
+--header 'Content-Type: application/json' \\
+--data-raw '${JSON.stringify(
+                  { name: 'default', expiresAt: expiry },
+                  undefined,
+                  2
+              )}'`;
+
+    const [isSending, setIsSending] = useState(false);
+    const { setToastApiError } = useToast();
+    const { createToken, updateToken, deleteToken } = useInviteTokenApi();
 
     const handleSubmit: FormEventHandler<HTMLFormElement> = async e => {
         e.preventDefault();
-        setLoading(true);
+        setIsSending(true);
 
         try {
-            const response = await createToken({
-                name: 'default',
-                expiresAt: parseISO(expiry),
-            });
-            const data = await response.json();
-            // FIXME: does not return token in response
-            console.log(data);
+            if (isUpdating) {
+                await updateToken(defaultToken!.secret, parseISO(expiry));
+                setInviteLink(defaultToken!.url);
+            } else {
+                const response = await createToken({
+                    name: 'default',
+                    expiresAt: parseISO(expiry),
+                });
+                const newToken = await response.json();
+                setInviteLink(newToken.url);
+            }
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         } finally {
-            setLoading(false);
+            setIsSending(false);
+        }
+    };
+
+    const onDeleteClick = async () => {
+        setIsSending(true);
+        try {
+            await deleteToken(defaultToken!.secret);
+            navigate(GO_BACK);
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        } finally {
+            setIsSending(false);
         }
     };
 
@@ -70,8 +106,8 @@ export const InviteLink: VFC<ICreateInviteLinkProps> = () => {
 
     return (
         <FormTemplate
-            loading={loading}
-            title="Create invite link"
+            loading={loading || isSending}
+            title={isUpdating ? 'Update invite link' : 'Create invite link'}
             description="When you send an invite link to a someone, they will be able to create an account and get access to Unleash. This new user will only have read access, until you change their assigned role."
             documentationLink="https://docs.getunleash.io/user_guide/rbac#standard-roles" // FIXME: update
             documentationLinkLabel="User management documentation"
@@ -131,7 +167,27 @@ export const InviteLink: VFC<ICreateInviteLinkProps> = () => {
                         mt: 'auto',
                     }}
                 >
-                    <CreateButton name="invite link" permission={ADMIN} />
+                    <PermissionButton
+                        type="submit"
+                        permission={ADMIN}
+                        disabled={isSending}
+                    >
+                        {isUpdating
+                            ? 'Update invite link'
+                            : 'Create invite link'}
+                    </PermissionButton>
+                    <ConditionallyRender
+                        condition={isUpdating}
+                        show={
+                            <Button
+                                sx={{ ml: 2 }}
+                                onClick={onDeleteClick}
+                                color="error"
+                            >
+                                Delete link
+                            </Button>
+                        }
+                    />
                     <Button
                         sx={{ ml: 2 }}
                         onClick={() => {
@@ -153,7 +209,9 @@ export const InviteLink: VFC<ICreateInviteLinkProps> = () => {
                         New team members now sign-up to Unleash. Please provide
                         them with the following link to get started:
                     </Typography>
-                    <LinkField inviteLink={inviteLink} />
+                    <LinkField
+                        inviteLink={`${uiConfig.unleashUrl}/new-user?invite=${inviteLink}`}
+                    />
 
                     <Typography variant="body1">
                         Copy the link and send it to the user. This will allow

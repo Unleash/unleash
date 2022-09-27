@@ -1,21 +1,40 @@
-import { useEffect, useState, VFC } from 'react';
+import { VFC } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Button, Typography } from '@mui/material';
+import useLoading from 'hooks/useLoading';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { useInviteTokens } from 'hooks/api/getters/useInviteTokens/useInviteTokens';
 import { LinkField } from '../LinkField/LinkField';
+import { add, formatDistanceToNowStrict, isAfter, parseISO } from 'date-fns';
+import { formatDateYMD } from 'utils/formatDate';
+import { useLocationSettings } from 'hooks/useLocationSettings';
 
-interface IInviteLinkBarProps {}
-
-export const InviteLinkBar: VFC<IInviteLinkBarProps> = () => {
+export const InviteLinkBar: VFC = () => {
     const navigate = useNavigate();
-    const [inviteLink, setInviteLink] = useState('');
+    const { data, loading } = useInviteTokens();
+    const ref = useLoading(loading);
+    const inviteToken =
+        data?.tokens?.find(token => token.name === 'default') ?? null;
+    const inviteLink = inviteToken?.url;
+    const createdAt = data?.tokens?.[0]?.createdAt ?? '';
+    const expiresAt = data?.tokens?.[0]?.expiresAt ?? '';
+    const expires = expiresAt || false;
+    const isExpired = expires && isAfter(new Date(), expires);
+    const willExpireSoon =
+        expires && isAfter(add(new Date(), { days: 14 }), expires);
+    const expiresIn = expires ? formatDistanceToNowStrict(expires) : false;
+    const { locationSettings } = useLocationSettings();
 
-    useEffect(() => {
-        const link = window.localStorage.getItem('inviteLink');
-        if (link) {
-            setInviteLink(link);
-        }
-    }, []);
+    const expireDateComponent = (
+        <Typography
+            component="span"
+            variant="body2"
+            color={willExpireSoon ? 'warning.main' : 'inherit'}
+            fontWeight="bold"
+        >
+            {expiresIn}
+        </Typography>
+    );
 
     return (
         <Box
@@ -30,6 +49,7 @@ export const InviteLinkBar: VFC<IInviteLinkBarProps> = () => {
                 border: '2px solid',
                 borderColor: 'primary.main',
             }}
+            ref={ref}
         >
             <Box
                 sx={{
@@ -44,22 +64,31 @@ export const InviteLinkBar: VFC<IInviteLinkBarProps> = () => {
                     show={
                         <>
                             <Typography variant="body2" sx={{ mb: 1 }}>
-                                You have an invite link created on 09/09/2021
-                                that will expire{' '}
-                                <Typography
-                                    component="span"
-                                    variant="body2"
-                                    // color="error"
-                                    fontWeight="bold"
-                                >
-                                    in 7 days
-                                </Typography>
+                                {`You have an invite link created on ${formatDateYMD(
+                                    createdAt,
+                                    locationSettings.locale
+                                )} `}
+                                <ConditionallyRender
+                                    condition={isExpired}
+                                    show={
+                                        <>
+                                            that expired {expireDateComponent}{' '}
+                                            ago
+                                        </>
+                                    }
+                                    elseShow={
+                                        <>
+                                            that will expire in{' '}
+                                            {expireDateComponent}
+                                        </>
+                                    }
+                                />
                             </Typography>
-                            <LinkField small inviteLink={inviteLink} />
+                            <LinkField small inviteLink={inviteLink!} />
                         </>
                     }
                     elseShow={
-                        <Typography variant="body2">
+                        <Typography variant="body2" data-loading>
                             You can easily create an invite link here that you
                             can share and use to invite people from your company
                             to your Unleash setup.
@@ -79,6 +108,7 @@ export const InviteLinkBar: VFC<IInviteLinkBarProps> = () => {
                 <Button
                     variant="outlined"
                     onClick={() => navigate('/admin/invite-link')}
+                    data-loading
                 >
                     {inviteLink ? 'Update' : 'Create'} invite link
                 </Button>

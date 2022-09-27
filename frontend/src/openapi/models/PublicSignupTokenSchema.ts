@@ -43,6 +43,12 @@ export interface PublicSignupTokenSchema {
      * @type {string}
      * @memberof PublicSignupTokenSchema
      */
+    url: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PublicSignupTokenSchema
+     */
     name: string;
     /**
      * 
@@ -82,6 +88,7 @@ export interface PublicSignupTokenSchema {
 export function instanceOfPublicSignupTokenSchema(value: object): boolean {
     let isInstance = true;
     isInstance = isInstance && "secret" in value;
+    isInstance = isInstance && "url" in value;
     isInstance = isInstance && "name" in value;
     isInstance = isInstance && "expiresAt" in value;
     isInstance = isInstance && "createdAt" in value;
@@ -102,6 +109,7 @@ export function PublicSignupTokenSchemaFromJSONTyped(json: any, ignoreDiscrimina
     return {
         
         'secret': json['secret'],
+        'url': json['url'],
         'name': json['name'],
         'expiresAt': (new Date(json['expiresAt'])),
         'createdAt': (new Date(json['createdAt'])),
@@ -121,6 +129,7 @@ export function PublicSignupTokenSchemaToJSON(value?: PublicSignupTokenSchema | 
     return {
         
         'secret': value.secret,
+        'url': value.url,
         'name': value.name,
         'expiresAt': (value.expiresAt.toISOString()),
         'createdAt': (value.createdAt.toISOString()),

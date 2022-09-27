@@ -19,6 +19,7 @@ import type {
   PublicSignupTokenCreateSchema,
   PublicSignupTokenSchema,
   PublicSignupTokenUpdateSchema,
+  PublicSignupTokensSchema,
   UserSchema,
 } from '../models';
 import {
@@ -30,6 +31,8 @@ import {
     PublicSignupTokenSchemaToJSON,
     PublicSignupTokenUpdateSchemaFromJSON,
     PublicSignupTokenUpdateSchemaToJSON,
+    PublicSignupTokensSchemaFromJSON,
+    PublicSignupTokensSchemaToJSON,
     UserSchemaFromJSON,
     UserSchemaToJSON,
 } from '../models';
@@ -172,7 +175,7 @@ export class PublicSignupTokensApi extends runtime.BaseAPI {
 
     /**
      */
-    async getAllPublicSignupTokensRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PublicSignupTokenSchema>> {
+    async getAllPublicSignupTokensRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PublicSignupTokensSchema>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -188,12 +191,12 @@ export class PublicSignupTokensApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => PublicSignupTokenSchemaFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => PublicSignupTokensSchemaFromJSON(jsonValue));
     }
 
     /**
      */
-    async getAllPublicSignupTokens(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PublicSignupTokenSchema> {
+    async getAllPublicSignupTokens(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PublicSignupTokensSchema> {
         const response = await this.getAllPublicSignupTokensRaw(initOverrides);
         return await response.value();
     }

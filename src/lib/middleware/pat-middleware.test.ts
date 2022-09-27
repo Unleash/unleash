@@ -11,6 +11,9 @@ beforeEach(() => {
         authentication: {
             enablePersonalAccessToken: true,
         },
+        flagResolver: {
+            isEnabled: jest.fn().mockReturnValue(true),
+        },
     };
 });
 

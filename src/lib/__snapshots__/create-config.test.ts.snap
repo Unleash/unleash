@@ -13,6 +13,7 @@ exports[`should create default config 1`] = `
     "createAdminUser": true,
     "customAuthHandler": [Function],
     "enableApiToken": true,
+    "enablePersonalAccessToken": true,
     "initApiTokens": [],
     "type": "open-source",
   },

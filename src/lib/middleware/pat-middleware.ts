@@ -6,13 +6,17 @@ const patMiddleware = (
     {
         getLogger,
         authentication,
+        flagResolver,
     }: Pick<IUnleashConfig, 'getLogger' | 'authentication' | 'flagResolver'>,
     { userService }: any,
 ): any => {
     const logger = getLogger('/middleware/pat-middleware.ts');
     logger.debug('Enabling PAT middleware');
 
-    if (!authentication.enablePersonalAccessToken) {
+    if (
+        !authentication.enablePersonalAccessToken ||
+        !flagResolver.isEnabled('personalAccessTokens')
+    ) {
         return (req, res, next) => next();
     }
 

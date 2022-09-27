@@ -38,7 +38,6 @@ jobs:
         with:
           annotations: none
           package-manager: yarn
-          github-token: ${{ secrets.GITHUB_TOKEN }}
           test-script: yarn run test:coverage:jest
           base-coverage-file: ./coverage/report.json
           output: report-markdown

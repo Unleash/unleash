@@ -5,11 +5,11 @@ import { IAddon } from 'interfaces/addons';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
 export const DEFAULT_DATA = {
+    events: [],
     provider: '',
     description: '',
     enabled: true,
     parameters: {},
-    events: [],
     projects: [],
     environments: [],
 } as unknown as IAddon; // TODO: improve type

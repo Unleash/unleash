@@ -50,11 +50,8 @@ You can create appropriate token, with type `FRONTEND` on `<YOUR_UNLEASH_URL>/ad
 
 ### Refresh interval for tokens
 
-Internally, unleash will set up a new unleash client per token it sees and configure the client with the project and environment specified in the token. By default
-the refresh interval is set to 10 seconds, plus a 10 second stagger to avoid thundering herd. This means that if you have 1000 users, unleash will refresh the client data within a window of 10s + a random number between 0 and 10s. This is to avoid all clients hitting the database simultaneously to refresh their data. If you need to change this interval, you can do so by setting the `FRONTEND_API_REFRESH_INTERVAL_MS` environment variable or by setting it directly in the config on startup. Note that the interval is in milliseconds: 
+Internally, Unleash creates a new Unleash client for each token it receives. Each client is configured with the project and environment specified in the token.
 
-```
-const unleashConfig = {
-    ... // previous values 
-    frontendApi: { refreshIntervalInMs: 4000 }
-}
+Each client updates its feature toggle configuration at a specified refresh interval plus a random offset between 0 and 10 seconds. By default, the refresh interval is set to 10 seconds. The random offset is used to stagger incoming requests to avoid a large number of clients all querying the database simultaneously. 
+
+The refresh interval is specified in milliseconds and can be set by using the `FRONTEND_API_REFRESH_INTERVAL_MS` environment variable or by using the `frontendApi.refreshIntervalInMs` configuration option in code.

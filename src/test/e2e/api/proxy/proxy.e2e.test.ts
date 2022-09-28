@@ -811,6 +811,7 @@ test('Should sync proxy for keys on an interval', async () => {
     const proxyRepository = new ProxyRepository(
         {
             getLogger,
+            frontendApi: { refreshIntervalInMs: 5000 },
         },
         db.stores,
         app.services,
@@ -823,5 +824,36 @@ test('Should sync proxy for keys on an interval', async () => {
 
     proxyRepository.stop();
     expect(spy.mock.calls.length > 6).toBe(true);
+    jest.useRealTimers();
+});
+
+test('Should change fetch interval', async () => {
+    jest.useFakeTimers();
+
+    const frontendToken = await createApiToken(ApiTokenType.FRONTEND);
+    const user = await app.services.apiTokenService.getUserForToken(
+        frontendToken.secret,
+    );
+
+    const spy = jest.spyOn(
+        ProxyRepository.prototype as any,
+        'featuresForToken',
+    );
+    const proxyRepository = new ProxyRepository(
+        {
+            getLogger,
+            frontendApi: { refreshIntervalInMs: 1000 },
+        },
+        db.stores,
+        app.services,
+        user,
+    );
+
+    await proxyRepository.start();
+
+    jest.advanceTimersByTime(60000);
+
+    proxyRepository.stop();
+    expect(spy.mock.calls.length > 30).toBe(true);
     jest.useRealTimers();
 });

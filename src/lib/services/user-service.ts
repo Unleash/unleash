@@ -422,6 +422,10 @@ class UserService {
         );
         return resetLink;
     }
+
+    async getUserByPersonalAccessToken(secret: string): Promise<IUser> {
+        return this.store.getUserByPersonalAccessToken(secret);
+    }
 }
 
 module.exports = UserService;

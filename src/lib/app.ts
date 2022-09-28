@@ -23,6 +23,7 @@ import secureHeaders from './middleware/secure-headers';
 import { loadIndexHTML } from './util/load-index-html';
 import { findPublicFolder } from './util/findPublicFolder';
 import { conditionalMiddleware } from './middleware/conditional-middleware';
+import patMiddleware from './middleware/pat-middleware';
 
 export default async function getApp(
     config: IUnleashConfig,
@@ -80,6 +81,8 @@ export default async function getApp(
             corsOriginMiddleware(services),
         ),
     );
+
+    app.use(baseUriPath, patMiddleware(config, services));
 
     switch (config.authentication.type) {
         case IAuthType.OPEN_SOURCE: {

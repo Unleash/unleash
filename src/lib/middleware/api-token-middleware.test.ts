@@ -159,8 +159,18 @@ test('should not add user if disabled', async () => {
         user: undefined,
     };
 
-    await func(req, undefined, cb);
+    const send = jest.fn();
+    const res = {
+        status: () => {
+            return {
+                send: send,
+            };
+        },
+    };
 
+    await func(req, res, cb);
+
+    expect(send).not.toHaveBeenCalled();
     expect(cb).toHaveBeenCalled();
     expect(req.user).toBeFalsy();
 });

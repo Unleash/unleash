@@ -405,6 +405,13 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         listen = { host: server.host || undefined, port: server.port };
     }
 
+    const frontendApi = options.frontendApi || {
+        refreshIntervalInMs: parseEnvVarNumber(
+            process.env.FRONTEND_API_REFRESH_INTERVAL_MS,
+            10000,
+        ),
+    };
+
     const secureHeaders =
         options.secureHeaders ||
         parseEnvVarBoolean(process.env.SECURE_HEADERS, false);
@@ -449,6 +456,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         import: importSetting,
         experimental,
         flagResolver,
+        frontendApi,
         email,
         secureHeaders,
         enableOAS,

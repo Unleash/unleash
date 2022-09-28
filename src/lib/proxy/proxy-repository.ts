@@ -13,7 +13,7 @@ import { UnleashEvents } from 'unleash-client';
 import { ANY_EVENT } from '../util/anyEventEmitter';
 import { Logger } from '../logger';
 
-type Config = Pick<IUnleashConfig, 'getLogger'>;
+type Config = Pick<IUnleashConfig, 'getLogger' | 'frontendApi'>;
 
 type Stores = Pick<IUnleashStores, 'projectStore' | 'eventStore'>;
 
@@ -57,7 +57,7 @@ export class ProxyRepository
         this.services = services;
         this.token = token;
         this.onAnyEvent = this.onAnyEvent.bind(this);
-        this.interval = 5000;
+        this.interval = config.frontendApi.refreshIntervalInMs;
     }
 
     getSegment(id: number): Segment | undefined {

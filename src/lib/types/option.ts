@@ -101,6 +101,7 @@ export interface IUnleashOptions {
     versionCheck?: Partial<IVersionOption>;
     authentication?: Partial<IAuthOption>;
     ui?: object;
+    frontendApi?: IFrontendApi;
     import?: Partial<IImportOption>;
     experimental?: Partial<IExperimentalOptions>;
     email?: Partial<IEmailOption>;
@@ -167,6 +168,10 @@ export interface ICspDomainConfig {
     imgSrc: string[];
 }
 
+interface IFrontendApi {
+    refreshIntervalInMs: number;
+}
+
 export interface IUnleashConfig {
     db: IDBOption;
     session: ISessionOption;
@@ -191,6 +196,7 @@ export interface IUnleashConfig {
     eventBus: EventEmitter;
     disableLegacyFeaturesApi?: boolean;
     environmentEnableOverrides?: string[];
+    frontendApi: IFrontendApi;
     inlineSegmentConstraints: boolean;
     segmentValuesLimit: number;
     strategySegmentsLimit: number;

@@ -85,6 +85,9 @@ exports[`should create default config 1`] = `
       "isEnabled": [Function],
     },
   },
+  "frontendApi": {
+    "refreshIntervalInMs": 10000,
+  },
   "frontendApiOrigins": [
     "*",
   ],

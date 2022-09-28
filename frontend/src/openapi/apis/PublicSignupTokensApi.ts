@@ -86,7 +86,7 @@ export class PublicSignupTokensApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/api/admin/invite-link/tokens/{token}/signup`.replace(`{${"token"}}`, encodeURIComponent(String(requestParameters.token))),
+            path: `/invite/{token}/signup`.replace(`{${"token"}}`, encodeURIComponent(String(requestParameters.token))),
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -239,7 +239,7 @@ export class PublicSignupTokensApi extends runtime.BaseAPI {
 
     /**
      */
-    async validatePublicSignupTokenRaw(requestParameters: ValidatePublicSignupTokenRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+    async validatePublicSignupTokenRaw(requestParameters: ValidatePublicSignupTokenRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PublicSignupTokenSchema>> {
         if (requestParameters.token === null || requestParameters.token === undefined) {
             throw new runtime.RequiredError('token','Required parameter requestParameters.token was null or undefined when calling validatePublicSignupToken.');
         }
@@ -253,19 +253,20 @@ export class PublicSignupTokensApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/api/admin/invite-link/tokens/{token}/validate`.replace(`{${"token"}}`, encodeURIComponent(String(requestParameters.token))),
-            method: 'POST',
+            path: `/invite/{token}/validate`.replace(`{${"token"}}`, encodeURIComponent(String(requestParameters.token))),
+            method: 'GET',
             headers: headerParameters,
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.VoidApiResponse(response);
+        return new runtime.JSONApiResponse(response, (jsonValue) => PublicSignupTokenSchemaFromJSON(jsonValue));
     }
 
     /**
      */
-    async validatePublicSignupToken(requestParameters: ValidatePublicSignupTokenRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.validatePublicSignupTokenRaw(requestParameters, initOverrides);
+    async validatePublicSignupToken(requestParameters: ValidatePublicSignupTokenRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PublicSignupTokenSchema> {
+        const response = await this.validatePublicSignupTokenRaw(requestParameters, initOverrides);
+        return await response.value();
     }
 
 }

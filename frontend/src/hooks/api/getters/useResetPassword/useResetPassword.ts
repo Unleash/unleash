@@ -35,11 +35,36 @@ const useResetPassword = (options: SWRConfiguration = {}) => {
         setLoading(!error && !data);
     }, [data, error]);
 
-    const invalidToken =
+    const isValidToken =
         (!loading && data?.name === INVALID_TOKEN_ERROR) ||
-        data?.name === USED_TOKEN_ERROR;
+        data?.name === USED_TOKEN_ERROR
+            ? false
+            : true;
 
-    return { token, data, error, loading, setLoading, invalidToken, retry };
+    const resetPassword = (password: string) => {
+        const path = formatApiPath('auth/reset/password');
+        return fetch(path, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            method: 'POST',
+            body: JSON.stringify({
+                token,
+                password,
+            }),
+        });
+    };
+
+    return {
+        token,
+        data,
+        error,
+        loading,
+        isValidToken,
+        setLoading,
+        retry,
+        resetPassword,
+    };
 };
 
 export default useResetPassword;

@@ -1,30 +1,62 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Box, TextField, Typography } from '@mui/material';
+import { OK } from 'constants/statusCodes';
 import useResetPassword from 'hooks/api/getters/useResetPassword/useResetPassword';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-// import useUserInvite from 'hooks/api/getters/useUserInvite/useUserInvite';
+import useUserInvite from 'hooks/api/getters/useUserInvite/useUserInvite';
 import AuthOptions from '../common/AuthOptions/AuthOptions';
 import DividerText from 'component/common/DividerText/DividerText';
 import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';
 import ResetPasswordForm from '../common/ResetPasswordForm/ResetPasswordForm';
 import InvalidToken from '../common/InvalidToken/InvalidToken';
 import { NewUserWrapper } from './NewUserWrapper/NewUserWrapper';
+import ResetPasswordError from '../common/ResetPasswordError/ResetPasswordError';
 
 export const NewUser = () => {
     const { authDetails } = useAuthDetails();
+    const [apiError, setApiError] = useState(false);
+    const navigate = useNavigate();
+    const [submitting, setSubmitting] = useState(false);
     const {
-        token,
-        data,
+        data: passwordResetData,
         loading: resetLoading,
         setLoading,
-        invalidToken,
+        isValidToken,
+        resetPassword,
     } = useResetPassword();
-    const inviteLoading = false;
     const passwordDisabled = authDetails?.defaultHidden === true;
-    // const inviteData = useUserInvite();
-    // console.log(inviteData);
+    const {
+        loading: inviteLoading,
+        isValid: isValidInvite,
+        email,
+        name,
+        setEmail,
+        setName,
+        addUser,
+    } = useUserInvite();
 
-    const invite = false;
-    if (invalidToken && invite == false) {
+    const onSubmit = async (password: string) => {
+        setSubmitting(true);
+
+        try {
+            const res = await (isValidInvite
+                ? addUser(password)
+                : resetPassword(password));
+            setSubmitting(false);
+            if (res.status === OK) {
+                navigate('/login?reset=true');
+                setApiError(false);
+            } else {
+                setApiError(true);
+            }
+        } catch (e) {
+            setApiError(true);
+            setSubmitting(false);
+        }
+    };
+
+    if (isValidToken === false && isValidInvite == false) {
         return (
             <NewUserWrapper loading={resetLoading || inviteLoading}>
                 <InvalidToken />
@@ -34,7 +66,7 @@ export const NewUser = () => {
 
     return (
         <NewUserWrapper
-            loading={resetLoading || inviteLoading}
+            loading={submitting || resetLoading || inviteLoading}
             title={
                 passwordDisabled
                     ? 'Connect your account and start your journey'
@@ -42,14 +74,14 @@ export const NewUser = () => {
             }
         >
             <ConditionallyRender
-                condition={data?.createdBy}
+                condition={passwordResetData?.createdBy}
                 show={
                     <Typography
                         variant="body1"
                         data-loading
                         sx={{ textAlign: 'center', mb: 2 }}
                     >
-                        {data?.createdBy}
+                        {passwordResetData?.createdBy}
                         <br /> has invited you to join Unleash.
                     </Typography>
                 }
@@ -85,7 +117,7 @@ export const NewUser = () => {
                 show={
                     <>
                         <ConditionallyRender
-                            condition={data?.email}
+                            condition={passwordResetData?.email}
                             show={() => (
                                 <Typography
                                     data-loading
@@ -99,22 +131,30 @@ export const NewUser = () => {
                         <TextField
                             data-loading
                             type="email"
-                            value={data?.email || ''}
-                            id="username"
+                            value={
+                                isValidToken ? passwordResetData?.email : email
+                            }
+                            id="email"
                             label="Email"
                             variant="outlined"
                             size="small"
                             sx={{ my: 1 }}
-                            disabled={Boolean(data?.email)}
+                            disabled={isValidToken}
                             fullWidth
                             required
+                            onChange={e => {
+                                if (isValidToken) {
+                                    return;
+                                }
+                                setEmail(e.target.value);
+                            }}
                         />
                         <ConditionallyRender
-                            condition={Boolean(invite)}
+                            condition={Boolean(isValidInvite)}
                             show={() => (
                                 <TextField
                                     data-loading
-                                    value=""
+                                    value={name}
                                     id="username"
                                     label="Full name"
                                     variant="outlined"
@@ -122,15 +162,23 @@ export const NewUser = () => {
                                     sx={{ my: 1 }}
                                     fullWidth
                                     required
+                                    onChange={e => {
+                                        setName(e.target.value);
+                                    }}
                                 />
                             )}
                         />
                         <Typography variant="body1" data-loading sx={{ mt: 2 }}>
                             Set a password for your account.
                         </Typography>
+                        <ConditionallyRender
+                            condition={apiError && isValidToken}
+                            show={<ResetPasswordError />}
+                        />
+                        {/* TODO: create-user failure message */}
                         <ResetPasswordForm
-                            token={token}
                             setLoading={setLoading}
+                            onSubmit={onSubmit}
                         />
                     </>
                 }

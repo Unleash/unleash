@@ -105,24 +105,6 @@ export class PublicSignupController extends Controller {
         });
 
         this.route({
-            method: 'post',
-            path: '/tokens/:token/signup',
-            handler: this.addTokenUser,
-            permission: NONE,
-            middleware: [
-                openApiService.validPath({
-                    tags: ['Public signup tokens'],
-                    operationId: 'addPublicSignupTokenUser',
-                    requestBody: createRequestSchema('createUserSchema'),
-                    responses: {
-                        200: createResponseSchema('userSchema'),
-                        ...getStandardResponses(409),
-                    },
-                }),
-            ],
-        });
-
-        this.route({
             method: 'get',
             path: '/tokens/:token',
             handler: this.getPublicSignupToken,
@@ -200,7 +182,7 @@ export class PublicSignupController extends Controller {
                 serializeDates(result),
             );
         } else {
-            return res.status(401).end();
+            return res.status(400).end();
         }
     }
 

@@ -1,36 +1,44 @@
-import React, { SyntheticEvent, useState } from 'react';
-import { Button, Typography } from '@mui/material';
-import classnames from 'classnames';
-import { useStyles } from './EditProfile.styles';
-import { useThemeStyles } from 'themes/themeStyles';
+import { Button, styled, Typography } from '@mui/material';
+import PasswordField from 'component/common/PasswordField/PasswordField';
 import PasswordChecker, {
     PASSWORD_FORMAT_MESSAGE,
 } from 'component/user/common/ResetPasswordForm/PasswordChecker/PasswordChecker';
 import PasswordMatcher from 'component/user/common/ResetPasswordForm/PasswordMatcher/PasswordMatcher';
 import useLoading from 'hooks/useLoading';
-import {
-    BAD_REQUEST,
-    NOT_FOUND,
-    OK,
-    UNAUTHORIZED,
-} from 'constants/statusCodes';
-import { formatApiPath } from 'utils/formatPath';
-import PasswordField from 'component/common/PasswordField/PasswordField';
+import useToast from 'hooks/useToast';
+import { IUser } from 'interfaces/user';
+import { SyntheticEvent, useState } from 'react';
 import { headers } from 'utils/apiUtils';
+import { formatApiPath } from 'utils/formatPath';
 import { formatUnknownError } from 'utils/formatUnknownError';
 
-interface IEditProfileProps {
-    setEditingProfile: React.Dispatch<React.SetStateAction<boolean>>;
-    setUpdatedPassword: React.Dispatch<React.SetStateAction<boolean>>;
+const StyledContent = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    padding: theme.spacing(6),
+    backgroundColor: theme.palette.background.paper,
+    borderRadius: theme.shape.borderRadiusLarge,
+}));
+
+const StyledSectionLabel = styled(Typography)(({ theme }) => ({
+    fontSize: theme.fontSizes.mainHeader,
+    marginBottom: theme.spacing(4),
+}));
+
+const StyledForm = styled('form')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(2),
+    maxWidth: theme.spacing(44),
+}));
+
+interface IPasswordTabProps {
+    user: IUser;
 }
 
-const EditProfile = ({
-    setEditingProfile,
-    setUpdatedPassword,
-}: IEditProfileProps) => {
-    const { classes: styles } = useStyles();
-    const { classes: themeStyles } = useThemeStyles();
+export const PasswordTab = ({ user }: IPasswordTabProps) => {
     const [loading, setLoading] = useState(false);
+    const { setToastData, setToastApiError } = useToast();
     const [validPassword, setValidPassword] = useState(false);
     const [error, setError] = useState<string>();
     const [password, setPassword] = useState('');
@@ -49,53 +57,30 @@ const EditProfile = ({
             setError(undefined);
             try {
                 const path = formatApiPath('api/admin/user/change-password');
-                const res = await fetch(path, {
+                await fetch(path, {
                     headers,
                     body: JSON.stringify({ password, confirmPassword }),
                     method: 'POST',
                     credentials: 'include',
                 });
-                handleResponse(res);
+                setToastData({
+                    title: 'Password changed successfully',
+                    text: 'Now you can sign in using your new password.',
+                    type: 'success',
+                });
             } catch (error: unknown) {
-                setError(formatUnknownError(error));
+                const formattedError = formatUnknownError(error);
+                setError(formattedError);
+                setToastApiError(formattedError);
             }
         }
         setLoading(false);
     };
 
-    const handleResponse = (res: Response) => {
-        if (res.status === BAD_REQUEST) {
-            setError(PASSWORD_FORMAT_MESSAGE);
-        }
-
-        if (res.status === UNAUTHORIZED) {
-            setError('You are not authorized to make this request.');
-        }
-
-        if (res.status === NOT_FOUND) {
-            setError(
-                'The resource you requested could not be found on the server.'
-            );
-        }
-
-        if (res.status === OK) {
-            setEditingProfile(false);
-            setUpdatedPassword(true);
-        }
-    };
-
     return (
-        <div className={styles.container} ref={ref}>
-            <Typography
-                variant="body1"
-                className={styles.editProfileTitle}
-                data-loading
-            >
-                Update password
-            </Typography>
-            <form
-                className={classnames(styles.form, themeStyles.contentSpacingY)}
-            >
+        <StyledContent ref={ref}>
+            <StyledSectionLabel>Change password</StyledSectionLabel>
+            <StyledForm>
                 <PasswordChecker
                     password={password}
                     callback={setValidPassword}
@@ -132,23 +117,12 @@ const EditProfile = ({
                     data-loading
                     variant="contained"
                     color="primary"
-                    className={styles.button}
                     type="submit"
                     onClick={submit}
                 >
                     Save
                 </Button>
-                <Button
-                    data-loading
-                    className={styles.button}
-                    type="submit"
-                    onClick={() => setEditingProfile(false)}
-                >
-                    Cancel
-                </Button>
-            </form>
-        </div>
+            </StyledForm>
+        </StyledContent>
     );
 };
-
-export default EditProfile;

@@ -1,192 +1,120 @@
-import React, { useState } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import {
-    Avatar,
-    Button,
-    FormControl,
-    InputLabel,
-    Paper,
-    Select,
-    Typography,
-    SelectChangeEvent,
-    Alert,
-} from '@mui/material';
-import classnames from 'classnames';
-import { useStyles } from 'component/user/UserProfile/UserProfileContent/UserProfileContent.styles';
-import { useThemeStyles } from 'themes/themeStyles';
-import EditProfile from '../EditProfile/EditProfile';
-import legacyStyles from '../../user.module.scss';
+import { Button, Paper, Typography, styled } from '@mui/material';
 import { basePath } from 'utils/formatPath';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { IUser } from 'interfaces/user';
-import { ILocationSettings } from 'hooks/useLocationSettings';
-import { useTheme } from '@mui/material/styles';
+import OpenInNew from '@mui/icons-material/OpenInNew';
+import { Link } from 'react-router-dom';
+import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
+
+const StyledPaper = styled(Paper)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    padding: theme.spacing(3),
+    borderRadius: theme.shape.borderRadiusMedium,
+    boxShadow: theme.boxShadows.popup,
+    position: 'absolute',
+    zIndex: 5000,
+    minWidth: theme.spacing(37.5),
+    right: 0,
+    [theme.breakpoints.down('md')]: {
+        width: '100%',
+        padding: '1rem',
+    },
+}));
+
+const StyledProfileInfo = styled('div')(({ theme }) => ({
+    alignSelf: 'flex-start',
+    display: 'flex',
+    alignItems: 'center',
+    marginBottom: theme.spacing(3),
+}));
+
+const StyledUserAvatar = styled(UserAvatar)(({ theme }) => ({
+    width: theme.spacing(4.75),
+    height: theme.spacing(4.75),
+    marginRight: theme.spacing(1.5),
+}));
+
+const StyledSubtitle = styled(Typography)(({ theme }) => ({
+    color: theme.palette.text.secondary,
+}));
+
+const StyledLinkButton = styled(Button<typeof Link | 'a'>)(({ theme }) => ({
+    padding: 0,
+    color: theme.palette.primary.dark,
+    fontWeight: theme.fontWeight.medium,
+}));
+
+const StyledLinkPrivacyButton = styled(StyledLinkButton)(({ theme }) => ({
+    alignSelf: 'flex-start',
+}));
+
+const StyledLogoutButton = styled(Button)(({ theme }) => ({
+    width: '100%',
+    height: theme.spacing(5),
+}));
+
+const StyledDivider = styled('div')(({ theme }) => ({
+    width: '100%',
+    height: '1px',
+    backgroundColor: theme.palette.divider,
+    margin: theme.spacing(3, 0),
+}));
 
 interface IUserProfileContentProps {
     id: string;
     showProfile: boolean;
     profile: IUser;
-    possibleLocales: string[];
-    imageUrl: string;
-    currentLocale?: string;
-    setCurrentLocale: (value: string) => void;
-    setLocationSettings: React.Dispatch<
-        React.SetStateAction<ILocationSettings>
-    >;
 }
 
-const UserProfileContent = ({
+export const UserProfileContent = ({
     id,
     showProfile,
     profile,
-    possibleLocales,
-    imageUrl,
-    currentLocale,
-    setCurrentLocale,
-    setLocationSettings,
-}: IUserProfileContentProps) => {
-    const { classes: themeStyles } = useThemeStyles();
-    const theme = useTheme();
+}: IUserProfileContentProps) => (
+    <ConditionallyRender
+        condition={showProfile}
+        show={
+            <StyledPaper id={id}>
+                <StyledProfileInfo>
+                    <StyledUserAvatar user={profile} />
+                    <div>
+                        <Typography>
+                            {profile.name || profile.username}
+                        </Typography>
+                        <StyledSubtitle variant="body2">
+                            {profile.email}
+                        </StyledSubtitle>
+                    </div>
+                </StyledProfileInfo>
 
-    const { uiConfig } = useUiConfig();
-    const [updatedPassword, setUpdatedPassword] = useState(false);
-    const [editingProfile, setEditingProfile] = useState(false);
-    const { classes: styles } = useStyles();
+                <StyledLinkButton component={Link} to={'/profile'}>
+                    View profile settings
+                </StyledLinkButton>
 
-    const profileAvatarClasses = classnames(styles.avatar, {
-        [styles.editingAvatar]: editingProfile,
-    });
+                <StyledDivider />
 
-    const profileEmailClasses = classnames(styles.profileEmail, {
-        [styles.editingEmail]: editingProfile,
-    });
-
-    const handleChange = (e: SelectChangeEvent) => {
-        const locale = e.target.value;
-        setCurrentLocale(locale);
-        setLocationSettings({ locale });
-    };
-
-    return (
-        <ConditionallyRender
-            condition={showProfile}
-            show={
-                <Paper
-                    id={id}
-                    className={classnames(
-                        styles.profile,
-                        themeStyles.flexColumn,
-                        themeStyles.itemsCenter,
-                        themeStyles.contentSpacingY
-                    )}
+                <StyledLinkPrivacyButton
+                    component="a"
+                    href="https://www.getunleash.io/privacy-policy"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                    endIcon={<OpenInNew />}
                 >
-                    <Avatar
-                        alt="Your Gravatar"
-                        src={imageUrl}
-                        className={profileAvatarClasses}
-                    />
-                    <Typography variant="body1" className={profileEmailClasses}>
-                        {profile?.email}
-                    </Typography>
-                    <ConditionallyRender
-                        condition={updatedPassword}
-                        show={
-                            <Alert onClose={() => setUpdatedPassword(false)}>
-                                Successfully updated password.
-                            </Alert>
-                        }
-                    />
-                    <ConditionallyRender
-                        condition={!editingProfile}
-                        show={
-                            <>
-                                <ConditionallyRender
-                                    condition={!uiConfig.disablePasswordAuth}
-                                    show={
-                                        <Button
-                                            onClick={() =>
-                                                setEditingProfile(true)
-                                            }
-                                        >
-                                            Update password
-                                        </Button>
-                                    }
-                                />
-                                <div className={themeStyles.divider} />
-                                <div className={legacyStyles.showUserSettings}>
-                                    <FormControl
-                                        variant="outlined"
-                                        size="small"
-                                        style={{
-                                            width: '100%',
-                                            minWidth: '120px',
-                                        }}
-                                    >
-                                        <InputLabel
-                                            htmlFor="locale-select"
-                                            style={{
-                                                backgroundColor:
-                                                    theme.palette
-                                                        .inputLabelBackground,
-                                            }}
-                                        >
-                                            Date/Time formatting
-                                        </InputLabel>
-                                        <Select
-                                            id="locale-select"
-                                            value={currentLocale || ''}
-                                            native
-                                            onChange={handleChange}
-                                            MenuProps={{
-                                                style: {
-                                                    zIndex: 9999,
-                                                },
-                                            }}
-                                        >
-                                            {possibleLocales.map(locale => {
-                                                return (
-                                                    <option
-                                                        key={locale}
-                                                        value={locale}
-                                                    >
-                                                        {locale}
-                                                    </option>
-                                                );
-                                            })}
-                                        </Select>
-                                    </FormControl>
-                                </div>
-                                <div className={themeStyles.divider} />
-                                <a
-                                    className={styles.link}
-                                    href="https://www.getunleash.io/privacy-policy"
-                                    rel="noopener noreferrer"
-                                    target="_blank"
-                                >
-                                    Privacy policy
-                                </a>
-                                <div className={themeStyles.divider} />
+                    Privacy Policy
+                </StyledLinkPrivacyButton>
 
-                                <Button
-                                    variant="contained"
-                                    color="primary"
-                                    href={`${basePath}/logout`}
-                                >
-                                    Logout
-                                </Button>
-                            </>
-                        }
-                        elseShow={
-                            <EditProfile
-                                setEditingProfile={setEditingProfile}
-                                setUpdatedPassword={setUpdatedPassword}
-                            />
-                        }
-                    />
-                </Paper>
-            }
-        />
-    );
-};
+                <StyledDivider />
 
-export default UserProfileContent;
+                <StyledLogoutButton
+                    variant="outlined"
+                    color="primary"
+                    href={`${basePath}/logout`}
+                >
+                    Logout
+                </StyledLogoutButton>
+            </StyledPaper>
+        }
+    />
+);

@@ -15,7 +15,7 @@ import assert from 'assert';
 import { ApiTokenType } from '../types/models/api-token';
 import { ProxyMetricsSchema } from '../openapi/spec/proxy-metrics-schema';
 
-type Config = Pick<IUnleashConfig, 'getLogger'>;
+type Config = Pick<IUnleashConfig, 'getLogger' | 'frontendApi'>;
 
 type Stores = Pick<IUnleashStores, 'projectStore' | 'eventStore'>;
 

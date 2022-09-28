@@ -132,7 +132,7 @@ describe('Public Signup API', () => {
         });
 
         return request
-            .get('/api/admin/invite-link/tokens/some-secret')
+            .get('/invite/some-secret/validate')
             .expect(200)
             .expect((res) => {
                 const token = res.body;
@@ -195,7 +195,7 @@ describe('Public Signup API', () => {
         });
 
         return request
-            .post('/api/admin/invite-link/tokens/some-secret/signup')
+            .post('/invite/some-secret/signup')
             .send(user)
             .expect(201)
             .expect(async (res) => {
@@ -217,7 +217,7 @@ describe('Public Signup API', () => {
         });
 
         return request
-            .post('/api/admin/invite-link/tokens/some-secret/signup')
+            .post('/invite/some-secret/signup')
             .send(user)
             .expect(400);
     });
@@ -233,7 +233,7 @@ describe('Public Signup API', () => {
         stores.publicSignupTokenStore.update('some-secret', { enabled: false });
 
         return request
-            .post('/api/admin/invite-link/tokens/some-secret/signup')
+            .post('/invite/some-secret/signup')
             .send(user)
             .expect(400);
     });
@@ -242,23 +242,21 @@ describe('Public Signup API', () => {
         const appName = '123!23';
 
         stores.clientApplicationsStore.upsert({ appName });
-        stores.publicSignupTokenStore.create({
-            name: 'some-name',
-            expiresAt: expireAt(),
-        });
+        // Create a token
+        const res = await request
+            .post('/api/admin/invite-link/tokens')
+            .send(createBody())
+            .expect(201);
+        const { secret } = res.body;
 
-        return request
-            .post('/api/admin/invite-link/tokens/some-secret/validate')
-            .expect(200);
+        return request.get(`/invite/${secret}/validate`).expect(200);
     });
 
-    test('should return 401 if token is invalid', async () => {
+    test('should return 400 if token is invalid', async () => {
         const appName = '123!23';
 
         stores.clientApplicationsStore.upsert({ appName });
 
-        return request
-            .post('/api/admin/invite-link/tokens/some-invalid-secret/validate')
-            .expect(401);
+        return request.get('/invite/some-invalid-secret/validate').expect(400);
     });
 });

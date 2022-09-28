@@ -4,7 +4,6 @@ export const publicSignupTokenUpdateSchema = {
     $id: '#/components/schemas/publicSignupTokenUpdateSchema',
     type: 'object',
     additionalProperties: false,
-    required: [],
     properties: {
         expiresAt: {
             type: 'string',

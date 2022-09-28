@@ -22,6 +22,7 @@ export default createTheme({
         main: '0px 2px 4px rgba(129, 122, 254, 0.2)',
         card: '0px 2px 10px rgba(28, 25, 78, 0.12)',
         elevated: '0px 1px 20px rgba(45, 42, 89, 0.1)',
+        popup: '0px 2px 6px rgba(0, 0, 0, 0.25)',
     },
     typography: {
         fontFamily: 'Sen, Roboto, sans-serif',

@@ -47,3 +47,14 @@ The client needs to point to the correct API endpoint. The front-end API is avai
 ### API token
 
 You can create appropriate token, with type `FRONTEND` on `<YOUR_UNLEASH_URL>/admin/api/create-token` page or with a request to `/api/admin/api-tokens`. See our guide on [how to create API tokens](../user_guide/token.mdx) for more details.
+
+### Refresh interval for tokens
+
+Internally, unleash will set up a new unleash client per token it sees and configure the client with the project and environment specified in the token. By default
+the refresh interval is set to 10 seconds, plus a 10 second stagger to avoid thundering herd. This means that if you have 1000 users, unleash will refresh the client data within a window of 10s + a random number between 0 and 10s. This is to avoid all clients hitting the database simultaneously to refresh their data. If you need to change this interval, you can do so by setting the `FRONTEND_API_REFRESH_INTERVAL_MS` environment variable or by setting it directly in the config on startup. Note that the interval is in milliseconds: 
+
+```
+const unleashConfig = {
+    ... // previous values 
+    frontendApi: { refreshIntervalInMs: 4000 }
+}

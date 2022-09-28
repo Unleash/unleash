@@ -98,7 +98,7 @@ You can either [add constraints when you add the strategy](../api/admin/feature-
 
 :::
 
-In the strategy configuration screen for the strategy that you want to configure, use the "add custom constraint" button to add a custom constraint.
+In the strategy configuration screen for the strategy that you want to configure, use the "add constraint" button to add a strategy constraint.
 
 ![](/img/create-toggle-add-constraint.png)
 

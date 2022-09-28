@@ -173,6 +173,7 @@ export class PublicSignupController extends Controller {
                     responses: {
                         200: emptyResponse,
                         401: emptyResponse,
+                        400: emptyResponse,
                     },
                 }),
             ],
@@ -215,7 +216,7 @@ export class PublicSignupController extends Controller {
         if (valid) {
             return res.status(200).end();
         }
-        return res.status(401).end();
+        return res.status(400).end();
     }
 
     async addTokenUser(

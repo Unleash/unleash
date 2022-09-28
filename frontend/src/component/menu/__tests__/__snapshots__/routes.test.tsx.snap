@@ -490,5 +490,12 @@ exports[`returns all baseRoutes 1`] = `
     "title": "Admin",
     "type": "protected",
   },
+  {
+    "component": [Function],
+    "menu": {},
+    "path": "/profile",
+    "title": "Profile",
+    "type": "protected",
+  },
 ]
 `;

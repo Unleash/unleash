@@ -129,6 +129,13 @@ unleash.start(unleashOptions);
 - **clientFeatureCaching** - configuring memoization of the /api/client/features endpoint
   - `enabled` - set to true by default - Overridable with (`CLIENT_FEATURE_CACHING_ENABLED`)
   - `maxAge` - the time to cache features, set to 600 milliseconds by default - Overridable with (`CLIENT_FEATURE_CACHING_MAXAGE`) ) (accepts milliseconds)
+- **frontendApi** - configuring the refresh interval for when the frontend clients will refresh it's data from the cache. Overridable with `FRONTEND_API_REFRESH_INTERVAL_MS` (accepts milliseconds)
+  ```
+  Example
+  frontendApi: {
+    refreshIntervalInMs: 5000,
+  }
+  ```
 
 You can also set the environment variable `ENABLED_ENVIRONMENTS` to a comma delimited string of environment names to override environments.
 

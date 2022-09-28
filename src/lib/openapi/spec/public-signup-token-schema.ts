@@ -6,9 +6,20 @@ export const publicSignupTokenSchema = {
     $id: '#/components/schemas/publicSignupTokenSchema',
     type: 'object',
     additionalProperties: false,
-    required: ['secret', 'name', 'expiresAt', 'createdAt', 'createdBy', 'role'],
+    required: [
+        'secret',
+        'url',
+        'name',
+        'expiresAt',
+        'createdAt',
+        'createdBy',
+        'role',
+    ],
     properties: {
         secret: {
+            type: 'string',
+        },
+        url: {
             type: 'string',
         },
         name: {

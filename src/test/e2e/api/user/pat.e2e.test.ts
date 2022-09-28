@@ -26,17 +26,20 @@ afterAll(async () => {
 });
 
 test('should create a PAT', async () => {
+    const description = 'expected description';
     const { request } = app;
 
     const { body } = await request
         .post('/api/admin/user/tokens')
         .send({
             expiresAt: tomorrow,
+            description: description,
         } as IPat)
         .set('Content-Type', 'application/json')
         .expect(201);
 
     expect(new Date(body.expiresAt)).toEqual(tomorrow);
+    expect(body.description).toEqual(description);
 });
 
 test('should delete the PAT', async () => {

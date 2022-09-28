@@ -92,13 +92,14 @@ describe('Public Signup API', () => {
     });
 
     test('should get All', async () => {
-        expect.assertions(1);
+        expect.assertions(2);
         const appName = '123!23';
 
         stores.clientApplicationsStore.upsert({ appName });
-        stores.publicSignupTokenStore.create({
+        stores.publicSignupTokenStore.insert({
             name: 'some-name',
             expiresAt: expireAt(),
+            createdBy: 'johnDoe',
         });
 
         return request
@@ -107,6 +108,7 @@ describe('Public Signup API', () => {
             .expect((res) => {
                 const { tokens } = res.body;
                 expect(tokens[0].name).toBe('some-name');
+                expect(tokens[0].createdBy).toBe('johnDoe');
             });
     });
 

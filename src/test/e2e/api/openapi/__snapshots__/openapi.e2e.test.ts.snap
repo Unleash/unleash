@@ -709,6 +709,9 @@ exports[`should serve the OpenAPI spec 1`] = `
             },
             "type": "array",
           },
+          "copyOf": {
+            "type": "string",
+          },
           "name": {
             "type": "string",
           },

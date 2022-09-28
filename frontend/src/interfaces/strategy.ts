@@ -19,6 +19,10 @@ export interface IFeatureStrategyPayload {
     name?: string;
     constraints: IConstraint[];
     parameters: IFeatureStrategyParameters;
+    copyOf?: string;
+}
+
+export interface ICopyFeatureStrategyPayload extends IFeatureStrategyPayload {
 }
 
 export interface IStrategy {

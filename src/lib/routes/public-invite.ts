@@ -73,7 +73,7 @@ export class PublicInviteController extends Controller {
                     requestBody: createRequestSchema('createUserSchema'),
                     responses: {
                         200: createResponseSchema('userSchema'),
-                        ...getStandardResponses(409),
+                        ...getStandardResponses(400, 409),
                     },
                 }),
             ],

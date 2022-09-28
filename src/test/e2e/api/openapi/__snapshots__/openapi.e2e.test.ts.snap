@@ -2419,6 +2419,9 @@ exports[`should serve the OpenAPI spec 1`] = `
             "nullable": true,
             "type": "string",
           },
+          "enabled": {
+            "type": "boolean",
+          },
           "expiresAt": {
             "format": "date-time",
             "type": "string",
@@ -2450,6 +2453,7 @@ exports[`should serve the OpenAPI spec 1`] = `
           "expiresAt",
           "createdAt",
           "createdBy",
+          "enabled",
           "role",
         ],
         "type": "object",
@@ -2457,14 +2461,15 @@ exports[`should serve the OpenAPI spec 1`] = `
       "publicSignupTokenUpdateSchema": {
         "additionalProperties": false,
         "properties": {
+          "enabled": {
+            "type": "boolean",
+          },
           "expiresAt": {
             "format": "date-time",
             "type": "string",
           },
         },
-        "required": [
-          "expiresAt",
-        ],
+        "required": [],
         "type": "object",
       },
       "publicSignupTokensSchema": {
@@ -4567,27 +4572,6 @@ If the provided project does not exist, the list of events will be empty.",
       },
     },
     "/api/admin/invite-link/tokens/{token}": {
-      "delete": {
-        "operationId": "deletePublicSignupToken",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "token",
-            "required": true,
-            "schema": {
-              "type": "string",
-            },
-          },
-        ],
-        "responses": {
-          "200": {
-            "description": "This response has no body.",
-          },
-        },
-        "tags": [
-          "Public signup tokens",
-        ],
-      },
       "get": {
         "operationId": "getPublicSignupToken",
         "parameters": [
@@ -4641,7 +4625,14 @@ If the provided project does not exist, the list of events will be empty.",
         },
         "responses": {
           "200": {
-            "description": "This response has no body.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/publicSignupTokenSchema",
+                },
+              },
+            },
+            "description": "publicSignupTokenSchema",
           },
         },
         "tags": [
@@ -4686,32 +4677,6 @@ If the provided project does not exist, the list of events will be empty.",
           },
           "409": {
             "description": "The provided resource can not be created or updated because it would conflict with the current state of the resource or with an already existing resource, respectively.",
-          },
-        },
-        "tags": [
-          "Public signup tokens",
-        ],
-      },
-    },
-    "/api/admin/invite-link/tokens/{token}/validate": {
-      "post": {
-        "operationId": "validatePublicSignupToken",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "token",
-            "required": true,
-            "schema": {
-              "type": "string",
-            },
-          },
-        ],
-        "responses": {
-          "200": {
-            "description": "This response has no body.",
-          },
-          "401": {
-            "description": "This response has no body.",
           },
         },
         "tags": [
@@ -7435,6 +7400,83 @@ If the provided project does not exist, the list of events will be empty.",
         },
         "tags": [
           "Operational",
+        ],
+      },
+    },
+    "/invite/{token}/signup": {
+      "post": {
+        "operationId": "addPublicSignupTokenUser",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "token",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/createUserSchema",
+              },
+            },
+          },
+          "description": "createUserSchema",
+          "required": true,
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/userSchema",
+                },
+              },
+            },
+            "description": "userSchema",
+          },
+          "409": {
+            "description": "The provided resource can not be created or updated because it would conflict with the current state of the resource or with an already existing resource, respectively.",
+          },
+        },
+        "tags": [
+          "Public signup tokens",
+        ],
+      },
+    },
+    "/invite/{token}/validate": {
+      "get": {
+        "operationId": "validatePublicSignupToken",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "token",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/publicSignupTokenSchema",
+                },
+              },
+            },
+            "description": "publicSignupTokenSchema",
+          },
+          "401": {
+            "description": "This response has no body.",
+          },
+        },
+        "tags": [
+          "Public signup tokens",
         ],
       },
     },

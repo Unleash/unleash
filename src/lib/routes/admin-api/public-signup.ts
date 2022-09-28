@@ -13,10 +13,7 @@ import {
     resourceCreatedResponseSchema,
 } from '../../openapi/util/create-response-schema';
 import { serializeDates } from '../../types/serialize-dates';
-import {
-    emptyResponse,
-    getStandardResponses,
-} from '../../openapi/util/standard-responses';
+import { getStandardResponses } from '../../openapi/util/standard-responses';
 import { PublicSignupTokenService } from '../../services/public-signup-token-service';
 import UserService from '../../services/user-service';
 import {
@@ -159,24 +156,6 @@ export class PublicSignupController extends Controller {
                 }),
             ],
         });
-
-        this.route({
-            method: 'post',
-            path: '/tokens/:token/validate',
-            handler: this.validate,
-            acceptAnyContentType: true,
-            permission: NONE,
-            middleware: [
-                openApiService.validPath({
-                    tags: ['Public signup tokens'],
-                    operationId: 'validatePublicSignupToken',
-                    responses: {
-                        200: emptyResponse,
-                        401: emptyResponse,
-                    },
-                }),
-            ],
-        });
     }
 
     async getAllPublicSignupTokens(
@@ -208,14 +187,21 @@ export class PublicSignupController extends Controller {
 
     async validate(
         req: IAuthRequest<TokenParam, void, CreateUserSchema>,
-        res: Response,
+        res: Response<PublicSignupTokenSchema>,
     ): Promise<void> {
         const { token } = req.params;
         const valid = await this.publicSignupTokenService.validate(token);
         if (valid) {
-            return res.status(200).end();
+            const result = await this.publicSignupTokenService.get(token);
+            this.openApiService.respondWithValidation(
+                200,
+                res,
+                publicSignupTokenSchema.$id,
+                serializeDates(result),
+            );
+        } else {
+            return res.status(401).end();
         }
-        return res.status(401).end();
     }
 
     async addTokenUser(

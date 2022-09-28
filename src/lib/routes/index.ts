@@ -12,12 +12,17 @@ import { HealthCheckController } from './health-check';
 import ProxyController from './proxy-api';
 import { conditionalMiddleware } from '../middleware/conditional-middleware';
 import EdgeController from './edge-api';
+import { PublicInviteController } from './public-invite';
 
 class IndexRouter extends Controller {
     constructor(config: IUnleashConfig, services: IUnleashServices) {
         super(config);
 
         this.use('/health', new HealthCheckController(config, services).router);
+        this.use(
+            '/invite',
+            new PublicInviteController(config, services).router,
+        );
         this.use('/internal-backstage', new BackstageController(config).router);
         this.use('/logout', new LogoutController(config, services).router);
         this.useWithMiddleware(

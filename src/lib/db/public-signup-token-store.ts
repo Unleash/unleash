@@ -32,8 +32,15 @@ interface ITokenUserRow {
 }
 
 const tokenRowReducer = (acc, tokenRow) => {
-    const { userId, userName, userUsername, roleId, roleName, ...token } =
-        tokenRow;
+    const {
+        userId,
+        userName,
+        userUsername,
+        roleId,
+        roleName,
+        roleType,
+        ...token
+    } = tokenRow;
     if (!acc[tokenRow.secret]) {
         acc[tokenRow.secret] = {
             secret: token.secret,
@@ -46,6 +53,7 @@ const tokenRowReducer = (acc, tokenRow) => {
             role: {
                 id: roleId,
                 name: roleName,
+                type: roleType,
             },
             users: [],
         };
@@ -123,6 +131,7 @@ export class PublicSignupTokenStore implements IPublicSignupTokenStore {
                 'users.username as userUsername',
                 'roles.id as roleId',
                 'roles.name as roleName',
+                'roles.type as roleType',
             );
     }
 

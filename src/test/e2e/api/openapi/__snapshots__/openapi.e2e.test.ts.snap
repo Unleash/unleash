@@ -4640,50 +4640,6 @@ If the provided project does not exist, the list of events will be empty.",
         ],
       },
     },
-    "/api/admin/invite-link/tokens/{token}/signup": {
-      "post": {
-        "operationId": "addPublicSignupTokenUser",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "token",
-            "required": true,
-            "schema": {
-              "type": "string",
-            },
-          },
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/createUserSchema",
-              },
-            },
-          },
-          "description": "createUserSchema",
-          "required": true,
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/userSchema",
-                },
-              },
-            },
-            "description": "userSchema",
-          },
-          "409": {
-            "description": "The provided resource can not be created or updated because it would conflict with the current state of the resource or with an already existing resource, respectively.",
-          },
-        },
-        "tags": [
-          "Public signup tokens",
-        ],
-      },
-    },
     "/api/admin/metrics/applications": {
       "get": {
         "operationId": "getApplications",
@@ -7471,8 +7427,8 @@ If the provided project does not exist, the list of events will be empty.",
             },
             "description": "publicSignupTokenSchema",
           },
-          "401": {
-            "description": "This response has no body.",
+          "400": {
+            "description": "The request data does not match what we expect.",
           },
         },
         "tags": [

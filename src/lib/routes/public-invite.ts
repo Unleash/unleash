@@ -9,10 +9,7 @@ import { OpenApiService } from '../services/openapi-service';
 import { createRequestSchema } from '../openapi/util/create-request-schema';
 import { createResponseSchema } from '../openapi/util/create-response-schema';
 import { serializeDates } from '../types/serialize-dates';
-import {
-    emptyResponse,
-    getStandardResponses,
-} from '../openapi/util/standard-responses';
+import { getStandardResponses } from '../openapi/util/standard-responses';
 import { PublicSignupTokenService } from '../services/public-signup-token-service';
 import {
     publicSignupTokenSchema,
@@ -58,7 +55,7 @@ export class PublicInviteController extends Controller {
                     operationId: 'validatePublicSignupToken',
                     responses: {
                         200: createResponseSchema('publicSignupTokenSchema'),
-                        401: emptyResponse,
+                        ...getStandardResponses(400),
                     },
                 }),
             ],
@@ -98,7 +95,7 @@ export class PublicInviteController extends Controller {
                 serializeDates(result),
             );
         } else {
-            return res.status(401).end();
+            return res.status(400).end();
         }
     }
 

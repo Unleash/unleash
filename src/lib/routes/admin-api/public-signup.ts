@@ -1,7 +1,7 @@
 import { Response } from 'express';
 
 import Controller from '../controller';
-import { ADMIN, NONE } from '../../types/permissions';
+import { ADMIN } from '../../types/permissions';
 import { Logger } from '../../logger';
 import { AccessService } from '../../services/access-service';
 import { IAuthRequest } from '../unleash-types';
@@ -13,7 +13,6 @@ import {
     resourceCreatedResponseSchema,
 } from '../../openapi/util/create-response-schema';
 import { serializeDates } from '../../types/serialize-dates';
-import { getStandardResponses } from '../../openapi/util/standard-responses';
 import { PublicSignupTokenService } from '../../services/public-signup-token-service';
 import UserService from '../../services/user-service';
 import {
@@ -26,8 +25,6 @@ import {
 } from '../../openapi/spec/public-signup-tokens-schema';
 import { PublicSignupTokenCreateSchema } from '../../openapi/spec/public-signup-token-create-schema';
 import { PublicSignupTokenUpdateSchema } from '../../openapi/spec/public-signup-token-update-schema';
-import { CreateUserSchema } from '../../openapi/spec/create-user-schema';
-import { UserSchema, userSchema } from '../../openapi/spec/user-schema';
 import { extractUsername } from '../../util/extract-user';
 
 interface TokenParam {
@@ -164,46 +161,6 @@ export class PublicSignupController extends Controller {
             res,
             publicSignupTokenSchema.$id,
             serializeDates(result),
-        );
-    }
-
-    async validate(
-        req: IAuthRequest<TokenParam, void, CreateUserSchema>,
-        res: Response<PublicSignupTokenSchema>,
-    ): Promise<void> {
-        const { token } = req.params;
-        const valid = await this.publicSignupTokenService.validate(token);
-        if (valid) {
-            const result = await this.publicSignupTokenService.get(token);
-            this.openApiService.respondWithValidation(
-                200,
-                res,
-                publicSignupTokenSchema.$id,
-                serializeDates(result),
-            );
-        } else {
-            return res.status(400).end();
-        }
-    }
-
-    async addTokenUser(
-        req: IAuthRequest<TokenParam, void, CreateUserSchema>,
-        res: Response<UserSchema>,
-    ): Promise<void> {
-        const { token } = req.params;
-        const valid = await this.publicSignupTokenService.validate(token);
-        if (!valid) {
-            return res.status(400).end();
-        }
-        const user = await this.publicSignupTokenService.addTokenUser(
-            token,
-            req.body,
-        );
-        this.openApiService.respondWithValidation(
-            201,
-            res,
-            userSchema.$id,
-            serializeDates(user),
         );
     }
 

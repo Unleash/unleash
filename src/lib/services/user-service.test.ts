@@ -1,3 +1,4 @@
+import { URL } from 'url';
 import UserService from './user-service';
 import UserStoreMock from '../../test/fixtures/fake-user-store';
 import EventStoreMock from '../../test/fixtures/fake-event-store';
@@ -305,4 +306,109 @@ test('Should be a valid password with special chars', async () => {
     const valid = service.validatePassword('this is a strong password!');
 
     expect(valid).toBe(true);
+});
+
+test('Should send password reset email if user exists', async () => {
+    const userStore = new UserStoreMock();
+    const eventStore = new EventStoreMock();
+    const accessService = new AccessServiceMock();
+    const resetTokenStore = new FakeResetTokenStore();
+    const resetTokenService = new ResetTokenService(
+        { resetTokenStore },
+        config,
+    );
+    const emailService = new EmailService(config.email, config.getLogger);
+    const sessionStore = new FakeSessionStore();
+    const sessionService = new SessionService({ sessionStore }, config);
+    const settingService = new SettingService(
+        {
+            settingStore: new FakeSettingStore(),
+            eventStore: new FakeEventStore(),
+        },
+        config,
+    );
+
+    const service = new UserService({ userStore, eventStore }, config, {
+        accessService,
+        resetTokenService,
+        emailService,
+        sessionService,
+        settingService,
+    });
+
+    const unknownUser = service.createResetPasswordEmail('unknown@example.com');
+    expect(unknownUser).rejects.toThrowError('Could not find user');
+
+    await userStore.insert({
+        id: 123,
+        name: 'User',
+        username: 'Username',
+        email: 'known@example.com',
+        permissions: [],
+        imageUrl: '',
+        seenAt: new Date(),
+        loginAttempts: 0,
+        createdAt: new Date(),
+        isAPI: false,
+        generateImageUrl: () => '',
+    });
+
+    const knownUser = service.createResetPasswordEmail('known@example.com');
+    expect(knownUser).resolves.toBeInstanceOf(URL);
+});
+
+test('Should throttle password reset email', async () => {
+    const userStore = new UserStoreMock();
+    const eventStore = new EventStoreMock();
+    const accessService = new AccessServiceMock();
+    const resetTokenStore = new FakeResetTokenStore();
+    const resetTokenService = new ResetTokenService(
+        { resetTokenStore },
+        config,
+    );
+    const emailService = new EmailService(config.email, config.getLogger);
+    const sessionStore = new FakeSessionStore();
+    const sessionService = new SessionService({ sessionStore }, config);
+    const settingService = new SettingService(
+        {
+            settingStore: new FakeSettingStore(),
+            eventStore: new FakeEventStore(),
+        },
+        config,
+    );
+
+    const service = new UserService({ userStore, eventStore }, config, {
+        accessService,
+        resetTokenService,
+        emailService,
+        sessionService,
+        settingService,
+    });
+
+    await userStore.insert({
+        id: 123,
+        name: 'User',
+        username: 'Username',
+        email: 'known@example.com',
+        permissions: [],
+        imageUrl: '',
+        seenAt: new Date(),
+        loginAttempts: 0,
+        createdAt: new Date(),
+        isAPI: false,
+        generateImageUrl: () => '',
+    });
+
+    jest.useFakeTimers();
+
+    const attempt1 = service.createResetPasswordEmail('known@example.com');
+    await expect(attempt1).resolves.toBeInstanceOf(URL);
+
+    const attempt2 = service.createResetPasswordEmail('known@example.com');
+    await expect(attempt2).resolves.toBe(undefined);
+
+    jest.runAllTimers();
+
+    const attempt3 = service.createResetPasswordEmail('known@example.com');
+    await expect(attempt3).resolves.toBeInstanceOf(URL);
 });

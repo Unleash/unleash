@@ -19,9 +19,9 @@ Custom activation strategies work exactly like the built-in activation strategie
 
 You define custom activation strategies on your Unleash instance, either via the admin UI or via the API. A strategy contains:
 
-- A strategy **name**: You'll use this to refer to the strategy in the UI and in code.
+- A strategy **name**: You'll use this to refer to the strategy in the UI and in code. The strategy name should make it easy to understand what the strategy does. For instance, if a strategy uses contact numbers to determine whether a feature should be enabled, then _ContactNumbers_ would be a good name.
 - An optional **description**: Use this to describe what the strategy should do.
-- An optional list of **parameters**: Use this to provide the strategy with arguments it should use in its evaluation.
+- An optional list of **parameters**: The parameter list lets you pass arguments to your custom activation strategy. These will be made available to your custom strategy implementation. How you interact with them differs between SDKs, but refer to the [Node.js example in the how-to guide](../how-to/how-to-use-custom-strategies.md) for a rough idea.
 
 The strategy **name** is the only required parameter, but adding a good **description** will make it easier to remember what a strategy should do. The list of **parameters** lets you pass data from the Unleash instance to the strategy implementation.
 

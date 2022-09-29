@@ -226,7 +226,7 @@ export default class MetricsMonitor {
                     .inc(entry[1].no);
             }
         });
-        eventBus.on(CLIENT_REGISTER, (m) => {
+        eventStore.on(CLIENT_REGISTER, (m) => {
             if (m.sdkVersion && m.sdkVersion.indexOf(':') > -1) {
                 const [sdkName, sdkVersion] = m.sdkVersion.split(':');
                 clientSdkVersionUsage.labels(sdkName, sdkVersion).inc();

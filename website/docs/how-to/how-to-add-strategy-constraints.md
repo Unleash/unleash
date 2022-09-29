@@ -18,7 +18,7 @@ You'll need to have an existing feature toggle with a defined strategy to add a 
 
 On the strategy you're working with, find and select the "edit strategy" button.
 
-![A feature toggle with one strategy. The "edit strategy" button is highlighted.](/img/add-constraint.png)
+![A feature toggle with one strategy. The "edit strategy" button is highlighted.](/img/create-toggle-edit-strategy.png)
 
 On the "edit strategy" screen, select the "add custom constraint" button to open the constraints menu.
 

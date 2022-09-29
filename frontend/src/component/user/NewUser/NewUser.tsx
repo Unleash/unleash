@@ -21,7 +21,6 @@ export const NewUser = () => {
     const {
         data: passwordResetData,
         loading: resetLoading,
-        setLoading,
         isValidToken,
         resetPassword,
     } = useResetPassword();
@@ -177,7 +176,6 @@ export const NewUser = () => {
                         />
                         {/* TODO: create-user failure message */}
                         <ResetPasswordForm
-                            setLoading={setLoading}
                             onSubmit={onSubmit}
                         />
                     </>

@@ -17,11 +17,10 @@ import { useStyles } from './ResetPasswordForm.styles';
 import PasswordField from 'component/common/PasswordField/PasswordField';
 
 interface IResetPasswordProps {
-    setLoading: Dispatch<SetStateAction<boolean>>;
     onSubmit: (password: string) => void;
 }
 
-const ResetPasswordForm = ({ setLoading, onSubmit }: IResetPasswordProps) => {
+const ResetPasswordForm = ({ onSubmit }: IResetPasswordProps) => {
     const { classes: styles } = useStyles();
     const { classes: themeStyles } = useThemeStyles();
     const [password, setPassword] = useState('');

@@ -1,21 +1,44 @@
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { VerticalTabs } from 'component/common/VerticalTabs/VerticalTabs';
+import { ITab, VerticalTabs } from 'component/common/VerticalTabs/VerticalTabs';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { PasswordTab } from './PasswordTab/PasswordTab';
+import { PersonalAPITokensTab } from './PersonalAPITokensTab/PersonalAPITokensTab';
 import { ProfileTab } from './ProfileTab/ProfileTab';
 
 const tabs = [
     { id: 'profile', label: 'Profile' },
-    { id: 'password', label: 'Change password' },
+    { id: 'password', label: 'Change password', path: 'change-password' },
+    { id: 'pat', label: 'Personal API tokens', path: 'personal-api-tokens' },
 ];
 
 export const Profile = () => {
-    const [tab, setTab] = useState('profile');
     const { user } = useAuthUser();
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    const onChange = (tab: ITab) => {
+        navigate(tab.path ? `/profile/${tab.path}` : '/profile', {
+            replace: true,
+        });
+        setTab(tab.id);
+    };
+
+    const tabFromUrl = () => {
+        const url = location.pathname;
+        const tab = tabs.find(t => t.path && url.includes(t.path));
+        return (tab || tabs[0]).id;
+    };
+
+    const [tab, setTab] = useState(tabFromUrl());
+
+    useEffect(() => {
+        setTab(tabFromUrl());
+    }, [location]);
 
     return (
-        <VerticalTabs tabs={tabs} value={tab} onChange={setTab}>
+        <VerticalTabs tabs={tabs} value={tab} onChange={onChange}>
             <ConditionallyRender
                 condition={tab === 'profile'}
                 show={<ProfileTab user={user!} />}
@@ -23,6 +46,10 @@ export const Profile = () => {
             <ConditionallyRender
                 condition={tab === 'password'}
                 show={<PasswordTab user={user!} />}
+            />
+            <ConditionallyRender
+                condition={tab === 'pat'}
+                show={<PersonalAPITokensTab user={user!} />}
             />
         </VerticalTabs>
     );

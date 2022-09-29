@@ -19,17 +19,19 @@ const StyledTabs = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(1),
+    flexShrink: 0,
 }));
 
-interface ITab {
+export interface ITab {
     id: string;
     label: string;
+    path?: string;
 }
 
 interface IVerticalTabsProps {
     tabs: ITab[];
     value: string;
-    onChange: (value: string) => void;
+    onChange: (tab: ITab) => void;
     children: React.ReactNode;
 }
 
@@ -46,7 +48,7 @@ export const VerticalTabs = ({
                     key={tab.id}
                     label={tab.label}
                     selected={tab.id === value}
-                    onClick={() => onChange(tab.id)}
+                    onClick={() => onChange(tab)}
                 />
             ))}
         </StyledTabs>

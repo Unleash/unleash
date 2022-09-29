@@ -493,7 +493,7 @@ exports[`returns all baseRoutes 1`] = `
   {
     "component": [Function],
     "menu": {},
-    "path": "/profile",
+    "path": "/profile/*",
     "title": "Profile",
     "type": "protected",
   },

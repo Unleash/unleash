@@ -531,7 +531,7 @@ export const routes: IRoute[] = [
         menu: {},
     },
     {
-        path: '/profile',
+        path: '/profile/*',
         title: 'Profile',
         component: Profile,
         type: 'protected',

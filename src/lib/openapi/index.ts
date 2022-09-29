@@ -120,6 +120,7 @@ import { publicSignupTokenSchema } from './spec/public-signup-token-schema';
 import { publicSignupTokensSchema } from './spec/public-signup-tokens-schema';
 import { publicSignupTokenUpdateSchema } from './spec/public-signup-token-update-schema';
 import apiVersion from '../util/version';
+import { profileSchema } from './spec/profile-schema';
 
 // All schemas in `openapi/spec` should be listed here.
 export const schemas = {
@@ -196,6 +197,7 @@ export const schemas = {
     publicSignupTokenUpdateSchema,
     publicSignupTokensSchema,
     publicSignupTokenSchema,
+    profileSchema,
     proxyClientSchema,
     proxyFeaturesSchema,
     proxyFeatureSchema,

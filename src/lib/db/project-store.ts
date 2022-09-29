@@ -294,8 +294,8 @@ class ProjectStore implements IProjectStore {
                 .from('role_user')
                 .leftJoin('roles', 'role_user.role_id', 'roles.id')
                 .where('type', 'root')
-                .where('name', 'Editor')
-                .where('user_id', userId)
+                .andWhere('name', 'Editor')
+                .andWhere('user_id', userId)
                 .union((queryBuilder) => {
                     queryBuilder
                         .select('project')

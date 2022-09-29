@@ -8,7 +8,7 @@ import {
     Tooltip,
 } from '@mui/material';
 import { AddToPhotos as CopyIcon, Lock } from '@mui/icons-material';
-import {IFeatureStrategy, IFeatureStrategyPayload} from 'interfaces/strategy';
+import { IFeatureStrategy, IFeatureStrategyPayload } from 'interfaces/strategy';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { IFeatureEnvironment } from 'interfaces/featureToggle';
 import AccessContext from 'contexts/AccessContext';
@@ -19,7 +19,7 @@ import useFeatureStrategyApi from 'hooks/api/actions/useFeatureStrategyApi/useFe
 import useToast from 'hooks/useToast';
 import { useFeatureImmutable } from 'hooks/api/getters/useFeature/useFeatureImmutable';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import {useSegments} from "../../../../../../../../../../hooks/api/getters/useSegments/useSegments";
+import { useSegments } from '../../../../../../../../../../hooks/api/getters/useSegments/useSegments';
 
 interface ICopyStrategyIconMenuProps {
     environments: IFeatureEnvironment['name'][];
@@ -51,7 +51,7 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
         const { id, ...strategyCopy } = {
             ...strategy,
             environment: environmentId,
-            copyOf: strategy.id
+            copyOf: strategy.id,
         };
 
         try {

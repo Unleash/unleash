@@ -33,32 +33,39 @@ const expiryOptions = [
     },
 ];
 
+const useFormatApiCode = (isUpdating: boolean, expiry: string) => {
+    const { uiConfig } = useUiConfig();
+
+    if (isUpdating) {
+        return () => `curl --location --request PUT '${
+            uiConfig.unleashUrl
+        }/api/admin/invite-link/tokens/default' \\
+--header 'Authorization: INSERT_API_KEY' \\
+--header 'Content-Type: application/json' \\
+--data-raw '${JSON.stringify({ expiresAt: expiry }, undefined, 2)}'`;
+    }
+
+    return () => `curl --location --request POST '${
+        uiConfig.unleashUrl
+    }/api/admin/invite-link/tokens' \\
+--header 'Authorization: INSERT_API_KEY' \\
+--header 'Content-Type: application/json' \\
+--data-raw '${JSON.stringify(
+        { name: 'default', expiresAt: expiry },
+        undefined,
+        2
+    )}'`;
+};
+
 export const InviteLink: VFC<ICreateInviteLinkProps> = () => {
     const navigate = useNavigate();
     const { data, loading } = useInviteTokens();
     const [inviteLink, setInviteLink] = useState('');
     const [expiry, setExpiry] = useState(expiryOptions[0].key);
-    const { uiConfig } = useUiConfig();
+    const [showDisableDialog, setDisableDialogue] = useState(false);
     const defaultToken = data?.tokens?.find(token => token.name === 'default');
     const isUpdating = Boolean(defaultToken);
-    const formatApiCode = () =>
-        isUpdating
-            ? `curl --location --request PUT '${
-                  uiConfig.unleashUrl
-              }/api/admin/invite-link/tokens/default' \\
---header 'Authorization: INSERT_API_KEY' \\
---header 'Content-Type: application/json' \\
---data-raw '${JSON.stringify({ expiresAt: expiry }, undefined, 2)}'`
-            : `curl --location --request POST '${
-                  uiConfig.unleashUrl
-              }/api/admin/invite-link/tokens' \\
---header 'Authorization: INSERT_API_KEY' \\
---header 'Content-Type: application/json' \\
---data-raw '${JSON.stringify(
-                  { name: 'default', expiresAt: expiry },
-                  undefined,
-                  2
-              )}'`;
+    const formatApiCode = useFormatApiCode(isUpdating, expiry);
 
     const [isSending, setIsSending] = useState(false);
     const { setToastApiError } = useToast();
@@ -89,8 +96,7 @@ export const InviteLink: VFC<ICreateInviteLinkProps> = () => {
         }
     };
 
-    const onDisableClick = async () => {
-        // FIXME: confirm dialog
+    const onDisableConfirmed = async () => {
         setIsSending(true);
         try {
             await updateToken(defaultToken!.secret, {
@@ -102,6 +108,10 @@ export const InviteLink: VFC<ICreateInviteLinkProps> = () => {
         } finally {
             setIsSending(false);
         }
+    };
+
+    const onDisableClick = async () => {
+        setDisableDialogue(true);
     };
 
     const closeConfirm = () => {
@@ -214,9 +224,7 @@ export const InviteLink: VFC<ICreateInviteLinkProps> = () => {
                         New team members now sign-up to Unleash. Please provide
                         them with the following link to get started:
                     </Typography>
-                    <LinkField
-                        inviteLink={inviteLink}
-                    />
+                    <LinkField inviteLink={inviteLink} />
 
                     <Typography variant="body1">
                         Copy the link and send it to the user. This will allow
@@ -225,6 +233,12 @@ export const InviteLink: VFC<ICreateInviteLinkProps> = () => {
                     </Typography>
                 </Box>
             </Dialogue>
+            <Dialogue
+                open={showDisableDialog}
+                onClose={() => setDisableDialogue(false)}
+                onClick={onDisableConfirmed}
+                title="Are you sure you want to delete your invite link?"
+            />
         </FormTemplate>
     );
 };

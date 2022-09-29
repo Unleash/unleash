@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { ApiTokenType } from '../types/models/api-token';
 import { IUnleashConfig } from '../types/option';
+import { IAuthRequest } from '../routes/unleash-types';
 
 const isClientApi = ({ path }) => {
     return path && path.startsWith('/api/client');
@@ -39,27 +40,31 @@ const apiAccessMiddleware = (
         return (req, res, next) => next();
     }
 
-    return (req, res, next) => {
+    return (req: IAuthRequest, res, next) => {
         if (req.user) {
             return next();
         }
 
         try {
             const apiToken = req.header('authorization');
-            const apiUser = apiTokenService.getUserForToken(apiToken);
-            const { CLIENT, FRONTEND } = ApiTokenType;
+            if (!apiToken?.startsWith('user:')) {
+                const apiUser = apiTokenService.getUserForToken(apiToken);
+                const { CLIENT, FRONTEND } = ApiTokenType;
 
-            if (apiUser) {
-                if (
-                    (apiUser.type === CLIENT && !isClientApi(req)) ||
-                    (apiUser.type === FRONTEND && !isProxyApi(req)) ||
-                    (apiUser.type === FRONTEND &&
-                        !flagResolver.isEnabled('embedProxy'))
-                ) {
-                    res.status(403).send({ message: TOKEN_TYPE_ERROR_MESSAGE });
-                    return;
+                if (apiUser) {
+                    if (
+                        (apiUser.type === CLIENT && !isClientApi(req)) ||
+                        (apiUser.type === FRONTEND && !isProxyApi(req)) ||
+                        (apiUser.type === FRONTEND &&
+                            !flagResolver.isEnabled('embedProxy'))
+                    ) {
+                        res.status(403).send({
+                            message: TOKEN_TYPE_ERROR_MESSAGE,
+                        });
+                        return;
+                    }
+                    req.user = apiUser;
                 }
-                req.user = apiUser;
             }
         } catch (error) {
             logger.error(error);

@@ -24,7 +24,10 @@ import {
 import { ContextFieldsSchema } from '../../openapi/spec/context-fields-schema';
 import { UpsertContextFieldSchema } from '../../openapi/spec/upsert-context-field-schema';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
-import { createResponseSchema } from '../../openapi/util/create-response-schema';
+import {
+    createResponseSchema,
+    resourceCreatedResponseSchema,
+} from '../../openapi/util/create-response-schema';
 import { serializeDates } from '../../types/serialize-dates';
 import NotFoundError from '../../error/notfound-error';
 import { NameSchema } from '../../openapi/spec/name-schema';
@@ -98,7 +101,9 @@ export class ContextController extends Controller {
                         'upsertContextFieldSchema',
                     ),
                     responses: {
-                        201: emptyResponse,
+                        201: resourceCreatedResponseSchema(
+                            'contextFieldSchema',
+                        ),
                     },
                 }),
             ],
@@ -189,13 +194,19 @@ export class ContextController extends Controller {
 
     async createContextField(
         req: IAuthRequest<void, void, UpsertContextFieldSchema>,
-        res: Response,
+        res: Response<ContextFieldSchema>,
     ): Promise<void> {
         const value = req.body;
         const userName = extractUsername(req);
 
-        await this.contextService.createContextField(value, userName);
-        res.status(201).end();
+        const result = await this.contextService.createContextField(
+            value,
+            userName,
+        );
+        res.status(201)
+            .header('location', `context/${result.name}`)
+            .json(serializeDates(result))
+            .end();
     }
 
     async updateContextField(

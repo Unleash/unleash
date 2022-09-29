@@ -10,12 +10,20 @@ export const defaultExperimentalOptions = {
             process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY,
             false,
         ),
+        personalAccessTokens: parseEnvVarBoolean(
+            process.env.UNLEASH_EXPERIMENTAL_PERSONAL_ACCESS_TOKENS,
+            false,
+        ),
         embedProxyFrontend: parseEnvVarBoolean(
             process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY_FRONTEND,
             false,
         ),
         batchMetrics: parseEnvVarBoolean(
             process.env.UNLEASH_EXPERIMENTAL_BATCH_METRICS,
+            false,
+        ),
+        publicSignup: parseEnvVarBoolean(
+            process.env.UNLEASH_EXPERIMENTAL_PUBLIC_SIGNUP,
             false,
         ),
     },

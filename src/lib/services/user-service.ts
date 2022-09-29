@@ -76,6 +76,8 @@ class UserService {
 
     private settingService: SettingService;
 
+    private passwordResetTimeouts: { [key: string]: NodeJS.Timeout } = {};
+
     constructor(
         stores: Pick<IUnleashStores, 'userStore' | 'eventStore'>,
         {
@@ -340,14 +342,15 @@ class UserService {
                 throw e;
             }
         }
-        this.store.successfullyLogin(user);
+        await this.store.successfullyLogin(user);
         return user;
     }
 
     async changePassword(userId: number, password: string): Promise<void> {
         this.validatePassword(password);
         const passwordHash = await bcrypt.hash(password, saltRounds);
-        return this.store.setPasswordHash(userId, passwordHash);
+        await this.store.setPasswordHash(userId, passwordHash);
+        await this.sessionService.deleteSessionsForUser(userId);
     }
 
     async getUserForToken(token: string): Promise<TokenUserSchema> {
@@ -399,10 +402,18 @@ class UserService {
         if (!receiver) {
             throw new NotFoundError(`Could not find ${receiverEmail}`);
         }
+        if (this.passwordResetTimeouts[receiver.id]) {
+            return;
+        }
+
         const resetLink = await this.resetTokenService.createResetPasswordUrl(
             receiver.id,
             user.username || user.email,
         );
+
+        this.passwordResetTimeouts[receiver.id] = setTimeout(() => {
+            delete this.passwordResetTimeouts[receiver.id];
+        }, 1000 * 60); // 1 minute
 
         await this.emailService.sendResetMail(
             receiver.name,
@@ -410,6 +421,10 @@ class UserService {
             resetLink.toString(),
         );
         return resetLink;
+    }
+
+    async getUserByPersonalAccessToken(secret: string): Promise<IUser> {
+        return this.store.getUserByPersonalAccessToken(secret);
     }
 }
 

@@ -20,7 +20,7 @@ On the strategy you're working with, find and select the "edit strategy" button.
 
 ![A feature toggle with one strategy. The "edit strategy" button is highlighted.](/img/add-constraint.png)
 
-On the "edit strategy" screen, select the "add custom constraint" button to open the constraints menu.
+On the "edit strategy" screen, select the "add constraint" button to open the constraints menu.
 
 ![A feature toggle strategy view showing a button labeled with add constraints.](/img/add-constraint.png)
 

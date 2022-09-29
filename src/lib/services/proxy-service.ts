@@ -15,7 +15,7 @@ import assert from 'assert';
 import { ApiTokenType } from '../types/models/api-token';
 import { ProxyMetricsSchema } from '../openapi/spec/proxy-metrics-schema';
 
-type Config = Pick<IUnleashConfig, 'getLogger'>;
+type Config = Pick<IUnleashConfig, 'getLogger' | 'frontendApi'>;
 
 type Stores = Pick<IUnleashStores, 'projectStore' | 'eventStore'>;
 
@@ -116,6 +116,10 @@ export class ProxyService {
 
     deleteClientForProxyToken(secret: string): void {
         this.clients.delete(secret);
+    }
+
+    stopAll(): void {
+        this.clients.forEach((client) => client.destroy());
     }
 
     private static assertExpectedTokenType({ type }: ApiUser) {

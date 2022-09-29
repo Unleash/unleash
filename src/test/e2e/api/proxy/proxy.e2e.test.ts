@@ -9,6 +9,7 @@ import {
 } from '../../../../lib/types/models/api-token';
 import { startOfHour } from 'date-fns';
 import { IConstraint, IStrategyConfig } from '../../../../lib/types/model';
+import { ProxyRepository } from '../../../../lib/proxy/proxy-repository';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -18,6 +19,10 @@ beforeAll(async () => {
     app = await setupAppWithAuth(db.stores, {
         frontendApiOrigins: ['https://example.com'],
     });
+});
+
+afterEach(() => {
+    app.services.proxyService.stopAll();
 });
 
 afterAll(async () => {
@@ -789,4 +794,66 @@ test('should filter features by segment', async () => {
         .expect('Content-Type', /json/)
         .expect(200)
         .expect((res) => expect(res.body).toEqual({ toggles: [] }));
+});
+
+test('Should sync proxy for keys on an interval', async () => {
+    jest.useFakeTimers();
+
+    const frontendToken = await createApiToken(ApiTokenType.FRONTEND);
+    const user = await app.services.apiTokenService.getUserForToken(
+        frontendToken.secret,
+    );
+
+    const spy = jest.spyOn(
+        ProxyRepository.prototype as any,
+        'featuresForToken',
+    );
+    const proxyRepository = new ProxyRepository(
+        {
+            getLogger,
+            frontendApi: { refreshIntervalInMs: 5000 },
+        },
+        db.stores,
+        app.services,
+        user,
+    );
+
+    await proxyRepository.start();
+
+    jest.advanceTimersByTime(60000);
+
+    proxyRepository.stop();
+    expect(spy.mock.calls.length > 6).toBe(true);
+    jest.useRealTimers();
+});
+
+test('Should change fetch interval', async () => {
+    jest.useFakeTimers();
+
+    const frontendToken = await createApiToken(ApiTokenType.FRONTEND);
+    const user = await app.services.apiTokenService.getUserForToken(
+        frontendToken.secret,
+    );
+
+    const spy = jest.spyOn(
+        ProxyRepository.prototype as any,
+        'featuresForToken',
+    );
+    const proxyRepository = new ProxyRepository(
+        {
+            getLogger,
+            frontendApi: { refreshIntervalInMs: 1000 },
+        },
+        db.stores,
+        app.services,
+        user,
+    );
+
+    await proxyRepository.start();
+
+    jest.advanceTimersByTime(60000);
+
+    proxyRepository.stop();
+    expect(spy.mock.calls.length > 30).toBe(true);
+    jest.useRealTimers();
 });

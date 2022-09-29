@@ -126,7 +126,7 @@ Next upload the public Certificate you generated in the previous step (`cert.pem
 
 ![SAML 2.0 Okta sing-out url](/img/sso-saml-okta-signout-url.png)
 
-### Step 3: Configure Single-Sign-Out in Unlash
+### Step 3: Configure Single-Sign-Out in Unleash
 
 Go back to Unleash Admin Dashboard and navigate to `Admin Menu -> Single-Sign-On -> SAML`. Fill in the values captured in the "Single Logout URL" from Okta.
 

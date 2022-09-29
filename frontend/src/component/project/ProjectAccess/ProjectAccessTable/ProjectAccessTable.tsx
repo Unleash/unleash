@@ -180,7 +180,7 @@ export const ProjectAccessTable: VFC = () => {
                     return userRow.addedAt || '';
                 },
                 Cell: ({ value }: { value: Date }) => (
-                    <TimeAgoCell value={value} emptyText="Never logged" />
+                    <TimeAgoCell value={value} emptyText="Never" />
                 ),
                 sortType: 'date',
                 maxWidth: 150,
@@ -200,7 +200,7 @@ export const ProjectAccessTable: VFC = () => {
                         .reverse()[0];
                 },
                 Cell: ({ value }: { value: Date }) => (
-                    <TimeAgoCell value={value} emptyText="Never logged" />
+                    <TimeAgoCell value={value} emptyText="Never" />
                 ),
                 sortType: 'date',
                 maxWidth: 150,

@@ -1,15 +1,20 @@
+import { useEffect, useState } from 'react';
 import {
     FormControl,
     InputLabel,
     Select,
     SelectChangeEvent,
     styled,
+    Tooltip,
     Typography,
 } from '@mui/material';
+import { Badge } from 'component/common/Badge/Badge';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
+import { useProfile } from 'hooks/api/getters/useProfile/useProfile';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { IUser } from 'interfaces/user';
-import { useEffect, useState } from 'react';
+import TopicOutlinedIcon from '@mui/icons-material/TopicOutlined';
+import { useNavigate } from 'react-router-dom';
 
 const StyledContent = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -46,6 +51,28 @@ const StyledSectionLabel = styled(Typography)(({ theme }) => ({
     marginBottom: theme.spacing(4),
 }));
 
+const StyledAccess = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    '& > div > p': {
+        marginBottom: theme.spacing(1.5),
+    },
+}));
+
+const StyledBadge = styled(Badge)(({ theme }) => ({
+    cursor: 'pointer',
+    marginRight: theme.spacing(1),
+}));
+
+const StyledDivider = styled('div')(({ theme }) => ({
+    width: '100%',
+    height: '1px',
+    backgroundColor: theme.palette.divider,
+    margin: theme.spacing(3, 0),
+}));
+
 const StyledFormControl = styled(FormControl)(({ theme }) => ({
     marginTop: theme.spacing(1.5),
     width: theme.spacing(30),
@@ -60,6 +87,8 @@ interface IProfileTabProps {
 }
 
 export const ProfileTab = ({ user }: IProfileTabProps) => {
+    const { profile } = useProfile();
+    const navigate = useNavigate();
     const { locationSettings, setLocationSettings } = useLocationSettings();
     const [currentLocale, setCurrentLocale] = useState<string>();
 
@@ -105,6 +134,37 @@ export const ProfileTab = ({ user }: IProfileTabProps) => {
                 </StyledInfo>
             </StyledHeader>
             <StyledContent>
+                <StyledSectionLabel>Access</StyledSectionLabel>
+                <StyledAccess>
+                    <div>
+                        <Typography variant="body2">Your root role</Typography>
+                        <Badge color="success">{profile?.rootRole}</Badge>
+                    </div>
+                    <div>
+                        <Typography variant="body2">Projects</Typography>
+                        {profile?.projects.map(({ project }) => (
+                            <Tooltip
+                                key={project}
+                                title="View project"
+                                arrow
+                                placement="bottom-end"
+                                describeChild
+                            >
+                                <StyledBadge
+                                    onClick={e => {
+                                        e.preventDefault();
+                                        navigate(`/projects/${project}`);
+                                    }}
+                                    color="secondary"
+                                    icon={<TopicOutlinedIcon />}
+                                >
+                                    {project}
+                                </StyledBadge>
+                            </Tooltip>
+                        ))}
+                    </div>
+                </StyledAccess>
+                <StyledDivider />
                 <StyledSectionLabel>Settings</StyledSectionLabel>
                 <Typography variant="body2">
                     This is the format used across the system for time and date

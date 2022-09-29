@@ -10,9 +10,9 @@ export interface IUseProfileOutput {
     error?: Error;
 }
 
-export const useProfile = (userId: number): IUseProfileOutput => {
+export const useProfile = (): IUseProfileOutput => {
     const { data, error, mutate } = useSWR(
-        formatApiPath(`api/admin/profile/${userId}`),
+        formatApiPath(`api/admin/user/profile`),
         fetcher
     );
 

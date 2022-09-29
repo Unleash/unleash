@@ -1,10 +1,8 @@
 export interface IProfile {
-    role: string;
-    projects: string[];
-    toggles: IProfileToggle[];
+    rootRole: string;
+    projects: IProfileProject[];
 }
 
-interface IProfileToggle {
+interface IProfileProject {
     project: string;
-    name: string;
 }

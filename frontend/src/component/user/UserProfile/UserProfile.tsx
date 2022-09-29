@@ -51,6 +51,7 @@ const UserProfile = ({ profile }: IUserProfileProps) => {
                 <UserProfileContent
                     id={modalId}
                     showProfile={showProfile}
+                    setShowProfile={setShowProfile}
                     profile={profile}
                 />
             </div>

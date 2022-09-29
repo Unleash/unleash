@@ -65,12 +65,14 @@ const StyledDivider = styled('div')(({ theme }) => ({
 interface IUserProfileContentProps {
     id: string;
     showProfile: boolean;
+    setShowProfile: (showProfile: boolean) => void;
     profile: IUser;
 }
 
 export const UserProfileContent = ({
     id,
     showProfile,
+    setShowProfile,
     profile,
 }: IUserProfileContentProps) => (
     <ConditionallyRender
@@ -89,7 +91,11 @@ export const UserProfileContent = ({
                     </div>
                 </StyledProfileInfo>
 
-                <StyledLinkButton component={Link} to={'/profile'}>
+                <StyledLinkButton
+                    component={Link}
+                    to={'/profile'}
+                    onClick={() => setShowProfile(false)}
+                >
                     View profile settings
                 </StyledLinkButton>
 

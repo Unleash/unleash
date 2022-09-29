@@ -28,4 +28,5 @@ export interface IRoleStore extends Store<ICustomRole, number> {
     getRootRoles(): Promise<IRole[]>;
     getRootRoleForAllUsers(): Promise<IUserRole[]>;
     nameInUse(name: string, existingId: number): Promise<boolean>;
+    getProjectRolesCount(): Promise<number>;
 }

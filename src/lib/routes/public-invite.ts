@@ -9,14 +9,14 @@ import { OpenApiService } from '../services/openapi-service';
 import { createRequestSchema } from '../openapi/util/create-request-schema';
 import { createResponseSchema } from '../openapi/util/create-response-schema';
 import { serializeDates } from '../types/serialize-dates';
-import { getStandardResponses } from '../openapi/util/standard-responses';
-import { PublicSignupTokenService } from '../services/public-signup-token-service';
 import {
-    publicSignupTokenSchema,
-    PublicSignupTokenSchema,
-} from '../openapi/spec/public-signup-token-schema';
-import { CreateUserSchema } from '../openapi/spec/create-user-schema';
+    emptyResponse,
+    getStandardResponses,
+} from '../openapi/util/standard-responses';
+import { PublicSignupTokenService } from '../services/public-signup-token-service';
+import { PublicSignupTokenSchema } from '../openapi/spec/public-signup-token-schema';
 import { UserSchema, userSchema } from '../openapi/spec/user-schema';
+import { CreateInvitedUserSchema } from '../openapi/spec/create-invited-user-schema';
 
 interface TokenParam {
     token: string;
@@ -54,7 +54,7 @@ export class PublicInviteController extends Controller {
                     tags: ['Public signup tokens'],
                     operationId: 'validatePublicSignupToken',
                     responses: {
-                        200: createResponseSchema('publicSignupTokenSchema'),
+                        200: emptyResponse,
                         ...getStandardResponses(400),
                     },
                 }),
@@ -70,7 +70,7 @@ export class PublicInviteController extends Controller {
                 openApiService.validPath({
                     tags: ['Public signup tokens'],
                     operationId: 'addPublicSignupTokenUser',
-                    requestBody: createRequestSchema('createUserSchema'),
+                    requestBody: createRequestSchema('createInvitedUserSchema'),
                     responses: {
                         200: createResponseSchema('userSchema'),
                         ...getStandardResponses(400, 409),
@@ -81,26 +81,20 @@ export class PublicInviteController extends Controller {
     }
 
     async validate(
-        req: IAuthRequest<TokenParam, void, CreateUserSchema>,
+        req: IAuthRequest<TokenParam, void>,
         res: Response<PublicSignupTokenSchema>,
     ): Promise<void> {
         const { token } = req.params;
         const valid = await this.publicSignupTokenService.validate(token);
         if (valid) {
-            const result = await this.publicSignupTokenService.get(token);
-            this.openApiService.respondWithValidation(
-                200,
-                res,
-                publicSignupTokenSchema.$id,
-                serializeDates(result),
-            );
+            return res.status(200).end();
         } else {
             return res.status(400).end();
         }
     }
 
     async addTokenUser(
-        req: IAuthRequest<TokenParam, void, CreateUserSchema>,
+        req: IAuthRequest<TokenParam, void, CreateInvitedUserSchema>,
         res: Response<UserSchema>,
     ): Promise<void> {
         const { token } = req.params;

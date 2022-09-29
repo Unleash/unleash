@@ -6,6 +6,7 @@ import { PublicSignupTokenSchema } from '../openapi/spec/public-signup-token-sch
 import { IRoleStore } from '../types/stores/role-store';
 import { IPublicSignupTokenCreate } from '../types/models/public-signup-token';
 import { PublicSignupTokenCreateSchema } from '../openapi/spec/public-signup-token-create-schema';
+import { CreateInvitedUserSchema } from 'lib/openapi/spec/create-invited-user-schema';
 import { RoleName } from '../types/model';
 import { IEventStore } from '../types/stores/event-store';
 import {
@@ -13,7 +14,7 @@ import {
     PublicSignupTokenUpdatedEvent,
     PublicSignupTokenUserAddedEvent,
 } from '../types/events';
-import UserService, { ICreateUser } from './user-service';
+import UserService from './user-service';
 import { IUser } from '../types/user';
 import { URL } from 'url';
 
@@ -93,11 +94,13 @@ export class PublicSignupTokenService {
 
     public async addTokenUser(
         secret: string,
-        createUser: ICreateUser,
+        createUser: CreateInvitedUserSchema,
     ): Promise<IUser> {
         const token = await this.get(secret);
-        createUser.rootRole = token.role.id;
-        const user = await this.userService.createUser(createUser);
+        const user = await this.userService.createUser({
+            ...createUser,
+            rootRole: token.role.id,
+        });
         await this.store.addTokenUser(secret, user.id);
         await this.eventStore.store(
             new PublicSignupTokenUserAddedEvent({

@@ -30,6 +30,7 @@ export * from './CreateApiTokenSchema';
 export * from './CreateEnvironmentSchema';
 export * from './CreateFeatureSchema';
 export * from './CreateFeatureStrategySchema';
+export * from './CreateInvitedUserSchema';
 export * from './CreateProjectSchema';
 export * from './CreateRoleWithPermissionsSchema';
 export * from './CreateRoleWithPermissionsSchemaPermissionsInner';

@@ -20,8 +20,10 @@ import { contextFieldsSchema } from './spec/context-fields-schema';
 import { createApiTokenSchema } from './spec/create-api-token-schema';
 import { createFeatureSchema } from './spec/create-feature-schema';
 import { createFeatureStrategySchema } from './spec/create-feature-strategy-schema';
+import { createInvitedUserSchema } from './spec/create-invited-user-schema';
 import { createUserSchema } from './spec/create-user-schema';
 import { dateSchema } from './spec/date-schema';
+import { edgeTokenSchema } from './spec/edge-token-schema';
 import { emailSchema } from './spec/email-schema';
 import { environmentSchema } from './spec/environment-schema';
 import { environmentsSchema } from './spec/environments-schema';
@@ -41,36 +43,53 @@ import { featureTypesSchema } from './spec/feature-types-schema';
 import { featureUsageSchema } from './spec/feature-usage-schema';
 import { featureVariantsSchema } from './spec/feature-variants-schema';
 import { feedbackSchema } from './spec/feedback-schema';
+import { groupSchema } from './spec/group-schema';
+import { groupsSchema } from './spec/groups-schema';
+import { groupUserModelSchema } from './spec/group-user-model-schema';
 import { healthCheckSchema } from './spec/health-check-schema';
 import { healthOverviewSchema } from './spec/health-overview-schema';
 import { healthReportSchema } from './spec/health-report-schema';
 import { idSchema } from './spec/id-schema';
+import { IServerOption } from '../types';
 import { legalValueSchema } from './spec/legal-value-schema';
 import { loginSchema } from './spec/login-schema';
 import { mapValues } from '../util/map-values';
 import { meSchema } from './spec/me-schema';
 import { nameSchema } from './spec/name-schema';
 import { omitKeys } from '../util/omit-keys';
+import { openApiTags } from './util/openapi-tags';
 import { overrideSchema } from './spec/override-schema';
 import { parametersSchema } from './spec/parameters-schema';
 import { passwordSchema } from './spec/password-schema';
 import { patchesSchema } from './spec/patches-schema';
 import { patchSchema } from './spec/patch-schema';
+import { patSchema } from './spec/pat-schema';
+import { patsSchema } from './spec/pats-schema';
 import { permissionSchema } from './spec/permission-schema';
-import { playgroundFeatureSchema } from './spec/playground-feature-schema';
-import { playgroundStrategySchema } from './spec/playground-strategy-schema';
 import { playgroundConstraintSchema } from './spec/playground-constraint-schema';
-import { playgroundSegmentSchema } from './spec/playground-segment-schema';
+import { playgroundFeatureSchema } from './spec/playground-feature-schema';
 import { playgroundRequestSchema } from './spec/playground-request-schema';
 import { playgroundResponseSchema } from './spec/playground-response-schema';
+import { playgroundSegmentSchema } from './spec/playground-segment-schema';
+import { playgroundStrategySchema } from './spec/playground-strategy-schema';
 import { projectEnvironmentSchema } from './spec/project-environment-schema';
 import { projectSchema } from './spec/project-schema';
 import { projectsSchema } from './spec/projects-schema';
+import { proxyClientSchema } from './spec/proxy-client-schema';
+import { proxyFeatureSchema } from './spec/proxy-feature-schema';
+import { proxyFeaturesSchema } from './spec/proxy-features-schema';
+import { proxyMetricsSchema } from './spec/proxy-metrics-schema';
+import { publicSignupTokenCreateSchema } from './spec/public-signup-token-create-schema';
+import { publicSignupTokenSchema } from './spec/public-signup-token-schema';
+import { publicSignupTokensSchema } from './spec/public-signup-tokens-schema';
+import { publicSignupTokenUpdateSchema } from './spec/public-signup-token-update-schema';
 import { resetPasswordSchema } from './spec/reset-password-schema';
 import { roleSchema } from './spec/role-schema';
 import { sdkContextSchema } from './spec/sdk-context-schema';
+import { searchEventsSchema } from './spec/search-events-schema';
 import { segmentSchema } from './spec/segment-schema';
 import { setStrategySortOrderSchema } from './spec/set-strategy-sort-order-schema';
+import { setUiConfigSchema } from './spec/set-ui-config-schema';
 import { sortOrderSchema } from './spec/sort-order-schema';
 import { splashSchema } from './spec/splash-schema';
 import { stateSchema } from './spec/state-schema';
@@ -90,35 +109,17 @@ import { updateTagTypeSchema } from './spec/update-tag-type-schema';
 import { updateUserSchema } from './spec/update-user-schema';
 import { upsertContextFieldSchema } from './spec/upsert-context-field-schema';
 import { upsertStrategySchema } from './spec/upsert-strategy-schema';
+import { URL } from 'url';
 import { userSchema } from './spec/user-schema';
+import { usersGroupsBaseSchema } from './spec/users-groups-base-schema';
 import { usersSchema } from './spec/users-schema';
 import { usersSearchSchema } from './spec/users-search-schema';
+import { validateEdgeTokensSchema } from './spec/validate-edge-tokens-schema';
 import { validatePasswordSchema } from './spec/validate-password-schema';
 import { validateTagTypeSchema } from './spec/validate-tag-type-schema';
 import { variantSchema } from './spec/variant-schema';
 import { variantsSchema } from './spec/variants-schema';
 import { versionSchema } from './spec/version-schema';
-import { IServerOption } from '../types';
-import { URL } from 'url';
-import { groupSchema } from './spec/group-schema';
-import { groupsSchema } from './spec/groups-schema';
-import { groupUserModelSchema } from './spec/group-user-model-schema';
-import { usersGroupsBaseSchema } from './spec/users-groups-base-schema';
-import { openApiTags } from './util/openapi-tags';
-import { searchEventsSchema } from './spec/search-events-schema';
-import { proxyFeaturesSchema } from './spec/proxy-features-schema';
-import { proxyFeatureSchema } from './spec/proxy-feature-schema';
-import { proxyClientSchema } from './spec/proxy-client-schema';
-import { proxyMetricsSchema } from './spec/proxy-metrics-schema';
-import { setUiConfigSchema } from './spec/set-ui-config-schema';
-import { edgeTokenSchema } from './spec/edge-token-schema';
-import { validateEdgeTokensSchema } from './spec/validate-edge-tokens-schema';
-import { patsSchema } from './spec/pats-schema';
-import { patSchema } from './spec/pat-schema';
-import { publicSignupTokenCreateSchema } from './spec/public-signup-token-create-schema';
-import { publicSignupTokenSchema } from './spec/public-signup-token-schema';
-import { publicSignupTokensSchema } from './spec/public-signup-tokens-schema';
-import { publicSignupTokenUpdateSchema } from './spec/public-signup-token-update-schema';
 import apiVersion from '../util/version';
 
 // All schemas in `openapi/spec` should be listed here.
@@ -144,10 +145,11 @@ export const schemas = {
     createApiTokenSchema,
     createFeatureSchema,
     createFeatureStrategySchema,
+    createInvitedUserSchema,
     createUserSchema,
     dateSchema,
-    emailSchema,
     edgeTokenSchema,
+    emailSchema,
     environmentSchema,
     environmentsSchema,
     eventSchema,
@@ -180,28 +182,28 @@ export const schemas = {
     overrideSchema,
     parametersSchema,
     passwordSchema,
-    patSchema,
-    patsSchema,
     patchesSchema,
     patchSchema,
+    patSchema,
+    patsSchema,
     permissionSchema,
-    playgroundFeatureSchema,
-    playgroundStrategySchema,
     playgroundConstraintSchema,
-    playgroundSegmentSchema,
+    playgroundFeatureSchema,
     playgroundRequestSchema,
     playgroundResponseSchema,
+    playgroundSegmentSchema,
+    playgroundStrategySchema,
     projectEnvironmentSchema,
-    publicSignupTokenCreateSchema,
-    publicSignupTokenUpdateSchema,
-    publicSignupTokensSchema,
-    publicSignupTokenSchema,
-    proxyClientSchema,
-    proxyFeaturesSchema,
-    proxyFeatureSchema,
-    proxyMetricsSchema,
     projectSchema,
     projectsSchema,
+    proxyClientSchema,
+    proxyFeatureSchema,
+    proxyFeaturesSchema,
+    proxyMetricsSchema,
+    publicSignupTokenCreateSchema,
+    publicSignupTokenSchema,
+    publicSignupTokensSchema,
+    publicSignupTokenUpdateSchema,
     resetPasswordSchema,
     roleSchema,
     sdkContextSchema,
@@ -228,16 +230,16 @@ export const schemas = {
     updateUserSchema,
     upsertContextFieldSchema,
     upsertStrategySchema,
-    usersGroupsBaseSchema,
     userSchema,
+    usersGroupsBaseSchema,
     usersSchema,
     usersSearchSchema,
+    validateEdgeTokensSchema,
     validatePasswordSchema,
     validateTagTypeSchema,
     variantSchema,
     variantsSchema,
     versionSchema,
-    validateEdgeTokensSchema,
 };
 
 // Schemas must have an $id property on the form "#/components/schemas/mySchema".

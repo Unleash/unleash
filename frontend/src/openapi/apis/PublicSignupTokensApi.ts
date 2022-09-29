@@ -15,7 +15,7 @@
 
 import * as runtime from '../runtime';
 import type {
-  CreateUserSchema,
+  CreateInvitedUserSchema,
   PublicSignupTokenCreateSchema,
   PublicSignupTokenSchema,
   PublicSignupTokenUpdateSchema,
@@ -23,8 +23,8 @@ import type {
   UserSchema,
 } from '../models';
 import {
-    CreateUserSchemaFromJSON,
-    CreateUserSchemaToJSON,
+    CreateInvitedUserSchemaFromJSON,
+    CreateInvitedUserSchemaToJSON,
     PublicSignupTokenCreateSchemaFromJSON,
     PublicSignupTokenCreateSchemaToJSON,
     PublicSignupTokenSchemaFromJSON,
@@ -39,7 +39,7 @@ import {
 
 export interface AddPublicSignupTokenUserRequest {
     token: string;
-    createUserSchema: CreateUserSchema;
+    createInvitedUserSchema: CreateInvitedUserSchema;
 }
 
 export interface CreatePublicSignupTokenRequest {
@@ -71,8 +71,8 @@ export class PublicSignupTokensApi extends runtime.BaseAPI {
             throw new runtime.RequiredError('token','Required parameter requestParameters.token was null or undefined when calling addPublicSignupTokenUser.');
         }
 
-        if (requestParameters.createUserSchema === null || requestParameters.createUserSchema === undefined) {
-            throw new runtime.RequiredError('createUserSchema','Required parameter requestParameters.createUserSchema was null or undefined when calling addPublicSignupTokenUser.');
+        if (requestParameters.createInvitedUserSchema === null || requestParameters.createInvitedUserSchema === undefined) {
+            throw new runtime.RequiredError('createInvitedUserSchema','Required parameter requestParameters.createInvitedUserSchema was null or undefined when calling addPublicSignupTokenUser.');
         }
 
         const queryParameters: any = {};
@@ -90,7 +90,7 @@ export class PublicSignupTokensApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: CreateUserSchemaToJSON(requestParameters.createUserSchema),
+            body: CreateInvitedUserSchemaToJSON(requestParameters.createInvitedUserSchema),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => UserSchemaFromJSON(jsonValue));
@@ -239,7 +239,7 @@ export class PublicSignupTokensApi extends runtime.BaseAPI {
 
     /**
      */
-    async validatePublicSignupTokenRaw(requestParameters: ValidatePublicSignupTokenRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PublicSignupTokenSchema>> {
+    async validatePublicSignupTokenRaw(requestParameters: ValidatePublicSignupTokenRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters.token === null || requestParameters.token === undefined) {
             throw new runtime.RequiredError('token','Required parameter requestParameters.token was null or undefined when calling validatePublicSignupToken.');
         }
@@ -259,14 +259,13 @@ export class PublicSignupTokensApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => PublicSignupTokenSchemaFromJSON(jsonValue));
+        return new runtime.VoidApiResponse(response);
     }
 
     /**
      */
-    async validatePublicSignupToken(requestParameters: ValidatePublicSignupTokenRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PublicSignupTokenSchema> {
-        const response = await this.validatePublicSignupTokenRaw(requestParameters, initOverrides);
-        return await response.value();
+    async validatePublicSignupToken(requestParameters: ValidatePublicSignupTokenRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.validatePublicSignupTokenRaw(requestParameters, initOverrides);
     }
 
 }

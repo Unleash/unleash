@@ -10,12 +10,13 @@ import useResetPassword from 'hooks/api/getters/useResetPassword/useResetPasswor
 import StandaloneLayout from '../common/StandaloneLayout/StandaloneLayout';
 import ResetPasswordForm from '../common/ResetPasswordForm/ResetPasswordForm';
 import ResetPasswordError from '../common/ResetPasswordError/ResetPasswordError';
+import { useAuthResetPasswordApi } from 'hooks/api/actions/useAuthResetPasswordApi/useAuthResetPasswordApi';
 
 const ResetPassword = () => {
     const { classes: styles } = useStyles();
-    const { loading, setLoading, isValidToken, resetPassword } =
-        useResetPassword();
-    const ref = useLoading(loading);
+    const { token, loading, setLoading, isValidToken } = useResetPassword();
+    const { resetPassword, loading: actionLoading } = useAuthResetPasswordApi();
+    const ref = useLoading(loading || actionLoading);
     const navigate = useNavigate();
     const [hasApiError, setHasApiError] = useState(false);
 
@@ -23,7 +24,7 @@ const ResetPassword = () => {
         setLoading(true);
 
         try {
-            const res = await resetPassword(password);
+            const res = await resetPassword({ token, password });
             setLoading(false);
             if (res.status === OK) {
                 navigate('/login?reset=true');

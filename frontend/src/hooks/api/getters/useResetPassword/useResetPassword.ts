@@ -41,20 +41,6 @@ const useResetPassword = (options: SWRConfiguration = {}) => {
             ? false
             : true;
 
-    const resetPassword = (password: string) => {
-        const path = formatApiPath('auth/reset/password');
-        return fetch(path, {
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            method: 'POST',
-            body: JSON.stringify({
-                token,
-                password,
-            }),
-        });
-    };
-
     return {
         token,
         data,
@@ -63,7 +49,6 @@ const useResetPassword = (options: SWRConfiguration = {}) => {
         isValidToken,
         setLoading,
         retry,
-        resetPassword,
     };
 };
 

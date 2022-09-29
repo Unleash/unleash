@@ -2,11 +2,13 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, TextField, Typography } from '@mui/material';
 import { CREATED, OK } from 'constants/statusCodes';
+import useToast from 'hooks/useToast';
 import useResetPassword from 'hooks/api/getters/useResetPassword/useResetPassword';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useUserInvite } from 'hooks/api/getters/useUserInvite/useUserInvite';
 import { useInviteTokenApi } from 'hooks/api/actions/useInviteTokenApi/useInviteTokenApi';
-import useToast from 'hooks/useToast';
+import { formatUnknownError } from 'utils/formatUnknownError';
+import { useAuthResetPasswordApi } from 'hooks/api/actions/useAuthResetPasswordApi/useAuthResetPasswordApi';
 import AuthOptions from '../common/AuthOptions/AuthOptions';
 import DividerText from 'component/common/DividerText/DividerText';
 import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';
@@ -14,29 +16,29 @@ import ResetPasswordForm from '../common/ResetPasswordForm/ResetPasswordForm';
 import InvalidToken from '../common/InvalidToken/InvalidToken';
 import { NewUserWrapper } from './NewUserWrapper/NewUserWrapper';
 import ResetPasswordError from '../common/ResetPasswordError/ResetPasswordError';
-import { formatUnknownError } from 'utils/formatUnknownError';
 
 export const NewUser = () => {
     const { authDetails } = useAuthDetails();
-    const [apiError, setApiError] = useState(false);
     const { setToastApiError } = useToast();
     const navigate = useNavigate();
-    const [submitting, setSubmitting] = useState(false);
+    const [apiError, setApiError] = useState(false);
+    const [email, setEmail] = useState('');
+    const [name, setName] = useState('');
     const {
+        token,
         data: passwordResetData,
         loading: resetLoading,
         isValidToken,
-        resetPassword,
     } = useResetPassword();
     const {
         secret,
         loading: inviteLoading,
         isValid: isValidInvite,
     } = useUserInvite();
-    const passwordDisabled = authDetails?.defaultHidden === true;
-    const [email, setEmail] = useState('');
-    const [name, setName] = useState('');
     const { addUser, loading: isUserSubmitting } = useInviteTokenApi();
+    const { resetPassword, loading: isPasswordSubmitting } =
+        useAuthResetPasswordApi();
+    const passwordDisabled = authDetails?.defaultHidden === true;
 
     const onSubmitInvitedUser = async (password: string) => {
         try {
@@ -46,29 +48,21 @@ export const NewUser = () => {
             }
         } catch (error) {
             setToastApiError(formatUnknownError(error));
-            setSubmitting(false);
         }
     };
 
     const onSubmitPasswordReset = async (password: string) => {
         try {
-            const res = await resetPassword(password);
-            setSubmitting(false);
+            const res = await resetPassword({ token, password });
             if (res.status === OK) {
                 navigate('/login?reset=true');
-                setApiError(false);
-            } else {
-                setApiError(true);
             }
         } catch (e) {
             setApiError(true);
-            setSubmitting(false);
         }
     };
 
     const onSubmit = (password: string) => {
-        setSubmitting(true);
-
         if (isValidInvite) {
             onSubmitInvitedUser(password);
         } else {
@@ -77,7 +71,6 @@ export const NewUser = () => {
     };
 
     if (isValidToken === false && isValidInvite == false) {
-        // TODO: expired invite token
         return (
             <NewUserWrapper loading={resetLoading || inviteLoading}>
                 <InvalidToken />
@@ -88,7 +81,10 @@ export const NewUser = () => {
     return (
         <NewUserWrapper
             loading={
-                submitting || resetLoading || inviteLoading || isUserSubmitting
+                resetLoading ||
+                inviteLoading ||
+                isUserSubmitting ||
+                isPasswordSubmitting
             }
             title={
                 passwordDisabled

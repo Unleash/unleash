@@ -4,7 +4,7 @@ import { RoleName } from '../../types/model';
 
 test('profileSchema', () => {
     const data: ProfileSchema = {
-        rootRole: RoleName.EDITOR,
+        rootRole: 'Editor' as RoleName,
         projects: ['default', 'secretproject'],
         features: [
             { name: 'firstFeature', project: 'default' },

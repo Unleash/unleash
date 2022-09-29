@@ -151,7 +151,7 @@ class UserController extends Controller {
 
         const responseData: ProfileSchema = {
             projects,
-            rootRole: RoleName[roles[0].name as keyof typeof RoleName],
+            rootRole: roles[0].name as RoleName,
             features: [],
         };
 

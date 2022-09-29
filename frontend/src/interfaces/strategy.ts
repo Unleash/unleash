@@ -22,8 +22,6 @@ export interface IFeatureStrategyPayload {
     copyOf?: string;
 }
 
-export interface ICopyFeatureStrategyPayload extends IFeatureStrategyPayload {}
-
 export interface IStrategy {
     name: string;
     displayName: string;

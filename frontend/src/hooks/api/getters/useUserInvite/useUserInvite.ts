@@ -25,7 +25,7 @@ export const useUserInvite = (options: SWRConfiguration = {}) => {
     const [loading, setLoading] = useState(!error && !data);
 
     useEffect(() => {
-        setLoading(!error && !data);
+        setLoading(!error && data === undefined);
     }, [data, error]);
 
     return {
@@ -35,4 +35,3 @@ export const useUserInvite = (options: SWRConfiguration = {}) => {
         loading,
     };
 };
-

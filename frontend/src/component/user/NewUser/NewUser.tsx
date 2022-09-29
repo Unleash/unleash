@@ -151,7 +151,9 @@ export const NewUser = () => {
                             data-loading
                             type="email"
                             value={
-                                isValidToken ? passwordResetData?.email : email
+                                isValidToken
+                                    ? passwordResetData?.email || ''
+                                    : email
                             }
                             id="email"
                             label="Email"

@@ -9,7 +9,7 @@ import AdminUsers from 'component/admin/users/UsersAdmin';
 import { GroupsAdmin } from 'component/admin/groups/GroupsAdmin';
 import { AuthSettings } from 'component/admin/auth/AuthSettings';
 import Login from 'component/user/Login/Login';
-import { C, EEA, P, RE, SE, UG } from 'component/common/flags';
+import { EEA, P, RE, SE, UG } from 'component/common/flags';
 import { NewUser } from 'component/user/NewUser/NewUser';
 import ResetPassword from 'component/user/ResetPassword/ResetPassword';
 import ForgottenPassword from 'component/user/ForgottenPassword/ForgottenPassword';
@@ -203,7 +203,6 @@ export const routes: IRoute[] = [
         title: 'Create',
         component: CreateUnleashContextPage,
         type: 'protected',
-        flag: C,
         menu: {},
     },
     {
@@ -212,7 +211,6 @@ export const routes: IRoute[] = [
         title: ':name',
         component: EditContext,
         type: 'protected',
-        flag: C,
         menu: {},
     },
     {
@@ -220,7 +218,6 @@ export const routes: IRoute[] = [
         title: 'Context fields',
         component: ContextList,
         type: 'protected',
-        flag: C,
         menu: { mobile: true, advanced: true },
     },
 

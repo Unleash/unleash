@@ -147,7 +147,6 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
-    "flag": "C",
     "menu": {},
     "parent": "/context",
     "path": "/context/create",
@@ -156,7 +155,6 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
-    "flag": "C",
     "menu": {},
     "parent": "/context",
     "path": "/context/edit/:name",
@@ -165,7 +163,6 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
-    "flag": "C",
     "menu": {
       "advanced": true,
       "mobile": true,

@@ -5,7 +5,6 @@ import getApp from '../../app';
 import supertest from 'supertest';
 import permissions from '../../../test/fixtures/permissions';
 import { RoleName, RoleType } from '../../types/model';
-import { CreateUserSchema } from '../../openapi/spec/create-user-schema';
 
 describe('Public Signup API', () => {
     async function getSetup() {
@@ -51,13 +50,11 @@ describe('Public Signup API', () => {
     let request;
     let destroy;
 
-    const user: CreateUserSchema = {
+    const user = {
         username: 'some-username',
         email: 'someEmail@example.com',
         name: 'some-name',
-        password: null,
-        rootRole: 1,
-        sendEmail: false,
+        password: 'password',
     };
 
     beforeEach(async () => {

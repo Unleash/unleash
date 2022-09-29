@@ -49,6 +49,18 @@ export default mergeConfig(
                     target: UNLEASH_API,
                     changeOrigin: true,
                 },
+                [`${UNLEASH_BASE_PATH}health`]: {
+                    target: UNLEASH_API,
+                    changeOrigin: true,
+                },
+                [`${UNLEASH_BASE_PATH}invite`]: {
+                    target: UNLEASH_API,
+                    changeOrigin: true,
+                },
+                [`${UNLEASH_BASE_PATH}edge`]: {
+                    target: UNLEASH_API,
+                    changeOrigin: true,
+                },
             },
         },
         plugins: [react(), tsconfigPaths(), svgr(), envCompatible()],

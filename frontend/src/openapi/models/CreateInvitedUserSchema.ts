@@ -24,7 +24,7 @@ export interface CreateInvitedUserSchema {
      * @type {string}
      * @memberof CreateInvitedUserSchema
      */
-    username: string;
+    username?: string;
     /**
      * 
      * @type {string}
@@ -36,7 +36,7 @@ export interface CreateInvitedUserSchema {
      * @type {string}
      * @memberof CreateInvitedUserSchema
      */
-    name?: string;
+    name: string;
     /**
      * 
      * @type {string}
@@ -50,8 +50,8 @@ export interface CreateInvitedUserSchema {
  */
 export function instanceOfCreateInvitedUserSchema(value: object): boolean {
     let isInstance = true;
-    isInstance = isInstance && "username" in value;
     isInstance = isInstance && "email" in value;
+    isInstance = isInstance && "name" in value;
     isInstance = isInstance && "password" in value;
 
     return isInstance;
@@ -67,9 +67,9 @@ export function CreateInvitedUserSchemaFromJSONTyped(json: any, ignoreDiscrimina
     }
     return {
         
-        'username': json['username'],
+        'username': !exists(json, 'username') ? undefined : json['username'],
         'email': json['email'],
-        'name': !exists(json, 'name') ? undefined : json['name'],
+        'name': json['name'],
         'password': json['password'],
     };
 }

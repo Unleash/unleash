@@ -4,7 +4,7 @@ export const createInvitedUserSchema = {
     $id: '#/components/schemas/createInvitedUserSchema',
     type: 'object',
     additionalProperties: false,
-    required: ['email', 'username', 'password'],
+    required: ['email', 'name', 'password'],
     properties: {
         username: {
             type: 'string',

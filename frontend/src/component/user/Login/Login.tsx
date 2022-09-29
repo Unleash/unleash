@@ -16,6 +16,7 @@ const Login = () => {
     const { user } = useAuthUser();
     const query = useQueryParams();
     const resetPassword = query.get('reset') === 'true';
+    const invited = query.get('invited') === 'true';
     const redirect = query.get('redirect') || '/';
 
     if (user) {
@@ -28,9 +29,18 @@ const Login = () => {
                 <ConditionallyRender
                     condition={resetPassword}
                     show={
-                        <Alert severity="success" sx={{ mb: 3 }}>
+                        <Alert severity="success" sx={{ mb: 4 }}>
                             <AlertTitle>Success</AlertTitle>
                             You successfully reset your password.
+                        </Alert>
+                    }
+                />
+                <ConditionallyRender
+                    condition={invited}
+                    show={
+                        <Alert severity="success" sx={{ mb: 4 }}>
+                            <AlertTitle>Success</AlertTitle>
+                            Your account has been created.
                         </Alert>
                     }
                 />

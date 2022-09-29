@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, TextField, Typography } from '@mui/material';
-import { OK } from 'constants/statusCodes';
+import { CREATED, OK } from 'constants/statusCodes';
 import useResetPassword from 'hooks/api/getters/useResetPassword/useResetPassword';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import useUserInvite from 'hooks/api/getters/useUserInvite/useUserInvite';
+import { useUserInvite } from 'hooks/api/getters/useUserInvite/useUserInvite';
+import { useInviteTokenApi } from 'hooks/api/actions/useInviteTokenApi/useInviteTokenApi';
+import useToast from 'hooks/useToast';
 import AuthOptions from '../common/AuthOptions/AuthOptions';
 import DividerText from 'component/common/DividerText/DividerText';
 import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';
@@ -12,10 +14,12 @@ import ResetPasswordForm from '../common/ResetPasswordForm/ResetPasswordForm';
 import InvalidToken from '../common/InvalidToken/InvalidToken';
 import { NewUserWrapper } from './NewUserWrapper/NewUserWrapper';
 import ResetPasswordError from '../common/ResetPasswordError/ResetPasswordError';
+import { formatUnknownError } from 'utils/formatUnknownError';
 
 export const NewUser = () => {
     const { authDetails } = useAuthDetails();
     const [apiError, setApiError] = useState(false);
+    const { setToastApiError } = useToast();
     const navigate = useNavigate();
     const [submitting, setSubmitting] = useState(false);
     const {
@@ -24,24 +28,31 @@ export const NewUser = () => {
         isValidToken,
         resetPassword,
     } = useResetPassword();
-    const passwordDisabled = authDetails?.defaultHidden === true;
     const {
+        secret,
         loading: inviteLoading,
         isValid: isValidInvite,
-        email,
-        name,
-        setEmail,
-        setName,
-        addUser,
     } = useUserInvite();
+    const passwordDisabled = authDetails?.defaultHidden === true;
+    const [email, setEmail] = useState('');
+    const [name, setName] = useState('');
+    const { addUser, loading: isUserSubmitting } = useInviteTokenApi();
 
-    const onSubmit = async (password: string) => {
-        setSubmitting(true);
-
+    const onSubmitInvitedUser = async (password: string) => {
         try {
-            const res = await (isValidInvite
-                ? addUser(password)
-                : resetPassword(password));
+            const res = await addUser(secret, { name, email, password });
+            if (res.status === CREATED) {
+                navigate('/login?invited=true');
+            }
+        } catch (error) {
+            setToastApiError(formatUnknownError(error));
+            setSubmitting(false);
+        }
+    };
+
+    const onSubmitPasswordReset = async (password: string) => {
+        try {
+            const res = await resetPassword(password);
             setSubmitting(false);
             if (res.status === OK) {
                 navigate('/login?reset=true');
@@ -55,7 +66,18 @@ export const NewUser = () => {
         }
     };
 
+    const onSubmit = (password: string) => {
+        setSubmitting(true);
+
+        if (isValidInvite) {
+            onSubmitInvitedUser(password);
+        } else {
+            onSubmitPasswordReset(password);
+        }
+    };
+
     if (isValidToken === false && isValidInvite == false) {
+        // TODO: expired invite token
         return (
             <NewUserWrapper loading={resetLoading || inviteLoading}>
                 <InvalidToken />
@@ -65,7 +87,9 @@ export const NewUser = () => {
 
     return (
         <NewUserWrapper
-            loading={submitting || resetLoading || inviteLoading}
+            loading={
+                submitting || resetLoading || inviteLoading || isUserSubmitting
+            }
             title={
                 passwordDisabled
                     ? 'Connect your account and start your journey'
@@ -174,10 +198,7 @@ export const NewUser = () => {
                             condition={apiError && isValidToken}
                             show={<ResetPasswordError />}
                         />
-                        {/* TODO: create-user failure message */}
-                        <ResetPasswordForm
-                            onSubmit={onSubmit}
-                        />
+                        <ResetPasswordForm onSubmit={onSubmit} />
                     </>
                 }
             />

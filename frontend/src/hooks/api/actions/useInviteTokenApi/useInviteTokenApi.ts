@@ -7,6 +7,7 @@ import {
 } from 'openapi';
 import { url as revalidateUrl } from 'hooks/api/getters/useInviteTokens/useInviteTokens';
 import useAPI from '../useApi/useApi';
+import { CreateInvitedUserSchema } from 'openapi/models/CreateInvitedUserSchema';
 
 const URI = 'api/admin/invite-link/tokens';
 
@@ -52,9 +53,25 @@ export const useInviteTokenApi = () => {
         },
         [createRequest, makeRequest]
     );
+
+    const addUser = useCallback(
+        async (secret: string, value: CreateInvitedUserSchema) => {
+            const req = createRequest(`/invite/${secret}/signup`, {
+                method: 'POST',
+                body: JSON.stringify(value),
+            });
+
+            const response = await makeRequest(req.caller, req.id);
+            mutate(revalidateUrl);
+            return response;
+        },
+        [createRequest, makeRequest]
+    );
+
     return {
         createToken,
         updateToken,
+        addUser,
         errors,
         loading,
     };

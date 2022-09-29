@@ -3,7 +3,6 @@ import dbInit from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import { RoleName } from '../../../../lib/types/model';
 import { PublicSignupTokenCreateSchema } from '../../../../lib/openapi/spec/public-signup-token-create-schema';
-import { CreateUserSchema } from '../../../../lib/openapi/spec/create-user-schema';
 
 let stores;
 let db;
@@ -151,12 +150,10 @@ test('users can signup with invite-link', async () => {
         roleId: 3,
     });
 
-    const createUser: CreateUserSchema = {
-        username: 'some-username',
+    const createUser = {
+        name: 'some-username',
         email: 'some@example.com',
         password: 'eweggwEG',
-        sendEmail: false,
-        rootRole: 1,
     };
 
     await request

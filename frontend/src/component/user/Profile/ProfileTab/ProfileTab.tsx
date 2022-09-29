@@ -98,7 +98,9 @@ export const ProfileTab = ({ user }: IProfileTabProps) => {
             <StyledHeader>
                 <StyledAvatar user={user} />
                 <StyledInfo>
-                    <StyledInfoName>{user.name}</StyledInfoName>
+                    <StyledInfoName>
+                        {user.name || user.username}
+                    </StyledInfoName>
                     <Typography variant="body1">{user.email}</Typography>
                 </StyledInfo>
             </StyledHeader>

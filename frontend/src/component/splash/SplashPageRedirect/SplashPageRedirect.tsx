@@ -30,7 +30,7 @@ export const SplashPageRedirect = () => {
 
     // Find the splash page to show (if any).
     const showSplashId = activeSplashIds.find(splashId => {
-        return !hasSeenSplashId(splashId, splash)
+        return !hasSeenSplashId(splashId, splash);
     });
 
     if (!showSplashId) {
@@ -43,4 +43,3 @@ export const SplashPageRedirect = () => {
 const hasSeenSplashId = (splashId: SplashId, splash: IAuthSplash): boolean => {
     return Boolean(splash[splashId]);
 };
-

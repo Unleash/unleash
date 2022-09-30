@@ -111,7 +111,6 @@ export const ProfileTab = ({ user }: IProfileTabProps) => {
         if (!found) {
             setPossibleLocales(prev => [...prev, locationSettings.locale]);
         }
-        /* eslint-disable-next-line*/
     }, [locationSettings]);
 
     const changeLocale = (e: SelectChangeEvent) => {

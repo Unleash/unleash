@@ -34,8 +34,8 @@ export const Profile = () => {
 
     const tabFromUrl = () => {
         const url = location.pathname;
-        const tab = tabs.find(t => t.path && url.includes(t.path));
-        return (tab || tabs[0]).id;
+        const foundTab = tabs.find(tab => tab.path && url.includes(tab.path));
+        return (foundTab || tabs[0]).id;
     };
 
     const [tab, setTab] = useState(tabFromUrl());

@@ -1,9 +1,9 @@
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { Button, Paper, Typography, styled } from '@mui/material';
+import { Button, Paper, Typography, styled, Link } from '@mui/material';
 import { basePath } from 'utils/formatPath';
 import { IUser } from 'interfaces/user';
 import OpenInNew from '@mui/icons-material/OpenInNew';
-import { Link } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
@@ -40,13 +40,22 @@ const StyledSubtitle = styled(Typography)(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
-const StyledLinkButton = styled(Button<typeof Link | 'a'>)(({ theme }) => ({
+const StyledLink = styled(Link<typeof RouterLink | 'a'>)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1),
     padding: 0,
     color: theme.palette.primary.dark,
     fontWeight: theme.fontWeight.medium,
+    '&:hover, &:focus': {
+        textDecoration: 'underline',
+    },
+    '& svg': {
+        fontSize: theme.spacing(2.25),
+    },
 }));
 
-const StyledLinkPrivacyButton = styled(StyledLinkButton)(({ theme }) => ({
+const StyledLinkPrivacy = styled(StyledLink)(({ theme }) => ({
     alignSelf: 'flex-start',
 }));
 
@@ -91,25 +100,26 @@ export const UserProfileContent = ({
                     </div>
                 </StyledProfileInfo>
 
-                <StyledLinkButton
-                    component={Link}
-                    to={'/profile'}
+                <StyledLink
+                    component={RouterLink}
+                    to="/profile"
+                    underline="hover"
                     onClick={() => setShowProfile(false)}
                 >
                     View profile settings
-                </StyledLinkButton>
+                </StyledLink>
 
                 <StyledDivider />
 
-                <StyledLinkPrivacyButton
+                <StyledLinkPrivacy
                     component="a"
                     href="https://www.getunleash.io/privacy-policy"
+                    underline="hover"
                     rel="noopener noreferrer"
                     target="_blank"
-                    endIcon={<OpenInNew />}
                 >
-                    Privacy Policy
-                </StyledLinkPrivacyButton>
+                    Privacy Policy <OpenInNew />
+                </StyledLinkPrivacy>
 
                 <StyledDivider />
 

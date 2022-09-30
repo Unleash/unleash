@@ -368,13 +368,10 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
     const getLogger = options.getLogger || getDefaultLogProvider(logLevel);
     validateLogProvider(getLogger);
 
-    console.log(process.env.BASE_URI_PATH);
-    console.log(defaultServerOption);
     const server: IServerOption = mergeAll([
         defaultServerOption,
         formatServerOptions(options.server),
     ]);
-    console.log(server);
 
     const versionCheck: IVersionOption = mergeAll([
         defaultVersionOption,

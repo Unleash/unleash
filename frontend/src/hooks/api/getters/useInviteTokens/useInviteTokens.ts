@@ -1,24 +1,19 @@
 import { useEffect, useState } from 'react';
 import useSWR, { SWRConfiguration } from 'swr';
-import {
-    PublicSignupTokensSchema,
-    PublicSignupTokensSchemaFromJSON,
-} from 'openapi';
 import { formatApiPath } from 'utils/formatPath';
+import { IPublicSignupTokens } from 'interfaces/publicSignupTokens';
 
 export const url = 'api/admin/invite-link/tokens';
 
 const fetcher = () => {
     const path = formatApiPath(url);
     return fetch(path, {
-        method: 'GET', // FIXME: POST?
-    })
-        .then(res => res.json())
-        .then(PublicSignupTokensSchemaFromJSON);
+        method: 'GET',
+    }).then(res => res.json());
 };
 
 export const useInviteTokens = (options: SWRConfiguration = {}) => {
-    const { data, error, mutate } = useSWR<PublicSignupTokensSchema>(
+    const { data, error } = useSWR<IPublicSignupTokens>(
         url,
         fetcher,
         options

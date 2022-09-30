@@ -1,4 +1,3 @@
-import { ChangePasswordSchema } from 'openapi';
 import { useCallback } from 'react';
 import useAPI from '../useApi/useApi';
 
@@ -8,7 +7,7 @@ export const useAuthResetPasswordApi = () => {
     });
 
     const resetPassword = useCallback(
-        (value: ChangePasswordSchema) => {
+        (value: { token: string; password: string }) => {
             const req = createRequest('auth/reset/password', {
                 method: 'POST',
                 body: JSON.stringify(value),

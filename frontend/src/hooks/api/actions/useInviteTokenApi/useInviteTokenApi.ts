@@ -1,13 +1,12 @@
 import { useCallback } from 'react';
 import { useSWRConfig } from 'swr';
-import {
-    PublicSignupTokenCreateSchema,
-    PublicSignupTokenCreateSchemaToJSON,
-    PublicSignupTokenUpdateSchema,
-} from 'openapi';
 import { url as revalidateUrl } from 'hooks/api/getters/useInviteTokens/useInviteTokens';
 import useAPI from '../useApi/useApi';
-import { CreateInvitedUserSchema } from 'openapi/models/CreateInvitedUserSchema';
+import type {
+    ICreateInvitedUser,
+    IPublicSignupTokenCreate,
+    IPublicSignupTokenUpdate,
+} from 'interfaces/publicSignupTokens';
 
 const URI = 'api/admin/invite-link/tokens';
 
@@ -18,12 +17,10 @@ export const useInviteTokenApi = () => {
     const { mutate } = useSWRConfig();
 
     const createToken = useCallback(
-        async (request: PublicSignupTokenCreateSchema) => {
+        async (request: IPublicSignupTokenCreate) => {
             const req = createRequest(URI, {
                 method: 'POST',
-                body: JSON.stringify(
-                    PublicSignupTokenCreateSchemaToJSON(request)
-                ),
+                body: JSON.stringify(request),
             });
 
             const response = await makeRequest(req.caller, req.id);
@@ -34,13 +31,11 @@ export const useInviteTokenApi = () => {
     );
 
     const updateToken = useCallback(
-        async (tokenName: string, value: PublicSignupTokenUpdateSchema) => {
+        async (tokenName: string, value: IPublicSignupTokenUpdate) => {
             const req = createRequest(`${URI}/${tokenName}`, {
                 method: 'PUT',
                 body: JSON.stringify({
-                    ...(value.expiresAt
-                        ? { expiresAt: value.expiresAt.toISOString() }
-                        : {}),
+                    ...(value.expiresAt ? { expiresAt: value.expiresAt } : {}),
                     ...(value.enabled !== undefined
                         ? { enabled: value.enabled }
                         : {}),
@@ -55,7 +50,7 @@ export const useInviteTokenApi = () => {
     );
 
     const addUser = useCallback(
-        async (secret: string, value: CreateInvitedUserSchema) => {
+        async (secret: string, value: ICreateInvitedUser) => {
             const req = createRequest(`/invite/${secret}/signup`, {
                 method: 'POST',
                 body: JSON.stringify(value),

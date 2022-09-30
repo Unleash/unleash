@@ -19,10 +19,14 @@ export const InviteLinkBar: VFC = () => {
     const createdAt = data?.tokens?.[0]?.createdAt ?? '';
     const expiresAt = data?.tokens?.[0]?.expiresAt ?? '';
     const expires = expiresAt || false;
-    const isExpired = expires && isAfter(new Date(), expires);
+    const isExpired = Boolean(
+        expires && isAfter(new Date(), parseISO(expires))
+    );
     const willExpireSoon =
-        expires && isAfter(add(new Date(), { days: 14 }), expires);
-    const expiresIn = expires ? formatDistanceToNowStrict(expires) : false;
+        expires && isAfter(add(new Date(), { days: 14 }), parseISO(expires));
+    const expiresIn = expires
+        ? formatDistanceToNowStrict(parseISO(expires))
+        : false;
     const { locationSettings } = useLocationSettings();
 
     const expireDateComponent = (

@@ -78,13 +78,13 @@ export const InviteLink: VFC<ICreateInviteLinkProps> = () => {
         try {
             if (isUpdating) {
                 await updateToken(defaultToken!.secret, {
-                    expiresAt: parseISO(expiry),
+                    expiresAt: expiry,
                 });
                 setInviteLink(defaultToken!.url);
             } else {
                 const response = await createToken({
                     name: 'default',
-                    expiresAt: parseISO(expiry),
+                    expiresAt: expiry,
                 });
                 const newToken = await response.json();
                 setInviteLink(newToken.url);

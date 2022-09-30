@@ -11,11 +11,14 @@ export function responseTimeMetrics(eventBus: EventEmitter): any {
 
         const pathname = req.route ? req.baseUrl + req.route.path : '(hidden)';
 
+        const appName = req.headers['unleash-appname'];
+
         const timingInfo = {
             path: pathname,
             method: req.method,
             statusCode,
             time,
+            appName,
         };
         eventBus.emit(REQUEST_TIME, timingInfo);
     });

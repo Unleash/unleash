@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import {
+    Box,
     FormControl,
     InputLabel,
     Select,
@@ -17,6 +18,7 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import TopicOutlinedIcon from '@mui/icons-material/TopicOutlined';
 import { useNavigate } from 'react-router-dom';
 import { PageContent } from 'component/common/PageContent/PageContent';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledHeader = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -46,14 +48,12 @@ const StyledAvatar = styled(UserAvatar)(({ theme }) => ({
 
 const StyledSectionLabel = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.mainHeader,
-    marginBottom: theme.spacing(4),
+    marginBottom: theme.spacing(3),
 }));
 
 const StyledAccess = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
     '& > div > p': {
         marginBottom: theme.spacing(1.5),
     },
@@ -133,7 +133,7 @@ export const ProfileTab = ({ user }: IProfileTabProps) => {
             <PageContent>
                 <StyledSectionLabel>Access</StyledSectionLabel>
                 <StyledAccess>
-                    <div>
+                    <Box sx={{ width: '50%' }}>
                         <Typography variant="body2">Your root role</Typography>
                         <Tooltip
                             title={profile?.rootRole.description || ''}
@@ -149,30 +149,42 @@ export const ProfileTab = ({ user }: IProfileTabProps) => {
                                 {profile?.rootRole.name}
                             </Badge>
                         </Tooltip>
-                    </div>
-                    <div>
+                    </Box>
+                    <Box>
                         <Typography variant="body2">Projects</Typography>
-                        {profile?.projects.map(project => (
-                            <Tooltip
-                                key={project}
-                                title="View project"
-                                arrow
-                                placement="bottom-end"
-                                describeChild
-                            >
-                                <StyledBadge
-                                    onClick={e => {
-                                        e.preventDefault();
-                                        navigate(`/projects/${project}`);
-                                    }}
-                                    color="secondary"
-                                    icon={<TopicOutlinedIcon />}
+                        <ConditionallyRender
+                            condition={Boolean(profile?.projects.length)}
+                            show={profile?.projects.map(project => (
+                                <Tooltip
+                                    key={project}
+                                    title="View project"
+                                    arrow
+                                    placement="bottom-end"
+                                    describeChild
                                 >
-                                    {project}
-                                </StyledBadge>
-                            </Tooltip>
-                        ))}
-                    </div>
+                                    <StyledBadge
+                                        onClick={e => {
+                                            e.preventDefault();
+                                            navigate(`/projects/${project}`);
+                                        }}
+                                        color="secondary"
+                                        icon={<TopicOutlinedIcon />}
+                                    >
+                                        {project}
+                                    </StyledBadge>
+                                </Tooltip>
+                            ))}
+                            elseShow={
+                                <Tooltip
+                                    title="You are not assigned to any projects"
+                                    arrow
+                                    describeChild
+                                >
+                                    <Badge>No projects</Badge>
+                                </Tooltip>
+                            }
+                        />
+                    </Box>
                 </StyledAccess>
                 <StyledDivider />
                 <StyledSectionLabel>Settings</StyledSectionLabel>

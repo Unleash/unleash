@@ -30,6 +30,7 @@ export interface ITab {
     id: string;
     label: string;
     path?: string;
+    hidden?: boolean;
 }
 
 interface IVerticalTabsProps {
@@ -47,14 +48,16 @@ export const VerticalTabs = ({
 }: IVerticalTabsProps) => (
     <StyledTabPage>
         <StyledTabs>
-            {tabs.map(tab => (
-                <VerticalTab
-                    key={tab.id}
-                    label={tab.label}
-                    selected={tab.id === value}
-                    onClick={() => onChange(tab)}
-                />
-            ))}
+            {tabs
+                .filter(tab => !tab.hidden)
+                .map(tab => (
+                    <VerticalTab
+                        key={tab.id}
+                        label={tab.label}
+                        selected={tab.id === value}
+                        onClick={() => onChange(tab)}
+                    />
+                ))}
         </StyledTabs>
         <StyledTabPageContent>{children}</StyledTabPageContent>
     </StyledTabPage>

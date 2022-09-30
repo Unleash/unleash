@@ -8,12 +8,6 @@ import { PasswordTab } from './PasswordTab/PasswordTab';
 import { PersonalAPITokensTab } from './PersonalAPITokensTab/PersonalAPITokensTab';
 import { ProfileTab } from './ProfileTab/ProfileTab';
 
-let tabs = [
-    { id: 'profile', label: 'Profile' },
-    { id: 'password', label: 'Change password', path: 'change-password' },
-    { id: 'pat', label: 'Personal API tokens', path: 'personal-api-tokens' },
-];
-
 export const Profile = () => {
     const { user } = useAuthUser();
     const location = useLocation();
@@ -21,9 +15,16 @@ export const Profile = () => {
 
     const { uiConfig } = useUiConfig();
 
-    if (!uiConfig.flags.personalAccessTokens) {
-        tabs = tabs.filter(tab => tab.id !== 'pat');
-    }
+    const tabs = [
+        { id: 'profile', label: 'Profile' },
+        { id: 'password', label: 'Change password', path: 'change-password' },
+        {
+            id: 'pat',
+            label: 'Personal API tokens',
+            path: 'personal-api-tokens',
+            hidden: !uiConfig.flags.personalAccessTokens,
+        },
+    ];
 
     const onChange = (tab: ITab) => {
         navigate(tab.path ? `/profile/${tab.path}` : '/profile', {

@@ -58,6 +58,30 @@ const StyledCancelButton = styled(Button)(({ theme }) => ({
     marginLeft: theme.spacing(3),
 }));
 
+enum ExpirationOption {
+    '7DAYS' = '7d',
+    '30DAYS' = '30d',
+    '60DAYS' = '60d',
+}
+
+const expirationOptions = [
+    {
+        key: ExpirationOption['7DAYS'],
+        days: 7,
+        label: '7 days',
+    },
+    {
+        key: ExpirationOption['30DAYS'],
+        days: 30,
+        label: '30 days',
+    },
+    {
+        key: ExpirationOption['60DAYS'],
+        days: 60,
+        label: '60 days',
+    },
+];
+
 interface ICreatePersonalAPITokenProps {
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -76,23 +100,26 @@ export const CreatePersonalAPIToken: FC<ICreatePersonalAPITokenProps> = ({
     const { locationSettings } = useLocationSettings();
 
     const [description, setDescription] = useState('');
-    const [expiration, setExpiration] = useState('30d');
+    const [expiration, setExpiration] = useState<ExpirationOption>(
+        ExpirationOption['30DAYS']
+    );
 
     const calculateDate = () => {
-        if (expiration.endsWith('d')) {
-            const days = parseInt(expiration.slice(0, -1));
-            const expiresAt = new Date();
-            expiresAt.setDate(expiresAt.getDate() + days);
-            return expiresAt;
+        const expiresAt = new Date();
+        const expirationOption = expirationOptions.find(
+            ({ key }) => key === expiration
+        );
+        if (expirationOption) {
+            expiresAt.setDate(expiresAt.getDate() + expirationOption.days);
         }
-        return new Date();
+        return expiresAt;
     };
 
     const [expiresAt, setExpiresAt] = useState(calculateDate());
 
     useEffect(() => {
         setDescription('');
-        setExpiration('30d');
+        setExpiration(ExpirationOption['30DAYS']);
     }, [open]);
 
     useEffect(() => {
@@ -170,12 +197,12 @@ export const CreatePersonalAPIToken: FC<ICreatePersonalAPITokenProps> = ({
                                 id="expiration"
                                 label="Token will expire in"
                                 value={expiration}
-                                onChange={e => setExpiration(e.target.value)}
-                                options={[
-                                    { key: '7d', label: '7 days' },
-                                    { key: '30d', label: '30 days' },
-                                    { key: '60d', label: '60 days' },
-                                ]}
+                                onChange={e =>
+                                    setExpiration(
+                                        e.target.value as ExpirationOption
+                                    )
+                                }
+                                options={expirationOptions}
                             />
                             <ConditionallyRender
                                 condition={Boolean(expiresAt)}

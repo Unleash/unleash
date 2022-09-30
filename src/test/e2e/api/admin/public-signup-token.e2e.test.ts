@@ -162,7 +162,7 @@ test('users can signup with invite-link', async () => {
         .expect(201)
         .expect((res) => {
             const user = res.body;
-            expect(user.username).toBe('some-username');
+            expect(user.name).toBe('some-username');
         });
 
     await destroy();

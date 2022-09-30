@@ -724,6 +724,29 @@ exports[`should serve the OpenAPI spec 1`] = `
         ],
         "type": "object",
       },
+      "createInvitedUserSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "email": {
+            "type": "string",
+          },
+          "name": {
+            "type": "string",
+          },
+          "password": {
+            "type": "string",
+          },
+          "username": {
+            "type": "string",
+          },
+        },
+        "required": [
+          "email",
+          "name",
+          "password",
+        ],
+        "type": "object",
+      },
       "createUserSchema": {
         "additionalProperties": false,
         "properties": {
@@ -7428,11 +7451,11 @@ If the provided project does not exist, the list of events will be empty.",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/createUserSchema",
+                "$ref": "#/components/schemas/createInvitedUserSchema",
               },
             },
           },
-          "description": "createUserSchema",
+          "description": "createInvitedUserSchema",
           "required": true,
         },
         "responses": {
@@ -7473,14 +7496,7 @@ If the provided project does not exist, the list of events will be empty.",
         ],
         "responses": {
           "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/publicSignupTokenSchema",
-                },
-              },
-            },
-            "description": "publicSignupTokenSchema",
+            "description": "This response has no body.",
           },
           "400": {
             "description": "The request data does not match what we expect.",

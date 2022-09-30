@@ -72,6 +72,7 @@ import { playgroundRequestSchema } from './spec/playground-request-schema';
 import { playgroundResponseSchema } from './spec/playground-response-schema';
 import { playgroundSegmentSchema } from './spec/playground-segment-schema';
 import { playgroundStrategySchema } from './spec/playground-strategy-schema';
+import { profileSchema } from './spec/profile-schema';
 import { projectEnvironmentSchema } from './spec/project-environment-schema';
 import { projectSchema } from './spec/project-schema';
 import { projectsSchema } from './spec/projects-schema';
@@ -121,7 +122,6 @@ import { variantSchema } from './spec/variant-schema';
 import { variantsSchema } from './spec/variants-schema';
 import { versionSchema } from './spec/version-schema';
 import apiVersion from '../util/version';
-import { profileSchema } from './spec/profile-schema';
 
 // All schemas in `openapi/spec` should be listed here.
 export const schemas = {
@@ -194,12 +194,10 @@ export const schemas = {
     playgroundResponseSchema,
     playgroundSegmentSchema,
     playgroundStrategySchema,
-    projectEnvironmentSchema,
-    publicSignupTokenCreateSchema,
-    publicSignupTokenUpdateSchema,
-    publicSignupTokensSchema,
-    publicSignupTokenSchema,
     profileSchema,
+    projectEnvironmentSchema,
+    projectSchema,
+    projectsSchema,
     proxyClientSchema,
     proxyFeatureSchema,
     proxyFeaturesSchema,

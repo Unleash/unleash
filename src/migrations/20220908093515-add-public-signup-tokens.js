@@ -28,9 +28,8 @@ exports.up = function (db, callback) {
 exports.down = function (db, callback) {
     db.runSql(
         `
-DROP TABLE public_signup_tokens;
-DROP TABLE public_signup_tokens_user;
-DROP TABLE public_signup_tokens_role;
+DROP TABLE IF EXISTS public_signup_tokens_user;
+DROP TABLE IF EXISTS public_signup_tokens;
         `,
         callback,
     );

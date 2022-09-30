@@ -1,6 +1,6 @@
 import { FromSchema } from 'json-schema-to-ts';
 import { featureSchema } from './feature-schema';
-import { RoleName } from '../../types/model';
+import { roleSchema } from './role-schema';
 
 export const profileSchema = {
     $id: '#/components/schemas/profileSchema',
@@ -9,8 +9,7 @@ export const profileSchema = {
     required: ['rootRole', 'projects', 'features'],
     properties: {
         rootRole: {
-            type: 'string',
-            enum: Object.values(RoleName),
+            $ref: '#/components/schemas/roleSchema',
         },
         projects: {
             type: 'array',
@@ -28,6 +27,7 @@ export const profileSchema = {
     components: {
         schemas: {
             featureSchema,
+            roleSchema,
         },
     },
 } as const;

@@ -2167,14 +2167,7 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "array",
           },
           "rootRole": {
-            "enum": [
-              "Admin",
-              "Editor",
-              "Viewer",
-              "Owner",
-              "Member",
-            ],
-            "type": "string",
+            "$ref": "#/components/schemas/roleSchema",
           },
         },
         "required": [

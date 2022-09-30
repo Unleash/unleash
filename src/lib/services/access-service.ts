@@ -5,6 +5,7 @@ import {
     IAccessStore,
     IRole,
     IRoleWithPermissions,
+    IRoleWithProject,
     IUserPermission,
     IUserRole,
 } from '../types/stores/access-store';
@@ -243,7 +244,7 @@ export class AccessService {
         }
     }
 
-    async getUserRootRoles(userId: number): Promise<IRole[]> {
+    async getUserRootRoles(userId: number): Promise<IRoleWithProject[]> {
         const userRoles = await this.store.getRolesForUserId(userId);
         return userRoles.filter((r) => r.type === RoleType.ROOT);
     }

@@ -21,7 +21,6 @@ import {
     ProfileSchema,
 } from '../../../openapi/spec/profile-schema';
 import ProjectService from '../../../services/project-service';
-import { RoleName } from '../../../types/model';
 
 class UserController extends Controller {
     private accessService: AccessService;
@@ -148,10 +147,10 @@ class UserController extends Controller {
         const projects = await this.projectService.getProjectsByUser(user.id);
 
         const roles = await this.accessService.getUserRootRoles(user.id);
-
+        const { project, ...rootRole } = roles[0];
         const responseData: ProfileSchema = {
             projects,
-            rootRole: roles[0].name as RoleName,
+            rootRole,
             features: [],
         };
 

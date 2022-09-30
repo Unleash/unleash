@@ -57,7 +57,7 @@ export default class MetricsMonitor {
         const requestDuration = new client.Summary({
             name: 'http_request_duration_milliseconds',
             help: 'App response time',
-            labelNames: ['path', 'method', 'status'],
+            labelNames: ['path', 'method', 'status', 'appName'],
             percentiles: [0.1, 0.5, 0.9, 0.95, 0.99],
             maxAgeSeconds: 600,
             ageBuckets: 5,
@@ -143,8 +143,10 @@ export default class MetricsMonitor {
 
         eventBus.on(
             events.REQUEST_TIME,
-            ({ path, method, time, statusCode }) => {
-                requestDuration.labels(path, method, statusCode).observe(time);
+            ({ path, method, time, statusCode, appName }) => {
+                requestDuration
+                    .labels(path, method, statusCode, appName)
+                    .observe(time);
             },
         );
 

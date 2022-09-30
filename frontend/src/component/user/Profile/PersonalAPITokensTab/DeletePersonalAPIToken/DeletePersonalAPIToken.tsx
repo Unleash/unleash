@@ -50,8 +50,9 @@ export const DeletePersonalAPIToken: FC<IDeletePersonalAPITokenProps> = ({
             title="Delete token?"
         >
             <Typography>
-                Do you really want to delete{' '}
-                <strong>{token?.description}</strong>?
+                Any applications or scripts using this token "
+                <strong>{token?.description}</strong>" will no longer be able to
+                access the Unleash API. You cannot undo this action.
             </Typography>
         </Dialogue>
     );

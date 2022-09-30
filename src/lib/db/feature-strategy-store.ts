@@ -193,8 +193,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 feature_name: featureName,
                 environment,
             })
-            .orderBy('created_at', 'asc')
-            .orderBy('sort_order', 'asc');
+            .orderBy('sort_order', 'created_at');
         stopTimer();
         return rows.map(mapRow);
     }

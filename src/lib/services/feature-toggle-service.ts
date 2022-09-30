@@ -718,11 +718,14 @@ class FeatureToggleService {
         const strategy = await this.featureStrategiesStore.getStrategyById(
             strategyId,
         );
+
+        const segments = await this.segmentService.getByStrategy(strategyId);
         return {
             id: strategy.id,
             name: strategy.strategyName,
             constraints: strategy.constraints || [],
             parameters: strategy.parameters,
+            segments: segments.map((s) => s.id),
         };
     }
 

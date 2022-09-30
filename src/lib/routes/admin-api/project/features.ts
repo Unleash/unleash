@@ -584,7 +584,11 @@ export default class ProjectFeaturesController extends Controller {
                 strategy.id,
             );
         }
-        res.status(200).json(strategy);
+
+        const updatedStrategy = await this.featureService.getStrategy(
+            strategy.id,
+        );
+        res.status(200).json(updatedStrategy);
     }
 
     async getFeatureStrategies(

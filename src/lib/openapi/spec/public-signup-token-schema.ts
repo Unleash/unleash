@@ -13,6 +13,7 @@ export const publicSignupTokenSchema = {
         'expiresAt',
         'createdAt',
         'createdBy',
+        'enabled',
         'role',
     ],
     properties: {
@@ -24,6 +25,9 @@ export const publicSignupTokenSchema = {
         },
         name: {
             type: 'string',
+        },
+        enabled: {
+            type: 'boolean',
         },
         expiresAt: {
             type: 'string',

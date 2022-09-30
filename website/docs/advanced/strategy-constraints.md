@@ -13,7 +13,7 @@ Unleash 4.9 introduced a more comprehensive set of constraint operators. These r
 When using _advanced strategy constraints_ (any operator that isn't `IN` or `NOT_IN`), *make sure your client SDK is up to date* and supports this feature. For older versions of the client SDKs we **cannot guarantee** any specific behavior. Please see the [incompatibilities section](#incompatibilities) for more information.
 :::
 
-**Strategy constraints** are conditions that must be satisifed for an [activation strategy](../user_guide/activation_strategy) to be evaluated for a feature toggle.
+**Strategy constraints** are conditions that must be satisfied for an [activation strategy](../user_guide/activation_strategy) to be evaluated for a feature toggle.
 With strategy constraints, you can:
 - roll out a feature **only to users in a specific region**
 - schedule a feature to be **released at a specific time**
@@ -40,7 +40,7 @@ By using [custom context fields](../user_guide/unleash_context#custom-context-fi
 
 You can also combine strategy constraints with the [gradual rollout strategy](../user_guide/activation_strategy#gradual-rollout) to do a gradual rollout to a **specific segment** of your user base.
 
-![A toggle with the gradual rollout strategy. The toggle is constrained on the custom content field "region" and set to only activate if the region is Africa or Europe.](/img/custom-constraints.png)
+![A toggle with the gradual rollout strategy. The toggle is constrained on the custom content field "region" and set to only activate if the region is Africa or Europe.](/img/strategy-constraints.png)
 
 ## Constraint structure
 

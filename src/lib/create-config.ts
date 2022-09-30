@@ -232,14 +232,10 @@ const formatServerOptions = (
     if (!serverOptions) return;
 
     /* eslint-disable-next-line */
-    if(serverOptions.baseUriPath) {
-        return {
-            ...serverOptions,
-            baseUriPath: formatBaseUri(serverOptions.baseUriPath),
-        };
-    } else {
-        return serverOptions;
-    }
+    return {
+        ...serverOptions,
+        baseUriPath: serverOptions.baseUriPath ? formatBaseUri(serverOptions.baseUriPath) : undefined,
+    };
 };
 
 const loadTokensFromString = (tokenString: String, tokenType: ApiTokenType) => {

@@ -14,6 +14,10 @@ export interface IRole {
     type: string;
 }
 
+export interface IRoleWithProject extends IRole {
+    project: string;
+}
+
 export interface IRoleWithPermissions extends IRole {
     permissions: IPermission[];
 }
@@ -49,7 +53,7 @@ export interface IAccessStore extends Store<IRole, number> {
 
     unlinkUserRoles(userId: number): Promise<void>;
 
-    getRolesForUserId(userId: number): Promise<IRole[]>;
+    getRolesForUserId(userId: number): Promise<IRoleWithProject[]>;
 
     getProjectUsersForRole(
         roleId: number,

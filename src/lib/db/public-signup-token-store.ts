@@ -32,19 +32,28 @@ interface ITokenUserRow {
 }
 
 const tokenRowReducer = (acc, tokenRow) => {
-    const { userId, userName, userUsername, roleId, roleName, ...token } =
-        tokenRow;
+    const {
+        userId,
+        userName,
+        userUsername,
+        roleId,
+        roleName,
+        roleType,
+        ...token
+    } = tokenRow;
     if (!acc[tokenRow.secret]) {
         acc[tokenRow.secret] = {
             secret: token.secret,
             name: token.name,
             url: token.url,
             expiresAt: token.expires_at,
+            enabled: token.enabled,
             createdAt: token.created_at,
             createdBy: token.created_by,
             role: {
                 id: roleId,
                 name: roleName,
+                type: roleType,
             },
             users: [],
         };
@@ -113,6 +122,7 @@ export class PublicSignupTokenStore implements IPublicSignupTokenStore {
                 'tokens.secret',
                 'tokens.name',
                 'tokens.expires_at',
+                'tokens.enabled',
                 'tokens.created_at',
                 'tokens.created_by',
                 'tokens.url',
@@ -121,6 +131,7 @@ export class PublicSignupTokenStore implements IPublicSignupTokenStore {
                 'users.username as userUsername',
                 'roles.id as roleId',
                 'roles.name as roleName',
+                'roles.type as roleType',
             );
     }
 
@@ -159,7 +170,7 @@ export class PublicSignupTokenStore implements IPublicSignupTokenStore {
 
     async isValid(secret: string): Promise<boolean> {
         const result = await this.db.raw(
-            `SELECT EXISTS (SELECT 1 FROM ${TABLE} WHERE secret = ? AND expires_at::date > ?) AS valid`,
+            `SELECT EXISTS (SELECT 1 FROM ${TABLE} WHERE secret = ? AND expires_at::date > ? AND enabled = true) AS valid`,
             [secret, new Date()],
         );
         const { valid } = result.rows[0];
@@ -197,12 +208,12 @@ export class PublicSignupTokenStore implements IPublicSignupTokenStore {
         return this.db<ITokenInsert>(TABLE).del();
     }
 
-    async setExpiry(
+    async update(
         secret: string,
-        expiresAt: Date,
+        { expiresAt, enabled }: { expiresAt?: Date; enabled?: boolean },
     ): Promise<PublicSignupTokenSchema> {
         const rows = await this.makeTokenUsersQuery()
-            .update({ expires_at: expiresAt })
+            .update({ expires_at: expiresAt, enabled })
             .where('secret', secret)
             .returning('*');
         if (rows.length > 0) {

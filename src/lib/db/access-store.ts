@@ -7,6 +7,7 @@ import {
     IAccessInfo,
     IAccessStore,
     IRole,
+    IRoleWithProject,
     IUserPermission,
     IUserRole,
 } from '../types/stores/access-store';
@@ -229,7 +230,7 @@ export class AccessStore implements IAccessStore {
         }));
     }
 
-    async getRolesForUserId(userId: number): Promise<IRole[]> {
+    async getRolesForUserId(userId: number): Promise<IRoleWithProject[]> {
         return this.db
             .select(['id', 'name', 'type', 'project', 'description'])
             .from<IRole[]>(T.ROLES)

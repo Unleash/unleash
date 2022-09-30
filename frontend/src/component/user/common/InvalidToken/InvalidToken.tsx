@@ -6,11 +6,13 @@ import { useThemeStyles } from 'themes/themeStyles';
 import classnames from 'classnames';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';
+import { useUserInvite } from 'hooks/api/getters/useUserInvite/useUserInvite';
 
 const InvalidToken: VFC = () => {
     const { authDetails } = useAuthDetails();
     const { classes: themeStyles } = useThemeStyles();
     const passwordDisabled = authDetails?.defaultHidden === true;
+    const { secret } = useUserInvite(); // NOTE: can be enhanced with "expired token"
 
     return (
         <div
@@ -43,22 +45,35 @@ const InvalidToken: VFC = () => {
                     </>
                 }
                 elseShow={
-                    <>
-                        <Typography variant="subtitle1">
-                            Your token has either been used to reset your
-                            password, or it has expired. Please request a new
-                            reset password URL in order to reset your password.
-                        </Typography>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            component={Link}
-                            to="/forgotten-password"
-                            data-testid={INVALID_TOKEN_BUTTON}
-                        >
-                            Reset password
-                        </Button>
-                    </>
+                    <ConditionallyRender
+                        condition={Boolean(secret)}
+                        show={
+                            <Typography variant="subtitle1">
+                                Provided invite link is invalid or expired.
+                                Please request a new URL in order to create your
+                                account.
+                            </Typography>
+                        }
+                        elseShow={
+                            <>
+                                <Typography variant="subtitle1">
+                                    Your token has either been used to reset
+                                    your password, or it has expired. Please
+                                    request a new reset password URL in order to
+                                    reset your password.
+                                </Typography>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    component={Link}
+                                    to="/forgotten-password"
+                                    data-testid={INVALID_TOKEN_BUTTON}
+                                >
+                                    Reset password
+                                </Button>
+                            </>
+                        }
+                    />
                 }
             />
         </div>

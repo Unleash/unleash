@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 
 const getFetcher = (token: string) => () => {
+    if (!token) return Promise.resolve({ name: INVALID_TOKEN_ERROR });
     const path = formatApiPath(`auth/reset/validate?token=${token}`);
     // Don't use handleErrorResponses here, because we need to read the error.
     return fetch(path, {
@@ -34,11 +35,21 @@ const useResetPassword = (options: SWRConfiguration = {}) => {
         setLoading(!error && !data);
     }, [data, error]);
 
-    const invalidToken =
+    const isValidToken =
         (!loading && data?.name === INVALID_TOKEN_ERROR) ||
-        data?.name === USED_TOKEN_ERROR;
+        data?.name === USED_TOKEN_ERROR
+            ? false
+            : true;
 
-    return { token, data, error, loading, setLoading, invalidToken, retry };
+    return {
+        token,
+        data,
+        error,
+        loading,
+        isValidToken,
+        setLoading,
+        retry,
+    };
 };
 
 export default useResetPassword;

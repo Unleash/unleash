@@ -3,7 +3,6 @@ import dbInit from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import { RoleName } from '../../../../lib/types/model';
 import { PublicSignupTokenCreateSchema } from '../../../../lib/openapi/spec/public-signup-token-create-schema';
-import { CreateUserSchema } from '../../../../lib/openapi/spec/create-user-schema';
 
 let stores;
 let db;
@@ -99,14 +98,12 @@ test('no permission to validate a token', async () => {
         createdBy: 'admin@example.com',
         roleId: 3,
     });
-    await request
-        .post('/api/admin/invite-link/tokens/some-secret/validate')
-        .expect(200);
+    await request.get('/invite/some-secret/validate').expect(200);
 
     await destroy();
 });
 
-test('should return 401 if token can not be validate', async () => {
+test('should return 400 if token can not be validate', async () => {
     const preHook = (app, config, { userService, accessService }) => {
         app.use('/api/admin/', async (req, res, next) => {
             const admin = await accessService.getRootRole(RoleName.ADMIN);
@@ -121,9 +118,7 @@ test('should return 401 if token can not be validate', async () => {
 
     const { request, destroy } = await setupAppWithCustomAuth(stores, preHook);
 
-    await request
-        .post('/api/admin/invite-link/tokens/some-invalid-secret/validate')
-        .expect(401);
+    await request.get('/invite/some-invalid-secret/validate').expect(400);
 
     await destroy();
 });
@@ -149,27 +144,25 @@ test('users can signup with invite-link', async () => {
         name: 'some-name',
         expiresAt: expireAt(),
         secret: 'some-secret',
-        url: 'http://localhost:4242/invite-lint/some-secret/signup',
+        url: 'http://localhost:4242/invite/some-secret/signup',
         createAt: new Date(),
         createdBy: 'admin@example.com',
         roleId: 3,
     });
 
-    const createUser: CreateUserSchema = {
-        username: 'some-username',
+    const createUser = {
+        name: 'some-username',
         email: 'some@example.com',
         password: 'eweggwEG',
-        sendEmail: false,
-        rootRole: 1,
     };
 
     await request
-        .post('/api/admin/invite-link/tokens/some-secret/signup')
+        .post('/invite/some-secret/signup')
         .send(createUser)
         .expect(201)
         .expect((res) => {
             const user = res.body;
-            expect(user.username).toBe('some-username');
+            expect(user.name).toBe('some-username');
         });
 
     await destroy();

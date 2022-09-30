@@ -1,10 +1,13 @@
 import { validateSchema } from '../validate';
 import { ProfileSchema } from './profile-schema';
-import { RoleName } from '../../types/model';
 
 test('profileSchema', () => {
     const data: ProfileSchema = {
-        rootRole: 'Editor' as RoleName,
+        rootRole: {
+            id: 1,
+            type: 'root',
+            name: 'Admin',
+        },
         projects: ['default', 'secretproject'],
         features: [
             { name: 'firstFeature', project: 'default' },

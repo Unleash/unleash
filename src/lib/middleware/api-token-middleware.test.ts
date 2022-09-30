@@ -58,6 +58,28 @@ test('should not add user if unknown token', async () => {
     expect(req.user).toBeFalsy();
 });
 
+test('should not make database query when provided PAT format', async () => {
+    const apiTokenService = {
+        getUserForToken: jest.fn(),
+    };
+
+    const func = apiTokenMiddleware(config, { apiTokenService });
+
+    const cb = jest.fn();
+
+    const req = {
+        header: jest.fn().mockReturnValue('user:asdkjsdhg3'),
+        user: undefined,
+    };
+
+    await func(req, undefined, cb);
+
+    expect(apiTokenService.getUserForToken).not.toHaveBeenCalled();
+    expect(req.header).toHaveBeenCalled();
+    expect(cb).toHaveBeenCalled();
+    expect(req.user).toBeFalsy();
+});
+
 test('should add user if known token', async () => {
     const apiUser = new ApiUser({
         username: 'default',
@@ -159,8 +181,18 @@ test('should not add user if disabled', async () => {
         user: undefined,
     };
 
-    await func(req, undefined, cb);
+    const send = jest.fn();
+    const res = {
+        status: () => {
+            return {
+                send: send,
+            };
+        },
+    };
 
+    await func(req, res, cb);
+
+    expect(send).not.toHaveBeenCalled();
     expect(cb).toHaveBeenCalled();
     expect(req.user).toBeFalsy();
 });

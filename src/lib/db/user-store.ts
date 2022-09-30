@@ -204,6 +204,20 @@ class UserStore implements IUserStore {
         const row = await this.db(TABLE).where({ id }).first();
         return rowToUser(row);
     }
+
+    async getUserByPersonalAccessToken(secret: string): Promise<User> {
+        const row = await this.db
+            .select(USER_COLUMNS.map((column) => `${TABLE}.${column}`))
+            .from(TABLE)
+            .leftJoin(
+                'personal_access_tokens',
+                'personal_access_tokens.user_id',
+                `${TABLE}.id`,
+            )
+            .where('secret', secret)
+            .first();
+        return rowToUser(row);
+    }
 }
 
 module.exports = UserStore;

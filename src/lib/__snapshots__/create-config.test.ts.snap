@@ -71,6 +71,7 @@ exports[`should create default config 1`] = `
       "batchMetrics": false,
       "embedProxy": false,
       "embedProxyFrontend": false,
+      "personalAccessTokens": false,
       "publicSignup": false,
     },
   },
@@ -81,11 +82,15 @@ exports[`should create default config 1`] = `
       "batchMetrics": false,
       "embedProxy": false,
       "embedProxyFrontend": false,
+      "personalAccessTokens": false,
       "publicSignup": false,
     },
     "externalResolver": {
       "isEnabled": [Function],
     },
+  },
+  "frontendApi": {
+    "refreshIntervalInMs": 10000,
   },
   "frontendApiOrigins": [
     "*",

@@ -121,6 +121,7 @@ import { variantSchema } from './spec/variant-schema';
 import { variantsSchema } from './spec/variants-schema';
 import { versionSchema } from './spec/version-schema';
 import apiVersion from '../util/version';
+import { profileSchema } from './spec/profile-schema';
 
 // All schemas in `openapi/spec` should be listed here.
 export const schemas = {
@@ -194,8 +195,11 @@ export const schemas = {
     playgroundSegmentSchema,
     playgroundStrategySchema,
     projectEnvironmentSchema,
-    projectSchema,
-    projectsSchema,
+    publicSignupTokenCreateSchema,
+    publicSignupTokenUpdateSchema,
+    publicSignupTokensSchema,
+    publicSignupTokenSchema,
+    profileSchema,
     proxyClientSchema,
     proxyFeatureSchema,
     proxyFeaturesSchema,

@@ -76,6 +76,8 @@ class UserService {
 
     private settingService: SettingService;
 
+    private passwordResetTimeouts: { [key: string]: NodeJS.Timeout } = {};
+
     constructor(
         stores: Pick<IUnleashStores, 'userStore' | 'eventStore'>,
         {
@@ -400,10 +402,18 @@ class UserService {
         if (!receiver) {
             throw new NotFoundError(`Could not find ${receiverEmail}`);
         }
+        if (this.passwordResetTimeouts[receiver.id]) {
+            return;
+        }
+
         const resetLink = await this.resetTokenService.createResetPasswordUrl(
             receiver.id,
             user.username || user.email,
         );
+
+        this.passwordResetTimeouts[receiver.id] = setTimeout(() => {
+            delete this.passwordResetTimeouts[receiver.id];
+        }, 1000 * 60); // 1 minute
 
         await this.emailService.sendResetMail(
             receiver.name,
@@ -411,6 +421,10 @@ class UserService {
             resetLink.toString(),
         );
         return resetLink;
+    }
+
+    async getUserByPersonalAccessToken(secret: string): Promise<IUser> {
+        return this.store.getUserByPersonalAccessToken(secret);
     }
 }
 

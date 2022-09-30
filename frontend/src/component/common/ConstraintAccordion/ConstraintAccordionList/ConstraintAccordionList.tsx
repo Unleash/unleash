@@ -16,7 +16,7 @@ interface IConstraintAccordionListProps {
     constraints: IConstraint[];
     setConstraints?: React.Dispatch<React.SetStateAction<IConstraint[]>>;
     showCreateButton?: boolean;
-    /* Add "Custom constraints" title on the top - default `true` */
+    /* Add "constraints" title on the top - default `true` */
     showLabel?: boolean;
 }
 
@@ -115,7 +115,7 @@ export const ConstraintAccordionList = forwardRef<
                     }
                     show={
                         <p className={styles.customConstraintLabel}>
-                            Custom constraints
+                            Constraints
                         </p>
                     }
                 />
@@ -141,7 +141,7 @@ export const ConstraintAccordionList = forwardRef<
                     show={
                         <div>
                             <div className={styles.addCustomLabel}>
-                                <p>Add any number of custom constraints</p>
+                                <p>Add any number of constraints</p>
                                 <Tooltip
                                     title="Help"
                                     arrow
@@ -164,7 +164,7 @@ export const ConstraintAccordionList = forwardRef<
                                 variant="outlined"
                                 color="secondary"
                             >
-                                Add custom constraint
+                                Add constraint
                             </Button>
                         </div>
                     }

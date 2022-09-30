@@ -2128,6 +2128,39 @@ exports[`should serve the OpenAPI spec 1`] = `
         ],
         "type": "object",
       },
+      "profileSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "features": {
+            "items": {
+              "$ref": "#/components/schemas/featureSchema",
+            },
+            "type": "array",
+          },
+          "projects": {
+            "items": {
+              "type": "string",
+            },
+            "type": "array",
+          },
+          "rootRole": {
+            "enum": [
+              "Admin",
+              "Editor",
+              "Viewer",
+              "Owner",
+              "Member",
+            ],
+            "type": "string",
+          },
+        },
+        "required": [
+          "rootRole",
+          "projects",
+          "features",
+        ],
+        "type": "object",
+      },
       "projectEnvironmentSchema": {
         "additionalProperties": false,
         "properties": {
@@ -6926,6 +6959,26 @@ If the provided project does not exist, the list of events will be empty.",
           },
           "400": {
             "description": "passwordMismatch",
+          },
+        },
+        "tags": [
+          "Users",
+        ],
+      },
+    },
+    "/api/admin/user/profile": {
+      "get": {
+        "operationId": "getProfile",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/profileSchema",
+                },
+              },
+            },
+            "description": "profileSchema",
           },
         },
         "tags": [

@@ -141,23 +141,13 @@ export const FeatureStrategyForm = ({
                     />
                 }
             />
-            <ConditionallyRender
-                condition={Boolean(uiConfig.flags.C || uiConfig.flags.CO)}
-                show={
-                    <FeatureStrategyConstraints
-                        projectId={feature.project}
-                        environmentId={environmentId}
-                        strategy={strategy}
-                        setStrategy={setStrategy}
-                    />
-                }
+            <FeatureStrategyConstraints
+                projectId={feature.project}
+                environmentId={environmentId}
+                strategy={strategy}
+                setStrategy={setStrategy}
             />
-            <ConditionallyRender
-                condition={Boolean(
-                    uiConfig.flags.SE || uiConfig.flags.C || uiConfig.flags.CO
-                )}
-                show={<hr className={styles.hr} />}
-            />
+            <hr className={styles.hr} />
             <FeatureStrategyType
                 strategy={strategy}
                 strategyDefinition={strategyDefinition}

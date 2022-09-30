@@ -13,6 +13,7 @@ import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import { useProfile } from 'hooks/api/getters/useProfile/useProfile';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { IUser } from 'interfaces/user';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import TopicOutlinedIcon from '@mui/icons-material/TopicOutlined';
 import { useNavigate } from 'react-router-dom';
 import { PageContent } from 'component/common/PageContent/PageContent';
@@ -135,11 +136,24 @@ export const ProfileTab = ({ user }: IProfileTabProps) => {
                 <StyledAccess>
                     <div>
                         <Typography variant="body2">Your root role</Typography>
-                        <Badge color="success">{profile?.rootRole}</Badge>
+                        <Tooltip
+                            title={profile?.rootRole.description || ''}
+                            arrow
+                            placement="bottom-end"
+                            describeChild
+                        >
+                            <Badge
+                                color="success"
+                                icon={<InfoOutlinedIcon />}
+                                iconRight
+                            >
+                                {profile?.rootRole.name}
+                            </Badge>
+                        </Tooltip>
                     </div>
                     <div>
                         <Typography variant="body2">Projects</Typography>
-                        {profile?.projects.map(({ project }) => (
+                        {profile?.projects.map(project => (
                             <Tooltip
                                 key={project}
                                 title="View project"

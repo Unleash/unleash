@@ -1,8 +1,6 @@
-export interface IProfile {
-    rootRole: string;
-    projects: IProfileProject[];
-}
+import IRole from './role';
 
-interface IProfileProject {
-    project: string;
+export interface IProfile {
+    rootRole: IRole;
+    projects: string[];
 }

@@ -28,7 +28,7 @@ const useApplicationsApi = () => {
     };
 
     const deleteApplication = async (appName: string) => {
-        const path = `${URI}/${appName}`;
+        const path = `${URI}/${encodeURIComponent(appName)}`;
         const req = createRequest(path, { method: 'DELETE' });
 
         try {

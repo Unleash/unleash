@@ -728,7 +728,7 @@ class FeatureToggleService {
         };
 
         if (segments && segments.length > 0) {
-            result = { ...result, segments: segments.map((s) => s.id) };
+            result = { ...result, segments: segments.map((segment) => segment.id) };
         }
         return result;
     }

@@ -22,8 +22,10 @@ export const PersonalAPITokenDialog: FC<IPersonalAPITokenDialogProps> = ({
     <Dialogue
         open={open}
         secondaryButtonText="Close"
-        onClose={() => {
-            setOpen(false);
+        onClose={(_, muiCloseReason?: string) => {
+            if (!muiCloseReason) {
+                setOpen(false);
+            }
         }}
         title="Personal API token created"
     >

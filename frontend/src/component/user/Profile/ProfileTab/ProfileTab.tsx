@@ -15,21 +15,18 @@ import { useLocationSettings } from 'hooks/useLocationSettings';
 import { IUser } from 'interfaces/user';
 import TopicOutlinedIcon from '@mui/icons-material/TopicOutlined';
 import { useNavigate } from 'react-router-dom';
+import { PageContent } from 'component/common/PageContent/PageContent';
 
-const StyledContent = styled('div')(({ theme }) => ({
+const StyledHeader = styled('div')(({ theme }) => ({
     display: 'flex',
-    flexDirection: 'column',
-    padding: theme.spacing(6),
-    backgroundColor: theme.palette.background.paper,
-    borderRadius: theme.shape.borderRadiusLarge,
-}));
-
-const StyledHeader = styled(StyledContent)(({ theme }) => ({
     flexDirection: 'row',
     alignItems: 'center',
+    padding: theme.spacing(6),
+    borderRadius: theme.shape.borderRadiusLarge,
     backgroundColor: theme.palette.primary.main,
     color: theme.palette.text.tertiaryContrast,
     marginBottom: theme.spacing(3),
+    boxShadow: theme.boxShadows.primaryHeader,
 }));
 
 const StyledInfo = styled('div')(() => ({
@@ -133,7 +130,7 @@ export const ProfileTab = ({ user }: IProfileTabProps) => {
                     <Typography variant="body1">{user.email}</Typography>
                 </StyledInfo>
             </StyledHeader>
-            <StyledContent>
+            <PageContent>
                 <StyledSectionLabel>Access</StyledSectionLabel>
                 <StyledAccess>
                     <div>
@@ -193,7 +190,7 @@ export const ProfileTab = ({ user }: IProfileTabProps) => {
                         })}
                     </Select>
                 </StyledFormControl>
-            </StyledContent>
+            </PageContent>
         </>
     );
 };

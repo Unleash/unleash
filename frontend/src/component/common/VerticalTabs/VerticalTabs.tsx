@@ -19,7 +19,11 @@ const StyledTabs = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(1),
+    width: theme.spacing(30),
     flexShrink: 0,
+    [theme.breakpoints.down('md')]: {
+        width: '100%',
+    },
 }));
 
 export interface ITab {

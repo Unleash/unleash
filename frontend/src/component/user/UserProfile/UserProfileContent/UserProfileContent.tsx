@@ -27,7 +27,7 @@ const StyledProfileInfo = styled('div')(({ theme }) => ({
     alignSelf: 'flex-start',
     display: 'flex',
     alignItems: 'center',
-    marginBottom: theme.spacing(3),
+    marginBottom: theme.spacing(2),
 }));
 
 const StyledUserAvatar = styled(UserAvatar)(({ theme }) => ({

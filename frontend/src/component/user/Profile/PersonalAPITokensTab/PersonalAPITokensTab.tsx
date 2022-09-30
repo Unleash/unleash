@@ -78,6 +78,7 @@ interface IPersonalAPITokensTabProps {
 export const PersonalAPITokensTab = ({ user }: IPersonalAPITokensTabProps) => {
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
+    const isExtraSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const { tokens = [], loading } = usePersonalAPITokens();
 
     const [searchParams, setSearchParams] = useSearchParams();
@@ -112,7 +113,7 @@ export const PersonalAPITokensTab = ({ user }: IPersonalAPITokensTabProps) => {
             {
                 Header: 'Expires',
                 accessor: 'expiresAt',
-                Cell: TimeAgoCell,
+                Cell: DateCell,
                 sortType: 'date',
                 maxWidth: 150,
             },
@@ -169,6 +170,7 @@ export const PersonalAPITokensTab = ({ user }: IPersonalAPITokensTabProps) => {
         rows,
         prepareRow,
         state: { sortBy },
+        setHiddenColumns,
     } = useTable(
         {
             columns,
@@ -182,6 +184,17 @@ export const PersonalAPITokensTab = ({ user }: IPersonalAPITokensTabProps) => {
         useSortBy,
         useFlexLayout
     );
+
+    useEffect(() => {
+        const hiddenColumns = [];
+        if (isSmallScreen) {
+            hiddenColumns.push('createdAt');
+        }
+        if (isExtraSmallScreen) {
+            hiddenColumns.push('expiresAt');
+        }
+        setHiddenColumns(hiddenColumns);
+    }, [setHiddenColumns, isSmallScreen, isExtraSmallScreen]);
 
     useEffect(() => {
         const tableState: PageQueryType = {};

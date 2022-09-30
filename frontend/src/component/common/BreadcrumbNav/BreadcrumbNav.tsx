@@ -26,7 +26,8 @@ const BreadcrumbNav = () => {
                 item !== 'features' &&
                 item !== 'features2' &&
                 item !== 'create-toggle' &&
-                item !== 'settings'
+                item !== 'settings' &&
+                item !== 'profile'
         );
 
     return (

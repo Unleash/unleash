@@ -14,7 +14,7 @@ const StyledTab = styled('button')<{ selected: boolean }>(
         padding: theme.spacing(2, 4),
         color: theme.palette.text.primary,
         fontSize: theme.fontSizes.bodySize,
-        fontWeight: theme.fontWeight.medium,
+        fontWeight: selected ? theme.fontWeight.bold : theme.fontWeight.medium,
         textAlign: 'left',
         transition: 'background-color 0.2s ease',
         '&:hover': {

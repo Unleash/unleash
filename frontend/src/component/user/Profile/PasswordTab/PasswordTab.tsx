@@ -1,4 +1,5 @@
 import { Button, styled, Typography } from '@mui/material';
+import { PageContent } from 'component/common/PageContent/PageContent';
 import PasswordField from 'component/common/PasswordField/PasswordField';
 import PasswordChecker, {
     PASSWORD_FORMAT_MESSAGE,
@@ -78,8 +79,7 @@ export const PasswordTab = ({ user }: IPasswordTabProps) => {
     };
 
     return (
-        <StyledContent ref={ref}>
-            <StyledSectionLabel>Change password</StyledSectionLabel>
+        <PageContent isLoading={loading} header="Change password">
             <StyledForm>
                 <PasswordChecker
                     password={password}
@@ -123,6 +123,6 @@ export const PasswordTab = ({ user }: IPasswordTabProps) => {
                     Save
                 </Button>
             </StyledForm>
-        </StyledContent>
+        </PageContent>
     );
 };

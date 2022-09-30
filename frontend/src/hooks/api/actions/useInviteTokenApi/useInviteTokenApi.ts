@@ -1,6 +1,4 @@
 import { useCallback } from 'react';
-import { useSWRConfig } from 'swr';
-import { url as revalidateUrl } from 'hooks/api/getters/useInviteTokens/useInviteTokens';
 import useAPI from '../useApi/useApi';
 import type {
     ICreateInvitedUser,
@@ -14,7 +12,6 @@ export const useInviteTokenApi = () => {
     const { makeRequest, createRequest, errors, loading } = useAPI({
         propagateErrors: true,
     });
-    const { mutate } = useSWRConfig();
 
     const createToken = useCallback(
         async (request: IPublicSignupTokenCreate) => {
@@ -23,9 +20,7 @@ export const useInviteTokenApi = () => {
                 body: JSON.stringify(request),
             });
 
-            const response = await makeRequest(req.caller, req.id);
-            mutate(revalidateUrl);
-            return response;
+            return await makeRequest(req.caller, req.id);
         },
         [createRequest, makeRequest]
     );
@@ -42,9 +37,7 @@ export const useInviteTokenApi = () => {
                 }),
             });
 
-            const response = await makeRequest(req.caller, req.id);
-            mutate(revalidateUrl);
-            return response;
+            return await makeRequest(req.caller, req.id);
         },
         [createRequest, makeRequest]
     );
@@ -56,9 +49,7 @@ export const useInviteTokenApi = () => {
                 body: JSON.stringify(value),
             });
 
-            const response = await makeRequest(req.caller, req.id);
-            mutate(revalidateUrl);
-            return response;
+            return await makeRequest(req.caller, req.id);
         },
         [createRequest, makeRequest]
     );

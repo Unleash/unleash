@@ -1,10 +1,12 @@
 import { FormEventHandler, useState, VFC } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSWRConfig } from 'swr';
+import { Box, Button, Typography } from '@mui/material';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
-import { Box, Button, styled, Typography } from '@mui/material';
-import { add, parseISO } from 'date-fns';
+import { url as inviteTokensUrlKey } from 'hooks/api/getters/useInviteTokens/useInviteTokens';
+import { add } from 'date-fns';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { GO_BACK } from 'constants/navigate';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
@@ -61,6 +63,7 @@ export const InviteLink: VFC<ICreateInviteLinkProps> = () => {
     const navigate = useNavigate();
     const { data, loading } = useInviteTokens();
     const [inviteLink, setInviteLink] = useState('');
+    const { mutate } = useSWRConfig();
     const [expiry, setExpiry] = useState(expiryOptions[0].key);
     const [showDisableDialog, setDisableDialogue] = useState(false);
     const defaultToken = data?.tokens?.find(token => token.name === 'default');
@@ -71,7 +74,7 @@ export const InviteLink: VFC<ICreateInviteLinkProps> = () => {
     const { setToastApiError } = useToast();
     const { createToken, updateToken } = useInviteTokenApi();
 
-    const handleSubmit: FormEventHandler<HTMLFormElement> = async e => {
+    const onSubmit: FormEventHandler<HTMLFormElement> = async e => {
         e.preventDefault();
         setIsSending(true);
 
@@ -93,6 +96,7 @@ export const InviteLink: VFC<ICreateInviteLinkProps> = () => {
             setToastApiError(formatUnknownError(error));
         } finally {
             setIsSending(false);
+            mutate(inviteTokensUrlKey);
         }
     };
 
@@ -130,7 +134,7 @@ export const InviteLink: VFC<ICreateInviteLinkProps> = () => {
         >
             <Box
                 component="form"
-                onSubmit={handleSubmit}
+                onSubmit={onSubmit}
                 sx={{
                     display: 'flex',
                     flexDirection: 'column',

@@ -45,6 +45,10 @@ export const NewUser = () => {
             const res = await addUser(secret, { name, email, password });
             if (res.status === CREATED) {
                 navigate('/login?invited=true');
+            } else {
+                setToastApiError(
+                    "Couldn't create user. Check if your invite link is valid."
+                );
             }
         } catch (error) {
             setToastApiError(formatUnknownError(error));
@@ -56,6 +60,8 @@ export const NewUser = () => {
             const res = await resetPassword({ token, password });
             if (res.status === OK) {
                 navigate('/login?reset=true');
+            } else {
+                setApiError(true);
             }
         } catch (e) {
             setApiError(true);

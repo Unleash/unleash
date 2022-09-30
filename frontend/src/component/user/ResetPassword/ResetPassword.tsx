@@ -21,11 +21,8 @@ const ResetPassword = () => {
     const [hasApiError, setHasApiError] = useState(false);
 
     const onSubmit = async (password: string) => {
-        setLoading(true);
-
         try {
             const res = await resetPassword({ token, password });
-            setLoading(false);
             if (res.status === OK) {
                 navigate('/login?reset=true');
                 setHasApiError(false);
@@ -34,7 +31,6 @@ const ResetPassword = () => {
             }
         } catch (e) {
             setHasApiError(true);
-            setLoading(false);
         }
     };
 

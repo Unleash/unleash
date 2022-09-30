@@ -720,13 +720,17 @@ class FeatureToggleService {
         );
 
         const segments = await this.segmentService.getByStrategy(strategyId);
-        return {
+        let result: Saved<IStrategyConfig> = {
             id: strategy.id,
             name: strategy.strategyName,
             constraints: strategy.constraints || [],
             parameters: strategy.parameters,
-            segments: segments.map((s) => s.id),
         };
+
+        if (segments && segments.length > 0) {
+            result = { ...result, segments: segments.map((s) => s.id) };
+        }
+        return result;
     }
 
     async getEnvironmentInfo(

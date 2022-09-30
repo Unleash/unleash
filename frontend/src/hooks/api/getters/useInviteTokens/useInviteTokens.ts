@@ -13,11 +13,7 @@ const fetcher = () => {
 };
 
 export const useInviteTokens = (options: SWRConfiguration = {}) => {
-    const { data, error } = useSWR<IPublicSignupTokens>(
-        url,
-        fetcher,
-        options
-    );
+    const { data, error } = useSWR<IPublicSignupTokens>(url, fetcher, options);
     const [loading, setLoading] = useState(!error && !data);
 
     useEffect(() => {

@@ -232,10 +232,14 @@ const formatServerOptions = (
     if (!serverOptions) return;
 
     /* eslint-disable-next-line */
-    return {
-        ...serverOptions,
-        baseUriPath: formatBaseUri(serverOptions.baseUriPath),
-    };
+    if(serverOptions.baseUriPath) {
+        return {
+            ...serverOptions,
+            baseUriPath: formatBaseUri(serverOptions.baseUriPath),
+        };
+    } else {
+        return serverOptions;
+    }
 };
 
 const loadTokensFromString = (tokenString: String, tokenType: ApiTokenType) => {
@@ -364,10 +368,13 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
     const getLogger = options.getLogger || getDefaultLogProvider(logLevel);
     validateLogProvider(getLogger);
 
+    console.log(process.env.BASE_URI_PATH);
+    console.log(defaultServerOption);
     const server: IServerOption = mergeAll([
         defaultServerOption,
         formatServerOptions(options.server),
     ]);
+    console.log(server);
 
     const versionCheck: IVersionOption = mergeAll([
         defaultVersionOption,

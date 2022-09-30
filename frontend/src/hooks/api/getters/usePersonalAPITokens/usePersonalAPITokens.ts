@@ -12,7 +12,7 @@ export interface IUsePersonalAPITokensOutput {
 
 export const usePersonalAPITokens = (): IUsePersonalAPITokensOutput => {
     const { data, error, mutate } = useSWR(
-        formatApiPath(`api/admin/user/tokens`),
+        formatApiPath('api/admin/user/tokens'),
         fetcher
     );
 

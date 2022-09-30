@@ -13,8 +13,7 @@ export const usePersonalAPITokensApi = () => {
     const createPersonalAPIToken = async (
         payload: ICreatePersonalApiTokenPayload
     ) => {
-        const path = `api/admin/user/tokens`;
-        const req = createRequest(path, {
+        const req = createRequest('api/admin/user/tokens', {
             method: 'POST',
             body: JSON.stringify(payload),
         });
@@ -27,8 +26,7 @@ export const usePersonalAPITokensApi = () => {
     };
 
     const deletePersonalAPIToken = async (secret: string) => {
-        const path = `api/admin/user/tokens/${secret}`;
-        const req = createRequest(path, {
+        const req = createRequest(`api/admin/user/tokens/${secret}`, {
             method: 'DELETE',
         });
         try {

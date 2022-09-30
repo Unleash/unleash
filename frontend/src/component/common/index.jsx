@@ -38,7 +38,9 @@ export const AppsLinkList = ({ apps }) => (
                     <ListItemText
                         primary={
                             <Link
-                                to={`/applications/${encodeURIComponent(appName)}`}
+                                to={`/applications/${encodeURIComponent(
+                                    appName
+                                )}`}
                                 className={[
                                     styles.listLink,
                                     styles.truncate,

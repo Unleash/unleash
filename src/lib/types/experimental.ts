@@ -42,6 +42,7 @@ export interface IExperimentalOptions {
         embedProxyFrontend?: boolean;
         batchMetrics?: boolean;
         anonymiseEventLog?: boolean;
+        personalAccessTokens?: boolean;
     };
     externalResolver: IExternalFlagResolver;
 }

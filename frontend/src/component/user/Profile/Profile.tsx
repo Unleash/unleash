@@ -1,13 +1,14 @@
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ITab, VerticalTabs } from 'component/common/VerticalTabs/VerticalTabs';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { PasswordTab } from './PasswordTab/PasswordTab';
 import { PersonalAPITokensTab } from './PersonalAPITokensTab/PersonalAPITokensTab';
 import { ProfileTab } from './ProfileTab/ProfileTab';
 
-const tabs = [
+let tabs = [
     { id: 'profile', label: 'Profile' },
     { id: 'password', label: 'Change password', path: 'change-password' },
     { id: 'pat', label: 'Personal API tokens', path: 'personal-api-tokens' },
@@ -17,6 +18,12 @@ export const Profile = () => {
     const { user } = useAuthUser();
     const location = useLocation();
     const navigate = useNavigate();
+
+    const { uiConfig } = useUiConfig();
+
+    if (!uiConfig.flags.personalAccessTokens) {
+        tabs = tabs.filter(tab => tab.id !== 'pat');
+    }
 
     const onChange = (tab: ITab) => {
         navigate(tab.path ? `/profile/${tab.path}` : '/profile', {

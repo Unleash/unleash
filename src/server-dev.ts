@@ -38,6 +38,7 @@ process.nextTick(async () => {
                         batchMetrics: true,
                         anonymiseEventLog: false,
                         responseTimeWithAppName: true,
+                        personalAccessTokens: true,
                     },
                 },
                 authentication: {

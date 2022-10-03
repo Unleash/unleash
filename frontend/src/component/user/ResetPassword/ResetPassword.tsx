@@ -11,14 +11,17 @@ import StandaloneLayout from '../common/StandaloneLayout/StandaloneLayout';
 import ResetPasswordForm from '../common/ResetPasswordForm/ResetPasswordForm';
 import ResetPasswordError from '../common/ResetPasswordError/ResetPasswordError';
 import { useAuthResetPasswordApi } from 'hooks/api/actions/useAuthResetPasswordApi/useAuthResetPasswordApi';
+import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';
 
 const ResetPassword = () => {
     const { classes: styles } = useStyles();
-    const { token, loading, setLoading, isValidToken } = useResetPassword();
+    const { token, loading, isValidToken } = useResetPassword();
     const { resetPassword, loading: actionLoading } = useAuthResetPasswordApi();
+    const { authDetails } = useAuthDetails();
     const ref = useLoading(loading || actionLoading);
     const navigate = useNavigate();
     const [hasApiError, setHasApiError] = useState(false);
+    const passwordDisabled = authDetails?.defaultHidden === true;
 
     const onSubmit = async (password: string) => {
         try {
@@ -39,7 +42,7 @@ const ResetPassword = () => {
             <StandaloneLayout>
                 <div className={styles.resetPassword}>
                     <ConditionallyRender
-                        condition={!isValidToken}
+                        condition={!isValidToken || passwordDisabled}
                         show={<InvalidToken />}
                         elseShow={
                             <>

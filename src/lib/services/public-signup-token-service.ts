@@ -6,14 +6,15 @@ import { PublicSignupTokenSchema } from '../openapi/spec/public-signup-token-sch
 import { IRoleStore } from '../types/stores/role-store';
 import { IPublicSignupTokenCreate } from '../types/models/public-signup-token';
 import { PublicSignupTokenCreateSchema } from '../openapi/spec/public-signup-token-create-schema';
+import { CreateInvitedUserSchema } from 'lib/openapi/spec/create-invited-user-schema';
 import { RoleName } from '../types/model';
 import { IEventStore } from '../types/stores/event-store';
 import {
     PublicSignupTokenCreatedEvent,
-    PublicSignupTokenManuallyExpiredEvent,
+    PublicSignupTokenUpdatedEvent,
     PublicSignupTokenUserAddedEvent,
 } from '../types/events';
-import UserService, { ICreateUser } from './user-service';
+import UserService from './user-service';
 import { IUser } from '../types/user';
 import { URL } from 'url';
 
@@ -56,7 +57,7 @@ export class PublicSignupTokenService {
 
     private getUrl(secret: string): string {
         return new URL(
-            `${this.unleashBase}/invite-link/${secret}/signup`,
+            `${this.unleashBase}/new-user?invite=${secret}`,
         ).toString();
     }
 
@@ -76,20 +77,30 @@ export class PublicSignupTokenService {
         return this.store.isValid(secret);
     }
 
-    public async setExpiry(
+    public async update(
         secret: string,
-        expireAt: Date,
+        { expiresAt, enabled }: { expiresAt?: Date; enabled?: boolean },
+        createdBy: string,
     ): Promise<PublicSignupTokenSchema> {
-        return this.store.setExpiry(secret, expireAt);
+        const result = await this.store.update(secret, { expiresAt, enabled });
+        await this.eventStore.store(
+            new PublicSignupTokenUpdatedEvent({
+                createdBy,
+                data: { secret, enabled, expiresAt },
+            }),
+        );
+        return result;
     }
 
     public async addTokenUser(
         secret: string,
-        createUser: ICreateUser,
+        createUser: CreateInvitedUserSchema,
     ): Promise<IUser> {
         const token = await this.get(secret);
-        createUser.rootRole = token.role.id;
-        const user = await this.userService.createUser(createUser);
+        const user = await this.userService.createUser({
+            ...createUser,
+            rootRole: token.role.id,
+        });
         await this.store.addTokenUser(secret, user.id);
         await this.eventStore.store(
             new PublicSignupTokenUserAddedEvent({
@@ -98,22 +109,6 @@ export class PublicSignupTokenService {
             }),
         );
         return user;
-    }
-
-    public async delete(secret: string, expiredBy: string): Promise<void> {
-        await this.expireToken(secret);
-        await this.eventStore.store(
-            new PublicSignupTokenManuallyExpiredEvent({
-                createdBy: expiredBy,
-                data: { secret },
-            }),
-        );
-    }
-
-    private async expireToken(
-        secret: string,
-    ): Promise<PublicSignupTokenSchema> {
-        return this.store.setExpiry(secret, new Date());
     }
 
     public async createNewPublicSignupToken(

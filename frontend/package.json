@@ -11,7 +11,7 @@
   },
   "scripts": {
     "build": "vite build",
-    "lint": "eslint src --max-warnings 0",
+    "lint": "yarn fmt:check",
     "start": "vite",
     "start:heroku": "UNLEASH_API=https://unleash.herokuapp.com yarn run start",
     "start:enterprise": "UNLEASH_API=https://unleash4.herokuapp.com yarn run start",
@@ -20,6 +20,7 @@
     "test:watch": "vitest watch",
     "fmt": "prettier src --write --loglevel warn",
     "fmt:check": "prettier src --check",
+    "ts:check": "tsc",
     "e2e": "yarn run cypress open --config baseUrl='http://localhost:3000' --env AUTH_USER=admin,AUTH_PASSWORD=unleash4all",
     "e2e:heroku": "yarn run cypress open --config baseUrl='http://localhost:3000' --env AUTH_USER=example@example.com",
     "prepare": "yarn run build"

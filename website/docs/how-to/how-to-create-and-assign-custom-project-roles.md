@@ -1,10 +1,13 @@
 ---
 title: How to create and assign custom project roles
 ---
+
 import VideoContent from '@site/src/components/VideoContent.jsx'
 
 :::info availability
+
 Custom project roles were introduced in **Unleash 4.6** and are only available in Unleash Enterprise.
+
 :::
 
 

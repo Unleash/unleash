@@ -23,7 +23,11 @@ export default class FakeRoleStore implements IRoleStore {
     }
 
     async create(role: ICustomRoleInsert): Promise<ICustomRole> {
-        const roleCreated = { ...role, id: 1, type: 'some-type' };
+        const roleCreated = {
+            ...role,
+            type: 'some-type',
+            id: this.roles.length,
+        };
         this.roles.push(roleCreated);
         return Promise.resolve(roleCreated);
     }

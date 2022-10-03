@@ -16,6 +16,11 @@ import { serializeDates } from '../../../types/serialize-dates';
 import { IUserPermission } from '../../../types/stores/access-store';
 import { PasswordSchema } from '../../../openapi/spec/password-schema';
 import { emptyResponse } from '../../../openapi/util/standard-responses';
+import {
+    profileSchema,
+    ProfileSchema,
+} from '../../../openapi/spec/profile-schema';
+import ProjectService from '../../../services/project-service';
 
 class UserController extends Controller {
     private accessService: AccessService;
@@ -28,6 +33,8 @@ class UserController extends Controller {
 
     private openApiService: OpenApiService;
 
+    private projectService: ProjectService;
+
     constructor(
         config: IUnleashConfig,
         {
@@ -36,6 +43,7 @@ class UserController extends Controller {
             userFeedbackService,
             userSplashService,
             openApiService,
+            projectService,
         }: Pick<
             IUnleashServices,
             | 'accessService'
@@ -43,6 +51,7 @@ class UserController extends Controller {
             | 'userFeedbackService'
             | 'userSplashService'
             | 'openApiService'
+            | 'projectService'
         >,
     ) {
         super(config);
@@ -51,6 +60,7 @@ class UserController extends Controller {
         this.userFeedbackService = userFeedbackService;
         this.userSplashService = userSplashService;
         this.openApiService = openApiService;
+        this.projectService = projectService;
 
         this.route({
             method: 'get',
@@ -62,6 +72,20 @@ class UserController extends Controller {
                     tags: ['Users'],
                     operationId: 'getMe',
                     responses: { 200: createResponseSchema('meSchema') },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'get',
+            path: '/profile',
+            handler: this.getProfile,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['Users'],
+                    operationId: 'getProfile',
+                    responses: { 200: createResponseSchema('profileSchema') },
                 }),
             ],
         });
@@ -110,6 +134,30 @@ class UserController extends Controller {
             200,
             res,
             meSchema.$id,
+            responseData,
+        );
+    }
+
+    async getProfile(
+        req: IAuthRequest,
+        res: Response<ProfileSchema>,
+    ): Promise<void> {
+        const { user } = req;
+
+        const projects = await this.projectService.getProjectsByUser(user.id);
+
+        const roles = await this.accessService.getUserRootRoles(user.id);
+        const { project, ...rootRole } = roles[0];
+        const responseData: ProfileSchema = {
+            projects,
+            rootRole,
+            features: [],
+        };
+
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            profileSchema.$id,
             responseData,
         );
     }

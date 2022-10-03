@@ -4,10 +4,11 @@ import {
     IAccessInfo,
     IAccessStore,
     IRole,
+    IRoleWithProject,
     IUserPermission,
     IUserRole,
 } from '../../lib/types/stores/access-store';
-import { IAvailablePermissions, IPermission } from 'lib/types/model';
+import { IPermission } from 'lib/types/model';
 
 class AccessStoreMock implements IAccessStore {
     addAccessToProject(
@@ -123,7 +124,7 @@ class AccessStoreMock implements IAccessStore {
         throw new Error('Method not implemented.');
     }
 
-    getRolesForUserId(userId: number): Promise<IRole[]> {
+    getRolesForUserId(userId: number): Promise<IRoleWithProject[]> {
         return Promise.resolve([]);
     }
 

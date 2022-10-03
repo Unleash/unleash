@@ -5,7 +5,6 @@ import getApp from '../../app';
 import supertest from 'supertest';
 import permissions from '../../../test/fixtures/permissions';
 import { RoleName, RoleType } from '../../types/model';
-import { CreateUserSchema } from '../../openapi/spec/create-user-schema';
 
 describe('Public Signup API', () => {
     async function getSetup() {
@@ -50,6 +49,13 @@ describe('Public Signup API', () => {
     let stores;
     let request;
     let destroy;
+
+    const user = {
+        username: 'some-username',
+        email: 'someEmail@example.com',
+        name: 'some-name',
+        password: 'password',
+    };
 
     beforeEach(async () => {
         const setup = await getSetup();
@@ -132,6 +138,30 @@ describe('Public Signup API', () => {
     });
 
     test('should expire token', async () => {
+        expect.assertions(2);
+        const appName = '123!23';
+
+        stores.clientApplicationsStore.upsert({ appName });
+        stores.publicSignupTokenStore.create({
+            name: 'some-name',
+            expiresAt: expireAt(),
+        });
+
+        const expireNow = expireAt(0);
+
+        return request
+            .put('/api/admin/invite-link/tokens/some-secret')
+            .send({ expiresAt: expireNow.toISOString() })
+            .expect(200)
+            .expect(async (res) => {
+                const token = res.body;
+                expect(token.expiresAt).toBe(expireNow.toISOString());
+                const eventCount = await stores.eventStore.count();
+                expect(eventCount).toBe(1); // PUBLIC_SIGNUP_TOKEN_TOKEN_UPDATED
+            });
+    });
+
+    test('should disable the token', async () => {
         expect.assertions(1);
         const appName = '123!23';
 
@@ -142,47 +172,16 @@ describe('Public Signup API', () => {
         });
 
         return request
-            .delete('/api/admin/invite-link/tokens/some-secret')
+            .put('/api/admin/invite-link/tokens/some-secret')
+            .send({ enabled: false })
             .expect(200)
-            .expect(async () => {
-                const eventCount = await stores.eventStore.count();
-                expect(eventCount).toBe(1); // PUBLIC_SIGNUP_TOKEN_MANUALLY_EXPIRED
-            });
-    });
-
-    test('should create user and add to token', async () => {
-        expect.assertions(3);
-        const appName = '123!23';
-
-        stores.clientApplicationsStore.upsert({ appName });
-        stores.publicSignupTokenStore.create({
-            name: 'some-name',
-            expiresAt: expireAt(),
-        });
-
-        const user: CreateUserSchema = {
-            username: 'some-username',
-            email: 'someEmail@example.com',
-            name: 'some-name',
-            password: null,
-            rootRole: 1,
-            sendEmail: false,
-        };
-
-        return request
-            .post('/api/admin/invite-link/tokens/some-secret/signup')
-            .send(user)
-            .expect(201)
             .expect(async (res) => {
-                const count = await stores.userStore.count();
-                expect(count).toBe(1);
-                const eventCount = await stores.eventStore.count();
-                expect(eventCount).toBe(2); //USER_CREATED && PUBLIC_SIGNUP_TOKEN_USER_ADDED
-                expect(res.body.username).toBe(user.username);
+                const token = res.body;
+                expect(token.enabled).toBe(false);
             });
     });
 
-    test('should return 200 if token is valid', async () => {
+    test('should not allow a user to register disabled token', async () => {
         const appName = '123!23';
 
         stores.clientApplicationsStore.upsert({ appName });
@@ -190,19 +189,11 @@ describe('Public Signup API', () => {
             name: 'some-name',
             expiresAt: expireAt(),
         });
+        stores.publicSignupTokenStore.update('some-secret', { enabled: false });
 
         return request
-            .post('/api/admin/invite-link/tokens/some-secret/validate')
-            .expect(200);
-    });
-
-    test('should return 401 if token is invalid', async () => {
-        const appName = '123!23';
-
-        stores.clientApplicationsStore.upsert({ appName });
-
-        return request
-            .post('/api/admin/invite-link/tokens/some-invalid-secret/validate')
-            .expect(401);
+            .post('/invite/some-secret/signup')
+            .send(user)
+            .expect(400);
     });
 });

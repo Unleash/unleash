@@ -147,7 +147,6 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
-    "flag": "C",
     "menu": {},
     "parent": "/context",
     "path": "/context/create",
@@ -156,7 +155,6 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
-    "flag": "C",
     "menu": {},
     "parent": "/context",
     "path": "/context/edit/:name",
@@ -165,7 +163,6 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
-    "flag": "C",
     "menu": {
       "advanced": true,
       "mobile": true,
@@ -390,6 +387,14 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
+    "menu": {},
+    "parent": "/admin",
+    "path": "/admin/invite-link",
+    "title": "Invite link",
+    "type": "protected",
+  },
+  {
+    "component": [Function],
     "flag": "UG",
     "menu": {
       "adminSettings": true,
@@ -483,6 +488,13 @@ exports[`returns all baseRoutes 1`] = `
     "menu": {},
     "path": "/admin",
     "title": "Admin",
+    "type": "protected",
+  },
+  {
+    "component": [Function],
+    "menu": {},
+    "path": "/profile/*",
+    "title": "Profile",
     "type": "protected",
   },
 ]

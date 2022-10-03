@@ -14,6 +14,7 @@ type Color = 'info' | 'success' | 'warning' | 'error' | 'secondary' | 'neutral';
 interface IBadgeProps {
     color?: Color;
     icon?: ReactElement;
+    iconRight?: boolean;
     className?: string;
     sx?: SxProps<Theme>;
     children?: ReactNode;
@@ -23,6 +24,7 @@ interface IBadgeProps {
 
 interface IBadgeIconProps {
     color?: Color;
+    iconRight?: boolean;
 }
 
 const StyledBadge = styled('div')<IBadgeProps>(
@@ -41,11 +43,27 @@ const StyledBadge = styled('div')<IBadgeProps>(
 );
 
 const StyledBadgeIcon = styled('div')<IBadgeIconProps>(
-    ({ theme, color = 'neutral' }) => ({
+    ({ theme, color = 'neutral', iconRight = false }) => ({
         display: 'flex',
         color: theme.palette[color].main,
-        marginRight: theme.spacing(0.5),
+        margin: iconRight
+            ? theme.spacing(0, 0, 0, 0.5)
+            : theme.spacing(0, 0.5, 0, 0),
     })
+);
+
+const BadgeIcon = (color: Color, icon: ReactElement, iconRight = false) => (
+    <StyledBadgeIcon color={color} iconRight={iconRight}>
+        <ConditionallyRender
+            condition={Boolean(icon?.props.sx)}
+            show={icon}
+            elseShow={() =>
+                cloneElement(icon!, {
+                    sx: { fontSize: '16px' },
+                })
+            }
+        />
+    </StyledBadgeIcon>
 );
 
 export const Badge: FC<IBadgeProps> = forwardRef(
@@ -53,6 +71,7 @@ export const Badge: FC<IBadgeProps> = forwardRef(
         {
             color = 'neutral',
             icon,
+            iconRight,
             className,
             sx,
             children,
@@ -69,22 +88,14 @@ export const Badge: FC<IBadgeProps> = forwardRef(
             ref={ref}
         >
             <ConditionallyRender
-                condition={Boolean(icon)}
-                show={
-                    <StyledBadgeIcon color={color}>
-                        <ConditionallyRender
-                            condition={Boolean(icon?.props.sx)}
-                            show={icon}
-                            elseShow={() =>
-                                cloneElement(icon!, {
-                                    sx: { fontSize: '16px' },
-                                })
-                            }
-                        />
-                    </StyledBadgeIcon>
-                }
+                condition={Boolean(icon) && !Boolean(iconRight)}
+                show={BadgeIcon(color, icon!)}
             />
             {children}
+            <ConditionallyRender
+                condition={Boolean(icon) && Boolean(iconRight)}
+                show={BadgeIcon(color, icon!, true)}
+            />
         </StyledBadge>
     )
 );

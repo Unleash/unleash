@@ -23,6 +23,7 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { DeleteProjectDialogue } from './DeleteProject/DeleteProjectDialogue';
+import ProjectLog from './ProjectLog/ProjectLog';
 
 const StyledDiv = styled('div')(() => ({
     display: 'flex',
@@ -83,6 +84,11 @@ const Project = () => {
             title: 'Archive',
             path: `${basePath}/archive`,
             name: 'archive',
+        },
+        {
+            title: 'Event log',
+            path: `${basePath}/logs`,
+            name: 'logs',
         },
     ];
 
@@ -211,6 +217,7 @@ const Project = () => {
                 <Route path="access/*" element={<ProjectAccess />} />
                 <Route path="environments" element={<ProjectEnvironment />} />
                 <Route path="archive" element={<ProjectFeaturesArchive />} />
+                <Route path="logs" element={<ProjectLog />} />
                 <Route path="*" element={<ProjectOverview />} />
             </Routes>
         </div>

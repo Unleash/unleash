@@ -152,7 +152,11 @@ const UsersList = () => {
                 Header: 'Last login',
                 accessor: (row: any) => row.seenAt || '',
                 Cell: ({ row: { original: user } }: any) => (
-                    <TimeAgoCell value={user.seenAt} emptyText="Never" />
+                    <TimeAgoCell
+                        value={user.seenAt}
+                        emptyText="Never"
+                        title={date => `Last login: ${date}`}
+                    />
                 ),
                 disableGlobalFilter: true,
                 sortType: 'date',

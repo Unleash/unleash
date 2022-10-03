@@ -58,6 +58,7 @@ import { EditGroup } from 'component/admin/groups/EditGroup/EditGroup';
 import { LazyPlayground } from 'component/playground/Playground/LazyPlayground';
 import { CorsAdmin } from 'component/admin/cors';
 import { InviteLink } from 'component/admin/users/InviteLink/InviteLink';
+import { Profile } from 'component/user/Profile/Profile';
 
 export const routes: IRoute[] = [
     // Splash
@@ -526,6 +527,13 @@ export const routes: IRoute[] = [
         title: 'Admin',
         component: Admin,
         hidden: false,
+        type: 'protected',
+        menu: {},
+    },
+    {
+        path: '/profile/*',
+        title: 'Profile',
+        component: Profile,
         type: 'protected',
         menu: {},
     },

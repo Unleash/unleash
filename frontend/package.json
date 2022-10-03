@@ -11,7 +11,7 @@
   },
   "scripts": {
     "build": "vite build",
-    "lint": "eslint src --max-warnings 0",
+    "lint": "yarn fmt:check",
     "start": "vite",
     "start:heroku": "UNLEASH_API=https://unleash.herokuapp.com yarn run start",
     "start:enterprise": "UNLEASH_API=https://unleash4.herokuapp.com yarn run start",

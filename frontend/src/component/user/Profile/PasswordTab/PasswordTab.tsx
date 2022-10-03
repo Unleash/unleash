@@ -1,30 +1,14 @@
-import { Button, styled, Typography } from '@mui/material';
+import { Button, styled } from '@mui/material';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import PasswordField from 'component/common/PasswordField/PasswordField';
 import PasswordChecker, {
     PASSWORD_FORMAT_MESSAGE,
 } from 'component/user/common/ResetPasswordForm/PasswordChecker/PasswordChecker';
 import PasswordMatcher from 'component/user/common/ResetPasswordForm/PasswordMatcher/PasswordMatcher';
-import useLoading from 'hooks/useLoading';
+import { usePasswordApi } from 'hooks/api/actions/usePasswordApi/usePasswordApi';
 import useToast from 'hooks/useToast';
-import { IUser } from 'interfaces/user';
 import { SyntheticEvent, useState } from 'react';
-import { headers } from 'utils/apiUtils';
-import { formatApiPath } from 'utils/formatPath';
 import { formatUnknownError } from 'utils/formatUnknownError';
-
-const StyledContent = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    padding: theme.spacing(6),
-    backgroundColor: theme.palette.background.paper,
-    borderRadius: theme.shape.borderRadiusLarge,
-}));
-
-const StyledSectionLabel = styled(Typography)(({ theme }) => ({
-    fontSize: theme.fontSizes.mainHeader,
-    marginBottom: theme.spacing(4),
-}));
 
 const StyledForm = styled('form')(({ theme }) => ({
     display: 'flex',
@@ -33,18 +17,14 @@ const StyledForm = styled('form')(({ theme }) => ({
     maxWidth: theme.spacing(44),
 }));
 
-interface IPasswordTabProps {
-    user: IUser;
-}
-
-export const PasswordTab = ({ user }: IPasswordTabProps) => {
+export const PasswordTab = () => {
     const [loading, setLoading] = useState(false);
     const { setToastData, setToastApiError } = useToast();
     const [validPassword, setValidPassword] = useState(false);
     const [error, setError] = useState<string>();
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const ref = useLoading(loading);
+    const { changePassword } = usePasswordApi();
 
     const submit = async (e: SyntheticEvent) => {
         e.preventDefault();
@@ -57,12 +37,9 @@ export const PasswordTab = ({ user }: IPasswordTabProps) => {
             setLoading(true);
             setError(undefined);
             try {
-                const path = formatApiPath('api/admin/user/change-password');
-                await fetch(path, {
-                    headers,
-                    body: JSON.stringify({ password, confirmPassword }),
-                    method: 'POST',
-                    credentials: 'include',
+                await changePassword({
+                    password,
+                    confirmPassword,
                 });
                 setToastData({
                     title: 'Password changed successfully',

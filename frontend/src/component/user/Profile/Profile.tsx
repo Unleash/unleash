@@ -53,7 +53,7 @@ export const Profile = () => {
             />
             <ConditionallyRender
                 condition={tab === 'password'}
-                show={<PasswordTab user={user!} />}
+                show={<PasswordTab />}
             />
             <ConditionallyRender
                 condition={tab === 'pat'}

@@ -2444,10 +2444,12 @@ exports[`should serve the OpenAPI spec 1`] = `
         "additionalProperties": false,
         "properties": {
           "expiresAt": {
+            "description": "The token's expiration date",
             "format": "date-time",
             "type": "string",
           },
           "name": {
+            "description": "The token's name alias",
             "type": "string",
           },
         },
@@ -2480,14 +2482,17 @@ exports[`should serve the OpenAPI spec 1`] = `
           },
           "role": {
             "$ref": "#/components/schemas/roleSchema",
+            "description": "The role that every user using the token will have.",
           },
           "secret": {
             "type": "string",
           },
           "url": {
+            "description": "The link to be shared",
             "type": "string",
           },
           "users": {
+            "description": "Array of users that have signed up using the token",
             "items": {
               "$ref": "#/components/schemas/userSchema",
             },
@@ -2514,6 +2519,7 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "boolean",
           },
           "expiresAt": {
+            "description": "The token's expiration date",
             "format": "date-time",
             "type": "string",
           },
@@ -4563,6 +4569,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/invite-link/tokens": {
       "get": {
+        "description": "Returns a list of public signup tokens",
         "operationId": "getAllPublicSignupTokens",
         "responses": {
           "200": {
@@ -4581,6 +4588,7 @@ If the provided project does not exist, the list of events will be empty.",
         ],
       },
       "post": {
+        "description": "Creates a public signup token",
         "operationId": "createPublicSignupToken",
         "requestBody": {
           "content": {
@@ -4621,6 +4629,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/invite-link/tokens/{token}": {
       "get": {
+        "description": "Gets the token with secret=\`token\`.",
         "operationId": "getPublicSignupToken",
         "parameters": [
           {
@@ -4649,6 +4658,7 @@ If the provided project does not exist, the list of events will be empty.",
         ],
       },
       "put": {
+        "description": "Updates a public signup token.",
         "operationId": "updatePublicSignupToken",
         "parameters": [
           {
@@ -7429,6 +7439,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/invite/{token}/signup": {
       "post": {
+        "description": "Creates a user with Viewer root role and links them to the signup token",
         "operationId": "addPublicSignupTokenUser",
         "parameters": [
           {
@@ -7476,6 +7487,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/invite/{token}/validate": {
       "get": {
+        "description": "Validates a public signup token exists, has not expired and is enabled",
         "operationId": "validatePublicSignupToken",
         "parameters": [
           {

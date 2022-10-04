@@ -271,7 +271,7 @@ class ProjectStore implements IProjectStore {
                     })
                     .union((queryBuilder) => {
                         queryBuilder
-                            .select('user_id', 'projects.name as project')
+                            .select('user_id', 'projects.id as project')
                             .from('role_user')
                             .leftJoin('roles', 'role_user.role_id', 'roles.id')
                             .crossJoin('projects')

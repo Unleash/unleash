@@ -53,6 +53,7 @@ export class PublicInviteController extends Controller {
                 openApiService.validPath({
                     tags: ['Public signup tokens'],
                     operationId: 'validatePublicSignupToken',
+                    description: `Validates a public signup token exists, has not expired and is enabled`,
                     responses: {
                         200: emptyResponse,
                         ...getStandardResponses(400),
@@ -70,6 +71,8 @@ export class PublicInviteController extends Controller {
                 openApiService.validPath({
                     tags: ['Public signup tokens'],
                     operationId: 'addPublicSignupTokenUser',
+                    description:
+                        'Creates a user with Viewer root role and links them to the signup token',
                     requestBody: createRequestSchema('createInvitedUserSchema'),
                     responses: {
                         200: createResponseSchema('userSchema'),

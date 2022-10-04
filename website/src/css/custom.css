@@ -63,6 +63,12 @@ html[data-theme='dark'] {
     --docsearch-primary-color: var(--ifm-color-primary-darkest);
 }
 
+div[class^='announcementBar_'],
+div[class^='announcementBar_'] svg {
+    background-color: var(--ifm-color-primary);
+    color: var(--ifm-color-primary-contrast-background);
+}
+
 .visually-hidden {
     border: 0;
     clip: rect(0 0 0 0);

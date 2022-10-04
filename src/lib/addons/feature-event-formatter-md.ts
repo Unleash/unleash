@@ -98,8 +98,12 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
     featureLink(event: IEvent): string {
         const { type, project = '', featureName } = event;
         if (type === FEATURE_ARCHIVED) {
+            if (project) {
+                return `${this.unleashUrl}/projects/${project}/archive`;
+            }
             return `${this.unleashUrl}/archive`;
         }
+
         return `${this.unleashUrl}/projects/${project}/features/${featureName}`;
     }
 

@@ -21,6 +21,7 @@ export const publicSignupTokenSchema = {
             type: 'string',
         },
         url: {
+            description: 'The link to be shared',
             type: 'string',
         },
         name: {
@@ -43,12 +44,14 @@ export const publicSignupTokenSchema = {
         },
         users: {
             type: 'array',
+            description: 'Array of users that have signed up using the token',
             items: {
                 $ref: '#/components/schemas/userSchema',
             },
             nullable: true,
         },
         role: {
+            description: 'The role that every user using the token will have.',
             $ref: '#/components/schemas/roleSchema',
         },
     },

@@ -7,10 +7,12 @@ export const publicSignupTokenCreateSchema = {
     required: ['name', 'expiresAt'],
     properties: {
         name: {
+            description: `The token's name alias`,
             type: 'string',
         },
         expiresAt: {
             type: 'string',
+            description: `The token's expiration date`,
             format: 'date-time',
         },
     },

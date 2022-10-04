@@ -25,6 +25,8 @@ declare module '@mui/material/styles' {
             main: string;
             card: string;
             elevated: string;
+            popup: string;
+            primaryHeader: string;
         };
     }
 

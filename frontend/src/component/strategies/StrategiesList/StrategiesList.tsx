@@ -175,8 +175,9 @@ export const StrategiesList = () => {
                 disableGlobalFilter: true,
             },
             {
+                id: 'Name',
                 Header: 'Name',
-                accessor: 'name',
+                accessor: (row: any) => formatStrategyName(row.name),
                 width: '90%',
                 Cell: ({
                     row: {
@@ -247,7 +248,7 @@ export const StrategiesList = () => {
 
     const initialState = useMemo(
         () => ({
-            sortBy: [{ id: 'name', desc: false }],
+            sortBy: [{ id: 'Name', desc: false }],
             hiddenColumns: ['description', 'sortOrder'],
         }),
         []

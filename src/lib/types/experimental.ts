@@ -26,6 +26,10 @@ export const defaultExperimentalOptions = {
             process.env.UNLEASH_EXPERIMENTAL_PUBLIC_SIGNUP,
             false,
         ),
+        responseTimeWithAppName: parseEnvVarBoolean(
+            process.env.UNLEASH_EXPERIMENTAL_RESPONSE_TIME_WITH_APP_NAME,
+            false,
+        ),
     },
     externalResolver: { isEnabled: (): boolean => false },
 };
@@ -38,6 +42,7 @@ export interface IExperimentalOptions {
         embedProxyFrontend?: boolean;
         batchMetrics?: boolean;
         anonymiseEventLog?: boolean;
+        personalAccessTokens?: boolean;
     };
     externalResolver: IExternalFlagResolver;
 }

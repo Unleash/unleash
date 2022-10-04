@@ -73,6 +73,7 @@ exports[`should create default config 1`] = `
       "embedProxyFrontend": false,
       "personalAccessTokens": false,
       "publicSignup": false,
+      "responseTimeWithAppName": false,
     },
   },
   "flagResolver": FlagResolver {
@@ -84,6 +85,7 @@ exports[`should create default config 1`] = `
       "embedProxyFrontend": false,
       "personalAccessTokens": false,
       "publicSignup": false,
+      "responseTimeWithAppName": false,
     },
     "externalResolver": {
       "isEnabled": [Function],

@@ -4,12 +4,12 @@ The frontend is written in react/typescript. It's is a single page application t
 
 ## ADRs
 
-We have created a set of ADRs to help guide the development of the frontend. These are located in the [ADR folder](./ADR).
+We have created a set of ADRs to help guide the development of the frontend:
 
 * [Component naming](./ADR/component-naming.md)
 * [Interface naming](./ADR/interface-naming.md)
 * [Preferred component props usage](./ADR/preferred-component-props-usage.md)
-* [Preferred export](./ADR//preferred-export.md)
+* [Preferred export](./ADR/preferred-export.md)
 * [Preferred function type](./ADR/preferred-function-type.md)
 * [Preferred style import placement](./ADR/preferred-styles-import-placement.md)
 * [Preferred styling method](./ADR/preferred-styling-method.md)
@@ -17,4 +17,3 @@ We have created a set of ADRs to help guide the development of the frontend. The
 * [Preferred data fetching method](./ADR/preferred-data-fetching-method.md)
 * [Preferred folder structure](./ADR/preferred-folder-structure.md)
 
-## 

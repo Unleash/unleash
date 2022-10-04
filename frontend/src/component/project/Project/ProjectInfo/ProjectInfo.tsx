@@ -16,6 +16,7 @@ import {
     AccordionSummary,
 } from '@mui/material';
 import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
+import { DEFAULT_PROJECT_ID } from '../../../../hooks/api/getters/useDefaultProject/useDefaultProjectId';
 
 interface IProjectInfoProps {
     id: string;
@@ -125,7 +126,6 @@ const ProjectInfo = ({
                         <p>projectId: {id}</p>
                     </div>
                 </div>
-
                 <div className={styles.infoSection}>
                     <div data-loading className={styles.percentageContainer}>
                         <PercentageCircle percentage={health} />
@@ -154,35 +154,39 @@ const ProjectInfo = ({
                         />
                     </Link>
                 </div>
-
-                <div
-                    className={styles.infoSection}
-                    style={{ marginBottom: '0' }}
-                >
-                    <p className={styles.subtitle} data-loading>
-                        Project members
-                    </p>
-                    <p data-loading className={styles.emphazisedText}>
-                        {memberCount}
-                    </p>
-                    <Link
-                        data-loading
-                        className={classnames(
-                            themeStyles.flexRow,
-                            themeStyles.justifyCenter,
-                            styles.infoLink
-                        )}
-                        to={link}
-                    >
-                        <span className={styles.linkText} data-loading>
-                            view more{' '}
-                        </span>
-                        <ArrowForwardIcon
-                            data-loading
-                            className={styles.arrowIcon}
-                        />
-                    </Link>
-                </div>
+                <ConditionallyRender
+                    condition={id !== DEFAULT_PROJECT_ID}
+                    show={
+                        <div
+                            className={styles.infoSection}
+                            style={{ marginBottom: '0' }}
+                        >
+                            <p className={styles.subtitle} data-loading>
+                                Project members
+                            </p>
+                            <p data-loading className={styles.emphazisedText}>
+                                {memberCount}
+                            </p>
+                            <Link
+                                data-loading
+                                className={classnames(
+                                    themeStyles.flexRow,
+                                    themeStyles.justifyCenter,
+                                    styles.infoLink
+                                )}
+                                to={link}
+                            >
+                                <span className={styles.linkText} data-loading>
+                                    view more{' '}
+                                </span>
+                                <ArrowForwardIcon
+                                    data-loading
+                                    className={styles.arrowIcon}
+                                />
+                            </Link>
+                        </div>
+                    }
+                />
             </div>
         </aside>
     );

@@ -3,7 +3,7 @@ import { useStyles } from './ProjectCard.styles';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { ReactComponent as ProjectIcon } from 'assets/icons/projectIcon.svg';
 import React, { useState, SyntheticEvent, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Delete, Edit } from '@mui/icons-material';
 import { getProjectEditPath } from 'utils/routePathHelpers';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
@@ -15,6 +15,9 @@ import AccessContext from 'contexts/AccessContext';
 import { DEFAULT_PROJECT_ID } from 'hooks/api/getters/useDefaultProject/useDefaultProjectId';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { DeleteProjectDialogue } from '../Project/DeleteProject/DeleteProjectDialogue';
+import classnames from 'classnames';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { ConditionallyRender } from '../../common/ConditionallyRender/ConditionallyRender';
 
 interface IProjectCardProps {
     name: string;
@@ -120,12 +123,17 @@ export const ProjectCard = ({
                     <p data-loading>health</p>
                 </div>
 
-                <div className={classes.infoBox}>
-                    <p className={classes.infoStats} data-loading>
-                        {memberCount}
-                    </p>
-                    <p data-loading>members</p>
-                </div>
+                <ConditionallyRender
+                    condition={id !== DEFAULT_PROJECT_ID}
+                    show={
+                        <div className={classes.infoBox}>
+                            <p className={classes.infoStats} data-loading>
+                                {memberCount}
+                            </p>
+                            <p data-loading>members</p>
+                        </div>
+                    }
+                />
             </div>
             <DeleteProjectDialogue
                 project={id}

@@ -3,6 +3,7 @@ import { IUnleashTest, setupAppWithAuth } from '../../../helpers/test-helper';
 import getLogger from '../../../../fixtures/no-logger';
 import { DEFAULT_ENV } from '../../../../../lib/util/constants';
 import { RoleName } from '../../../../../lib/server-impl';
+import { CREATE_FEATURE_STRATEGY } from '../../../../../lib/types/permissions';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -75,4 +76,37 @@ test('Should be possible to update feature toggle with permission', async () => 
         .put(`${url}/${name}`)
         .send({ name, description: 'updated', type: 'kill-switch' })
         .expect(200);
+});
+
+test('Should not be possible auto-enable feature toggle without CREATE_FEATURE_STRATEGY permission', async () => {
+    const email = 'user33@mail.com';
+    const url = '/api/admin/projects/default/features';
+    const name = 'auth.toggle.enable';
+
+    await app.services.featureToggleServiceV2.createFeatureToggle(
+        'default',
+        { name },
+        'me',
+        true,
+    );
+
+    await app.services.userService.createUser({
+        email,
+        rootRole: RoleName.EDITOR,
+    });
+
+    await app.request.post('/auth/demo/login').send({
+        email,
+    });
+
+    const role = await db.stores.roleStore.getRoleByName(RoleName.EDITOR);
+
+    await db.stores.accessStore.removePermissionFromRole(
+        role.id,
+        CREATE_FEATURE_STRATEGY,
+        'default',
+    );
+    await app.request
+        .post(`${url}/${name}/environments/default/on`)
+        .expect(403);
 });

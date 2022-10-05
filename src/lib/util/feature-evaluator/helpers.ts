@@ -1,3 +1,4 @@
+import { IStrategyConfig } from '../../types/model';
 import { FeatureStrategiesEvaluationResult } from './client';
 import { Context } from './context';
 
@@ -37,4 +38,16 @@ export function resolveContextValue(
 
 export function safeName(str: string = ''): string {
     return str.replace(/\//g, '_');
+}
+
+export function getDefaultStrategy(featureName: string): IStrategyConfig {
+    return {
+        name: 'flexibleRollout',
+        constraints: [],
+        parameters: {
+            rollout: '100',
+            stickiness: 'default',
+            groupId: featureName,
+        },
+    };
 }

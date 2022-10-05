@@ -125,6 +125,6 @@ export interface IAccessStore extends Store<IRole, number> {
     removePermissionFromRole(
         roleId: number,
         permission: string,
-        projectId?: string,
+        environment?: string,
     ): Promise<void>;
 }

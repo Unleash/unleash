@@ -71,6 +71,11 @@ import { IContextFieldStore } from 'lib/types/stores/context-field-store';
 import { Saved, Unsaved } from '../types/saved';
 import { SegmentService } from './segment-service';
 import { SetStrategySortOrderSchema } from 'lib/openapi/spec/set-strategy-sort-order-schema';
+import { getDefaultStrategy } from '../util/feature-evaluator/helpers';
+import { AccessService } from './access-service';
+import { User } from '../server-impl';
+import { CREATE_FEATURE_STRATEGY } from '../types/permissions';
+import NoAccessError from '../error/no-access-error';
 
 interface IFeatureContext {
     featureName: string;
@@ -106,6 +111,8 @@ class FeatureToggleService {
 
     private segmentService: SegmentService;
 
+    private accessService: AccessService;
+
     constructor(
         {
             featureStrategiesStore,
@@ -129,6 +136,7 @@ class FeatureToggleService {
         >,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
         segmentService: SegmentService,
+        accessService: AccessService,
     ) {
         this.logger = getLogger('services/feature-toggle-service.ts');
         this.featureStrategiesStore = featureStrategiesStore;
@@ -140,6 +148,7 @@ class FeatureToggleService {
         this.featureEnvironmentStore = featureEnvironmentStore;
         this.contextFieldStore = contextFieldStore;
         this.segmentService = segmentService;
+        this.accessService = accessService;
     }
 
     async validateFeatureContext({
@@ -834,6 +843,7 @@ class FeatureToggleService {
         environment: string,
         enabled: boolean,
         createdBy: string,
+        user?: User,
     ): Promise<FeatureToggle> {
         const hasEnvironment =
             await this.featureEnvironmentStore.featureHasEnvironment(
@@ -849,9 +859,23 @@ class FeatureToggleService {
                     environment,
                 );
                 if (strategies.length === 0) {
-                    throw new InvalidOperationError(
-                        'You can not enable the environment before it has strategies',
-                    );
+                    const canAddStrategies =
+                        user &&
+                        (await this.accessService.hasPermission(
+                            user,
+                            CREATE_FEATURE_STRATEGY,
+                            project,
+                            environment,
+                        ));
+                    if (canAddStrategies) {
+                        await this.createStrategy(
+                            getDefaultStrategy(featureName),
+                            { environment, projectId: project, featureName },
+                            createdBy,
+                        );
+                    } else {
+                        throw new NoAccessError(CREATE_FEATURE_STRATEGY);
+                    }
                 }
             }
             const updatedEnvironmentStatus =

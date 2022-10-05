@@ -91,6 +91,33 @@ test('Should call slack webhook for archived toggle', async () => {
     expect(fetchRetryCalls[0].options.body).toMatchSnapshot();
 });
 
+test('Should call slack webhook for archived toggle with project info', async () => {
+    const addon = new SlackAddon({
+        getLogger: noLogger,
+        unleashUrl: 'http://some-url.com',
+    });
+    const event: IEvent = {
+        id: 2,
+        createdAt: new Date(),
+        type: FEATURE_ARCHIVED,
+        featureName: 'some-toggle',
+        project: 'some-project',
+        createdBy: 'some@user.com',
+        data: {
+            name: 'some-toggle',
+        },
+    };
+
+    const parameters = {
+        url: 'http://hooks.slack.com',
+    };
+
+    await addon.handleEvent(event, parameters);
+    expect(fetchRetryCalls.length).toBe(1);
+    expect(fetchRetryCalls[0].url).toBe(parameters.url);
+    expect(fetchRetryCalls[0].options.body).toMatchSnapshot();
+});
+
 test(`Should call webhook for toggled environment`, async () => {
     const addon = new SlackAddon({
         getLogger: noLogger,

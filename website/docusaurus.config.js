@@ -26,6 +26,12 @@ module.exports = {
             apiKey: '9772249a7262b377ac876853d32bd760',
             indexName: 'getunleash',
         },
+        announcementBar: {
+            id: 'strategy-constraints-announcement',
+            content:
+                '🚀 Unleash brings powerful Constraints feature to OSS users. <a href=https://www.getunleash.io/blog/unleash-brings-powerful-constraints-feature-to-oss-users title="Unleash blog: Constraints are now available to open-source users">Read more</a> →',
+            isCloseable: true,
+        },
         navbar: {
             title: 'Unleash',
             logo: {

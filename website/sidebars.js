@@ -314,7 +314,11 @@ module.exports = {
                     'Discussions, explanations, and explorations regarding topics related to Unleash.',
                 slug: '/topics',
             },
-            items: ['topics/a-b-testing', 'topics/proxy-hosting'],
+            items: [
+                'topics/anatomy-of-unleash',
+                'topics/a-b-testing',
+                'topics/proxy-hosting',
+            ],
         },
     ],
 };

@@ -13,7 +13,6 @@
 
 [Open Live Demo →](https://www.getunleash.io/interactive-demo)
 
-
 </div>
 
 ## About Unleash
@@ -212,6 +211,12 @@ If none of the official SDKs fit your need, there's also a number of [community-
 **Proud Open-Source users:** (send us a message if you want to add your logo here)
 
 ![The Unleash logo encircled by logos for Finn.no, nav (the Norwegian Labour and Welfare Administration), Budgets, Otovo, and Amedia. The encircling logos are all connected to the Unleash logo.](./.github/github_unleash_users.svg)
+
+<br/>
+
+## Migration guides
+
+Unleash has evolved significantly over the past few years, and we know how hard it can be to keep software up to date. If you're using the current major version, upgrading shouldn't be an issue. If you're on a previous major version, check out the [Unleash migration guide](https://docs.getunleash.io/deploy/migration_guide)!
 
 <br/>
 

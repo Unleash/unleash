@@ -101,7 +101,10 @@ export default class EnvironmentStore implements IEnvironmentStore {
     async getAll(query?: Object): Promise<IEnvironment[]> {
         let qB = this.db<IEnvironmentsTable>(TABLE)
             .select('*')
-            .orderBy('sort_order', 'created_at');
+            .orderBy([
+                { column: 'sort_order', order: 'asc' },
+                { column: 'created_at', order: 'asc' },
+            ]);
         if (query) {
             qB = qB.where(query);
         }

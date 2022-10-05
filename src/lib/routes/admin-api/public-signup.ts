@@ -72,7 +72,7 @@ export class PublicSignupController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Public signup tokens'],
-                    description: 'Returns a list of public signup tokens',
+                    summary: 'Retrieve all existing public signup tokens',
                     operationId: 'getAllPublicSignupTokens',
                     responses: {
                         200: createResponseSchema('publicSignupTokensSchema'),

@@ -12,7 +12,6 @@ const ProjectLog = () => {
             <EventLog
                 title="Event Log"
                 project={projectId}
-                feature={'test'}
                 displayInline
             ></EventLog>
         </div>

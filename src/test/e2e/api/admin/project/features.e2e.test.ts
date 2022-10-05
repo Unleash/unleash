@@ -43,6 +43,8 @@ afterEach(async () => {
                 ),
             ),
     );
+
+    await db.stores.strategyStore.deleteAll();
 });
 
 afterAll(async () => {

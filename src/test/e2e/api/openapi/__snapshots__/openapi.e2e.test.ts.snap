@@ -2528,40 +2528,6 @@ exports[`should serve the OpenAPI spec 1`] = `
       },
       "publicSignupTokensSchema": {
         "additionalProperties": false,
-        "example": {
-          "tokens": [
-            {
-              "createdAt": "2022-08-15T09:09:09.194Z",
-              "createdBy": "Jack Doe",
-              "expiresAt": "2022-09-15T09:09:09.194Z",
-              "name": "shared",
-              "role": {
-                "description": "Allows users to view",
-                "id": 0,
-                "name": "Viewer",
-                "type": "root",
-              },
-              "secret": "ew395up3o39ncc9o",
-              "url": "http://localhost:4242/invite-link/ew395up3o39ncc9o/signup",
-              "users": [
-                {
-                  "createdAt": "2022-09-15T09:09:09.194Z",
-                  "email": "john@example.com",
-                  "emailSent": true,
-                  "id": 0,
-                  "imageUrl": "https://gravatar.com/avatar/222f2ab70c039dda12e3d11acdcebd02?size=42&default=retro",
-                  "inviteLink": "",
-                  "isAPI": true,
-                  "loginAttempts": 0,
-                  "name": "John Doe",
-                  "rootRole": 0,
-                  "seenAt": "2022-09-15T09:09:09.194Z",
-                  "username": "BigJ",
-                },
-              ],
-            },
-          ],
-        },
         "properties": {
           "tokens": {
             "items": {

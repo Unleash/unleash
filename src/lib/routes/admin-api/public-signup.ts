@@ -111,7 +111,8 @@ export class PublicSignupController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Public signup tokens'],
-                    description: 'Gets the token with secret=`token`.',
+                    description: 'Retrieve a token',
+                    summary: 'Get information of a specific token. The `:token` part of the URL should be the token's secret.'
                     operationId: 'getPublicSignupToken',
                     responses: {
                         200: createResponseSchema('publicSignupTokenSchema'),

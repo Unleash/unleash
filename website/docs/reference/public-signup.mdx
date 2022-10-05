@@ -2,51 +2,25 @@
 title: Public Invite Links
 ---
 
-Public invite links allow you to invite team members to unleash very quickly and efficiently.
+Public invite links let you invite team members to your Unleash instance. Any user with an invite link can sign up to Unleash instance that created the link. The user will get the **viewer** role (refer to the [_standard roles_ section of the RBAC document](../user_guide/rbac.md#standard-roles) for more information on roles).
 
-## Public signup tokens
+User who follow the invite link are taken directly to the Unleash sign-up page, where they can create an account.
 
-You can use the form to create a new _public signup token_ and a new invite link will be created for you and displayed in the admin UI
+Only **Unleash instance admins** can create public invite links.
 
-Copy and share this link with anyone you would like to give access.
+![An Unleash signup form for new users](/img/public-invite_signup.png)
 
-Anyone signing up with Unleash using the _invite-link_
+## Public sign-up tokens
 
-### Creating a new token
+The most important part of a public sign-up link is the sign-up token. The token is added as the `invite` query parameter to the invite link.
 
-- Go to settings -> User
+Each token has an **expiry date**. After this expiry date, the token will stop working and users can no longer sign up using an invite link with that token.
 
-![Go to settings -> User ](/img/public-signup-step1.png)
+## Creating, updating, and deleting tokens
 
+You can [create, update and delete tokens via the Unleash Admin UI](../how-to/how-to-manage-public-invite-tokens.mdx) or via the [Unleash API](../reference/api/unleash/public-signup-tokens.api.md "Public sign-up tokens API documentation").
 
-- Click the Create Invite Link button
+A token is active as soon as it's created and stops working as soon as it's deleted or expired.
 
-![Click the Create Invite Link button](/img/public-signup-step2.png)
-
-- Set an expiration for your new token
-
-![Create invite link form](/img/public-signup-step3-create_link.png)
-
-**`expireAt`**: Public signup tokens will expire on this date
-
-- Token created - Link will be available in your Users page (until you delete it)
-
-![Link Created](/img/public-signup-step4_link_Created.png)
-
-
-Once your link is created, you can copy and share with anyone you like.
-
-### Updating/Deleting a token
-- You can use the same form to update or delete your token
-![Update invite link form](/img/public-signup-step3-create_link.png)
-
-## Invite links
-Any user using the _invite-link_ will be allowed to signup with Unleash using the UI and will be assigned the **_Viewer_** role.
-
-The user will be taken directly to the signup page, where they can fill in their data and create an account.
-
-![User signup form](/img/public-invite_signup.png)
-
-Once the user is logged in as a **_Viewer_**, they will be able to navigate the Unleash UI but without being able to edit or create anything
-![User signup form](/img/public-invite_step2_signed_in.png)
+You can only have one active invite token at a time. If you already have an active token, you must delete it to create a new one.
 

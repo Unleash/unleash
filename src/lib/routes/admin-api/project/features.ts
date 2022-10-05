@@ -527,6 +527,7 @@ export default class ProjectFeaturesController extends Controller {
             environment,
             true,
             extractUsername(req),
+            req.user,
         );
         res.status(200).end();
     }
@@ -542,6 +543,7 @@ export default class ProjectFeaturesController extends Controller {
             environment,
             false,
             extractUsername(req),
+            req.user,
         );
         res.status(200).end();
     }

@@ -71,6 +71,7 @@ export const createServices = (
         stores,
         config,
         segmentService,
+        accessService,
     );
     const environmentService = new EnvironmentService(stores, config);
     const featureTagService = new FeatureTagService(stores, config);

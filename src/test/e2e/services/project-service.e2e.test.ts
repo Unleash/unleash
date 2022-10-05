@@ -40,6 +40,7 @@ beforeAll(async () => {
         stores,
         config,
         new SegmentService(stores, config),
+        accessService,
     );
     environmentService = new EnvironmentService(stores, config);
     projectService = new ProjectService(

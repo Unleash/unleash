@@ -21,7 +21,7 @@ export const publicSignupTokenSchema = {
             type: 'string',
         },
         url: {
-            description: 'The link to be shared',
+            description: 'The public signup link for the token. Users who follow this link will be taken to a signup page where they can create an Unleash user.',
             type: 'string',
         },
         name: {

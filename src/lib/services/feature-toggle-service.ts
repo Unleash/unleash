@@ -71,6 +71,7 @@ import { IContextFieldStore } from 'lib/types/stores/context-field-store';
 import { Saved, Unsaved } from '../types/saved';
 import { SegmentService } from './segment-service';
 import { SetStrategySortOrderSchema } from 'lib/openapi/spec/set-strategy-sort-order-schema';
+import { getDefaultStrategy } from '../util/feature-evaluator/helpers';
 
 interface IFeatureContext {
     featureName: string;
@@ -849,8 +850,10 @@ class FeatureToggleService {
                     environment,
                 );
                 if (strategies.length === 0) {
-                    throw new InvalidOperationError(
-                        'You can not enable the environment before it has strategies',
+                    await this.createStrategy(
+                        getDefaultStrategy(featureName),
+                        { environment, projectId: project, featureName },
+                        createdBy,
                     );
                 }
             }

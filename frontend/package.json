@@ -130,6 +130,6 @@
     ]
   },
   "dependencies": {
-    "dequal": "^2.0.3"
+    "dequal": "2.0.3"
   }
 }

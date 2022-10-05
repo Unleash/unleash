@@ -51,7 +51,7 @@ export const publicSignupTokenSchema = {
             nullable: true,
         },
         role: {
-            description: 'The role that every user using the token will have.',
+            description: 'Users who sign up using this token will be given this role.',
             $ref: '#/components/schemas/roleSchema',
         },
     },

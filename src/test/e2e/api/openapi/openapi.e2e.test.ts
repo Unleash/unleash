@@ -4,6 +4,7 @@ import getLogger from '../../../fixtures/no-logger';
 import SwaggerParser from '@apidevtools/swagger-parser';
 import enforcer from 'openapi-enforcer';
 import semver from 'semver';
+import { openApiTags } from '../../../../lib/openapi/util/openapi-tags';
 
 let app;
 let db;
@@ -99,4 +100,16 @@ test('the generated OpenAPI spec is valid', async () => {
     }
 
     expect(enforcerWarning ?? enforcerError).toBe(undefined);
+});
+
+test('all root-level tags are "approved tags"', async () => {
+    const { body: spec } = await app.request
+        .get('/docs/openapi.json')
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+    const specTags = spec.tags;
+    const approvedTags = openApiTags;
+
+    expect(specTags).toStrictEqual(approvedTags);
 });

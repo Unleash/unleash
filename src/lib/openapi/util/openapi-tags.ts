@@ -1,3 +1,6 @@
+// The "official" OpenAPI tags that we use. These tags are added to the OpenAPI
+// spec as the root-level "tags" list. Consider creating a new entry here when
+// creating a new endpoint.
 const OPENAPI_TAGS = [
     {
         name: 'Addons',
@@ -90,4 +93,6 @@ export const openApiTags = [...OPENAPI_TAGS].sort((a, b) =>
     a.name.localeCompare(b.name),
 );
 
-export type OpenApiTag = typeof OPENAPI_TAGS[number]['name'];
+export type OpenApiTag =
+    // The official OpenAPI tags that we use.
+    typeof OPENAPI_TAGS[number]['name'];

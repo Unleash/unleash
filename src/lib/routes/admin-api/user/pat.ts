@@ -39,7 +39,7 @@ export default class PatController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['API tokens'],
                     operationId: 'getPats',
                     responses: { 200: createResponseSchema('patsSchema') },
                 }),
@@ -52,7 +52,7 @@ export default class PatController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['API tokens'],
                     operationId: 'createPat',
                     requestBody: createRequestSchema('patSchema'),
                     responses: { 200: createResponseSchema('patSchema') },
@@ -68,7 +68,7 @@ export default class PatController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['API tokens'],
                     operationId: 'deletePat',
                     responses: { 200: emptyResponse },
                 }),

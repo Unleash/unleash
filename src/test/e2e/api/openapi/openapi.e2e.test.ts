@@ -114,6 +114,19 @@ test('all root-level tags are "approved tags"', async () => {
     expect(specTags).toStrictEqual(approvedTags);
 });
 
+// All tags that are used for OpenAPI path operations must also be listed in the
+// OpenAPI root-level tags list. For us, there's two immediate things that make
+// this important:
+//
+// 1. Swagger UI groups operations by tags. To make sure that endpoints are
+// listed where users would expect to find them, they should be given an
+// appropriate tag.
+//
+// 2. The OpenAPI/docusaurus integration we use does not generate documentation
+// for paths whose tags are not listed in the root-level tags list.
+//
+// If none of the official tags seem appropriate for an endpoint, consider
+// creating a new tag.
 test('all tags are listed in the root "tags" list', async () => {
     const { body: spec } = await app.request
         .get('/docs/openapi.json')

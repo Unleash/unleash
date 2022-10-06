@@ -28,6 +28,7 @@ beforeAll(async () => {
         stores,
         config,
         new SegmentService(stores, config),
+        accessService,
     );
     const project = {
         id: 'test-project',

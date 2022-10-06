@@ -18,6 +18,8 @@ import { SdkContextSchema } from 'lib/openapi/spec/sdk-context-schema';
 import { SegmentSchema } from 'lib/openapi/spec/segment-schema';
 import { playgroundStrategyEvaluation } from '../../../lib/openapi/spec/playground-strategy-schema';
 import { PlaygroundSegmentSchema } from 'lib/openapi/spec/playground-segment-schema';
+import { GroupService } from '../../../lib/services/group-service';
+import { AccessService } from '../../../lib/services/access-service';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -30,10 +32,13 @@ beforeAll(async () => {
     db = await dbInit('playground_service_serial', config.getLogger);
     stores = db.stores;
     segmentService = new SegmentService(stores, config);
+    const groupService = new GroupService(stores, config);
+    const accessService = new AccessService(stores, config, groupService);
     featureToggleService = new FeatureToggleService(
         stores,
         config,
         segmentService,
+        accessService,
     );
     service = new PlaygroundService(config, {
         featureToggleServiceV2: featureToggleService,

@@ -69,12 +69,39 @@ test('Should call teams webhook for archived toggle', async () => {
         getLogger: noLogger,
         unleashUrl: 'http://some-url.com',
     });
-    const event = {
+    const event: IEvent = {
         id: 1,
         createdAt: new Date(),
         type: FEATURE_ARCHIVED,
         createdBy: 'some@user.com',
         featureName: 'some-toggle',
+        data: {
+            name: 'some-toggle',
+        },
+    };
+
+    const parameters = {
+        url: 'http://hooks.office.com',
+    };
+
+    await addon.handleEvent(event, parameters);
+    expect(fetchRetryCalls.length).toBe(1);
+    expect(fetchRetryCalls[0].url).toBe(parameters.url);
+    expect(fetchRetryCalls[0].options.body).toMatchSnapshot();
+});
+
+test('Should call teams webhook for archived toggle with project info', async () => {
+    const addon = new TeamsAddon({
+        getLogger: noLogger,
+        unleashUrl: 'http://some-url.com',
+    });
+    const event: IEvent = {
+        id: 1,
+        createdAt: new Date(),
+        type: FEATURE_ARCHIVED,
+        createdBy: 'some@user.com',
+        featureName: 'some-toggle',
+        project: 'some-project',
         data: {
             name: 'some-toggle',
         },

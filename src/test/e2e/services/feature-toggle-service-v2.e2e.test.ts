@@ -6,6 +6,8 @@ import { SegmentService } from '../../../lib/services/segment-service';
 import { FeatureStrategySchema } from '../../../lib/openapi/spec/feature-strategy-schema';
 import User from '../../../lib/types/user';
 import { IConstraint } from '../../../lib/types/model';
+import { AccessService } from '../../../lib/services/access-service';
+import { GroupService } from '../../../lib/services/group-service';
 
 let stores;
 let db;
@@ -28,7 +30,14 @@ beforeAll(async () => {
     );
     stores = db.stores;
     segmentService = new SegmentService(stores, config);
-    service = new FeatureToggleService(stores, config, segmentService);
+    const groupService = new GroupService(stores, config);
+    const accessService = new AccessService(stores, config, groupService);
+    service = new FeatureToggleService(
+        stores,
+        config,
+        segmentService,
+        accessService,
+    );
 });
 
 afterAll(async () => {

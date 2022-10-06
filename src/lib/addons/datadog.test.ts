@@ -89,6 +89,33 @@ test('Should call datadog webhook  for archived toggle', async () => {
     expect(fetchRetryCalls[0].options.body).toMatchSnapshot();
 });
 
+test('Should call datadog webhook  for archived toggle with project info', async () => {
+    const addon = new DatadogAddon({
+        getLogger: noLogger,
+        unleashUrl: 'http://some-url.com',
+    });
+    const event: IEvent = {
+        id: 2,
+        createdAt: new Date(),
+        type: FEATURE_ARCHIVED,
+        createdBy: 'some@user.com',
+        featureName: 'some-toggle',
+        project: 'some-project',
+        data: {
+            name: 'some-toggle',
+        },
+    };
+
+    const parameters = {
+        url: 'http://api.datadoghq.com/api/v1/events',
+    };
+
+    await addon.handleEvent(event, parameters);
+    expect(fetchRetryCalls.length).toBe(1);
+    expect(fetchRetryCalls[0].url).toBe(parameters.url);
+    expect(fetchRetryCalls[0].options.body).toMatchSnapshot();
+});
+
 test(`Should call datadog webhook for toggled environment`, async () => {
     const addon = new DatadogAddon({
         getLogger: noLogger,

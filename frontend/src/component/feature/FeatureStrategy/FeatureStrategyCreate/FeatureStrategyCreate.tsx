@@ -20,13 +20,13 @@ import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/perm
 import { ISegment } from 'interfaces/segment';
 import { useSegmentsApi } from 'hooks/api/actions/useSegmentsApi/useSegmentsApi';
 import { formatStrategyName } from 'utils/strategyNames';
-import { useFeatureImmutable } from 'hooks/api/getters/useFeature/useFeatureImmutable';
 import { useFormErrors } from 'hooks/useFormErrors';
 import { createFeatureStrategy } from 'utils/createFeatureStrategy';
 import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
 import { useCollaborateData } from 'hooks/useCollaborateData';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { IFeatureToggle } from 'interfaces/featureToggle';
+import { comparisonModerator } from '../featureStrategy.utils';
 
 export const FeatureStrategyCreate = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -60,7 +60,8 @@ export const FeatureStrategyCreate = () => {
             feature,
             {
                 afterSubmitAction: refetchFeature,
-            }
+            },
+            comparisonModerator
         );
 
     useEffect(() => {

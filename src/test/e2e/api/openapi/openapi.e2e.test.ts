@@ -113,3 +113,66 @@ test('all root-level tags are "approved tags"', async () => {
 
     expect(specTags).toStrictEqual(approvedTags);
 });
+
+test('all tags are listed in the root "tags" list', async () => {
+    const { body: spec } = await app.request
+        .get('/docs/openapi.json')
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+    const rootLevelTagNames = new Set(spec.tags.map((tag) => tag.name));
+
+    // dictionary of all invalid tags found in the spec
+    let invalidTags = {};
+    for (const [path, data] of Object.entries(spec.paths)) {
+        for (const [operation, opData] of Object.entries(data)) {
+            // ensure that the list of tags for every operation is a subset of
+            // the list of tags defined on the root level
+
+            // check each tag for this operation
+            for (const tag of opData.tags) {
+                if (!rootLevelTagNames.has(tag)) {
+                    // store other invalid tags that already exist on this
+                    // operation
+                    const preExistingTags =
+                        (invalidTags[path] ?? {})[operation]?.invalidTags ?? [];
+
+                    // add information about the invalid tag to the invalid tags
+                    // dict.
+                    invalidTags = {
+                        ...invalidTags,
+                        [path]: {
+                            ...invalidTags[path],
+                            [operation]: {
+                                operationId: opData.operationId,
+                                invalidTags: [...preExistingTags, tag],
+                            },
+                        },
+                    };
+                }
+            }
+        }
+    }
+
+    if (Object.keys(invalidTags).length) {
+        // create a human-readable list of invalid tags per operation
+        const msgs = Object.entries(invalidTags).flatMap(([path, data]) =>
+            Object.entries(data).map(
+                ([operation, opData]) =>
+                    `${operation.toUpperCase()} ${path} (operation id: ${
+                        opData.operationId
+                    }) has the following invalid tags: ${opData.invalidTags.join(
+                        ',',
+                    )}`,
+            ),
+        );
+
+        // format message
+        const errorMessage = `The OpenAPI spec contains path-level tags that are not listed in the root-level tags object. The relevant paths, operation ids, and tags are as follows:\n${msgs.join(
+            '\n',
+        )} `;
+
+        console.error(errorMessage);
+    }
+    expect(invalidTags).toStrictEqual({});
+});

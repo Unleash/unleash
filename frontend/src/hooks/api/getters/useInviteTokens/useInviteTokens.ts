@@ -22,7 +22,7 @@ export const useInviteTokens = (options: SWRConfiguration = {}) => {
 
     return {
         data: data
-            ? { tokens: data.tokens.filter(token => token.enabled) }
+            ? { tokens: data.tokens?.filter(token => token.enabled) }
             : undefined,
         error,
         loading,

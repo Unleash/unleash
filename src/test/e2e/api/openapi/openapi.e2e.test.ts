@@ -181,9 +181,11 @@ test('all tags are listed in the root "tags" list', async () => {
         );
 
         // format message
-        const errorMessage = `The OpenAPI spec contains path-level tags that are not listed in the root-level tags object. The relevant paths, operation ids, and tags are as follows:\n${msgs.join(
-            '\n',
-        )} `;
+        const errorMessage = `The OpenAPI spec contains path-level tags that are not listed in the root-level tags object. The relevant paths, operation ids, and tags are as follows:\n\n${msgs.join(
+            '\n\n',
+        )}\n\nFor reference, the root-level tags are: ${spec.tags
+            .map((tag) => `"${tag.name}"`)
+            .join(', ')}`;
 
         console.error(errorMessage);
     }

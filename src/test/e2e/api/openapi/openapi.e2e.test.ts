@@ -111,9 +111,9 @@ test('all root-level tags are "approved tags"', async () => {
     const specTags = spec.tags;
     const approvedTags = openApiTags;
 
-    expect(specTags).toStrictEqual(approvedTags);
+    // expect spec tags to be a subset of the approved tags
+    expect(approvedTags).toEqual(expect.arrayContaining(specTags));
 });
-
 // All tags that are used for OpenAPI path operations must also be listed in the
 // OpenAPI root-level tags list. For us, there's two immediate things that make
 // this important:

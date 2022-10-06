@@ -174,9 +174,9 @@ test('all tags are listed in the root "tags" list', async () => {
                 ([operation, opData]) =>
                     `${operation.toUpperCase()} ${path} (operation id: ${
                         opData.operationId
-                    }) has the following invalid tags: ${opData.invalidTags.join(
-                        ',',
-                    )}`,
+                    }) has the following invalid tags: ${opData.invalidTags
+                        .map((tag) => `"${tag}"`)
+                        .join(', ')}`,
             ),
         );
 

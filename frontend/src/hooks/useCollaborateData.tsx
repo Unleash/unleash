@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { SWRConfiguration } from 'swr';
 import { dequal } from 'dequal';
 import { StaleDataNotification } from 'component/common/StaleDataNotification/StaleDataNotification';
+import { IFeatureToggle } from 'interfaces/featureToggle';
 
 interface IFormatUnleashGetterOutput<Type> {
     data: Type;
@@ -42,7 +43,8 @@ interface IStaleNotificationOptions {
 export const useCollaborateData = <Type,>(
     getterOptions: IGetterOptions,
     initialData: Type,
-    notificationOptions: IStaleNotificationOptions
+    notificationOptions: IStaleNotificationOptions,
+    comparisonModeratorFunc: (data: Type) => any
 ): ICollaborateDataOutput<Type> => {
     const { data, refetch } = formatUnleashGetter<Type>(getterOptions);
     const [cache, setCache] = useState<Type | null>(initialData || null);
@@ -53,6 +55,17 @@ export const useCollaborateData = <Type,>(
         setCache(data);
     };
 
+    const formatDequalData = (data: Type | null) => {
+        if (!data) return data;
+        if (
+            comparisonModeratorFunc &&
+            typeof comparisonModeratorFunc === 'function'
+        ) {
+            return comparisonModeratorFunc(data);
+        }
+        return data;
+    };
+
     useEffect(() => {
         if (cache === null) {
             setCache(initialData);
@@ -60,7 +73,9 @@ export const useCollaborateData = <Type,>(
     }, [initialData]);
 
     useEffect(() => {
-        const equal = dequal(data, cache);
+        if (!cache || !data) return;
+
+        const equal = dequal(formatDequalData(cache), formatDequalData(data));
 
         if (!equal) {
             setDataModified(true);
@@ -72,8 +87,8 @@ export const useCollaborateData = <Type,>(
         refetch,
         staleDataNotification: (
             <StaleDataNotification
-                cache={cache}
-                data={data}
+                cache={formatDequalData(cache)}
+                data={formatDequalData(data)}
                 refresh={() => forceRefreshCache(data)}
                 show={dataModified}
                 afterSubmitAction={notificationOptions.afterSubmitAction}

@@ -4,6 +4,7 @@ import getLogger from '../../../fixtures/no-logger';
 import SwaggerParser from '@apidevtools/swagger-parser';
 import enforcer from 'openapi-enforcer';
 import semver from 'semver';
+import { openApiTags } from '../../../../lib/openapi/util/openapi-tags';
 
 let app;
 let db;
@@ -99,4 +100,94 @@ test('the generated OpenAPI spec is valid', async () => {
     }
 
     expect(enforcerWarning ?? enforcerError).toBe(undefined);
+});
+
+test('all root-level tags are "approved tags"', async () => {
+    const { body: spec } = await app.request
+        .get('/docs/openapi.json')
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+    const specTags = spec.tags;
+    const approvedTags = openApiTags;
+
+    // expect spec tags to be a subset of the approved tags
+    expect(approvedTags).toEqual(expect.arrayContaining(specTags));
+});
+// All tags that are used for OpenAPI path operations must also be listed in the
+// OpenAPI root-level tags list. For us, there's two immediate things that make
+// this important:
+//
+// 1. Swagger UI groups operations by tags. To make sure that endpoints are
+// listed where users would expect to find them, they should be given an
+// appropriate tag.
+//
+// 2. The OpenAPI/docusaurus integration we use does not generate documentation
+// for paths whose tags are not listed in the root-level tags list.
+//
+// If none of the official tags seem appropriate for an endpoint, consider
+// creating a new tag.
+test('all tags are listed in the root "tags" list', async () => {
+    const { body: spec } = await app.request
+        .get('/docs/openapi.json')
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+    const rootLevelTagNames = new Set(spec.tags.map((tag) => tag.name));
+
+    // dictionary of all invalid tags found in the spec
+    let invalidTags = {};
+    for (const [path, data] of Object.entries(spec.paths)) {
+        for (const [operation, opData] of Object.entries(data)) {
+            // ensure that the list of tags for every operation is a subset of
+            // the list of tags defined on the root level
+
+            // check each tag for this operation
+            for (const tag of opData.tags) {
+                if (!rootLevelTagNames.has(tag)) {
+                    // store other invalid tags that already exist on this
+                    // operation
+                    const preExistingTags =
+                        (invalidTags[path] ?? {})[operation]?.invalidTags ?? [];
+
+                    // add information about the invalid tag to the invalid tags
+                    // dict.
+                    invalidTags = {
+                        ...invalidTags,
+                        [path]: {
+                            ...invalidTags[path],
+                            [operation]: {
+                                operationId: opData.operationId,
+                                invalidTags: [...preExistingTags, tag],
+                            },
+                        },
+                    };
+                }
+            }
+        }
+    }
+
+    if (Object.keys(invalidTags).length) {
+        // create a human-readable list of invalid tags per operation
+        const msgs = Object.entries(invalidTags).flatMap(([path, data]) =>
+            Object.entries(data).map(
+                ([operation, opData]) =>
+                    `${operation.toUpperCase()} ${path} (operation id: ${
+                        opData.operationId
+                    }) has the following invalid tags: ${opData.invalidTags
+                        .map((tag) => `"${tag}"`)
+                        .join(', ')}`,
+            ),
+        );
+
+        // format message
+        const errorMessage = `The OpenAPI spec contains path-level tags that are not listed in the root-level tags object. The relevant paths, operation ids, and tags are as follows:\n\n${msgs.join(
+            '\n\n',
+        )}\n\nFor reference, the root-level tags are: ${spec.tags
+            .map((tag) => `"${tag.name}"`)
+            .join(', ')}`;
+
+        console.error(errorMessage);
+    }
+    expect(invalidTags).toStrictEqual({});
 });

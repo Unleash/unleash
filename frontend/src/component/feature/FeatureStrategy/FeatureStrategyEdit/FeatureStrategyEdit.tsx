@@ -24,6 +24,7 @@ import { sortStrategyParameters } from 'utils/sortStrategyParameters';
 import { useCollaborateData } from 'hooks/useCollaborateData';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { IFeatureToggle } from 'interfaces/featureToggle';
+import { comparisonModerator } from '../featureStrategy.utils';
 
 export const FeatureStrategyEdit = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -58,7 +59,8 @@ export const FeatureStrategyEdit = () => {
             feature,
             {
                 afterSubmitAction: refetchFeature,
-            }
+            },
+            comparisonModerator
         );
 
     useEffect(() => {

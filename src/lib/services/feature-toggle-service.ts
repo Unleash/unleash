@@ -490,13 +490,22 @@ class FeatureToggleService {
                     featureName,
                     environment,
                 );
-            return featureStrategies.map((strat) => ({
-                id: strat.id,
-                name: strat.strategyName,
-                constraints: strat.constraints,
-                parameters: strat.parameters,
-                sortOrder: strat.sortOrder,
-            }));
+            const result = [];
+            for (const strat of featureStrategies) {
+                const segments =
+                    (await this.segmentService.getByStrategy(strat.id)).map(
+                        (segment) => segment.id,
+                    ) ?? [];
+                result.push({
+                    id: strat.id,
+                    name: strat.strategyName,
+                    constraints: strat.constraints,
+                    parameters: strat.parameters,
+                    sortOrder: strat.sortOrder,
+                    segments,
+                });
+            }
+            return result;
         }
         throw new NotFoundError(
             `Feature ${featureName} does not have environment ${environment}`,

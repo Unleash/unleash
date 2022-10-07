@@ -576,8 +576,8 @@ export default class ProjectFeaturesController extends Controller {
         );
 
         if (copyOf) {
-            this.logger.debug(
-                `Cloning segments from strategyId=${strategy.id} to strategyId=${copyOf}`,
+            this.logger.info(
+                `Cloning segments from: strategyId=${copyOf} to: strategyId=${strategy.id} `,
             );
             await this.segmentService.cloneStrategySegments(
                 copyOf,

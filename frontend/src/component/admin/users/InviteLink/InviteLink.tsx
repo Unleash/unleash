@@ -17,6 +17,7 @@ import { useInviteTokenApi } from 'hooks/api/actions/useInviteTokenApi/useInvite
 import { useInviteTokens } from 'hooks/api/getters/useInviteTokens/useInviteTokens';
 import { LinkField } from '../LinkField/LinkField';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 interface ICreateInviteLinkProps {}
 
@@ -64,12 +65,12 @@ export const InviteLink: VFC<ICreateInviteLinkProps> = () => {
     const { data, loading } = useInviteTokens();
     const [inviteLink, setInviteLink] = useState('');
     const { mutate } = useSWRConfig();
+    const trackEvent = usePlausibleTracker();
     const [expiry, setExpiry] = useState(expiryOptions[0].key);
     const [showDisableDialog, setDisableDialogue] = useState(false);
     const defaultToken = data?.tokens?.find(token => token.name === 'default');
     const isUpdating = Boolean(defaultToken);
     const formatApiCode = useFormatApiCode(isUpdating, expiry);
-
     const [isSending, setIsSending] = useState(false);
     const { setToastApiError } = useToast();
     const { createToken, updateToken } = useInviteTokenApi();
@@ -77,6 +78,14 @@ export const InviteLink: VFC<ICreateInviteLinkProps> = () => {
     const onSubmit: FormEventHandler<HTMLFormElement> = async e => {
         e.preventDefault();
         setIsSending(true);
+
+        trackEvent('invite', {
+            props: {
+                eventType: isUpdating
+                    ? 'link update submitted'
+                    : 'link created',
+            },
+        });
 
         try {
             if (isUpdating) {

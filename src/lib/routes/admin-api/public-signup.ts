@@ -113,7 +113,7 @@ export class PublicSignupController extends Controller {
                     tags: ['Public signup tokens'],
                     summary: 'Retrieve a token',
                     description:
-                        'Get information of a specific token. The `:token` part of the URL should be the token`s secret.',
+                        "Get information about a specific token. The `:token` part of the URL should be the token's secret.",
                     operationId: 'getPublicSignupToken',
                     responses: {
                         200: createResponseSchema('publicSignupTokenSchema'),

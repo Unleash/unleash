@@ -1,3 +1,4 @@
+import { INewPersonalAPIToken } from 'interfaces/personalAPIToken';
 import useAPI from '../useApi/useApi';
 
 interface ICreatePersonalApiTokenPayload {
@@ -12,7 +13,7 @@ export const usePersonalAPITokensApi = () => {
 
     const createPersonalAPIToken = async (
         payload: ICreatePersonalApiTokenPayload
-    ) => {
+    ): Promise<INewPersonalAPIToken> => {
         const req = createRequest('api/admin/user/tokens', {
             method: 'POST',
             body: JSON.stringify(payload),
@@ -25,8 +26,8 @@ export const usePersonalAPITokensApi = () => {
         }
     };
 
-    const deletePersonalAPIToken = async (secret: string) => {
-        const req = createRequest(`api/admin/user/tokens/${secret}`, {
+    const deletePersonalAPIToken = async (id: string) => {
+        const req = createRequest(`api/admin/user/tokens/${id}`, {
             method: 'DELETE',
         });
         try {

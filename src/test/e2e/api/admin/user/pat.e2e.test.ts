@@ -8,6 +8,7 @@ let db: ITestDb;
 
 let tomorrow = new Date();
 let firstSecret;
+let firstId;
 tomorrow.setDate(tomorrow.getDate() + 1);
 
 beforeAll(async () => {
@@ -44,6 +45,7 @@ test('should create a PAT', async () => {
     expect(new Date(body.expiresAt)).toEqual(tomorrow);
     expect(body.description).toEqual(description);
     firstSecret = body.secret;
+    firstId = body.id;
 
     const response = await request
         .get('/api/admin/user/tokens')
@@ -64,9 +66,9 @@ test('should delete the PAT', async () => {
         .set('Content-Type', 'application/json')
         .expect(201);
 
-    const createdSecret = body.secret;
+    const createdId = body.id;
 
-    await request.delete(`/api/admin/user/tokens/${createdSecret}`).expect(200);
+    await request.delete(`/api/admin/user/tokens/${createdId}`).expect(200);
 });
 
 test('should get all PATs', async () => {
@@ -78,6 +80,36 @@ test('should get all PATs', async () => {
         .expect(200);
 
     expect(body.pats).toHaveLength(1);
+    expect(body.pats[0].secret).toBeUndefined();
+    expect(body.pats[0].id).toBeDefined();
+});
+
+test('should not allow deletion of other users PAT', async () => {
+    const { request } = app;
+
+    await app.request
+        .post(`/auth/demo/login`)
+        .send({
+            email: 'user-second@getunleash.io',
+        })
+        .expect(200);
+
+    await request.delete(`/api/admin/user/tokens/${firstId}`).expect(200);
+
+    await app.request
+        .post(`/auth/demo/login`)
+        .send({
+            email: 'user@getunleash.io',
+        })
+        .expect(200);
+
+    const { body } = await request
+        .get('/api/admin/user/tokens')
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+    expect(body.pats).toHaveLength(1);
+    expect(body.pats[0].secret).toBeUndefined();
 });
 
 test('should get only current user PATs', async () => {

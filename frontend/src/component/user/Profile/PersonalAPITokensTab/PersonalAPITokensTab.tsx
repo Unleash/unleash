@@ -20,7 +20,10 @@ import { HighlightCell } from 'component/common/Table/cells/HighlightCell/Highli
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { usePersonalAPITokens } from 'hooks/api/getters/usePersonalAPITokens/usePersonalAPITokens';
 import { useSearch } from 'hooks/useSearch';
-import { IPersonalAPIToken } from 'interfaces/personalAPIToken';
+import {
+    INewPersonalAPIToken,
+    IPersonalAPIToken,
+} from 'interfaces/personalAPIToken';
 import { IUser } from 'interfaces/user';
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
@@ -98,6 +101,7 @@ export const PersonalAPITokensTab = ({ user }: IPersonalAPITokensTabProps) => {
     const [createOpen, setCreateOpen] = useState(false);
     const [dialogOpen, setDialogOpen] = useState(false);
     const [deleteOpen, setDeleteOpen] = useState(false);
+    const [newToken, setNewToken] = useState<INewPersonalAPIToken>();
     const [selectedToken, setSelectedToken] = useState<IPersonalAPIToken>();
 
     const columns = useMemo(
@@ -308,15 +312,15 @@ export const PersonalAPITokensTab = ({ user }: IPersonalAPITokensTabProps) => {
             <CreatePersonalAPIToken
                 open={createOpen}
                 setOpen={setCreateOpen}
-                newToken={(token: IPersonalAPIToken) => {
-                    setSelectedToken(token);
+                newToken={(token: INewPersonalAPIToken) => {
+                    setNewToken(token);
                     setDialogOpen(true);
                 }}
             />
             <PersonalAPITokenDialog
                 open={dialogOpen}
                 setOpen={setDialogOpen}
-                token={selectedToken}
+                token={newToken}
             />
             <DeletePersonalAPIToken
                 open={deleteOpen}

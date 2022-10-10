@@ -2,12 +2,20 @@ import { useCallback, useContext, useEffect } from 'react';
 import { PlausibleContext } from 'contexts/PlausibleContext';
 import { EventOptions, PlausibleOptions } from 'plausible-tracker';
 
+/**
+ * Allowed event names. Makes it easy to remove, since TS will complain.
+ * Add those to Plausible as Custom event goals.
+ * @see https://plausible.io/docs/custom-event-goals#2-create-a-custom-event-goal-in-your-plausible-analytics-account
+ * @example `'download | 'invite' | 'signup'`
+ **/
+type CustomEvents = 'invite';
+
 export const usePlausibleTracker = () => {
     const plausible = useContext(PlausibleContext);
 
-    return useCallback(
+    const trackEvent = useCallback(
         (
-            eventName: string,
+            eventName: CustomEvents,
             options?: EventOptions | undefined,
             eventData?: PlausibleOptions | undefined
         ) => {
@@ -21,4 +29,6 @@ export const usePlausibleTracker = () => {
         },
         [plausible]
     );
+
+    return { trackEvent };
 };

@@ -65,7 +65,7 @@ export const InviteLink: VFC<ICreateInviteLinkProps> = () => {
     const { data, loading } = useInviteTokens();
     const [inviteLink, setInviteLink] = useState('');
     const { mutate } = useSWRConfig();
-    const trackEvent = usePlausibleTracker();
+    const { trackEvent } = usePlausibleTracker();
     const [expiry, setExpiry] = useState(expiryOptions[0].key);
     const [showDisableDialog, setDisableDialogue] = useState(false);
     const defaultToken = data?.tokens?.find(token => token.name === 'default');

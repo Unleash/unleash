@@ -14,7 +14,7 @@ export const InviteLinkBar: VFC = () => {
     const navigate = useNavigate();
     const { data, loading } = useInviteTokens();
     const ref = useLoading(loading);
-    const trackEvent = usePlausibleTracker();
+    const { trackEvent } = usePlausibleTracker();
     const inviteToken =
         data?.tokens?.find(token => token.name === 'default') ?? null;
     const inviteLink = inviteToken?.url;

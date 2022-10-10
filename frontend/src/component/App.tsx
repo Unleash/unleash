@@ -15,7 +15,6 @@ import { SplashPageRedirect } from 'component/splash/SplashPageRedirect/SplashPa
 import { useStyles } from './App.styles';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { Suspense } from 'react';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 export const App = () => {
     const { classes: styles } = useStyles();

@@ -40,7 +40,7 @@ export const NewUser = () => {
     const { resetPassword, loading: isPasswordSubmitting } =
         useAuthResetPasswordApi();
     const passwordDisabled = authDetails?.defaultHidden === true;
-    const trackEvent = usePlausibleTracker();
+    const { trackEvent } = usePlausibleTracker();
 
     const onSubmitInvitedUser = async (password: string) => {
         try {

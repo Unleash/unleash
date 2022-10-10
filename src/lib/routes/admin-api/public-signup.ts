@@ -90,7 +90,7 @@ export class PublicSignupController extends Controller {
                 openApiService.validPath({
                     tags: ['Public signup tokens'],
                     operationId: 'createPublicSignupToken',
-                    description: 'Creates a public signup token',
+                    summary: 'Create a public signup token',
                     requestBody: createRequestSchema(
                         'publicSignupTokenCreateSchema',
                     ),
@@ -131,7 +131,7 @@ export class PublicSignupController extends Controller {
                 openApiService.validPath({
                     tags: ['Public signup tokens'],
                     operationId: 'updatePublicSignupToken',
-                    description: 'Updates a public signup token.',
+                    summary: 'Update a public signup token',
                     requestBody: createRequestSchema(
                         'publicSignupTokenUpdateSchema',
                     ),

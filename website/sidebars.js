@@ -50,6 +50,7 @@ module.exports = {
                     label: 'Unleash API guides',
                     items: [
                         'user_guide/api-token',
+                        'user_guide/personal-api-token',
                         'advanced/api_access',
                         'how-to/how-to-enable-openapi',
                     ],

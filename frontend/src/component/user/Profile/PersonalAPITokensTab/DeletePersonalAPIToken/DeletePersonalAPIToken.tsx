@@ -25,7 +25,7 @@ export const DeletePersonalAPIToken: FC<IDeletePersonalAPITokenProps> = ({
     const onRemoveClick = async () => {
         if (token) {
             try {
-                await deletePersonalAPIToken(token?.secret);
+                await deletePersonalAPIToken(token?.id);
                 refetchTokens();
                 setOpen(false);
                 setToastData({

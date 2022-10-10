@@ -1,7 +1,7 @@
 import { Alert, styled, Typography } from '@mui/material';
 import { UserToken } from 'component/admin/apiToken/ConfirmToken/UserToken/UserToken';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import { IPersonalAPIToken } from 'interfaces/personalAPIToken';
+import { INewPersonalAPIToken } from 'interfaces/personalAPIToken';
 import { FC } from 'react';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
@@ -11,7 +11,7 @@ const StyledAlert = styled(Alert)(({ theme }) => ({
 interface IPersonalAPITokenDialogProps {
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    token?: IPersonalAPIToken;
+    token?: INewPersonalAPIToken;
 }
 
 export const PersonalAPITokenDialog: FC<IPersonalAPITokenDialogProps> = ({

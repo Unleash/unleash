@@ -1,4 +1,4 @@
-import { VFC } from 'react';
+import { useEffect, VFC } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Button, Typography } from '@mui/material';
 import useLoading from 'hooks/useLoading';
@@ -8,11 +8,13 @@ import { LinkField } from '../LinkField/LinkField';
 import { add, formatDistanceToNowStrict, isAfter, parseISO } from 'date-fns';
 import { formatDateYMD } from 'utils/formatDate';
 import { useLocationSettings } from 'hooks/useLocationSettings';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 export const InviteLinkBar: VFC = () => {
     const navigate = useNavigate();
     const { data, loading } = useInviteTokens();
     const ref = useLoading(loading);
+    const { trackEvent } = usePlausibleTracker();
     const inviteToken =
         data?.tokens?.find(token => token.name === 'default') ?? null;
     const inviteLink = inviteToken?.url;
@@ -39,6 +41,18 @@ export const InviteLinkBar: VFC = () => {
             {expiresIn}
         </Typography>
     );
+
+    const onInviteLinkActionClick = () => {
+        trackEvent('invite', {
+            props: {
+                eventType: Boolean(inviteLink)
+                    ? 'link bar action: edit'
+                    : 'link bar action: create',
+            },
+        });
+
+        navigate('/admin/invite-link');
+    };
 
     return (
         <Box
@@ -111,7 +125,7 @@ export const InviteLinkBar: VFC = () => {
             >
                 <Button
                     variant="outlined"
-                    onClick={() => navigate('/admin/invite-link')}
+                    onClick={onInviteLinkActionClick}
                     data-loading
                 >
                     {inviteLink ? 'Update' : 'Create'} invite link

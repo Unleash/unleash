@@ -1168,7 +1168,7 @@ test('Trying to get a non existing feature strategy should yield 404', async () 
         .expect(404);
 });
 
-test('Can not enable environment for feature without strategies', async () => {
+test('Can enable environment for feature without strategies', async () => {
     const environment = 'some-env';
     const featureName = 'com.test.enable.environment.disabled';
 
@@ -1196,7 +1196,7 @@ test('Can not enable environment for feature without strategies', async () => {
             `/api/admin/projects/default/features/${featureName}/environments/${environment}/on`,
         )
         .set('Content-Type', 'application/json')
-        .expect(403);
+        .expect(200);
     await app.request
         .get(`/api/admin/projects/default/features/${featureName}`)
         .expect(200)
@@ -1205,7 +1205,7 @@ test('Can not enable environment for feature without strategies', async () => {
             const enabledFeatureEnv = res.body.environments.find(
                 (e) => e.name === environment,
             );
-            expect(enabledFeatureEnv.enabled).toBe(false);
+            expect(enabledFeatureEnv.enabled).toBe(true);
             expect(enabledFeatureEnv.type).toBe('test');
         });
 });

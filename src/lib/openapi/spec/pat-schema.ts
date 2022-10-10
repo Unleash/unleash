@@ -4,6 +4,9 @@ export const patSchema = {
     $id: '#/components/schemas/patSchema',
     type: 'object',
     properties: {
+        id: {
+            type: 'number',
+        },
         secret: {
             type: 'string',
         },

@@ -62,20 +62,20 @@
     ]
   },
   "devDependencies": {
-    "@babel/core": "7.18.13",
+    "@babel/core": "7.19.3",
     "@docusaurus/module-type-aliases": "2.0.1",
-    "@storybook/addon-actions": "6.5.10",
-    "@storybook/addon-essentials": "6.5.10",
-    "@storybook/addon-interactions": "6.5.10",
-    "@storybook/addon-links": "6.5.10",
-    "@storybook/react": "6.5.10",
+    "@storybook/addon-actions": "6.5.12",
+    "@storybook/addon-essentials": "6.5.12",
+    "@storybook/addon-interactions": "6.5.12",
+    "@storybook/addon-links": "6.5.12",
+    "@storybook/react": "6.5.12",
     "@storybook/testing-library": "0.0.13",
     "@tsconfig/docusaurus": "1.0.6",
     "babel-loader": "8.2.5",
     "enhanced-resolve": "5.10.0",
     "react-router": "6.3.0",
-    "replace-in-file": "^6.3.5",
+    "replace-in-file": "6.3.5",
     "storybook-addon-root-attribute": "1.0.2",
-    "typescript": "4.8.2"
+    "typescript": "4.8.4"
   }
 }

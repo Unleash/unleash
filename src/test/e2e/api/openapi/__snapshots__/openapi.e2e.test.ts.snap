@@ -24,17 +24,17 @@ exports[`should serve the OpenAPI UI 1`] = `
         background: #fafafa;
       }
     </style>
-    
+
       <link rel="stylesheet" type="text/css" href="./swagger-ui.css" >
-    
+
   </head>
   <body>
-    
+
       <div id="swagger-ui"></div>
       <script src="./swagger-ui-bundle.js"></script>
       <script src="./swagger-ui-standalone-preset.js"></script>
       <script src="./swagger-ui-init.js"></script>
-    
+
   </body>
 </html>
   "
@@ -708,6 +708,9 @@ exports[`should serve the OpenAPI spec 1`] = `
               "$ref": "#/components/schemas/constraintSchema",
             },
             "type": "array",
+          },
+          "copyOf": {
+            "type": "string",
           },
           "name": {
             "type": "string",
@@ -1687,6 +1690,9 @@ exports[`should serve the OpenAPI spec 1`] = `
             "format": "date-time",
             "nullable": true,
             "type": "string",
+          },
+          "id": {
+            "type": "number",
           },
           "secret": {
             "type": "string",
@@ -7029,7 +7035,7 @@ If the provided project does not exist, the list of events will be empty.",
           },
         },
         "tags": [
-          "admin",
+          "API tokens",
         ],
       },
       "post": {
@@ -7058,17 +7064,17 @@ If the provided project does not exist, the list of events will be empty.",
           },
         },
         "tags": [
-          "admin",
+          "API tokens",
         ],
       },
     },
-    "/api/admin/user/tokens/{secret}": {
+    "/api/admin/user/tokens/{id}": {
       "delete": {
         "operationId": "deletePat",
         "parameters": [
           {
             "in": "path",
-            "name": "secret",
+            "name": "id",
             "required": true,
             "schema": {
               "type": "string",
@@ -7081,7 +7087,7 @@ If the provided project does not exist, the list of events will be empty.",
           },
         },
         "tags": [
-          "admin",
+          "API tokens",
         ],
       },
     },

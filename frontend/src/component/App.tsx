@@ -1,4 +1,7 @@
+import { Suspense } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
+import { ErrorBoundary } from 'react-error-boundary';
+import { Error } from 'component/layout/Error/Error';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { FeedbackNPS } from 'component/feedback/FeedbackNPS/FeedbackNPS';
 import { LayoutPicker } from 'component/layout/LayoutPicker/LayoutPicker';
@@ -14,7 +17,6 @@ import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import { SplashPageRedirect } from 'component/splash/SplashPageRedirect/SplashPageRedirect';
 import { useStyles } from './App.styles';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { Suspense } from 'react';
 
 export const App = () => {
     const { classes: styles } = useStyles();
@@ -28,50 +30,52 @@ export const App = () => {
         : routes;
 
     return (
-        <SWRProvider>
-            <Suspense fallback={<Loader />}>
-                <PlausibleProvider>
-                    <ConditionallyRender
-                        condition={!hasFetchedAuth}
-                        show={<Loader />}
-                        elseShow={
-                            <div className={styles.container}>
-                                <ToastRenderer />
-                                <LayoutPicker>
-                                    <Routes>
-                                        {availableRoutes.map(route => (
+        <ErrorBoundary FallbackComponent={Error}>
+            <SWRProvider>
+                <Suspense fallback={<Loader />}>
+                    <PlausibleProvider>
+                        <ConditionallyRender
+                            condition={!hasFetchedAuth}
+                            show={<Loader />}
+                            elseShow={
+                                <div className={styles.container}>
+                                    <ToastRenderer />
+                                    <LayoutPicker>
+                                        <Routes>
+                                            {availableRoutes.map(route => (
+                                                <Route
+                                                    key={route.path}
+                                                    path={route.path}
+                                                    element={
+                                                        <ProtectedRoute
+                                                            route={route}
+                                                        />
+                                                    }
+                                                />
+                                            ))}
                                             <Route
-                                                key={route.path}
-                                                path={route.path}
+                                                path="/"
                                                 element={
-                                                    <ProtectedRoute
-                                                        route={route}
+                                                    <Navigate
+                                                        to="/features"
+                                                        replace
                                                     />
                                                 }
                                             />
-                                        ))}
-                                        <Route
-                                            path="/"
-                                            element={
-                                                <Navigate
-                                                    to="/features"
-                                                    replace
-                                                />
-                                            }
-                                        />
-                                        <Route
-                                            path="*"
-                                            element={<NotFound />}
-                                        />
-                                    </Routes>
-                                    <FeedbackNPS openUrl="http://feedback.unleash.run" />
-                                    <SplashPageRedirect />
-                                </LayoutPicker>
-                            </div>
-                        }
-                    />
-                </PlausibleProvider>
-            </Suspense>
-        </SWRProvider>
+                                            <Route
+                                                path="*"
+                                                element={<NotFound />}
+                                            />
+                                        </Routes>
+                                        <FeedbackNPS openUrl="http://feedback.unleash.run" />
+                                        <SplashPageRedirect />
+                                    </LayoutPicker>
+                                </div>
+                            }
+                        />
+                    </PlausibleProvider>
+                </Suspense>
+            </SWRProvider>
+        </ErrorBoundary>
     );
 };

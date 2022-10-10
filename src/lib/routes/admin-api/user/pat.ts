@@ -62,7 +62,7 @@ export default class PatController extends Controller {
 
         this.route({
             method: 'delete',
-            path: '/:secret',
+            path: '/:id',
             acceptAnyContentType: true,
             handler: this.deletePat,
             permission: NONE,
@@ -95,11 +95,11 @@ export default class PatController extends Controller {
     }
 
     async deletePat(
-        req: IAuthRequest<{ secret: string }>,
+        req: IAuthRequest<{ id: number }>,
         res: Response,
     ): Promise<void> {
-        const { secret } = req.params;
-        await this.patService.deletePat(secret);
+        const { id } = req.params;
+        await this.patService.deletePat(id, req.user.id);
         res.status(200).end();
     }
 }

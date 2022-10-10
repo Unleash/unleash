@@ -1688,6 +1688,9 @@ exports[`should serve the OpenAPI spec 1`] = `
             "nullable": true,
             "type": "string",
           },
+          "id": {
+            "type": "number",
+          },
           "secret": {
             "type": "string",
           },
@@ -7051,13 +7054,13 @@ If the provided project does not exist, the list of events will be empty.",
         ],
       },
     },
-    "/api/admin/user/tokens/{secret}": {
+    "/api/admin/user/tokens/{id}": {
       "delete": {
         "operationId": "deletePat",
         "parameters": [
           {
             "in": "path",
-            "name": "secret",
+            "name": "id",
             "required": true,
             "schema": {
               "type": "string",

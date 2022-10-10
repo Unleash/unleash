@@ -136,7 +136,7 @@
   },
   "devDependencies": {
     "@apidevtools/swagger-parser": "10.1.0",
-    "@babel/core": "7.18.13",
+    "@babel/core": "7.19.3",
     "@swc/core": "1.2.246",
     "@swc/jest": "0.2.23",
     "@types/bcryptjs": "2.4.2",
@@ -183,7 +183,7 @@
     "supertest": "6.2.4",
     "ts-node": "10.9.1",
     "tsc-watch": "5.0.3",
-    "typescript": "4.8.2"
+    "typescript": "4.8.4"
   },
   "resolutions": {
     "async": "^3.2.4",

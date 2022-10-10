@@ -7,6 +7,7 @@ export const publicSignupTokenUpdateSchema = {
     properties: {
         expiresAt: {
             type: 'string',
+            description: `The token's expiration date.`,
             format: 'date-time',
         },
         enabled: {

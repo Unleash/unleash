@@ -14,7 +14,6 @@ import {
     getStandardResponses,
 } from '../openapi/util/standard-responses';
 import { PublicSignupTokenService } from '../services/public-signup-token-service';
-import { PublicSignupTokenSchema } from '../openapi/spec/public-signup-token-schema';
 import { UserSchema, userSchema } from '../openapi/spec/user-schema';
 import { CreateInvitedUserSchema } from '../openapi/spec/create-invited-user-schema';
 
@@ -53,7 +52,7 @@ export class PublicInviteController extends Controller {
                 openApiService.validPath({
                     tags: ['Public signup tokens'],
                     operationId: 'validatePublicSignupToken',
-                    summary: `Validates a public signup token exists, has not expired and is enabled`,
+                    summary: `Check whether a public sign-up token exists, has not expired and is enabled`,
                     responses: {
                         200: emptyResponse,
                         ...getStandardResponses(400),
@@ -85,7 +84,7 @@ export class PublicInviteController extends Controller {
 
     async validate(
         req: IAuthRequest<TokenParam, void>,
-        res: Response<PublicSignupTokenSchema>,
+        res: Response,
     ): Promise<void> {
         const { token } = req.params;
         const valid = await this.publicSignupTokenService.validate(token);

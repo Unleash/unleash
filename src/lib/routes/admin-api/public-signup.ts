@@ -72,6 +72,7 @@ export class PublicSignupController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Public signup tokens'],
+                    summary: 'Retrieve all existing public signup tokens',
                     operationId: 'getAllPublicSignupTokens',
                     responses: {
                         200: createResponseSchema('publicSignupTokensSchema'),
@@ -89,6 +90,7 @@ export class PublicSignupController extends Controller {
                 openApiService.validPath({
                     tags: ['Public signup tokens'],
                     operationId: 'createPublicSignupToken',
+                    summary: 'Create a public signup token',
                     requestBody: createRequestSchema(
                         'publicSignupTokenCreateSchema',
                     ),
@@ -109,6 +111,9 @@ export class PublicSignupController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Public signup tokens'],
+                    summary: 'Retrieve a token',
+                    description:
+                        "Get information about a specific token. The `:token` part of the URL should be the token's secret.",
                     operationId: 'getPublicSignupToken',
                     responses: {
                         200: createResponseSchema('publicSignupTokenSchema'),
@@ -126,6 +131,7 @@ export class PublicSignupController extends Controller {
                 openApiService.validPath({
                     tags: ['Public signup tokens'],
                     operationId: 'updatePublicSignupToken',
+                    summary: 'Update a public signup token',
                     requestBody: createRequestSchema(
                         'publicSignupTokenUpdateSchema',
                     ),

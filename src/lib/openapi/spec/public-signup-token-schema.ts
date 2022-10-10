@@ -45,7 +45,7 @@ export const publicSignupTokenSchema = {
         },
         users: {
             type: 'array',
-            description: 'Array of users that have signed up using the token',
+            description: 'Array of users that have signed up using the token.',
             items: {
                 $ref: '#/components/schemas/userSchema',
             },

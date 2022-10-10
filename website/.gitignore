@@ -20,6 +20,6 @@ yarn-debug.log*
 yarn-error.log*
 
 # OpenAPI docusaurus generated stuff
-docs/reference/apis/**/sidebar.js
+docs/reference/api/**/sidebar.js
 *.api.mdx
 *.tag.mdx

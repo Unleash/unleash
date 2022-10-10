@@ -1,5 +1,18 @@
 /* Figures (with captions) */
-figcaption {
-    text-align: center;
+figure {
+    box-shadow: var(--ifm-global-shadow-lw);
+    border-radius: var(--ifm-global-radius);
+    padding: var(--ifm-pre-padding);
 }
-/* End figures (with captions) */
+
+figure * + * {
+    margin-block-start: var(--ifm-pre-padding);
+}
+
+figcaption {
+    /* background: black; */
+    /* text-align: center; */
+    font-size: 90%;
+    padding-inline: var(--ifm-pre-padding);
+    border-inline-start: 5px solid var(--ifm-color-primary);
+}

@@ -2,9 +2,11 @@ import { IUnleashTest, setupAppWithAuth } from '../../../helpers/test-helper';
 import dbInit, { ITestDb } from '../../../helpers/database-init';
 import getLogger from '../../../../fixtures/no-logger';
 import { IPat } from '../../../../../lib/types/models/pat';
+import { IPatStore } from '../../../../../lib/types/stores/pat-store';
 
 let app: IUnleashTest;
 let db: ITestDb;
+let patStore: IPatStore;
 
 let tomorrow = new Date();
 let firstSecret;
@@ -13,6 +15,7 @@ tomorrow.setDate(tomorrow.getDate() + 1);
 
 beforeAll(async () => {
     db = await dbInit('user_pat', getLogger);
+    patStore = db.stores.patStore;
     app = await setupAppWithAuth(db.stores, {
         experimental: { flags: { personalAccessTokens: true } },
     });
@@ -186,5 +189,20 @@ test('should not get user with invalid token', async () => {
     await app.request
         .get('/api/admin/user')
         .set('Authorization', 'randomtoken')
+        .expect(401);
+});
+
+test('should not get user with expired token', async () => {
+    const token = await patStore.create({
+        id: 1,
+        secret: 'user:expired-token',
+        description: 'expired-token',
+        userId: 1,
+        expiresAt: new Date('2020-01-01'),
+    });
+
+    await app.request
+        .get('/api/admin/user')
+        .set('Authorization', token.secret)
         .expect(401);
 });

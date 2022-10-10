@@ -215,6 +215,7 @@ class UserStore implements IUserStore {
                 `${TABLE}.id`,
             )
             .where('secret', secret)
+            .andWhere('expires_at', '>', 'now()')
             .first();
         return rowToUser(row);
     }

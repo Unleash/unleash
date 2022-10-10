@@ -709,6 +709,9 @@ exports[`should serve the OpenAPI spec 1`] = `
             },
             "type": "array",
           },
+          "copyOf": {
+            "type": "string",
+          },
           "name": {
             "type": "string",
           },
@@ -2483,14 +2486,17 @@ exports[`should serve the OpenAPI spec 1`] = `
           },
           "role": {
             "$ref": "#/components/schemas/roleSchema",
+            "description": "Users who sign up using this token will be given this role.",
           },
           "secret": {
             "type": "string",
           },
           "url": {
+            "description": "The public signup link for the token. Users who follow this link will be taken to a signup page where they can create an Unleash user.",
             "type": "string",
           },
           "users": {
+            "description": "Array of users that have signed up using the token",
             "items": {
               "$ref": "#/components/schemas/userSchema",
             },
@@ -7472,6 +7478,7 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "The provided resource can not be created or updated because it would conflict with the current state of the resource or with an already existing resource, respectively.",
           },
         },
+        "summary": "Create a user with the "viewer" root role and link them to a signup token",
         "tags": [
           "Public signup tokens",
         ],
@@ -7498,6 +7505,7 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "The request data does not match what we expect.",
           },
         },
+        "summary": "Validates a public signup token exists, has not expired and is enabled",
         "tags": [
           "Public signup tokens",
         ],

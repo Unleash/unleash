@@ -39,6 +39,7 @@ import { FeatureEnvironmentSchema } from '../../../openapi/spec/feature-environm
 import { SetStrategySortOrderSchema } from '../../../openapi/spec/set-strategy-sort-order-schema';
 
 import { emptyResponse } from '../../../openapi/util/standard-responses';
+import { SegmentService } from '../../../services/segment-service';
 
 interface FeatureStrategyParams {
     projectId: string;
@@ -68,7 +69,10 @@ const PATH_STRATEGY = `${PATH_STRATEGIES}/:strategyId`;
 
 type ProjectFeaturesServices = Pick<
     IUnleashServices,
-    'featureToggleServiceV2' | 'projectHealthService' | 'openApiService'
+    | 'featureToggleServiceV2'
+    | 'projectHealthService'
+    | 'openApiService'
+    | 'segmentService'
 >;
 
 export default class ProjectFeaturesController extends Controller {
@@ -76,15 +80,22 @@ export default class ProjectFeaturesController extends Controller {
 
     private openApiService: OpenApiService;
 
+    private segmentService: SegmentService;
+
     private readonly logger: Logger;
 
     constructor(
         config: IUnleashConfig,
-        { featureToggleServiceV2, openApiService }: ProjectFeaturesServices,
+        {
+            featureToggleServiceV2,
+            openApiService,
+            segmentService,
+        }: ProjectFeaturesServices,
     ) {
         super(config);
         this.featureService = featureToggleServiceV2;
         this.openApiService = openApiService;
+        this.segmentService = segmentService;
         this.logger = config.getLogger('/admin-api/project/features.ts');
 
         this.route({
@@ -557,13 +568,29 @@ export default class ProjectFeaturesController extends Controller {
         res: Response<FeatureStrategySchema>,
     ): Promise<void> {
         const { projectId, featureName, environment } = req.params;
+        const { copyOf, ...strategyConfig } = req.body;
+
         const userName = extractUsername(req);
         const strategy = await this.featureService.createStrategy(
-            req.body,
+            strategyConfig,
             { environment, projectId, featureName },
             userName,
         );
-        res.status(200).json(strategy);
+
+        if (copyOf) {
+            this.logger.info(
+                `Cloning segments from: strategyId=${copyOf} to: strategyId=${strategy.id} `,
+            );
+            await this.segmentService.cloneStrategySegments(
+                copyOf,
+                strategy.id,
+            );
+        }
+
+        const updatedStrategy = await this.featureService.getStrategy(
+            strategy.id,
+        );
+        res.status(200).json(updatedStrategy);
     }
 
     async getFeatureStrategies(

@@ -21,6 +21,8 @@ export const publicSignupTokenSchema = {
             type: 'string',
         },
         url: {
+            description:
+                'The public signup link for the token. Users who follow this link will be taken to a signup page where they can create an Unleash user.',
             type: 'string',
         },
         name: {
@@ -43,12 +45,15 @@ export const publicSignupTokenSchema = {
         },
         users: {
             type: 'array',
+            description: 'Array of users that have signed up using the token',
             items: {
                 $ref: '#/components/schemas/userSchema',
             },
             nullable: true,
         },
         role: {
+            description:
+                'Users who sign up using this token will be given this role.',
             $ref: '#/components/schemas/roleSchema',
         },
     },

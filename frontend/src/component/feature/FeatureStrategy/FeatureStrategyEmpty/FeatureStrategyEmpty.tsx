@@ -12,6 +12,8 @@ import { useFeatureImmutable } from 'hooks/api/getters/useFeature/useFeatureImmu
 import { getFeatureStrategyIcon } from 'utils/strategyNames';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { CopyButton } from './CopyButton/CopyButton';
+import { useSegments } from '../../../../hooks/api/getters/useSegments/useSegments';
+import { IFeatureStrategyPayload } from '../../../../interfaces/strategy';
 
 interface IFeatureStrategyEmptyProps {
     projectId: string;
@@ -65,6 +67,7 @@ export const FeatureStrategyEmpty = ({
                     const { id, ...strategyCopy } = {
                         ...strategy,
                         environment: environmentId,
+                        copyOf: strategy.id,
                     };
 
                     return addStrategyToFeature(

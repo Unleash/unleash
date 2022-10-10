@@ -124,7 +124,6 @@ export class SegmentService {
         const sourceStrategySegments = await this.getByStrategy(
             sourceStrategyId,
         );
-
         await Promise.all(
             sourceStrategySegments.map((sourceStrategySegment) => {
                 return this.addToStrategy(

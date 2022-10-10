@@ -12,7 +12,7 @@ import SelectMenu from 'component/common/select';
 import { formatDateYMD } from 'utils/formatDate';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { IPersonalAPIToken } from 'interfaces/personalAPIToken';
+import { INewPersonalAPIToken } from 'interfaces/personalAPIToken';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',
@@ -85,7 +85,7 @@ const expirationOptions = [
 interface ICreatePersonalAPITokenProps {
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    newToken: (token: IPersonalAPIToken) => void;
+    newToken: (token: INewPersonalAPIToken) => void;
 }
 
 export const CreatePersonalAPIToken: FC<ICreatePersonalAPITokenProps> = ({

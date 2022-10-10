@@ -2450,10 +2450,12 @@ exports[`should serve the OpenAPI spec 1`] = `
         "additionalProperties": false,
         "properties": {
           "expiresAt": {
+            "description": "The token's expiration date.",
             "format": "date-time",
             "type": "string",
           },
           "name": {
+            "description": "The token's name.",
             "type": "string",
           },
         },
@@ -2496,7 +2498,7 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "string",
           },
           "users": {
-            "description": "Array of users that have signed up using the token",
+            "description": "Array of users that have signed up using the token.",
             "items": {
               "$ref": "#/components/schemas/userSchema",
             },
@@ -2523,6 +2525,7 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "boolean",
           },
           "expiresAt": {
+            "description": "The token's expiration date.",
             "format": "date-time",
             "type": "string",
           },
@@ -4585,6 +4588,7 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "publicSignupTokensSchema",
           },
         },
+        "summary": "Retrieve all existing public signup tokens",
         "tags": [
           "Public signup tokens",
         ],
@@ -4623,6 +4627,7 @@ If the provided project does not exist, the list of events will be empty.",
             },
           },
         },
+        "summary": "Create a public signup token",
         "tags": [
           "Public signup tokens",
         ],
@@ -4630,6 +4635,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/invite-link/tokens/{token}": {
       "get": {
+        "description": "Get information about a specific token. The \`:token\` part of the URL should be the token's secret.",
         "operationId": "getPublicSignupToken",
         "parameters": [
           {
@@ -4653,6 +4659,7 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "publicSignupTokenSchema",
           },
         },
+        "summary": "Retrieve a token",
         "tags": [
           "Public signup tokens",
         ],
@@ -4692,6 +4699,7 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "publicSignupTokenSchema",
           },
         },
+        "summary": "Update a public signup token",
         "tags": [
           "Public signup tokens",
         ],
@@ -7505,7 +7513,7 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "The request data does not match what we expect.",
           },
         },
-        "summary": "Validates a public signup token exists, has not expired and is enabled",
+        "summary": "Check whether a public sign-up token exists, has not expired and is enabled",
         "tags": [
           "Public signup tokens",
         ],

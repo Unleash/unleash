@@ -289,6 +289,7 @@ module.exports = {
                         'advanced/toggle_variants',
                         'reference/front-end-api',
                         'reference/playground',
+                        'reference/public-signup',
                         'user_guide/projects',
                         'user_guide/rbac',
                         'reference/segments',

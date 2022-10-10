@@ -1,0 +1,26 @@
+---
+title: Public Invite Links
+---
+
+Public invite links let you invite team members to your Unleash instance. Any user with an invite link can sign up to Unleash instance that created the link. The user will get the **viewer** role (refer to the [_standard roles_ section of the RBAC document](../user_guide/rbac.md#standard-roles) for more information on roles).
+
+User who follow the invite link are taken directly to the Unleash sign-up page, where they can create an account.
+
+Only **Unleash instance admins** can create public invite links.
+
+![An Unleash signup form for new users](/img/public-invite_signup.png)
+
+## Public sign-up tokens
+
+The most important part of a public sign-up link is the sign-up token. The token is added as the `invite` query parameter to the invite link.
+
+Each token has an **expiry date**. After this expiry date, the token will stop working and users can no longer sign up using an invite link with that token.
+
+## Creating, updating, and deleting tokens
+
+You can [create, update and delete tokens via the Unleash Admin UI](../how-to/how-to-manage-public-invite-tokens.mdx) or via the [Unleash API](../reference/api/unleash/public-signup-tokens.tag.mdx "Public sign-up tokens API documentation").
+
+A token is active as soon as it's created and stops working as soon as it's deleted or expired.
+
+You can only have one active invite token at a time. If you already have an active token, you must delete it to create a new one.
+

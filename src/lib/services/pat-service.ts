@@ -37,6 +37,7 @@ export default class PatService {
         pat.userId = user.id;
         const newPat = await this.patStore.create(pat);
 
+        pat.secret = '***';
         await this.eventStore.store({
             type: PAT_CREATED,
             createdBy: user.email || user.username,
@@ -50,8 +51,8 @@ export default class PatService {
         return this.patStore.getAllByUser(user.id);
     }
 
-    async deletePat(secret: string): Promise<void> {
-        return this.patStore.delete(secret);
+    async deletePat(id: number, userId: number): Promise<void> {
+        return this.patStore.deleteForUser(id, userId);
     }
 
     private generateSecretKey() {

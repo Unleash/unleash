@@ -146,7 +146,7 @@ The **environment** is the name of an environment on your Unleash server, such a
 
 The **hash** is 64 character long hexadecimal string.
 
-Personal API tokens do not have either the project or environment parts, since they mimic the user that created them. In place of the project field, the string `user` is present so that the token can be identified as a personal access token.
+Personal API tokens do not contain project or environment information, since they mimic the user that created them. Instead, the token starts with the string `user`.
 
 Some example client tokens are:
 

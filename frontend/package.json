@@ -130,5 +130,8 @@
     "ignorePatterns": [
       "cypress"
     ]
+  },
+  "dependencies": {
+    "millify": "^5.0.1"
   }
 }

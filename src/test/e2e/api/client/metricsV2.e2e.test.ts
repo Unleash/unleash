@@ -97,3 +97,52 @@ test('should pick up environment from token', async () => {
     expect(metrics[0].environment).toBe('test');
     expect(metrics[0].appName).toBe('some-fancy-app');
 });
+
+test('should set lastSeen for toggles with metrics', async () => {
+    const start = Date.now();
+    await app.services.featureToggleServiceV2.createFeatureToggle(
+        'default',
+        { name: 't1' },
+        'tester',
+    );
+    await app.services.featureToggleServiceV2.createFeatureToggle(
+        'default',
+        { name: 't2' },
+        'tester',
+    );
+    const token = await app.services.apiTokenService.createApiToken({
+        type: ApiTokenType.CLIENT,
+        project: 'default',
+        environment: 'default',
+        username: 'tester',
+    });
+
+    await app.request
+        .post('/api/client/metrics')
+        .set('Authorization', token.secret)
+        .send({
+            appName: 'some-fancy-app',
+            instanceId: '1',
+            bucket: {
+                start: Date.now(),
+                stop: Date.now(),
+                toggles: {
+                    t1: {
+                        yes: 100,
+                        no: 50,
+                    },
+                    t2: {
+                        yes: 0,
+                        no: 0,
+                    },
+                },
+            },
+        })
+        .expect(202);
+
+    await app.services.clientMetricsServiceV2.bulkAdd();
+    const t1 = await db.stores.featureToggleStore.get('t1');
+    const t2 = await db.stores.featureToggleStore.get('t2');
+    expect(t1.lastSeenAt.getTime()).toBeGreaterThanOrEqual(start);
+    expect(t2.lastSeenAt).toBeDefined();
+});

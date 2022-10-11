@@ -62,23 +62,27 @@ export default class ClientMetricsServiceV2 {
         clientIp: string,
     ): Promise<void> {
         const value = await clientMetricsSchema.validateAsync(data);
-        const toggleNames = Object.keys(value.bucket.toggles);
+        const toggleNames = Object.keys(value.bucket.toggles).filter(
+            (name) =>
+                !(
+                    value.bucket.toggles[name].yes === 0 &&
+                    value.bucket.toggles[name].no === 0
+                ),
+        );
         if (toggleNames.length > 0) {
             await this.featureToggleStore.setLastSeen(toggleNames);
         }
 
         this.logger.debug(`got metrics from ${clientIp}`);
 
-        const clientMetrics: IClientMetricsEnv[] = toggleNames
-            .map((name) => ({
-                featureName: name,
-                appName: value.appName,
-                environment: value.environment,
-                timestamp: value.bucket.start, //we might need to approximate between start/stop...
-                yes: value.bucket.toggles[name].yes,
-                no: value.bucket.toggles[name].no,
-            }))
-            .filter((item) => !(item.yes === 0 && item.no === 0));
+        const clientMetrics: IClientMetricsEnv[] = toggleNames.map((name) => ({
+            featureName: name,
+            appName: value.appName,
+            environment: value.environment,
+            timestamp: value.bucket.start, //we might need to approximate between start/stop...
+            yes: value.bucket.toggles[name].yes,
+            no: value.bucket.toggles[name].no,
+        }));
 
         if (this.config.flagResolver.isEnabled('batchMetrics')) {
             this.unsavedMetrics = collapseHourlyMetrics([

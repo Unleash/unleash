@@ -2,7 +2,6 @@
 title: Anatomy of Unleash
 ---
 import Figure from '@site/src/components/Figure/Figure.tsx'
-import img1 from '/img/anatomy-of-unleash-environment.png'
 
 Unleash has many different components on different levels. This guide is here to give you a conceptual overview over how Unleash works. It covers the various components that exist within an Unleash system and how they interact with each other and with external applications. The diagrams are intended to help you understand the fundamental building blocks, such as [projects](../user_guide/projects.md), [environments](../user_guide/environments.md), [variants](../advanced/feature-toggle-variants.md) and, of course, [feature toggles](../reference/feature-toggles.mdx).
 
@@ -29,7 +28,7 @@ All Unleash instances must have at least one project at any given time. New inst
 
 Pro and Enterprise customers can create, rename, and delete projects as they wish (as long as there is always **at least one project**). Open-source users, on the other hand, only get access to the default project.
 
-<Figure caption="Unleash projects (the outer box) contain one or more environments (the inner box)." img={img1}/>
+<Figure caption="Unleash projects (the outer box) contain one or more environments (the inner box)." img={'/img/anatomy-of-unleash-environment.png'}/>
 
 ## Environments and project environments
 

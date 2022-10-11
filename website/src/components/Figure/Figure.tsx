@@ -64,6 +64,7 @@
 **/
 
 import React from 'react';
+import useBaseUrl from '@docusaurus/useBaseUrl';
 
 import './styles.module.css';
 
@@ -80,7 +81,7 @@ type Props = {
 const Component: React.FC<Props> = ({ img, alt, caption }) => {
     return (
         <figure>
-            <img alt={alt} src={img.src} />
+            <img alt={alt} src={useBaseUrl(img)} />
             <figcaption>{caption}</figcaption>
         </figure>
     );

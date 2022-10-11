@@ -80,7 +80,7 @@ type Props = {
 const Component: React.FC<Props> = ({ img, alt, caption }) => {
     return (
         <figure>
-            <img alt={alt} src={require(`@site/static${img}`).src} />
+            <img alt={alt} src={img.src} />
             <figcaption>{caption}</figcaption>
         </figure>
     );

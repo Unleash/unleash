@@ -75,7 +75,7 @@ export default async function getApp(
     // Preflight requests should not have Authorization headers,
     // so this must be handled before the API token middleware.
     app.options(
-        '/api/frontend*',
+        `${baseUriPath}/api/frontend*`,
         conditionalMiddleware(
             () => config.flagResolver.isEnabled('embedProxy'),
             corsOriginMiddleware(services),

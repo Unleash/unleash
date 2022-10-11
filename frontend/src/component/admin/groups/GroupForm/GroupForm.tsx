@@ -6,6 +6,7 @@ import { IGroupUser } from 'interfaces/group';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { GroupFormUsersSelect } from './GroupFormUsersSelect/GroupFormUsersSelect';
 import { GroupFormUsersTable } from './GroupFormUsersTable/GroupFormUsersTable';
+import { ItemList } from 'component/common/ItemList/ItemList';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',
@@ -19,6 +20,12 @@ const StyledInputDescription = styled('p')(({ theme }) => ({
 }));
 
 const StyledInput = styled(Input)(({ theme }) => ({
+    width: '100%',
+    maxWidth: theme.spacing(50),
+    marginBottom: theme.spacing(2),
+}));
+
+const StyledItemList = styled(ItemList)(({ theme }) => ({
     width: '100%',
     maxWidth: theme.spacing(50),
     marginBottom: theme.spacing(2),
@@ -41,9 +48,11 @@ const StyledCancelButton = styled(Button)(({ theme }) => ({
 interface IGroupForm {
     name: string;
     description: string;
+    mappingsSSO: string[];
     users: IGroupUser[];
     setName: (name: string) => void;
     setDescription: React.Dispatch<React.SetStateAction<string>>;
+    setMappingsSSO: React.Dispatch<React.SetStateAction<string[]>>;
     setUsers: React.Dispatch<React.SetStateAction<IGroupUser[]>>;
     handleSubmit: (e: any) => void;
     handleCancel: () => void;
@@ -54,9 +63,11 @@ interface IGroupForm {
 export const GroupForm: FC<IGroupForm> = ({
     name,
     description,
+    mappingsSSO,
     users,
     setName,
     setDescription,
+    setMappingsSSO,
     setUsers,
     handleSubmit,
     handleCancel,
@@ -91,6 +102,21 @@ export const GroupForm: FC<IGroupForm> = ({
                 value={description}
                 onChange={e => setDescription(e.target.value)}
                 data-testid={UG_DESC_ID}
+            />
+            <ConditionallyRender
+                condition={true} // TODO: feature flag + SSO sync enabled
+                show={
+                    <>
+                        <StyledInputDescription>
+                            Is this group associated with SSO groups?
+                        </StyledInputDescription>
+                        <StyledItemList
+                            label="SSO group ID / name"
+                            value={mappingsSSO}
+                            onChange={setMappingsSSO}
+                        />
+                    </>
+                }
             />
             <ConditionallyRender
                 condition={mode === 'Create'}

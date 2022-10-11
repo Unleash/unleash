@@ -17,6 +17,12 @@ export const groupSchema = {
         description: {
             type: 'string',
         },
+        mappingsSSO: {
+            type: 'array',
+            items: {
+                type: 'string',
+            },
+        },
         createdBy: {
             type: 'string',
             nullable: true,

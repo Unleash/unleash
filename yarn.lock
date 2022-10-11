@@ -3413,10 +3413,10 @@ faker@5.5.3:
   resolved "https://registry.npmjs.org/faker/-/faker-5.5.3.tgz"
   integrity sha512-wLTv2a28wjUyWkbnX7u/ABZBkUkIF2fCd73V6P2oFqEGEktDfzWx4UxrSqtPRw0xPRAcjeAOIiJWqZm3pP4u3g==
 
-fast-check@3.1.4:
-  version "3.1.4"
-  resolved "https://registry.yarnpkg.com/fast-check/-/fast-check-3.1.4.tgz#e755623b4a63d0a26c285acbd1c1d8e3ea283a6e"
-  integrity sha512-AC4o8U7riY668tHAcJ10PHWpmhaNDfyzs2THFwQ6FJMPP05EmHKEmYvup7B1DCS+kKAzzosjSF51TamUM5IyPA==
+fast-check@3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/fast-check/-/fast-check-3.2.0.tgz#a1f2848de45a4ea6b4606993022ffde7003aa296"
+  integrity sha512-RH1GMdVeN6Le0B4gI7fz5VZnCgrkREqt4SFMGyFe8v9n06ZuFdR2npxJDl8GUvZQZCq0/mo92JYUZInZnUm0nw==
   dependencies:
     pure-rand "^5.0.2"
 

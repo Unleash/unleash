@@ -55,7 +55,11 @@ Support for scoped admin tokens with more fine-grained permissions is currently 
 
 ### Personal access tokens
 
-**Personal access tokens** are a special form of admin tokens and grant access to the same resources that the user that created them has access to. These permissions are dynamic, so if a user's permissions change through addition of a custom role, the token will likewise have altered permissions. Using a personal access token to modify resources will reflect the creating user's name in the event log for that operation. All personal access tokens have a lifetime and will stop working after the expiration date.
+**Personal access tokens** are a special form of admin tokens and grant access to the same resources that the user that created them has access to. These permissions are dynamic, so if a user's permissions change through addition of a custom role, the token will likewise have altered permissions. 
+
+When using a personal access token to modify resources, the event log will list the token creator's name for that operation. 
+
+All personal access tokens have a lifetime and **will stop working after the expiration** date.
 
 Use personal access tokens to:
 

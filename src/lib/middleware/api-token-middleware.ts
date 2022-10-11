@@ -15,7 +15,7 @@ const isProxyApi = ({ path }) => {
     // Handle all our current proxy paths which will redirect to the new
     // embedded proxy endpoint
     return (
-        path.startsWith('/api/default/proxy') ||
+        path.startsWith('/api/proxy') ||
         path.startsWith('/api/development/proxy') ||
         path.startsWith('/api/production/proxy') ||
         path.startsWith('/api/frontend')

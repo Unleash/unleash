@@ -33,6 +33,8 @@ Pro and Enterprise customers can create, rename, and delete projects as they wis
 
 ## Environments and project environments
 
+<Figure img="/img/anatomy-of-unleash-customer-tiers.png" caption="Feature toggles can be activated or deactivated independently in different environments. For instance, a feature toggle can be active in the development environment, and deactivated in the production environment. Even if their configuration is otherwise identical, deactivated feature toggles will never be considered enabled."/>
+
 [**Environments**](../user_guide/environments.md) in Unleash let you change how a feature toggle works in your application’s different environments. For instance, while you are developing a feature, it’s likely that you’ll want it to be available in the development environment, but not in the production environment: environments let you do that. You might also want to enable a feature for only some users in a production environment, but for no users in a development environment: environments let you do that.
 
 Environments exist on two different levels within Unleash. The set of **all available environments is defined on the global level**. Additionally, **each project** can choose which of these global environments should be **available on the project level**. The set of environments available to any given project is **always a subset** of the set of globally available environments.
@@ -44,6 +46,9 @@ Enterprise users can create and remove environments. Open-source and Pro custome
 Environments are adjacent to [feature toggles](../reference/feature-toggles.mdx) in Unleash: neither one contains the other, but they come together to let you define activation strategies.
 
 
+
+<Figure img="/img/anatomy-of-unleash-new-feature-rollout.png" caption="You can use different activation strategies and constraints in different environments. For instance, you can show a feature only to select user IDs in development, but roll it out to 25% of your user base in production."/>
+
 ## Features (feature  toggles)
 
 [**Feature toggles**](../reference/feature-toggles.mdx) are at the heart of Unleash’s functionality. Feature toggles belong to projects and live next to project environments. In and of itself, a feature toggle doesn’t do anything. You must assign [**activation strategies**](../user_guide/activation-strategies.md) to it for it to start taking effect.
@@ -52,11 +57,9 @@ When creating a feature toggle, you must assign a unique (across your Unleash in
 
 <Figure img="/img/anatomy-of-unleash-features.png" caption="Feature toggle states are evaluated independently in each environment." alt="A hierarchy showing a project containing an environment containing a feature toggle configuration."/>
 
-<Figure img="/img/anatomy-of-unleash-strategy.png" caption="Activation strategies are applied to feature toggles on a per-environment basis and decide whether a feature is enabled or not." alt="A hierarchy displaying an environment containing a feature toggle configuration with an activation strategy."/>
-
-
-
 ## Activation strategies
+
+<Figure img="/img/anatomy-of-unleash-strategy.png" caption="Activation strategies are applied to feature toggles on a per-environment basis and decide whether a feature is enabled or not." alt="A hierarchy displaying an environment containing a feature toggle configuration with an activation strategy."/>
 
 [**Activation strategies**](../user_guide/activation-strategies.md) (or just **strategies** for short) are the part of feature toggles that tell Unleash **who should get a feature**. An activation strategy is assigned to **one **feature toggle in **one **environment.
 
@@ -66,7 +69,10 @@ Activation strategies tie feature toggles and [environments](../user_guide/envir
 
 Unleash comes with a number of strategies built in (refer the [activation strategies documentation](../user_guide/activation-strategies.md) for more information on those). You can also create your own [custom activation strategies](../advanced/custom-activation-strategy.md) if you need them. All strategies can be further augmented by [**strategy constraints**](../advanced/strategy-constraints.md).
 
-<Figure img="/img/anatomy-of-unleash-constraint.png" caption="Constraints can be applied to strategies, allowing you to narrow a feature's audience." alt="A hierarchy drawing showing a constraint applied to an activation strategy."/>
+
+<Figure img="/img/anatomy-of-unleash-environments-strategies.png" caption="Feature toggles exist across environments and can have different activation strategies in each environment."/>
+
+<Figure img="/img/anatomy-of-unleash-environments-strategies2.png" caption="Feature toggle activation strategies can be copied between environments. You can also create new strategies in each environment."/>
 
 ## Strategy constraints
 
@@ -82,6 +88,7 @@ You can define constraints on whatever properties you want in your [Unleash cont
 
 Constraints are applied to individual strategies and do not stay in sync with each other. When you need to have the same constraints applied to multiple strategies and need those constraints to stay in sync, use [**segments**](../reference/segments.mdx).
 
+<Figure img="/img/anatomy-of-unleash-constraint.png" caption="Constraints can be applied to strategies, allowing you to narrow a feature's audience." alt="A hierarchy drawing showing a constraint applied to an activation strategy."/>
 
 ## Segments
 
@@ -107,15 +114,7 @@ You can use the variant payload to attach arbitrary data to a variant. Variants 
 
 A feature toggle can have as many variants as you want. Importantly, variants are independent of [environments](../user_guide/environments.md). In other words: you’ll always have the exact same variants with the exact same weightings and the exact same payloads in all environments.
 
-<Figure img="/img/anatomy-of-unleash-environments-strategies.png" caption="Feature toggles exist across environments and can have different activation strategies in each environment."/>
-
-<Figure img="/img/anatomy-of-unleash-environments-strategies2.png" caption="Feature toggle activation strategies can be copied between environments. You can also create new strategies new strategies in each environment."/>
-
 <Figure img="/img/anatomy-of-unleash-variants.png" caption="Feature toggle variants are the same for all environments."/>
-
-<Figure img="/img/anatomy-of-unleash-customer-tiers.png" caption="Feature toggles can be activated or deactivated independently in different environments. For instance, a feature toggle can be active in the development environment, and deactivated in the production environment. Even if their configuration is otherwise identical, deactivated feature toggles will never be considered enabled."/>
-
-<Figure img="/img/anatomy-of-unleash-new-feature-rollout.png" caption="You can use different activation strategies and constraints in different environments. For instance, you can show a feature only to select user IDs in development, but roll it out to 25% of your user base in production."/>
 
 ## Use case: changing website colors {#use-case}
 

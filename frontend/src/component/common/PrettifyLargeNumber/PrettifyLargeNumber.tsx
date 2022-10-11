@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import millify from 'millify';
 import { Tooltip } from '@mui/material';
+import { LARGE_NUMBER_PRETTIFIED } from 'utils/testIds';
 
 interface IPrettifyLargeNumberProps {
     /**
@@ -36,9 +37,9 @@ export const PrettifyLargeNumber: FC<IPrettifyLargeNumberProps> = ({
 
     return showTooltip ? (
         <Tooltip title={value.toLocaleString()} arrow>
-            <span>{prettyValue}</span>
+            <span data-testid={LARGE_NUMBER_PRETTIFIED}>{prettyValue}</span>
         </Tooltip>
     ) : (
-        <>{prettyValue}</>
+        <span data-testid={LARGE_NUMBER_PRETTIFIED}>{prettyValue}</span>
     );
 };

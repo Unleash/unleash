@@ -34,9 +34,11 @@ An API token contains the following pieces of information:
 | Name | Description |
 | --- | --- |
 | Token name (sometimes called "username") | The token's name. Names are **not** required to be unique. |
-| Type | What kind of token it is: admin, client, user (personal api token) or front-end. |
-| Projects | What projects a token has access to - not present in personal api tokens. |
-| Environment | What environment the token has access to - not present in personal api tokens. |
+| Type | What kind of token it is: admin, client, or front-end. |
+| Projects | What projects a token has access to. |
+| Environment | What environment the token has access to. |
+
+
 
 ### Admin tokens
 
@@ -55,9 +57,9 @@ Support for scoped admin tokens with more fine-grained permissions is currently 
 
 ### Personal access tokens
 
-**Personal access tokens** are a special form of admin tokens and grant access to the same resources that the user that created them has access to. These permissions are dynamic, so if a user's permissions change through addition of a custom role, the token will likewise have altered permissions. 
+**Personal access tokens** are a special form of admin tokens and grant access to the same resources that the user that created them has access to. These permissions are dynamic, so if a user's permissions change through addition of a custom role, the token will likewise have altered permissions.
 
-When using a personal access token to modify resources, the event log will list the token creator's name for that operation. 
+When using a personal access token to modify resources, the event log will list the token creator's name for that operation.
 
 All personal access tokens have a lifetime and **will stop working after the expiration** date.
 

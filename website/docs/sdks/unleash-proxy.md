@@ -98,7 +98,7 @@ Keep-Alive: timeout=5
 
 :::info Limitations for hosted proxies
 
-Custom activation strategies can **not** be used with the hosted proxy option available to Pro and Enterprise customers.
+Custom activation strategies can **not** be used with the Unleash-hosted proxy available to Pro and Enterprise customers.
 
 :::
 

@@ -15,7 +15,7 @@ figure * + * {
 }
 
 figcaption {
-    font-size: 90%;
+    font-size: var(--unleash-font-size-smaller);
     padding-inline: var(--ifm-pre-padding);
     border-inline-start: 5px solid var(--ifm-color-primary);
 }

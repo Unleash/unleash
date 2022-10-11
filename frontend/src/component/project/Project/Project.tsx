@@ -23,7 +23,7 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { DeleteProjectDialogue } from './DeleteProject/DeleteProjectDialogue';
-import ProjectLog from './ProjectLog/ProjectLog';
+import { ProjectLog } from './ProjectLog/ProjectLog';
 
 const StyledDiv = styled('div')(() => ({
     display: 'flex',

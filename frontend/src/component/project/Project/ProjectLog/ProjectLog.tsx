@@ -1,21 +1,23 @@
 import { EventLog } from 'component/events/EventLog/EventLog';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { useStyles } from './ProjectLog.styles';
+import { styled } from '@mui/material';
 
-const ProjectLog = () => {
+const StyledDiv = styled('div')(({ theme }) => ({
+    borderRadius: '12.5px',
+    backgroundColor: theme.palette.background.paper,
+    padding: '2rem',
+}));
+
+export const ProjectLog = () => {
     const projectId = useRequiredPathParam('projectId');
 
-    const { classes: styles } = useStyles();
-
     return (
-        <div className={styles.container}>
+        <StyledDiv>
             <EventLog
                 title="Event Log"
                 project={projectId}
                 displayInline
             ></EventLog>
-        </div>
+        </StyledDiv>
     );
 };
-
-export default ProjectLog;

@@ -5,6 +5,11 @@ figure {
     padding: var(--ifm-pre-padding);
 }
 
+figure img {
+    box-shadow: none;
+    border: none;
+}
+
 figure * + * {
     margin-block-start: var(--ifm-pre-padding);
 }

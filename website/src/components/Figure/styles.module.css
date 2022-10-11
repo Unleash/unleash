@@ -15,8 +15,6 @@ figure * + * {
 }
 
 figcaption {
-    /* background: black; */
-    /* text-align: center; */
     font-size: 90%;
     padding-inline: var(--ifm-pre-padding);
     border-inline-start: 5px solid var(--ifm-color-primary);

@@ -50,9 +50,9 @@ Environments are adjacent to [feature toggles](../reference/feature-toggles.mdx)
 
 When creating a feature toggle, you must assign a unique (across your Unleash instance) name, a [feature toggle type](../advanced/feature-toggle-types.md), a [project](../user_guide/projects.md) it belongs to, and an optional description. Everything except for the name can be changed later.
 
-<Figure img="/img/anatomy-of-unleash-features.png" caption="TODO"/>
+<Figure img="/img/anatomy-of-unleash-features.png" caption="Feature toggle states are evaluated independently in each environment." alt="A hierarchy showing a project containing an environment containing a feature toggle configuration."/>
 
-<Figure img="/img/anatomy-of-unleash-strategy.png" caption="TODO"/>
+<Figure img="/img/anatomy-of-unleash-strategy.png" caption="Activation strategies are applied to feature toggles on a per-environment basis and decide whether a feature is enabled or not." alt="A hierarchy displaying an environment containing a feature toggle configuration with an activation strategy."/>
 
 
 
@@ -66,7 +66,7 @@ Activation strategies tie feature toggles and [environments](../user_guide/envir
 
 Unleash comes with a number of strategies built in (refer the [activation strategies documentation](../user_guide/activation-strategies.md) for more information on those). You can also create your own [custom activation strategies](../advanced/custom-activation-strategy.md) if you need them. All strategies can be further augmented by [**strategy constraints**](../advanced/strategy-constraints.md).
 
-<Figure img="/img/anatomy-of-unleash-constraint.png" caption="TODO"/>
+<Figure img="/img/anatomy-of-unleash-constraint.png" caption="Constraints can be applied to strategies, allowing you to narrow a feature's audience." alt="A hierarchy drawing showing a constraint applied to an activation strategy."/>
 
 ## Strategy constraints
 
@@ -93,7 +93,7 @@ You can apply multiple segments to a strategy. Much like with constraints, **eve
 
 Segments are only available to Pro and Enterprise users.
 
-<Figure img="/img/anatomy-of-unleash-segments.png" caption="TODO"/>
+<Figure img="/img/anatomy-of-unleash-segments.png" caption="Segments are reusable lists of constraints that can be applied to a strategy instead of or in addition to constraints." />
 
 ## Variants and feature toggle payloads
 
@@ -107,20 +107,15 @@ You can use the variant payload to attach arbitrary data to a variant. Variants 
 
 A feature toggle can have as many variants as you want. Importantly, variants are independent of [environments](../user_guide/environments.md). In other words: you’ll always have the exact same variants with the exact same weightings and the exact same payloads in all environments.
 
-<Figure img="/img/anatomy-of-unleash-environments-strategies.png" caption="TODO"/>
+<Figure img="/img/anatomy-of-unleash-environments-strategies.png" caption="Feature toggles exist across environments and can have different activation strategies in each environment."/>
 
-<Figure img="/img/anatomy-of-unleash-environments-strategies2.png" caption="TODO"/>
+<Figure img="/img/anatomy-of-unleash-environments-strategies2.png" caption="Feature toggle activation strategies can be copied between environments. You can also create new strategies new strategies in each environment."/>
 
-<Figure img="/img/anatomy-of-unleash-variants.png" caption="TODO"/>
+<Figure img="/img/anatomy-of-unleash-variants.png" caption="Feature toggle variants are the same for all environments."/>
 
-<Figure img="/img/anatomy-of-unleash-customer-tiers.png" caption="TODO"/>
+<Figure img="/img/anatomy-of-unleash-customer-tiers.png" caption="Feature toggles can be activated or deactivated independently in different environments. For instance, a feature toggle can be active in the development environment, and deactivated in the production environment. Even if their configuration is otherwise identical, deactivated feature toggles will never be considered enabled."/>
 
-
-**Example 1: **Customers above a certain tier get additional features
-
-<Figure img="/img/anatomy-of-unleash-new-feature-rollout.png" caption="TODO"/>
-
-**Example 2: **New feature rollout for improved checkout process
+<Figure img="/img/anatomy-of-unleash-new-feature-rollout.png" caption="You can use different activation strategies and constraints in different environments. For instance, you can show a feature only to select user IDs in development, but roll it out to 25% of your user base in production."/>
 
 ## Use case: changing website colors {#use-case}
 

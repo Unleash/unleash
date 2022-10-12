@@ -69,6 +69,7 @@
     "immer": "9.0.15",
     "jsdom": "20.0.1",
     "lodash.clonedeep": "4.5.0",
+    "millify": "^5.0.1",
     "msw": "0.47.4",
     "pkginfo": "0.4.1",
     "plausible-tracker": "0.3.8",

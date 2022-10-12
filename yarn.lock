@@ -5641,10 +5641,10 @@ onetime@^6.0.0:
   dependencies:
     mimic-fn "^4.0.0"
 
-openapi-enforcer@1.21.1:
-  version "1.21.1"
-  resolved "https://registry.yarnpkg.com/openapi-enforcer/-/openapi-enforcer-1.21.1.tgz#7ee234744ab9be6f556074fea5421cd16bcb464e"
-  integrity sha512-3prImYTGEsbQo0KC2/pCDprqaSFa52g9vyiEIzop1MspBxWd8YEAftpyYrNfyI/oxPHVPTD7GbQwp7mknun0Kg==
+openapi-enforcer@1.22.0:
+  version "1.22.0"
+  resolved "https://registry.yarnpkg.com/openapi-enforcer/-/openapi-enforcer-1.22.0.tgz#89fd941e4573874214790822754ee0b56dd01099"
+  integrity sha512-TP91CEsR10HB8qTv4hhq8+PiLCPCQtfJYVe+kBF67MfFpO7RicZIwwE4Fev5XFgtv1IcBnX33GdEx/P7Xnk7nA==
   dependencies:
     js-yaml "^4.1.0"
     randexp "^0.5.3"

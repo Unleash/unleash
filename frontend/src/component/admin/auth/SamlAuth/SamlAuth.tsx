@@ -257,7 +257,8 @@ export const SamlAuth = () => {
                     <Grid item md={5}>
                         <strong>Enable Group Syncing</strong>
                         <p>
-                            Enables automatically syncing of users from the SAML provider when a user logs in
+                            Enables automatically syncing of users from the SAML
+                            provider when a user logs in
                         </p>
                     </Grid>
                     <Grid item md={6} style={{ padding: '20px' }}>
@@ -272,9 +273,7 @@ export const SamlAuth = () => {
                                 />
                             }
                             label={
-                                data.enableGroupSyncing
-                                    ? 'Enabled'
-                                    : 'Disabled'
+                                data.enableGroupSyncing ? 'Enabled' : 'Disabled'
                             }
                         />
                     </Grid>
@@ -283,7 +282,8 @@ export const SamlAuth = () => {
                     <Grid item md={5}>
                         <strong>Group Field JSON Path</strong>
                         <p>
-                            Specifies the path in the SAML token response from which to read the groups the user belongs to
+                            Specifies the path in the SAML token response from
+                            which to read the groups the user belongs to
                         </p>
                     </Grid>
                     <Grid item md={6}>

@@ -261,9 +261,7 @@ export const OidcAuth = () => {
                                 />
                             }
                             label={
-                                data.enableGroupSyncing
-                                    ? 'Enabled'
-                                    : 'Disabled'
+                                data.enableGroupSyncing ? 'Enabled' : 'Disabled'
                             }
                         />
                     </Grid>

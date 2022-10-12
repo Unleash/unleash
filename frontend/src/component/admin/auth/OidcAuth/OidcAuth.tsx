@@ -272,7 +272,7 @@ export const OidcAuth = () => {
                     <Grid item md={5}>
                         <strong>Group Field JSON Path</strong>
                         <p>
-                            Specifies the path in the OIDC token response from which to read the groups the user belongs to
+                            Specifies the path in the OIDC token response from which to read the groups the user belongs to.
                         </p>
                     </Grid>
                     <Grid item md={6}>

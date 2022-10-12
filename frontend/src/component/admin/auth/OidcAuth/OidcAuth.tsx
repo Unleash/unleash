@@ -246,7 +246,8 @@ export const OidcAuth = () => {
                     <Grid item md={5}>
                         <strong>Enable Group Syncing</strong>
                         <p>
-                            Enables automatically syncing of users from the OIDC provider when a user logs in.
+                            Enables automatically syncing of users from the OIDC
+                            provider when a user logs in.
                         </p>
                     </Grid>
                     <Grid item md={6} style={{ padding: '20px' }}>
@@ -270,7 +271,8 @@ export const OidcAuth = () => {
                     <Grid item md={5}>
                         <strong>Group Field JSON Path</strong>
                         <p>
-                            Specifies the path in the OIDC token response from which to read the groups the user belongs to.
+                            Specifies the path in the OIDC token response from
+                            which to read the groups the user belongs to.
                         </p>
                     </Grid>
                     <Grid item md={6}>

@@ -38,14 +38,12 @@ export default class ClientMetricsServiceV2 {
             clientMetricsStoreV2,
         }: Pick<IUnleashStores, 'featureToggleStore' | 'clientMetricsStoreV2'>,
         config: IUnleashConfig,
+        lastSeenService: LastSeenService,
         bulkInterval = secondsToMilliseconds(5),
     ) {
         this.featureToggleStore = featureToggleStore;
         this.clientMetricsStoreV2 = clientMetricsStoreV2;
-        this.lastSeenService = new LastSeenService(
-            { featureToggleStore },
-            config,
-        );
+        this.lastSeenService = lastSeenService;
         this.config = config;
         this.logger = config.getLogger(
             '/services/client-metrics/client-metrics-service-v2.ts',

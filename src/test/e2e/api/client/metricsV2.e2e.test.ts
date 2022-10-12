@@ -141,6 +141,7 @@ test('should set lastSeen for toggles with metrics', async () => {
         .expect(202);
 
     await app.services.clientMetricsServiceV2.bulkAdd();
+    await app.services.lastSeenService.store();
     const t1 = await db.stores.featureToggleStore.get('t1');
     const t2 = await db.stores.featureToggleStore.get('t2');
     expect(t1.lastSeenAt.getTime()).toBeGreaterThanOrEqual(start);

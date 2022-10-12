@@ -128,7 +128,7 @@ test('Should not update last seen toggles with 0 metrics', async () => {
     const t2 = await stores.featureToggleStore.get('tb2');
 
     expect(t2.lastSeenAt).toBeNull();
-    expect(t1.lastSeenAt.getTime()).toBeGreaterThan(time);
+    expect(t1.lastSeenAt.getTime()).toBeGreaterThanOrEqual(time);
 
     service.destroy();
 });

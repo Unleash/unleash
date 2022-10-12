@@ -3,7 +3,6 @@ import dbInit from '../helpers/database-init';
 import { IUnleashStores } from '../../../lib/types/stores';
 import { LastSeenService } from '../../../lib/services/client-metrics/last-seen-service';
 import { IClientMetricsEnv } from '../../../lib/types/stores/client-metrics-store-v2';
-import { secondsToMilliseconds } from 'date-fns';
 
 let stores: IUnleashStores;
 let db;
@@ -21,42 +20,7 @@ afterAll(async () => {
     await db.destroy();
 });
 
-/**
- * A utility to wait for any pending promises in the test subject code.
- * For instance, if the test needs to wait for a timeout/interval handler,
- * and that handler does something async, advancing the timers is not enough:
- * We have to explicitly wait for the second promise.
- * For more info, see https://stackoverflow.com/a/51045733/2868829
- *
- * Usage in test code after advancing timers, but before making assertions:
- *
- * test('hello', async () => {
- *    jest.useFakeTimers('modern');
- *
- *    // Schedule a timeout with a callback that does something async
- *    // before calling our spy
- *    const spy = jest.fn();
- *    setTimeout(async () => {
- *        await Promise.resolve();
- *        spy();
- *    }, 1000);
- *
- *    expect(spy).not.toHaveBeenCalled();
- *
- *    jest.advanceTimersByTime(1500);
- *    await flushPromises(); // this is required to make it work!
- *
- *    expect(spy).toHaveBeenCalledTimes(1);
- *
- *    jest.useRealTimers();
- * });
- */
-function flushPromises() {
-    return Promise.resolve(setImmediate);
-}
-
-test('Should update last seen for known toggles after 30s', async () => {
-    jest.useFakeTimers();
+test('Should update last seen for known toggles', async () => {
     const service = new LastSeenService(stores, config);
     const time = Date.now();
     await stores.featureToggleStore.create('default', { name: 'ta1' });
@@ -81,16 +45,13 @@ test('Should update last seen for known toggles after 30s', async () => {
     ];
 
     service.updateLastSeen(metrics);
-    jest.advanceTimersByTime(secondsToMilliseconds(31));
-    await flushPromises();
+    await service.store();
 
     const t1 = await stores.featureToggleStore.get('ta1');
 
     expect(t1.lastSeenAt.getTime()).toBeGreaterThan(time);
 
     service.destroy();
-
-    jest.useRealTimers();
 });
 
 test('Should not update last seen toggles with 0 metrics', async () => {

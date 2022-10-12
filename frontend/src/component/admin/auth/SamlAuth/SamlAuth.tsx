@@ -21,12 +21,14 @@ import { removeEmptyStringFields } from 'utils/removeEmptyStringFields';
 const initialState = {
     enabled: false,
     autoCreate: false,
+    enableGroupSyncing: false,
     unleashHostname: location.hostname,
     entityId: '',
     signOnUrl: '',
     certificate: '',
     signOutUrl: '',
     spCertificate: '',
+    groupJsonPath: '',
 };
 
 export const SamlAuth = () => {
@@ -36,6 +38,7 @@ export const SamlAuth = () => {
     const { hasAccess } = useContext(AccessContext);
     const { config } = useAuthSettings('saml');
     const { updateSettings, errors, loading } = useAuthSettingsApi('saml');
+    const ssoSyncHidden = !uiConfig.flags.syncSSOGroups;
 
     useEffect(() => {
         if (config.entityId) {
@@ -53,6 +56,10 @@ export const SamlAuth = () => {
 
     const updateField = (event: React.ChangeEvent<HTMLInputElement>) => {
         setValue(event.target.name, event.target.value);
+    };
+
+    const updateGroupSyncing = () => {
+        setData({ ...data, enableGroupSyncing: !data.enableGroupSyncing });
     };
 
     const updateEnabled = () => {
@@ -243,6 +250,53 @@ export const SamlAuth = () => {
                             maxRows={14}
                             variant="outlined"
                             size="small"
+                        />
+                    </Grid>
+                </Grid>
+                <Grid hidden={ssoSyncHidden} container spacing={3} mb={2}>
+                    <Grid item md={5}>
+                        <strong>Enable Group Syncing</strong>
+                        <p>
+                            Enables automatically syncing of users from the SAML provider when a user logs in
+                        </p>
+                    </Grid>
+                    <Grid item md={6} style={{ padding: '20px' }}>
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    onChange={updateGroupSyncing}
+                                    value={data.enableGroupSyncing}
+                                    disabled={!data.enabled}
+                                    name="enableGroupSyncing"
+                                    checked={data.enableGroupSyncing}
+                                />
+                            }
+                            label={
+                                data.enableGroupSyncing
+                                    ? 'Enabled'
+                                    : 'Disabled'
+                            }
+                        />
+                    </Grid>
+                </Grid>
+                <Grid hidden={ssoSyncHidden} container spacing={3} mb={2}>
+                    <Grid item md={5}>
+                        <strong>Group Field JSON Path</strong>
+                        <p>
+                            Specifies the path in the SAML token response from which to read the groups the user belongs to
+                        </p>
+                    </Grid>
+                    <Grid item md={6}>
+                        <TextField
+                            onChange={updateField}
+                            label="Group JSON Path"
+                            name="groupJsonPath"
+                            value={data.groupJsonPath}
+                            disabled={!data.enableGroupSyncing}
+                            style={{ width: '400px' }}
+                            variant="outlined"
+                            size="small"
+                            required
                         />
                     </Grid>
                 </Grid>

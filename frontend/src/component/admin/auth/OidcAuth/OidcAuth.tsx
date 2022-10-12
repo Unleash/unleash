@@ -21,8 +21,10 @@ import { removeEmptyStringFields } from 'utils/removeEmptyStringFields';
 const initialState = {
     enabled: false,
     enableSingleSignOut: false,
+    enableGroupSyncing: false,
     autoCreate: false,
     unleashHostname: location.hostname,
+    groupJsonPath: '',
     clientId: '',
     discoverUrl: '',
     secret: '',
@@ -36,6 +38,8 @@ export const OidcAuth = () => {
     const { hasAccess } = useContext(AccessContext);
     const { config } = useAuthSettings('oidc');
     const { updateSettings, errors, loading } = useAuthSettingsApi('oidc');
+    const ssoSyncHidden = !uiConfig.flags.syncSSOGroups;
+
 
     useEffect(() => {
         if (config.discoverUrl) {
@@ -61,6 +65,10 @@ export const OidcAuth = () => {
 
     const updateSingleSignOut = () => {
         setData({ ...data, enableSingleSignOut: !data.enableSingleSignOut });
+    };
+
+    const updateGroupSyncing = () => {
+        setData({ ...data, enableGroupSyncing: !data.enableGroupSyncing });
     };
 
     const setValue = (name: string, value: string | boolean) => {
@@ -232,6 +240,53 @@ export const OidcAuth = () => {
                             style={{ width: '400px' }}
                             variant="outlined"
                             size="small"
+                        />
+                    </Grid>
+                </Grid>
+                <Grid hidden={ssoSyncHidden} container spacing={3} mb={2}>
+                    <Grid item md={5}>
+                        <strong>Enable Group Syncing</strong>
+                        <p>
+                            Enables automatically syncing of users from the OIDC provider when a user logs in
+                        </p>
+                    </Grid>
+                    <Grid item md={6} style={{ padding: '20px' }}>
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    onChange={updateGroupSyncing}
+                                    value={data.enableGroupSyncing}
+                                    disabled={!data.enabled}
+                                    name="enableGroupSyncing"
+                                    checked={data.enableGroupSyncing}
+                                />
+                            }
+                            label={
+                                data.enableGroupSyncing
+                                    ? 'Enabled'
+                                    : 'Disabled'
+                            }
+                        />
+                    </Grid>
+                </Grid>
+                <Grid hidden={ssoSyncHidden} container spacing={3} mb={2}>
+                    <Grid item md={5}>
+                        <strong>Group Field JSON Path</strong>
+                        <p>
+                            Specifies the path in the OIDC token response from which to read the groups the user belongs to
+                        </p>
+                    </Grid>
+                    <Grid item md={6}>
+                        <TextField
+                            onChange={updateField}
+                            label="Group JSON Path"
+                            name="groupJsonPath"
+                            value={data.groupJsonPath}
+                            disabled={!data.enableGroupSyncing}
+                            style={{ width: '400px' }}
+                            variant="outlined"
+                            size="small"
+                            required
                         />
                     </Grid>
                 </Grid>

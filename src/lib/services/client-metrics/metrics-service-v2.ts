@@ -15,6 +15,7 @@ import ApiUser from '../../types/api-user';
 import { ALL } from '../../types/models/api-token';
 import User from '../../types/user';
 import { collapseHourlyMetrics } from '../../util/collapseHourlyMetrics';
+import { LastSeenService } from './last-seen-service';
 
 export default class ClientMetricsServiceV2 {
     private config: IUnleashConfig;
@@ -26,6 +27,8 @@ export default class ClientMetricsServiceV2 {
     private clientMetricsStoreV2: IClientMetricsStoreV2;
 
     private featureToggleStore: IFeatureToggleStore;
+
+    private lastSeenService: LastSeenService;
 
     private logger: Logger;
 
@@ -39,6 +42,10 @@ export default class ClientMetricsServiceV2 {
     ) {
         this.featureToggleStore = featureToggleStore;
         this.clientMetricsStoreV2 = clientMetricsStoreV2;
+        this.lastSeenService = new LastSeenService(
+            { featureToggleStore },
+            config,
+        );
         this.config = config;
         this.logger = config.getLogger(
             '/services/client-metrics/client-metrics-service-v2.ts',
@@ -69,9 +76,6 @@ export default class ClientMetricsServiceV2 {
                     value.bucket.toggles[name].no === 0
                 ),
         );
-        if (toggleNames.length > 0) {
-            await this.featureToggleStore.setLastSeen(toggleNames);
-        }
 
         this.logger.debug(`got metrics from ${clientIp}`);
 
@@ -89,7 +93,11 @@ export default class ClientMetricsServiceV2 {
                 ...this.unsavedMetrics,
                 ...clientMetrics,
             ]);
+            this.lastSeenService.updateLastSeen(clientMetrics);
         } else {
+            if (toggleNames.length > 0) {
+                await this.featureToggleStore.setLastSeen(toggleNames);
+            }
             await this.clientMetricsStoreV2.batchInsertMetrics(clientMetrics);
         }
 
@@ -165,5 +173,6 @@ export default class ClientMetricsServiceV2 {
 
     destroy(): void {
         this.timers.forEach(clearInterval);
+        this.lastSeenService.destroy();
     }
 }

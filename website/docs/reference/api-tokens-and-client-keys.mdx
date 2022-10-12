@@ -29,7 +29,7 @@ All types use [the same format](#format) but have different intended uses. Admin
 
 ### The parts of an API token {#token-data}
 
-An API token contains the following pieces of information:
+Admin, client and front-end tokens contain the following pieces of information:
 
 | Name | Description |
 | --- | --- |
@@ -38,7 +38,7 @@ An API token contains the following pieces of information:
 | Projects | What projects a token has access to. |
 | Environment | What environment the token has access to. |
 
-
+Personal access tokens follow their own special format, and only contain an optional description for the token and an expiry date.
 
 ### Admin tokens
 
@@ -68,7 +68,7 @@ Use personal access tokens to:
 - Provide more fine-grained permissions for automation than an admin token provides
 - Give temporary access to an automation tool
 
-Do **not** use personal api tokens for:
+Do **not** use personal access tokens for:
 
 -   [Client SDKs](../sdks/index.md): You will _not_ be able to read toggle data from multiple environments. Use [client tokens](#client-tokens) instead.
 -   Write custom Unleash UIs: Personal access tokens have a lifetime and will expire, use [admin tokens](#admin-tokens) tokens instead.
@@ -148,7 +148,7 @@ The **environment** is the name of an environment on your Unleash server, such a
 
 The **hash** is 64 character long hexadecimal string.
 
-Personal API tokens do not contain project or environment information, since they mimic the user that created them. Instead, the token starts with the string `user`.
+Personal access tokens do not contain project or environment information, since they mimic the user that created them. Instead, the token starts with the string `user`.
 
 Some example client tokens are:
 

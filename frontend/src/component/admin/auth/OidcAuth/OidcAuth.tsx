@@ -40,7 +40,6 @@ export const OidcAuth = () => {
     const { updateSettings, errors, loading } = useAuthSettingsApi('oidc');
     const ssoSyncHidden = !uiConfig.flags.syncSSOGroups;
 
-
     useEffect(() => {
         if (config.discoverUrl) {
             setData(config);

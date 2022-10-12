@@ -29,7 +29,7 @@ All Unleash instances must have at least one project at any given time. New inst
 
 Pro and Enterprise customers can create, rename, and delete projects as they wish (as long as there is always **at least one project**). Open-source users, on the other hand, only get access to the default project.
 
-<Figure caption="Unleash projects (the outer box) contain one or more environments (the inner box)." img="/img/anatomy-of-unleash-environment.png"/>
+<Figure caption="Unleash projects contain one or more environments." alt="A square labeled 'project' containing another square, labeled 'environment'." img="/img/anatomy-of-unleash-environment.png"/>
 
 ## Environments and project environments
 
@@ -83,6 +83,19 @@ For example, if you wanted to roll a feature out to 50% of users with **a specif
 Constraints can also be used for more general purposes, such as timing feature releases or releasing features in specific regions.
 
 An activation strategy can have as many constraints as you want. When an activation strategy has multiple constraints, then **every constraint **must be satisfied for the strategy to be evaluated. So if you have two constraints: one that says users must have an “@mycompany.com” email address and one that says users must have signed up for a beta program, then the strategy would **only be evaluated for users with @mycompany.com emails that have signed up for the program**.
+
+:::tip Strategies and constraints
+
+Feature toggle strategies are **permissive**: As long as **one** strategy resolves to true, the feature is considered enabled. On the other hand, constrains are **restrictive**: for a given strategy, **all** constraints must be met for it to resolve to true.
+
+We can exemplify this difference with the logical operators AND and OR:
+- For a feature toggle, if strategy 1 OR strategy 2 OR .. OR strategy `n` is true, **then the feature is enabled**.
+- For a strategy, it can be evaluated **if and only if** constraint 1 AND constraint 2 AND .. AND constraint `n` are met.
+
+Note that even if all the constraints are met, the strategy itself might not resolve to true: that will depend on the strategy and the provided context.
+
+:::
+
 
 You can define constraints on whatever properties you want in your [Unleash context](../user_guide/unleash-context.md).
 

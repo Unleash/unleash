@@ -144,7 +144,11 @@ class ResetPasswordController extends Controller {
     ): Promise<void> {
         await this.logout(req);
         const { token, password } = req.body;
-        await this.userService.resetPassword(token, password);
+        try {
+            await this.userService.resetPassword(token, password);
+        } catch (e) {
+            this.logger.error(e);
+        }
         res.status(200).end();
     }
 

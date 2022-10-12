@@ -40,7 +40,7 @@ module.exports = {
                 slug: '/topics',
             },
             items: [
-                'topics/anatomy-of-unleash',
+                'topics/the-anatomy-of-unleash',
                 'topics/a-b-testing',
                 'topics/proxy-hosting',
             ],

@@ -75,6 +75,15 @@ export default class PatStore implements IPatStore {
         return present;
     }
 
+    async existsWithDescription(description: string): Promise<boolean> {
+        const result = await this.db.raw(
+            `SELECT EXISTS(SELECT 1 FROM ${TABLE} WHERE description = ?) AS present`,
+            [description],
+        );
+        const { present } = result.rows[0];
+        return present;
+    }
+
     async get(id: number): Promise<Pat> {
         const row = await this.db(TABLE).where({ id }).first();
         return fromRow(row);

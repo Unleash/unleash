@@ -6,6 +6,8 @@ import { PAT_CREATED } from '../types/events';
 import { IPat } from '../types/models/pat';
 import crypto from 'crypto';
 import User from '../types/user';
+import BadDataError from '../error/bad-data-error';
+import NameExistsError from '../error/name-exists-error';
 
 export default class PatService {
     private config: IUnleashConfig;
@@ -30,9 +32,7 @@ export default class PatService {
     }
 
     async createPat(pat: IPat, user: User): Promise<IPat> {
-        if (new Date(pat.expiresAt) < new Date()) {
-            throw new Error('The expiry date should be in future.');
-        }
+        await this.validatePat(pat);
         pat.secret = this.generateSecretKey();
         pat.userId = user.id;
         const newPat = await this.patStore.create(pat);
@@ -53,6 +53,20 @@ export default class PatService {
 
     async deletePat(id: number, userId: number): Promise<void> {
         return this.patStore.deleteForUser(id, userId);
+    }
+
+    async validatePat({ description, expiresAt }: IPat): Promise<void> {
+        if (!description) {
+            throw new BadDataError('PAT description cannot be empty');
+        }
+
+        if (new Date(expiresAt) < new Date()) {
+            throw new Error('The expiry date should be in future.');
+        }
+
+        if (await this.patStore.existsWithDescription(description)) {
+            throw new NameExistsError('PAT description already exists');
+        }
     }
 
     private generateSecretKey() {

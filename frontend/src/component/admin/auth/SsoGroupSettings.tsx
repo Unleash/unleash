@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import { FormControlLabel, Grid, Switch, TextField } from '@mui/material';
 
 interface SsoGroupSettingsProps {
-    ssoType: string;
+    ssoType: 'OIDC' | 'SAML';
     data?: {
         enabled: boolean;
         enableGroupSyncing: boolean;

@@ -3,6 +3,7 @@ lerna-debug
 npm-debug
 .DS_Store
 /dist
+website/docs/reference/api/unleash/sidebar.js
 
 # Logs
 logs

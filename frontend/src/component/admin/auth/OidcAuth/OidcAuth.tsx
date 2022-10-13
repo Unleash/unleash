@@ -40,7 +40,7 @@ export const OidcAuth = () => {
     const { hasAccess } = useContext(AccessContext);
     const { config } = useAuthSettings('oidc');
     const { updateSettings, errors, loading } = useAuthSettingsApi('oidc');
-    const ssoSyncShown = uiConfig.flags.syncSSOGroups || false;
+    const ssoSyncShown = Boolean(uiConfig.flags.syncSSOGroups);
 
     useEffect(() => {
         if (config.discoverUrl) {

@@ -244,7 +244,7 @@ export const OidcAuth = () => {
                     condition={ssoSyncShown}
                     show={
                         <SsoGroupSettings
-                            ssoType={'OIDC'}
+                            ssoType="OIDC"
                             data={data}
                             setValue={setValue}
                         ></SsoGroupSettings>

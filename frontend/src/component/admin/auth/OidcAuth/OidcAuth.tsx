@@ -247,7 +247,7 @@ export const OidcAuth = () => {
                             ssoType="OIDC"
                             data={data}
                             setValue={setValue}
-                        ></SsoGroupSettings>
+                        />
                     }
                 />
                 <AutoCreateForm data={data} setValue={setValue} />

@@ -7,7 +7,7 @@ It is possible to integrate directly with the Admin API. In this guide we will e
 
 ## Step 1: Create API token {#step-1-create-api-token}
 
-You'll need either an [admin token](../reference/api-tokens-and-client-keys.mdx#admin-tokens) or a [personal access token](../reference/api-tokens-and-client-keys.mdx#personal-access-tokens) for this to work. To create one, follow the steps in the [_how to create API tokens_](../user_guide/token.mdx) guide or the [_how to create personal access tokens_](../user_guide/personal-access-token.mdx) guide, respectively.
+You'll need either an [admin token](../reference/api-tokens-and-client-keys.mdx#admin-tokens) or a [personal access token](../reference/api-tokens-and-client-keys.mdx#personal-access-tokens) for this to work. To create one, follow the steps in the [_how to create API tokens_](../user_guide/token.mdx) guide or the [_how to create personal access tokens_](how-to/how-to-create-personal-access-tokens) guide, respectively.
 
 Please note that it may take up to 60 seconds for the new key to propagate to all Unleash instances due to eager caching.
 

@@ -45,6 +45,11 @@ Enterprise users can create and remove environments. Open-source and Pro custome
 
 Environments are adjacent to [feature toggles](../reference/feature-toggles.mdx) in Unleash: neither one contains the other, but they come together to let you define activation strategies.
 
+:::tip Environments and API keys
+
+When connecting an SDK to Unleash, it's the **API key that decides which environment to** fetch features for. For legacy reasons, all Unleash SDKs accept a configuration option called `environment`, but this **does not affect the environment** at all. It is an Unleash context field and a holdover from before Unleash had native environments.
+
+:::
 
 
 <Figure img="/img/anatomy-of-unleash-new-feature-rollout.png" caption="You can use different activation strategies and constraints in different environments. For instance, you can show a feature only to select user IDs in development, but roll it out to 25% of your user base in production."/>

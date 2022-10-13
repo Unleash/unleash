@@ -248,11 +248,22 @@ export default class GroupStore implements IGroupStore {
     ): Promise<IGroupUser[]> {
         const rows = await this.db(`${T.GROUP_USER} as gu`)
             .leftJoin(`${T.GROUPS} as g`, 'g.id', 'gu.group_id')
-            .leftJoin(`${T.GROUPS} as gr`, 'gr.id', '!=', 'g.id')
-            .where('gu.user_id', userId)
-            .whereRaw('gr.mappings_sso \\?| :groups', {
-                groups: externalGroups,
-            });
+            .whereNotIn(
+                'g.id',
+                this.db(T.GROUPS)
+                    .select('id')
+                    .whereRaw('mappings_sso \\?| :groups', {
+                        groups: externalGroups,
+                    }),
+            )
+            .where('gu.user_id', userId);
         return rows.map(rowToGroupUser);
+    }
+
+    async getGroupsForUser(userId: number): Promise<Group[]> {
+        const rows = await this.db(T.GROUPS)
+            .leftJoin(T.GROUP_USER, 'groups.id', 'group_user.group_id')
+            .where('user_id', userId);
+        return rows.map(rowToGroup);
     }
 }

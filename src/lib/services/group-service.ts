@@ -234,4 +234,8 @@ export class GroupService {
         );
         await this.groupStore.deleteUsersFromGroup(oldGroups);
     }
+
+    async getGroupsForUser(userId: number): Promise<IGroup[]> {
+        return this.groupStore.getGroupsForUser(userId);
+    }
 }

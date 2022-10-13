@@ -1,5 +1,5 @@
 import { Store } from './store';
-import {
+import Group, {
     IGroup,
     IGroupModel,
     IGroupProject,
@@ -15,6 +15,7 @@ export interface IStoreGroup {
 }
 
 export interface IGroupStore extends Store<IGroup, number> {
+    getGroupsForUser(userId: number): Promise<Group[]>;
     getOldGroupsForExternalUser(
         userId: number,
         externalGroups: string[],

@@ -20,6 +20,23 @@ beforeAll(async () => {
         getLogger,
     });
     groupService = new GroupService(stores, config);
+
+    await stores.groupStore.create({
+        name: 'dev_group',
+        description: 'dev_group',
+        mappingsSSO: ['dev'],
+    });
+    await stores.groupStore.create({
+        name: 'maintainer_group',
+        description: 'maintainer_group',
+        mappingsSSO: ['maintainer'],
+    });
+
+    await stores.groupStore.create({
+        name: 'admin_group',
+        description: 'admin_group',
+        mappingsSSO: ['admin'],
+    });
 });
 
 afterAll(async () => {
@@ -28,10 +45,27 @@ afterAll(async () => {
 
 afterEach(async () => {});
 
-test('should have default project', async () => {
-    const project = await groupService.syncExternalGroups(user.id, [
-        'dev',
-        'maintainer',
-    ]);
-    expect(project).toBeDefined();
+test('should have three group', async () => {
+    const project = await groupService.getAll();
+    expect(project.length).toBe(3);
+});
+
+test('should add person to 2 groups', async () => {
+    await groupService.syncExternalGroups(user.id, ['dev', 'maintainer']);
+    const groups = await groupService.getGroupsForUser(user.id);
+    expect(groups.length).toBe(2);
+});
+
+test('should remove person from one group', async () => {
+    await groupService.syncExternalGroups(user.id, ['maintainer']);
+    const groups = await groupService.getGroupsForUser(user.id);
+    expect(groups.length).toBe(1);
+    expect(groups[0].name).toEqual('maintainer_group');
+});
+
+test('should add person to completely new group with new name', async () => {
+    await groupService.syncExternalGroups(user.id, ['dev']);
+    const groups = await groupService.getGroupsForUser(user.id);
+    expect(groups.length).toBe(1);
+    expect(groups[0].name).toEqual('dev_group');
 });

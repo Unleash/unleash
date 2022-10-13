@@ -61,7 +61,7 @@ export default class PatService {
         }
 
         if (new Date(expiresAt) < new Date()) {
-            throw new Error('The expiry date should be in future.');
+            throw new BadDataError('The expiry date should be in future.');
         }
 
         if (await this.patStore.existsWithDescription(description)) {

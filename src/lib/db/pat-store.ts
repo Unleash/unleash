@@ -79,9 +79,6 @@ export default class PatStore implements IPatStore {
         description: string,
         userId: number,
     ): Promise<boolean> {
-        if (description.startsWith('another')) {
-            console.log('existsWithDescriptionByUser', description, userId);
-        }
         const result = await this.db.raw(
             `SELECT EXISTS(SELECT 1 FROM ${TABLE} WHERE description = ? AND user_id = ?) AS present`,
             [description, userId],

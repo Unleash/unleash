@@ -40,7 +40,7 @@ export const SamlAuth = () => {
     const { hasAccess } = useContext(AccessContext);
     const { config } = useAuthSettings('saml');
     const { updateSettings, errors, loading } = useAuthSettingsApi('saml');
-    const ssoSyncShown = uiConfig.flags.syncSSOGroups || false;
+    const ssoSyncShown = Boolean(uiConfig.flags.syncSSOGroups);
 
     useEffect(() => {
         if (config.entityId) {
@@ -255,10 +255,10 @@ export const SamlAuth = () => {
                     condition={ssoSyncShown}
                     show={
                         <SsoGroupSettings
-                            ssoType={'SAML'}
+                            ssoType="SAML"
                             data={data}
                             setValue={setValue}
-                        ></SsoGroupSettings>
+                        />
                     }
                 />
 

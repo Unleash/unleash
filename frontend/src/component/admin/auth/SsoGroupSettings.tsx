@@ -76,6 +76,6 @@ export const SsoGroupSettings = ({
                     />
                 </Grid>
             </Grid>
-        </Fragment>
+        </>
     );
 };

@@ -17,6 +17,8 @@ import useAuthSettings from 'hooks/api/getters/useAuthSettings/useAuthSettings';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { removeEmptyStringFields } from 'utils/removeEmptyStringFields';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { SsoGroupSettings } from '../SsoGroupSettings';
 
 const initialState = {
     enabled: false,
@@ -38,7 +40,7 @@ export const OidcAuth = () => {
     const { hasAccess } = useContext(AccessContext);
     const { config } = useAuthSettings('oidc');
     const { updateSettings, errors, loading } = useAuthSettingsApi('oidc');
-    const ssoSyncHidden = !uiConfig.flags.syncSSOGroups;
+    const ssoSyncShown = uiConfig.flags.syncSSOGroups || false;
 
     useEffect(() => {
         if (config.discoverUrl) {
@@ -64,10 +66,6 @@ export const OidcAuth = () => {
 
     const updateSingleSignOut = () => {
         setData({ ...data, enableSingleSignOut: !data.enableSingleSignOut });
-    };
-
-    const updateGroupSyncing = () => {
-        setData({ ...data, enableGroupSyncing: !data.enableGroupSyncing });
     };
 
     const setValue = (name: string, value: string | boolean) => {
@@ -242,54 +240,16 @@ export const OidcAuth = () => {
                         />
                     </Grid>
                 </Grid>
-                <Grid hidden={ssoSyncHidden} container spacing={3} mb={2}>
-                    <Grid item md={5}>
-                        <strong>Enable Group Syncing</strong>
-                        <p>
-                            Enables automatically syncing of users from the OIDC
-                            provider when a user logs in.
-                        </p>
-                    </Grid>
-                    <Grid item md={6} style={{ padding: '20px' }}>
-                        <FormControlLabel
-                            control={
-                                <Switch
-                                    onChange={updateGroupSyncing}
-                                    value={data.enableGroupSyncing}
-                                    disabled={!data.enabled}
-                                    name="enableGroupSyncing"
-                                    checked={data.enableGroupSyncing}
-                                />
-                            }
-                            label={
-                                data.enableGroupSyncing ? 'Enabled' : 'Disabled'
-                            }
-                        />
-                    </Grid>
-                </Grid>
-                <Grid hidden={ssoSyncHidden} container spacing={3} mb={2}>
-                    <Grid item md={5}>
-                        <strong>Group Field JSON Path</strong>
-                        <p>
-                            Specifies the path in the OIDC token response from
-                            which to read the groups the user belongs to.
-                        </p>
-                    </Grid>
-                    <Grid item md={6}>
-                        <TextField
-                            onChange={updateField}
-                            label="Group JSON Path"
-                            name="groupJsonPath"
-                            value={data.groupJsonPath}
-                            disabled={!data.enableGroupSyncing}
-                            style={{ width: '400px' }}
-                            variant="outlined"
-                            size="small"
-                            required
-                        />
-                    </Grid>
-                </Grid>
-
+                <ConditionallyRender
+                    condition={ssoSyncShown}
+                    show={
+                        <SsoGroupSettings
+                            ssoType={'OIDC'}
+                            data={data}
+                            setValue={setValue}
+                        ></SsoGroupSettings>
+                    }
+                />
                 <AutoCreateForm data={data} setValue={setValue} />
 
                 <Grid container spacing={3}>

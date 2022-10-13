@@ -27,13 +27,20 @@ export const EditGroup = () => {
         setName,
         description,
         setDescription,
+        mappingsSSO,
+        setMappingsSSO,
         users,
         setUsers,
         getGroupPayload,
         clearErrors,
         errors,
         setErrors,
-    } = useGroupForm(group?.name, group?.description, group?.users);
+    } = useGroupForm(
+        group?.name,
+        group?.description,
+        group?.mappingsSSO,
+        group?.users
+    );
 
     const { groups } = useGroups();
     const { updateGroup, loading } = useGroupApi();
@@ -96,9 +103,11 @@ export const EditGroup = () => {
             <GroupForm
                 name={name}
                 description={description}
+                mappingsSSO={mappingsSSO}
                 users={users}
                 setName={onSetName}
                 setDescription={setDescription}
+                setMappingsSSO={setMappingsSSO}
                 setUsers={setUsers}
                 errors={errors}
                 handleSubmit={handleSubmit}

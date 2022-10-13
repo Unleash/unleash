@@ -18,9 +18,10 @@ This section describes what API tokens are. For information on how to create the
 
 :::
 
-Use API tokens to connect to the Unleash server API. API tokens come in three distinct types:
+Use API tokens to connect to the Unleash server API. API tokens come in four distinct types:
 
 -   [Admin tokens](#admin-tokens)
+-   [Personal access tokens](#personal-access-tokens)
 -   [Client tokens](#client-tokens)
 -   [Front-end tokens](#front-end-tokens)
 
@@ -28,14 +29,16 @@ All types use [the same format](#format) but have different intended uses. Admin
 
 ### The parts of an API token {#token-data}
 
-An API token contains the following pieces of information:
+Admin, client and front-end tokens contain the following pieces of information:
 
 | Name | Description |
 | --- | --- |
-| Token name (sometimes called "username") | The token's name. Names or **not** required to be unique. |
+| Token name (sometimes called "username") | The token's name. Names are **not** required to be unique. |
 | Type | What kind of token it is: admin, client, or front-end. |
 | Projects | What projects a token has access to. |
 | Environment | What environment the token has access to. |
+
+Personal access tokens follow their own special format, and only contain an optional description for the token and an expiry date.
 
 ### Admin tokens
 
@@ -51,6 +54,24 @@ Do **not** use admin tokens for:
 -   [Client SDKs](../sdks/index.md): You will _not_ be able to read toggle data from multiple environments. Use [client tokens](#client-tokens) instead.
 
 Support for scoped admin tokens with more fine-grained permissions is currently in the planning stage.
+
+### Personal access tokens
+
+**Personal access tokens** are a special form of admin tokens and grant access to the same resources that the user that created them has access to. These permissions are dynamic, so if a user's permissions change through addition of a custom role, the token will likewise have altered permissions.
+
+When using a personal access token to modify resources, the event log will list the token creator's name for that operation.
+
+All personal access tokens have a lifetime and **will stop working after the expiration** date.
+
+Use personal access tokens to:
+
+- Provide more fine-grained permissions for automation than an admin token provides
+- Give temporary access to an automation tool
+
+Do **not** use personal access tokens for:
+
+-   [Client SDKs](../sdks/index.md): You will _not_ be able to read toggle data from multiple environments. Use [client tokens](#client-tokens) instead.
+-   Write custom Unleash UIs: Personal access tokens have a lifetime and will expire, use [admin tokens](#admin-tokens) tokens instead.
 
 ### Client tokens
 
@@ -127,6 +148,8 @@ The **environment** is the name of an environment on your Unleash server, such a
 
 The **hash** is 64 character long hexadecimal string.
 
+Personal access tokens do not contain project or environment information, since they mimic the user that created them. Instead, the token starts with the string `user`.
+
 Some example client tokens are:
 
 -   A token with access to toggles in the "development" environment of a single project, "project-a":
@@ -140,6 +163,10 @@ Some example client tokens are:
 -   A token with access to toggles in the "development" environment of all projects:
     ```
     *:development.be44368985f7fb3237c584ef86f3d6bdada42ddbd63a019d26955178
+    ```
+-   A personal access token:
+    ```
+    user:be7536c3a160ff15e3a92da45de531dd54bc1ae15d8455c0476f086b
     ```
 
 ## Proxy client keys {#proxy-client-keys}

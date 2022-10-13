@@ -20,7 +20,14 @@ const T = {
     ROLES: 'roles',
 };
 
-const GROUP_COLUMNS = ['id', 'name', 'description', 'created_at', 'created_by'];
+const GROUP_COLUMNS = [
+    'id',
+    'name',
+    'description',
+    'mappings_sso',
+    'created_at',
+    'created_by',
+];
 
 const rowToGroup = (row) => {
     if (!row) {
@@ -30,6 +37,7 @@ const rowToGroup = (row) => {
         id: row.id,
         name: row.name,
         description: row.description,
+        mappingsSSO: row.mappings_sso,
         createdAt: row.created_at,
         createdBy: row.created_by,
     });
@@ -46,9 +54,10 @@ const rowToGroupUser = (row) => {
     };
 };
 
-const groupToRow = (user: IStoreGroup) => ({
-    name: user.name,
-    description: user.description,
+const groupToRow = (group: IStoreGroup) => ({
+    name: group.name,
+    description: group.description,
+    mappings_sso: JSON.stringify(group.mappingsSSO),
 });
 
 export default class GroupStore implements IGroupStore {
@@ -69,10 +78,7 @@ export default class GroupStore implements IGroupStore {
     async update(group: IGroupModel): Promise<IGroup> {
         const rows = await this.db(T.GROUPS)
             .where({ id: group.id })
-            .update({
-                name: group.name,
-                description: group.description,
-            })
+            .update(groupToRow(group))
             .returning(GROUP_COLUMNS);
 
         return rowToGroup(rows[0]);

@@ -1,0 +1,41 @@
+---
+title: How to create Personal Access Tokens
+---
+
+:::info availability
+
+Personal access tokens are planned to be released in **Unleash 4.17**.
+
+:::
+
+Personal access tokens are a tool to enable a user to use the Admin API as themselves with their own set of permissions, rather than using an admin token. See [_how to use the Admin API_](../advanced/api_access) for more information.
+
+## Step 1: Navigate to the personal access tokens page {#step-1}
+
+Open the user profile pane in the admin UI and select the _view user profile_ menu item (available at the URL `/profile`).
+
+![The admin UI navigation "user profile" menu with the view user profile menu item selected.](/img/create-pat-1.png)
+
+Select the "Personal Access Tokens" menu item.
+
+![The user profile page with the "Personal Access Tokens" menu item highlighted.](/img/create-pat-2.png)
+
+## Step 2: Navigate to New Token {#step-2}
+
+Navigate to "New Token".
+
+![The New Token element highlighted. ](/img/create-pat-3.png)
+
+## Step 3: Fill in the create personal API token form and create it {#step-3}
+
+Give your token a description and optionally set an expiry date. By default the expiry date is set to 30 days.
+
+![The New Token form with the description text box and create element highlighted. ](/img/create-pat-4.png)
+
+## Step 4: Save your token {#step-4}
+
+Once your new token is created, the popup will display the new token details. You must save your token somewhere outside of Unleash, you won't be able to access it again.
+
+![The token created popup with the "Copy Token" element highlighted. ](/img/create-pat-5.png)
+
+Your personal access token can now be used in place of an [admin token](../reference/api-tokens-and-client-keys#admin-tokens).

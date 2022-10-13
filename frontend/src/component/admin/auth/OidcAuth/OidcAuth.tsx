@@ -17,12 +17,16 @@ import useAuthSettings from 'hooks/api/getters/useAuthSettings/useAuthSettings';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { removeEmptyStringFields } from 'utils/removeEmptyStringFields';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { SsoGroupSettings } from '../SsoGroupSettings';
 
 const initialState = {
     enabled: false,
     enableSingleSignOut: false,
+    enableGroupSyncing: false,
     autoCreate: false,
     unleashHostname: location.hostname,
+    groupJsonPath: '',
     clientId: '',
     discoverUrl: '',
     secret: '',
@@ -36,6 +40,7 @@ export const OidcAuth = () => {
     const { hasAccess } = useContext(AccessContext);
     const { config } = useAuthSettings('oidc');
     const { updateSettings, errors, loading } = useAuthSettingsApi('oidc');
+    const ssoSyncShown = Boolean(uiConfig.flags.syncSSOGroups);
 
     useEffect(() => {
         if (config.discoverUrl) {
@@ -235,7 +240,16 @@ export const OidcAuth = () => {
                         />
                     </Grid>
                 </Grid>
-
+                <ConditionallyRender
+                    condition={ssoSyncShown}
+                    show={
+                        <SsoGroupSettings
+                            ssoType="OIDC"
+                            data={data}
+                            setValue={setValue}
+                        />
+                    }
+                />
                 <AutoCreateForm data={data} setValue={setValue} />
 
                 <Grid container spacing={3}>

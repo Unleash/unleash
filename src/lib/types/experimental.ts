@@ -14,6 +14,10 @@ export const defaultExperimentalOptions = {
             process.env.UNLEASH_EXPERIMENTAL_PERSONAL_ACCESS_TOKENS,
             false,
         ),
+        syncSSOGroups: parseEnvVarBoolean(
+            process.env.UNLEASH_EXPERIMENTAL_SYNC_SSO_GROUPS,
+            false,
+        ),
         embedProxyFrontend: parseEnvVarBoolean(
             process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY_FRONTEND,
             false,
@@ -43,6 +47,7 @@ export interface IExperimentalOptions {
         batchMetrics?: boolean;
         anonymiseEventLog?: boolean;
         personalAccessTokens?: boolean;
+        syncSSOGroups?: boolean;
     };
     externalResolver: IExternalFlagResolver;
 }

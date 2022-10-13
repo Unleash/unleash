@@ -75,10 +75,16 @@ export default class PatStore implements IPatStore {
         return present;
     }
 
-    async existsWithDescription(description: string): Promise<boolean> {
+    async existsWithDescriptionByUser(
+        description: string,
+        userId: number,
+    ): Promise<boolean> {
+        if (description.startsWith('another')) {
+            console.log('existsWithDescriptionByUser', description, userId);
+        }
         const result = await this.db.raw(
-            `SELECT EXISTS(SELECT 1 FROM ${TABLE} WHERE description = ?) AS present`,
-            [description],
+            `SELECT EXISTS(SELECT 1 FROM ${TABLE} WHERE description = ? AND user_id = ?) AS present`,
+            [description, userId],
         );
         const { present } = result.rows[0];
         return present;

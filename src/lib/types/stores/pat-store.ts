@@ -5,5 +5,8 @@ export interface IPatStore extends Store<IPat, number> {
     create(group: IPat): Promise<IPat>;
     getAllByUser(userId: number): Promise<IPat[]>;
     deleteForUser(id: number, userId: number): Promise<void>;
-    existsWithDescription(description: string): Promise<boolean>;
+    existsWithDescriptionByUser(
+        description: string,
+        userId: number,
+    ): Promise<boolean>;
 }

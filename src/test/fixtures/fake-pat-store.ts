@@ -20,7 +20,10 @@ export default class FakePatStore implements IPatStore {
         throw new Error('Method not implemented.');
     }
 
-    existsWithDescription(description: string): Promise<boolean> {
+    existsWithDescriptionByUser(
+        description: string,
+        userId: number,
+    ): Promise<boolean> {
         throw new Error('Method not implemented.');
     }
 

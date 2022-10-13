@@ -32,7 +32,7 @@ export default class PatService {
     }
 
     async createPat(pat: IPat, user: User): Promise<IPat> {
-        await this.validatePat(pat);
+        await this.validatePat(pat, user.id);
         pat.secret = this.generateSecretKey();
         pat.userId = user.id;
         const newPat = await this.patStore.create(pat);
@@ -55,7 +55,10 @@ export default class PatService {
         return this.patStore.deleteForUser(id, userId);
     }
 
-    async validatePat({ description, expiresAt }: IPat): Promise<void> {
+    async validatePat(
+        { description, expiresAt }: IPat,
+        userId: number,
+    ): Promise<void> {
         if (!description) {
             throw new BadDataError('PAT description cannot be empty');
         }
@@ -64,7 +67,9 @@ export default class PatService {
             throw new BadDataError('The expiry date should be in future.');
         }
 
-        if (await this.patStore.existsWithDescription(description)) {
+        if (
+            await this.patStore.existsWithDescriptionByUser(description, userId)
+        ) {
             throw new NameExistsError('PAT description already exists');
         }
     }

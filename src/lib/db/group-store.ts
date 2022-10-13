@@ -163,7 +163,7 @@ export default class GroupStore implements IGroupStore {
         return rowToGroup(row[0]);
     }
 
-    async addNewUsersToGroup(
+    async addUsersToGroup(
         groupId: number,
         users: IGroupUserModel[],
         userName: string,
@@ -179,7 +179,7 @@ export default class GroupStore implements IGroupStore {
         return (transaction || this.db).batchInsert(T.GROUP_USER, rows);
     }
 
-    async deleteOldUsersFromGroup(
+    async deleteUsersFromGroup(
         deletableUsers: IGroupUser[],
         transaction?: Transaction,
     ): Promise<void> {
@@ -199,8 +199,54 @@ export default class GroupStore implements IGroupStore {
         userName: string,
     ): Promise<void> {
         await this.db.transaction(async (tx) => {
-            await this.addNewUsersToGroup(groupId, newUsers, userName, tx);
-            await this.deleteOldUsersFromGroup(deletableUsers, tx);
+            await this.addUsersToGroup(groupId, newUsers, userName, tx);
+            await this.deleteUsersFromGroup(deletableUsers, tx);
         });
+    }
+
+    async getNewGroupsForExternalUser(
+        userId: number,
+        externalGroups: string[],
+    ): Promise<IGroup[]> {
+        const rows = await this.db(`${T.GROUPS} as g`)
+            .leftJoin(`${T.GROUP_USER} as gs`, function () {
+                this.on('g.id', 'gs.group_id').andOnVal(
+                    'gs.user_id',
+                    '=',
+                    userId,
+                );
+            })
+            .where('gs.user_id', null)
+            .whereRaw('mappings_sso \\?| :groups', { groups: externalGroups });
+        return rows.map(rowToGroup);
+    }
+
+    async addUserToGroups(
+        userId: number,
+        groupIds: number[],
+        createdBy?: string,
+    ): Promise<void> {
+        const rows = groupIds.map((groupId) => {
+            return {
+                group_id: groupId,
+                user_id: userId,
+                created_by: createdBy,
+            };
+        });
+        return this.db.batchInsert(T.GROUP_USER, rows);
+    }
+
+    async getOldGroupsForExternalUser(
+        userId: number,
+        externalGroups: string[],
+    ): Promise<IGroupUser[]> {
+        const rows = await this.db(`${T.GROUP_USER} as gu`)
+            .leftJoin(`${T.GROUPS} as g`, 'g.id', 'gu.group_id')
+            .leftJoin(`${T.GROUPS} as gr`, 'gr.id', '!=', 'g.id')
+            .where('gu.user_id', userId)
+            .whereRaw('gr.mappings_sso \\?| :groups', {
+                groups: externalGroups,
+            });
+        return rows.map(rowToGroupUser);
     }
 }

@@ -42,7 +42,7 @@ export default class FakeGroupStore implements IGroupStore {
         throw new Error('Method not implemented.');
     }
 
-    addNewUsersToGroup(
+    addUsersToGroup(
         id: number,
         users: IGroupUserModel[],
         userName: string,
@@ -54,7 +54,7 @@ export default class FakeGroupStore implements IGroupStore {
         throw new Error('Method not implemented.');
     }
 
-    deleteOldUsersFromGroup(deletableUsers: IGroupUser[]): Promise<void> {
+    deleteUsersFromGroup(deletableUsers: IGroupUser[]): Promise<void> {
         throw new Error('Method not implemented.');
     }
 
@@ -81,6 +81,28 @@ export default class FakeGroupStore implements IGroupStore {
     }
 
     getGroupProjects(groupIds: number[]): Promise<IGroupProject[]> {
+        throw new Error('Method not implemented.');
+    }
+
+    getNewGroupsForExternalUser(
+        userId: number,
+        externalGroups: string[],
+    ): Promise<IGroup[]> {
+        throw new Error('Method not implemented.');
+    }
+
+    addUserToGroups(
+        userId: number,
+        groupIds: number[],
+        createdBy?: string,
+    ): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
+
+    getOldGroupsForExternalUser(
+        userId: number,
+        externalGroups: string[],
+    ): Promise<IGroupUser[]> {
         throw new Error('Method not implemented.');
     }
 }

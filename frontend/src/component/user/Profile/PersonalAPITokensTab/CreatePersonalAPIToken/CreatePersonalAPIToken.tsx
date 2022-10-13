@@ -93,7 +93,7 @@ export const CreatePersonalAPIToken: FC<ICreatePersonalAPITokenProps> = ({
     setOpen,
     newToken,
 }) => {
-    const { refetchTokens } = usePersonalAPITokens();
+    const { tokens, refetchTokens } = usePersonalAPITokens();
     const { createPersonalAPIToken, loading } = usePersonalAPITokensApi();
     const { setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
@@ -103,6 +103,11 @@ export const CreatePersonalAPIToken: FC<ICreatePersonalAPITokenProps> = ({
     const [expiration, setExpiration] = useState<ExpirationOption>(
         ExpirationOption['30DAYS']
     );
+    const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
+    const clearErrors = () => {
+        setErrors({});
+    };
 
     const calculateDate = () => {
         const expiresAt = new Date();
@@ -157,6 +162,23 @@ export const CreatePersonalAPIToken: FC<ICreatePersonalAPITokenProps> = ({
     --data-raw '${JSON.stringify(getPersonalAPITokenPayload(), undefined, 2)}'`;
     };
 
+    const isDescriptionEmpty = (description: string) => description.length;
+    const isDescriptionUnique = (description: string) =>
+        !tokens?.filter(token => token.description === description).length;
+    const isValid =
+        isDescriptionEmpty(description) && isDescriptionUnique(description);
+
+    const onSetDescription = (description: string) => {
+        clearErrors();
+        if (!isDescriptionUnique(description)) {
+            setErrors({
+                description:
+                    'A personal API token with that description already exists.',
+            });
+        }
+        setDescription(description);
+    };
+
     return (
         <SidebarModal
             open={open}
@@ -184,8 +206,10 @@ export const CreatePersonalAPIToken: FC<ICreatePersonalAPITokenProps> = ({
                         <StyledInput
                             autoFocus
                             label="Description"
+                            error={Boolean(errors.description)}
+                            errorText={errors.description}
                             value={description}
-                            onChange={e => setDescription(e.target.value)}
+                            onChange={e => onSetDescription(e.target.value)}
                             required
                         />
                         <StyledInputDescription>
@@ -226,6 +250,7 @@ export const CreatePersonalAPIToken: FC<ICreatePersonalAPITokenProps> = ({
                             type="submit"
                             variant="contained"
                             color="primary"
+                            disabled={!isValid}
                         >
                             Create token
                         </Button>

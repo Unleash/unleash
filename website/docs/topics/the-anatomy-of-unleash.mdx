@@ -3,7 +3,7 @@ title: The Anatomy of Unleash
 ---
 import Figure from '@site/src/components/Figure/Figure.tsx'
 
-Unleash has many different components on different levels. This guide is here to give you a conceptual overview over how Unleash works. It covers the various components that exist within an Unleash system and how they interact with each other and with external applications. The diagrams are intended to help you understand the fundamental building blocks, such as [projects](../user_guide/projects.md), [environments](../user_guide/environments.md), [variants](../advanced/feature-toggle-variants.md) and, of course, [feature toggles](../reference/feature-toggles.mdx).
+This guide's purpose is to give you a conceptual overview of how Unleash works. It covers the various components that exist within an Unleash system and how they interact with each other and with external applications. The diagrams are intended to help you understand the fundamental building blocks, such as [projects](../user_guide/projects.md), [environments](../user_guide/environments.md), [variants](../advanced/feature-toggle-variants.md) and, of course, [feature toggles](../reference/feature-toggles.mdx).
 
 The end of this guide presents a [short use case, explaining how you might configure Unleash](#use-case) to start working with feature toggles.
 
@@ -27,7 +27,7 @@ Some things in Unleash are configured and defined on the global level. These opt
 
 All Unleash instances must have at least one project at any given time. New instances get a project called “Default”.
 
-Pro and Enterprise customers can create, rename, and delete projects as they wish (as long as there is always **at least one project**). Open-source users, on the other hand, only get access to the default project.
+Pro and Enterprise customers can create, rename, and delete projects as they wish (as long as there is always **at least one project**). Open-source users, on the other hand, only get access to the Default project.
 
 <Figure caption="Unleash projects contain one or more environments." alt="A square labeled 'project' containing another square, labeled 'environment'." img="/img/anatomy-of-unleash-environment.png"/>
 
@@ -35,7 +35,7 @@ Pro and Enterprise customers can create, rename, and delete projects as they wis
 
 <Figure img="/img/anatomy-of-unleash-customer-tiers.png" caption="Feature toggles can be activated or deactivated independently in different environments. For instance, a feature toggle can be active in the development environment, and deactivated in the production environment. Even if their configuration is otherwise identical, deactivated feature toggles will never be considered enabled."/>
 
-[**Environments**](../user_guide/environments.md) in Unleash let you change how a feature toggle works in your application’s different environments. For instance, while you are developing a feature, it’s likely that you’ll want it to be available in the development environment, but not in the production environment: environments let you do that. You might also want to enable a feature for only some users in a production environment, but for no users in a development environment: environments let you do that.
+[**Environments**](../user_guide/environments.md) in Unleash let you change how a feature toggle works in your application’s different environments. For instance, while you are developing a feature, it’s likely that you’ll want it to be available in your development environment, but not in your production environment: environments let you do that. You might also want to enable a feature for only some users in your production environment, but no users in your development environment: environments let you do that.
 
 Environments exist on two different levels within Unleash. The set of **all available environments is defined on the global level**. Additionally, **each project** can choose which of these global environments should be **available on the project level**. The set of environments available to any given project is **always a subset** of the set of globally available environments.
 
@@ -76,7 +76,7 @@ Unleash comes with a number of strategies built in (refer the [activation strate
 
 ## Strategy constraints
 
-[**Strategy constraints**](../advanced/strategy-constraints.md) (or just **constraints**) help you fine-tune your strategies. They are an extra layer of prerequisites that help you narrow the audience of a strategy down. Strategy constraints are applied to [**activation strategies**](../user_guide/activation-strategies.md)
+[**Strategy constraints**](../advanced/strategy-constraints.md) (or just **constraints**) help you fine-tune your strategies. They are an extra layer of prerequisites that help you narrow the audience of a strategy down. Strategy constraints are applied to [**activation strategies**](../user_guide/activation-strategies.md).
 
 For example, if you wanted to roll a feature out to 50% of users with **a specific email domain **(such as “@mycompany.com”), then strategy constraints would let you target only users with that email domain.
 
@@ -89,7 +89,7 @@ An activation strategy can have as many constraints as you want. When an activat
 Feature toggle strategies are **permissive**: As long as **one** strategy resolves to true, the feature is considered enabled. On the other hand, constrains are **restrictive**: for a given strategy, **all** constraints must be met for it to resolve to true.
 
 We can exemplify this difference with the logical operators AND and OR:
-- For a feature toggle, if strategy 1 OR strategy 2 OR .. OR strategy `n` is true, **then the feature is enabled**.
+- For a feature toggle, if Strategy1 OR Strategy2 OR .. OR StrategyN is true, **then the feature is enabled**.
 - For a strategy, it can be evaluated **if and only if** constraint 1 AND constraint 2 AND .. AND constraint `n` are met.
 
 Note that even if all the constraints are met, the strategy itself might not resolve to true: that will depend on the strategy and the provided context.
@@ -179,7 +179,7 @@ You decide to use feature toggle variants to differentiate between the different
 
 ```js
 
-const theme  = unleash.getVariant(“new-color-scheme”).name
+const theme = unleash.getVariant(“new-color-scheme”).name;
 
 if (theme === “green”) {
   // load stylesheet with green color scheme

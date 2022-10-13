@@ -29,7 +29,7 @@ export const SsoGroupSettings = ({
     };
 
     return (
-        <Fragment>
+        <>
             <Grid container spacing={3} mb={2}>
                 <Grid item md={5}>
                     <strong>Enable Group Syncing</strong>

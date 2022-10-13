@@ -42,6 +42,7 @@ export interface IFlags {
     embedProxyFrontend?: boolean;
     publicSignup?: boolean;
     personalAccessTokens?: boolean;
+    suggestChanges?: boolean;
 }
 
 export interface IVersionInfo {

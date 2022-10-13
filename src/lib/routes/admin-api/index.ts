@@ -26,6 +26,7 @@ import ConstraintsController from './constraints';
 import PatController from './user/pat';
 import { PublicSignupController } from './public-signup';
 import { conditionalMiddleware } from '../../middleware/conditional-middleware';
+import SuggestChangesController from './suggest-changes';
 
 class AdminApi extends Controller {
     constructor(config: IUnleashConfig, services: IUnleashServices) {
@@ -90,13 +91,14 @@ class AdminApi extends Controller {
             '/user-admin',
             new UserAdminController(config, services).router,
         );
-        this.use(
-            '/api/suggest-changes',
+        this.app.use(
+            '/suggest-changes',
             conditionalMiddleware(
                 () => config.flagResolver.isEnabled('suggestChanges'),
-                new ProxyController(config, services).router,
+                new SuggestChangesController(config, services).router,
             ),
         );
+
         this.app.use(
             '/feedback',
             new UserFeedbackController(config, services).router,

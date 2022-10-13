@@ -24,6 +24,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { DeleteProjectDialogue } from './DeleteProject/DeleteProjectDialogue';
 import { ProjectLog } from './ProjectLog/ProjectLog';
+import { SuggestedChanges } from './SuggestedChanges/SuggestedChanges';
 
 const StyledDiv = styled('div')(() => ({
     display: 'flex',
@@ -53,7 +54,7 @@ const Project = () => {
     const { classes: styles } = useStyles();
     const navigate = useNavigate();
     const { pathname } = useLocation();
-    const { isOss } = useUiConfig();
+    const { isOss, uiConfig } = useUiConfig();
     const basePath = `/projects/${projectId}`;
     const projectName = project?.name || projectId;
 
@@ -65,6 +66,15 @@ const Project = () => {
             path: basePath,
             name: 'overview',
         },
+        ...(uiConfig?.flags?.suggestChanges
+            ? [
+                  {
+                      title: 'Suggested changes',
+                      path: `${basePath}/changes`,
+                      name: 'changes',
+                  },
+              ]
+            : []),
         {
             title: 'Health',
             path: `${basePath}/health`,
@@ -213,6 +223,7 @@ const Project = () => {
                 }}
             />
             <Routes>
+                <Route path="changes" element={<SuggestedChanges />} />
                 <Route path="health" element={<ProjectHealth />} />
                 <Route path="access/*" element={<ProjectAccess />} />
                 <Route path="environments" element={<ProjectEnvironment />} />

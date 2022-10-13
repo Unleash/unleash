@@ -82,6 +82,7 @@ export const createServices = (
         config,
         segmentService,
         accessService,
+        achievementsService,
     );
     const environmentService = new EnvironmentService(stores, config);
     const featureTagService = new FeatureTagService(stores, config);

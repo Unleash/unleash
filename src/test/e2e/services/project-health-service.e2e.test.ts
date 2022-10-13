@@ -9,6 +9,7 @@ import { IUnleashStores } from '../../../lib/types';
 import { IUser } from '../../../lib/server-impl';
 import { SegmentService } from '../../../lib/services/segment-service';
 import { GroupService } from '../../../lib/services/group-service';
+import AchievementsService from '../../../lib/services/achievements-service';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -34,6 +35,7 @@ beforeAll(async () => {
         config,
         new SegmentService(stores, config),
         accessService,
+        new AchievementsService(stores, config),
     );
     projectService = new ProjectService(
         stores,

@@ -11,6 +11,7 @@ import EnvironmentService from '../../../lib/services/environment-service';
 import IncompatibleProjectError from '../../../lib/error/incompatible-project-error';
 import { SegmentService } from '../../../lib/services/segment-service';
 import { GroupService } from '../../../lib/services/group-service';
+import AchievementsService from '../../../lib/services/achievements-service';
 
 let stores;
 let db: ITestDb;
@@ -41,6 +42,7 @@ beforeAll(async () => {
         config,
         new SegmentService(stores, config),
         accessService,
+        new AchievementsService(stores, config),
     );
     environmentService = new EnvironmentService(stores, config);
     projectService = new ProjectService(
@@ -422,7 +424,12 @@ test('should not change project if feature toggle project does not match current
     const toggle = { name: 'test-toggle' };
 
     await projectService.createProject(project, user);
-    await featureToggleService.createFeatureToggle(project.id, toggle, user);
+    await featureToggleService.createFeatureToggle(
+        project.id,
+        toggle,
+        user,
+        user,
+    );
 
     try {
         await projectService.changeProject(
@@ -448,7 +455,12 @@ test('should return 404 if no project is found with the project id', async () =>
     const toggle = { name: 'test-toggle-2' };
 
     await projectService.createProject(project, user);
-    await featureToggleService.createFeatureToggle(project.id, toggle, user);
+    await featureToggleService.createFeatureToggle(
+        project.id,
+        toggle,
+        user,
+        user,
+    );
 
     try {
         await projectService.changeProject(
@@ -483,7 +495,12 @@ test('should fail if user is not authorized', async () => {
 
     await projectService.createProject(project, user);
     await projectService.createProject(projectDestination, projectAdmin1);
-    await featureToggleService.createFeatureToggle(project.id, toggle, user);
+    await featureToggleService.createFeatureToggle(
+        project.id,
+        toggle,
+        user,
+        user,
+    );
 
     try {
         await projectService.changeProject(
@@ -506,7 +523,12 @@ test('should change project when checks pass', async () => {
 
     await projectService.createProject(projectA, user);
     await projectService.createProject(projectB, user);
-    await featureToggleService.createFeatureToggle(projectA.id, toggle, user);
+    await featureToggleService.createFeatureToggle(
+        projectA.id,
+        toggle,
+        user,
+        user,
+    );
     await projectService.changeProject(
         projectB.id,
         toggle.name,
@@ -524,7 +546,12 @@ test('changing project should emit event even if user does not have a username s
     const toggle = { name: randomId() };
     await projectService.createProject(projectA, user);
     await projectService.createProject(projectB, user);
-    await featureToggleService.createFeatureToggle(projectA.id, toggle, user);
+    await featureToggleService.createFeatureToggle(
+        projectA.id,
+        toggle,
+        user,
+        user,
+    );
     const eventsBeforeChange = await stores.eventStore.getEvents();
     await projectService.changeProject(
         projectB.id,
@@ -544,7 +571,12 @@ test('should require equal project environments to move features', async () => {
 
     await projectService.createProject(projectA, user);
     await projectService.createProject(projectB, user);
-    await featureToggleService.createFeatureToggle(projectA.id, toggle, user);
+    await featureToggleService.createFeatureToggle(
+        projectA.id,
+        toggle,
+        user,
+        user,
+    );
     await stores.environmentStore.create(environment);
     await environmentService.addEnvironmentToProject(
         environment.name,

@@ -426,6 +426,7 @@ export default class ProjectFeaturesController extends Controller {
             name,
             replaceGroupId,
             userName,
+            req.user,
         );
 
         this.openApiService.respondWithValidation(
@@ -447,6 +448,7 @@ export default class ProjectFeaturesController extends Controller {
             projectId,
             req.body,
             userName,
+            req.user,
         );
 
         this.openApiService.respondWithValidation(

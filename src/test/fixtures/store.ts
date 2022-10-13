@@ -11,6 +11,7 @@ import FakeAddonStore from './fake-addon-store';
 import FakeProjectStore from './fake-project-store';
 import FakeUserStore from './fake-user-store';
 import FakeAccessStore from './fake-access-store';
+import FakeAchievementsStore from './fake-achievements-store';
 import FakeUserFeedbackStore from './fake-user-feedback-store';
 import FakeFeatureTagStore from './fake-feature-tag-store';
 import FakeEnvironmentStore from './fake-environment-store';
@@ -54,6 +55,7 @@ const createStores: () => IUnleashStores = () => {
         projectStore: new FakeProjectStore(),
         userStore: new FakeUserStore(),
         accessStore: new FakeAccessStore(),
+        achievementsStore: new FakeAchievementsStore(),
         userFeedbackStore: new FakeUserFeedbackStore(),
         featureStrategiesStore: new FakeFeatureStrategiesStore(),
         featureTagStore: new FakeFeatureTagStore(),

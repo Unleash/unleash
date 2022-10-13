@@ -17,6 +17,7 @@ import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import { SplashPageRedirect } from 'component/splash/SplashPageRedirect/SplashPageRedirect';
 import { useStyles } from './App.styles';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { AchievementPopup } from './achievements/AchievementPopup/AchievementPopup';
 
 export const App = () => {
     const { classes: styles } = useStyles();
@@ -75,6 +76,7 @@ export const App = () => {
                                     </Routes>
                                     <FeedbackNPS openUrl="http://feedback.unleash.run" />
                                     <SplashPageRedirect />
+                                    <AchievementPopup />
                                 </div>
                             }
                         />

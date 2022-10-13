@@ -14,6 +14,7 @@ import { IFeatureTagStore } from './stores/feature-tag-store';
 import { IUserStore } from './stores/user-store';
 import { IAddonStore } from './stores/addon-store';
 import { IAccessStore } from './stores/access-store';
+import { IAchievementsStore } from './stores/achievements-store';
 import { IApiTokenStore } from './stores/api-token-store';
 import { IResetTokenStore } from './stores/reset-token-store';
 import { IUserFeedbackStore } from './stores/user-feedback-store';
@@ -31,6 +32,7 @@ import { IPublicSignupTokenStore } from './stores/public-signup-token-store';
 
 export interface IUnleashStores {
     accessStore: IAccessStore;
+    achievementsStore: IAchievementsStore;
     addonStore: IAddonStore;
     apiTokenStore: IApiTokenStore;
     clientApplicationsStore: IClientApplicationsStore;

@@ -14,6 +14,7 @@ import UserStore from './user-store';
 import ProjectStore from './project-store';
 import TagStore from './tag-store';
 import TagTypeStore from './tag-type-store';
+import AchievementsStore from './achievements-store';
 import AddonStore from './addon-store';
 import { ApiTokenStore } from './api-token-store';
 import SessionStore from './session-store';
@@ -58,6 +59,7 @@ export const createStores = (
         projectStore: new ProjectStore(db, eventBus, getLogger),
         tagStore: new TagStore(db, eventBus, getLogger),
         tagTypeStore: new TagTypeStore(db, eventBus, getLogger),
+        achievementsStore: new AchievementsStore(db, getLogger),
         addonStore: new AddonStore(db, eventBus, getLogger),
         accessStore: new AccessStore(db, eventBus, getLogger),
         apiTokenStore: new ApiTokenStore(db, eventBus, getLogger),

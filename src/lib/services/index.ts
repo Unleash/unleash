@@ -10,6 +10,7 @@ import ClientMetricsServiceV2 from './client-metrics/metrics-service-v2';
 import TagTypeService from './tag-type-service';
 import TagService from './tag-service';
 import StrategyService from './strategy-service';
+import AchievementsService from './achievements-service';
 import AddonService from './addon-service';
 import ContextService from './context-service';
 import VersionService from './version-service';
@@ -44,6 +45,7 @@ export const createServices = (
 ): IUnleashServices => {
     const groupService = new GroupService(stores, config);
     const accessService = new AccessService(stores, config, groupService);
+    const achievementsService = new AchievementsService(stores, config);
     const apiTokenService = new ApiTokenService(stores, config);
     const clientInstanceService = new ClientInstanceService(stores, config);
     const lastSeenService = new LastSeenService(stores, config);
@@ -126,6 +128,7 @@ export const createServices = (
 
     return {
         accessService,
+        achievementsService,
         addonService,
         featureToggleService: featureToggleServiceV2,
         featureToggleServiceV2,

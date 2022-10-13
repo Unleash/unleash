@@ -3,6 +3,10 @@
 // creating a new endpoint.
 const OPENAPI_TAGS = [
     {
+        name: 'Achievements',
+        description: 'Fetch Unleash Achievements.',
+    },
+    {
         name: 'Addons',
         description:
             'Create, update, and delete [Unleash addons](https://docs.getunleash.io/addons).',

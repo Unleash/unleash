@@ -80,6 +80,8 @@ export const CLIENT_REGISTER = 'client-register';
 
 export const PAT_CREATED = 'pat-created';
 
+export const ACHIEVEMENT_UNLOCKED = 'achievement-unlocked';
+
 export const PUBLIC_SIGNUP_TOKEN_CREATED = 'public-signup-token-created';
 export const PUBLIC_SIGNUP_TOKEN_USER_ADDED = 'public-signup-token-user-added';
 export const PUBLIC_SIGNUP_TOKEN_TOKEN_UPDATED = 'public-signup-token-updated';

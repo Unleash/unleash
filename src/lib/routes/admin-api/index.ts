@@ -24,6 +24,7 @@ import ProjectApi from './project';
 import { EnvironmentsController } from './environments';
 import ConstraintsController from './constraints';
 import PatController from './user/pat';
+import AchievementsController from './user/achievements';
 import { PublicSignupController } from './public-signup';
 import { conditionalMiddleware } from '../../middleware/conditional-middleware';
 import InstanceAdminController from './instance-admin';
@@ -66,6 +67,10 @@ class AdminApi extends Controller {
         this.app.use(
             '/user/tokens',
             new PatController(config, services).router,
+        );
+        this.app.use(
+            '/user/achievements',
+            new AchievementsController(config, services).router,
         );
         this.app.use(
             '/ui-config',

@@ -90,7 +90,7 @@ Feature toggle strategies are **permissive**: As long as **one** strategy resolv
 
 We can exemplify this difference with the logical operators AND and OR:
 - For a feature toggle, if Strategy1 OR Strategy2 OR .. OR StrategyN is true, **then the feature is enabled**.
-- For a strategy, it can be evaluated **if and only if** constraint 1 AND constraint 2 AND .. AND constraint `n` are met.
+- For a strategy, it can be evaluated **if and only if** Constraint1 AND Constraint2 AND .. AND ConstraintN are met.
 
 Note that even if all the constraints are met, the strategy itself might not resolve to true: that will depend on the strategy and the provided context.
 

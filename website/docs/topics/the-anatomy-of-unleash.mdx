@@ -63,7 +63,9 @@ When creating a feature toggle, you must assign a unique (across your Unleash in
 
 [**Activation strategies**](../user_guide/activation-strategies.md) (or just **strategies** for short) are the part of feature toggles that tell Unleash **who should get a feature**. An activation strategy is assigned to **one **feature toggle in **one **environment.
 
-When you check a [feature toggle](../reference/feature-toggles.mdx) in an application, the toggle’s strategies decide the result. As long as **at least one** of a toggle’s strategies resolve to true for the current context (user or application), then the toggle will be considered enabled. In other words, if you have a hundred strategies and ninety-nine of them resolve to false, but one of them resolves to true, then the toggle is enabled.
+When you check a [feature toggle](../reference/feature-toggles.mdx) in an application, the following decides the result:
+1. Is the toggle active in the current environment? If not, it will be disabled.
+2. If the toggle **is** active in the current environment, the toggle’s strategies decide the result. As long as **at least one** of a toggle’s strategies resolve to true for the current context (user or application), then the toggle will be considered enabled. In other words, if you have a hundred strategies and ninety-nine of them resolve to false, but one of them resolves to true, then the toggle is enabled.
 
 Activation strategies tie feature toggles and [environments](../user_guide/environments.md) together. When you assign an activation strategy to a feature toggle, you do so in one environment at a time. You can assign the same strategy to the same toggle in different environments, but they will be different instances of the same strategy, and do not stay in sync. Unleash also lets you copy strategies from one environment to another.
 

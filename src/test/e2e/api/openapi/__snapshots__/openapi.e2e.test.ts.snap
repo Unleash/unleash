@@ -1390,6 +1390,12 @@ exports[`should serve the OpenAPI spec 1`] = `
           "id": {
             "type": "number",
           },
+          "mappingsSSO": {
+            "items": {
+              "type": "string",
+            },
+            "type": "array",
+          },
           "name": {
             "type": "string",
           },

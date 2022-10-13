@@ -18,7 +18,7 @@ const set = {
     state: 'REVIEW',
     createdBy: 'Tymek',
     lastUpdatedAt: '2021-03-01T12:00:00.000Z',
-    project: 'new-project',
+    project: 'default',
     // approvers: [],
     // submittedBy: ??
     // changeAuthors ??
@@ -107,15 +107,17 @@ export default class SuggestChangesController extends Controller {
     async createChangeRequest(req: Request, res: Response): Promise<void> {}
 
     async getChangeRequest(req: Request, res: Response): Promise<void> {
-        res.json(set);
+        res.json(set).end();
     }
 
     async approveChangeRequest(req: Request, res: Response): Promise<void> {
         set.state = 'APPROVED';
+        res.status(200).end();
     }
 
     async requestChanges(req: Request, res: Response): Promise<void> {
         set.state = 'REQUEST_CHANGES';
+        res.status(200).end();
     }
 
     async applyChangeRequest(
@@ -139,5 +141,6 @@ export default class SuggestChangesController extends Controller {
         });
 
         set.state = 'APPLIED';
+        res.status(200).end();
     }
 }

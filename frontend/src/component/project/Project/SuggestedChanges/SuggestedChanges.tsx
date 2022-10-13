@@ -14,13 +14,17 @@ import {
 import { useChangeRequest } from 'hooks/api/getters/useChangeRequest/useChangeRequest';
 import { useSuggestChangesApi } from 'hooks/api/actions/useSuggestChangesApi/useSuggestChangesApi';
 import { ChangesetDiff } from './ChangesetDiff/ChangesetDiff';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 export const SuggestedChanges: VFC = () => {
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
     const [selectedValue, setSelectedValue] = useState('');
     const { changeRequest, refetchChangeRequest } = useChangeRequest('1234');
-    const { approveChangeRequest, requestChangesOnChangeRequest } =
-        useSuggestChangesApi();
+    const {
+        approveChangeRequest,
+        requestChangesOnChangeRequest,
+        applyChangeRequest,
+    } = useSuggestChangesApi();
 
     const onClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
@@ -34,22 +38,18 @@ export const SuggestedChanges: VFC = () => {
 
     const onSubmit = async (e: any) => {
         e.preventDefault();
-        console.log(selectedValue);
         if (selectedValue === 'approve') {
             try {
-                console.log('approving');
                 await approveChangeRequest('1234');
                 setSelectedValue('');
                 refetchChangeRequest();
                 onClose();
-                console.log('closing');
             } catch (error) {
                 console.log(error);
                 // handleError
             }
         } else if (selectedValue === 'requestChanges') {
             try {
-                console.log('FIRING');
                 await requestChangesOnChangeRequest('1234');
                 setSelectedValue('');
                 refetchChangeRequest();
@@ -59,8 +59,16 @@ export const SuggestedChanges: VFC = () => {
                 // handleError
             }
         }
-
         // show an error if no action was selected
+    };
+
+    const onApply = async () => {
+        try {
+            await applyChangeRequest('1234');
+            refetchChangeRequest();
+        } catch (e) {
+            console.log(e);
+        }
     };
 
     // console.log(changeRequest);
@@ -88,51 +96,84 @@ export const SuggestedChanges: VFC = () => {
             >
                 <ChangesetDiff changeSet={changeRequest?.changeSet} />
             </Box>
-            <Button variant="contained" onClick={onClick}>
-                Review changes
-            </Button>
-            <Popover
-                id={'review-popover'}
-                open={Boolean(anchorEl)}
-                anchorEl={anchorEl}
-                onClose={onClose}
-                anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'left',
-                }}
-            >
-                <Box
-                    component="form"
-                    onSubmit={onSubmit}
-                    sx={{
-                        padding: '1rem 2rem',
-                        display: 'flex',
-                        flexDirection: 'column',
-                    }}
-                >
-                    <FormControl>
-                        <RadioGroup
-                            value={selectedValue}
-                            onChange={onRadioChange}
-                            name="review-actions-radio"
+            <ConditionallyRender
+                condition={changeRequest?.state === 'APPLIED'}
+                show={<Typography>Applied</Typography>}
+            />
+            <ConditionallyRender
+                condition={changeRequest?.state === 'APPROVED'}
+                show={
+                    <>
+                        <Button
+                            sx={{ mt: 2 }}
+                            variant="contained"
+                            onClick={onApply}
                         >
-                            <FormControlLabel
-                                value="approve"
-                                control={<Radio />}
-                                label="Approve"
-                            />
-                            <FormControlLabel
-                                value="requestChanges"
-                                control={<Radio />}
-                                label="Request changes"
-                            />
-                        </RadioGroup>
-                    </FormControl>
-                    <Button type="submit" variant="contained" color="primary">
-                        Submit
-                    </Button>
-                </Box>
-            </Popover>
+                            Apply changes
+                        </Button>
+                    </>
+                }
+            />
+            <ConditionallyRender
+                condition={changeRequest?.state === 'REVIEW'}
+                show={
+                    <>
+                        <Button
+                            sx={{ mt: 2 }}
+                            variant="contained"
+                            onClick={onClick}
+                        >
+                            Review changes
+                        </Button>
+                        <Popover
+                            id={'review-popover'}
+                            open={Boolean(anchorEl)}
+                            anchorEl={anchorEl}
+                            onClose={onClose}
+                            anchorOrigin={{
+                                vertical: 'bottom',
+                                horizontal: 'left',
+                            }}
+                        >
+                            <Box
+                                component="form"
+                                onSubmit={onSubmit}
+                                sx={{
+                                    padding: '1rem 2rem',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                }}
+                            >
+                                <FormControl>
+                                    <RadioGroup
+                                        value={selectedValue}
+                                        onChange={onRadioChange}
+                                        name="review-actions-radio"
+                                    >
+                                        <FormControlLabel
+                                            value="approve"
+                                            control={<Radio />}
+                                            label="Approve"
+                                        />
+                                        <FormControlLabel
+                                            value="requestChanges"
+                                            control={<Radio />}
+                                            label="Request changes"
+                                        />
+                                    </RadioGroup>
+                                </FormControl>
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    color="primary"
+                                >
+                                    Submit
+                                </Button>
+                            </Box>
+                        </Popover>
+                    </>
+                }
+            />
         </Paper>
     );
 };

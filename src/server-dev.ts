@@ -39,6 +39,7 @@ process.nextTick(async () => {
                         anonymiseEventLog: false,
                         responseTimeWithAppName: true,
                         personalAccessTokens: true,
+                        suggestChanges: true,
                     },
                 },
                 authentication: {

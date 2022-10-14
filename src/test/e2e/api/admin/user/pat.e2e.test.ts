@@ -169,7 +169,7 @@ test('should fail creation of PAT without a description', async () => {
         .expect(400);
 });
 
-test('should fail creation of PAT with a description that already exists', async () => {
+test('should fail creation of PAT with a description that already exists for the current user', async () => {
     const description = 'duplicate description';
 
     await app.request

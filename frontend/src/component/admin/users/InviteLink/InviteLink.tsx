@@ -136,9 +136,9 @@ export const InviteLink: VFC<ICreateInviteLinkProps> = () => {
         <FormTemplate
             loading={loading || isSending}
             title={isUpdating ? 'Update invite link' : 'Create invite link'}
-            description="When you send an invite link to a someone, they will be able to create an account and get access to Unleash. This new user will only have read access, until you change their assigned role."
-            documentationLink="https://docs.getunleash.io/user_guide/rbac#standard-roles" // FIXME: update
-            documentationLinkLabel="User management documentation"
+            description="When you send an invite link to someone, they will be able to create an account and get access to Unleash. This new user will only have read access, until you change their assigned role."
+            documentationLink="https://docs.getunleash.io/reference/public-signup"
+            documentationLinkLabel="Invite link documentation"
             formatApiCode={formatApiCode}
         >
             <Box

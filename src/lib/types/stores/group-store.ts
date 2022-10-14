@@ -1,5 +1,5 @@
 import { Store } from './store';
-import {
+import Group, {
     IGroup,
     IGroupModel,
     IGroupProject,
@@ -15,6 +15,20 @@ export interface IStoreGroup {
 }
 
 export interface IGroupStore extends Store<IGroup, number> {
+    getGroupsForUser(userId: number): Promise<Group[]>;
+    getOldGroupsForExternalUser(
+        userId: number,
+        externalGroups: string[],
+    ): Promise<IGroupUser[]>;
+    addUserToGroups(
+        userId: number,
+        groupIds: number[],
+        createdBy?: string,
+    ): Promise<void>;
+    getNewGroupsForExternalUser(
+        userId: number,
+        externalGroups: string[],
+    ): Promise<IGroup[]>;
     getGroupProjects(groupIds: number[]): Promise<IGroupProject[]>;
 
     getProjectGroupRoles(projectId: string): Promise<IGroupRole[]>;
@@ -29,13 +43,13 @@ export interface IGroupStore extends Store<IGroup, number> {
         userName: string,
     ): Promise<void>;
 
-    deleteOldUsersFromGroup(deletableUsers: IGroupUser[]): Promise<void>;
+    deleteUsersFromGroup(deletableUsers: IGroupUser[]): Promise<void>;
 
     update(group: IGroupModel): Promise<IGroup>;
 
     getAllUsersByGroups(groupIds: number[]): Promise<IGroupUser[]>;
 
-    addNewUsersToGroup(
+    addUsersToGroup(
         groupId: number,
         users: IGroupUserModel[],
         userName: string,

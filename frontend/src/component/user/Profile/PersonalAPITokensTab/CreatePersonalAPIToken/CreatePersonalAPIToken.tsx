@@ -164,7 +164,7 @@ export const CreatePersonalAPIToken: FC<ICreatePersonalAPITokenProps> = ({
 
     const isDescriptionEmpty = (description: string) => description.length;
     const isDescriptionUnique = (description: string) =>
-        !tokens?.filter(token => token.description === description).length;
+        !tokens?.some(token => token.description === description);
     const isValid =
         isDescriptionEmpty(description) && isDescriptionUnique(description);
 

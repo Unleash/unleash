@@ -260,7 +260,6 @@ class FeatureController extends Controller {
             project,
             validatedToggle,
             userName,
-            req.user,
             true,
         );
         const strategies = await Promise.all(

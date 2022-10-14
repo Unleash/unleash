@@ -2,7 +2,6 @@ import { IUnleashTest, setupApp } from '../../helpers/test-helper';
 import dbInit, { ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import { DEFAULT_ENV } from '../../../../lib/util/constants';
-import User from '../../../../lib/types/user';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -10,7 +9,6 @@ let db: ITestDb;
 const featureName = 'feature.default.1';
 const username = 'test';
 const projectId = 'default';
-const mockUser = new User({ id: 1, email: 'test@example.com' });
 
 beforeAll(async () => {
     db = await dbInit('feature_env_api_client', getLogger);
@@ -23,7 +21,6 @@ beforeAll(async () => {
             description: 'the #1 feature',
         },
         username,
-        mockUser,
     );
 
     await app.services.featureToggleServiceV2.createStrategy(

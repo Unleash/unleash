@@ -4,14 +4,11 @@ import getLogger from '../../../fixtures/no-logger';
 import { DEFAULT_ENV } from '../../../../lib/util/constants';
 import { collectIds } from '../../../../lib/util/collect-ids';
 import { ApiTokenType } from '../../../../lib/types/models/api-token';
-import { User } from '../../../../lib/server-impl';
 
 const importData = require('../../../examples/import.json');
 
 let app: IUnleashTest;
 let db: ITestDb;
-
-const mockUser = new User({ id: 1, email: 'test@example.com' });
 
 beforeAll(async () => {
     db = await dbInit('state_api_serial', getLogger);
@@ -170,7 +167,6 @@ test('Can roundtrip. I.e. export and then import', async () => {
             description: 'Feature for export',
         },
         userName,
-        mockUser,
     );
     await app.services.featureToggleServiceV2.createStrategy(
         {
@@ -218,7 +214,6 @@ test('Roundtrip with tags works', async () => {
             description: 'Feature for export',
         },
         userName,
-        mockUser,
     );
     await app.services.featureToggleServiceV2.createStrategy(
         {
@@ -280,7 +275,6 @@ test('Roundtrip with strategies in multiple environments works', async () => {
             description: 'Feature for export',
         },
         userName,
-        mockUser,
     );
     await app.services.environmentService.addEnvironmentToProject(
         environment,
@@ -381,7 +375,6 @@ test(`should not delete api_tokens on import when drop-flag is set`, async () =>
             description: 'Feature for export',
         },
         userName,
-        mockUser,
     );
     await app.services.featureToggleServiceV2.createStrategy(
         {

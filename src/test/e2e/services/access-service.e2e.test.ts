@@ -14,7 +14,6 @@ import { DEFAULT_PROJECT } from '../../../lib/types/project';
 import { ALL_PROJECTS } from '../../../lib/util/constants';
 import { SegmentService } from '../../../lib/services/segment-service';
 import { GroupService } from '../../../lib/services/group-service';
-import AchievementsService from '../../../lib/services/achievements-service';
 
 let db: ITestDb;
 let stores: IUnleashStores;
@@ -220,7 +219,6 @@ beforeAll(async () => {
         config,
         new SegmentService(stores, config),
         accessService,
-        new AchievementsService(stores, config),
     );
     projectService = new ProjectService(
         stores,

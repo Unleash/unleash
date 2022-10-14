@@ -78,8 +78,6 @@ import { AccessService } from './access-service';
 import { User } from '../server-impl';
 import { CREATE_FEATURE_STRATEGY } from '../types/permissions';
 import NoAccessError from '../error/no-access-error';
-import AchievementsService from './achievements-service';
-import { Achievements } from '../../lib/achievements';
 
 interface IFeatureContext {
     featureName: string;
@@ -117,8 +115,6 @@ class FeatureToggleService {
 
     private accessService: AccessService;
 
-    private achievementsService: AchievementsService;
-
     constructor(
         {
             featureStrategiesStore,
@@ -143,7 +139,6 @@ class FeatureToggleService {
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
         segmentService: SegmentService,
         accessService: AccessService,
-        achievementsService: AchievementsService,
     ) {
         this.logger = getLogger('services/feature-toggle-service.ts');
         this.featureStrategiesStore = featureStrategiesStore;
@@ -156,7 +151,6 @@ class FeatureToggleService {
         this.contextFieldStore = contextFieldStore;
         this.segmentService = segmentService;
         this.accessService = accessService;
-        this.achievementsService = achievementsService;
     }
 
     async validateFeatureContext({
@@ -708,7 +702,6 @@ class FeatureToggleService {
         projectId: string,
         value: FeatureToggleDTO,
         createdBy: string,
-        user: User,
         isValidated: boolean = false,
     ): Promise<FeatureToggle> {
         this.logger.info(`${createdBy} creates feature toggle ${value.name}`);
@@ -757,11 +750,6 @@ class FeatureToggleService {
                 }),
             );
 
-            await this.achievementsService.unlockAchievement(
-                Achievements.FIRST_TOGGLE,
-                user,
-            );
-
             return createdToggle;
         }
         throw new NotFoundError(`Project with id ${projectId} does not exist`);
@@ -773,7 +761,6 @@ class FeatureToggleService {
         newFeatureName: string,
         replaceGroupId: boolean = true, // eslint-disable-line
         userName: string,
-        user: User,
     ): Promise<FeatureToggle> {
         this.logger.info(
             `${userName} clones feature toggle ${featureName} to ${newFeatureName}`,
@@ -794,7 +781,6 @@ class FeatureToggleService {
             projectId,
             newToggle,
             userName,
-            user,
         );
 
         const variantTasks = newToggle.environments.map((e) => {

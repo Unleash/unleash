@@ -4,7 +4,6 @@ import getLogger from '../../../fixtures/no-logger';
 import { ApiTokenService } from '../../../../lib/services/api-token-service';
 import { ApiTokenType } from '../../../../lib/types/models/api-token';
 import { DEFAULT_ENV } from '../../../../lib/util/constants';
-import User from '../../../../lib/types/user';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -18,7 +17,6 @@ const username = 'test';
 const feature1 = 'f1.token.access';
 const feature2 = 'f2.token.access';
 const feature3 = 'f3.p2.token.access';
-const mockUser = new User({ id: 1, email: 'test@example.com' });
 
 beforeAll(async () => {
     db = await dbInit('feature_api_api_access_client', getLogger);
@@ -49,7 +47,6 @@ beforeAll(async () => {
             description: 'the #1 feature',
         },
         username,
-        mockUser,
     );
 
     await featureToggleServiceV2.createStrategy(
@@ -78,7 +75,6 @@ beforeAll(async () => {
             name: feature2,
         },
         username,
-        mockUser,
     );
     await featureToggleServiceV2.createStrategy(
         {
@@ -97,7 +93,6 @@ beforeAll(async () => {
             name: feature3,
         },
         username,
-        mockUser,
     );
     await featureToggleServiceV2.createStrategy(
         {

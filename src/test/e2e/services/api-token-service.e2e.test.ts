@@ -10,7 +10,6 @@ import FeatureToggleService from '../../../lib/services/feature-toggle-service';
 import { AccessService } from '../../../lib/services/access-service';
 import { SegmentService } from '../../../lib/services/segment-service';
 import { GroupService } from '../../../lib/services/group-service';
-import AchievementsService from '../../../lib/services/achievements-service';
 
 let db;
 let stores;
@@ -25,13 +24,11 @@ beforeAll(async () => {
     stores = db.stores;
     const groupService = new GroupService(stores, config);
     const accessService = new AccessService(stores, config, groupService);
-    const achievementsService = new AchievementsService(stores, config);
     const featureToggleService = new FeatureToggleService(
         stores,
         config,
         new SegmentService(stores, config),
         accessService,
-        achievementsService,
     );
     const project = {
         id: 'test-project',

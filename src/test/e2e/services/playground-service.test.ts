@@ -20,7 +20,6 @@ import { playgroundStrategyEvaluation } from '../../../lib/openapi/spec/playgrou
 import { PlaygroundSegmentSchema } from 'lib/openapi/spec/playground-segment-schema';
 import { GroupService } from '../../../lib/services/group-service';
 import { AccessService } from '../../../lib/services/access-service';
-import AchievementsService from '../../../lib/services/achievements-service';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -35,13 +34,11 @@ beforeAll(async () => {
     segmentService = new SegmentService(stores, config);
     const groupService = new GroupService(stores, config);
     const accessService = new AccessService(stores, config, groupService);
-    const achievementsService = new AchievementsService(stores, config);
     featureToggleService = new FeatureToggleService(
         stores,
         config,
         segmentService,
         accessService,
-        achievementsService,
     );
     service = new PlaygroundService(config, {
         featureToggleServiceV2: featureToggleService,

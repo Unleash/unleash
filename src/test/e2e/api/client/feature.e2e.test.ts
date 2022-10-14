@@ -2,12 +2,9 @@ import { IUnleashTest, setupApp } from '../../helpers/test-helper';
 import dbInit, { ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import { DEFAULT_ENV } from '../../../../lib/util/constants';
-import User from '../../../../lib/types/user';
 
 let app: IUnleashTest;
 let db: ITestDb;
-
-const mockUser = new User({ id: 1, email: 'test@example.com' });
 
 beforeAll(async () => {
     db = await dbInit('feature_api_client', getLogger);
@@ -20,7 +17,6 @@ beforeAll(async () => {
             impressionData: true,
         },
         'test',
-        mockUser,
     );
     await app.services.featureToggleServiceV2.createFeatureToggle(
         'default',
@@ -29,7 +25,6 @@ beforeAll(async () => {
             description: 'soon to be the #1 feature',
         },
         'test',
-        mockUser,
     );
     await app.services.featureToggleServiceV2.createFeatureToggle(
         'default',
@@ -38,7 +33,6 @@ beforeAll(async () => {
             description: 'terrible feature',
         },
         'test',
-        mockUser,
     );
     await app.services.featureToggleServiceV2.createFeatureToggle(
         'default',
@@ -47,7 +41,6 @@ beforeAll(async () => {
             description: 'the #1 feature',
         },
         'test',
-        mockUser,
     );
 
     await app.services.featureToggleServiceV2.archiveToggle(
@@ -62,7 +55,6 @@ beforeAll(async () => {
             description: 'soon to be the #1 feature',
         },
         'test',
-        mockUser,
     );
 
     await app.services.featureToggleServiceV2.archiveToggle(
@@ -76,7 +68,6 @@ beforeAll(async () => {
             description: 'terrible feature',
         },
         'test',
-        mockUser,
     );
     await app.services.featureToggleServiceV2.archiveToggle(
         'featureArchivedZ',
@@ -89,7 +80,6 @@ beforeAll(async () => {
             description: 'A feature toggle with variants',
         },
         'test',
-        mockUser,
     );
     await app.services.featureToggleServiceV2.saveVariants(
         'feature.with.variants',

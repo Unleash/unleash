@@ -12,7 +12,6 @@ import {
     IVariant,
 } from '../../../../lib/types/model';
 import { randomId } from '../../../../lib/util/random-id';
-import User from '../../../../lib/types/user';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -23,8 +22,6 @@ const defaultStrategy = {
     constraints: [],
 };
 
-const mockUser = new User({ id: 1, email: 'test@example.com' });
-
 beforeAll(async () => {
     db = await dbInit('feature_api_serial', getLogger);
     app = await setupApp(db.stores);
@@ -34,13 +31,11 @@ beforeAll(async () => {
         strategy: Omit<IStrategyConfig, 'id'> = defaultStrategy,
         projectId: string = 'default',
         username: string = 'test',
-        user = mockUser,
     ) => {
         await app.services.featureToggleServiceV2.createFeatureToggle(
             projectId,
             toggle,
             username,
-            user,
         );
         await app.services.featureToggleServiceV2.createStrategy(
             strategy,
@@ -408,7 +403,6 @@ test('can toggle a feature that does exist', async () => {
                 name: featureName,
             },
             'test',
-            mockUser,
         );
     await app.services.featureToggleServiceV2.createStrategy(
         defaultStrategy,

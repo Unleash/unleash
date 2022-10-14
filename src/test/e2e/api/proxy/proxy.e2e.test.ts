@@ -14,12 +14,9 @@ import {
     IStrategyConfig,
 } from '../../../../lib/types';
 import { ProxyRepository } from '../../../../lib/proxy';
-import User from '../../../../lib/types/user';
 
 let app: IUnleashTest;
 let db: ITestDb;
-
-const mockUser = new User({ id: 1, email: 'test@example.com' });
 
 beforeAll(async () => {
     db = await dbInit('proxy', getLogger);
@@ -75,7 +72,6 @@ const createFeatureToggle = async ({
             project,
             { name },
             'userName',
-            mockUser,
             true,
         );
     const createdStrategies = await Promise.all(

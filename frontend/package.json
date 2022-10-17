@@ -96,6 +96,9 @@
     "vitest": "0.22.1",
     "whatwg-fetch": "3.6.2"
   },
+  "resolutions": {
+    "@codemirror/state": "6.1.2"
+  },
   "jest": {
     "moduleNameMapper": {
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/src/__mocks__/fileMock.js",

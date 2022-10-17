@@ -254,9 +254,11 @@ export default class GroupStore implements IGroupStore {
                     .select('id')
                     .whereRaw('mappings_sso \\?| :groups', {
                         groups: externalGroups,
-                    }),
+                    })
+                    .orWhereRaw('jsonb_array_length(mappings_sso) = 0'),
             )
             .where('gu.user_id', userId);
+
         return rows.map(rowToGroupUser);
     }
 

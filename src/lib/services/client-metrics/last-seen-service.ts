@@ -44,8 +44,12 @@ export class LastSeenService {
 
     updateLastSeen(clientMetrics: IClientMetricsEnv[]): void {
         clientMetrics
-            .filter((clientMetric) => clientMetric.yes > 0 || clientMetric.no > 0)
-            .forEach((clientMetric) => this.lastSeenToggles.add(clientMetric.featureName));
+            .filter(
+                (clientMetric) => clientMetric.yes > 0 || clientMetric.no > 0,
+            )
+            .forEach((clientMetric) =>
+                this.lastSeenToggles.add(clientMetric.featureName),
+            );
     }
 
     destroy(): void {

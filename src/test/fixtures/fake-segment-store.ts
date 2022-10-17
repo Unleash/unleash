@@ -2,6 +2,10 @@ import { ISegmentStore } from '../../lib/types/stores/segment-store';
 import { IFeatureStrategySegment, ISegment } from '../../lib/types/model';
 
 export default class FakeSegmentStore implements ISegmentStore {
+    count(): Promise<number> {
+        throw new Error('Method not implemented.');
+    }
+
     create(): Promise<ISegment> {
         throw new Error('Method not implemented.');
     }

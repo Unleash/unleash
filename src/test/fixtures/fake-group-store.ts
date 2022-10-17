@@ -9,6 +9,10 @@ import Group, {
 } from '../../lib/types/group';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 export default class FakeGroupStore implements IGroupStore {
+    count(): Promise<number> {
+        throw new Error('Method not implemented.');
+    }
+
     data: IGroup[];
 
     async getAll(): Promise<IGroup[]> {

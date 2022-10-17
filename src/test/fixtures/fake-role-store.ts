@@ -8,6 +8,14 @@ import {
 } from 'lib/types/stores/role-store';
 
 export default class FakeRoleStore implements IRoleStore {
+    count(): Promise<number> {
+        throw new Error('Method not implemented.');
+    }
+
+    getProjectRolesCount(): Promise<number> {
+        throw new Error('Method not implemented.');
+    }
+
     roles: ICustomRole[] = [];
 
     getGroupRolesForProject(projectId: string): Promise<IRole[]> {

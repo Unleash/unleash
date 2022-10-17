@@ -220,19 +220,21 @@ export class GroupService {
         userId: number,
         externalGroups: string[],
     ): Promise<void> {
-        let newGroups = await this.groupStore.getNewGroupsForExternalUser(
-            userId,
-            externalGroups,
-        );
-        await this.groupStore.addUserToGroups(
-            userId,
-            newGroups.map((g) => g.id),
-        );
-        let oldGroups = await this.groupStore.getOldGroupsForExternalUser(
-            userId,
-            externalGroups,
-        );
-        await this.groupStore.deleteUsersFromGroup(oldGroups);
+        if (Array.isArray(externalGroups)) {
+            let newGroups = await this.groupStore.getNewGroupsForExternalUser(
+                userId,
+                externalGroups,
+            );
+            await this.groupStore.addUserToGroups(
+                userId,
+                newGroups.map((g) => g.id),
+            );
+            let oldGroups = await this.groupStore.getOldGroupsForExternalUser(
+                userId,
+                externalGroups,
+            );
+            await this.groupStore.deleteUsersFromGroup(oldGroups);
+        }
     }
 
     async getGroupsForUser(userId: number): Promise<IGroup[]> {

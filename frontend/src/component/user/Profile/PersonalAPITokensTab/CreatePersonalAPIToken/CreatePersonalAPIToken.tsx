@@ -1,4 +1,4 @@
-import { Button, styled, Typography } from '@mui/material';
+import { Alert, Button, styled, Typography } from '@mui/material';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -37,6 +37,7 @@ const StyledExpirationPicker = styled('div')<{ custom?: boolean }>(
         display: 'flex',
         alignItems: custom ? 'start' : 'center',
         gap: theme.spacing(1.5),
+        marginBottom: theme.spacing(2),
         [theme.breakpoints.down('sm')]: {
             flexDirection: 'column',
             alignItems: 'flex-start',
@@ -57,6 +58,11 @@ const StyledDateTimePicker = styled(DateTimePicker)(({ theme }) => ({
     [theme.breakpoints.down('sm')]: {
         width: theme.spacing(50),
     },
+}));
+
+const StyledAlert = styled(Alert)(({ theme }) => ({
+    marginBottom: theme.spacing(2),
+    maxWidth: theme.spacing(50),
 }));
 
 const StyledButtonContainer = styled('div')(({ theme }) => ({
@@ -325,6 +331,16 @@ export const CreatePersonalAPIToken: FC<ICreatePersonalAPITokenProps> = ({
                                 }
                             />
                         </StyledExpirationPicker>
+                        <ConditionallyRender
+                            condition={neverExpires}
+                            show={
+                                <StyledAlert severity="warning">
+                                    We strongly recommend that you set an
+                                    expiration date for your token to help keep
+                                    your information secure.
+                                </StyledAlert>
+                            }
+                        />
                     </div>
 
                     <StyledButtonContainer>

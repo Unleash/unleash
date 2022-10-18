@@ -9,6 +9,7 @@ export interface IGroup {
     projects: string[];
     addedAt?: string;
     userCount?: number;
+    mappingsSSO: string[];
 }
 
 export interface IGroupUser extends IUser {

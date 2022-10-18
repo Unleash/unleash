@@ -74,6 +74,7 @@ exports[`should create default config 1`] = `
       "personalAccessTokens": false,
       "publicSignup": false,
       "responseTimeWithAppName": false,
+      "syncSSOGroups": false,
     },
   },
   "flagResolver": FlagResolver {
@@ -86,6 +87,7 @@ exports[`should create default config 1`] = `
       "personalAccessTokens": false,
       "publicSignup": false,
       "responseTimeWithAppName": false,
+      "syncSSOGroups": false,
     },
     "externalResolver": {
       "isEnabled": [Function],

@@ -33,6 +33,7 @@ import { ProxyService } from '../services/proxy-service';
 import EdgeService from '../services/edge-service';
 import PatService from '../services/pat-service';
 import { PublicSignupTokenService } from '../services/public-signup-token-service';
+import { LastSeenService } from '../services/client-metrics/last-seen-service';
 
 export interface IUnleashServices {
     accessService: AccessService;
@@ -71,4 +72,5 @@ export interface IUnleashServices {
     openApiService: OpenApiService;
     clientSpecService: ClientSpecService;
     patService: PatService;
+    lastSeenService: LastSeenService;
 }

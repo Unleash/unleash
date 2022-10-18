@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect } from 'react';
+import { useCallback, useContext } from 'react';
 import { PlausibleContext } from 'contexts/PlausibleContext';
 import { EventOptions, PlausibleOptions } from 'plausible-tracker';
 

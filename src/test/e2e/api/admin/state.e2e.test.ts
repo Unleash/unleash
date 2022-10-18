@@ -437,3 +437,25 @@ test(`should clean apitokens for not existing environment after import with drop
     const apiTokens = await app.services.apiTokenService.getAllTokens();
     expect(apiTokens.length).toEqual(0);
 });
+
+test(`should not show environment on feature toggle, when environment is disabled`, async () => {
+    await app.request
+        .post('/api/admin/state/import?drop=true')
+        .attach('file', 'src/test/examples/import-state.json')
+        .expect(202);
+
+    const { body } = await app.request.get(
+        '/api/admin/projects/default/features/my-feature',
+    );
+
+    expect(body.environments).toHaveLength(2);
+
+    const hiddenEnvironment = body.environments.find(
+        (env) => env.name === 'state-hidden-environment',
+    );
+    const visibleEnvironment = body.environments.find(
+        (env) => env.name === 'state-visible-environment',
+    );
+    expect(hiddenEnvironment.enabled).toBe(false);
+    expect(visibleEnvironment.enabled).toBe(true);
+});

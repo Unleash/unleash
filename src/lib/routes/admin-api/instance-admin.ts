@@ -7,28 +7,52 @@ import Controller from '../controller';
 import { NONE } from '../../types/permissions';
 import { UiConfigSchema } from '../../openapi/spec/ui-config-schema';
 import { InstanceStatsService } from '../../services/instance-stats-service';
+import { OpenApiService } from '../../services/openapi-service';
+import { createResponseSchema } from '../../openapi/util/create-response-schema';
 
 class InstanceAdminController extends Controller {
     private instanceStatsService: InstanceStatsService;
+
+    private openApiService: OpenApiService;
 
     constructor(
         config: IUnleashConfig,
         {
             instanceStatsService,
-        }: Pick<IUnleashServices, 'instanceStatsService'>,
+            openApiService,
+        }: Pick<IUnleashServices, 'instanceStatsService' | 'openApiService'>,
     ) {
         super(config);
+
+        this.openApiService = openApiService;
         this.instanceStatsService = instanceStatsService;
 
         this.route({
             method: 'get',
             path: '/statistics/csv',
-            handler: this.getStatistics,
+            handler: this.getStatisticsCSV,
             permission: NONE,
+        });
+
+        this.route({
+            method: 'get',
+            path: '/statistics',
+            handler: this.getStatisticsCSV,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['Instance Admin'],
+                    operationId: 'getInstanceAdminStats',
+                    responses: {
+                        200: createResponseSchema('instanceAdminStatsSchema'),
+                    },
+                    deprecated: true,
+                }),
+            ],
         });
     }
 
-    async getStatistics(
+    async getStatisticsCSV(
         req: AuthedRequest,
         res: Response<UiConfigSchema>,
     ): Promise<void> {

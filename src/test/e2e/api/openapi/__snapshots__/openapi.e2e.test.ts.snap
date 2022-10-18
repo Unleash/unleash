@@ -1569,6 +1569,62 @@ exports[`should serve the OpenAPI spec 1`] = `
         ],
         "type": "object",
       },
+      "instanceAdminStatsSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "OIDCenabled": {
+            "type": "number",
+          },
+          "SAMLenabled": {
+            "type": "number",
+          },
+          "contextFields": {
+            "type": "number",
+          },
+          "environments": {
+            "type": "number",
+          },
+          "featureToggles": {
+            "type": "number",
+          },
+          "groups": {
+            "type": "number",
+          },
+          "instanceId": {
+            "type": "string",
+          },
+          "projects": {
+            "type": "number",
+          },
+          "roles": {
+            "type": "number",
+          },
+          "segments": {
+            "type": "number",
+          },
+          "strategies": {
+            "type": "number",
+          },
+          "timestamp": {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string",
+          },
+          "users": {
+            "type": "number",
+          },
+          "versionEnterprise": {
+            "type": "string",
+          },
+          "versionOSS": {
+            "type": "string",
+          },
+        },
+        "required": [
+          "instanceId",
+        ],
+        "type": "object",
+      },
       "legalValueSchema": {
         "additionalProperties": false,
         "properties": {
@@ -4576,6 +4632,27 @@ If the provided project does not exist, the list of events will be empty.",
         },
         "tags": [
           "Admin UI",
+        ],
+      },
+    },
+    "/api/admin/instance-admin/statistics": {
+      "get": {
+        "deprecated": true,
+        "operationId": "getInstanceAdminStats",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/instanceAdminStatsSchema",
+                },
+              },
+            },
+            "description": "instanceAdminStatsSchema",
+          },
+        },
+        "tags": [
+          "Features",
         ],
       },
     },

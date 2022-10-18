@@ -16,8 +16,8 @@ import { ISettingStore } from '../types/stores/settings-store';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface InstanceStats {
-    timestamp: Date;
     instanceId: string;
+    timestamp: Date;
     versionOSS: string;
     versionEnterprise?: string;
     users: number;

@@ -3,6 +3,7 @@ figure {
     box-shadow: var(--ifm-global-shadow-lw);
     border-radius: var(--ifm-global-radius);
     padding: var(--ifm-pre-padding);
+    margin-inline: 0;
 }
 
 figure img {

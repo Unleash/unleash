@@ -1,5 +1,5 @@
 import { VFC } from 'react';
-import { Box, Paper, Button, Typography, Card } from '@mui/material';
+import { Box, Paper, Typography, Card } from '@mui/material';
 import { PlaygroundResultChip } from 'component/playground/Playground/PlaygroundResultsTable/PlaygroundResultChip/PlaygroundResultChip'; // FIXME: refactor - extract to common
 
 type ChangesetDiffProps = {
@@ -7,7 +7,19 @@ type ChangesetDiffProps = {
 };
 
 export const ChangesetDiff: VFC<ChangesetDiffProps> = ({ changeSet }) => (
-    <>
+    <Paper
+        elevation={4}
+        sx={{
+            border: '1px solid',
+            p: 2,
+            borderColor: theme => theme.palette.dividerAlternative,
+            display: 'flex',
+            gap: 2,
+            flexDirection: 'column',
+            borderRadius: theme => `${theme.shape.borderRadius}px`,
+        }}
+    >
+        <Typography variant="h3">Changes</Typography>
         {/*// @ts-ignore FIXME: types */}
         {changeSet?.map(item => (
             <Card
@@ -58,5 +70,5 @@ export const ChangesetDiff: VFC<ChangesetDiffProps> = ({ changeSet }) => (
                 </Box>
             </Card>
         ))}
-    </>
+    </Paper>
 );

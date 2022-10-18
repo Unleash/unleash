@@ -9,22 +9,16 @@ import {
     FormControl,
     FormControlLabel,
     RadioGroup,
-    Card,
 } from '@mui/material';
 import { useChangeRequest } from 'hooks/api/getters/useChangeRequest/useChangeRequest';
-import { useSuggestChangesApi } from 'hooks/api/actions/useSuggestChangesApi/useSuggestChangesApi';
-import { ChangesetDiff } from './ChangesetDiff/ChangesetDiff';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { ChangesetDiff } from './ChangesetDiff/ChangesetDiff';
+import { ChangesHeader } from './ChangesHeader/ChangesHeader';
 
 export const SuggestedChanges: VFC = () => {
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
     const [selectedValue, setSelectedValue] = useState('');
-    const { changeRequest, refetchChangeRequest } = useChangeRequest('1234');
-    const {
-        approveChangeRequest,
-        requestChangesOnChangeRequest,
-        applyChangeRequest,
-    } = useSuggestChangesApi();
+    const { data: changeRequest } = useChangeRequest();
 
     const onClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
@@ -39,39 +33,20 @@ export const SuggestedChanges: VFC = () => {
     const onSubmit = async (e: any) => {
         e.preventDefault();
         if (selectedValue === 'approve') {
-            try {
-                await approveChangeRequest('1234');
-                setSelectedValue('');
-                refetchChangeRequest();
-                onClose();
-            } catch (error) {
-                console.log(error);
-                // handleError
-            }
+            console.log('approve');
         } else if (selectedValue === 'requestChanges') {
-            try {
-                await requestChangesOnChangeRequest('1234');
-                setSelectedValue('');
-                refetchChangeRequest();
-                onClose();
-            } catch (error) {
-                console.log(error);
-                // handleError
-            }
+            console.log('requestChanges');
         }
         // show an error if no action was selected
     };
 
     const onApply = async () => {
         try {
-            await applyChangeRequest('1234');
-            refetchChangeRequest();
+            console.log('apply');
         } catch (e) {
             console.log(e);
         }
     };
-
-    // console.log(changeRequest);
 
     return (
         <Paper
@@ -84,18 +59,13 @@ export const SuggestedChanges: VFC = () => {
             <Typography>{changeRequest?.state}</Typography>
             Environment: {changeRequest?.environment}
             <br />
-            <Box
-                sx={{
-                    border: '1px solid',
-                    p: 2,
-                    borderColor: theme => theme.palette.dividerAlternative,
-                    display: 'flex',
-                    gap: 2,
-                    flexDirection: 'column',
-                }}
-            >
-                <ChangesetDiff changeSet={changeRequest?.changeSet} />
-            </Box>
+            <ChangesHeader
+                author={changeRequest?.createdBy?.name}
+                avatar={changeRequest?.createdBy?.imageUrl}
+                createdAt={changeRequest?.createdAt}
+            />
+            <br />
+            <ChangesetDiff changeSet={changeRequest?.changeSet} />
             <ConditionallyRender
                 condition={changeRequest?.state === 'APPLIED'}
                 show={<Typography>Applied</Typography>}

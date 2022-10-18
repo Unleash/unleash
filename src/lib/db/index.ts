@@ -93,7 +93,7 @@ export const createStores = (
             getLogger,
         ),
         patStore: new PatStore(db, getLogger),
-        suggetChangeStore: new SuggestChangeStore(db, eventBus, getLogger),
+        suggestChangeStore: new SuggestChangeStore(db, eventBus, getLogger),
     };
 };
 

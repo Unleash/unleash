@@ -61,5 +61,5 @@ export interface IUnleashStores {
     segmentStore: ISegmentStore;
     patStore: IPatStore;
     publicSignupTokenStore: IPublicSignupTokenStore;
-    suggetChangeStore: ISuggestChangeStore;
+    suggestChangeStore: ISuggestChangeStore;
 }

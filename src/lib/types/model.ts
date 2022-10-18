@@ -368,12 +368,12 @@ export interface IFeatureStrategySegment {
 
 export interface ISuggestChangeSet {
     id: number;
+    state: string;
+    project: string;
     environment: string;
-    state?: string;
-    project?: string;
-    createdBy?: string;
-    createdAt?: Date;
-    changes?: ISuggestChange[];
+    createdBy: string;
+    createdAt: Date;
+    changes: ISuggestChange[];
 }
 
 export interface ISuggestChange {
@@ -381,8 +381,4 @@ export interface ISuggestChange {
     action: string;
     payload?: string;
     eventData?: string;
-    createdBy?: string;
-    updatedBy?: string;
-    createdAt?: Date;
-    changeSetId?: number;
 }

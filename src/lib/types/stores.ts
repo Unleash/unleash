@@ -28,6 +28,7 @@ import { ISegmentStore } from './stores/segment-store';
 import { IGroupStore } from './stores/group-store';
 import { IPatStore } from './stores/pat-store';
 import { IPublicSignupTokenStore } from './stores/public-signup-token-store';
+import { ISuggestChangeStore } from './stores/suggest-change-store';
 
 export interface IUnleashStores {
     accessStore: IAccessStore;
@@ -60,4 +61,5 @@ export interface IUnleashStores {
     segmentStore: ISegmentStore;
     patStore: IPatStore;
     publicSignupTokenStore: IPublicSignupTokenStore;
+    suggetChangeStore: ISuggestChangeStore;
 }

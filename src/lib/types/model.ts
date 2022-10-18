@@ -365,3 +365,24 @@ export interface IFeatureStrategySegment {
     featureStrategyId: string;
     segmentId: number;
 }
+
+export interface ISuggestChangeSet {
+    id: number;
+    environment: string;
+    state?: string;
+    project?: string;
+    createdBy?: string;
+    createdAt?: Date;
+    changes?: ISuggestChange[];
+}
+
+export interface ISuggestChange {
+    id: number;
+    action: string;
+    payload?: string;
+    eventData?: string;
+    createdBy?: string;
+    updatedBy?: string;
+    createdAt?: Date;
+    changeSetId?: number;
+}

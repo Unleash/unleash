@@ -24,7 +24,7 @@ import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
 import PermissionButton from '../../common/PermissionButton/PermissionButton';
 import {
     CREATE_ADDON,
-    UPDATE_ADDON
+    UPDATE_ADDON,
 } from '../../providers/AccessProvider/permissions';
 import {
     StyledForm,

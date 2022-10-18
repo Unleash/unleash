@@ -334,7 +334,7 @@ export const AddonForm: VFC<IAddonFormProps> = ({
                             type="submit"
                             color="primary"
                             variant="contained"
-                            permission={ADMIN}
+                            permission={editMode ? 'UPDATE_ADDON' : 'CREATE_ADDON'}
                         >
                             {submitText}
                         </PermissionButton>

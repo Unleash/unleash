@@ -7,6 +7,12 @@ figure {
     margin-inline: 0;
 }
 
+.float {
+    float: right;
+    max-width: 50%;
+    margin-left: var(--ifm-pre-padding);
+}
+
 figure img {
     box-shadow: none;
     border: none;
@@ -20,4 +26,10 @@ figcaption {
     font-size: var(--unleash-font-size-smaller);
     padding-inline: var(--ifm-pre-padding);
     border-inline-start: 5px solid var(--ifm-color-primary);
+}
+
+
+/* clear floating figures for everything but paragraphs and lists */
+:global(.markdown) :is(:not(p):not(ol):not(ul):not(li)) {
+    clear: both;
 }

@@ -22,8 +22,8 @@ module.exports = {
         disableSwitch: true,
         respectPrefersColorScheme: false,
         algolia: {
-            appId: 'BH4D9OD16A',
-            apiKey: '9772249a7262b377ac876853d32bd760',
+            appId: '5U05JI5NE1',
+            apiKey: 'dc9c4491fcf9143ee34015f22d1dd9d6',
             indexName: 'getunleash',
         },
         announcementBar: {

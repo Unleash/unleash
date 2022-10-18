@@ -4,9 +4,6 @@
   "repository": "https://github.com/heroku/node-js-sample",
   "logo": "https://github.com/Unleash/unleash/blob/main/.github/logo.png?raw=true",
   "keywords": ["node", "feature toggles", "release"],
-  "scripts": {
-    "build": "yarn build && cd frontend && yarn && yarn build"
-  },
   "addons": [
     {
       "plan": "heroku-postgresql",

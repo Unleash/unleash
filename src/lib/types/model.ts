@@ -379,6 +379,6 @@ export interface ISuggestChangeSet {
 export interface ISuggestChange {
     id: number;
     action: string;
-    payload?: string;
-    eventData?: string;
+    payload?: unknown;
+    eventData?: unknown;
 }

@@ -1420,6 +1420,10 @@ exports[`should serve the OpenAPI spec 1`] = `
       "groupUserModelSchema": {
         "additionalProperties": false,
         "properties": {
+          "createdBy": {
+            "nullable": true,
+            "type": "string",
+          },
           "joinedAt": {
             "format": "date-time",
             "type": "string",

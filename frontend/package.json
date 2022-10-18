@@ -97,7 +97,8 @@
     "whatwg-fetch": "3.6.2"
   },
   "resolutions": {
-    "@codemirror/state": "6.1.2"
+    "@codemirror/state": "6.1.2",
+    "@xmldom/xmldom": "^0.7.6"
   },
   "jest": {
     "moduleNameMapper": {

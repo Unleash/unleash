@@ -67,7 +67,6 @@ import React from 'react';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 
 import './styles.module.css';
-import styles from './styles.module.css';
 
 type Props = {
     // An optional alt text, if the caption does not already convey all relevant
@@ -77,13 +76,11 @@ type Props = {
     caption: string;
     // the path to the image, starting with `/img/`. Example: /img/image.png
     img: string;
-    // whether the image should be floated to one side on larger setups
-    float?: boolean;
 };
 
-const Component: React.FC<Props> = ({ img, alt, caption, float }) => {
+const Component: React.FC<Props> = ({ img, alt, caption }) => {
     return (
-        <figure className={float ? styles.float : ''}>
+        <figure>
             <img alt={alt} src={useBaseUrl(img)} />
             <figcaption>{caption}</figcaption>
         </figure>

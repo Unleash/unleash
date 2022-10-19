@@ -6,6 +6,7 @@ import { openApiAdmin } from 'utils/openapiClient';
 import { IConstraint } from 'interfaces/strategy';
 import { useCallback, useContext } from 'react';
 import { AchievementContext } from 'component/achievements/AchievementContext/AchievementContext';
+import { Achievement } from 'constants/achievements';
 
 const useFeatureApi = () => {
     const { makeRequest, createRequest, errors, loading } = useAPI({
@@ -45,7 +46,7 @@ const useFeatureApi = () => {
         projectId: string,
         createFeatureSchema: CreateFeatureSchema
     ) => {
-        unlockAchievement('FIRST_TOGGLE');
+        unlockAchievement(Achievement.FIRST_TOGGLE);
 
         return openApiAdmin.createFeature({
             projectId,

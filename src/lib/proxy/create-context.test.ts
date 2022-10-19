@@ -55,11 +55,23 @@ test('will not blow up if properties is an array', () => {
         properties: ['some'],
     });
 
-    // console.log(context);
-
     expect(context.userId).toBe('123');
     expect(context).not.toHaveProperty('tenantId');
     expect(context).not.toHaveProperty('region');
+});
+
+test('will respect environment set in context', () => {
+    const context = createContext({
+        userId: '123',
+        tenantId: 'some-tenant',
+        environment: 'development',
+        region: 'eu',
+        properties: ['some'],
+    });
+
+    // console.log(context);
+
+    expect(context.environment).toBe('development');
 });
 
 test.skip('will not blow up if userId is an array', () => {

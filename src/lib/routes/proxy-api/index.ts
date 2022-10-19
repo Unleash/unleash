@@ -169,7 +169,7 @@ export default class ProxyController extends Controller {
     private static createContext(req: ApiUserRequest): Context {
         const { query } = req;
         query.remoteAddress = query.remoteAddress || req.ip;
-        query.environment = req.user.environment;
+        query.environment = query.environment || req.user.environment;
         return createContext(query);
     }
 }

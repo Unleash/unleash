@@ -32,3 +32,9 @@ export function createContext(value: any): Context {
 
     return cleanContext;
 }
+
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export const enrichContextWithIp = (query: any, ip: string): Context => {
+    query.remoteAddress = query.remoteAddress || ip;
+    return createContext(query);
+};

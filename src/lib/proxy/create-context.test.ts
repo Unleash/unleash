@@ -1,6 +1,6 @@
 // Copy of https://github.com/Unleash/unleash-proxy/blob/main/src/test/create-context.test.ts.
 
-import { createContext } from './create-context';
+import { createContext, enrichContextWithIp } from './create-context';
 
 test('should remove undefined properties', () => {
     const context = createContext({
@@ -81,6 +81,16 @@ test('will not set environment to be development if not set in context', () => {
     });
 
     expect(context.environment).toBe(undefined);
+});
+
+test('will only enrich context with ip', () => {
+    const query = {};
+    const ip = '192.168.10.0';
+    const result = enrichContextWithIp(query, ip);
+
+    expect(result.environment).toBe(undefined);
+    expect(result.remoteAddress).toBe(ip);
+    expect(result.properties).toStrictEqual({});
 });
 
 test.skip('will not blow up if userId is an array', () => {

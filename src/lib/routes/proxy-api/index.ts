@@ -9,7 +9,7 @@ import {
     ProxyFeaturesSchema,
 } from '../../openapi/spec/proxy-features-schema';
 import { Context } from 'unleash-client';
-import { createContext } from '../../proxy/create-context';
+import { enrichContextWithIp } from '../../proxy/create-context';
 import { ProxyMetricsSchema } from '../../openapi/spec/proxy-metrics-schema';
 import { ProxyClientSchema } from '../../openapi/spec/proxy-client-schema';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
@@ -168,7 +168,6 @@ export default class ProxyController extends Controller {
 
     private static createContext(req: ApiUserRequest): Context {
         const { query } = req;
-        query.remoteAddress = query.remoteAddress || req.ip;
-        return createContext(query);
+        return enrichContextWithIp(query, req.ip);
     }
 }

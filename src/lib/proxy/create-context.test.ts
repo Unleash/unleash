@@ -83,14 +83,20 @@ test('will not set environment to be development if not set in context', () => {
     expect(context.environment).toBe(undefined);
 });
 
-test('will only enrich context with ip', () => {
+test('will enrich context with ip', () => {
     const query = {};
     const ip = '192.168.10.0';
     const result = enrichContextWithIp(query, ip);
 
-    expect(result.environment).toBe(undefined);
     expect(result.remoteAddress).toBe(ip);
-    expect(result.properties).toStrictEqual({});
+});
+
+test('will not change environment when enriching', () => {
+    const query = { environment: 'production' };
+    const ip = '192.168.10.0';
+    const result = enrichContextWithIp(query, ip);
+
+    expect(result.environment).toBe('production');
 });
 
 test.skip('will not blow up if userId is an array', () => {

@@ -20,3 +20,4 @@ We have created a set of ADRs to help guide the development of the frontend:
 * [Preferred data mutation method](./ADR/preferred-data-mutation-method.md)
 * [Preferred data fetching method](./ADR/preferred-data-fetching-method.md)
 * [Preferred folder structure](./ADR/preferred-folder-structure.md)
+* [Preferred form architecture](./ADR/preferred-form-architecture.md)

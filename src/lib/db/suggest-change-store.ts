@@ -83,7 +83,7 @@ export default class SuggestChangeStore implements ISuggestChangeStore {
     }
 
     prefixColumns(): string[] {
-        return COLUMNS.map((c) => `${Tables.suggestChangeSet}.${c}`);
+        return COLUMNS.map((column) => `${Tables.suggestChangeSet}.${column}`);
     }
 
     mapRow(row?: ISuggestChangeSetRow): ISuggestChangeSet {

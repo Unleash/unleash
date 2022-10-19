@@ -129,7 +129,6 @@ Both DigitalOcean and Heroku will charge you for running Unleash on their servic
 
 :::tip Free credits
 
-
 You'll receive $100 in free credits if you are a new DigitalOcean user using this link.
 
 :::

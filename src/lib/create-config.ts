@@ -234,7 +234,9 @@ const formatServerOptions = (
     /* eslint-disable-next-line */
     return {
         ...serverOptions,
-        baseUriPath: serverOptions.baseUriPath ? formatBaseUri(serverOptions.baseUriPath) : undefined,
+        baseUriPath: serverOptions.baseUriPath
+            ? formatBaseUri(serverOptions.baseUriPath)
+            : undefined,
     };
 };
 
@@ -364,9 +366,19 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
     const getLogger = options.getLogger || getDefaultLogProvider(logLevel);
     validateLogProvider(getLogger);
 
+    let basePath = process.env.BASE_URI_PATH
+        ? formatBaseUri(process.env.BASE_URI_PATH)
+        : undefined;
+    let serverEnvs;
+    if (basePath) {
+        serverEnvs = {
+            baseUriPath: basePath,
+        };
+    }
     const server: IServerOption = mergeAll([
         defaultServerOption,
         formatServerOptions(options.server),
+        serverEnvs,
     ]);
 
     const versionCheck: IVersionOption = mergeAll([

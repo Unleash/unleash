@@ -72,6 +72,17 @@ test('will respect environment set in context', () => {
     expect(context.environment).toBe('development');
 });
 
+test('will not set environment to be development if not set in context', () => {
+    const context = createContext({
+        userId: '123',
+        tenantId: 'some-tenant',
+        region: 'eu',
+        properties: ['some'],
+    });
+
+    expect(context.environment).toBe(undefined);
+});
+
 test.skip('will not blow up if userId is an array', () => {
     const context = createContext({
         userId: ['123'],

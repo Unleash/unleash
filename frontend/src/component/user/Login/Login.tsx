@@ -9,6 +9,9 @@ import Authentication from '../Authentication/Authentication';
 import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import { parseRedirectParam } from 'component/user/Login/parseRedirectParam';
+import { useContext } from 'react';
+import { AchievementContext } from 'component/achievements/AchievementContext/AchievementContext';
+import { Achievement } from 'constants/achievements';
 
 const Login = () => {
     const { classes: styles } = useStyles();
@@ -18,8 +21,10 @@ const Login = () => {
     const resetPassword = query.get('reset') === 'true';
     const invited = query.get('invited') === 'true';
     const redirect = query.get('redirect') || '/';
+    const { unlockAchievement } = useContext(AchievementContext);
 
     if (user) {
+        unlockAchievement(Achievement.FIRST_LOGIN);
         return <Navigate to={parseRedirectParam(redirect)} replace />;
     }
 

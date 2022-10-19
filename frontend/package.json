@@ -13,7 +13,7 @@
     "build": "vite build",
     "lint": "yarn fmt:check",
     "start": "vite",
-    "start:heroku": "UNLEASH_API=https://unleash.herokuapp.com yarn run start",
+    "start:sandbox": "UNLEASH_API=https://sandbox.getunleash.io/ospro yarn run start",
     "start:enterprise": "UNLEASH_API=https://unleash4.herokuapp.com yarn run start",
     "start:demo": "UNLEASH_BASE_PATH=/demo/ yarn start",
     "test": "tsc && vitest run",

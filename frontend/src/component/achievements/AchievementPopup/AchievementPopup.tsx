@@ -1,9 +1,8 @@
 import { Avatar, styled, Typography } from '@mui/material';
 import { IAchievement } from 'interfaces/achievement';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Timer } from './Timer';
 import { useNavigate } from 'react-router-dom';
-import { useAchievements } from 'hooks/api/getters/useAchievements/useAchievements';
 import { useAchievementsApi } from 'hooks/api/actions/useAchievementsApi/useAchievementsApi';
 
 const StyledPopup = styled('div')<{ visible: boolean }>(
@@ -59,38 +58,43 @@ const StyledDescription = styled(Typography)(({ theme }) => ({
 
 let timeout: Timer;
 
-export const AchievementPopup = () => {
+interface AchievementPopupProps {
+    newAchievements: IAchievement[];
+    setNewAchievements: React.Dispatch<React.SetStateAction<IAchievement[]>>;
+}
+
+export const AchievementPopup = ({
+    newAchievements,
+    setNewAchievements,
+}: AchievementPopupProps) => {
     const navigate = useNavigate();
-    const { achievements } = useAchievements();
     const { markAchievementSeen } = useAchievementsApi();
 
     const [visible, setVisible] = useState(false);
+    const [ready, setReady] = useState(true);
     const [achievement, setAchievement] = useState<IAchievement | null>(null);
 
     const showAchievement = (achievement: IAchievement) => {
+        setReady(false);
         setAchievement(achievement);
         markAchievementSeen(achievement.id);
+        setNewAchievements(prevAchievements =>
+            prevAchievements.filter(({ id }) => id !== achievement.id)
+        );
         setVisible(true);
         timeout = new Timer(() => {
             setVisible(false);
+            setTimeout(() => {
+                setReady(true);
+            }, 300);
         }, 5000);
     };
 
-    // TODO: Is this the right approach?
     useEffect(() => {
-        const newAchievements =
-            achievements
-                ?.sort(
-                    (a, b) =>
-                        new Date(a.unlockedAt).getTime() -
-                        new Date(b.unlockedAt).getTime()
-                )
-                .filter(achievement => !achievement.seenAt) || [];
-
-        if (newAchievements?.length) {
+        if (newAchievements.length > 0 && ready) {
             showAchievement(newAchievements[0]);
         }
-    }, [achievements]);
+    }, [ready, newAchievements]);
 
     return (
         <StyledPopup

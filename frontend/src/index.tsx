@@ -12,6 +12,7 @@ import { basePath } from 'utils/formatPath';
 import { FeedbackCESProvider } from 'component/feedback/FeedbackCESContext/FeedbackCESProvider';
 import { AnnouncerProvider } from 'component/common/Announcer/AnnouncerProvider/AnnouncerProvider';
 import { InstanceStatus } from 'component/common/InstanceStatus/InstanceStatus';
+import { AchievementProvider } from 'component/achievements/AchievementProvider/AchievementProvider';
 import { UIProviderContainer } from 'component/providers/UIProvider/UIProviderContainer';
 
 ReactDOM.render(
@@ -22,8 +23,10 @@ ReactDOM.render(
                     <AnnouncerProvider>
                         <FeedbackCESProvider>
                             <InstanceStatus>
-                                <ScrollTop />
-                                <App />
+                                <AchievementProvider>
+                                    <ScrollTop />
+                                    <App />
+                                </AchievementProvider>
                             </InstanceStatus>
                         </FeedbackCESProvider>
                     </AnnouncerProvider>

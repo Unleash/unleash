@@ -5,7 +5,6 @@ import { IEventStore } from '../types/stores/event-store';
 import { ACHIEVEMENT_UNLOCKED } from '../types/events';
 import { IAchievement } from '../types/models/achievement';
 import User from '../types/user';
-import { Achievement } from '../achievements';
 
 export default class AchievementsService {
     private config: IUnleashConfig;
@@ -34,15 +33,20 @@ export default class AchievementsService {
     }
 
     async unlockAchievement(
-        achievement: Achievement,
+        achievementId: string,
         user: User,
-    ): Promise<void> {
-        await this.achievementsStore.unlock(achievement, user.id);
+    ): Promise<IAchievement> {
+        const newAchievement = await this.achievementsStore.unlock(
+            achievementId,
+            user.id,
+        );
 
         await this.eventStore.store({
             type: ACHIEVEMENT_UNLOCKED,
             createdBy: user.email || user.username,
         });
+
+        return newAchievement;
     }
 
     async markAchievementSeen(id: number, user: User): Promise<void> {

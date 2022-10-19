@@ -13,4 +13,4 @@ export const Achievements = {
     },
 };
 
-export type Achievement = typeof Achievements[keyof typeof Achievements];
+export type Achievement = keyof typeof Achievements;

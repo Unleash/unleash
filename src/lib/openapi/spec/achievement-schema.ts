@@ -7,16 +7,10 @@ export const achievementSchema = {
         id: {
             type: 'number',
         },
-        title: {
-            type: 'string',
-        },
-        description: {
+        achievementId: {
             type: 'string',
         },
         rarity: {
-            type: 'string',
-        },
-        imageUrl: {
             type: 'string',
         },
         unlockedAt: {

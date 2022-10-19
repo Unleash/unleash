@@ -4,12 +4,15 @@ import { Operation } from 'fast-json-patch';
 import { CreateFeatureSchema } from 'openapi';
 import { openApiAdmin } from 'utils/openapiClient';
 import { IConstraint } from 'interfaces/strategy';
-import { useCallback } from 'react';
+import { useCallback, useContext } from 'react';
+import { AchievementContext } from 'component/achievements/AchievementContext/AchievementContext';
 
 const useFeatureApi = () => {
     const { makeRequest, createRequest, errors, loading } = useAPI({
         propagateErrors: true,
     });
+
+    const { unlockAchievement } = useContext(AchievementContext);
 
     const validateFeatureToggleName = async (name: string | undefined) => {
         const path = `api/admin/features/validate`;
@@ -42,6 +45,8 @@ const useFeatureApi = () => {
         projectId: string,
         createFeatureSchema: CreateFeatureSchema
     ) => {
+        unlockAchievement('FIRST_TOGGLE');
+
         return openApiAdmin.createFeature({
             projectId,
             createFeatureSchema,

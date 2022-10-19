@@ -14,6 +14,10 @@ import {
     AchievementsSchema,
     achievementsSchema,
 } from '../../../openapi/spec/achievements-schema';
+import {
+    AchievementSchema,
+    achievementSchema,
+} from '../../../openapi/spec/achievement-schema';
 
 export default class AchievementsController extends Controller {
     private achievementsService: AchievementsService;
@@ -53,6 +57,21 @@ export default class AchievementsController extends Controller {
         this.route({
             method: 'post',
             path: '',
+            handler: this.unlockAchievement,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['Achievements'],
+                    operationId: 'unlockAchievement',
+                    responses: {
+                        201: createResponseSchema('achievementSchema'),
+                    },
+                }),
+            ],
+        });
+        this.route({
+            method: 'put',
+            path: '',
             handler: this.markAchievementSeen,
             permission: NONE,
             middleware: [
@@ -77,6 +96,24 @@ export default class AchievementsController extends Controller {
             {
                 achievements: serializeDates(achievements),
             },
+        );
+    }
+
+    async unlockAchievement(
+        req: IAuthRequest,
+        res: Response<AchievementSchema>,
+    ): Promise<void> {
+        const { id } = req.body;
+        const newAchievement = await this.achievementsService.unlockAchievement(
+            id,
+            req.user,
+        );
+
+        this.openApiService.respondWithValidation(
+            201,
+            res,
+            achievementSchema.$id,
+            serializeDates(newAchievement),
         );
     }
 

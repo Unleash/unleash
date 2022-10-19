@@ -7,3 +7,11 @@ export interface IAchievement {
     unlockedAt: Date;
     seenAt?: Date;
 }
+
+export interface IAchievementResult {
+    id: number;
+    achievementId: string;
+    rarity: string;
+    unlockedAt: Date;
+    seenAt?: Date;
+}

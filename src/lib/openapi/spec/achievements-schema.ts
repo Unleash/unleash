@@ -5,7 +5,7 @@ export const achievementsSchema = {
     $id: '#/components/schemas/achievementsSchema',
     type: 'object',
     properties: {
-        pats: {
+        achievements: {
             type: 'array',
             items: {
                 $ref: '#/components/schemas/achievementSchema',

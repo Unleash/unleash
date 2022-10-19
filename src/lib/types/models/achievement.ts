@@ -1,9 +1,7 @@
 export interface IAchievement {
     id: number;
-    title: string;
-    description: string;
-    rarity: string;
-    imageUrl: string;
-    unlockedAt: Date;
+    achievementId?: string;
+    rarity?: string;
+    unlockedAt?: Date;
     seenAt?: Date;
 }

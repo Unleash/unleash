@@ -1,4 +1,6 @@
-# ADR: Preferred export
+---
+title: "ADR: Preferred export"
+---
 
 ## Background
 

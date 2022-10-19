@@ -1,5 +1,5 @@
 ---
-title: ADR: Preferred component props usage
+title: "ADR: Preferred component props usage"
 ---
 
 ## Background

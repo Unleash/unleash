@@ -1,5 +1,5 @@
 ---
-title: ADR: Preferred folder structure
+title: "ADR: Preferred folder structure"
 ---
 
 ## Background

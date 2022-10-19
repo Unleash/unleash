@@ -1,5 +1,5 @@
 ---
-title: ADR: Preferred data fetching method
+title: "ADR: Preferred data fetching method"
 ---
 
 ## Background

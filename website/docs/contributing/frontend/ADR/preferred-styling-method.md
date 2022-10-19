@@ -1,5 +1,5 @@
 ---
-title: ADR: preferred styling method
+title: "ADR: preferred styling method"
 ---
 
 This document supersedes ...

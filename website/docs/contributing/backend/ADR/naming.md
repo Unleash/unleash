@@ -1,5 +1,5 @@
 ---
-title: ADR: Naming
+title: "ADR: Naming"
 ---
 
 ## Background

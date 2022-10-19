@@ -1,5 +1,5 @@
 ---
-title: ADR: Preferred data mutation method
+title: "ADR: Preferred data mutation method"
 ---
 
 ## Background

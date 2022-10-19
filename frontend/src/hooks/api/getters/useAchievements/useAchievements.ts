@@ -1,11 +1,11 @@
 import useSWR from 'swr';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import { IAchievement, IAchievementDefinition } from 'interfaces/achievement';
+import { IAchievement, IAchievementDefinitions } from 'interfaces/achievement';
 
 export interface IUseAchievementsOutput {
     achievements?: IAchievement[];
-    all: IAchievementDefinition[];
+    all: IAchievementDefinitions;
     refetchAchievements: () => void;
     loading: boolean;
     error?: Error;

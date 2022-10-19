@@ -10,7 +10,7 @@ const StyledForm = styled('form')(({ theme }) => ({
 }));
 
 export const AchievementsTab = () => {
-    const { achievements, all = [], loading } = useAchievements();
+    const { achievements, all = {}, loading } = useAchievements();
 
     return (
         <PageContent isLoading={loading} header="Achievements">

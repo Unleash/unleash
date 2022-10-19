@@ -9,6 +9,10 @@ export interface IAchievement {
     seenAt?: Date;
 }
 
+export interface IAchievementDefinitions {
+    [key: string]: IAchievementDefinition;
+}
+
 export interface IAchievementDefinition {
     id: string;
     title: string;

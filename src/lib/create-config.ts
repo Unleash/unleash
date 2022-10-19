@@ -238,11 +238,9 @@ const formatServerOptions = (
     /* eslint-disable-next-line */
     return {
         ...serverOptions,
-        baseUriPath: process.env.BASE_URI_PATH
-            ? formatBaseUri(process.env.BASE_URI_PATH)
-            : serverOptions.baseUriPath
-            ? formatBaseUri(serverOptions.baseUriPath)
-            : '',
+        baseUriPath: formatBaseUri(
+            process.env.BASE_URI_PATH || serverOptions.baseUriPath,
+        ),
     };
 };
 

@@ -229,14 +229,20 @@ const removeUndefinedKeys = (o: object): object =>
 const formatServerOptions = (
     serverOptions?: Partial<IServerOption>,
 ): Partial<IServerOption> | undefined => {
-    if (!serverOptions) return;
+    if (!serverOptions) {
+        return {
+            baseUriPath: formatBaseUri(process.env.BASE_URI_PATH),
+        };
+    }
 
     /* eslint-disable-next-line */
     return {
         ...serverOptions,
-        baseUriPath: serverOptions.baseUriPath
+        baseUriPath: process.env.BASE_URI_PATH
+            ? formatBaseUri(process.env.BASE_URI_PATH)
+            : serverOptions.baseUriPath
             ? formatBaseUri(serverOptions.baseUriPath)
-            : undefined,
+            : '',
     };
 };
 
@@ -366,19 +372,9 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
     const getLogger = options.getLogger || getDefaultLogProvider(logLevel);
     validateLogProvider(getLogger);
 
-    let basePath = process.env.BASE_URI_PATH
-        ? formatBaseUri(process.env.BASE_URI_PATH)
-        : undefined;
-    let serverEnvs;
-    if (basePath) {
-        serverEnvs = {
-            baseUriPath: basePath,
-        };
-    }
     const server: IServerOption = mergeAll([
         defaultServerOption,
         formatServerOptions(options.server),
-        serverEnvs,
     ]);
 
     const versionCheck: IVersionOption = mergeAll([

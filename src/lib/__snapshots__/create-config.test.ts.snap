@@ -115,7 +115,7 @@ exports[`should create default config 1`] = `
   "secureHeaders": false,
   "segmentValuesLimit": 100,
   "server": {
-    "baseUriPath": undefined,
+    "baseUriPath": "",
     "cdnPrefix": undefined,
     "enableRequestLogger": false,
     "gracefulShutdownEnable": true,

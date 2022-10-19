@@ -25,6 +25,8 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 import { DeleteProjectDialogue } from './DeleteProject/DeleteProjectDialogue';
 import { ProjectLog } from './ProjectLog/ProjectLog';
 import { SuggestedChanges } from './SuggestedChanges/SuggestedChanges';
+import { DraftBanner } from './SuggestedChanges/DraftBanner/DraftBanner';
+import { MainLayout } from 'component/layout/MainLayout/MainLayout';
 
 const StyledDiv = styled('div')(() => ({
     display: 'flex',
@@ -122,7 +124,7 @@ const Project = () => {
     }, []);
 
     return (
-        <div ref={ref}>
+        <MainLayout ref={ref} subheader={<DraftBanner />}>
             <div className={styles.header}>
                 <div className={styles.innerContainer}>
                     <h2 className={styles.title}>
@@ -231,7 +233,7 @@ const Project = () => {
                 <Route path="logs" element={<ProjectLog />} />
                 <Route path="*" element={<ProjectOverview />} />
             </Routes>
-        </div>
+        </MainLayout>
     );
 };
 

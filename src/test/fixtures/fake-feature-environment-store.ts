@@ -150,7 +150,7 @@ export default class FakeFeatureEnvironmentStore
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         projectId: string,
     ): Promise<void> {
-        return Promise.reject(new Error('Not implemented'));
+        return Promise.resolve();
     }
 
     disableEnvironmentIfNoStrategies(

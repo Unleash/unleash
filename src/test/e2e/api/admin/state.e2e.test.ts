@@ -260,14 +260,7 @@ test('Roundtrip with strategies in multiple environments works', async () => {
         id: projectId,
         description: 'Project for export',
     });
-    await app.services.environmentService.addEnvironmentToProject(
-        environment,
-        projectId,
-    );
-    await app.services.environmentService.addEnvironmentToProject(
-        DEFAULT_ENV,
-        projectId,
-    );
+
     await app.services.featureToggleServiceV2.createFeatureToggle(
         projectId,
         {
@@ -276,6 +269,15 @@ test('Roundtrip with strategies in multiple environments works', async () => {
             description: 'Feature for export',
         },
         userName,
+    );
+    await app.services.environmentService.addEnvironmentToProject(
+        environment,
+        projectId,
+    );
+
+    await app.services.environmentService.addEnvironmentToProject(
+        DEFAULT_ENV,
+        projectId,
     );
     await app.services.featureToggleServiceV2.createStrategy(
         {
@@ -307,7 +309,7 @@ test('Roundtrip with strategies in multiple environments works', async () => {
         userName: 'export-tester',
     });
     const f = await app.services.featureToggleServiceV2.getFeature(featureName);
-    expect(f.environments).toHaveLength(2);
+    expect(f.environments).toHaveLength(4);
 });
 
 test(`Importing version 2 replaces :global: environment with 'default'`, async () => {
@@ -320,7 +322,7 @@ test(`Importing version 2 replaces :global: environment with 'default'`, async (
     const feature = await app.services.featureToggleServiceV2.getFeatureToggle(
         'this-is-fun',
     );
-    expect(feature.environments).toHaveLength(1);
+    expect(feature.environments).toHaveLength(4);
     expect(feature.environments[0].name).toBe(DEFAULT_ENV);
 });
 
@@ -444,18 +446,15 @@ test(`should not show environment on feature toggle, when environment is disable
         .attach('file', 'src/test/examples/import-state.json')
         .expect(202);
 
-    const { body } = await app.request.get(
-        '/api/admin/projects/default/features/my-feature',
-    );
+    await app.request
+        .post('/api/admin/projects/default/environments')
+        .send({ environment: 'state-visible-environment' })
+        .expect(200);
 
-    expect(body.environments).toHaveLength(2);
+    const { body } = await app.request
+        .get('/api/admin/projects/default/features/my-feature')
+        .expect(200);
 
-    const hiddenEnvironment = body.environments.find(
-        (env) => env.name === 'state-hidden-environment',
-    );
-    const visibleEnvironment = body.environments.find(
-        (env) => env.name === 'state-visible-environment',
-    );
-    expect(hiddenEnvironment.enabled).toBe(false);
-    expect(visibleEnvironment.enabled).toBe(true);
+    expect(body.environments).toHaveLength(1);
+    expect(body.environments[0].name).toBe('state-visible-environment');
 });

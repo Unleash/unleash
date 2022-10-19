@@ -59,6 +59,7 @@ import { LazyPlayground } from 'component/playground/Playground/LazyPlayground';
 import { CorsAdmin } from 'component/admin/cors';
 import { InviteLink } from 'component/admin/users/InviteLink/InviteLink';
 import { Profile } from 'component/user/Profile/Profile';
+import { InstanceAdmin } from '../admin/instance-admin/InstanceAdmin';
 
 export const routes: IRoute[] = [
     // Splash
@@ -494,6 +495,14 @@ export const routes: IRoute[] = [
         parent: '/admin',
         title: 'Single sign-on',
         component: AuthSettings,
+        type: 'protected',
+        menu: { adminSettings: true },
+    },
+    {
+        path: '/admin/instance',
+        parent: '/admin',
+        title: 'Instance admin',
+        component: InstanceAdmin,
         type: 'protected',
         menu: { adminSettings: true },
     },

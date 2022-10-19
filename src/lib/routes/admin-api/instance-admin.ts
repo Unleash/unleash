@@ -6,7 +6,10 @@ import { IUnleashConfig } from '../../types/option';
 import Controller from '../controller';
 import { NONE } from '../../types/permissions';
 import { UiConfigSchema } from '../../openapi/spec/ui-config-schema';
-import { InstanceStatsService } from '../../services/instance-stats-service';
+import {
+    InstanceStats,
+    InstanceStatsService,
+} from '../../services/instance-stats-service';
 import { OpenApiService } from '../../services/openapi-service';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
 
@@ -37,7 +40,7 @@ class InstanceAdminController extends Controller {
         this.route({
             method: 'get',
             path: '/statistics',
-            handler: this.getStatisticsCSV,
+            handler: this.getStatistics,
             permission: NONE,
             middleware: [
                 openApiService.validPath({
@@ -50,6 +53,14 @@ class InstanceAdminController extends Controller {
                 }),
             ],
         });
+    }
+
+    async getStatistics(
+        req: AuthedRequest,
+        res: Response<InstanceStats>,
+    ): Promise<void> {
+        const instanceStats = await this.instanceStatsService.getStats();
+        res.json(instanceStats);
     }
 
     async getStatisticsCSV(

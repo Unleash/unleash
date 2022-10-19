@@ -15,7 +15,7 @@ import VersionService from './version-service';
 import { ISettingStore } from '../types/stores/settings-store';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-interface InstanceStats {
+export interface InstanceStats {
     instanceId: string;
     timestamp: Date;
     versionOSS: string;

@@ -7,8 +7,6 @@ This document supersedes [ADR: preferred styles import placement](./preferred-st
 
 ## Background
 
-SUPERSEDED BY [ADR: Preferred styling method](./preferred-styling-method.md)
-
 In the codebase, we need to have a uniform way of performing style updates.
 
 ## Decision

@@ -4,9 +4,9 @@ import { IEventStore } from '../types/stores/event-store';
 import { SUGGEST_CHANGE_CREATED } from '../types/events';
 import User from '../types/user';
 import { ISuggestChangeStore } from '../types/stores/suggest-change-store';
-import { ISuggestChangeSet } from '../types/model';
+import { ISuggestChange, ISuggestChangeSet } from '../types/model';
 
-export default class SuggestChangeService {
+export class SuggestChangeService {
     private config: IUnleashConfig;
 
     private logger: Logger;
@@ -28,10 +28,10 @@ export default class SuggestChangeService {
         this.eventStore = eventStore;
     }
 
-    async createChangeRequest(
+    createChangeSetRequest = async (
         changeSet: ISuggestChangeSet,
         user: User,
-    ): Promise<ISuggestChangeSet> {
+    ): Promise<ISuggestChangeSet> => {
         const newChangeRequest = await this.suggestChangeStore.create(
             changeSet,
             user,
@@ -44,19 +44,26 @@ export default class SuggestChangeService {
         });
 
         return newChangeRequest;
-    }
+    };
 
-    async getAll(): Promise<ISuggestChangeSet[]> {
+    addChangeToChangeSet = async (
+        change: ISuggestChange,
+        changeSetId: number,
+        user: User,
+    ): Promise<ISuggestChangeSet> => {
+        await this.suggestChangeStore.addChangeToSet(change, changeSetId, user);
+        return this.get(changeSetId);
+    };
+
+    getAll = async (): Promise<ISuggestChangeSet[]> => {
         return this.suggestChangeStore.getAll();
-    }
+    };
 
-    async get(id: number): Promise<ISuggestChangeSet> {
+    get = async (id: number): Promise<ISuggestChangeSet> => {
         return this.suggestChangeStore.get(id);
-    }
+    };
 
-    async delete(id: number): Promise<void> {
+    delete = async (id: number): Promise<void> => {
         return this.suggestChangeStore.delete(id);
-    }
+    };
 }
-
-module.exports = SuggestChangeService;

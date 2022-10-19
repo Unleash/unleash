@@ -36,7 +36,7 @@ import EdgeService from './edge-service';
 import PatService from './pat-service';
 import { PublicSignupTokenService } from './public-signup-token-service';
 import { LastSeenService } from './client-metrics/last-seen-service';
-import SuggestChangeService from './suggest-change-service';
+import { SuggestChangeService } from './suggest-change-service';
 export const createServices = (
     stores: IUnleashStores,
     config: IUnleashConfig,

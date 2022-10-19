@@ -374,11 +374,53 @@ export interface ISuggestChangeSet {
     createdBy: string;
     createdAt: Date;
     changes: ISuggestChange[];
+    events: ISuggestChangeEvent[];
+    // approvalFlow: IChangeSetApprovalFlow;
+}
+export interface IApprovalFlow {}
+
+export interface IChangeSetApprovalFlow {
+    id: string;
+    flow: IApprovalFlow;
 }
 
 export interface ISuggestChange {
     id: number;
-    action: string;
+    action: SuggestChangeAction;
+    feature: string;
     payload?: unknown;
-    eventData?: unknown;
+    createdBy: string;
+    createdAt: Date;
+    event: ISuggestChangeEvent;
+}
+
+export enum SuggestChangeSetEvent {
+    CREATED = 'CREATED',
+    UPDATED = 'UPDATED',
+    SUBMITTED = 'SUBMITTED',
+    APPROVED = 'APPROVED',
+    REJECTED = 'REJECTED',
+    CLOSED = 'CLOSED',
+}
+
+export enum SuggestChangeAction {
+    UPDATE_ENABLED = 'updateEnabled',
+    ADD_STRATEGY = 'strategyAdd',
+    UPDATE_STRATEGY = 'strategyUpdate',
+    DELETE_STRATEGY = 'strategyDelete',
+}
+
+export enum SuggestChangeEvent {
+    UPDATE_ENABLED = 'updateFeatureEnabledEvent',
+    ADD_STRATEGY = 'addStrategyEvent',
+    UPDATE_STRATEGY = 'updateStrategyEvent',
+    DELETE_STRATEGY = 'deleteStrategyEvent',
+}
+
+export interface ISuggestChangeEvent {
+    id: number;
+    event: SuggestChangeSetEvent;
+    data: unknown;
+    createdBy: string;
+    createdAt: Date;
 }

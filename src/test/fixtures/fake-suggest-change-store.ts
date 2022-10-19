@@ -1,5 +1,5 @@
 import { ISuggestChangeStore } from '../../lib/types/stores/suggest-change-store';
-import { ISuggestChangeSet } from '../../lib/types/model';
+import { ISuggestChange, ISuggestChangeSet } from '../../lib/types/model';
 import { PartialSome } from '../../lib/types/partial';
 import User from '../../lib/types/user';
 
@@ -18,6 +18,33 @@ export default class FakeSuggestChangeStore implements ISuggestChangeStore {
     // eslint-disable-next-line no-unused-vars,@typescript-eslint/no-unused-vars
     async delete(id: number): Promise<void> {
         return Promise.resolve(undefined);
+    }
+
+    addChangeToSet(
+        change: ISuggestChange,
+        changeSetID: number,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        user: Partial<Pick<User, 'username' | 'email'>>,
+    ): Promise<void> {
+        const changeSet = this.suggestChanges.find((s) => (s.id = changeSetID));
+        changeSet.changes.push(change);
+        return Promise.resolve();
+    }
+
+    getForEnvironment(environment: string): Promise<ISuggestChangeSet[]> {
+        return Promise.resolve(
+            this.suggestChanges.filter(
+                (changeSet) => (changeSet.environment = environment),
+            ),
+        );
+    }
+
+    getForProject(project: string): Promise<ISuggestChangeSet[]> {
+        return Promise.resolve(
+            this.suggestChanges.filter(
+                (changeSet) => (changeSet.project = project),
+            ),
+        );
     }
 
     create(

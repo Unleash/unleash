@@ -80,7 +80,7 @@ yarn test
 
 ## Database changes {#database-changes}
 
-We use database migrations to track database changes.
+We use database migrations to track database changes. Never change a migration that has been merged to main. If you need to change a migration, create a new migration that reverts the old one and then creates the new one.
 
 ### Making a schema change {#making-a-schema-change}
 
@@ -94,7 +94,7 @@ Use db-migrate to create new migrations file.
 > yarn run db-migrate create YOUR-MIGRATION-NAME
 ```
 
-All migrations require one `up` and one `down` method.
+All migrations require one `up` and one `down` method. There are some migrations that will maintain the database integrity, but not the data integrity and may not be safe to run on a production database.
 
 Example of a typical migration:
 

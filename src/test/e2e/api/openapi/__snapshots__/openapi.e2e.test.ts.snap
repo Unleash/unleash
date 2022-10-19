@@ -44,6 +44,53 @@ exports[`should serve the OpenAPI spec 1`] = `
 {
   "components": {
     "schemas": {
+      "achievementSchema": {
+        "properties": {
+          "achievementId": {
+            "type": "string",
+          },
+          "description": {
+            "type": "string",
+          },
+          "id": {
+            "type": "number",
+          },
+          "imageUrl": {
+            "type": "string",
+          },
+          "rarity": {
+            "type": "string",
+          },
+          "seenAt": {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string",
+          },
+          "title": {
+            "type": "string",
+          },
+          "unlockedAt": {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string",
+          },
+        },
+        "type": "object",
+      },
+      "achievementsSchema": {
+        "properties": {
+          "achievements": {
+            "items": {
+              "$ref": "#/components/schemas/achievementSchema",
+            },
+            "type": "array",
+          },
+          "all": {
+            "type": "object",
+          },
+        },
+        "type": "object",
+      },
       "addonParameterSchema": {
         "properties": {
           "description": {
@@ -7213,6 +7260,55 @@ If the provided project does not exist, the list of events will be empty.",
         ],
       },
     },
+    "/api/admin/user/achievements": {
+      "get": {
+        "operationId": "getAchievements",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/achievementsSchema",
+                },
+              },
+            },
+            "description": "achievementsSchema",
+          },
+        },
+        "tags": [
+          "Achievements",
+        ],
+      },
+      "post": {
+        "operationId": "unlockAchievement",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/achievementSchema",
+                },
+              },
+            },
+            "description": "achievementSchema",
+          },
+        },
+        "tags": [
+          "Achievements",
+        ],
+      },
+      "put": {
+        "operationId": "markAchievementSeen",
+        "responses": {
+          "200": {
+            "description": "This response has no body.",
+          },
+        },
+        "tags": [
+          "Achievements",
+        ],
+      },
+    },
     "/api/admin/user/change-password": {
       "post": {
         "operationId": "changeMyPassword",
@@ -7705,6 +7801,10 @@ If the provided project does not exist, the list of events will be empty.",
     },
   ],
   "tags": [
+    {
+      "description": "Fetch Unleash Achievements.",
+      "name": "Achievements",
+    },
     {
       "description": "Create, update, and delete [Unleash addons](https://docs.getunleash.io/addons).",
       "name": "Addons",

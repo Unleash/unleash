@@ -65,7 +65,7 @@ export default class AchievementsController extends Controller {
                     tags: ['Achievements'],
                     operationId: 'unlockAchievement',
                     responses: {
-                        201: createResponseSchema('achievementSchema'),
+                        200: createResponseSchema('achievementSchema'),
                     },
                 }),
             ],

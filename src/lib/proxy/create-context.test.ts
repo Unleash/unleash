@@ -69,8 +69,6 @@ test('will respect environment set in context', () => {
         properties: ['some'],
     });
 
-    // console.log(context);
-
     expect(context.environment).toBe('development');
 });
 

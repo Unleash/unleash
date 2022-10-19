@@ -1,12 +1,14 @@
-# ADR: Preferred folder structure
+---
+title: ADR: Preferred folder structure
+---
 
 ## Background
 
-Folder structure is important in how easy it is to navigate and reason about the codebase. It's important to have a clear structure that is easy to understand and follow, while grouping related files together in such a way that is easy to find and remove. 
+Folder structure is important in how easy it is to navigate and reason about the codebase. It's important to have a clear structure that is easy to understand and follow, while grouping related files together in such a way that is easy to find and remove.
 
 ## Decision
 
-We have decided to create tree-like folder structure that mimics as closely as possible the relationship of the React components in the project. This has a number of benefits: 
+We have decided to create tree-like folder structure that mimics as closely as possible the relationship of the React components in the project. This has a number of benefits:
 
 * If you are looking for a component, you can easily find it by looking at the folder structure.
 * If you need to delete a component, you can be sure that all of the files connected to that component will be deleted if you delete the folder. This is supremely important, because it allows us to get rid of dead code easily and without having to worry about the consequences of deleting a file and worrying about whether it's used somewhere else.

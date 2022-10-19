@@ -1,4 +1,6 @@
-# Backend
+---
+title: Back end
+---
 
 The frontend is written in nodejs/typescript. It's written as a REST API following a CSR (controller, service, repository/store) pattern. The following ADRs are defined for the backend:
 
@@ -130,5 +132,3 @@ Please run `yarn test` checks before publishing.
 Run `npm run publish` to start the publishing process.
 
 `npm run publish:dry`
-
-

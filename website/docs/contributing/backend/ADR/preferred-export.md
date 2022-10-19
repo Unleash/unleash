@@ -1,8 +1,10 @@
-# ADR: Preferred export
+---
+title: ADR: Preferred export
+---
 
 ## Background
 
-In the codebase, we have discovered that default exports create multiple problems. One is that you can rename the component when importing it, which can cause confusion. Another is that it is harder to find the component when you are looking for it, as you have to look for the file name instead of the component name (solved by ADR for naming, but still relevant). 
+In the codebase, we have discovered that default exports create multiple problems. One is that you can rename the component when importing it, which can cause confusion. Another is that it is harder to find the component when you are looking for it, as you have to look for the file name instead of the component name (solved by ADR for naming, but still relevant).
 
 ## Decision
 

@@ -1,4 +1,6 @@
-# ADR: Preferred styles import placement
+---
+title: ADR: preferred styles import placement
+---
 
 ## Background
 

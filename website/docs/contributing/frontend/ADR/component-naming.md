@@ -1,4 +1,6 @@
-# ADR: Component naming and file naming
+---
+title: ADR: Component naming and file naming
+---
 
 ## Background
 

@@ -1,4 +1,6 @@
-# ADR: Preferred function type
+---
+title: ADR: Preferred function type
+---
 
 ## Background
 

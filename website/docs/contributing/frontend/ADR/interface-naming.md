@@ -1,4 +1,6 @@
-# ADR: Interface naming
+---
+title: ADR: Interface naming
+---
 
 ## Background
 

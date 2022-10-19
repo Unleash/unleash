@@ -1,4 +1,6 @@
-# ADR: Naming
+---
+title: ADR: Naming
+---
 
 ## Background
 
@@ -6,7 +8,7 @@ In the codebase, we have found a need to have a common way of naming things in o
 
 ## Decision
 
-We have decided to use a naming convention where the files are named after the main class that it contains. Example: 
+We have decided to use a naming convention where the files are named after the main class that it contains. Example:
 
 ```js
 feature-toggle-service.ts
@@ -16,4 +18,4 @@ class FeatureToggleService {
 }
 ```
 
-The reason for this decision is to remove mental clutter and free up capacity to easily navigate the codebase. Knowing that a file is named after the class that it contains allows you to quickly scan a file without watching for a context where the class is used in order to understand what it is. 
+The reason for this decision is to remove mental clutter and free up capacity to easily navigate the codebase. Knowing that a file is named after the class that it contains allows you to quickly scan a file without watching for a context where the class is used in order to understand what it is.

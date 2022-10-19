@@ -1,6 +1,10 @@
+---
+title: Developer guide
+---
+
 ## Introduction {#introduction}
 
-This repository contains two main parts. The backend and the frontend of unleash. The backend is a Node.js application that is built using TypeScript. The frontend is a React application that is built using TypeScript. The backend specific code can be found in the `src` lib folder. The frontend specific code can be found in the `frontend` folder. 
+This repository contains two main parts. The backend and the frontend of unleash. The backend is a Node.js application that is built using TypeScript. The frontend is a React application that is built using TypeScript. The backend specific code can be found in the `src` lib folder. The frontend specific code can be found in the `frontend` folder.
 
 ## Development philosophy
 
@@ -14,7 +18,7 @@ Software is difficult. Being a software engineer is about acknowledging our limi
 
 * We strive to write code that is easy to understand and maintain
 
-We believe code is a language. Written code is a way to communicate intent. It's about explaining to the reader what this code does, in the shortest amount of time possible. As such, writing clean code is supremely important to us. We believe that this contributes to keeping our codebase maintainable, and helps us maintain speed in the long run. 
+We believe code is a language. Written code is a way to communicate intent. It's about explaining to the reader what this code does, in the shortest amount of time possible. As such, writing clean code is supremely important to us. We believe that this contributes to keeping our codebase maintainable, and helps us maintain speed in the long run.
 
 * We think about solutions before comitting
 
@@ -26,4 +30,4 @@ The following resources should be read before contributing to the project:
 
 * [Clean code javascript](https://github.com/ryanmcdermott/clean-code-javascript)
 * [frontend overview](./frontend/overview.md)
-* [backend overview](./backend/overview.md) 
+* [backend overview](./backend/overview.md)

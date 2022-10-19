@@ -6,6 +6,7 @@ import { PartialSome } from '../types/partial';
 import {
     ISuggestChange,
     ISuggestChangeEvent,
+    ISuggestChangeEventData,
     ISuggestChangeSet,
     SuggestChangeAction,
     SuggestChangeEvent,
@@ -22,10 +23,11 @@ const Tables = {
 interface ISuggestChangeEventRow {
     id: number;
     event: SuggestChangeSetEvent;
-    data?: unknown;
+    data?: ISuggestChangeEventData;
     created_by?: string;
     created_at?: Date;
 }
+
 interface ISuggestChangeSetInsert {
     id: number;
     environment: string;
@@ -39,7 +41,7 @@ interface ISuggestChangeInsert {
     id: number;
     action: SuggestChangeAction;
     feature: string;
-    payload?: string;
+    payload?: unknown;
     created_by?: string;
     created_at?: Date;
 }
@@ -80,7 +82,7 @@ const suggestChangeRowReducer = (acc, suggestChangeRow) => {
         currentSuggestChangeSet.events.push({
             id: eventId,
             event: eventType,
-            data: JSON.parse(eventData),
+            data: eventData,
             createdBy: eventCreatedAt,
             createdAt: eventCreatedBy,
         });
@@ -90,7 +92,7 @@ const suggestChangeRowReducer = (acc, suggestChangeRow) => {
         currentSuggestChangeSet.changes.push({
             id: changeId,
             action: changeAction,
-            payload: JSON.parse(changePayload),
+            payload: changePayload,
             createdAt: changeCreatedAt,
             createdBy: changeCreatedBy,
         });
@@ -207,7 +209,7 @@ export class SuggestChangeStore implements ISuggestChangeStore {
             .insert<ISuggestChangeInsert>({
                 action: change.action,
                 feature: change.feature,
-                payload: JSON.stringify(change.payload),
+                payload: change.payload,
                 suggest_change_set_id: changeSetID,
                 created_at: change.createdAt,
                 created_by: user.username || user.email,
@@ -225,7 +227,7 @@ export class SuggestChangeStore implements ISuggestChangeStore {
     createEventForChange = async (
         event: string,
         changeSetID: number,
-        data: unknown,
+        data: ISuggestChangeEventData,
         user: Partial<Pick<User, 'username' | 'email'>>,
     ): Promise<void> => {
         await this.db(Tables.suggestChangeEvent)

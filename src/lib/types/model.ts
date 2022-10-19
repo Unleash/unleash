@@ -371,10 +371,10 @@ export interface ISuggestChangeSet {
     state: string;
     project: string;
     environment: string;
-    createdBy: string;
-    createdAt: Date;
-    changes: ISuggestChange[];
-    events: ISuggestChangeEvent[];
+    createdBy?: string;
+    createdAt?: Date;
+    changes?: ISuggestChange[];
+    events?: ISuggestChangeEvent[];
     // approvalFlow: IChangeSetApprovalFlow;
 }
 export interface IApprovalFlow {}
@@ -389,9 +389,8 @@ export interface ISuggestChange {
     action: SuggestChangeAction;
     feature: string;
     payload?: unknown;
-    createdBy: string;
-    createdAt: Date;
-    event: ISuggestChangeEvent;
+    createdBy?: string;
+    createdAt?: Date;
 }
 
 export enum SuggestChangeSetEvent {
@@ -420,7 +419,12 @@ export enum SuggestChangeEvent {
 export interface ISuggestChangeEvent {
     id: number;
     event: SuggestChangeSetEvent;
+    data: ISuggestChangeEventData;
+    createdBy?: string;
+    createdAt?: Date;
+}
+
+export interface ISuggestChangeEventData {
+    feature: string;
     data: unknown;
-    createdBy: string;
-    createdAt: Date;
 }

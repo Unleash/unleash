@@ -63,6 +63,16 @@ export class SuggestChangeService {
         return this.suggestChangeStore.get(id);
     };
 
+    getForProject = async (project: string): Promise<ISuggestChangeSet[]> => {
+        return this.suggestChangeStore.getForProject(project);
+    };
+
+    getForEnvironment = async (
+        project: string,
+    ): Promise<ISuggestChangeSet[]> => {
+        return this.suggestChangeStore.getForProject(project);
+    };
+
     delete = async (id: number): Promise<void> => {
         return this.suggestChangeStore.delete(id);
     };

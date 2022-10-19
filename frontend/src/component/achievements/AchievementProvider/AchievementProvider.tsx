@@ -21,7 +21,7 @@ export const AchievementProvider = ({
             unlockAchievement: async (achievement: Achievement) => {
                 const newAchievement = await unlockAchievement(achievement);
 
-                if (newAchievement) {
+                if (newAchievement?.id !== -1) {
                     setNewAchievements(prevAchievements => [
                         ...prevAchievements,
                         newAchievement,

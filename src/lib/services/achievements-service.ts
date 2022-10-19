@@ -5,6 +5,7 @@ import { IEventStore } from '../types/stores/event-store';
 import { ACHIEVEMENT_UNLOCKED } from '../types/events';
 import { IAchievement } from '../types/models/achievement';
 import User from '../types/user';
+import { Achievement } from '../constants/achievements';
 
 export default class AchievementsService {
     private config: IUnleashConfig;
@@ -33,7 +34,7 @@ export default class AchievementsService {
     }
 
     async unlockAchievement(
-        achievementId: string,
+        achievementId: Achievement,
         user: User,
     ): Promise<IAchievement> {
         const newAchievement = await this.achievementsStore.unlock(

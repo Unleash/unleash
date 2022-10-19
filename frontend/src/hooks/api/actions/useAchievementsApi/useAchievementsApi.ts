@@ -1,6 +1,6 @@
 import useAPI from '../useApi/useApi';
-import { Achievement, Achievements } from 'constants/achievements';
-import { IAchievement, IAchievementResult } from 'interfaces/achievement';
+import { Achievement } from 'constants/achievements';
+import { IAchievement } from 'interfaces/achievement';
 
 export const useAchievementsApi = () => {
     const { makeRequest, createRequest, errors, loading } = useAPI({
@@ -9,15 +9,14 @@ export const useAchievementsApi = () => {
 
     const unlockAchievement = async (
         id: Achievement
-    ): Promise<IAchievement | undefined> => {
+    ): Promise<IAchievement> => {
         const req = createRequest('api/admin/user/achievements', {
             method: 'POST',
             body: JSON.stringify({ id }),
         });
         try {
             const response = await makeRequest(req.caller, req.id);
-            const achievementJSON = await response.json();
-            return mapAchievement(achievementJSON);
+            return await response.json();
         } catch (e) {
             throw e;
         }
@@ -41,20 +40,4 @@ export const useAchievementsApi = () => {
         errors,
         loading,
     };
-};
-
-const mapAchievement = (achievement: IAchievementResult) => {
-    const { id, achievementId } = achievement;
-
-    if (id !== -1 && Object.keys(Achievements).includes(achievementId)) {
-        const { title, description, imageUrl } =
-            Achievements[achievementId as keyof typeof Achievements];
-
-        return {
-            ...achievement,
-            title,
-            description,
-            imageUrl,
-        };
-    }
 };

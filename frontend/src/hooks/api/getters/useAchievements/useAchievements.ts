@@ -1,9 +1,7 @@
 import useSWR from 'swr';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import { IAchievement, IAchievementResult } from 'interfaces/achievement';
-import { useMemo } from 'react';
-import { Achievements } from 'constants/achievements';
+import { IAchievement } from 'interfaces/achievement';
 
 export interface IUseAchievementsOutput {
     achievements?: IAchievement[];
@@ -18,35 +16,12 @@ export const useAchievements = (): IUseAchievementsOutput => {
         fetcher
     );
 
-    return useMemo(
-        () => ({
-            achievements: mapAchievements(data?.achievements ?? []),
-            loading: !error && !data,
-            refetchAchievements: () => mutate(),
-            error,
-        }),
-        [data, error, mutate]
-    );
-};
-
-const mapAchievements = (achievements: IAchievementResult[]) => {
-    const filteredAchievements = achievements.filter(({ achievementId }) =>
-        Object.keys(Achievements).includes(achievementId)
-    );
-
-    return filteredAchievements.map(achievement => {
-        const { title, description, imageUrl } =
-            Achievements[
-                achievement.achievementId as keyof typeof Achievements
-            ];
-
-        return {
-            ...achievement,
-            title,
-            description,
-            imageUrl,
-        };
-    });
+    return {
+        achievements: data ? data.achievements : undefined,
+        loading: !error && !data,
+        refetchAchievements: () => mutate(),
+        error,
+    };
 };
 
 const fetcher = (path: string) => {

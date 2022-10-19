@@ -1,7 +1,15 @@
-export interface IAchievement {
+interface IAchievementValue {
     id: number;
-    achievementId?: string;
-    rarity?: string;
-    unlockedAt?: Date;
+    title: string;
+    description: string;
+    rarity: string;
+    imageUrl: string;
+    unlockedAt: Date;
     seenAt?: Date;
 }
+
+interface IAchievementNull {
+    id: -1;
+}
+
+export type IAchievement = IAchievementValue | IAchievementNull;

@@ -39,6 +39,7 @@ export const App = () => {
                             show={<Loader />}
                             elseShow={
                                 <div className={styles.container}>
+                                    <h1>Grand new opening</h1>
                                     <ToastRenderer />
                                     <LayoutPicker>
                                         <Routes>

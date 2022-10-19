@@ -7,6 +7,7 @@ export const achievementsSchema = {
     properties: {
         all: {
             type: 'object',
+            additionalProperties: true,
         },
         achievements: {
             type: 'array',

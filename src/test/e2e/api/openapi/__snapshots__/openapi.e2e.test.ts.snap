@@ -86,6 +86,7 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "array",
           },
           "all": {
+            "additionalProperties": true,
             "type": "object",
           },
         },

@@ -13,8 +13,6 @@ Before you can connect your application to Unleash you need a Unleash server. Yo
 1. **Unleash Open-source**
    - [Docker](../deploy/getting-started.md)
    - [Helm Chart](https://github.com/unleash/helm-charts/)
-   <!-- todo: what do we do about this? -->
-   - [Click-to-deploy on Heroku](https://www.heroku.com/deploy/?template=https://github.com/Unleash/unleash)
    - [GitLab](https://docs.gitlab.com/ee/operations/feature_flags.html#choose-a-client-library)
 2. **Unleash Enterprise**
    - [Hosted Plans](https://www.getunleash.io/plans)

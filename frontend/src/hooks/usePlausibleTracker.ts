@@ -1,37 +1,34 @@
-import Plausible from 'plausible-tracker';
-import { useEffect } from 'react';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { IFlags } from 'interfaces/uiConfig';
+import { useCallback, useContext } from 'react';
+import { PlausibleContext } from 'contexts/PlausibleContext';
+import { EventOptions, PlausibleOptions } from 'plausible-tracker';
 
-const PLAUSIBLE_UNLEASH_API_HOST = 'https://plausible.getunleash.io';
-const PLAUSIBLE_UNLEASH_DOMAIN = 'app.unleash-hosted.com';
+/**
+ * Allowed event names. Makes it easy to remove, since TS will complain.
+ * Add those to Plausible as Custom event goals.
+ * @see https://plausible.io/docs/custom-event-goals#2-create-a-custom-event-goal-in-your-plausible-analytics-account
+ * @example `'download | 'invite' | 'signup'`
+ **/
+type CustomEvents = 'invite';
 
 export const usePlausibleTracker = () => {
-    const { uiConfig } = useUiConfig();
-    const enabled = enablePlausibleTracker(uiConfig.flags);
+    const plausible = useContext(PlausibleContext);
 
-    useEffect(() => {
-        if (enabled) {
-            try {
-                return initPlausibleTracker();
-            } catch (error) {
-                console.warn(error);
+    const trackEvent = useCallback(
+        (
+            eventName: CustomEvents,
+            options?: EventOptions | undefined,
+            eventData?: PlausibleOptions | undefined
+        ) => {
+            if (plausible?.trackEvent) {
+                plausible.trackEvent(eventName, options, eventData);
+            } else {
+                if (options?.callback) {
+                    options.callback();
+                }
             }
-        }
-    }, [enabled]);
-};
+        },
+        [plausible]
+    );
 
-const initPlausibleTracker = (): (() => void) => {
-    const plausible = Plausible({
-        domain: PLAUSIBLE_UNLEASH_DOMAIN,
-        apiHost: PLAUSIBLE_UNLEASH_API_HOST,
-        trackLocalhost: true,
-    });
-
-    return plausible.enableAutoPageviews();
-};
-
-// Enable Plausible if we're on the Unleash SaaS domain.
-export const enablePlausibleTracker = (flags: Partial<IFlags>): boolean => {
-    return Boolean(flags.T);
+    return { trackEvent };
 };

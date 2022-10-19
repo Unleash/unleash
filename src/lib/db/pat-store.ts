@@ -6,8 +6,8 @@ import NotFoundError from '../error/notfound-error';
 
 const TABLE = 'personal_access_tokens';
 
-const PAT_COLUMNS = [
-    'secret',
+const PAT_PUBLIC_COLUMNS = [
+    'id',
     'description',
     'user_id',
     'expires_at',
@@ -20,6 +20,7 @@ const fromRow = (row) => {
         throw new NotFoundError('No PAT found');
     }
     return new Pat({
+        id: row.id,
         secret: row.secret,
         userId: row.user_id,
         description: row.description,
@@ -51,8 +52,12 @@ export default class PatStore implements IPatStore {
         return fromRow(row[0]);
     }
 
-    async delete(secret: string): Promise<void> {
-        return this.db(TABLE).where({ secret: secret }).del();
+    async delete(id: number): Promise<void> {
+        return this.db(TABLE).where({ id: id }).del();
+    }
+
+    async deleteForUser(id: number, userId: number): Promise<void> {
+        return this.db(TABLE).where({ id: id, user_id: userId }).del();
     }
 
     async deleteAll(): Promise<void> {
@@ -61,28 +66,40 @@ export default class PatStore implements IPatStore {
 
     destroy(): void {}
 
-    async exists(secret: string): Promise<boolean> {
+    async exists(id: number): Promise<boolean> {
         const result = await this.db.raw(
-            `SELECT EXISTS(SELECT 1 FROM ${TABLE} WHERE secret = ?) AS present`,
-            [secret],
+            `SELECT EXISTS(SELECT 1 FROM ${TABLE} WHERE id = ?) AS present`,
+            [id],
         );
         const { present } = result.rows[0];
         return present;
     }
 
-    async get(secret: string): Promise<Pat> {
-        const row = await this.db(TABLE).where({ secret }).first();
+    async existsWithDescriptionByUser(
+        description: string,
+        userId: number,
+    ): Promise<boolean> {
+        const result = await this.db.raw(
+            `SELECT EXISTS(SELECT 1 FROM ${TABLE} WHERE description = ? AND user_id = ?) AS present`,
+            [description, userId],
+        );
+        const { present } = result.rows[0];
+        return present;
+    }
+
+    async get(id: number): Promise<Pat> {
+        const row = await this.db(TABLE).where({ id }).first();
         return fromRow(row);
     }
 
     async getAll(): Promise<Pat[]> {
-        const groups = await this.db.select(PAT_COLUMNS).from(TABLE);
+        const groups = await this.db.select(PAT_PUBLIC_COLUMNS).from(TABLE);
         return groups.map(fromRow);
     }
 
     async getAllByUser(userId: number): Promise<Pat[]> {
         const groups = await this.db
-            .select(PAT_COLUMNS)
+            .select(PAT_PUBLIC_COLUMNS)
             .from(TABLE)
             .where('user_id', userId);
         return groups.map(fromRow);

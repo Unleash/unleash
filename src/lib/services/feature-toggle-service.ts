@@ -45,6 +45,7 @@ import {
     IFeatureOverview,
     IFeatureStrategy,
     IFeatureToggleQuery,
+    ISegment,
     IStrategyConfig,
     IVariant,
     WeightType,
@@ -71,6 +72,11 @@ import { IContextFieldStore } from 'lib/types/stores/context-field-store';
 import { Saved, Unsaved } from '../types/saved';
 import { SegmentService } from './segment-service';
 import { SetStrategySortOrderSchema } from 'lib/openapi/spec/set-strategy-sort-order-schema';
+import { getDefaultStrategy } from '../util/feature-evaluator/helpers';
+import { AccessService } from './access-service';
+import { User } from '../server-impl';
+import { CREATE_FEATURE_STRATEGY } from '../types/permissions';
+import NoAccessError from '../error/no-access-error';
 
 interface IFeatureContext {
     featureName: string;
@@ -106,6 +112,8 @@ class FeatureToggleService {
 
     private segmentService: SegmentService;
 
+    private accessService: AccessService;
+
     constructor(
         {
             featureStrategiesStore,
@@ -129,6 +137,7 @@ class FeatureToggleService {
         >,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
         segmentService: SegmentService,
+        accessService: AccessService,
     ) {
         this.logger = getLogger('services/feature-toggle-service.ts');
         this.featureStrategiesStore = featureStrategiesStore;
@@ -140,6 +149,7 @@ class FeatureToggleService {
         this.featureEnvironmentStore = featureEnvironmentStore;
         this.contextFieldStore = contextFieldStore;
         this.segmentService = segmentService;
+        this.accessService = accessService;
     }
 
     async validateFeatureContext({
@@ -274,12 +284,14 @@ class FeatureToggleService {
 
     featureStrategyToPublic(
         featureStrategy: IFeatureStrategy,
+        segments: ISegment[] = [],
     ): Saved<IStrategyConfig> {
         return {
             id: featureStrategy.id,
             name: featureStrategy.strategyName,
             constraints: featureStrategy.constraints || [],
             parameters: featureStrategy.parameters,
+            segments: segments.map((segment) => segment.id) ?? [],
         };
     }
 
@@ -321,7 +333,13 @@ class FeatureToggleService {
                 });
 
             const tags = await this.tagStore.getAllTagsForFeature(featureName);
-            const strategy = this.featureStrategyToPublic(newFeatureStrategy);
+            const segments = await this.segmentService.getByStrategy(
+                newFeatureStrategy.id,
+            );
+            const strategy = this.featureStrategyToPublic(
+                newFeatureStrategy,
+                segments,
+            );
             await this.eventStore.store(
                 new FeatureStrategyAddEvent({
                     project: projectId,
@@ -376,10 +394,17 @@ class FeatureToggleService {
                 updates,
             );
 
+            const segments = await this.segmentService.getByStrategy(
+                strategy.id,
+            );
+
             // Store event!
             const tags = await this.tagStore.getAllTagsForFeature(featureName);
-            const data = this.featureStrategyToPublic(strategy);
-            const preData = this.featureStrategyToPublic(existingStrategy);
+            const data = this.featureStrategyToPublic(strategy, segments);
+            const preData = this.featureStrategyToPublic(
+                existingStrategy,
+                segments,
+            );
             await this.eventStore.store(
                 new FeatureStrategyUpdateEvent({
                     project: projectId,
@@ -415,8 +440,14 @@ class FeatureToggleService {
                 existingStrategy,
             );
             const tags = await this.tagStore.getAllTagsForFeature(featureName);
-            const data = this.featureStrategyToPublic(strategy);
-            const preData = this.featureStrategyToPublic(existingStrategy);
+            const segments = await this.segmentService.getByStrategy(
+                strategy.id,
+            );
+            const data = this.featureStrategyToPublic(strategy, segments);
+            const preData = this.featureStrategyToPublic(
+                existingStrategy,
+                segments,
+            );
             await this.eventStore.store(
                 new FeatureStrategyUpdateEvent({
                     featureName,
@@ -479,6 +510,7 @@ class FeatureToggleService {
         featureName: string,
         environment: string = DEFAULT_ENV,
     ): Promise<Saved<IStrategyConfig>[]> {
+        this.logger.debug('getStrategiesForEnvironment');
         const hasEnv = await this.featureEnvironmentStore.featureHasEnvironment(
             environment,
             featureName,
@@ -490,13 +522,22 @@ class FeatureToggleService {
                     featureName,
                     environment,
                 );
-            return featureStrategies.map((strat) => ({
-                id: strat.id,
-                name: strat.strategyName,
-                constraints: strat.constraints,
-                parameters: strat.parameters,
-                sortOrder: strat.sortOrder,
-            }));
+            const result = [];
+            for (const strat of featureStrategies) {
+                const segments =
+                    (await this.segmentService.getByStrategy(strat.id)).map(
+                        (segment) => segment.id,
+                    ) ?? [];
+                result.push({
+                    id: strat.id,
+                    name: strat.strategyName,
+                    constraints: strat.constraints,
+                    parameters: strat.parameters,
+                    sortOrder: strat.sortOrder,
+                    segments,
+                });
+            }
+            return result;
         }
         throw new NotFoundError(
             `Feature ${featureName} does not have environment ${environment}`,
@@ -718,12 +759,23 @@ class FeatureToggleService {
         const strategy = await this.featureStrategiesStore.getStrategyById(
             strategyId,
         );
-        return {
+
+        const segments = await this.segmentService.getByStrategy(strategyId);
+        let result: Saved<IStrategyConfig> = {
             id: strategy.id,
             name: strategy.strategyName,
             constraints: strategy.constraints || [],
             parameters: strategy.parameters,
+            segments: [],
         };
+
+        if (segments && segments.length > 0) {
+            result = {
+                ...result,
+                segments: segments.map((segment) => segment.id),
+            };
+        }
+        return result;
     }
 
     async getEnvironmentInfo(
@@ -834,6 +886,7 @@ class FeatureToggleService {
         environment: string,
         enabled: boolean,
         createdBy: string,
+        user?: User,
     ): Promise<FeatureToggle> {
         const hasEnvironment =
             await this.featureEnvironmentStore.featureHasEnvironment(
@@ -849,9 +902,23 @@ class FeatureToggleService {
                     environment,
                 );
                 if (strategies.length === 0) {
-                    throw new InvalidOperationError(
-                        'You can not enable the environment before it has strategies',
-                    );
+                    const canAddStrategies =
+                        user &&
+                        (await this.accessService.hasPermission(
+                            user,
+                            CREATE_FEATURE_STRATEGY,
+                            project,
+                            environment,
+                        ));
+                    if (canAddStrategies) {
+                        await this.createStrategy(
+                            getDefaultStrategy(featureName),
+                            { environment, projectId: project, featureName },
+                            createdBy,
+                        );
+                    } else {
+                        throw new NoAccessError(CREATE_FEATURE_STRATEGY);
+                    }
                 }
             }
             const updatedEnvironmentStatus =

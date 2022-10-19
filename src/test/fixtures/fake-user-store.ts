@@ -137,6 +137,11 @@ class UserStoreMock implements IUserStore {
         });
         return Promise.resolve(undefined);
     }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    getUserByPersonalAccessToken(secret: string): Promise<IUser> {
+        return Promise.resolve(undefined);
+    }
 }
 
 module.exports = UserStoreMock;

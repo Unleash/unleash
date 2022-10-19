@@ -709,6 +709,9 @@ exports[`should serve the OpenAPI spec 1`] = `
             },
             "type": "array",
           },
+          "copyOf": {
+            "type": "string",
+          },
           "name": {
             "type": "string",
           },
@@ -721,6 +724,29 @@ exports[`should serve the OpenAPI spec 1`] = `
         },
         "required": [
           "name",
+        ],
+        "type": "object",
+      },
+      "createInvitedUserSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "email": {
+            "type": "string",
+          },
+          "name": {
+            "type": "string",
+          },
+          "password": {
+            "type": "string",
+          },
+          "username": {
+            "type": "string",
+          },
+        },
+        "required": [
+          "email",
+          "name",
+          "password",
         ],
         "type": "object",
       },
@@ -1364,6 +1390,12 @@ exports[`should serve the OpenAPI spec 1`] = `
           "id": {
             "type": "number",
           },
+          "mappingsSSO": {
+            "items": {
+              "type": "string",
+            },
+            "type": "array",
+          },
           "name": {
             "type": "string",
           },
@@ -1664,6 +1696,9 @@ exports[`should serve the OpenAPI spec 1`] = `
             "format": "date-time",
             "nullable": true,
             "type": "string",
+          },
+          "id": {
+            "type": "number",
           },
           "secret": {
             "type": "string",
@@ -2128,6 +2163,32 @@ exports[`should serve the OpenAPI spec 1`] = `
         ],
         "type": "object",
       },
+      "profileSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "features": {
+            "items": {
+              "$ref": "#/components/schemas/featureSchema",
+            },
+            "type": "array",
+          },
+          "projects": {
+            "items": {
+              "type": "string",
+            },
+            "type": "array",
+          },
+          "rootRole": {
+            "$ref": "#/components/schemas/roleSchema",
+          },
+        },
+        "required": [
+          "rootRole",
+          "projects",
+          "features",
+        ],
+        "type": "object",
+      },
       "projectEnvironmentSchema": {
         "additionalProperties": false,
         "properties": {
@@ -2395,10 +2456,12 @@ exports[`should serve the OpenAPI spec 1`] = `
         "additionalProperties": false,
         "properties": {
           "expiresAt": {
+            "description": "The token's expiration date.",
             "format": "date-time",
             "type": "string",
           },
           "name": {
+            "description": "The token's name.",
             "type": "string",
           },
         },
@@ -2419,6 +2482,9 @@ exports[`should serve the OpenAPI spec 1`] = `
             "nullable": true,
             "type": "string",
           },
+          "enabled": {
+            "type": "boolean",
+          },
           "expiresAt": {
             "format": "date-time",
             "type": "string",
@@ -2428,14 +2494,17 @@ exports[`should serve the OpenAPI spec 1`] = `
           },
           "role": {
             "$ref": "#/components/schemas/roleSchema",
+            "description": "Users who sign up using this token will be given this role.",
           },
           "secret": {
             "type": "string",
           },
           "url": {
+            "description": "The public signup link for the token. Users who follow this link will be taken to a signup page where they can create an Unleash user.",
             "type": "string",
           },
           "users": {
+            "description": "Array of users that have signed up using the token.",
             "items": {
               "$ref": "#/components/schemas/userSchema",
             },
@@ -2450,6 +2519,7 @@ exports[`should serve the OpenAPI spec 1`] = `
           "expiresAt",
           "createdAt",
           "createdBy",
+          "enabled",
           "role",
         ],
         "type": "object",
@@ -2457,14 +2527,15 @@ exports[`should serve the OpenAPI spec 1`] = `
       "publicSignupTokenUpdateSchema": {
         "additionalProperties": false,
         "properties": {
+          "enabled": {
+            "type": "boolean",
+          },
           "expiresAt": {
+            "description": "The token's expiration date.",
             "format": "date-time",
             "type": "string",
           },
         },
-        "required": [
-          "expiresAt",
-        ],
         "type": "object",
       },
       "publicSignupTokensSchema": {
@@ -4523,6 +4594,7 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "publicSignupTokensSchema",
           },
         },
+        "summary": "Retrieve all existing public signup tokens",
         "tags": [
           "Public signup tokens",
         ],
@@ -4561,34 +4633,15 @@ If the provided project does not exist, the list of events will be empty.",
             },
           },
         },
+        "summary": "Create a public signup token",
         "tags": [
           "Public signup tokens",
         ],
       },
     },
     "/api/admin/invite-link/tokens/{token}": {
-      "delete": {
-        "operationId": "deletePublicSignupToken",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "token",
-            "required": true,
-            "schema": {
-              "type": "string",
-            },
-          },
-        ],
-        "responses": {
-          "200": {
-            "description": "This response has no body.",
-          },
-        },
-        "tags": [
-          "Public signup tokens",
-        ],
-      },
       "get": {
+        "description": "Get information about a specific token. The \`:token\` part of the URL should be the token's secret.",
         "operationId": "getPublicSignupToken",
         "parameters": [
           {
@@ -4612,6 +4665,7 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "publicSignupTokenSchema",
           },
         },
+        "summary": "Retrieve a token",
         "tags": [
           "Public signup tokens",
         ],
@@ -4641,79 +4695,17 @@ If the provided project does not exist, the list of events will be empty.",
         },
         "responses": {
           "200": {
-            "description": "This response has no body.",
-          },
-        },
-        "tags": [
-          "Public signup tokens",
-        ],
-      },
-    },
-    "/api/admin/invite-link/tokens/{token}/signup": {
-      "post": {
-        "operationId": "addPublicSignupTokenUser",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "token",
-            "required": true,
-            "schema": {
-              "type": "string",
-            },
-          },
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/createUserSchema",
-              },
-            },
-          },
-          "description": "createUserSchema",
-          "required": true,
-        },
-        "responses": {
-          "200": {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/userSchema",
+                  "$ref": "#/components/schemas/publicSignupTokenSchema",
                 },
               },
             },
-            "description": "userSchema",
-          },
-          "409": {
-            "description": "The provided resource can not be created or updated because it would conflict with the current state of the resource or with an already existing resource, respectively.",
+            "description": "publicSignupTokenSchema",
           },
         },
-        "tags": [
-          "Public signup tokens",
-        ],
-      },
-    },
-    "/api/admin/invite-link/tokens/{token}/validate": {
-      "post": {
-        "operationId": "validatePublicSignupToken",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "token",
-            "required": true,
-            "schema": {
-              "type": "string",
-            },
-          },
-        ],
-        "responses": {
-          "200": {
-            "description": "This response has no body.",
-          },
-          "401": {
-            "description": "This response has no body.",
-          },
-        },
+        "summary": "Update a public signup token",
         "tags": [
           "Public signup tokens",
         ],
@@ -7013,6 +7005,26 @@ If the provided project does not exist, the list of events will be empty.",
         ],
       },
     },
+    "/api/admin/user/profile": {
+      "get": {
+        "operationId": "getProfile",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/profileSchema",
+                },
+              },
+            },
+            "description": "profileSchema",
+          },
+        },
+        "tags": [
+          "Users",
+        ],
+      },
+    },
     "/api/admin/user/tokens": {
       "get": {
         "operationId": "getPats",
@@ -7029,7 +7041,7 @@ If the provided project does not exist, the list of events will be empty.",
           },
         },
         "tags": [
-          "admin",
+          "API tokens",
         ],
       },
       "post": {
@@ -7058,17 +7070,17 @@ If the provided project does not exist, the list of events will be empty.",
           },
         },
         "tags": [
-          "admin",
+          "API tokens",
         ],
       },
     },
-    "/api/admin/user/tokens/{secret}": {
+    "/api/admin/user/tokens/{id}": {
       "delete": {
         "operationId": "deletePat",
         "parameters": [
           {
             "in": "path",
-            "name": "secret",
+            "name": "id",
             "required": true,
             "schema": {
               "type": "string",
@@ -7081,7 +7093,7 @@ If the provided project does not exist, the list of events will be empty.",
           },
         },
         "tags": [
-          "admin",
+          "API tokens",
         ],
       },
     },
@@ -7435,6 +7447,81 @@ If the provided project does not exist, the list of events will be empty.",
         },
         "tags": [
           "Operational",
+        ],
+      },
+    },
+    "/invite/{token}/signup": {
+      "post": {
+        "operationId": "addPublicSignupTokenUser",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "token",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/createInvitedUserSchema",
+              },
+            },
+          },
+          "description": "createInvitedUserSchema",
+          "required": true,
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/userSchema",
+                },
+              },
+            },
+            "description": "userSchema",
+          },
+          "400": {
+            "description": "The request data does not match what we expect.",
+          },
+          "409": {
+            "description": "The provided resource can not be created or updated because it would conflict with the current state of the resource or with an already existing resource, respectively.",
+          },
+        },
+        "summary": "Create a user with the "viewer" root role and link them to a signup token",
+        "tags": [
+          "Public signup tokens",
+        ],
+      },
+    },
+    "/invite/{token}/validate": {
+      "get": {
+        "operationId": "validatePublicSignupToken",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "token",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": {
+          "200": {
+            "description": "This response has no body.",
+          },
+          "400": {
+            "description": "The request data does not match what we expect.",
+          },
+        },
+        "summary": "Check whether a public sign-up token exists, has not expired and is enabled",
+        "tags": [
+          "Public signup tokens",
         ],
       },
     },

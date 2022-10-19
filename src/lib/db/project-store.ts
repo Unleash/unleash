@@ -269,18 +269,6 @@ class ProjectStore implements IProjectStore {
                                 'group_role.group_id',
                             );
                     })
-                    .union((queryBuilder) => {
-                        queryBuilder
-                            .select('user_id', 'projects.name as project')
-                            .from('role_user')
-                            .leftJoin('roles', 'role_user.role_id', 'roles.id')
-                            .crossJoin('projects')
-                            .where((builder) =>
-                                builder
-                                    .where('type', 'root')
-                                    .where('roles.name', 'Editor'),
-                            );
-                    })
                     .as('query');
             })
             .groupBy('project')
@@ -288,7 +276,33 @@ class ProjectStore implements IProjectStore {
         return members;
     }
 
-    async getMembersCountByProject(projectId?: string): Promise<number> {
+    async getProjectsByUser(userId: number): Promise<string[]> {
+        const members = await this.db
+            .from((db) => {
+                db.select('project')
+                    .from('role_user')
+                    .leftJoin('roles', 'role_user.role_id', 'roles.id')
+                    .where('type', 'root')
+                    .andWhere('name', 'Editor')
+                    .andWhere('user_id', userId)
+                    .union((queryBuilder) => {
+                        queryBuilder
+                            .select('project')
+                            .from('group_role')
+                            .leftJoin(
+                                'group_user',
+                                'group_user.group_id',
+                                'group_role.group_id',
+                            )
+                            .where('user_id', userId);
+                    })
+                    .as('query');
+            })
+            .pluck('project');
+        return members;
+    }
+
+    async getMembersCountByProject(projectId: string): Promise<number> {
         const members = await this.db
             .from((db) => {
                 db.select('user_id')
@@ -298,9 +312,6 @@ class ProjectStore implements IProjectStore {
                         builder
                             .where('project', projectId)
                             .whereNot('type', 'root'),
-                    )
-                    .orWhere((builder) =>
-                        builder.where('type', 'root').where('name', 'Editor'),
                     )
                     .union((queryBuilder) => {
                         queryBuilder

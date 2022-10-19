@@ -15,6 +15,7 @@ import ApiUser from '../../types/api-user';
 import { ALL } from '../../types/models/api-token';
 import User from '../../types/user';
 import { collapseHourlyMetrics } from '../../util/collapseHourlyMetrics';
+import { LastSeenService } from './last-seen-service';
 
 export default class ClientMetricsServiceV2 {
     private config: IUnleashConfig;
@@ -27,6 +28,8 @@ export default class ClientMetricsServiceV2 {
 
     private featureToggleStore: IFeatureToggleStore;
 
+    private lastSeenService: LastSeenService;
+
     private logger: Logger;
 
     constructor(
@@ -35,10 +38,12 @@ export default class ClientMetricsServiceV2 {
             clientMetricsStoreV2,
         }: Pick<IUnleashStores, 'featureToggleStore' | 'clientMetricsStoreV2'>,
         config: IUnleashConfig,
+        lastSeenService: LastSeenService,
         bulkInterval = secondsToMilliseconds(5),
     ) {
         this.featureToggleStore = featureToggleStore;
         this.clientMetricsStoreV2 = clientMetricsStoreV2;
+        this.lastSeenService = lastSeenService;
         this.config = config;
         this.logger = config.getLogger(
             '/services/client-metrics/client-metrics-service-v2.ts',
@@ -62,30 +67,35 @@ export default class ClientMetricsServiceV2 {
         clientIp: string,
     ): Promise<void> {
         const value = await clientMetricsSchema.validateAsync(data);
-        const toggleNames = Object.keys(value.bucket.toggles);
-        if (toggleNames.length > 0) {
-            await this.featureToggleStore.setLastSeen(toggleNames);
-        }
+        const toggleNames = Object.keys(value.bucket.toggles).filter(
+            (name) =>
+                !(
+                    value.bucket.toggles[name].yes === 0 &&
+                    value.bucket.toggles[name].no === 0
+                ),
+        );
 
         this.logger.debug(`got metrics from ${clientIp}`);
 
-        const clientMetrics: IClientMetricsEnv[] = toggleNames
-            .map((name) => ({
-                featureName: name,
-                appName: value.appName,
-                environment: value.environment,
-                timestamp: value.bucket.start, //we might need to approximate between start/stop...
-                yes: value.bucket.toggles[name].yes,
-                no: value.bucket.toggles[name].no,
-            }))
-            .filter((item) => !(item.yes === 0 && item.no === 0));
+        const clientMetrics: IClientMetricsEnv[] = toggleNames.map((name) => ({
+            featureName: name,
+            appName: value.appName,
+            environment: value.environment,
+            timestamp: value.bucket.start, //we might need to approximate between start/stop...
+            yes: value.bucket.toggles[name].yes,
+            no: value.bucket.toggles[name].no,
+        }));
 
         if (this.config.flagResolver.isEnabled('batchMetrics')) {
             this.unsavedMetrics = collapseHourlyMetrics([
                 ...this.unsavedMetrics,
                 ...clientMetrics,
             ]);
+            this.lastSeenService.updateLastSeen(clientMetrics);
         } else {
+            if (toggleNames.length > 0) {
+                await this.featureToggleStore.setLastSeen(toggleNames);
+            }
             await this.clientMetricsStoreV2.batchInsertMetrics(clientMetrics);
         }
 
@@ -161,5 +171,6 @@ export default class ClientMetricsServiceV2 {
 
     destroy(): void {
         this.timers.forEach(clearInterval);
+        this.lastSeenService.destroy();
     }
 }

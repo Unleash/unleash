@@ -55,6 +55,7 @@ export const EditGroupUsers: FC<IEditGroupUsersProps> = ({
     const { users, setUsers, getGroupPayload } = useGroupForm(
         group.name,
         group.description,
+        group.mappingsSSO,
         group.users
     );
 

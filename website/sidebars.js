@@ -29,6 +29,23 @@ module.exports = {
             ],
         },
         {
+            label: 'Topic guides',
+            collapsed: false,
+            type: 'category',
+            link: {
+                type: 'generated-index',
+                title: 'Topic guides',
+                description:
+                    'Discussions, explanations, and explorations regarding topics related to Unleash.',
+                slug: '/topics',
+            },
+            items: [
+                'topics/the-anatomy-of-unleash',
+                'topics/a-b-testing',
+                'topics/proxy-hosting',
+            ],
+        },
+        {
             label: 'How-to guides',
             collapsed: false,
             type: 'category',
@@ -50,6 +67,7 @@ module.exports = {
                     label: 'Unleash API guides',
                     items: [
                         'user_guide/api-token',
+                        'how-to/how-to-create-personal-access-tokens',
                         'advanced/api_access',
                         'how-to/how-to-enable-openapi',
                     ],
@@ -289,6 +307,7 @@ module.exports = {
                         'advanced/toggle_variants',
                         'reference/front-end-api',
                         'reference/playground',
+                        'reference/public-signup',
                         'user_guide/projects',
                         'user_guide/rbac',
                         'reference/segments',
@@ -302,19 +321,6 @@ module.exports = {
                     ],
                 },
             ],
-        },
-        {
-            label: 'Topic guides',
-            collapsed: false,
-            type: 'category',
-            link: {
-                type: 'generated-index',
-                title: 'Topic guides',
-                description:
-                    'Discussions, explanations, and explorations regarding topics related to Unleash.',
-                slug: '/topics',
-            },
-            items: ['topics/a-b-testing', 'topics/proxy-hosting'],
         },
     ],
 };

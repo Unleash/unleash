@@ -13,6 +13,8 @@
     --ifm-code-font-size: 90%;
     --ifm-font-size-base: 15px;
     --navbar-link-color: #122d33;
+
+    --unleash-font-size-smaller: 90%;
 }
 
 footer {
@@ -61,6 +63,12 @@ html[data-theme='dark'] {
     --unleash-img-background-color: #fff;
 
     --docsearch-primary-color: var(--ifm-color-primary-darkest);
+}
+
+div[class^='announcementBar_'],
+div[class^='announcementBar_'] svg {
+    background-color: var(--ifm-color-primary);
+    color: var(--ifm-color-primary-contrast-background);
 }
 
 .visually-hidden {

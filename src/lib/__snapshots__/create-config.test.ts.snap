@@ -71,7 +71,10 @@ exports[`should create default config 1`] = `
       "batchMetrics": false,
       "embedProxy": false,
       "embedProxyFrontend": false,
+      "personalAccessTokens": false,
       "publicSignup": false,
+      "responseTimeWithAppName": false,
+      "syncSSOGroups": false,
     },
   },
   "flagResolver": FlagResolver {
@@ -81,11 +84,17 @@ exports[`should create default config 1`] = `
       "batchMetrics": false,
       "embedProxy": false,
       "embedProxyFrontend": false,
+      "personalAccessTokens": false,
       "publicSignup": false,
+      "responseTimeWithAppName": false,
+      "syncSSOGroups": false,
     },
     "externalResolver": {
       "isEnabled": [Function],
     },
+  },
+  "frontendApi": {
+    "refreshIntervalInMs": 10000,
   },
   "frontendApiOrigins": [
     "*",

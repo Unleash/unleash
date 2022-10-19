@@ -20,7 +20,14 @@ const T = {
     ROLES: 'roles',
 };
 
-const GROUP_COLUMNS = ['id', 'name', 'description', 'created_at', 'created_by'];
+const GROUP_COLUMNS = [
+    'id',
+    'name',
+    'description',
+    'mappings_sso',
+    'created_at',
+    'created_by',
+];
 
 const rowToGroup = (row) => {
     if (!row) {
@@ -30,6 +37,7 @@ const rowToGroup = (row) => {
         id: row.id,
         name: row.name,
         description: row.description,
+        mappingsSSO: row.mappings_sso,
         createdAt: row.created_at,
         createdBy: row.created_by,
     });
@@ -46,9 +54,10 @@ const rowToGroupUser = (row) => {
     };
 };
 
-const groupToRow = (user: IStoreGroup) => ({
-    name: user.name,
-    description: user.description,
+const groupToRow = (group: IStoreGroup) => ({
+    name: group.name,
+    description: group.description,
+    mappings_sso: JSON.stringify(group.mappingsSSO),
 });
 
 export default class GroupStore implements IGroupStore {
@@ -69,10 +78,7 @@ export default class GroupStore implements IGroupStore {
     async update(group: IGroupModel): Promise<IGroup> {
         const rows = await this.db(T.GROUPS)
             .where({ id: group.id })
-            .update({
-                name: group.name,
-                description: group.description,
-            })
+            .update(groupToRow(group))
             .returning(GROUP_COLUMNS);
 
         return rowToGroup(rows[0]);
@@ -163,7 +169,7 @@ export default class GroupStore implements IGroupStore {
         return rowToGroup(row[0]);
     }
 
-    async addNewUsersToGroup(
+    async addUsersToGroup(
         groupId: number,
         users: IGroupUserModel[],
         userName: string,
@@ -179,7 +185,7 @@ export default class GroupStore implements IGroupStore {
         return (transaction || this.db).batchInsert(T.GROUP_USER, rows);
     }
 
-    async deleteOldUsersFromGroup(
+    async deleteUsersFromGroup(
         deletableUsers: IGroupUser[],
         transaction?: Transaction,
     ): Promise<void> {
@@ -199,8 +205,67 @@ export default class GroupStore implements IGroupStore {
         userName: string,
     ): Promise<void> {
         await this.db.transaction(async (tx) => {
-            await this.addNewUsersToGroup(groupId, newUsers, userName, tx);
-            await this.deleteOldUsersFromGroup(deletableUsers, tx);
+            await this.addUsersToGroup(groupId, newUsers, userName, tx);
+            await this.deleteUsersFromGroup(deletableUsers, tx);
         });
+    }
+
+    async getNewGroupsForExternalUser(
+        userId: number,
+        externalGroups: string[],
+    ): Promise<IGroup[]> {
+        const rows = await this.db(`${T.GROUPS} as g`)
+            .leftJoin(`${T.GROUP_USER} as gs`, function () {
+                this.on('g.id', 'gs.group_id').andOnVal(
+                    'gs.user_id',
+                    '=',
+                    userId,
+                );
+            })
+            .where('gs.user_id', null)
+            .whereRaw('mappings_sso \\?| :groups', { groups: externalGroups });
+        return rows.map(rowToGroup);
+    }
+
+    async addUserToGroups(
+        userId: number,
+        groupIds: number[],
+        createdBy?: string,
+    ): Promise<void> {
+        const rows = groupIds.map((groupId) => {
+            return {
+                group_id: groupId,
+                user_id: userId,
+                created_by: createdBy,
+            };
+        });
+        return this.db.batchInsert(T.GROUP_USER, rows);
+    }
+
+    async getOldGroupsForExternalUser(
+        userId: number,
+        externalGroups: string[],
+    ): Promise<IGroupUser[]> {
+        const rows = await this.db(`${T.GROUP_USER} as gu`)
+            .leftJoin(`${T.GROUPS} as g`, 'g.id', 'gu.group_id')
+            .whereNotIn(
+                'g.id',
+                this.db(T.GROUPS)
+                    .select('id')
+                    .whereRaw('mappings_sso \\?| :groups', {
+                        groups: externalGroups,
+                    })
+                    .orWhereRaw('jsonb_array_length(mappings_sso) = 0'),
+            )
+            .where('gu.user_id', userId);
+
+        return rows.map(rowToGroupUser);
+    }
+
+    async getGroupsForUser(userId: number): Promise<Group[]> {
+        const rows = await this.db(T.GROUPS)
+            .leftJoin(T.GROUP_USER, 'groups.id', 'group_user.group_id')
+            .where('user_id', userId);
+        return rows.map(rowToGroup);
     }
 }

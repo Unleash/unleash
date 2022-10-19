@@ -13,7 +13,7 @@ import { UnleashEvents } from 'unleash-client';
 import { ANY_EVENT } from '../util/anyEventEmitter';
 import { Logger } from '../logger';
 
-type Config = Pick<IUnleashConfig, 'getLogger'>;
+type Config = Pick<IUnleashConfig, 'getLogger' | 'frontendApi'>;
 
 type Stores = Pick<IUnleashStores, 'projectStore' | 'eventStore'>;
 
@@ -40,6 +40,10 @@ export class ProxyRepository
 
     private segments: Segment[];
 
+    private interval: number;
+
+    private timer: NodeJS.Timer;
+
     constructor(
         config: Config,
         stores: Stores,
@@ -53,6 +57,7 @@ export class ProxyRepository
         this.services = services;
         this.token = token;
         this.onAnyEvent = this.onAnyEvent.bind(this);
+        this.interval = config.frontendApi.refreshIntervalInMs;
     }
 
     getSegment(id: number): Segment | undefined {
@@ -80,11 +85,24 @@ export class ProxyRepository
 
     stop(): void {
         this.stores.eventStore.off(ANY_EVENT, this.onAnyEvent);
+        clearTimeout(this.timer);
     }
 
     private async loadDataForToken() {
-        this.features = await this.featuresForToken();
-        this.segments = await this.segmentsForToken();
+        this.timer = setTimeout(async () => {
+            await this.loadDataForToken();
+        }, this.randomizeDelay(this.interval, this.interval * 2)).unref();
+
+        try {
+            this.features = await this.featuresForToken();
+            this.segments = await this.segmentsForToken();
+        } catch (e) {
+            this.logger.error(e);
+        }
+    }
+
+    private randomizeDelay(floor: number, ceiling: number): number {
+        return Math.floor(Math.random() * (ceiling - floor) + floor);
     }
 
     private async onAnyEvent() {

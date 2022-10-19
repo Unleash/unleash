@@ -5,6 +5,7 @@ export interface IGroup {
     id?: number;
     name: string;
     description?: string;
+    mappingsSSO?: string[];
     createdAt?: Date;
     userCount?: number;
     createdBy?: string;
@@ -57,7 +58,16 @@ export default class Group implements IGroup {
 
     description: string;
 
-    constructor({ id, name, description, createdBy, createdAt }: IGroup) {
+    mappingsSSO: string[];
+
+    constructor({
+        id,
+        name,
+        description,
+        mappingsSSO,
+        createdBy,
+        createdAt,
+    }: IGroup) {
         if (!id) {
             throw new TypeError('Id is required');
         }
@@ -67,6 +77,7 @@ export default class Group implements IGroup {
         this.id = id;
         this.name = name;
         this.description = description;
+        this.mappingsSSO = mappingsSSO;
         this.createdBy = createdBy;
         this.createdAt = createdAt;
     }

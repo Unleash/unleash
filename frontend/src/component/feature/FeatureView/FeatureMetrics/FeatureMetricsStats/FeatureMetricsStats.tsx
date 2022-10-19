@@ -1,6 +1,7 @@
 import { calculatePercentage } from 'utils/calculatePercentage';
 import { useStyles } from './FeatureMetricsStats.styles';
 import { Grid } from '@mui/material';
+import { PrettifyLargeNumber } from 'component/common/PrettifyLargeNumber/PrettifyLargeNumber';
 
 export interface IFeatureMetricsStatsProps {
     totalYes: number;
@@ -34,7 +35,9 @@ export const FeatureMetricsStats = ({
             <Grid item xs={12} sm={4}>
                 <article className={styles.item}>
                     <h3 className={styles.title}>Exposure</h3>
-                    <p className={styles.value}>{totalYes}</p>
+                    <p className={styles.value}>
+                        <PrettifyLargeNumber value={totalYes} />
+                    </p>
                     <p className={styles.text}>
                         Total exposure of the feature in the environment{' '}
                         {hoursSuffix}.
@@ -56,7 +59,9 @@ export const FeatureMetricsStats = ({
             <Grid item xs={12} sm={4}>
                 <article className={styles.item}>
                     <h3 className={styles.title}>Requests</h3>
-                    <p className={styles.value}>{totalYes + totalNo}</p>
+                    <p className={styles.value}>
+                        <PrettifyLargeNumber value={totalYes + totalNo} />
+                    </p>
                     <p className={styles.text}>
                         Total requests for the feature in the environment{' '}
                         {hoursSuffix}.

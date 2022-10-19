@@ -218,6 +218,7 @@ beforeAll(async () => {
         stores,
         config,
         new SegmentService(stores, config),
+        accessService,
     );
     projectService = new ProjectService(
         stores,
@@ -880,7 +881,7 @@ test('Should be allowed move feature toggle to project when given access through
         description: '',
     });
 
-    await groupStore.addNewUsersToGroup(
+    await groupStore.addUsersToGroup(
         groupWithProjectAccess.id,
         [{ user: viewerUser }],
         'Admin',
@@ -917,7 +918,7 @@ test('Should not lose user role access when given permissions from a group', asy
         description: '',
     });
 
-    await groupStore.addNewUsersToGroup(
+    await groupStore.addUsersToGroup(
         groupWithNoAccess.id,
         [{ user: user }],
         'Admin',
@@ -966,13 +967,13 @@ test('Should allow user to take multiple group roles and have expected permissio
         description: '',
     });
 
-    await groupStore.addNewUsersToGroup(
+    await groupStore.addUsersToGroup(
         groupWithCreateAccess.id,
         [{ user: viewerUser }],
         'Admin',
     );
 
-    await groupStore.addNewUsersToGroup(
+    await groupStore.addUsersToGroup(
         groupWithDeleteAccess.id,
         [{ user: viewerUser }],
         'Admin',

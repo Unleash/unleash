@@ -9,7 +9,7 @@ import AdminUsers from 'component/admin/users/UsersAdmin';
 import { GroupsAdmin } from 'component/admin/groups/GroupsAdmin';
 import { AuthSettings } from 'component/admin/auth/AuthSettings';
 import Login from 'component/user/Login/Login';
-import { C, EEA, P, RE, SE, UG } from 'component/common/flags';
+import { EEA, P, RE, SE, UG } from 'component/common/flags';
 import { NewUser } from 'component/user/NewUser/NewUser';
 import ResetPassword from 'component/user/ResetPassword/ResetPassword';
 import ForgottenPassword from 'component/user/ForgottenPassword/ForgottenPassword';
@@ -57,6 +57,8 @@ import { CreateGroup } from 'component/admin/groups/CreateGroup/CreateGroup';
 import { EditGroup } from 'component/admin/groups/EditGroup/EditGroup';
 import { LazyPlayground } from 'component/playground/Playground/LazyPlayground';
 import { CorsAdmin } from 'component/admin/cors';
+import { InviteLink } from 'component/admin/users/InviteLink/InviteLink';
+import { Profile } from 'component/user/Profile/Profile';
 
 export const routes: IRoute[] = [
     // Splash
@@ -203,7 +205,6 @@ export const routes: IRoute[] = [
         title: 'Create',
         component: CreateUnleashContextPage,
         type: 'protected',
-        flag: C,
         menu: {},
     },
     {
@@ -212,7 +213,6 @@ export const routes: IRoute[] = [
         title: ':name',
         component: EditContext,
         type: 'protected',
-        flag: C,
         menu: {},
     },
     {
@@ -220,7 +220,6 @@ export const routes: IRoute[] = [
         title: 'Context fields',
         component: ContextList,
         type: 'protected',
-        flag: C,
         menu: { mobile: true, advanced: true },
     },
 
@@ -438,6 +437,14 @@ export const routes: IRoute[] = [
         menu: {},
     },
     {
+        path: '/admin/invite-link',
+        parent: '/admin',
+        title: 'Invite link',
+        component: InviteLink,
+        type: 'protected',
+        menu: {},
+    },
+    {
         path: '/admin/groups',
         parent: '/admin',
         title: 'Groups',
@@ -520,6 +527,13 @@ export const routes: IRoute[] = [
         title: 'Admin',
         component: Admin,
         hidden: false,
+        type: 'protected',
+        menu: {},
+    },
+    {
+        path: '/profile/*',
+        title: 'Profile',
+        component: Profile,
         type: 'protected',
         menu: {},
     },

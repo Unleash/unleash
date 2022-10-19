@@ -42,19 +42,6 @@ const GeneralSelect: React.FC<IGeneralSelectProps> = ({
     fullWidth,
     ...rest
 }) => {
-    const renderSelectItems = () =>
-        options.map(option => (
-            <MenuItem
-                key={option.key}
-                value={option.key}
-                title={option.title || ''}
-                data-testid={`${SELECT_ITEM_ID}-${option.label}`}
-                disabled={option.disabled}
-            >
-                {option.label}
-            </MenuItem>
-        ));
-
     const onSelectChange = (event: SelectChangeEvent) => {
         event.preventDefault();
         onChange(String(event.target.value));
@@ -79,7 +66,17 @@ const GeneralSelect: React.FC<IGeneralSelectProps> = ({
                 IconComponent={KeyboardArrowDownOutlined}
                 {...rest}
             >
-                {renderSelectItems()}
+                {options.map(option => (
+                    <MenuItem
+                        key={option.key}
+                        value={option.key}
+                        title={option.title || ''}
+                        data-testid={`${SELECT_ITEM_ID}-${option.label}`}
+                        disabled={option.disabled}
+                    >
+                        {option.label}
+                    </MenuItem>
+                ))}
             </Select>
         </FormControl>
     );

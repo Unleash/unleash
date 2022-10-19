@@ -10,6 +10,14 @@ export const defaultExperimentalOptions = {
             process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY,
             false,
         ),
+        personalAccessTokens: parseEnvVarBoolean(
+            process.env.UNLEASH_EXPERIMENTAL_PERSONAL_ACCESS_TOKENS,
+            false,
+        ),
+        syncSSOGroups: parseEnvVarBoolean(
+            process.env.UNLEASH_EXPERIMENTAL_SYNC_SSO_GROUPS,
+            false,
+        ),
         embedProxyFrontend: parseEnvVarBoolean(
             process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY_FRONTEND,
             false,
@@ -20,6 +28,10 @@ export const defaultExperimentalOptions = {
         ),
         publicSignup: parseEnvVarBoolean(
             process.env.UNLEASH_EXPERIMENTAL_PUBLIC_SIGNUP,
+            false,
+        ),
+        responseTimeWithAppName: parseEnvVarBoolean(
+            process.env.UNLEASH_EXPERIMENTAL_RESPONSE_TIME_WITH_APP_NAME,
             false,
         ),
     },
@@ -34,6 +46,8 @@ export interface IExperimentalOptions {
         embedProxyFrontend?: boolean;
         batchMetrics?: boolean;
         anonymiseEventLog?: boolean;
+        personalAccessTokens?: boolean;
+        syncSSOGroups?: boolean;
     };
     externalResolver: IExternalFlagResolver;
 }

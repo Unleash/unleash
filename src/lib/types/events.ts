@@ -80,8 +80,7 @@ export const PAT_CREATED = 'pat-created';
 
 export const PUBLIC_SIGNUP_TOKEN_CREATED = 'public-signup-token-created';
 export const PUBLIC_SIGNUP_TOKEN_USER_ADDED = 'public-signup-token-user-added';
-export const PUBLIC_SIGNUP_TOKEN_MANUALLY_EXPIRED =
-    'public-signup-token-manually-expired';
+export const PUBLIC_SIGNUP_TOKEN_TOKEN_UPDATED = 'public-signup-token-updated';
 
 export interface IBaseEvent {
     type: string;
@@ -548,11 +547,11 @@ export class PublicSignupTokenCreatedEvent extends BaseEvent {
     }
 }
 
-export class PublicSignupTokenManuallyExpiredEvent extends BaseEvent {
+export class PublicSignupTokenUpdatedEvent extends BaseEvent {
     readonly data: any;
 
     constructor(eventData: { createdBy: string; data: any }) {
-        super(PUBLIC_SIGNUP_TOKEN_MANUALLY_EXPIRED, eventData.createdBy);
+        super(PUBLIC_SIGNUP_TOKEN_TOKEN_UPDATED, eventData.createdBy);
         this.data = eventData.data;
     }
 }

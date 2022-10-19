@@ -6,7 +6,7 @@ export default class FakePatStore implements IPatStore {
         throw new Error('Method not implemented.');
     }
 
-    delete(key: string): Promise<void> {
+    delete(key: number): Promise<void> {
         throw new Error('Method not implemented.');
     }
 
@@ -16,11 +16,18 @@ export default class FakePatStore implements IPatStore {
 
     destroy(): void {}
 
-    exists(key: string): Promise<boolean> {
+    exists(key: number): Promise<boolean> {
         throw new Error('Method not implemented.');
     }
 
-    get(key: string): Promise<IPat> {
+    existsWithDescriptionByUser(
+        description: string,
+        userId: number,
+    ): Promise<boolean> {
+        throw new Error('Method not implemented.');
+    }
+
+    get(key: number): Promise<IPat> {
         throw new Error('Method not implemented.');
     }
 
@@ -29,6 +36,10 @@ export default class FakePatStore implements IPatStore {
     }
 
     getAllByUser(userId: number): Promise<IPat[]> {
+        throw new Error('Method not implemented.');
+    }
+
+    deleteForUser(id: number, userId: number): Promise<void> {
         throw new Error('Method not implemented.');
     }
 }

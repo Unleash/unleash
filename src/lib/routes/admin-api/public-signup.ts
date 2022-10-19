@@ -1,7 +1,7 @@
 import { Response } from 'express';
 
 import Controller from '../controller';
-import { ADMIN, NONE } from '../../types/permissions';
+import { ADMIN } from '../../types/permissions';
 import { Logger } from '../../logger';
 import { AccessService } from '../../services/access-service';
 import { IAuthRequest } from '../unleash-types';
@@ -13,10 +13,6 @@ import {
     resourceCreatedResponseSchema,
 } from '../../openapi/util/create-response-schema';
 import { serializeDates } from '../../types/serialize-dates';
-import {
-    emptyResponse,
-    getStandardResponses,
-} from '../../openapi/util/standard-responses';
 import { PublicSignupTokenService } from '../../services/public-signup-token-service';
 import UserService from '../../services/user-service';
 import {
@@ -29,8 +25,6 @@ import {
 } from '../../openapi/spec/public-signup-tokens-schema';
 import { PublicSignupTokenCreateSchema } from '../../openapi/spec/public-signup-token-create-schema';
 import { PublicSignupTokenUpdateSchema } from '../../openapi/spec/public-signup-token-update-schema';
-import { CreateUserSchema } from '../../openapi/spec/create-user-schema';
-import { UserSchema, userSchema } from '../../openapi/spec/user-schema';
 import { extractUsername } from '../../util/extract-user';
 
 interface TokenParam {
@@ -78,6 +72,7 @@ export class PublicSignupController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Public signup tokens'],
+                    summary: 'Retrieve all existing public signup tokens',
                     operationId: 'getAllPublicSignupTokens',
                     responses: {
                         200: createResponseSchema('publicSignupTokensSchema'),
@@ -95,6 +90,7 @@ export class PublicSignupController extends Controller {
                 openApiService.validPath({
                     tags: ['Public signup tokens'],
                     operationId: 'createPublicSignupToken',
+                    summary: 'Create a public signup token',
                     requestBody: createRequestSchema(
                         'publicSignupTokenCreateSchema',
                     ),
@@ -108,24 +104,6 @@ export class PublicSignupController extends Controller {
         });
 
         this.route({
-            method: 'post',
-            path: '/tokens/:token/signup',
-            handler: this.addTokenUser,
-            permission: NONE,
-            middleware: [
-                openApiService.validPath({
-                    tags: ['Public signup tokens'],
-                    operationId: 'addPublicSignupTokenUser',
-                    requestBody: createRequestSchema('createUserSchema'),
-                    responses: {
-                        200: createResponseSchema('userSchema'),
-                        ...getStandardResponses(409),
-                    },
-                }),
-            ],
-        });
-
-        this.route({
             method: 'get',
             path: '/tokens/:token',
             handler: this.getPublicSignupToken,
@@ -133,6 +111,9 @@ export class PublicSignupController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Public signup tokens'],
+                    summary: 'Retrieve a token',
+                    description:
+                        "Get information about a specific token. The `:token` part of the URL should be the token's secret.",
                     operationId: 'getPublicSignupToken',
                     responses: {
                         200: createResponseSchema('publicSignupTokenSchema'),
@@ -150,46 +131,12 @@ export class PublicSignupController extends Controller {
                 openApiService.validPath({
                     tags: ['Public signup tokens'],
                     operationId: 'updatePublicSignupToken',
+                    summary: 'Update a public signup token',
                     requestBody: createRequestSchema(
                         'publicSignupTokenUpdateSchema',
                     ),
                     responses: {
-                        200: emptyResponse,
-                    },
-                }),
-            ],
-        });
-
-        this.route({
-            method: 'delete',
-            path: '/tokens/:token',
-            handler: this.deletePublicSignupToken,
-            acceptAnyContentType: true,
-            permission: ADMIN,
-            middleware: [
-                openApiService.validPath({
-                    tags: ['Public signup tokens'],
-                    operationId: 'deletePublicSignupToken',
-                    responses: {
-                        200: emptyResponse,
-                    },
-                }),
-            ],
-        });
-
-        this.route({
-            method: 'post',
-            path: '/tokens/:token/validate',
-            handler: this.validate,
-            acceptAnyContentType: true,
-            permission: NONE,
-            middleware: [
-                openApiService.validPath({
-                    tags: ['Public signup tokens'],
-                    operationId: 'validatePublicSignupToken',
-                    responses: {
-                        200: emptyResponse,
-                        401: emptyResponse,
+                        200: createResponseSchema('publicSignupTokenSchema'),
                     },
                 }),
             ],
@@ -223,33 +170,6 @@ export class PublicSignupController extends Controller {
         );
     }
 
-    async validate(
-        req: IAuthRequest<TokenParam, void, CreateUserSchema>,
-        res: Response,
-    ): Promise<void> {
-        const { token } = req.params;
-        const valid = await this.publicSignupTokenService.validate(token);
-        if (valid) return res.status(200).end();
-        else return res.status(401).end();
-    }
-
-    async addTokenUser(
-        req: IAuthRequest<TokenParam, void, CreateUserSchema>,
-        res: Response<UserSchema>,
-    ): Promise<void> {
-        const { token } = req.params;
-        const user = await this.publicSignupTokenService.addTokenUser(
-            token,
-            req.body,
-        );
-        this.openApiService.respondWithValidation(
-            201,
-            res,
-            userSchema.$id,
-            serializeDates(user),
-        );
-    }
-
     async createPublicSignupToken(
         req: IAuthRequest<void, void, PublicSignupTokenCreateSchema>,
         res: Response<PublicSignupTokenSchema>,
@@ -274,28 +194,27 @@ export class PublicSignupController extends Controller {
         res: Response,
     ): Promise<any> {
         const { token } = req.params;
-        const { expiresAt } = req.body;
+        const { expiresAt, enabled } = req.body;
 
-        if (!expiresAt) {
+        if (!expiresAt && enabled === undefined) {
             this.logger.error(req.body);
             return res.status(400).send();
         }
 
-        await this.publicSignupTokenService.setExpiry(
+        const result = await this.publicSignupTokenService.update(
             token,
-            new Date(expiresAt),
+            {
+                ...(enabled === undefined ? {} : { enabled }),
+                ...(expiresAt ? { expiresAt: new Date(expiresAt) } : {}),
+            },
+            extractUsername(req),
         );
-        return res.status(200).end();
-    }
 
-    async deletePublicSignupToken(
-        req: IAuthRequest<TokenParam>,
-        res: Response,
-    ): Promise<void> {
-        const { token } = req.params;
-        const username = extractUsername(req);
-
-        await this.publicSignupTokenService.delete(token, username);
-        res.status(200).end();
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            publicSignupTokenSchema.$id,
+            serializeDates(result),
+        );
     }
 }

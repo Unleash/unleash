@@ -11,6 +11,7 @@ test('publicSignupTokenSchema', () => {
         role: { name: 'Viewer ', type: 'type', id: 1 },
         createdAt: new Date().toISOString(),
         createdBy: 'someone',
+        enabled: true,
     };
 
     expect(

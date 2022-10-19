@@ -23,6 +23,7 @@ import secureHeaders from './middleware/secure-headers';
 import { loadIndexHTML } from './util/load-index-html';
 import { findPublicFolder } from './util/findPublicFolder';
 import { conditionalMiddleware } from './middleware/conditional-middleware';
+import patMiddleware from './middleware/pat-middleware';
 
 export default async function getApp(
     config: IUnleashConfig,
@@ -41,7 +42,7 @@ export default async function getApp(
     app.set('port', config.server.port);
     app.locals.baseUriPath = baseUriPath;
     if (config.server.serverMetrics && config.eventBus) {
-        app.use(responseTimeMetrics(config.eventBus));
+        app.use(responseTimeMetrics(config.eventBus, config.flagResolver));
     }
 
     app.use(requestLogger(config));
@@ -74,12 +75,14 @@ export default async function getApp(
     // Preflight requests should not have Authorization headers,
     // so this must be handled before the API token middleware.
     app.options(
-        '/api/frontend*',
+        `${baseUriPath}/api/frontend*`,
         conditionalMiddleware(
             () => config.flagResolver.isEnabled('embedProxy'),
             corsOriginMiddleware(services),
         ),
     );
+
+    app.use(baseUriPath, patMiddleware(config, services));
 
     switch (config.authentication.type) {
         case IAuthType.OPEN_SOURCE: {

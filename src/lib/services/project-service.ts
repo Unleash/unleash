@@ -574,6 +574,10 @@ export default class ProjectService {
         return this.store.getMembersCountByProject(projectId);
     }
 
+    async getProjectsByUser(userId: number): Promise<string[]> {
+        return this.store.getProjectsByUser(userId);
+    }
+
     async getProjectOverview(
         projectId: string,
         archived: boolean = false,

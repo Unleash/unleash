@@ -4,6 +4,7 @@ import { IFeatureEnvironmentMetrics } from 'interfaces/featureToggle';
 import { calculatePercentage } from 'utils/calculatePercentage';
 import PercentageCircle from 'component/common/PercentageCircle/PercentageCircle';
 import { useStyles } from './FeatureOverviewEnvironmentMetrics.styles';
+import { PrettifyLargeNumber } from 'component/common/PrettifyLargeNumber/PrettifyLargeNumber';
 
 interface IFeatureOverviewEnvironmentMetrics {
     environmentMetric?: IFeatureEnvironmentMetrics;
@@ -68,9 +69,15 @@ const FeatureOverviewEnvironmentMetrics = ({
                 <p className={styles.percentage}>{percentage}%</p>
                 <p className={styles.infoParagraph}>
                     The feature has been requested{' '}
-                    <b>{environmentMetric.yes + environmentMetric.no} times</b>{' '}
-                    and exposed <b>{environmentMetric.yes} times</b> in the last
-                    hour
+                    <b>
+                        <PrettifyLargeNumber value={total} /> times
+                    </b>{' '}
+                    and exposed{' '}
+                    <b>
+                        <PrettifyLargeNumber value={environmentMetric.yes} />{' '}
+                        times
+                    </b>{' '}
+                    in the last hour
                 </p>
             </div>
             <div className={styles.percentageCircle} data-loading>

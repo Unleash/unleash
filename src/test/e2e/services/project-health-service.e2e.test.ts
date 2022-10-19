@@ -33,6 +33,7 @@ beforeAll(async () => {
         stores,
         config,
         new SegmentService(stores, config),
+        accessService,
     );
     projectService = new ProjectService(
         stores,

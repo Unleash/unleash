@@ -1,5 +1,7 @@
 <div align="center">
 
+## 🚀 Unleash 4.16 brings powerful Constraints feature to OSS users. [Read more →](https://www.getunleash.io/blog/unleash-brings-powerful-constraints-feature-to-oss-users?utm_source=github&utm_medium=community&utm_campaign=constraints_04102026)
+
 <a href="https://getunleash.io" title="Unleash - Create with freedom. Release with confidence">
     <img src="./.github/github_header_opaque_landscape.svg" alt="The Unleash website">
 </a>
@@ -8,6 +10,8 @@
 <br/>
 
 [![Build and Tests](https://img.shields.io/github/workflow/status/unleash/unleash/Build%20%26%20Tests)](https://github.com/Unleash/unleash/actions/workflows/build.yaml) [![Coverage Status](https://coveralls.io/repos/github/Unleash/unleash/badge.svg?branch=main)](https://coveralls.io/github/Unleash/unleash?branch=main) [![Docker Pulls](https://img.shields.io/docker/pulls/unleashorg/unleash-server)](https://hub.docker.com/r/unleashorg/unleash-server) [![Apache-2.0 license](https://img.shields.io/github/license/unleash/unleash)](https://github.com/Unleash/unleash/blob/main/LICENSE) [![Join Unleash on Slack](https://img.shields.io/badge/slack-join-635dc5?logo=slack)](https://slack.unleash.run)
+
+[Open Live Demo →](https://www.getunleash.io/interactive-demo)
 
 </div>
 
@@ -207,6 +211,12 @@ If none of the official SDKs fit your need, there's also a number of [community-
 **Proud Open-Source users:** (send us a message if you want to add your logo here)
 
 ![The Unleash logo encircled by logos for Finn.no, nav (the Norwegian Labour and Welfare Administration), Budgets, Otovo, and Amedia. The encircling logos are all connected to the Unleash logo.](./.github/github_unleash_users.svg)
+
+<br/>
+
+## Migration guides
+
+Unleash has evolved significantly over the past few years, and we know how hard it can be to keep software up to date. If you're using the current major version, upgrading shouldn't be an issue. If you're on a previous major version, check out the [Unleash migration guide](https://docs.getunleash.io/deploy/migration_guide)!
 
 <br/>
 

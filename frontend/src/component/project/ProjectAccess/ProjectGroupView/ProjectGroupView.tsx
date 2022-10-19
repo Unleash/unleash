@@ -89,7 +89,11 @@ const columns = [
         Header: 'Last login',
         accessor: (row: IGroupUser) => row.seenAt || '',
         Cell: ({ row: { original: user } }: any) => (
-            <TimeAgoCell value={user.seenAt} emptyText="Never" />
+            <TimeAgoCell
+                value={user.seenAt}
+                emptyText="Never"
+                title={date => `Last login: ${date}`}
+            />
         ),
         sortType: 'date',
         maxWidth: 150,

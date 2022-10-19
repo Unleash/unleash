@@ -35,6 +35,7 @@ import { ProxyService } from './proxy-service';
 import EdgeService from './edge-service';
 import PatService from './pat-service';
 import { PublicSignupTokenService } from './public-signup-token-service';
+import { LastSeenService } from './client-metrics/last-seen-service';
 export const createServices = (
     stores: IUnleashStores,
     config: IUnleashConfig,
@@ -43,7 +44,12 @@ export const createServices = (
     const accessService = new AccessService(stores, config, groupService);
     const apiTokenService = new ApiTokenService(stores, config);
     const clientInstanceService = new ClientInstanceService(stores, config);
-    const clientMetricsServiceV2 = new ClientMetricsServiceV2(stores, config);
+    const lastSeenService = new LastSeenService(stores, config);
+    const clientMetricsServiceV2 = new ClientMetricsServiceV2(
+        stores,
+        config,
+        lastSeenService,
+    );
     const contextService = new ContextService(stores, config);
     const emailService = new EmailService(config.email, config.getLogger);
     const eventService = new EventService(stores, config);
@@ -71,6 +77,7 @@ export const createServices = (
         stores,
         config,
         segmentService,
+        accessService,
     );
     const environmentService = new EnvironmentService(stores, config);
     const featureTagService = new FeatureTagService(stores, config);
@@ -146,6 +153,7 @@ export const createServices = (
         edgeService,
         patService,
         publicSignupTokenService,
+        lastSeenService,
     };
 };
 

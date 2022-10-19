@@ -96,6 +96,12 @@ Keep-Alive: timeout=5
 
 ## Custom activation strategies
 
+:::info Limitations for hosted proxies
+
+Custom activation strategies can **not** be used with the Unleash-hosted proxy available to Pro and Enterprise customers.
+
+:::
+
 The Unleash Proxy can load [custom activation strategies](../advanced/custom-activation-strategy.md) for front-end client SDKs ([Android](../sdks/android-proxy.md), [JavaScript](../sdks/proxy-javascript.md), [React](../sdks/proxy-react.md), [iOS](../sdks/proxy-ios.md)). For a step-by-step guide, refer to the [_how to use custom strategies_ guide](../how-to/how-to-use-custom-strategies.md#step-3-b).
 
 To load custom strategies, use either of these two options:

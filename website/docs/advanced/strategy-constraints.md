@@ -4,16 +4,21 @@ title: Strategy Constraints
 ---
 
 :::info Availability
-Strategy constraints are available to Unleash Pro and Enterprise users.
+
+Before Unleash 4.16, strategy constraints were only available to Unleash Pro and Enterprise users. From 4.16 onwards, they're **available to everyone**.
+
 
 Unleash 4.9 introduced a more comprehensive set of constraint operators. These require that both Unleash *and* your client SDK of choice support them. See the [SDK compatibility table](../sdks/index.md#strategy-constraints) for more information. Prior to Unleash 4.9, the only available operators were `IN` and `NOT_IN`.
+
 :::
 
 :::caution undefined behavior
+
 When using _advanced strategy constraints_ (any operator that isn't `IN` or `NOT_IN`), *make sure your client SDK is up to date* and supports this feature. For older versions of the client SDKs we **cannot guarantee** any specific behavior. Please see the [incompatibilities section](#incompatibilities) for more information.
+
 :::
 
-**Strategy constraints** are conditions that must be satisifed for an [activation strategy](../user_guide/activation_strategy) to be evaluated for a feature toggle.
+**Strategy constraints** are conditions that must be satisfied for an [activation strategy](../user_guide/activation_strategy) to be evaluated for a feature toggle.
 With strategy constraints, you can:
 - roll out a feature **only to users in a specific region**
 - schedule a feature to be **released at a specific time**
@@ -40,7 +45,7 @@ By using [custom context fields](../user_guide/unleash_context#custom-context-fi
 
 You can also combine strategy constraints with the [gradual rollout strategy](../user_guide/activation_strategy#gradual-rollout) to do a gradual rollout to a **specific segment** of your user base.
 
-![A toggle with the gradual rollout strategy. The toggle is constrained on the custom content field "region" and set to only activate if the region is Africa or Europe.](/img/custom-constraints.png)
+![A toggle with the gradual rollout strategy. The toggle is constrained on the custom content field "region" and set to only activate if the region is Africa or Europe.](/img/strategy-constraints.png)
 
 ## Constraint structure
 

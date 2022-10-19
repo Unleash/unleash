@@ -5,12 +5,14 @@ import { IGroupUser } from 'interfaces/group';
 export const useGroupForm = (
     initialName = '',
     initialDescription = '',
+    initialMappingsSSO: string[] = [],
     initialUsers: IGroupUser[] = []
 ) => {
     const params = useQueryParams();
     const groupQueryName = params.get('name');
     const [name, setName] = useState(groupQueryName || initialName);
     const [description, setDescription] = useState(initialDescription);
+    const [mappingsSSO, setMappingsSSO] = useState(initialMappingsSSO);
     const [users, setUsers] = useState<IGroupUser[]>(initialUsers);
     const [errors, setErrors] = useState({});
 
@@ -18,6 +20,7 @@ export const useGroupForm = (
         return {
             name,
             description,
+            mappingsSSO,
             users: users.map(({ id }) => ({
                 user: { id },
             })),
@@ -33,6 +36,8 @@ export const useGroupForm = (
         setName,
         description,
         setDescription,
+        mappingsSSO,
+        setMappingsSSO,
         users,
         setUsers,
         getGroupPayload,

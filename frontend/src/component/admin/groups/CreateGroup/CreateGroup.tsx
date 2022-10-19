@@ -22,6 +22,8 @@ export const CreateGroup = () => {
         setName,
         description,
         setDescription,
+        mappingsSSO,
+        setMappingsSSO,
         users,
         setUsers,
         getGroupPayload,
@@ -92,9 +94,11 @@ export const CreateGroup = () => {
             <GroupForm
                 name={name}
                 description={description}
+                mappingsSSO={mappingsSSO}
                 users={users}
                 setName={onSetName}
                 setDescription={setDescription}
+                setMappingsSSO={setMappingsSSO}
                 setUsers={setUsers}
                 errors={errors}
                 handleSubmit={handleSubmit}

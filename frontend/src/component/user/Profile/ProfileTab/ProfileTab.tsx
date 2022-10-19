@@ -19,17 +19,23 @@ import TopicOutlinedIcon from '@mui/icons-material/TopicOutlined';
 import { useNavigate } from 'react-router-dom';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { IAchievement } from 'interfaces/achievement';
+import { ProfileAchievements } from './ProfileAchievements/ProfileAchievements';
 
 const StyledHeader = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: theme.spacing(6),
+    position: 'relative',
     borderRadius: theme.shape.borderRadiusLarge,
     backgroundColor: theme.palette.primary.main,
     color: theme.palette.text.tertiaryContrast,
     marginBottom: theme.spacing(3),
     boxShadow: theme.boxShadows.primaryHeader,
+}));
+
+const StyledHeaderContent = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: theme.spacing(6),
 }));
 
 const StyledInfo = styled('div')(() => ({
@@ -38,6 +44,14 @@ const StyledInfo = styled('div')(() => ({
 
 const StyledInfoName = styled(Typography)(({ theme }) => ({
     fontSize: theme.spacing(3.75),
+}));
+
+const StyledProfileAchievements = styled(ProfileAchievements)(({ theme }) => ({
+    position: 'absolute',
+    bottom: theme.spacing(1.5),
+    right: theme.spacing(1.5),
+    display: 'flex',
+    gap: theme.spacing(1),
 }));
 
 const StyledAvatar = styled(UserAvatar)(({ theme }) => ({
@@ -122,13 +136,16 @@ export const ProfileTab = ({ user }: IProfileTabProps) => {
     return (
         <>
             <StyledHeader>
-                <StyledAvatar user={user} />
-                <StyledInfo>
-                    <StyledInfoName>
-                        {user.name || user.username}
-                    </StyledInfoName>
-                    <Typography variant="body1">{user.email}</Typography>
-                </StyledInfo>
+                <StyledHeaderContent>
+                    <StyledAvatar user={user} />
+                    <StyledInfo>
+                        <StyledInfoName>
+                            {user.name || user.username}
+                        </StyledInfoName>
+                        <Typography variant="body1">{user.email}</Typography>
+                    </StyledInfo>
+                </StyledHeaderContent>
+                <StyledProfileAchievements />
             </StyledHeader>
             <PageContent>
                 <StyledSectionLabel>Access</StyledSectionLabel>

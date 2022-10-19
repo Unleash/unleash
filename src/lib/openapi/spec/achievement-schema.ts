@@ -7,6 +7,9 @@ export const achievementSchema = {
         id: {
             type: 'number',
         },
+        achievementId: {
+            type: 'string',
+        },
         title: {
             type: 'string',
         },

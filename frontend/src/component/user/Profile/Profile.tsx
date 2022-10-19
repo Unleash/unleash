@@ -3,6 +3,7 @@ import { ITab, VerticalTabs } from 'component/common/VerticalTabs/VerticalTabs';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { AchievementsTab } from './AchievementsTab/AchievementsTab';
 import { PasswordTab } from './PasswordTab/PasswordTab';
 import { PersonalAPITokensTab } from './PersonalAPITokensTab/PersonalAPITokensTab';
 import { ProfileTab } from './ProfileTab/ProfileTab';
@@ -20,6 +21,7 @@ export const Profile = () => {
             label: 'Personal API tokens',
             path: 'personal-api-tokens',
         },
+        { id: 'achievements', label: 'Achievements', path: 'achievements' },
     ];
 
     const onChange = (tab: ITab) => {
@@ -54,6 +56,10 @@ export const Profile = () => {
             <ConditionallyRender
                 condition={tab === 'pat'}
                 show={<PersonalAPITokensTab user={user!} />}
+            />
+            <ConditionallyRender
+                condition={tab === 'achievements'}
+                show={<AchievementsTab />}
             />
         </VerticalTabs>
     );

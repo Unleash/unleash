@@ -1,5 +1,6 @@
 interface IAchievementValue {
     id: number;
+    achievementId: string;
     title: string;
     description: string;
     rarity: string;

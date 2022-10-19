@@ -5,6 +5,9 @@ export const achievementsSchema = {
     $id: '#/components/schemas/achievementsSchema',
     type: 'object',
     properties: {
+        all: {
+            type: 'object',
+        },
         achievements: {
             type: 'array',
             items: {

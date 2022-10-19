@@ -18,6 +18,7 @@ import {
     AchievementSchema,
     achievementSchema,
 } from '../../../openapi/spec/achievement-schema';
+import { Achievements } from '../../../constants/achievements';
 
 export default class AchievementsController extends Controller {
     private achievementsService: AchievementsService;
@@ -94,6 +95,7 @@ export default class AchievementsController extends Controller {
             res,
             achievementsSchema.$id,
             {
+                all: Achievements,
                 achievements: serializeDates(achievements),
             },
         );

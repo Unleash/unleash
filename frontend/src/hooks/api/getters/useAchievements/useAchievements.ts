@@ -1,10 +1,11 @@
 import useSWR from 'swr';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import { IAchievement } from 'interfaces/achievement';
+import { IAchievement, IAchievementDefinition } from 'interfaces/achievement';
 
 export interface IUseAchievementsOutput {
     achievements?: IAchievement[];
+    all: IAchievementDefinition[];
     refetchAchievements: () => void;
     loading: boolean;
     error?: Error;
@@ -18,6 +19,7 @@ export const useAchievements = (): IUseAchievementsOutput => {
 
     return {
         achievements: data ? data.achievements : undefined,
+        all: data ? data.all : undefined,
         loading: !error && !data,
         refetchAchievements: () => mutate(),
         error,

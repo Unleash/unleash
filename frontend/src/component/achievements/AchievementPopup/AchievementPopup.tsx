@@ -101,14 +101,11 @@ export const AchievementPopup = ({
             visible={visible}
             onMouseEnter={() => timeout.pause()}
             onMouseLeave={() => timeout.resume()}
-            onClick={() => navigate('/profile')}
+            onClick={() => navigate('/profile/achievements')}
         >
             <StyledHeader>Achievement unlocked!</StyledHeader>
             <StyledPopupBody>
-                <StyledAvatar
-                    variant="rounded"
-                    src="https://www.getunleash.io/logos/unleash_glyph_pos.svg"
-                />
+                <StyledAvatar variant="rounded" src={achievement?.imageUrl} />
                 <StyledPopupDescription>
                     <StyledTitle>{achievement?.title}</StyledTitle>
                     <StyledDescription>

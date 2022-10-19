@@ -24,6 +24,7 @@ const fromRow = (row): IAchievement => {
 
     return {
         id: row.id,
+        achievementId: row.achievement_id,
         title,
         description,
         rarity: '', // TODO: We have this info, just need to query it: "x% of users have this achievement"

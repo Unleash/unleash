@@ -2,7 +2,7 @@ import { Knex } from 'knex';
 import { Logger, LogProvider } from '../logger';
 
 import NotFoundError from '../error/notfound-error';
-import { IProject, IProjectWithCount } from '../types/model';
+import { IEnvironment, IProject, IProjectWithCount } from '../types/model';
 import {
     IProjectHealthUpdate,
     IProjectInsert,
@@ -169,7 +169,10 @@ class ProjectStore implements IProjectStore {
         }
     }
 
-    async importProjects(projects: IProjectInsert[]): Promise<IProject[]> {
+    async importProjects(
+        projects: IProjectInsert[],
+        environments?: IEnvironment[],
+    ): Promise<IProject[]> {
         const rows = await this.db(TABLE)
             .insert(projects.map(this.fieldToRow))
             .returning(COLUMNS)
@@ -177,6 +180,13 @@ class ProjectStore implements IProjectStore {
             .ignore();
         if (rows.length > 0) {
             await this.addDefaultEnvironment(rows);
+            environments
+                ?.filter((env) => env.name !== DEFAULT_ENV)
+                .forEach((env) => {
+                    projects.forEach((project) => {
+                        this.addEnvironmentToProject(project.id, env.name);
+                    });
+                });
             return rows.map(this.mapRow);
         }
         return [];

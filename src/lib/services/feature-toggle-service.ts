@@ -1006,7 +1006,6 @@ class FeatureToggleService {
         const defaultEnv = environments.find((e) => e.name === DEFAULT_ENV);
         const strategies = defaultEnv?.strategies || [];
         const enabled = defaultEnv?.enabled || false;
-
         return { ...legacyFeature, enabled, strategies };
     }
 

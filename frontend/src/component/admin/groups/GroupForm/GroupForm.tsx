@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { Button, IconButton, styled, Tooltip } from '@mui/material';
+import { Button, styled, Tooltip } from '@mui/material';
 import { UG_DESC_ID, UG_NAME_ID } from 'utils/testIds';
 import Input from 'component/common/Input/Input';
 import { IGroupUser } from 'interfaces/group';
@@ -8,7 +8,7 @@ import { GroupFormUsersSelect } from './GroupFormUsersSelect/GroupFormUsersSelec
 import { GroupFormUsersTable } from './GroupFormUsersTable/GroupFormUsersTable';
 import { ItemList } from 'component/common/ItemList/ItemList';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import useAuthSettings from '../../../../hooks/api/getters/useAuthSettings/useAuthSettings';
+import useAuthSettings from 'hooks/api/getters/useAuthSettings/useAuthSettings';
 import { HelpOutline } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 
@@ -100,12 +100,9 @@ export const GroupForm: FC<IGroupForm> = ({
     const { config: oidcSettings } = useAuthSettings('oidc');
     const { config: samlSettings } = useAuthSettings('saml');
 
-    const isGroupSyncingEnabled = () => {
-        return (
-            (oidcSettings?.enabled && oidcSettings.enableGroupSyncing) ||
-            (samlSettings?.enabled && samlSettings.enableGroupSyncing)
-        );
-    };
+    const isGroupSyncingEnabled =
+        (oidcSettings?.enabled && oidcSettings.enableGroupSyncing) ||
+        (samlSettings?.enabled && samlSettings.enableGroupSyncing);
 
     return (
         <StyledForm onSubmit={handleSubmit}>
@@ -137,12 +134,12 @@ export const GroupForm: FC<IGroupForm> = ({
                     data-testid={UG_DESC_ID}
                 />
                 <ConditionallyRender
-                    condition={Boolean(
-                        uiConfig.flags.syncSSOGroups && !isOss()
-                    )}
+                    condition={
+                        Boolean(uiConfig.flags.syncSSOGroups) && !isOss()
+                    }
                     show={
                         <ConditionallyRender
-                            condition={Boolean(isGroupSyncingEnabled())}
+                            condition={Boolean(isGroupSyncingEnabled)}
                             show={
                                 <>
                                     <StyledInputDescription>
@@ -157,26 +154,24 @@ export const GroupForm: FC<IGroupForm> = ({
                                 </>
                             }
                             elseShow={() => (
-                                <>
-                                    <StyledDescriptionBlock>
-                                        <div>
-                                            You can enable SSO groups
-                                            syncronization if needed
-                                            <Tooltip
-                                                title="You can enable SSO groups
+                                <StyledDescriptionBlock>
+                                    <div>
+                                        You can enable SSO groups syncronization
+                                        if needed
+                                        <Tooltip
+                                            title="You can enable SSO groups
                                             syncronization if needed"
-                                                arrow
-                                            >
-                                                <StyledHelpOutline />
-                                            </Tooltip>
-                                        </div>
-                                        <Link data-loading to={`/admin/auth`}>
-                                            <span data-loading>
-                                                View SSO configuration{' '}
-                                            </span>
-                                        </Link>
-                                    </StyledDescriptionBlock>
-                                </>
+                                            arrow
+                                        >
+                                            <StyledHelpOutline />
+                                        </Tooltip>
+                                    </div>
+                                    <Link data-loading to={`/admin/auth`}>
+                                        <span data-loading>
+                                            View SSO configuration{' '}
+                                        </span>
+                                    </Link>
+                                </StyledDescriptionBlock>
                             )}
                         />
                     }

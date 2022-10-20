@@ -20,3 +20,17 @@ export abstract class Transactor<T> implements Transactional<T> {
         return clone as T;
     }
 }
+
+export const expectTransaction = (db: Knex | Knex.Transaction): void => {
+    if (db.isTransaction) {
+        return;
+    }
+    const isRunningInTest = process.env.NODE_ENV === 'test';
+    const errorMessage =
+        'A store method that was expected to be run in a transaction was run outside of a transaction';
+    if (isRunningInTest) {
+        throw new Error(errorMessage);
+    } else {
+        console.error(errorMessage);
+    }
+};

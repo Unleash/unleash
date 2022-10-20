@@ -4,6 +4,7 @@ import {
 } from '../../lib/types/stores/feature-toggle-store';
 import NotFoundError from '../../lib/error/notfound-error';
 import { FeatureToggle, FeatureToggleDTO, IVariant } from 'lib/types/model';
+import { Knex } from 'knex';
 
 export default class FakeFeatureToggleStore implements IFeatureToggleStore {
     features: FeatureToggle[] = [];
@@ -134,5 +135,12 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         const feature = await this.get(featureName);
         feature.variants = newVariants;
         return feature;
+    }
+
+    transactional(
+        /* eslint-disable-next-line */
+        transaction: Knex.Transaction<any, any[]>,
+    ): IFeatureToggleStore {
+        throw new Error('Method not implemented.');
     }
 }

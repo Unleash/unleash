@@ -9,8 +9,7 @@ import Group, {
     IGroupUser,
     IGroupUserModel,
 } from '../types/group';
-import Transaction = Knex.Transaction;
-import { Transactor } from './transactional';
+import { expectTransaction, Transactor } from './transactional';
 
 const T = {
     GROUPS: 'groups',
@@ -178,7 +177,6 @@ export default class GroupStore
         groupId: number,
         users: IGroupUserModel[],
         userName: string,
-        transaction?: Transaction,
     ): Promise<void> {
         const rows = users.map((user) => {
             return {
@@ -187,14 +185,11 @@ export default class GroupStore
                 created_by: userName,
             };
         });
-        return (transaction || this.db).batchInsert(T.GROUP_USER, rows);
+        return this.db.batchInsert(T.GROUP_USER, rows);
     }
 
-    async deleteUsersFromGroup(
-        deletableUsers: IGroupUser[],
-        transaction?: Transaction,
-    ): Promise<void> {
-        return (transaction || this.db)(T.GROUP_USER)
+    async deleteUsersFromGroup(deletableUsers: IGroupUser[]): Promise<void> {
+        return this.db(T.GROUP_USER)
             .whereIn(
                 ['group_id', 'user_id'],
                 deletableUsers.map((user) => [user.groupId, user.userId]),
@@ -209,10 +204,9 @@ export default class GroupStore
         deletableUsers: IGroupUser[],
         userName: string,
     ): Promise<void> {
-        await this.db.transaction(async (tx) => {
-            await this.addUsersToGroup(groupId, newUsers, userName, tx);
-            await this.deleteUsersFromGroup(deletableUsers, tx);
-        });
+        expectTransaction(this.db);
+        await this.addUsersToGroup(groupId, newUsers, userName);
+        await this.deleteUsersFromGroup(deletableUsers);
     }
 
     async getNewGroupsForExternalUser(

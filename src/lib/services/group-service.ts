@@ -15,6 +15,7 @@ import { IEventStore } from '../types/stores/event-store';
 import NameExistsError from '../error/name-exists-error';
 import { IUserStore } from '../types/stores/user-store';
 import { IUser } from '../types/user';
+import { Knex } from 'knex';
 
 export class GroupService {
     private groupStore: IGroupStore;
@@ -25,14 +26,17 @@ export class GroupService {
 
     private logger: Logger;
 
+    private db: Knex;
+
     constructor(
         stores: Pick<IUnleashStores, 'groupStore' | 'eventStore' | 'userStore'>,
-        { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
+        { getLogger }: Pick<IUnleashConfig, 'getLogger'>, // db: Knex,
     ) {
         this.logger = getLogger('service/group-service.js');
         this.groupStore = stores.groupStore;
         this.eventStore = stores.eventStore;
         this.userStore = stores.userStore;
+        // this.db = db;
     }
 
     async getAll(): Promise<IGroupModel[]> {
@@ -118,19 +122,21 @@ export class GroupService {
         );
         const deletableUserIds = deletableUsers.map((g) => g.userId);
 
-        await this.groupStore.updateGroupUsers(
-            newGroup.id,
-            group.users.filter(
-                (user) => !existingUserIds.includes(user.user.id),
-            ),
-            group.users.filter(
-                (user) =>
-                    existingUserIds.includes(user.user.id) &&
-                    !deletableUserIds.includes(user.user.id),
-            ),
-            deletableUsers,
-            userName,
-        );
+        this.db.transaction(async (tx) => {
+            await this.groupStore.transactional(tx).updateGroupUsers(
+                newGroup.id,
+                group.users.filter(
+                    (user) => !existingUserIds.includes(user.user.id),
+                ),
+                group.users.filter(
+                    (user) =>
+                        existingUserIds.includes(user.user.id) &&
+                        !deletableUserIds.includes(user.user.id),
+                ),
+                deletableUsers,
+                userName,
+            );
+        });
 
         await this.eventStore.store({
             type: GROUP_UPDATED,

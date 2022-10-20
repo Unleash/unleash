@@ -366,7 +366,7 @@ export interface IFeatureStrategySegment {
     segmentId: number;
 }
 
-export interface ISuggestChangeSet {
+export interface ISuggestChangeset {
     id: number;
     state: string;
     project: string;
@@ -393,7 +393,7 @@ export interface ISuggestChange {
     createdAt?: Date;
 }
 
-export enum SuggestChangeSetEvent {
+export enum SuggestChangesetEvent {
     CREATED = 'CREATED',
     UPDATED = 'UPDATED',
     SUBMITTED = 'SUBMITTED',
@@ -418,7 +418,7 @@ export enum SuggestChangeEvent {
 
 export interface ISuggestChangeEvent {
     id: number;
-    event: SuggestChangeSetEvent;
+    event: SuggestChangesetEvent;
     data: ISuggestChangeEventData;
     createdBy?: string;
     createdAt?: Date;

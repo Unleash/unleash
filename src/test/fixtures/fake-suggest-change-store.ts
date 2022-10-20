@@ -1,12 +1,12 @@
 import { ISuggestChangeStore } from '../../lib/types/stores/suggest-change-store';
-import { ISuggestChange, ISuggestChangeSet } from '../../lib/types/model';
+import { ISuggestChange, ISuggestChangeset } from '../../lib/types/model';
 import { PartialSome } from '../../lib/types/partial';
 import User from '../../lib/types/user';
 
 export default class FakeSuggestChangeStore implements ISuggestChangeStore {
-    suggestChanges: ISuggestChangeSet[] = [];
+    suggestChanges: ISuggestChangeset[] = [];
 
-    async get(id: number): Promise<ISuggestChangeSet> {
+    async get(id: number): Promise<ISuggestChangeset> {
         const change = this.suggestChanges.find((c) => c.id === id);
         return Promise.resolve(change);
     }
@@ -31,7 +31,7 @@ export default class FakeSuggestChangeStore implements ISuggestChangeStore {
         return Promise.resolve();
     }
 
-    getForEnvironment(environment: string): Promise<ISuggestChangeSet[]> {
+    getForEnvironment(environment: string): Promise<ISuggestChangeset[]> {
         return Promise.resolve(
             this.suggestChanges.filter(
                 (changeSet) => (changeSet.environment = environment),
@@ -39,7 +39,7 @@ export default class FakeSuggestChangeStore implements ISuggestChangeStore {
         );
     }
 
-    getForProject(project: string): Promise<ISuggestChangeSet[]> {
+    getForProject(project: string): Promise<ISuggestChangeset[]> {
         return Promise.resolve(
             this.suggestChanges.filter(
                 (changeSet) => (changeSet.project = project),
@@ -48,9 +48,9 @@ export default class FakeSuggestChangeStore implements ISuggestChangeStore {
     }
 
     create(
-        suggestChangeSet: PartialSome<ISuggestChangeSet, 'id'>,
+        suggestChangeSet: PartialSome<ISuggestChangeset, 'id'>,
         user: Partial<Pick<User, 'username' | 'email'>>,
-    ): Promise<ISuggestChangeSet> {
+    ): Promise<ISuggestChangeset> {
         this.suggestChanges.push({
             id: 1,
             ...suggestChangeSet,
@@ -59,7 +59,7 @@ export default class FakeSuggestChangeStore implements ISuggestChangeStore {
         return Promise.resolve(undefined);
     }
 
-    getAll(): Promise<ISuggestChangeSet[]> {
+    getAll(): Promise<ISuggestChangeset[]> {
         return Promise.resolve([]);
     }
 

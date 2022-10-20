@@ -7,10 +7,10 @@ import {
     ISuggestChange,
     ISuggestChangeEvent,
     ISuggestChangeEventData,
-    ISuggestChangeSet,
+    ISuggestChangeset,
     SuggestChangeAction,
     SuggestChangeEvent,
-    SuggestChangeSetEvent,
+    SuggestChangesetEvent,
 } from '../types/model';
 import User from '../types/user';
 
@@ -22,7 +22,7 @@ const T = {
 
 interface ISuggestChangeEventRow {
     id: number;
-    event: SuggestChangeSetEvent;
+    event: SuggestChangesetEvent;
     data?: ISuggestChangeEventData;
     created_by?: string;
     created_at?: Date;
@@ -146,12 +146,12 @@ export class SuggestChangeStore implements ISuggestChangeStore {
             );
     };
 
-    getAll = async (): Promise<ISuggestChangeSet[]> => {
+    getAll = async (): Promise<ISuggestChangeset[]> => {
         const rows = await this.buildSuggestChangeSetChangesEventsQuery();
         return this.mapRows(rows);
     };
 
-    getForProject = async (project: string): Promise<ISuggestChangeSet[]> => {
+    getForProject = async (project: string): Promise<ISuggestChangeset[]> => {
         const rows = await this.buildSuggestChangeSetChangesEventsQuery().where(
             {
                 project,
@@ -163,7 +163,7 @@ export class SuggestChangeStore implements ISuggestChangeStore {
 
     getForEnvironment = async (
         environment: string,
-    ): Promise<ISuggestChangeSet[]> => {
+    ): Promise<ISuggestChangeset[]> => {
         const rows = await this.buildSuggestChangeSetChangesEventsQuery().where(
             {
                 environment,
@@ -173,7 +173,7 @@ export class SuggestChangeStore implements ISuggestChangeStore {
         return this.mapRows(rows);
     };
 
-    get = async (id: number): Promise<ISuggestChangeSet> => {
+    get = async (id: number): Promise<ISuggestChangeset> => {
         const rows = await this.buildSuggestChangeSetChangesEventsQuery().where(
             {
                 id,
@@ -184,9 +184,9 @@ export class SuggestChangeStore implements ISuggestChangeStore {
     };
 
     create = async (
-        suggestChangeSet: PartialSome<ISuggestChangeSet, 'id'>,
+        suggestChangeSet: PartialSome<ISuggestChangeset, 'id'>,
         user: Partial<Pick<User, 'username' | 'email'>>,
-    ): Promise<ISuggestChangeSet> => {
+    ): Promise<ISuggestChangeset> => {
         const [{ id }] = await this.db(T.SUGGEST_CHANGE_SET)
             .insert<ISuggestChangeSetInsert>({
                 id: suggestChangeSet.id,
@@ -263,7 +263,7 @@ export class SuggestChangeStore implements ISuggestChangeStore {
         return result.rows[0].present;
     };
 
-    mapRows = (rows?: any[]): ISuggestChangeSet[] => {
+    mapRows = (rows?: any[]): ISuggestChangeset[] => {
         const suggestChangeSets = rows.reduce(suggestChangeRowReducer, {});
         return Object.values(suggestChangeSets);
     };

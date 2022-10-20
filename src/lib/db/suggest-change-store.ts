@@ -75,7 +75,7 @@ const suggestChangeRowReducer = (acc, suggestChangeRow) => {
             project: suggestChangeSet.project,
             createdBy: {
                 username: suggestChangeSet.changeSetUsername,
-                avatar: suggestChangeSet.changeSetAvatar,
+                imageUrl: suggestChangeSet.changeSetAvatar,
             },
             createdAt: suggestChangeSet.created_at,
             changes: [],
@@ -90,7 +90,7 @@ const suggestChangeRowReducer = (acc, suggestChangeRow) => {
             data: eventData,
             createdBy: {
                 username: eventCreatedByUsername,
-                avatar: eventCreatedByUsername,
+                imageUrl: eventCreatedByUsername,
             },
             createdAt: eventCreatedAt,
         });
@@ -104,7 +104,7 @@ const suggestChangeRowReducer = (acc, suggestChangeRow) => {
             createdAt: changeCreatedAt,
             createdBy: {
                 username: changeCreatedByUsername,
-                avatar: changeCreatedByAvatar,
+                imageUrl: changeCreatedByAvatar,
             },
         });
     }
@@ -151,19 +151,19 @@ export class SuggestChangeStore implements ISuggestChangeStore {
                 'changeSet.project',
                 'changeSet.createdAt',
                 'changeSetUser.username as changeSetUsername',
-                'changeSetUser.avatar as changeSetAvatar',
+                'changeSetUser.imageUrl as changeSetAvatar',
                 'change.id as changeId.',
                 'change.action as changeAction',
                 'change.payload as changePayload',
                 'change.created_at as changeCreatedAt',
                 'changUser.username as changeCreatedByUsername',
-                'changUser.avatar as changeCreatedByAvatar',
+                'changUser.imageUrl as changeCreatedByAvatar',
                 'event.id as eventId',
                 'event.event as eventType',
                 'event.data as eventData',
                 'event.created_at as eventCreatedAt',
                 'eventUser.username as eventCreatedByUsername',
-                'eventUser.avatar as eventCreatedByAvatar',
+                'eventUser.imageUrl as eventCreatedByAvatar',
             );
     };
 

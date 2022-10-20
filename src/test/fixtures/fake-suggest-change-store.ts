@@ -54,7 +54,7 @@ export default class FakeSuggestChangeStore implements ISuggestChangeStore {
         this.suggestChanges.push({
             id: 1,
             ...suggestChangeSet,
-            createdBy: user.email,
+            createdBy: { username: user.email, imageUrl: '' },
         });
         return Promise.resolve(undefined);
     }

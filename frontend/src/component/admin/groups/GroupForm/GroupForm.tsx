@@ -1,5 +1,5 @@
-import { FC } from 'react';
-import { Button, styled } from '@mui/material';
+import React, { FC } from 'react';
+import { Button, styled, Tooltip } from '@mui/material';
 import { UG_DESC_ID, UG_NAME_ID } from 'utils/testIds';
 import Input from 'component/common/Input/Input';
 import { IGroupUser } from 'interfaces/group';
@@ -8,6 +8,9 @@ import { GroupFormUsersSelect } from './GroupFormUsersSelect/GroupFormUsersSelec
 import { GroupFormUsersTable } from './GroupFormUsersTable/GroupFormUsersTable';
 import { ItemList } from 'component/common/ItemList/ItemList';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import useAuthSettings from 'hooks/api/getters/useAuthSettings/useAuthSettings';
+import { HelpOutline } from '@mui/icons-material';
+import { Link } from 'react-router-dom';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',
@@ -22,13 +25,13 @@ const StyledInputDescription = styled('p')(({ theme }) => ({
 
 const StyledInput = styled(Input)(({ theme }) => ({
     width: '100%',
-    maxWidth: theme.spacing(50),
+    maxWidth: theme.spacing(60),
     marginBottom: theme.spacing(2),
 }));
 
 const StyledItemList = styled(ItemList)(({ theme }) => ({
     width: '100%',
-    maxWidth: theme.spacing(50),
+    maxWidth: theme.spacing(60),
     marginBottom: theme.spacing(2),
 }));
 
@@ -44,6 +47,22 @@ const StyledButtonContainer = styled('div')(() => ({
 
 const StyledCancelButton = styled(Button)(({ theme }) => ({
     marginLeft: theme.spacing(3),
+}));
+
+const StyledDescriptionBlock = styled('div')(({ theme }) => ({
+    width: '100%',
+    maxWidth: theme.spacing(60),
+    padding: theme.spacing(3),
+    backgroundColor: theme.palette.neutral.light,
+    color: theme.palette.grey[900],
+    fontSize: theme.fontSizes.smallBody,
+    borderRadius: theme.shape.borderRadiusMedium,
+}));
+
+const StyledHelpOutline = styled(HelpOutline)(({ theme }) => ({
+    fontSize: theme.fontSizes.smallBody,
+    marginLeft: '0.3rem',
+    color: theme.palette.grey[700],
 }));
 
 interface IGroupForm {
@@ -76,7 +95,14 @@ export const GroupForm: FC<IGroupForm> = ({
     mode,
     children,
 }) => {
-    const { uiConfig } = useUiConfig();
+    const { uiConfig, isOss } = useUiConfig();
+
+    const { config: oidcSettings } = useAuthSettings('oidc');
+    const { config: samlSettings } = useAuthSettings('saml');
+
+    const isGroupSyncingEnabled =
+        (oidcSettings?.enabled && oidcSettings.enableGroupSyncing) ||
+        (samlSettings?.enabled && samlSettings.enableGroupSyncing);
 
     return (
         <StyledForm onSubmit={handleSubmit}>
@@ -108,18 +134,46 @@ export const GroupForm: FC<IGroupForm> = ({
                     data-testid={UG_DESC_ID}
                 />
                 <ConditionallyRender
-                    condition={Boolean(uiConfig.flags.syncSSOGroups)}
+                    condition={
+                        Boolean(uiConfig.flags.syncSSOGroups) && !isOss()
+                    }
                     show={
-                        <>
-                            <StyledInputDescription>
-                                Is this group associated with SSO groups?
-                            </StyledInputDescription>
-                            <StyledItemList
-                                label="SSO group ID / name"
-                                value={mappingsSSO}
-                                onChange={setMappingsSSO}
-                            />
-                        </>
+                        <ConditionallyRender
+                            condition={isGroupSyncingEnabled}
+                            show={
+                                <>
+                                    <StyledInputDescription>
+                                        Is this group associated with SSO
+                                        groups?
+                                    </StyledInputDescription>
+                                    <StyledItemList
+                                        label="SSO group ID / name"
+                                        value={mappingsSSO}
+                                        onChange={setMappingsSSO}
+                                    />
+                                </>
+                            }
+                            elseShow={() => (
+                                <StyledDescriptionBlock>
+                                    <div>
+                                        You can enable SSO groups syncronization
+                                        if needed
+                                        <Tooltip
+                                            title="You can enable SSO groups
+                                            syncronization if needed"
+                                            arrow
+                                        >
+                                            <StyledHelpOutline />
+                                        </Tooltip>
+                                    </div>
+                                    <Link data-loading to={`/admin/auth`}>
+                                        <span data-loading>
+                                            View SSO configuration
+                                        </span>
+                                    </Link>
+                                </StyledDescriptionBlock>
+                            )}
+                        />
                     }
                 />
                 <ConditionallyRender

@@ -32,7 +32,7 @@ func init() {
 	unleash.Initialize(
 		unleash.WithListener(&unleash.DebugListener{}),
 		unleash.WithAppName("my-application"),
-		unleash.WithUrl("http://unleash.herokuapp.com/api/"),
+		unleash.WithUrl("https://unleash.example.com/api/"),
         unleash.WithCustomHeaders(http.Header{"Authorization": {"<API token>"}}),
 	)
 }

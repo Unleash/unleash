@@ -13,7 +13,7 @@
     "build": "vite build",
     "lint": "yarn fmt:check",
     "start": "vite",
-    "start:heroku": "UNLEASH_API=https://unleash.herokuapp.com yarn run start",
+    "start:sandbox": "UNLEASH_API=https://sandbox.getunleash.io/ospro yarn run start",
     "start:enterprise": "UNLEASH_API=https://unleash4.herokuapp.com yarn run start",
     "start:demo": "UNLEASH_BASE_PATH=/demo/ yarn start",
     "test": "tsc && vitest run",
@@ -91,13 +91,14 @@
     "typescript": "4.8.4",
     "vite": "3.0.9",
     "vite-plugin-env-compatible": "1.1.1",
-    "vite-plugin-svgr": "2.2.1",
+    "vite-plugin-svgr": "2.2.2",
     "vite-tsconfig-paths": "3.5.1",
     "vitest": "0.22.1",
     "whatwg-fetch": "3.6.2"
   },
   "resolutions": {
-    "@codemirror/state": "6.1.2"
+    "@codemirror/state": "6.1.2",
+    "@xmldom/xmldom": "^0.8.0"
   },
   "jest": {
     "moduleNameMapper": {

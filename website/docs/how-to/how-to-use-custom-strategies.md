@@ -65,7 +65,7 @@ The steps to implement a custom strategy for your client depend on the kind of c
    }
 
    const instance = initialize({
-     url: 'http://unleash.herokuapp.com/api/',
+     url: 'https://unleash.example.com/api/',
      appName: 'unleash-demo',
      instanceId: '1',
      // highlight-next-line

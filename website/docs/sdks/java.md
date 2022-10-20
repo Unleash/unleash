@@ -111,7 +111,7 @@ UnleashContextProvider contextProvider = new MyAwesomeContextProvider();
 UnleashConfig config = new UnleashConfig.Builder()
             .appName("java-test")
             .instanceId("instance x")
-            .unleashAPI("http://unleash.herokuapp.com/api/")
+            .unleashAPI("https://unleash.example.com/api/")
             .unleashContextProvider(contextProvider)
             .build();
 

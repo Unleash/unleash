@@ -17,6 +17,7 @@ import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
 import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
+import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { usePersonalAPITokens } from 'hooks/api/getters/usePersonalAPITokens/usePersonalAPITokens';
 import { useSearch } from 'hooks/useSearch';
@@ -116,7 +117,13 @@ export const PersonalAPITokensTab = ({ user }: IPersonalAPITokensTabProps) => {
             {
                 Header: 'Expires',
                 accessor: 'expiresAt',
-                Cell: DateCell,
+                Cell: ({ value }: { value: string }) => {
+                    const date = new Date(value);
+                    if (date.getFullYear() > new Date().getFullYear() + 100) {
+                        return <TextCell>Never</TextCell>;
+                    }
+                    return <DateCell value={value} />;
+                },
                 sortType: 'date',
                 maxWidth: 150,
             },

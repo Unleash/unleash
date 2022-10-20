@@ -1,6 +1,6 @@
 // Copy of https://github.com/Unleash/unleash-proxy/blob/main/src/test/create-context.test.ts.
 
-import { createContext } from './create-context';
+import { createContext, enrichContextWithIp } from './create-context';
 
 test('should remove undefined properties', () => {
     const context = createContext({
@@ -55,11 +55,48 @@ test('will not blow up if properties is an array', () => {
         properties: ['some'],
     });
 
-    // console.log(context);
-
     expect(context.userId).toBe('123');
     expect(context).not.toHaveProperty('tenantId');
     expect(context).not.toHaveProperty('region');
+});
+
+test('will respect environment set in context', () => {
+    const context = createContext({
+        userId: '123',
+        tenantId: 'some-tenant',
+        environment: 'development',
+        region: 'eu',
+        properties: ['some'],
+    });
+
+    expect(context.environment).toBe('development');
+});
+
+test('will not set environment to be development if not set in context', () => {
+    const context = createContext({
+        userId: '123',
+        tenantId: 'some-tenant',
+        region: 'eu',
+        properties: ['some'],
+    });
+
+    expect(context.environment).toBe(undefined);
+});
+
+test('will enrich context with ip', () => {
+    const query = {};
+    const ip = '192.168.10.0';
+    const result = enrichContextWithIp(query, ip);
+
+    expect(result.remoteAddress).toBe(ip);
+});
+
+test('will not change environment when enriching', () => {
+    const query = { environment: 'production' };
+    const ip = '192.168.10.0';
+    const result = enrichContextWithIp(query, ip);
+
+    expect(result.environment).toBe('production');
 });
 
 test.skip('will not blow up if userId is an array', () => {

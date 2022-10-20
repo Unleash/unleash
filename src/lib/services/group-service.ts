@@ -211,6 +211,7 @@ export class GroupService {
             return {
                 user: user,
                 joinedAt: roleUser.joinedAt,
+                createdBy: roleUser.createdBy,
             };
         });
         return { ...group, users: finalUsers };
@@ -219,6 +220,7 @@ export class GroupService {
     async syncExternalGroups(
         userId: number,
         externalGroups: string[],
+        createdBy?: string,
     ): Promise<void> {
         if (Array.isArray(externalGroups)) {
             let newGroups = await this.groupStore.getNewGroupsForExternalUser(
@@ -228,6 +230,7 @@ export class GroupService {
             await this.groupStore.addUserToGroups(
                 userId,
                 newGroups.map((g) => g.id),
+                createdBy,
             );
             let oldGroups = await this.groupStore.getOldGroupsForExternalUser(
                 userId,

@@ -1,7 +1,7 @@
 import { Avatar, styled, Typography } from '@mui/material';
 import { IAchievement } from 'interfaces/achievement';
 
-const StyledTooltipBody = styled('div')(({ theme }) => ({
+const StyledTooltipBody = styled('div')(() => ({
     display: 'flex',
     flexDirection: 'row',
 }));

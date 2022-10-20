@@ -18,10 +18,7 @@ import { ChangesetDiff } from './ChangesetDiff/ChangesetDiff';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { PageContent } from '../../../common/PageContent/PageContent';
 import { PageHeader } from '../../../common/PageHeader/PageHeader';
-import { Search } from '../../../common/Search/Search';
-import PermissionIconButton from '../../../common/PermissionIconButton/PermissionIconButton';
-import { UPDATE_PROJECT } from '../../../providers/AccessProvider/permissions';
-import { Delete, Edit, HelpOutline } from '@mui/icons-material';
+import { HelpOutline } from '@mui/icons-material';
 interface ISuggestedChangesProps {
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -58,28 +55,15 @@ export const SuggestedChanges: VFC<ISuggestedChangesProps> = ({
     open,
     setOpen,
 }) => {
-    const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
     const [selectedValue, setSelectedValue] = useState('');
     const { data: changeRequest } = useChangeRequest();
 
-    const onClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-        setAnchorEl(event.currentTarget);
+    const onReview = async () => {
+        console.log('approve');
     };
 
-    const onClose = () => setAnchorEl(null);
-
-    const onRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSelectedValue((event.target as HTMLInputElement).value);
-    };
-
-    const onSubmit = async (e: any) => {
-        e.preventDefault();
-        if (selectedValue === 'approve') {
-            console.log('approve');
-        } else if (selectedValue === 'requestChanges') {
-            console.log('requestChanges');
-        }
-        // show an error if no action was selected
+    const onDiscard = async () => {
+        console.log('discard');
     };
 
     const onApply = async () => {
@@ -121,94 +105,58 @@ export const SuggestedChanges: VFC<ISuggestedChangesProps> = ({
                     ></PageHeader>
                 }
             >
+                {/* TODO: multiple environments (changesets) */}
                 <Typography>{changeRequest?.state}</Typography>
-                Environment: {changeRequest?.environment}
                 <br />
-                {/* <ChangesHeader
-                author={changeRequest?.createdBy?.name}
-                avatar={changeRequest?.createdBy?.imageUrl}
-                createdAt={changeRequest?.createdAt}
-            /> */}
-                <br />
-                <ChangesetDiff changeset={changeRequest?.changes} />
-                <ConditionallyRender
-                    condition={changeRequest?.state === 'APPLIED'}
-                    show={<Typography>Applied</Typography>}
+                <ChangesetDiff
+                    changes={changeRequest?.changes}
+                    state={changeRequest?.state}
                 />
-                <ConditionallyRender
-                    condition={changeRequest?.state === 'APPROVED'}
-                    show={
-                        <>
-                            <Button
-                                sx={{ mt: 2 }}
-                                variant="contained"
-                                onClick={onApply}
-                            >
-                                Apply changes
-                            </Button>
-                        </>
-                    }
-                />
-                <ConditionallyRender
-                    condition={changeRequest?.state === 'REVIEW'}
-                    show={
-                        <>
-                            <Button
-                                sx={{ mt: 2 }}
-                                variant="contained"
-                                onClick={onClick}
-                            >
-                                Review changes
-                            </Button>
-                            <Popover
-                                id={'review-popover'}
-                                open={Boolean(anchorEl)}
-                                anchorEl={anchorEl}
-                                onClose={onClose}
-                                anchorOrigin={{
-                                    vertical: 'bottom',
-                                    horizontal: 'left',
-                                }}
-                            >
-                                <Box
-                                    component="form"
-                                    onSubmit={onSubmit}
-                                    sx={{
-                                        padding: '1rem 2rem',
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                    }}
+                <Box sx={{ display: 'flex' }}>
+                    <ConditionallyRender
+                        condition={changeRequest?.state === 'APPROVED'}
+                        show={<Typography>Applied</Typography>}
+                    />
+                    <ConditionallyRender
+                        condition={changeRequest?.state === 'CLOSED'}
+                        show={<Typography>Applied</Typography>}
+                    />
+                    <ConditionallyRender
+                        condition={changeRequest?.state === 'APPROVED'}
+                        show={
+                            <>
+                                <Button
+                                    sx={{ mt: 2 }}
+                                    variant="contained"
+                                    onClick={onApply}
                                 >
-                                    <FormControl>
-                                        <RadioGroup
-                                            value={selectedValue}
-                                            onChange={onRadioChange}
-                                            name="review-actions-radio"
-                                        >
-                                            <FormControlLabel
-                                                value="approve"
-                                                control={<Radio />}
-                                                label="Approve"
-                                            />
-                                            <FormControlLabel
-                                                value="requestChanges"
-                                                control={<Radio />}
-                                                label="Request changes"
-                                            />
-                                        </RadioGroup>
-                                    </FormControl>
-                                    <Button
-                                        type="submit"
-                                        variant="contained"
-                                        color="primary"
-                                    >
-                                        Submit
-                                    </Button>
-                                </Box>
-                            </Popover>
-                        </>
-                    }
-                />
+                                    Apply changes
+                                </Button>
+                            </>
+                        }
+                    />
+                    <ConditionallyRender
+                        condition={changeRequest?.state === 'CREATED'}
+                        show={
+                            <>
+                                <Button
+                                    sx={{ mt: 2, ml: 'auto' }}
+                                    variant="contained"
+                                    onClick={onReview}
+                                >
+                                    Request changes
+                                </Button>
+                                <Button
+                                    sx={{ mt: 2, ml: 2 }}
+                                    variant="outlined"
+                                    onClick={onDiscard}
+                                >
+                                    Discard changes
+                                </Button>
+                            </>
+                        }
+                    />
+                </Box>
             </StyledPageContent>
         </SidebarModal>
     );

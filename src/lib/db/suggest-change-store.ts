@@ -24,16 +24,16 @@ interface ISuggestChangeEventRow {
     id: number;
     event: SuggestChangesetEvent;
     data?: ISuggestChangeEventData;
-    created_by?: string;
+    created_by?: number;
     created_at?: Date;
 }
 
-interface ISuggestChangeSetInsert {
+interface ISuggestChangesetInsert {
     id: number;
     environment: string;
     state?: string;
     project?: string;
-    created_by?: string;
+    created_by?: number;
     created_at?: Date;
 }
 
@@ -42,11 +42,11 @@ interface ISuggestChangeInsert {
     action: SuggestChangeAction;
     feature: string;
     payload?: unknown;
-    created_by?: string;
+    created_by?: number;
     created_at?: Date;
 }
 
-interface ISuggestChangeSetRow extends ISuggestChangeSetInsert {
+interface ISuggestChangesetRow extends ISuggestChangesetInsert {
     changes?: ISuggestChange[];
     events?: ISuggestChangeEvent[];
 }
@@ -57,11 +57,13 @@ const suggestChangeRowReducer = (acc, suggestChangeRow) => {
         eventType,
         eventData,
         eventCreatedAt,
-        eventCreatedBy,
+        eventCreatedByUsername,
+        eventCreatedByAvatar,
         changeId,
         changeAction,
         changePayload,
-        changeCreatedBy,
+        changeCreatedByUsername,
+        changeCreatedByAvatar,
         changeCreatedAt,
         ...suggestChangeSet
     } = suggestChangeRow;
@@ -71,7 +73,10 @@ const suggestChangeRowReducer = (acc, suggestChangeRow) => {
             environment: suggestChangeSet.environment,
             state: suggestChangeSet.state,
             project: suggestChangeSet.project,
-            createdBy: suggestChangeSet.created_by,
+            createdBy: {
+                username: suggestChangeSet.changeSetUsername,
+                avatar: suggestChangeSet.changeSetAvatar,
+            },
             createdAt: suggestChangeSet.created_at,
             changes: [],
             events: [],
@@ -83,8 +88,11 @@ const suggestChangeRowReducer = (acc, suggestChangeRow) => {
             id: eventId,
             event: eventType,
             data: eventData,
-            createdBy: eventCreatedAt,
-            createdAt: eventCreatedBy,
+            createdBy: {
+                username: eventCreatedByUsername,
+                avatar: eventCreatedByUsername,
+            },
+            createdAt: eventCreatedAt,
         });
     }
 
@@ -94,7 +102,10 @@ const suggestChangeRowReducer = (acc, suggestChangeRow) => {
             action: changeAction,
             payload: changePayload,
             createdAt: changeCreatedAt,
-            createdBy: changeCreatedBy,
+            createdBy: {
+                username: changeCreatedByUsername,
+                avatar: changeCreatedByAvatar,
+            },
         });
     }
     return acc;
@@ -114,35 +125,45 @@ export class SuggestChangeStore implements ISuggestChangeStore {
     }
 
     private buildSuggestChangeSetChangesEventsQuery = () => {
-        return this.db<ISuggestChangeSetRow>(
+        return this.db<ISuggestChangesetRow>(
             `${T.SUGGEST_CHANGE_SET} as changeSet`,
         )
+            .leftJoin(
+                `users as changSetUser`,
+                'changeSet.createdBy',
+                'changSetUser.id',
+            )
             .leftJoin(
                 `${T.SUGGEST_CHANGE} as change`,
                 'changeSet.id',
                 'change.suggest_change_set_id',
             )
+            .leftJoin(`users as changUser`, 'change.createdBy', 'changUser.id')
             .leftJoin(
                 `${T.SUGGEST_CHANGE_EVENT} as event`,
                 'changeSet.id',
                 'event.suggest_change_set_id',
             )
+            .leftJoin(`users as eventUser`, 'eventUser.id', 'event.createdBy')
             .select(
                 'changeSet.secret',
                 'changeSet.environment',
                 'changeSet.project',
-                'changeSet.createAt',
-                'changeSet.createBy',
+                'changeSet.createdAt',
+                'changeSetUser.username as changeSetUsername',
+                'changeSetUser.avatar as changeSetAvatar',
                 'change.id as changeId.',
                 'change.action as changeAction',
                 'change.payload as changePayload',
                 'change.created_at as changeCreatedAt',
-                'change.created_by as changeCreatedBy',
+                'changUser.username as changeCreatedByUsername',
+                'changUser.avatar as changeCreatedByAvatar',
                 'event.id as eventId',
                 'event.event as eventType',
                 'event.data as eventData',
                 'event.created_at as eventCreatedAt',
-                'event.created_by as eventCreatedBy',
+                'eventUser.username as eventCreatedByUsername',
+                'eventUser.avatar as eventCreatedByAvatar',
             );
     };
 
@@ -188,7 +209,7 @@ export class SuggestChangeStore implements ISuggestChangeStore {
         user: Partial<Pick<User, 'username' | 'email'>>,
     ): Promise<ISuggestChangeset> => {
         const [{ id }] = await this.db(T.SUGGEST_CHANGE_SET)
-            .insert<ISuggestChangeSetInsert>({
+            .insert<ISuggestChangesetInsert>({
                 id: suggestChangeSet.id,
                 environment: suggestChangeSet.environment,
                 state: suggestChangeSet.state,

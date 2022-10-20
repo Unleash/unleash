@@ -1,7 +1,7 @@
 import { ITagType } from './stores/tag-type-store';
 import { LogProvider } from '../logger';
 import { IRole } from './stores/access-store';
-import { IUser } from './user';
+import User, { IUser } from './user';
 import { ALL_OPERATORS } from '../util/constants';
 
 export type Operator = typeof ALL_OPERATORS[number];
@@ -371,7 +371,7 @@ export interface ISuggestChangeset {
     state: string;
     project: string;
     environment: string;
-    createdBy?: string;
+    createdBy?: User;
     createdAt?: Date;
     changes?: ISuggestChange[];
     events?: ISuggestChangeEvent[];
@@ -389,7 +389,7 @@ export interface ISuggestChange {
     action: SuggestChangeAction;
     feature: string;
     payload?: unknown;
-    createdBy?: string;
+    createdBy?: User;
     createdAt?: Date;
 }
 
@@ -420,7 +420,7 @@ export interface ISuggestChangeEvent {
     id: number;
     event: SuggestChangesetEvent;
     data: ISuggestChangeEventData;
-    createdBy?: string;
+    createdBy?: User;
     createdAt?: Date;
 }
 

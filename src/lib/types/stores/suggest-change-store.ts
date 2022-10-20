@@ -5,12 +5,15 @@ import User from '../user';
 
 export interface ISuggestChangeStore extends Store<ISuggestChangeset, number> {
     create(
-        suggestChangeSet: PartialSome<ISuggestChangeset, 'id'>,
+        suggestChangeSet: PartialSome<
+            ISuggestChangeset,
+            'id' | 'createdBy' | 'createdAt'
+        >,
         user: Partial<Pick<User, 'username' | 'email'>>,
     ): Promise<ISuggestChangeset>;
 
     addChangeToSet(
-        change: ISuggestChange,
+        change: PartialSome<ISuggestChange, 'id' | 'createdBy' | 'createdAt'>,
         changeSetID: number,
         user: Partial<Pick<User, 'username' | 'email'>>,
     ): Promise<void>;

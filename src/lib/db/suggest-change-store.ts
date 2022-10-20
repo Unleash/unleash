@@ -205,7 +205,10 @@ export class SuggestChangeStore implements ISuggestChangeStore {
     };
 
     create = async (
-        suggestChangeSet: PartialSome<ISuggestChangeset, 'id'>,
+        suggestChangeSet: PartialSome<
+            ISuggestChangeset,
+            'id' | 'createdBy' | 'createdAt'
+        >,
         user: Partial<Pick<User, 'username' | 'email'>>,
     ): Promise<ISuggestChangeset> => {
         const [{ id }] = await this.db(T.SUGGEST_CHANGE_SET)
@@ -228,7 +231,7 @@ export class SuggestChangeStore implements ISuggestChangeStore {
     };
 
     addChangeToSet = async (
-        change: ISuggestChange,
+        change: PartialSome<ISuggestChange, 'id' | 'createdBy' | 'createdAt'>,
         changeSetID: number,
         user: Partial<Pick<User, 'username' | 'email'>>,
     ): Promise<void> => {

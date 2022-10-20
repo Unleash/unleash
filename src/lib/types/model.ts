@@ -371,19 +371,19 @@ export interface ISuggestChangeset {
     state: string;
     project: string;
     environment: string;
-    createdBy?: Pick<User, 'username' | 'imageUrl'>;
-    createdAt?: Date;
-    changes?: ISuggestChange[];
-    events?: ISuggestChangeEvent[];
+    createdBy: Pick<User, 'username' | 'imageUrl'>;
+    createdAt: Date;
+    changes: ISuggestChange[];
+    events: ISuggestChangeEvent[];
 }
 
 export interface ISuggestChange {
     id: number;
     action: SuggestChangeAction;
     feature: string;
-    payload?: unknown;
-    createdBy?: Pick<User, 'username' | 'imageUrl'>;
-    createdAt?: Date;
+    payload: unknown;
+    createdBy: Pick<User, 'username' | 'imageUrl'>;
+    createdAt: Date;
 }
 
 export enum SuggestChangesetEvent {
@@ -413,8 +413,8 @@ export interface ISuggestChangeEvent {
     id: number;
     event: SuggestChangesetEvent;
     data: ISuggestChangeEventData;
-    createdBy?: Pick<User, 'username' | 'imageUrl'>;
-    createdAt?: Date;
+    createdBy: Pick<User, 'username' | 'imageUrl'>;
+    createdAt: Date;
 }
 
 export interface ISuggestChangeEventData {

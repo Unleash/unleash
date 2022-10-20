@@ -3,20 +3,22 @@ export interface ISuggestChangeSet {
     state: string;
     project: string;
     environment: string;
-    createdBy: string;
-    createdAt: Date;
-    changes: ISuggestChange[];
-    events: ISuggestChangeEvent[];
+    createdBy?: string;
+    createdAt?: Date;
+    changes?: ISuggestChange[];
+    events?: ISuggestChangeEvent[];
 }
 
 export interface ISuggestChange {
     id: number;
-    action: string;
+    action: SuggestChangeAction;
     feature: string;
-    payload?: boolean;
+    payload?: unknown;
+    createdBy?: string;
+    createdAt?: Date;
 }
 
-export enum SuggestChangeEvent {
+export enum SuggestChangeSetEvent {
     CREATED = 'CREATED',
     UPDATED = 'UPDATED',
     SUBMITTED = 'SUBMITTED',
@@ -25,10 +27,29 @@ export enum SuggestChangeEvent {
     CLOSED = 'CLOSED',
 }
 
+export enum SuggestChangeAction {
+    UPDATE_ENABLED = 'updateEnabled',
+    ADD_STRATEGY = 'strategyAdd',
+    UPDATE_STRATEGY = 'strategyUpdate',
+    DELETE_STRATEGY = 'strategyDelete',
+}
+
+export enum SuggestChangeEvent {
+    UPDATE_ENABLED = 'updateFeatureEnabledEvent',
+    ADD_STRATEGY = 'addStrategyEvent',
+    UPDATE_STRATEGY = 'updateStrategyEvent',
+    DELETE_STRATEGY = 'deleteStrategyEvent',
+}
+
 export interface ISuggestChangeEvent {
     id: number;
-    event: SuggestChangeEvent;
+    event: SuggestChangeSetEvent;
+    data: ISuggestChangeEventData;
+    createdBy?: string;
+    createdAt?: Date;
+}
+
+export interface ISuggestChangeEventData {
+    feature: string;
     data: unknown;
-    createdBy: string;
-    createdAt: Date;
 }

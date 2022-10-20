@@ -5,25 +5,8 @@ let stores;
 let db: ITestDb;
 
 beforeAll(async () => {
-    db = await dbInit('group_service_serial', getLogger);
+    db = await dbInit('transactional_serial', getLogger);
     stores = db.stores;
-
-    await stores.groupStore.create({
-        name: 'dev_group',
-        description: 'dev_group',
-        mappingsSSO: ['dev'],
-    });
-    await stores.groupStore.create({
-        name: 'maintainer_group',
-        description: 'maintainer_group',
-        mappingsSSO: ['maintainer'],
-    });
-
-    await stores.groupStore.create({
-        name: 'admin_group',
-        description: 'admin_group',
-        mappingsSSO: ['admin'],
-    });
 });
 
 afterAll(async () => {
@@ -44,4 +27,21 @@ test('should actually do something transactional mode', async () => {
         return group.name === 'some_other_group';
     });
     expect(createdGroup).toBeDefined();
+});
+
+test('should fail entire transaction if encountering an error', async () => {
+    await db.db.transaction(async (trx) => {
+        const featureDTO = {
+            name: 'SomeUniqueNameThatSoonWontBeUnique',
+        };
+
+        await stores.featureToggleStore
+            .transactional(trx)
+            .create('default', featureDTO);
+        await stores.featureToggleStore
+            .transactional(trx)
+            .create('default', featureDTO);
+    });
+    const toggles = await stores.featureToggleStore.getAll();
+    expect(toggles.length).toBe(0);
 });

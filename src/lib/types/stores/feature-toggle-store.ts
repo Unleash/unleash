@@ -1,4 +1,5 @@
 import { FeatureToggle, FeatureToggleDTO, IVariant } from '../model';
+import { Transactional } from './transactional';
 import { Store } from './store';
 
 export interface IFeatureToggleQuery {
@@ -7,7 +8,9 @@ export interface IFeatureToggleQuery {
     stale: boolean;
 }
 
-export interface IFeatureToggleStore extends Store<FeatureToggle, string> {
+export interface IFeatureToggleStore
+    extends Store<FeatureToggle, string>,
+        Transactional<IFeatureToggleStore> {
     count(query?: Partial<IFeatureToggleQuery>): Promise<number>;
     setLastSeen(toggleNames: string[]): Promise<void>;
     getProjectId(name: string): Promise<string>;

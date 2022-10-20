@@ -139,7 +139,7 @@ export const GroupForm: FC<IGroupForm> = ({
                     }
                     show={
                         <ConditionallyRender
-                            condition={Boolean(isGroupSyncingEnabled)}
+                            condition={isGroupSyncingEnabled}
                             show={
                                 <>
                                     <StyledInputDescription>
@@ -168,7 +168,7 @@ export const GroupForm: FC<IGroupForm> = ({
                                     </div>
                                     <Link data-loading to={`/admin/auth`}>
                                         <span data-loading>
-                                            View SSO configuration{' '}
+                                            View SSO configuration
                                         </span>
                                     </Link>
                                 </StyledDescriptionBlock>

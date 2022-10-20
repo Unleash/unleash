@@ -375,13 +375,6 @@ export interface ISuggestChangeset {
     createdAt?: Date;
     changes?: ISuggestChange[];
     events?: ISuggestChangeEvent[];
-    // approvalFlow: IChangeSetApprovalFlow;
-}
-export interface IApprovalFlow {}
-
-export interface IChangeSetApprovalFlow {
-    id: string;
-    flow: IApprovalFlow;
 }
 
 export interface ISuggestChange {

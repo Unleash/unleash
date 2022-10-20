@@ -45,19 +45,3 @@ test('should actually do something transactional mode', async () => {
     });
     expect(createdGroup).toBeDefined();
 });
-
-test('should actually do something transactional mode', async () => {
-    await db.db.transaction(async (trx) => {
-        await stores.groupStore.transactional(trx).create({
-            name: 'some_other_group',
-            description: 'admin_group',
-            mappingsSSO: ['admin'],
-        });
-    });
-
-    const groups = await stores.groupStore.getAll();
-    const createdGroup = groups.find((group) => {
-        return group.name === 'some_other_group';
-    });
-    expect(createdGroup).toBeDefined();
-});

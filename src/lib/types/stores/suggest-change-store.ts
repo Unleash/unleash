@@ -13,8 +13,7 @@ export interface ISuggestChangeStore extends Store<ISuggestChangeset, number> {
         change: ISuggestChange,
         changeSetID: number,
         user: Partial<Pick<User, 'username' | 'email'>>,
-        shouldReturn?: boolean,
-    ): Promise<void | ISuggestChangeset>;
+    ): Promise<void>;
 
     get(id: number): Promise<ISuggestChangeset>;
 

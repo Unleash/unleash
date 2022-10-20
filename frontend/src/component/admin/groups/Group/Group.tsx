@@ -112,6 +112,14 @@ export const Group: VFC = () => {
                 maxWidth: 150,
             },
             {
+                id: 'createdBy',
+                Header: 'Added by',
+                accessor: 'createdBy',
+                Cell: HighlightCell,
+                minWidth: 90,
+                searchable: true,
+            },
+            {
                 Header: 'Last login',
                 accessor: (row: IGroupUser) => row.seenAt || '',
                 Cell: ({ row: { original: user } }: any) => (

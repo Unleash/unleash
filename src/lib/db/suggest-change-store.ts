@@ -14,10 +14,10 @@ import {
 } from '../types/model';
 import User from '../types/user';
 
-const Tables = {
-    suggestChange: 'suggest_change',
-    suggestChangeSet: 'suggest_change_set',
-    suggestChangeEvent: 'suggest_change_event',
+const T = {
+    SUGGEST_CHANGE: 'suggest_change',
+    SUGGEST_CHANGE_SET: 'suggest_change_set',
+    SUGGEST_CHANGE_EVENT: 'suggest_change_event',
 };
 
 interface ISuggestChangeEventRow {
@@ -113,17 +113,17 @@ export class SuggestChangeStore implements ISuggestChangeStore {
         this.logger = getLogger('lib/db/suggest-change-store.ts');
     }
 
-    private makeSuggestChangeSetChangesEventsQuery = () => {
+    private buildSuggestChangeSetChangesEventsQuery = () => {
         return this.db<ISuggestChangeSetRow>(
-            `${Tables.suggestChangeSet} as changeSet`,
+            `${T.SUGGEST_CHANGE_SET} as changeSet`,
         )
             .leftJoin(
-                `${Tables.suggestChange} as change`,
+                `${T.SUGGEST_CHANGE} as change`,
                 'changeSet.id',
                 'change.suggest_change_set_id',
             )
             .leftJoin(
-                `${Tables.suggestChangeEvent} as event`,
+                `${T.SUGGEST_CHANGE_EVENT} as event`,
                 'changeSet.id',
                 'event.suggest_change_set_id',
             )
@@ -147,14 +147,16 @@ export class SuggestChangeStore implements ISuggestChangeStore {
     };
 
     getAll = async (): Promise<ISuggestChangeSet[]> => {
-        const rows = await this.makeSuggestChangeSetChangesEventsQuery();
+        const rows = await this.buildSuggestChangeSetChangesEventsQuery();
         return this.mapRows(rows);
     };
 
     getForProject = async (project: string): Promise<ISuggestChangeSet[]> => {
-        const rows = await this.makeSuggestChangeSetChangesEventsQuery().where({
-            project,
-        });
+        const rows = await this.buildSuggestChangeSetChangesEventsQuery().where(
+            {
+                project,
+            },
+        );
 
         return this.mapRows(rows);
     };
@@ -162,17 +164,21 @@ export class SuggestChangeStore implements ISuggestChangeStore {
     getForEnvironment = async (
         environment: string,
     ): Promise<ISuggestChangeSet[]> => {
-        const rows = await this.makeSuggestChangeSetChangesEventsQuery().where({
-            environment,
-        });
+        const rows = await this.buildSuggestChangeSetChangesEventsQuery().where(
+            {
+                environment,
+            },
+        );
 
         return this.mapRows(rows);
     };
 
     get = async (id: number): Promise<ISuggestChangeSet> => {
-        const rows = await this.makeSuggestChangeSetChangesEventsQuery().where({
-            id,
-        });
+        const rows = await this.buildSuggestChangeSetChangesEventsQuery().where(
+            {
+                id,
+            },
+        );
 
         return this.mapRows(rows)[0];
     };
@@ -181,7 +187,7 @@ export class SuggestChangeStore implements ISuggestChangeStore {
         suggestChangeSet: PartialSome<ISuggestChangeSet, 'id'>,
         user: Partial<Pick<User, 'username' | 'email'>>,
     ): Promise<ISuggestChangeSet> => {
-        const [{ id }] = await this.db(Tables.suggestChangeSet)
+        const [{ id }] = await this.db(T.SUGGEST_CHANGE_SET)
             .insert<ISuggestChangeSetInsert>({
                 id: suggestChangeSet.id,
                 environment: suggestChangeSet.environment,
@@ -205,7 +211,7 @@ export class SuggestChangeStore implements ISuggestChangeStore {
         changeSetID: number,
         user: Partial<Pick<User, 'username' | 'email'>>,
     ): Promise<void> => {
-        await this.db(Tables.suggestChange)
+        await this.db(T.SUGGEST_CHANGE)
             .insert<ISuggestChangeInsert>({
                 action: change.action,
                 feature: change.feature,
@@ -230,7 +236,7 @@ export class SuggestChangeStore implements ISuggestChangeStore {
         data: ISuggestChangeEventData,
         user: Partial<Pick<User, 'username' | 'email'>>,
     ): Promise<void> => {
-        await this.db(Tables.suggestChangeEvent)
+        await this.db(T.SUGGEST_CHANGE_EVENT)
             .insert<ISuggestChangeEventRow>({
                 event,
                 data,
@@ -241,16 +247,16 @@ export class SuggestChangeStore implements ISuggestChangeStore {
     };
 
     delete = (id: number): Promise<void> => {
-        return this.db(Tables.suggestChangeSet).where({ id }).del();
+        return this.db(T.SUGGEST_CHANGE_SET).where({ id }).del();
     };
 
     deleteAll = (): Promise<void> => {
-        return this.db(Tables.suggestChangeSet).del();
+        return this.db(T.SUGGEST_CHANGE_SET).del();
     };
 
     exists = async (id: number): Promise<boolean> => {
         const result = await this.db.raw(
-            `SELECT EXISTS(SELECT 1 FROM ${Tables.suggestChangeSet} WHERE id = ?) AS present`,
+            `SELECT EXISTS(SELECT 1 FROM ${T.SUGGEST_CHANGE_SET} WHERE id = ?) AS present`,
             [id],
         );
 

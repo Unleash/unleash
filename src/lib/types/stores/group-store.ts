@@ -7,6 +7,7 @@ import Group, {
     IGroupUser,
     IGroupUserModel,
 } from '../group';
+import { Transactional } from './transactional';
 
 export interface IStoreGroup {
     name: string;
@@ -14,7 +15,9 @@ export interface IStoreGroup {
     mappingsSSO?: string[];
 }
 
-export interface IGroupStore extends Store<IGroup, number> {
+export interface IGroupStore
+    extends Store<IGroup, number>,
+        Transactional<IGroupStore> {
     getGroupsForUser(userId: number): Promise<Group[]>;
     getOldGroupsForExternalUser(
         userId: number,

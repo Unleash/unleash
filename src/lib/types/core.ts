@@ -6,6 +6,7 @@ import User from './user';
 import { IUnleashConfig } from './option';
 import { IUnleashStores } from './stores';
 import { IUnleashServices } from './services';
+import { Knex } from 'knex';
 
 export interface AuthedRequest extends Request {
     user: User;
@@ -20,4 +21,5 @@ export interface IUnleash {
     services: IUnleashServices;
     stop: () => Promise<void>;
     version: string;
+    db: Knex;
 }

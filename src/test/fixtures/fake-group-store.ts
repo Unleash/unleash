@@ -7,6 +7,7 @@ import Group, {
     IGroupUser,
     IGroupUserModel,
 } from '../../lib/types/group';
+import { Knex } from 'knex';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 export default class FakeGroupStore implements IGroupStore {
     data: IGroup[];
@@ -107,6 +108,10 @@ export default class FakeGroupStore implements IGroupStore {
     }
 
     getGroupsForUser(userId: number): Promise<Group[]> {
+        throw new Error('Method not implemented.');
+    }
+
+    transactional(transaction: Knex.Transaction<any, any[]>): IGroupStore {
         throw new Error('Method not implemented.');
     }
 }

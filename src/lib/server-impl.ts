@@ -76,6 +76,7 @@ async function createApp(
         app,
         config,
         version: serverVersion,
+        db,
     };
 
     if (config.import.file) {

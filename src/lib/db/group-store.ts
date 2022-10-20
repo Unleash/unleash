@@ -10,6 +10,7 @@ import Group, {
     IGroupUserModel,
 } from '../types/group';
 import Transaction = Knex.Transaction;
+import { AbstractTransactional } from './transactional';
 
 const T = {
     GROUPS: 'groups',
@@ -60,10 +61,14 @@ const groupToRow = (group: IStoreGroup) => ({
     mappings_sso: JSON.stringify(group.mappingsSSO),
 });
 
-export default class GroupStore implements IGroupStore {
+export default class GroupStore
+    extends AbstractTransactional<GroupStore>
+    implements IGroupStore
+{
     private db: Knex;
 
     constructor(db: Knex) {
+        super();
         this.db = db;
     }
 

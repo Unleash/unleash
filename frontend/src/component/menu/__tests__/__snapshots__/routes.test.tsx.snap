@@ -4,6 +4,7 @@ exports[`returns all baseRoutes 1`] = `
 [
   {
     "component": [Function],
+    "isStandalone": true,
     "menu": {},
     "path": "/splash/:splashId",
     "title": "Unleash",
@@ -78,6 +79,7 @@ exports[`returns all baseRoutes 1`] = `
   {
     "component": [Function],
     "flag": "P",
+    "isStandalone": true,
     "menu": {},
     "parent": "/projects",
     "path": "/projects/:projectId/*",

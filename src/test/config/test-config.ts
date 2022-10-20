@@ -29,6 +29,7 @@ export function createTestConfig(config?: IUnleashOptions): IUnleashConfig {
                 batchMetrics: true,
                 personalAccessTokens: true,
                 syncSSOGroups: true,
+                cloneEnvironment: true,
             },
         },
     };

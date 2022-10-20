@@ -124,7 +124,10 @@ const Project = () => {
     }, []);
 
     return (
-        <MainLayout ref={ref} subheader={<DraftBanner />}>
+        <MainLayout
+            ref={ref}
+            subheader={uiConfig?.flags?.suggestChanges ? <DraftBanner /> : null}
+        >
             <div className={styles.header}>
                 <div className={styles.innerContainer}>
                     <h2 className={styles.title}>

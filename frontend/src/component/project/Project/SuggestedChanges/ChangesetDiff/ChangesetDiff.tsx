@@ -1,11 +1,23 @@
 import { VFC } from 'react';
-import { Box, Paper, Typography, Card } from '@mui/material';
+import { Box, Paper, Typography, Card, Chip, styled } from '@mui/material';
 import { PlaygroundResultChip } from 'component/playground/Playground/PlaygroundResultsTable/PlaygroundResultChip/PlaygroundResultChip'; // FIXME: refactor - extract to common
 import { ISuggestChange } from 'interfaces/suggestChangeset';
+import EnvironmentIcon from '../../../../common/EnvironmentIcon/EnvironmentIcon';
+import StringTruncator from '../../../../common/StringTruncator/StringTruncator';
+import { ConditionallyRender } from '../../../../common/ConditionallyRender/ConditionallyRender';
 
 type ChangesetDiffProps = {
     changeset?: ISuggestChange[];
 };
+
+const StyledHeader = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    [theme.breakpoints.down(560)]: {
+        flexDirection: 'column',
+        textAlign: 'center',
+    },
+}));
 
 export const ChangesetDiff: VFC<ChangesetDiffProps> = ({
     changeset: changeSet,
@@ -22,7 +34,16 @@ export const ChangesetDiff: VFC<ChangesetDiffProps> = ({
             borderRadius: theme => `${theme.shape.borderRadius}px`,
         }}
     >
-        <Typography variant="h3">Changes</Typography>
+        <StyledHeader>
+            <EnvironmentIcon enabled={true} />
+            <div>
+                <StringTruncator
+                    text={`production`}
+                    maxWidth="100"
+                    maxLength={15}
+                />
+            </div>
+        </StyledHeader>
         {/*// @ts-ignore FIXME: types */}
         {changeSet?.map(item => (
             <Card

@@ -221,7 +221,7 @@ export class SuggestChangeStore implements ISuggestChangeStore {
             .returning('id');
 
         suggestChangeSet.changes.forEach((change) => {
-            this.addChangeToSet(change, id, user);
+            this.addChangeToSet(change, id, user, false);
         });
 
         return this.get(id);
@@ -231,7 +231,8 @@ export class SuggestChangeStore implements ISuggestChangeStore {
         change: ISuggestChange,
         changeSetID: number,
         user: Partial<Pick<User, 'username' | 'email'>>,
-    ): Promise<void> => {
+        shouldReturn = true,
+    ): Promise<void | ISuggestChangeset> => {
         await this.db(T.SUGGEST_CHANGE)
             .insert<ISuggestChangeInsert>({
                 action: change.action,
@@ -249,6 +250,9 @@ export class SuggestChangeStore implements ISuggestChangeStore {
             { feature: change.feature, data: change.payload },
             user,
         );
+        if (shouldReturn) {
+            return this.get(changeSetID);
+        }
     };
 
     createEventForChange = async (

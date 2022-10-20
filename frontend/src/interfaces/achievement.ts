@@ -1,22 +1,16 @@
+import { Achievement } from 'constants/achievements';
+
 export interface IAchievement {
-    id: number;
-    achievementId: string;
+    id: Achievement;
     title: string;
     description: string;
-    rarity: string;
     imageUrl: string;
+    rarity: string;
+}
+
+export interface IAchievementUnlock {
+    id: number;
+    achievementId: Achievement;
     unlockedAt: Date;
     seenAt?: Date;
-}
-
-export interface IAchievementDefinitions {
-    [key: string]: IAchievementDefinition;
-}
-
-export interface IAchievementDefinition {
-    id: string;
-    title: string;
-    description: string;
-    imageUrl: string;
-    rarity: string;
 }

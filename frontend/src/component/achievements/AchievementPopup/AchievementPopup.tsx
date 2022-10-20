@@ -1,9 +1,10 @@
 import { Avatar, styled, Typography } from '@mui/material';
-import { IAchievement } from 'interfaces/achievement';
+import { IAchievement, IAchievementUnlock } from 'interfaces/achievement';
 import React, { useEffect, useState } from 'react';
 import { Timer } from './Timer';
 import { useNavigate } from 'react-router-dom';
 import { useAchievementsApi } from 'hooks/api/actions/useAchievementsApi/useAchievementsApi';
+import { useAchievements } from 'hooks/api/getters/useAchievements/useAchievements';
 
 const StyledPopup = styled('div')<{ visible: boolean }>(
     ({ theme, visible }) => ({
@@ -64,42 +65,48 @@ const StyledRarityDescription = styled(Typography)(({ theme }) => ({
 let timeout: Timer;
 
 interface AchievementPopupProps {
-    newAchievements: IAchievement[];
-    setNewAchievements: React.Dispatch<React.SetStateAction<IAchievement[]>>;
+    newUnlocks: IAchievementUnlock[];
+    setNewUnlocks: React.Dispatch<React.SetStateAction<IAchievementUnlock[]>>;
 }
 
 export const AchievementPopup = ({
-    newAchievements,
-    setNewAchievements,
+    newUnlocks,
+    setNewUnlocks,
 }: AchievementPopupProps) => {
     const navigate = useNavigate();
+    const { achievements } = useAchievements();
     const { markAchievementSeen } = useAchievementsApi();
 
     const [visible, setVisible] = useState(false);
     const [ready, setReady] = useState(true);
     const [achievement, setAchievement] = useState<IAchievement | null>(null);
 
-    const showAchievement = (achievement: IAchievement) => {
-        setReady(false);
-        setAchievement(achievement);
-        markAchievementSeen(achievement.id);
-        setNewAchievements(prevAchievements =>
-            prevAchievements.filter(({ id }) => id !== achievement.id)
+    const showAchievement = (unlock: IAchievementUnlock) => {
+        const achievement = achievements.find(
+            achievement => achievement.id === unlock.achievementId
         );
-        setVisible(true);
-        timeout = new Timer(() => {
-            setVisible(false);
-            setTimeout(() => {
-                setReady(true);
-            }, 300);
-        }, 5000);
+        if (achievement) {
+            setReady(false);
+            setAchievement(achievement);
+            markAchievementSeen(unlock.id);
+            setNewUnlocks(prevUnlocks =>
+                prevUnlocks.filter(({ id }) => id !== unlock.id)
+            );
+            setVisible(true);
+            timeout = new Timer(() => {
+                setVisible(false);
+                setTimeout(() => {
+                    setReady(true);
+                }, 300);
+            }, 5000);
+        }
     };
 
     useEffect(() => {
-        if (newAchievements.length > 0 && ready) {
-            showAchievement(newAchievements[0]);
+        if (newUnlocks.length > 0 && ready) {
+            showAchievement(newUnlocks[0]);
         }
-    }, [ready, newAchievements]);
+    }, [ready, newUnlocks]);
 
     return (
         <StyledPopup

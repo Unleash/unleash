@@ -15,9 +15,9 @@ import {
     achievementsSchema,
 } from '../../../openapi/spec/achievements-schema';
 import {
-    AchievementSchema,
-    achievementSchema,
-} from '../../../openapi/spec/achievement-schema';
+    AchievementUnlockSchema,
+    achievementUnlockSchema,
+} from '../../../openapi/spec/achievement-unlock-schema';
 
 export default class AchievementsController extends Controller {
     private achievementsService: AchievementsService;
@@ -88,25 +88,25 @@ export default class AchievementsController extends Controller {
         req: IAuthRequest,
         res: Response<AchievementsSchema>,
     ): Promise<void> {
-        const achievements = await this.achievementsService.getAll(req.user);
-        const definitions = await this.achievementsService.getDefinitions();
+        const achievements = await this.achievementsService.getAll();
+        const unlocks = await this.achievementsService.getUnlocks(req.user);
         this.openApiService.respondWithValidation(
             200,
             res,
             achievementsSchema.$id,
             {
-                all: definitions,
-                achievements: serializeDates(achievements),
+                achievements,
+                unlocks: serializeDates(unlocks),
             },
         );
     }
 
     async unlockAchievement(
         req: IAuthRequest,
-        res: Response<AchievementSchema>,
+        res: Response<AchievementUnlockSchema>,
     ): Promise<void> {
         const { id } = req.body;
-        const newAchievement = await this.achievementsService.unlockAchievement(
+        const unlock = await this.achievementsService.unlockAchievement(
             id,
             req.user,
         );
@@ -114,8 +114,8 @@ export default class AchievementsController extends Controller {
         this.openApiService.respondWithValidation(
             201,
             res,
-            achievementSchema.$id,
-            serializeDates(newAchievement),
+            achievementUnlockSchema.$id,
+            serializeDates(unlock),
         );
     }
 

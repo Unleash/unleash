@@ -1,14 +1,13 @@
 import { FromSchema } from 'json-schema-to-ts';
+import { Achievement } from '../../constants/achievements';
 
 export const achievementSchema = {
     $id: '#/components/schemas/achievementSchema',
     type: 'object',
+    additionalProperties: false,
     properties: {
         id: {
-            type: 'number',
-        },
-        achievementId: {
-            type: 'string',
+            enum: Object.values(Achievement),
         },
         title: {
             type: 'string',
@@ -21,16 +20,6 @@ export const achievementSchema = {
         },
         imageUrl: {
             type: 'string',
-        },
-        unlockedAt: {
-            type: 'string',
-            format: 'date-time',
-            nullable: true,
-        },
-        seenAt: {
-            type: 'string',
-            format: 'date-time',
-            nullable: true,
         },
     },
     components: {

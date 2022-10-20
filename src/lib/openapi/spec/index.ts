@@ -120,4 +120,5 @@ export * from './public-signup-token-create-schema';
 export * from './public-signup-token-update-schema';
 export * from './feature-environment-metrics-schema';
 export * from './achievement-schema';
+export * from './achievement-unlock-schema';
 export * from './achievements-schema';

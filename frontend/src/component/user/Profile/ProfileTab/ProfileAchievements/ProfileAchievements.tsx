@@ -32,11 +32,19 @@ const StyledAchievementAvatar = styled(Avatar)(({ theme }) => ({
 
 export const ProfileAchievements = (props: DividerProps) => {
     const navigate = useNavigate();
-    const { achievements } = useAchievements();
+    const { achievements = [], unlocks = [] } = useAchievements();
+
+    const unlockedAchievements = achievements.filter(achievement =>
+        unlocks.find(({ achievementId }) => achievementId === achievement.id)
+    );
+
+    const rarestUnlockedAchievements = unlockedAchievements
+        .sort(({ rarity: a }, { rarity: b }) => parseFloat(a) - parseFloat(b))
+        .slice(0, 5);
 
     return (
         <div {...props}>
-            {achievements?.slice(0, 5).map(achievement => (
+            {rarestUnlockedAchievements.map(achievement => (
                 <StyledTooltip
                     key={achievement.id}
                     title={

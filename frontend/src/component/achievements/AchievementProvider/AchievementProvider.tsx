@@ -1,6 +1,7 @@
 import { Achievement } from 'constants/achievements';
 import { useAchievementsApi } from 'hooks/api/actions/useAchievementsApi/useAchievementsApi';
-import { IAchievement } from 'interfaces/achievement';
+import { useAchievements } from 'hooks/api/getters/useAchievements/useAchievements';
+import { IAchievementUnlock } from 'interfaces/achievement';
 import { ReactElement, useMemo, useState, ReactNode } from 'react';
 import { AchievementContext } from '../AchievementContext/AchievementContext';
 import { AchievementPopup } from '../AchievementPopup/AchievementPopup';
@@ -12,32 +13,31 @@ interface IAnnouncerProviderProps {
 export const AchievementProvider = ({
     children,
 }: IAnnouncerProviderProps): ReactElement => {
+    const { refetchAchievements } = useAchievements();
     const { unlockAchievement } = useAchievementsApi();
 
-    const [newAchievements, setNewAchievements] = useState<IAchievement[]>([]);
+    const [newUnlocks, setNewUnlocks] = useState<IAchievementUnlock[]>([]);
 
     const value = useMemo(
         () => ({
             unlockAchievement: async (achievement: Achievement) => {
-                const newAchievement = await unlockAchievement(achievement);
+                const newUnlock = await unlockAchievement(achievement);
+                await refetchAchievements();
 
-                if (newAchievement?.id !== -1) {
-                    setNewAchievements(prevAchievements => [
-                        ...prevAchievements,
-                        newAchievement,
-                    ]);
+                if (newUnlock?.id !== -1) {
+                    setNewUnlocks(prevUnlocks => [...prevUnlocks, newUnlock]);
                 }
             },
         }),
-        [setNewAchievements]
+        [setNewUnlocks]
     );
 
     return (
         <AchievementContext.Provider value={value}>
             {children}
             <AchievementPopup
-                newAchievements={newAchievements}
-                setNewAchievements={setNewAchievements}
+                newUnlocks={newUnlocks}
+                setNewUnlocks={setNewUnlocks}
             />
         </AchievementContext.Provider>
     );

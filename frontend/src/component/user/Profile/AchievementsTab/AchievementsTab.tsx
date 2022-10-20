@@ -10,18 +10,18 @@ const StyledForm = styled('form')(({ theme }) => ({
 }));
 
 export const AchievementsTab = () => {
-    const { achievements, all = {}, loading } = useAchievements();
+    const { achievements = [], unlocks, loading } = useAchievements();
 
     return (
         <PageContent isLoading={loading} header="Achievements">
             <StyledForm>
-                {Object.values(all)?.map(definition => (
+                {Object.values(achievements)?.map(achievement => (
                     <AchievementCard
-                        key={definition.id}
-                        definition={definition}
-                        achievement={achievements?.find(
+                        key={achievement.id}
+                        achievement={achievement}
+                        unlock={unlocks?.find(
                             ({ achievementId }) =>
-                                achievementId === definition.id
+                                achievementId === achievement.id
                         )}
                     />
                 ))}

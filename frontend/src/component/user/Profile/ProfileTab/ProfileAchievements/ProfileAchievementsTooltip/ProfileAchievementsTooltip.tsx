@@ -23,8 +23,13 @@ const StyledTooltipTitle = styled(Typography)(({ theme }) => ({
 }));
 
 const StyledTooltipDescription = styled(Typography)(({ theme }) => ({
-    fontSize: theme.fontSizes.smallerBody,
+    fontSize: theme.fontSizes.smallBody,
     color: theme.palette.text.secondary,
+}));
+
+const StyledTooltipRarityDescription = styled(Typography)(({ theme }) => ({
+    fontSize: theme.fontSizes.smallerBody,
+    color: theme.palette.primary.main,
 }));
 
 export const ProfileAchievementsTooltip = ({
@@ -43,9 +48,9 @@ export const ProfileAchievementsTooltip = ({
                 <StyledTooltipDescription>
                     {achievement?.description}
                 </StyledTooltipDescription>
-                <StyledTooltipDescription>
-                    {achievement?.rarity}
-                </StyledTooltipDescription>
+                <StyledTooltipRarityDescription>
+                    {achievement?.rarity}% of users have this achievement
+                </StyledTooltipRarityDescription>
             </StyledTooltipBodyDescription>
         </StyledTooltipBody>
     );

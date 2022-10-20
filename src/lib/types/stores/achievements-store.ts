@@ -1,12 +1,12 @@
-import {
-    Achievement,
-    AchievementDefinitions,
-} from '../../constants/achievements';
-import { IAchievement } from '../models/achievement';
+import { Achievement } from '../../constants/achievements';
+import { IAchievement, IAchievementUnlock } from '../models/achievement';
 
 export interface IAchievementsStore {
-    getAllByUser(userId: number): Promise<IAchievement[]>;
-    getDefinitions(): Promise<AchievementDefinitions>;
-    unlock(achievementId: Achievement, userId: number): Promise<IAchievement>;
+    getAll(): Promise<IAchievement[]>;
+    getUnlocks(userId: number): Promise<IAchievementUnlock[]>;
+    unlock(
+        achievementId: Achievement,
+        userId: number,
+    ): Promise<IAchievementUnlock>;
     markAsSeen(id: number, userId: number): Promise<void>;
 }

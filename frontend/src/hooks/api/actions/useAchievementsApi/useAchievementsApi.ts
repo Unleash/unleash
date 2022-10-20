@@ -1,6 +1,6 @@
 import useAPI from '../useApi/useApi';
 import { Achievement } from 'constants/achievements';
-import { IAchievement } from 'interfaces/achievement';
+import { IAchievementUnlock } from 'interfaces/achievement';
 
 export const useAchievementsApi = () => {
     const { makeRequest, createRequest, errors, loading } = useAPI({
@@ -9,7 +9,7 @@ export const useAchievementsApi = () => {
 
     const unlockAchievement = async (
         id: Achievement
-    ): Promise<IAchievement> => {
+    ): Promise<IAchievementUnlock> => {
         const req = createRequest('api/admin/user/achievements', {
             method: 'POST',
             body: JSON.stringify({ id }),

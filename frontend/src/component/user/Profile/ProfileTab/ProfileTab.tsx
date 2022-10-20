@@ -19,7 +19,6 @@ import TopicOutlinedIcon from '@mui/icons-material/TopicOutlined';
 import { useNavigate } from 'react-router-dom';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { IAchievement } from 'interfaces/achievement';
 import { ProfileAchievements } from './ProfileAchievements/ProfileAchievements';
 
 const StyledHeader = styled('div')(({ theme }) => ({

@@ -45,15 +45,16 @@ exports[`should serve the OpenAPI spec 1`] = `
   "components": {
     "schemas": {
       "achievementSchema": {
+        "additionalProperties": false,
         "properties": {
-          "achievementId": {
-            "type": "string",
-          },
           "description": {
             "type": "string",
           },
           "id": {
-            "type": "number",
+            "enum": [
+              "FIRST_LOGIN",
+              "FIRST_TOGGLE",
+            ],
           },
           "imageUrl": {
             "type": "string",
@@ -61,12 +62,27 @@ exports[`should serve the OpenAPI spec 1`] = `
           "rarity": {
             "type": "string",
           },
+          "title": {
+            "type": "string",
+          },
+        },
+        "type": "object",
+      },
+      "achievementUnlockSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "achievementId": {
+            "enum": [
+              "FIRST_LOGIN",
+              "FIRST_TOGGLE",
+            ],
+          },
+          "id": {
+            "type": "number",
+          },
           "seenAt": {
             "format": "date-time",
             "nullable": true,
-            "type": "string",
-          },
-          "title": {
             "type": "string",
           },
           "unlockedAt": {
@@ -85,9 +101,11 @@ exports[`should serve the OpenAPI spec 1`] = `
             },
             "type": "array",
           },
-          "all": {
-            "additionalProperties": true,
-            "type": "object",
+          "unlocks": {
+            "items": {
+              "$ref": "#/components/schemas/achievementUnlockSchema",
+            },
+            "type": "array",
           },
         },
         "type": "object",

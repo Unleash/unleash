@@ -3,9 +3,9 @@ import { Logger } from '../logger';
 import { IAchievementsStore } from '../types/stores/achievements-store';
 import { IEventStore } from '../types/stores/event-store';
 import { ACHIEVEMENT_UNLOCKED } from '../types/events';
-import { IAchievement } from '../types/models/achievement';
+import { IAchievement, IAchievementUnlock } from '../types/models/achievement';
 import User from '../types/user';
-import { Achievement, AchievementDefinitions } from '../constants/achievements';
+import { Achievement } from '../constants/achievements';
 
 export default class AchievementsService {
     private config: IUnleashConfig;
@@ -29,18 +29,18 @@ export default class AchievementsService {
         this.eventStore = eventStore;
     }
 
-    async getAll(user: User): Promise<IAchievement[]> {
-        return this.achievementsStore.getAllByUser(user.id);
+    async getAll(): Promise<IAchievement[]> {
+        return this.achievementsStore.getAll();
     }
 
-    async getDefinitions(): Promise<AchievementDefinitions> {
-        return this.achievementsStore.getDefinitions();
+    async getUnlocks(user: User): Promise<IAchievementUnlock[]> {
+        return this.achievementsStore.getUnlocks(user.id);
     }
 
     async unlockAchievement(
         achievementId: Achievement,
         user: User,
-    ): Promise<IAchievement> {
+    ): Promise<IAchievementUnlock> {
         const newAchievement = await this.achievementsStore.unlock(
             achievementId,
             user.id,

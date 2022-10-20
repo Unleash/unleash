@@ -1,7 +1,7 @@
 import { Avatar, styled, Typography } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useLocationSettings } from 'hooks/useLocationSettings';
-import { IAchievement, IAchievementDefinition } from 'interfaces/achievement';
+import { IAchievement, IAchievementUnlock } from 'interfaces/achievement';
 import { formatDateYMD } from 'utils/formatDate';
 
 const StyledCard = styled('div')<{ unlocked: boolean }>(({ unlocked }) => ({
@@ -12,7 +12,7 @@ const StyledCard = styled('div')<{ unlocked: boolean }>(({ unlocked }) => ({
     width: '100%',
 }));
 
-const StyledCardBody = styled('div')(({ theme }) => ({
+const StyledCardBody = styled('div')(() => ({
     display: 'flex',
     flexDirection: 'row',
 }));
@@ -44,32 +44,31 @@ const StyledCardRarityDescription = styled(Typography)(({ theme }) => ({
 }));
 
 interface IAchievementCardProps {
-    definition?: IAchievementDefinition;
     achievement?: IAchievement;
+    unlock?: IAchievementUnlock;
 }
 
 export const AchievementCard = ({
-    definition,
     achievement,
+    unlock,
 }: IAchievementCardProps) => {
     const { locationSettings } = useLocationSettings();
-    const unlocked = achievement !== undefined;
+    const unlocked = Boolean(unlock);
 
     return (
-        <StyledCard unlocked={Boolean(achievement)}>
+        <StyledCard unlocked={unlocked}>
             <StyledCardBody>
                 <StyledCardAvatar
                     variant="rounded"
-                    src={definition?.imageUrl}
+                    src={achievement?.imageUrl}
                 />
                 <StyledCardBodyDescription>
-                    <StyledCardTitle>{definition?.title}</StyledCardTitle>
+                    <StyledCardTitle>{achievement?.title}</StyledCardTitle>
                     <StyledCardDescription>
-                        {definition?.description}
+                        {achievement?.description}
                     </StyledCardDescription>
                     <StyledCardRarityDescription>
-                        {definition?.rarity}% of users have unlocked this
-                        achievement
+                        {achievement?.rarity}% of users have this achievement
                     </StyledCardRarityDescription>
                 </StyledCardBodyDescription>
             </StyledCardBody>
@@ -79,7 +78,7 @@ export const AchievementCard = ({
                     <StyledCardDescription>
                         Unlocked at{' '}
                         {formatDateYMD(
-                            achievement?.unlockedAt!,
+                            unlock?.unlockedAt!,
                             locationSettings.locale
                         )}
                     </StyledCardDescription>

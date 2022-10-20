@@ -15,7 +15,7 @@ afterAll(async () => {
 test('creates new feature toggle with createdBy', async () => {
     expect.assertions(1);
 
-    const { request, destroy } = await setupAppWithAuth(db.stores);
+    const { request, destroy } = await setupAppWithAuth(db);
 
     // Login
     await request.post('/auth/demo/login').send({
@@ -41,7 +41,7 @@ test('creates new feature toggle with createdBy', async () => {
 
 test('should require authenticated user', async () => {
     expect.assertions(0);
-    const { request, destroy } = await setupAppWithAuth(db.stores);
+    const { request, destroy } = await setupAppWithAuth(db);
     await request.get('/api/admin/features').expect(401);
     await destroy();
 });

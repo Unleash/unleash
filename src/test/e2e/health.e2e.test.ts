@@ -2,12 +2,10 @@ import { setupApp } from './helpers/test-helper';
 import dbInit from './helpers/database-init';
 import getLogger from '../fixtures/no-logger';
 
-let stores;
 let db;
 
 beforeAll(async () => {
     db = await dbInit('health_api', getLogger);
-    stores = db.stores;
 });
 
 afterAll(async () => {
@@ -16,7 +14,7 @@ afterAll(async () => {
 
 test('returns health good', async () => {
     expect.assertions(0);
-    const { request, destroy } = await setupApp(stores);
+    const { request, destroy } = await setupApp(db);
     await request
         .get('/health')
         .expect('Content-Type', /json/)

@@ -8,7 +8,7 @@ let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('feature_api_client', getLogger);
-    app = await setupApp(db.stores);
+    app = await setupApp(db);
     await app.services.featureToggleServiceV2.createFeatureToggle(
         'default',
         {

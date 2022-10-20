@@ -32,7 +32,7 @@ beforeAll(async () => {
     db = await dbInit('playground_service_serial', config.getLogger);
     stores = db.stores;
     segmentService = new SegmentService(stores, config);
-    const groupService = new GroupService(stores, config);
+    const groupService = new GroupService(stores, config, db.db);
     const accessService = new AccessService(stores, config, groupService);
     featureToggleService = new FeatureToggleService(
         stores,

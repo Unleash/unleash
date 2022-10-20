@@ -10,7 +10,7 @@ let projectStore: ProjectStore;
 
 beforeAll(async () => {
     db = await dbInit('projects_api_serial', getLogger);
-    app = await setupApp(db.stores);
+    app = await setupApp(db);
     projectStore = db.stores.projectStore;
 });
 

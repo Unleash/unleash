@@ -54,7 +54,7 @@ test('admin users should be able to create a token', async () => {
         });
     };
 
-    const { request, destroy } = await setupAppWithCustomAuth(stores, preHook);
+    const { request, destroy } = await setupAppWithCustomAuth(db, preHook);
 
     const tokenCreate: PublicSignupTokenCreateSchema = {
         name: 'some-name',
@@ -88,7 +88,7 @@ test('no permission to validate a token', async () => {
         });
     };
 
-    const { request, destroy } = await setupAppWithCustomAuth(stores, preHook);
+    const { request, destroy } = await setupAppWithCustomAuth(db, preHook);
 
     await stores.publicSignupTokenStore.insert({
         name: 'some-name',
@@ -116,7 +116,7 @@ test('should return 400 if token can not be validate', async () => {
         });
     };
 
-    const { request, destroy } = await setupAppWithCustomAuth(stores, preHook);
+    const { request, destroy } = await setupAppWithCustomAuth(db, preHook);
 
     await request.get('/invite/some-invalid-secret/validate').expect(400);
 
@@ -138,7 +138,7 @@ test('users can signup with invite-link', async () => {
         });
     };
 
-    const { request, destroy } = await setupAppWithCustomAuth(stores, preHook);
+    const { request, destroy } = await setupAppWithCustomAuth(db, preHook);
 
     await stores.publicSignupTokenStore.insert({
         name: 'some-name',
@@ -183,7 +183,7 @@ test('can get a token with users', async () => {
         });
     };
 
-    const { request, destroy } = await setupAppWithCustomAuth(stores, preHook);
+    const { request, destroy } = await setupAppWithCustomAuth(db, preHook);
 
     await stores.publicSignupTokenStore.insert({
         name: 'some-name',

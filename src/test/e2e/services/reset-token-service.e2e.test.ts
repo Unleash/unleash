@@ -28,7 +28,7 @@ let sessionService: SessionService;
 beforeAll(async () => {
     db = await dbInit('reset_token_service_serial', getLogger);
     stores = db.stores;
-    const groupService = new GroupService(stores, config);
+    const groupService = new GroupService(stores, config, db);
     accessService = new AccessService(stores, config, groupService);
     resetTokenService = new ResetTokenService(stores, config);
     sessionService = new SessionService(stores, config);

@@ -9,7 +9,7 @@ const PATH = '/api/admin/constraints/validate';
 
 beforeAll(async () => {
     db = await dbInit('constraints', getLogger);
-    app = await setupApp(db.stores);
+    app = await setupApp(db);
 });
 
 afterAll(async () => {

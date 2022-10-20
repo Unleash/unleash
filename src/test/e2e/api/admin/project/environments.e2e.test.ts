@@ -8,7 +8,7 @@ let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('project_environments_api_serial', getLogger);
-    app = await setupApp(db.stores);
+    app = await setupApp(db);
 });
 
 afterEach(async () => {

@@ -7,7 +7,7 @@ let app;
 
 beforeAll(async () => {
     db = await dbInit('routes_test_serial');
-    app = await setupAppWithBaseUrl(db.stores);
+    app = await setupAppWithBaseUrl(db);
 });
 
 afterAll(async () => {

@@ -26,7 +26,7 @@ const sortOrderDefault = 9999;
 
 beforeAll(async () => {
     db = await dbInit('feature_strategy_api_serial', getLogger);
-    app = await setupApp(db.stores);
+    app = await setupApp(db);
 });
 
 afterEach(async () => {

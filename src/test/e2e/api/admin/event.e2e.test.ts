@@ -11,7 +11,7 @@ let eventStore: IEventStore;
 
 beforeAll(async () => {
     db = await dbInit('event_api_serial', getLogger);
-    app = await setupApp(db.stores);
+    app = await setupApp(db);
     eventStore = db.stores.eventStore;
 });
 

@@ -27,7 +27,7 @@ beforeAll(async () => {
         name: 'Some Name',
         email: 'test@getunleash.io',
     });
-    groupService = new GroupService(stores, config);
+    groupService = new GroupService(stores, config, db.db);
     accessService = new AccessService(stores, config, groupService);
     featureToggleService = new FeatureToggleService(
         stores,

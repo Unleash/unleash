@@ -1,6 +1,7 @@
 import { IEventStore } from '../../lib/types/stores/event-store';
 import { IEvent } from '../../lib/types/events';
 import { AnyEventEmitter } from '../../lib/util/anyEventEmitter';
+import { Knex } from 'knex';
 
 class FakeEventStore extends AnyEventEmitter implements IEventStore {
     events: IEvent[];
@@ -63,6 +64,11 @@ class FakeEventStore extends AnyEventEmitter implements IEventStore {
     }
 
     async searchEvents(): Promise<IEvent[]> {
+        throw new Error('Method not implemented.');
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    transactional(transaction: Knex.Transaction<any, any[]>): IEventStore {
         throw new Error('Method not implemented.');
     }
 }

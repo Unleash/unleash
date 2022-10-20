@@ -29,7 +29,7 @@ let adminRole: IRole;
 beforeAll(async () => {
     db = await dbInit('user_admin_api_serial', getLogger);
     stores = db.stores;
-    app = await setupApp(stores);
+    app = await setupApp(db);
 
     userStore = stores.userStore;
     eventStore = stores.eventStore;
@@ -278,7 +278,7 @@ test('Creates a user and includes inviteLink and emailConfigured', async () => {
 });
 
 test('Creates a user but does not send email if sendEmail is set to false', async () => {
-    const myAppConfig = await setupAppWithCustomConfig(stores, {
+    const myAppConfig = await setupAppWithCustomConfig(db, {
         email: {
             host: 'smtp.ethereal.email',
             smtpuser: 'rafaela.pouros@ethereal.email',

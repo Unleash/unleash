@@ -7,8 +7,8 @@ import { createTestConfig } from '../../config/test-config';
 import { IAuthType } from '../../../lib/types/option';
 import { createServices } from '../../../lib/services';
 import sessionDb from '../../../lib/middleware/session-db';
-import { IUnleashStores } from '../../../lib/types';
 import { IUnleashServices } from '../../../lib/types/services';
+import { ITestDb } from './database-init';
 
 process.env.NODE_ENV = 'test';
 
@@ -19,7 +19,7 @@ export interface IUnleashTest {
 }
 
 async function createApp(
-    stores,
+    db: ITestDb,
     adminAuthentication = IAuthType.NONE,
     preHook?: Function,
     customOptions?: any,
@@ -34,11 +34,11 @@ async function createApp(
         },
         ...customOptions,
     });
-    const services = createServices(stores, config);
+    const services = createServices(db.stores, config, db.db);
     const unleashSession = sessionDb(config, undefined);
     const emitter = new EventEmitter();
     emitter.setMaxListeners(0);
-    const app = await getApp(config, stores, services, unleashSession);
+    const app = await getApp(config, db.stores, services, unleashSession);
     const request = supertest.agent(app);
 
     const destroy = async () => {
@@ -52,34 +52,32 @@ async function createApp(
     return { request, destroy, services };
 }
 
-export async function setupApp(stores: IUnleashStores): Promise<IUnleashTest> {
-    return createApp(stores);
+export async function setupApp(db: ITestDb): Promise<IUnleashTest> {
+    return createApp(db);
 }
 
 export async function setupAppWithCustomConfig(
-    stores: IUnleashStores,
+    db: ITestDb,
     customOptions: any,
 ): Promise<IUnleashTest> {
-    return createApp(stores, undefined, undefined, customOptions);
+    return createApp(db, undefined, undefined, customOptions);
 }
 
 export async function setupAppWithAuth(
-    stores: IUnleashStores,
+    db: ITestDb,
     customOptions?: any,
 ): Promise<IUnleashTest> {
-    return createApp(stores, IAuthType.DEMO, undefined, customOptions);
+    return createApp(db, IAuthType.DEMO, undefined, customOptions);
 }
 
 export async function setupAppWithCustomAuth(
-    stores: IUnleashStores,
+    db: ITestDb,
     preHook: Function,
 ): Promise<IUnleashTest> {
-    return createApp(stores, IAuthType.CUSTOM, preHook);
+    return createApp(db, IAuthType.CUSTOM, preHook);
 }
-export async function setupAppWithBaseUrl(
-    stores: IUnleashStores,
-): Promise<IUnleashTest> {
-    return createApp(stores, undefined, undefined, {
+export async function setupAppWithBaseUrl(db: ITestDb): Promise<IUnleashTest> {
+    return createApp(db, undefined, undefined, {
         server: {
             unleashUrl: 'http://localhost:4242',
             basePathUri: '/hosted',

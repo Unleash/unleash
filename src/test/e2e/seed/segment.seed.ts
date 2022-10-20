@@ -139,7 +139,7 @@ const seedSegmentsDatabase = async (
 
 const main = async (): Promise<void> => {
     const db = await dbInit(seedSchema, getLogger);
-    const app = await setupApp(db.stores);
+    const app = await setupApp(db);
 
     await seedSegmentsDatabase(app, seedSegmentSpec);
     await app.destroy();

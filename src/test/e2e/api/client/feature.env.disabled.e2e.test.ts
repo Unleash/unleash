@@ -12,7 +12,7 @@ const projectId = 'default';
 
 beforeAll(async () => {
     db = await dbInit('feature_env_api_client', getLogger);
-    app = await setupApp(db.stores);
+    app = await setupApp(db);
 
     await app.services.featureToggleServiceV2.createFeatureToggle(
         projectId,

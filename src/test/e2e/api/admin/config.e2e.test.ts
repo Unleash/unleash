@@ -9,7 +9,7 @@ let app: IUnleashTest;
 
 beforeAll(async () => {
     db = await dbInit('config_api_serial', getLogger);
-    app = await setupApp(db.stores);
+    app = await setupApp(db);
 });
 
 afterAll(async () => {

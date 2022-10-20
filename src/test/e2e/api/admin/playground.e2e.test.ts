@@ -21,7 +21,7 @@ let token: IApiToken;
 
 beforeAll(async () => {
     db = await dbInit('playground_api_serial', getLogger);
-    app = await setupAppWithAuth(db.stores);
+    app = await setupAppWithAuth(db);
     const { apiTokenService } = app.services;
     token = await apiTokenService.createApiTokenWithProjects({
         type: ApiTokenType.ADMIN,

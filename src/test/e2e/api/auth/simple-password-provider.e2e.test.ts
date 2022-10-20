@@ -33,8 +33,8 @@ let adminUser: IUser;
 beforeAll(async () => {
     db = await dbInit('simple_password_provider_api_serial', getLogger);
     stores = db.stores;
-    app = await setupApp(stores);
-    const groupService = new GroupService(stores, config);
+    app = await setupApp(db);
+    const groupService = new GroupService(stores, config, db.db);
     const accessService = new AccessService(stores, config, groupService);
     const resetTokenService = new ResetTokenService(stores, config);
     const emailService = new EmailService(undefined, config.getLogger);

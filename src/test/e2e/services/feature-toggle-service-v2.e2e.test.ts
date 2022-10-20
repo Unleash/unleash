@@ -30,7 +30,7 @@ beforeAll(async () => {
     );
     stores = db.stores;
     segmentService = new SegmentService(stores, config);
-    const groupService = new GroupService(stores, config);
+    const groupService = new GroupService(stores, config, db.db);
     const accessService = new AccessService(stores, config, groupService);
     service = new FeatureToggleService(
         stores,

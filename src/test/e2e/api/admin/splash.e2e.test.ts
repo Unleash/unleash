@@ -5,13 +5,11 @@ import getLogger from '../../../fixtures/no-logger';
 import { IUnleashConfig } from '../../../../lib/types/option';
 import { IUnleashServices } from '../../../../lib/types/services';
 
-let stores;
 let db;
 let app;
 
 beforeAll(async () => {
     db = await dbInit('splash_api_serial', getLogger);
-    stores = db.stores;
 
     const email = 'custom-user@mail.com';
 
@@ -33,7 +31,7 @@ beforeAll(async () => {
         );
     };
 
-    app = await setupAppWithCustomAuth(stores, preHook);
+    app = await setupAppWithCustomAuth(db, preHook);
 });
 
 afterAll(async () => {

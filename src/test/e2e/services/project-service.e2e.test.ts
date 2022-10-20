@@ -34,7 +34,7 @@ beforeAll(async () => {
         // @ts-ignore
         experimental: { environments: { enabled: true } },
     });
-    groupService = new GroupService(stores, config);
+    groupService = new GroupService(stores, config, db.db);
     accessService = new AccessService(stores, config, groupService);
     featureToggleService = new FeatureToggleService(
         stores,

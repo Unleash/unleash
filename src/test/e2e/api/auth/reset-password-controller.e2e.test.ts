@@ -48,8 +48,8 @@ const getBackendResetUrl = (url: URL): string => {
 beforeAll(async () => {
     db = await dbInit('reset_password_api_serial', getLogger);
     stores = db.stores;
-    app = await setupApp(stores);
-    const groupService = new GroupService(stores, config);
+    app = await setupApp(db);
+    const groupService = new GroupService(stores, config, db.db);
     accessService = new AccessService(stores, config, groupService);
     const emailService = new EmailService(config.email, config.getLogger);
     const sessionStore = new SessionStore(
@@ -181,7 +181,7 @@ test('Invalid token should yield 401', async () =>
 
 test('Calling validate endpoint with already existing session should destroy session', async () => {
     expect.assertions(0);
-    const { request, destroy } = await setupAppWithAuth(stores);
+    const { request, destroy } = await setupAppWithAuth(db);
     await request
         .post('/auth/demo/login')
         .send({
@@ -202,7 +202,7 @@ test('Calling validate endpoint with already existing session should destroy ses
 
 test('Calling reset endpoint with already existing session should logout/destroy existing session', async () => {
     expect.assertions(0);
-    const { request, destroy } = await setupAppWithAuth(stores);
+    const { request, destroy } = await setupAppWithAuth(db);
     const url = await resetTokenService.createResetPasswordUrl(
         user.id,
         adminUser.username,

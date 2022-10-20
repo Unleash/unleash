@@ -36,11 +36,13 @@ import EdgeService from './edge-service';
 import PatService from './pat-service';
 import { PublicSignupTokenService } from './public-signup-token-service';
 import { LastSeenService } from './client-metrics/last-seen-service';
+import { Knex } from 'knex';
 export const createServices = (
     stores: IUnleashStores,
     config: IUnleashConfig,
+    db: Knex,
 ): IUnleashServices => {
-    const groupService = new GroupService(stores, config);
+    const groupService = new GroupService(stores, config, db);
     const accessService = new AccessService(stores, config, groupService);
     const apiTokenService = new ApiTokenService(stores, config);
     const clientInstanceService = new ClientInstanceService(stores, config);

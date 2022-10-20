@@ -7,7 +7,7 @@ let app;
 
 beforeAll(async () => {
     db = await dbInit('context_api_serial', getLogger);
-    app = await setupApp(db.stores);
+    app = await setupApp(db);
 });
 
 afterAll(async () => {

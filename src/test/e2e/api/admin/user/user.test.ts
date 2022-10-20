@@ -9,7 +9,7 @@ const email = 'user@getunleash.io';
 
 beforeAll(async () => {
     db = await dbInit('user_api_serial', getLogger);
-    app = await setupAppWithAuth(db.stores);
+    app = await setupAppWithAuth(db);
 });
 
 afterAll(async () => {

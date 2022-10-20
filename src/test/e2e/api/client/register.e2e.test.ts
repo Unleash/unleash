@@ -15,7 +15,7 @@ let db;
 
 beforeAll(async () => {
     db = await dbInit('register_client', getLogger);
-    app = await setupApp(db.stores);
+    app = await setupApp(db);
 });
 
 afterAll(async () => {

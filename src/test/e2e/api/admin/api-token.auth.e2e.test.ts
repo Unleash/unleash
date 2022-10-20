@@ -37,7 +37,7 @@ test('editor users should only get client tokens', async () => {
         });
     };
 
-    const { request, destroy } = await setupAppWithCustomAuth(stores, preHook);
+    const { request, destroy } = await setupAppWithCustomAuth(db, preHook);
 
     await stores.apiTokenStore.insert({
         username: 'test',
@@ -78,7 +78,7 @@ test('viewer users should not be allowed to fetch tokens', async () => {
         });
     };
 
-    const { request, destroy } = await setupAppWithCustomAuth(stores, preHook);
+    const { request, destroy } = await setupAppWithCustomAuth(db, preHook);
 
     await stores.apiTokenStore.insert({
         username: 'test',
@@ -114,7 +114,7 @@ test('Only token-admins should be allowed to create token', async () => {
         });
     };
 
-    const { request, destroy } = await setupAppWithCustomAuth(stores, preHook);
+    const { request, destroy } = await setupAppWithCustomAuth(db, preHook);
 
     await request
         .post('/api/admin/api-tokens')
@@ -142,7 +142,7 @@ test('Token-admin should be allowed to create token', async () => {
         });
     };
 
-    const { request, destroy } = await setupAppWithCustomAuth(stores, preHook);
+    const { request, destroy } = await setupAppWithCustomAuth(db, preHook);
 
     await request
         .post('/api/admin/api-tokens')

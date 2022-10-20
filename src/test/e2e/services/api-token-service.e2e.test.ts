@@ -22,7 +22,7 @@ beforeAll(async () => {
     });
     db = await dbInit('api_token_service_serial', getLogger);
     stores = db.stores;
-    const groupService = new GroupService(stores, config);
+    const groupService = new GroupService(stores, config, db.db);
     const accessService = new AccessService(stores, config, groupService);
     const featureToggleService = new FeatureToggleService(
         stores,

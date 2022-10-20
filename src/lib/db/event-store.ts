@@ -1,10 +1,11 @@
 import { Knex } from 'knex';
-import { IEvent, IBaseEvent } from '../types/events';
-import { LogProvider, Logger } from '../logger';
+import { IBaseEvent, IEvent } from '../types/events';
+import { Logger, LogProvider } from '../logger';
 import { IEventStore } from '../types/stores/event-store';
 import { ITag } from '../types/model';
 import { SearchEventsSchema } from '../openapi/spec/search-events-schema';
 import { AnyEventEmitter } from '../util/anyEventEmitter';
+import { Transactional } from '../types/stores/transactional';
 
 const EVENT_COLUMNS = [
     'id',
@@ -34,14 +35,20 @@ export interface IEventTable {
 
 const TABLE = 'events';
 
-class EventStore extends AnyEventEmitter implements IEventStore {
+class EventStore
+    extends AnyEventEmitter
+    implements IEventStore, Transactional<IEventStore>
+{
     private db: Knex;
 
     private logger: Logger;
 
+    private logProvider: LogProvider;
+
     constructor(db: Knex, getLogger: LogProvider) {
         super();
         this.db = db;
+        this.logProvider = getLogger;
         this.logger = getLogger('lib/db/event-store.ts');
     }
 
@@ -216,6 +223,18 @@ class EventStore extends AnyEventEmitter implements IEventStore {
             project: e.project,
             environment: e.environment,
         };
+    }
+
+    transactional(transaction: Knex.Transaction): IEventStore {
+        let clone = new (this.constructor as {
+            new (db: Knex, getLogger: LogProvider): any;
+        })(this.db, this.logProvider);
+
+        for (const attribute in this) {
+            clone[attribute] = this[attribute];
+        }
+        clone.db = transaction;
+        return clone as IEventStore;
     }
 }
 

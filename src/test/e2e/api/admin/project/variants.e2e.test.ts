@@ -9,7 +9,7 @@ let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('project_feature_variants_api_serial', getLogger);
-    app = await setupApp(db.stores);
+    app = await setupApp(db);
 });
 
 afterAll(async () => {

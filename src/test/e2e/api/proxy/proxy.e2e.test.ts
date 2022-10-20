@@ -16,7 +16,7 @@ let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('proxy', getLogger);
-    app = await setupAppWithAuth(db.stores, {
+    app = await setupAppWithAuth(db, {
         frontendApiOrigins: ['https://example.com'],
     });
 });

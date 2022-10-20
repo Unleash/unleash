@@ -4,12 +4,10 @@ import AuthenticationRequired from '../../../../lib/types/authentication-require
 import dbInit from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 
-let stores;
 let db;
 
 beforeAll(async () => {
     db = await dbInit('feature_api_custom_auth', getLogger);
-    stores = db.stores;
 });
 
 afterAll(async () => {
@@ -34,7 +32,7 @@ test('should require authenticated user', async () => {
                 .end(),
         );
     };
-    const { request, destroy } = await setupAppWithCustomAuth(stores, preHook);
+    const { request, destroy } = await setupAppWithCustomAuth(db, preHook);
     await request.get('/api/admin/features').expect(401);
     await destroy();
 });
@@ -49,7 +47,7 @@ test('creates new feature toggle with createdBy', async () => {
             next();
         });
     };
-    const { request, destroy } = await setupAppWithCustomAuth(stores, preHook);
+    const { request, destroy } = await setupAppWithCustomAuth(db, preHook);
 
     // create toggle
     await request

@@ -24,7 +24,7 @@ const defaultStrategy = {
 
 beforeAll(async () => {
     db = await dbInit('feature_api_serial', getLogger);
-    app = await setupApp(db.stores);
+    app = await setupApp(db);
 
     const createToggle = async (
         toggle: FeatureToggleDTO,
@@ -770,12 +770,9 @@ test('marks feature toggle as stale', async () => {
 });
 
 test('should not hit endpoints if disable configuration is set', async () => {
-    const appWithDisabledLegacyFeatures = await setupAppWithCustomConfig(
-        db.stores,
-        {
-            disableLegacyFeaturesApi: true,
-        },
-    );
+    const appWithDisabledLegacyFeatures = await setupAppWithCustomConfig(db, {
+        disableLegacyFeaturesApi: true,
+    });
 
     await appWithDisabledLegacyFeatures.request
         .get('/api/admin/features/featureX')
@@ -789,12 +786,9 @@ test('should not hit endpoints if disable configuration is set', async () => {
 });
 
 test('should hit validate and tags endpoint if legacy api is disabled', async () => {
-    const appWithDisabledLegacyFeatures = await setupAppWithCustomConfig(
-        db.stores,
-        {
-            disableLegacyFeaturesApi: true,
-        },
-    );
+    const appWithDisabledLegacyFeatures = await setupAppWithCustomConfig(db, {
+        disableLegacyFeaturesApi: true,
+    });
 
     const feature = {
         name: 'test.feature.disabled.api',
@@ -826,12 +820,9 @@ test('should hit validate and tags endpoint if legacy api is disabled', async ()
 });
 
 test('should have access to the get all features endpoint even if api is disabled', async () => {
-    const appWithDisabledLegacyFeatures = await setupAppWithCustomConfig(
-        db.stores,
-        {
-            disableLegacyFeaturesApi: true,
-        },
-    );
+    const appWithDisabledLegacyFeatures = await setupAppWithCustomConfig(db, {
+        disableLegacyFeaturesApi: true,
+    });
 
     await appWithDisabledLegacyFeatures.request
         .get('/api/admin/features')

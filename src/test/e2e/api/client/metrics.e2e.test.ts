@@ -8,7 +8,7 @@ let db;
 
 beforeAll(async () => {
     db = await dbInit('metrics_api_client', getLogger);
-    app = await setupApp(db.stores);
+    app = await setupApp(db);
 });
 
 afterAll(async () => {

@@ -30,13 +30,14 @@ export class GroupService {
 
     constructor(
         stores: Pick<IUnleashStores, 'groupStore' | 'eventStore' | 'userStore'>,
-        { getLogger }: Pick<IUnleashConfig, 'getLogger'>, // db: Knex,
+        { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
+        db: Knex,
     ) {
         this.logger = getLogger('service/group-service.js');
         this.groupStore = stores.groupStore;
         this.eventStore = stores.eventStore;
         this.userStore = stores.userStore;
-        // this.db = db;
+        this.db = db;
     }
 
     async getAll(): Promise<IGroupModel[]> {
@@ -106,23 +107,24 @@ export class GroupService {
         const preData = await this.groupStore.get(group.id);
 
         await this.validateGroup(group, preData);
+        return this.db.transaction(async (tx) => {
+            const newGroup = await this.groupStore
+                .transactional(tx)
+                .update(group);
 
-        const newGroup = await this.groupStore.update(group);
+            const existingUsers = await this.groupStore
+                .transactional(tx)
+                .getAllUsersByGroups([group.id]);
+            const existingUserIds = existingUsers.map((g) => g.userId);
 
-        const existingUsers = await this.groupStore.getAllUsersByGroups([
-            group.id,
-        ]);
-        const existingUserIds = existingUsers.map((g) => g.userId);
+            const deletableUsers = existingUsers.filter(
+                (existingUser) =>
+                    !group.users.some(
+                        (groupUser) => groupUser.user.id == existingUser.userId,
+                    ),
+            );
+            const deletableUserIds = deletableUsers.map((g) => g.userId);
 
-        const deletableUsers = existingUsers.filter(
-            (existingUser) =>
-                !group.users.some(
-                    (groupUser) => groupUser.user.id == existingUser.userId,
-                ),
-        );
-        const deletableUserIds = deletableUsers.map((g) => g.userId);
-
-        this.db.transaction(async (tx) => {
             await this.groupStore.transactional(tx).updateGroupUsers(
                 newGroup.id,
                 group.users.filter(
@@ -136,16 +138,14 @@ export class GroupService {
                 deletableUsers,
                 userName,
             );
+            await this.eventStore.transactional(tx).store({
+                type: GROUP_UPDATED,
+                createdBy: userName,
+                data: newGroup,
+                preData,
+            });
+            return newGroup;
         });
-
-        await this.eventStore.store({
-            type: GROUP_UPDATED,
-            createdBy: userName,
-            data: newGroup,
-            preData,
-        });
-
-        return newGroup;
     }
 
     async getProjectGroups(
@@ -226,19 +226,21 @@ export class GroupService {
         userId: number,
         externalGroups: string[],
     ): Promise<void> {
-        let newGroups = await this.groupStore.getNewGroupsForExternalUser(
-            userId,
-            externalGroups,
-        );
-        await this.groupStore.addUserToGroups(
-            userId,
-            newGroups.map((g) => g.id),
-        );
-        let oldGroups = await this.groupStore.getOldGroupsForExternalUser(
-            userId,
-            externalGroups,
-        );
-        await this.groupStore.deleteUsersFromGroup(oldGroups);
+        await this.db.transaction(async (trx) => {
+            let newGroups = await this.groupStore
+                .transactional(trx)
+                .getNewGroupsForExternalUser(userId, externalGroups);
+            await this.groupStore.transactional(trx).addUserToGroups(
+                userId,
+                newGroups.map((g) => g.id),
+            );
+            let oldGroups = await this.groupStore
+                .transactional(trx)
+                .getOldGroupsForExternalUser(userId, externalGroups);
+            await this.groupStore
+                .transactional(trx)
+                .deleteUsersFromGroup(oldGroups);
+        });
     }
 
     async getGroupsForUser(userId: number): Promise<IGroup[]> {

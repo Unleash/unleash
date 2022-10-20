@@ -7,7 +7,7 @@ let db;
 
 beforeAll(async () => {
     db = await dbInit('archive_serial', getLogger);
-    app = await setupApp(db.stores);
+    app = await setupApp(db);
     await app.services.featureToggleServiceV2.createFeatureToggle(
         'default',
         {

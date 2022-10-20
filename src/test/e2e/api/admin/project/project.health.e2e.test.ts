@@ -8,7 +8,7 @@ let user;
 
 beforeAll(async () => {
     db = await dbInit('project_health_api_serial', getLogger);
-    app = await setupApp(db.stores);
+    app = await setupApp(db);
     user = await db.stores.userStore.insert({
         name: 'Some Name',
         email: 'test@getunleash.io',

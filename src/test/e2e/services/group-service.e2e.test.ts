@@ -19,7 +19,7 @@ beforeAll(async () => {
     const config = createTestConfig({
         getLogger,
     });
-    groupService = new GroupService(stores, config);
+    groupService = new GroupService(stores, config, db.db);
 
     await stores.groupStore.create({
         name: 'dev_group',

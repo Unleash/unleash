@@ -1,12 +1,15 @@
 import { VFC } from 'react';
 import { Box, Paper, Typography, Card } from '@mui/material';
 import { PlaygroundResultChip } from 'component/playground/Playground/PlaygroundResultsTable/PlaygroundResultChip/PlaygroundResultChip'; // FIXME: refactor - extract to common
+import { ISuggestChange } from 'interfaces/suggestChangeset';
 
 type ChangesetDiffProps = {
-    changeSet?: any;
+    changeset?: ISuggestChange[];
 };
 
-export const ChangesetDiff: VFC<ChangesetDiffProps> = ({ changeSet }) => (
+export const ChangesetDiff: VFC<ChangesetDiffProps> = ({
+    changeset: changeSet,
+}) => (
     <Paper
         elevation={4}
         sx={{

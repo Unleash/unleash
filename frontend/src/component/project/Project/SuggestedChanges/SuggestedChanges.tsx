@@ -59,13 +59,13 @@ export const SuggestedChanges: VFC = () => {
             <Typography>{changeRequest?.state}</Typography>
             Environment: {changeRequest?.environment}
             <br />
-            <ChangesHeader
+            {/* <ChangesHeader
                 author={changeRequest?.createdBy?.name}
                 avatar={changeRequest?.createdBy?.imageUrl}
                 createdAt={changeRequest?.createdAt}
-            />
+            /> */}
             <br />
-            <ChangesetDiff changeSet={changeRequest?.changeSet} />
+            <ChangesetDiff changeset={changeRequest?.changes} />
             <ConditionallyRender
                 condition={changeRequest?.state === 'APPLIED'}
                 show={<Typography>Applied</Typography>}

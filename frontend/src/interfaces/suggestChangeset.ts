@@ -1,4 +1,4 @@
-export interface ISuggestChangeSet {
+export interface ISuggestChangeset {
     id: number;
     state: string;
     project: string;
@@ -11,27 +11,24 @@ export interface ISuggestChangeSet {
 
 export interface ISuggestChange {
     id: number;
-    action: SuggestChangeAction;
+    action:
+        | 'updateEnabled'
+        | 'strategyAdd'
+        | 'strategyUpdate'
+        | 'strategyDelete';
     feature: string;
     payload?: unknown;
     createdBy?: string;
     createdAt?: Date;
 }
 
-export enum SuggestChangeSetEvent {
+export enum SuggestChangesetEvent {
     CREATED = 'CREATED',
     UPDATED = 'UPDATED',
     SUBMITTED = 'SUBMITTED',
     APPROVED = 'APPROVED',
     REJECTED = 'REJECTED',
     CLOSED = 'CLOSED',
-}
-
-export enum SuggestChangeAction {
-    UPDATE_ENABLED = 'updateEnabled',
-    ADD_STRATEGY = 'strategyAdd',
-    UPDATE_STRATEGY = 'strategyUpdate',
-    DELETE_STRATEGY = 'strategyDelete',
 }
 
 export enum SuggestChangeEvent {
@@ -43,7 +40,7 @@ export enum SuggestChangeEvent {
 
 export interface ISuggestChangeEvent {
     id: number;
-    event: SuggestChangeSetEvent;
+    event: SuggestChangesetEvent;
     data: ISuggestChangeEventData;
     createdBy?: string;
     createdAt?: Date;

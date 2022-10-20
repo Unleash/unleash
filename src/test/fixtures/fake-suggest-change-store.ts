@@ -34,7 +34,7 @@ export default class FakeSuggestChangeStore implements ISuggestChangeStore {
     getForEnvironment(environment: string): Promise<ISuggestChangeset[]> {
         return Promise.resolve(
             this.suggestChanges.filter(
-                (changeSet) => (changeSet.environment = environment),
+                (changeSet) => changeSet.environment === environment,
             ),
         );
     }
@@ -42,7 +42,7 @@ export default class FakeSuggestChangeStore implements ISuggestChangeStore {
     getForProject(project: string): Promise<ISuggestChangeset[]> {
         return Promise.resolve(
             this.suggestChanges.filter(
-                (changeSet) => (changeSet.project = project),
+                (changeSet) => changeSet.project === project,
             ),
         );
     }

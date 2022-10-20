@@ -43,6 +43,7 @@ export interface IFlags {
     publicSignup?: boolean;
     personalAccessTokens?: boolean;
     syncSSOGroups?: boolean;
+    suggestChanges?: boolean;
 }
 
 export interface IVersionInfo {

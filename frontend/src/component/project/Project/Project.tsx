@@ -24,6 +24,9 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { DeleteProjectDialogue } from './DeleteProject/DeleteProjectDialogue';
 import { ProjectLog } from './ProjectLog/ProjectLog';
+import { SuggestedChanges } from './SuggestedChanges/SuggestedChanges';
+import { DraftBanner } from './SuggestedChanges/DraftBanner/DraftBanner';
+import { MainLayout } from 'component/layout/MainLayout/MainLayout';
 
 const StyledDiv = styled('div')(() => ({
     display: 'flex',
@@ -53,7 +56,7 @@ const Project = () => {
     const { classes: styles } = useStyles();
     const navigate = useNavigate();
     const { pathname } = useLocation();
-    const { isOss } = useUiConfig();
+    const { isOss, uiConfig } = useUiConfig();
     const basePath = `/projects/${projectId}`;
     const projectName = project?.name || projectId;
 
@@ -65,6 +68,15 @@ const Project = () => {
             path: basePath,
             name: 'overview',
         },
+        ...(uiConfig?.flags?.suggestChanges
+            ? [
+                  {
+                      title: 'Suggested changes',
+                      path: `${basePath}/changes`,
+                      name: 'changes',
+                  },
+              ]
+            : []),
         {
             title: 'Health',
             path: `${basePath}/health`,
@@ -112,7 +124,10 @@ const Project = () => {
     }, []);
 
     return (
-        <div ref={ref}>
+        <MainLayout
+            ref={ref}
+            subheader={uiConfig?.flags?.suggestChanges ? <DraftBanner /> : null}
+        >
             <div className={styles.header}>
                 <div className={styles.innerContainer}>
                     <h2 className={styles.title}>
@@ -213,6 +228,7 @@ const Project = () => {
                 }}
             />
             <Routes>
+                <Route path="changes" element={<SuggestedChanges />} />
                 <Route path="health" element={<ProjectHealth />} />
                 <Route path="access/*" element={<ProjectAccess />} />
                 <Route path="environments" element={<ProjectEnvironment />} />
@@ -220,7 +236,7 @@ const Project = () => {
                 <Route path="logs" element={<ProjectLog />} />
                 <Route path="*" element={<ProjectOverview />} />
             </Routes>
-        </div>
+        </MainLayout>
     );
 };
 

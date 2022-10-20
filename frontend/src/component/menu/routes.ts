@@ -68,6 +68,7 @@ export const routes: IRoute[] = [
         component: SplashPage,
         type: 'protected',
         menu: {},
+        isStandalone: true,
     },
 
     // Project
@@ -145,6 +146,7 @@ export const routes: IRoute[] = [
         flag: P,
         type: 'protected',
         menu: {},
+        isStandalone: true,
     },
     {
         path: '/projects',
@@ -546,6 +548,7 @@ export const routes: IRoute[] = [
         type: 'unprotected',
         hidden: true,
         menu: {},
+        isStandalone: true,
     },
     /* If you update this route path, make sure you update the path in SWRProvider.tsx */
     {
@@ -555,6 +558,7 @@ export const routes: IRoute[] = [
         component: NewUser,
         type: 'unprotected',
         menu: {},
+        isStandalone: true,
     },
     /* If you update this route path, make sure you update the path in SWRProvider.tsx */
     {
@@ -564,6 +568,7 @@ export const routes: IRoute[] = [
         component: ResetPassword,
         type: 'unprotected',
         menu: {},
+        isStandalone: true,
     },
     /* If you update this route path, make sure you update the path in SWRProvider.tsx */
     {
@@ -573,6 +578,7 @@ export const routes: IRoute[] = [
         component: ForgottenPassword,
         type: 'unprotected',
         menu: {},
+        isStandalone: true,
     },
 ];
 

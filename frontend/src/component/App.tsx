@@ -40,36 +40,41 @@ export const App = () => {
                             elseShow={
                                 <div className={styles.container}>
                                     <ToastRenderer />
-                                    <LayoutPicker>
-                                        <Routes>
-                                            {availableRoutes.map(route => (
-                                                <Route
-                                                    key={route.path}
-                                                    path={route.path}
-                                                    element={
+                                    <Routes>
+                                        {availableRoutes.map(route => (
+                                            <Route
+                                                key={route.path}
+                                                path={route.path}
+                                                element={
+                                                    <LayoutPicker
+                                                        isStandalone={
+                                                            route.isStandalone ===
+                                                            true
+                                                        }
+                                                    >
                                                         <ProtectedRoute
                                                             route={route}
                                                         />
-                                                    }
-                                                />
-                                            ))}
-                                            <Route
-                                                path="/"
-                                                element={
-                                                    <Navigate
-                                                        to="/features"
-                                                        replace
-                                                    />
+                                                    </LayoutPicker>
                                                 }
                                             />
-                                            <Route
-                                                path="*"
-                                                element={<NotFound />}
-                                            />
-                                        </Routes>
-                                        <FeedbackNPS openUrl="http://feedback.unleash.run" />
-                                        <SplashPageRedirect />
-                                    </LayoutPicker>
+                                        ))}
+                                        <Route
+                                            path="/"
+                                            element={
+                                                <Navigate
+                                                    to="/features"
+                                                    replace
+                                                />
+                                            }
+                                        />
+                                        <Route
+                                            path="*"
+                                            element={<NotFound />}
+                                        />
+                                    </Routes>
+                                    <FeedbackNPS openUrl="http://feedback.unleash.run" />
+                                    <SplashPageRedirect />
                                 </div>
                             }
                         />

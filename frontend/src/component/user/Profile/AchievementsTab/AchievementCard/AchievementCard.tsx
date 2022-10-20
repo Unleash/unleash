@@ -34,8 +34,13 @@ const StyledCardTitle = styled(Typography)(({ theme }) => ({
 }));
 
 const StyledCardDescription = styled(Typography)(({ theme }) => ({
-    fontSize: theme.fontSizes.smallerBody,
+    fontSize: theme.fontSizes.smallBody,
     color: theme.palette.text.secondary,
+}));
+
+const StyledCardRarityDescription = styled(Typography)(({ theme }) => ({
+    fontSize: theme.fontSizes.smallerBody,
+    color: theme.palette.primary.main,
 }));
 
 interface IAchievementCardProps {
@@ -62,9 +67,10 @@ export const AchievementCard = ({
                     <StyledCardDescription>
                         {definition?.description}
                     </StyledCardDescription>
-                    <StyledCardDescription>
-                        {achievement?.rarity}
-                    </StyledCardDescription>
+                    <StyledCardRarityDescription>
+                        {definition?.rarity}% of users have unlocked this
+                        achievement
+                    </StyledCardRarityDescription>
                 </StyledCardBodyDescription>
             </StyledCardBody>
             <ConditionallyRender

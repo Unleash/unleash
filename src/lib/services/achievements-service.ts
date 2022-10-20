@@ -5,7 +5,7 @@ import { IEventStore } from '../types/stores/event-store';
 import { ACHIEVEMENT_UNLOCKED } from '../types/events';
 import { IAchievement } from '../types/models/achievement';
 import User from '../types/user';
-import { Achievement } from '../constants/achievements';
+import { Achievement, AchievementDefinitions } from '../constants/achievements';
 
 export default class AchievementsService {
     private config: IUnleashConfig;
@@ -31,6 +31,10 @@ export default class AchievementsService {
 
     async getAll(user: User): Promise<IAchievement[]> {
         return this.achievementsStore.getAllByUser(user.id);
+    }
+
+    async getDefinitions(): Promise<AchievementDefinitions> {
+        return this.achievementsStore.getDefinitions();
     }
 
     async unlockAchievement(

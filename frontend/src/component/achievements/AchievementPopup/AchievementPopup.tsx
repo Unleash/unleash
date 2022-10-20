@@ -52,8 +52,13 @@ const StyledTitle = styled(Typography)(({ theme }) => ({
 }));
 
 const StyledDescription = styled(Typography)(({ theme }) => ({
-    fontSize: theme.fontSizes.smallerBody,
+    fontSize: theme.fontSizes.smallBody,
     color: theme.palette.text.secondary,
+}));
+
+const StyledRarityDescription = styled(Typography)(({ theme }) => ({
+    fontSize: theme.fontSizes.smallerBody,
+    color: theme.palette.primary.main,
 }));
 
 let timeout: Timer;
@@ -111,7 +116,9 @@ export const AchievementPopup = ({
                     <StyledDescription>
                         {achievement?.description}
                     </StyledDescription>
-                    <StyledDescription>{achievement?.rarity}</StyledDescription>
+                    <StyledRarityDescription>
+                        {achievement?.rarity}% of users have this achievement
+                    </StyledRarityDescription>
                 </StyledPopupDescription>
             </StyledPopupBody>
         </StyledPopup>

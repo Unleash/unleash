@@ -18,7 +18,6 @@ import {
     AchievementSchema,
     achievementSchema,
 } from '../../../openapi/spec/achievement-schema';
-import { Achievements } from '../../../constants/achievements';
 
 export default class AchievementsController extends Controller {
     private achievementsService: AchievementsService;
@@ -90,12 +89,13 @@ export default class AchievementsController extends Controller {
         res: Response<AchievementsSchema>,
     ): Promise<void> {
         const achievements = await this.achievementsService.getAll(req.user);
+        const definitions = await this.achievementsService.getDefinitions();
         this.openApiService.respondWithValidation(
             200,
             res,
             achievementsSchema.$id,
             {
-                all: Achievements,
+                all: definitions,
                 achievements: serializeDates(achievements),
             },
         );

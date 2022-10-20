@@ -18,4 +18,5 @@ export interface IAchievementDefinition {
     title: string;
     description: string;
     imageUrl: string;
+    rarity: string;
 }

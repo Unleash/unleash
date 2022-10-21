@@ -13,6 +13,7 @@ import {
     SuggestChangesetEvent,
 } from '../types/model';
 import User from '../types/user';
+import NotFoundError from '../error/notfound-error';
 
 const T = {
     SUGGEST_CHANGE: 'suggest_change',
@@ -196,8 +197,11 @@ export class SuggestChangeStore implements ISuggestChangeStore {
                 created_by: user.id,
             },
         );
-
-        return this.mapRows(rows)[0];
+        const change = this.mapRows(rows)[0];
+        if (!change) {
+            throw new NotFoundError();
+        }
+        return change;
     };
 
     getForEnvironment = async (

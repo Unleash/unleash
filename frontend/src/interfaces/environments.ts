@@ -22,6 +22,11 @@ export interface IEnvironmentEditPayload {
     type: string;
 }
 
+export interface IEnvironmentClonePayload {
+    // TODO: Implement this
+    name: string;
+}
+
 export interface IEnvironmentResponse {
     environments: IEnvironment[];
 }

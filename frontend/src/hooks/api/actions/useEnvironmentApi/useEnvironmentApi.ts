@@ -3,6 +3,7 @@ import {
     ISortOrderPayload,
     IEnvironmentEditPayload,
     IEnvironment,
+    IEnvironmentClonePayload,
 } from 'interfaces/environments';
 import useAPI from '../useApi/useApi';
 
@@ -82,6 +83,27 @@ const useEnvironmentApi = () => {
         }
     };
 
+    const cloneEnvironment = async (
+        name: string,
+        payload: IEnvironmentClonePayload
+    ) => {
+        // TODO: Make sure endpoint is correct
+        const path = `api/admin/environments/clone/${name}`;
+        const req = createRequest(
+            path,
+            { method: 'POST', body: JSON.stringify(payload) },
+            'cloneEnvironment'
+        );
+
+        try {
+            const res = await makeRequest(req.caller, req.id);
+
+            return res;
+        } catch (e) {
+            throw e;
+        }
+    };
+
     const changeSortOrder = async (payload: ISortOrderPayload) => {
         const path = `api/admin/environments/sort-order`;
         const req = createRequest(
@@ -140,6 +162,7 @@ const useEnvironmentApi = () => {
         loading,
         deleteEnvironment,
         updateEnvironment,
+        cloneEnvironment,
         changeSortOrder,
         toggleEnvironmentOff,
         toggleEnvironmentOn,

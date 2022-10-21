@@ -103,7 +103,8 @@ export const EnvironmentActionCellPopover = ({
                         )}
                     </PermissionHOC>
                     <ConditionallyRender
-                        condition={Boolean(uiConfig.flags.cloneEnvironment)}
+                        // condition={Boolean(uiConfig.flags.cloneEnvironment)}
+                        condition={true} // TODO: Change this back
                         show={
                             <PermissionHOC permission={ADMIN}>
                                 {({ hasAccess }) => (

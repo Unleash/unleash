@@ -77,11 +77,11 @@ export const EditGroup = () => {
         navigate(GO_BACK);
     };
 
-    const isNameEmpty = (name: string) => name.length;
+    const isNameNotEmpty = (name: string) => name.length;
     const isNameUnique = (name: string) =>
         !groups?.filter(group => group.name === name && group.id !== groupId)
             .length;
-    const isValid = isNameEmpty(name) && isNameUnique(name);
+    const isValid = isNameNotEmpty(name) && isNameUnique(name);
 
     const onSetName = (name: string) => {
         clearErrors();

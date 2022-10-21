@@ -12,6 +12,7 @@ import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironmen
 import useToast from 'hooks/useToast';
 import PermissionSwitch from 'component/common/PermissionSwitch/PermissionSwitch';
 import { EnvironmentActionCellPopover } from './EnvironmentActionCellPopover/EnvironmentActionCellPopover';
+import { EnvironmentCloneModal } from './EnvironmentCloneModal/EnvironmentCloneModal';
 
 interface IEnvironmentTableActionsProps {
     environment: IEnvironment;
@@ -29,6 +30,7 @@ export const EnvironmentActionCell = ({
 
     const [deleteModal, setDeleteModal] = useState(false);
     const [toggleModal, setToggleModal] = useState(false);
+    const [cloneModal, setCloneModal] = useState(false);
     const [confirmName, setConfirmName] = useState('');
 
     const handleDeleteEnvironment = async () => {
@@ -102,7 +104,7 @@ export const EnvironmentActionCell = ({
             <EnvironmentActionCellPopover
                 environment={environment}
                 onEdit={() => navigate(`/environments/${environment.name}`)}
-                onClone={() => console.log('TODO: CLONE')}
+                onClone={() => setCloneModal(true)}
                 onDelete={() => setDeleteModal(true)}
             />
             <EnvironmentDeleteConfirm
@@ -118,6 +120,11 @@ export const EnvironmentActionCell = ({
                 open={toggleModal}
                 setToggleDialog={setToggleModal}
                 handleConfirmToggleEnvironment={handleConfirmToggleEnvironment}
+            />
+            <EnvironmentCloneModal
+                environment={environment}
+                open={cloneModal}
+                setOpen={setCloneModal}
             />
         </ActionCell>
     );

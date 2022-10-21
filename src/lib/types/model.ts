@@ -377,11 +377,16 @@ export interface ISuggestChangeset {
     events: ISuggestChangeEvent[];
 }
 
+export interface ISuggestChangePayload {
+    environment: string;
+    data: unknown;
+}
+
 export interface ISuggestChange {
     id: number;
     action: SuggestChangeAction;
     feature: string;
-    payload: unknown;
+    payload: ISuggestChangePayload;
     createdBy: Pick<User, 'id' | 'username' | 'imageUrl'>;
     createdAt: Date;
 }

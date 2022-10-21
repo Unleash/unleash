@@ -26,7 +26,7 @@ export default class FakeSuggestChangeStore implements ISuggestChangeStore {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         user: Partial<Pick<User, 'username' | 'email'>>,
     ): Promise<void> {
-        const changeSet = this.suggestChanges.find((s) => (s.id = changeSetID));
+        const changeSet = this.suggestChanges.find((s) => s.id === changeSetID);
         changeSet.changes.push(change);
         return Promise.resolve();
     }

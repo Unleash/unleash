@@ -59,7 +59,7 @@ class InstanceAdminController extends Controller {
         req: AuthedRequest,
         res: Response<InstanceStats>,
     ): Promise<void> {
-        const instanceStats = await this.instanceStatsService.getStats();
+        const instanceStats = await this.instanceStatsService.getSignedStats();
         res.json(instanceStats);
     }
 

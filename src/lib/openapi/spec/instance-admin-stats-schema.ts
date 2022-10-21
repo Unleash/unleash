@@ -53,6 +53,9 @@ export const instanceAdminStatsSchema = {
         OIDCenabled: {
             type: 'number',
         },
+        sum: {
+            type: 'string',
+        },
     },
     components: {},
 } as const;

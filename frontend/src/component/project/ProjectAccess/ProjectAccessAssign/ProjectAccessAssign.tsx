@@ -404,7 +404,7 @@ export const ProjectAccessAssign = ({
                             color="primary"
                             disabled={!isValid}
                         >
-                            Assign {entityType}
+                            {edit ? 'Save' : `Assign ${entityType}`}
                         </Button>
                         <StyledCancelButton onClick={() => navigate(GO_BACK)}>
                             Cancel

@@ -1,4 +1,4 @@
-import { Save } from '@mui/icons-material';
+import { Download } from '@mui/icons-material';
 import { Button, IconButton, Link, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 import { Box } from '@mui/system';
 import { VFC } from 'react';
@@ -50,7 +50,7 @@ export const InstanceStats: VFC = () => {
                 <Table aria-label="Instance statistics">
                     <TableHead>
                         <TableRow>
-                            <TableCell>Item</TableCell>
+                            <TableCell>Field</TableCell>
                             <TableCell align="right">Value</TableCell>
                         </TableRow>
                     </TableHead>
@@ -65,7 +65,7 @@ export const InstanceStats: VFC = () => {
                 </Table>
                 <span style={{ textAlign: 'center' }}>
                 <Button 
-                    startIcon={<Save />}
+                    startIcon={<Download />}
                     aria-label="Download instance statistics"
                     color="primary"
                     variant="contained"

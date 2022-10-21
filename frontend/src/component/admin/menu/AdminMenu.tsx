@@ -144,7 +144,7 @@ function AdminMenu() {
                                 createNavLinkStyle({ isActive, theme })
                             }
                         >
-                            Instance admin
+                            Instance stats
                         </NavLink>
                     }
                 />

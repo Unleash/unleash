@@ -501,7 +501,7 @@ export const routes: IRoute[] = [
     {
         path: '/admin/instance',
         parent: '/admin',
-        title: 'Instance admin',
+        title: 'Instance stats',
         component: InstanceAdmin,
         type: 'protected',
         menu: { adminSettings: true },

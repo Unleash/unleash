@@ -24,5 +24,7 @@ export interface ISuggestChangeStore extends Store<ISuggestChangeset, number> {
 
     getForProject(project: string): Promise<ISuggestChangeset[]>;
 
+    getForUser(user: User): Promise<ISuggestChangeset>;
+
     getForEnvironment(environment: string): Promise<ISuggestChangeset[]>;
 }

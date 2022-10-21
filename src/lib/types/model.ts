@@ -371,7 +371,7 @@ export interface ISuggestChangeset {
     state: string;
     project: string;
     environment: string;
-    createdBy: Pick<User, 'username' | 'imageUrl'>;
+    createdBy: Pick<User, 'id' | 'username' | 'imageUrl'>;
     createdAt: Date;
     changes: ISuggestChange[];
     events: ISuggestChangeEvent[];
@@ -382,7 +382,7 @@ export interface ISuggestChange {
     action: SuggestChangeAction;
     feature: string;
     payload: unknown;
-    createdBy: Pick<User, 'username' | 'imageUrl'>;
+    createdBy: Pick<User, 'id' | 'username' | 'imageUrl'>;
     createdAt: Date;
 }
 
@@ -413,7 +413,7 @@ export interface ISuggestChangeEvent {
     id: number;
     event: SuggestChangesetEvent;
     data: ISuggestChangeEventData;
-    createdBy: Pick<User, 'username' | 'imageUrl'>;
+    createdBy: Pick<User, 'id' | 'username' | 'imageUrl'>;
     createdAt: Date;
 }
 

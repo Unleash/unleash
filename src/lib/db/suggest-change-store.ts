@@ -57,6 +57,7 @@ const suggestChangeRowReducer = (acc, suggestChangeRow) => {
         eventType,
         eventData,
         eventCreatedAt,
+        eventCreatedBy,
         eventCreatedByUsername,
         eventCreatedByAvatar,
         changeId,
@@ -65,6 +66,7 @@ const suggestChangeRowReducer = (acc, suggestChangeRow) => {
         changeCreatedByUsername,
         changeCreatedByAvatar,
         changeCreatedAt,
+        changeCreatedBy,
         ...suggestChangeSet
     } = suggestChangeRow;
     if (!acc[suggestChangeRow.secret]) {
@@ -74,6 +76,7 @@ const suggestChangeRowReducer = (acc, suggestChangeRow) => {
             state: suggestChangeSet.state,
             project: suggestChangeSet.project,
             createdBy: {
+                id: suggestChangeSet.created_by,
                 username: suggestChangeSet.changeSetUsername,
                 imageUrl: suggestChangeSet.changeSetAvatar,
             },
@@ -89,6 +92,7 @@ const suggestChangeRowReducer = (acc, suggestChangeRow) => {
             event: eventType,
             data: eventData,
             createdBy: {
+                id: eventCreatedBy,
                 username: eventCreatedByUsername,
                 imageUrl: eventCreatedByUsername,
             },
@@ -103,6 +107,7 @@ const suggestChangeRowReducer = (acc, suggestChangeRow) => {
             payload: changePayload,
             createdAt: changeCreatedAt,
             createdBy: {
+                id: changeCreatedBy,
                 username: changeCreatedByUsername,
                 imageUrl: changeCreatedByAvatar,
             },
@@ -149,19 +154,22 @@ export class SuggestChangeStore implements ISuggestChangeStore {
                 'changeSet.secret',
                 'changeSet.environment',
                 'changeSet.project',
-                'changeSet.createdAt',
+                'changeSet.created_at',
+                'changeSet.created_by',
                 'changeSetUser.username as changeSetUsername',
                 'changeSetUser.imageUrl as changeSetAvatar',
                 'change.id as changeId.',
                 'change.action as changeAction',
                 'change.payload as changePayload',
                 'change.created_at as changeCreatedAt',
+                'change.created_by as changeCreatedBy',
                 'changUser.username as changeCreatedByUsername',
                 'changUser.imageUrl as changeCreatedByAvatar',
                 'event.id as eventId',
                 'event.event as eventType',
                 'event.data as eventData',
                 'event.created_at as eventCreatedAt',
+                'event.created_by as eventCreatedBy',
                 'eventUser.username as eventCreatedByUsername',
                 'eventUser.imageUrl as eventCreatedByAvatar',
             );
@@ -180,6 +188,16 @@ export class SuggestChangeStore implements ISuggestChangeStore {
         );
 
         return this.mapRows(rows);
+    };
+
+    getForUser = async (user: User): Promise<ISuggestChangeset> => {
+        const rows = await this.buildSuggestChangeSetChangesEventsQuery().where(
+            {
+                created_by: user.id,
+            },
+        );
+
+        return this.mapRows(rows)[0];
     };
 
     getForEnvironment = async (

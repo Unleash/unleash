@@ -39,6 +39,14 @@ export default class FakeSuggestChangeStore implements ISuggestChangeStore {
         );
     }
 
+    getForUser(user: User): Promise<ISuggestChangeset> {
+        return Promise.resolve(
+            this.suggestChanges.find(
+                (changeSet) => changeSet.createdBy.id === user.id,
+            ),
+        );
+    }
+
     getForProject(project: string): Promise<ISuggestChangeset[]> {
         return Promise.resolve(
             this.suggestChanges.filter(
@@ -49,12 +57,12 @@ export default class FakeSuggestChangeStore implements ISuggestChangeStore {
 
     create(
         suggestChangeSet: PartialSome<ISuggestChangeset, 'id'>,
-        user: Partial<Pick<User, 'username' | 'email'>>,
+        user: Partial<Pick<User, 'id' | 'username' | 'email'>>,
     ): Promise<ISuggestChangeset> {
         this.suggestChanges.push({
             id: 1,
             ...suggestChangeSet,
-            createdBy: { username: user.email, imageUrl: '' },
+            createdBy: { id: user.id, username: user.email, imageUrl: '' },
         });
         return Promise.resolve(undefined);
     }

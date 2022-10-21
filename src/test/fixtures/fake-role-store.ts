@@ -9,7 +9,7 @@ import {
 
 export default class FakeRoleStore implements IRoleStore {
     count(): Promise<number> {
-        throw new Error('Method not implemented.');
+        return Promise.resolve(0);
     }
 
     getProjectRolesCount(): Promise<number> {

@@ -8,7 +8,7 @@ import NotFoundError from '../../lib/error/notfound-error';
 
 export default class FakeStrategiesStore implements IStrategyStore {
     count(): Promise<number> {
-        throw new Error('Method not implemented.');
+        return Promise.resolve(0);
     }
 
     defaultStrategy: IStrategy = {

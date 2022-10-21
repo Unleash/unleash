@@ -7,7 +7,7 @@ import NotFoundError from '../../lib/error/notfound-error';
 
 export default class FakeContextFieldStore implements IContextFieldStore {
     count(): Promise<number> {
-        throw new Error('Method not implemented.');
+        return Promise.resolve(0);
     }
 
     defaultContextFields: IContextField[] = [

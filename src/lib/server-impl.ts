@@ -67,6 +67,7 @@ async function createApp(
         stores,
         serverVersion,
         config.eventBus,
+        services.instanceStatsService,
         db,
     );
     const unleash: Omit<IUnleash, 'stop'> = {

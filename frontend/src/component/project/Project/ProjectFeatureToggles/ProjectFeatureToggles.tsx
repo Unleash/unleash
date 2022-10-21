@@ -36,6 +36,8 @@ import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/Feat
 import { useSearch } from 'hooks/useSearch';
 import { useMediaQuery } from '@mui/material';
 import { Search } from 'component/common/Search/Search';
+import { RemoveGroup } from '../../../admin/groups/RemoveGroup/RemoveGroup';
+import { SuggestChangesDialogue } from '../SuggestedChanges/SuggestChangesDialogue';
 
 interface IProjectFeatureTogglesProps {
     features: IProject['features'];
@@ -82,6 +84,7 @@ export const ProjectFeatureToggles = ({
         string | undefined
     >();
     const projectId = useRequiredPathParam('projectId');
+    const [suggestChangesOpen, setSuggestChangesOpen] = useState(false);
 
     const { value: storedParams, setValue: setStoredParams } =
         createLocalStorage(
@@ -108,6 +111,7 @@ export const ProjectFeatureToggles = ({
             enabled: boolean
         ) => {
             try {
+                setSuggestChangesOpen(true);
                 if (enabled) {
                     await toggleFeatureEnvironmentOn(
                         projectId,
@@ -451,6 +455,11 @@ export const ProjectFeatureToggles = ({
                     rows={rows}
                     headerGroups={headerGroups}
                     prepareRow={prepareRow}
+                />
+                <SuggestChangesDialogue
+                    open={suggestChangesOpen}
+                    setOpen={setSuggestChangesOpen}
+                    change={null}
                 />
             </SearchHighlightProvider>
             <ConditionallyRender

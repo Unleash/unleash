@@ -27,6 +27,7 @@ import { ProjectLog } from './ProjectLog/ProjectLog';
 import { SuggestedChanges } from './SuggestedChanges/SuggestedChanges';
 import { DraftBanner } from './SuggestedChanges/DraftBanner/DraftBanner';
 import { MainLayout } from 'component/layout/MainLayout/MainLayout';
+import { useChangeRequest } from '../../../hooks/api/getters/useChangeRequest/useChangeRequest';
 
 const StyledDiv = styled('div')(() => ({
     display: 'flex',
@@ -57,6 +58,7 @@ const Project = () => {
     const navigate = useNavigate();
     const { pathname } = useLocation();
     const { isOss, uiConfig } = useUiConfig();
+    const { data: changeRequest } = useChangeRequest();
     const basePath = `/projects/${projectId}`;
     const projectName = project?.name || projectId;
 

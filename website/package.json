@@ -28,7 +28,7 @@
     "@mdx-js/react": "1.6.22",
     "@svgr/webpack": "6.5.0",
     "clsx": "1.2.1",
-    "docusaurus-plugin-openapi-docs": "1.1.9",
+    "docusaurus-plugin-openapi-docs": "1.3.2",
     "docusaurus-theme-openapi-docs": "1.1.9",
     "file-loader": "6.2.0",
     "react": "18.2.0",

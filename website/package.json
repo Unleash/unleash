@@ -26,7 +26,7 @@
     "@docusaurus/preset-classic": "2.0.1",
     "@docusaurus/remark-plugin-npm2yarn": "2.0.1",
     "@mdx-js/react": "1.6.22",
-    "@svgr/webpack": "6.3.1",
+    "@svgr/webpack": "6.5.0",
     "clsx": "1.2.1",
     "docusaurus-plugin-openapi-docs": "1.1.9",
     "docusaurus-theme-openapi-docs": "1.1.9",

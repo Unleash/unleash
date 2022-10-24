@@ -9,7 +9,7 @@ import Group, {
     IGroupUser,
     IGroupUserModel,
 } from '../types/group';
-import { expectTransaction, Transactor } from './transactional';
+import { Transactor } from './transactional';
 
 const T = {
     GROUPS: 'groups',
@@ -210,7 +210,7 @@ export default class GroupStore
         deletableUsers: IGroupUser[],
         userName: string,
     ): Promise<void> {
-        expectTransaction(this.db);
+        this.expectTransaction(this.db);
         await this.addUsersToGroup(groupId, newUsers, userName);
         await this.deleteUsersFromGroup(deletableUsers);
     }

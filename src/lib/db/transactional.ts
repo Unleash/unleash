@@ -1,6 +1,20 @@
 import { Knex } from 'knex';
 import { Transactional } from 'lib/types/stores/transactional';
 
+export const expectTransaction = (db: Knex | Knex.Transaction): void => {
+    if (db.isTransaction) {
+        return;
+    }
+    const isRunningInTest = process.env.NODE_ENV === 'test';
+    const errorMessage =
+        'A store method that was expected to be run in a transaction was run outside of a transaction';
+    if (isRunningInTest) {
+        throw new Error(errorMessage);
+    } else {
+        console.error(errorMessage);
+    }
+};
+
 export abstract class Transactor<T> implements Transactional<T> {
     args: any[];
 
@@ -19,18 +33,8 @@ export abstract class Transactor<T> implements Transactional<T> {
         clone.db = transaction;
         return clone as T;
     }
-}
 
-export const expectTransaction = (db: Knex | Knex.Transaction): void => {
-    if (db.isTransaction) {
-        return;
+    expectTransaction(db: Knex | Knex.Transaction): void {
+        expectTransaction(db);
     }
-    const isRunningInTest = process.env.NODE_ENV === 'test';
-    const errorMessage =
-        'A store method that was expected to be run in a transaction was run outside of a transaction';
-    if (isRunningInTest) {
-        throw new Error(errorMessage);
-    } else {
-        console.error(errorMessage);
-    }
-};
+}

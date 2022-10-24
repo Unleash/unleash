@@ -2,11 +2,13 @@ import dbInit, { ITestDb } from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
 import { createTestConfig } from '../../config/test-config';
 import { GroupService } from '../../../lib/services/group-service';
+import GroupStore from '../../../lib/db/group-store';
 
 let stores;
 let db: ITestDb;
 
 let groupService: GroupService;
+let groupStore: GroupStore;
 let user;
 
 beforeAll(async () => {
@@ -20,6 +22,7 @@ beforeAll(async () => {
         getLogger,
     });
     groupService = new GroupService(stores, config, db.db);
+    groupStore = stores.groupStore;
 
     await stores.groupStore.create({
         name: 'dev_group',
@@ -68,4 +71,29 @@ test('should add person to completely new group with new name', async () => {
     const groups = await groupService.getGroupsForUser(user.id);
     expect(groups.length).toBe(1);
     expect(groups[0].name).toEqual('dev_group');
+});
+
+test('should not update groups when not string array ', async () => {
+    await groupService.syncExternalGroups(user.id, 'Everyone' as any);
+    const groups = await groupService.getGroupsForUser(user.id);
+    expect(groups.length).toBe(1);
+    expect(groups[0].name).toEqual('dev_group');
+});
+
+test('should clear groups when empty array ', async () => {
+    await groupService.syncExternalGroups(user.id, []);
+    const groups = await groupService.getGroupsForUser(user.id);
+    expect(groups.length).toBe(0);
+});
+
+test('should not remove user from no SSO definition group', async () => {
+    const group = await groupStore.create({
+        name: 'no_mapping_group',
+        description: 'no_mapping_group',
+    });
+    await groupStore.addUserToGroups(user.id, [group.id]);
+    await groupService.syncExternalGroups(user.id, []);
+    const groups = await groupService.getGroupsForUser(user.id);
+    expect(groups.length).toBe(1);
+    expect(groups[0].name).toEqual('no_mapping_group');
 });

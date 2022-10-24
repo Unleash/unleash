@@ -151,17 +151,6 @@ export class SuggestChangeStore implements ISuggestChangeStore {
         project: string,
         environment: string,
     ): Promise<ISuggestChangeset> => {
-        console.log(
-            this.buildSuggestChangeSetChangesQuery()
-                .where({
-                    'changeSet.created_by': user.id,
-                    state: 'Draft',
-                    project: project,
-                    environment: environment,
-                })
-                .toSQL()
-                .toNative(),
-        );
         const rows = await this.buildSuggestChangeSetChangesQuery().where({
             'changeSet.created_by': user.id,
             state: 'Draft',

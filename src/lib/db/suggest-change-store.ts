@@ -5,29 +5,15 @@ import { Knex } from 'knex';
 import { PartialSome } from '../types/partial';
 import {
     ISuggestChange,
-    ISuggestChangeEvent,
-    ISuggestChangeEventData,
     ISuggestChangeset,
     SuggestChangeAction,
-    SuggestChangeEvent,
-    SuggestChangesetEvent,
 } from '../types/model';
 import User from '../types/user';
-import NotFoundError from '../error/notfound-error';
 
 const T = {
     SUGGEST_CHANGE: 'suggest_change',
     SUGGEST_CHANGE_SET: 'suggest_change_set',
-    SUGGEST_CHANGE_EVENT: 'suggest_change_event',
 };
-
-interface ISuggestChangeEventRow {
-    id: number;
-    event: SuggestChangesetEvent;
-    data?: ISuggestChangeEventData;
-    created_by?: number;
-    created_at?: Date;
-}
 
 interface ISuggestChangesetInsert {
     id: number;
@@ -49,29 +35,22 @@ interface ISuggestChangeInsert {
 
 interface ISuggestChangesetRow extends ISuggestChangesetInsert {
     changes?: ISuggestChange[];
-    events?: ISuggestChangeEvent[];
 }
 
 const suggestChangeRowReducer = (acc, suggestChangeRow) => {
     const {
-        eventId,
-        eventType,
-        eventData,
-        eventCreatedAt,
-        eventCreatedBy,
-        eventCreatedByUsername,
-        eventCreatedByAvatar,
         changeId,
         changeAction,
         changePayload,
+        changeFeature,
         changeCreatedByUsername,
         changeCreatedByAvatar,
         changeCreatedAt,
         changeCreatedBy,
         ...suggestChangeSet
     } = suggestChangeRow;
-    if (!acc[suggestChangeRow.secret]) {
-        acc[suggestChangeRow.secret] = {
+    if (!acc[suggestChangeRow.id]) {
+        acc[suggestChangeRow.id] = {
             id: suggestChangeSet.id,
             environment: suggestChangeSet.environment,
             state: suggestChangeSet.state,
@@ -83,27 +62,14 @@ const suggestChangeRowReducer = (acc, suggestChangeRow) => {
             },
             createdAt: suggestChangeSet.created_at,
             changes: [],
-            events: [],
         };
     }
     const currentSuggestChangeSet = acc[suggestChangeSet.id];
-    if (eventId) {
-        currentSuggestChangeSet.events.push({
-            id: eventId,
-            event: eventType,
-            data: eventData,
-            createdBy: {
-                id: eventCreatedBy,
-                username: eventCreatedByUsername,
-                imageUrl: eventCreatedByUsername,
-            },
-            createdAt: eventCreatedAt,
-        });
-    }
 
     if (changeId) {
         currentSuggestChangeSet.changes.push({
             id: changeId,
+            feature: changeFeature,
             action: changeAction,
             payload: changePayload,
             createdAt: changeCreatedAt,
@@ -130,13 +96,13 @@ export class SuggestChangeStore implements ISuggestChangeStore {
         this.logger = getLogger('lib/db/suggest-change-store.ts');
     }
 
-    private buildSuggestChangeSetChangesEventsQuery = () => {
+    private buildSuggestChangeSetChangesQuery = () => {
         return this.db<ISuggestChangesetRow>(
             `${T.SUGGEST_CHANGE_SET} as changeSet`,
         )
             .leftJoin(
                 `users as changeSetUser`,
-                'changeSet.createdBy',
+                'changeSet.created_by',
                 'changeSetUser.id',
             )
             .leftJoin(`projects`, 'projects.id', 'changeSet.project')
@@ -147,51 +113,36 @@ export class SuggestChangeStore implements ISuggestChangeStore {
             )
             .leftJoin(
                 `users as changeUser`,
-                'change.createdBy',
+                'change.created_by',
                 'changeUser.id',
             )
-            .leftJoin(
-                `${T.SUGGEST_CHANGE_EVENT} as event`,
-                'changeSet.id',
-                'event.suggest_change_set_id',
-            )
-            .leftJoin(`users as eventUser`, 'eventUser.id', 'event.createdBy')
             .select(
-                'changeSet.secret',
                 'changeSet.environment',
                 'projects.name as project',
                 'changeSet.created_at',
                 'changeSet.created_by',
                 'changeSetUser.username as changeSetUsername',
-                'changeSetUser.imageUrl as changeSetAvatar',
-                'change.id as changeId.',
+                'changeSetUser.image_url as changeSetAvatar',
+                'change.id as changeId',
+                'change.feature as changeFeature',
                 'change.action as changeAction',
                 'change.payload as changePayload',
                 'change.created_at as changeCreatedAt',
                 'change.created_by as changeCreatedBy',
                 'changeUser.username as changeCreatedByUsername',
-                'changeUser.imageUrl as changeCreatedByAvatar',
-                'event.id as eventId',
-                'event.event as eventType',
-                'event.data as eventData',
-                'event.created_at as eventCreatedAt',
-                'event.created_by as eventCreatedBy',
-                'eventUser.username as eventCreatedByUsername',
-                'eventUser.imageUrl as eventCreatedByAvatar',
+                'changeUser.image_url as changeCreatedByAvatar',
             );
     };
 
     getAll = async (): Promise<ISuggestChangeset[]> => {
-        const rows = await this.buildSuggestChangeSetChangesEventsQuery();
+        const rows = await this.buildSuggestChangeSetChangesQuery();
         return this.mapRows(rows);
     };
 
     getForProject = async (project: string): Promise<ISuggestChangeset[]> => {
-        const rows = await this.buildSuggestChangeSetChangesEventsQuery().where(
-            {
-                project,
-            },
-        );
+        const rows = await this.buildSuggestChangeSetChangesQuery().where({
+            project,
+        });
         return this.mapRows(rows);
     };
 
@@ -200,39 +151,41 @@ export class SuggestChangeStore implements ISuggestChangeStore {
         project: string,
         environment: string,
     ): Promise<ISuggestChangeset> => {
-        const rows = await this.buildSuggestChangeSetChangesEventsQuery().where(
-            {
-                created_by: user.id,
-                state: 'Draft',
-                project: project,
-                environment: environment,
-            },
+        console.log(
+            this.buildSuggestChangeSetChangesQuery()
+                .where({
+                    'changeSet.created_by': user.id,
+                    state: 'Draft',
+                    project: project,
+                    environment: environment,
+                })
+                .toSQL()
+                .toNative(),
         );
+        const rows = await this.buildSuggestChangeSetChangesQuery().where({
+            'changeSet.created_by': user.id,
+            state: 'Draft',
+            project: project,
+            environment: environment,
+        });
         const change = this.mapRows(rows)[0];
-        if (!change) {
-            throw new NotFoundError();
-        }
         return change;
     };
 
     getForEnvironment = async (
         environment: string,
     ): Promise<ISuggestChangeset[]> => {
-        const rows = await this.buildSuggestChangeSetChangesEventsQuery().where(
-            {
-                environment,
-            },
-        );
+        const rows = await this.buildSuggestChangeSetChangesQuery().where({
+            environment,
+        });
 
         return this.mapRows(rows);
     };
 
     get = async (id: number): Promise<ISuggestChangeset> => {
-        const rows = await this.buildSuggestChangeSetChangesEventsQuery().where(
-            {
-                id,
-            },
-        );
+        const rows = await this.buildSuggestChangeSetChangesQuery().where({
+            'changeSet.id': id,
+        });
 
         return this.mapRows(rows)[0];
     };
@@ -244,20 +197,6 @@ export class SuggestChangeStore implements ISuggestChangeStore {
         >,
         user: User,
     ): Promise<ISuggestChangeset> => {
-        console.log(suggestChangeSet);
-        console.log(
-            this.db(T.SUGGEST_CHANGE_SET)
-                .insert<ISuggestChangesetInsert>({
-                    environment: suggestChangeSet.environment,
-                    state: suggestChangeSet.state,
-                    project: suggestChangeSet.project,
-                    created_by: user.id,
-                })
-                .returning('id')
-                .toSQL()
-                .toNative(),
-        );
-
         const [{ id }] = await this.db(T.SUGGEST_CHANGE_SET)
             .insert<ISuggestChangesetInsert>({
                 environment: suggestChangeSet.environment,
@@ -286,29 +225,6 @@ export class SuggestChangeStore implements ISuggestChangeStore {
                 payload: change.payload,
                 suggest_change_set_id: changeSetID,
                 created_by: user.id,
-            })
-            .returning('id');
-
-        await this.createEventForChange(
-            SuggestChangeEvent[change.action],
-            changeSetID,
-            { feature: change.feature, data: change.payload },
-            user,
-        );
-    };
-
-    createEventForChange = async (
-        event: string,
-        changeSetID: number,
-        data: ISuggestChangeEventData,
-        user: Partial<Pick<User, 'username' | 'email'>>,
-    ): Promise<void> => {
-        await this.db(T.SUGGEST_CHANGE_EVENT)
-            .insert<ISuggestChangeEventRow>({
-                event,
-                data,
-                suggest_change_set_id: changeSetID,
-                created_by: user.username || user.email,
             })
             .returning('id');
     };

@@ -374,7 +374,6 @@ export interface ISuggestChangeset {
     createdBy: Pick<User, 'id' | 'username' | 'imageUrl'>;
     createdAt: Date;
     changes: ISuggestChange[];
-    events?: ISuggestChangeEvent[];
 }
 
 export interface ISuggestChangePayload {
@@ -413,15 +412,6 @@ export enum SuggestChangeEvent {
     UPDATE_STRATEGY = 'updateStrategyEvent',
     DELETE_STRATEGY = 'deleteStrategyEvent',
 }
-
-export interface ISuggestChangeEvent {
-    id: number;
-    event: SuggestChangesetEvent;
-    data: ISuggestChangeEventData;
-    createdBy: Pick<User, 'id' | 'username' | 'imageUrl'>;
-    createdAt: Date;
-}
-
 export interface ISuggestChangeEventData {
     feature: string;
     data: unknown;

@@ -38,12 +38,14 @@ interface IRouteOptionsNonGet extends IRouteOptionsBase {
 type IRouteOptions = IRouteOptionsNonGet | IRouteOptionsGet;
 
 const checkPermission = (permission) => async (req, res, next) => {
+    console.log('CHeck permissions');
     if (!permission || permission === NONE) {
         return next();
     }
     if (req.checkRbac && (await req.checkRbac(permission))) {
         return next();
     }
+    console.log('403 permissions');
     return res.status(403).json(new NoAccessError(permission)).end();
 };
 

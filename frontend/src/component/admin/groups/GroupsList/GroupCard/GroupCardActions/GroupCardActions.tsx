@@ -16,6 +16,7 @@ import { Link } from 'react-router-dom';
 const StyledActions = styled('div')(({ theme }) => ({
     display: 'flex',
     justifyContent: 'center',
+    transform: 'translate3d(8px, -6px, 0)',
 }));
 
 const StyledPopover = styled(Popover)(({ theme }) => ({

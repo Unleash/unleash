@@ -1605,6 +1605,9 @@ exports[`should serve the OpenAPI spec 1`] = `
           "strategies": {
             "type": "number",
           },
+          "sum": {
+            "type": "string",
+          },
           "timestamp": {
             "format": "date-time",
             "nullable": true,
@@ -4652,7 +4655,7 @@ If the provided project does not exist, the list of events will be empty.",
           },
         },
         "tags": [
-          "Features",
+          "Instance Admin",
         ],
       },
     },
@@ -7661,6 +7664,10 @@ If the provided project does not exist, the list of events will be empty.",
     {
       "description": "[Import and export](https://docs.getunleash.io/deploy/import_export) the state of your Unleash instance.",
       "name": "Import/Export",
+    },
+    {
+      "description": "Instance admin endpoints used to manage the Unleash instance itself.",
+      "name": "Instance Admin",
     },
     {
       "description": "Register, read, or delete metrics recorded by Unleash.",

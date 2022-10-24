@@ -148,15 +148,6 @@ export default class RoleStore implements IRoleStore {
             .orWhere('type', 'project');
     }
 
-    async getProjectRolesCount(): Promise<number> {
-        return this.db
-            .from<IRole>(T.ROLES)
-            .count('*')
-            .where('type', 'custom')
-            .orWhere('type', 'project')
-            .then((res) => Number(res[0].count));
-    }
-
     async getRolesForProject(projectId: string): Promise<IRole[]> {
         return this.db
             .select(['r.id', 'r.name', 'r.type', 'ru.project', 'r.description'])

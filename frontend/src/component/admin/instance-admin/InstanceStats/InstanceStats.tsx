@@ -56,7 +56,7 @@ export const InstanceStats: VFC = () => {
                     </TableHead>
                     <TableBody>
                         {rows.map(row => (
-                            <TableRow >
+                            <TableRow key={row.title}>
                                 <TableCell component="th" scope="row">{row.title}</TableCell>
                                 <TableCell align="right">{row.value}</TableCell>
                             </TableRow>

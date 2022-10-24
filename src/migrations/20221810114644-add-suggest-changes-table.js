@@ -5,9 +5,9 @@ exports.up = function (db, callback) {
         `
 CREATE TABLE IF NOT EXISTS suggest_change_set (
   id serial primary key,
-  environment varchar(255) NOT NULL,
+  environment varchar(100) REFERENCES environments(name) ON DELETE CASCADE,
   state varchar(255) NOT NULL,
-  project varchar(255) NOT NULL,
+  project varchar(255) REFERENCES projects(id) ON DELETE CASCADE,
   created_by integer not null references users (id) ON DELETE CASCADE,
   created_at timestamp default now(),
   updated_by integer not null references users (id) ON DELETE CASCADE
@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS suggest_change_set (
 CREATE TABLE IF NOT EXISTS suggest_change (
     id serial primary key,
     action varchar(255) NOT NULL,
-    payload json NOT NULL,
+    payload jsonb not null default '[]'::jsonb,
     created_by integer not null references users (id) ON DELETE CASCADE,
     created_at timestamp default now(),
     suggest_change_set_id integer NOT NULL REFERENCES suggest_change_set(id) ON DELETE CASCADE
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS suggest_change (
 CREATE TABLE IF NOT EXISTS suggest_change_event (
     id serial primary key,
     event varchar(255) NOT NULL,
-    data json NOT NULL,
+    data jsonb not null default '[]'::jsonb,
     created_by integer not null references users (id) ON DELETE CASCADE,
     created_at timestamp default now(),
     suggest_change_set_id integer NOT NULL REFERENCES suggest_change_set(id) ON DELETE CASCADE

@@ -135,16 +135,21 @@ export class SuggestChangeStore implements ISuggestChangeStore {
             `${T.SUGGEST_CHANGE_SET} as changeSet`,
         )
             .leftJoin(
-                `users as changSetUser`,
+                `users as changeSetUser`,
                 'changeSet.createdBy',
-                'changSetUser.id',
+                'changeSetUser.id',
             )
+            .leftJoin(`projects`, 'projects.id', 'changeSet.project')
             .leftJoin(
                 `${T.SUGGEST_CHANGE} as change`,
                 'changeSet.id',
                 'change.suggest_change_set_id',
             )
-            .leftJoin(`users as changUser`, 'change.createdBy', 'changUser.id')
+            .leftJoin(
+                `users as changeUser`,
+                'change.createdBy',
+                'changeUser.id',
+            )
             .leftJoin(
                 `${T.SUGGEST_CHANGE_EVENT} as event`,
                 'changeSet.id',
@@ -154,7 +159,7 @@ export class SuggestChangeStore implements ISuggestChangeStore {
             .select(
                 'changeSet.secret',
                 'changeSet.environment',
-                'changeSet.project',
+                'projects.name as project',
                 'changeSet.created_at',
                 'changeSet.created_by',
                 'changeSetUser.username as changeSetUsername',
@@ -164,8 +169,8 @@ export class SuggestChangeStore implements ISuggestChangeStore {
                 'change.payload as changePayload',
                 'change.created_at as changeCreatedAt',
                 'change.created_by as changeCreatedBy',
-                'changUser.username as changeCreatedByUsername',
-                'changUser.imageUrl as changeCreatedByAvatar',
+                'changeUser.username as changeCreatedByUsername',
+                'changeUser.imageUrl as changeCreatedByAvatar',
                 'event.id as eventId',
                 'event.event as eventType',
                 'event.data as eventData',
@@ -187,14 +192,20 @@ export class SuggestChangeStore implements ISuggestChangeStore {
                 project,
             },
         );
-
         return this.mapRows(rows);
     };
 
-    getForUser = async (user: User): Promise<ISuggestChangeset> => {
+    getDraftForUser = async (
+        user: User,
+        project: string,
+        environment: string,
+    ): Promise<ISuggestChangeset> => {
         const rows = await this.buildSuggestChangeSetChangesEventsQuery().where(
             {
                 created_by: user.id,
+                state: 'Draft',
+                project: project,
+                environment: environment,
             },
         );
         const change = this.mapRows(rows)[0];
@@ -231,17 +242,28 @@ export class SuggestChangeStore implements ISuggestChangeStore {
             ISuggestChangeset,
             'id' | 'createdBy' | 'createdAt'
         >,
-        user: Partial<Pick<User, 'username' | 'email'>>,
+        user: User,
     ): Promise<ISuggestChangeset> => {
+        console.log(suggestChangeSet);
+        console.log(
+            this.db(T.SUGGEST_CHANGE_SET)
+                .insert<ISuggestChangesetInsert>({
+                    environment: suggestChangeSet.environment,
+                    state: suggestChangeSet.state,
+                    project: suggestChangeSet.project,
+                    created_by: user.id,
+                })
+                .returning('id')
+                .toSQL()
+                .toNative(),
+        );
+
         const [{ id }] = await this.db(T.SUGGEST_CHANGE_SET)
             .insert<ISuggestChangesetInsert>({
-                id: suggestChangeSet.id,
                 environment: suggestChangeSet.environment,
                 state: suggestChangeSet.state,
                 project: suggestChangeSet.project,
-                changes: JSON.stringify(suggestChangeSet.changes),
-                created_at: suggestChangeSet.createdAt,
-                created_by: user.username || user.email,
+                created_by: user.id,
             })
             .returning('id');
 
@@ -255,7 +277,7 @@ export class SuggestChangeStore implements ISuggestChangeStore {
     addChangeToSet = async (
         change: PartialSome<ISuggestChange, 'id' | 'createdBy' | 'createdAt'>,
         changeSetID: number,
-        user: Partial<Pick<User, 'username' | 'email'>>,
+        user: User,
     ): Promise<void> => {
         await this.db(T.SUGGEST_CHANGE)
             .insert<ISuggestChangeInsert>({
@@ -263,8 +285,7 @@ export class SuggestChangeStore implements ISuggestChangeStore {
                 feature: change.feature,
                 payload: change.payload,
                 suggest_change_set_id: changeSetID,
-                created_at: change.createdAt,
-                created_by: user.username || user.email,
+                created_by: user.id,
             })
             .returning('id');
 

@@ -21,10 +21,10 @@ export default class FakeSuggestChangeStore implements ISuggestChangeStore {
     }
 
     addChangeToSet(
-        change: ISuggestChange,
+        change: PartialSome<ISuggestChange, 'id' | 'createdBy' | 'createdAt'>,
         changeSetID: number,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        user: Partial<Pick<User, 'username' | 'email'>>,
+        user: User,
     ): Promise<void> {
         const changeSet = this.suggestChanges.find((s) => s.id === changeSetID);
         changeSet.changes.push(change);
@@ -39,10 +39,17 @@ export default class FakeSuggestChangeStore implements ISuggestChangeStore {
         );
     }
 
-    getForUser(user: User): Promise<ISuggestChangeset> {
+    getDraftForUser(
+        user: User,
+        project: string,
+        environment: string,
+    ): Promise<ISuggestChangeset> {
         return Promise.resolve(
             this.suggestChanges.find(
-                (changeSet) => changeSet.createdBy.id === user.id,
+                (changeSet) =>
+                    changeSet.project === project &&
+                    changeSet.environment === environment &&
+                    changeSet.createdBy.id === user.id,
             ),
         );
     }

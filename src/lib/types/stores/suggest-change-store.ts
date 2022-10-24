@@ -15,7 +15,7 @@ export interface ISuggestChangeStore extends Store<ISuggestChangeset, number> {
     addChangeToSet(
         change: PartialSome<ISuggestChange, 'id' | 'createdBy' | 'createdAt'>,
         changeSetID: number,
-        user: Partial<Pick<User, 'username' | 'email'>>,
+        user: User,
     ): Promise<void>;
 
     get(id: number): Promise<ISuggestChangeset>;
@@ -24,7 +24,11 @@ export interface ISuggestChangeStore extends Store<ISuggestChangeset, number> {
 
     getForProject(project: string): Promise<ISuggestChangeset[]>;
 
-    getForUser(user: User): Promise<ISuggestChangeset>;
+    getDraftForUser(
+        user: User,
+        project: string,
+        environment: string,
+    ): Promise<ISuggestChangeset>;
 
     getForEnvironment(environment: string): Promise<ISuggestChangeset[]>;
 }

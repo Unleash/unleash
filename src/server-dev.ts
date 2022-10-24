@@ -40,6 +40,7 @@ process.nextTick(async () => {
                         responseTimeWithAppName: true,
                         personalAccessTokens: true,
                         syncSSOGroups: true,
+                        suggestChanges: true,
                     },
                 },
                 authentication: {

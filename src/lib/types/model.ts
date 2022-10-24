@@ -374,7 +374,7 @@ export interface ISuggestChangeset {
     createdBy: Pick<User, 'id' | 'username' | 'imageUrl'>;
     createdAt: Date;
     changes: ISuggestChange[];
-    events: ISuggestChangeEvent[];
+    events?: ISuggestChangeEvent[];
 }
 
 export interface ISuggestChangePayload {
@@ -383,12 +383,12 @@ export interface ISuggestChangePayload {
 }
 
 export interface ISuggestChange {
-    id: number;
+    id?: number;
     action: SuggestChangeAction;
     feature: string;
     payload: ISuggestChangePayload;
-    createdBy: Pick<User, 'id' | 'username' | 'imageUrl'>;
-    createdAt: Date;
+    createdBy?: Pick<User, 'id' | 'username' | 'imageUrl'>;
+    createdAt?: Date;
 }
 
 export enum SuggestChangesetEvent {

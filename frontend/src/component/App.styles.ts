@@ -18,10 +18,12 @@ export const useStyles = makeStyles()(theme => ({
         flex: 1,
         width: '100%',
         backgroundColor: theme.palette.contentWrapper,
+        position: 'relative',
     },
     content: {
         width: '1250px',
-        margin: '16px auto',
+        marginLeft: 'auto',
+        marginRight: 'auto',
         [theme.breakpoints.down('lg')]: {
             width: '1024px',
         },

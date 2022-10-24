@@ -51,6 +51,7 @@ const rowToGroupUser = (row) => {
         userId: row.user_id,
         groupId: row.group_id,
         joinedAt: row.created_at,
+        createdBy: row.created_by,
     };
 };
 
@@ -117,7 +118,12 @@ export default class GroupStore implements IGroupStore {
 
     async getAllUsersByGroups(groupIds: number[]): Promise<IGroupUser[]> {
         const rows = await this.db
-            .select('gu.group_id', 'u.id as user_id', 'gu.created_at')
+            .select(
+                'gu.group_id',
+                'u.id as user_id',
+                'gu.created_at',
+                'gu.created_by',
+            )
             .from(`${T.GROUP_USER} AS gu`)
             .join(`${T.USERS} AS u`, 'u.id', 'gu.user_id')
             .whereIn('gu.group_id', groupIds);

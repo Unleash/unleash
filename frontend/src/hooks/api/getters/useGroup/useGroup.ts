@@ -15,6 +15,7 @@ export const mapGroupUsers = (users: any[]) =>
     users.map(user => ({
         ...user.user,
         joinedAt: new Date(user.joinedAt),
+        createdBy: user.createdBy,
     }));
 
 export const useGroup = (groupId: number): IUseGroupOutput => {

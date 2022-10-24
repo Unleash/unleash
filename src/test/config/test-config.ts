@@ -30,6 +30,7 @@ export function createTestConfig(config?: IUnleashOptions): IUnleashConfig {
                 personalAccessTokens: true,
                 syncSSOGroups: true,
                 suggestChanges: true,
+                cloneEnvironment: true,
             },
         },
     };

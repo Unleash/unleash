@@ -41,6 +41,7 @@ process.nextTick(async () => {
                         personalAccessTokens: true,
                         syncSSOGroups: true,
                         suggestChanges: true,
+                        cloneEnvironment: true,
                     },
                 },
                 authentication: {

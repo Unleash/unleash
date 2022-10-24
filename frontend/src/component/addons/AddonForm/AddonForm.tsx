@@ -22,7 +22,10 @@ import { AddonMultiSelector } from './AddonMultiSelector/AddonMultiSelector';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
 import PermissionButton from '../../common/PermissionButton/PermissionButton';
-import { ADMIN } from '../../providers/AccessProvider/permissions';
+import {
+    CREATE_ADDON,
+    UPDATE_ADDON,
+} from '../../providers/AccessProvider/permissions';
 import {
     StyledForm,
     StyledFormSection,
@@ -334,7 +337,7 @@ export const AddonForm: VFC<IAddonFormProps> = ({
                             type="submit"
                             color="primary"
                             variant="contained"
-                            permission={ADMIN}
+                            permission={editMode ? UPDATE_ADDON : CREATE_ADDON}
                         >
                             {submitText}
                         </PermissionButton>

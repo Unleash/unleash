@@ -13,6 +13,7 @@ export interface IRoute {
     enterprise?: boolean;
     component: VoidFunctionComponent;
     menu: IRouteMenu;
+    isStandalone?: boolean;
 }
 
 interface IRouteMenu {

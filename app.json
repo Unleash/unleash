@@ -4,6 +4,10 @@
   "repository": "https://github.com/heroku/node-js-sample",
   "logo": "https://github.com/Unleash/unleash/blob/main/.github/logo.png?raw=true",
   "keywords": ["node", "feature toggles", "release"],
+  "env": {
+    "NPM_CONFIG_PRODUCTION": "false",
+    "YARN_PRODUCTION": "false"
+  },
   "addons": [
     {
       "plan": "heroku-postgresql",

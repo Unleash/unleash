@@ -1,9 +1,5 @@
 import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
-import {
-    DELETE_ENVIRONMENT,
-    UPDATE_ENVIRONMENT,
-} from 'component/providers/AccessProvider/permissions';
-import { Edit, Delete } from '@mui/icons-material';
+import { UPDATE_ENVIRONMENT } from 'component/providers/AccessProvider/permissions';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { IEnvironment } from 'interfaces/environments';
@@ -15,7 +11,7 @@ import useProjectRolePermissions from 'hooks/api/getters/useProjectRolePermissio
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import useToast from 'hooks/useToast';
 import PermissionSwitch from 'component/common/PermissionSwitch/PermissionSwitch';
-import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
+import { EnvironmentActionCellPopover } from './EnvironmentActionCellPopover/EnvironmentActionCellPopover';
 
 interface IEnvironmentTableActionsProps {
     environment: IEnvironment;
@@ -103,32 +99,12 @@ export const EnvironmentActionCell = ({
                 onClick={() => setToggleModal(true)}
             />
             <ActionCell.Divider />
-            <PermissionIconButton
-                permission={UPDATE_ENVIRONMENT}
-                disabled={environment.protected}
-                size="large"
-                tooltipProps={{
-                    title: environment.protected
-                        ? 'You cannot edit protected environment'
-                        : 'Edit environment',
-                }}
-                onClick={() => navigate(`/environments/${environment.name}`)}
-            >
-                <Edit />
-            </PermissionIconButton>
-            <PermissionIconButton
-                permission={DELETE_ENVIRONMENT}
-                disabled={environment.protected}
-                size="large"
-                tooltipProps={{
-                    title: environment.protected
-                        ? 'You cannot delete protected environment'
-                        : 'Delete environment',
-                }}
-                onClick={() => setDeleteModal(true)}
-            >
-                <Delete />
-            </PermissionIconButton>
+            <EnvironmentActionCellPopover
+                environment={environment}
+                onEdit={() => navigate(`/environments/${environment.name}`)}
+                onClone={() => console.log('TODO: CLONE')}
+                onDelete={() => setDeleteModal(true)}
+            />
             <EnvironmentDeleteConfirm
                 env={environment}
                 setDeldialogue={setDeleteModal}

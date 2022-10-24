@@ -2,7 +2,6 @@ import { Typography } from '@mui/material';
 import { IFeatureStrategyParameters } from 'interfaces/strategy';
 import RolloutSlider from '../RolloutSlider/RolloutSlider';
 import Select from 'component/common/select';
-import React from 'react';
 import Input from 'component/common/Input/Input';
 import {
     FLEXIBLE_STRATEGY_GROUP_ID,

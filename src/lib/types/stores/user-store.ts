@@ -1,3 +1,4 @@
+import { RoleName } from '../model';
 import { IUser } from '../user';
 import { Store } from './store';
 
@@ -17,6 +18,7 @@ export interface IUserLookup {
 export interface IUserUpdateFields {
     name?: string;
     email?: string;
+    rootRole?: number | RoleName;
 }
 
 export interface IUserStore extends Store<IUser, number> {

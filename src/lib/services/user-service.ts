@@ -330,6 +330,9 @@ class UserService {
             if (name && user.name !== name) {
                 user = await this.store.update(user.id, { name, email });
             }
+            if (rootRole) {
+                user = await this.store.update(user.id, { rootRole });
+            }
         } catch (e) {
             // User does not exists. Create if "autoCreate" is enabled
             if (autoCreate) {

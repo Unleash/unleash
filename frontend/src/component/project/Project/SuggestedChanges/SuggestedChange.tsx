@@ -146,21 +146,22 @@ export const SuggestedChange: FC = () => {
                             <Card
                                 key={item.feature}
                                 elevation={0}
-                                sx={{
+                                sx={theme => ({
+                                    marginTop: theme.spacing(2),
                                     borderRadius: theme =>
                                         `${theme.shape.borderRadius}px`,
                                     overflow: 'hidden',
                                     border: '1px solid',
                                     borderColor: theme =>
                                         theme.palette.dividerAlternative,
-                                }}
+                                })}
                             >
                                 <Box
-                                    sx={{
+                                    sx={theme => ({
                                         backgroundColor: theme =>
                                             theme.palette.tableHeaderBackground,
                                         p: 2,
-                                    }}
+                                    })}
                                 >
                                     <Typography>{item.feature}</Typography>
                                 </Box>
@@ -172,12 +173,7 @@ export const SuggestedChange: FC = () => {
                                             item.action === 'updateEnabled'
                                         }
                                         show={
-                                            <Box
-                                                sx={{
-                                                    marginTop: theme.spacing(2),
-                                                }}
-                                                key={item?.id}
-                                            >
+                                            <Box key={item?.id}>
                                                 New status:{' '}
                                                 <PlaygroundResultChip
                                                     showIcon={false}

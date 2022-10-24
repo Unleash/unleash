@@ -6,7 +6,10 @@ import useToast from 'hooks/useToast';
 import { FormEvent, useEffect, useState } from 'react';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import Input from 'component/common/Input/Input';
-import { IEnvironment } from 'interfaces/environments';
+import {
+    IEnvironment,
+    IEnvironmentClonePayload,
+} from 'interfaces/environments';
 import useEnvironmentApi from 'hooks/api/actions/useEnvironmentApi/useEnvironmentApi';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import EnvironmentTypeSelector from 'component/environments/EnvironmentForm/EnvironmentTypeSelector/EnvironmentTypeSelector';
@@ -97,7 +100,7 @@ export const EnvironmentCloneModal = ({
         setErrors({});
     }, [environment]);
 
-    const getCloneEnvironmentPayload = () => ({
+    const getCloneEnvironmentPayload = (): IEnvironmentClonePayload => ({
         name,
         type,
         projectsEnabled: projects,

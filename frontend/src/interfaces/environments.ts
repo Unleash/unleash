@@ -23,8 +23,10 @@ export interface IEnvironmentEditPayload {
 }
 
 export interface IEnvironmentClonePayload {
-    // TODO: Implement this
     name: string;
+    type: string;
+    projectsEnabled: string[];
+    clonePermissions: boolean;
 }
 
 export interface IEnvironmentResponse {

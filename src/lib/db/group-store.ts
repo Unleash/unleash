@@ -68,7 +68,7 @@ export default class GroupStore
     private db: Knex | Knex.Transaction;
 
     constructor(db: Knex) {
-        super();
+        super(db);
         this.db = db;
     }
 

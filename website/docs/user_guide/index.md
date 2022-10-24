@@ -62,7 +62,7 @@ The reference docs are organized into the following topics:
 
 ## Other resources and communities
 
-💻 The core of Unleash is all open source and [hosted on GitHub](https://www.heroku.com/deploy/?template=https://github.com/Unleash/unleash 'Unleash on GitHub').
+💻 The core of Unleash is all open source and [hosted on GitHub](https://github.com/Unleash/unleash/ 'Unleash on GitHub').
 
 💬 If you've got questions or just wanna chat to the team and other Unleash users, come [join our Slack community](https://slack.unleash.run/)
 

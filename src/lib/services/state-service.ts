@@ -164,9 +164,20 @@ export default class StateService {
         }
         const importData = await stateSchema.validateAsync(data);
 
+        let importedEnvironments: IEnvironment[] = [];
         if (importData.environments) {
-            await this.importEnvironments({
+            importedEnvironments = await this.importEnvironments({
                 environments: data.environments,
+                userName,
+                dropBeforeImport,
+                keepExisting,
+            });
+        }
+
+        if (importData.projects) {
+            await this.importProjects({
+                projects: data.projects,
+                importedEnvironments,
                 userName,
                 dropBeforeImport,
                 keepExisting,
@@ -202,15 +213,6 @@ export default class StateService {
         if (importData.strategies) {
             await this.importStrategies({
                 strategies: data.strategies,
-                userName,
-                dropBeforeImport,
-                keepExisting,
-            });
-        }
-
-        if (importData.projects) {
-            await this.importProjects({
-                projects: data.projects,
                 userName,
                 dropBeforeImport,
                 keepExisting,
@@ -258,11 +260,14 @@ export default class StateService {
     async importFeatureEnvironments({ featureEnvironments }): Promise<void> {
         await Promise.all(
             featureEnvironments.map((env) =>
-                this.featureEnvironmentStore.addEnvironmentToFeature(
-                    env.featureName,
-                    env.environment,
-                    env.enabled,
-                ),
+                this.toggleStore
+                    .getProjectId(env.featureName)
+                    .then((id) =>
+                        this.featureEnvironmentStore.connectFeatureToEnvironmentsForProject(
+                            env.featureName,
+                            id,
+                        ),
+                    ),
             ),
         );
     }
@@ -410,7 +415,7 @@ export default class StateService {
         userName,
         dropBeforeImport,
         keepExisting,
-    }): Promise<void> {
+    }): Promise<IEnvironment[]> {
         this.logger.info(`Import ${environments.length} projects`);
         const oldEnvs = dropBeforeImport
             ? []
@@ -427,8 +432,9 @@ export default class StateService {
         const envsImport = environments.filter((env) =>
             keepExisting ? !oldEnvs.some((old) => old.name === env.name) : true,
         );
+        let importedEnvs = [];
         if (envsImport.length > 0) {
-            const importedEnvs = await this.environmentStore.importEnvironments(
+            importedEnvs = await this.environmentStore.importEnvironments(
                 envsImport,
             );
             const importedEnvironmentEvents = importedEnvs.map((env) => ({
@@ -447,11 +453,13 @@ export default class StateService {
                     this.apiTokenStore.delete(apiToken.secret),
                 );
         }
+        return importedEnvs;
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async importProjects({
         projects,
+        importedEnvironments,
         userName,
         dropBeforeImport,
         keepExisting,
@@ -477,6 +485,7 @@ export default class StateService {
         if (projectsToImport.length > 0) {
             const importedProjects = await this.projectStore.importProjects(
                 projectsToImport,
+                importedEnvironments,
             );
             const importedProjectEvents = importedProjects.map((project) => ({
                 type: PROJECT_IMPORT,

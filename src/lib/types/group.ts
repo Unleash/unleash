@@ -16,6 +16,7 @@ export interface IGroupUser {
     userId: number;
     joinedAt: Date;
     seenAt?: Date;
+    createdBy?: string;
 }
 
 export interface IGroupRole {
@@ -38,6 +39,7 @@ export interface IGroupProject {
 export interface IGroupUserModel {
     user: IUser;
     joinedAt?: Date;
+    createdBy?: string;
 }
 
 export interface IGroupModelWithProjectRole extends IGroupModel {

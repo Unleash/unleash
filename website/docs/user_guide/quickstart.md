@@ -115,21 +115,29 @@ Now you can fetch the feature toggle you created and try turning it on / off in 
 
 If you want to set up your own instance for testing purposes you can easily do so by using one of our premade setup kits for Heroku or DigitalOcean.
 
-> The Heroku instance setup is FREE, and includes a DB to save your state but it will eventually go to sleep when not used. The DigitalOcean setup utilises droplets and will cost you around $10/month to run, but in turn it will not go to sleep. NOTE: If you use the DigitalOcean link below and are a new user, you will receive $100 in FREE credits.
+::: info Pricing
 
-### Deploy a free version of Unleash to Heroku
+Both DigitalOcean and Heroku will charge you for running Unleash on their services. However, if you use the DigitalOcean link below and are a new user, you will receive $100 in free credits.
+
+:::
+
+### Deploy a paid version of Unleash to Heroku
 
 [![Deploy to Heroku](https://www.herokucdn.com/deploy/button.png)](https://www.heroku.com/deploy/?template=https://github.com/Unleash/unleash)
 
 ### Deploy a paid version of Unleash to DigitalOcean
 
-> You'll receive $100 in free credits if you are a new DigitalOcean user using this link.
+:::tip Free credits
+
+You'll receive $100 in free credits if you are a new DigitalOcean user using this link.
+
+:::
 
 [![Deploy to DigitalOcean](https://www.deploytodo.com/do-btn-blue.svg)](https://cloud.digitalocean.com/apps/new?repo=https://github.com/Unleash/unleash/tree/main&refcode=0e1d75187044)
 
 ### Accessing your new instance
 
-Once you have set up the new instance, click the URL provided by either Heroku or DigitalOcean and you'll be taken to the application login screen.
+Once you have set up the new instance, follow the URL provided by either Heroku or DigitalOcean and it will take you to the application login screen.
 
 Input the following credentials to log in:
 

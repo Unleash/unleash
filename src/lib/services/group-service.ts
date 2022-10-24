@@ -107,6 +107,7 @@ export class GroupService {
         const preData = await this.groupStore.get(group.id);
 
         await this.validateGroup(group, preData);
+
         return this.db.transaction(async (tx) => {
             const newGroup = await this.groupStore
                 .transactional(tx)
@@ -138,12 +139,14 @@ export class GroupService {
                 deletableUsers,
                 userName,
             );
+
             await this.eventStore.transactional(tx).store({
                 type: GROUP_UPDATED,
                 createdBy: userName,
                 data: newGroup,
                 preData,
             });
+
             return newGroup;
         });
     }
@@ -217,6 +220,7 @@ export class GroupService {
             return {
                 user: user,
                 joinedAt: roleUser.joinedAt,
+                createdBy: roleUser.createdBy,
             };
         });
         return { ...group, users: finalUsers };
@@ -225,22 +229,26 @@ export class GroupService {
     async syncExternalGroups(
         userId: number,
         externalGroups: string[],
+        createdBy?: string,
     ): Promise<void> {
-        await this.db.transaction(async (trx) => {
-            let newGroups = await this.groupStore
-                .transactional(trx)
-                .getNewGroupsForExternalUser(userId, externalGroups);
-            await this.groupStore.transactional(trx).addUserToGroups(
-                userId,
-                newGroups.map((g) => g.id),
-            );
-            let oldGroups = await this.groupStore
-                .transactional(trx)
-                .getOldGroupsForExternalUser(userId, externalGroups);
-            await this.groupStore
-                .transactional(trx)
-                .deleteUsersFromGroup(oldGroups);
-        });
+        if (Array.isArray(externalGroups)) {
+            await this.db.transaction(async (trx) => {
+                let newGroups = await this.groupStore
+                    .transactional(trx)
+                    .getNewGroupsForExternalUser(userId, externalGroups);
+                await this.groupStore.transactional(trx).addUserToGroups(
+                    userId,
+                    newGroups.map((g) => g.id),
+                    createdBy,
+                );
+                let oldGroups = await this.groupStore
+                    .transactional(trx)
+                    .getOldGroupsForExternalUser(userId, externalGroups);
+                await this.groupStore
+                    .transactional(trx)
+                    .deleteUsersFromGroup(oldGroups);
+            });
+        }
     }
 
     async getGroupsForUser(userId: number): Promise<IGroup[]> {

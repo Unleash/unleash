@@ -2,7 +2,7 @@ import {
     IEnvironmentProjectLink,
     IProjectMembersCount,
 } from '../../db/project-store';
-import { IProject, IProjectWithCount } from '../model';
+import { IEnvironment, IProject, IProjectWithCount } from '../model';
 import { Store } from './store';
 
 export interface IProjectInsert {
@@ -31,7 +31,10 @@ export interface IProjectStore extends Store<IProject, string> {
     updateHealth(healthUpdate: IProjectHealthUpdate): Promise<void>;
     create(project: IProjectInsert): Promise<IProject>;
     update(update: IProjectInsert): Promise<void>;
-    importProjects(projects: IProjectInsert[]): Promise<IProject[]>;
+    importProjects(
+        projects: IProjectInsert[],
+        environments?: IEnvironment[],
+    ): Promise<IProject[]>;
     addEnvironmentToProject(id: string, environment: string): Promise<void>;
     deleteEnvironmentForProject(id: string, environment: string): Promise<void>;
     getEnvironmentsForProject(id: string): Promise<string[]>;

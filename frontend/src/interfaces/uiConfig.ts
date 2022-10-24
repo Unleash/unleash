@@ -43,6 +43,8 @@ export interface IFlags {
     publicSignup?: boolean;
     personalAccessTokens?: boolean;
     syncSSOGroups?: boolean;
+    suggestChanges?: boolean;
+    cloneEnvironment?: boolean;
 }
 
 export interface IVersionInfo {

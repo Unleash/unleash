@@ -13,14 +13,14 @@ yarn install
 yarn run start
 ```
 
-## Run with a heroku-hosted instance of unleash-api
+## Run with a sandbox instance of the Unleash API
 
-Alternatively, instead of running unleash-api on localhost, use a remote instance:
+Alternatively, instead of running unleash-api on localhost, you can use a remote instance:
 
 ```
 cd ~/frontend
 yarn install
-yarn run start:heroku
+yarn run start:sandbox
 ```
 
 ## Running end-to-end tests
@@ -30,7 +30,7 @@ so it's important that you check these yourself before submitting a PR.
 On the server the tests will run against the deployed Heroku app so this is what you probably want to test against:
 
 ```
-yarn run start:heroku
+yarn run start:sandbox
 ```
 
 In a different shell, you can run the tests themselves:

@@ -70,12 +70,12 @@ const StyledCounterDescription = styled('span')(({ theme }) => ({
     marginLeft: theme.spacing(1),
 }));
 
-const ProjectBadgeContainer = styled('div')(() => ({
+const ProjectBadgeContainer = styled('div')(({ theme }) => ({
     maxWidth: '50%',
-}));
-
-const StyledBadge = styled(Badge)(() => ({
-    marginRight: 0.5,
+    display: 'flex',
+    justifyContent: 'flex-end',
+    gap: theme.spacing(0.5),
+    flexWrap: 'wrap',
 }));
 
 interface IGroupCardProps {
@@ -122,7 +122,7 @@ export const GroupCard = ({ group }: IGroupCardProps) => {
                                         placement="bottom-end"
                                         describeChild
                                     >
-                                        <StyledBadge
+                                        <Badge
                                             onClick={e => {
                                                 e.preventDefault();
                                                 navigate(
@@ -133,7 +133,7 @@ export const GroupCard = ({ group }: IGroupCardProps) => {
                                             icon={<TopicOutlinedIcon />}
                                         >
                                             {project}
-                                        </StyledBadge>
+                                        </Badge>
                                     </Tooltip>
                                 ))}
                                 elseShow={

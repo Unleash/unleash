@@ -538,6 +538,47 @@ test('should filter features by constraints', async () => {
         .expect((res) => expect(res.body.toggles).toHaveLength(0));
 });
 
+test('should be able to set environment as a context variable', async () => {
+    const frontendToken = await createApiToken(ApiTokenType.FRONTEND);
+    const featureName = 'featureWithEnvironmentConstraint';
+    await createFeatureToggle({
+        name: featureName,
+        enabled: true,
+        strategies: [
+            {
+                name: 'default',
+                constraints: [
+                    {
+                        contextName: 'environment',
+                        operator: 'IN',
+                        values: ['staging'],
+                    },
+                ],
+                parameters: {},
+            },
+        ],
+    });
+
+    await app.request
+        .get('/api/frontend?environment=staging')
+        .set('Authorization', frontendToken.secret)
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.toggles).toHaveLength(1);
+            expect(res.body.toggles[0].name).toBe(featureName);
+        });
+
+    await app.request
+        .get('/api/frontend')
+        .set('Authorization', frontendToken.secret)
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.toggles).toHaveLength(0);
+        });
+});
+
 test('should filter features by project', async () => {
     const projectA = 'projectA';
     const projectB = 'projectB';

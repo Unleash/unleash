@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { forwardRef, ReactNode } from 'react';
 import classnames from 'classnames';
 import { makeStyles } from 'tss-react/mui';
 import { Grid } from '@mui/material';
@@ -30,47 +30,58 @@ const useStyles = makeStyles()(theme => ({
 
 interface IMainLayoutProps {
     children: ReactNode;
+    subheader?: ReactNode;
 }
 
-export const MainLayout = ({ children }: IMainLayoutProps) => {
-    const { classes } = useStyles();
-    const { classes: styles } = useAppStyles();
-    const { uiConfig } = useUiConfig();
+export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
+    ({ children, subheader }, ref) => {
+        const { classes } = useStyles();
+        const { classes: styles } = useAppStyles();
+        const { uiConfig } = useUiConfig();
 
-    return (
-        <>
-            <SkipNavLink />
-            <Header />
-            <SkipNavTarget />
-            <Grid container className={classes.container}>
-                <main className={classnames(styles.contentWrapper)}>
-                    <Grid item className={styles.content} xs={12} sm={12}>
-                        <div
-                            className={classes.contentContainer}
-                            style={{ zIndex: 200 }}
+        return (
+            <>
+                <SkipNavLink />
+                <Header />
+                <SkipNavTarget />
+                <Grid container className={classes.container}>
+                    <main className={classnames(styles.contentWrapper)}>
+                        {subheader}
+                        <Grid
+                            item
+                            className={styles.content}
+                            xs={12}
+                            sm={12}
+                            my={2}
                         >
-                            <BreadcrumbNav />
-                            <Proclamation toast={uiConfig.toast} />
-                            {children}
-                        </div>
-                    </Grid>
-                    <img
-                        src={formatAssetPath(textureImage)}
-                        alt=""
-                        style={{
-                            display: 'block',
-                            position: 'fixed',
-                            zIndex: 0,
-                            bottom: 0,
-                            right: 0,
-                            width: 400,
-                            pointerEvents: 'none',
-                            userSelect: 'none',
-                        }}
-                    />
-                </main>
-                <Footer />
-            </Grid>
-        </>
-    );
-};
+                            <div
+                                className={classes.contentContainer}
+                                style={{ zIndex: 200 }}
+                                ref={ref}
+                            >
+                                <BreadcrumbNav />
+                                <Proclamation toast={uiConfig.toast} />
+                                {children}
+                            </div>
+                        </Grid>
+                        <img
+                            src={formatAssetPath(textureImage)}
+                            alt=""
+                            style={{
+                                display: 'block',
+                                position: 'fixed',
+                                zIndex: 0,
+                                bottom: 0,
+                                right: 0,
+                                width: 400,
+                                pointerEvents: 'none',
+                                userSelect: 'none',
+                            }}
+                        />
+                    </main>
+                    <Footer />
+                </Grid>
+            </>
+        );
+    }
+);

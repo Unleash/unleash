@@ -70,6 +70,11 @@ const OPENAPI_TAGS = [
             'Create, update, and delete [Unleash Public Signup tokens](https://docs.getunleash.io/reference/public-signup-tokens).',
     },
     {
+        name: 'Segments',
+        description:
+            'Create, update, delete, and manage [segments](https://docs.getunleash.io/reference/segments).',
+    },
+    {
         name: 'Strategies',
         description:
             'Create, update, delete, manage [custom strategies](https://docs.getunleash.io/advanced/custom_activation_strategy).',

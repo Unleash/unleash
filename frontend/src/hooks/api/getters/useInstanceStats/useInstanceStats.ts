@@ -28,12 +28,6 @@ export interface IInstanceStatsResponse {
     error?: Error;
 }
 
-export const mapGroupUsers = (users: any[]) =>
-    users.map(user => ({
-        ...user.user,
-        joinedAt: new Date(user.joinedAt),
-    }));
-
 export const useInstanceStats = (): IInstanceStatsResponse => {
     const { data, error, mutate } = useSWR(
         formatApiPath(`api/admin/instance-admin/statistics`),

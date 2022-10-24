@@ -4,7 +4,7 @@ import { InstanceStats } from './InstanceStats/InstanceStats';
 export const InstanceAdmin = () => {
     return (
         <div>
-             <AdminMenu />
+            <AdminMenu />
             <InstanceStats />
         </div>
     );

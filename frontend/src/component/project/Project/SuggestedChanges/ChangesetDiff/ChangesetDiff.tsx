@@ -1,6 +1,5 @@
 import { VFC } from 'react';
 import { Box, Typography, Card, styled } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ISuggestChange } from 'interfaces/suggestChangeset';
 import EnvironmentIcon from 'component/common/EnvironmentIcon/EnvironmentIcon';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';

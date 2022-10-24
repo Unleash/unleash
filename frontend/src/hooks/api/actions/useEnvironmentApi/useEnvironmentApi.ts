@@ -87,8 +87,7 @@ const useEnvironmentApi = () => {
         name: string,
         payload: IEnvironmentClonePayload
     ) => {
-        // TODO: Make sure endpoint is correct
-        const path = `api/admin/environments/clone/${name}`;
+        const path = `api/admin/environments/${name}/clone`;
         const req = createRequest(
             path,
             { method: 'POST', body: JSON.stringify(payload) },

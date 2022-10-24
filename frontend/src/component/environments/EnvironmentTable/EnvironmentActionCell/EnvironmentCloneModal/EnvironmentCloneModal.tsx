@@ -1,4 +1,4 @@
-import { Alert, Button, styled, Typography } from '@mui/material';
+import { Button, FormControlLabel, styled, Switch } from '@mui/material';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -6,14 +6,12 @@ import useToast from 'hooks/useToast';
 import { FormEvent, useEffect, useState } from 'react';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import Input from 'component/common/Input/Input';
-import SelectMenu from 'component/common/select';
-import { formatDateYMD } from 'utils/formatDate';
-import { useLocationSettings } from 'hooks/useLocationSettings';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { DateTimePicker } from 'component/common/DateTimePicker/DateTimePicker';
 import { IEnvironment } from 'interfaces/environments';
 import useEnvironmentApi from 'hooks/api/actions/useEnvironmentApi/useEnvironmentApi';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
+import EnvironmentTypeSelector from 'component/environments/EnvironmentForm/EnvironmentTypeSelector/EnvironmentTypeSelector';
+import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
+import { EnvironmentProjectSelect } from './EnvironmentProjectSelect/EnvironmentProjectSelect';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',
@@ -22,46 +20,21 @@ const StyledForm = styled('form')(() => ({
 }));
 
 const StyledInputDescription = styled('p')(({ theme }) => ({
+    display: 'flex',
+    color: theme.palette.text.primary,
+    marginBottom: theme.spacing(1),
+    '&:not(:first-child)': {
+        marginTop: theme.spacing(4),
+    },
+}));
+
+const StyledInputSecondaryDescription = styled('p')(({ theme }) => ({
     color: theme.palette.text.secondary,
     marginBottom: theme.spacing(1),
 }));
 
 const StyledInput = styled(Input)(({ theme }) => ({
     width: '100%',
-    maxWidth: theme.spacing(50),
-    marginBottom: theme.spacing(2),
-}));
-
-const StyledExpirationPicker = styled('div')<{ custom?: boolean }>(
-    ({ theme, custom }) => ({
-        display: 'flex',
-        alignItems: custom ? 'start' : 'center',
-        gap: theme.spacing(1.5),
-        marginBottom: theme.spacing(2),
-        [theme.breakpoints.down('sm')]: {
-            flexDirection: 'column',
-            alignItems: 'flex-start',
-        },
-    })
-);
-
-const StyledSelectMenu = styled(SelectMenu)(({ theme }) => ({
-    minWidth: theme.spacing(20),
-    marginRight: theme.spacing(0.5),
-    [theme.breakpoints.down('sm')]: {
-        width: theme.spacing(50),
-    },
-}));
-
-const StyledDateTimePicker = styled(DateTimePicker)(({ theme }) => ({
-    width: theme.spacing(28),
-    [theme.breakpoints.down('sm')]: {
-        width: theme.spacing(50),
-    },
-}));
-
-const StyledAlert = styled(Alert)(({ theme }) => ({
-    marginBottom: theme.spacing(2),
     maxWidth: theme.spacing(50),
 }));
 
@@ -101,9 +74,11 @@ export const EnvironmentCloneModal = ({
     const { cloneEnvironment, loading } = useEnvironmentApi();
     const { setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
-    const { locationSettings } = useLocationSettings();
 
     const [name, setName] = useState('');
+    const [type, setType] = useState('development');
+    const [projects, setProjects] = useState<string[]>([]);
+    const [clonePermissions, setClonePermissions] = useState(true);
     const [errors, setErrors] = useState<ICreatePersonalAPITokenErrors>({});
 
     const clearError = (field: ErrorField) => {
@@ -114,15 +89,19 @@ export const EnvironmentCloneModal = ({
         setErrors(errors => ({ ...errors, [field]: error }));
     };
 
-    // useEffect(() => {
-    //     setDescription('');
-    //     setErrors({});
-    //     setExpiration(ExpirationOption['30DAYS']);
-    // }, [open]);
+    useEffect(() => {
+        setName(`${environment.name}-clone`);
+        setType('development');
+        setProjects([]);
+        setClonePermissions(true);
+        setErrors({});
+    }, [environment]);
 
-    // TODO: Update this to the correct payload
     const getCloneEnvironmentPayload = () => ({
         name,
+        type,
+        projectsEnabled: projects,
+        clonePermissions,
     });
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -141,10 +120,9 @@ export const EnvironmentCloneModal = ({
     };
 
     const formatApiCode = () => {
-        // TODO: Update this to the correct endpoint
         return `curl --location --request POST '${
             uiConfig.unleashUrl
-        }/api/admin/environments/clone/${environment.name}' \\
+        }/api/admin/environments/${environment.name}/clone' \\
     --header 'Authorization: INSERT_API_KEY' \\
     --header 'Content-Type: application/json' \\
     --data-raw '${JSON.stringify(getCloneEnvironmentPayload(), undefined, 2)}'`;
@@ -178,9 +156,9 @@ export const EnvironmentCloneModal = ({
                 loading={loading}
                 modal
                 title="Clone environment"
-                description="TODO: Add description"
-                documentationLink="TODO: Add link to documentation"
-                documentationLinkLabel="Learn more"
+                description={`You are cloning the "${environment.name}" environment with all the feature toggles and all the strategies into a new environment.`}
+                documentationLink="https://docs.getunleash.io/user_guide/environments"
+                documentationLinkLabel="Environments documentation"
                 formatApiCode={formatApiCode}
             >
                 <StyledForm onSubmit={handleSubmit}>
@@ -197,6 +175,41 @@ export const EnvironmentCloneModal = ({
                             value={name}
                             onChange={e => onSetName(e.target.value)}
                             required
+                        />
+                        <StyledInputDescription>
+                            What type of environment do you want to create?
+                        </StyledInputDescription>
+                        <EnvironmentTypeSelector
+                            onChange={e => setType(e.currentTarget.value)}
+                            value={type}
+                        />
+                        <StyledInputDescription>
+                            For what projects should the cloned environment be
+                            enabled?
+                            <HelpIcon tooltip="The cloned environment will be available in all existing projects but it will be automatically enabled in the selected ones" />
+                        </StyledInputDescription>
+                        <EnvironmentProjectSelect
+                            projects={projects}
+                            setProjects={setProjects}
+                        />
+                        <StyledInputDescription>
+                            Keep the users permission to this environment?
+                        </StyledInputDescription>
+                        <StyledInputSecondaryDescription>
+                            If you turn it off, the permission for this
+                            environment across all projects and feature toggles
+                            will remain only for admin and editor roles.
+                        </StyledInputSecondaryDescription>
+                        <FormControlLabel
+                            label={clonePermissions ? 'Yes' : 'No'}
+                            control={
+                                <Switch
+                                    onChange={e =>
+                                        setClonePermissions(e.target.checked)
+                                    }
+                                    checked={clonePermissions}
+                                />
+                            }
                         />
                     </div>
 

@@ -1,8 +1,10 @@
-import { VFC } from 'react';
+import { useState, VFC } from 'react';
 import { Box, Button, Typography } from '@mui/material';
 import { useStyles as useAppStyles } from 'component/App.styles';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { EditGroupUsers } from '../../../../admin/groups/Group/EditGroupUsers/EditGroupUsers';
+import { SuggestedChanges } from '../SuggestedChanges';
 
 interface IDraftBannerProps {
     environment?: string;
@@ -10,6 +12,7 @@ interface IDraftBannerProps {
 
 export const DraftBanner: VFC<IDraftBannerProps> = ({ environment }) => {
     const { classes } = useAppStyles();
+    const [reviewChangesOpen, setReviewChangesOpen] = useState(false);
 
     return (
         <Box
@@ -48,7 +51,7 @@ export const DraftBanner: VFC<IDraftBannerProps> = ({ environment }) => {
                     </Typography>
                     <Button
                         variant="contained"
-                        onClick={() => {}}
+                        onClick={() => setReviewChangesOpen(true)}
                         sx={{ ml: 'auto' }}
                     >
                         Review changes
@@ -58,6 +61,10 @@ export const DraftBanner: VFC<IDraftBannerProps> = ({ environment }) => {
                     </Button>
                 </Box>
             </Box>
+            <SuggestedChanges
+                open={reviewChangesOpen}
+                setOpen={setReviewChangesOpen}
+            />
         </Box>
     );
 };

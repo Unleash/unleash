@@ -1,30 +1,60 @@
 import { VFC } from 'react';
-import { Box, Paper, Typography, Card } from '@mui/material';
-import { PlaygroundResultChip } from 'component/playground/Playground/PlaygroundResultsTable/PlaygroundResultChip/PlaygroundResultChip'; // FIXME: refactor - extract to common
+import { Box, Typography, Card, styled } from '@mui/material';
 import { ISuggestChange } from 'interfaces/suggestChangeset';
+import EnvironmentIcon from 'component/common/EnvironmentIcon/EnvironmentIcon';
+import StringTruncator from 'component/common/StringTruncator/StringTruncator';
+import { PlaygroundResultChip } from 'component/playground/Playground/PlaygroundResultsTable/PlaygroundResultChip/PlaygroundResultChip'; // FIXME: refactor - extract to common
+import { ChangeItem } from './ChangeItem/ChangeItem';
 
 type ChangesetDiffProps = {
-    changeset?: ISuggestChange[];
+    changes?: ISuggestChange[];
+    state: string;
 };
 
-export const ChangesetDiff: VFC<ChangesetDiffProps> = ({
-    changeset: changeSet,
-}) => (
-    <Paper
-        elevation={4}
+const StyledHeader = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    [theme.breakpoints.down(560)]: {
+        flexDirection: 'column',
+        textAlign: 'center',
+    },
+    paddingBottom: theme.spacing(1),
+}));
+
+export const ChangesetDiff: VFC<ChangesetDiffProps> = ({ changes, state }) => (
+    <Box
         sx={{
-            border: '1px solid',
-            p: 2,
-            borderColor: theme => theme.palette.dividerAlternative,
+            p: 3,
+            border: '2px solid',
+            borderColor: theme => theme.palette.playgroundBackground,
             display: 'flex',
             gap: 2,
             flexDirection: 'column',
-            borderRadius: theme => `${theme.shape.borderRadius}px`,
+            borderRadius: theme => `${theme.shape.borderRadiusExtraLarge}px`,
         }}
     >
-        <Typography variant="h3">Changes</Typography>
-        {/*// @ts-ignore FIXME: types */}
-        {changeSet?.map(item => (
+        <StyledHeader>
+            <EnvironmentIcon enabled={true} />
+            <Box>
+                <StringTruncator
+                    text={`production`}
+                    maxWidth="100"
+                    maxLength={15}
+                />
+            </Box>
+            <Box sx={{ ml: 'auto' }}>
+                <PlaygroundResultChip
+                    showIcon={false}
+                    label={state === 'CREATED' ? 'Draft mode' : '???'}
+                    enabled="unknown"
+                />
+            </Box>
+        </StyledHeader>
+        <Typography variant="body2" color="textSecondary">
+            You request changes for these feature toggles:
+        </Typography>
+        {/* TODO: group by feature name */}
+        {changes?.map(item => (
             <Card
                 key={item.feature}
                 elevation={0}
@@ -45,33 +75,9 @@ export const ChangesetDiff: VFC<ChangesetDiffProps> = ({
                     <Typography>{item.feature}</Typography>
                 </Box>
                 <Box sx={{ p: 2 }}>
-                    {/*
-                      // @ts-ignore FIXME: types */}
-                    {item?.changes?.map(change => {
-                        if (change?.action === 'updateEnabled') {
-                            return (
-                                <Box key={change?.id}>
-                                    New status:{' '}
-                                    <PlaygroundResultChip
-                                        showIcon={false}
-                                        label={
-                                            change?.payload
-                                                ? 'Enabled'
-                                                : 'Disabled'
-                                        }
-                                        enabled={change?.payload}
-                                    />
-                                </Box>
-                            );
-                        }
-                        return (
-                            <Box key={change.id}>
-                                Change with ID: {change.id}
-                            </Box>
-                        );
-                    })}
+                    <ChangeItem {...item} />
                 </Box>
             </Card>
         ))}
-    </Paper>
+    </Box>
 );

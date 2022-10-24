@@ -4,32 +4,36 @@ import { ISuggestChangeset } from 'interfaces/suggestChangeset';
 import handleErrorResponses from '../httpErrorResponseHandler';
 
 // FIXME: mock
-const data: ISuggestChangeset = {
-    id: 123,
+const data: any = {
+    id: 'f79d399f-cb38-4982-b9b6-4e0b2d2d55a3',
     environment: 'production',
-    state: 'REVIEW',
-    createdAt: new Date('2021-03-01T12:00:00.000Z'),
+    state: 'DRAFT',
     project: 'default',
-    createdBy: '123412341',
+    createdBy: {
+        email: 'mateusz@getunleash.ai',
+        avatar: 'https://gravatar-uri.com/1321',
+    },
+    createdAt: '2020-10-20T12:00:00.000Z',
     changes: [
         {
-            id: 1,
-            feature: 'feature1',
+            id: 'f79d399f-cb38-4982-b9b6-4141sdsdaad',
+            feature: 'my-feature-toggle',
             action: 'updateEnabled',
-            payload: true,
-            createdAt: new Date('2021-03-01T12:00:00.000Z'),
+            payload: { data: true },
         },
         {
-            id: 2,
-            feature: 'feature2',
+            id: 'f79d399f-cb38-4982-b9b6-4141sdsdaad',
+            feature: 'new-feature-toggle',
             action: 'updateEnabled',
-            payload: false,
-            createdAt: new Date('2022-09-30T16:34:00.000Z'),
+            payload: {
+                data: { data: false },
+                strategyId: '123-14',
+            },
         },
     ],
 };
 
-export const useChangeRequest = () => {
+export const useSuggestedChange = () => {
     // const { data, error, mutate } = useSWR(
     //     formatApiPath(`api/admin/suggest-changes/${id}`),
     //     fetcher

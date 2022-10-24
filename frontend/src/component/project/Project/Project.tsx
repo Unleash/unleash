@@ -24,7 +24,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { DeleteProjectDialogue } from './DeleteProject/DeleteProjectDialogue';
 import { ProjectLog } from './ProjectLog/ProjectLog';
-import { SuggestedChanges } from './SuggestedChanges/SuggestedChanges';
+import { SuggestedChange } from './SuggestedChanges/SuggestedChange';
 import { DraftBanner } from './SuggestedChanges/DraftBanner/DraftBanner';
 import { MainLayout } from 'component/layout/MainLayout/MainLayout';
 
@@ -228,12 +228,21 @@ const Project = () => {
                 }}
             />
             <Routes>
-                <Route path="changes" element={<SuggestedChanges />} />
                 <Route path="health" element={<ProjectHealth />} />
                 <Route path="access/*" element={<ProjectAccess />} />
                 <Route path="environments" element={<ProjectEnvironment />} />
                 <Route path="archive" element={<ProjectFeaturesArchive />} />
                 <Route path="logs" element={<ProjectLog />} />
+                <Route
+                    path="suggest-changes/:id"
+                    element={
+                        <ConditionallyRender
+                            condition={Boolean(uiConfig?.flags?.suggestChanges)}
+                            show={<SuggestedChange />}
+                        />
+                    }
+                />
+
                 <Route path="*" element={<ProjectOverview />} />
             </Routes>
         </MainLayout>

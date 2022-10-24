@@ -7610,6 +7610,10 @@ If the provided project does not exist, the list of events will be empty.",
       "name": "Public signup tokens",
     },
     {
+      "description": "Create, update, delete, and manage [segments](https://docs.getunleash.io/reference/segments).",
+      "name": "Segments",
+    },
+    {
       "description": "Create, update, delete, manage [custom strategies](https://docs.getunleash.io/advanced/custom_activation_strategy).",
       "name": "Strategies",
     },

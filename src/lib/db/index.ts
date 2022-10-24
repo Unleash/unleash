@@ -32,6 +32,7 @@ import SegmentStore from './segment-store';
 import GroupStore from './group-store';
 import PatStore from './pat-store';
 import { PublicSignupTokenStore } from './public-signup-token-store';
+import { SuggestChangeStore } from './suggest-change-store';
 
 export const createStores = (
     config: IUnleashConfig,
@@ -92,6 +93,7 @@ export const createStores = (
             getLogger,
         ),
         patStore: new PatStore(db, getLogger),
+        suggestChangeStore: new SuggestChangeStore(db, eventBus, getLogger),
     };
 };
 

@@ -1,12 +1,13 @@
 import { Box, Typography } from '@mui/material';
 import { FC } from 'react';
 
-export const StrategyAddedChange: FC = () => {
+export const StrategyAddedChange: FC = ({ children }) => {
     return (
-        <Box sx={{ p: 1 }}>
+        <Box sx={{ p: 1, display: 'flex', gap: 1 }}>
             <Typography sx={theme => ({ color: theme.palette.success.main })}>
-                + Strategy Added
+                + Strategy Added:
             </Typography>
+            {children}
         </Box>
     );
 };

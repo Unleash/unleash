@@ -16,23 +16,35 @@ const data: any = {
     createdAt: '2020-10-20T12:00:00.000Z',
     changes: [
         {
-            id: 'f79d399f-cb38-4982-b9b6-4141sdsdaad',
             feature: 'my-feature-toggle',
             changeSet: [
-                { action: 'updateEnabled', payload: { data: { data: true } } },
                 {
+                    id: 'f79d399f-cb38-4982-b9b6-4141sdsdaad',
+                    action: 'updateEnabled',
+                    payload: { data: { data: true } },
+                },
+                {
+                    id: 'f79d399f-cb38-4982-b9b6-4141sdsdaad',
                     action: 'addStrategy',
                     payload: {
-                        data: {},
+                        name: 'flexibleRollout',
+                        constraints: [],
+                        parameters: {
+                            rollout: '50',
+                            stickiness: 'default',
+                            groupId: 'suggest-changes',
+                        },
                     },
                 },
                 {
+                    id: 'f79d399f-cb38-4982-b9b6-4141sdsdaad',
                     action: 'updateStrategy',
                     payload: {
                         data: {},
                     },
                 },
                 {
+                    id: 'f79d399f-cb38-4982-b9b6-4141sdsdaad',
                     action: 'deleteStrategy',
                     payload: {
                         data: {},
@@ -41,10 +53,10 @@ const data: any = {
             ],
         },
         {
-            id: 'f79d399f-cb38-4982-b9b6-4141sdsdaad',
             feature: 'new-feature-toggle',
             changeSet: [
                 {
+                    id: 'f79d399f-cb38-4982-b9b6-4141sdsdaad',
                     action: 'updateEnabled',
                     payload: {
                         data: { data: false },
@@ -54,10 +66,10 @@ const data: any = {
             ],
         },
         {
-            id: 'f79d399f-cb38-4982-b9b6-4141sdsdaad',
             feature: 'add-strategy-feature-toggle',
             changeSet: [
                 {
+                    id: 'f79d399f-cb38-4982-b9b6-4141sdsdaad',
                     action: 'addStrategy',
                     payload: {
                         data: {},

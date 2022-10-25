@@ -13,7 +13,7 @@ export const SuggestedFeatureToggleChange: FC<
             elevation={0}
             sx={theme => ({
                 marginTop: theme.spacing(2),
-                borderRadius: theme => `${theme.shape.borderRadius}px`,
+                borderRadius: theme => `${theme.shape.borderRadiusLarge}px`,
                 overflow: 'hidden',
                 border: '1px solid',
                 borderColor: theme => theme.palette.dividerAlternative,

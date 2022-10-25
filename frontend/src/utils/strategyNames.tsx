@@ -36,6 +36,13 @@ export const getFeatureStrategyIcon = (strategyName: string): ElementType => {
     }
 };
 
+export const GetFeatureStrategyIcon: FC<{ strategyName: string }> = ({
+    strategyName,
+}) => {
+    const Icon = getFeatureStrategyIcon(strategyName);
+    return <Icon />;
+};
+
 export const formattedStrategyNames: Record<string, string> = {
     applicationHostname: 'Hosts',
     default: 'Standard',

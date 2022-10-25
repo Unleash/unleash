@@ -19,6 +19,10 @@ import {
     StrategyEditedChange,
 } from './SuggestedFeatureToggleChange/StrategyChange';
 import { objectId } from '../../../../utils/objectId';
+import {
+    formatStrategyName,
+    GetFeatureStrategyIcon,
+} from '../../../../utils/strategyNames';
 
 export const SuggestedChange: FC = () => {
     const { data: suggestedChange } = useSuggestedChange();
@@ -94,7 +98,7 @@ export const SuggestedChange: FC = () => {
                     <Paper
                         elevation={0}
                         sx={theme => ({
-                            marginTop: theme.spacing(1),
+                            marginTop: theme.spacing(2),
                             padding: 4,
                             borderRadius: theme =>
                                 `${theme.shape.borderRadiusLarge}px`,
@@ -186,7 +190,7 @@ export const SuggestedChange: FC = () => {
                                                         <ToggleStatusChange
                                                             enabled={
                                                                 change?.payload
-                                                                    .data.data
+                                                                    ?.data?.data
                                                             }
                                                         />
                                                     }
@@ -197,7 +201,19 @@ export const SuggestedChange: FC = () => {
                                                         'addStrategy'
                                                     }
                                                     show={
-                                                        <StrategyAddedChange />
+                                                        <StrategyAddedChange>
+                                                            <GetFeatureStrategyIcon
+                                                                strategyName={
+                                                                    change
+                                                                        .payload
+                                                                        .name
+                                                                }
+                                                            />
+                                                            {formatStrategyName(
+                                                                change.payload
+                                                                    .name
+                                                            )}
+                                                        </StrategyAddedChange>
                                                     }
                                                 />
                                                 <ConditionallyRender

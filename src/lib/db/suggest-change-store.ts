@@ -147,19 +147,17 @@ export class SuggestChangeStore implements ISuggestChangeStore {
         return this.mapRows(rows);
     };
 
-    getDraftForUser = async (
+    getDraftsForUser = async (
         userId: number,
         project: string,
-        environment: string,
-    ): Promise<ISuggestChangeset> => {
+    ): Promise<ISuggestChangeset[]> => {
         const rows = await this.buildSuggestChangeSetChangesQuery().where({
             'changeSet.created_by': userId,
             state: 'Draft',
             project: project,
-            environment: environment,
         });
-        const change = this.mapRows(rows)[0];
-        return change;
+        const changesets = this.mapRows(rows);
+        return changesets;
     };
 
     getForEnvironment = async (

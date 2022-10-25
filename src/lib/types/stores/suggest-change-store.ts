@@ -23,11 +23,10 @@ export interface ISuggestChangeStore extends Store<ISuggestChangeset, number> {
 
     getForProject(project: string): Promise<ISuggestChangeset[]>;
 
-    getDraftForUser(
+    getDraftsForUser(
         userId: number,
         project: string,
-        environment: string,
-    ): Promise<ISuggestChangeset>;
+    ): Promise<ISuggestChangeset[]>;
 
     getForEnvironment(environment: string): Promise<ISuggestChangeset[]>;
 }

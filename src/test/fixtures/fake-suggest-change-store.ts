@@ -38,16 +38,14 @@ export default class FakeSuggestChangeStore implements ISuggestChangeStore {
         );
     }
 
-    getDraftForUser(
+    getDraftsForUser(
         userId: number,
         project: string,
-        environment: string,
-    ): Promise<ISuggestChangeset> {
+    ): Promise<ISuggestChangeset[]> {
         return Promise.resolve(
-            this.suggestChanges.find(
+            this.suggestChanges.filter(
                 (changeSet) =>
                     changeSet.project === project &&
-                    changeSet.environment === environment &&
                     changeSet.createdBy.id === userId,
             ),
         );

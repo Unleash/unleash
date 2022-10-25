@@ -18,17 +18,52 @@ const data: any = {
         {
             id: 'f79d399f-cb38-4982-b9b6-4141sdsdaad',
             feature: 'my-feature-toggle',
-            action: 'updateEnabled',
-            payload: { data: true },
+            changeSet: [
+                { action: 'updateEnabled', payload: { data: { data: true } } },
+                {
+                    action: 'addStrategy',
+                    payload: {
+                        data: {},
+                    },
+                },
+                {
+                    action: 'updateStrategy',
+                    payload: {
+                        data: {},
+                    },
+                },
+                {
+                    action: 'deleteStrategy',
+                    payload: {
+                        data: {},
+                    },
+                },
+            ],
         },
         {
             id: 'f79d399f-cb38-4982-b9b6-4141sdsdaad',
             feature: 'new-feature-toggle',
-            action: 'updateEnabled',
-            payload: {
-                data: { data: false },
-                strategyId: '123-14',
-            },
+            changeSet: [
+                {
+                    action: 'updateEnabled',
+                    payload: {
+                        data: { data: false },
+                        strategyId: '123-14',
+                    },
+                },
+            ],
+        },
+        {
+            id: 'f79d399f-cb38-4982-b9b6-4141sdsdaad',
+            feature: 'add-strategy-feature-toggle',
+            changeSet: [
+                {
+                    action: 'addStrategy',
+                    payload: {
+                        data: {},
+                    },
+                },
+            ],
         },
     ],
 };

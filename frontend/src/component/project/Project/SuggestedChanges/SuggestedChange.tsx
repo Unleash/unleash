@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, Fragment } from 'react';
 import { Avatar, Box, Card, Paper, Typography } from '@mui/material';
 import Timeline from '@mui/lab/Timeline';
 import TimelineSeparator from '@mui/lab/TimelineSeparator';
@@ -8,16 +8,20 @@ import TimelineDot from '@mui/lab/TimelineDot';
 import TimelineItem, { timelineItemClasses } from '@mui/lab/TimelineItem';
 import TimeAgo from 'react-timeago';
 import { useSuggestedChange } from 'hooks/api/getters/useSuggestChange/useSuggestedChange';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import {
-    PlaygroundResultChip,
-    StyledTrueChip,
-} from 'component/playground/Playground/PlaygroundResultsTable/PlaygroundResultChip/PlaygroundResultChip';
+import { StyledTrueChip } from 'component/playground/Playground/PlaygroundResultsTable/PlaygroundResultChip/PlaygroundResultChip';
 import { ReactComponent as ChangesAppliedIcon } from 'assets/icons/merge.svg';
+import { SuggestedFeatureToggleChange } from './SuggestedFeatureToggleChange/SuggestedFeatureToggleChange';
+import { ToggleStatusChange } from './SuggestedFeatureToggleChange/ToggleStatusChange';
+import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender';
+import {
+    StrategyAddedChange,
+    StrategyDeletedChange,
+    StrategyEditedChange,
+} from './SuggestedFeatureToggleChange/StrategyChange';
+import { objectId } from '../../../../utils/objectId';
 
 export const SuggestedChange: FC = () => {
-    const { data: changeRequest } = useSuggestedChange();
-    console.log(changeRequest);
+    const { data: suggestedChange } = useSuggestedChange();
 
     return (
         <>
@@ -28,7 +32,14 @@ export const SuggestedChange: FC = () => {
                     borderRadius: theme => `${theme.shape.borderRadiusLarge}px`,
                 })}
             >
-                <Box sx={theme => ({ display: 'flex', alignItems: 'center', gap: 2, marginBottom: theme.spacing(2)})}>
+                <Box
+                    sx={theme => ({
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 2,
+                        marginBottom: theme.spacing(2),
+                    })}
+                >
                     <Typography
                         sx={{
                             display: 'flex',
@@ -37,23 +48,37 @@ export const SuggestedChange: FC = () => {
                         variant="h1"
                     >
                         Suggestion
-                        <Typography
-                            variant="h1"
-                            component="p"
-                        >
-                            #{changeRequest.id}
+                        <Typography variant="h1" component="p">
+                            #{suggestedChange.id}
                         </Typography>
                     </Typography>
                     <StyledTrueChip
-                        icon={<ChangesAppliedIcon strokeWidth="0.25"/>}
-                        label='Changes applied'
+                        icon={<ChangesAppliedIcon strokeWidth="0.25" />}
+                        label="Changes applied"
                     />
                 </Box>
                 <Box sx={{ display: 'flex', verticalAlign: 'center', gap: 2 }}>
-                    <Typography sx={{margin: 'auto 0'}}>Created <TimeAgo date={new Date(changeRequest.createdAt)}/> by</Typography>
-                    <Avatar src={changeRequest?.createdBy?.avatar}/>
-                    <Card variant="outlined" sx={theme => ({ padding: 1, backgroundColor: theme.palette.tertiary.light })}>
-                        Environment: <Typography display="inline" fontWeight="bold">{changeRequest?.environment}</Typography> | Updates: <Typography display="inline" fontWeight="bold">{changeRequest?.changes.length} feature toggles</Typography>
+                    <Typography sx={{ margin: 'auto 0' }}>
+                        Created{' '}
+                        <TimeAgo date={new Date(suggestedChange.createdAt)} />{' '}
+                        by
+                    </Typography>
+                    <Avatar src={suggestedChange?.createdBy?.avatar} />
+                    <Card
+                        variant="outlined"
+                        sx={theme => ({
+                            padding: 1,
+                            backgroundColor: theme.palette.tertiary.light,
+                        })}
+                    >
+                        Environment:{' '}
+                        <Typography display="inline" fontWeight="bold">
+                            {suggestedChange?.environment}
+                        </Typography>{' '}
+                        | Updates:{' '}
+                        <Typography display="inline" fontWeight="bold">
+                            {suggestedChange?.changes.length} feature toggles
+                        </Typography>
                     </Card>
                 </Box>
             </Paper>
@@ -141,58 +166,64 @@ export const SuggestedChange: FC = () => {
                         })}
                     >
                         Changes
-                        {changeRequest.changes?.map((item: any) => (
-                            <Card
-                                key={item.feature}
-                                elevation={0}
-                                sx={theme => ({
-                                    marginTop: theme.spacing(2),
-                                    borderRadius: theme =>
-                                        `${theme.shape.borderRadius}px`,
-                                    overflow: 'hidden',
-                                    border: '1px solid',
-                                    borderColor: theme =>
-                                        theme.palette.dividerAlternative,
-                                })}
-                            >
-                                <Box
-                                    sx={theme => ({
-                                        backgroundColor: theme =>
-                                            theme.palette.tableHeaderBackground,
-                                        p: 2,
-                                    })}
+                        {suggestedChange.changes?.map(
+                            (featureToggleChange: any) => (
+                                <SuggestedFeatureToggleChange
+                                    key={featureToggleChange.feature}
+                                    featureToggleName={
+                                        featureToggleChange.feature
+                                    }
                                 >
-                                    <Typography>{item.feature}</Typography>
-                                </Box>
-                                <Box sx={{ p: 2 }}>
-                                    {/*
-                      // @ts-ignore FIXME: types */}
-                                    <ConditionallyRender
-                                        condition={
-                                            item.action === 'updateEnabled'
-                                        }
-                                        show={
-                                            <Box key={item?.id}>
-                                                New status:{' '}
-                                                <PlaygroundResultChip
-                                                    showIcon={false}
-                                                    label={
-                                                        item?.payload.data ===
-                                                        true
-                                                            ? 'Enabled'
-                                                            : 'Disabled'
+                                    {featureToggleChange.changeSet.map(
+                                        (change: any) => (
+                                            <Fragment key={objectId(change)}>
+                                                <ConditionallyRender
+                                                    condition={
+                                                        change.action ===
+                                                        'updateEnabled'
                                                     }
-                                                    enabled={
-                                                        item?.payload.data ===
-                                                        true
+                                                    show={
+                                                        <ToggleStatusChange
+                                                            enabled={
+                                                                change?.payload
+                                                                    .data.data
+                                                            }
+                                                        />
                                                     }
                                                 />
-                                            </Box>
-                                        }
-                                    />
-                                </Box>
-                            </Card>
-                        ))}
+                                                <ConditionallyRender
+                                                    condition={
+                                                        change.action ===
+                                                        'addStrategy'
+                                                    }
+                                                    show={
+                                                        <StrategyAddedChange />
+                                                    }
+                                                />
+                                                <ConditionallyRender
+                                                    condition={
+                                                        change.action ===
+                                                        'deleteStrategy'
+                                                    }
+                                                    show={
+                                                        <StrategyDeletedChange />
+                                                    }
+                                                />
+                                                <ConditionallyRender
+                                                    condition={
+                                                        change.action ===
+                                                        'updateStrategy'
+                                                    }
+                                                    show={
+                                                        <StrategyEditedChange />
+                                                    }
+                                                />
+                                            </Fragment>
+                                        )
+                                    )}
+                                </SuggestedFeatureToggleChange>
+                            )
+                        )}
                     </Box>
                 </Paper>
             </Box>

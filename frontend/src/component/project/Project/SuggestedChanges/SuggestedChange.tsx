@@ -1,28 +1,19 @@
-import { useState, FC } from 'react';
-import {
-    Box,
-    Paper,
-    Button,
-    Typography,
-    Card,
-    Popover,
-    Radio,
-    FormControl,
-    FormControlLabel,
-    RadioGroup,
-} from '@mui/material';
+import { FC } from 'react';
+import { Avatar, Box, Card, Paper, Typography } from '@mui/material';
 import Timeline from '@mui/lab/Timeline';
 import TimelineSeparator from '@mui/lab/TimelineSeparator';
 import TimelineConnector from '@mui/lab/TimelineConnector';
 import TimelineContent from '@mui/lab/TimelineContent';
 import TimelineDot from '@mui/lab/TimelineDot';
 import TimelineItem, { timelineItemClasses } from '@mui/lab/TimelineItem';
-
+import TimeAgo from 'react-timeago';
 import { useSuggestedChange } from 'hooks/api/getters/useSuggestChange/useSuggestedChange';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { ChangesetDiff } from './ChangesetDiff/ChangesetDiff';
-import { ChangesHeader } from './ChangesHeader/ChangesHeader';
-import { PlaygroundResultChip } from 'component/playground/Playground/PlaygroundResultsTable/PlaygroundResultChip/PlaygroundResultChip';
+import {
+    PlaygroundResultChip,
+    StyledTrueChip,
+} from 'component/playground/Playground/PlaygroundResultsTable/PlaygroundResultChip/PlaygroundResultChip';
+import { ReactComponent as ChangesAppliedIcon } from 'assets/icons/merge.svg';
 
 export const SuggestedChange: FC = () => {
     const { data: changeRequest } = useSuggestedChange();
@@ -32,12 +23,12 @@ export const SuggestedChange: FC = () => {
         <>
             <Paper
                 elevation={0}
-                sx={{
-                    p: 4,
+                sx={theme => ({
+                    p: theme.spacing(2, 4),
                     borderRadius: theme => `${theme.shape.borderRadiusLarge}px`,
-                }}
+                })}
             >
-                <Box sx={theme => ({ padding: theme.spacing(2) })}>
+                <Box sx={theme => ({ display: 'flex', alignItems: 'center', gap: 2, marginBottom: theme.spacing(2)})}>
                     <Typography
                         sx={{
                             display: 'flex',
@@ -47,15 +38,23 @@ export const SuggestedChange: FC = () => {
                     >
                         Suggestion
                         <Typography
-                            sx={theme => ({
-                                marginLeft: theme.spacing(1),
-                            })}
                             variant="h1"
                             component="p"
                         >
                             #{changeRequest.id}
                         </Typography>
                     </Typography>
+                    <StyledTrueChip
+                        icon={<ChangesAppliedIcon strokeWidth="0.25"/>}
+                        label='Changes applied'
+                    />
+                </Box>
+                <Box sx={{ display: 'flex', verticalAlign: 'center', gap: 2 }}>
+                    <Typography sx={{margin: 'auto 0'}}>Created <TimeAgo date={new Date(changeRequest.createdAt)}/> by</Typography>
+                    <Avatar src={changeRequest?.createdBy?.avatar}/>
+                    <Card variant="outlined" sx={theme => ({ padding: 1, backgroundColor: theme.palette.tertiary.light })}>
+                        Environment: <Typography display="inline" fontWeight="bold">{changeRequest?.environment}</Typography> | Updates: <Typography display="inline" fontWeight="bold">{changeRequest?.changes.length} feature toggles</Typography>
+                    </Card>
                 </Box>
             </Paper>
 
@@ -70,7 +69,7 @@ export const SuggestedChange: FC = () => {
                     <Paper
                         elevation={0}
                         sx={theme => ({
-                            marginTop: theme.spacing(2),
+                            marginTop: theme.spacing(1),
                             padding: 4,
                             borderRadius: theme =>
                                 `${theme.shape.borderRadiusLarge}px`,

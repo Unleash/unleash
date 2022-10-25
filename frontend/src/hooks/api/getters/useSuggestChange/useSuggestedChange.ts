@@ -5,7 +5,7 @@ import handleErrorResponses from '../httpErrorResponseHandler';
 
 // FIXME: mock
 const data: any = {
-    id: 'f79d399f-cb38-4982-b9b6-4e0b2d2d55a3',
+    id: '12',
     environment: 'production',
     state: 'DRAFT',
     project: 'default',

@@ -60,15 +60,17 @@ const suggestChangeRowReducer = (acc, suggestChangeRow) => {
                 imageUrl: suggestChangeSet.changeSetAvatar,
             },
             createdAt: suggestChangeSet.created_at,
-            changes: [],
+            features: [],
         };
     }
     const currentSuggestChangeSet = acc[suggestChangeSet.id];
 
     if (changeId) {
-        currentSuggestChangeSet.changes.push({
+        const feature = currentSuggestChangeSet.features.find(
+            (f) => f.name === changeFeature,
+        );
+        const change = {
             id: changeId,
-            feature: changeFeature,
             action: changeAction,
             payload: changePayload,
             createdAt: changeCreatedAt,
@@ -77,7 +79,15 @@ const suggestChangeRowReducer = (acc, suggestChangeRow) => {
                 username: changeCreatedByUsername,
                 imageUrl: changeCreatedByAvatar,
             },
-        });
+        };
+        if (feature) {
+            feature.changes.push(change);
+        } else {
+            currentSuggestChangeSet.features.push({
+                name: changeFeature,
+                changes: [change],
+            });
+        }
     }
     return acc;
 };

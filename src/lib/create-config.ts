@@ -100,7 +100,9 @@ function loadClientCachingOptions(
 
 function loadUI(options: IUnleashOptions): IUIConfig {
     const uiO = options.ui || {};
-    const ui: IUIConfig = {};
+    const ui: IUIConfig = {
+        environment: 'Open Source',
+    };
 
     ui.flags = {
         E: true,

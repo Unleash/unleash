@@ -135,6 +135,19 @@ function AdminMenu() {
                         </NavLink>
                     }
                 />
+                <Tab
+                    value="/admin/instance"
+                    label={
+                        <NavLink
+                            to="/admin/instance"
+                            style={({ isActive }) =>
+                                createNavLinkStyle({ isActive, theme })
+                            }
+                        >
+                            Instance stats
+                        </NavLink>
+                    }
+                />
                 {isBilling && (
                     <Tab
                         value="/admin/billing"

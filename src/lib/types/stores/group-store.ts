@@ -58,4 +58,6 @@ export interface IGroupStore extends Store<IGroup, number> {
     existsWithName(name: string): Promise<boolean>;
 
     create(group: IStoreGroup): Promise<IGroup>;
+
+    count(): Promise<number>;
 }

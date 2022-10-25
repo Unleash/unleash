@@ -139,6 +139,7 @@ export interface IListeningHost {
 }
 
 export interface IUIConfig {
+    environment?: string;
     slogan?: string;
     name?: string;
     links?: [

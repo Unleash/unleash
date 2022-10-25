@@ -1573,6 +1573,65 @@ exports[`should serve the OpenAPI spec 1`] = `
         ],
         "type": "object",
       },
+      "instanceAdminStatsSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "OIDCenabled": {
+            "type": "number",
+          },
+          "SAMLenabled": {
+            "type": "number",
+          },
+          "contextFields": {
+            "type": "number",
+          },
+          "environments": {
+            "type": "number",
+          },
+          "featureToggles": {
+            "type": "number",
+          },
+          "groups": {
+            "type": "number",
+          },
+          "instanceId": {
+            "type": "string",
+          },
+          "projects": {
+            "type": "number",
+          },
+          "roles": {
+            "type": "number",
+          },
+          "segments": {
+            "type": "number",
+          },
+          "strategies": {
+            "type": "number",
+          },
+          "sum": {
+            "type": "string",
+          },
+          "timestamp": {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string",
+          },
+          "users": {
+            "type": "number",
+          },
+          "versionEnterprise": {
+            "type": "string",
+          },
+          "versionOSS": {
+            "type": "string",
+          },
+        },
+        "required": [
+          "instanceId",
+        ],
+        "type": "object",
+      },
       "legalValueSchema": {
         "additionalProperties": false,
         "properties": {
@@ -4583,6 +4642,27 @@ If the provided project does not exist, the list of events will be empty.",
         ],
       },
     },
+    "/api/admin/instance-admin/statistics": {
+      "get": {
+        "deprecated": true,
+        "operationId": "getInstanceAdminStats",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/instanceAdminStatsSchema",
+                },
+              },
+            },
+            "description": "instanceAdminStatsSchema",
+          },
+        },
+        "tags": [
+          "Instance Admin",
+        ],
+      },
+    },
     "/api/admin/invite-link/tokens": {
       "get": {
         "operationId": "getAllPublicSignupTokens",
@@ -7588,6 +7668,10 @@ If the provided project does not exist, the list of events will be empty.",
     {
       "description": "[Import and export](https://docs.getunleash.io/deploy/import_export) the state of your Unleash instance.",
       "name": "Import/Export",
+    },
+    {
+      "description": "Instance admin endpoints used to manage the Unleash instance itself.",
+      "name": "Instance Admin",
     },
     {
       "description": "Register, read, or delete metrics recorded by Unleash.",

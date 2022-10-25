@@ -1557,3 +1557,24 @@ This event fires when you delete a segment.
   "environment": null
 }
 ```
+
+## Suggest changes events
+
+### 'suggest-change-created'
+
+This event fires when you create a a suggest-changes draft.
+
+```json title="example event: suggest-change-created"
+{
+  "id": 971,
+  "type": "suggest-change-created",
+  "createdBy": "user@company.com",
+  "createdAt": "2022-06-03T10:30:08.128Z",
+  "data": {},
+  "preData": null,
+  "tags": [],
+  "featureName": null,
+  "project": null,
+  "environment": null
+}
+```

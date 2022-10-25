@@ -1,7 +1,7 @@
 import { ITagType } from './stores/tag-type-store';
 import { LogProvider } from '../logger';
 import { IRole } from './stores/access-store';
-import { IUser } from './user';
+import User, { IUser } from './user';
 import { ALL_OPERATORS } from '../util/constants';
 
 export type Operator = typeof ALL_OPERATORS[number];
@@ -364,4 +364,55 @@ export interface ISegment {
 export interface IFeatureStrategySegment {
     featureStrategyId: string;
     segmentId: number;
+}
+
+export interface ISuggestChangeset {
+    id: number;
+    state: string;
+    project: string;
+    environment: string;
+    createdBy: Pick<User, 'id' | 'username' | 'imageUrl'>;
+    createdAt: Date;
+    changes: ISuggestChange[];
+}
+
+export interface ISuggestChangePayload {
+    environment: string;
+    data: unknown;
+}
+
+export interface ISuggestChange {
+    id?: number;
+    action: SuggestChangeAction;
+    feature: string;
+    payload: ISuggestChangePayload;
+    createdBy?: Pick<User, 'id' | 'username' | 'imageUrl'>;
+    createdAt?: Date;
+}
+
+export enum SuggestChangesetEvent {
+    CREATED = 'CREATED',
+    UPDATED = 'UPDATED',
+    SUBMITTED = 'SUBMITTED',
+    APPROVED = 'APPROVED',
+    REJECTED = 'REJECTED',
+    CLOSED = 'CLOSED',
+}
+
+export enum SuggestChangeAction {
+    UPDATE_ENABLED = 'updateEnabled',
+    ADD_STRATEGY = 'strategyAdd',
+    UPDATE_STRATEGY = 'strategyUpdate',
+    DELETE_STRATEGY = 'strategyDelete',
+}
+
+export enum SuggestChangeEvent {
+    UPDATE_ENABLED = 'updateFeatureEnabledEvent',
+    ADD_STRATEGY = 'addStrategyEvent',
+    UPDATE_STRATEGY = 'updateStrategyEvent',
+    DELETE_STRATEGY = 'deleteStrategyEvent',
+}
+export interface ISuggestChangeEventData {
+    feature: string;
+    data: unknown;
 }

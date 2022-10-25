@@ -14,6 +14,10 @@ export const defaultExperimentalOptions = {
             process.env.UNLEASH_EXPERIMENTAL_PERSONAL_ACCESS_TOKENS,
             false,
         ),
+        suggestChanges: parseEnvVarBoolean(
+            process.env.UNLEASH_EXPERIMENTAL_SUGGEST_CHANGES,
+            false,
+        ),
         syncSSOGroups: parseEnvVarBoolean(
             process.env.UNLEASH_EXPERIMENTAL_SYNC_SSO_GROUPS,
             false,
@@ -52,6 +56,7 @@ export interface IExperimentalOptions {
         anonymiseEventLog?: boolean;
         personalAccessTokens?: boolean;
         syncSSOGroups?: boolean;
+        suggestChanges?: boolean;
         cloneEnvironment?: boolean;
     };
     externalResolver: IExternalFlagResolver;

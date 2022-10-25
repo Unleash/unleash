@@ -68,15 +68,6 @@ const Project = () => {
             path: basePath,
             name: 'overview',
         },
-        ...(uiConfig?.flags?.suggestChanges
-            ? [
-                  {
-                      title: 'Suggested changes',
-                      path: `${basePath}/changes`,
-                      name: 'changes',
-                  },
-              ]
-            : []),
         {
             title: 'Health',
             path: `${basePath}/health`,

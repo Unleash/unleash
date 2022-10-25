@@ -7,7 +7,7 @@ import handleErrorResponses from '../httpErrorResponseHandler';
 const data: ISuggestChangeset = {
     id: 123,
     environment: 'production',
-    state: 'REVIEW',
+    state: 'CREATED',
     createdAt: new Date('2021-03-01T12:00:00.000Z'),
     project: 'default',
     createdBy: '123412341',

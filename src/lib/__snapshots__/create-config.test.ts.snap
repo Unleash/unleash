@@ -75,6 +75,7 @@ exports[`should create default config 1`] = `
       "personalAccessTokens": false,
       "publicSignup": false,
       "responseTimeWithAppName": false,
+      "suggestChanges": false,
       "syncSSOGroups": false,
     },
   },
@@ -89,6 +90,7 @@ exports[`should create default config 1`] = `
       "personalAccessTokens": false,
       "publicSignup": false,
       "responseTimeWithAppName": false,
+      "suggestChanges": false,
       "syncSSOGroups": false,
     },
     "externalResolver": {

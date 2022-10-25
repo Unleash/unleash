@@ -1,7 +1,13 @@
-import {UserAvatar} from "../../../common/UserAvatar/UserAvatar";
+import { UserAvatar } from '../../../common/UserAvatar/UserAvatar';
+import { TextCell } from '../../../common/Table/cells/TextCell/TextCell';
 
-export const AvatarCell = () => {
+export const AvatarCell = ({ value }: any) => {
     return (
-        <UserAvatar />
-    )
-}
+        <TextCell>
+            <UserAvatar
+                user={value}
+                sx={{ maxWidth: '30px', maxHeight: '30px', alignSelf: 'left' }}
+            />
+        </TextCell>
+    );
+};

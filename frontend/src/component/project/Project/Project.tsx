@@ -27,6 +27,7 @@ import { ProjectLog } from './ProjectLog/ProjectLog';
 import { SuggestedChanges } from './SuggestedChanges/SuggestedChanges';
 import { DraftBanner } from './SuggestedChanges/DraftBanner/DraftBanner';
 import { MainLayout } from 'component/layout/MainLayout/MainLayout';
+import { ProjectChangeRequests } from '../../suggest-changes/ProjectChangeRequests/ProjectChangeRequests';
 
 const StyledDiv = styled('div')(() => ({
     display: 'flex',
@@ -68,15 +69,6 @@ const Project = () => {
             path: basePath,
             name: 'overview',
         },
-        ...(uiConfig?.flags?.suggestChanges
-            ? [
-                  {
-                      title: 'Suggested changes',
-                      path: `${basePath}/changes`,
-                      name: 'changes',
-                  },
-              ]
-            : []),
         {
             title: 'Health',
             path: `${basePath}/health`,
@@ -96,6 +88,11 @@ const Project = () => {
             title: 'Archive',
             path: `${basePath}/archive`,
             name: 'archive',
+        },
+        {
+            title: 'Change requests',
+            path: `${basePath}/change-requests`,
+            name: 'logs',
         },
         {
             title: 'Event log',
@@ -228,12 +225,15 @@ const Project = () => {
                 }}
             />
             <Routes>
-                <Route path="changes" element={<SuggestedChanges />} />
                 <Route path="health" element={<ProjectHealth />} />
                 <Route path="access/*" element={<ProjectAccess />} />
                 <Route path="environments" element={<ProjectEnvironment />} />
                 <Route path="archive" element={<ProjectFeaturesArchive />} />
                 <Route path="logs" element={<ProjectLog />} />
+                <Route
+                    path="change-requests"
+                    element={<ProjectChangeRequests />}
+                />
                 <Route path="*" element={<ProjectOverview />} />
             </Routes>
         </MainLayout>

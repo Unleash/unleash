@@ -1,6 +1,12 @@
 export interface ISuggestChangeset {
     id: number;
-    state: string;
+    state:
+        | 'CREATED'
+        | 'UPDATED'
+        | 'SUBMITTED'
+        | 'APPROVED'
+        | 'REJECTED'
+        | 'CLOSED';
     project: string;
     environment: string;
     createdBy?: string;

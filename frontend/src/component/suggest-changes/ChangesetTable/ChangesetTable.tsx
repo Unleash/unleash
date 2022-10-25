@@ -1,24 +1,24 @@
-import {PageContent} from 'component/common/PageContent/PageContent';
-import {PageHeader} from 'component/common/PageHeader/PageHeader';
-import {TablePlaceholder, VirtualizedTable} from 'component/common/Table';
-import {SortingRule, useFlexLayout, useSortBy, useTable} from 'react-table';
-import {SearchHighlightProvider} from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import {useMediaQuery} from '@mui/material';
-import {sortTypes} from 'utils/sortTypes';
-import {useEffect, useMemo, useState} from 'react';
-import {ConditionallyRender} from 'component/common/ConditionallyRender/ConditionallyRender';
-import {Search} from 'component/common/Search/Search';
-import {featuresPlaceholder} from 'component/feature/FeatureToggleList/FeatureToggleListTable';
+import { PageContent } from 'component/common/PageContent/PageContent';
+import { PageHeader } from 'component/common/PageHeader/PageHeader';
+import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
+import { SortingRule, useFlexLayout, useSortBy, useTable } from 'react-table';
+import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
+import { useMediaQuery } from '@mui/material';
+import { sortTypes } from 'utils/sortTypes';
+import { useEffect, useMemo, useState } from 'react';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { Search } from 'component/common/Search/Search';
+import { featuresPlaceholder } from 'component/feature/FeatureToggleList/FeatureToggleListTable';
 import theme from 'themes/theme';
 import useToast from 'hooks/useToast';
-import {useSearch} from 'hooks/useSearch';
-import {useSearchParams} from 'react-router-dom';
-import {TimeAgoCell} from "../../common/Table/cells/TimeAgoCell/TimeAgoCell";
-import {TextCell} from "../../common/Table/cells/TextCell/TextCell";
-import {ChangesetStatusCell} from './ChangesetStatusCell/ChangesetStatusCell';
-import {ChangesetActionCell} from './ChangesetActionCell/ChangesetActionCell';
-import {AvatarCell} from "./AvatarCell/AvatarCell";
-import {ChangesetTitleCell} from "./ChangesetTitleCell/ChangesetTitleCell";
+import { useSearch } from 'hooks/useSearch';
+import { useSearchParams } from 'react-router-dom';
+import { TimeAgoCell } from '../../common/Table/cells/TimeAgoCell/TimeAgoCell';
+import { TextCell } from '../../common/Table/cells/TextCell/TextCell';
+import { ChangesetStatusCell } from './ChangesetStatusCell/ChangesetStatusCell';
+import { ChangesetActionCell } from './ChangesetActionCell/ChangesetActionCell';
+import { AvatarCell } from './AvatarCell/AvatarCell';
+import { ChangesetTitleCell } from './ChangesetTitleCell/ChangesetTitleCell';
 
 export interface IChangeSetTableProps {
     changesets: any[];
@@ -59,55 +59,45 @@ export const ChangesetTable = ({
             {
                 id: 'Title',
                 Header: 'Title',
-                width: 85,
+                minWidth: 200,
                 canSort: true,
                 accessor: 'id',
                 Cell: ChangesetTitleCell,
-                align: 'center',
             },
             {
                 Header: 'By',
-                accessor: 'createdBy.imageUrl',
-                width: 85,
-                canSort: true,
+                accessor: 'createdBy',
+                maxWidth: 50,
+                minWidth: 50,
+                canSort: false,
                 Cell: AvatarCell,
-                align: 'center',
             },
             {
                 Header: 'Submitted',
-                accessor: 'updateddAt',
+                accessor: 'updatedAt',
                 searchable: true,
                 minWidth: 100,
-                Cell: ({ value, row: { original } }: any) => (
-                    <TimeAgoCell
-                        value={value}
-                    />
-                ),
+                Cell: ({ value }: any) => <TimeAgoCell value={value} />,
                 sortType: 'alphanumeric',
             },
             {
                 Header: 'Environment',
-                accessor: 'payload.environment',
-                width: 150,
-                Cell: ({ value }: any) => (
-                    <TextCell
-                        value={value}
-                    />
-                ),
-                sortType: 'date',
+                accessor: 'environment',
+                minWidth: 100,
+                Cell: ({ value }: any) => <TextCell value={value} />,
+                sortType: 'text',
             },
             {
                 Header: 'Status',
-                accessor: 'status',
-                width: 150,
-                Cell: ChangesetStatusCell,
-                sortType: 'date',
+                accessor: 'state',
+                minWidth: 150,
+                Cell: ({ value }: any) => <ChangesetStatusCell value={value} />,
+                sortType: 'text',
             },
             {
-                Header: 'Actions',
+                Header: '',
                 id: 'Actions',
-                align: 'center',
-                maxWidth: 120,
+                minWidth: 50,
                 canSort: false,
                 Cell: ChangesetActionCell,
             },
@@ -160,14 +150,11 @@ export const ChangesetTable = ({
 
     useEffect(() => {
         const hiddenColumns = [''];
-        if (isMediumScreen) {
-            hiddenColumns.push('createddBy', 'updatedAt');
-        }
         if (isSmallScreen) {
-            hiddenColumns.push('createddBy', 'updatedAt');
+            hiddenColumns.push('createdBy', 'updatedAt');
         }
         setHiddenColumns(hiddenColumns);
-    }, [setHiddenColumns, isSmallScreen, isMediumScreen]);
+    }, [setHiddenColumns, isSmallScreen]);
 
     useEffect(() => {
         if (loading) {
@@ -223,13 +210,13 @@ export const ChangesetTable = ({
                         condition={searchValue?.length > 0}
                         show={
                             <TablePlaceholder>
-                                No feature toggles found matching &ldquo;
+                                No changesets found matching &ldquo;
                                 {searchValue}&rdquo;
                             </TablePlaceholder>
                         }
                         elseShow={
                             <TablePlaceholder>
-                                None of the feature toggles were archived yet.
+                                None of the changesets where submitted yet.
                             </TablePlaceholder>
                         }
                     />

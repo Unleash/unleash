@@ -1,7 +1,6 @@
 import { ISuggestChangeStore } from '../../lib/types/stores/suggest-change-store';
 import { ISuggestChange, ISuggestChangeset } from '../../lib/types/model';
 import { PartialSome } from '../../lib/types/partial';
-import User from '../../lib/types/user';
 
 export default class FakeSuggestChangeStore implements ISuggestChangeStore {
     suggestChanges: ISuggestChangeset[] = [];
@@ -24,7 +23,7 @@ export default class FakeSuggestChangeStore implements ISuggestChangeStore {
         change: PartialSome<ISuggestChange, 'id' | 'createdBy' | 'createdAt'>,
         changeSetID: number,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        user: User,
+        userId: number,
     ): Promise<void> {
         const changeSet = this.suggestChanges.find((s) => s.id === changeSetID);
         changeSet.changes.push(change);
@@ -40,7 +39,7 @@ export default class FakeSuggestChangeStore implements ISuggestChangeStore {
     }
 
     getDraftForUser(
-        user: User,
+        userId: number,
         project: string,
         environment: string,
     ): Promise<ISuggestChangeset> {
@@ -49,7 +48,7 @@ export default class FakeSuggestChangeStore implements ISuggestChangeStore {
                 (changeSet) =>
                     changeSet.project === project &&
                     changeSet.environment === environment &&
-                    changeSet.createdBy.id === user.id,
+                    changeSet.createdBy.id === userId,
             ),
         );
     }
@@ -63,14 +62,11 @@ export default class FakeSuggestChangeStore implements ISuggestChangeStore {
     }
 
     create(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         suggestChangeSet: PartialSome<ISuggestChangeset, 'id'>,
-        user: Partial<Pick<User, 'id' | 'username' | 'email'>>,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        userId: number,
     ): Promise<ISuggestChangeset> {
-        this.suggestChanges.push({
-            id: 1,
-            ...suggestChangeSet,
-            createdBy: { id: user.id, username: user.email, imageUrl: '' },
-        });
         return Promise.resolve(undefined);
     }
 

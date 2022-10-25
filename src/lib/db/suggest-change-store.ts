@@ -8,7 +8,6 @@ import {
     ISuggestChangeset,
     SuggestChangeAction,
 } from '../types/model';
-import User from '../types/user';
 
 const T = {
     SUGGEST_CHANGE: 'suggest_change',
@@ -117,6 +116,8 @@ export class SuggestChangeStore implements ISuggestChangeStore {
                 'changeUser.id',
             )
             .select(
+                'changeSet.state',
+                'changeSet.id',
                 'changeSet.environment',
                 'projects.name as project',
                 'changeSet.created_at',
@@ -147,12 +148,12 @@ export class SuggestChangeStore implements ISuggestChangeStore {
     };
 
     getDraftForUser = async (
-        user: User,
+        userId: number,
         project: string,
         environment: string,
     ): Promise<ISuggestChangeset> => {
         const rows = await this.buildSuggestChangeSetChangesQuery().where({
-            'changeSet.created_by': user.id,
+            'changeSet.created_by': userId,
             state: 'Draft',
             project: project,
             environment: environment,
@@ -184,19 +185,19 @@ export class SuggestChangeStore implements ISuggestChangeStore {
             ISuggestChangeset,
             'id' | 'createdBy' | 'createdAt'
         >,
-        user: User,
+        userId: number,
     ): Promise<ISuggestChangeset> => {
         const [{ id }] = await this.db(T.SUGGEST_CHANGE_SET)
             .insert<ISuggestChangesetInsert>({
                 environment: suggestChangeSet.environment,
                 state: suggestChangeSet.state,
                 project: suggestChangeSet.project,
-                created_by: user.id,
+                created_by: userId,
             })
             .returning('id');
 
         suggestChangeSet.changes.forEach((change) => {
-            this.addChangeToSet(change, id, user);
+            this.addChangeToSet(change, id, userId);
         });
 
         return this.get(id);
@@ -205,7 +206,7 @@ export class SuggestChangeStore implements ISuggestChangeStore {
     addChangeToSet = async (
         change: PartialSome<ISuggestChange, 'id' | 'createdBy' | 'createdAt'>,
         changeSetID: number,
-        user: User,
+        userId: number,
     ): Promise<void> => {
         await this.db(T.SUGGEST_CHANGE)
             .insert<ISuggestChangeInsert>({
@@ -213,7 +214,7 @@ export class SuggestChangeStore implements ISuggestChangeStore {
                 feature: change.feature,
                 payload: change.payload,
                 suggest_change_set_id: changeSetID,
-                created_by: user.id,
+                created_by: userId,
             })
             .returning('id');
     };

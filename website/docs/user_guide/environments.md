@@ -56,6 +56,14 @@ In order for the SDK to download the feature toggle configuration for the correc
 
 ![An API key creation form. The form's fields are "username", "token type", "project", and, crucially, "environment". The development environment is selected.](/img/environments_api_keys.png 'Create Environment specific API Keys')
 
+## Cloning environments
+
+If you have a lot of feature toggles, it can be tedious to configure the same activation strategies for each environment. To make this easier, you can clone an environment. This will copy all feature toggles and activation strategies from the source environment to the target environment.
+
+This can also prove to be a safe way to experiment with activation strategies without affecting production-facing environments. You can clone the production environment, and then test out the new activation strategies in the cloned environment. If everything works as expected, you can then apply the same activation strategies to the production environment.
+
+When cloning an environment, you can choose several options to customize your new environment: Name, type of environment, in which projects it should be enabled right away and whether you wish to keep the same user permissions. You'll also be provided a new API key bound to the newly cloned environment.
+
 ## Migration
 
 To ease migration we have created a special environment called “default”. All existing activation strategies have been added to this environment. All existing Client API keys have also been scoped to work against the default environment to ensure zero disruption as part of the upgrade.
@@ -111,6 +119,7 @@ In order to support configuration per environment we had to rebuild our feature 
 - Will be possible to turn environments on/off for all projects
 - Will be allowed to update and remove environments.
 - Will be allowed to create new environments.
+- Will be allowed to clone environments.
 
 ## Rollout Plan
 

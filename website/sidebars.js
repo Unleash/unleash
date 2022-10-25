@@ -103,6 +103,17 @@ module.exports = {
                     },
                 },
                 {
+                    label: 'Environments',
+                    items: ['how-to/how-to-clone-environment'],
+                    type: 'category',
+                    link: {
+                        type: 'generated-index',
+                        title: 'How-to: environments',
+                        description: 'Environments how-to guides.',
+                        slug: '/how-to/env',
+                    },
+                },
+                {
                     label: 'Users and permissions',
                     items: [
                         'user_guide/user-management',

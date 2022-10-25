@@ -7,6 +7,10 @@ import {
 import NotFoundError from '../../lib/error/notfound-error';
 
 export default class FakeStrategiesStore implements IStrategyStore {
+    count(): Promise<number> {
+        return Promise.resolve(0);
+    }
+
     defaultStrategy: IStrategy = {
         name: 'default',
         description: 'default strategy',

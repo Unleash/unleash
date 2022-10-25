@@ -121,6 +121,7 @@ import { validateTagTypeSchema } from './spec/validate-tag-type-schema';
 import { variantSchema } from './spec/variant-schema';
 import { variantsSchema } from './spec/variants-schema';
 import { versionSchema } from './spec/version-schema';
+import { instanceAdminStatsSchema } from './spec/instance-admin-stats-schema';
 import apiVersion from '../util/version';
 
 // All schemas in `openapi/spec` should be listed here.
@@ -176,6 +177,7 @@ export const schemas = {
     healthOverviewSchema,
     healthReportSchema,
     idSchema,
+    instanceAdminStatsSchema,
     legalValueSchema,
     loginSchema,
     meSchema,

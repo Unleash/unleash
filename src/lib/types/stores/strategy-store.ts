@@ -38,4 +38,5 @@ export interface IStrategyStore extends Store<IStrategy, string> {
     reactivateStrategy({ name }: Pick<IStrategy, 'name'>): Promise<void>;
     importStrategy(data: IMinimalStrategy): Promise<void>;
     dropCustomStrategies(): Promise<void>;
+    count(): Promise<number>;
 }

@@ -141,6 +141,7 @@ exports[`should create default config 1`] = `
   },
   "strategySegmentsLimit": 5,
   "ui": {
+    "environment": "Open Source",
     "flags": {
       "E": true,
       "ENABLE_DARK_MODE_SUPPORT": false,

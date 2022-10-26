@@ -1773,10 +1773,10 @@
     "@typescript-eslint/types" "5.40.1"
     eslint-visitor-keys "^3.3.0"
 
-"@unleash/express-openapi@^0.2.1-beta.0":
-  version "0.2.1-beta.0"
-  resolved "https://registry.yarnpkg.com/@unleash/express-openapi/-/express-openapi-0.2.1-beta.0.tgz#1f5f43c6eb46c490990dc3e4709ab23a48a24e9a"
-  integrity sha512-72pNESnWyIvsLZaYjaBHwPXzO361up/A1tA/Mv+eG1MkntRJMNhRSgPzPvoP5j7pCxKeXqu1FRfXTXLRzGo+HA==
+"@unleash/express-openapi@^0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@unleash/express-openapi/-/express-openapi-0.2.1.tgz#ecbba742dad0a05c1563f35e3272ee3671dc478d"
+  integrity sha512-wvwgSrzMGo3khB2E/xPLXlB/uT6FruszIsUDThJpttILtxBmj1SDWb0L6SG1CQ2tlnC786/6+0iSBwcz0fViOg==
   dependencies:
     ajv "^6.10.2"
     http-errors "^1.7.3"

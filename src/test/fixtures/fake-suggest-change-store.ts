@@ -1,5 +1,9 @@
 import { ISuggestChangeStore } from '../../lib/types/stores/suggest-change-store';
-import { ISuggestChange, ISuggestChangeset } from '../../lib/types/model';
+import {
+    ISuggestChange,
+    ISuggestChangeset,
+    SuggestChangesetState,
+} from '../../lib/types/model';
 import { PartialSome } from '../../lib/types/partial';
 
 export default class FakeSuggestChangeStore implements ISuggestChangeStore {
@@ -85,5 +89,14 @@ export default class FakeSuggestChangeStore implements ISuggestChangeStore {
 
     exists(key: number): Promise<boolean> {
         return Promise.resolve(Boolean(key));
+    }
+
+    updateState(
+        id: number,
+        state: SuggestChangesetState,
+    ): Promise<ISuggestChangeset> {
+        const changeSet = this.suggestChanges.find((s) => s.id === id);
+        changeSet.state = state;
+        return Promise.resolve(undefined);
     }
 }

@@ -7,6 +7,7 @@ import {
     ISuggestChange,
     ISuggestChangeset,
     SuggestChangeAction,
+    SuggestChangesetState,
 } from '../types/model';
 
 const T = {
@@ -151,9 +152,11 @@ export class SuggestChangeStore implements ISuggestChangeStore {
     };
 
     getForProject = async (project: string): Promise<ISuggestChangeset[]> => {
-        const rows = await this.buildSuggestChangeSetChangesQuery().where({
-            project,
-        });
+        const rows = await this.buildSuggestChangeSetChangesQuery()
+            .where({
+                project,
+            })
+            .whereNot('state', SuggestChangesetState.DRAFT);
         return this.mapRows(rows);
     };
 
@@ -163,7 +166,7 @@ export class SuggestChangeStore implements ISuggestChangeStore {
     ): Promise<ISuggestChangeset[]> => {
         const rows = await this.buildSuggestChangeSetChangesQuery().where({
             'changeSet.created_by': userId,
-            state: 'Draft',
+            state: SuggestChangesetState.DRAFT,
             project: project,
         });
         const changesets = this.mapRows(rows);
@@ -250,4 +253,14 @@ export class SuggestChangeStore implements ISuggestChangeStore {
     };
 
     destroy(): void {}
+
+    async updateState(
+        id: number,
+        state: SuggestChangesetState,
+    ): Promise<ISuggestChangeset> {
+        await this.db(T.SUGGEST_CHANGE_SET)
+            .update('state', state)
+            .where({ id });
+        return this.get(id);
+    }
 }

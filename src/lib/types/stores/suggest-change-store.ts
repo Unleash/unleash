@@ -1,5 +1,9 @@
 import { Store } from './store';
-import { ISuggestChange, ISuggestChangeset } from '../model';
+import {
+    ISuggestChange,
+    ISuggestChangeset,
+    SuggestChangesetState,
+} from '../model';
 import { PartialSome } from '../partial';
 
 export interface ISuggestChangeStore extends Store<ISuggestChangeset, number> {
@@ -18,6 +22,11 @@ export interface ISuggestChangeStore extends Store<ISuggestChangeset, number> {
     ): Promise<void>;
 
     get(id: number): Promise<ISuggestChangeset>;
+
+    updateState(
+        id: number,
+        state: SuggestChangesetState,
+    ): Promise<ISuggestChangeset>;
 
     getAll(): Promise<ISuggestChangeset[]>;
 

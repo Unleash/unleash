@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { Avatar, Box, Card, Paper, Typography } from '@mui/material';
-import { StyledTrueChip } from '../../../../../playground/Playground/PlaygroundResultsTable/PlaygroundResultChip/PlaygroundResultChip';
-import { ReactComponent as ChangesAppliedIcon } from '../../../../../../assets/icons/merge.svg';
+import { PlaygroundResultChip } from 'component/playground/Playground/PlaygroundResultsTable/PlaygroundResultChip/PlaygroundResultChip';
+import { ReactComponent as ChangesAppliedIcon } from 'assets/icons/merge.svg';
 import TimeAgo from 'react-timeago';
 
 export const SuggestedChangeHeader: FC<{ suggestedChange: any }> = ({
@@ -35,9 +35,10 @@ export const SuggestedChangeHeader: FC<{ suggestedChange: any }> = ({
                         #{suggestedChange.id}
                     </Typography>
                 </Typography>
-                <StyledTrueChip
-                    icon={<ChangesAppliedIcon strokeWidth="0.25" />}
+                <PlaygroundResultChip
+                    // icon={<ChangesAppliedIcon strokeWidth="0.25" />}
                     label="Changes applied"
+                    enabled="unknown"
                 />
             </Box>
             <Box sx={{ display: 'flex', verticalAlign: 'center', gap: 2 }}>

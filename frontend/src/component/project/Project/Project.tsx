@@ -24,8 +24,8 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { DeleteProjectDialogue } from './DeleteProject/DeleteProjectDialogue';
 import { ProjectLog } from './ProjectLog/ProjectLog';
-import { SuggestedChangeOverview } from './SuggestedChanges/SuggestedChangeOverview/SuggestedChangeOverview';
-import { DraftBanner } from './SuggestedChanges/DraftBanner/DraftBanner';
+import { SuggestedChangeOverview } from 'component/suggestChanges/SuggestedChangeOverview/SuggestedChangeOverview';
+import { DraftBanner } from 'component/suggestChanges/DraftBanner/DraftBanner';
 import { MainLayout } from 'component/layout/MainLayout/MainLayout';
 
 const StyledDiv = styled('div')(() => ({

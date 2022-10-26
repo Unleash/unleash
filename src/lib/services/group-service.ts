@@ -15,7 +15,7 @@ import { IEventStore } from '../types/stores/event-store';
 import NameExistsError from '../error/name-exists-error';
 import { IUserStore } from '../types/stores/user-store';
 import { IUser } from '../types/user';
-import { Knex } from 'knex';
+import { TransactionCreator, UnleashTransaction } from 'lib/db/transactional';
 
 export class GroupService {
     private groupStore: IGroupStore;
@@ -26,18 +26,18 @@ export class GroupService {
 
     private logger: Logger;
 
-    private db: Knex;
+    private startTransaction: TransactionCreator<UnleashTransaction>;
 
     constructor(
         stores: Pick<IUnleashStores, 'groupStore' | 'eventStore' | 'userStore'>,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
-        db: Knex,
+        startTransaction: TransactionCreator<UnleashTransaction>,
     ) {
         this.logger = getLogger('service/group-service.js');
         this.groupStore = stores.groupStore;
         this.eventStore = stores.eventStore;
         this.userStore = stores.userStore;
-        this.db = db;
+        this.startTransaction = startTransaction;
     }
 
     async getAll(): Promise<IGroupModel[]> {
@@ -108,7 +108,7 @@ export class GroupService {
 
         await this.validateGroup(group, preData);
 
-        return this.db.transaction(async (tx) => {
+        return this.startTransaction(async (tx) => {
             const newGroup = await this.groupStore
                 .transactional(tx)
                 .update(group);
@@ -232,7 +232,7 @@ export class GroupService {
         createdBy?: string,
     ): Promise<void> {
         if (Array.isArray(externalGroups)) {
-            await this.db.transaction(async (trx) => {
+            await this.startTransaction(async (trx) => {
                 let newGroups = await this.groupStore
                     .transactional(trx)
                     .getNewGroupsForExternalUser(userId, externalGroups);

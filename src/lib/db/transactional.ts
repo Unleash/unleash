@@ -38,3 +38,35 @@ export abstract class Transactor<T> implements Transactional<T> {
         expectTransaction(db);
     }
 }
+
+export type KnexTransaction = Knex.Transaction<any, any[]>;
+
+export type MockTransaction = null;
+
+export type UnleashTransaction = KnexTransaction | MockTransaction;
+
+export type TransactionCreator<S> = <T>(
+    scope: (trx: S) => void | Promise<T>,
+) => Promise<T>;
+
+export const createKnexTransactionStarter = (
+    knex: Knex,
+): TransactionCreator<UnleashTransaction> => {
+    function transaction<T>(
+        scope: (trx: KnexTransaction) => void | Promise<T>,
+    ) {
+        return knex.transaction(scope);
+    }
+    return transaction;
+};
+
+export const createMockTransactionStarter =
+    (): TransactionCreator<UnleashTransaction> => {
+        function transaction<T>(
+            scope: (trx: MockTransaction) => void | Promise<T>,
+        ) {
+            scope(null);
+            return null;
+        }
+        return transaction;
+    };

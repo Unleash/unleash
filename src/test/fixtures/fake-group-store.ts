@@ -7,10 +7,14 @@ import Group, {
     IGroupUser,
     IGroupUserModel,
 } from '../../lib/types/group';
-import { Knex } from 'knex';
+import { UnleashTransaction } from 'lib/db/transactional';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 export default class FakeGroupStore implements IGroupStore {
     data: IGroup[];
+
+    constructor() {
+        this.data = [];
+    }
 
     async getAll(): Promise<IGroup[]> {
         return Promise.resolve(this.data);
@@ -56,7 +60,7 @@ export default class FakeGroupStore implements IGroupStore {
     }
 
     deleteUsersFromGroup(deletableUsers: IGroupUser[]): Promise<void> {
-        throw new Error('Method not implemented.');
+        return Promise.resolve();
     }
 
     update(group: IGroupModel): Promise<IGroup> {
@@ -89,7 +93,13 @@ export default class FakeGroupStore implements IGroupStore {
         userId: number,
         externalGroups: string[],
     ): Promise<IGroup[]> {
-        throw new Error('Method not implemented.');
+        const mockGroups = externalGroups.map((externalGroup, index) => {
+            return {
+                id: index,
+                name: externalGroup,
+            };
+        });
+        return Promise.resolve(mockGroups);
     }
 
     addUserToGroups(
@@ -97,21 +107,34 @@ export default class FakeGroupStore implements IGroupStore {
         groupIds: number[],
         createdBy?: string,
     ): Promise<void> {
-        throw new Error('Method not implemented.');
+        groupIds.forEach((groupId) => {
+            this.data.push({
+                id: groupId,
+                name: `TestGroup-${groupId}`,
+            });
+        });
+        return Promise.resolve();
     }
 
     getOldGroupsForExternalUser(
         userId: number,
         externalGroups: string[],
     ): Promise<IGroupUser[]> {
-        throw new Error('Method not implemented.');
+        const mockGroups = externalGroups.map((externalGroup, index) => {
+            return {
+                groupId: index,
+                userId: index,
+                joinedAt: new Date(),
+            };
+        });
+        return Promise.resolve(mockGroups);
     }
 
     getGroupsForUser(userId: number): Promise<Group[]> {
         throw new Error('Method not implemented.');
     }
 
-    transactional(transaction: Knex.Transaction<any, any[]>): IGroupStore {
-        throw new Error('Method not implemented.');
+    transactional(transaction: UnleashTransaction): IGroupStore {
+        return this;
     }
 }

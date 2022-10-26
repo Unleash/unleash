@@ -1,5 +1,5 @@
-import { Knex } from 'knex';
+import { UnleashTransaction } from 'lib/db/transactional';
 
 export interface Transactional<T> {
-    transactional(transaction: Knex.Transaction): T;
+    transactional(transaction: UnleashTransaction): T;
 }

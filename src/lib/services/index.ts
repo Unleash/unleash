@@ -37,12 +37,14 @@ import PatService from './pat-service';
 import { PublicSignupTokenService } from './public-signup-token-service';
 import { LastSeenService } from './client-metrics/last-seen-service';
 import { Knex } from 'knex';
+import { createKnexTransactionStarter } from '../db/transactional';
 export const createServices = (
     stores: IUnleashStores,
     config: IUnleashConfig,
     db: Knex,
 ): IUnleashServices => {
-    const groupService = new GroupService(stores, config, db);
+    let startTransaction = createKnexTransactionStarter(db);
+    const groupService = new GroupService(stores, config, startTransaction);
     const accessService = new AccessService(stores, config, groupService);
     const apiTokenService = new ApiTokenService(stores, config);
     const clientInstanceService = new ClientInstanceService(stores, config);

@@ -1,11 +1,20 @@
+import { createMockTransactionStarter } from '../lib/db/transactional';
+import { IUnleashConfig } from '../lib/server-impl';
+import { GroupService } from '../lib/services/group-service';
 import dbInit, { ITestDb } from './/e2e/helpers/database-init';
-import getLogger from './fixtures/no-logger';
+import { createTestConfig } from './config/test-config';
+import FakeGroupStore from './fixtures/fake-group-store';
+import noLoggerProvider from './fixtures/no-logger';
 
 let stores;
 let db: ITestDb;
+let config: IUnleashConfig;
 
 beforeAll(async () => {
-    db = await dbInit('transactional_serial', getLogger);
+    db = await dbInit('transactional_serial', noLoggerProvider);
+    config = createTestConfig({
+        getLogger: noLoggerProvider,
+    });
     stores = db.stores;
 });
 
@@ -140,4 +149,25 @@ test('should fail entire transaction if encountering an error', async () => {
     });
     const toggles = await stores.featureToggleStore.getAll();
     expect(toggles.length).toBe(0);
+});
+
+test('should allow transactions be swapped for a different implementation', async () => {
+    const mockStores = {
+        groupStore: new FakeGroupStore(),
+        eventStore: null,
+        userStore: null,
+    };
+
+    expect((await mockStores.groupStore.getAll()).length).toBe(0);
+
+    const groupService = new GroupService(
+        mockStores,
+        config,
+        createMockTransactionStarter(),
+    );
+    const externalGroups = ['group-one', 'group-two'];
+
+    await groupService.syncExternalGroups(7, externalGroups, 'David Fincher');
+
+    expect((await mockStores.groupStore.getAll()).length).toBe(2);
 });

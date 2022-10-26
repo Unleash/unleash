@@ -3,6 +3,7 @@ import getLogger from '../../fixtures/no-logger';
 import { createTestConfig } from '../../config/test-config';
 import { GroupService } from '../../../lib/services/group-service';
 import GroupStore from '../../../lib/db/group-store';
+import { createKnexTransactionStarter } from '../../../lib/db/transactional';
 
 let stores;
 let db: ITestDb;
@@ -21,7 +22,8 @@ beforeAll(async () => {
     const config = createTestConfig({
         getLogger,
     });
-    groupService = new GroupService(stores, config, db.db);
+    let startTransaction = createKnexTransactionStarter(db.db);
+    groupService = new GroupService(stores, config, startTransaction);
     groupStore = stores.groupStore;
 
     await stores.groupStore.create({

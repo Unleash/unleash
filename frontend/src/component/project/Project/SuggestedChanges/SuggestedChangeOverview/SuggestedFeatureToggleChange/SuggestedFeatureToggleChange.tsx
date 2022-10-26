@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { Box, Card, Typography } from '@mui/material';
+import ToggleOnIcon from '@mui/icons-material/ToggleOn';
 
 interface ISuggestedFeatureToggleChange {
     featureToggleName: string;
@@ -21,12 +22,14 @@ export const SuggestedFeatureToggleChange: FC<
         >
             <Box
                 sx={theme => ({
-                    backgroundColor: theme =>
-                        theme.palette.tableHeaderBackground,
+                    backgroundColor: theme.palette.tableHeaderBackground,
                     p: 2,
                 })}
             >
-                <Typography>{featureToggleName}</Typography>
+                <Box sx={{ display: 'flex', gap: 1 }}>
+                    <ToggleOnIcon color="disabled" />
+                    <Typography color="primary">{featureToggleName}</Typography>
+                </Box>
             </Box>
             <Box sx={{ p: 2 }}>{children}</Box>
         </Card>

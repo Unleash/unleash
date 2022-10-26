@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
 import { FC } from 'react';
-import { PlaygroundResultChip } from '../../../../playground/Playground/PlaygroundResultsTable/PlaygroundResultChip/PlaygroundResultChip';
+import { PlaygroundResultChip } from '../../../../../playground/Playground/PlaygroundResultsTable/PlaygroundResultChip/PlaygroundResultChip';
 
 export const ToggleStatusChange: FC<{ enabled: boolean }> = ({ enabled }) => {
     return (

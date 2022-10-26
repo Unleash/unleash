@@ -91,8 +91,9 @@ const Project = () => {
         },
         {
             title: 'Change requests',
-            path: `${basePath}/change-requests`,
-            name: 'logs',
+            path: `${basePath}/suggest-changes`,
+            name: 'suggest-changes' +
+                '',
         },
         {
             title: 'Event log',
@@ -231,6 +232,10 @@ const Project = () => {
                 <Route path="archive" element={<ProjectFeaturesArchive />} />
                 <Route path="logs" element={<ProjectLog />} />
                 <Route
+                    path="suggest-changes"
+                    element={<ProjectChangeRequests />}
+                />
+                <Route
                     path="suggest-changes/:id"
                     element={
                         <ConditionallyRender
@@ -239,12 +244,8 @@ const Project = () => {
                         />
                     }
                 />
-
-                <Route
-                    path="change-requests"
-                    element={<ProjectChangeRequests />}
-                />
                 <Route path="*" element={<ProjectOverview />} />
+
             </Routes>
         </MainLayout>
     );

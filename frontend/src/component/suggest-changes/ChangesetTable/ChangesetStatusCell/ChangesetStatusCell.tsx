@@ -2,6 +2,7 @@ import { UserAvatar } from '../../../common/UserAvatar/UserAvatar';
 import { Chip, styled } from '@mui/material';
 import { colors } from '../../../../themes/colors';
 import { TextCell } from '../../../common/Table/cells/TextCell/TextCell';
+import {Check, Close} from "@mui/icons-material";
 
 interface IChangesetStatusCellProps {
     value?: string | null;
@@ -19,6 +20,7 @@ export const StyledChip = styled(Chip)(({ theme, icon }) => ({
     height: 24,
     borderRadius: theme.shape.borderRadius,
     fontWeight: theme.typography.fontWeightMedium,
+    gap: theme.spacing(1,1),
     ['& .MuiChip-label']: {
         padding: 0,
         paddingLeft: Boolean(icon) ? theme.spacing(0.5) : 0,
@@ -60,15 +62,15 @@ export const StyledReviewChip = styled(StyledChip)(({ theme }) => ({
 export const ChangesetStatusCell = ({ value }: IChangesetStatusCellProps) => {
     const renderState = (state: string) => {
         if (state === 'Review') {
-            return <StyledReviewChip label={'Review required'} />;
+            return <StyledReviewChip label={'Review required'} icon={<Check fontSize={'small'}  />} />;
         }
 
         if (state === 'Approved') {
-            return <StyledApprovedChip label={'Approved'} />;
+            return <StyledApprovedChip label={'Approved'} icon={<Check fontSize={'small'}  />} />;
         }
 
         if (state === 'Rejected') {
-            return <StyledRejectedChip label={'Rejected'} />;
+            return <StyledRejectedChip label={'Rejected'} icon={<Close fontSize={'small'} sx={{mr: 8}} />} />;
         }
     };
 

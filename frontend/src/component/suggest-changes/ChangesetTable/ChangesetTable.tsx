@@ -1,24 +1,25 @@
-import { PageContent } from 'component/common/PageContent/PageContent';
-import { PageHeader } from 'component/common/PageHeader/PageHeader';
-import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
-import { SortingRule, useFlexLayout, useSortBy, useTable } from 'react-table';
-import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { useMediaQuery } from '@mui/material';
-import { sortTypes } from 'utils/sortTypes';
-import { useEffect, useMemo, useState } from 'react';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { Search } from 'component/common/Search/Search';
-import { featuresPlaceholder } from 'component/feature/FeatureToggleList/FeatureToggleListTable';
+import {PageContent} from 'component/common/PageContent/PageContent';
+import {PageHeader} from 'component/common/PageHeader/PageHeader';
+import {SortableTableHeader, Table, TableCell, TablePlaceholder} from 'component/common/Table';
+import {SortingRule, useFlexLayout, useSortBy, useTable} from 'react-table';
+import {SearchHighlightProvider} from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
+import {useMediaQuery} from '@mui/material';
+import {sortTypes} from 'utils/sortTypes';
+import {useEffect, useMemo, useState} from 'react';
+import {ConditionallyRender} from 'component/common/ConditionallyRender/ConditionallyRender';
+import {Search} from 'component/common/Search/Search';
+import {featuresPlaceholder} from 'component/feature/FeatureToggleList/FeatureToggleListTable';
 import theme from 'themes/theme';
 import useToast from 'hooks/useToast';
-import { useSearch } from 'hooks/useSearch';
-import { useSearchParams } from 'react-router-dom';
-import { TimeAgoCell } from '../../common/Table/cells/TimeAgoCell/TimeAgoCell';
-import { TextCell } from '../../common/Table/cells/TextCell/TextCell';
-import { ChangesetStatusCell } from './ChangesetStatusCell/ChangesetStatusCell';
-import { ChangesetActionCell } from './ChangesetActionCell/ChangesetActionCell';
-import { AvatarCell } from './AvatarCell/AvatarCell';
-import { ChangesetTitleCell } from './ChangesetTitleCell/ChangesetTitleCell';
+import {useSearch} from 'hooks/useSearch';
+import {useSearchParams} from 'react-router-dom';
+import {TimeAgoCell} from '../../common/Table/cells/TimeAgoCell/TimeAgoCell';
+import {TextCell} from '../../common/Table/cells/TextCell/TextCell';
+import {ChangesetStatusCell} from './ChangesetStatusCell/ChangesetStatusCell';
+import {ChangesetActionCell} from './ChangesetActionCell/ChangesetActionCell';
+import {AvatarCell} from './AvatarCell/AvatarCell';
+import {ChangesetTitleCell} from './ChangesetTitleCell/ChangesetTitleCell';
+import {TableBody, TableRow} from "../../common/Table";
 
 export interface IChangeSetTableProps {
     changesets: any[];
@@ -44,9 +45,6 @@ export const ChangesetTable = ({
     projectId,
 }: IChangeSetTableProps) => {
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
-    const isMediumScreen = useMediaQuery(theme.breakpoints.down('lg'));
-
-    const { setToastData, setToastApiError } = useToast();
 
     const [searchParams, setSearchParams] = useSearchParams();
 
@@ -59,7 +57,7 @@ export const ChangesetTable = ({
             {
                 id: 'Title',
                 Header: 'Title',
-                minWidth: 200,
+                width: 100,
                 canSort: true,
                 accessor: 'id',
                 Cell: ChangesetTitleCell,
@@ -68,22 +66,22 @@ export const ChangesetTable = ({
                 Header: 'By',
                 accessor: 'createdBy',
                 maxWidth: 50,
-                minWidth: 50,
                 canSort: false,
                 Cell: AvatarCell,
+                align: 'center'
             },
             {
                 Header: 'Submitted',
                 accessor: 'updatedAt',
                 searchable: true,
-                minWidth: 100,
+                maxWidth: 100,
                 Cell: ({ value }: any) => <TimeAgoCell value={value} />,
                 sortType: 'alphanumeric',
             },
             {
                 Header: 'Environment',
                 accessor: 'environment',
-                minWidth: 100,
+                maxWidth: 100,
                 Cell: ({ value }: any) => <TextCell value={value} />,
                 sortType: 'text',
             },
@@ -91,6 +89,7 @@ export const ChangesetTable = ({
                 Header: 'Status',
                 accessor: 'state',
                 minWidth: 150,
+                width: 150,
                 Cell: ({ value }: any) => <ChangesetStatusCell value={value} />,
                 sortType: 'text',
             },
@@ -98,6 +97,7 @@ export const ChangesetTable = ({
                 Header: '',
                 id: 'Actions',
                 minWidth: 50,
+                width: 50,
                 canSort: false,
                 Cell: ChangesetActionCell,
             },
@@ -135,6 +135,8 @@ export const ChangesetTable = ({
         state: { sortBy },
         prepareRow,
         setHiddenColumns,
+        getTableProps,
+        getTableBodyProps
     } = useTable(
         {
             columns: columns as any[], // TODO: fix after `react-table` v8 update
@@ -143,8 +145,10 @@ export const ChangesetTable = ({
             sortTypes,
             disableSortRemove: true,
             autoResetSortBy: false,
+            defaultColumn: {
+                Cell: TextCell,
+            },
         },
-        useFlexLayout,
         useSortBy
     );
 
@@ -197,11 +201,26 @@ export const ChangesetTable = ({
             }
         >
             <SearchHighlightProvider value={getSearchText(searchValue)}>
-                <VirtualizedTable
-                    rows={rows}
-                    headerGroups={headerGroups}
-                    prepareRow={prepareRow}
-                />
+                <Table {...getTableProps()}>
+                    <SortableTableHeader headerGroups={headerGroups} />
+                    <TableBody {...getTableBodyProps()}>
+                        {rows.map(row => {
+                            prepareRow(row);
+                            return (
+                                <TableRow hover {...row.getRowProps()}>
+                                    {row.cells.map(cell => (
+                                        <TableCell
+                                            {...cell.getCellProps()}
+                                            padding="none"
+                                        >
+                                            {cell.render('Cell')}
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            );
+                        })}
+                    </TableBody>
+                </Table>
             </SearchHighlightProvider>
             <ConditionallyRender
                 condition={rows.length === 0}

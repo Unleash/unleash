@@ -45,6 +45,70 @@ export const ProjectChangeRequests = () => {
                 },
             ],
         },
+        {
+            id: 1,
+            state: 'Rejected',
+            project: 'default',
+            environment: 'production',
+            createdBy: {
+                id: 1,
+                username: 'someuser',
+                imageUrl:
+                    'https://gravatar.com/avatar/21232f297a57a5a743894a0e4a801fc3?size=42&default=retro',
+            },
+            createdAt: '2022-10-25 08:54:000Z',
+            updatedAt: '2022-10-25 08:54:000Z',
+            changes: [
+                {
+                    id: 1,
+                    action: 'updateEnabled',
+                    feature: 'feature1',
+                    payload: {
+                        environmnent: 'production',
+                    },
+                },
+                {
+                    id: 2,
+                    action: 'strategyAdd',
+                    feature: 'feature1',
+                    payload: {
+                        environmnent: 'production',
+                    },
+                },
+            ],
+        },
+        {
+            id: 1,
+            state: 'Approved',
+            project: 'default',
+            environment: 'production',
+            createdBy: {
+                id: 1,
+                username: 'someuser',
+                imageUrl:
+                    'https://gravatar.com/avatar/21232f297a57a5a743894a0e4a801fc3?size=42&default=retro',
+            },
+            createdAt: '2022-10-25 08:54:000Z',
+            updatedAt: '2022-10-25 08:54:000Z',
+            changes: [
+                {
+                    id: 1,
+                    action: 'updateEnabled',
+                    feature: 'feature1',
+                    payload: {
+                        environmnent: 'production',
+                    },
+                },
+                {
+                    id: 2,
+                    action: 'strategyAdd',
+                    feature: 'feature1',
+                    payload: {
+                        environmnent: 'production',
+                    },
+                },
+            ],
+        },
     ];
 
     const refetch = async () => Promise.resolve();

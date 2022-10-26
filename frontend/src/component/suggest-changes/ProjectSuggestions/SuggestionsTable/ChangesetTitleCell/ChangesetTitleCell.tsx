@@ -1,7 +1,7 @@
-import {TextCell} from '../../../../common/Table/cells/TextCell/TextCell';
-import {Link, styled, Typography} from '@mui/material';
-import {Link as RouterLink} from 'react-router-dom';
-import {useTheme} from "@mui/system";
+import { TextCell } from '../../../../common/Table/cells/TextCell/TextCell';
+import { Link, styled, Typography } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
+import { useTheme } from '@mui/system';
 
 interface IChangesetTitleCellProps {
     value?: any;
@@ -28,13 +28,19 @@ export const ChangesetTitleCell = ({
     return (
         <TextCell>
             <StyledLink>
-                <Link component={RouterLink} underline={'hover'} to={'#'} sx={{pt: 0.2}}>
+                <Link
+                    component={RouterLink}
+                    underline={'hover'}
+                    to={'#'}
+                    sx={{ pt: 0.2 }}
+                >
                     Suggestion
                 </Link>
                 <Typography
                     component={'span'}
                     color={theme.palette.text.secondary}
-                    sx={{ margin: theme.spacing(0,1), pt: 0 }}>
+                    sx={{ margin: theme.spacing(0, 1), pt: 0 }}
+                >
                     {`#${id}`}
                 </Typography>
             </StyledLink>
@@ -44,7 +50,9 @@ export const ChangesetTitleCell = ({
                     underline={'hover'}
                     to={'#'}
                 >{`${changes?.length}`}</Link>
-                <span style={{ margin: 'auto 8px' }}>{`changes`}</span>
+                <span style={{ margin: 'auto 8px' }}>
+                    {changes.length < 1 ? `update` : 'updates'}
+                </span>
             </StyledLink>
         </TextCell>
     );

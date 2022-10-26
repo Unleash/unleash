@@ -1,12 +1,11 @@
-import {Route, Routes, useLocation, useNavigate} from "react-router-dom";
-import {usePageTitle} from "../../../hooks/usePageTitle";
-import {createLocalStorage} from "../../../utils/createLocalStorage";
-import {useRequiredPathParam} from "../../../hooks/useRequiredPathParam";
-import {useProjectNameOrId} from "../../../hooks/api/getters/useProject/useProject";
-import { useStyles } from "./ProjectSuggestions.styles";
-import { SuggestionsTable } from "./SuggestionsTable/SuggestionsTable";
-import {SortingRule} from "react-table";
-
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { usePageTitle } from '../../../hooks/usePageTitle';
+import { createLocalStorage } from '../../../utils/createLocalStorage';
+import { useRequiredPathParam } from '../../../hooks/useRequiredPathParam';
+import { useProjectNameOrId } from '../../../hooks/api/getters/useProject/useProject';
+import { useStyles } from './ProjectSuggestions.styles';
+import { SuggestionsTable } from './SuggestionsTable/SuggestionsTable';
+import { SortingRule } from 'react-table';
 
 const defaultSort: SortingRule<string> = { id: 'updatedAt', desc: true };
 
@@ -51,7 +50,7 @@ export const ProjectSuggestions = () => {
         },
         {
             id: 1,
-            state: 'Closed',
+            state: 'Cancelled',
             project: 'default',
             environment: 'production',
             createdBy: {
@@ -83,7 +82,7 @@ export const ProjectSuggestions = () => {
         },
         {
             id: 1,
-            state: 'Closed',
+            state: 'Applied',
             project: 'default',
             environment: 'production',
             createdBy: {
@@ -187,14 +186,14 @@ export const ProjectSuggestions = () => {
     );
 
     return (
-            <SuggestionsTable
-                changesets={changesets}
-                storedParams={value}
-                setStoredParams={setValue}
-                refetch={refetch}
-                projectId={projectId}
-                title={''}
-                loading={false}
-            />
-    )
-}
+        <SuggestionsTable
+            changesets={changesets}
+            storedParams={value}
+            setStoredParams={setValue}
+            refetch={refetch}
+            projectId={projectId}
+            title={''}
+            loading={false}
+        />
+    );
+};

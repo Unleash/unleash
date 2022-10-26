@@ -1,25 +1,36 @@
-import {PageContent} from 'component/common/PageContent/PageContent';
-import {PageHeader} from 'component/common/PageHeader/PageHeader';
-import {SortableTableHeader, Table, TableCell, TablePlaceholder} from 'component/common/Table';
-import {SortingRule, useSortBy, useTable} from 'react-table';
-import {SearchHighlightProvider} from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import {Tab, Tabs, useMediaQuery} from '@mui/material';
-import {sortTypes} from 'utils/sortTypes';
-import {useEffect, useMemo, useState} from 'react';
-import {ConditionallyRender} from 'component/common/ConditionallyRender/ConditionallyRender';
-import {Search} from 'component/common/Search/Search';
-import {featuresPlaceholder} from 'component/feature/FeatureToggleList/FeatureToggleListTable';
+import { PageContent } from 'component/common/PageContent/PageContent';
+import { PageHeader } from 'component/common/PageHeader/PageHeader';
+import {
+    SortableTableHeader,
+    Table,
+    TableCell,
+    TablePlaceholder,
+} from 'component/common/Table';
+import { SortingRule, useSortBy, useTable } from 'react-table';
+import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
+import { Tab, Tabs, useMediaQuery } from '@mui/material';
+import { sortTypes } from 'utils/sortTypes';
+import { useEffect, useMemo, useState } from 'react';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { Search } from 'component/common/Search/Search';
+import { featuresPlaceholder } from 'component/feature/FeatureToggleList/FeatureToggleListTable';
 import theme from 'themes/theme';
-import {useSearch} from 'hooks/useSearch';
-import {Route, Routes, useLocation, useNavigate, useSearchParams} from 'react-router-dom';
-import {TimeAgoCell} from '../../../common/Table/cells/TimeAgoCell/TimeAgoCell';
-import {TextCell} from '../../../common/Table/cells/TextCell/TextCell';
-import {ChangesetStatusCell} from './ChangesetStatusCell/ChangesetStatusCell';
-import {ChangesetActionCell} from './ChangesetActionCell/ChangesetActionCell';
-import {AvatarCell} from './AvatarCell/AvatarCell';
-import {ChangesetTitleCell} from './ChangesetTitleCell/ChangesetTitleCell';
-import {TableBody, TableRow} from "../../../common/Table";
-import {useStyles} from '../ProjectSuggestions.styles'
+import { useSearch } from 'hooks/useSearch';
+import {
+    Route,
+    Routes,
+    useLocation,
+    useNavigate,
+    useSearchParams,
+} from 'react-router-dom';
+import { TimeAgoCell } from '../../../common/Table/cells/TimeAgoCell/TimeAgoCell';
+import { TextCell } from '../../../common/Table/cells/TextCell/TextCell';
+import { ChangesetStatusCell } from './ChangesetStatusCell/ChangesetStatusCell';
+import { ChangesetActionCell } from './ChangesetActionCell/ChangesetActionCell';
+import { AvatarCell } from './AvatarCell/AvatarCell';
+import { ChangesetTitleCell } from './ChangesetTitleCell/ChangesetTitleCell';
+import { TableBody, TableRow } from '../../../common/Table';
+import { useStyles } from '../ProjectSuggestions.styles';
 
 export interface IChangeSetTableProps {
     changesets: any[];
@@ -54,11 +65,17 @@ export const SuggestionsTable = ({
     );
 
     const [openChangesets, closedChangesets] = useMemo(() => {
-        const open = changesets.filter(changeset => changeset.state !== 'Closed')
-        const closed = changesets.filter(changeset => changeset.state === 'Closed')
+        const open = changesets.filter(changeset =>
+            changeset.state !== 'Cancelled' &&
+            changeset.state !== 'Applied'
+        );
+        const closed = changesets.filter(changeset =>
+            changeset.state === 'Cancelled' ||
+            changeset.state === 'Applied'
+        );
 
-        return [open, closed]
-    }, [changesets])
+        return [open, closed];
+    }, [changesets]);
 
     const { pathname } = useLocation();
     const basePath = `/projects/${projectId}/suggest-changes`;
@@ -68,21 +85,17 @@ export const SuggestionsTable = ({
             title: 'Suggestions',
             path: `${basePath}#open`,
             name: 'suggestions',
-            data: openChangesets
+            data: openChangesets,
         },
         {
             title: 'Closed',
             path: `${basePath}#closed`,
             name: 'closed',
-            data: closedChangesets
+            data: closedChangesets,
         },
     ];
 
-    const activeTab = [...tabs]
-        .reverse()
-        .find(tab => pathname.startsWith(tab.path)) ?? tabs[0];
-
-    debugger;
+    const [activeTab, setActiveTab] = useState(tabs[0]);
 
     const columns = useMemo(
         () => [
@@ -100,7 +113,7 @@ export const SuggestionsTable = ({
                 maxWidth: 50,
                 canSort: false,
                 Cell: AvatarCell,
-                align: 'center'
+                align: 'center',
             },
             {
                 Header: 'Submitted',
@@ -168,7 +181,7 @@ export const SuggestionsTable = ({
         prepareRow,
         setHiddenColumns,
         getTableProps,
-        getTableBodyProps
+        getTableBodyProps,
     } = useTable(
         {
             columns: columns as any[], // TODO: fix after `react-table` v8 update
@@ -224,14 +237,14 @@ export const SuggestionsTable = ({
                             key={tab.title}
                             label={`${tab.title} (${tab.data.length})`}
                             value={tab.path}
-                            onClick={() => navigate(tab.path)}
+                            onClick={() => setActiveTab(tab)}
                             className={classes.tabButton}
                         />
                     ))}
                 </Tabs>
             </div>
-        )
-    }
+        );
+    };
 
     return (
         <PageContent

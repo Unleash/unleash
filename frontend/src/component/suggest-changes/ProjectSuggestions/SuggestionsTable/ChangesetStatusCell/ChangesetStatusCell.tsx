@@ -2,8 +2,14 @@ import { UserAvatar } from '../../../../common/UserAvatar/UserAvatar';
 import { Chip, styled } from '@mui/material';
 import { colors } from '../../../../../themes/colors';
 import { TextCell } from '../../../../common/Table/cells/TextCell/TextCell';
-import {Check, CircleOutlined, CircleSharp, Close, Percent} from "@mui/icons-material";
-import PercentageCircle from "../../../../common/PercentageCircle/PercentageCircle";
+import {
+    Check,
+    CircleOutlined,
+    CircleSharp,
+    Close,
+    Percent,
+} from '@mui/icons-material';
+import PercentageCircle from '../../../../common/PercentageCircle/PercentageCircle';
 
 interface IChangesetStatusCellProps {
     value?: string | null;
@@ -21,7 +27,7 @@ export const StyledChip = styled(Chip)(({ theme, icon }) => ({
     height: 30,
     borderRadius: theme.shape.borderRadius,
     fontWeight: theme.typography.fontWeightMedium,
-    gap: theme.spacing(1,1),
+    gap: theme.spacing(1, 1),
     ['& .MuiChip-label']: {
         padding: 0,
         paddingLeft: Boolean(icon) ? theme.spacing(0.5) : 0,
@@ -63,15 +69,48 @@ export const StyledReviewChip = styled(StyledChip)(({ theme }) => ({
 export const ChangesetStatusCell = ({ value }: IChangesetStatusCellProps) => {
     const renderState = (state: string) => {
         if (state === 'Review') {
-            return <StyledReviewChip label={'Review required'} icon={<CircleOutlined fontSize={'small'}  />} />;
+            return (
+                <StyledReviewChip
+                    label={'Review required'}
+                    icon={<CircleOutlined fontSize={'small'} />}
+                />
+            );
         }
 
         if (state === 'Approved') {
-            return <StyledApprovedChip label={'Approved'} icon={<Check fontSize={'small'}  />} />;
+            return (
+                <StyledApprovedChip
+                    label={'Approved'}
+                    icon={<Check fontSize={'small'} />}
+                />
+            );
+        }
+
+        if (state === 'Applied') {
+            return (
+                <StyledApprovedChip
+                    label={'Applied'}
+                    icon={<Check fontSize={'small'} />}
+                />
+            );
         }
 
         if (state === 'Rejected') {
-            return <StyledRejectedChip label={'Rejected'} icon={<Close fontSize={'small'} sx={{mr: 8}} />} />;
+            return (
+                <StyledRejectedChip
+                    label={'Rejected'}
+                    icon={<Close fontSize={'small'} sx={{ mr: 8 }} />}
+                />
+            );
+        }
+
+        if (state === 'Cancelled') {
+            return (
+                <StyledRejectedChip
+                    label={'Cancelled'}
+                    icon={<Close fontSize={'small'} sx={{ mr: 8 }} />}
+                />
+            );
         }
     };
 

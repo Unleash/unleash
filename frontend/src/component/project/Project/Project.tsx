@@ -92,8 +92,7 @@ const Project = () => {
         {
             title: 'Change requests',
             path: `${basePath}/suggest-changes`,
-            name: 'suggest-changes' +
-                '',
+            name: 'suggest-changes' + '',
         },
         {
             title: 'Event log',
@@ -245,7 +244,6 @@ const Project = () => {
                     }
                 />
                 <Route path="*" element={<ProjectOverview />} />
-
             </Routes>
         </MainLayout>
     );

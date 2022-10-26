@@ -1,9 +1,8 @@
 import express from 'express';
 import { conditionalMiddleware } from '../../../../lib/middleware/conditional-middleware';
 import supertest from 'supertest';
-import cors from 'cors';
 
-test('should return 200 when middleware is disabled', async () => {
+test('disabled middleware should not block paths that use the same path', async () => {
     const app = express();
     const path = '/api/admin/projects';
 
@@ -47,7 +46,7 @@ test('should return 404 when path is not enabled', async () => {
     await supertest(app).get('/api/admin/projects/suggest-changes').expect(404);
 });
 
-test('should respect priority', async () => {
+test('should respect ordering of endpoints', async () => {
     const app = express();
     const path = '/api/admin/projects';
 
@@ -70,7 +69,7 @@ test('should respect priority', async () => {
         .expect(200, { name: 'Suggest changes' });
 });
 
-test('should return 200 for endpoint on the same basepath if middleware is disabled', async () => {
+test('disabled middleware should not block paths that use the same basepath', async () => {
     const app = express();
     const path = '/api/admin/projects';
 
@@ -91,50 +90,4 @@ test('should return 200 for endpoint on the same basepath if middleware is disab
     await supertest(app)
         .get('/api/admin/projects')
         .expect(200, { projects: [] });
-});
-
-test('should match path for middleware with path set to /', async () => {
-    const app = express();
-    const pathOne = '/api/frontend*';
-    const pathTwo = '/api/frontendTwo*';
-
-    app.options(
-        pathOne,
-        conditionalMiddleware(() => false, cors()),
-    );
-
-    app.options(
-        '/',
-        conditionalMiddleware(() => false, cors()),
-    );
-
-    await supertest(app).options(pathOne).expect(404);
-
-    await supertest(app).options(pathTwo).expect(404);
-});
-
-test('should match path for middleware with path set to /', async () => {
-    const app = express();
-    const pathOne = '/api/frontend*';
-    const pathTwo = '/api/frontendTwo*';
-
-    app.options(
-        pathOne,
-        conditionalMiddleware(() => true, cors()),
-    );
-
-    app.options(
-        '/',
-        conditionalMiddleware(() => true, cors()),
-    );
-
-    await supertest(app)
-        .options(pathOne)
-        .expect(204)
-        .expect((res) => res.headers['access-control-allow-origin'] === '*');
-
-    await supertest(app)
-        .options(pathTwo)
-        .expect(204)
-        .expect((res) => res.headers['access-control-allow-origin'] === '*');
 });

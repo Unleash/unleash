@@ -3,6 +3,7 @@ import { Box, Button, Typography } from '@mui/material';
 import { useStyles as useAppStyles } from 'component/App.styles';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { SuggestedChangesSidebar } from '../SuggestedChangesSidebar/SuggestedChangesSidebar';
 
 interface IDraftBannerProps {
     environment?: string;
@@ -10,7 +11,7 @@ interface IDraftBannerProps {
 
 export const DraftBanner: VFC<IDraftBannerProps> = ({ environment }) => {
     const { classes } = useAppStyles();
-    const [reviewChangesOpen, setReviewChangesOpen] = useState(false);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     return (
         <Box
@@ -49,7 +50,9 @@ export const DraftBanner: VFC<IDraftBannerProps> = ({ environment }) => {
                     </Typography>
                     <Button
                         variant="contained"
-                        onClick={() => setReviewChangesOpen(true)}
+                        onClick={() => {
+                            setIsSidebarOpen(true);
+                        }}
                         sx={{ ml: 'auto' }}
                     >
                         Review changes
@@ -59,6 +62,12 @@ export const DraftBanner: VFC<IDraftBannerProps> = ({ environment }) => {
                     </Button>
                 </Box>
             </Box>
+            <SuggestedChangesSidebar
+                open={isSidebarOpen}
+                onClose={() => {
+                    setIsSidebarOpen(false);
+                }}
+            />
         </Box>
     );
 };

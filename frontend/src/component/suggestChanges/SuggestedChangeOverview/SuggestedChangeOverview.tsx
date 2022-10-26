@@ -1,10 +1,10 @@
 import { FC } from 'react';
-import { Box } from '@mui/material';
+import { Box, Paper } from '@mui/material';
 import { useSuggestedChange } from 'hooks/api/getters/useSuggestChange/useSuggestedChange';
 import { SuggestedChangeHeader } from './SuggestedChangeHeader/SuggestedChangeHeader';
 import { SuggestedChangeTimeline } from './SuggestedChangeTimeline/SuggestedChangeTimeline';
 import { SuggestedChangeReviewers } from './SuggestedChangeReviewers/SuggestedChangeReviewers';
-import { SuggestedChangeSet } from './SuggestedChangeSet/SuggestedChangeSet';
+import { SuggestedChangeset } from '../SuggestedChangeset/SuggestedChangeset';
 
 export const SuggestedChangeOverview: FC = () => {
     const { data: suggestedChange } = useSuggestedChange();
@@ -23,8 +23,25 @@ export const SuggestedChangeOverview: FC = () => {
                     <SuggestedChangeTimeline />
                     <SuggestedChangeReviewers />
                 </Box>
-
-                <SuggestedChangeSet suggestedChange={suggestedChange} />
+                <Paper
+                    elevation={0}
+                    sx={theme => ({
+                        marginTop: theme.spacing(2),
+                        marginLeft: theme.spacing(2),
+                        width: '70%',
+                        padding: 2,
+                        borderRadius: theme =>
+                            `${theme.shape.borderRadiusLarge}px`,
+                    })}
+                >
+                    <Box
+                        sx={theme => ({
+                            padding: theme.spacing(2),
+                        })}
+                    >
+                        <SuggestedChangeset suggestedChange={suggestedChange} />
+                    </Box>
+                </Paper>
             </Box>
         </>
     );

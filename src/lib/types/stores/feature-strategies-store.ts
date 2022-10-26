@@ -11,6 +11,7 @@ export interface FeatureConfigurationClient {
     name: string;
     type: string;
     enabled: boolean;
+    project: string;
     stale: boolean;
     strategies: IStrategyConfig[];
     variants: IVariant[];

@@ -93,7 +93,7 @@ export const EnvironmentCloneModal = ({
     const { cloneEnvironment, loading } = useEnvironmentApi();
     const { createToken } = useApiTokensApi();
     const { projects: allProjects } = useProjects();
-    const { setToastApiError } = useToast();
+    const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
 
     const [name, setName] = useState(`${environment.name}-clone`);
@@ -112,13 +112,23 @@ export const EnvironmentCloneModal = ({
     };
 
     useEffect(() => {
-        setName(`${environment.name}-clone`);
+        setName(getUniqueName(environment.name));
         setType('development');
         setProjects([]);
         setTokenProjects(['*']);
         setClonePermissions(true);
         setErrors({});
     }, [environment]);
+
+    const getUniqueName = (name: string) => {
+        let uniqueName = `${name}-clone`;
+        let number = 2;
+        while (!isNameUnique(uniqueName)) {
+            uniqueName = `${environment.name}-clone-${number}`;
+            number++;
+        }
+        return uniqueName;
+    };
 
     const getCloneEnvironmentPayload = (): IEnvironmentClonePayload => ({
         name,
@@ -145,6 +155,10 @@ export const EnvironmentCloneModal = ({
             const response = await createToken(getApiTokenCreatePayload());
             const token = await response.json();
             newToken(token);
+            setToastData({
+                title: 'Environment successfully cloned!',
+                type: 'success',
+            });
             refetchEnvironments();
             setOpen(false);
         } catch (error: unknown) {
@@ -195,7 +209,7 @@ export const EnvironmentCloneModal = ({
                 loading={loading}
                 modal
                 title={`Clone ${environment.name} environment`}
-                description="Cloning an environment will clone all feature toggles and their configuration (strategies, segments, status, etc) into a new environment."
+                description="Cloning an environment will clone all feature toggles and their configuration (activation strategies, segments, status, etc) into a new environment."
                 documentationLink="https://docs.getunleash.io/user_guide/environments#cloning-environments"
                 documentationLinkLabel="Cloning environments documentation"
                 formatApiCode={formatApiCode}

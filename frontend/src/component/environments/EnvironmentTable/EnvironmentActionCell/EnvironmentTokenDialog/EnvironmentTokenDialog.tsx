@@ -26,8 +26,7 @@ export const EnvironmentTokenDialog = ({
         title="New API token created"
     >
         <Typography variant="body1">
-            Your new token for "<strong>{token?.environment}</strong>" has been
-            created successfully.
+            Your new token has been created successfully.
         </Typography>
         <Typography variant="body1">
             You can also find it as "<strong>{token?.username}</strong>" in the{' '}

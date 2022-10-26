@@ -22,11 +22,13 @@ export default class FakeSuggestChangeStore implements ISuggestChangeStore {
     addChangeToSet(
         change: PartialSome<ISuggestChange, 'id' | 'createdBy' | 'createdAt'>,
         changeSetID: number,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         userId: number,
     ): Promise<void> {
         const changeSet = this.suggestChanges.find((s) => s.id === changeSetID);
-        changeSet.changes.push(change);
+        changeSet.changes.push({
+            createdBy: { id: userId, username: '', imageUrl: '' },
+            ...change,
+        });
         return Promise.resolve();
     }
 
@@ -60,11 +62,14 @@ export default class FakeSuggestChangeStore implements ISuggestChangeStore {
     }
 
     create(
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         suggestChangeSet: PartialSome<ISuggestChangeset, 'id'>,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         userId: number,
     ): Promise<ISuggestChangeset> {
+        this.suggestChanges.push({
+            id: 1,
+            ...suggestChangeSet,
+            createdBy: { id: userId, username: '', imageUrl: '' },
+        });
         return Promise.resolve(undefined);
     }
 

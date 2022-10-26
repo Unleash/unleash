@@ -66,8 +66,8 @@ const suggestChangeRowReducer = (acc, suggestChangeRow) => {
     const currentSuggestChangeSet = acc[suggestChangeSet.id];
 
     if (changeId) {
-        const feature = currentSuggestChangeSet.features.find(
-            (f) => f.name === changeFeature,
+        const featureObject = currentSuggestChangeSet.features.find(
+            (feature) => feature.name === changeFeature,
         );
         const change = {
             id: changeId,
@@ -80,8 +80,8 @@ const suggestChangeRowReducer = (acc, suggestChangeRow) => {
                 imageUrl: changeCreatedByAvatar,
             },
         };
-        if (feature) {
-            feature.changes.push(change);
+        if (featureObject) {
+            featureObject.changes.push(change);
         } else {
             currentSuggestChangeSet.features.push({
                 name: changeFeature,

@@ -43,6 +43,7 @@ export const StyledTrueChip = styled(StyledChip)(({ theme }) => ({
     },
     ['& .MuiChip-icon']: {
         color: theme.palette.success.main,
+        marginRight: 0,
     },
 }));
 

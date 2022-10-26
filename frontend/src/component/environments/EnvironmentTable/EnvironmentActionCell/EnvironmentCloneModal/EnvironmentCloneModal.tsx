@@ -1,4 +1,4 @@
-import { Button, FormControlLabel, styled, Switch } from '@mui/material';
+import { Button, FormControlLabel, Link, styled, Switch } from '@mui/material';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -15,6 +15,12 @@ import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironmen
 import EnvironmentTypeSelector from 'component/environments/EnvironmentForm/EnvironmentTypeSelector/EnvironmentTypeSelector';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { EnvironmentProjectSelect } from './EnvironmentProjectSelect/EnvironmentProjectSelect';
+import { SelectProjectInput } from 'component/admin/apiToken/ApiTokenForm/SelectProjectInput/SelectProjectInput';
+import useProjects from 'hooks/api/getters/useProjects/useProjects';
+import useApiTokensApi, {
+    IApiTokenCreate,
+} from 'hooks/api/actions/useApiTokensApi/useApiTokensApi';
+import { IApiToken } from 'hooks/api/getters/useApiTokens/useApiTokens';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',
@@ -26,7 +32,7 @@ const StyledInputDescription = styled('p')(({ theme }) => ({
     display: 'flex',
     color: theme.palette.text.primary,
     marginBottom: theme.spacing(1),
-    '&:not(:first-child)': {
+    '&:not(:first-of-type)': {
         marginTop: theme.spacing(4),
     },
 }));
@@ -39,6 +45,12 @@ const StyledInputSecondaryDescription = styled('p')(({ theme }) => ({
 const StyledInput = styled(Input)(({ theme }) => ({
     width: '100%',
     maxWidth: theme.spacing(50),
+}));
+
+const StyledSeparator = styled('hr')(({ theme }) => ({
+    border: 0,
+    borderTop: `1px solid ${theme.palette.divider}`,
+    margin: theme.spacing(4, 0),
 }));
 
 const StyledButtonContainer = styled('div')(({ theme }) => ({
@@ -56,31 +68,38 @@ const StyledCancelButton = styled(Button)(({ theme }) => ({
 
 enum ErrorField {
     NAME = 'name',
+    PROJECTS = 'projects',
 }
 
 interface ICreatePersonalAPITokenErrors {
     [ErrorField.NAME]?: string;
+    [ErrorField.PROJECTS]?: string;
 }
 
 interface ICreatePersonalAPITokenProps {
     environment: IEnvironment;
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    newToken: (token: IApiToken) => void;
 }
 
 export const EnvironmentCloneModal = ({
     environment,
     open,
     setOpen,
+    newToken,
 }: ICreatePersonalAPITokenProps) => {
     const { environments, refetchEnvironments } = useEnvironments();
     const { cloneEnvironment, loading } = useEnvironmentApi();
+    const { createToken } = useApiTokensApi();
+    const { projects: allProjects } = useProjects();
     const { setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
 
-    const [name, setName] = useState('');
+    const [name, setName] = useState(`${environment.name}-clone`);
     const [type, setType] = useState('development');
     const [projects, setProjects] = useState<string[]>([]);
+    const [tokenProjects, setTokenProjects] = useState<string[]>(['*']);
     const [clonePermissions, setClonePermissions] = useState(true);
     const [errors, setErrors] = useState<ICreatePersonalAPITokenErrors>({});
 
@@ -96,6 +115,7 @@ export const EnvironmentCloneModal = ({
         setName(`${environment.name}-clone`);
         setType('development');
         setProjects([]);
+        setTokenProjects(['*']);
         setClonePermissions(true);
         setErrors({});
     }, [environment]);
@@ -107,6 +127,13 @@ export const EnvironmentCloneModal = ({
         clonePermissions,
     });
 
+    const getApiTokenCreatePayload = (): IApiTokenCreate => ({
+        username: `${name}-token`,
+        type: 'CLIENT',
+        environment: name,
+        projects: tokenProjects,
+    });
+
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
@@ -115,6 +142,9 @@ export const EnvironmentCloneModal = ({
                 environment.name,
                 getCloneEnvironmentPayload()
             );
+            const response = await createToken(getApiTokenCreatePayload());
+            const token = await response.json();
+            newToken(token);
             refetchEnvironments();
             setOpen(false);
         } catch (error: unknown) {
@@ -134,7 +164,8 @@ export const EnvironmentCloneModal = ({
     const isNameNotEmpty = (name: string) => name.length;
     const isNameUnique = (name: string) =>
         !environments?.some(environment => environment.name === name);
-    const isValid = isNameNotEmpty(name) && isNameUnique(name);
+    const isValid =
+        isNameNotEmpty(name) && isNameUnique(name) && tokenProjects.length;
 
     const onSetName = (name: string) => {
         clearError(ErrorField.NAME);
@@ -147,21 +178,26 @@ export const EnvironmentCloneModal = ({
         setName(name);
     };
 
+    const selectableProjects = allProjects.map(project => ({
+        value: project.id,
+        label: project.name,
+    }));
+
     return (
         <SidebarModal
             open={open}
             onClose={() => {
                 setOpen(false);
             }}
-            label="Clone environment"
+            label={`Clone ${environment.name} environment`}
         >
             <FormTemplate
                 loading={loading}
                 modal
-                title="Clone environment"
-                description={`You are cloning the "${environment.name}" environment with all the feature toggles and all the strategies into a new environment.`}
-                documentationLink="https://docs.getunleash.io/user_guide/environments"
-                documentationLinkLabel="Environments documentation"
+                title={`Clone ${environment.name} environment`}
+                description="Cloning an environment will clone all feature toggles and their configuration (strategies, segments, status, etc) into a new environment."
+                documentationLink="https://docs.getunleash.io/user_guide/environments#cloning-environments"
+                documentationLinkLabel="Cloning environments documentation"
                 formatApiCode={formatApiCode}
             >
                 <StyledForm onSubmit={handleSubmit}>
@@ -213,6 +249,32 @@ export const EnvironmentCloneModal = ({
                                     checked={clonePermissions}
                                 />
                             }
+                        />
+                        <StyledSeparator />
+                        <StyledInputDescription>
+                            API Token
+                        </StyledInputDescription>
+                        <StyledInputSecondaryDescription>
+                            A new Server-side SDK (CLIENT) API token will be
+                            generated for the cloned environment, so you can get
+                            started connecting to it right away.{' '}
+                            <Link
+                                href="https://docs.getunleash.io/reference/api-tokens-and-client-keys"
+                                target="_blank"
+                            >
+                                Read more about API tokens
+                            </Link>
+                            .
+                        </StyledInputSecondaryDescription>
+                        <StyledInputDescription>
+                            Which project do you want to give access to?
+                        </StyledInputDescription>
+                        <SelectProjectInput
+                            options={selectableProjects}
+                            defaultValue={tokenProjects}
+                            onChange={setTokenProjects}
+                            error={errors.projects}
+                            onFocus={() => clearError(ErrorField.PROJECTS)}
                         />
                     </div>
 

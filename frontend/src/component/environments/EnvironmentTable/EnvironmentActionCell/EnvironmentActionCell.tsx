@@ -13,6 +13,8 @@ import useToast from 'hooks/useToast';
 import PermissionSwitch from 'component/common/PermissionSwitch/PermissionSwitch';
 import { EnvironmentActionCellPopover } from './EnvironmentActionCellPopover/EnvironmentActionCellPopover';
 import { EnvironmentCloneModal } from './EnvironmentCloneModal/EnvironmentCloneModal';
+import { IApiToken } from 'hooks/api/getters/useApiTokens/useApiTokens';
+import { EnvironmentTokenDialog } from './EnvironmentTokenDialog/EnvironmentTokenDialog';
 
 interface IEnvironmentTableActionsProps {
     environment: IEnvironment;
@@ -31,6 +33,8 @@ export const EnvironmentActionCell = ({
     const [deleteModal, setDeleteModal] = useState(false);
     const [toggleModal, setToggleModal] = useState(false);
     const [cloneModal, setCloneModal] = useState(false);
+    const [tokenModal, setTokenModal] = useState(false);
+    const [newToken, setNewToken] = useState<IApiToken>();
     const [confirmName, setConfirmName] = useState('');
 
     const handleDeleteEnvironment = async () => {
@@ -125,6 +129,15 @@ export const EnvironmentActionCell = ({
                 environment={environment}
                 open={cloneModal}
                 setOpen={setCloneModal}
+                newToken={(token: IApiToken) => {
+                    setNewToken(token);
+                    setTokenModal(true);
+                }}
+            />
+            <EnvironmentTokenDialog
+                open={tokenModal}
+                setOpen={setTokenModal}
+                token={newToken}
             />
         </ActionCell>
     );

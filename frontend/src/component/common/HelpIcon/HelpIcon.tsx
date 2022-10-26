@@ -1,7 +1,7 @@
 import { styled, Tooltip, TooltipProps } from '@mui/material';
 import { HelpOutline } from '@mui/icons-material';
 
-const StyledContainer = styled('div')(({ theme }) => ({
+const StyledContainer = styled('span')(({ theme }) => ({
     display: 'inline-grid',
     alignItems: 'center',
     outline: 0,
@@ -15,7 +15,7 @@ const StyledContainer = styled('div')(({ theme }) => ({
         color: theme.palette.primary.main,
     },
     '& svg': {
-        fontSize: theme.fontSizes.bodySize,
+        fontSize: theme.fontSizes.mainHeader,
         color: theme.palette.neutral.main,
         marginLeft: theme.spacing(0.5),
     },

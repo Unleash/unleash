@@ -1,8 +1,17 @@
-import { Autocomplete, Checkbox, styled, TextField } from '@mui/material';
+import {
+    Autocomplete,
+    AutocompleteRenderGroupParams,
+    Checkbox,
+    styled,
+    TextField,
+} from '@mui/material';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { caseInsensitiveSearch } from 'utils/search';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
+import { Fragment } from 'react';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { SelectAllButton } from 'component/admin/apiToken/ApiTokenForm/SelectProjectInput/SelectAllButton/SelectAllButton';
 
 const StyledOption = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -81,6 +90,31 @@ export const EnvironmentProjectSelect = ({
         projects.includes(id)
     );
 
+    const isAllSelected =
+        projects.length > 0 && projects.length === projectOptions.length;
+
+    const onSelectAllClick = () => {
+        const newProjects = isAllSelected
+            ? []
+            : projectOptions.map(({ id }) => id);
+        setProjects(newProjects);
+    };
+
+    const renderGroup = ({ key, children }: AutocompleteRenderGroupParams) => (
+        <Fragment key={key}>
+            <ConditionallyRender
+                condition={projectOptions.length > 2}
+                show={
+                    <SelectAllButton
+                        isAllSelected={isAllSelected}
+                        onClick={onSelectAllClick}
+                    />
+                }
+            />
+            {children}
+        </Fragment>
+    );
+
     return (
         <StyledGroupFormUsersSelect>
             <Autocomplete
@@ -98,7 +132,7 @@ export const EnvironmentProjectSelect = ({
                     ) {
                         return;
                     }
-                    setProjects(newValue.map(project => project.id));
+                    setProjects(newValue.map(({ id }) => id));
                 }}
                 options={projectOptions}
                 renderOption={(props, option, { selected }) =>
@@ -119,6 +153,8 @@ export const EnvironmentProjectSelect = ({
                     <TextField {...params} label="Projects" />
                 )}
                 renderTags={value => renderTags(value)}
+                groupBy={() => 'Select/Deselect all'}
+                renderGroup={renderGroup}
             />
         </StyledGroupFormUsersSelect>
     );

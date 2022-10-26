@@ -5530,7 +5530,7 @@ micromatch@^4.0.2, micromatch@^4.0.4:
     braces "^3.0.2"
     picomatch "^2.3.1"
 
-millify@^5.0.1:
+millify@5.0.1:
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/millify/-/millify-5.0.1.tgz#f3f2cebf4d3071e127c05942f827c49754a03754"
   integrity sha512-1IacXjRDMbRevt2++mBnrI2iFxljWlQapMUT9Bs+uAF3o/TrYdE46Uf6CqlmoOWMX1JDAlMorXPv4/hM1eE/kw==

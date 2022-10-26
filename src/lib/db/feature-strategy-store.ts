@@ -201,6 +201,22 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         return rows.map(mapRow);
     }
 
+    async getFeatureToggleForEnvironment(
+        featureName: string,
+        environment: string,
+    ): Promise<FeatureToggleWithEnvironment> {
+        const toggle = await this.getFeatureToggleWithEnvs(featureName);
+
+        const result = {
+            ...toggle,
+            environments: toggle.environments.filter(
+                (toggleEnv) => toggleEnv.name === environment,
+            ),
+        };
+
+        return result;
+    }
+
     async getFeatureToggleWithEnvs(
         featureName: string,
         archived: boolean = false,

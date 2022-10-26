@@ -27,7 +27,7 @@ import { ProjectLog } from './ProjectLog/ProjectLog';
 import { SuggestedChangeOverview } from './SuggestedChanges/SuggestedChangeOverview/SuggestedChangeOverview';
 import { DraftBanner } from './SuggestedChanges/DraftBanner/DraftBanner';
 import { MainLayout } from 'component/layout/MainLayout/MainLayout';
-import { ProjectChangeRequests } from '../../suggest-changes/ProjectChangeRequests/ProjectChangeRequests';
+import { ProjectSuggestions } from '../../suggest-changes/ProjectSuggestions/ProjectSuggestions';
 
 const StyledDiv = styled('div')(() => ({
     display: 'flex',
@@ -233,7 +233,7 @@ const Project = () => {
                 <Route path="logs" element={<ProjectLog />} />
                 <Route
                     path="suggest-changes"
-                    element={<ProjectChangeRequests />}
+                    element={<ProjectSuggestions />}
                 />
                 <Route
                     path="suggest-changes/:id"

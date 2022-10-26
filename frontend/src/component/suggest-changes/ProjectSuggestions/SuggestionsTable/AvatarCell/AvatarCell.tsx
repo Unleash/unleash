@@ -1,5 +1,5 @@
-import { UserAvatar } from '../../../common/UserAvatar/UserAvatar';
-import { TextCell } from '../../../common/Table/cells/TextCell/TextCell';
+import { UserAvatar } from '../../../../common/UserAvatar/UserAvatar';
+import { TextCell } from '../../../../common/Table/cells/TextCell/TextCell';
 
 export const AvatarCell = ({ value }: any) => {
     return (

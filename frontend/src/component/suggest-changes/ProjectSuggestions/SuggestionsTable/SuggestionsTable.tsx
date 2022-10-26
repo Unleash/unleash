@@ -1,25 +1,25 @@
 import {PageContent} from 'component/common/PageContent/PageContent';
 import {PageHeader} from 'component/common/PageHeader/PageHeader';
 import {SortableTableHeader, Table, TableCell, TablePlaceholder} from 'component/common/Table';
-import {SortingRule, useFlexLayout, useSortBy, useTable} from 'react-table';
+import {SortingRule, useSortBy, useTable} from 'react-table';
 import {SearchHighlightProvider} from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import {useMediaQuery} from '@mui/material';
+import {Tab, Tabs, useMediaQuery} from '@mui/material';
 import {sortTypes} from 'utils/sortTypes';
 import {useEffect, useMemo, useState} from 'react';
 import {ConditionallyRender} from 'component/common/ConditionallyRender/ConditionallyRender';
 import {Search} from 'component/common/Search/Search';
 import {featuresPlaceholder} from 'component/feature/FeatureToggleList/FeatureToggleListTable';
 import theme from 'themes/theme';
-import useToast from 'hooks/useToast';
 import {useSearch} from 'hooks/useSearch';
-import {useSearchParams} from 'react-router-dom';
-import {TimeAgoCell} from '../../common/Table/cells/TimeAgoCell/TimeAgoCell';
-import {TextCell} from '../../common/Table/cells/TextCell/TextCell';
+import {Route, Routes, useLocation, useNavigate, useSearchParams} from 'react-router-dom';
+import {TimeAgoCell} from '../../../common/Table/cells/TimeAgoCell/TimeAgoCell';
+import {TextCell} from '../../../common/Table/cells/TextCell/TextCell';
 import {ChangesetStatusCell} from './ChangesetStatusCell/ChangesetStatusCell';
 import {ChangesetActionCell} from './ChangesetActionCell/ChangesetActionCell';
 import {AvatarCell} from './AvatarCell/AvatarCell';
 import {ChangesetTitleCell} from './ChangesetTitleCell/ChangesetTitleCell';
-import {TableBody, TableRow} from "../../common/Table";
+import {TableBody, TableRow} from "../../../common/Table";
+import {useStyles} from '../ProjectSuggestions.styles'
 
 export interface IChangeSetTableProps {
     changesets: any[];
@@ -32,10 +32,10 @@ export interface IChangeSetTableProps {
             | SortingRule<string>
             | ((prev: SortingRule<string>) => SortingRule<string>)
     ) => SortingRule<string>;
-    projectId?: string;
+    projectId: string;
 }
 
-export const ChangesetTable = ({
+export const SuggestionsTable = ({
     changesets = [],
     loading,
     refetch,
@@ -44,13 +44,45 @@ export const ChangesetTable = ({
     title,
     projectId,
 }: IChangeSetTableProps) => {
+    const { classes } = useStyles();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
-
     const [searchParams, setSearchParams] = useSearchParams();
+    const navigate = useNavigate();
 
     const [searchValue, setSearchValue] = useState(
         searchParams.get('search') || ''
     );
+
+    const [openChangesets, closedChangesets] = useMemo(() => {
+        const open = changesets.filter(changeset => changeset.state !== 'Closed')
+        const closed = changesets.filter(changeset => changeset.state === 'Closed')
+
+        return [open, closed]
+    }, [changesets])
+
+    const { pathname } = useLocation();
+    const basePath = `/projects/${projectId}/suggest-changes`;
+
+    const tabs = [
+        {
+            title: 'Suggestions',
+            path: `${basePath}#open`,
+            name: 'suggestions',
+            data: openChangesets
+        },
+        {
+            title: 'Closed',
+            path: `${basePath}#closed`,
+            name: 'closed',
+            data: closedChangesets
+        },
+    ];
+
+    const activeTab = [...tabs]
+        .reverse()
+        .find(tab => pathname.startsWith(tab.path)) ?? tabs[0];
+
+    debugger;
 
     const columns = useMemo(
         () => [
@@ -110,7 +142,7 @@ export const ChangesetTable = ({
         data: searchedData,
         getSearchText,
         getSearchContext,
-    } = useSearch(columns, searchValue, changesets);
+    } = useSearch(columns, searchValue, activeTab.data);
 
     const data = useMemo(
         () => (loading ? featuresPlaceholder : searchedData),
@@ -179,16 +211,34 @@ export const ChangesetTable = ({
         setStoredParams({ id: sortBy[0].id, desc: sortBy[0].desc || false });
     }, [loading, sortBy, searchValue]); // eslint-disable-line react-hooks/exhaustive-deps
 
+    const renderTabs = () => {
+        return (
+            <div className={classes.tabContainer}>
+                <Tabs
+                    value={activeTab?.path}
+                    indicatorColor="primary"
+                    textColor="primary"
+                >
+                    {tabs.map(tab => (
+                        <Tab
+                            key={tab.title}
+                            label={`${tab.title} (${tab.data.length})`}
+                            value={tab.path}
+                            onClick={() => navigate(tab.path)}
+                            className={classes.tabButton}
+                        />
+                    ))}
+                </Tabs>
+            </div>
+        )
+    }
+
     return (
         <PageContent
             isLoading={loading}
             header={
                 <PageHeader
-                    titleElement={`${title} (${
-                        rows.length < data.length
-                            ? `${rows.length} of ${data.length}`
-                            : data.length
-                    })`}
+                    titleElement={renderTabs()}
                     actions={
                         <Search
                             initialValue={searchValue}
@@ -241,6 +291,10 @@ export const ChangesetTable = ({
                     />
                 )}
             />
+            <Routes>
+                <Route path="suggestions" />
+                <Route path="closed" />
+            </Routes>
         </PageContent>
     );
 };

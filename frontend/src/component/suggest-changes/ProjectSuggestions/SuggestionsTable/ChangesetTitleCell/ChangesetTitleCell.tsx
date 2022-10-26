@@ -1,4 +1,4 @@
-import {TextCell} from '../../../common/Table/cells/TextCell/TextCell';
+import {TextCell} from '../../../../common/Table/cells/TextCell/TextCell';
 import {Link, styled, Typography} from '@mui/material';
 import {Link as RouterLink} from 'react-router-dom';
 import {useTheme} from "@mui/system";

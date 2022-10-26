@@ -4,8 +4,8 @@ import { FeatureConfigurationClient } from 'lib/types/stores/feature-strategies-
 import { Segment } from './feature-evaluator/strategy/strategy';
 import { ISegment } from 'lib/types/model';
 import { serializeDates } from '../../lib/types/serialize-dates';
-import { FeatureInterface } from './feature-evaluator/feature';
 import { Operator } from './feature-evaluator/constraint';
+import { FeatureInterface } from 'unleash-client/lib/feature';
 
 enum PayloadType {
     STRING = 'string',
@@ -27,6 +27,7 @@ export const mapFeaturesForClient = (
                 type: variant.payload.type as unknown as PayloadType,
             },
         })),
+        project: feature.project,
         strategies: feature.strategies.map((strategy) => ({
             parameters: {},
             ...strategy,

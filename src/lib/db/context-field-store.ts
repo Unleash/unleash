@@ -119,5 +119,11 @@ class ContextFieldStore implements IContextFieldStore {
     async delete(name: string): Promise<void> {
         return this.db(TABLE).where({ name }).del();
     }
+
+    async count(): Promise<number> {
+        return this.db(TABLE)
+            .count('*')
+            .then((res) => Number(res[0].count));
+    }
 }
 export default ContextFieldStore;

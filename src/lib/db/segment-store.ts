@@ -50,6 +50,13 @@ export default class SegmentStore implements ISegmentStore {
         this.logger = getLogger('lib/db/segment-store.ts');
     }
 
+    async count(): Promise<number> {
+        return this.db
+            .from(T.segments)
+            .count('*')
+            .then((res) => Number(res[0].count));
+    }
+
     async create(
         segment: PartialSome<ISegment, 'id'>,
         user: Partial<Pick<User, 'username' | 'email'>>,

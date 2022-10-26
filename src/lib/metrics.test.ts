@@ -10,11 +10,14 @@ import {
 } from './types/events';
 import { createMetricsMonitor } from './metrics';
 import createStores from '../test/fixtures/store';
+import { InstanceStatsService } from './services/instance-stats-service';
+import VersionService from './services/version-service';
 
 const monitor = createMetricsMonitor();
 const eventBus = new EventEmitter();
 const prometheusRegister = register;
 let eventStore: IEventStore;
+let statsService: InstanceStatsService;
 let stores;
 beforeAll(() => {
     const config = createTestConfig({
@@ -24,6 +27,8 @@ beforeAll(() => {
     });
     stores = createStores();
     eventStore = stores.eventStore;
+    const versionService = new VersionService(stores, config);
+    statsService = new InstanceStatsService(stores, config, versionService);
     const db = {
         client: {
             pool: {
@@ -37,7 +42,15 @@ beforeAll(() => {
         },
     };
     // @ts-ignore - We don't want a full knex implementation for our tests, it's enough that it actually yields the numbers we want.
-    monitor.startMonitoring(config, stores, '4.0.0', eventBus, db);
+    monitor.startMonitoring(
+        config,
+        stores,
+        '4.0.0',
+        eventBus,
+        statsService,
+        //@ts-ignore
+        db,
+    );
 });
 afterAll(() => {
     monitor.stopMonitoring();
@@ -102,6 +115,9 @@ test('should collect metrics for db query timings', async () => {
 });
 
 test('should collect metrics for feature toggle size', async () => {
+    await new Promise((done) => {
+        setTimeout(done, 10);
+    });
     const metrics = await prometheusRegister.metrics();
     expect(metrics).toMatch(/feature_toggles_total{version="(.*)"} 0/);
 });

@@ -36,6 +36,8 @@ import EdgeService from './edge-service';
 import PatService from './pat-service';
 import { PublicSignupTokenService } from './public-signup-token-service';
 import { LastSeenService } from './client-metrics/last-seen-service';
+import { InstanceStatsService } from './instance-stats-service';
+
 export const createServices = (
     stores: IUnleashStores,
     config: IUnleashConfig,
@@ -116,6 +118,12 @@ export const createServices = (
         userService,
     );
 
+    const instanceStatsService = new InstanceStatsService(
+        stores,
+        config,
+        versionService,
+    );
+
     return {
         accessService,
         addonService,
@@ -154,6 +162,7 @@ export const createServices = (
         patService,
         publicSignupTokenService,
         lastSeenService,
+        instanceStatsService,
     };
 };
 

@@ -74,6 +74,13 @@ export default class StrategyStore implements IStrategyStore {
         await this.db(TABLE).del();
     }
 
+    async count(): Promise<number> {
+        return this.db
+            .from(TABLE)
+            .count('*')
+            .then((res) => Number(res[0].count));
+    }
+
     destroy(): void {}
 
     async exists(name: string): Promise<boolean> {

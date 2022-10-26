@@ -22,6 +22,7 @@ import { IUnleashConfig } from './types/option';
 import { IUnleashStores } from './types/stores';
 import { hoursToMilliseconds, minutesToMilliseconds } from 'date-fns';
 import Timer = NodeJS.Timer;
+import { InstanceStatsService } from './services/instance-stats-service';
 
 export default class MetricsMonitor {
     timer?: Timer;
@@ -38,19 +39,14 @@ export default class MetricsMonitor {
         stores: IUnleashStores,
         version: string,
         eventBus: EventEmitter,
+        instanceStatsService: InstanceStatsService,
         db: Knex,
     ): Promise<void> {
         if (!config.server.serverMetrics) {
             return;
         }
 
-        const {
-            eventStore,
-            featureToggleStore,
-            userStore,
-            projectStore,
-            environmentStore,
-        } = stores;
+        const { eventStore } = stores;
 
         client.collectDefaultMetrics();
 
@@ -97,6 +93,40 @@ export default class MetricsMonitor {
             name: 'environments_total',
             help: 'Number of environments',
         });
+        const groupsTotal = new client.Gauge({
+            name: 'groups_total',
+            help: 'Number of groups',
+        });
+
+        const rolesTotal = new client.Gauge({
+            name: 'roles_total',
+            help: 'Number of roles',
+        });
+
+        const segmentsTotal = new client.Gauge({
+            name: 'segments_total',
+            help: 'Number of segments',
+        });
+
+        const contextTotal = new client.Gauge({
+            name: 'context_total',
+            help: 'Number of context',
+        });
+
+        const strategiesTotal = new client.Gauge({
+            name: 'strategies_total',
+            help: 'Number of strategies',
+        });
+
+        const samlEnabled = new client.Gauge({
+            name: 'saml_enabled',
+            help: 'Whether SAML is enabled',
+        });
+
+        const oidcEnabled = new client.Gauge({
+            name: 'oidc_enabled',
+            help: 'Whether OIDC is enabled',
+        });
 
         const clientSdkVersionUsage = new client.Counter({
             name: 'client_sdk_versions',
@@ -105,41 +135,51 @@ export default class MetricsMonitor {
         });
 
         async function collectStaticCounters() {
-            let togglesCount: number = 0;
-            let usersCount: number;
-            let projectsCount: number;
-            let environmentsCount: number;
             try {
-                togglesCount = await featureToggleStore.count({
-                    archived: false,
-                });
-                usersCount = await userStore.count();
-                projectsCount = await projectStore.count();
-                environmentsCount = await environmentStore.count();
-                // eslint-disable-next-line no-empty
-            } catch (e) {}
+                const stats = await instanceStatsService.getStats();
 
-            featureTogglesTotal.reset();
-            featureTogglesTotal.labels(version).set(togglesCount);
-            if (usersCount) {
+                featureTogglesTotal.reset();
+                featureTogglesTotal.labels(version).set(stats.featureToggles);
+
                 usersTotal.reset();
-                usersTotal.set(usersCount);
-            }
-            if (projectsCount) {
+                usersTotal.set(stats.users);
+
                 projectsTotal.reset();
-                projectsTotal.set(projectsCount);
-            }
-            if (environmentsCount) {
+                projectsTotal.set(stats.projects);
+
                 environmentsTotal.reset();
-                environmentsTotal.set(environmentsCount);
-            }
+                environmentsTotal.set(stats.environments);
+
+                groupsTotal.reset();
+                groupsTotal.set(stats.groups);
+
+                rolesTotal.reset();
+                rolesTotal.set(stats.roles);
+
+                segmentsTotal.reset();
+                segmentsTotal.set(stats.segments);
+
+                contextTotal.reset();
+                contextTotal.set(stats.contextFields);
+
+                strategiesTotal.reset();
+                strategiesTotal.set(stats.strategies);
+
+                samlEnabled.reset();
+                samlEnabled.set(stats.SAMLenabled ? 1 : 0);
+
+                oidcEnabled.reset();
+                oidcEnabled.set(stats.OIDCenabled ? 1 : 0);
+            } catch (e) {}
         }
 
-        collectStaticCounters();
-        this.timer = setInterval(
-            () => collectStaticCounters(),
-            hoursToMilliseconds(2),
-        ).unref();
+        process.nextTick(() => {
+            collectStaticCounters();
+            this.timer = setInterval(
+                () => collectStaticCounters(),
+                hoursToMilliseconds(2),
+            ).unref();
+        });
 
         eventBus.on(
             events.REQUEST_TIME,

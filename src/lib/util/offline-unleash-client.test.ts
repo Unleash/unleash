@@ -45,6 +45,7 @@ describe('offline client', () => {
             features: [
                 {
                     name,
+                    project: 'default',
                     enabled: true,
                     strategies: [{ name: 'default' }],
                     variants: [],
@@ -68,6 +69,7 @@ describe('offline client', () => {
                 {
                     name: enabledFeature,
                     enabled: true,
+                    project: 'default',
                     strategies: [
                         {
                             name: 'default',
@@ -87,6 +89,7 @@ describe('offline client', () => {
                 {
                     name: disabledFeature,
                     enabled: true,
+                    project: 'default',
                     strategies: [
                         {
                             name: 'default',
@@ -123,6 +126,7 @@ describe('offline client', () => {
                             name: 'default',
                         },
                     ],
+                    project: 'default',
                     stale: false,
                     enabled: false,
                     name,
@@ -149,6 +153,7 @@ describe('offline client', () => {
                             name: 'default',
                         },
                     ],
+                    project: 'default',
                     stale: false,
                     enabled: false,
                     name,
@@ -187,6 +192,7 @@ describe('offline client', () => {
                     stale: false,
                     enabled: false,
                     name,
+                    project: 'default',
                     type: 'experiment',
                     variants: [
                         {
@@ -226,6 +232,7 @@ describe('offline client', () => {
                             constraints: [],
                         },
                     ],
+                    project: 'default',
                     stale: false,
                     enabled: true,
                     name,
@@ -255,6 +262,7 @@ describe('offline client', () => {
                             constraints: [],
                         },
                     ],
+                    project: 'default',
                     stale: false,
                     enabled: true,
                     name,
@@ -291,6 +299,7 @@ describe('offline client', () => {
                             constraints: [],
                         },
                     ],
+                    project: 'default',
                     stale: false,
                     enabled: true,
                     name,
@@ -376,6 +385,7 @@ describe('offline client', () => {
                     // impressionData: false,
                     enabled: true,
                     name: featureName,
+                    project: 'default',
                     // description: '',
                     // project: 'heartman-for-test',
                     stale: false,

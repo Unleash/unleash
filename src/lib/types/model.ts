@@ -384,7 +384,7 @@ export interface ISuggestChangeFeature {
 export interface ISuggestChange {
     id?: number;
     action: SuggestChangeAction;
-    payload: any;
+    payload: SuggestChangePayload;
     createdBy?: Pick<User, 'id' | 'username' | 'imageUrl'>;
     createdAt?: Date;
 }
@@ -395,6 +395,32 @@ export enum SuggestChangesetState {
     IN_REVIEW = 'In review',
     APPLIED = 'Applied',
     CANCELLED = 'Cancelled',
+}
+
+type SuggestChangePayload =
+    | SuggestChangeEnabled
+    | SuggestChangeAddStrategy
+    | SuggestChangeEditStrategy
+    | SuggestChangeDeleteStrategy;
+
+type SuggestChangeEnabled = { data: boolean };
+
+type SuggestChangeAddStrategy = Pick<
+    IFeatureStrategy,
+    'parameters' | 'constraints' | 'parameters'
+>;
+
+type SuggestChangeEditStrategy = Omit<IFeatureStrategy, 'createdAt'>;
+
+type SuggestChangeDeleteStrategy = { id: string };
+
+export enum SuggestChangesetEvent {
+    CREATED = 'CREATED',
+    UPDATED = 'UPDATED',
+    SUBMITTED = 'SUBMITTED',
+    APPROVED = 'APPROVED',
+    REJECTED = 'REJECTED',
+    CLOSED = 'CLOSED',
 }
 
 export enum SuggestChangeAction {

@@ -1,7 +1,10 @@
 import { ISuggestChangeStore } from '../../lib/types/stores/suggest-change-store';
-import { ISuggestChange, ISuggestChangeset } from '../../lib/types/model';
+import {
+    ISuggestChange,
+    ISuggestChangeset,
+    SuggestChangesetState,
+} from '../../lib/types/model';
 import { PartialSome } from '../../lib/types/partial';
-import User from '../../lib/types/user';
 
 export default class FakeSuggestChangeStore implements ISuggestChangeStore {
     suggestChanges: ISuggestChangeset[] = [];
@@ -23,11 +26,13 @@ export default class FakeSuggestChangeStore implements ISuggestChangeStore {
     addChangeToSet(
         change: PartialSome<ISuggestChange, 'id' | 'createdBy' | 'createdAt'>,
         changeSetID: number,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        user: User,
+        userId: number,
     ): Promise<void> {
         const changeSet = this.suggestChanges.find((s) => s.id === changeSetID);
-        changeSet.changes.push(change);
+        changeSet.changes.push({
+            createdBy: { id: userId, username: '', imageUrl: '' },
+            ...change,
+        });
         return Promise.resolve();
     }
 
@@ -39,17 +44,15 @@ export default class FakeSuggestChangeStore implements ISuggestChangeStore {
         );
     }
 
-    getDraftForUser(
-        user: User,
+    getDraftsForUser(
+        userId: number,
         project: string,
-        environment: string,
-    ): Promise<ISuggestChangeset> {
+    ): Promise<ISuggestChangeset[]> {
         return Promise.resolve(
-            this.suggestChanges.find(
+            this.suggestChanges.filter(
                 (changeSet) =>
                     changeSet.project === project &&
-                    changeSet.environment === environment &&
-                    changeSet.createdBy.id === user.id,
+                    changeSet.createdBy.id === userId,
             ),
         );
     }
@@ -64,12 +67,12 @@ export default class FakeSuggestChangeStore implements ISuggestChangeStore {
 
     create(
         suggestChangeSet: PartialSome<ISuggestChangeset, 'id'>,
-        user: Partial<Pick<User, 'id' | 'username' | 'email'>>,
+        userId: number,
     ): Promise<ISuggestChangeset> {
         this.suggestChanges.push({
             id: 1,
             ...suggestChangeSet,
-            createdBy: { id: user.id, username: user.email, imageUrl: '' },
+            createdBy: { id: userId, username: '', imageUrl: '' },
         });
         return Promise.resolve(undefined);
     }
@@ -86,5 +89,14 @@ export default class FakeSuggestChangeStore implements ISuggestChangeStore {
 
     exists(key: number): Promise<boolean> {
         return Promise.resolve(Boolean(key));
+    }
+
+    updateState(
+        id: number,
+        state: SuggestChangesetState,
+    ): Promise<ISuggestChangeset> {
+        const changeSet = this.suggestChanges.find((s) => s.id === id);
+        changeSet.state = state;
+        return Promise.resolve(undefined);
     }
 }

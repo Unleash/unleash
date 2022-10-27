@@ -376,27 +376,21 @@ export interface ISuggestChangeset {
     changes: ISuggestChange[];
 }
 
-export interface ISuggestChangePayload {
-    environment: string;
-    data: unknown;
-}
-
 export interface ISuggestChange {
     id?: number;
     action: SuggestChangeAction;
     feature: string;
-    payload: ISuggestChangePayload;
+    payload: any;
     createdBy?: Pick<User, 'id' | 'username' | 'imageUrl'>;
     createdAt?: Date;
 }
 
-export enum SuggestChangesetEvent {
-    CREATED = 'CREATED',
-    UPDATED = 'UPDATED',
-    SUBMITTED = 'SUBMITTED',
-    APPROVED = 'APPROVED',
-    REJECTED = 'REJECTED',
-    CLOSED = 'CLOSED',
+export enum SuggestChangesetState {
+    DRAFT = 'Draft',
+    APPROVED = 'Approved',
+    IN_REVIEW = 'In review',
+    APPLIED = 'Applied',
+    CANCELLED = 'Cancelled',
 }
 
 export enum SuggestChangeAction {
@@ -406,12 +400,6 @@ export enum SuggestChangeAction {
     DELETE_STRATEGY = 'strategyDelete',
 }
 
-export enum SuggestChangeEvent {
-    UPDATE_ENABLED = 'updateFeatureEnabledEvent',
-    ADD_STRATEGY = 'addStrategyEvent',
-    UPDATE_STRATEGY = 'updateStrategyEvent',
-    DELETE_STRATEGY = 'deleteStrategyEvent',
-}
 export interface ISuggestChangeEventData {
     feature: string;
     data: unknown;

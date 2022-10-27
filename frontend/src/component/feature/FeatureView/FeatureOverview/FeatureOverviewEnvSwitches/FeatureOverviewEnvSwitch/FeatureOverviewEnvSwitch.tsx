@@ -10,6 +10,9 @@ import React from 'react';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useStyles } from './FeatureOverviewEnvSwitch.styles';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { useSuggestToggle } from 'hooks/useSuggestToggle';
+import { SuggestChangesDialogue } from 'component/suggestChanges/SuggestChangeConfirmDialog/SuggestChangeConfirmDialog';
 
 interface IFeatureOverviewEnvSwitchProps {
     env: IFeatureEnvironment;
@@ -31,6 +34,12 @@ const FeatureOverviewEnvSwitch = ({
     const { refetchFeature } = useFeature(projectId, featureId);
     const { setToastData, setToastApiError } = useToast();
     const { classes: styles } = useStyles();
+    const { uiConfig } = useUiConfig();
+    const {
+        onSuggestToggle,
+        onSuggestToggleClose,
+        suggestChangesDialogDetails,
+    } = useSuggestToggle();
 
     const handleToggleEnvironmentOn = async () => {
         try {
@@ -74,6 +83,11 @@ const FeatureOverviewEnvSwitch = ({
     };
 
     const toggleEnvironment = async (e: React.ChangeEvent) => {
+        if (uiConfig?.flags?.suggestChanges && env.name === 'production') {
+            e.preventDefault();
+            onSuggestToggle(featureId, env.name, env.enabled);
+            return;
+        }
         if (env.enabled) {
             await handleToggleEnvironmentOff();
             return;
@@ -104,6 +118,13 @@ const FeatureOverviewEnvSwitch = ({
                 />
                 {content}
             </label>
+            <SuggestChangesDialogue
+                isOpen={suggestChangesDialogDetails.isOpen}
+                onClose={onSuggestToggleClose}
+                featureName={featureId}
+                environment={suggestChangesDialogDetails?.environment}
+                onConfirm={() => {}}
+            />
         </div>
     );
 };

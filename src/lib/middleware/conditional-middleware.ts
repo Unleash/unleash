@@ -8,12 +8,11 @@ export const conditionalMiddleware = (
 
     router.use((req, res, next) => {
         if (condition()) {
-            next();
+            middleware(req, res, next);
         } else {
-            res.status(404).send({ message: 'Not found' });
+            next();
         }
     });
 
-    router.use(middleware);
     return router;
 };

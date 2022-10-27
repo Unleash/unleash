@@ -1,7 +1,10 @@
 import { Store } from './store';
-import { ISuggestChange, ISuggestChangeset } from '../model';
+import {
+    ISuggestChange,
+    ISuggestChangeset,
+    SuggestChangesetState,
+} from '../model';
 import { PartialSome } from '../partial';
-import User from '../user';
 
 export interface ISuggestChangeStore extends Store<ISuggestChangeset, number> {
     create(
@@ -9,26 +12,30 @@ export interface ISuggestChangeStore extends Store<ISuggestChangeset, number> {
             ISuggestChangeset,
             'id' | 'createdBy' | 'createdAt'
         >,
-        user: Partial<Pick<User, 'username' | 'email'>>,
+        userId: number,
     ): Promise<ISuggestChangeset>;
 
     addChangeToSet(
         change: PartialSome<ISuggestChange, 'id' | 'createdBy' | 'createdAt'>,
         changeSetID: number,
-        user: User,
+        userId: number,
     ): Promise<void>;
 
     get(id: number): Promise<ISuggestChangeset>;
+
+    updateState(
+        id: number,
+        state: SuggestChangesetState,
+    ): Promise<ISuggestChangeset>;
 
     getAll(): Promise<ISuggestChangeset[]>;
 
     getForProject(project: string): Promise<ISuggestChangeset[]>;
 
-    getDraftForUser(
-        user: User,
+    getDraftsForUser(
+        userId: number,
         project: string,
-        environment: string,
-    ): Promise<ISuggestChangeset>;
+    ): Promise<ISuggestChangeset[]>;
 
     getForEnvironment(environment: string): Promise<ISuggestChangeset[]>;
 }

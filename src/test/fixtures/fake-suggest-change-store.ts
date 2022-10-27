@@ -23,15 +23,26 @@ export default class FakeSuggestChangeStore implements ISuggestChangeStore {
         return Promise.resolve(undefined);
     }
 
+    // eslint-disable-next-line no-unused-vars,@typescript-eslint/no-unused-vars
+    async deleteChange(id: number): Promise<void> {
+        return Promise.resolve(undefined);
+    }
+
     addChangeToSet(
         change: PartialSome<ISuggestChange, 'id' | 'createdBy' | 'createdAt'>,
+        feature: string,
         changeSetID: number,
         userId: number,
     ): Promise<void> {
         const changeSet = this.suggestChanges.find((s) => s.id === changeSetID);
-        changeSet.changes.push({
-            createdBy: { id: userId, username: '', imageUrl: '' },
-            ...change,
+        changeSet.features.push({
+            name: feature,
+            changes: [
+                {
+                    createdBy: { id: userId, username: '', imageUrl: '' },
+                    ...change,
+                },
+            ],
         });
         return Promise.resolve();
     }

@@ -15,10 +15,12 @@ interface IChangesetStatusCellProps {
     value?: string | null;
 }
 
-enum ChangesetState {
+export enum SuggestChangesetState {
     DRAFT = 'Draft',
-    REVIEW = 'Review',
     APPROVED = 'Approved',
+    IN_REVIEW = 'In review',
+    APPLIED = 'Applied',
+    CANCELLED = 'Cancelled',
     REJECTED = 'Rejected',
 }
 
@@ -68,49 +70,44 @@ export const StyledReviewChip = styled(StyledChip)(({ theme }) => ({
 }));
 export const ChangesetStatusCell = ({ value }: IChangesetStatusCellProps) => {
     const renderState = (state: string) => {
-        if (state === 'Review') {
-            return (
-                <StyledReviewChip
-                    label={'Review required'}
-                    icon={<CircleOutlined fontSize={'small'} />}
-                />
-            );
-        }
-
-        if (state === 'Approved') {
-            return (
-                <StyledApprovedChip
-                    label={'Approved'}
-                    icon={<Check fontSize={'small'} />}
-                />
-            );
-        }
-
-        if (state === 'Applied') {
-            return (
-                <StyledApprovedChip
-                    label={'Applied'}
-                    icon={<Check fontSize={'small'} />}
-                />
-            );
-        }
-
-        if (state === 'Rejected') {
-            return (
-                <StyledRejectedChip
-                    label={'Rejected'}
-                    icon={<Close fontSize={'small'} sx={{ mr: 8 }} />}
-                />
-            );
-        }
-
-        if (state === 'Cancelled') {
-            return (
-                <StyledRejectedChip
-                    label={'Cancelled'}
-                    icon={<Close fontSize={'small'} sx={{ mr: 8 }} />}
-                />
-            );
+        switch (state) {
+            case SuggestChangesetState.IN_REVIEW:
+                return (
+                    <StyledReviewChip
+                        label={'Review required'}
+                        icon={<CircleOutlined fontSize={'small'} />}
+                    />
+                );
+            case SuggestChangesetState.APPROVED:
+                return (
+                    <StyledApprovedChip
+                        label={'Approved'}
+                        icon={<Check fontSize={'small'} />}
+                    />
+                );
+            case SuggestChangesetState.APPLIED:
+                return (
+                    <StyledApprovedChip
+                        label={'Applied'}
+                        icon={<Check fontSize={'small'} />}
+                    />
+                );
+            case SuggestChangesetState.CANCELLED:
+                return (
+                    <StyledRejectedChip
+                        label={'Cancelled'}
+                        icon={<Close fontSize={'small'} sx={{ mr: 8 }} />}
+                    />
+                );
+            case SuggestChangesetState.REJECTED:
+                return (
+                    <StyledRejectedChip
+                        label={'Rejected'}
+                        icon={<Close fontSize={'small'} sx={{ mr: 8 }} />}
+                    />
+                );
+            default:
+                return null;
         }
     };
 

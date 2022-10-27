@@ -27,7 +27,7 @@ import { ProjectLog } from './ProjectLog/ProjectLog';
 import { SuggestedChangeOverview } from 'component/suggestChanges/SuggestedChangeOverview/SuggestedChangeOverview';
 import { DraftBanner } from 'component/suggestChanges/DraftBanner/DraftBanner';
 import { MainLayout } from 'component/layout/MainLayout/MainLayout';
-import { ProjectSuggestedChanges } from '../../suggest-changes/ProjectSuggestions/ProjectSuggestedChanges';
+import { ProjectSuggestions } from '../../suggest-changes/ProjectSuggestions/ProjectSuggestedChanges';
 
 const StyledDiv = styled('div')(() => ({
     display: 'flex',
@@ -235,7 +235,7 @@ const Project = () => {
                     element={
                         <ConditionallyRender
                             condition={Boolean(uiConfig?.flags?.suggestChanges)}
-                            show={<ProjectSuggestedChanges />}
+                            show={<ProjectSuggestions />}
                         />
                     }
                 />

@@ -17,7 +17,7 @@ export const ProjectSuggestedChanges = () => {
     const { changesets, loading } = useProjectSuggestedChanges(projectId);
 
     const { value, setValue } = createLocalStorage(
-        `${projectId}:ProjectChangeRequests`,
+        `${projectId}:ProjectSuggestedChanges`,
         defaultSort
     );
 

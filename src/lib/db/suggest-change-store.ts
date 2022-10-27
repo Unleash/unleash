@@ -237,6 +237,10 @@ export class SuggestChangeStore implements ISuggestChangeStore {
         return this.db(T.SUGGEST_CHANGE_SET).where({ id }).del();
     };
 
+    deleteChange = (id: number): Promise<void> => {
+        return this.db(T.SUGGEST_CHANGE).where({ id }).del();
+    };
+
     deleteAll = (): Promise<void> => {
         return this.db(T.SUGGEST_CHANGE_SET).del();
     };

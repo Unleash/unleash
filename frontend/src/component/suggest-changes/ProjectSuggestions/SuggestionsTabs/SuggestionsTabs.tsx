@@ -16,13 +16,7 @@ import { Search } from 'component/common/Search/Search';
 import { featuresPlaceholder } from 'component/feature/FeatureToggleList/FeatureToggleListTable';
 import theme from 'themes/theme';
 import { useSearch } from 'hooks/useSearch';
-import {
-    Route,
-    Routes,
-    useLocation,
-    useNavigate,
-    useSearchParams,
-} from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { TimeAgoCell } from '../../../common/Table/cells/TimeAgoCell/TimeAgoCell';
 import { TextCell } from '../../../common/Table/cells/TextCell/TextCell';
 import { ChangesetStatusCell } from './ChangesetStatusCell/ChangesetStatusCell';
@@ -30,12 +24,10 @@ import { ChangesetActionCell } from './ChangesetActionCell/ChangesetActionCell';
 import { AvatarCell } from './AvatarCell/AvatarCell';
 import { ChangesetTitleCell } from './ChangesetTitleCell/ChangesetTitleCell';
 import { TableBody, TableRow } from '../../../common/Table';
-import { useStyles } from '../ProjectSuggestions.styles';
+import { useStyles } from './SuggestionsTabs.styles';
 
 export interface IChangeSetTableProps {
     changesets: any[];
-    title: string;
-    refetch: () => void;
     loading: boolean;
     storedParams: SortingRule<string>;
     setStoredParams: (
@@ -46,51 +38,41 @@ export interface IChangeSetTableProps {
     projectId: string;
 }
 
-export const SuggestionsTable = ({
+export const SuggestionsTabs = ({
     changesets = [],
     loading,
-    refetch,
     storedParams,
     setStoredParams,
-    title,
     projectId,
 }: IChangeSetTableProps) => {
     const { classes } = useStyles();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [searchParams, setSearchParams] = useSearchParams();
-    const navigate = useNavigate();
 
     const [searchValue, setSearchValue] = useState(
         searchParams.get('search') || ''
     );
 
     const [openChangesets, closedChangesets] = useMemo(() => {
-        const open = changesets.filter(changeset =>
-            changeset.state !== 'Cancelled' &&
-            changeset.state !== 'Applied'
+        const open = changesets.filter(
+            changeset =>
+                changeset.state !== 'Cancelled' && changeset.state !== 'Applied'
         );
-        const closed = changesets.filter(changeset =>
-            changeset.state === 'Cancelled' ||
-            changeset.state === 'Applied'
+        const closed = changesets.filter(
+            changeset =>
+                changeset.state === 'Cancelled' || changeset.state === 'Applied'
         );
 
         return [open, closed];
     }, [changesets]);
 
-    const { pathname } = useLocation();
-    const basePath = `/projects/${projectId}/suggest-changes`;
-
     const tabs = [
         {
             title: 'Suggestions',
-            path: `${basePath}#open`,
-            name: 'suggestions',
             data: openChangesets,
         },
         {
             title: 'Closed',
-            path: `${basePath}#closed`,
-            name: 'closed',
             data: closedChangesets,
         },
     ];
@@ -120,14 +102,14 @@ export const SuggestionsTable = ({
                 accessor: 'updatedAt',
                 searchable: true,
                 maxWidth: 100,
-                Cell: ({ value }: any) => <TimeAgoCell value={value} />,
+                Cell: TimeAgoCell,
                 sortType: 'alphanumeric',
             },
             {
                 Header: 'Environment',
                 accessor: 'environment',
                 maxWidth: 100,
-                Cell: ({ value }: any) => <TextCell value={value} />,
+                Cell: TextCell,
                 sortType: 'text',
             },
             {
@@ -135,7 +117,7 @@ export const SuggestionsTable = ({
                 accessor: 'state',
                 minWidth: 150,
                 width: 150,
-                Cell: ({ value }: any) => <ChangesetStatusCell value={value} />,
+                Cell: ChangesetStatusCell,
                 sortType: 'text',
             },
             {
@@ -228,7 +210,7 @@ export const SuggestionsTable = ({
         return (
             <div className={classes.tabContainer}>
                 <Tabs
-                    value={activeTab?.path}
+                    value={activeTab?.title}
                     indicatorColor="primary"
                     textColor="primary"
                 >
@@ -236,7 +218,7 @@ export const SuggestionsTable = ({
                         <Tab
                             key={tab.title}
                             label={`${tab.title} (${tab.data.length})`}
-                            value={tab.path}
+                            value={tab.title}
                             onClick={() => setActiveTab(tab)}
                             className={classes.tabButton}
                         />
@@ -292,22 +274,18 @@ export const SuggestionsTable = ({
                         condition={searchValue?.length > 0}
                         show={
                             <TablePlaceholder>
-                                No changesets found matching &ldquo;
+                                No changes found matching &ldquo;
                                 {searchValue}&rdquo;
                             </TablePlaceholder>
                         }
                         elseShow={
                             <TablePlaceholder>
-                                None of the changesets where submitted yet.
+                                None of the changes where submitted yet.
                             </TablePlaceholder>
                         }
                     />
                 )}
             />
-            <Routes>
-                <Route path="suggestions" />
-                <Route path="closed" />
-            </Routes>
         </PageContent>
     );
 };

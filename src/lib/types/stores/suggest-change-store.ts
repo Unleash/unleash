@@ -17,11 +17,14 @@ export interface ISuggestChangeStore extends Store<ISuggestChangeset, number> {
 
     addChangeToSet(
         change: PartialSome<ISuggestChange, 'id' | 'createdBy' | 'createdAt'>,
+        feature: string,
         changeSetID: number,
         userId: number,
     ): Promise<void>;
 
     get(id: number): Promise<ISuggestChangeset>;
+
+    deleteChange(changeId: number): Promise<void>;
 
     updateState(
         id: number,

@@ -404,22 +404,22 @@ type SuggestChangePayload =
     | SuggestChangeDeleteStrategy;
 
 export interface ISuggestChangeAddStrategy extends ISuggestChangeBase {
-    action: SuggestChangeAction.ADD_STRATEGY;
+    action: 'addStrategy';
     payload: SuggestChangeAddStrategy;
 }
 
 export interface ISuggestChangeDeleteStrategy extends ISuggestChangeBase {
-    action: SuggestChangeAction.DELETE_STRATEGY;
+    action: 'deleteStrategy';
     payload: SuggestChangeDeleteStrategy;
 }
 
 export interface ISuggestChangeUpdateStrategy extends ISuggestChangeBase {
-    action: SuggestChangeAction.UPDATE_STRATEGY;
+    action: 'updateStrategy';
     payload: SuggestChangeEditStrategy;
 }
 
 export interface ISuggestChangeEnabled extends ISuggestChangeBase {
-    action: SuggestChangeAction.UPDATE_ENABLED;
+    action: 'updateEnabled';
     payload: SuggestChangeEnabled;
 }
 
@@ -451,12 +451,11 @@ export enum SuggestChangesetEvent {
     CLOSED = 'CLOSED',
 }
 
-export enum SuggestChangeAction {
-    UPDATE_ENABLED = 'updateEnabled',
-    ADD_STRATEGY = 'strategyAdd',
-    UPDATE_STRATEGY = 'strategyUpdate',
-    DELETE_STRATEGY = 'strategyDelete',
-}
+export type SuggestChangeAction =
+    | 'updateEnabled'
+    | 'addStrategy'
+    | 'updateStrategy'
+    | 'deleteStrategy';
 
 export interface ISuggestChangeEventData {
     feature: string;

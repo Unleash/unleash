@@ -381,7 +381,7 @@ export interface ISuggestChangeFeature {
     changes: ISuggestChange[];
 }
 
-export interface ISuggestChange {
+export interface ISuggestChangeBase {
     id?: number;
     action: SuggestChangeAction;
     payload: SuggestChangePayload;
@@ -403,16 +403,44 @@ type SuggestChangePayload =
     | SuggestChangeEditStrategy
     | SuggestChangeDeleteStrategy;
 
-type SuggestChangeEnabled = { data: boolean };
+export interface ISuggestChangeAddStrategy extends ISuggestChangeBase {
+    action: SuggestChangeAction.ADD_STRATEGY;
+    payload: SuggestChangeAddStrategy;
+}
+
+export interface ISuggestChangeDeleteStrategy extends ISuggestChangeBase {
+    action: SuggestChangeAction.DELETE_STRATEGY;
+    payload: SuggestChangeDeleteStrategy;
+}
+
+export interface ISuggestChangeUpdateStrategy extends ISuggestChangeBase {
+    action: SuggestChangeAction.UPDATE_STRATEGY;
+    payload: SuggestChangeEditStrategy;
+}
+
+export interface ISuggestChangeEnabled extends ISuggestChangeBase {
+    action: SuggestChangeAction.UPDATE_ENABLED;
+    payload: SuggestChangeEnabled;
+}
+
+export type ISuggestChange =
+    | ISuggestChangeAddStrategy
+    | ISuggestChangeDeleteStrategy
+    | ISuggestChangeUpdateStrategy
+    | ISuggestChangeEnabled;
+
+type SuggestChangeEnabled = { enabled: boolean };
 
 type SuggestChangeAddStrategy = Pick<
     IFeatureStrategy,
-    'parameters' | 'constraints' | 'parameters'
->;
+    'parameters' | 'constraints'
+> & { name: string };
 
-type SuggestChangeEditStrategy = Omit<IFeatureStrategy, 'createdAt'>;
+type SuggestChangeEditStrategy = SuggestChangeAddStrategy & { id: string };
 
-type SuggestChangeDeleteStrategy = { id: string };
+type SuggestChangeDeleteStrategy = {
+    deleteId: string;
+};
 
 export enum SuggestChangesetEvent {
     CREATED = 'CREATED',

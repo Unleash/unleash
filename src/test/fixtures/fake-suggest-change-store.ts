@@ -29,8 +29,8 @@ export default class FakeSuggestChangeStore implements ISuggestChangeStore {
     }
 
     addChangeToSet(
-        change: PartialSome<ISuggestChange, 'id' | 'createdBy' | 'createdAt'>,
         feature: string,
+        change: ISuggestChange,
         changeSetID: number,
         userId: number,
     ): Promise<void> {
@@ -44,6 +44,7 @@ export default class FakeSuggestChangeStore implements ISuggestChangeStore {
                 },
             ],
         });
+
         return Promise.resolve();
     }
 

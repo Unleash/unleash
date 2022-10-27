@@ -104,8 +104,9 @@ export const ProjectFeatureToggles = ({
     const {
         onSuggestToggle,
         onSuggestToggleClose,
+        onSuggestToggleConfirm,
         suggestChangesDialogDetails,
-    } = useSuggestToggle();
+    } = useSuggestToggle(projectId);
 
     const onToggle = useCallback(
         async (
@@ -521,7 +522,7 @@ export const ProjectFeatureToggles = ({
                 onClose={onSuggestToggleClose}
                 featureName={suggestChangesDialogDetails?.featureName}
                 environment={suggestChangesDialogDetails?.environment}
-                onConfirm={() => {}}
+                onConfirm={onSuggestToggleConfirm}
             />
         </PageContent>
     );

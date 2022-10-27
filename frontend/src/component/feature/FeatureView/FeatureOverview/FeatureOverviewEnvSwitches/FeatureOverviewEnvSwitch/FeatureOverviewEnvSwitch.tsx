@@ -38,8 +38,9 @@ const FeatureOverviewEnvSwitch = ({
     const {
         onSuggestToggle,
         onSuggestToggleClose,
+        onSuggestToggleConfirm,
         suggestChangesDialogDetails,
-    } = useSuggestToggle();
+    } = useSuggestToggle(projectId);
 
     const handleToggleEnvironmentOn = async () => {
         try {
@@ -123,7 +124,7 @@ const FeatureOverviewEnvSwitch = ({
                 onClose={onSuggestToggleClose}
                 featureName={featureId}
                 environment={suggestChangesDialogDetails?.environment}
-                onConfirm={() => {}}
+                onConfirm={onSuggestToggleConfirm}
             />
         </div>
     );

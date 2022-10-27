@@ -7,9 +7,9 @@ title: /internal-backstage/prometheus
 
 `GET http://unleash.host.com/internal-backstage/prometheus`
 
-Unleash uses Prometheus internally to collect metrics. These are available on the given url if the `serverMetrics` option is enabled (default=true).
+Unleash uses Prometheus internally to collect metrics. By default, the metrics are available at `/internal-backstage/prometheus`. You can disable this endpoint by setting the `serverMetrics` option to `false`.
 
-Note that it's not recomended to expose Prometheus metrics to the public. You should therefore drop all external access to `/internal-backstage/*` on the network layer to keep your instance secure. 
+Note that it's not recommended to expose Prometheus metrics to the public. Thus, if you want to keep metrics enabled, you should block all external access to `/internal-backstage/*` on the network layer to keep your instance secure. 
 
 [Read more about Prometheus](https://prometheus.io/)
 

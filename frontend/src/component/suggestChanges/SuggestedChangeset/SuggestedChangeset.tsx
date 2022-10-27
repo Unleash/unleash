@@ -4,38 +4,39 @@ import { SuggestedFeatureToggleChange } from '../SuggestedChangeOverview/Suggest
 import { objectId } from 'utils/objectId';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ToggleStatusChange } from '../SuggestedChangeOverview/SuggestedFeatureToggleChange/ToggleStatusChange';
-import {
-    StrategyAddedChange,
-    StrategyDeletedChange,
-    StrategyEditedChange,
-} from '../SuggestedChangeOverview/SuggestedFeatureToggleChange/StrategyChange';
-import {
-    formatStrategyName,
-    GetFeatureStrategyIcon,
-} from 'utils/strategyNames';
+// import {
+//     StrategyAddedChange,
+//     StrategyDeletedChange,
+//     StrategyEditedChange,
+// } from '../SuggestedChangeOverview/SuggestedFeatureToggleChange/StrategyChange';
+// import {
+//     formatStrategyName,
+//     GetFeatureStrategyIcon,
+// } from 'utils/strategyNames';
+import type { ISuggestChangesResponse } from 'hooks/api/getters/useSuggestedChangesDraft/useSuggestedChangesDraft';
 
-export const SuggestedChangeset: FC<{ suggestedChange: any }> = ({
-    suggestedChange,
-}) => {
+export const SuggestedChangeset: FC<{
+    suggestedChange: ISuggestChangesResponse;
+}> = ({ suggestedChange }) => {
     return (
         <Box>
             Changes
-            {suggestedChange.changes?.map((featureToggleChange: any) => (
+            {suggestedChange.features?.map(featureToggleChange => (
                 <SuggestedFeatureToggleChange
-                    key={featureToggleChange.feature}
-                    featureToggleName={featureToggleChange.feature}
+                    key={featureToggleChange.name}
+                    featureToggleName={featureToggleChange.name}
                 >
-                    {featureToggleChange.changeSet.map((change: any) => (
+                    {featureToggleChange.changes.map(change => (
                         <Box key={objectId(change)}>
                             <ConditionallyRender
                                 condition={change.action === 'updateEnabled'}
                                 show={
                                     <ToggleStatusChange
-                                        enabled={change?.payload?.data?.data}
+                                        enabled={change?.payload?.enabled}
                                     />
                                 }
                             />
-                            <ConditionallyRender
+                            {/* <ConditionallyRender
                                 condition={change.action === 'addStrategy'}
                                 show={
                                     <StrategyAddedChange>
@@ -55,7 +56,7 @@ export const SuggestedChangeset: FC<{ suggestedChange: any }> = ({
                             <ConditionallyRender
                                 condition={change.action === 'updateStrategy'}
                                 show={<StrategyEditedChange />}
-                            />
+                            /> */}
                         </Box>
                     ))}
                 </SuggestedFeatureToggleChange>

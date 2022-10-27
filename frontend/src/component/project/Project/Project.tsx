@@ -117,7 +117,11 @@ const Project = () => {
     return (
         <MainLayout
             ref={ref}
-            subheader={uiConfig?.flags?.suggestChanges ? <DraftBanner /> : null}
+            subheader={
+                uiConfig?.flags?.suggestChanges ? (
+                    <DraftBanner project={projectId} />
+                ) : null
+            }
         >
             <div className={styles.header}>
                 <div className={styles.innerContainer}>

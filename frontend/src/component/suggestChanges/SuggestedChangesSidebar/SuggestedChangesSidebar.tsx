@@ -1,14 +1,16 @@
-import React, { useState, VFC } from 'react';
+import { VFC } from 'react';
 import { Box, Button, Typography, styled, Tooltip } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { HelpOutline } from '@mui/icons-material';
-import { useSuggestedChange } from 'hooks/api/getters/useSuggestChange/useSuggestedChange';
 import { SuggestedChangeset } from '../SuggestedChangeset/SuggestedChangeset';
+import { useSuggestedChangesDraft } from 'hooks/api/getters/useSuggestedChangesDraft/useSuggestedChangesDraft';
+
 interface ISuggestedChangesSidebarProps {
     open: boolean;
+    project: string;
     onClose: () => void;
 }
 const StyledPageContent = styled(PageContent)(({ theme }) => ({
@@ -26,11 +28,13 @@ const StyledPageContent = styled(PageContent)(({ theme }) => ({
     },
     borderRadius: `${theme.spacing(1.5, 0, 0, 1.5)} !important`,
 }));
+
 const StyledHelpOutline = styled(HelpOutline)(({ theme }) => ({
     fontSize: theme.fontSizes.mainHeader,
     marginLeft: '0.3rem',
     color: theme.palette.grey[700],
 }));
+
 const StyledHeaderHint = styled('div')(({ theme }) => ({
     color: theme.palette.text.secondary,
     fontSize: theme.fontSizes.smallBody,
@@ -38,23 +42,43 @@ const StyledHeaderHint = styled('div')(({ theme }) => ({
 
 export const SuggestedChangesSidebar: VFC<ISuggestedChangesSidebarProps> = ({
     open,
+    project,
     onClose,
 }) => {
-    const { data: suggestedChange } = useSuggestedChange();
+    const { draft, loading } = useSuggestedChangesDraft(project);
 
     const onReview = async () => {
-        console.log('approve');
+        alert('approve');
     };
     const onDiscard = async () => {
-        console.log('discard');
+        alert('discard');
     };
     const onApply = async () => {
         try {
-            console.log('apply');
+            alert('apply');
         } catch (e) {
             console.log(e);
         }
     };
+
+    if (!loading && !draft) {
+        return (
+            <SidebarModal open={open} onClose={onClose} label="Review changes">
+                <StyledPageContent
+                    header={
+                        <PageHeader
+                            secondary
+                            titleElement="Review your changes"
+                        ></PageHeader>
+                    }
+                >
+                    There are no changes to review.
+                    {/* FIXME: empty state */}
+                </StyledPageContent>
+            </SidebarModal>
+        );
+    }
+
     return (
         <SidebarModal open={open} onClose={onClose} label="Review changes">
             <StyledPageContent
@@ -80,55 +104,82 @@ export const SuggestedChangesSidebar: VFC<ISuggestedChangesSidebarProps> = ({
                     ></PageHeader>
                 }
             >
-                {/* TODO: multiple environments (changesets) */}
-                <Typography>{suggestedChange?.state}</Typography>
-                <br />
-                <SuggestedChangeset suggestedChange={suggestedChange} />
-                <Box sx={{ display: 'flex' }}>
-                    <ConditionallyRender
-                        condition={suggestedChange?.state === 'APPROVED'}
-                        show={<Typography>Applied</Typography>}
-                    />
-                    <ConditionallyRender
-                        condition={suggestedChange?.state === 'CLOSED'}
-                        show={<Typography>Applied</Typography>}
-                    />
-                    <ConditionallyRender
-                        condition={suggestedChange?.state === 'APPROVED'}
-                        show={
-                            <>
-                                <Button
-                                    sx={{ mt: 2 }}
-                                    variant="contained"
-                                    onClick={onApply}
-                                >
-                                    Apply changes
-                                </Button>
-                            </>
-                        }
-                    />
-                    <ConditionallyRender
-                        condition={suggestedChange?.state === 'CREATED'}
-                        show={
-                            <>
-                                <Button
-                                    sx={{ mt: 2, ml: 'auto' }}
-                                    variant="contained"
-                                    onClick={onReview}
-                                >
-                                    Request changes
-                                </Button>
-                                <Button
-                                    sx={{ mt: 2, ml: 2 }}
-                                    variant="outlined"
-                                    onClick={onDiscard}
-                                >
-                                    Discard changes
-                                </Button>
-                            </>
-                        }
-                    />
-                </Box>
+                {draft?.map(environmentChangeset => (
+                    <Box
+                        key={environmentChangeset.id}
+                        sx={{
+                            padding: 2,
+                            border: '2px solid',
+                            borderColor: theme => theme.palette.neutral.light,
+                            borderRadius: theme =>
+                                `${theme.shape.borderRadiusLarge}px`,
+                        }}
+                    >
+                        <Typography>
+                            env: {environmentChangeset?.environment}
+                        </Typography>
+                        <Typography>
+                            state: {environmentChangeset?.state}
+                        </Typography>
+                        <hr />
+                        <SuggestedChangeset
+                            suggestedChange={environmentChangeset}
+                        />
+                        <Box sx={{ display: 'flex' }}>
+                            <ConditionallyRender
+                                condition={
+                                    environmentChangeset?.state === 'APPROVED'
+                                }
+                                show={<Typography>Applied</Typography>}
+                            />
+                            <ConditionallyRender
+                                condition={
+                                    environmentChangeset?.state === 'CLOSED'
+                                }
+                                show={<Typography>Applied</Typography>}
+                            />
+                            <ConditionallyRender
+                                condition={
+                                    environmentChangeset?.state === 'APPROVED'
+                                }
+                                show={
+                                    <>
+                                        <Button
+                                            sx={{ mt: 2 }}
+                                            variant="contained"
+                                            onClick={onApply}
+                                        >
+                                            Apply changes
+                                        </Button>
+                                    </>
+                                }
+                            />
+                            <ConditionallyRender
+                                condition={
+                                    environmentChangeset?.state === 'Draft'
+                                }
+                                show={
+                                    <>
+                                        <Button
+                                            sx={{ mt: 2, ml: 'auto' }}
+                                            variant="contained"
+                                            onClick={onReview}
+                                        >
+                                            Request changes
+                                        </Button>
+                                        <Button
+                                            sx={{ mt: 2, ml: 2 }}
+                                            variant="outlined"
+                                            onClick={onDiscard}
+                                        >
+                                            Discard changes
+                                        </Button>
+                                    </>
+                                }
+                            />
+                        </Box>
+                    </Box>
+                ))}
             </StyledPageContent>
         </SidebarModal>
     );

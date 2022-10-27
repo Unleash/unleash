@@ -18,7 +18,7 @@ export const ChangesetTitleCell = ({
     value,
     row: { original },
 }: IChangesetTitleCellProps) => {
-    const { id, changes, project } = original;
+    const { id, features: changes, project } = original;
     const theme = useTheme();
     const path = `projects/${project}/suggest-changes/${id}`;
 

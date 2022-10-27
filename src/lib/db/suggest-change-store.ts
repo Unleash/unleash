@@ -15,29 +15,29 @@ const T = {
     SUGGEST_CHANGE_SET: 'suggest_change_set',
 };
 
-interface ISuggestChangesetRow {
+interface ISuggestChangesetInsert {
     id: number;
-    state: SuggestChangesetState;
     environment: string;
-    project: string;
-    created_at: Date;
-    created_by: number;
-    changeSetUsername: string;
-    changeSetAvatar: string;
-    changeId: number;
-    changeFeature: string;
-    changeAction: SuggestChangeAction;
-    changePayload: any;
-    changeCreatedAt: Date;
-    changeCreatedBy: number;
-    changeCreatedByUsername: string;
-    changeCreatedByAvatar: string;
+    state?: string;
+    project?: string;
+    created_by?: number;
+    created_at?: Date;
 }
 
-const suggestChangeRowReducer = (
-    acc: Record<number, ISuggestChangeset>,
-    suggestChangeRow: ISuggestChangesetRow,
-): Record<number, ISuggestChangeset> => {
+interface ISuggestChangeInsert {
+    id: number;
+    action: SuggestChangeAction;
+    feature: string;
+    payload?: unknown;
+    created_by?: number;
+    created_at?: Date;
+}
+
+interface ISuggestChangesetRow extends ISuggestChangesetInsert {
+    changes?: ISuggestChange[];
+}
+
+const suggestChangeRowReducer = (acc, suggestChangeRow) => {
     const {
         changeId,
         changeAction,
@@ -199,7 +199,7 @@ export class SuggestChangeStore implements ISuggestChangeStore {
         userId: number,
     ): Promise<ISuggestChangeset> => {
         const [{ id }] = await this.db(T.SUGGEST_CHANGE_SET)
-            .insert({
+            .insert<ISuggestChangesetInsert>({
                 environment: suggestChangeSet.environment,
                 state: suggestChangeSet.state,
                 project: suggestChangeSet.project,
@@ -207,25 +207,22 @@ export class SuggestChangeStore implements ISuggestChangeStore {
             })
             .returning('id');
 
-        suggestChangeSet.features.forEach((feature) => {
-            feature.changes.forEach((change) => {
-                this.addChangeToSet(change, feature.name, id, userId);
-            });
+        suggestChangeSet.changes.forEach((change) => {
+            this.addChangeToSet(change, id, userId);
         });
 
         return this.get(id);
     };
 
     addChangeToSet = async (
-        change: ISuggestChange,
-        feature: string,
+        change: PartialSome<ISuggestChange, 'id' | 'createdBy' | 'createdAt'>,
         changeSetID: number,
         userId: number,
     ): Promise<void> => {
         await this.db(T.SUGGEST_CHANGE)
-            .insert({
+            .insert<ISuggestChangeInsert>({
                 action: change.action,
-                feature: feature,
+                feature: change.feature,
                 payload: change.payload,
                 suggest_change_set_id: changeSetID,
                 created_by: userId,
@@ -250,10 +247,8 @@ export class SuggestChangeStore implements ISuggestChangeStore {
         return result.rows[0].present;
     };
 
-    mapRows = (rows?: ISuggestChangesetRow[]): ISuggestChangeset[] => {
-        const suggestChangeSets = rows.reduce<
-            Record<number, ISuggestChangeset>
-        >(suggestChangeRowReducer, {});
+    mapRows = (rows?: any[]): ISuggestChangeset[] => {
+        const suggestChangeSets = rows.reduce(suggestChangeRowReducer, {});
         return Object.values(suggestChangeSets);
     };
 

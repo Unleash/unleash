@@ -373,17 +373,13 @@ export interface ISuggestChangeset {
     environment: string;
     createdBy: Pick<User, 'id' | 'username' | 'imageUrl'>;
     createdAt: Date;
-    features: ISuggestChangeFeature[];
-}
-
-export interface ISuggestChangeFeature {
-    name: string;
     changes: ISuggestChange[];
 }
 
 export interface ISuggestChange {
     id?: number;
     action: SuggestChangeAction;
+    feature: string;
     payload: any;
     createdBy?: Pick<User, 'id' | 'username' | 'imageUrl'>;
     createdAt?: Date;

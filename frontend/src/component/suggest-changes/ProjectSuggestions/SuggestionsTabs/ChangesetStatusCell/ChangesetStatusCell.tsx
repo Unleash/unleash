@@ -1,15 +1,7 @@
-import { UserAvatar } from '../../../../common/UserAvatar/UserAvatar';
 import { Chip, styled } from '@mui/material';
 import { colors } from '../../../../../themes/colors';
 import { TextCell } from '../../../../common/Table/cells/TextCell/TextCell';
-import {
-    Check,
-    CircleOutlined,
-    CircleSharp,
-    Close,
-    Percent,
-} from '@mui/icons-material';
-import PercentageCircle from '../../../../common/PercentageCircle/PercentageCircle';
+import { Check, CircleOutlined, Close } from '@mui/icons-material';
 
 interface IChangesetStatusCellProps {
     value?: string | null;

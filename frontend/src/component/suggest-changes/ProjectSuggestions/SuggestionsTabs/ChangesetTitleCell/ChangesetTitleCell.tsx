@@ -18,8 +18,9 @@ export const ChangesetTitleCell = ({
     value,
     row: { original },
 }: IChangesetTitleCellProps) => {
-    const { id, changes } = original;
+    const { id, changes, project } = original;
     const theme = useTheme();
+    const path = `projects/${project}/suggest-changes/${id}`;
 
     if (!value) {
         return <TextCell />;
@@ -31,7 +32,7 @@ export const ChangesetTitleCell = ({
                 <Link
                     component={RouterLink}
                     underline={'hover'}
-                    to={'#'}
+                    to={path}
                     sx={{ pt: 0.2 }}
                 >
                     Suggestion
@@ -48,7 +49,7 @@ export const ChangesetTitleCell = ({
                 <Link
                     component={RouterLink}
                     underline={'hover'}
-                    to={'#'}
+                    to={path}
                 >{`${changes?.length}`}</Link>
                 <span style={{ margin: 'auto 8px' }}>
                     {changes.length < 1 ? `update` : 'updates'}

@@ -185,6 +185,13 @@ class AccessStoreMock implements IAccessStore {
     removeRolesOfTypeForUser(userId: number, roleType: string): Promise<void> {
         return Promise.resolve(undefined);
     }
+
+    cloneEnvironmentPermissions(
+        sourceEnvironment: string,
+        destinationEnvironment: string,
+    ): Promise<void> {
+        return Promise.resolve(undefined);
+    }
 }
 
 module.exports = AccessStoreMock;

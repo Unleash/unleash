@@ -9,16 +9,23 @@ import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
 import { IFeatureEnvironment } from '../types/model';
 import NotFoundError from '../error/notfound-error';
+import { v4 as uuidv4 } from 'uuid';
 
 const T = {
     featureEnvs: 'feature_environments',
     featureStrategies: 'feature_strategies',
+    featureProjects: 'feature',
 };
 
 interface IFeatureEnvironmentRow {
     environment: string;
     feature_name: string;
     enabled: boolean;
+}
+
+interface ISegmentRow {
+    id: string;
+    segment_id: number;
 }
 
 export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
@@ -267,5 +274,86 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
                     .ignore();
             }),
         );
+    }
+
+    async copyEnvironmentFeatures(
+        sourceEnvironment: string,
+        destinationEnvironment: string,
+        disableAll: boolean,
+    ): Promise<void> {
+        const enabledFragment = disableAll ? 'false as enabled' : 'enabled';
+
+        await this.db.raw(
+            `INSERT INTO ${T.featureEnvs} (
+                SELECT ? AS environment, feature_name, ${enabledFragment} FROM ${T.featureEnvs} WHERE environment = ?)`,
+            [destinationEnvironment, sourceEnvironment],
+        );
+    }
+
+    async cloneStrategies(
+        sourceEnvironment: string,
+        destinationEnvironment: string,
+    ): Promise<void> {
+        let sourceFeatureStrategies = await this.db('feature_strategies').where(
+            {
+                environment: sourceEnvironment,
+            },
+        );
+
+        const clonedStrategyRows = sourceFeatureStrategies.map(
+            (featureStrategy) => {
+                return {
+                    id: uuidv4(),
+                    feature_name: featureStrategy.feature_name,
+                    project_name: featureStrategy.project_name,
+                    environment: destinationEnvironment,
+                    strategy_name: featureStrategy.strategy_name,
+                    parameters: JSON.stringify(featureStrategy.parameters),
+                    constraints: JSON.stringify(featureStrategy.constraints),
+                    sort_order: featureStrategy.sort_order,
+                };
+            },
+        );
+
+        if (clonedStrategyRows.length === 0) {
+            return Promise.resolve();
+        }
+        await this.db('feature_strategies').insert(clonedStrategyRows);
+
+        const newStrategyMapping = new Map();
+        sourceFeatureStrategies.forEach((sourceStrategy, index) => {
+            newStrategyMapping.set(
+                sourceStrategy.id,
+                clonedStrategyRows[index].id,
+            );
+        });
+
+        const segmentsToClone: ISegmentRow[] = await this.db(
+            'feature_strategy_segment as fss',
+        )
+            .select(['id', 'segment_id'])
+            .join(
+                'feature_strategies AS fs',
+                'fss.feature_strategy_id',
+                'fs.id',
+            )
+            .where('environment', sourceEnvironment);
+
+        const clonedSegmentIdRows = segmentsToClone.map(
+            (existingSegmentRow) => {
+                return {
+                    feature_strategy_id: newStrategyMapping.get(
+                        existingSegmentRow.id,
+                    ),
+                    segment_id: existingSegmentRow.segment_id,
+                };
+            },
+        );
+
+        if (clonedSegmentIdRows.length > 0) {
+            await this.db('feature_strategy_segment').insert(
+                clonedSegmentIdRows,
+            );
+        }
     }
 }

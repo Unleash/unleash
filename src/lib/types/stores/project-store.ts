@@ -47,4 +47,8 @@ export interface IProjectStore extends Store<IProject, string> {
     getProjectLinksForEnvironments(
         environments: string[],
     ): Promise<IEnvironmentProjectLink[]>;
+    addEnvironmentToProjects(
+        environment: string,
+        projects: string[],
+    ): Promise<void>;
 }

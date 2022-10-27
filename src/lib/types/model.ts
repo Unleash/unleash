@@ -131,6 +131,13 @@ export interface IEnvironmentCreate {
     enabled?: boolean;
 }
 
+export interface IEnvironmentClone {
+    name: string;
+    projectsEnabled?: string[];
+    type: string;
+    clonePermissions?: boolean;
+}
+
 export interface IEnvironmentOverview {
     name: string;
     enabled: boolean;

@@ -232,7 +232,12 @@ const Project = () => {
                 <Route path="logs" element={<ProjectLog />} />
                 <Route
                     path="suggest-changes"
-                    element={<ProjectSuggestions />}
+                    element={
+                        <ConditionallyRender
+                            condition={Boolean(uiConfig?.flags?.suggestChanges)}
+                            show={<ProjectSuggestions />}
+                        />
+                    }
                 />
                 <Route
                     path="suggest-changes/:id"

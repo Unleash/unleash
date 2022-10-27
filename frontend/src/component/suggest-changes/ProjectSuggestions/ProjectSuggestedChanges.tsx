@@ -8,7 +8,7 @@ import { useProjectSuggestedChanges } from 'hooks/api/getters/useProjectSuggeste
 
 const defaultSort: SortingRule<string> = { id: 'updatedAt', desc: true };
 
-export const ProjectSuggestions = () => {
+export const ProjectSuggestedChanges = () => {
     const projectId = useRequiredPathParam('projectId');
     const projectName = useProjectNameOrId(projectId);
 

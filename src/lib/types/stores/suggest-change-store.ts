@@ -17,6 +17,7 @@ export interface ISuggestChangeStore extends Store<ISuggestChangeset, number> {
 
     addChangeToSet(
         change: PartialSome<ISuggestChange, 'id' | 'createdBy' | 'createdAt'>,
+        feature: string,
         changeSetID: number,
         userId: number,
     ): Promise<void>;

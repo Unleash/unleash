@@ -25,13 +25,19 @@ export default class FakeSuggestChangeStore implements ISuggestChangeStore {
 
     addChangeToSet(
         change: PartialSome<ISuggestChange, 'id' | 'createdBy' | 'createdAt'>,
+        feature: string,
         changeSetID: number,
         userId: number,
     ): Promise<void> {
         const changeSet = this.suggestChanges.find((s) => s.id === changeSetID);
-        changeSet.changes.push({
-            createdBy: { id: userId, username: '', imageUrl: '' },
-            ...change,
+        changeSet.features.push({
+            name: feature,
+            changes: [
+                {
+                    createdBy: { id: userId, username: '', imageUrl: '' },
+                    ...change,
+                },
+            ],
         });
         return Promise.resolve();
     }

@@ -167,8 +167,6 @@ export default class FakeFeatureEnvironmentStore
         sourceEnvironment: string,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         destinationEnvironment: string,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        disableAll: boolean,
     ): Promise<void> {
         throw new Error('Method not implemented.');
     }

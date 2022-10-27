@@ -279,13 +279,10 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
     async copyEnvironmentFeatures(
         sourceEnvironment: string,
         destinationEnvironment: string,
-        disableAll: boolean,
     ): Promise<void> {
-        const enabledFragment = disableAll ? 'false as enabled' : 'enabled';
-
         await this.db.raw(
             `INSERT INTO ${T.featureEnvs} (
-                SELECT ? AS environment, feature_name, ${enabledFragment} FROM ${T.featureEnvs} WHERE environment = ?)`,
+                SELECT ? AS environment, feature_name, enabled FROM ${T.featureEnvs} WHERE environment = ?)`,
             [destinationEnvironment, sourceEnvironment],
         );
     }

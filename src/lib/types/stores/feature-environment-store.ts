@@ -51,7 +51,6 @@ export interface IFeatureEnvironmentStore
     copyEnvironmentFeatures(
         sourceEnvironment: string,
         destinationEnvironment: string,
-        disableAll: boolean,
     ): Promise<void>;
     cloneStrategies(
         sourceEnvironment: string,

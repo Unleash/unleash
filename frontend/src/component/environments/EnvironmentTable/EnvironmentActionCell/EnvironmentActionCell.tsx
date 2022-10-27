@@ -15,6 +15,7 @@ import { EnvironmentActionCellPopover } from './EnvironmentActionCellPopover/Env
 import { EnvironmentCloneModal } from './EnvironmentCloneModal/EnvironmentCloneModal';
 import { IApiToken } from 'hooks/api/getters/useApiTokens/useApiTokens';
 import { EnvironmentTokenDialog } from './EnvironmentTokenDialog/EnvironmentTokenDialog';
+import { ENV_LIMIT } from 'constants/values';
 
 interface IEnvironmentTableActionsProps {
     environment: IEnvironment;
@@ -25,7 +26,7 @@ export const EnvironmentActionCell = ({
 }: IEnvironmentTableActionsProps) => {
     const navigate = useNavigate();
     const { setToastApiError, setToastData } = useToast();
-    const { refetchEnvironments } = useEnvironments();
+    const { environments, refetchEnvironments } = useEnvironments();
     const { refetch: refetchPermissions } = useProjectRolePermissions();
     const { deleteEnvironment, toggleEnvironmentOn, toggleEnvironmentOff } =
         useEnvironmentApi();
@@ -108,7 +109,17 @@ export const EnvironmentActionCell = ({
             <EnvironmentActionCellPopover
                 environment={environment}
                 onEdit={() => navigate(`/environments/${environment.name}`)}
-                onClone={() => setCloneModal(true)}
+                onClone={() => {
+                    if (environments.length < ENV_LIMIT) {
+                        setCloneModal(true);
+                    } else {
+                        setToastData({
+                            type: 'error',
+                            title: 'Environment limit reached',
+                            text: `You have reached the maximum number of environments (${ENV_LIMIT}). Please reach out if you need more.`,
+                        });
+                    }
+                }}
                 onDelete={() => setDeleteModal(true)}
             />
             <EnvironmentDeleteConfirm

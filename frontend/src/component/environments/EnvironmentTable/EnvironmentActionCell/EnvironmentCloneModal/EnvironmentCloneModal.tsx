@@ -1,4 +1,13 @@
-import { Button, FormControlLabel, Link, styled, Switch } from '@mui/material';
+import {
+    Button,
+    FormControl,
+    FormControlLabel,
+    Link,
+    Radio,
+    RadioGroup,
+    styled,
+    Switch,
+} from '@mui/material';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -21,6 +30,7 @@ import useApiTokensApi, {
     IApiTokenCreate,
 } from 'hooks/api/actions/useApiTokensApi/useApiTokensApi';
 import { IApiToken } from 'hooks/api/getters/useApiTokens/useApiTokens';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',
@@ -47,10 +57,18 @@ const StyledInput = styled(Input)(({ theme }) => ({
     maxWidth: theme.spacing(50),
 }));
 
-const StyledSeparator = styled('hr')(({ theme }) => ({
-    border: 0,
-    borderTop: `1px solid ${theme.palette.divider}`,
-    margin: theme.spacing(4, 0),
+const StyledSecondaryContainer = styled('div')(({ theme }) => ({
+    padding: theme.spacing(3),
+    backgroundColor: theme.palette.secondaryContainer,
+    borderRadius: theme.shape.borderRadiusMedium,
+    marginTop: theme.spacing(4),
+}));
+
+const StyledInlineContainer = styled('div')(({ theme }) => ({
+    padding: theme.spacing(0, 4),
+    '& > p:not(:first-of-type)': {
+        marginTop: theme.spacing(2),
+    },
 }));
 
 const StyledButtonContainer = styled('div')(({ theme }) => ({
@@ -65,6 +83,11 @@ const StyledButtonContainer = styled('div')(({ theme }) => ({
 const StyledCancelButton = styled(Button)(({ theme }) => ({
     marginLeft: theme.spacing(3),
 }));
+
+enum APITokenGeneration {
+    LATER = 'later',
+    NOW = 'now',
+}
 
 enum ErrorField {
     NAME = 'name',
@@ -96,11 +119,13 @@ export const EnvironmentCloneModal = ({
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
 
-    const [name, setName] = useState(`${environment.name}-clone`);
+    const [name, setName] = useState(`${environment.name}_clone`);
     const [type, setType] = useState('development');
     const [projects, setProjects] = useState<string[]>([]);
     const [tokenProjects, setTokenProjects] = useState<string[]>(['*']);
     const [clonePermissions, setClonePermissions] = useState(true);
+    const [apiTokenGeneration, setApiTokenGeneration] =
+        useState<APITokenGeneration>(APITokenGeneration.LATER);
     const [errors, setErrors] = useState<ICreatePersonalAPITokenErrors>({});
 
     const clearError = (field: ErrorField) => {
@@ -121,10 +146,10 @@ export const EnvironmentCloneModal = ({
     }, [environment]);
 
     const getUniqueName = (name: string) => {
-        let uniqueName = `${name}-clone`;
+        let uniqueName = `${name}_clone`;
         let number = 2;
         while (!isNameUnique(uniqueName)) {
-            uniqueName = `${environment.name}-clone-${number}`;
+            uniqueName = `${environment.name}_clone_${number}`;
             number++;
         }
         return uniqueName;
@@ -133,12 +158,12 @@ export const EnvironmentCloneModal = ({
     const getCloneEnvironmentPayload = (): IEnvironmentClonePayload => ({
         name,
         type,
-        projectsEnabled: projects,
+        projects,
         clonePermissions,
     });
 
     const getApiTokenCreatePayload = (): IApiTokenCreate => ({
-        username: `${name}-token`,
+        username: `${name}_token`,
         type: 'CLIENT',
         environment: name,
         projects: tokenProjects,
@@ -153,8 +178,10 @@ export const EnvironmentCloneModal = ({
                 getCloneEnvironmentPayload()
             );
             const response = await createToken(getApiTokenCreatePayload());
-            const token = await response.json();
-            newToken(token);
+            if (apiTokenGeneration === APITokenGeneration.NOW) {
+                const token = await response.json();
+                newToken(token);
+            }
             setToastData({
                 title: 'Environment successfully cloned!',
                 type: 'success',
@@ -237,9 +264,9 @@ export const EnvironmentCloneModal = ({
                             value={type}
                         />
                         <StyledInputDescription>
-                            For what projects should the cloned environment be
-                            enabled?
-                            <HelpIcon tooltip="The cloned environment will be available in all existing projects but it will be automatically enabled in the selected ones" />
+                            Select for which projects to clone the environment
+                            configuration
+                            <HelpIcon tooltip="The cloned environment will keep the feature toggle state for the selected projects, where it will be enabled by default." />
                         </StyledInputDescription>
                         <EnvironmentProjectSelect
                             projects={projects}
@@ -264,32 +291,74 @@ export const EnvironmentCloneModal = ({
                                 />
                             }
                         />
-                        <StyledSeparator />
-                        <StyledInputDescription>
-                            API Token
-                        </StyledInputDescription>
-                        <StyledInputSecondaryDescription>
-                            A new Server-side SDK (CLIENT) API token will be
-                            generated for the cloned environment, so you can get
-                            started connecting to it right away.{' '}
-                            <Link
-                                href="https://docs.getunleash.io/reference/api-tokens-and-client-keys"
-                                target="_blank"
-                            >
-                                Read more about API tokens
-                            </Link>
-                            .
-                        </StyledInputSecondaryDescription>
-                        <StyledInputDescription>
-                            Which project do you want to give access to?
-                        </StyledInputDescription>
-                        <SelectProjectInput
-                            options={selectableProjects}
-                            defaultValue={tokenProjects}
-                            onChange={setTokenProjects}
-                            error={errors.projects}
-                            onFocus={() => clearError(ErrorField.PROJECTS)}
-                        />
+                        <StyledSecondaryContainer>
+                            <StyledInputDescription>
+                                API Token
+                            </StyledInputDescription>
+                            <StyledInputSecondaryDescription>
+                                In order to connect your SDKs to your newly
+                                cloned environment, you will also need an API
+                                token.{' '}
+                                <Link
+                                    href="https://docs.getunleash.io/reference/api-tokens-and-client-keys"
+                                    target="_blank"
+                                >
+                                    Read more about API tokens
+                                </Link>
+                                .
+                            </StyledInputSecondaryDescription>
+                            <FormControl>
+                                <RadioGroup
+                                    value={apiTokenGeneration}
+                                    onChange={e =>
+                                        setApiTokenGeneration(
+                                            e.target.value as APITokenGeneration
+                                        )
+                                    }
+                                    name="api-token-generation"
+                                >
+                                    <FormControlLabel
+                                        value={APITokenGeneration.LATER}
+                                        control={<Radio />}
+                                        label="I want to generate an API token later"
+                                    />
+                                    <FormControlLabel
+                                        value={APITokenGeneration.NOW}
+                                        control={<Radio />}
+                                        label="Generate an API token now"
+                                    />
+                                </RadioGroup>
+                            </FormControl>
+                            <ConditionallyRender
+                                condition={
+                                    apiTokenGeneration ===
+                                    APITokenGeneration.NOW
+                                }
+                                show={
+                                    <StyledInlineContainer>
+                                        <StyledInputSecondaryDescription>
+                                            A new Server-side SDK (CLIENT) API
+                                            token will be generated for the
+                                            cloned environment, so you can get
+                                            started connecting to it right away.
+                                        </StyledInputSecondaryDescription>
+                                        <StyledInputDescription>
+                                            Which projects do you want this
+                                            token to give access to?
+                                        </StyledInputDescription>
+                                        <SelectProjectInput
+                                            options={selectableProjects}
+                                            defaultValue={tokenProjects}
+                                            onChange={setTokenProjects}
+                                            error={errors.projects}
+                                            onFocus={() =>
+                                                clearError(ErrorField.PROJECTS)
+                                            }
+                                        />
+                                    </StyledInlineContainer>
+                                }
+                            />
+                        </StyledSecondaryContainer>
                     </div>
 
                     <StyledButtonContainer>

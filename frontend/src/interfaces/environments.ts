@@ -25,7 +25,7 @@ export interface IEnvironmentEditPayload {
 export interface IEnvironmentClonePayload {
     name: string;
     type: string;
-    projectsEnabled: string[];
+    projects: string[];
     clonePermissions: boolean;
 }
 

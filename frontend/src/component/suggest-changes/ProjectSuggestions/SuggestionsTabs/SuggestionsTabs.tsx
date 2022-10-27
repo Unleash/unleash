@@ -99,7 +99,7 @@ export const SuggestionsTabs = ({
             },
             {
                 Header: 'Submitted',
-                accessor: 'updatedAt',
+                accessor: 'createdAt',
                 searchable: true,
                 maxWidth: 100,
                 Cell: TimeAgoCell,

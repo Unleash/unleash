@@ -29,8 +29,8 @@ export default class FakeSuggestChangeStore implements ISuggestChangeStore {
     }
 
     addChangeToSet(
-        feature: string,
         change: ISuggestChange,
+        feature: string,
         changeSetID: number,
         userId: number,
     ): Promise<void> {

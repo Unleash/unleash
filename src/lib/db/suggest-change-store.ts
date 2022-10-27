@@ -230,8 +230,6 @@ export class SuggestChangeStore implements ISuggestChangeStore {
                 suggest_change_set_id: changeSetID,
                 created_by: userId,
             })
-            .onConflict(['action', 'suggest_change_set_id', 'feature'])
-            .merge()
             .returning('id');
     };
 

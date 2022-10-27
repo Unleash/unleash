@@ -19,8 +19,7 @@ CREATE TABLE IF NOT EXISTS suggest_change (
     payload jsonb not null default '[]'::jsonb,
     created_by integer not null references users (id) ON DELETE CASCADE,
     created_at timestamp default now(),
-    suggest_change_set_id integer NOT NULL REFERENCES suggest_change_set(id) ON DELETE CASCADE,
-    UNIQUE (feature, action, suggest_change_set_id)
+    suggest_change_set_id integer NOT NULL REFERENCES suggest_change_set(id) ON DELETE CASCADE
 );
 `,
         callback,

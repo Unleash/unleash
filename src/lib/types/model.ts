@@ -133,7 +133,7 @@ export interface IEnvironmentCreate {
 
 export interface IEnvironmentClone {
     name: string;
-    projectsEnabled?: string[];
+    projects?: string[];
     type: string;
     clonePermissions?: boolean;
 }

@@ -162,11 +162,13 @@ export default class FakeFeatureEnvironmentStore
         return Promise.reject(new Error('Not implemented'));
     }
 
-    copyEnvironmentFeatures(
+    copyEnvironmentFeaturesByProjects(
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         sourceEnvironment: string,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         destinationEnvironment: string,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        projects: string[],
     ): Promise<void> {
         throw new Error('Method not implemented.');
     }

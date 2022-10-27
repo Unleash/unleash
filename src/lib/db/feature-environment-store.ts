@@ -14,7 +14,7 @@ import { v4 as uuidv4 } from 'uuid';
 const T = {
     featureEnvs: 'feature_environments',
     featureStrategies: 'feature_strategies',
-    featureProjects: 'feature',
+    features: 'features',
 };
 
 interface IFeatureEnvironmentRow {
@@ -276,14 +276,15 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
         );
     }
 
-    async copyEnvironmentFeatures(
+    async copyEnvironmentFeaturesByProjects(
         sourceEnvironment: string,
         destinationEnvironment: string,
+        projects: string[],
     ): Promise<void> {
         await this.db.raw(
             `INSERT INTO ${T.featureEnvs} (
-                SELECT ? AS environment, feature_name, enabled FROM ${T.featureEnvs} WHERE environment = ?)`,
-            [destinationEnvironment, sourceEnvironment],
+                SELECT distinct ? AS environment, feature_name, enabled FROM ${T.featureEnvs} INNER JOIN ${T.features} ON ${T.featureEnvs}.feature_name = ${T.features}.name WHERE environment = ? AND project = ANY(?))`,
+            [destinationEnvironment, sourceEnvironment, projects],
         );
     }
 

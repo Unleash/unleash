@@ -24,8 +24,6 @@ export interface ISuggestChangeStore extends Store<ISuggestChangeset, number> {
 
     get(id: number): Promise<ISuggestChangeset>;
 
-    deleteChange(changeId: number): Promise<void>;
-
     updateState(
         id: number,
         state: SuggestChangesetState,

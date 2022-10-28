@@ -340,7 +340,7 @@ export const EnvironmentCloneModal = ({
                                             A new Server-side SDK (CLIENT) API
                                             token will be generated for the
                                             cloned environment, so you can get
-                                            started connecting to it right away.
+                                            started right away.
                                         </StyledInputSecondaryDescription>
                                         <StyledInputDescription>
                                             Which projects do you want this

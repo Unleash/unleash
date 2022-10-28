@@ -212,11 +212,11 @@ export const CreatePersonalAPIToken: FC<ICreatePersonalAPITokenProps> = ({
     --data-raw '${JSON.stringify(getPersonalAPITokenPayload(), undefined, 2)}'`;
     };
 
-    const isDescriptionEmpty = (description: string) => description.length;
+    const isDescriptionNotEmpty = (description: string) => description.length;
     const isDescriptionUnique = (description: string) =>
         !tokens?.some(token => token.description === description);
     const isValid =
-        isDescriptionEmpty(description) &&
+        isDescriptionNotEmpty(description) &&
         isDescriptionUnique(description) &&
         expiresAt > new Date();
 

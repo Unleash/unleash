@@ -16,13 +16,14 @@ import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { GO_BACK } from 'constants/navigate';
+import { ENV_LIMIT } from 'constants/values';
 
 const CreateEnvironment = () => {
     const { setToastApiError, setToastData } = useToast();
     const { uiConfig } = useUiConfig();
     const navigate = useNavigate();
     const { environments } = useEnvironments();
-    const canCreateMoreEnvs = environments.length < 7;
+    const canCreateMoreEnvs = environments.length < ENV_LIMIT;
     const { createEnvironment, loading } = useEnvironmentApi();
     const { refetch } = useProjectRolePermissions();
     const {
@@ -114,8 +115,9 @@ const CreateEnvironment = () => {
                     >
                         <Alert severity="error">
                             <p>
-                                Currently Unleash does not support more than 7
-                                environments. If you need more please reach out.
+                                Currently Unleash does not support more than{' '}
+                                {ENV_LIMIT} environments. If you need more
+                                please reach out.
                             </p>
                         </Alert>
                         <br />

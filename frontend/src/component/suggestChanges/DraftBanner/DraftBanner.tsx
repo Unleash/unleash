@@ -17,7 +17,7 @@ export const DraftBanner: VFC<IDraftBannerProps> = ({ environment }) => {
         <Box
             sx={{
                 position: 'sticky',
-                top: 0,
+                top: -1,
                 zIndex: theme => theme.zIndex.appBar,
                 borderTop: theme => `1px solid ${theme.palette.warning.border}`,
                 borderBottom: theme =>

@@ -94,13 +94,7 @@ const useEnvironmentApi = () => {
             'cloneEnvironment'
         );
 
-        try {
-            const res = await makeRequest(req.caller, req.id);
-
-            return res;
-        } catch (e) {
-            throw e;
-        }
+        return await makeRequest(req.caller, req.id);
     };
 
     const changeSortOrder = async (payload: ISortOrderPayload) => {

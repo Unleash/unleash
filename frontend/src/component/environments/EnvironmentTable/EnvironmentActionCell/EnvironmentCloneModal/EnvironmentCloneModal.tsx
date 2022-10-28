@@ -264,8 +264,8 @@ export const EnvironmentCloneModal = ({
                             value={type}
                         />
                         <StyledInputDescription>
-                            Select for which projects to clone the environment
-                            configuration
+                            Select which projects you want to clone the
+                            environment configuration in?
                             <HelpIcon tooltip="The cloned environment will keep the feature toggle state for the selected projects, where it will be enabled by default." />
                         </StyledInputDescription>
                         <EnvironmentProjectSelect

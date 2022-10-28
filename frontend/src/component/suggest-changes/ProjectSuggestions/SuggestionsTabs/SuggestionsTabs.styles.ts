@@ -2,8 +2,7 @@ import { makeStyles } from 'tss-react/mui';
 
 export const useStyles = makeStyles()(theme => ({
     header: {
-        paddingTop: 0,
-        paddingBottom: 0,
+        padding: theme.spacing(0, 4),
     },
     tabContainer: {
         paddingLeft: 0,

@@ -52,11 +52,11 @@ export const PageContent: FC<IPageContentProps> = ({
     const headerClasses = classnames(
         'header',
         styles.headerContainer,
+        headerClass || styles.headerPadding,
         {
             [styles.paddingDisabled]: disablePadding,
             [styles.borderDisabled]: disableBorder,
-        },
-        headerClass
+        }
     );
 
     const bodyClasses = classnames(

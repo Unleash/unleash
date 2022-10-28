@@ -244,7 +244,7 @@ export const EnvironmentCloneModal = ({
                 <StyledForm onSubmit={handleSubmit}>
                     <div>
                         <StyledInputDescription>
-                            What is your environment name? (Can't be changed
+                            What is your new environment name? (Can't be changed
                             later)
                         </StyledInputDescription>
                         <StyledInput

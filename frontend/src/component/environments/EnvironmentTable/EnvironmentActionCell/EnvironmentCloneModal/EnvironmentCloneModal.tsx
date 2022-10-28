@@ -320,7 +320,7 @@ export const EnvironmentCloneModal = ({
                                     <FormControlLabel
                                         value={APITokenGeneration.LATER}
                                         control={<Radio />}
-                                        label="I want to generate an API token later"
+                                        label="Generate an API token later"
                                     />
                                     <FormControlLabel
                                         value={APITokenGeneration.NOW}

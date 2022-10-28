@@ -124,6 +124,20 @@ export default class FakeFeatureStrategiesStore
         return Promise.resolve(rows);
     }
 
+    async getFeatureToggleForEnvironment(
+        featureName: string,
+        // eslint-disable-next-line
+        environment: string,
+    ): Promise<FeatureToggleWithEnvironment> {
+        const toggle = this.featureToggles.find((f) => f.name === featureName);
+        if (toggle) {
+            return { ...toggle, environments: [] };
+        }
+        throw new NotFoundError(
+            `Could not find feature with name ${featureName}`,
+        );
+    }
+
     async getFeatureToggleWithEnvs(
         featureName: string,
         archived: boolean = false,

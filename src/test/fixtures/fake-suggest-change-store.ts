@@ -29,7 +29,7 @@ export default class FakeSuggestChangeStore implements ISuggestChangeStore {
     }
 
     addChangeToSet(
-        change: PartialSome<ISuggestChange, 'id' | 'createdBy' | 'createdAt'>,
+        change: ISuggestChange,
         feature: string,
         changeSetID: number,
         userId: number,
@@ -44,6 +44,7 @@ export default class FakeSuggestChangeStore implements ISuggestChangeStore {
                 },
             ],
         });
+
         return Promise.resolve();
     }
 

@@ -381,10 +381,10 @@ export interface ISuggestChangeFeature {
     changes: ISuggestChange[];
 }
 
-export interface ISuggestChange {
+export interface ISuggestChangeBase {
     id?: number;
     action: SuggestChangeAction;
-    payload: any;
+    payload: SuggestChangePayload;
     createdBy?: Pick<User, 'id' | 'username' | 'imageUrl'>;
     createdAt?: Date;
 }
@@ -397,12 +397,65 @@ export enum SuggestChangesetState {
     CANCELLED = 'Cancelled',
 }
 
-export enum SuggestChangeAction {
-    UPDATE_ENABLED = 'updateEnabled',
-    ADD_STRATEGY = 'strategyAdd',
-    UPDATE_STRATEGY = 'strategyUpdate',
-    DELETE_STRATEGY = 'strategyDelete',
+type SuggestChangePayload =
+    | SuggestChangeEnabled
+    | SuggestChangeAddStrategy
+    | SuggestChangeEditStrategy
+    | SuggestChangeDeleteStrategy;
+
+export interface ISuggestChangeAddStrategy extends ISuggestChangeBase {
+    action: 'addStrategy';
+    payload: SuggestChangeAddStrategy;
 }
+
+export interface ISuggestChangeDeleteStrategy extends ISuggestChangeBase {
+    action: 'deleteStrategy';
+    payload: SuggestChangeDeleteStrategy;
+}
+
+export interface ISuggestChangeUpdateStrategy extends ISuggestChangeBase {
+    action: 'updateStrategy';
+    payload: SuggestChangeEditStrategy;
+}
+
+export interface ISuggestChangeEnabled extends ISuggestChangeBase {
+    action: 'updateEnabled';
+    payload: SuggestChangeEnabled;
+}
+
+export type ISuggestChange =
+    | ISuggestChangeAddStrategy
+    | ISuggestChangeDeleteStrategy
+    | ISuggestChangeUpdateStrategy
+    | ISuggestChangeEnabled;
+
+type SuggestChangeEnabled = { enabled: boolean };
+
+type SuggestChangeAddStrategy = Pick<
+    IFeatureStrategy,
+    'parameters' | 'constraints'
+> & { name: string };
+
+type SuggestChangeEditStrategy = SuggestChangeAddStrategy & { id: string };
+
+type SuggestChangeDeleteStrategy = {
+    deleteId: string;
+};
+
+export enum SuggestChangesetEvent {
+    CREATED = 'CREATED',
+    UPDATED = 'UPDATED',
+    SUBMITTED = 'SUBMITTED',
+    APPROVED = 'APPROVED',
+    REJECTED = 'REJECTED',
+    CLOSED = 'CLOSED',
+}
+
+export type SuggestChangeAction =
+    | 'updateEnabled'
+    | 'addStrategy'
+    | 'updateStrategy'
+    | 'deleteStrategy';
 
 export interface ISuggestChangeEventData {
     feature: string;

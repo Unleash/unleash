@@ -273,7 +273,7 @@ export const EnvironmentCloneModal = ({
                             setProjects={setProjects}
                         />
                         <StyledInputDescription>
-                            Keep the users permission to this environment?
+                            Keep the users permission for this environment?
                         </StyledInputDescription>
                         <StyledInputSecondaryDescription>
                             If you turn it off, the permission for this

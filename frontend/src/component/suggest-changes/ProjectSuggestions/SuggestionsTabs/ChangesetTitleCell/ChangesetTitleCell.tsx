@@ -2,6 +2,7 @@ import { TextCell } from '../../../../common/Table/cells/TextCell/TextCell';
 import { Link, styled, Typography } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { useTheme } from '@mui/system';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
 interface IChangesetTitleCellProps {
     value?: any;
@@ -18,9 +19,10 @@ export const ChangesetTitleCell = ({
     value,
     row: { original },
 }: IChangesetTitleCellProps) => {
-    const { id, features: changes, project } = original;
+    const projectId = useRequiredPathParam('projectId');
+    const { id, features: changes } = original;
     const theme = useTheme();
-    const path = `projects/${project}/suggest-changes/${id}`;
+    const path = `/projects/${projectId}/suggest-changes/${id}`;
 
     if (!value) {
         return <TextCell />;

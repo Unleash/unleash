@@ -7,6 +7,7 @@ import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { HelpOutline } from '@mui/icons-material';
 import { SuggestedChangeset } from '../SuggestedChangeset/SuggestedChangeset';
 import { useSuggestedChangesDraft } from 'hooks/api/getters/useSuggestedChangesDraft/useSuggestedChangesDraft';
+import { useSuggestChangeApi } from 'hooks/api/actions/useSuggestChangeApi/useSuggestChangeApi';
 
 interface ISuggestedChangesSidebarProps {
     open: boolean;
@@ -45,10 +46,22 @@ export const SuggestedChangesSidebar: VFC<ISuggestedChangesSidebarProps> = ({
     project,
     onClose,
 }) => {
-    const { draft, loading } = useSuggestedChangesDraft(project);
+    const {
+        draft,
+        loading,
+        refetch: refetchSuggestChange,
+    } = useSuggestedChangesDraft(project);
+    const { changeState } = useSuggestChangeApi();
 
-    const onReview = async () => {
-        alert('approve');
+    console.log(draft);
+
+    const onReview = async (draftId: number) => {
+        try {
+            await changeState(project, draftId, { state: 'In review' });
+            refetchSuggestChange();
+        } catch (e) {
+            console.log('something went wrong');
+        }
     };
     const onDiscard = async () => {
         alert('discard');
@@ -163,7 +176,11 @@ export const SuggestedChangesSidebar: VFC<ISuggestedChangesSidebarProps> = ({
                                         <Button
                                             sx={{ mt: 2, ml: 'auto' }}
                                             variant="contained"
-                                            onClick={onReview}
+                                            onClick={() =>
+                                                onReview(
+                                                    environmentChangeset.id
+                                                )
+                                            }
                                         >
                                             Request changes
                                         </Button>

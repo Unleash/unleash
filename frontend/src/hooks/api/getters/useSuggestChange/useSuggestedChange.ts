@@ -80,6 +80,9 @@ const data: any = {
     ],
 };
 
+/**
+ * @deprecated for draft: useSuggestedChangesDraft
+ */
 export const useSuggestedChange = () => {
     // const { data, error, mutate } = useSWR(
     //     formatApiPath(`api/admin/suggest-changes/${id}`),

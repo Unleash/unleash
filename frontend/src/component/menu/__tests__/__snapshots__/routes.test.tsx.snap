@@ -54,6 +54,7 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
+    "isStandalone": true,
     "menu": {},
     "parent": "/projects",
     "path": "/projects/:projectId/features/:featureId/*",

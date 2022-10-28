@@ -11,7 +11,7 @@ describe('PrettifyLargeNumber', () => {
             LARGE_NUMBER_PRETTIFIED
         );
 
-        expect(prettifiedText.textContent).toBe('999,999');
+        expect(prettifiedText.textContent).toHaveLength('999,999'.length);
     });
 
     it('should render prettified number for value equal to the threshold', async () => {
@@ -41,7 +41,9 @@ describe('PrettifyLargeNumber', () => {
             LARGE_NUMBER_PRETTIFIED
         );
 
-        expect(prettifiedText.getAttribute('aria-label')).toBe('12,345,678');
+        expect(prettifiedText.getAttribute('aria-label')).toHaveLength(
+            '12,345,678'.length
+        );
     });
 
     it('should render prettified number with provided significant figures for value greater than threshold', async () => {

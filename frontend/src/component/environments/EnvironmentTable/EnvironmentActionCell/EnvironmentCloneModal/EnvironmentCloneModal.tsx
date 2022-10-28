@@ -320,7 +320,7 @@ export const EnvironmentCloneModal = ({
                                     <FormControlLabel
                                         value={APITokenGeneration.LATER}
                                         control={<Radio />}
-                                        label="Generate an API token later"
+                                        label="I want to generate an API token later"
                                     />
                                     <FormControlLabel
                                         value={APITokenGeneration.NOW}
@@ -329,35 +329,39 @@ export const EnvironmentCloneModal = ({
                                     />
                                 </RadioGroup>
                             </FormControl>
-                            <ConditionallyRender
-                                condition={
-                                    apiTokenGeneration ===
-                                    APITokenGeneration.NOW
-                                }
-                                show={
-                                    <StyledInlineContainer>
-                                        <StyledInputSecondaryDescription>
-                                            A new Server-side SDK (CLIENT) API
-                                            token will be generated for the
-                                            cloned environment, so you can get
-                                            started right away.
-                                        </StyledInputSecondaryDescription>
-                                        <StyledInputDescription>
-                                            Which projects do you want this
-                                            token to give access to?
-                                        </StyledInputDescription>
-                                        <SelectProjectInput
-                                            options={selectableProjects}
-                                            defaultValue={tokenProjects}
-                                            onChange={setTokenProjects}
-                                            error={errors.projects}
-                                            onFocus={() =>
-                                                clearError(ErrorField.PROJECTS)
-                                            }
-                                        />
-                                    </StyledInlineContainer>
-                                }
-                            />
+                            <StyledInlineContainer>
+                                <StyledInputSecondaryDescription>
+                                    A new Server-side SDK (CLIENT) API token
+                                    will be generated for the cloned
+                                    environment, so you can get started right
+                                    away.
+                                </StyledInputSecondaryDescription>
+                                <ConditionallyRender
+                                    condition={
+                                        apiTokenGeneration ===
+                                        APITokenGeneration.NOW
+                                    }
+                                    show={
+                                        <>
+                                            <StyledInputDescription>
+                                                Which projects do you want this
+                                                token to give access to?
+                                            </StyledInputDescription>
+                                            <SelectProjectInput
+                                                options={selectableProjects}
+                                                defaultValue={tokenProjects}
+                                                onChange={setTokenProjects}
+                                                error={errors.projects}
+                                                onFocus={() =>
+                                                    clearError(
+                                                        ErrorField.PROJECTS
+                                                    )
+                                                }
+                                            />
+                                        </>
+                                    }
+                                />
+                            </StyledInlineContainer>
                         </StyledSecondaryContainer>
                     </div>
 

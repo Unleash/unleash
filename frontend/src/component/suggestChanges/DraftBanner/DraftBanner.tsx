@@ -16,7 +16,7 @@ export const DraftBanner: VFC<IDraftBannerProps> = ({ project }) => {
     const { draft, loading } = useSuggestedChangesDraft(project);
     const environment = '';
 
-    if (!loading && !draft) {
+    if ((!loading && !draft) || draft?.length === 0) {
         return null;
     }
 

@@ -45,7 +45,7 @@ export const SuggestedChangesSidebar: VFC<ISuggestedChangesSidebarProps> = ({
     project,
     onClose,
 }) => {
-    const { draft, loading } = useSuggestedChangesDraft(project);
+    const { draft, loading, refetch } = useSuggestedChangesDraft(project);
 
     const onReview = async () => {
         alert('approve');
@@ -124,6 +124,10 @@ export const SuggestedChangesSidebar: VFC<ISuggestedChangesSidebarProps> = ({
                         <hr />
                         <SuggestedChangeset
                             suggestedChange={environmentChangeset}
+                            onNavigate={() => {
+                                onClose();
+                            }}
+                            onRefetch={refetch}
                         />
                         <Box sx={{ display: 'flex' }}>
                             <ConditionallyRender

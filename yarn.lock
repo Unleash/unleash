@@ -3949,10 +3949,10 @@ has@^1.0.3:
   dependencies:
     function-bind "^1.1.1"
 
-helmet@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.npmjs.org/helmet/-/helmet-5.0.0.tgz"
-  integrity sha512-wCuTCJZnEKXagvjcZiAnXkzS4lh8mTJ/JhhC5XjH5vPvSzzX/8Y88u6mfE3F66itB6UIA7uZEekXJsbdFTOiPw==
+helmet@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/helmet/-/helmet-6.0.0.tgz#8e183820ddccd7729a206ad73c577b264f495595"
+  integrity sha512-FO9RpR1wNJepH/GbLPQVtkE2eESglXL641p7SdyoT4LngHFJcZheHMoyUcjCZF4qpuMMO1u5q6RK0l9Ux8JBcg==
 
 hexoid@1.0.0:
   version "1.0.0"

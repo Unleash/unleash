@@ -113,7 +113,7 @@
     "json2csv": "^5.0.7",
     "knex": "^2.0.0",
     "log4js": "^6.0.0",
-    "make-fetch-happen": "^10.1.2",
+    "make-fetch-happen": "^11.0.0",
     "memoizee": "^0.4.15",
     "mime": "^3.0.0",
     "multer": "^1.4.5-lts.1",

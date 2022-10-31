@@ -8,6 +8,10 @@ import {
 } from 'lib/types/stores/role-store';
 
 export default class FakeRoleStore implements IRoleStore {
+    count(): Promise<number> {
+        return Promise.resolve(0);
+    }
+
     roles: ICustomRole[] = [];
 
     getGroupRolesForProject(projectId: string): Promise<IRole[]> {

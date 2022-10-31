@@ -1,7 +1,7 @@
 import { ITagType } from './stores/tag-type-store';
 import { LogProvider } from '../logger';
 import { IRole } from './stores/access-store';
-import { IUser } from './user';
+import User, { IUser } from './user';
 import { ALL_OPERATORS } from '../util/constants';
 
 export type Operator = typeof ALL_OPERATORS[number];
@@ -129,6 +129,13 @@ export interface IEnvironmentCreate {
     type: string;
     sortOrder?: number;
     enabled?: boolean;
+}
+
+export interface IEnvironmentClone {
+    name: string;
+    projects?: string[];
+    type: string;
+    clonePermissions?: boolean;
 }
 
 export interface IEnvironmentOverview {
@@ -364,4 +371,100 @@ export interface ISegment {
 export interface IFeatureStrategySegment {
     featureStrategyId: string;
     segmentId: number;
+}
+
+export interface ISuggestChangeset {
+    id: number;
+    state: string;
+    project: string;
+    environment: string;
+    createdBy: Pick<User, 'id' | 'username' | 'imageUrl'>;
+    createdAt: Date;
+    features: ISuggestChangeFeature[];
+}
+
+export interface ISuggestChangeFeature {
+    name: string;
+    changes: ISuggestChange[];
+}
+
+export interface ISuggestChangeBase {
+    id?: number;
+    action: SuggestChangeAction;
+    payload: SuggestChangePayload;
+    createdBy?: Pick<User, 'id' | 'username' | 'imageUrl'>;
+    createdAt?: Date;
+}
+
+export enum SuggestChangesetState {
+    DRAFT = 'Draft',
+    APPROVED = 'Approved',
+    IN_REVIEW = 'In review',
+    APPLIED = 'Applied',
+    CANCELLED = 'Cancelled',
+}
+
+type SuggestChangePayload =
+    | SuggestChangeEnabled
+    | SuggestChangeAddStrategy
+    | SuggestChangeEditStrategy
+    | SuggestChangeDeleteStrategy;
+
+export interface ISuggestChangeAddStrategy extends ISuggestChangeBase {
+    action: 'addStrategy';
+    payload: SuggestChangeAddStrategy;
+}
+
+export interface ISuggestChangeDeleteStrategy extends ISuggestChangeBase {
+    action: 'deleteStrategy';
+    payload: SuggestChangeDeleteStrategy;
+}
+
+export interface ISuggestChangeUpdateStrategy extends ISuggestChangeBase {
+    action: 'updateStrategy';
+    payload: SuggestChangeEditStrategy;
+}
+
+export interface ISuggestChangeEnabled extends ISuggestChangeBase {
+    action: 'updateEnabled';
+    payload: SuggestChangeEnabled;
+}
+
+export type ISuggestChange =
+    | ISuggestChangeAddStrategy
+    | ISuggestChangeDeleteStrategy
+    | ISuggestChangeUpdateStrategy
+    | ISuggestChangeEnabled;
+
+type SuggestChangeEnabled = { enabled: boolean };
+
+type SuggestChangeAddStrategy = Pick<
+    IFeatureStrategy,
+    'parameters' | 'constraints'
+> & { name: string };
+
+type SuggestChangeEditStrategy = SuggestChangeAddStrategy & { id: string };
+
+type SuggestChangeDeleteStrategy = {
+    deleteId: string;
+};
+
+export enum SuggestChangesetEvent {
+    CREATED = 'CREATED',
+    UPDATED = 'UPDATED',
+    SUBMITTED = 'SUBMITTED',
+    APPROVED = 'APPROVED',
+    REJECTED = 'REJECTED',
+    CLOSED = 'CLOSED',
+}
+
+export type SuggestChangeAction =
+    | 'updateEnabled'
+    | 'addStrategy'
+    | 'updateStrategy'
+    | 'deleteStrategy';
+
+export interface ISuggestChangeEventData {
+    feature: string;
+    data: unknown;
 }

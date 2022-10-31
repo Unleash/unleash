@@ -47,8 +47,6 @@ Examples of custom authentication hooks:
 - [basic-auth-hook.js](https://github.com/Unleash/unleash-examples/blob/7ed25f97a31dfd8f773c00847080b1a4c889fd87/v3/securing-basic-auth/basic-auth-hook.js)
 - [keycloak-auth-hook.js](https://github.com/Unleash/unleash-examples/blob/7ed25f97a31dfd8f773c00847080b1a4c889fd87/v3/securing-keycloak-auth/keycloak-auth-hook.js)
 
-We also have a version of Unleash deployed on Heroku which uses Google OAuth 2.0: https://secure-unleash.herokuapp.com
-
 ## Securing the Client API {#securing-the-client-api}
 
 A common way to support client access is to use pre-shared secrets. This can be solved by having clients send a shared key in an HTTP header with every client request to the Unleash API. All official Unleash clients should support this.

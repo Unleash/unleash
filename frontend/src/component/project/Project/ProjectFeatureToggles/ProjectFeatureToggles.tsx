@@ -36,6 +36,8 @@ import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/Feat
 import { useSearch } from 'hooks/useSearch';
 import { useMediaQuery } from '@mui/material';
 import { Search } from 'component/common/Search/Search';
+import { useSuggestToggle } from 'hooks/useSuggestToggle';
+import { SuggestChangesDialogue } from 'component/suggestChanges/SuggestChangeConfirmDialog/SuggestChangeConfirmDialog';
 
 interface IProjectFeatureTogglesProps {
     features: IProject['features'];
@@ -99,6 +101,12 @@ export const ProjectFeatureToggles = ({
 
     const { toggleFeatureEnvironmentOn, toggleFeatureEnvironmentOff } =
         useFeatureApi();
+    const {
+        onSuggestToggle,
+        onSuggestToggleClose,
+        onSuggestToggleConfirm,
+        suggestChangesDialogDetails,
+    } = useSuggestToggle(projectId);
 
     const onToggle = useCallback(
         async (
@@ -107,6 +115,13 @@ export const ProjectFeatureToggles = ({
             environment: string,
             enabled: boolean
         ) => {
+            if (
+                uiConfig?.flags?.suggestChanges &&
+                environment === 'production'
+            ) {
+                onSuggestToggle(featureName, environment, enabled);
+                throw new Error('Additional approval required');
+            }
             try {
                 if (enabled) {
                     await toggleFeatureEnvironmentOn(
@@ -501,6 +516,13 @@ export const ProjectFeatureToggles = ({
                 }}
                 featureId={featureArchiveState || ''}
                 projectId={projectId}
+            />{' '}
+            <SuggestChangesDialogue
+                isOpen={suggestChangesDialogDetails.isOpen}
+                onClose={onSuggestToggleClose}
+                featureName={suggestChangesDialogDetails?.featureName}
+                environment={suggestChangesDialogDetails?.environment}
+                onConfirm={onSuggestToggleConfirm}
             />
         </PageContent>
     );

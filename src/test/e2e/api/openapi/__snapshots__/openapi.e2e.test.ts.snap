@@ -1390,6 +1390,12 @@ exports[`should serve the OpenAPI spec 1`] = `
           "id": {
             "type": "number",
           },
+          "mappingsSSO": {
+            "items": {
+              "type": "string",
+            },
+            "type": "array",
+          },
           "name": {
             "type": "string",
           },
@@ -1414,6 +1420,10 @@ exports[`should serve the OpenAPI spec 1`] = `
       "groupUserModelSchema": {
         "additionalProperties": false,
         "properties": {
+          "createdBy": {
+            "nullable": true,
+            "type": "string",
+          },
           "joinedAt": {
             "format": "date-time",
             "type": "string",
@@ -1560,6 +1570,65 @@ exports[`should serve the OpenAPI spec 1`] = `
         },
         "required": [
           "id",
+        ],
+        "type": "object",
+      },
+      "instanceAdminStatsSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "OIDCenabled": {
+            "type": "number",
+          },
+          "SAMLenabled": {
+            "type": "number",
+          },
+          "contextFields": {
+            "type": "number",
+          },
+          "environments": {
+            "type": "number",
+          },
+          "featureToggles": {
+            "type": "number",
+          },
+          "groups": {
+            "type": "number",
+          },
+          "instanceId": {
+            "type": "string",
+          },
+          "projects": {
+            "type": "number",
+          },
+          "roles": {
+            "type": "number",
+          },
+          "segments": {
+            "type": "number",
+          },
+          "strategies": {
+            "type": "number",
+          },
+          "sum": {
+            "type": "string",
+          },
+          "timestamp": {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string",
+          },
+          "users": {
+            "type": "number",
+          },
+          "versionEnterprise": {
+            "type": "string",
+          },
+          "versionOSS": {
+            "type": "string",
+          },
+        },
+        "required": [
+          "instanceId",
         ],
         "type": "object",
       },
@@ -4573,135 +4642,24 @@ If the provided project does not exist, the list of events will be empty.",
         ],
       },
     },
-    "/api/admin/invite-link/tokens": {
+    "/api/admin/instance-admin/statistics": {
       "get": {
-        "operationId": "getAllPublicSignupTokens",
+        "deprecated": true,
+        "operationId": "getInstanceAdminStats",
         "responses": {
           "200": {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/publicSignupTokensSchema",
+                  "$ref": "#/components/schemas/instanceAdminStatsSchema",
                 },
               },
             },
-            "description": "publicSignupTokensSchema",
+            "description": "instanceAdminStatsSchema",
           },
         },
-        "summary": "Retrieve all existing public signup tokens",
         "tags": [
-          "Public signup tokens",
-        ],
-      },
-      "post": {
-        "operationId": "createPublicSignupToken",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/publicSignupTokenCreateSchema",
-              },
-            },
-          },
-          "description": "publicSignupTokenCreateSchema",
-          "required": true,
-        },
-        "responses": {
-          "201": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/publicSignupTokenSchema",
-                },
-              },
-            },
-            "description": "The resource was successfully created.",
-            "headers": {
-              "location": {
-                "description": "The location of the newly created resource.",
-                "schema": {
-                  "format": "uri",
-                  "type": "string",
-                },
-              },
-            },
-          },
-        },
-        "summary": "Create a public signup token",
-        "tags": [
-          "Public signup tokens",
-        ],
-      },
-    },
-    "/api/admin/invite-link/tokens/{token}": {
-      "get": {
-        "description": "Get information about a specific token. The \`:token\` part of the URL should be the token's secret.",
-        "operationId": "getPublicSignupToken",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "token",
-            "required": true,
-            "schema": {
-              "type": "string",
-            },
-          },
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/publicSignupTokenSchema",
-                },
-              },
-            },
-            "description": "publicSignupTokenSchema",
-          },
-        },
-        "summary": "Retrieve a token",
-        "tags": [
-          "Public signup tokens",
-        ],
-      },
-      "put": {
-        "operationId": "updatePublicSignupToken",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "token",
-            "required": true,
-            "schema": {
-              "type": "string",
-            },
-          },
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/publicSignupTokenUpdateSchema",
-              },
-            },
-          },
-          "description": "publicSignupTokenUpdateSchema",
-          "required": true,
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/publicSignupTokenSchema",
-                },
-              },
-            },
-            "description": "publicSignupTokenSchema",
-          },
-        },
-        "summary": "Update a public signup token",
-        "tags": [
-          "Public signup tokens",
+          "Instance Admin",
         ],
       },
     },
@@ -7192,74 +7150,6 @@ If the provided project does not exist, the list of events will be empty.",
         ],
       },
     },
-    "/api/frontend": {
-      "get": {
-        "operationId": "getFrontendFeatures",
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/proxyFeaturesSchema",
-                },
-              },
-            },
-            "description": "proxyFeaturesSchema",
-          },
-        },
-        "tags": [
-          "Unstable",
-        ],
-      },
-    },
-    "/api/frontend/client/metrics": {
-      "post": {
-        "operationId": "registerFrontendMetrics",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/proxyMetricsSchema",
-              },
-            },
-          },
-          "description": "proxyMetricsSchema",
-          "required": true,
-        },
-        "responses": {
-          "200": {
-            "description": "This response has no body.",
-          },
-        },
-        "tags": [
-          "Unstable",
-        ],
-      },
-    },
-    "/api/frontend/client/register": {
-      "post": {
-        "operationId": "registerFrontendClient",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/proxyClientSchema",
-              },
-            },
-          },
-          "description": "proxyClientSchema",
-          "required": true,
-        },
-        "responses": {
-          "200": {
-            "description": "This response has no body.",
-          },
-        },
-        "tags": [
-          "Unstable",
-        ],
-      },
-    },
     "/auth/reset/password": {
       "post": {
         "operationId": "changePassword",
@@ -7580,6 +7470,10 @@ If the provided project does not exist, the list of events will be empty.",
       "name": "Import/Export",
     },
     {
+      "description": "Instance admin endpoints used to manage the Unleash instance itself.",
+      "name": "Instance Admin",
+    },
+    {
       "description": "Register, read, or delete metrics recorded by Unleash.",
       "name": "Metrics",
     },
@@ -7598,6 +7492,10 @@ If the provided project does not exist, the list of events will be empty.",
     {
       "description": "Create, update, and delete [Unleash Public Signup tokens](https://docs.getunleash.io/reference/public-signup-tokens).",
       "name": "Public signup tokens",
+    },
+    {
+      "description": "Create, update, delete, and manage [segments](https://docs.getunleash.io/reference/segments).",
+      "name": "Segments",
     },
     {
       "description": "Create, update, delete, manage [custom strategies](https://docs.getunleash.io/advanced/custom_activation_strategy).",

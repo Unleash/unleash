@@ -69,11 +69,13 @@ exports[`should create default config 1`] = `
       "ENABLE_DARK_MODE_SUPPORT": false,
       "anonymiseEventLog": false,
       "batchMetrics": false,
+      "cloneEnvironment": false,
       "embedProxy": false,
       "embedProxyFrontend": false,
-      "personalAccessTokens": false,
       "publicSignup": false,
       "responseTimeWithAppName": false,
+      "suggestChanges": false,
+      "syncSSOGroups": false,
     },
   },
   "flagResolver": FlagResolver {
@@ -81,11 +83,13 @@ exports[`should create default config 1`] = `
       "ENABLE_DARK_MODE_SUPPORT": false,
       "anonymiseEventLog": false,
       "batchMetrics": false,
+      "cloneEnvironment": false,
       "embedProxy": false,
       "embedProxyFrontend": false,
-      "personalAccessTokens": false,
       "publicSignup": false,
       "responseTimeWithAppName": false,
+      "suggestChanges": false,
+      "syncSSOGroups": false,
     },
     "externalResolver": {
       "isEnabled": [Function],
@@ -135,6 +139,7 @@ exports[`should create default config 1`] = `
   },
   "strategySegmentsLimit": 5,
   "ui": {
+    "environment": "Open Source",
     "flags": {
       "E": true,
       "ENABLE_DARK_MODE_SUPPORT": false,

@@ -83,7 +83,7 @@ export class GroupService {
 
         const newGroup = await this.groupStore.create(group);
 
-        await this.groupStore.addNewUsersToGroup(
+        await this.groupStore.addUsersToGroup(
             newGroup.id,
             group.users,
             userName,
@@ -211,8 +211,36 @@ export class GroupService {
             return {
                 user: user,
                 joinedAt: roleUser.joinedAt,
+                createdBy: roleUser.createdBy,
             };
         });
         return { ...group, users: finalUsers };
+    }
+
+    async syncExternalGroups(
+        userId: number,
+        externalGroups: string[],
+        createdBy?: string,
+    ): Promise<void> {
+        if (Array.isArray(externalGroups)) {
+            let newGroups = await this.groupStore.getNewGroupsForExternalUser(
+                userId,
+                externalGroups,
+            );
+            await this.groupStore.addUserToGroups(
+                userId,
+                newGroups.map((g) => g.id),
+                createdBy,
+            );
+            let oldGroups = await this.groupStore.getOldGroupsForExternalUser(
+                userId,
+                externalGroups,
+            );
+            await this.groupStore.deleteUsersFromGroup(oldGroups);
+        }
+    }
+
+    async getGroupsForUser(userId: number): Promise<IGroup[]> {
+        return this.groupStore.getGroupsForUser(userId);
     }
 }

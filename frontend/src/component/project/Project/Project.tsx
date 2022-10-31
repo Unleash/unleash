@@ -24,6 +24,10 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { DeleteProjectDialogue } from './DeleteProject/DeleteProjectDialogue';
 import { ProjectLog } from './ProjectLog/ProjectLog';
+import { SuggestedChangeOverview } from 'component/suggestChanges/SuggestedChangeOverview/SuggestedChangeOverview';
+import { DraftBanner } from 'component/suggestChanges/DraftBanner/DraftBanner';
+import { MainLayout } from 'component/layout/MainLayout/MainLayout';
+import { ProjectSuggestedChanges } from '../../suggest-changes/ProjectSuggestions/ProjectSuggestedChanges';
 
 const StyledDiv = styled('div')(() => ({
     display: 'flex',
@@ -53,7 +57,7 @@ const Project = () => {
     const { classes: styles } = useStyles();
     const navigate = useNavigate();
     const { pathname } = useLocation();
-    const { isOss } = useUiConfig();
+    const { isOss, uiConfig } = useUiConfig();
     const basePath = `/projects/${projectId}`;
     const projectName = project?.name || projectId;
 
@@ -86,6 +90,11 @@ const Project = () => {
             name: 'archive',
         },
         {
+            title: 'Change requests',
+            path: `${basePath}/suggest-changes`,
+            name: 'suggest-changes' + '',
+        },
+        {
             title: 'Event log',
             path: `${basePath}/logs`,
             name: 'logs',
@@ -112,7 +121,14 @@ const Project = () => {
     }, []);
 
     return (
-        <div ref={ref}>
+        <MainLayout
+            ref={ref}
+            subheader={
+                uiConfig?.flags?.suggestChanges ? (
+                    <DraftBanner project={projectId} />
+                ) : null
+            }
+        >
             <div className={styles.header}>
                 <div className={styles.innerContainer}>
                     <h2 className={styles.title}>
@@ -218,9 +234,27 @@ const Project = () => {
                 <Route path="environments" element={<ProjectEnvironment />} />
                 <Route path="archive" element={<ProjectFeaturesArchive />} />
                 <Route path="logs" element={<ProjectLog />} />
+                <Route
+                    path="suggest-changes"
+                    element={
+                        <ConditionallyRender
+                            condition={Boolean(uiConfig?.flags?.suggestChanges)}
+                            show={<ProjectSuggestedChanges />}
+                        />
+                    }
+                />
+                <Route
+                    path="suggest-changes/:id"
+                    element={
+                        <ConditionallyRender
+                            condition={Boolean(uiConfig?.flags?.suggestChanges)}
+                            show={<SuggestedChangeOverview />}
+                        />
+                    }
+                />
                 <Route path="*" element={<ProjectOverview />} />
             </Routes>
-        </div>
+        </MainLayout>
     );
 };
 

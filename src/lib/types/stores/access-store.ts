@@ -127,4 +127,9 @@ export interface IAccessStore extends Store<IRole, number> {
         permission: string,
         environment?: string,
     ): Promise<void>;
+
+    cloneEnvironmentPermissions(
+        sourceEnvironment: string,
+        destinationEnvironment: string,
+    ): Promise<void>;
 }

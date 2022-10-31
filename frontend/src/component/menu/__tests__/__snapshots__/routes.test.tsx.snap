@@ -4,6 +4,7 @@ exports[`returns all baseRoutes 1`] = `
 [
   {
     "component": [Function],
+    "isStandalone": true,
     "menu": {},
     "path": "/splash/:splashId",
     "title": "Unleash",
@@ -53,6 +54,7 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
+    "isStandalone": true,
     "menu": {},
     "parent": "/projects",
     "path": "/projects/:projectId/features/:featureId/*",
@@ -78,6 +80,7 @@ exports[`returns all baseRoutes 1`] = `
   {
     "component": [Function],
     "flag": "P",
+    "isStandalone": true,
     "menu": {},
     "parent": "/projects",
     "path": "/projects/:projectId/*",
@@ -450,6 +453,16 @@ exports[`returns all baseRoutes 1`] = `
     "parent": "/admin",
     "path": "/admin/auth",
     "title": "Single sign-on",
+    "type": "protected",
+  },
+  {
+    "component": [Function],
+    "menu": {
+      "adminSettings": true,
+    },
+    "parent": "/admin",
+    "path": "/admin/instance",
+    "title": "Instance stats",
     "type": "protected",
   },
   {

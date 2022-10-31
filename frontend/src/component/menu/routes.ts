@@ -59,6 +59,7 @@ import { LazyPlayground } from 'component/playground/Playground/LazyPlayground';
 import { CorsAdmin } from 'component/admin/cors';
 import { InviteLink } from 'component/admin/users/InviteLink/InviteLink';
 import { Profile } from 'component/user/Profile/Profile';
+import { InstanceAdmin } from '../admin/instance-admin/InstanceAdmin';
 
 export const routes: IRoute[] = [
     // Splash
@@ -68,6 +69,7 @@ export const routes: IRoute[] = [
         component: SplashPage,
         type: 'protected',
         menu: {},
+        isStandalone: true,
     },
 
     // Project
@@ -119,6 +121,7 @@ export const routes: IRoute[] = [
         title: 'FeatureView',
         component: FeatureView,
         type: 'protected',
+        isStandalone: true,
         menu: {},
     },
     {
@@ -145,6 +148,7 @@ export const routes: IRoute[] = [
         flag: P,
         type: 'protected',
         menu: {},
+        isStandalone: true,
     },
     {
         path: '/projects',
@@ -498,6 +502,14 @@ export const routes: IRoute[] = [
         menu: { adminSettings: true },
     },
     {
+        path: '/admin/instance',
+        parent: '/admin',
+        title: 'Instance stats',
+        component: InstanceAdmin,
+        type: 'protected',
+        menu: { adminSettings: true },
+    },
+    {
         path: '/admin/cors',
         parent: '/admin',
         title: 'CORS origins',
@@ -546,6 +558,7 @@ export const routes: IRoute[] = [
         type: 'unprotected',
         hidden: true,
         menu: {},
+        isStandalone: true,
     },
     /* If you update this route path, make sure you update the path in SWRProvider.tsx */
     {
@@ -555,6 +568,7 @@ export const routes: IRoute[] = [
         component: NewUser,
         type: 'unprotected',
         menu: {},
+        isStandalone: true,
     },
     /* If you update this route path, make sure you update the path in SWRProvider.tsx */
     {
@@ -564,6 +578,7 @@ export const routes: IRoute[] = [
         component: ResetPassword,
         type: 'unprotected',
         menu: {},
+        isStandalone: true,
     },
     /* If you update this route path, make sure you update the path in SWRProvider.tsx */
     {
@@ -573,6 +588,7 @@ export const routes: IRoute[] = [
         component: ForgottenPassword,
         type: 'unprotected',
         menu: {},
+        isStandalone: true,
     },
 ];
 

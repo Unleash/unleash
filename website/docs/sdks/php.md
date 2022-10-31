@@ -90,7 +90,7 @@ $contextProvider = new MyAwesomeContextProvider();
 $unleash = UnleashBuilder::create()
     ->withAppName('my.php-app')
     ->withInstanceId('your-instance-1')
-    ->withAppUrl('http://unleash.herokuapp.com/api/')
+    ->withAppUrl('https://unleash.example.com/api/')
     ->withContextProvider($contextProvider)
     ->build();
 

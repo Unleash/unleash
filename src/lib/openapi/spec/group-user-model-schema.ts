@@ -11,6 +11,10 @@ export const groupUserModelSchema = {
             type: 'string',
             format: 'date-time',
         },
+        createdBy: {
+            type: 'string',
+            nullable: true,
+        },
         user: {
             $ref: '#/components/schemas/userSchema',
         },

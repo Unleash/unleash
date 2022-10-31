@@ -150,7 +150,7 @@ export default class FakeFeatureEnvironmentStore
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         projectId: string,
     ): Promise<void> {
-        return Promise.reject(new Error('Not implemented'));
+        return Promise.resolve();
     }
 
     disableEnvironmentIfNoStrategies(
@@ -160,5 +160,25 @@ export default class FakeFeatureEnvironmentStore
         environment: string,
     ): Promise<void> {
         return Promise.reject(new Error('Not implemented'));
+    }
+
+    copyEnvironmentFeaturesByProjects(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        sourceEnvironment: string,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        destinationEnvironment: string,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        projects: string[],
+    ): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
+
+    cloneStrategies(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        sourceEnvironment: string,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        destinationEnvironment: string,
+    ): Promise<void> {
+        throw new Error('Method not implemented.');
     }
 }

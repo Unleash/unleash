@@ -46,6 +46,11 @@ const OPENAPI_TAGS = [
             '[Import and export](https://docs.getunleash.io/deploy/import_export) the state of your Unleash instance.',
     },
     {
+        name: 'Instance Admin',
+        description:
+            'Instance admin endpoints used to manage the Unleash instance itself.',
+    },
+    {
         name: 'Metrics',
         description: 'Register, read, or delete metrics recorded by Unleash.',
     },
@@ -68,6 +73,11 @@ const OPENAPI_TAGS = [
         name: 'Public signup tokens',
         description:
             'Create, update, and delete [Unleash Public Signup tokens](https://docs.getunleash.io/reference/public-signup-tokens).',
+    },
+    {
+        name: 'Segments',
+        description:
+            'Create, update, delete, and manage [segments](https://docs.getunleash.io/reference/segments).',
     },
     {
         name: 'Strategies',

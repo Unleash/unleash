@@ -4,6 +4,7 @@ import { IGroupUserModel } from 'interfaces/group';
 interface ICreateGroupPayload {
     name: string;
     description: string;
+    mappingsSSO: string[];
     users: IGroupUserModel[];
 }
 

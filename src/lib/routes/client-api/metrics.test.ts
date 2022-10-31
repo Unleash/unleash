@@ -4,7 +4,7 @@ import getApp from '../../app';
 import { createTestConfig } from '../../../test/config/test-config';
 import { clientMetricsSchema } from '../../services/client-metrics/schema';
 import { createServices } from '../../services';
-import { IUnleashOptions, IUnleashStores } from '../../types';
+import { IUnleashOptions, IUnleashServices, IUnleashStores } from '../../types';
 
 async function getSetup(opts?: IUnleashOptions) {
     const stores = createStores();
@@ -16,6 +16,7 @@ async function getSetup(opts?: IUnleashOptions) {
     return {
         request: supertest(app),
         stores,
+        services,
         destroy: () => {
             services.versionService.destroy();
             services.clientInstanceService.destroy();
@@ -26,6 +27,7 @@ async function getSetup(opts?: IUnleashOptions) {
 
 let request;
 let stores: IUnleashStores;
+let services: IUnleashServices;
 let destroy;
 
 beforeEach(async () => {
@@ -33,6 +35,7 @@ beforeEach(async () => {
     request = setup.request;
     stores = setup.stores;
     destroy = setup.destroy;
+    services = setup.services;
 });
 
 afterEach(() => {
@@ -202,6 +205,7 @@ test('should set lastSeen on toggle', async () => {
         })
         .expect(202);
 
+    await services.lastSeenService.store();
     const toggle = await stores.featureToggleStore.get('toggleLastSeen');
 
     expect(toggle.lastSeenAt).toBeTruthy();

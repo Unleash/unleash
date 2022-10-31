@@ -10,8 +10,12 @@ export const defaultExperimentalOptions = {
             process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY,
             false,
         ),
-        personalAccessTokens: parseEnvVarBoolean(
-            process.env.UNLEASH_EXPERIMENTAL_PERSONAL_ACCESS_TOKENS,
+        suggestChanges: parseEnvVarBoolean(
+            process.env.UNLEASH_EXPERIMENTAL_SUGGEST_CHANGES,
+            false,
+        ),
+        syncSSOGroups: parseEnvVarBoolean(
+            process.env.UNLEASH_EXPERIMENTAL_SYNC_SSO_GROUPS,
             false,
         ),
         embedProxyFrontend: parseEnvVarBoolean(
@@ -30,6 +34,10 @@ export const defaultExperimentalOptions = {
             process.env.UNLEASH_EXPERIMENTAL_RESPONSE_TIME_WITH_APP_NAME,
             false,
         ),
+        cloneEnvironment: parseEnvVarBoolean(
+            process.env.UNLEASH_EXPERIMENTAL_CLONE_ENVIRONMENT,
+            false,
+        ),
     },
     externalResolver: { isEnabled: (): boolean => false },
 };
@@ -42,7 +50,9 @@ export interface IExperimentalOptions {
         embedProxyFrontend?: boolean;
         batchMetrics?: boolean;
         anonymiseEventLog?: boolean;
-        personalAccessTokens?: boolean;
+        syncSSOGroups?: boolean;
+        suggestChanges?: boolean;
+        cloneEnvironment?: boolean;
     };
     externalResolver: IExternalFlagResolver;
 }

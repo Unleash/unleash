@@ -16,9 +16,7 @@ tomorrow.setDate(tomorrow.getDate() + 1);
 beforeAll(async () => {
     db = await dbInit('user_pat', getLogger);
     patStore = db.stores.patStore;
-    app = await setupAppWithAuth(db.stores, {
-        experimental: { flags: { personalAccessTokens: true } },
-    });
+    app = await setupAppWithAuth(db.stores);
 
     await app.request
         .post(`/auth/demo/login`)
@@ -59,11 +57,13 @@ test('should create a PAT', async () => {
 });
 
 test('should delete the PAT', async () => {
+    const description = 'pat to be deleted';
     const { request } = app;
 
     const { body } = await request
         .post('/api/admin/user/tokens')
         .send({
+            description,
             expiresAt: tomorrow,
         } as IPat)
         .set('Content-Type', 'application/json')
@@ -128,6 +128,7 @@ test('should get only current user PATs', async () => {
     await request
         .post('/api/admin/user/tokens')
         .send({
+            description: 'my pat',
             expiresAt: tomorrow,
         } as IPat)
         .set('Content-Type', 'application/json')
@@ -149,10 +150,72 @@ test('should fail creation of PAT with passed expiry', async () => {
     await request
         .post('/api/admin/user/tokens')
         .send({
+            description: 'my expired pat',
             expiresAt: yesterday,
         } as IPat)
         .set('Content-Type', 'application/json')
-        .expect(500);
+        .expect(400);
+});
+
+test('should fail creation of PAT without a description', async () => {
+    await app.request
+        .post('/api/admin/user/tokens')
+        .send({
+            expiresAt: tomorrow,
+        } as IPat)
+        .set('Content-Type', 'application/json')
+        .expect(400);
+});
+
+test('should fail creation of PAT with a description that already exists for the current user', async () => {
+    const description = 'duplicate description';
+
+    await app.request
+        .post('/api/admin/user/tokens')
+        .send({
+            description,
+            expiresAt: tomorrow,
+        } as IPat)
+        .set('Content-Type', 'application/json')
+        .expect(201);
+
+    await app.request
+        .post('/api/admin/user/tokens')
+        .send({
+            description,
+            expiresAt: tomorrow,
+        } as IPat)
+        .set('Content-Type', 'application/json')
+        .expect(409);
+});
+
+test('should not fail creation of PAT when a description already exists for another user PAT', async () => {
+    const description = 'another duplicate description';
+
+    await app.request
+        .post('/api/admin/user/tokens')
+        .send({
+            description,
+            expiresAt: tomorrow,
+        } as IPat)
+        .set('Content-Type', 'application/json')
+        .expect(201);
+
+    await app.request
+        .post(`/auth/demo/login`)
+        .send({
+            email: 'user-other@getunleash.io',
+        })
+        .expect(200);
+
+    await app.request
+        .post('/api/admin/user/tokens')
+        .send({
+            description,
+            expiresAt: tomorrow,
+        } as IPat)
+        .set('Content-Type', 'application/json')
+        .expect(201);
 });
 
 test('should get user id 1', async () => {

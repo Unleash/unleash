@@ -25,6 +25,7 @@ import * as permissions from './types/permissions';
 import * as eventType from './types/events';
 import { RoleName } from './types/model';
 import { SimpleAuthSettings } from './types/settings/simple-auth-settings';
+import { Knex } from 'knex';
 
 async function createApp(
     config: IUnleashConfig,
@@ -57,7 +58,7 @@ async function createApp(
         // eslint-disable-next-line no-param-reassign
         config.server.secret = secret;
     }
-    const app = await getApp(config, stores, services, unleashSession);
+    const app = await getApp(config, stores, services, unleashSession, db);
 
     if (typeof config.eventHook === 'function') {
         addEventHook(config.eventHook, stores.eventStore);
@@ -67,6 +68,7 @@ async function createApp(
         stores,
         serverVersion,
         config.eventBus,
+        services.instanceStatsService,
         db,
     );
     const unleash: Omit<IUnleash, 'stop'> = {
@@ -172,6 +174,7 @@ export {
     LogLevel,
     RoleName,
     IAuthType,
+    Knex,
 };
 
 export default {

@@ -3,7 +3,11 @@ import {
     IProjectInsert,
     IProjectStore,
 } from '../../lib/types/stores/project-store';
-import { IProject, IProjectWithCount } from '../../lib/types/model';
+import {
+    IEnvironment,
+    IProject,
+    IProjectWithCount,
+} from '../../lib/types/model';
 import NotFoundError from '../../lib/error/notfound-error';
 import {
     IEnvironmentProjectLink,
@@ -110,7 +114,12 @@ export default class FakeProjectStore implements IProjectStore {
         return this.exists(id);
     }
 
-    async importProjects(projects: IProjectInsert[]): Promise<IProject[]> {
+    async importProjects(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        projects: IProjectInsert[],
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        environments?: IEnvironment[],
+    ): Promise<IProject[]> {
         return projects.map((p) => this.createInternal(p));
     }
 
@@ -130,6 +139,15 @@ export default class FakeProjectStore implements IProjectStore {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     getProjectsByUser(userId: number): Promise<string[]> {
+        throw new Error('Method not implemented.');
+    }
+
+    addEnvironmentToProjects(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        environment: string,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        projects: string[],
+    ): Promise<void> {
         throw new Error('Method not implemented.');
     }
 }

@@ -1,9 +1,5 @@
 import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
-import {
-    DELETE_ENVIRONMENT,
-    UPDATE_ENVIRONMENT,
-} from 'component/providers/AccessProvider/permissions';
-import { Edit, Delete } from '@mui/icons-material';
+import { UPDATE_ENVIRONMENT } from 'component/providers/AccessProvider/permissions';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { IEnvironment } from 'interfaces/environments';
@@ -15,7 +11,11 @@ import useProjectRolePermissions from 'hooks/api/getters/useProjectRolePermissio
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import useToast from 'hooks/useToast';
 import PermissionSwitch from 'component/common/PermissionSwitch/PermissionSwitch';
-import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
+import { EnvironmentActionCellPopover } from './EnvironmentActionCellPopover/EnvironmentActionCellPopover';
+import { EnvironmentCloneModal } from './EnvironmentCloneModal/EnvironmentCloneModal';
+import { IApiToken } from 'hooks/api/getters/useApiTokens/useApiTokens';
+import { EnvironmentTokenDialog } from './EnvironmentTokenDialog/EnvironmentTokenDialog';
+import { ENV_LIMIT } from 'constants/values';
 
 interface IEnvironmentTableActionsProps {
     environment: IEnvironment;
@@ -26,13 +26,16 @@ export const EnvironmentActionCell = ({
 }: IEnvironmentTableActionsProps) => {
     const navigate = useNavigate();
     const { setToastApiError, setToastData } = useToast();
-    const { refetchEnvironments } = useEnvironments();
+    const { environments, refetchEnvironments } = useEnvironments();
     const { refetch: refetchPermissions } = useProjectRolePermissions();
     const { deleteEnvironment, toggleEnvironmentOn, toggleEnvironmentOff } =
         useEnvironmentApi();
 
     const [deleteModal, setDeleteModal] = useState(false);
     const [toggleModal, setToggleModal] = useState(false);
+    const [cloneModal, setCloneModal] = useState(false);
+    const [tokenModal, setTokenModal] = useState(false);
+    const [newToken, setNewToken] = useState<IApiToken>();
     const [confirmName, setConfirmName] = useState('');
 
     const handleDeleteEnvironment = async () => {
@@ -103,32 +106,22 @@ export const EnvironmentActionCell = ({
                 onClick={() => setToggleModal(true)}
             />
             <ActionCell.Divider />
-            <PermissionIconButton
-                permission={UPDATE_ENVIRONMENT}
-                disabled={environment.protected}
-                size="large"
-                tooltipProps={{
-                    title: environment.protected
-                        ? 'You cannot edit protected environment'
-                        : 'Edit environment',
+            <EnvironmentActionCellPopover
+                environment={environment}
+                onEdit={() => navigate(`/environments/${environment.name}`)}
+                onClone={() => {
+                    if (environments.length < ENV_LIMIT) {
+                        setCloneModal(true);
+                    } else {
+                        setToastData({
+                            type: 'error',
+                            title: 'Environment limit reached',
+                            text: `You have reached the maximum number of environments (${ENV_LIMIT}). Please reach out if you need more.`,
+                        });
+                    }
                 }}
-                onClick={() => navigate(`/environments/${environment.name}`)}
-            >
-                <Edit />
-            </PermissionIconButton>
-            <PermissionIconButton
-                permission={DELETE_ENVIRONMENT}
-                disabled={environment.protected}
-                size="large"
-                tooltipProps={{
-                    title: environment.protected
-                        ? 'You cannot delete protected environment'
-                        : 'Delete environment',
-                }}
-                onClick={() => setDeleteModal(true)}
-            >
-                <Delete />
-            </PermissionIconButton>
+                onDelete={() => setDeleteModal(true)}
+            />
             <EnvironmentDeleteConfirm
                 env={environment}
                 setDeldialogue={setDeleteModal}
@@ -142,6 +135,20 @@ export const EnvironmentActionCell = ({
                 open={toggleModal}
                 setToggleDialog={setToggleModal}
                 handleConfirmToggleEnvironment={handleConfirmToggleEnvironment}
+            />
+            <EnvironmentCloneModal
+                environment={environment}
+                open={cloneModal}
+                setOpen={setCloneModal}
+                newToken={(token: IApiToken) => {
+                    setNewToken(token);
+                    setTokenModal(true);
+                }}
+            />
+            <EnvironmentTokenDialog
+                open={tokenModal}
+                setOpen={setTokenModal}
+                token={newToken}
             />
         </ActionCell>
     );

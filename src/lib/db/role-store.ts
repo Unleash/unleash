@@ -47,6 +47,13 @@ export default class RoleStore implements IRoleStore {
         return rows.map(this.mapRow);
     }
 
+    async count(): Promise<number> {
+        return this.db
+            .from(T.ROLES)
+            .count('*')
+            .then((res) => Number(res[0].count));
+    }
+
     async create(role: ICustomRoleInsert): Promise<ICustomRole> {
         const row = await this.db(T.ROLES)
             .insert({

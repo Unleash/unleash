@@ -435,4 +435,17 @@ export class AccessStore implements IAccessStore {
             })
             .delete();
     }
+
+    async cloneEnvironmentPermissions(
+        sourceEnvironment: string,
+        destinationEnvironment: string,
+    ): Promise<void> {
+        return this.db.raw(
+            `insert into role_permission
+                (role_id, permission_id, environment)
+                (select role_id, permission_id, ?
+                from ${T.ROLE_PERMISSION} where environment = ?)`,
+            [destinationEnvironment, sourceEnvironment],
+        );
+    }
 }

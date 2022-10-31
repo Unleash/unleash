@@ -51,7 +51,8 @@ const FeatureOverviewEnvironmentMetrics = ({
                         data-loading
                     >
                         The feature has been requested <b>0 times</b> and
-                        exposed<b> 0 times</b> in the last hour
+                        exposed
+                        <b> 0 times</b> in the last hour
                     </p>
                 </div>
                 <FiberManualRecord

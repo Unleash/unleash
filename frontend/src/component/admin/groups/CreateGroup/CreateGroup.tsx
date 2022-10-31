@@ -22,6 +22,8 @@ export const CreateGroup = () => {
         setName,
         description,
         setDescription,
+        mappingsSSO,
+        setMappingsSSO,
         users,
         setUsers,
         getGroupPayload,
@@ -67,10 +69,10 @@ export const CreateGroup = () => {
         navigate(GO_BACK);
     };
 
-    const isNameEmpty = (name: string) => name.length;
+    const isNameNotEmpty = (name: string) => name.length;
     const isNameUnique = (name: string) =>
         !groups?.filter(group => group.name === name).length;
-    const isValid = isNameEmpty(name) && isNameUnique(name);
+    const isValid = isNameNotEmpty(name) && isNameUnique(name);
 
     const onSetName = (name: string) => {
         clearErrors();
@@ -92,9 +94,11 @@ export const CreateGroup = () => {
             <GroupForm
                 name={name}
                 description={description}
+                mappingsSSO={mappingsSSO}
                 users={users}
                 setName={onSetName}
                 setDescription={setDescription}
+                setMappingsSSO={setMappingsSSO}
                 setUsers={setUsers}
                 errors={errors}
                 handleSubmit={handleSubmit}

@@ -26,6 +26,7 @@ import ConstraintsController from './constraints';
 import PatController from './user/pat';
 import { PublicSignupController } from './public-signup';
 import { conditionalMiddleware } from '../../middleware/conditional-middleware';
+import InstanceAdminController from './instance-admin';
 
 class AdminApi extends Controller {
     constructor(config: IUnleashConfig, services: IUnleashServices) {
@@ -120,6 +121,10 @@ class AdminApi extends Controller {
                 () => config.flagResolver.isEnabled('publicSignup'),
                 new PublicSignupController(config, services).router,
             ),
+        );
+        this.app.use(
+            '/instance-admin',
+            new InstanceAdminController(config, services).router,
         );
     }
 }

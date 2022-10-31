@@ -3,6 +3,7 @@ import dbInit, { ITestDb } from '../../../helpers/database-init';
 import getLogger from '../../../../fixtures/no-logger';
 import { IPat } from '../../../../../lib/types/models/pat';
 import { IPatStore } from '../../../../../lib/types/stores/pat-store';
+import { PAT_LIMIT } from '../../../../../lib/util/constants';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -270,4 +271,37 @@ test('should not get user with expired token', async () => {
         .get('/api/admin/user')
         .set('Authorization', token.secret)
         .expect(401);
+});
+
+test('should fail creation of PAT when PAT limit has been reached', async () => {
+    await app.request
+        .post(`/auth/demo/login`)
+        .send({
+            email: 'user-too-many-pats@getunleash.io',
+        })
+        .expect(200);
+
+    const tokenCreations = [];
+    for (let i = 0; i < PAT_LIMIT; i++) {
+        tokenCreations.push(
+            await app.request
+                .post('/api/admin/user/tokens')
+                .send({
+                    description: `my pat ${i}`,
+                    expiresAt: tomorrow,
+                } as IPat)
+                .set('Content-Type', 'application/json')
+                .expect(201),
+        );
+    }
+    await Promise.all(tokenCreations);
+
+    await app.request
+        .post('/api/admin/user/tokens')
+        .send({
+            description: `my pat ${PAT_LIMIT}`,
+            expiresAt: tomorrow,
+        } as IPat)
+        .set('Content-Type', 'application/json')
+        .expect(403);
 });

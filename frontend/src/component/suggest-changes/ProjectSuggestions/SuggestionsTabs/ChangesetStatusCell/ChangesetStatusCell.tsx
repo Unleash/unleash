@@ -1,6 +1,7 @@
+import { VFC } from 'react';
 import { Chip, styled } from '@mui/material';
-import { colors } from '../../../../../themes/colors';
-import { TextCell } from '../../../../common/Table/cells/TextCell/TextCell';
+import { colors } from 'themes/colors';
+import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { Check, CircleOutlined, Close } from '@mui/icons-material';
 
 interface IChangesetStatusCellProps {
@@ -60,7 +61,10 @@ export const StyledReviewChip = styled(StyledChip)(({ theme }) => ({
         color: theme.palette.primary.main,
     },
 }));
-export const ChangesetStatusCell = ({ value }: IChangesetStatusCellProps) => {
+
+export const ChangesetStatusCell: VFC<IChangesetStatusCellProps> = ({
+    value,
+}) => {
     const renderState = (state: string) => {
         switch (state) {
             case SuggestChangesetState.IN_REVIEW:

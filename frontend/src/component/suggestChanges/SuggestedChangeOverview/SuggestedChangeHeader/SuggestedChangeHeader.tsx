@@ -37,8 +37,8 @@ export const SuggestedChangeHeader: FC<{ suggestedChange: any }> = ({
                 </Typography>
                 <PlaygroundResultChip
                     // icon={<ChangesAppliedIcon strokeWidth="0.25" />}
-                    label="Changes applied"
-                    enabled="unknown"
+                    label="Changes approved"
+                    enabled
                 />
             </Box>
             <Box sx={{ display: 'flex', verticalAlign: 'center', gap: 2 }}>
@@ -60,7 +60,7 @@ export const SuggestedChangeHeader: FC<{ suggestedChange: any }> = ({
                     </Typography>{' '}
                     | Updates:{' '}
                     <Typography display="inline" fontWeight="bold">
-                        {suggestedChange?.changes.length} feature toggles
+                        {suggestedChange?.features.length} feature toggles
                     </Typography>
                 </Card>
             </Box>

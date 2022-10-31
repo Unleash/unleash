@@ -2,10 +2,14 @@ import { useCallback, useState } from 'react';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useSuggestChangeApi } from './api/actions/useSuggestChangeApi/useSuggestChangeApi';
+import { useSuggestedChangesDraft } from './api/getters/useSuggestedChangesDraft/useSuggestedChangesDraft';
 
 export const useSuggestToggle = (project: string) => {
     const { setToastData, setToastApiError } = useToast();
-    const { addSuggestion } = useSuggestChangeApi(project);
+    const { addSuggestion } = useSuggestChangeApi();
+    const { refetch: refetchSuggestedChange } =
+        useSuggestedChangesDraft(project);
+
     const [suggestChangesDialogDetails, setSuggestChangesDialogDetails] =
         useState<{
             enabled?: boolean;
@@ -32,13 +36,18 @@ export const useSuggestToggle = (project: string) => {
 
     const onSuggestToggleConfirm = useCallback(async () => {
         try {
-            await addSuggestion(suggestChangesDialogDetails.environment!, {
-                feature: suggestChangesDialogDetails.featureName!,
-                action: 'updateEnabled',
-                payload: {
-                    enabled: Boolean(suggestChangesDialogDetails.enabled),
-                },
-            });
+            await addSuggestion(
+                project,
+                suggestChangesDialogDetails.environment!,
+                {
+                    feature: suggestChangesDialogDetails.featureName!,
+                    action: 'updateEnabled',
+                    payload: {
+                        enabled: Boolean(suggestChangesDialogDetails.enabled),
+                    },
+                }
+            );
+            refetchSuggestedChange();
             setSuggestChangesDialogDetails({ isOpen: false });
             setToastData({
                 type: 'success',

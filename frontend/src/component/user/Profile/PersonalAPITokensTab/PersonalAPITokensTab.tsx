@@ -19,6 +19,7 @@ import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
+import { PAT_LIMIT } from 'constants/values';
 import { usePersonalAPITokens } from 'hooks/api/getters/usePersonalAPITokens/usePersonalAPITokens';
 import { useSearch } from 'hooks/useSearch';
 import {
@@ -250,6 +251,7 @@ export const PersonalAPITokensTab = ({ user }: IPersonalAPITokensTabProps) => {
                             <Button
                                 variant="contained"
                                 color="primary"
+                                disabled={tokens.length >= PAT_LIMIT}
                                 onClick={() => setCreateOpen(true)}
                             >
                                 New token

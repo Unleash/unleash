@@ -57,7 +57,7 @@ async function createApp(
         // eslint-disable-next-line no-param-reassign
         config.server.secret = secret;
     }
-    const app = await getApp(config, stores, services, unleashSession);
+    const app = await getApp(config, stores, services, unleashSession, db);
 
     if (typeof config.eventHook === 'function') {
         addEventHook(config.eventHook, stores.eventStore);

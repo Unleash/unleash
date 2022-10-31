@@ -24,12 +24,14 @@ import { loadIndexHTML } from './util/load-index-html';
 import { findPublicFolder } from './util/findPublicFolder';
 import { conditionalMiddleware } from './middleware/conditional-middleware';
 import patMiddleware from './middleware/pat-middleware';
+import { Knex } from 'knex';
 
 export default async function getApp(
     config: IUnleashConfig,
     stores: IUnleashStores,
     services: IUnleashServices,
     unleashSession?: RequestHandler,
+    db?: Knex,
 ): Promise<Application> {
     const app = express();
 
@@ -48,7 +50,7 @@ export default async function getApp(
     app.use(requestLogger(config));
 
     if (typeof config.preHook === 'function') {
-        config.preHook(app, config, services);
+        config.preHook(app, config, services, db);
     }
 
     app.use(compression());
@@ -137,7 +139,7 @@ export default async function getApp(
     );
 
     if (typeof config.preRouterHook === 'function') {
-        config.preRouterHook(app, config, services, stores);
+        config.preRouterHook(app, config, services, stores, db);
     }
 
     // Setup API routes

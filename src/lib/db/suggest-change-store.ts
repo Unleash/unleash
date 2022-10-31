@@ -166,7 +166,7 @@ export class SuggestChangeStore implements ISuggestChangeStore {
     ): Promise<ISuggestChangeset[]> => {
         const rows = await this.buildSuggestChangeSetChangesQuery().where({
             'changeSet.created_by': userId,
-            //state: SuggestChangesetState.DRAFT,
+            state: SuggestChangesetState.DRAFT,
             project: project,
         });
         const changesets = this.mapRows(rows);

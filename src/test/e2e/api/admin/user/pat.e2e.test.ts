@@ -16,9 +16,7 @@ tomorrow.setDate(tomorrow.getDate() + 1);
 beforeAll(async () => {
     db = await dbInit('user_pat', getLogger);
     patStore = db.stores.patStore;
-    app = await setupAppWithAuth(db.stores, {
-        experimental: { flags: { personalAccessTokens: true } },
-    });
+    app = await setupAppWithAuth(db.stores);
 
     await app.request
         .post(`/auth/demo/login`)

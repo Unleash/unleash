@@ -38,7 +38,6 @@ process.nextTick(async () => {
                         batchMetrics: true,
                         anonymiseEventLog: false,
                         responseTimeWithAppName: true,
-                        personalAccessTokens: true,
                         syncSSOGroups: true,
                         suggestChanges: true,
                         cloneEnvironment: true,

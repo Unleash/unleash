@@ -74,8 +74,7 @@ export const useSuggestChangeApi = () => {
             method: 'DELETE',
         });
         try {
-            const response = await makeRequest(req.caller, req.id);
-            return await response.json();
+            return await makeRequest(req.caller, req.id);
         } catch (e) {
             throw e;
         }

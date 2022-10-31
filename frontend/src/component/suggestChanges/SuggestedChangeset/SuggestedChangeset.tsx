@@ -33,7 +33,11 @@ export const SuggestedChangeset: VFC<ISuggestedChangeset> = ({
     const { setToastData, setToastApiError } = useToast();
     const onDiscard = (id: number) => async () => {
         try {
-            await discardSuggestions(suggestedChange.project, suggestedChange.id, id);
+            await discardSuggestions(
+                suggestedChange.project,
+                suggestedChange.id,
+                id
+            );
             setToastData({
                 title: 'Change discarded from suggestion draft.',
                 type: 'success',

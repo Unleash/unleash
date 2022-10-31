@@ -64,11 +64,16 @@ Environment cloning is an upcoming feature, and is scheduled to become available
 
 :::
 
-If you have a lot of feature toggles, it can be tedious to configure the same activation strategies for each environment. To make this easier, you can clone an environment. This will copy all feature toggle configurations and activation strategies from the source environment to the target environment.
+Unleash environments can be cloned. Cloning an environment creates a **new** environment based on the selected source environment. When cloning an environment, you select any number of projects whose feature toggle configurations will also be cloned. These projects will have identical configurations for the source and target environments. However, the environments can then be configured independently and will not stay in sync with each other.
 
-This can also prove to be a safe way to experiment with activation strategies without affecting production-facing environments. You can clone the production environment, and then test out the new activation strategies in the cloned environment. If everything works as expected, you can then apply the same activation strategies to the production environment.
+When cloning an environment, you must give the new environment
+- a name
+- an environment type
+- a list of projects to clone configurations in
 
-When cloning an environment, you can choose several options to customize your new environment: name, type of environment, which projects to clone the environment configuration in, and whether you wish to keep the same user permissions. You'll also be provided the choice of generating a new API key bound to the newly cloned environment right away, or generating one yourself at a later stage.
+You must also decide whether you want to clone the user permissions to the new environment or ... [what do you do here? what's the option?]
+
+Once created, the new environment works just as any other environment.
 
 ## Migration
 

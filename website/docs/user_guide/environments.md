@@ -71,7 +71,9 @@ When cloning an environment, you must give the new environment
 - an environment type
 - a list of projects to clone configurations in
 
-You must also decide whether you want to clone the user permissions to the new environment or ... [what do you do here? what's the option?]
+You must also decide whether you want to clone the user permissions to the new environment or to make it a fresh environment where only an admin or editor of the selected projects can make changes. You can always add permissions later, using [Custom Project Roles](../user_guide/rbac#custom-project-roles).
+
+In order to clone an environment, you can follow the [How to clone environments](../how-to/how-to-clone-environments.mdx) guide.
 
 Once created, the new environment works just as any other environment.
 
@@ -129,8 +131,7 @@ In order to support configuration per environment we had to rebuild our feature 
 - Will get access to two preconfigured environments: “development” and “production”. Existing users of Unleash will also get an additional “default” environment to simplify the adoption of environments.
 - Will be possible to turn environments on/off for all projects
 - Will be allowed to update and remove environments.
-- Will be allowed to create new environments.
-- Will be allowed to clone environments.
+- Will be allowed to clone or create new environments.
 
 ## Rollout Plan
 

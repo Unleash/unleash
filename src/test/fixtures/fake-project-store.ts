@@ -141,4 +141,13 @@ export default class FakeProjectStore implements IProjectStore {
     getProjectsByUser(userId: number): Promise<string[]> {
         throw new Error('Method not implemented.');
     }
+
+    addEnvironmentToProjects(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        environment: string,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        projects: string[],
+    ): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
 }

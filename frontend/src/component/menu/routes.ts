@@ -121,6 +121,7 @@ export const routes: IRoute[] = [
         title: 'FeatureView',
         component: FeatureView,
         type: 'protected',
+        isStandalone: true,
         menu: {},
     },
     {

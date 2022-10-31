@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { Button, styled, Tooltip } from '@mui/material';
+import { Box, Button, styled } from '@mui/material';
 import { UG_DESC_ID, UG_NAME_ID } from 'utils/testIds';
 import Input from 'component/common/Input/Input';
 import { IGroupUser } from 'interfaces/group';
@@ -9,8 +9,8 @@ import { GroupFormUsersTable } from './GroupFormUsersTable/GroupFormUsersTable';
 import { ItemList } from 'component/common/ItemList/ItemList';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useAuthSettings from 'hooks/api/getters/useAuthSettings/useAuthSettings';
-import { HelpOutline } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
+import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',
@@ -57,12 +57,6 @@ const StyledDescriptionBlock = styled('div')(({ theme }) => ({
     color: theme.palette.grey[900],
     fontSize: theme.fontSizes.smallBody,
     borderRadius: theme.shape.borderRadiusMedium,
-}));
-
-const StyledHelpOutline = styled(HelpOutline)(({ theme }) => ({
-    fontSize: theme.fontSizes.smallBody,
-    marginLeft: '0.3rem',
-    color: theme.palette.grey[700],
 }));
 
 interface IGroupForm {
@@ -155,17 +149,11 @@ export const GroupForm: FC<IGroupForm> = ({
                             }
                             elseShow={() => (
                                 <StyledDescriptionBlock>
-                                    <div>
+                                    <Box sx={{ display: 'flex' }}>
                                         You can enable SSO groups syncronization
                                         if needed
-                                        <Tooltip
-                                            title="You can enable SSO groups
-                                            syncronization if needed"
-                                            arrow
-                                        >
-                                            <StyledHelpOutline />
-                                        </Tooltip>
-                                    </div>
+                                        <HelpIcon tooltip="SSO groups syncronization allows SSO groups to be mapped to Unleash groups, so that user group membership is properly synchronized." />
+                                    </Box>
                                     <Link data-loading to={`/admin/auth`}>
                                         <span data-loading>
                                             View SSO configuration

@@ -1,5 +1,4 @@
 import getLogger from '../../test/fixtures/no-logger';
-import { createTestConfig } from '../../test/config/test-config';
 import patMiddleware from './pat-middleware';
 import User from '../types/user';
 
@@ -81,39 +80,6 @@ test('should add user if known token', async () => {
     expect(cb).toHaveBeenCalled();
     expect(req.header).toHaveBeenCalled();
     expect(req.user).toBe(apiUser);
-});
-
-test('should not add user if disabled', async () => {
-    const apiUser = new User({
-        id: 44,
-        username: 'my-user',
-    });
-    const userService = {
-        getUserByPersonalAccessToken: jest.fn().mockReturnValue(apiUser),
-    };
-
-    const disabledConfig = createTestConfig({
-        getLogger,
-        experimental: {
-            flags: {
-                personalAccessTokens: false,
-            },
-        },
-    });
-
-    const func = patMiddleware(disabledConfig, { userService });
-
-    const cb = jest.fn();
-
-    const req = {
-        header: jest.fn().mockReturnValue('user:some-known-token'),
-        user: undefined,
-    };
-
-    await func(req, undefined, cb);
-
-    expect(cb).toHaveBeenCalled();
-    expect(req.user).toBeFalsy();
 });
 
 test('should call next if userService throws exception', async () => {

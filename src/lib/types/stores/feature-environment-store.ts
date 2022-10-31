@@ -48,4 +48,13 @@ export interface IFeatureEnvironmentStore
 
     connectProject(environment: string, projectId: string): Promise<void>;
     disconnectProject(environment: string, projectId: string): Promise<void>;
+    copyEnvironmentFeaturesByProjects(
+        sourceEnvironment: string,
+        destinationEnvironment: string,
+        projects: string[],
+    ): Promise<void>;
+    cloneStrategies(
+        sourceEnvironment: string,
+        destinationEnvironment: string,
+    ): Promise<void>;
 }

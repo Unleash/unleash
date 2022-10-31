@@ -246,6 +246,23 @@ class ProjectStore implements IProjectStore {
             .ignore();
     }
 
+    async addEnvironmentToProjects(
+        environment: string,
+        projects: string[],
+    ): Promise<void> {
+        const rows = projects.map((project) => {
+            return {
+                project_id: project,
+                environment_name: environment,
+            };
+        });
+
+        await this.db('project_environments')
+            .insert(rows)
+            .onConflict(['project_id', 'environment_name'])
+            .ignore();
+    }
+
     async getEnvironmentsForProject(id: string): Promise<string[]> {
         return this.db('project_environments')
             .where({

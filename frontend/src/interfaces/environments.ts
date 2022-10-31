@@ -22,6 +22,13 @@ export interface IEnvironmentEditPayload {
     type: string;
 }
 
+export interface IEnvironmentClonePayload {
+    name: string;
+    type: string;
+    projects: string[];
+    clonePermissions: boolean;
+}
+
 export interface IEnvironmentResponse {
     environments: IEnvironment[];
 }

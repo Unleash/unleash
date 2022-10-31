@@ -19,6 +19,7 @@ interface IPageContentProps extends PaperProps {
     disableBorder?: boolean;
     disableLoading?: boolean;
     bodyClass?: string;
+    headerClass?: string;
 }
 
 const PageContentLoading: FC<{ isLoading: boolean }> = ({
@@ -40,6 +41,7 @@ export const PageContent: FC<IPageContentProps> = ({
     disablePadding = false,
     disableBorder = false,
     bodyClass = '',
+    headerClass = '',
     isLoading = false,
     disableLoading = false,
     className,
@@ -47,10 +49,15 @@ export const PageContent: FC<IPageContentProps> = ({
 }) => {
     const { classes: styles } = useStyles();
 
-    const headerClasses = classnames('header', styles.headerContainer, {
-        [styles.paddingDisabled]: disablePadding,
-        [styles.borderDisabled]: disableBorder,
-    });
+    const headerClasses = classnames(
+        'header',
+        styles.headerContainer,
+        headerClass || styles.headerPadding,
+        {
+            [styles.paddingDisabled]: disablePadding,
+            [styles.borderDisabled]: disableBorder,
+        }
+    );
 
     const bodyClasses = classnames(
         'body',

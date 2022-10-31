@@ -12,6 +12,10 @@ import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironmen
 import useToast from 'hooks/useToast';
 import PermissionSwitch from 'component/common/PermissionSwitch/PermissionSwitch';
 import { EnvironmentActionCellPopover } from './EnvironmentActionCellPopover/EnvironmentActionCellPopover';
+import { EnvironmentCloneModal } from './EnvironmentCloneModal/EnvironmentCloneModal';
+import { IApiToken } from 'hooks/api/getters/useApiTokens/useApiTokens';
+import { EnvironmentTokenDialog } from './EnvironmentTokenDialog/EnvironmentTokenDialog';
+import { ENV_LIMIT } from 'constants/values';
 
 interface IEnvironmentTableActionsProps {
     environment: IEnvironment;
@@ -22,13 +26,16 @@ export const EnvironmentActionCell = ({
 }: IEnvironmentTableActionsProps) => {
     const navigate = useNavigate();
     const { setToastApiError, setToastData } = useToast();
-    const { refetchEnvironments } = useEnvironments();
+    const { environments, refetchEnvironments } = useEnvironments();
     const { refetch: refetchPermissions } = useProjectRolePermissions();
     const { deleteEnvironment, toggleEnvironmentOn, toggleEnvironmentOff } =
         useEnvironmentApi();
 
     const [deleteModal, setDeleteModal] = useState(false);
     const [toggleModal, setToggleModal] = useState(false);
+    const [cloneModal, setCloneModal] = useState(false);
+    const [tokenModal, setTokenModal] = useState(false);
+    const [newToken, setNewToken] = useState<IApiToken>();
     const [confirmName, setConfirmName] = useState('');
 
     const handleDeleteEnvironment = async () => {
@@ -102,7 +109,17 @@ export const EnvironmentActionCell = ({
             <EnvironmentActionCellPopover
                 environment={environment}
                 onEdit={() => navigate(`/environments/${environment.name}`)}
-                onClone={() => console.log('TODO: CLONE')}
+                onClone={() => {
+                    if (environments.length < ENV_LIMIT) {
+                        setCloneModal(true);
+                    } else {
+                        setToastData({
+                            type: 'error',
+                            title: 'Environment limit reached',
+                            text: `You have reached the maximum number of environments (${ENV_LIMIT}). Please reach out if you need more.`,
+                        });
+                    }
+                }}
                 onDelete={() => setDeleteModal(true)}
             />
             <EnvironmentDeleteConfirm
@@ -118,6 +135,20 @@ export const EnvironmentActionCell = ({
                 open={toggleModal}
                 setToggleDialog={setToggleModal}
                 handleConfirmToggleEnvironment={handleConfirmToggleEnvironment}
+            />
+            <EnvironmentCloneModal
+                environment={environment}
+                open={cloneModal}
+                setOpen={setCloneModal}
+                newToken={(token: IApiToken) => {
+                    setNewToken(token);
+                    setTokenModal(true);
+                }}
+            />
+            <EnvironmentTokenDialog
+                open={tokenModal}
+                setOpen={setTokenModal}
+                token={newToken}
             />
         </ActionCell>
     );

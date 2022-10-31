@@ -4,20 +4,27 @@ import { useStyles as useAppStyles } from 'component/App.styles';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { SuggestedChangesSidebar } from '../SuggestedChangesSidebar/SuggestedChangesSidebar';
+import { useSuggestedChangesDraft } from 'hooks/api/getters/useSuggestedChangesDraft/useSuggestedChangesDraft';
 
 interface IDraftBannerProps {
-    environment?: string;
+    project: string;
 }
 
-export const DraftBanner: VFC<IDraftBannerProps> = ({ environment }) => {
+export const DraftBanner: VFC<IDraftBannerProps> = ({ project }) => {
     const { classes } = useAppStyles();
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const { draft, loading } = useSuggestedChangesDraft(project);
+    const environment = '';
+
+    if ((!loading && !draft) || draft?.length === 0) {
+        return null;
+    }
 
     return (
         <Box
             sx={{
                 position: 'sticky',
-                top: 0,
+                top: -1,
                 zIndex: theme => theme.zIndex.appBar,
                 borderTop: theme => `1px solid ${theme.palette.warning.border}`,
                 borderBottom: theme =>
@@ -63,6 +70,7 @@ export const DraftBanner: VFC<IDraftBannerProps> = ({ environment }) => {
                 </Box>
             </Box>
             <SuggestedChangesSidebar
+                project={project}
                 open={isSidebarOpen}
                 onClose={() => {
                     setIsSidebarOpen(false);

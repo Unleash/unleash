@@ -71,7 +71,7 @@ export default class PatService {
 
         if ((await this.patStore.countByUser(userId)) >= PAT_LIMIT) {
             throw new OperationDeniedError(
-                `Too many PATs ${PAT_LIMIT} already exist for this user.`,
+                `Too many PATs (${PAT_LIMIT}) already exist for this user.`,
             );
         }
 

@@ -135,6 +135,10 @@ export const SuggestedChangesSidebar: VFC<ISuggestedChangesSidebarProps> = ({
                         <hr />
                         <SuggestedChangeset
                             suggestedChange={environmentChangeset}
+                            onNavigate={() => {
+                                onClose();
+                            }}
+                            onRefetch={refetchSuggestedChanges}
                         />
                         <Box sx={{ display: 'flex' }}>
                             <ConditionallyRender

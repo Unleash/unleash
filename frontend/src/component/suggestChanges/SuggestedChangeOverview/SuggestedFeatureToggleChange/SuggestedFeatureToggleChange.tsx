@@ -1,14 +1,17 @@
 import { FC } from 'react';
+import { Link } from 'react-router-dom';
 import { Box, Card, Typography } from '@mui/material';
 import ToggleOnIcon from '@mui/icons-material/ToggleOn';
 
 interface ISuggestedFeatureToggleChange {
-    featureToggleName: string;
+    featureName: string;
+    projectId: string;
+    onNavigate?: () => void;
 }
 
 export const SuggestedFeatureToggleChange: FC<
     ISuggestedFeatureToggleChange
-> = ({ featureToggleName, children }) => {
+> = ({ featureName, projectId, onNavigate, children }) => {
     return (
         <Card
             elevation={0}
@@ -28,7 +31,15 @@ export const SuggestedFeatureToggleChange: FC<
             >
                 <Box sx={{ display: 'flex', gap: 1 }}>
                     <ToggleOnIcon color="disabled" />
-                    <Typography color="primary">{featureToggleName}</Typography>
+                    <Typography
+                        component={Link}
+                        to={`/projects/${projectId}/features/${featureName}`}
+                        color="primary"
+                        sx={{ textDecoration: 'none' }}
+                        onClick={onNavigate}
+                    >
+                        {featureName}
+                    </Typography>
                 </Box>
             </Box>
             <Box sx={{ p: 2 }}>{children}</Box>

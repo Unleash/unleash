@@ -64,10 +64,27 @@ export const useSuggestChangeApi = () => {
         }
     };
 
+    const discardSuggestions = async (
+        project: string,
+        changesetId: number,
+        changeId: number
+    ) => {
+        const path = `api/admin/projects/${project}/suggest-changes/${changesetId}/changes/${changeId}`;
+        const req = createRequest(path, {
+            method: 'DELETE',
+        });
+        try {
+            return await makeRequest(req.caller, req.id);
+        } catch (e) {
+            throw e;
+        }
+    };
+
     return {
         addSuggestion,
         applyChanges,
         changeState,
+        discardSuggestions,
         errors,
         loading,
     };

@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { useCallback, VFC } from 'react';
 import { Box } from '@mui/material';
 import { SuggestedFeatureToggleChange } from '../SuggestedChangeOverview/SuggestedFeatureToggleChange/SuggestedFeatureToggleChange';
 import { objectId } from 'utils/objectId';
@@ -14,17 +14,49 @@ import { ToggleStatusChange } from '../SuggestedChangeOverview/SuggestedFeatureT
 //     GetFeatureStrategyIcon,
 // } from 'utils/strategyNames';
 import type { ISuggestChangesResponse } from 'hooks/api/getters/useSuggestedChangesDraft/useSuggestedChangesDraft';
+import { useSuggestChangeApi } from 'hooks/api/actions/useSuggestChangeApi/useSuggestChangeApi';
+import { formatUnknownError } from 'utils/formatUnknownError';
+import useToast from 'hooks/useToast';
 
-export const SuggestedChangeset: FC<{
+interface ISuggestedChangeset {
     suggestedChange: ISuggestChangesResponse;
-}> = ({ suggestedChange }) => {
+    onRefetch?: () => void;
+    onNavigate?: () => void;
+}
+
+export const SuggestedChangeset: VFC<ISuggestedChangeset> = ({
+    suggestedChange,
+    onRefetch,
+    onNavigate,
+}) => {
+    const { discardSuggestions } = useSuggestChangeApi();
+    const { setToastData, setToastApiError } = useToast();
+    const onDiscard = (id: number) => async () => {
+        try {
+            await discardSuggestions(
+                suggestedChange.project,
+                suggestedChange.id,
+                id
+            );
+            setToastData({
+                title: 'Change discarded from suggestion draft.',
+                type: 'success',
+            });
+            onRefetch?.();
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
+    };
+
     return (
         <Box>
             Changes
             {suggestedChange.features?.map(featureToggleChange => (
                 <SuggestedFeatureToggleChange
                     key={featureToggleChange.name}
-                    featureToggleName={featureToggleChange.name}
+                    featureName={featureToggleChange.name}
+                    projectId={suggestedChange.project}
+                    onNavigate={onNavigate}
                 >
                     {featureToggleChange.changes.map(change => (
                         <Box key={objectId(change)}>
@@ -33,6 +65,7 @@ export const SuggestedChangeset: FC<{
                                 show={
                                     <ToggleStatusChange
                                         enabled={change?.payload?.enabled}
+                                        onDiscard={onDiscard(change.id)}
                                     />
                                 }
                             />

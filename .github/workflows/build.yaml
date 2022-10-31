@@ -54,8 +54,9 @@ jobs:
       - name: Trigger CI build
         env:
           UNLEASH_CI_BUILDER_GITHUB_TOKEN: ${{ secrets.UNLEASH_CI_BUILDER_GITHUB_TOKEN }}
-          COMMITS: ${{ toJSON(github.event.commits) }}
+          COMMITS: ${{ toJSON(github.event.commits[*].id) }}
+          SLUG: ${{ github.event.repository.full_name }}
         run: |
           curl -X POST -H "Accept: application/vnd.github+json" -H "Authorization: Bearer ${UNLEASH_CI_BUILDER_GITHUB_TOKEN}" \
             https://api.github.com/repos/bricks-software/unleash-ci-builder/dispatches \
-            -d '{"event_type":"trigger-unleash-cloud-build","client_payload":{"commits":$COMMITS}}'
+            -d "{\"event_type\":\"trigger-unleash-cloud-build\",\"client_payload\":{\"source\":\"${SLUG}\",\"commits\":${COMMITS}}}"

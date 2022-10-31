@@ -5,7 +5,7 @@ import { Chip, ListItem, Tooltip } from '@mui/material';
 import { Undo } from '@mui/icons-material';
 import TimeAgo from 'react-timeago';
 import { IAccessContext } from 'contexts/AccessContext';
-import StatusChip from 'component/common/StatusChip/StatusChip';
+import { FeatureStatusChip } from 'component/common/FeatureStatusChip/FeatureStatusChip';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { IFlags } from 'interfaces/uiConfig';
@@ -159,7 +159,10 @@ export const FeatureToggleListItem = memo<IFeatureToggleListItemProps>(
                         themeStyles.hideLt920
                     )}
                 >
-                    <StatusChip stale={Boolean(stale)} showActive={false} />
+                    <FeatureStatusChip
+                        stale={Boolean(stale)}
+                        showActive={false}
+                    />
                     <ConditionallyRender
                         condition={!inProject}
                         show={

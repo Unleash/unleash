@@ -50,7 +50,6 @@ export const SuggestedChangeset: VFC<ISuggestedChangeset> = ({
 
     return (
         <Box>
-            Changes
             {suggestedChange.features?.map(featureToggleChange => (
                 <SuggestedFeatureToggleChange
                     key={featureToggleChange.name}

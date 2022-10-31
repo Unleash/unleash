@@ -26,7 +26,7 @@ import useLoading from 'hooks/useLoading';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { FeatureStaleDialog } from 'component/common/FeatureStaleDialog/FeatureStaleDialog';
 import AddTagDialog from './FeatureOverview/AddTagDialog/AddTagDialog';
-import StatusChip from 'component/common/StatusChip/StatusChip';
+import { FeatureStatusChip } from 'component/common/FeatureStatusChip/FeatureStatusChip';
 import { FeatureNotFound } from 'component/feature/FeatureView/FeatureNotFound/FeatureNotFound';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { FeatureArchiveDialog } from '../../common/FeatureArchiveDialog/FeatureArchiveDialog';
@@ -109,7 +109,7 @@ export const FeatureView = () => {
                                     <ConditionallyRender
                                         condition={!smallScreen}
                                         show={
-                                            <StatusChip
+                                            <FeatureStatusChip
                                                 stale={feature?.stale}
                                             />
                                         }

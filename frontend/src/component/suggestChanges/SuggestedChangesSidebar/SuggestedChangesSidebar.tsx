@@ -1,19 +1,29 @@
 import { VFC } from 'react';
-import { Box, Button, Typography, styled, Tooltip } from '@mui/material';
+import {
+    Box,
+    Button,
+    Typography,
+    styled,
+    Tooltip,
+    Divider,
+} from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { HelpOutline } from '@mui/icons-material';
+import EnvironmentIcon from 'component/common/EnvironmentIcon/EnvironmentIcon';
 import { SuggestedChangeset } from '../SuggestedChangeset/SuggestedChangeset';
 import { useSuggestedChangesDraft } from 'hooks/api/getters/useSuggestedChangesDraft/useSuggestedChangesDraft';
 import { useSuggestChangeApi } from 'hooks/api/actions/useSuggestChangeApi/useSuggestChangeApi';
+import { StatusChip } from 'component/common/StatusChip/StatusChip';
 
 interface ISuggestedChangesSidebarProps {
     open: boolean;
     project: string;
     onClose: () => void;
 }
+
 const StyledPageContent = styled(PageContent)(({ theme }) => ({
     height: '100vh',
     overflow: 'auto',
@@ -126,13 +136,23 @@ export const SuggestedChangesSidebar: VFC<ISuggestedChangesSidebarProps> = ({
                                 `${theme.shape.borderRadiusLarge}px`,
                         }}
                     >
-                        <Typography>
-                            env: {environmentChangeset?.environment}
+                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                            <Box sx={{ display: 'flex' }}>
+                                <EnvironmentIcon enabled={true} />
+                                <Typography component="span" variant="h2">
+                                    {environmentChangeset?.environment}
+                                </Typography>
+                            </Box>
+                            <Box sx={{ ml: 'auto' }}>
+                                <StatusChip
+                                    label={environmentChangeset?.state}
+                                />
+                            </Box>
+                        </Box>
+                        <Divider sx={{ my: 3 }} />
+                        <Typography variant="body1" color="text.secondary">
+                            You request changes for these feature toggles:
                         </Typography>
-                        <Typography>
-                            state: {environmentChangeset?.state}
-                        </Typography>
-                        <hr />
                         <SuggestedChangeset
                             suggestedChange={environmentChangeset}
                             onNavigate={() => {

@@ -1,6 +1,6 @@
 import { VFC } from 'react';
-import { Link, Box, Typography } from '@mui/material';
-import { PlaygroundResultChip } from 'component/playground/Playground/PlaygroundResultsTable/PlaygroundResultChip/PlaygroundResultChip';
+import { Link, Box } from '@mui/material';
+import { StatusChip } from 'component/common/StatusChip/StatusChip';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface IPlaygroundResultsTable {
@@ -16,10 +16,9 @@ export const ToggleStatusChange: VFC<IPlaygroundResultsTable> = ({
         <Box sx={{ p: 1, display: 'flex', justifyContent: 'space-between' }}>
             <Box>
                 New status:{' '}
-                <PlaygroundResultChip
-                    showIcon={false}
+                <StatusChip
                     label={enabled ? ' Enabled' : 'Disabled'}
-                    enabled={enabled}
+                    variant={enabled ? 'true' : 'false'}
                 />
             </Box>
             <ConditionallyRender

@@ -1,34 +1,68 @@
-import { Chip } from '@mui/material';
-import { useStyles } from './StatusChip.styles';
+import { FC, ReactElement } from 'react';
+import { Chip, styled } from '@mui/material';
+import { colors } from 'themes/colors';
 
-interface IStatusChip {
-    stale: boolean;
-    showActive?: boolean;
+interface IResultChipProps {
+    label: string;
+    variant?: 'true' | 'false' | 'undefined';
+    icon?: ReactElement;
 }
 
-const StatusChip = ({ stale, showActive = true }: IStatusChip) => {
-    const { classes: styles } = useStyles();
+export const StyledChip = styled(Chip)(({ theme, icon }) => ({
+    padding: theme.spacing(0, 1),
+    height: 24,
+    borderRadius: theme.shape.borderRadius,
+    fontWeight: theme.typography.fontWeightMedium,
+    ['& .MuiChip-label']: {
+        padding: 0,
+        paddingLeft: Boolean(icon) ? theme.spacing(0.5) : 0,
+    },
+}));
 
-    if (!stale && !showActive) {
-        return null;
+export const StyledFalseChip = styled(StyledChip)(({ theme }) => ({
+    border: `1px solid ${theme.palette.error.main}`,
+    backgroundColor: colors.red['200'],
+    ['& .MuiChip-label']: {
+        color: theme.palette.error.main,
+    },
+    ['& .MuiChip-icon']: {
+        color: theme.palette.error.main,
+    },
+}));
+
+export const StyledTrueChip = styled(StyledChip)(({ theme }) => ({
+    border: `1px solid ${theme.palette.success.main}`,
+    backgroundColor: colors.green['100'],
+    ['& .MuiChip-label']: {
+        color: theme.palette.success.main,
+    },
+    ['& .MuiChip-icon']: {
+        color: theme.palette.success.main,
+        marginRight: 0,
+    },
+}));
+
+export const StyledUnknownChip = styled(StyledChip)(({ theme }) => ({
+    border: `1px solid ${theme.palette.warning.main}`,
+    backgroundColor: colors.orange['100'],
+    ['& .MuiChip-label']: {
+        color: theme.palette.warning.main,
+    },
+    ['& .MuiChip-icon']: {
+        color: theme.palette.warning.main,
+    },
+}));
+
+export const StatusChip: FC<IResultChipProps> = ({
+    label,
+    icon,
+    variant = 'undefined',
+}) => {
+    if (variant === 'true') {
+        return <StyledTrueChip icon={icon} label={label} variant="outlined" />;
     }
-
-    const title = stale
-        ? 'Feature toggle is deprecated.'
-        : 'Feature toggle is active.';
-    const value = stale ? 'Stale' : 'Active';
-
-    return (
-        <div data-loading style={{ marginLeft: '8px' }}>
-            <Chip
-                color="primary"
-                variant="outlined"
-                className={styles.chip}
-                title={title}
-                label={value}
-            />
-        </div>
-    );
+    if (variant === 'false') {
+        return <StyledFalseChip icon={icon} label={label} variant="outlined" />;
+    }
+    return <StyledUnknownChip icon={icon} label={label} variant="outlined" />;
 };
-
-export default StatusChip;

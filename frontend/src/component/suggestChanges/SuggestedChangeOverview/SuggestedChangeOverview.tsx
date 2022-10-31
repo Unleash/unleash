@@ -64,6 +64,7 @@ export const SuggestedChangeOverview: FC = () => {
                             padding: theme.spacing(2),
                         })}
                     >
+                        Changes
                         <SuggestedChangeset suggestedChange={suggestedChange} />
                         <Button
                             variant="contained"

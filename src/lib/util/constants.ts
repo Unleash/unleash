@@ -56,4 +56,4 @@ export const NUM_OPERATORS = [NUM_EQ, NUM_GT, NUM_GTE, NUM_LT, NUM_LTE];
 export const DATE_OPERATORS = [DATE_AFTER, DATE_BEFORE];
 export const SEMVER_OPERATORS = [SEMVER_EQ, SEMVER_GT, SEMVER_LT];
 
-export const PAT_LIMIT = 5;
+export const PAT_LIMIT = 10;

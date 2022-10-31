@@ -62,7 +62,7 @@ If you have a lot of feature toggles, it can be tedious to configure the same ac
 
 This can also prove to be a safe way to experiment with activation strategies without affecting production-facing environments. You can clone the production environment, and then test out the new activation strategies in the cloned environment. If everything works as expected, you can then apply the same activation strategies to the production environment.
 
-When cloning an environment, you can choose several options to customize your new environment: Name, type of environment, which projects to clone the environment configuration in, and whether you wish to keep the same user permissions. You'll also be provided the choice of generating a new API key bound to the newly cloned environment right away, or generating one yourself at a later stage.
+When cloning an environment, you can choose several options to customize your new environment: name, type of environment, which projects to clone the environment configuration in, and whether you wish to keep the same user permissions. You'll also be provided the choice of generating a new API key bound to the newly cloned environment right away, or generating one yourself at a later stage.
 
 ## Migration
 

@@ -49,16 +49,14 @@ export const SuggestedChangesSidebar: VFC<ISuggestedChangesSidebarProps> = ({
     const {
         draft,
         loading,
-        refetch: refetchSuggestChange,
+        refetch: refetchSuggestedChanges,
     } = useSuggestedChangesDraft(project);
     const { changeState } = useSuggestChangeApi();
-
-    console.log(draft);
 
     const onReview = async (draftId: number) => {
         try {
             await changeState(project, draftId, { state: 'In review' });
-            refetchSuggestChange();
+            refetchSuggestedChanges();
         } catch (e) {
             console.log('something went wrong');
         }

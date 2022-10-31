@@ -27,7 +27,7 @@ export const useSuggestChangeApi = () => {
         });
         try {
             const response = await makeRequest(req.caller, req.id);
-            return await response.json();
+            return response.json();
         } catch (e) {
             throw e;
         }
@@ -45,7 +45,7 @@ export const useSuggestChangeApi = () => {
         });
         try {
             const response = await makeRequest(req.caller, req.id);
-            return await response.json();
+            return response.json();
         } catch (e) {
             throw e;
         }

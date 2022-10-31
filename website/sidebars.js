@@ -104,7 +104,7 @@ module.exports = {
                 },
                 {
                     label: 'Environments',
-                    items: ['how-to/how-to-clone-environment'],
+                    items: ['how-to/how-to-clone-environments'],
                     type: 'category',
                     link: {
                         type: 'generated-index',

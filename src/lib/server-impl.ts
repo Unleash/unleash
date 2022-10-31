@@ -25,6 +25,7 @@ import * as permissions from './types/permissions';
 import * as eventType from './types/events';
 import { RoleName } from './types/model';
 import { SimpleAuthSettings } from './types/settings/simple-auth-settings';
+import { Knex } from 'knex';
 
 async function createApp(
     config: IUnleashConfig,
@@ -173,6 +174,7 @@ export {
     LogLevel,
     RoleName,
     IAuthType,
+    Knex,
 };
 
 export default {

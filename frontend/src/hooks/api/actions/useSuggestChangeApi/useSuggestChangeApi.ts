@@ -65,6 +65,7 @@ export const useSuggestChangeApi = () => {
     };
 
     const discardSuggestions = async (
+        project: string,
         changesetId: number,
         changeId: number
     ) => {
@@ -84,6 +85,7 @@ export const useSuggestChangeApi = () => {
         addSuggestion,
         applyChanges,
         changeState,
+        discardSuggestions,
         errors,
         loading,
     };

@@ -130,7 +130,7 @@ export class SuggestChangeStore implements ISuggestChangeStore {
                 'changeSet.state',
                 'changeSet.id',
                 'changeSet.environment',
-                'projects.id as project',
+                'projects.name as project',
                 'changeSet.created_at',
                 'changeSet.created_by',
                 'changeSetUser.username as changeSetUsername',

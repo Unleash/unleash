@@ -35,7 +35,7 @@ export const useSuggestChangeApi = () => {
 
     const changeState = async (
         project: string,
-        suggestChangeId: string,
+        suggestChangeId: number,
         payload: any
     ) => {
         const path = `api/admin/projects/${project}/suggest-changes/${suggestChangeId}/state`;

@@ -77,7 +77,7 @@ export const SuggestionsTabs = ({
         },
     ];
 
-    const [activeTab, setActiveTab] = useState(tabs[0]);
+    const [activeTab, setActiveTab] = useState(0);
 
     const columns = useMemo(
         () => [
@@ -137,7 +137,7 @@ export const SuggestionsTabs = ({
         data: searchedData,
         getSearchText,
         getSearchContext,
-    } = useSearch(columns, searchValue, activeTab.data);
+    } = useSearch(columns, searchValue, tabs[activeTab]?.data);
 
     const data = useMemo(
         () => (loading ? featuresPlaceholder : searchedData),
@@ -206,34 +206,31 @@ export const SuggestionsTabs = ({
         setStoredParams({ id: sortBy[0].id, desc: sortBy[0].desc || false });
     }, [loading, sortBy, searchValue]); // eslint-disable-line react-hooks/exhaustive-deps
 
-    const renderTabs = () => {
-        return (
-            <div className={classes.tabContainer}>
-                <Tabs
-                    value={activeTab?.title}
-                    indicatorColor="primary"
-                    textColor="primary"
-                >
-                    {tabs.map(tab => (
-                        <Tab
-                            key={tab.title}
-                            label={`${tab.title} (${tab.data.length})`}
-                            value={tab.title}
-                            onClick={() => setActiveTab(tab)}
-                            className={classes.tabButton}
-                        />
-                    ))}
-                </Tabs>
-            </div>
-        );
-    };
-
     return (
         <PageContent
             isLoading={loading}
+            headerClass={classes.header}
             header={
                 <PageHeader
-                    titleElement={renderTabs()}
+                    titleElement={
+                        <div className={classes.tabContainer}>
+                            <Tabs
+                                value={tabs[activeTab]?.title}
+                                indicatorColor="primary"
+                                textColor="primary"
+                            >
+                                {tabs.map((tab, index) => (
+                                    <Tab
+                                        key={tab.title}
+                                        label={`${tab.title} (${tab.data.length})`}
+                                        value={tab.title}
+                                        onClick={() => setActiveTab(index)}
+                                        className={classes.tabButton}
+                                    />
+                                ))}
+                            </Tabs>
+                        </div>
+                    }
                     actions={
                         <Search
                             initialValue={searchValue}

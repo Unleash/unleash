@@ -27,6 +27,7 @@ import { ProjectLog } from './ProjectLog/ProjectLog';
 import { SuggestedChangeOverview } from 'component/suggestChanges/SuggestedChangeOverview/SuggestedChangeOverview';
 import { DraftBanner } from 'component/suggestChanges/DraftBanner/DraftBanner';
 import { MainLayout } from 'component/layout/MainLayout/MainLayout';
+import { ProjectSuggestedChanges } from '../../suggest-changes/ProjectSuggestions/ProjectSuggestedChanges';
 
 const StyledDiv = styled('div')(() => ({
     display: 'flex',
@@ -87,6 +88,11 @@ const Project = () => {
             title: 'Archive',
             path: `${basePath}/archive`,
             name: 'archive',
+        },
+        {
+            title: 'Change requests',
+            path: `${basePath}/suggest-changes`,
+            name: 'suggest-changes' + '',
         },
         {
             title: 'Event log',
@@ -229,6 +235,15 @@ const Project = () => {
                 <Route path="archive" element={<ProjectFeaturesArchive />} />
                 <Route path="logs" element={<ProjectLog />} />
                 <Route
+                    path="suggest-changes"
+                    element={
+                        <ConditionallyRender
+                            condition={Boolean(uiConfig?.flags?.suggestChanges)}
+                            show={<ProjectSuggestedChanges />}
+                        />
+                    }
+                />
+                <Route
                     path="suggest-changes/:id"
                     element={
                         <ConditionallyRender
@@ -237,7 +252,6 @@ const Project = () => {
                         />
                     }
                 />
-
                 <Route path="*" element={<ProjectOverview />} />
             </Routes>
         </MainLayout>

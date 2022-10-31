@@ -1,13 +1,38 @@
 import { FC } from 'react';
-import { Box, Paper } from '@mui/material';
+import { Box, Button, Paper } from '@mui/material';
 import { useSuggestedChange } from 'hooks/api/getters/useSuggestChange/useSuggestedChange';
 import { SuggestedChangeHeader } from './SuggestedChangeHeader/SuggestedChangeHeader';
 import { SuggestedChangeTimeline } from './SuggestedChangeTimeline/SuggestedChangeTimeline';
 import { SuggestedChangeReviewers } from './SuggestedChangeReviewers/SuggestedChangeReviewers';
 import { SuggestedChangeset } from '../SuggestedChangeset/SuggestedChangeset';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import { useSuggestChangeApi } from 'hooks/api/actions/useSuggestChangeApi/useSuggestChangeApi';
+import useToast from 'hooks/useToast';
+import { formatUnknownError } from 'utils/formatUnknownError';
 
 export const SuggestedChangeOverview: FC = () => {
-    const { data: suggestedChange } = useSuggestedChange();
+    const projectId = useRequiredPathParam('projectId');
+    const id = useRequiredPathParam('id');
+    const { data: suggestedChange } = useSuggestedChange(projectId, id);
+    const { applyChanges } = useSuggestChangeApi();
+    const { setToastData, setToastApiError } = useToast();
+
+    if (!suggestedChange) {
+        return null;
+    }
+
+    const onApplyChanges = async () => {
+        try {
+            await applyChanges(projectId, id);
+            setToastData({
+                type: 'success',
+                title: 'Success',
+                text: 'Changes appplied',
+            });
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
+    };
 
     return (
         <>
@@ -40,6 +65,13 @@ export const SuggestedChangeOverview: FC = () => {
                         })}
                     >
                         <SuggestedChangeset suggestedChange={suggestedChange} />
+                        <Button
+                            variant="contained"
+                            sx={{ marginTop: 2 }}
+                            onClick={onApplyChanges}
+                        >
+                            Apply changes
+                        </Button>
                     </Box>
                 </Paper>
             </Box>

@@ -10,10 +10,6 @@ export const defaultExperimentalOptions = {
             process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY,
             false,
         ),
-        personalAccessTokens: parseEnvVarBoolean(
-            process.env.UNLEASH_EXPERIMENTAL_PERSONAL_ACCESS_TOKENS,
-            false,
-        ),
         suggestChanges: parseEnvVarBoolean(
             process.env.UNLEASH_EXPERIMENTAL_SUGGEST_CHANGES,
             false,
@@ -54,7 +50,6 @@ export interface IExperimentalOptions {
         embedProxyFrontend?: boolean;
         batchMetrics?: boolean;
         anonymiseEventLog?: boolean;
-        personalAccessTokens?: boolean;
         syncSSOGroups?: boolean;
         suggestChanges?: boolean;
         cloneEnvironment?: boolean;

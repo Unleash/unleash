@@ -41,7 +41,6 @@ export interface IFlags {
     ENABLE_DARK_MODE_SUPPORT?: boolean;
     embedProxyFrontend?: boolean;
     publicSignup?: boolean;
-    personalAccessTokens?: boolean;
     syncSSOGroups?: boolean;
     suggestChanges?: boolean;
     cloneEnvironment?: boolean;

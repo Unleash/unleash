@@ -9,6 +9,7 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useSuggestChangeApi } from 'hooks/api/actions/useSuggestChangeApi/useSuggestChangeApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { SuggestedChangeReviewStatus } from './SuggestedChangeReviewStatus/SuggestedChangeReviewStatus';
 
 export const SuggestedChangeOverview: FC = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -65,6 +66,7 @@ export const SuggestedChangeOverview: FC = () => {
                         })}
                     >
                         <SuggestedChangeset suggestedChange={suggestedChange} />
+                        <SuggestedChangeReviewStatus approved={true} />
                         <Button
                             variant="contained"
                             sx={{ marginTop: 2 }}

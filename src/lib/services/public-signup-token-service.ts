@@ -17,6 +17,7 @@ import {
 import UserService from './user-service';
 import { IUser } from '../types/user';
 import { URL } from 'url';
+import { add } from 'date-fns';
 
 export class PublicSignupTokenService {
     private store: IPublicSignupTokenStore;
@@ -118,9 +119,13 @@ export class PublicSignupTokenService {
         const viewerRole = await this.roleStore.getRoleByName(RoleName.VIEWER);
         const secret = this.generateSecretKey();
         const url = this.getUrl(secret);
+        const cappedDate = this.getMinimumDate(
+            new Date(tokenCreate.expiresAt),
+            add(new Date(), { months: 1 }),
+        );
         const newToken: IPublicSignupTokenCreate = {
             name: tokenCreate.name,
-            expiresAt: new Date(tokenCreate.expiresAt),
+            expiresAt: cappedDate,
             secret: secret,
             roleId: viewerRole ? viewerRole.id : -1,
             createdBy: createdBy,
@@ -139,6 +144,10 @@ export class PublicSignupTokenService {
 
     private generateSecretKey(): string {
         return crypto.randomBytes(16).toString('hex');
+    }
+
+    private getMinimumDate(date1: Date, date2: Date): Date {
+        return date1 < date2 ? date1 : date2;
     }
 
     destroy(): void {

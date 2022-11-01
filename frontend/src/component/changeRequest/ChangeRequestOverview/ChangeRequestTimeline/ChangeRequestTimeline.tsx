@@ -34,7 +34,7 @@ export const ChangeRequestTimeline: FC = () => {
                     </TimelineItem>
                     <TimelineItem>
                         <TimelineSeparator>
-                            <TimelineDot color="success" />
+                            <TimelineDot color="primary" />
                             <TimelineConnector />
                         </TimelineSeparator>
                         <TimelineContent>Approved</TimelineContent>

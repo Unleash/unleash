@@ -12,7 +12,6 @@ import {
     StyledReviewTitle,
     StyledDivider,
 } from './ChangeRequestReviewStatus.styles';
-
 interface ISuggestChangeReviewsStatusProps {
     approved: boolean;
 }

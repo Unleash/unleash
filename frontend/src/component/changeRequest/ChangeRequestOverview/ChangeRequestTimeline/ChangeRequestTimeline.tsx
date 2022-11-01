@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { styled } from '@mui/material';
 import { Box, Paper } from '@mui/material';
 import Timeline from '@mui/lab/Timeline';
 import TimelineItem, { timelineItemClasses } from '@mui/lab/TimelineItem';
@@ -6,47 +7,129 @@ import TimelineSeparator from '@mui/lab/TimelineSeparator';
 import TimelineDot from '@mui/lab/TimelineDot';
 import TimelineConnector from '@mui/lab/TimelineConnector';
 import TimelineContent from '@mui/lab/TimelineContent';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { SuggestChangesetState } from '../suggestChanges.types';
+interface ISuggestChangeTimelineProps {
+    state: SuggestChangesetState;
+}
+interface ITimelineData {
+    title: string;
+    active: boolean;
+}
 
-export const ChangeRequestTimeline: FC = () => {
+const StyledPaper = styled(Paper)(({ theme }) => ({
+    marginTop: theme.spacing(2),
+    borderRadius: `${theme.shape.borderRadiusLarge}px`,
+}));
+
+const StyledBox = styled(Box)(({ theme }) => ({
+    padding: theme.spacing(2),
+    marginBottom: `-${theme.spacing(4)}`,
+}));
+
+const StyledTimeline = styled(Timeline)(() => ({
+    [`& .${timelineItemClasses.root}:before`]: {
+        flex: 0,
+        padding: 0,
+    },
+}));
+
+export const ChangeRequestTimeline: FC<ISuggestChangeTimelineProps> = ({
+    state,
+}) => {
+    const createTimeLineData = (
+        state: SuggestChangesetState
+    ): ITimelineData[] => {
+        const steps: SuggestChangesetState[] = [
+            'Draft',
+            'In review',
+            'Approved',
+            'Applied',
+        ];
+
+        return steps.map(step => ({
+            title: step,
+            active: step === state,
+        }));
+    };
+
+    const renderTimeline = () => {
+        const data = createTimeLineData(state);
+        const activeIndex = data.findIndex(item => item.active);
+        const hasActiveStep = activeIndex !== -1;
+
+        if (state === 'Cancelled') {
+            return createCancelledTimeline(data);
+        }
+
+        return createTimeline(data, hasActiveStep, activeIndex);
+    };
+
     return (
-        <Paper
-            elevation={0}
-            sx={theme => ({
-                marginTop: theme.spacing(2),
-                borderRadius: theme => `${theme.shape.borderRadiusLarge}px`,
-            })}
-        >
-            <Box sx={theme => ({ padding: theme.spacing(2) })}>
-                <Timeline
-                    sx={{
-                        [`& .${timelineItemClasses.root}:before`]: {
-                            flex: 0,
-                            padding: 0,
-                        },
-                    }}
-                >
-                    <TimelineItem>
-                        <TimelineSeparator>
-                            <TimelineDot color="success" />
-                            <TimelineConnector color="success" />
-                        </TimelineSeparator>
-                        <TimelineContent>Draft</TimelineContent>
-                    </TimelineItem>
-                    <TimelineItem>
-                        <TimelineSeparator>
-                            <TimelineDot color="primary" />
-                            <TimelineConnector />
-                        </TimelineSeparator>
-                        <TimelineContent>Approved</TimelineContent>
-                    </TimelineItem>
-                    <TimelineItem>
-                        <TimelineSeparator>
-                            <TimelineDot />
-                        </TimelineSeparator>
-                        <TimelineContent>Applied</TimelineContent>
-                    </TimelineItem>
-                </Timeline>
-            </Box>
-        </Paper>
+        <StyledPaper elevation={0}>
+            <StyledBox>
+                <StyledTimeline>{renderTimeline()}</StyledTimeline>
+            </StyledBox>
+        </StyledPaper>
+    );
+};
+
+const createTimeline = (
+    data: ITimelineData[],
+    hasActiveStep: boolean,
+    activeIndex: number
+) => {
+    return data.map(({ title }, index) => {
+        const notLastItem = !(index === data.length - 1);
+
+        const connector = (
+            <ConditionallyRender
+                condition={notLastItem}
+                show={<TimelineConnector />}
+            />
+        );
+
+        if (hasActiveStep && activeIndex >= index) {
+            return createTimelineItem('success', title, connector);
+        }
+
+        if (activeIndex + 1 === index) {
+            return createTimelineItem('primary', title, connector, {
+                variant: 'outlined',
+            });
+        }
+
+        return createTimelineItem('grey', title, connector);
+    });
+};
+
+const createCancelledTimeline = (data: ITimelineData[]) => {
+    return data.map(({ title }, index) => {
+        const notLastItem = !(index === data.length - 1);
+
+        const connector = (
+            <ConditionallyRender
+                condition={notLastItem}
+                show={<TimelineConnector />}
+            />
+        );
+        return createTimelineItem('grey', title, connector);
+    });
+};
+
+const createTimelineItem = (
+    color: 'primary' | 'success' | 'grey',
+    title: string,
+    connector: JSX.Element,
+    timelineDotProps: { [key: string]: string } = {}
+) => {
+    return (
+        <TimelineItem key={title}>
+            <TimelineSeparator>
+                <TimelineDot color={color} {...timelineDotProps} />
+                {connector}
+            </TimelineSeparator>
+            <TimelineContent>{title}</TimelineContent>
+        </TimelineItem>
     );
 };

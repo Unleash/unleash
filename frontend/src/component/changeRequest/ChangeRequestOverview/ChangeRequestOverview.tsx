@@ -7,9 +7,9 @@ import { ChangeRequestReviewers } from './ChangeRequestReviewers/ChangeRequestRe
 import { ChangeRequest } from '../ChangeRequest/ChangeRequest';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
+import { ChangeRequestReviewStatus } from './ChangeRequestReviewStatus/ChangeRequestReviewStatus';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { ChangeRequestReviewStatus } from './ChangeRequestReviewStatus/ChangeRequestReviewStatus';
 
 export const ChangeRequestOverview: FC = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -46,7 +46,7 @@ export const ChangeRequestOverview: FC = () => {
                         flexDirection: 'column',
                     }}
                 >
-                    <ChangeRequestTimeline />
+                    <ChangeRequestTimeline state={changeRequest.state} />
                     <ChangeRequestReviewers />
                 </Box>
                 <Paper
@@ -66,7 +66,13 @@ export const ChangeRequestOverview: FC = () => {
                         })}
                     >
                         <ChangeRequest changeRequest={changeRequest} />
-                        <ChangeRequestReviewStatus approved={true} />
+                        <ChangeRequestReviewStatus
+                            approved={
+                                changeRequest.state === 'Approved' ||
+                                changeRequest.state === 'Applied'
+                            }
+                        />
+
                         <Button
                             variant="contained"
                             sx={{ marginTop: 2 }}

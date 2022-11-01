@@ -10,8 +10,8 @@ export const defaultExperimentalOptions = {
             process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY,
             false,
         ),
-        suggestChanges: parseEnvVarBoolean(
-            process.env.UNLEASH_EXPERIMENTAL_SUGGEST_CHANGES,
+        changeRequests: parseEnvVarBoolean(
+            process.env.UNLEASH_EXPERIMENTAL_CHANGE_REQUESTS,
             false,
         ),
         syncSSOGroups: parseEnvVarBoolean(
@@ -51,7 +51,7 @@ export interface IExperimentalOptions {
         batchMetrics?: boolean;
         anonymiseEventLog?: boolean;
         syncSSOGroups?: boolean;
-        suggestChanges?: boolean;
+        changeRequests?: boolean;
         cloneEnvironment?: boolean;
     };
     externalResolver: IExternalFlagResolver;

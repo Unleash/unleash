@@ -11,8 +11,8 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { useStyles } from './FeatureOverviewEnvSwitch.styles';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { useSuggestToggle } from 'hooks/useSuggestToggle';
-import { SuggestChangesDialogue } from 'component/suggestChanges/SuggestChangeConfirmDialog/SuggestChangeConfirmDialog';
+import { useChangeRequestToggle } from 'hooks/useChangeRequestToggle';
+import { ChangeRequestDialogue } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestConfirmDialog';
 
 interface IFeatureOverviewEnvSwitchProps {
     env: IFeatureEnvironment;
@@ -36,11 +36,11 @@ const FeatureOverviewEnvSwitch = ({
     const { classes: styles } = useStyles();
     const { uiConfig } = useUiConfig();
     const {
-        onSuggestToggle,
-        onSuggestToggleClose,
-        onSuggestToggleConfirm,
-        suggestChangesDialogDetails,
-    } = useSuggestToggle(projectId);
+        onChangeRequestToggle,
+        onChangeRequestToggleClose,
+        onChangeRequestToggleConfirm,
+        changeRequestDialogDetails,
+    } = useChangeRequestToggle(projectId);
 
     const handleToggleEnvironmentOn = async () => {
         try {
@@ -84,9 +84,9 @@ const FeatureOverviewEnvSwitch = ({
     };
 
     const toggleEnvironment = async (e: React.ChangeEvent) => {
-        if (uiConfig?.flags?.suggestChanges && env.name === 'production') {
+        if (uiConfig?.flags?.changeRequests && env.name === 'production') {
             e.preventDefault();
-            onSuggestToggle(featureId, env.name, env.enabled);
+            onChangeRequestToggle(featureId, env.name, env.enabled);
             return;
         }
         if (env.enabled) {
@@ -119,12 +119,12 @@ const FeatureOverviewEnvSwitch = ({
                 />
                 {content}
             </label>
-            <SuggestChangesDialogue
-                isOpen={suggestChangesDialogDetails.isOpen}
-                onClose={onSuggestToggleClose}
+            <ChangeRequestDialogue
+                isOpen={changeRequestDialogDetails.isOpen}
+                onClose={onChangeRequestToggleClose}
                 featureName={featureId}
-                environment={suggestChangesDialogDetails?.environment}
-                onConfirm={onSuggestToggleConfirm}
+                environment={changeRequestDialogDetails?.environment}
+                onConfirm={onChangeRequestToggleConfirm}
             />
         </div>
     );

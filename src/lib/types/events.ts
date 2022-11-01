@@ -82,7 +82,7 @@ export const PUBLIC_SIGNUP_TOKEN_CREATED = 'public-signup-token-created';
 export const PUBLIC_SIGNUP_TOKEN_USER_ADDED = 'public-signup-token-user-added';
 export const PUBLIC_SIGNUP_TOKEN_TOKEN_UPDATED = 'public-signup-token-updated';
 
-export const SUGGEST_CHANGE_CREATED = 'suggest-change-created';
+export const CHANGE_REQUEST_CREATED = 'change-request-created';
 
 export interface IBaseEvent {
     type: string;

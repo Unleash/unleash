@@ -138,7 +138,12 @@ export class EmailService {
     ): Promise<IEmailEnvelope> {
         if (this.configured()) {
             const year = new Date().getFullYear();
-            const context = { passwordLink, name, year, unleashUrl };
+            const context = {
+                passwordLink,
+                name: this.stripSpecialCharacters(name),
+                year,
+                unleashUrl,
+            };
             const bodyHtml = await this.compileTemplate(
                 'getting-started',
                 TemplateFormat.HTML,
@@ -221,5 +226,9 @@ export class EmailService {
 
     configured(): boolean {
         return this.sender !== 'not-configured' && this.mailer !== undefined;
+    }
+
+    stripSpecialCharacters(str: string): string {
+        return str?.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '');
     }
 }

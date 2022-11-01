@@ -80,3 +80,23 @@ test('Can supply additional SMTP transport options', async () => {
         },
     });
 });
+
+test('should strip special characters from email subject', async () => {
+    const emailService = new EmailService(
+        {
+            host: 'test',
+            port: 9999,
+            secure: false,
+            sender: 'noreply@getunleash.ai',
+            smtpuser: '',
+            smtppass: '',
+        },
+        noLoggerProvider,
+    );
+    expect(emailService.stripSpecialCharacters('http://evil.com')).toBe(
+        'httpevilcom',
+    );
+    expect(emailService.stripSpecialCharacters('http://ööbik.com')).toBe(
+        'httpööbikcom',
+    );
+});

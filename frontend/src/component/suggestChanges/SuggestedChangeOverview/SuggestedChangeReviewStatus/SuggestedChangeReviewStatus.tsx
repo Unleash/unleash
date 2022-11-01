@@ -1,83 +1,100 @@
-import { Box, Divider, Typography, useTheme } from '@mui/material';
-import Cancel from '@mui/icons-material/Cancel';
+import { FC } from 'react';
+import { Box, Typography } from '@mui/material';
 import { ReactComponent as ChangesAppliedIcon } from 'assets/icons/merge.svg';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import {
+    StyledOuterContainer,
+    StyledButtonContainer,
+    StyledReviewStatusContainer,
+    StyledFlexAlignCenterBox,
+    StyledSuccessIcon,
+    StyledErrorIcon,
+    StyledReviewTitle,
+    StyledDivider,
+} from './SuggestChangeReviewStatus.styles';
 
-export const SuggestedChangeReviewStatus = () => {
-    const theme = useTheme();
-    const cancel = (
-        <Cancel
-            sx={theme => ({
-                color: theme.palette.error.main,
-                height: '35px',
-                width: '35px',
-                marginRight: theme.spacing(1),
-            })}
-        />
-    );
+interface ISuggestChangeReviewsStatusProps {
+    approved: boolean;
+}
 
+export const SuggestedChangeReviewStatus: FC<
+    ISuggestChangeReviewsStatusProps
+> = ({ approved }) => {
     return (
-        <Box sx={theme => ({ display: 'flex', marginTop: theme.spacing(2) })}>
-            <Box
-                sx={theme => ({
-                    borderRadius: theme =>
-                        `${theme.shape.borderRadiusMedium}px`,
-                    backgroundColor: theme.palette.tableHeaderBackground,
-                    padding: theme.spacing(1, 2),
-                    marginRight: theme.spacing(2),
-                    height: '45px',
-                    width: '45px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                })}
-            >
+        <StyledOuterContainer>
+            <StyledButtonContainer approved={approved}>
                 <ChangesAppliedIcon
                     style={{
                         transform: `scale(1.5)`,
-                        color: theme.palette.neutral.main,
                     }}
                 />
-            </Box>
-            <Box
-                sx={theme => ({
-                    borderRadius: `${theme.shape.borderRadiusLarge}px`,
-                    border: `1px solid ${theme.palette.dividerAlternative}`,
-                    padding: theme.spacing(3),
-                    width: '100%',
-                })}
-            >
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    {cancel}
-                    <Box>
-                        <Typography
-                            sx={theme => ({
-                                fontWeight: 'bold',
-                                color: theme.palette.error.main,
-                            })}
-                        >
-                            Review required
-                        </Typography>
-                        <Typography>
-                            At least 1 approving review must be submitted before
-                            changes can be applied
-                        </Typography>
-                    </Box>
-                </Box>
+            </StyledButtonContainer>
+            <StyledReviewStatusContainer approved={approved}>
+                <StyledFlexAlignCenterBox>
+                    <ConditionallyRender
+                        condition={approved}
+                        show={<Approved approved={approved} />}
+                        elseShow={<ReviewRequired approved={approved} />}
+                    />
+                </StyledFlexAlignCenterBox>
+            </StyledReviewStatusContainer>
+        </StyledOuterContainer>
+    );
+};
 
-                <Divider sx={theme => ({ margin: theme.spacing(2.5, 0) })} />
-
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    {cancel}
-                    <Typography
-                        sx={theme => ({
-                            fontWeight: 'bold',
-                            color: theme.palette.error.main,
-                        })}
-                    >
-                        Apply changes is blocked
+const Approved = ({ approved }: ISuggestChangeReviewsStatusProps) => {
+    return (
+        <>
+            <StyledFlexAlignCenterBox>
+                <StyledSuccessIcon />
+                <Box>
+                    <StyledReviewTitle approved={approved}>
+                        Changed approved
+                    </StyledReviewTitle>
+                    <Typography>
+                        One approving review from requested approvers
                     </Typography>
                 </Box>
-            </Box>
-        </Box>
+            </StyledFlexAlignCenterBox>
+
+            <StyledDivider />
+
+            <StyledFlexAlignCenterBox>
+                <StyledSuccessIcon />
+                <Box>
+                    <StyledReviewTitle approved={approved}>
+                        Changes are ready to be applied
+                    </StyledReviewTitle>
+                </Box>
+            </StyledFlexAlignCenterBox>
+        </>
+    );
+};
+
+const ReviewRequired = ({ approved }: ISuggestChangeReviewsStatusProps) => {
+    return (
+        <>
+            <StyledFlexAlignCenterBox>
+                <StyledErrorIcon />
+                <Box>
+                    <StyledReviewTitle approved={approved}>
+                        Review required
+                    </StyledReviewTitle>
+                    <Typography>
+                        At least 1 approving review must be submitted before
+                        changes can be applied
+                    </Typography>
+                </Box>
+            </StyledFlexAlignCenterBox>
+
+            <StyledDivider />
+
+            <StyledFlexAlignCenterBox>
+                <StyledErrorIcon />
+                <StyledReviewTitle approved={approved}>
+                    Apply changes is blocked
+                </StyledReviewTitle>
+            </StyledFlexAlignCenterBox>
+        </>
     );
 };

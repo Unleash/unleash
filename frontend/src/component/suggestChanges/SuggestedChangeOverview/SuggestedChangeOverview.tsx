@@ -66,7 +66,7 @@ export const SuggestedChangeOverview: FC = () => {
                         })}
                     >
                         <SuggestedChangeset suggestedChange={suggestedChange} />
-                        <SuggestedChangeReviewStatus />
+                        <SuggestedChangeReviewStatus approved={true} />
                         <Button
                             variant="contained"
                             sx={{ marginTop: 2 }}

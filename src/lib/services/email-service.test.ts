@@ -99,4 +99,5 @@ test('should strip special characters from email subject', async () => {
     expect(emailService.stripSpecialCharacters('http://ööbik.com')).toBe(
         'httpööbikcom',
     );
+    expect(emailService.stripSpecialCharacters('tom-jones')).toBe('tom-jones');
 });

@@ -523,6 +523,8 @@ export const ProjectFeatureToggles = ({
                 featureName={suggestChangesDialogDetails?.featureName}
                 environment={suggestChangesDialogDetails?.environment}
                 onConfirm={onSuggestToggleConfirm}
+                enabled={suggestChangesDialogDetails.enabled}
+                variant='updateEnabled'
             />
         </PageContent>
     );

@@ -1,12 +1,12 @@
 import useAPI from '../useApi/useApi';
 
-interface ISuggestChangeSchema {
+export interface ISuggestChangeSchema {
     feature: string;
     action:
         | 'updateEnabled'
-        | 'strategyAdd'
-        | 'strategyUpdate'
-        | 'strategyDelete';
+        | 'addStrategy'
+        | 'updateStrategy'
+        | 'deleteStrategy';
     payload: string | boolean | object | number;
 }
 

@@ -11,13 +11,13 @@ import {
     StyledErrorIcon,
     StyledReviewTitle,
     StyledDivider,
-} from './SuggestChangeReviewStatus.styles';
+} from './ChangeRequestReviewStatus.styles';
 
 interface ISuggestChangeReviewsStatusProps {
     approved: boolean;
 }
 
-export const SuggestedChangeReviewStatus: FC<
+export const ChangeRequestReviewStatus: FC<
     ISuggestChangeReviewsStatusProps
 > = ({ approved }) => {
     return (

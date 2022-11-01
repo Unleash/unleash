@@ -9,7 +9,7 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { SuggestedChangeReviewStatus } from './SuggestedChangeReviewStatus/SuggestedChangeReviewStatus';
+import { ChangeRequestReviewStatus } from './ChangeRequestReviewStatus/ChangeRequestReviewStatus';
 
 export const ChangeRequestOverview: FC = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -66,7 +66,7 @@ export const ChangeRequestOverview: FC = () => {
                         })}
                     >
                         <ChangeRequest changeRequest={changeRequest} />
-                        <SuggestedChangeReviewStatus approved={true} />
+                        <ChangeRequestReviewStatus approved={true} />
                         <Button
                             variant="contained"
                             sx={{ marginTop: 2 }}

@@ -25,7 +25,9 @@ exports.up = function (db, cb) {
                 `
         INSERT INTO context_fields(name, description, sort_order) VALUES('environment', 'Allows you to constrain on application environment', 0);
         INSERT INTO context_fields(name, description, sort_order) VALUES('userId', 'Allows you to constrain on userId', 1);
-        INSERT INTO context_fields(name, description, sort_order) VALUES('appName', 'Allows you to constrain on application name', 2);
+        INSERT INTO context_fields(name, description, sort_order) VALUES('appName', 'Allows you to constrain on application name', 4);
+        INSERT INTO context_fields(name, description, sort_order) VALUES('csProjectId', 'Allows you to constrain on CS projectId', 2);
+        INSERT INTO context_fields(name, description, sort_order) VALUES('csAccountId', 'Allows you to constrain on CS accountId', 3);
         `,
             ),
         ],

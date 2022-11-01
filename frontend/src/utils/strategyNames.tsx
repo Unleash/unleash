@@ -4,8 +4,10 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import PeopleIcon from '@mui/icons-material/People';
 import LanguageIcon from '@mui/icons-material/Language';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
+import VerifiedUser from '@mui/icons-material/VerifiedUser';
 import CodeIcon from '@mui/icons-material/Code';
 import { ReactComponent as RolloutIcon } from 'assets/icons/rollout.svg';
+import { Folder } from '@mui/icons-material';
 
 export const formatStrategyName = (strategyName: string): string => {
     return formattedStrategyNames[strategyName] ?? strategyName;
@@ -29,6 +31,10 @@ export const getFeatureStrategyIcon = (strategyName: string): ElementType => {
             return RolloutSvgIcon;
         case 'userWithId':
             return PeopleIcon;
+        case 'withCsAccountId':
+            return VerifiedUser;
+        case 'withCsProjectId':
+            return Folder;
         case 'applicationHostname':
             return LocationOnIcon;
         default:
@@ -52,4 +58,6 @@ export const formattedStrategyNames: Record<string, string> = {
     gradualRolloutUserId: 'Users',
     remoteAddress: 'IPs',
     userWithId: 'UserIDs',
+    withCsProjectId: 'CS Project IDs',
+    withCsAccountId: 'CS Account IDs',
 };

@@ -7,6 +7,7 @@ import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashCon
 import produce from 'immer';
 import React from 'react';
 import { IFormErrors } from 'hooks/useFormErrors';
+import WithCsProjectIdStrategy from 'component/feature/StrategyTypes/WithCsProjectIdStrategy/WithCsProjectId';
 
 interface IFeatureStrategyTypeProps {
     hasAccess: boolean;
@@ -39,6 +40,8 @@ export const FeatureStrategyType = ({
         validateParameter(name, value);
     };
 
+    console.log(strategy.name);
+
     switch (strategy.name) {
         case 'default':
             return <DefaultStrategy strategyDefinition={strategyDefinition} />;
@@ -54,6 +57,15 @@ export const FeatureStrategyType = ({
         case 'userWithId':
             return (
                 <UserWithIdStrategy
+                    parameters={strategy.parameters ?? {}}
+                    updateParameter={updateParameter}
+                    editable={hasAccess}
+                    errors={errors}
+                />
+            );
+        case 'withCsProjectId':
+            return (
+                <WithCsProjectIdStrategy
                     parameters={strategy.parameters ?? {}}
                     updateParameter={updateParameter}
                     editable={hasAccess}

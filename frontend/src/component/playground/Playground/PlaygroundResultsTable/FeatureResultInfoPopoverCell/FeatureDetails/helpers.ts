@@ -9,6 +9,8 @@ export const DEFAULT_STRATEGIES = [
     'gradualRolloutUserId',
     'remoteAddress',
     'userWithId',
+    'withCsProjectId',
+    'withCsAccountId',
 ];
 
 export function checkForEmptyValues(object?: Object): boolean {

@@ -8,6 +8,8 @@ import FlexibleRolloutStrategy from './flexible-rollout-strategy';
 import { Strategy } from './strategy';
 import UnknownStrategy from './unknown-strategy';
 import ApplicationHostnameStrategy from './application-hostname-strategy';
+import WithCsProjectIdStrategy from './with-cs-project-id-strategy';
+import WithCsAccountdStrategy from './with-cs-account-id-strategy';
 
 export { Strategy } from './strategy';
 export { StrategyTransportInterface } from './strategy';
@@ -19,6 +21,8 @@ export const defaultStrategies: Array<Strategy> = [
     new GradualRolloutUserIdStrategy(),
     new GradualRolloutSessionIdStrategy(),
     new UserWithIdStrategy(),
+    new WithCsProjectIdStrategy(),
+    new WithCsAccountdStrategy(),
     new RemoteAddressStrategy(),
     new FlexibleRolloutStrategy(),
     new UnknownStrategy(),

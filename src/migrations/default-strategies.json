@@ -17,6 +17,30 @@
     ]
   },
   {
+    "name": "withCsProjectId",
+    "description": "Active for users in a CS projectId defined in the csProjectIds-list",
+    "parameters": [
+      {
+        "name": "csProjectIds",
+        "type": "list",
+        "description": "Comma Separated list of CS projects",
+        "required": false
+      }
+    ]
+  },
+  {
+    "name": "withCsAccountId",
+    "description": "Active for users with an accountId defined in the accountIds-list",
+    "parameters": [
+      {
+        "name": "csAccountIds",
+        "type": "list",
+        "description": "Comma Separated list of CS account Id",
+        "required": false
+      }
+    ]
+  },
+  {
     "name": "applicationHostname",
     "description": "Active for client instances with a hostName in the hostNames-list.",
     "parameters": [

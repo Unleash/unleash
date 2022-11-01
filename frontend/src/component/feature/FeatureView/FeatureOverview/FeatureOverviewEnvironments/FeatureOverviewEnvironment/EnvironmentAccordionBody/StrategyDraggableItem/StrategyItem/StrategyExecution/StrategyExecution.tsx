@@ -82,6 +82,26 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
                     return (
                         <ConstraintItem key={key} value={users} text="user" />
                     );
+                case 'csProjectIds':
+                case 'CsProjectIds':
+                    const csProjectIds = parseParameterStrings(parameters[key]);
+                    return (
+                        <ConstraintItem
+                            key={key}
+                            value={csProjectIds}
+                            text="project"
+                        />
+                    );
+                case 'csAccountIds':
+                case 'CsAccountIds':
+                    const csAccountIds = parseParameterStrings(parameters[key]);
+                    return (
+                        <ConstraintItem
+                            key={key}
+                            value={csAccountIds}
+                            text="account"
+                        />
+                    );
                 case 'hostNames':
                 case 'HostNames':
                     const hosts = parseParameterStrings(parameters[key]);

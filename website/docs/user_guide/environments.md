@@ -69,7 +69,7 @@ Unleash environments can be cloned. Cloning an environment creates a **new** env
 When cloning an environment, you must give the new environment
 - a name
 - an environment type
-- a list of projects to clone configurations in
+- a list of projects to clone feature configurations in
 
 You must also decide whether you want to clone the user permissions to the new environment or to make it a fresh environment where only an admin or editor of the selected projects can make changes. You can always add permissions later, using [Custom Project Roles](../user_guide/rbac#custom-project-roles).
 

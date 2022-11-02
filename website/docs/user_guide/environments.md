@@ -71,7 +71,7 @@ When cloning an environment, you must give the new environment
 - an environment type
 - a list of projects to clone feature configurations in
 
-You must also decide whether you want to clone the user permissions to the new environment or to make it a fresh environment where only an admin or editor of the selected projects can make changes. You can always add permissions later, using [Custom Project Roles](../user_guide/rbac#custom-project-roles).
+You can also clone user permissions into the new environment. When you do that, permissions in the new environment will be the same as in the environment you cloned from. If you don't clone permissions, only admins and project editors can make changes in the new environment. You can change permissions after creation by using [custom project roles](../user_guide/rbac#custom-project-roles).
 
 In order to clone an environment, you can follow the [How to clone environments](../how-to/how-to-clone-environments.mdx) guide.
 

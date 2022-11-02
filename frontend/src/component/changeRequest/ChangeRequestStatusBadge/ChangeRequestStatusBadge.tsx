@@ -35,10 +35,7 @@ export const ChangeRequestStatusBadge: VFC<IChangeRequestStatusBadgeProps> = ({
             );
         case 'Cancelled':
             return (
-                <Badge
-                    color="error"
-                    icon={<Close fontSize={'small'} sx={{ mr: 8 }} />}
-                >
+                <Badge color="error" icon={<Close fontSize={'small'} />}>
                     Cancelled
                 </Badge>
             );

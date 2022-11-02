@@ -3,7 +3,12 @@ import { Cancel, CheckCircle } from '@mui/icons-material';
 import { Box, Typography, Divider } from '@mui/material';
 
 const styledComponentPropCheck = () => (prop: string) =>
-    prop !== 'color' && prop !== 'sx' && prop !== 'approved';
+    prop !== 'color' &&
+    prop !== 'sx' &&
+    prop !== 'approved' &&
+    prop !== 'border' &&
+    prop !== 'bgColor' &&
+    prop !== 'svgColor';
 
 export const StyledFlexAlignCenterBox = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -31,11 +36,9 @@ export const StyledOuterContainer = styled(Box)(({ theme }) => ({
 
 export const StyledButtonContainer = styled(Box, {
     shouldForwardProp: styledComponentPropCheck(),
-})<{ approved: boolean }>(({ theme, approved }) => ({
+})<{ bgColor: string; svgColor: string }>(({ theme, bgColor, svgColor }) => ({
     borderRadius: `${theme.shape.borderRadiusMedium}px`,
-    backgroundColor: approved
-        ? theme.palette.success.main
-        : theme.palette.tableHeaderBackground,
+    backgroundColor: bgColor,
     padding: theme.spacing(1, 2),
     marginRight: theme.spacing(2),
     height: '45px',
@@ -44,9 +47,7 @@ export const StyledButtonContainer = styled(Box, {
     alignItems: 'center',
     justifyContent: 'center',
     ['svg']: {
-        color: approved
-            ? theme.palette.tertiary.background
-            : theme.palette.neutral.main,
+        color: svgColor,
     },
 }));
 
@@ -56,18 +57,16 @@ export const StyledDivider = styled(Divider)(({ theme }) => ({
 
 export const StyledReviewStatusContainer = styled(Box, {
     shouldForwardProp: styledComponentPropCheck(),
-})<{ approved: boolean }>(({ theme, approved }) => ({
+})<{ border: boolean }>(({ theme, border }) => ({
     borderRadius: `${theme.shape.borderRadiusLarge}px`,
-    border: approved
-        ? `2px solid ${theme.palette.success.main}`
-        : `1px solid ${theme.palette.tertiary.main}`,
+    border: border,
     padding: theme.spacing(3),
     width: '100%',
 }));
 
 export const StyledReviewTitle = styled(Typography, {
     shouldForwardProp: styledComponentPropCheck(),
-})<{ approved: boolean }>(({ theme, approved }) => ({
+})<{ color: string }>(({ theme, color }) => ({
     fontWeight: 'bold',
-    color: approved ? theme.palette.success.main : theme.palette.error.main,
+    color,
 }));

@@ -8,9 +8,9 @@ import TimelineDot from '@mui/lab/TimelineDot';
 import TimelineConnector from '@mui/lab/TimelineConnector';
 import TimelineContent from '@mui/lab/TimelineContent';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { SuggestChangesetState } from '../suggestChanges.types';
+import { ChangeRequestState } from '../changeRequest.types';
 interface ISuggestChangeTimelineProps {
-    state: SuggestChangesetState;
+    state: ChangeRequestState;
 }
 interface ITimelineData {
     title: string;
@@ -37,10 +37,8 @@ const StyledTimeline = styled(Timeline)(() => ({
 export const ChangeRequestTimeline: FC<ISuggestChangeTimelineProps> = ({
     state,
 }) => {
-    const createTimeLineData = (
-        state: SuggestChangesetState
-    ): ITimelineData[] => {
-        const steps: SuggestChangesetState[] = [
+    const createTimeLineData = (state: ChangeRequestState): ITimelineData[] => {
+        const steps: ChangeRequestState[] = [
             'Draft',
             'In review',
             'Approved',

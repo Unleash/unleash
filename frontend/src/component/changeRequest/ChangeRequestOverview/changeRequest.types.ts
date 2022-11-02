@@ -1,4 +1,4 @@
-export type SuggestChangesetState =
+export type ChangeRequestState =
     | 'Draft'
     | 'Approved'
     | 'In review'

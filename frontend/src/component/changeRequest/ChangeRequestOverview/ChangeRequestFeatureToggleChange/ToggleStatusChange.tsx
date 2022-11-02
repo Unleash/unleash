@@ -1,7 +1,7 @@
 import { VFC } from 'react';
 import { Link, Box } from '@mui/material';
-import { StatusChip } from 'component/common/StatusChip/StatusChip';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { Badge } from 'component/common/Badge/Badge';
 
 interface IPlaygroundResultsTable {
     enabled: boolean;
@@ -16,10 +16,9 @@ export const ToggleStatusChange: VFC<IPlaygroundResultsTable> = ({
         <Box sx={{ p: 1, display: 'flex', justifyContent: 'space-between' }}>
             <Box>
                 New status:{' '}
-                <StatusChip
-                    label={enabled ? ' Enabled' : 'Disabled'}
-                    variant={enabled ? 'true' : 'false'}
-                />
+                <Badge color={enabled ? 'success' : 'error'}>
+                    {enabled ? ' Enabled' : 'Disabled'}
+                </Badge>
             </Box>
             <ConditionallyRender
                 condition={Boolean(onDiscard)}

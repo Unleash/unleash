@@ -4,7 +4,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { ReactComponent as FeatureEnabledIcon } from 'assets/icons/isenabled-true.svg';
 import { ReactComponent as FeatureDisabledIcon } from 'assets/icons/isenabled-false.svg';
 import { WarningOutlined } from '@mui/icons-material';
-import { StatusChip } from 'component/common/StatusChip/StatusChip';
+import { Badge } from 'component/common/Badge/Badge';
 
 interface IResultChipProps {
     enabled: boolean | 'unevaluated' | 'unknown';
@@ -46,25 +46,22 @@ export const PlaygroundResultChip: VFC<IResultChipProps> = ({
     return (
         <ConditionallyRender
             condition={enabled === 'unknown' || enabled === 'unevaluated'}
-            show={
-                <StatusChip icon={showIcon ? icon : undefined} label={label} />
-            }
+            show={<Badge icon={showIcon ? icon : undefined} color="warning">{label}</Badge>}
             elseShow={
                 <ConditionallyRender
                     condition={typeof enabled === 'boolean' && Boolean(enabled)}
                     show={
-                        <StatusChip
-                            variant="true"
+                        <Badge
+                            color="success"
                             icon={showIcon ? icon : undefined}
-                            label={label}
-                        />
+                        >
+                            {label}
+                        </Badge>
                     }
                     elseShow={
-                        <StatusChip
-                            variant="false"
-                            icon={showIcon ? icon : undefined}
-                            label={label}
-                        />
+                        <Badge color="error" icon={showIcon ? icon : undefined}>
+                            {label}
+                        </Badge>
                     }
                 />
             }

@@ -1,10 +1,10 @@
 import { VFC } from 'react';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
-import { resolveChangeRequestStatusIcon } from 'component/changeRequest/changeRequest.utils';
 import { ChangeRequestState } from 'component/changeRequest/changeRequest.types';
+import { ChangeRequestStatusBadge } from 'component/changeRequest/ChangeRequestStatusBadge/ChangeRequestStatusBadge';
 
 interface IChangeRequestStatusCellProps {
-    value?: string | null;
+    value?: string | null; // FIXME: proper type
 }
 
 export const ChangeRequestStatusCell: VFC<IChangeRequestStatusCellProps> = ({
@@ -12,7 +12,7 @@ export const ChangeRequestStatusCell: VFC<IChangeRequestStatusCellProps> = ({
 }) => {
     const renderState = () => {
         if (!value) return null;
-        return resolveChangeRequestStatusIcon(value as ChangeRequestState);
+        return <ChangeRequestStatusBadge state={value as ChangeRequestState} />;
     };
 
     if (!value) {

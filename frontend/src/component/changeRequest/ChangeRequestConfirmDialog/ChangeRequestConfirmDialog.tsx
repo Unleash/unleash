@@ -1,7 +1,9 @@
-import {FC} from 'react';
-import {Alert, Typography} from '@mui/material';
-import {Dialogue} from 'component/common/Dialogue/Dialogue';
-import {IFeatureStrategyPayload} from "../../../interfaces/strategy";
+import { FC } from 'react';
+import { Alert, styled, Typography } from '@mui/material';
+import { Dialogue } from 'component/common/Dialogue/Dialogue';
+import { IFeatureStrategy } from '../../../interfaces/strategy';
+import { ConditionallyRender } from '../../common/ConditionallyRender/ConditionallyRender';
+import { formatStrategyName } from '../../../utils/strategyNames';
 
 interface IChangeRequestDialogueProps {
     isOpen: boolean;
@@ -10,10 +12,16 @@ interface IChangeRequestDialogueProps {
     featureName?: string;
     environment?: string;
     fromEnvironment?: string;
-    payload?: IFeatureStrategyPayload | IFeatureStrategyPayload[];
+    payload?: IFeatureStrategy | IFeatureStrategy[];
     showBanner?: boolean;
     enabled?: boolean;
-    variant: 'updateEnabled' | 'addStrategy' | 'copyStrategy' | 'removeStrategy' | 'updateStrategy'
+    variant:
+        | 'updateEnabled'
+        | 'addStrategy'
+        | 'copyStrategy'
+        | 'copyStrategies'
+        | 'removeStrategy'
+        | 'updateStrategy';
 }
 
 interface UpdateEnabledMsg {
@@ -22,34 +30,64 @@ interface UpdateEnabledMsg {
     environment: string;
 }
 
-const UpdateEnabled = ({enabled, featureName, environment}: UpdateEnabledMsg) => (
+const UpdateEnabled = ({
+    enabled,
+    featureName,
+    environment,
+}: UpdateEnabledMsg) => (
     <Typography>
         <strong>{enabled ? 'Disable' : 'Enable'}</strong> feature toggle{' '}
         <strong>{featureName}</strong> in <strong>{environment}</strong>
     </Typography>
-)
+);
 
 interface CopyStrategyMsg {
-    payload: IFeatureStrategyPayload | IFeatureStrategyPayload[];
+    payload: IFeatureStrategy | IFeatureStrategy[];
     fromEnvironment: string;
     environment: string;
 }
 
-const CopyStrategy = ({payload, fromEnvironment, environment}: CopyStrategyMsg) => (
-    <>
-    {Array.isArray(payload) ?
-        payload.map(strategy => (
+const CopyStrategy = ({
+    payload,
+    fromEnvironment,
+    environment,
+}: CopyStrategyMsg) => (
+    <Typography>
+        <strong>
+            Copy {formatStrategyName((payload as IFeatureStrategy)?.name)}{' '}
+            strategy{' '}
+        </strong>{' '}
+        from {fromEnvironment} to {environment}
+    </Typography>
+);
+
+const MsgContainer = styled('div')(({ theme }) => ({
+    '&>*:nth-child(n)': {
+        margin: theme.spacing(1, 0),
+    },
+}));
+
+const CopyStrategies = ({
+    payload,
+    fromEnvironment,
+    environment,
+}: CopyStrategyMsg) => (
+    <MsgContainer>
+        <Typography>
+            <strong>Copy: </strong>
+        </Typography>
+        {(payload as IFeatureStrategy[])?.map(strategy => (
             <Typography>
-                <strong>Copy {strategy?.name} strategy </strong>{' '}
-                from {fromEnvironment} to {environment}
+                <strong>
+                    {formatStrategyName((strategy as IFeatureStrategy)?.name)}{' '}
+                    strategy{' '}
+                </strong>{' '}
             </Typography>
-        ))
-        :
-        (<Typography>
-            <strong>Copy {payload?.name} strategy </strong>{' '}
+        ))}
+        <Typography>
             from {fromEnvironment} to {environment}
-        </Typography>)}
-    </>
+        </Typography>
+    </MsgContainer>
 );
 
 export const ChangeRequestDialogue: FC<IChangeRequestDialogueProps> = ({
@@ -62,39 +100,56 @@ export const ChangeRequestDialogue: FC<IChangeRequestDialogueProps> = ({
     environment,
     fromEnvironment,
     variant,
-    showBanner
-
+    showBanner,
 }) => (
     <Dialogue
         open={isOpen}
-        primaryButtonText="Add to draft"
+        primaryButtonText="Add suggestion to draft"
         secondaryButtonText="Cancel"
         onClick={onConfirm}
         onClose={onClose}
         title="Request changes"
+        fullWidth
     >
-        {showBanner && <Alert severity="info" sx={{mb: 2}}>
-            Suggest changes is enabled for {environment}. Your changes needs to
-            be approved before they will be live. All the changes you do now
-            will be added into a draft that you can submit for review.
-        </Alert>}
+        {showBanner && (
+            <Alert severity="info" sx={{ mb: 2 }}>
+                Suggest changes is enabled for {environment}. Your changes needs
+                to be approved before they will be live. All the changes you do
+                now will be added into a draft that you can submit for review.
+            </Alert>
+        )}
         <Typography variant="body2" color="text.secondary">
-           Your suggestion:
+            Your suggestion:
         </Typography>
-        {variant === 'updateEnabled' && (
-            <UpdateEnabled
-                environment={environment!}
-                featureName={featureName!}
-                enabled={enabled!}
-            />)
-        }
-
-        {variant === 'copyStrategy' && (
-            <CopyStrategy
-                environment={environment!}
-                fromEnvironment={fromEnvironment!}
-                payload={payload!}
-            />)
-        }
+        <ConditionallyRender
+            condition={variant === 'updateEnabled'}
+            show={
+                <UpdateEnabled
+                    environment={environment!}
+                    featureName={featureName!}
+                    enabled={enabled!}
+                />
+            }
+        />
+        <ConditionallyRender
+            condition={variant === 'copyStrategy'}
+            show={
+                <CopyStrategy
+                    environment={environment!}
+                    fromEnvironment={fromEnvironment!}
+                    payload={payload!}
+                />
+            }
+        />
+        <ConditionallyRender
+            condition={variant === 'copyStrategies'}
+            show={
+                <CopyStrategies
+                    environment={environment!}
+                    fromEnvironment={fromEnvironment!}
+                    payload={payload!}
+                />
+            }
+        />
     </Dialogue>
 );

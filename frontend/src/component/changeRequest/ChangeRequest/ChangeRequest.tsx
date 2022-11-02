@@ -8,6 +8,16 @@ import type { IChangeRequestResponse } from 'hooks/api/getters/useChangeRequestD
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
+import {
+    StrategyAddedChange,
+    StrategyDeletedChange,
+    StrategyEditedChange,
+} from '../ChangeRequestOverview/ChangeRequestFeatureToggleChange/StrategyChange';
+import {
+    formatStrategyName,
+    GetFeatureStrategyIcon,
+} from '../../../utils/strategyNames';
+import { IFeatureStrategyPayload } from '../../../interfaces/strategy';
 
 interface IChangeRequest {
     changeRequest: IChangeRequestResponse;
@@ -55,20 +65,28 @@ export const ChangeRequest: VFC<IChangeRequest> = ({
                                 condition={change.action === 'updateEnabled'}
                                 show={
                                     <ToggleStatusChange
-                                        enabled={change?.payload?.enabled}
+                                        enabled={
+                                            (change?.payload as any)?.enabled
+                                        }
                                         onDiscard={onDiscard(change.id)}
                                     />
                                 }
                             />
-                            {/* <ConditionallyRender
+                            <ConditionallyRender
                                 condition={change.action === 'addStrategy'}
                                 show={
                                     <StrategyAddedChange>
                                         <GetFeatureStrategyIcon
-                                            strategyName={change.payload.name}
+                                            strategyName={
+                                                (
+                                                    change.payload as IFeatureStrategyPayload
+                                                )?.name!
+                                            }
                                         />
                                         {formatStrategyName(
-                                            change.payload.name
+                                            (
+                                                change.payload as IFeatureStrategyPayload
+                                            )?.name!
                                         )}
                                     </StrategyAddedChange>
                                 }
@@ -80,7 +98,7 @@ export const ChangeRequest: VFC<IChangeRequest> = ({
                             <ConditionallyRender
                                 condition={change.action === 'updateStrategy'}
                                 show={<StrategyEditedChange />}
-                            /> */}
+                            />
                         </Box>
                     ))}
                 </ChangeRequestFeatureToggleChange>

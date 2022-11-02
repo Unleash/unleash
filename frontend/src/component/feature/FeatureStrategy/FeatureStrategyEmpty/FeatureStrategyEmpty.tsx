@@ -12,10 +12,9 @@ import { useFeatureImmutable } from 'hooks/api/getters/useFeature/useFeatureImmu
 import { getFeatureStrategyIcon } from 'utils/strategyNames';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { CopyButton } from './CopyButton/CopyButton';
-import useUiConfig from "../../../../hooks/api/getters/useUiConfig/useUiConfig";
-import {useChangeRequestAddStrategy} from "../../../../hooks/useChangeRequestAddStrategy";
-import {c} from "msw/lib/glossary-dc3fd077";
-import {ChangeRequestDialogue} from "../../../changeRequest/ChangeRequestConfirmDialog/ChangeRequestConfirmDialog";
+import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
+import { useChangeRequestAddStrategy } from '../../../../hooks/useChangeRequestAddStrategy';
+import { ChangeRequestDialogue } from '../../../changeRequest/ChangeRequestConfirmDialog/ChangeRequestConfirmDialog';
 
 interface IFeatureStrategyEmptyProps {
     projectId: string;
@@ -45,7 +44,7 @@ export const FeatureStrategyEmpty = ({
     );
 
     const { uiConfig } = useUiConfig();
-    const suggestChangesEnabled = uiConfig?.flags?.changeRequests
+    const suggestChangesEnabled = uiConfig?.flags?.changeRequests;
 
     const {
         changeRequestDialogDetails,
@@ -74,7 +73,11 @@ export const FeatureStrategyEmpty = ({
             )?.strategies || [];
 
         if (suggestChangesEnabled) {
-            await onChangeRequestAddStrategies(environmentId, strategies, fromEnvironmentName);
+            await onChangeRequestAddStrategies(
+                environmentId,
+                strategies,
+                fromEnvironmentName
+            );
             return;
         }
 
@@ -144,7 +147,7 @@ export const FeatureStrategyEmpty = ({
                 fromEnvironment={changeRequestDialogDetails?.fromEnvironment}
                 onConfirm={onChangeRequestAddStrategiesConfirm}
                 payload={changeRequestDialogDetails.strategies!}
-                variant='copyStrategy'
+                variant="copyStrategies"
             />
 
             <div className={styles.container}>
@@ -152,8 +155,8 @@ export const FeatureStrategyEmpty = ({
                     You have not defined any strategies yet.
                 </div>
                 <p className={styles.description}>
-                    Strategies added in this environment will only be executed if
-                    the SDK is using an{' '}
+                    Strategies added in this environment will only be executed
+                    if the SDK is using an{' '}
                     <Link to="/admin/api">API key configured</Link> for this
                     environment.
                 </p>
@@ -188,7 +191,9 @@ export const FeatureStrategyEmpty = ({
                     />
                 </Box>
                 <Box sx={{ width: '100%', mt: 3 }}>
-                    <SectionSeparator>Or use a strategy template</SectionSeparator>
+                    <SectionSeparator>
+                        Or use a strategy template
+                    </SectionSeparator>
                 </Box>
                 <Box
                     sx={{

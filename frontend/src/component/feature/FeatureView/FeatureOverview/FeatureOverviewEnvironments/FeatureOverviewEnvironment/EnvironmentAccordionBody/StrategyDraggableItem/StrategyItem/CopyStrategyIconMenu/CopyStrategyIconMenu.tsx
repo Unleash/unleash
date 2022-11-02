@@ -1,29 +1,36 @@
-import {MouseEvent, useContext, useState, VFC} from 'react';
-import {IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Tooltip,} from '@mui/material';
-import {AddToPhotos as CopyIcon, Lock} from '@mui/icons-material';
-import {IFeatureStrategy} from 'interfaces/strategy';
-import {useRequiredPathParam} from 'hooks/useRequiredPathParam';
-import {IFeatureEnvironment} from 'interfaces/featureToggle';
+import { MouseEvent, useContext, useState, VFC } from 'react';
+import {
+    IconButton,
+    ListItemIcon,
+    ListItemText,
+    Menu,
+    MenuItem,
+    Tooltip,
+} from '@mui/material';
+import { AddToPhotos as CopyIcon, Lock } from '@mui/icons-material';
+import { IFeatureStrategy } from 'interfaces/strategy';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import { IFeatureEnvironment } from 'interfaces/featureToggle';
 import AccessContext from 'contexts/AccessContext';
-import {CREATE_FEATURE_STRATEGY} from 'component/providers/AccessProvider/permissions';
-import {ConditionallyRender} from 'component/common/ConditionallyRender/ConditionallyRender';
-import {useFeature} from 'hooks/api/getters/useFeature/useFeature';
+import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import useFeatureStrategyApi from 'hooks/api/actions/useFeatureStrategyApi/useFeatureStrategyApi';
 import useToast from 'hooks/useToast';
-import {useFeatureImmutable} from 'hooks/api/getters/useFeature/useFeatureImmutable';
-import {formatUnknownError} from 'utils/formatUnknownError';
-import useUiConfig from "hooks/api/getters/useUiConfig/useUiConfig";
-import {useChangeRequestAddStrategy} from "hooks/useChangeRequestAddStrategy";
-import {
-    ChangeRequestDialogue
-} from "../../../../../../../../../changeRequest/ChangeRequestConfirmDialog/ChangeRequestConfirmDialog";
+import { useFeatureImmutable } from 'hooks/api/getters/useFeature/useFeatureImmutable';
+import { formatUnknownError } from 'utils/formatUnknownError';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { useChangeRequestAddStrategy } from 'hooks/useChangeRequestAddStrategy';
+import { ChangeRequestDialogue } from '../../../../../../../../../changeRequest/ChangeRequestConfirmDialog/ChangeRequestConfirmDialog';
 
 interface ICopyStrategyIconMenuProps {
+    environmentId: string;
     environments: IFeatureEnvironment['name'][];
     strategy: IFeatureStrategy;
 }
 
 export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
+    environmentId,
     environments,
     strategy,
 }) => {
@@ -44,7 +51,7 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
     };
     const { hasAccess } = useContext(AccessContext);
     const { uiConfig } = useUiConfig();
-    const suggestChangesEnabled = uiConfig?.flags?.changeRequests
+    const suggestChangesEnabled = uiConfig?.flags?.changeRequests;
 
     const {
         changeRequestDialogDetails,
@@ -53,14 +60,22 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
         onChangeRequestAddStrategyConfirm,
     } = useChangeRequestAddStrategy(projectId, featureId, 'addStrategy');
 
-    const onCopyStrategy = async (environmentId: string) => {
+    const onCopyStrategy = async (environment: string) => {
         const { id, ...strategyCopy } = {
             ...strategy,
-            environment: environmentId,
+            environment,
             copyOf: strategy.id,
         };
+        console.log(strategy);
         if (suggestChangesEnabled) {
-            await onChangeRequestAddStrategy(environmentId, strategyCopy)
+            await onChangeRequestAddStrategy(
+                environment,
+                {
+                    id,
+                    ...strategyCopy,
+                },
+                environmentId
+            );
             return;
         }
 
@@ -95,10 +110,10 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
                 onClose={onChangeRequestAddStrategyClose}
                 featureName={changeRequestDialogDetails?.featureName}
                 environment={changeRequestDialogDetails?.environment}
-                fromEnvironment={strategy?.environment}
+                fromEnvironment={changeRequestDialogDetails?.fromEnvironment}
                 onConfirm={onChangeRequestAddStrategyConfirm}
                 payload={changeRequestDialogDetails.strategy!}
-                variant='copyStrategy'
+                variant="copyStrategy"
             />
             <Tooltip
                 title={`Copy to another environment${

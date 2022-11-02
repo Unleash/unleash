@@ -2,13 +2,16 @@ import useSWR from 'swr';
 import { useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
+import { IFeatureStrategyPayload } from '../../../../interfaces/strategy';
 
 interface IChange {
     id: number;
     action: string;
-    payload: {
-        enabled: boolean; // FIXME: add other action types
-    };
+    payload:
+        | {
+              enabled: boolean; // FIXME: add other action types
+          }
+        | IFeatureStrategyPayload;
     createdAt: Date;
     createdBy: {
         id: number;

@@ -1,25 +1,31 @@
-import {useCallback, useState} from 'react';
+import { useCallback, useState } from 'react';
 import useToast from 'hooks/useToast';
-import {formatUnknownError} from 'utils/formatUnknownError';
-import {IFeatureStrategyPayload} from "../interfaces/strategy";
-import {useChangeRequestApi} from "./api/actions/useChangeRequestApi/useChangeRequestApi";
-import {useChangeRequestDraft} from "./api/getters/useChangeRequestDraft/useChangeRequestDraft";
+import { formatUnknownError } from 'utils/formatUnknownError';
+import {
+    IFeatureStrategy,
+    IFeatureStrategyPayload,
+} from '../interfaces/strategy';
+import { useChangeRequestApi } from './api/actions/useChangeRequestApi/useChangeRequestApi';
+import { useChangeRequestDraft } from './api/getters/useChangeRequestDraft/useChangeRequestDraft';
 
-export type SuggestStrategyAction =
-    'addStrategy'
+export type ChangeRequestStrategyAction =
+    | 'addStrategy'
     | 'updateStrategy'
     | 'deleteStrategy';
 
-export const useChangeRequestAddStrategy = (project: string, featureName: string, action: SuggestStrategyAction) => {
+export const useChangeRequestAddStrategy = (
+    project: string,
+    featureName: string,
+    action: ChangeRequestStrategyAction
+) => {
     const { setToastData, setToastApiError } = useToast();
     const { addChangeRequest } = useChangeRequestApi();
-    const { refetch: refetchSuggestedChange } =
-        useChangeRequestDraft(project);
+    const { refetch: refetchSuggestedChange } = useChangeRequestDraft(project);
 
     const [changeRequestDialogDetails, setChangeRequestDialogDetails] =
         useState<{
-            strategy?: IFeatureStrategyPayload;
-            strategies?: IFeatureStrategyPayload[];
+            strategy?: IFeatureStrategy;
+            strategies?: IFeatureStrategy[];
             featureName?: string;
             environment?: string;
             fromEnvironment?: string;
@@ -27,10 +33,15 @@ export const useChangeRequestAddStrategy = (project: string, featureName: string
         }>({ isOpen: false });
 
     const onChangeRequestAddStrategy = useCallback(
-        (environment: string, strategy: IFeatureStrategyPayload) => {
+        (
+            environment: string,
+            strategy: IFeatureStrategy,
+            fromEnvironment?: string
+        ) => {
             setChangeRequestDialogDetails({
                 featureName,
                 environment,
+                fromEnvironment,
                 strategy,
                 isOpen: true,
             });
@@ -39,7 +50,11 @@ export const useChangeRequestAddStrategy = (project: string, featureName: string
     );
 
     const onChangeRequestAddStrategies = useCallback(
-        (environment: string, strategies: IFeatureStrategyPayload[], fromEnvironment: string) => {
+        (
+            environment: string,
+            strategies: IFeatureStrategy[],
+            fromEnvironment: string
+        ) => {
             setChangeRequestDialogDetails({
                 featureName,
                 environment,
@@ -80,9 +95,9 @@ export const useChangeRequestAddStrategy = (project: string, featureName: string
 
     const onChangeRequestAddStrategiesConfirm = useCallback(async () => {
         try {
-            debugger;
-            changeRequestDialogDetails.strategies!.map(async (strategy) => {
-                    await addChangeRequest(
+            await Promise.all(
+                changeRequestDialogDetails.strategies!.map(strategy => {
+                    return addChangeRequest(
                         project,
                         changeRequestDialogDetails.environment!,
                         {
@@ -91,7 +106,8 @@ export const useChangeRequestAddStrategy = (project: string, featureName: string
                             payload: strategy,
                         }
                     );
-            })
+                })
+            );
             refetchSuggestedChange();
             setChangeRequestDialogDetails({ isOpen: false });
             setToastData({

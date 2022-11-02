@@ -41,7 +41,6 @@ export const ChangeRequest: VFC<IChangeRequest> = ({
 
     return (
         <Box>
-            Changes
             {changeRequest.features?.map(featureToggleChange => (
                 <ChangeRequestFeatureToggleChange
                     key={featureToggleChange.name}

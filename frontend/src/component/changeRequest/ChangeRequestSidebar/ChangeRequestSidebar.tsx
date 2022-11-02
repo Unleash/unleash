@@ -153,7 +153,6 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
                         <Typography variant="body1" color="text.secondary">
                             You request changes for these feature toggles:
                         </Typography>
-                        <hr />
                         <ChangeRequest
                             changeRequest={environmentChangeRequest}
                             onNavigate={() => {

@@ -12,11 +12,10 @@ import { useFeatureImmutable } from 'hooks/api/getters/useFeature/useFeatureImmu
 import { getFeatureStrategyIcon } from 'utils/strategyNames';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { CopyButton } from './CopyButton/CopyButton';
-import { useSegments } from '../../../../hooks/api/getters/useSegments/useSegments';
-import { IFeatureStrategyPayload } from '../../../../interfaces/strategy';
-import {SuggestChangesDialogue} from "../../../suggestChanges/SuggestChangeConfirmDialog/SuggestChangeConfirmDialog";
 import useUiConfig from "../../../../hooks/api/getters/useUiConfig/useUiConfig";
-import {useSuggestAddStrategy} from "../../../../hooks/useSuggestAddStrategy";
+import {useChangeRequestAddStrategy} from "../../../../hooks/useChangeRequestAddStrategy";
+import {c} from "msw/lib/glossary-dc3fd077";
+import {ChangeRequestDialogue} from "../../../changeRequest/ChangeRequestConfirmDialog/ChangeRequestConfirmDialog";
 
 interface IFeatureStrategyEmptyProps {
     projectId: string;
@@ -46,14 +45,14 @@ export const FeatureStrategyEmpty = ({
     );
 
     const { uiConfig } = useUiConfig();
-    const suggestChangesEnabled = uiConfig?.flags?.suggestChanges
+    const suggestChangesEnabled = uiConfig?.flags?.changeRequests
 
     const {
-        onSuggestAddStrategies,
-        onSuggestAddStrategyClose,
-        onSuggestAddStrategiesConfirm,
-        suggestChangesDialogDetails,
-    } = useSuggestAddStrategy(projectId, featureId, 'addStrategy');
+        changeRequestDialogDetails,
+        onChangeRequestAddStrategies,
+        onChangeRequestAddStrategiesConfirm,
+        onChangeRequestAddStrategyClose,
+    } = useChangeRequestAddStrategy(projectId, featureId, 'addStrategy');
 
     const onAfterAddStrategy = (multiple = false) => {
         refetchFeature();
@@ -75,7 +74,7 @@ export const FeatureStrategyEmpty = ({
             )?.strategies || [];
 
         if (suggestChangesEnabled) {
-            await onSuggestAddStrategies(environmentId, strategies, fromEnvironmentName);
+            await onChangeRequestAddStrategies(environmentId, strategies, fromEnvironmentName);
             return;
         }
 
@@ -137,14 +136,14 @@ export const FeatureStrategyEmpty = ({
 
     return (
         <>
-            <SuggestChangesDialogue
-                isOpen={suggestChangesDialogDetails.isOpen}
-                onClose={onSuggestAddStrategyClose}
-                featureName={suggestChangesDialogDetails?.featureName}
+            <ChangeRequestDialogue
+                isOpen={changeRequestDialogDetails.isOpen}
+                onClose={onChangeRequestAddStrategyClose}
+                featureName={changeRequestDialogDetails?.featureName}
                 environment={environmentId}
-                fromEnvironment={suggestChangesDialogDetails?.environment}
-                onConfirm={onSuggestAddStrategiesConfirm}
-                payload={suggestChangesDialogDetails.strategies!}
+                fromEnvironment={changeRequestDialogDetails?.environment}
+                onConfirm={onChangeRequestAddStrategiesConfirm}
+                payload={changeRequestDialogDetails.strategies!}
                 variant='copyStrategy'
             />
 

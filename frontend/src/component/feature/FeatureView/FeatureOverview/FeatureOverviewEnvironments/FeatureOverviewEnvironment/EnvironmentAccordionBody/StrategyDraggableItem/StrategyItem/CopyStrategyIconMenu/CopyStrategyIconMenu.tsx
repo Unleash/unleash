@@ -13,10 +13,10 @@ import useToast from 'hooks/useToast';
 import {useFeatureImmutable} from 'hooks/api/getters/useFeature/useFeatureImmutable';
 import {formatUnknownError} from 'utils/formatUnknownError';
 import useUiConfig from "hooks/api/getters/useUiConfig/useUiConfig";
+import {useChangeRequestAddStrategy} from "hooks/useChangeRequestAddStrategy";
 import {
-    SuggestChangesDialogue
-} from "component/suggestChanges/SuggestChangeConfirmDialog/SuggestChangeConfirmDialog";
-import {useSuggestAddStrategy} from "hooks/useSuggestAddStrategy";
+    ChangeRequestDialogue
+} from "../../../../../../../../../changeRequest/ChangeRequestConfirmDialog/ChangeRequestConfirmDialog";
 
 interface ICopyStrategyIconMenuProps {
     environments: IFeatureEnvironment['name'][];
@@ -44,14 +44,14 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
     };
     const { hasAccess } = useContext(AccessContext);
     const { uiConfig } = useUiConfig();
-    const suggestChangesEnabled = uiConfig?.flags?.suggestChanges
+    const suggestChangesEnabled = uiConfig?.flags?.changeRequests
 
     const {
-        onSuggestAddStrategy,
-        onSuggestAddStrategyClose,
-        onSuggestAddStrategyConfirm,
-        suggestChangesDialogDetails,
-    } = useSuggestAddStrategy(projectId, featureId, 'addStrategy');
+        changeRequestDialogDetails,
+        onChangeRequestAddStrategyClose,
+        onChangeRequestAddStrategy,
+        onChangeRequestAddStrategyConfirm,
+    } = useChangeRequestAddStrategy(projectId, featureId, 'addStrategy');
 
     const onCopyStrategy = async (environmentId: string) => {
         const { id, ...strategyCopy } = {
@@ -60,7 +60,7 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
             copyOf: strategy.id,
         };
         if (suggestChangesEnabled) {
-            await onSuggestAddStrategy(environmentId, strategyCopy)
+            await onChangeRequestAddStrategy(environmentId, strategyCopy)
             return;
         }
 
@@ -90,14 +90,14 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
 
     return (
         <div>
-            <SuggestChangesDialogue
-                isOpen={suggestChangesDialogDetails.isOpen}
-                onClose={onSuggestAddStrategyClose}
-                featureName={suggestChangesDialogDetails?.featureName}
-                environment={suggestChangesDialogDetails?.environment}
+            <ChangeRequestDialogue
+                isOpen={changeRequestDialogDetails.isOpen}
+                onClose={onChangeRequestAddStrategyClose}
+                featureName={changeRequestDialogDetails?.featureName}
+                environment={changeRequestDialogDetails?.environment}
                 fromEnvironment={strategy?.environment}
-                onConfirm={onSuggestAddStrategyConfirm}
-                payload={suggestChangesDialogDetails.strategy!}
+                onConfirm={onChangeRequestAddStrategyConfirm}
+                payload={changeRequestDialogDetails.strategy!}
                 variant='copyStrategy'
             />
             <Tooltip

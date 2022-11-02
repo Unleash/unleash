@@ -9,4 +9,5 @@ export interface IPatStore extends Store<IPat, number> {
         description: string,
         userId: number,
     ): Promise<boolean>;
+    countByUser(userId: number): Promise<number>;
 }

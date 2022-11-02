@@ -42,7 +42,7 @@ export interface IFlags {
     embedProxyFrontend?: boolean;
     publicSignup?: boolean;
     syncSSOGroups?: boolean;
-    suggestChanges?: boolean;
+    changeRequests?: boolean;
     cloneEnvironment?: boolean;
 }
 

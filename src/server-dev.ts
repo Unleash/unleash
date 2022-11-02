@@ -39,7 +39,7 @@ process.nextTick(async () => {
                         anonymiseEventLog: false,
                         responseTimeWithAppName: true,
                         syncSSOGroups: true,
-                        suggestChanges: true,
+                        changeRequests: true,
                         cloneEnvironment: true,
                     },
                 },

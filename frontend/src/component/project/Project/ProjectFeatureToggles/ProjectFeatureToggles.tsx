@@ -36,8 +36,8 @@ import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/Feat
 import { useSearch } from 'hooks/useSearch';
 import { useMediaQuery } from '@mui/material';
 import { Search } from 'component/common/Search/Search';
-import { useSuggestToggle } from 'hooks/useSuggestToggle';
-import { SuggestChangesDialogue } from 'component/suggestChanges/SuggestChangeConfirmDialog/SuggestChangeConfirmDialog';
+import { useChangeRequestToggle } from 'hooks/useChangeRequestToggle';
+import { ChangeRequestDialogue } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestConfirmDialog';
 
 interface IProjectFeatureTogglesProps {
     features: IProject['features'];
@@ -102,11 +102,11 @@ export const ProjectFeatureToggles = ({
     const { toggleFeatureEnvironmentOn, toggleFeatureEnvironmentOff } =
         useFeatureApi();
     const {
-        onSuggestToggle,
-        onSuggestToggleClose,
-        onSuggestToggleConfirm,
-        suggestChangesDialogDetails,
-    } = useSuggestToggle(projectId);
+        onChangeRequestToggle,
+        onChangeRequestToggleClose,
+        onChangeRequestToggleConfirm,
+        changeRequestDialogDetails,
+    } = useChangeRequestToggle(projectId);
 
     const onToggle = useCallback(
         async (
@@ -116,10 +116,10 @@ export const ProjectFeatureToggles = ({
             enabled: boolean
         ) => {
             if (
-                uiConfig?.flags?.suggestChanges &&
+                uiConfig?.flags?.changeRequests &&
                 environment === 'production'
             ) {
-                onSuggestToggle(featureName, environment, enabled);
+                onChangeRequestToggle(featureName, environment, enabled);
                 throw new Error('Additional approval required');
             }
             try {
@@ -344,6 +344,10 @@ export const ProjectFeatureToggles = ({
         [environments] // eslint-disable-line react-hooks/exhaustive-deps
     );
 
+    const getRowId = useCallback((row: any) => {
+        return row.name;
+    }, []);
+
     const {
         allColumns,
         headerGroups,
@@ -359,6 +363,7 @@ export const ProjectFeatureToggles = ({
             sortTypes,
             disableSortRemove: true,
             autoResetSortBy: false,
+            getRowId,
         },
         useFlexLayout,
         useSortBy
@@ -517,12 +522,12 @@ export const ProjectFeatureToggles = ({
                 featureId={featureArchiveState || ''}
                 projectId={projectId}
             />{' '}
-            <SuggestChangesDialogue
-                isOpen={suggestChangesDialogDetails.isOpen}
-                onClose={onSuggestToggleClose}
-                featureName={suggestChangesDialogDetails?.featureName}
-                environment={suggestChangesDialogDetails?.environment}
-                onConfirm={onSuggestToggleConfirm}
+            <ChangeRequestDialogue
+                isOpen={changeRequestDialogDetails.isOpen}
+                onClose={onChangeRequestToggleClose}
+                featureName={changeRequestDialogDetails?.featureName}
+                environment={changeRequestDialogDetails?.environment}
+                onConfirm={onChangeRequestToggleConfirm}
             />
         </PageContent>
     );

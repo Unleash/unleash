@@ -214,3 +214,37 @@ test('can get a token with users', async () => {
 
     await destroy();
 });
+
+test('should not be able to set expiry further than 1 month', async () => {
+    const preHook = (app, config, { userService, accessService }) => {
+        app.use('/api/admin/', async (req, res, next) => {
+            const role = await accessService.getRootRole(RoleName.ADMIN);
+            const user = await userService.createUser({
+                email: 'admin@example.com',
+                rootRole: role.id,
+            });
+            req.user = user;
+            next();
+        });
+    };
+
+    const { request, destroy } = await setupAppWithCustomAuth(stores, preHook);
+
+    const tokenCreate: PublicSignupTokenCreateSchema = {
+        name: 'some-name',
+        expiresAt: expireAt(100).toISOString(),
+    };
+
+    await request
+        .post('/api/admin/invite-link/tokens')
+        .send(tokenCreate)
+        .expect('Content-Type', /json/)
+        .expect(201)
+        .expect((res) => {
+            expect(new Date(res.body.expiresAt).getTime()).toBeLessThan(
+                expireAt(31).getTime(),
+            );
+        });
+
+    await destroy();
+});

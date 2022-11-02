@@ -8,6 +8,8 @@ import crypto from 'crypto';
 import User from '../types/user';
 import BadDataError from '../error/bad-data-error';
 import NameExistsError from '../error/name-exists-error';
+import { OperationDeniedError } from '../error/operation-denied-error';
+import { PAT_LIMIT } from '../util/constants';
 
 export default class PatService {
     private config: IUnleashConfig;
@@ -65,6 +67,12 @@ export default class PatService {
 
         if (new Date(expiresAt) < new Date()) {
             throw new BadDataError('The expiry date should be in future.');
+        }
+
+        if ((await this.patStore.countByUser(userId)) >= PAT_LIMIT) {
+            throw new OperationDeniedError(
+                `Too many PATs (${PAT_LIMIT}) already exist for this user.`,
+            );
         }
 
         if (

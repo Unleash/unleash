@@ -123,3 +123,15 @@ A user group consists of the following:
 Groups do nothing on their own. They must be given a role on a project to assign permissions. You can assign both standard roles and custom project roles to groups.
 
 While a user can only have one role in a given project, a user may belong to multiple groups, and each of those groups may be given a role on a project. In the case where a given user is given permissions to a project through more than one group, the user will inherit most permissive permissions of all their groups in that project.
+
+## User Group SSO Integration
+
+:::info availability
+
+User group SSO Integration is planned to be released in **Unleash 4.18** and will be available for enterprise customers.
+
+:::
+
+User groups also support integration with your Single Sign On provider. This allows you to automatically assign users to groups when they login through Single Sign On (SSO). See [_how to set up group sso sync_](../how-to/how-to-set-up-group-sso-sync.md) for more details.
+
+Users that have been added to a group through your SSO provider will be automatically removed next time they log in if they've been removed from the SSO group. Users that have been manually added to the group will not be affected.

@@ -108,6 +108,7 @@ module.exports = {
                         'user_guide/user-management',
                         'how-to/how-to-create-and-assign-custom-project-roles',
                         'how-to/how-to-create-and-manage-user-groups',
+                        'how-to/how-to-set-up-group-sso-sync',
                     ],
                     type: 'category',
                     link: {
@@ -124,6 +125,7 @@ module.exports = {
                         'advanced/sso-saml',
                         'advanced/sso-saml-keycloak',
                         'advanced/sso-google',
+                        'advanced/sso-keycloak-group-sync',
                     ],
                     type: 'category',
                     link: {

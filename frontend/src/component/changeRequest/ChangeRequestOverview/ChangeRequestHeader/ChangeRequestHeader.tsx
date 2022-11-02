@@ -38,6 +38,7 @@ export const ChangeRequestHeader: FC<{ changeRequest: IChangeRequest }> = ({
                                 display="inline"
                                 fontWeight="bold"
                                 variant="body2"
+                                component="span"
                             >
                                 {changeRequest?.environment}
                             </Typography>{' '}
@@ -46,6 +47,7 @@ export const ChangeRequestHeader: FC<{ changeRequest: IChangeRequest }> = ({
                                 variant="body2"
                                 display="inline"
                                 fontWeight="bold"
+                                component="span"
                             >
                                 {changeRequest?.features.length} feature toggles
                             </Typography>

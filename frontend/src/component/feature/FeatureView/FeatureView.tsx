@@ -30,7 +30,7 @@ import StatusChip from 'component/common/StatusChip/StatusChip';
 import { FeatureNotFound } from 'component/feature/FeatureView/FeatureNotFound/FeatureNotFound';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { FeatureArchiveDialog } from '../../common/FeatureArchiveDialog/FeatureArchiveDialog';
-import { DraftBanner } from 'component/suggestChanges/DraftBanner/DraftBanner';
+import { DraftBanner } from 'component/changeRequest/DraftBanner/DraftBanner';
 import { MainLayout } from 'component/layout/MainLayout/MainLayout';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
@@ -88,7 +88,7 @@ export const FeatureView = () => {
         <MainLayout
             ref={ref}
             subheader={
-                uiConfig?.flags?.suggestChanges ? (
+                uiConfig?.flags?.changeRequests ? (
                     <DraftBanner project={projectId} />
                 ) : null
             }

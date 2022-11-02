@@ -11,7 +11,7 @@ test('disabled middleware should not block paths that use the same path', async 
         conditionalMiddleware(
             () => false,
             (req, res) => {
-                res.send({ suggestChanges: 'hello' });
+                res.send({ changeRequest: 'hello' });
             },
         ),
     );
@@ -30,11 +30,11 @@ test('should return 404 when path is not enabled', async () => {
     const path = '/api/admin/projects';
 
     app.use(
-        `${path}/suggest-changes`,
+        `${path}/change-requests`,
         conditionalMiddleware(
             () => false,
             (req, res) => {
-                res.send({ suggestChanges: 'hello' });
+                res.send({ changeRequest: 'hello' });
             },
         ),
     );
@@ -43,7 +43,7 @@ test('should return 404 when path is not enabled', async () => {
         res.json({ projects: [] });
     });
 
-    await supertest(app).get('/api/admin/projects/suggest-changes').expect(404);
+    await supertest(app).get('/api/admin/projects/change-requests').expect(404);
 });
 
 test('should respect ordering of endpoints', async () => {
@@ -55,7 +55,7 @@ test('should respect ordering of endpoints', async () => {
         conditionalMiddleware(
             () => true,
             (req, res) => {
-                res.json({ name: 'Suggest changes' });
+                res.json({ name: 'Request changes' });
             },
         ),
     );
@@ -66,7 +66,7 @@ test('should respect ordering of endpoints', async () => {
 
     await supertest(app)
         .get('/api/admin/projects')
-        .expect(200, { name: 'Suggest changes' });
+        .expect(200, { name: 'Request changes' });
 });
 
 test('disabled middleware should not block paths that use the same basepath', async () => {
@@ -74,11 +74,11 @@ test('disabled middleware should not block paths that use the same basepath', as
     const path = '/api/admin/projects';
 
     app.use(
-        `${path}/suggest-changes`,
+        `${path}/change-requests`,
         conditionalMiddleware(
             () => false,
             (req, res) => {
-                res.json({ name: 'Suggest changes' });
+                res.json({ name: 'Request changes' });
             },
         ),
     );

@@ -24,10 +24,10 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { DeleteProjectDialogue } from './DeleteProject/DeleteProjectDialogue';
 import { ProjectLog } from './ProjectLog/ProjectLog';
-import { SuggestedChangeOverview } from 'component/suggestChanges/SuggestedChangeOverview/SuggestedChangeOverview';
-import { DraftBanner } from 'component/suggestChanges/DraftBanner/DraftBanner';
+import { ChangeRequestOverview } from 'component/changeRequest/ChangeRequestOverview/ChangeRequestOverview';
+import { DraftBanner } from 'component/changeRequest/DraftBanner/DraftBanner';
 import { MainLayout } from 'component/layout/MainLayout/MainLayout';
-import { ProjectSuggestedChanges } from '../../suggest-changes/ProjectSuggestions/ProjectSuggestedChanges';
+import { ProjectChangeRequests } from '../../changeRequest/ProjectChangeRequests/ProjectChangeRequests';
 
 const StyledDiv = styled('div')(() => ({
     display: 'flex',
@@ -91,8 +91,8 @@ const Project = () => {
         },
         {
             title: 'Change requests',
-            path: `${basePath}/suggest-changes`,
-            name: 'suggest-changes' + '',
+            path: `${basePath}/change-requests`,
+            name: 'change-request' + '',
         },
         {
             title: 'Event log',
@@ -124,7 +124,7 @@ const Project = () => {
         <MainLayout
             ref={ref}
             subheader={
-                uiConfig?.flags?.suggestChanges ? (
+                !uiConfig?.flags?.changeRequests ? (
                     <DraftBanner project={projectId} />
                 ) : null
             }
@@ -235,20 +235,20 @@ const Project = () => {
                 <Route path="archive" element={<ProjectFeaturesArchive />} />
                 <Route path="logs" element={<ProjectLog />} />
                 <Route
-                    path="suggest-changes"
+                    path="change-requests"
                     element={
                         <ConditionallyRender
-                            condition={Boolean(uiConfig?.flags?.suggestChanges)}
-                            show={<ProjectSuggestedChanges />}
+                            condition={Boolean(uiConfig?.flags?.changeRequests)}
+                            show={<ProjectChangeRequests />}
                         />
                     }
                 />
                 <Route
-                    path="suggest-changes/:id"
+                    path="change-requests/:id"
                     element={
                         <ConditionallyRender
-                            condition={Boolean(uiConfig?.flags?.suggestChanges)}
-                            show={<SuggestedChangeOverview />}
+                            condition={Boolean(uiConfig?.flags?.changeRequests)}
+                            show={<ChangeRequestOverview />}
                         />
                     }
                 />

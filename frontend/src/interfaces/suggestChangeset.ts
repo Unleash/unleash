@@ -1,4 +1,4 @@
-export interface ISuggestChangeset {
+export interface IChangeRequest {
     id: number;
     state:
         | 'CREATED'
@@ -11,11 +11,10 @@ export interface ISuggestChangeset {
     environment: string;
     createdBy?: string;
     createdAt?: Date;
-    changes?: ISuggestChange[];
-    events?: ISuggestChangeEvent[];
+    changes?: IChangeRequestEvent[];
 }
 
-export interface ISuggestChange {
+export interface IChangeRequestEvent {
     id: number;
     action:
         | 'updateEnabled'
@@ -28,31 +27,11 @@ export interface ISuggestChange {
     createdAt?: Date;
 }
 
-export enum SuggestChangesetEvent {
+export enum ChangeRequestEvent {
     CREATED = 'CREATED',
     UPDATED = 'UPDATED',
     SUBMITTED = 'SUBMITTED',
     APPROVED = 'APPROVED',
     REJECTED = 'REJECTED',
     CLOSED = 'CLOSED',
-}
-
-export enum SuggestChangeEvent {
-    UPDATE_ENABLED = 'updateFeatureEnabledEvent',
-    ADD_STRATEGY = 'addStrategyEvent',
-    UPDATE_STRATEGY = 'updateStrategyEvent',
-    DELETE_STRATEGY = 'deleteStrategyEvent',
-}
-
-export interface ISuggestChangeEvent {
-    id: number;
-    event: SuggestChangesetEvent;
-    data: ISuggestChangeEventData;
-    createdBy?: string;
-    createdAt?: Date;
-}
-
-export interface ISuggestChangeEventData {
-    feature: string;
-    data: unknown;
 }

@@ -1562,7 +1562,7 @@ This event fires when you delete a segment.
 
 ### 'suggest-change-created'
 
-This event fires when you create a a suggest-changes draft.
+This event fires when you create a a change-request draft.
 
 ```json title="example event: suggest-change-created"
 {

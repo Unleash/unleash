@@ -125,6 +125,7 @@ const FeatureOverviewEnvSwitch = ({
                 featureName={featureId}
                 environment={changeRequestDialogDetails?.environment}
                 onConfirm={onChangeRequestToggleConfirm}
+                variant={'updateEnabled'}
             />
         </div>
     );

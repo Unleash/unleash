@@ -53,14 +53,14 @@ export const ChangeRequestTimeline: FC<ISuggestChangeTimelineProps> = ({
 
     const renderTimeline = () => {
         const data = createTimeLineData(state);
-        const activeIndex = data.findIndex(item => item.active);
-        const hasActiveStep = activeIndex !== -1;
+        const index = data.findIndex(item => item.active);
+        const activeIndex: number | null = index !== -1 ? index : null;
 
         if (state === 'Cancelled') {
             return createCancelledTimeline(data);
         }
 
-        return createTimeline(data, hasActiveStep, activeIndex);
+        return createTimeline(data, activeIndex);
     };
 
     return (
@@ -72,26 +72,22 @@ export const ChangeRequestTimeline: FC<ISuggestChangeTimelineProps> = ({
     );
 };
 
-const createTimeline = (
-    data: ITimelineData[],
-    hasActiveStep: boolean,
-    activeIndex: number
-) => {
+const createTimeline = (data: ITimelineData[], activeIndex: number | null) => {
     return data.map(({ title }, index) => {
-        const notLastItem = !(index === data.length - 1);
+        const shouldConnectToNextItem = index < data.length - 1;
 
         const connector = (
             <ConditionallyRender
-                condition={notLastItem}
+                condition={shouldConnectToNextItem}
                 show={<TimelineConnector />}
             />
         );
 
-        if (hasActiveStep && activeIndex >= index) {
+        if (activeIndex !== null && activeIndex >= index) {
             return createTimelineItem('success', title, connector);
         }
 
-        if (activeIndex + 1 === index) {
+        if (activeIndex !== null && activeIndex + 1 === index) {
             return createTimelineItem('primary', title, connector, {
                 variant: 'outlined',
             });
@@ -103,11 +99,11 @@ const createTimeline = (
 
 const createCancelledTimeline = (data: ITimelineData[]) => {
     return data.map(({ title }, index) => {
-        const notLastItem = !(index === data.length - 1);
+        const shouldConnectToNextItem = index < data.length - 1;
 
         const connector = (
             <ConditionallyRender
-                condition={notLastItem}
+                condition={shouldConnectToNextItem}
                 show={<TimelineConnector />}
             />
         );

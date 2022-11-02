@@ -6,7 +6,10 @@ interface IStatusChip {
     showActive?: boolean;
 }
 
-export const FeatureStatusChip = ({ stale, showActive = true }: IStatusChip) => {
+export const FeatureStatusChip = ({
+    stale,
+    showActive = true,
+}: IStatusChip) => {
     const { classes: styles } = useStyles();
 
     if (!stale && !showActive) {
@@ -30,4 +33,3 @@ export const FeatureStatusChip = ({ stale, showActive = true }: IStatusChip) => 
         </div>
     );
 };
-

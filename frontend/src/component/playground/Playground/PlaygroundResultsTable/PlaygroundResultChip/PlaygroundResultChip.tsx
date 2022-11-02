@@ -46,7 +46,11 @@ export const PlaygroundResultChip: VFC<IResultChipProps> = ({
     return (
         <ConditionallyRender
             condition={enabled === 'unknown' || enabled === 'unevaluated'}
-            show={<Badge icon={showIcon ? icon : undefined} color="warning">{label}</Badge>}
+            show={
+                <Badge icon={showIcon ? icon : undefined} color="warning">
+                    {label}
+                </Badge>
+            }
             elseShow={
                 <ConditionallyRender
                     condition={typeof enabled === 'boolean' && Boolean(enabled)}

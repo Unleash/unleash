@@ -8,7 +8,11 @@ import {
     IClientMetricsStoreV2,
 } from '../../types/stores/client-metrics-store-v2';
 import { clientMetricsSchema } from './schema';
-import { hoursToMilliseconds, secondsToMilliseconds } from 'date-fns';
+import {
+    compareAsc,
+    hoursToMilliseconds,
+    secondsToMilliseconds,
+} from 'date-fns';
 import { IFeatureToggleStore } from '../../types/stores/feature-toggle-store';
 import { CLIENT_METRICS } from '../../types/events';
 import ApiUser from '../../types/api-user';
@@ -16,6 +20,7 @@ import { ALL } from '../../types/models/api-token';
 import User from '../../types/user';
 import { collapseHourlyMetrics } from '../../util/collapseHourlyMetrics';
 import { LastSeenService } from './last-seen-service';
+import { generateHourBuckets, HourBucket } from '../../util/time-utils';
 
 export default class ClientMetricsServiceV2 {
     private config: IUnleashConfig;
@@ -150,12 +155,53 @@ export default class ClientMetricsServiceV2 {
 
     async getClientMetricsForToggle(
         toggleName: string,
-        hoursBack?: number,
+        hoursBack: number = 24,
     ): Promise<IClientMetricsEnv[]> {
-        return this.clientMetricsStoreV2.getMetricsForFeatureToggle(
-            toggleName,
-            hoursBack,
+        const hours = generateHourBuckets(hoursBack);
+        const metrics =
+            await this.clientMetricsStoreV2.getMetricsForFeatureToggle(
+                toggleName,
+                hoursBack,
+            );
+
+        const environments = metrics.reduce(
+            (unique, item) =>
+                unique.includes(item.environment)
+                    ? unique
+                    : [...unique, item.environment],
+            [],
         );
+
+        const applications = metrics.reduce(
+            (unique, item) =>
+                unique.includes(item.appName)
+                    ? unique
+                    : [...unique, item.appName],
+            [],
+        );
+
+        hours.forEach((item: HourBucket) => {
+            if (
+                !metrics.some(
+                    (e) => compareAsc(e.timestamp, item.timestamp) === 0,
+                )
+            ) {
+                environments.forEach((environment) => {
+                    applications.forEach((appName) => {
+                        metrics.push({
+                            timestamp: item.timestamp,
+                            no: 0,
+                            yes: 0,
+                            appName,
+                            environment,
+                            featureName: toggleName,
+                        });
+                    });
+                });
+            }
+        });
+
+        return metrics.sort((a, b) => compareAsc(a.timestamp, b.timestamp));
     }
 
     resolveMetricsEnvironment(user: User | ApiUser, data: IClientApp): string {

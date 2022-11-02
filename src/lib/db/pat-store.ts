@@ -87,6 +87,15 @@ export default class PatStore implements IPatStore {
         return present;
     }
 
+    async countByUser(userId: number): Promise<number> {
+        const result = await this.db.raw(
+            `SELECT COUNT(*) AS count FROM ${TABLE} WHERE user_id = ?`,
+            [userId],
+        );
+        const { count } = result.rows[0];
+        return count;
+    }
+
     async get(id: number): Promise<Pat> {
         const row = await this.db(TABLE).where({ id }).first();
         return fromRow(row);

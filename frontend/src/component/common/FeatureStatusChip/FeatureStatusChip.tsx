@@ -1,12 +1,15 @@
 import { Chip } from '@mui/material';
-import { useStyles } from './StatusChip.styles';
+import { useStyles } from './FeatureStatusChip.styles';
 
 interface IStatusChip {
     stale: boolean;
     showActive?: boolean;
 }
 
-const StatusChip = ({ stale, showActive = true }: IStatusChip) => {
+export const FeatureStatusChip = ({
+    stale,
+    showActive = true,
+}: IStatusChip) => {
     const { classes: styles } = useStyles();
 
     if (!stale && !showActive) {
@@ -30,5 +33,3 @@ const StatusChip = ({ stale, showActive = true }: IStatusChip) => {
         </div>
     );
 };
-
-export default StatusChip;

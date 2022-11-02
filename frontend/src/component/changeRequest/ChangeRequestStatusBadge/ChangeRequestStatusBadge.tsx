@@ -1,18 +1,26 @@
-import { ChangeRequestState } from './changeRequest.types';
+import { VFC } from 'react';
+import { ChangeRequestState } from '../changeRequest.types';
 import { Badge } from 'component/common/Badge/Badge';
 import { Check, CircleOutlined, Close } from '@mui/icons-material';
 
-export const resolveChangeRequestStatusIcon = (state: ChangeRequestState) => {
-    const reviewRequired = (
-        <Badge color="secondary" icon={<CircleOutlined fontSize={'small'} />}>
-            Review required
-        </Badge>
-    );
+interface IChangeRequestStatusBadgeProps {
+    state: ChangeRequestState;
+}
+
+const ReviewRequiredBadge: VFC = () => (
+    <Badge color="secondary" icon={<CircleOutlined fontSize={'small'} />}>
+        Review required
+    </Badge>
+);
+
+export const ChangeRequestStatusBadge: VFC<IChangeRequestStatusBadgeProps> = ({
+    state,
+}) => {
     switch (state) {
         case 'Draft':
-            return reviewRequired;
+            return <ReviewRequiredBadge />;
         case 'In review':
-            return reviewRequired;
+            return <ReviewRequiredBadge />;
         case 'Approved':
             return (
                 <Badge color="success" icon={<Check fontSize={'small'} />}>
@@ -35,6 +43,6 @@ export const resolveChangeRequestStatusIcon = (state: ChangeRequestState) => {
                 </Badge>
             );
         default:
-            return reviewRequired;
+            return <ReviewRequiredBadge />;
     }
 };

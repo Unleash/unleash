@@ -65,6 +65,7 @@ export const ChangeRequestOverview: FC = () => {
                             padding: theme.spacing(2),
                         })}
                     >
+                        Changes
                         <ChangeRequest changeRequest={changeRequest} />
                         <ChangeRequestReviewStatus
                             approved={
@@ -72,7 +73,6 @@ export const ChangeRequestOverview: FC = () => {
                                 changeRequest.state === 'Applied'
                             }
                         />
-
                         <Button
                             variant="contained"
                             sx={{ marginTop: 2 }}

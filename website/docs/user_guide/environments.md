@@ -73,7 +73,7 @@ When cloning an environment, you must give the new environment
 
 You can also clone user permissions into the new environment. When you do that, permissions in the new environment will be the same as in the environment you cloned from. If you don't clone permissions, only admins and project editors can make changes in the new environment. You can change permissions after creation by using [custom project roles](../user_guide/rbac#custom-project-roles).
 
-In order to clone an environment, you can follow the [How to clone environments](../how-to/how-to-clone-environments.mdx) guide.
+In order to clone an environment, you can follow the [how to clone environments](../how-to/how-to-clone-environments.mdx) guide.
 
 Once created, the new environment works just as any other environment.
 

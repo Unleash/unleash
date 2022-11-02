@@ -3,7 +3,7 @@ import { Cancel, CheckCircle } from '@mui/icons-material';
 import { Box, Typography, Divider } from '@mui/material';
 
 const styledComponentPropCheck = () => (prop: string) =>
-    prop !== 'color' && prop !== 'sx';
+    prop !== 'color' && prop !== 'sx' && prop !== 'approved';
 
 export const StyledFlexAlignCenterBox = styled(Box)(({ theme }) => ({
     display: 'flex',

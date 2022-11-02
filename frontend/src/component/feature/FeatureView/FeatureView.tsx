@@ -84,6 +84,8 @@ export const FeatureView = () => {
         return <FeatureNotFound />;
     }
 
+    console.log(uiConfig?.flags);
+
     return (
         <MainLayout
             ref={ref}

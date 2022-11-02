@@ -12,7 +12,6 @@ import {
     StyledReviewTitle,
     StyledDivider,
 } from './ChangeRequestReviewStatus.styles';
-
 interface ISuggestChangeReviewsStatusProps {
     approved: boolean;
 }
@@ -30,13 +29,11 @@ export const ChangeRequestReviewStatus: FC<
                 />
             </StyledButtonContainer>
             <StyledReviewStatusContainer approved={approved}>
-                <StyledFlexAlignCenterBox>
-                    <ConditionallyRender
-                        condition={approved}
-                        show={<Approved approved={approved} />}
-                        elseShow={<ReviewRequired approved={approved} />}
-                    />
-                </StyledFlexAlignCenterBox>
+                <ConditionallyRender
+                    condition={approved}
+                    show={<Approved approved={approved} />}
+                    elseShow={<ReviewRequired approved={approved} />}
+                />
             </StyledReviewStatusContainer>
         </StyledOuterContainer>
     );

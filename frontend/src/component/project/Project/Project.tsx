@@ -124,7 +124,7 @@ const Project = () => {
         <MainLayout
             ref={ref}
             subheader={
-                !uiConfig?.flags?.changeRequests ? (
+                uiConfig?.flags?.changeRequests ? (
                     <DraftBanner project={projectId} />
                 ) : null
             }

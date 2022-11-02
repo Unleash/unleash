@@ -8,7 +8,7 @@ import TimelineDot from '@mui/lab/TimelineDot';
 import TimelineConnector from '@mui/lab/TimelineConnector';
 import TimelineContent from '@mui/lab/TimelineContent';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { ChangeRequestState } from '../changeRequest.types';
+import { ChangeRequestState } from '../../changeRequest.types';
 interface ISuggestChangeTimelineProps {
     state: ChangeRequestState;
 }

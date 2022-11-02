@@ -131,7 +131,7 @@ In order to support configuration per environment we had to rebuild our feature 
 - Will get access to two preconfigured environments: “development” and “production”. Existing users of Unleash will also get an additional “default” environment to simplify the adoption of environments.
 - Will be possible to turn environments on/off for all projects
 - Will be allowed to update and remove environments.
-- Will be allowed to clone or create new environments.
+- Will be allowed to create new environments and clone existing environments.
 
 ## Rollout Plan
 

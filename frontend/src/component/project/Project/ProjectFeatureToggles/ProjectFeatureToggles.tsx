@@ -344,6 +344,10 @@ export const ProjectFeatureToggles = ({
         [environments] // eslint-disable-line react-hooks/exhaustive-deps
     );
 
+    const getRowId = useCallback((row: any) => {
+        return row.name;
+    }, []);
+
     const {
         allColumns,
         headerGroups,
@@ -359,6 +363,7 @@ export const ProjectFeatureToggles = ({
             sortTypes,
             disableSortRemove: true,
             autoResetSortBy: false,
+            getRowId,
         },
         useFlexLayout,
         useSortBy

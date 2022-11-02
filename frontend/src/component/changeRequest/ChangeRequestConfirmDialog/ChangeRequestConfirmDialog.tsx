@@ -1,9 +1,7 @@
-import { FC } from 'react';
-import { Alert, Typography } from '@mui/material';
-import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import {ISuggestChangeSchema} from "../../../hooks/api/actions/useSuggestChangeApi/useSuggestChangeApi";
+import {FC} from 'react';
+import {Alert, Typography} from '@mui/material';
+import {Dialogue} from 'component/common/Dialogue/Dialogue';
 import {IFeatureStrategyPayload} from "../../../interfaces/strategy";
-import {PartialSome} from "../../../../../src/lib/types/partial";
 
 interface IChangeRequestDialogueProps {
     isOpen: boolean;
@@ -42,13 +40,13 @@ const CopyStrategy = ({payload, fromEnvironment, environment}: CopyStrategyMsg) 
     {Array.isArray(payload) ?
         payload.map(strategy => (
             <Typography>
-                <strong>Copy {strategy!.name} strategy </strong>{' '}
+                <strong>Copy {strategy?.name} strategy </strong>{' '}
                 from {fromEnvironment} to {environment}
             </Typography>
         ))
         :
         (<Typography>
-            <strong>Copy {payload!.name} strategy </strong>{' '}
+            <strong>Copy {payload?.name} strategy </strong>{' '}
             from {fromEnvironment} to {environment}
         </Typography>)}
     </>

@@ -80,6 +80,7 @@ export const useChangeRequestAddStrategy = (project: string, featureName: string
 
     const onChangeRequestAddStrategiesConfirm = useCallback(async () => {
         try {
+            debugger;
             changeRequestDialogDetails.strategies!.map(async (strategy) => {
                     await addChangeRequest(
                         project,

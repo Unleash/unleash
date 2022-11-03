@@ -25,7 +25,7 @@ interface IFeatureStrategyRemoveProps {
     icon?: boolean;
 }
 
-interface FeatureStrategyRemoveDialogueProps {
+interface IFeatureStrategyRemoveDialogueProps {
     onRemove: (event: React.FormEvent) => Promise<void>;
     onClose: () => void;
     isOpen: boolean;
@@ -38,11 +38,9 @@ const RemoveAlert: FC = () => (
     </Alert>
 );
 
-const FeatureStrategyRemoveDialogue: FC<FeatureStrategyRemoveDialogueProps> = ({
-    onRemove,
-    onClose,
-    isOpen,
-}) => {
+const FeatureStrategyRemoveDialogue: FC<
+    IFeatureStrategyRemoveDialogueProps
+> = ({ onRemove, onClose, isOpen }) => {
     return (
         <Dialogue
             title="Are you sure you want to delete this strategy?"
@@ -63,7 +61,7 @@ const MsgContainer = styled('div')(({ theme }) => ({
 }));
 
 const SuggestFeatureStrategyRemoveDialogue: FC<
-    FeatureStrategyRemoveDialogueProps
+    IFeatureStrategyRemoveDialogueProps
 > = ({ onRemove, onClose, isOpen }) => {
     return (
         <Dialogue
@@ -85,42 +83,24 @@ const SuggestFeatureStrategyRemoveDialogue: FC<
     );
 };
 
-export const FeatureStrategyRemove = ({
+interface IRemoveProps {
+    projectId: string;
+    featureId: string;
+    environmentId: string;
+    strategyId: string;
+}
+
+const useOnRemove = ({
     projectId,
     featureId,
     environmentId,
     strategyId,
-    disabled,
-    icon,
-}: IFeatureStrategyRemoveProps) => {
-    const [openDialogue, setOpenDialogue] = useState(false);
+}: IRemoveProps) => {
     const { deleteStrategyFromFeature } = useFeatureStrategyApi();
-    const { addChangeRequest } = useChangeRequestApi();
-    const { refetchFeature } = useFeature(projectId, featureId);
     const { setToastData, setToastApiError } = useToast();
     const navigate = useNavigate();
-    const { uiConfig } = useUiConfig();
-    const suggestChangesEnabled = Boolean(uiConfig?.flags?.changeRequests);
+    const { refetchFeature } = useFeature(projectId, featureId);
 
-    const onSuggestRemove = async (event: React.FormEvent) => {
-        try {
-            event.preventDefault();
-            await addChangeRequest(projectId, environmentId, {
-                action: 'deleteStrategy',
-                feature: featureId,
-                payload: {
-                    id: strategyId,
-                },
-            });
-            setToastData({
-                title: 'Changes added to the draft!',
-                type: 'success',
-            });
-            setOpenDialogue(false);
-        } catch (error: unknown) {
-            setToastApiError(formatUnknownError(error));
-        }
-    };
     const onRemove = async (event: React.FormEvent) => {
         try {
             event.preventDefault();
@@ -140,6 +120,63 @@ export const FeatureStrategyRemove = ({
             setToastApiError(formatUnknownError(error));
         }
     };
+    return onRemove;
+};
+
+const useOnSuggestRemove = ({
+    projectId,
+    featureId,
+    environmentId,
+    strategyId,
+}: IRemoveProps) => {
+    const { addChangeRequest } = useChangeRequestApi();
+    const { setToastData, setToastApiError } = useToast();
+    const onSuggestRemove = async (event: React.FormEvent) => {
+        try {
+            event.preventDefault();
+            await addChangeRequest(projectId, environmentId, {
+                action: 'deleteStrategy',
+                feature: featureId,
+                payload: {
+                    id: strategyId,
+                },
+            });
+            setToastData({
+                title: 'Changes added to the draft!',
+                type: 'success',
+            });
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
+    };
+    return onSuggestRemove;
+};
+
+export const FeatureStrategyRemove = ({
+    projectId,
+    featureId,
+    environmentId,
+    strategyId,
+    disabled,
+    icon,
+}: IFeatureStrategyRemoveProps) => {
+    const [openDialogue, setOpenDialogue] = useState(false);
+
+    const { uiConfig } = useUiConfig();
+    const suggestChangesEnabled = Boolean(uiConfig?.flags?.changeRequests);
+
+    const onRemove = useOnRemove({
+        featureId,
+        projectId,
+        strategyId,
+        environmentId,
+    });
+    const onSuggestRemove = useOnSuggestRemove({
+        featureId,
+        projectId,
+        strategyId,
+        environmentId,
+    });
 
     const onRemoveStrategy = () => {
         setOpenDialogue(true);
@@ -185,7 +222,10 @@ export const FeatureStrategyRemove = ({
                     <SuggestFeatureStrategyRemoveDialogue
                         isOpen={openDialogue}
                         onClose={() => setOpenDialogue(false)}
-                        onRemove={onSuggestRemove}
+                        onRemove={async e => {
+                            await onSuggestRemove(e);
+                            setOpenDialogue(false);
+                        }}
                     />
                 }
                 elseShow={

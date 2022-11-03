@@ -529,7 +529,7 @@ export const ProjectFeatureToggles = ({
                 environment={changeRequestDialogDetails?.environment}
                 onConfirm={onChangeRequestToggleConfirm}
                 enabled={changeRequestDialogDetails.enabled}
-                variant='updateEnabled'
+                variant="updateEnabled"
             />
         </PageContent>
     );

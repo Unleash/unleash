@@ -30,10 +30,14 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
 }));
 
-const StyledButtonBox = styled(Paper)(({ theme }) => ({
+const StyledButtonBox = styled(Box)(({ theme }) => ({
     marginTop: theme.spacing(2),
     display: 'flex',
     justifyContent: 'flex-end',
+}));
+
+const StyledInnerContainer = styled(Box)(({ theme }) => ({
+    padding: theme.spacing(2),
 }));
 
 export const ChangeRequestOverview: FC = () => {
@@ -73,11 +77,7 @@ export const ChangeRequestOverview: FC = () => {
                     <ChangeRequestReviewers />
                 </StyledAsideBox>
                 <StyledPaper elevation={0}>
-                    <Box
-                        sx={theme => ({
-                            padding: theme.spacing(2),
-                        })}
-                    >
+                    <StyledInnerContainer>
                         Changes
                         <ChangeRequest changeRequest={changeRequest} />
                         <ChangeRequestReviewStatus
@@ -100,7 +100,7 @@ export const ChangeRequestOverview: FC = () => {
                                 }
                             />
                         </StyledButtonBox>
-                    </Box>
+                    </StyledInnerContainer>
                 </StyledPaper>
             </Box>
         </>

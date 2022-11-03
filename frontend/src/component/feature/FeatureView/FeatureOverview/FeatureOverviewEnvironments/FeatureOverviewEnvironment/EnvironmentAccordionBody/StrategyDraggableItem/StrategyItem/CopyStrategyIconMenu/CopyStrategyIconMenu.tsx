@@ -22,6 +22,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useChangeRequestAddStrategy } from 'hooks/useChangeRequestAddStrategy';
 import { ChangeRequestDialogue } from '../../../../../../../../../changeRequest/ChangeRequestConfirmDialog/ChangeRequestConfirmDialog';
+import { CopyStrategyMessage } from '../../../../../../../../../changeRequest/ChangeRequestConfirmDialog/ChangeRequestMessages/CopyStrategyMessage';
 
 interface ICopyStrategyIconMenuProps {
     environmentId: string;
@@ -51,7 +52,7 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
     };
     const { hasAccess } = useContext(AccessContext);
     const { uiConfig } = useUiConfig();
-    const suggestChangesEnabled = uiConfig?.flags?.changeRequests;
+    const changeRequestsEnabled = uiConfig?.flags?.changeRequests;
 
     const {
         changeRequestDialogDetails,
@@ -66,7 +67,7 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
             environment,
             copyOf: strategy.id,
         };
-        if (suggestChangesEnabled) {
+        if (changeRequestsEnabled) {
             await onChangeRequestAddStrategy(
                 environment,
                 {
@@ -107,12 +108,16 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
             <ChangeRequestDialogue
                 isOpen={changeRequestDialogDetails.isOpen}
                 onClose={onChangeRequestAddStrategyClose}
-                featureName={changeRequestDialogDetails?.featureName}
                 environment={changeRequestDialogDetails?.environment}
-                fromEnvironment={changeRequestDialogDetails?.fromEnvironment}
                 onConfirm={onChangeRequestAddStrategyConfirm}
-                payload={changeRequestDialogDetails.strategy!}
-                variant="copyStrategy"
+                messageComponent={
+                    <CopyStrategyMessage
+                        fromEnvironment={
+                            changeRequestDialogDetails.fromEnvironment!
+                        }
+                        payload={changeRequestDialogDetails.strategy!}
+                    />
+                }
             />
             <Tooltip
                 title={`Copy to another environment${

@@ -38,6 +38,8 @@ import { useMediaQuery } from '@mui/material';
 import { Search } from 'component/common/Search/Search';
 import { useChangeRequestToggle } from 'hooks/useChangeRequestToggle';
 import { ChangeRequestDialogue } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestConfirmDialog';
+import { CopyStrategyMessage } from '../../../changeRequest/ChangeRequestConfirmDialog/ChangeRequestMessages/CopyStrategyMessage';
+import { UpdateEnabledMessage } from '../../../changeRequest/ChangeRequestConfirmDialog/ChangeRequestMessages/UpdateEnabledMessage';
 
 interface IProjectFeatureTogglesProps {
     features: IProject['features'];
@@ -525,11 +527,15 @@ export const ProjectFeatureToggles = ({
             <ChangeRequestDialogue
                 isOpen={changeRequestDialogDetails.isOpen}
                 onClose={onChangeRequestToggleClose}
-                featureName={changeRequestDialogDetails?.featureName}
                 environment={changeRequestDialogDetails?.environment}
                 onConfirm={onChangeRequestToggleConfirm}
-                enabled={changeRequestDialogDetails.enabled}
-                variant="updateEnabled"
+                messageComponent={
+                    <UpdateEnabledMessage
+                        featureName={changeRequestDialogDetails.featureName!}
+                        enabled={changeRequestDialogDetails.enabled!}
+                        environment={changeRequestDialogDetails?.environment!}
+                    />
+                }
             />
         </PageContent>
     );

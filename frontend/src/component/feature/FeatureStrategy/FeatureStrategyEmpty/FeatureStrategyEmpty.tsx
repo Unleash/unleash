@@ -15,6 +15,7 @@ import { CopyButton } from './CopyButton/CopyButton';
 import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
 import { useChangeRequestAddStrategy } from '../../../../hooks/useChangeRequestAddStrategy';
 import { ChangeRequestDialogue } from '../../../changeRequest/ChangeRequestConfirmDialog/ChangeRequestConfirmDialog';
+import { CopyStrategiesMessage } from '../../../changeRequest/ChangeRequestConfirmDialog/ChangeRequestMessages/CopyStrategiesMessage';
 
 interface IFeatureStrategyEmptyProps {
     projectId: string;
@@ -142,12 +143,16 @@ export const FeatureStrategyEmpty = ({
             <ChangeRequestDialogue
                 isOpen={changeRequestDialogDetails.isOpen}
                 onClose={onChangeRequestAddStrategyClose}
-                featureName={changeRequestDialogDetails?.featureName}
                 environment={changeRequestDialogDetails?.environment}
-                fromEnvironment={changeRequestDialogDetails?.fromEnvironment}
                 onConfirm={onChangeRequestAddStrategiesConfirm}
-                payload={changeRequestDialogDetails.strategies!}
-                variant="copyStrategies"
+                messageComponent={
+                    <CopyStrategiesMessage
+                        fromEnvironment={
+                            changeRequestDialogDetails.fromEnvironment!
+                        }
+                        payload={changeRequestDialogDetails.strategies!}
+                    />
+                }
             />
 
             <div className={styles.container}>

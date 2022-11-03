@@ -87,7 +87,7 @@ Log in to Unleash as an admin user and navigate to the SSO configuration. Input 
 
 ### Step 2: Enable Group Syncing {#unleash-step-2}
 
-Turn on Group Syncing and set a value for "Group Field JSON Path", this must match the value in Keycloak for claim name exactly. Save your configuration.
+Turn on Group Syncing and set a value for "Group Field JSON Path". This must match the value in claim name in Keycloak exactly. Save your configuration.
 
 ![The Unleash SSO configuration screen with the Enable Group Syncing and Group Field JSON Path highlighted.](/img/setup-keycloak-sync-12.png)
 

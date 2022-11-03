@@ -8,6 +8,16 @@ import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useCh
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
 import type { IChangeRequest } from '../changeRequest.types';
+import {
+    StrategyAddedChange,
+    StrategyDeletedChange,
+    StrategyEditedChange,
+} from '../ChangeRequestOverview/ChangeRequestFeatureToggleChange/StrategyChange';
+import {
+    formatStrategyName,
+    GetFeatureStrategyIcon,
+} from '../../../utils/strategyNames';
+import { hasEnabledField, hasNameField } from '../changeRequest.types';
 
 interface IChangeRequestProps {
     changeRequest: IChangeRequest;
@@ -50,37 +60,45 @@ export const ChangeRequest: VFC<IChangeRequestProps> = ({
                 >
                     {featureToggleChange.changes.map(change => (
                         <Box key={objectId(change)}>
-                            <ConditionallyRender
-                                condition={change.action === 'updateEnabled'}
-                                show={
+                            {change.action === 'updateEnabled' &&
+                                hasEnabledField(change.payload) && (
                                     <ToggleStatusChange
-                                        // @ts-expect-error TODO: fix types
-                                        enabled={change?.payload?.enabled}
+                                        enabled={change.payload.enabled}
                                         onDiscard={onDiscard(change.id)}
                                     />
-                                }
-                            />
-                            {/* <ConditionallyRender
-                                condition={change.action === 'addStrategy'}
-                                show={
-                                    <StrategyAddedChange>
+                                )}
+                            {change.action === 'addStrategy' &&
+                                hasNameField(change.payload) && (
+                                    <StrategyAddedChange
+                                        onDiscard={onDiscard(change.id)}
+                                    >
                                         <GetFeatureStrategyIcon
                                             strategyName={change.payload.name}
                                         />
+
                                         {formatStrategyName(
-                                            change.payload.name
+                                            change?.payload?.name
                                         )}
                                     </StrategyAddedChange>
-                                }
-                            />
-                            <ConditionallyRender
-                                condition={change.action === 'deleteStrategy'}
-                                show={<StrategyDeletedChange />}
-                            />
-                            <ConditionallyRender
-                                condition={change.action === 'updateStrategy'}
-                                show={<StrategyEditedChange />}
-                            /> */}
+                                )}
+                            {change.action === 'deleteStrategy' && (
+                                <StrategyDeletedChange
+                                    onDiscard={onDiscard(change.id)}
+                                />
+                            )}
+                            {change.action === 'updateStrategy' &&
+                                hasNameField(change.payload) && (
+                                    <StrategyEditedChange
+                                        onDiscard={onDiscard(change.id)}
+                                    >
+                                        <GetFeatureStrategyIcon
+                                            strategyName={change?.payload?.name}
+                                        />
+                                        {formatStrategyName(
+                                            change?.payload?.name
+                                        )}
+                                    </StrategyEditedChange>
+                                )}
                         </Box>
                     ))}
                 </ChangeRequestFeatureToggleChange>

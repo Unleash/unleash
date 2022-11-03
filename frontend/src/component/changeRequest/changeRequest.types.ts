@@ -34,3 +34,11 @@ interface IChangeRequestFeatureChanges {
     createdBy: ICreatedBy;
     warning?: string;
 }
+
+export const hasEnabledField = (
+    payload: unknown
+): payload is { enabled: boolean } =>
+    typeof payload === 'object' && payload !== null && 'enabled' in payload;
+
+export const hasNameField = (payload: unknown): payload is { name: string } =>
+    typeof payload === 'object' && payload !== null && 'name' in payload;

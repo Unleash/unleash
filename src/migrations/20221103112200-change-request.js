@@ -3,8 +3,6 @@
 exports.up = function (db, callback) {
     db.runSql(
         `
-            DROP TABLE IF EXISTS suggest_change;
-            DROP TABLE IF EXISTS suggest_change_set;
             CREATE TABLE IF NOT EXISTS change_requests (
               id serial primary key,
               environment varchar(100) REFERENCES environments(name) ON DELETE CASCADE,

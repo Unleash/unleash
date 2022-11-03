@@ -119,6 +119,7 @@ A user group consists of the following:
 - a **name** (required)
 - a **description** (optional)
 - a list of users (optional)
+- a list of SSO groups to sync from (optional)
 
 Groups do nothing on their own. They must be given a role on a project to assign permissions. You can assign both standard roles and custom project roles to groups.
 
@@ -135,3 +136,34 @@ User group syncing is planned to be released in Unleash 4.18 and will be availab
 User groups also support integration with your Single Sign-On (SSO) provider. This allows you to automatically assign users to groups when they log in through SSO. Check out [_how to set up group SSO sync_](../how-to/how-to-set-up-group-sso-sync.md) for more details.
 
 Users that have been added to a group through your SSO provider will be automatically removed next time they log in if they've been removed from the SSO group. Users that have been manually added to the group will not be affected.
+
+To enable group sync, you'll need to set two fields in your SSO provider configuration options:
+
+- **enable group syncing**:
+
+  Turns on group syncing, by default this is disabled.
+
+- **group field JSON path**
+
+  A JSON path that should point to the groups field in your token response. This should match the exact field returned by the provider. For example, if your token looks like this:
+
+  ```json
+  {
+
+    "iss": "https://some-url.com",
+    "azp": "1234987819200.apps.some-url.com",
+    "aud": "1234987819200.apps.some-url.com",
+    "sub": "10769150350006150715113082367",
+    "at_hash": "HK6E_P6Dh8Y93mRNtsDB1Q",
+    "hd": "example.com",
+    "email": "jsmith@example.com",
+    "email_verified": "true",
+    "groups": ["test-group", "test-group-2"], //the field where groups are specified
+    "iat": 1353601026,
+    "exp": 1353604926,
+    "nonce": "0394852-3190485-2490358"
+  }
+  ```
+  You need to set the `Group Field JSON path` to "groups".
+
+Once you've enabled group syncing and set an appropriate path, you'll need to add the SSO group names to the Unleash group. This can be done by navigating to the Unleash group you want to enable sync for and adding the SSO group names to the "SSO group ID/name" property.

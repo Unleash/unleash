@@ -44,7 +44,7 @@ Save your configuration.
 
 ### Step 4: Copy your client secret {#keycloak-step-4}
 
-Navigate to "Credentials" and copy your client secret. You'll need to add this to the Unleash configuration later.
+Navigate to "Credentials" and copy your client secret. You'll need to add this to the Unleash configuration later, so put it somewhere you'll be able to find it.
 
 ![The Keycloak credentials configuration with copy client secret highlighted.](/img/setup-keycloak-sync-4.png)
 

@@ -22,7 +22,7 @@ Turn on "Enable Group Syncing" and input a field a for "Group Field JSON Path". 
 
 ![The Single sign-on configuration page with enable group syncing, group field JSON path and save inputs highlighted.](/img/setup-sso-group-sync-2.png)
 
-### Step 3: Navigate to a group {#step-3}
+## Step 3: Navigate to a group {#step-3}
 
 Navigate to the group you want to sync users for.
 

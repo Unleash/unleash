@@ -1,5 +1,4 @@
 ---
-id: sso-keycloak-group-sync
 title: 'How to set up Keycloak and Unleash to sync user groups'
 ---
 

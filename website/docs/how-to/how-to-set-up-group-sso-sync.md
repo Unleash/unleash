@@ -16,7 +16,7 @@ Navigate to the "Single sign-on" configuration page.
 
 ![The Unleash Admin UI with the steps highlighted to navigate to the Single sign-on configuration.](/img/setup-sso-group-sync-1.png)
 
-### Step 2: Enable Group Syncing {#step-2}
+## Step 2: Enable Group Syncing {#step-2}
 
 Turn on "Enable Group Syncing" and input a field a for "Group Field JSON Path". The latter is the JSON path in the token response where your group properties are located, this is up to your SSO provider, a full example for Keycloak can be [found here](../../advanced/sso-keycloak-group-sync). Once you're happy, save your configuration.
 

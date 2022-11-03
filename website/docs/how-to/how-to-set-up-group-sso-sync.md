@@ -34,7 +34,7 @@ Navigate to edit group.
 
 ![The group configuration screen with edit group highlighted.](/img/setup-sso-group-sync-4.png)
 
-### Step 5: Link SSO groups to your group {#step-5}
+## Step 5: Link SSO groups to your group {#step-5}
 
 Link as many SSO groups as you like to your group, these names should match the group name or ID sent by your SSO provider exactly. Save your group configuration, the next time a user belonging to one of these groups logs in, they'll be automatically added to this group.
 

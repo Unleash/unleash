@@ -28,7 +28,7 @@ Navigate to the group you want to sync users for.
 
 ![The Unleash Admin UI with the steps highlighted to navigate to groups and a highlighted group card.](/img/setup-sso-group-sync-3.png)
 
-### Step 4: Edit the group configuration {#step-4}
+## Step 4: Edit the group configuration {#step-4}
 
 Navigate to edit group.
 

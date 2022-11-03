@@ -47,7 +47,8 @@
     "ansi-regex": "^5.0.1",
     "nth-check": "^2.0.1",
     "shelljs": "^0.8.5",
-    "trim-newlines": "^4.0.0"
+    "trim-newlines": "^4.0.0",
+    "minimatch": "^3.0.5"
   },
   "browserslist": {
     "production": [

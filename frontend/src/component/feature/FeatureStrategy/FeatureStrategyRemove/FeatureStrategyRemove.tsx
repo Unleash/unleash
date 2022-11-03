@@ -178,17 +178,13 @@ export const FeatureStrategyRemove = ({
         environmentId,
     });
 
-    const onRemoveStrategy = () => {
-        setOpenDialogue(true);
-    };
-
     return (
         <>
             <ConditionallyRender
                 condition={Boolean(icon)}
                 show={
                     <PermissionIconButton
-                        onClick={onRemoveStrategy}
+                        onClick={() => setOpenDialogue(true)}
                         projectId={projectId}
                         environmentId={environmentId}
                         disabled={disabled}

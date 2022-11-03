@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { FC, useState } from 'react';
 import useFeatureStrategyApi from 'hooks/api/actions/useFeatureStrategyApi/useFeatureStrategyApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useNavigate } from 'react-router-dom';
 import useToast from 'hooks/useToast';
 import { formatFeaturePath } from '../FeatureStrategyEdit/FeatureStrategyEdit';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import { Alert } from '@mui/material';
+import { Alert, styled, Typography } from '@mui/material';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { DELETE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
@@ -13,6 +13,8 @@ import { STRATEGY_FORM_REMOVE_ID } from 'utils/testIds';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { Delete } from '@mui/icons-material';
+import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
+import { useChangeRequestApi } from '../../../../hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 
 interface IFeatureStrategyRemoveProps {
     projectId: string;
@@ -23,19 +25,81 @@ interface IFeatureStrategyRemoveProps {
     icon?: boolean;
 }
 
-export const FeatureStrategyRemove = ({
+interface IFeatureStrategyRemoveDialogueProps {
+    onRemove: (event: React.FormEvent) => Promise<void>;
+    onClose: () => void;
+    isOpen: boolean;
+}
+
+const RemoveAlert: FC = () => (
+    <Alert severity="error">
+        Removing the strategy will change which users receive access to the
+        feature.
+    </Alert>
+);
+
+const FeatureStrategyRemoveDialogue: FC<
+    IFeatureStrategyRemoveDialogueProps
+> = ({ onRemove, onClose, isOpen }) => {
+    return (
+        <Dialogue
+            title="Are you sure you want to delete this strategy?"
+            open={isOpen}
+            primaryButtonText="Remove strategy"
+            secondaryButtonText="Cancel"
+            onClick={onRemove}
+            onClose={onClose}
+        >
+            <RemoveAlert />
+        </Dialogue>
+    );
+};
+
+const MsgContainer = styled('div')(({ theme }) => ({
+    marginTop: theme.spacing(3),
+    marginBottom: theme.spacing(1),
+}));
+
+const SuggestFeatureStrategyRemoveDialogue: FC<
+    IFeatureStrategyRemoveDialogueProps
+> = ({ onRemove, onClose, isOpen }) => {
+    return (
+        <Dialogue
+            title="Suggest changes"
+            open={isOpen}
+            primaryButtonText="Add suggestion to draft"
+            secondaryButtonText="Cancel"
+            onClick={onRemove}
+            onClose={onClose}
+        >
+            <RemoveAlert />
+            <MsgContainer>
+                <Typography variant="body2" color="text.secondary">
+                    Your suggestion:
+                </Typography>
+            </MsgContainer>
+            <Typography fontWeight="bold">Remove strategy</Typography>
+        </Dialogue>
+    );
+};
+
+interface IRemoveProps {
+    projectId: string;
+    featureId: string;
+    environmentId: string;
+    strategyId: string;
+}
+
+const useOnRemove = ({
     projectId,
     featureId,
     environmentId,
     strategyId,
-    disabled,
-    icon,
-}: IFeatureStrategyRemoveProps) => {
-    const [openDialogue, setOpenDialogue] = useState(false);
+}: IRemoveProps) => {
     const { deleteStrategyFromFeature } = useFeatureStrategyApi();
-    const { refetchFeature } = useFeature(projectId, featureId);
     const { setToastData, setToastApiError } = useToast();
     const navigate = useNavigate();
+    const { refetchFeature } = useFeature(projectId, featureId);
 
     const onRemove = async (event: React.FormEvent) => {
         try {
@@ -56,6 +120,63 @@ export const FeatureStrategyRemove = ({
             setToastApiError(formatUnknownError(error));
         }
     };
+    return onRemove;
+};
+
+const useOnSuggestRemove = ({
+    projectId,
+    featureId,
+    environmentId,
+    strategyId,
+}: IRemoveProps) => {
+    const { addChangeRequest } = useChangeRequestApi();
+    const { setToastData, setToastApiError } = useToast();
+    const onSuggestRemove = async (event: React.FormEvent) => {
+        try {
+            event.preventDefault();
+            await addChangeRequest(projectId, environmentId, {
+                action: 'deleteStrategy',
+                feature: featureId,
+                payload: {
+                    id: strategyId,
+                },
+            });
+            setToastData({
+                title: 'Changes added to the draft!',
+                type: 'success',
+            });
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
+    };
+    return onSuggestRemove;
+};
+
+export const FeatureStrategyRemove = ({
+    projectId,
+    featureId,
+    environmentId,
+    strategyId,
+    disabled,
+    icon,
+}: IFeatureStrategyRemoveProps) => {
+    const [openDialogue, setOpenDialogue] = useState(false);
+
+    const { uiConfig } = useUiConfig();
+    const suggestChangesEnabled = Boolean(uiConfig?.flags?.changeRequests);
+
+    const onRemove = useOnRemove({
+        featureId,
+        projectId,
+        strategyId,
+        environmentId,
+    });
+    const onSuggestRemove = useOnSuggestRemove({
+        featureId,
+        projectId,
+        strategyId,
+        environmentId,
+    });
 
     return (
         <>
@@ -91,19 +212,26 @@ export const FeatureStrategyRemove = ({
                     </PermissionButton>
                 }
             />
-            <Dialogue
-                title="Are you sure you want to delete this strategy?"
-                open={openDialogue}
-                primaryButtonText="Remove strategy"
-                secondaryButtonText="Cancel"
-                onClick={onRemove}
-                onClose={() => setOpenDialogue(false)}
-            >
-                <Alert severity="error">
-                    Removing the strategy will change which users receive access
-                    to the feature.
-                </Alert>
-            </Dialogue>
+            <ConditionallyRender
+                condition={suggestChangesEnabled}
+                show={
+                    <SuggestFeatureStrategyRemoveDialogue
+                        isOpen={openDialogue}
+                        onClose={() => setOpenDialogue(false)}
+                        onRemove={async e => {
+                            await onSuggestRemove(e);
+                            setOpenDialogue(false);
+                        }}
+                    />
+                }
+                elseShow={
+                    <FeatureStrategyRemoveDialogue
+                        isOpen={openDialogue}
+                        onClose={() => setOpenDialogue(false)}
+                        onRemove={onRemove}
+                    />
+                }
+            />
         </>
     );
 };

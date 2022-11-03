@@ -4,9 +4,9 @@ interface IChangeRequestsSchema {
     feature: string;
     action:
         | 'updateEnabled'
-        | 'strategyAdd'
-        | 'strategyUpdate'
-        | 'strategyDelete';
+        | 'addStrategy'
+        | 'updateStrategy'
+        | 'deleteStrategy';
     payload: string | boolean | object | number;
 }
 

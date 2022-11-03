@@ -1,28 +1,43 @@
-import { Box, Link, Typography } from '@mui/material';
+import { Box, Link, styled, Typography } from '@mui/material';
 import { FC } from 'react';
 
 interface IStrategyChangeProps {
     onDiscard: () => void;
 }
 
+export const ChangeItemWrapper = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'space-between',
+    padding: theme.spacing(1),
+}));
+
+const ChangeItemInfo: FC = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    gap: theme.spacing(1),
+}));
+
+const Discard: FC<IStrategyChangeProps> = ({ onDiscard }) => (
+    <Box>
+        <Link onClick={onDiscard}>Discard</Link>
+    </Box>
+);
+
 export const StrategyAddedChange: FC<IStrategyChangeProps> = ({
     children,
     onDiscard,
 }) => {
     return (
-        <Box sx={{ p: 1, display: 'flex', justifyContent: 'space-between' }}>
-            <Box sx={{ display: 'flex', gap: 1 }}>
+        <ChangeItemWrapper>
+            <ChangeItemInfo>
                 <Typography
                     sx={theme => ({ color: theme.palette.success.main })}
                 >
                     + Adding strategy:
                 </Typography>
                 {children}
-            </Box>
-            <Box>
-                <Link onClick={onDiscard}>Discard</Link>
-            </Box>
-        </Box>
+            </ChangeItemInfo>
+            <Discard onDiscard={onDiscard} />
+        </ChangeItemWrapper>
     );
 };
 
@@ -31,29 +46,29 @@ export const StrategyEditedChange: FC<IStrategyChangeProps> = ({
     onDiscard,
 }) => {
     return (
-        <Box sx={{ p: 1, display: 'flex', justifyContent: 'space-between' }}>
-            <Box sx={{ display: 'flex', gap: 1 }}>
+        <ChangeItemWrapper>
+            <ChangeItemInfo>
                 <Typography>Editing strategy:</Typography>
                 {children}
-            </Box>
-            <Box>
-                <Link onClick={onDiscard}>Discard</Link>
-            </Box>
-        </Box>
+            </ChangeItemInfo>
+            <Discard onDiscard={onDiscard} />
+        </ChangeItemWrapper>
     );
 };
 
 export const StrategyDeletedChange: FC<IStrategyChangeProps> = ({
     onDiscard,
+    children,
 }) => {
     return (
-        <Box sx={{ p: 1, display: 'flex', justifyContent: 'space-between' }}>
-            <Typography sx={theme => ({ color: theme.palette.error.main })}>
-                - Deleting strategy
-            </Typography>
-            <Box>
-                <Link onClick={onDiscard}>Discard</Link>
-            </Box>
-        </Box>
+        <ChangeItemWrapper>
+            <ChangeItemInfo>
+                <Typography sx={theme => ({ color: theme.palette.error.main })}>
+                    - Deleting strategy
+                </Typography>
+                {children}
+            </ChangeItemInfo>
+            <Discard onDiscard={onDiscard} />
+        </ChangeItemWrapper>
     );
 };

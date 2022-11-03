@@ -59,7 +59,13 @@ export const ChangeRequest: VFC<IChangeRequestProps> = ({
                     onNavigate={onNavigate}
                 >
                     {featureToggleChange.changes.map(change => (
-                        <Box key={objectId(change)}>
+                        <Box
+                            key={objectId(change)}
+                            sx={{
+                                paddingTop: 2,
+                                paddingBottom: 2,
+                            }}
+                        >
                             {change.action === 'updateEnabled' &&
                                 hasEnabledField(change.payload) && (
                                     <ToggleStatusChange
@@ -77,7 +83,7 @@ export const ChangeRequest: VFC<IChangeRequestProps> = ({
                                         />
 
                                         {formatStrategyName(
-                                            change?.payload?.name
+                                            change.payload.name
                                         )}
                                     </StrategyAddedChange>
                                 )}
@@ -92,10 +98,10 @@ export const ChangeRequest: VFC<IChangeRequestProps> = ({
                                         onDiscard={onDiscard(change.id)}
                                     >
                                         <GetFeatureStrategyIcon
-                                            strategyName={change?.payload?.name}
+                                            strategyName={change.payload.name}
                                         />
                                         {formatStrategyName(
-                                            change?.payload?.name
+                                            change.payload.name
                                         )}
                                     </StrategyEditedChange>
                                 )}

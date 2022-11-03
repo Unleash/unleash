@@ -21,6 +21,7 @@ import User from '../../types/user';
 import { collapseHourlyMetrics } from '../../util/collapseHourlyMetrics';
 import { LastSeenService } from './last-seen-service';
 import { generateHourBuckets } from '../../util/time-utils';
+import { IFlagResolver } from '../../types/experimental';
 
 export default class ClientMetricsServiceV2 {
     private config: IUnleashConfig;
@@ -34,6 +35,8 @@ export default class ClientMetricsServiceV2 {
     private featureToggleStore: IFeatureToggleStore;
 
     private lastSeenService: LastSeenService;
+
+    private flagResolver: IFlagResolver;
 
     private logger: Logger;
 
@@ -50,6 +53,7 @@ export default class ClientMetricsServiceV2 {
         this.clientMetricsStoreV2 = clientMetricsStoreV2;
         this.lastSeenService = lastSeenService;
         this.config = config;
+        this.flagResolver = config.flagResolver;
         this.logger = config.getLogger(
             '/services/client-metrics/client-metrics-service-v2.ts',
         );
@@ -157,56 +161,63 @@ export default class ClientMetricsServiceV2 {
         featureName: string,
         hoursBack: number = 24,
     ): Promise<IClientMetricsEnv[]> {
-        const hours = generateHourBuckets(hoursBack);
         const metrics =
             await this.clientMetricsStoreV2.getMetricsForFeatureToggle(
                 featureName,
                 hoursBack,
             );
 
-        const environments = metrics.reduce(
-            (unique, item) =>
-                unique.includes(item.environment)
-                    ? unique
-                    : [...unique, item.environment],
-            [],
-        );
+        if (this.flagResolver.isEnabled('fixHourMetrics')) {
+            const hours = generateHourBuckets(hoursBack);
 
-        const applications = metrics
-            .reduce(
+            const environments = metrics.reduce(
                 (unique, item) =>
-                    unique.includes(item.appName)
+                    unique.includes(item.environment)
                         ? unique
-                        : [...unique, item.appName],
+                        : [...unique, item.environment],
                 [],
-            )
-            .slice(0, 100);
+            );
 
-        const result = environments.flatMap((environment) =>
-            applications.flatMap((appName) =>
-                hours.flatMap((hourBucket) => {
-                    const metric = metrics.find(
-                        (item) =>
-                            compareAsc(hourBucket.timestamp, item.timestamp) ===
-                                0 &&
-                            item.appName === appName &&
-                            item.environment === environment,
-                    );
-                    return (
-                        metric || {
-                            timestamp: hourBucket.timestamp,
-                            no: 0,
-                            yes: 0,
-                            appName,
-                            environment,
-                            featureName,
-                        }
-                    );
-                }),
-            ),
-        );
+            const applications = metrics
+                .reduce(
+                    (unique, item) =>
+                        unique.includes(item.appName)
+                            ? unique
+                            : [...unique, item.appName],
+                    [],
+                )
+                .slice(0, 100);
 
-        return result.sort((a, b) => compareAsc(a.timestamp, b.timestamp));
+            const result = environments.flatMap((environment) =>
+                applications.flatMap((appName) =>
+                    hours.flatMap((hourBucket) => {
+                        const metric = metrics.find(
+                            (item) =>
+                                compareAsc(
+                                    hourBucket.timestamp,
+                                    item.timestamp,
+                                ) === 0 &&
+                                item.appName === appName &&
+                                item.environment === environment,
+                        );
+                        return (
+                            metric || {
+                                timestamp: hourBucket.timestamp,
+                                no: 0,
+                                yes: 0,
+                                appName,
+                                environment,
+                                featureName,
+                            }
+                        );
+                    }),
+                ),
+            );
+
+            return result.sort((a, b) => compareAsc(a.timestamp, b.timestamp));
+        } else {
+            return metrics;
+        }
     }
 
     resolveMetricsEnvironment(user: User | ApiUser, data: IClientApp): string {

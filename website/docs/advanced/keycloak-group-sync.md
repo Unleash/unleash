@@ -56,7 +56,7 @@ Navigate to your realm settings and copy the link to OpenID endpoint configurati
 
 ### Step 6: Create a new Client Scope and Map Groups {#keycloak-step-6}
 
-Navigate to the "Client Scopes" page select "Create Client Scope".
+Navigate to the "Client Scopes" page and select "Create Client Scope".
 
 ![The Keycloak Client Scopes page with the Create Client Scope button highlighted.](/img/setup-keycloak-sync-6.png)
 

@@ -39,7 +39,8 @@ const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
 interface IEnvironmentActionCellPopoverProps {
     environment: IEnvironment;
     onEdit: () => void;
-    onDeprecateToggle: () => void;
+    onDeprecate: () => void;
+    onUndeprecate: () => void;
     onClone: () => void;
     onDelete: () => void;
 }
@@ -47,7 +48,8 @@ interface IEnvironmentActionCellPopoverProps {
 export const EnvironmentActionCellPopover = ({
     environment,
     onEdit,
-    onDeprecateToggle,
+    onDeprecate,
+    onUndeprecate,
     onClone,
     onDelete,
 }: IEnvironmentActionCellPopoverProps) => {
@@ -139,7 +141,11 @@ export const EnvironmentActionCellPopover = ({
                         {({ hasAccess }) => (
                             <StyledMenuItem
                                 onClick={() => {
-                                    onDeprecateToggle();
+                                    if (environment.enabled) {
+                                        onDeprecate();
+                                    } else {
+                                        onUndeprecate();
+                                    }
                                     handleClose();
                                 }}
                                 disabled={!hasAccess || environment.protected}

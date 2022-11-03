@@ -93,7 +93,7 @@ export const EnvironmentTable = () => {
                 inside each feature toggle.
             </StyledAlert>
             <SearchHighlightProvider value={globalFilter}>
-                <Table {...getTableProps()}>
+                <Table {...getTableProps()} rowHeight="compact">
                     <SortableTableHeader headerGroups={headerGroups as any} />
                     <TableBody {...getTableBodyProps()}>
                         {rows.map(row => {
@@ -142,6 +142,7 @@ const COLUMNS = [
             <EnvironmentIconCell environment={original} />
         ),
         disableGlobalFilter: true,
+        isDragHandle: true,
     },
     {
         Header: 'Name',

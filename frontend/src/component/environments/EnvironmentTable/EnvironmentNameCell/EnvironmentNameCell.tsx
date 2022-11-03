@@ -4,7 +4,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { Badge } from 'component/common/Badge/Badge';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { styled } from '@mui/material';
+import { styled, Tooltip } from '@mui/material';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
     marginLeft: theme.spacing(1),
@@ -28,7 +28,15 @@ export const EnvironmentNameCell = ({
             />
             <ConditionallyRender
                 condition={!environment.enabled}
-                show={<StyledBadge color="neutral">Deprecated</StyledBadge>}
+                show={
+                    <Tooltip
+                        title="This environment is not auto-enabled for new projects. The project owner will need to manually enable it in the project."
+                        arrow
+                        describeChild
+                    >
+                        <StyledBadge color="neutral">Deprecated</StyledBadge>
+                    </Tooltip>
+                }
             />
         </TextCell>
     );

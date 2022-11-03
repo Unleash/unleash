@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { IEnvironment } from 'interfaces/environments';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import EnvironmentToggleConfirm from '../../EnvironmentToggleConfirm/EnvironmentToggleConfirm';
+// import EnvironmentToggleConfirm from '../../EnvironmentToggleConfirm/EnvironmentToggleConfirm'; // TODO: Delete this file as well
 import EnvironmentDeleteConfirm from '../../EnvironmentDeleteConfirm/EnvironmentDeleteConfirm';
 import useEnvironmentApi from 'hooks/api/actions/useEnvironmentApi/useEnvironmentApi';
 import useProjectRolePermissions from 'hooks/api/getters/useProjectRolePermissions/useProjectRolePermissions';
@@ -30,7 +30,9 @@ export const EnvironmentActionCell = ({
         useEnvironmentApi();
 
     const [deleteModal, setDeleteModal] = useState(false);
-    const [toggleModal, setToggleModal] = useState(false);
+    // const [toggleModal, setToggleModal] = useState(false);
+    const [deprecateModal, setDeprecateModal] = useState(false);
+    const [undeprecateModal, setUndeprecateModal] = useState(false);
     const [cloneModal, setCloneModal] = useState(false);
     const [tokenModal, setTokenModal] = useState(false);
     const [newToken, setNewToken] = useState<IApiToken>();
@@ -54,48 +56,49 @@ export const EnvironmentActionCell = ({
         }
     };
 
-    const handleConfirmToggleEnvironment = () => {
-        return environment.enabled
-            ? handleToggleEnvironmentOff()
-            : handleToggleEnvironmentOn();
-    };
+    // const handleConfirmToggleEnvironment = () => {
+    //     return environment.enabled
+    //         ? handleToggleEnvironmentOff()
+    //         : handleToggleEnvironmentOn();
+    // };
 
-    const handleToggleEnvironmentOn = async () => {
-        try {
-            setToggleModal(false);
-            await toggleEnvironmentOn(environment.name);
-            setToastData({
-                type: 'success',
-                title: 'Project environment enabled',
-            });
-        } catch (error: unknown) {
-            setToastApiError(formatUnknownError(error));
-        } finally {
-            await refetchEnvironments();
-        }
-    };
+    // const handleToggleEnvironmentOn = async () => {
+    //     try {
+    //         setToggleModal(false);
+    //         await toggleEnvironmentOn(environment.name);
+    //         setToastData({
+    //             type: 'success',
+    //             title: 'Project environment enabled',
+    //         });
+    //     } catch (error: unknown) {
+    //         setToastApiError(formatUnknownError(error));
+    //     } finally {
+    //         await refetchEnvironments();
+    //     }
+    // };
 
-    const handleToggleEnvironmentOff = async () => {
-        try {
-            setToggleModal(false);
-            await toggleEnvironmentOff(environment.name);
-            setToastData({
-                type: 'success',
-                title: 'Project environment disabled',
-            });
-        } catch (error: unknown) {
-            setToastApiError(formatUnknownError(error));
-        } finally {
-            await refetchEnvironments();
-        }
-    };
+    // const handleToggleEnvironmentOff = async () => {
+    //     try {
+    //         setToggleModal(false);
+    //         await toggleEnvironmentOff(environment.name);
+    //         setToastData({
+    //             type: 'success',
+    //             title: 'Project environment disabled',
+    //         });
+    //     } catch (error: unknown) {
+    //         setToastApiError(formatUnknownError(error));
+    //     } finally {
+    //         await refetchEnvironments();
+    //     }
+    // };
 
     return (
         <ActionCell>
             <EnvironmentActionCellPopover
                 environment={environment}
                 onEdit={() => navigate(`/environments/${environment.name}`)}
-                onDeprecateToggle={() => setToggleModal(true)}
+                onDeprecate={() => setDeprecateModal(true)}
+                onUndeprecate={() => setUndeprecateModal(true)}
                 onClone={() => {
                     if (environments.length < ENV_LIMIT) {
                         setCloneModal(true);
@@ -117,12 +120,12 @@ export const EnvironmentActionCell = ({
                 confirmName={confirmName}
                 setConfirmName={setConfirmName}
             />
-            <EnvironmentToggleConfirm
+            {/* <EnvironmentToggleConfirm
                 env={environment}
                 open={toggleModal}
                 setToggleDialog={setToggleModal}
                 handleConfirmToggleEnvironment={handleConfirmToggleEnvironment}
-            />
+            /> */}
             <EnvironmentCloneModal
                 environment={environment}
                 open={cloneModal}

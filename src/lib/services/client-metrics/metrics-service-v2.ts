@@ -20,7 +20,7 @@ import { ALL } from '../../types/models/api-token';
 import User from '../../types/user';
 import { collapseHourlyMetrics } from '../../util/collapseHourlyMetrics';
 import { LastSeenService } from './last-seen-service';
-import { generateHourBuckets, HourBucket } from '../../util/time-utils';
+import { generateHourBuckets } from '../../util/time-utils';
 
 export default class ClientMetricsServiceV2 {
     private config: IUnleashConfig;
@@ -154,13 +154,13 @@ export default class ClientMetricsServiceV2 {
     }
 
     async getClientMetricsForToggle(
-        toggleName: string,
+        featureName: string,
         hoursBack: number = 24,
     ): Promise<IClientMetricsEnv[]> {
         const hours = generateHourBuckets(hoursBack);
         const metrics =
             await this.clientMetricsStoreV2.getMetricsForFeatureToggle(
-                toggleName,
+                featureName,
                 hoursBack,
             );
 
@@ -172,36 +172,41 @@ export default class ClientMetricsServiceV2 {
             [],
         );
 
-        const applications = metrics.reduce(
-            (unique, item) =>
-                unique.includes(item.appName)
-                    ? unique
-                    : [...unique, item.appName],
-            [],
-        );
+        const applications = metrics
+            .reduce(
+                (unique, item) =>
+                    unique.includes(item.appName)
+                        ? unique
+                        : [...unique, item.appName],
+                [],
+            )
+            .slice(0, 100);
 
-        hours.forEach((item: HourBucket) => {
-            if (
-                !metrics.some(
-                    (e) => compareAsc(e.timestamp, item.timestamp) === 0,
-                )
-            ) {
-                environments.forEach((environment) => {
-                    applications.forEach((appName) => {
-                        metrics.push({
-                            timestamp: item.timestamp,
+        const result = environments.flatMap((environment) =>
+            applications.flatMap((appName) =>
+                hours.flatMap((hourBucket) => {
+                    const metric = metrics.find(
+                        (item) =>
+                            compareAsc(hourBucket.timestamp, item.timestamp) ===
+                                0 &&
+                            item.appName === appName &&
+                            item.environment === environment,
+                    );
+                    return (
+                        metric || {
+                            timestamp: hourBucket.timestamp,
                             no: 0,
                             yes: 0,
                             appName,
                             environment,
-                            featureName: toggleName,
-                        });
-                    });
-                });
-            }
-        });
+                            featureName,
+                        }
+                    );
+                }),
+            ),
+        );
 
-        return metrics.sort((a, b) => compareAsc(a.timestamp, b.timestamp));
+        return result.sort((a, b) => compareAsc(a.timestamp, b.timestamp));
     }
 
     resolveMetricsEnvironment(user: User | ApiUser, data: IClientApp): string {

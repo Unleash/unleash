@@ -90,7 +90,20 @@ export const ChangeRequest: VFC<IChangeRequestProps> = ({
                             {change.action === 'deleteStrategy' && (
                                 <StrategyDeletedChange
                                     onDiscard={onDiscard(change.id)}
-                                />
+                                >
+                                    {hasNameField(change.payload) && (
+                                        <>
+                                            <GetFeatureStrategyIcon
+                                                strategyName={
+                                                    change.payload.name
+                                                }
+                                            />
+                                            {formatStrategyName(
+                                                change.payload.name
+                                            )}
+                                        </>
+                                    )}
+                                </StrategyDeletedChange>
                             )}
                             {change.action === 'updateStrategy' &&
                                 hasNameField(change.payload) && (

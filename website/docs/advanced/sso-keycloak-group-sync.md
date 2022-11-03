@@ -60,7 +60,7 @@ Navigate to the "Client Scopes" page and select "Create Client Scope".
 
 ![The Keycloak Client Scopes page with the Create Client Scope button highlighted.](/img/setup-keycloak-sync-6.png)
 
-Give your new scope a name, set the type to "Optional" and make sure the type is set to "OpenID Connect" and the "Include in Token Response" option is enabled. Save your new scope.
+Give your new scope a name. Set the type to "Optional". Make sure the protocol is set to "OpenID Connect" and the "Include in Token Response" option is enabled. Save your new scope.
 
 ![The Keycloak Add Client Scope page with the Name, Type, Protocol and Include in Token Response fields highlighted.](/img/setup-keycloak-sync-7.png)
 

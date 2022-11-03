@@ -36,7 +36,7 @@ Set the redirect URI to:
 
 For a hosted Unleash instance this becomes:
 
-`https://<region>.app.unleash-hosted.com/<instanceName>/auth/oidc/callback`
+`https://<region>.app.unleash-hosted.com/<instance-name>/auth/oidc/callback`
 
 Save your configuration.
 

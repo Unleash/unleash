@@ -10,7 +10,7 @@ User group syncing is planned to be released in Unleash 4.18 and will be availab
 
 This guide takes you through how to configure your [user groups](../user_guide/rbac#user-groups) to automatically populate users through Single Sign On (SSO). Refer to [setting up Keycloak for user group sync](../../advanced/sso-keycloak-group-sync) for an end to end example. Note that the steps below require you to be logged in as an admin user.
 
-### Step 1: Navigate to SSO configuration {#step-1}
+## Step 1: Navigate to SSO configuration {#step-1}
 
 Navigate to the "Single sign-on" configuration page.
 

@@ -29,11 +29,11 @@ Select "OpenID Connect" as the client type and give your client a name, then sav
 
 Set the redirect URI to:
 
-`[basUrl]/auth/oidc/callback`
+`<baseUrl>/auth/oidc/callback`
 
 For a hosted Unleash instance this becomes:
 
-`https://[region].app.unleash-hosted.com/[instanceName]/auth/oidc/callback`
+`https://<region>.app.unleash-hosted.com/<instanceName>/auth/oidc/callback`
 
 Save your configuration.
 

@@ -28,6 +28,10 @@ export default createTheme({
             fontSize: '1.5rem',
             lineHeight: 1.875,
         },
+        h2: {
+            fontSize: `${20 / 16}rem`,
+            fontWeight: '700',
+        },
         h3: {
             fontSize: '1rem',
             fontWeight: '700',

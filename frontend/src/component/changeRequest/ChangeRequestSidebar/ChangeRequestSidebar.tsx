@@ -1,19 +1,29 @@
 import { VFC } from 'react';
-import { Box, Button, Typography, styled, Tooltip } from '@mui/material';
+import {
+    Box,
+    Button,
+    Typography,
+    styled,
+    Tooltip,
+    Divider,
+} from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { HelpOutline } from '@mui/icons-material';
+import EnvironmentIcon from 'component/common/EnvironmentIcon/EnvironmentIcon';
 import { ChangeRequest } from '../ChangeRequest/ChangeRequest';
 import { useChangeRequestDraft } from 'hooks/api/getters/useChangeRequestDraft/useChangeRequestDraft';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
+import { ChangeRequestStatusBadge } from '../ChangeRequestStatusBadge/ChangeRequestStatusBadge';
 
 interface IChangeRequestSidebarProps {
     open: boolean;
     project: string;
     onClose: () => void;
 }
+
 const StyledPageContent = styled(PageContent)(({ theme }) => ({
     height: '100vh',
     overflow: 'auto',
@@ -39,6 +49,11 @@ const StyledHelpOutline = styled(HelpOutline)(({ theme }) => ({
 const StyledHeaderHint = styled('div')(({ theme }) => ({
     color: theme.palette.text.secondary,
     fontSize: theme.fontSizes.smallBody,
+}));
+
+const BackButton = styled(Button)(({ theme }) => ({
+    marginTop: theme.spacing(2),
+    marginLeft: 'auto',
 }));
 
 export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
@@ -85,6 +100,7 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
                 >
                     There are no changes to review.
                     {/* FIXME: empty state */}
+                    <BackButton onClick={onClose}>Close</BackButton>
                 </StyledPageContent>
             </SidebarModal>
         );
@@ -126,13 +142,23 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
                                 `${theme.shape.borderRadiusLarge}px`,
                         }}
                     >
-                        <Typography>
-                            env: {environmentChangeRequest?.environment}
+                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                            <Box sx={{ display: 'flex' }}>
+                                <EnvironmentIcon enabled={true} />
+                                <Typography component="span" variant="h2">
+                                    {environmentChangeRequest?.environment}
+                                </Typography>
+                            </Box>
+                            <Box sx={{ ml: 'auto' }}>
+                                <ChangeRequestStatusBadge
+                                    state={environmentChangeRequest?.state}
+                                />
+                            </Box>
+                        </Box>
+                        <Divider sx={{ my: 3 }} />
+                        <Typography variant="body1" color="text.secondary">
+                            You request changes for these feature toggles:
                         </Typography>
-                        <Typography>
-                            state: {environmentChangeRequest?.state}
-                        </Typography>
-                        <hr />
                         <ChangeRequest
                             changeRequest={environmentChangeRequest}
                             onNavigate={() => {
@@ -144,20 +170,21 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
                             <ConditionallyRender
                                 condition={
                                     environmentChangeRequest?.state ===
-                                    'APPROVED'
-                                }
-                                show={<Typography>Applied</Typography>}
-                            />
-                            <ConditionallyRender
-                                condition={
-                                    environmentChangeRequest?.state === 'CLOSED'
+                                    'Approved'
                                 }
                                 show={<Typography>Applied</Typography>}
                             />
                             <ConditionallyRender
                                 condition={
                                     environmentChangeRequest?.state ===
-                                    'APPROVED'
+                                    'Applied'
+                                }
+                                show={<Typography>Applied</Typography>}
+                            />
+                            <ConditionallyRender
+                                condition={
+                                    environmentChangeRequest?.state ===
+                                    'Approved'
                                 }
                                 show={
                                     <>
@@ -201,6 +228,7 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
                         </Box>
                     </Box>
                 ))}
+                <BackButton onClick={onClose}>Close</BackButton>
             </StyledPageContent>
         </SidebarModal>
     );

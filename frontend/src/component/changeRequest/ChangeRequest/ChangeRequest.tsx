@@ -4,10 +4,10 @@ import { ChangeRequestFeatureToggleChange } from '../ChangeRequestOverview/Chang
 import { objectId } from 'utils/objectId';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ToggleStatusChange } from '../ChangeRequestOverview/ChangeRequestFeatureToggleChange/ToggleStatusChange';
-import type { IChangeRequestResponse } from 'hooks/api/getters/useChangeRequestDraft/useChangeRequestDraft';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
+import type { IChangeRequest } from '../changeRequest.types';
 import {
     StrategyAddedChange,
     StrategyDeletedChange,
@@ -19,13 +19,13 @@ import {
 } from '../../../utils/strategyNames';
 import { IFeatureStrategyPayload } from '../../../interfaces/strategy';
 
-interface IChangeRequest {
-    changeRequest: IChangeRequestResponse;
+interface IChangeRequestProps {
+    changeRequest: IChangeRequest;
     onRefetch?: () => void;
     onNavigate?: () => void;
 }
 
-export const ChangeRequest: VFC<IChangeRequest> = ({
+export const ChangeRequest: VFC<IChangeRequestProps> = ({
     changeRequest,
     onRefetch,
     onNavigate,
@@ -51,7 +51,6 @@ export const ChangeRequest: VFC<IChangeRequest> = ({
 
     return (
         <Box>
-            Changes
             {changeRequest.features?.map(featureToggleChange => (
                 <ChangeRequestFeatureToggleChange
                     key={featureToggleChange.name}
@@ -65,6 +64,7 @@ export const ChangeRequest: VFC<IChangeRequest> = ({
                                 condition={change.action === 'updateEnabled'}
                                 show={
                                     <ToggleStatusChange
+                                        // @ts-expect-error TODO: fix types
                                         enabled={
                                             (change?.payload as any)?.enabled
                                         }

@@ -2,40 +2,9 @@ import useSWR from 'swr';
 import { useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import { IFeatureStrategyPayload } from '../../../../interfaces/strategy';
-
-interface IChange {
-    id: number;
-    action: string;
-    payload:
-        | {
-              enabled: boolean; // FIXME: add other action types
-          }
-        | IFeatureStrategyPayload;
-    createdAt: Date;
-    createdBy: {
-        id: number;
-        username?: any;
-        imageUrl?: any;
-    };
-}
-
-export interface IChangeRequestResponse {
-    id: number;
-    environment: string;
-    state: string;
-    project: string;
-    createdBy: {
-        id: number;
-        username?: any;
-        imageUrl?: any;
-    };
-    createdAt: Date;
-    features: Array<{
-        name: string;
-        changes: IChange[];
-    }>;
-}
+import {
+    IChangeRequest,
+} from 'component/changeRequest/changeRequest.types';
 
 const fetcher = (path: string) => {
     return fetch(path)
@@ -44,7 +13,7 @@ const fetcher = (path: string) => {
 };
 
 export const useChangeRequestDraft = (project: string) => {
-    const { data, error, mutate } = useSWR<IChangeRequestResponse[]>(
+    const { data, error, mutate } = useSWR<IChangeRequest[]>(
         formatApiPath(`api/admin/projects/${project}/change-requests/draft`),
         fetcher
     );

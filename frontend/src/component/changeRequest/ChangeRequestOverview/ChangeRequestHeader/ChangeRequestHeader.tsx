@@ -2,8 +2,8 @@ import { Box } from '@mui/material';
 import { FC } from 'react';
 import { Typography } from '@mui/material';
 import TimeAgo from 'react-timeago';
-import { resolveChangeRequestStatusIcon } from 'component/changeRequest/changeRequest.utils';
 import { IChangeRequest } from 'component/changeRequest/changeRequest.types';
+import { ChangeRequestStatusBadge } from 'component/changeRequest/ChangeRequestStatusBadge/ChangeRequestStatusBadge';
 import {
     StyledPaper,
     StyledContainer,
@@ -22,7 +22,7 @@ export const ChangeRequestHeader: FC<{ changeRequest: IChangeRequest }> = ({
                 <StyledHeader variant="h1">
                     Change request #{changeRequest.id}
                 </StyledHeader>
-                {resolveChangeRequestStatusIcon(changeRequest.state)}
+                <ChangeRequestStatusBadge state={changeRequest.state} />;
             </StyledContainer>
             <StyledInnerContainer>
                 <Typography variant="body2" sx={{ margin: 'auto 0' }}>

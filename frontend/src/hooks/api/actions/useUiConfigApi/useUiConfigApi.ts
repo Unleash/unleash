@@ -1,5 +1,4 @@
 import useAPI from '../useApi/useApi';
-import { formatApiPath } from 'utils/formatPath';
 
 export const useUiConfigApi = () => {
     const { makeRequest, createRequest, errors, loading } = useAPI({
@@ -13,7 +12,7 @@ export const useUiConfigApi = () => {
             frontendSettings: { frontendApiOrigins },
         };
         const req = createRequest(
-            formatApiPath('api/admin/ui-config'),
+            'api/admin/ui-config',
             { method: 'POST', body: JSON.stringify(payload) },
             'setFrontendSettings'
         );

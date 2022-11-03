@@ -47,6 +47,7 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
         setAnchorEl(null);
     };
     const { hasAccess } = useContext(AccessContext);
+
     const onClick = async (environmentId: string) => {
         const { id, ...strategyCopy } = {
             ...strategy,

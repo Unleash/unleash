@@ -74,7 +74,7 @@ export const ChangeRequestOverview: FC = () => {
             <Box sx={{ display: 'flex' }}>
                 <StyledAsideBox>
                     <ChangeRequestTimeline state={changeRequest.state} />
-                    <ChangeRequestReviewers />
+                    {/* <ChangeRequestReviewers /> */}
                 </StyledAsideBox>
                 <StyledPaper elevation={0}>
                     <StyledInnerContainer>

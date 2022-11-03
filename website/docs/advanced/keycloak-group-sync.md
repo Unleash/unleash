@@ -10,6 +10,9 @@ User group syncing is an upcoming Unleash feature that will be available for ent
 
 In this guide, we will setup OIDC Single Sign-On (SSO) in Keycloak and configure Unleash to automatically sync user group membership from Keycloak.
 
+## Prerequisites
+The steps in this guide assume you to have admin access to a running Unleash instance and to a running Keycloak instance.
+
 ## Keycloak Configuration
 
 ### Step 1: Navigate to Create Client {#keycloak-step-1}

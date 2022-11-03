@@ -125,7 +125,7 @@ module.exports = {
                         'advanced/sso-saml',
                         'advanced/sso-saml-keycloak',
                         'advanced/sso-google',
-                        'how-to/sso-keycloak-group-sync',
+                        'how-to/how-to-setup-sso-keycloak-group-sync',
                     ],
                     type: 'category',
                     link: {

@@ -1,5 +1,6 @@
+import { styled } from '@mui/material';
 import { FC } from 'react';
-import { Box, Button, Paper } from '@mui/material';
+import { Box } from '@mui/material';
 import { useChangeRequest } from 'hooks/api/getters/useChangeRequest/useChangeRequest';
 import { ChangeRequestHeader } from './ChangeRequestHeader/ChangeRequestHeader';
 import { ChangeRequestTimeline } from './ChangeRequestTimeline/ChangeRequestTimeline';
@@ -10,11 +11,42 @@ import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useCh
 import { ChangeRequestReviewStatus } from './ChangeRequestReviewStatus/ChangeRequestReviewStatus';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import Button from '@mui/material/Button';
+import Paper from '@mui/material/Paper';
+import { ReviewButton } from './ReviewButton/ReviewButton';
+
+const StyledAsideBox = styled(Box)(({ theme }) => ({
+    width: '30%',
+    display: 'flex',
+    flexDirection: 'column',
+}));
+
+const StyledPaper = styled(Paper)(({ theme }) => ({
+    marginTop: theme.spacing(2),
+    marginLeft: theme.spacing(2),
+    width: '70%',
+    padding: theme.spacing(1, 2),
+    borderRadius: theme.shape.borderRadiusLarge,
+}));
+
+const StyledButtonBox = styled(Box)(({ theme }) => ({
+    marginTop: theme.spacing(2),
+    display: 'flex',
+    justifyContent: 'flex-end',
+}));
+
+const StyledInnerContainer = styled(Box)(({ theme }) => ({
+    padding: theme.spacing(2),
+}));
 
 export const ChangeRequestOverview: FC = () => {
     const projectId = useRequiredPathParam('projectId');
     const id = useRequiredPathParam('id');
-    const { data: changeRequest } = useChangeRequest(projectId, id);
+    const { data: changeRequest, refetchChangeRequest } = useChangeRequest(
+        projectId,
+        id
+    );
     const { applyChanges } = useChangeRequestApi();
     const { setToastData, setToastApiError } = useToast();
 
@@ -25,10 +57,11 @@ export const ChangeRequestOverview: FC = () => {
     const onApplyChanges = async () => {
         try {
             await applyChanges(projectId, id);
+            refetchChangeRequest();
             setToastData({
                 type: 'success',
                 title: 'Success',
-                text: 'Changes appplied',
+                text: 'Changes applied',
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
@@ -39,49 +72,36 @@ export const ChangeRequestOverview: FC = () => {
         <>
             <ChangeRequestHeader changeRequest={changeRequest} />
             <Box sx={{ display: 'flex' }}>
-                <Box
-                    sx={{
-                        width: '30%',
-                        display: 'flex',
-                        flexDirection: 'column',
-                    }}
-                >
+                <StyledAsideBox>
                     <ChangeRequestTimeline state={changeRequest.state} />
-                    <ChangeRequestReviewers />
-                </Box>
-                <Paper
-                    elevation={0}
-                    sx={theme => ({
-                        marginTop: theme.spacing(2),
-                        marginLeft: theme.spacing(2),
-                        width: '70%',
-                        padding: 2,
-                        borderRadius: theme =>
-                            `${theme.shape.borderRadiusLarge}px`,
-                    })}
-                >
-                    <Box
-                        sx={theme => ({
-                            padding: theme.spacing(2),
-                        })}
-                    >
+                    {/* <ChangeRequestReviewers /> */}
+                </StyledAsideBox>
+                <StyledPaper elevation={0}>
+                    <StyledInnerContainer>
                         Changes
                         <ChangeRequest changeRequest={changeRequest} />
                         <ChangeRequestReviewStatus
-                            approved={
-                                changeRequest.state === 'Approved' ||
-                                changeRequest.state === 'Applied'
-                            }
+                            state={changeRequest.state}
                         />
-                        <Button
-                            variant="contained"
-                            sx={{ marginTop: 2 }}
-                            onClick={onApplyChanges}
-                        >
-                            Apply changes
-                        </Button>
-                    </Box>
-                </Paper>
+                        <StyledButtonBox>
+                            <ConditionallyRender
+                                condition={changeRequest.state === 'In review'}
+                                show={<ReviewButton />}
+                            />
+                            <ConditionallyRender
+                                condition={changeRequest.state === 'Approved'}
+                                show={
+                                    <Button
+                                        variant="contained"
+                                        onClick={onApplyChanges}
+                                    >
+                                        Apply changes
+                                    </Button>
+                                }
+                            />
+                        </StyledButtonBox>
+                    </StyledInnerContainer>
+                </StyledPaper>
             </Box>
         </>
     );

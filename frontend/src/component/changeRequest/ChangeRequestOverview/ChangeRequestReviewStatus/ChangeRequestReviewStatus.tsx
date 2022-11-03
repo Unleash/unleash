@@ -1,7 +1,6 @@
 import { FC } from 'react';
-import { Box, Typography, useTheme } from '@mui/material';
+import { Box, Theme, Typography, useTheme } from '@mui/material';
 import { ReactComponent as ChangesAppliedIcon } from 'assets/icons/merge.svg';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
     StyledOuterContainer,
     StyledButtonContainer,
@@ -17,9 +16,7 @@ interface ISuggestChangeReviewsStatusProps {
     state: ChangeRequestState;
 }
 
-const resolveBorder = (state: ChangeRequestState) => {
-    const theme = useTheme();
-
+const resolveBorder = (state: ChangeRequestState, theme: Theme) => {
     if (state === 'Approved') {
         return `2px solid ${theme.palette.success.main}`;
     }
@@ -31,42 +28,42 @@ const resolveBorder = (state: ChangeRequestState) => {
     return `1px solid ${theme.palette.tertiary.main}`;
 };
 
-const resolveIconColors = (state: ChangeRequestState) => {
-    const theme = useTheme();
-
+const resolveIconColors = (state: ChangeRequestState, theme: Theme) => {
     if (state === 'Approved') {
         return {
-            bgColor: theme.palette.success.main,
+            bgColor: theme.palette.success.main!,
             svgColor: theme.palette.tertiary.background,
         };
     }
 
     if (state === 'Applied') {
         return {
-            bgColor: theme.palette.primary.main,
+            bgColor: theme.palette.primary.main!,
             svgColor: theme.palette.tertiary.background,
         };
     }
 
     return {
         bgColor: theme.palette.tableHeaderBackground,
-        svgColor: theme.palette.neutral.main,
+        svgColor: theme.palette.neutral.main!,
     };
 };
 
 export const ChangeRequestReviewStatus: FC<
     ISuggestChangeReviewsStatusProps
 > = ({ state }) => {
+    const theme = useTheme();
+
     return (
         <StyledOuterContainer>
-            <StyledButtonContainer {...resolveIconColors(state)}>
+            <StyledButtonContainer {...resolveIconColors(state, theme)}>
                 <ChangesAppliedIcon
                     style={{
                         transform: `scale(1.5)`,
                     }}
                 />
             </StyledButtonContainer>
-            <StyledReviewStatusContainer border={resolveBorder(state)}>
+            <StyledReviewStatusContainer border={resolveBorder(state, theme)}>
                 <ResolveComponent state={state} />
             </StyledReviewStatusContainer>
         </StyledOuterContainer>

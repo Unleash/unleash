@@ -17,8 +17,6 @@ import {
 
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
-const options = ['Approve change', 'Reject change'];
-
 export const ReviewButton = () => {
     const projectId = useRequiredPathParam('projectId');
     const id = useRequiredPathParam('id');
@@ -30,30 +28,33 @@ export const ReviewButton = () => {
     const [open, setOpen] = React.useState(false);
     const anchorRef = React.useRef<HTMLButtonElement>(null);
 
-    const onMenuItemClick = async (index: number) => {
+    const onApprove = async () => {
         try {
-            const option = options[index];
-            if (option.includes('Approve')) {
-                await changeState(projectId, Number(id), { state: 'Approved' });
-                refetchChangeRequest();
-                setToastData({
-                    type: 'success',
-                    title: 'Success',
-                    text: 'Changes approved',
-                });
-            }
+            await changeState(projectId, Number(id), {
+                state: 'Approved',
+            });
+            refetchChangeRequest();
+            setToastData({
+                type: 'success',
+                title: 'Success',
+                text: 'Changes approved',
+            });
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
+    };
 
-            if (option.includes('Reject')) {
-                await changeState(projectId, Number(id), {
-                    state: 'Cancelled',
-                });
-                refetchChangeRequest();
-                setToastData({
-                    type: 'success',
-                    title: 'Success',
-                    text: 'Changes rejected',
-                });
-            }
+    const onReject = async () => {
+        try {
+            await changeState(projectId, Number(id), {
+                state: 'Cancelled',
+            });
+            refetchChangeRequest();
+            setToastData({
+                type: 'success',
+                title: 'Success',
+                text: 'Changes rejected',
+            });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }
@@ -114,16 +115,12 @@ export const ReviewButton = () => {
                                     id="review-options-menu"
                                     autoFocusItem
                                 >
-                                    {options.map((option, index) => (
-                                        <MenuItem
-                                            key={option}
-                                            onClick={() =>
-                                                onMenuItemClick(index)
-                                            }
-                                        >
-                                            {option}
-                                        </MenuItem>
-                                    ))}
+                                    <MenuItem onClick={onApprove}>
+                                        Approve changes
+                                    </MenuItem>
+                                    <MenuItem onClick={onReject}>
+                                        Reject changes
+                                    </MenuItem>
                                 </MenuList>
                             </ClickAwayListener>
                         </Paper>

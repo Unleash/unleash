@@ -61,7 +61,7 @@ export const ChangeRequestOverview: FC = () => {
             setToastData({
                 type: 'success',
                 title: 'Success',
-                text: 'Changes appplied',
+                text: 'Changes applied',
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));

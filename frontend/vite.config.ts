@@ -7,6 +7,9 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 import react from '@vitejs/plugin-react';
 import svgr from 'vite-plugin-svgr';
 import envCompatible from 'vite-plugin-env-compatible';
+import { resolve } from 'path';
+
+const projectRootDir = resolve(__dirname);
 
 const UNLEASH_API = process.env.UNLEASH_API || 'http://localhost:4242';
 const UNLEASH_BASE_PATH = process.env.UNLEASH_BASE_PATH || '/';
@@ -64,6 +67,14 @@ export default mergeConfig(
             },
         },
         plugins: [react(), tsconfigPaths(), svgr(), envCompatible()],
+        resolve: {
+            alias: [
+                {
+                    find: '@server',
+                    replacement: resolve(projectRootDir, '../src/lib'),
+                },
+            ],
+        },
         esbuild: {
             logOverride: { 'this-is-undefined-in-esm': 'silent' },
         },

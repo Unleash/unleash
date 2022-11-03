@@ -2,9 +2,9 @@ ARG NODE_VERSION=16-alpine
 
 FROM --platform=$BUILDPLATFORM node:$NODE_VERSION as frontend_builder
 
-WORKDIR /frontend
+WORKDIR /unleash/frontend
 
-COPY ./frontend /frontend
+COPY . /unleash
 
 RUN yarn install --frozen-lockfile
 
@@ -18,7 +18,7 @@ RUN yarn config set network-timeout 300000
 
 RUN yarn install --frozen-lockfile --ignore-scripts  && yarn run build && yarn run local:package
 
-COPY --from=frontend_builder /frontend/build /unleash/build/frontend/build
+COPY --from=frontend_builder /unleash/frontend/build /unleash/build/frontend/build
 
 WORKDIR /unleash/docker
 

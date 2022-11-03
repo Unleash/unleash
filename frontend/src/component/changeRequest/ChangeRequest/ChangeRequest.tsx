@@ -20,7 +20,6 @@ import {
     formatStrategyName,
     GetFeatureStrategyIcon,
 } from '../../../utils/strategyNames';
-import { IFeatureStrategyPayload } from '../../../interfaces/strategy';
 import { IChangeRequestEnabled } from '../changeRequest.types';
 
 interface IChangeRequestProps {

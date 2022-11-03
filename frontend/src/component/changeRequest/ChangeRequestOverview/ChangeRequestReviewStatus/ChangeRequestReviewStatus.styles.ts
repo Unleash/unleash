@@ -57,7 +57,7 @@ export const StyledDivider = styled(Divider)(({ theme }) => ({
 
 export const StyledReviewStatusContainer = styled(Box, {
     shouldForwardProp: styledComponentPropCheck(),
-})<{ border: boolean }>(({ theme, border }) => ({
+})<{ border: string }>(({ theme, border }) => ({
     borderRadius: `${theme.shape.borderRadiusLarge}px`,
     border: border,
     padding: theme.spacing(3),

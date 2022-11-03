@@ -170,23 +170,13 @@ export default class ClientMetricsServiceV2 {
         if (this.flagResolver.isEnabled('fixHourMetrics')) {
             const hours = generateHourBuckets(hoursBack);
 
-            const environments = metrics.reduce(
-                (unique, item) =>
-                    unique.includes(item.environment)
-                        ? unique
-                        : [...unique, item.environment],
-                [],
-            );
+            const environments = [
+                ...new Set(metrics.map((x) => x.environment)),
+            ];
 
-            const applications = metrics
-                .reduce(
-                    (unique, item) =>
-                        unique.includes(item.appName)
-                            ? unique
-                            : [...unique, item.appName],
-                    [],
-                )
-                .slice(0, 100);
+            const applications = [
+                ...new Set(metrics.map((x) => x.appName)),
+            ].slice(0, 100);
 
             const result = environments.flatMap((environment) =>
                 applications.flatMap((appName) =>

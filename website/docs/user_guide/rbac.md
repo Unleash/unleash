@@ -128,7 +128,7 @@ While a user can only have one role in a given project, a user may belong to mul
 
 :::info availability
 
-User group SSO Integration is planned to be released in **Unleash 4.18** and will be available for enterprise customers.
+User group syncing is planned to be released in Unleash 4.18 and will be available for enterprise customers.
 
 :::
 

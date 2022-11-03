@@ -164,6 +164,6 @@ To enable group sync, you'll need to set two fields in your SSO provider configu
     "nonce": "0394852-3190485-2490358"
   }
   ```
-  You need to set the `Group Field JSON path` to "groups".
+  You need to set the "Group Field JSON path" to "groups".
 
 Once you've enabled group syncing and set an appropriate path, you'll need to add the SSO group names to the Unleash group. This can be done by navigating to the Unleash group you want to enable sync for and adding the SSO group names to the "SSO group ID/name" property.

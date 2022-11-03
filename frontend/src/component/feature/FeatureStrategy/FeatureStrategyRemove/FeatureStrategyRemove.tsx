@@ -14,6 +14,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { Delete } from '@mui/icons-material';
 import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
+import { useChangeRequestApi } from '../../../../hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 
 interface IFeatureStrategyRemoveProps {
     projectId: string;
@@ -94,6 +95,7 @@ export const FeatureStrategyRemove = ({
 }: IFeatureStrategyRemoveProps) => {
     const [openDialogue, setOpenDialogue] = useState(false);
     const { deleteStrategyFromFeature } = useFeatureStrategyApi();
+    const { addChangeRequest } = useChangeRequestApi();
     const { refetchFeature } = useFeature(projectId, featureId);
     const { setToastData, setToastApiError } = useToast();
     const navigate = useNavigate();
@@ -103,7 +105,13 @@ export const FeatureStrategyRemove = ({
     const onSuggestRemove = async (event: React.FormEvent) => {
         try {
             event.preventDefault();
-            console.log('suggesting remove');
+            await addChangeRequest(projectId, environmentId, {
+                action: 'deleteStrategy',
+                feature: featureId,
+                payload: {
+                    id: strategyId,
+                },
+            });
             setToastData({
                 title: 'Changes added to the draft!',
                 type: 'success',

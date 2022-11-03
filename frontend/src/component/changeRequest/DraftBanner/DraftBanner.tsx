@@ -4,7 +4,7 @@ import { useStyles as useAppStyles } from 'component/App.styles';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ChangeRequestSidebar } from '../ChangeRequestSidebar/ChangeRequestSidebar';
-import { useChangeRequestDraft } from 'hooks/api/getters/useChangeRequestDraft/useChangeRequestDraft';
+import { useChangeRequestOpen } from 'hooks/api/getters/useChangeRequestOpen/useChangeRequestOpen';
 
 interface IDraftBannerProps {
     project: string;
@@ -13,7 +13,7 @@ interface IDraftBannerProps {
 export const DraftBanner: VFC<IDraftBannerProps> = ({ project }) => {
     const { classes } = useAppStyles();
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-    const { draft, loading } = useChangeRequestDraft(project);
+    const { draft, loading } = useChangeRequestOpen(project);
     const environment = '';
 
     if ((!loading && !draft) || draft?.length === 0) {

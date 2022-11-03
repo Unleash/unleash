@@ -1,5 +1,4 @@
 ---
-id: sso-open-id-connect
 title: How to add SSO with OpenID Connect
 ---
 
@@ -7,7 +6,7 @@ title: How to add SSO with OpenID Connect
 
 ## Introduction {#introduction}
 
-In this guide we will do a deep dive on the Single-Sign-On (SSO) using the OpenID Connect protocol and connect it with Okta as IdP. Unleash supports other identity providers and protocols, have a look at [all available Single-Sign-On options](./sso.md)
+In this guide we will do a deep dive on the Single-Sign-On (SSO) using the OpenID Connect protocol and connect it with Okta as IdP. Unleash supports other identity providers and protocols, have a look at [all available Single-Sign-On options](../advanced/sso.md)
 
 ## Basic configuration
 

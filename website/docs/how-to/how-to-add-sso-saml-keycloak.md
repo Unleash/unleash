@@ -1,5 +1,4 @@
 ---
-id: sso-saml-keycloak
 title: How to add SSO with SAML 2.0 Keycloak
 ---
 
@@ -7,7 +6,7 @@ title: How to add SSO with SAML 2.0 Keycloak
 
 ## Introduction {#introduction}
 
-In this guide we will do a deep dive on the Single-Sign-On (SSO) integration with SAML 2.0 and connect it with Keycloak as IdP. Unleash supports other identity providers and protocols, have a look at [all available Single-Sign-On options](./sso.md)
+In this guide we will do a deep dive on the Single-Sign-On (SSO) integration with SAML 2.0 and connect it with Keycloak as IdP. Unleash supports other identity providers and protocols, have a look at [all available Single-Sign-On options](../advanced/sso.md)
 
 ## Basic configuration
 

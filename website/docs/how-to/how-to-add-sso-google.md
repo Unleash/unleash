@@ -1,13 +1,12 @@
 ---
-id: sso-google
 title: '[Deprecated] How to add SSO with Google'
 ---
 
-> Single Sign-on via the Google Authenticator provider is deprecated. We recommend using [OpenID Connect](./sso-open-id-connect.md) instead.
+> Single Sign-on via the Google Authenticator provider is deprecated. We recommend using [OpenID Connect](./how-to-add-sso-open-id-connect.md) instead.
 
 ## Introduction {#introduction}
 
-In this guide we will do a deep dive on the Single-Sign-On (SSO) using Google Authentication. Unleash supports other identity providers and protocols, have a look at [all available Single-Sign-On options](./sso.md)
+In this guide we will do a deep dive on the Single-Sign-On (SSO) using Google Authentication. Unleash supports other identity providers and protocols, have a look at [all available Single-Sign-On options](../advanced/sso.md)
 
 ## Basic configuration
 

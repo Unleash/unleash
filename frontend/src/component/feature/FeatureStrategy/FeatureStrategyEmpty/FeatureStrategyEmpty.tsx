@@ -44,7 +44,7 @@ export const FeatureStrategyEmpty = ({
     );
 
     const { uiConfig } = useUiConfig();
-    const suggestChangesEnabled = uiConfig?.flags?.changeRequests;
+    const changeRequestsEnabled = uiConfig?.flags?.changeRequests;
 
     const {
         changeRequestDialogDetails,
@@ -72,7 +72,7 @@ export const FeatureStrategyEmpty = ({
                 environment => environment.name === fromEnvironmentName
             )?.strategies || [];
 
-        if (suggestChangesEnabled) {
+        if (changeRequestsEnabled) {
             await onChangeRequestAddStrategies(
                 environmentId,
                 strategies,

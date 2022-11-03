@@ -7,7 +7,10 @@ import { ToggleStatusChange } from '../ChangeRequestOverview/ChangeRequestFeatur
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
-import type { IChangeRequest } from '../changeRequest.types';
+import type {
+    IChangeRequest,
+    IChangeRequestAddStrategy,
+} from '../changeRequest.types';
 import {
     StrategyAddedChange,
     StrategyDeletedChange,
@@ -18,6 +21,7 @@ import {
     GetFeatureStrategyIcon,
 } from '../../../utils/strategyNames';
 import { IFeatureStrategyPayload } from '../../../interfaces/strategy';
+import { IChangeRequestEnabled } from '../changeRequest.types';
 
 interface IChangeRequestProps {
     changeRequest: IChangeRequest;
@@ -65,9 +69,10 @@ export const ChangeRequest: VFC<IChangeRequestProps> = ({
                                 show={
                                     <ToggleStatusChange
                                         enabled={
-                                            (change?.payload as any)?.enabled
+                                            (change as IChangeRequestEnabled)
+                                                ?.payload?.enabled
                                         }
-                                        onDiscard={onDiscard(change.id)}
+                                        onDiscard={onDiscard(change.id!)}
                                     />
                                 }
                             />
@@ -78,14 +83,14 @@ export const ChangeRequest: VFC<IChangeRequestProps> = ({
                                         <GetFeatureStrategyIcon
                                             strategyName={
                                                 (
-                                                    change.payload as IFeatureStrategyPayload
-                                                )?.name!
+                                                    change as IChangeRequestAddStrategy
+                                                )?.payload.name!
                                             }
                                         />
                                         {formatStrategyName(
                                             (
-                                                change.payload as IFeatureStrategyPayload
-                                            )?.name!
+                                                change as IChangeRequestAddStrategy
+                                            )?.payload.name!
                                         )}
                                     </StrategyAddedChange>
                                 }

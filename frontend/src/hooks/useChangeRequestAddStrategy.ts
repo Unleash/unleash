@@ -20,7 +20,7 @@ export const useChangeRequestAddStrategy = (
 ) => {
     const { setToastData, setToastApiError } = useToast();
     const { addChangeRequest } = useChangeRequestApi();
-    const { refetch: refetchSuggestedChange } = useChangeRequestDraft(project);
+    const { refetch } = useChangeRequestDraft(project);
 
     const [changeRequestDialogDetails, setChangeRequestDialogDetails] =
         useState<{
@@ -81,7 +81,7 @@ export const useChangeRequestAddStrategy = (
                     payload: changeRequestDialogDetails.strategy!,
                 }
             );
-            refetchSuggestedChange();
+            refetch();
             setChangeRequestDialogDetails({ isOpen: false });
             setToastData({
                 type: 'success',
@@ -108,7 +108,7 @@ export const useChangeRequestAddStrategy = (
                     );
                 })
             );
-            refetchSuggestedChange();
+            refetch();
             setChangeRequestDialogDetails({ isOpen: false });
             setToastData({
                 type: 'success',

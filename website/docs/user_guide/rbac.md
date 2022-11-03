@@ -141,7 +141,7 @@ To enable group sync, you'll need to set two fields in your SSO provider configu
 
 - **enable group syncing**:
 
-  Turns on group syncing, by default this is disabled.
+  Turns on group syncing. This is disabled by default.
 
 - **group field JSON path**
 

@@ -64,7 +64,6 @@ export const ChangeRequest: VFC<IChangeRequestProps> = ({
                                 condition={change.action === 'updateEnabled'}
                                 show={
                                     <ToggleStatusChange
-                                        // @ts-expect-error TODO: fix types
                                         enabled={
                                             (change?.payload as any)?.enabled
                                         }

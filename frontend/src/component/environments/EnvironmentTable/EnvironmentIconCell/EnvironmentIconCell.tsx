@@ -6,6 +6,7 @@ import { Box, IconButton } from '@mui/material';
 import { CloudCircle, DragIndicator } from '@mui/icons-material';
 import { UPDATE_ENVIRONMENT } from 'component/providers/AccessProvider/permissions';
 import AccessContext from 'contexts/AccessContext';
+import { IEnvironment } from 'interfaces/environments';
 
 const DragIcon = styled(IconButton)(
     ({ theme }) => `
@@ -15,7 +16,21 @@ const DragIcon = styled(IconButton)(
     `
 );
 
-export const EnvironmentIconCell: VFC = () => {
+const StyledCloudCircle = styled(CloudCircle)<{ deprecated?: boolean }>(
+    ({ theme, deprecated }) => ({
+        color: deprecated
+            ? theme.palette.neutral.border
+            : theme.palette.primary.main,
+    })
+);
+
+interface IEnvironmentIconCellProps {
+    environment: IEnvironment;
+}
+
+export const EnvironmentIconCell: VFC<IEnvironmentIconCellProps> = ({
+    environment,
+}) => {
     const { hasAccess } = useContext(AccessContext);
     const updatePermission = hasAccess(UPDATE_ENVIRONMENT);
     const { searchQuery } = useSearchHighlightContext();
@@ -36,7 +51,7 @@ export const EnvironmentIconCell: VFC = () => {
                     </DragIcon>
                 }
             />
-            <CloudCircle color="disabled" />
+            <StyledCloudCircle deprecated={!environment.enabled} />
         </Box>
     );
 };

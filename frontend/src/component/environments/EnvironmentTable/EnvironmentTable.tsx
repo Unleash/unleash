@@ -138,7 +138,9 @@ const COLUMNS = [
     {
         id: 'Icon',
         width: '1%',
-        Cell: () => <EnvironmentIconCell />,
+        Cell: ({ row: { original } }: any) => (
+            <EnvironmentIconCell environment={original} />
+        ),
         disableGlobalFilter: true,
     },
     {

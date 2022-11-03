@@ -23,12 +23,12 @@ export const EnvironmentNameCell = ({
         <TextCell>
             <Highlighter search={searchQuery}>{environment.name}</Highlighter>
             <ConditionallyRender
-                condition={!environment.enabled}
-                show={<StyledBadge color="warning">Disabled</StyledBadge>}
-            />
-            <ConditionallyRender
                 condition={environment.protected}
                 show={<StyledBadge color="success">Predefined</StyledBadge>}
+            />
+            <ConditionallyRender
+                condition={!environment.enabled}
+                show={<StyledBadge color="neutral">Deprecated</StyledBadge>}
             />
         </TextCell>
     );

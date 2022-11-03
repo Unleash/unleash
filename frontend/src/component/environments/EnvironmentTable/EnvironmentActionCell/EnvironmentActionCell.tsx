@@ -1,5 +1,4 @@
 import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
-import { UPDATE_ENVIRONMENT } from 'component/providers/AccessProvider/permissions';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { IEnvironment } from 'interfaces/environments';
@@ -10,7 +9,6 @@ import useEnvironmentApi from 'hooks/api/actions/useEnvironmentApi/useEnvironmen
 import useProjectRolePermissions from 'hooks/api/getters/useProjectRolePermissions/useProjectRolePermissions';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import useToast from 'hooks/useToast';
-import PermissionSwitch from 'component/common/PermissionSwitch/PermissionSwitch';
 import { EnvironmentActionCellPopover } from './EnvironmentActionCellPopover/EnvironmentActionCellPopover';
 import { EnvironmentCloneModal } from './EnvironmentCloneModal/EnvironmentCloneModal';
 import { IApiToken } from 'hooks/api/getters/useApiTokens/useApiTokens';
@@ -94,21 +92,10 @@ export const EnvironmentActionCell = ({
 
     return (
         <ActionCell>
-            <PermissionSwitch
-                permission={UPDATE_ENVIRONMENT}
-                checked={environment.enabled}
-                disabled={environment.protected}
-                tooltip={
-                    environment.enabled
-                        ? `Disable environment ${environment.name}`
-                        : `Enable environment ${environment.name}`
-                }
-                onClick={() => setToggleModal(true)}
-            />
-            <ActionCell.Divider />
             <EnvironmentActionCellPopover
                 environment={environment}
                 onEdit={() => navigate(`/environments/${environment.name}`)}
+                onDeprecateToggle={() => setToggleModal(true)}
                 onClone={() => {
                     if (environments.length < ENV_LIMIT) {
                         setCloneModal(true);

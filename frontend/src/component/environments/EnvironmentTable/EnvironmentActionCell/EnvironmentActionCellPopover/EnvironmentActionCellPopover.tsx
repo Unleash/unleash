@@ -18,7 +18,13 @@ import {
     DELETE_ENVIRONMENT,
     UPDATE_ENVIRONMENT,
 } from 'component/providers/AccessProvider/permissions';
-import { Delete, Edit, AddToPhotos as CopyIcon } from '@mui/icons-material';
+import {
+    Delete,
+    Edit,
+    AddToPhotos as CopyIcon,
+    VisibilityOffOutlined,
+    VisibilityOutlined,
+} from '@mui/icons-material';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
@@ -33,6 +39,7 @@ const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
 interface IEnvironmentActionCellPopoverProps {
     environment: IEnvironment;
     onEdit: () => void;
+    onDeprecateToggle: () => void;
     onClone: () => void;
     onDelete: () => void;
 }
@@ -40,6 +47,7 @@ interface IEnvironmentActionCellPopoverProps {
 export const EnvironmentActionCellPopover = ({
     environment,
     onEdit,
+    onDeprecateToggle,
     onClone,
     onDelete,
 }: IEnvironmentActionCellPopoverProps) => {
@@ -127,6 +135,32 @@ export const EnvironmentActionCellPopover = ({
                             </PermissionHOC>
                         }
                     />
+                    <PermissionHOC permission={UPDATE_ENVIRONMENT}>
+                        {({ hasAccess }) => (
+                            <StyledMenuItem
+                                onClick={() => {
+                                    onDeprecateToggle();
+                                    handleClose();
+                                }}
+                                disabled={!hasAccess || environment.protected}
+                            >
+                                <ListItemIcon>
+                                    <ConditionallyRender
+                                        condition={environment.enabled}
+                                        show={<VisibilityOffOutlined />}
+                                        elseShow={<VisibilityOutlined />}
+                                    />
+                                </ListItemIcon>
+                                <ListItemText>
+                                    <Typography variant="body2">
+                                        {environment.enabled
+                                            ? 'Deprecate'
+                                            : 'Undeprecate'}
+                                    </Typography>
+                                </ListItemText>
+                            </StyledMenuItem>
+                        )}
+                    </PermissionHOC>
                     <PermissionHOC permission={DELETE_ENVIRONMENT}>
                         {({ hasAccess }) => (
                             <StyledMenuItem

@@ -28,6 +28,7 @@ import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { IFeatureToggle } from 'interfaces/featureToggle';
 import { comparisonModerator } from '../featureStrategy.utils';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
+import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 
 export const FeatureStrategyCreate = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -49,9 +50,10 @@ export const FeatureStrategyCreate = () => {
 
     const { feature, refetchFeature } = useFeature(projectId, featureId);
     const ref = useRef<IFeatureToggle>(feature);
+    const isChangeRequestEnabled = useChangeRequestsEnabled();
 
     const isChangeRequest =
-        uiConfig?.flags.changeRequests && environmentId === 'production'; // FIXME: get from API - is it enabled
+        isChangeRequestEnabled && environmentId === 'production'; // FIXME: get from API - is it enabled
 
     const { data, staleDataNotification, forceRefreshCache } =
         useCollaborateData<IFeatureToggle>(
@@ -112,7 +114,6 @@ export const FeatureStrategyCreate = () => {
             feature: featureId,
             payload,
         });
-        // TODO: banner if draft doesn't exits
         // TODO: segments in change requests
         setToastData({
             title: 'Strategy added to draft',

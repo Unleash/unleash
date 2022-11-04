@@ -18,7 +18,7 @@ export interface IChangeRequestFeature {
 }
 
 export interface IChangeRequestBase {
-    id?: number;
+    id: number;
     action: ChangeRequestAction;
     payload: ChangeRequestPayload;
     conflict?: string;
@@ -83,3 +83,6 @@ export type ChangeRequestAction =
     | 'addStrategy'
     | 'updateStrategy'
     | 'deleteStrategy';
+
+export const hasNameField = (payload: unknown): payload is { name: string } =>
+    typeof payload === 'object' && payload !== null && 'name' in payload;

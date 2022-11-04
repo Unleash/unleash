@@ -6,6 +6,7 @@ import {
     styled,
     Tooltip,
     Divider,
+    IconButton,
 } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
@@ -17,6 +18,7 @@ import { ChangeRequest } from '../ChangeRequest/ChangeRequest';
 import { useChangeRequestOpen } from 'hooks/api/getters/useChangeRequestOpen/useChangeRequestOpen';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { ChangeRequestStatusBadge } from '../ChangeRequestStatusBadge/ChangeRequestStatusBadge';
+import CloseIcon from '@mui/icons-material/Close';
 
 interface IChangeRequestSidebarProps {
     open: boolean;
@@ -112,16 +114,28 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
                 header={
                     <PageHeader
                         secondary
+                        actions={
+                            <IconButton onClick={onClose}>
+                                <CloseIcon />
+                            </IconButton>
+                        }
                         titleElement={
                             <>
-                                Review your changes
-                                <Tooltip
-                                    title="You can review your changes from this page.
-                                    Needs a text to explain the process."
-                                    arrow
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                    }}
                                 >
-                                    <StyledHelpOutline />
-                                </Tooltip>
+                                    Review your changes
+                                    <Tooltip
+                                        title="You can review your changes from this page.
+                                    Needs a text to explain the process."
+                                        arrow
+                                    >
+                                        <StyledHelpOutline />
+                                    </Tooltip>
+                                </Box>
                                 <StyledHeaderHint>
                                     Make sure you are sending the right changes
                                     to be reviewed
@@ -228,7 +242,6 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
                         </Box>
                     </Box>
                 ))}
-                <BackButton onClick={onClose}>Close</BackButton>
             </StyledPageContent>
         </SidebarModal>
     );

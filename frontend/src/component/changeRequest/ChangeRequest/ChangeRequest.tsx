@@ -2,15 +2,11 @@ import { VFC } from 'react';
 import { Box } from '@mui/material';
 import { ChangeRequestFeatureToggleChange } from '../ChangeRequestOverview/ChangeRequestFeatureToggleChange/ChangeRequestFeatureToggleChange';
 import { objectId } from 'utils/objectId';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ToggleStatusChange } from '../ChangeRequestOverview/ChangeRequestFeatureToggleChange/ToggleStatusChange';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
-import type {
-    IChangeRequest,
-    IChangeRequestAddStrategy,
-} from '../changeRequest.types';
+import type { IChangeRequest } from '../changeRequest.types';
 import {
     StrategyAddedChange,
     StrategyDeletedChange,
@@ -20,7 +16,7 @@ import {
     formatStrategyName,
     GetFeatureStrategyIcon,
 } from 'utils/strategyNames';
-import { IChangeRequestEnabled } from '../changeRequest.types';
+import { hasNameField } from '../changeRequest.types';
 
 interface IChangeRequestProps {
     changeRequest: IChangeRequest;
@@ -62,46 +58,60 @@ export const ChangeRequest: VFC<IChangeRequestProps> = ({
                     onNavigate={onNavigate}
                 >
                     {featureToggleChange.changes.map(change => (
-                        <Box key={objectId(change)}>
-                            <ConditionallyRender
-                                condition={change.action === 'updateEnabled'}
-                                show={
-                                    <ToggleStatusChange
-                                        enabled={
-                                            (change as IChangeRequestEnabled)
-                                                ?.payload?.enabled
-                                        }
-                                        onDiscard={onDiscard(change.id!)}
+                        <Box
+                            key={objectId(change)}
+                            sx={theme => ({
+                                padding: 2,
+                                borderTop: '1px solid',
+                                borderColor: theme =>
+                                    theme.palette.dividerAlternative,
+                            })}
+                        >
+                            {change.action === 'updateEnabled' && (
+                                <ToggleStatusChange
+                                    enabled={change.payload.enabled}
+                                    onDiscard={onDiscard(change.id)}
+                                />
+                            )}
+                            {change.action === 'addStrategy' && (
+                                <StrategyAddedChange
+                                    onDiscard={onDiscard(change.id)}
+                                >
+                                    <GetFeatureStrategyIcon
+                                        strategyName={change.payload.name}
                                     />
-                                }
-                            />
-                            <ConditionallyRender
-                                condition={change.action === 'addStrategy'}
-                                show={
-                                    <StrategyAddedChange>
-                                        <GetFeatureStrategyIcon
-                                            strategyName={
-                                                (
-                                                    change as IChangeRequestAddStrategy
-                                                )?.payload.name!
-                                            }
-                                        />
-                                        {formatStrategyName(
-                                            (
-                                                change as IChangeRequestAddStrategy
-                                            )?.payload.name!
-                                        )}
-                                    </StrategyAddedChange>
-                                }
-                            />
-                            <ConditionallyRender
-                                condition={change.action === 'deleteStrategy'}
-                                show={<StrategyDeletedChange />}
-                            />
-                            <ConditionallyRender
-                                condition={change.action === 'updateStrategy'}
-                                show={<StrategyEditedChange />}
-                            />
+
+                                    {formatStrategyName(change.payload.name)}
+                                </StrategyAddedChange>
+                            )}
+                            {change.action === 'deleteStrategy' && (
+                                <StrategyDeletedChange
+                                    onDiscard={onDiscard(change.id)}
+                                >
+                                    {hasNameField(change.payload) && (
+                                        <>
+                                            <GetFeatureStrategyIcon
+                                                strategyName={
+                                                    change.payload.name
+                                                }
+                                            />
+                                            {formatStrategyName(
+                                                change.payload.name
+                                            )}
+                                        </>
+                                    )}
+                                </StrategyDeletedChange>
+                            )}
+                            {change.action === 'updateStrategy' && (
+                                <StrategyEditedChange
+                                    onDiscard={onDiscard(change.id)}
+                                >
+                                    <GetFeatureStrategyIcon
+                                        strategyName={change.payload.name}
+                                    />
+                                    {formatStrategyName(change.payload.name)}
+                                </StrategyEditedChange>
+                            )}
                         </Box>
                     ))}
                 </ChangeRequestFeatureToggleChange>

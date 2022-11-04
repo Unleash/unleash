@@ -26,7 +26,7 @@ export const ChangeRequestFeatureToggleChange: FC<
             <Box
                 sx={theme => ({
                     backgroundColor: theme.palette.tableHeaderBackground,
-                    p: 2,
+                    padding: theme.spacing(3),
                 })}
             >
                 <Box sx={{ display: 'flex', gap: 1 }}>
@@ -42,7 +42,7 @@ export const ChangeRequestFeatureToggleChange: FC<
                     </Typography>
                 </Box>
             </Box>
-            <Box sx={{ p: 2 }}>{children}</Box>
+            <Box>{children}</Box>
         </Card>
     );
 };

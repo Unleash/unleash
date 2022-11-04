@@ -15,6 +15,7 @@ import PermissionIconButton from 'component/common/PermissionIconButton/Permissi
 import { Delete } from '@mui/icons-material';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
+import { useChangeRequestOpen } from 'hooks/api/getters/useChangeRequestOpen/useChangeRequestOpen';
 
 interface IFeatureStrategyRemoveProps {
     projectId: string;
@@ -130,6 +131,7 @@ const useOnSuggestRemove = ({
     strategyId,
 }: IRemoveProps) => {
     const { addChangeRequest } = useChangeRequestApi();
+    const { refetch: refetchChangeRequests } = useChangeRequestOpen(projectId);
     const { setToastData, setToastApiError } = useToast();
     const onSuggestRemove = async (event: React.FormEvent) => {
         try {
@@ -145,6 +147,7 @@ const useOnSuggestRemove = ({
                 title: 'Changes added to the draft!',
                 type: 'success',
             });
+            await refetchChangeRequests();
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }

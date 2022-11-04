@@ -51,7 +51,7 @@ export const FeatureStrategyCreate = () => {
 
     const { feature, refetchFeature } = useFeature(projectId, featureId);
     const ref = useRef<IFeatureToggle>(feature);
-    const isChangeRequestEnabled = useChangeRequestsEnabled();
+    const isChangeRequestEnabled = useChangeRequestsEnabled(environmentId);
     const { refetch: refetchChangeRequests } = useChangeRequestOpen(projectId);
 
     const isChangeRequest =

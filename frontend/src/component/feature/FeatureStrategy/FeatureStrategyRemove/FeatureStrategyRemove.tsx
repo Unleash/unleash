@@ -165,7 +165,7 @@ export const FeatureStrategyRemove = ({
 }: IFeatureStrategyRemoveProps) => {
     const [openDialogue, setOpenDialogue] = useState(false);
 
-    const changeRequestsEnabled = useChangeRequestsEnabled();
+    const changeRequestsEnabled = useChangeRequestsEnabled(environmentId);
 
     const onRemove = useOnRemove({
         featureId,

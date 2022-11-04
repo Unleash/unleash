@@ -38,6 +38,7 @@ import { useMediaQuery } from '@mui/material';
 import { Search } from 'component/common/Search/Search';
 import { useChangeRequestToggle } from 'hooks/useChangeRequestToggle';
 import { ChangeRequestDialogue } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestConfirmDialog';
+import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 
 interface IProjectFeatureTogglesProps {
     features: IProject['features'];
@@ -93,6 +94,7 @@ export const ProjectFeatureToggles = ({
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
     const { uiConfig } = useUiConfig();
+    const changeRequestsEnabled = useChangeRequestsEnabled();
     const environments = useEnvironmentsRef(
         loading ? ['a', 'b', 'c'] : newEnvironments
     );
@@ -115,10 +117,7 @@ export const ProjectFeatureToggles = ({
             environment: string,
             enabled: boolean
         ) => {
-            if (
-                uiConfig?.flags?.changeRequests &&
-                environment === 'production'
-            ) {
+            if (changeRequestsEnabled && environment === 'production') {
                 onChangeRequestToggle(featureName, environment, enabled);
                 throw new Error('Additional approval required');
             }

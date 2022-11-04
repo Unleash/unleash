@@ -10,9 +10,9 @@ const fetcher = (path: string) => {
         .then(res => res.json());
 };
 
-export const useChangeRequestDraft = (project: string) => {
+export const useChangeRequestOpen = (project: string) => {
     const { data, error, mutate } = useSWR<IChangeRequest[]>(
-        formatApiPath(`api/admin/projects/${project}/change-requests/draft`),
+        formatApiPath(`api/admin/projects/${project}/change-requests/open`),
         fetcher
     );
 

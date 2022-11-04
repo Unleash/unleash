@@ -14,7 +14,7 @@ import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { HelpOutline } from '@mui/icons-material';
 import EnvironmentIcon from 'component/common/EnvironmentIcon/EnvironmentIcon';
 import { ChangeRequest } from '../ChangeRequest/ChangeRequest';
-import { useChangeRequestDraft } from 'hooks/api/getters/useChangeRequestDraft/useChangeRequestDraft';
+import { useChangeRequestOpen } from 'hooks/api/getters/useChangeRequestOpen/useChangeRequestOpen';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { ChangeRequestStatusBadge } from '../ChangeRequestStatusBadge/ChangeRequestStatusBadge';
 
@@ -65,7 +65,7 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
         draft,
         loading,
         refetch: refetchChangeRequest,
-    } = useChangeRequestDraft(project);
+    } = useChangeRequestOpen(project);
     const { changeState } = useChangeRequestApi();
 
     const onReview = async (draftId: number) => {

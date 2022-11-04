@@ -22,7 +22,7 @@ export const ChangeRequestHeader: FC<{ changeRequest: IChangeRequest }> = ({
                 <StyledHeader variant="h1">
                     Change request #{changeRequest.id}
                 </StyledHeader>
-                <ChangeRequestStatusBadge state={changeRequest.state} />;
+                <ChangeRequestStatusBadge state={changeRequest.state} />
             </StyledContainer>
             <StyledInnerContainer>
                 <Typography variant="body2" sx={{ margin: 'auto 0' }}>

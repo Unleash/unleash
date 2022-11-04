@@ -29,6 +29,7 @@ import { IFeatureToggle } from 'interfaces/featureToggle';
 import { comparisonModerator } from '../featureStrategy.utils';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
+import { useChangeRequestOpen } from 'hooks/api/getters/useChangeRequestOpen/useChangeRequestOpen';
 
 export const FeatureStrategyCreate = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -51,6 +52,7 @@ export const FeatureStrategyCreate = () => {
     const { feature, refetchFeature } = useFeature(projectId, featureId);
     const ref = useRef<IFeatureToggle>(feature);
     const isChangeRequestEnabled = useChangeRequestsEnabled();
+    const { refetch: refetchChangeRequests } = useChangeRequestOpen(projectId);
 
     const isChangeRequest =
         isChangeRequestEnabled && environmentId === 'production'; // FIXME: get from API - is it enabled
@@ -106,9 +108,7 @@ export const FeatureStrategyCreate = () => {
         });
     };
 
-    const onAddStrategySuggestion = async (
-        payload: IFeatureStrategyPayload
-    ) => {
+    const onStrategyRequestAdd = async (payload: IFeatureStrategyPayload) => {
         await addChangeRequest(projectId, environmentId, {
             action: 'addStrategy',
             feature: featureId,
@@ -120,6 +120,7 @@ export const FeatureStrategyCreate = () => {
             type: 'success',
             confetti: true,
         });
+        refetchChangeRequests();
     };
 
     const onSubmit = async () => {
@@ -127,7 +128,7 @@ export const FeatureStrategyCreate = () => {
 
         try {
             if (isChangeRequest) {
-                await onAddStrategySuggestion(payload);
+                await onStrategyRequestAdd(payload);
             } else {
                 await onAddStrategy(payload);
             }

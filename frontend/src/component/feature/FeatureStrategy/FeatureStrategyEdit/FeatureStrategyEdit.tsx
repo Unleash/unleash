@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { FeatureStrategyForm } from 'component/feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyForm';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -27,6 +27,7 @@ import { IFeatureToggle } from 'interfaces/featureToggle';
 import { comparisonModerator } from '../featureStrategy.utils';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
+import { useChangeRequestOpen } from 'hooks/api/getters/useChangeRequestOpen/useChangeRequestOpen';
 
 export const FeatureStrategyEdit = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -46,6 +47,7 @@ export const FeatureStrategyEdit = () => {
     const navigate = useNavigate();
     const { addChangeRequest } = useChangeRequestApi();
     const isChangeRequestEnabled = useChangeRequestsEnabled();
+    const { refetch: refetchChangeRequests } = useChangeRequestOpen(projectId);
 
     const isChangeRequest =
         isChangeRequestEnabled && environmentId === 'production'; // FIXME: get from API - is it enabled
@@ -130,6 +132,7 @@ export const FeatureStrategyEdit = () => {
             type: 'success',
             confetti: true,
         });
+        refetchChangeRequests();
     };
 
     const onSubmit = async () => {

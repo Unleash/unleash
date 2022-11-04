@@ -15,7 +15,7 @@ import PermissionIconButton from 'component/common/PermissionIconButton/Permissi
 import { Delete } from '@mui/icons-material';
 import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
 import { useChangeRequestApi } from '../../../../hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
-import { useChangeRequestsEnabled } from '../../../../hooks/useChangeRequestsEnabled';
+import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 
 interface IFeatureStrategyRemoveProps {
     projectId: string;

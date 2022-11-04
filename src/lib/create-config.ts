@@ -108,7 +108,7 @@ function loadUI(options: IUnleashOptions): IUIConfig {
         E: true,
         ENABLE_DARK_MODE_SUPPORT: false,
     };
-    return mergeAll([uiO, ui]);
+    return mergeAll([ui, uiO]);
 }
 
 const dateHandlingCallback = (connection, callback) => {

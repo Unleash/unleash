@@ -2,10 +2,7 @@ import useSWR from 'swr';
 import { useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import {
-    ChangeRequestState,
-    IChangeRequest,
-} from 'component/changeRequest/changeRequest.types';
+import { IChangeRequest } from 'component/changeRequest/changeRequest.types';
 
 const fetcher = (path: string) => {
     return fetch(path)

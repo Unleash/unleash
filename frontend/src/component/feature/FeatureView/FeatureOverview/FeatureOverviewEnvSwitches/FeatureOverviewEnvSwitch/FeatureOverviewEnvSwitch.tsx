@@ -10,9 +10,9 @@ import React from 'react';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useStyles } from './FeatureOverviewEnvSwitch.styles';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useChangeRequestToggle } from 'hooks/useChangeRequestToggle';
 import { ChangeRequestDialogue } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestConfirmDialog';
+import { UpdateEnabledMessage } from '../../../../../changeRequest/ChangeRequestConfirmDialog/ChangeRequestMessages/UpdateEnabledMessage';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 
 interface IFeatureOverviewEnvSwitchProps {
@@ -123,9 +123,15 @@ const FeatureOverviewEnvSwitch = ({
             <ChangeRequestDialogue
                 isOpen={changeRequestDialogDetails.isOpen}
                 onClose={onChangeRequestToggleClose}
-                featureName={featureId}
                 environment={changeRequestDialogDetails?.environment}
                 onConfirm={onChangeRequestToggleConfirm}
+                messageComponent={
+                    <UpdateEnabledMessage
+                        enabled={changeRequestDialogDetails?.enabled!}
+                        featureName={changeRequestDialogDetails?.featureName!}
+                        environment={changeRequestDialogDetails.environment!}
+                    />
+                }
             />
         </div>
     );

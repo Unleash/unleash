@@ -177,8 +177,8 @@ export const EnvironmentCloneModal = ({
                 environment.name,
                 getCloneEnvironmentPayload()
             );
-            const response = await createToken(getApiTokenCreatePayload());
             if (apiTokenGeneration === APITokenGeneration.NOW) {
+                const response = await createToken(getApiTokenCreatePayload());
                 const token = await response.json();
                 newToken(token);
             }

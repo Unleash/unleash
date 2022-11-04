@@ -13,6 +13,7 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useChangeRequestToggle } from 'hooks/useChangeRequestToggle';
 import { ChangeRequestDialogue } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestConfirmDialog';
+import { useChangeRequestsEnabled } from '../../../../../../hooks/useChangeRequestsEnabled';
 
 interface IFeatureOverviewEnvSwitchProps {
     env: IFeatureEnvironment;
@@ -34,7 +35,7 @@ const FeatureOverviewEnvSwitch = ({
     const { refetchFeature } = useFeature(projectId, featureId);
     const { setToastData, setToastApiError } = useToast();
     const { classes: styles } = useStyles();
-    const { uiConfig } = useUiConfig();
+    const changeRequestsEnabled = useChangeRequestsEnabled();
     const {
         onChangeRequestToggle,
         onChangeRequestToggleClose,
@@ -84,7 +85,7 @@ const FeatureOverviewEnvSwitch = ({
     };
 
     const toggleEnvironment = async (e: React.ChangeEvent) => {
-        if (uiConfig?.flags?.changeRequests && env.name === 'production') {
+        if (changeRequestsEnabled && env.name === 'production') {
             e.preventDefault();
             onChangeRequestToggle(featureId, env.name, !env.enabled);
             return;

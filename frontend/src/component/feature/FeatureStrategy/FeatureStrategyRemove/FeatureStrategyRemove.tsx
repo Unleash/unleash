@@ -15,6 +15,7 @@ import PermissionIconButton from 'component/common/PermissionIconButton/Permissi
 import { Delete } from '@mui/icons-material';
 import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
 import { useChangeRequestApi } from '../../../../hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
+import { useChangeRequestsEnabled } from '../../../../hooks/useChangeRequestsEnabled';
 
 interface IFeatureStrategyRemoveProps {
     projectId: string;
@@ -162,8 +163,7 @@ export const FeatureStrategyRemove = ({
 }: IFeatureStrategyRemoveProps) => {
     const [openDialogue, setOpenDialogue] = useState(false);
 
-    const { uiConfig } = useUiConfig();
-    const suggestChangesEnabled = Boolean(uiConfig?.flags?.changeRequests);
+    const changeRequestsEnabled = useChangeRequestsEnabled();
 
     const onRemove = useOnRemove({
         featureId,
@@ -213,7 +213,7 @@ export const FeatureStrategyRemove = ({
                 }
             />
             <ConditionallyRender
-                condition={suggestChangesEnabled}
+                condition={changeRequestsEnabled}
                 show={
                     <SuggestFeatureStrategyRemoveDialogue
                         isOpen={openDialogue}

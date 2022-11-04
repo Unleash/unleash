@@ -61,10 +61,12 @@ export const ChangeRequest: VFC<IChangeRequestProps> = ({
                     {featureToggleChange.changes.map(change => (
                         <Box
                             key={objectId(change)}
-                            sx={{
-                                paddingTop: 2,
-                                paddingBottom: 2,
-                            }}
+                            sx={theme => ({
+                                padding: 2,
+                                borderTop: '1px solid',
+                                borderColor: theme =>
+                                    theme.palette.dividerAlternative,
+                            })}
                         >
                             {change.action === 'updateEnabled' &&
                                 hasEnabledField(change.payload) && (

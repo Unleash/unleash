@@ -8,7 +8,7 @@ import useFeatureStrategyApi from 'hooks/api/actions/useFeatureStrategyApi/useFe
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useNavigate } from 'react-router-dom';
 import useToast from 'hooks/useToast';
-import { IFeatureStrategy } from 'interfaces/strategy';
+import { IFeatureStrategy, IFeatureStrategyPayload } from 'interfaces/strategy';
 import {
     featureStrategyDocsLink,
     featureStrategyHelp,
@@ -27,6 +27,8 @@ import { useCollaborateData } from 'hooks/useCollaborateData';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { IFeatureToggle } from 'interfaces/featureToggle';
 import { comparisonModerator } from '../featureStrategy.utils';
+import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
+import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 
 export const FeatureStrategyCreate = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -39,6 +41,7 @@ export const FeatureStrategyCreate = () => {
     const errors = useFormErrors();
 
     const { addStrategyToFeature, loading } = useFeatureStrategyApi();
+    const { addChangeRequest } = useChangeRequestApi();
     const { setStrategySegments } = useSegmentsApi();
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
@@ -47,6 +50,10 @@ export const FeatureStrategyCreate = () => {
 
     const { feature, refetchFeature } = useFeature(projectId, featureId);
     const ref = useRef<IFeatureToggle>(feature);
+    const isChangeRequestEnabled = useChangeRequestsEnabled();
+
+    const isChangeRequest =
+        isChangeRequestEnabled && environmentId === 'production'; // FIXME: get from API - is it enabled
 
     const { data, staleDataNotification, forceRefreshCache } =
         useCollaborateData<IFeatureToggle>(
@@ -77,27 +84,53 @@ export const FeatureStrategyCreate = () => {
         }
     }, [featureId, strategyDefinition]);
 
-    const onSubmit = async () => {
-        try {
-            const created = await addStrategyToFeature(
-                projectId,
-                featureId,
+    const onAddStrategy = async (payload: IFeatureStrategyPayload) => {
+        const created = await addStrategyToFeature(
+            projectId,
+            featureId,
+            environmentId,
+            payload
+        );
+        if (uiConfig.flags.SE) {
+            await setStrategySegments({
                 environmentId,
-                createStrategyPayload(strategy)
-            );
-            if (uiConfig.flags.SE) {
-                await setStrategySegments({
-                    environmentId,
-                    projectId,
-                    strategyId: created.id,
-                    segmentIds: segments.map(s => s.id),
-                });
-            }
-            setToastData({
-                title: 'Strategy created',
-                type: 'success',
-                confetti: true,
+                projectId,
+                strategyId: created.id,
+                segmentIds: segments.map(s => s.id),
             });
+        }
+        setToastData({
+            title: 'Strategy created',
+            type: 'success',
+            confetti: true,
+        });
+    };
+
+    const onAddStrategySuggestion = async (
+        payload: IFeatureStrategyPayload
+    ) => {
+        await addChangeRequest(projectId, environmentId, {
+            action: 'addStrategy',
+            feature: featureId,
+            payload,
+        });
+        // TODO: segments in change requests
+        setToastData({
+            title: 'Strategy added to draft',
+            type: 'success',
+            confetti: true,
+        });
+    };
+
+    const onSubmit = async () => {
+        const payload = createStrategyPayload(strategy);
+
+        try {
+            if (isChangeRequest) {
+                await onAddStrategySuggestion(payload);
+            } else {
+                await onAddStrategy(payload);
+            }
             refetchFeature();
             navigate(formatFeaturePath(projectId, featureId));
         } catch (error: unknown) {
@@ -135,6 +168,7 @@ export const FeatureStrategyCreate = () => {
                 loading={loading}
                 permission={CREATE_FEATURE_STRATEGY}
                 errors={errors}
+                isChangeRequest={isChangeRequest}
             />
             {staleDataNotification}
         </FormTemplate>

@@ -85,7 +85,7 @@ const FeatureOverviewEnvSwitch = ({
     };
 
     const toggleEnvironment = async (e: React.ChangeEvent) => {
-        if (changeRequestsEnabled && env.name === 'production') {
+        if (changeRequestsEnabled) {
             e.preventDefault();
             onChangeRequestToggle(featureId, env.name, !env.enabled);
             return;

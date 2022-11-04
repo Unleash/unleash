@@ -28,7 +28,7 @@ import { ChangeRequestOverview } from 'component/changeRequest/ChangeRequestOver
 import { DraftBanner } from 'component/changeRequest/DraftBanner/DraftBanner';
 import { MainLayout } from 'component/layout/MainLayout/MainLayout';
 import { ProjectChangeRequests } from '../../changeRequest/ProjectChangeRequests/ProjectChangeRequests';
-import { useChangeRequestsEnabled } from '../../../hooks/useChangeRequestsEnabled';
+import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 
 const StyledDiv = styled('div')(() => ({
     display: 'flex',

@@ -6,7 +6,7 @@ import {
     IFeatureStrategyPayload,
 } from '../interfaces/strategy';
 import { useChangeRequestApi } from './api/actions/useChangeRequestApi/useChangeRequestApi';
-import { useChangeRequestDraft } from './api/getters/useChangeRequestDraft/useChangeRequestDraft';
+import { useChangeRequestOpen } from './api/getters/useChangeRequestOpen/useChangeRequestOpen';
 
 export type ChangeRequestStrategyAction =
     | 'addStrategy'
@@ -20,7 +20,7 @@ export const useChangeRequestAddStrategy = (
 ) => {
     const { setToastData, setToastApiError } = useToast();
     const { addChangeRequest } = useChangeRequestApi();
-    const { refetch } = useChangeRequestDraft(project);
+    const { refetch } = useChangeRequestOpen(project);
 
     const [changeRequestDialogDetails, setChangeRequestDialogDetails] =
         useState<{

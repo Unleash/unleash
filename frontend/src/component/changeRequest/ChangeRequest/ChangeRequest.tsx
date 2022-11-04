@@ -7,7 +7,20 @@ import { ToggleStatusChange } from '../ChangeRequestOverview/ChangeRequestFeatur
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
-import type { IChangeRequest } from '../changeRequest.types';
+import type {
+    IChangeRequest,
+    IChangeRequestAddStrategy,
+} from '../changeRequest.types';
+import {
+    StrategyAddedChange,
+    StrategyDeletedChange,
+    StrategyEditedChange,
+} from '../ChangeRequestOverview/ChangeRequestFeatureToggleChange/StrategyChange';
+import {
+    formatStrategyName,
+    GetFeatureStrategyIcon,
+} from '../../../utils/strategyNames';
+import { IChangeRequestEnabled } from '../changeRequest.types';
 
 interface IChangeRequestProps {
     changeRequest: IChangeRequest;
@@ -54,21 +67,29 @@ export const ChangeRequest: VFC<IChangeRequestProps> = ({
                                 condition={change.action === 'updateEnabled'}
                                 show={
                                     <ToggleStatusChange
-                                        // @ts-expect-error TODO: fix types
-                                        enabled={change?.payload?.enabled}
-                                        onDiscard={onDiscard(change.id)}
+                                        enabled={
+                                            (change as IChangeRequestEnabled)
+                                                ?.payload?.enabled
+                                        }
+                                        onDiscard={onDiscard(change.id!)}
                                     />
                                 }
                             />
-                            {/* <ConditionallyRender
+                            <ConditionallyRender
                                 condition={change.action === 'addStrategy'}
                                 show={
                                     <StrategyAddedChange>
                                         <GetFeatureStrategyIcon
-                                            strategyName={change.payload.name}
+                                            strategyName={
+                                                (
+                                                    change as IChangeRequestAddStrategy
+                                                )?.payload.name!
+                                            }
                                         />
                                         {formatStrategyName(
-                                            change.payload.name
+                                            (
+                                                change as IChangeRequestAddStrategy
+                                            )?.payload.name!
                                         )}
                                     </StrategyAddedChange>
                                 }
@@ -80,7 +101,7 @@ export const ChangeRequest: VFC<IChangeRequestProps> = ({
                             <ConditionallyRender
                                 condition={change.action === 'updateStrategy'}
                                 show={<StrategyEditedChange />}
-                            /> */}
+                            />
                         </Box>
                     ))}
                 </ChangeRequestFeatureToggleChange>

@@ -13,8 +13,7 @@ import { STRATEGY_FORM_REMOVE_ID } from 'utils/testIds';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { Delete } from '@mui/icons-material';
-import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
-import { useChangeRequestApi } from '../../../../hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
+import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 
 interface IFeatureStrategyRemoveProps {

@@ -2,7 +2,6 @@ import { VFC } from 'react';
 import { Box } from '@mui/material';
 import { ChangeRequestFeatureToggleChange } from '../ChangeRequestOverview/ChangeRequestFeatureToggleChange/ChangeRequestFeatureToggleChange';
 import { objectId } from 'utils/objectId';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ToggleStatusChange } from '../ChangeRequestOverview/ChangeRequestFeatureToggleChange/ToggleStatusChange';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
@@ -16,7 +15,7 @@ import {
 import {
     formatStrategyName,
     GetFeatureStrategyIcon,
-} from '../../../utils/strategyNames';
+} from 'utils/strategyNames';
 import { hasEnabledField, hasNameField } from '../changeRequest.types';
 
 interface IChangeRequestProps {

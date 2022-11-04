@@ -54,6 +54,7 @@ export const StrategyItem: VFC<IStrategyItemProps> = ({
                         )}
                         show={() => (
                             <CopyStrategyIconMenu
+                                environmentId={environmentId}
                                 environments={otherEnvironments as string[]}
                                 strategy={strategy}
                             />

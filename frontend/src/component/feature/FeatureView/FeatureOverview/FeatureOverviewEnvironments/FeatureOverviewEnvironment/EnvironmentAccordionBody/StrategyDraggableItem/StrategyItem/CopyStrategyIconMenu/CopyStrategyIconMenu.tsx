@@ -8,7 +8,7 @@ import {
     Tooltip,
 } from '@mui/material';
 import { AddToPhotos as CopyIcon, Lock } from '@mui/icons-material';
-import { IFeatureStrategy, IFeatureStrategyPayload } from 'interfaces/strategy';
+import { IFeatureStrategy } from 'interfaces/strategy';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { IFeatureEnvironment } from 'interfaces/featureToggle';
 import AccessContext from 'contexts/AccessContext';
@@ -19,20 +19,24 @@ import useFeatureStrategyApi from 'hooks/api/actions/useFeatureStrategyApi/useFe
 import useToast from 'hooks/useToast';
 import { useFeatureImmutable } from 'hooks/api/getters/useFeature/useFeatureImmutable';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { useSegments } from '../../../../../../../../../../hooks/api/getters/useSegments/useSegments';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { useChangeRequestAddStrategy } from 'hooks/useChangeRequestAddStrategy';
+import { ChangeRequestDialogue } from '../../../../../../../../../changeRequest/ChangeRequestConfirmDialog/ChangeRequestConfirmDialog';
+import { CopyStrategyMessage } from '../../../../../../../../../changeRequest/ChangeRequestConfirmDialog/ChangeRequestMessages/CopyStrategyMessage';
 
 interface ICopyStrategyIconMenuProps {
+    environmentId: string;
     environments: IFeatureEnvironment['name'][];
     strategy: IFeatureStrategy;
 }
 
 export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
+    environmentId,
     environments,
     strategy,
 }) => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
-    const { segments } = useSegments(strategy.id);
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
@@ -47,19 +51,40 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
         setAnchorEl(null);
     };
     const { hasAccess } = useContext(AccessContext);
-    const onClick = async (environmentId: string) => {
+    const { uiConfig } = useUiConfig();
+    const changeRequestsEnabled = uiConfig?.flags?.changeRequests;
+
+    const {
+        changeRequestDialogDetails,
+        onChangeRequestAddStrategyClose,
+        onChangeRequestAddStrategy,
+        onChangeRequestAddStrategyConfirm,
+    } = useChangeRequestAddStrategy(projectId, featureId, 'addStrategy');
+
+    const onCopyStrategy = async (environment: string) => {
         const { id, ...strategyCopy } = {
             ...strategy,
-            environment: environmentId,
+            environment,
             copyOf: strategy.id,
         };
+        if (changeRequestsEnabled) {
+            await onChangeRequestAddStrategy(
+                environment,
+                {
+                    id,
+                    ...strategyCopy,
+                },
+                environmentId
+            );
+            return;
+        }
 
         try {
             await addStrategyToFeature(
                 projectId,
                 featureId,
                 environmentId,
-                strategyCopy
+                strategy
             );
             refetchFeature();
             refetchFeatureImmutable();
@@ -80,6 +105,20 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
 
     return (
         <div>
+            <ChangeRequestDialogue
+                isOpen={changeRequestDialogDetails.isOpen}
+                onClose={onChangeRequestAddStrategyClose}
+                environment={changeRequestDialogDetails?.environment}
+                onConfirm={onChangeRequestAddStrategyConfirm}
+                messageComponent={
+                    <CopyStrategyMessage
+                        fromEnvironment={
+                            changeRequestDialogDetails.fromEnvironment!
+                        }
+                        payload={changeRequestDialogDetails.strategy!}
+                    />
+                }
+            />
             <Tooltip
                 title={`Copy to another environment${
                     enabled ? '' : ' (Access denied)'
@@ -128,7 +167,7 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
                         >
                             <div>
                                 <MenuItem
-                                    onClick={() => onClick(environment)}
+                                    onClick={() => onCopyStrategy(environment)}
                                     disabled={!access}
                                 >
                                     <ConditionallyRender

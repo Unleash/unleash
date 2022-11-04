@@ -1,6 +1,6 @@
 import useAPI from '../useApi/useApi';
 
-interface IChangeRequestsSchema {
+export interface IChangeRequestsSchema {
     feature: string;
     action:
         | 'updateEnabled'

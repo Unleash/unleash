@@ -13,9 +13,9 @@ import { STRATEGY_FORM_REMOVE_ID } from 'utils/testIds';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { Delete } from '@mui/icons-material';
-import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
-import { useChangeRequestApi } from '../../../../hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
-import { useChangeRequestDraft } from '../../../../hooks/api/getters/useChangeRequestDraft/useChangeRequestDraft';
+import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
+import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
+import { useChangeRequestOpen } from 'hooks/api/getters/useChangeRequestOpen/useChangeRequestOpen';
 
 interface IFeatureStrategyRemoveProps {
     projectId: string;
@@ -131,7 +131,7 @@ const useOnSuggestRemove = ({
     strategyId,
 }: IRemoveProps) => {
     const { addChangeRequest } = useChangeRequestApi();
-    const { refetch: refetchChangeRequests } = useChangeRequestDraft(projectId);
+    const { refetch: refetchChangeRequests } = useChangeRequestOpen(projectId);
     const { setToastData, setToastApiError } = useToast();
     const onSuggestRemove = async (event: React.FormEvent) => {
         try {
@@ -165,8 +165,7 @@ export const FeatureStrategyRemove = ({
 }: IFeatureStrategyRemoveProps) => {
     const [openDialogue, setOpenDialogue] = useState(false);
 
-    const { uiConfig } = useUiConfig();
-    const suggestChangesEnabled = Boolean(uiConfig?.flags?.changeRequests);
+    const changeRequestsEnabled = useChangeRequestsEnabled();
 
     const onRemove = useOnRemove({
         featureId,
@@ -216,7 +215,7 @@ export const FeatureStrategyRemove = ({
                 }
             />
             <ConditionallyRender
-                condition={suggestChangesEnabled}
+                condition={changeRequestsEnabled}
                 show={
                     <SuggestFeatureStrategyRemoveDialogue
                         isOpen={openDialogue}

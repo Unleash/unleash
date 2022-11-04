@@ -114,7 +114,7 @@ export const FeatureStrategyCreate = () => {
             feature: featureId,
             payload,
         });
-        // TODO: segments in change requests
+        // FIXME: segments in change requests
         setToastData({
             title: 'Strategy added to draft',
             type: 'success',

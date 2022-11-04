@@ -25,6 +25,8 @@ import { useCollaborateData } from 'hooks/useCollaborateData';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { IFeatureToggle } from 'interfaces/featureToggle';
 import { comparisonModerator } from '../featureStrategy.utils';
+import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
+import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 
 export const FeatureStrategyEdit = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -42,6 +44,11 @@ export const FeatureStrategyEdit = () => {
     const { uiConfig } = useUiConfig();
     const { unleashUrl } = uiConfig;
     const navigate = useNavigate();
+    const { addChangeRequest } = useChangeRequestApi();
+    const isChangeRequestEnabled = useChangeRequestsEnabled();
+
+    const isChangeRequest =
+        isChangeRequestEnabled && environmentId === 'production'; // FIXME: get from API - is it enabled
 
     const { feature, refetchFeature } = useFeature(projectId, featureId);
 
@@ -87,29 +94,53 @@ export const FeatureStrategyEdit = () => {
         savedStrategySegments && setSegments(savedStrategySegments);
     }, [savedStrategySegments]);
 
-    const onSubmit = async () => {
-        try {
-            await updateStrategyOnFeature(
-                projectId,
-                featureId,
+    const onStrategyEdit = async (payload: IFeatureStrategyPayload) => {
+        await updateStrategyOnFeature(
+            projectId,
+            featureId,
+            environmentId,
+            strategyId,
+            payload
+        );
+        if (uiConfig.flags.SE) {
+            await setStrategySegments({
                 environmentId,
+                projectId,
                 strategyId,
-                createStrategyPayload(strategy)
-            );
-            if (uiConfig.flags.SE) {
-                await setStrategySegments({
-                    environmentId,
-                    projectId,
-                    strategyId,
-                    segmentIds: segments.map(s => s.id),
-                });
-                await refetchSavedStrategySegments();
-            }
-            setToastData({
-                title: 'Strategy updated',
-                type: 'success',
-                confetti: true,
+                segmentIds: segments.map(s => s.id),
             });
+            await refetchSavedStrategySegments();
+        }
+        setToastData({
+            title: 'Strategy updated',
+            type: 'success',
+            confetti: true,
+        });
+    };
+
+    const onStrategyRequestEdit = async (payload: IFeatureStrategyPayload) => {
+        await addChangeRequest(projectId, environmentId, {
+            action: 'updateStrategy',
+            feature: featureId,
+            payload: { ...payload, id: strategyId },
+        });
+        // FIXME: segments in change requests
+        setToastData({
+            title: 'Change added to draft',
+            type: 'success',
+            confetti: true,
+        });
+    };
+
+    const onSubmit = async () => {
+        const payload = createStrategyPayload(strategy);
+
+        try {
+            if (isChangeRequest) {
+                await onStrategyRequestEdit(payload);
+            } else {
+                await onStrategyEdit(payload);
+            }
             refetchFeature();
             navigate(formatFeaturePath(projectId, featureId));
         } catch (error: unknown) {
@@ -152,6 +183,7 @@ export const FeatureStrategyEdit = () => {
                 loading={loading}
                 permission={UPDATE_FEATURE_STRATEGY}
                 errors={errors}
+                isChangeRequest={isChangeRequest}
             />
             {staleDataNotification}
         </FormTemplate>
@@ -160,13 +192,11 @@ export const FeatureStrategyEdit = () => {
 
 export const createStrategyPayload = (
     strategy: Partial<IFeatureStrategy>
-): IFeatureStrategyPayload => {
-    return {
-        name: strategy.name,
-        constraints: strategy.constraints ?? [],
-        parameters: strategy.parameters ?? {},
-    };
-};
+): IFeatureStrategyPayload => ({
+    name: strategy.name,
+    constraints: strategy.constraints ?? [],
+    parameters: strategy.parameters ?? {},
+});
 
 export const formatFeaturePath = (
     projectId: string,

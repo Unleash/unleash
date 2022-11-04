@@ -19,7 +19,7 @@ import {
 import {
     formatStrategyName,
     GetFeatureStrategyIcon,
-} from '../../../utils/strategyNames';
+} from 'utils/strategyNames';
 import { IChangeRequestEnabled } from '../changeRequest.types';
 
 interface IChangeRequestProps {

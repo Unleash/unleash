@@ -1,4 +1,6 @@
 import React, { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Button } from '@mui/material';
 import {
     IFeatureStrategy,
     IFeatureStrategyParameters,
@@ -7,15 +9,8 @@ import {
 import { FeatureStrategyType } from '../FeatureStrategyType/FeatureStrategyType';
 import { FeatureStrategyEnabled } from './FeatureStrategyEnabled/FeatureStrategyEnabled';
 import { FeatureStrategyConstraints } from '../FeatureStrategyConstraints/FeatureStrategyConstraints';
-import { Button } from '@mui/material';
-import {
-    FeatureStrategyProdGuard,
-    useFeatureStrategyProdGuard,
-} from '../FeatureStrategyProdGuard/FeatureStrategyProdGuard';
 import { IFeatureToggle } from 'interfaces/featureToggle';
 import { useStyles } from './FeatureStrategyForm.styles';
-import { formatFeaturePath } from '../FeatureStrategyEdit/FeatureStrategyEdit';
-import { useNavigate } from 'react-router-dom';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { STRATEGY_FORM_SUBMIT_ID } from 'utils/testIds';
@@ -28,6 +23,11 @@ import { IFormErrors } from 'hooks/useFormErrors';
 import { validateParameterValue } from 'utils/validateParameterValue';
 import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
 import { FeatureStrategyChangeRequestAlert } from './FeatureStrategyChangeRequestAlert/FeatureStrategyChangeRequestAlert';
+import {
+    FeatureStrategyProdGuard,
+    useFeatureStrategyProdGuard,
+} from '../FeatureStrategyProdGuard/FeatureStrategyProdGuard';
+import { formatFeaturePath } from '../FeatureStrategyEdit/FeatureStrategyEdit';
 
 interface IFeatureStrategyFormProps {
     feature: IFeatureToggle;
@@ -129,23 +129,19 @@ export const FeatureStrategyForm = ({
 
     return (
         <form className={styles.form} onSubmit={onSubmitWithValidation}>
-            <div>
-                <ConditionallyRender
-                    condition={Boolean(isChangeRequest)}
-                    show={
-                        <FeatureStrategyChangeRequestAlert
-                            environment={environmentId}
-                        />
-                    }
-                    elseShow={
-                        <FeatureStrategyEnabled
-                            projectId={feature.project}
-                            featureId={feature.name}
-                            environmentId={environmentId}
-                        />
-                    }
-                />
-            </div>
+            <ConditionallyRender
+                condition={Boolean(isChangeRequest)}
+                show={
+                    <FeatureStrategyChangeRequestAlert
+                        environment={environmentId}
+                    />
+                }
+            />
+            <FeatureStrategyEnabled
+                projectId={feature.project}
+                featureId={feature.name}
+                environmentId={environmentId}
+            />
             <hr className={styles.hr} />
             <ConditionallyRender
                 condition={Boolean(uiConfig.flags.SE)}

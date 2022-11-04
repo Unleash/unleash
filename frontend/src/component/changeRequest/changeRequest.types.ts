@@ -18,7 +18,7 @@ export interface IChangeRequestFeature {
 }
 
 export interface IChangeRequestBase {
-    id?: number;
+    id: number;
     action: ChangeRequestAction;
     payload: ChangeRequestPayload;
     conflict?: string;

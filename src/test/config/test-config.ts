@@ -30,6 +30,7 @@ export function createTestConfig(config?: IUnleashOptions): IUnleashConfig {
                 syncSSOGroups: true,
                 changeRequests: true,
                 cloneEnvironment: true,
+                fixHourMetrics: true,
             },
         },
     };

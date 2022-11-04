@@ -79,18 +79,18 @@ test('should return raw metrics, aggregated on key', async () => {
         .expect('Content-Type', /json/)
         .expect(200);
 
-    expect(demo.data).toHaveLength(2);
-    expect(demo.data[0].environment).toBe('default');
-    expect(demo.data[0].yes).toBe(5);
-    expect(demo.data[0].no).toBe(4);
-    expect(demo.data[1].environment).toBe('test');
-    expect(demo.data[1].yes).toBe(1);
-    expect(demo.data[1].no).toBe(3);
+    expect(demo.data).toHaveLength(48);
+    expect(demo.data[46].environment).toBe('default');
+    expect(demo.data[46].yes).toBe(5);
+    expect(demo.data[46].no).toBe(4);
+    expect(demo.data[47].environment).toBe('test');
+    expect(demo.data[47].yes).toBe(1);
+    expect(demo.data[47].no).toBe(3);
 
-    expect(t2.data).toHaveLength(1);
-    expect(t2.data[0].environment).toBe('default');
-    expect(t2.data[0].yes).toBe(7);
-    expect(t2.data[0].no).toBe(104);
+    expect(t2.data).toHaveLength(24);
+    expect(t2.data[23].environment).toBe('default');
+    expect(t2.data[23].yes).toBe(7);
+    expect(t2.data[23].no).toBe(104);
 });
 
 test('should support the hoursBack query param for raw metrics', async () => {
@@ -141,10 +141,10 @@ test('should support the hoursBack query param for raw metrics', async () => {
     const hoursTooMany = await fetchHoursBack(999);
 
     expect(hours1.data).toHaveLength(1);
-    expect(hours24.data).toHaveLength(2);
-    expect(hours48.data).toHaveLength(3);
-    expect(hoursTooFew.data).toHaveLength(2);
-    expect(hoursTooMany.data).toHaveLength(2);
+    expect(hours24.data).toHaveLength(24);
+    expect(hours48.data).toHaveLength(48);
+    expect(hoursTooFew.data).toHaveLength(24);
+    expect(hoursTooMany.data).toHaveLength(24);
 });
 
 test('should return toggle summary', async () => {

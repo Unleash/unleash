@@ -8,7 +8,7 @@ import { styled, Tab, Tabs } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
 import useToast from 'hooks/useToast';
 import useQueryParams from 'hooks/useQueryParams';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ProjectAccess } from '../ProjectAccess/ProjectAccess';
 import ProjectEnvironment from '../ProjectEnvironment/ProjectEnvironment';
 import { ProjectFeaturesArchive } from './ProjectFeaturesArchive/ProjectFeaturesArchive';
@@ -63,43 +63,53 @@ const Project = () => {
 
     const [showDelDialog, setShowDelDialog] = useState(false);
 
-    const tabs = [
-        {
-            title: 'Overview',
-            path: basePath,
-            name: 'overview',
-        },
-        {
-            title: 'Health',
-            path: `${basePath}/health`,
-            name: 'health',
-        },
-        {
-            title: 'Access',
-            path: `${basePath}/access`,
-            name: 'access',
-        },
-        {
-            title: 'Environments',
-            path: `${basePath}/environments`,
-            name: 'environments',
-        },
-        {
-            title: 'Archive',
-            path: `${basePath}/archive`,
-            name: 'archive',
-        },
-        {
+    const changeRequestsEnabled = uiConfig?.flags?.changeRequests;
+
+    const tabs = useMemo(() => {
+        const tabArray = [
+            {
+                title: 'Overview',
+                path: basePath,
+                name: 'overview',
+            },
+            {
+                title: 'Health',
+                path: `${basePath}/health`,
+                name: 'health',
+            },
+            {
+                title: 'Access',
+                path: `${basePath}/access`,
+                name: 'access',
+            },
+            {
+                title: 'Environments',
+                path: `${basePath}/environments`,
+                name: 'environments',
+            },
+            {
+                title: 'Archive',
+                path: `${basePath}/archive`,
+                name: 'archive',
+            },
+            {
+                title: 'Event log',
+                path: `${basePath}/logs`,
+                name: 'logs',
+            },
+        ];
+
+        const changeRequestTab = {
             title: 'Change requests',
             path: `${basePath}/change-requests`,
             name: 'change-request' + '',
-        },
-        {
-            title: 'Event log',
-            path: `${basePath}/logs`,
-            name: 'logs',
-        },
-    ];
+        };
+
+        if (changeRequestsEnabled) {
+            tabArray.splice(tabArray.length - 2, 0, changeRequestTab);
+        }
+        return tabArray;
+    }, [changeRequestsEnabled]);
 
     const activeTab = [...tabs]
         .reverse()

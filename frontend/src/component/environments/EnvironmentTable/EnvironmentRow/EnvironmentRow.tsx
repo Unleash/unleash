@@ -1,4 +1,4 @@
-import { MoveListItem } from 'hooks/useDragItem';
+import { MoveListItem, useDragItem } from 'hooks/useDragItem';
 import { Row } from 'react-table';
 import { styled, TableRow } from '@mui/material';
 import { TableCell } from 'component/common/Table';
@@ -6,7 +6,6 @@ import { useSearchHighlightContext } from 'component/common/Table/SearchHighligh
 import { UPDATE_ENVIRONMENT } from 'component/providers/AccessProvider/permissions';
 import AccessContext from 'contexts/AccessContext';
 import { ForwardedRef, useContext, useRef } from 'react';
-import { useDragItemWithHandle } from 'hooks/useDragItemWithHandle';
 
 const StyledTableRow = styled(TableRow)(() => ({
     '&:hover': {
@@ -28,7 +27,7 @@ export const EnvironmentRow = ({ row, moveListItem }: IEnvironmentRowProps) => {
     const { searchQuery } = useSearchHighlightContext();
     const draggable = !searchQuery && hasAccess(UPDATE_ENVIRONMENT);
 
-    const dragItemRef = useDragItemWithHandle<HTMLTableRowElement>(
+    const dragItemRef = useDragItem<HTMLTableRowElement>(
         row.index,
         moveListItem,
         dragHandleRef

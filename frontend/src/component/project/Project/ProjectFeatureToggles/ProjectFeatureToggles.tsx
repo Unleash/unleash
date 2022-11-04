@@ -38,7 +38,7 @@ import { useMediaQuery } from '@mui/material';
 import { Search } from 'component/common/Search/Search';
 import { useChangeRequestToggle } from 'hooks/useChangeRequestToggle';
 import { ChangeRequestDialogue } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestConfirmDialog';
-import { useChangeRequestsEnabled } from '../../../../hooks/useChangeRequestsEnabled';
+import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 
 interface IProjectFeatureTogglesProps {
     features: IProject['features'];

@@ -36,6 +36,14 @@ const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
     borderRadius: theme.shape.borderRadius,
 }));
 
+const StyledMenuItemNegative = styled(StyledMenuItem)(({ theme }) => ({
+    color: theme.palette.error.main,
+}));
+
+const StyledListItemIconNegative = styled(ListItemIcon)(({ theme }) => ({
+    color: theme.palette.error.main,
+}));
+
 interface IEnvironmentActionCellPopoverProps {
     environment: IEnvironment;
     onEdit: () => void;
@@ -169,22 +177,22 @@ export const EnvironmentActionCellPopover = ({
                     </PermissionHOC>
                     <PermissionHOC permission={DELETE_ENVIRONMENT}>
                         {({ hasAccess }) => (
-                            <StyledMenuItem
+                            <StyledMenuItemNegative
                                 onClick={() => {
                                     onDelete();
                                     handleClose();
                                 }}
                                 disabled={!hasAccess || environment.protected}
                             >
-                                <ListItemIcon>
+                                <StyledListItemIconNegative>
                                     <Delete />
-                                </ListItemIcon>
+                                </StyledListItemIconNegative>
                                 <ListItemText>
                                     <Typography variant="body2">
                                         Delete
                                     </Typography>
                                 </ListItemText>
-                            </StyledMenuItem>
+                            </StyledMenuItemNegative>
                         )}
                     </PermissionHOC>
                 </StyledMenuList>

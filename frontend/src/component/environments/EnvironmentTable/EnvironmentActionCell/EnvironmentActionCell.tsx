@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { IEnvironment } from 'interfaces/environments';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import EnvironmentDeleteConfirm from '../../EnvironmentDeleteConfirm/EnvironmentDeleteConfirm';
 import useEnvironmentApi from 'hooks/api/actions/useEnvironmentApi/useEnvironmentApi';
 import useProjectRolePermissions from 'hooks/api/getters/useProjectRolePermissions/useProjectRolePermissions';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
@@ -14,6 +13,7 @@ import { IApiToken } from 'hooks/api/getters/useApiTokens/useApiTokens';
 import { EnvironmentTokenDialog } from './EnvironmentTokenDialog/EnvironmentTokenDialog';
 import { ENV_LIMIT } from 'constants/values';
 import { EnvironmentDeprecateToggleDialog } from './EnvironmentDeprecateToggleDialog/EnvironmentDeprecateToggleDialog';
+import { EnvironmentDeleteDialog } from './EnvironmentDeleteDialog/EnvironmentDeleteDialog';
 
 interface IEnvironmentTableActionsProps {
     environment: IEnvironment;
@@ -29,14 +29,13 @@ export const EnvironmentActionCell = ({
     const { deleteEnvironment, toggleEnvironmentOn, toggleEnvironmentOff } =
         useEnvironmentApi();
 
-    const [deleteModal, setDeleteModal] = useState(false);
-    const [deprecateToggleModal, setDeprecateToggleModal] = useState(false);
+    const [deleteDialog, setDeleteDialog] = useState(false);
+    const [deprecateToggleDialog, setDeprecateToggleDialog] = useState(false);
     const [cloneModal, setCloneModal] = useState(false);
-    const [tokenModal, setTokenModal] = useState(false);
+    const [tokenDialog, setTokenDialog] = useState(false);
     const [newToken, setNewToken] = useState<IApiToken>();
-    const [confirmName, setConfirmName] = useState('');
 
-    const handleDeleteEnvironment = async () => {
+    const onDeleteConfirm = async () => {
         try {
             await deleteEnvironment(environment.name);
             refetchPermissions();
@@ -48,14 +47,12 @@ export const EnvironmentActionCell = ({
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         } finally {
-            setDeleteModal(false);
-            setConfirmName('');
+            setDeleteDialog(false);
             await refetchEnvironments();
         }
     };
 
     const onDeprecateToggleConfirm = async () => {
-        setDeprecateToggleModal(false);
         try {
             if (environment.enabled) {
                 await toggleEnvironmentOff(environment.name);
@@ -73,6 +70,7 @@ export const EnvironmentActionCell = ({
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         } finally {
+            setDeprecateToggleDialog(false);
             await refetchEnvironments();
         }
     };
@@ -82,7 +80,7 @@ export const EnvironmentActionCell = ({
             <EnvironmentActionCellPopover
                 environment={environment}
                 onEdit={() => navigate(`/environments/${environment.name}`)}
-                onDeprecateToggle={() => setDeprecateToggleModal(true)}
+                onDeprecateToggle={() => setDeprecateToggleDialog(true)}
                 onClone={() => {
                     if (environments.length < ENV_LIMIT) {
                         setCloneModal(true);
@@ -94,20 +92,18 @@ export const EnvironmentActionCell = ({
                         });
                     }
                 }}
-                onDelete={() => setDeleteModal(true)}
+                onDelete={() => setDeleteDialog(true)}
             />
-            <EnvironmentDeleteConfirm
-                env={environment}
-                setDeldialogue={setDeleteModal}
-                open={deleteModal}
-                handleDeleteEnvironment={handleDeleteEnvironment}
-                confirmName={confirmName}
-                setConfirmName={setConfirmName}
+            <EnvironmentDeleteDialog
+                environment={environment}
+                open={deleteDialog}
+                setOpen={setDeleteDialog}
+                onConfirm={onDeleteConfirm}
             />
             <EnvironmentDeprecateToggleDialog
                 environment={environment}
-                open={deprecateToggleModal}
-                setOpen={setDeprecateToggleModal}
+                open={deprecateToggleDialog}
+                setOpen={setDeprecateToggleDialog}
                 onConfirm={onDeprecateToggleConfirm}
             />
             <EnvironmentCloneModal
@@ -116,12 +112,12 @@ export const EnvironmentActionCell = ({
                 setOpen={setCloneModal}
                 newToken={(token: IApiToken) => {
                     setNewToken(token);
-                    setTokenModal(true);
+                    setTokenDialog(true);
                 }}
             />
             <EnvironmentTokenDialog
-                open={tokenModal}
-                setOpen={setTokenModal}
+                open={tokenDialog}
+                setOpen={setTokenDialog}
                 token={newToken}
             />
         </ActionCell>

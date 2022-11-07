@@ -1,15 +1,24 @@
 import { styled, Alert, TableBody, TableRow } from '@mui/material';
-import React from 'react';
+import React, { useState } from 'react';
 import { IEnvironment } from 'interfaces/environments';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { useTable } from 'react-table';
 import { EnvironmentNameCell } from 'component/environments/EnvironmentTable/EnvironmentNameCell/EnvironmentNameCell';
 import { EnvironmentIconCell } from 'component/environments/EnvironmentTable/EnvironmentIconCell/EnvironmentIconCell';
 import { SortableTableHeader, Table, TableCell } from 'component/common/Table';
+import Input from 'component/common/Input/Input';
 
 const StyledTable = styled(Table)(({ theme }) => ({
     marginTop: theme.spacing(3),
+}));
+
+const StyledLabel = styled('p')(({ theme }) => ({
+    marginTop: theme.spacing(3),
+    marginBottom: theme.spacing(1.5),
+}));
+
+const StyledInput = styled(Input)(() => ({
+    width: '100%',
 }));
 
 const COLUMNS = [
@@ -33,22 +42,19 @@ const COLUMNS = [
     },
 ];
 
-interface IEnvironmentDeprecateToggleDialogProps {
+interface IEnvironmentDeleteDialogProps {
     environment: IEnvironment;
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     onConfirm: () => void;
 }
 
-export const EnvironmentDeprecateToggleDialog = ({
+export const EnvironmentDeleteDialog = ({
     environment,
     open,
     setOpen,
     onConfirm,
-}: IEnvironmentDeprecateToggleDialogProps) => {
-    const { enabled } = environment;
-    const actionName = enabled ? 'Deprecate' : 'Undeprecate';
-
+}: IEnvironmentDeleteDialogProps) => {
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
         useTable({
             columns: COLUMNS as any,
@@ -56,35 +62,25 @@ export const EnvironmentDeprecateToggleDialog = ({
             disableSortBy: true,
         });
 
+    const [confirmName, setConfirmName] = useState('');
+
     return (
         <Dialogue
-            title={`${actionName} environment?`}
+            title="Delete environment?"
             open={open}
-            primaryButtonText={actionName}
+            primaryButtonText="Delete environment"
+            disabledPrimaryButton={environment.name !== confirmName}
             secondaryButtonText="Close"
             onClick={onConfirm}
             onClose={() => {
                 setOpen(false);
             }}
         >
-            <ConditionallyRender
-                condition={enabled}
-                show={
-                    <Alert severity="info">
-                        Deprecating an environment will mark it as deprecated.
-                        Deprecated environments are not set as visible by
-                        default for new projects. Project owners are still able
-                        to override this setting in the project.
-                    </Alert>
-                }
-                elseShow={
-                    <Alert severity="info">
-                        Undeprecating an environment will no longer mark it as
-                        deprecated. An undeprecated environemt will be set as
-                        visibly by default for new projects.
-                    </Alert>
-                }
-            />
+            <Alert severity="error">
+                <strong>Danger!</strong> Deleting this environment will result
+                in removing all strategies that are active in this environment
+                across all feature toggles.
+            </Alert>
 
             <StyledTable {...getTableProps()} rowHeight="compact">
                 <SortableTableHeader headerGroups={headerGroups as any} />
@@ -103,6 +99,16 @@ export const EnvironmentDeprecateToggleDialog = ({
                     })}
                 </TableBody>
             </StyledTable>
+            <StyledLabel>
+                In order to delete this environment, please enter the id of the
+                environment in the textfield below:{' '}
+                <strong>{environment.name}</strong>
+            </StyledLabel>
+            <StyledInput
+                label="Environment name"
+                value={confirmName}
+                onChange={e => setConfirmName(e.target.value)}
+            />
         </Dialogue>
     );
 };

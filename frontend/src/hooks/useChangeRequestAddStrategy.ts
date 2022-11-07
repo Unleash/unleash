@@ -3,7 +3,6 @@ import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import {
     IFeatureStrategy,
-    IFeatureStrategyPayload,
 } from '../interfaces/strategy';
 import { useChangeRequestApi } from './api/actions/useChangeRequestApi/useChangeRequestApi';
 import { useChangeRequestOpen } from './api/getters/useChangeRequestOpen/useChangeRequestOpen';
@@ -26,7 +25,6 @@ export const useChangeRequestAddStrategy = (
         useState<{
             strategy?: IFeatureStrategy;
             strategies?: IFeatureStrategy[];
-            featureName?: string;
             environment?: string;
             fromEnvironment?: string;
             isOpen: boolean;
@@ -39,7 +37,6 @@ export const useChangeRequestAddStrategy = (
             fromEnvironment?: string
         ) => {
             setChangeRequestDialogDetails({
-                featureName,
                 environment,
                 fromEnvironment,
                 strategy,
@@ -56,7 +53,6 @@ export const useChangeRequestAddStrategy = (
             fromEnvironment: string
         ) => {
             setChangeRequestDialogDetails({
-                featureName,
                 environment,
                 fromEnvironment,
                 strategies,
@@ -71,53 +67,61 @@ export const useChangeRequestAddStrategy = (
     }, []);
 
     const onChangeRequestAddStrategyConfirm = useCallback(async () => {
-        try {
-            await addChangeRequest(
-                project,
-                changeRequestDialogDetails.environment!,
-                {
-                    feature: changeRequestDialogDetails.featureName!,
-                    action: action,
-                    payload: changeRequestDialogDetails.strategy!,
-                }
-            );
-            refetch();
-            setChangeRequestDialogDetails({ isOpen: false });
-            setToastData({
-                type: 'success',
-                title: 'Changes added to the draft!',
-            });
-        } catch (error) {
-            setToastApiError(formatUnknownError(error));
-            setChangeRequestDialogDetails({ isOpen: false });
+        const { environment, strategy } = changeRequestDialogDetails;
+        if (environment && featureName && strategy) {
+            try {
+                await addChangeRequest(
+                    project,
+                    environment,
+                    {
+                        feature: featureName,
+                        action: action,
+                        payload: strategy,
+                    }
+                );
+                refetch();
+                setChangeRequestDialogDetails({ isOpen: false });
+                setToastData({
+                    type: 'success',
+                    title: 'Changes added to the draft!',
+                });
+            } catch (error) {
+                setToastApiError(formatUnknownError(error));
+                setChangeRequestDialogDetails({ isOpen: false });
+            }
         }
+        //eslint-disable-next-line
     }, [addChangeRequest]);
 
     const onChangeRequestAddStrategiesConfirm = useCallback(async () => {
-        try {
-            await Promise.all(
-                changeRequestDialogDetails.strategies!.map(strategy => {
-                    return addChangeRequest(
-                        project,
-                        changeRequestDialogDetails.environment!,
-                        {
-                            feature: changeRequestDialogDetails.featureName!,
-                            action: action,
-                            payload: strategy,
-                        }
-                    );
-                })
-            );
-            refetch();
-            setChangeRequestDialogDetails({ isOpen: false });
-            setToastData({
-                type: 'success',
-                title: 'Changes added to the draft!',
-            });
-        } catch (error) {
-            setToastApiError(formatUnknownError(error));
-            setChangeRequestDialogDetails({ isOpen: false });
+        const { environment, strategies } = changeRequestDialogDetails;
+        if (environment && featureName && strategies) {
+            try {
+                await Promise.all(
+                    changeRequestDialogDetails.strategies!.map(strategy => {
+                        return addChangeRequest(
+                            project,
+                            environment,
+                            {
+                                feature: featureName,
+                                action: action,
+                                payload: strategy,
+                            }
+                        );
+                    })
+                );
+                refetch();
+                setChangeRequestDialogDetails({ isOpen: false });
+                setToastData({
+                    type: 'success',
+                    title: 'Changes added to the draft!',
+                });
+            } catch (error) {
+                setToastApiError(formatUnknownError(error));
+                setChangeRequestDialogDetails({ isOpen: false });
+            }
         }
+        //eslint-disable-next-line
     }, [addChangeRequest]);
 
     return {

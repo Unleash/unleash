@@ -13,7 +13,7 @@ import {
 import ApiUser from '../../../../../lib/types/api-user';
 import { ApiTokenType } from '../../../../../lib/types/models/api-token';
 import IncompatibleProjectError from '../../../../../lib/error/incompatible-project-error';
-import { IVariant, WeightType } from '../../../../../lib/types/model';
+import { IVariant, RoleName, WeightType } from '../../../../../lib/types/model';
 import { v4 as uuidv4 } from 'uuid';
 import supertest from 'supertest';
 import { randomId } from '../../../../../lib/util/random-id';
@@ -457,6 +457,56 @@ test('Getting feature that does not exist should yield 404', async () => {
     await app.request
         .get('/api/admin/projects/default/features/non.existing.feature')
         .expect(404);
+});
+
+describe('Interacting with features using project IDs that belong to other projects', () => {
+    const otherProject = 'project2';
+    const featureName = 'new-toggle';
+
+    beforeAll(async () => {
+        const dummyAdmin = await app.services.userService.createUser({
+            name: 'Some Name',
+            email: 'test@getunleash.io',
+            rootRole: RoleName.ADMIN,
+        });
+        await app.services.projectService.createProject(
+            { name: otherProject, id: otherProject },
+            dummyAdmin,
+        );
+
+        // ensure the new project has been created
+        await app.request
+            .get(`/api/admin/projects/${otherProject}`)
+            .expect(200);
+
+        // create toggle in default project
+        await app.request
+            .post('/api/admin/projects/default/features')
+            .send({ name: featureName })
+            .expect(201);
+    });
+
+    afterAll(async () => {
+        await db.stores.projectStore.delete(otherProject);
+        await db.stores.featureToggleStore.delete(featureName);
+        await db.stores.userStore.deleteAll();
+    });
+
+    test("Getting a feature yields 404 if the provided project id doesn't match the feature's project", async () => {
+        // validate that it isn't returned for the new project
+        await app.request
+            .get(`/api/admin/projects/${otherProject}/features/${featureName}`)
+            .expect(404);
+    });
+
+    test("Archiving a feature yields 404 if the provided project id doesn't match the feature's project", async () => {
+        // validate that it isn't archived when you provide the other project name
+        await app.request
+            .delete(
+                `/api/admin/projects/${otherProject}/features/${featureName}`,
+            )
+            .expect(404);
+    });
 });
 
 test('Should update feature toggle', async () => {

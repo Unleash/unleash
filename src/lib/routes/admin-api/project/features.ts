@@ -438,8 +438,12 @@ export default class ProjectFeaturesController extends Controller {
         req: Request<FeatureParams, any, any, any>,
         res: Response,
     ): Promise<void> {
-        const { featureName } = req.params;
-        const feature = await this.featureService.getFeature(featureName);
+        const { featureName, projectId } = req.params;
+        const feature = await this.featureService.getFeature(
+            featureName,
+            false,
+            projectId,
+        );
         res.status(200).json(feature);
     }
 
@@ -493,7 +497,6 @@ export default class ProjectFeaturesController extends Controller {
         );
     }
 
-    // TODO: validate projectId
     async archiveFeature(
         req: IAuthRequest<
             { projectId: string; featureName: string },
@@ -503,9 +506,13 @@ export default class ProjectFeaturesController extends Controller {
         >,
         res: Response<void>,
     ): Promise<void> {
-        const { featureName } = req.params;
+        const { featureName, projectId } = req.params;
         const userName = extractUsername(req);
-        await this.featureService.archiveToggle(featureName, userName);
+        await this.featureService.archiveToggle(
+            featureName,
+            userName,
+            projectId,
+        );
         res.status(202).send();
     }
 

@@ -552,7 +552,11 @@ class FeatureToggleService {
     async getFeature(
         featureName: string,
         archived: boolean = false,
+        projectId?: string,
     ): Promise<FeatureToggleWithEnvironment> {
+        if (projectId) {
+            await this.validateFeatureContext({ featureName, projectId });
+        }
         return this.featureStrategiesStore.getFeatureToggleWithEnvs(
             featureName,
             archived,
@@ -865,8 +869,14 @@ class FeatureToggleService {
         return feature;
     }
 
-    // todo: add projectId
-    async archiveToggle(featureName: string, createdBy: string): Promise<void> {
+    async archiveToggle(
+        featureName: string,
+        createdBy: string,
+        projectId?: string,
+    ): Promise<void> {
+        if (projectId) {
+            await this.validateFeatureContext({ featureName, projectId });
+        }
         const feature = await this.featureToggleStore.get(featureName);
         await this.featureToggleStore.archive(featureName);
         const tags = await this.tagStore.getAllTagsForFeature(featureName);

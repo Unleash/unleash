@@ -119,7 +119,7 @@ export const ProjectFeatureToggles = ({
             environment: string,
             enabled: boolean
         ) => {
-            if (changeRequestsEnabled && environment === 'production') {
+            if (changeRequestsEnabled) {
                 onChangeRequestToggle(featureName, environment, enabled);
                 throw new Error('Additional approval required');
             }

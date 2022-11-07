@@ -51,11 +51,8 @@ export const FeatureStrategyCreate = () => {
 
     const { feature, refetchFeature } = useFeature(projectId, featureId);
     const ref = useRef<IFeatureToggle>(feature);
-    const isChangeRequestEnabled = useChangeRequestsEnabled();
+    const isChangeRequestEnabled = useChangeRequestsEnabled(environmentId);
     const { refetch: refetchChangeRequests } = useChangeRequestOpen(projectId);
-
-    const isChangeRequest =
-        isChangeRequestEnabled && environmentId === 'production'; // FIXME: get from API - is it enabled
 
     const { data, staleDataNotification, forceRefreshCache } =
         useCollaborateData<IFeatureToggle>(
@@ -127,7 +124,7 @@ export const FeatureStrategyCreate = () => {
         const payload = createStrategyPayload(strategy);
 
         try {
-            if (isChangeRequest) {
+            if (isChangeRequestEnabled) {
                 await onStrategyRequestAdd(payload);
             } else {
                 await onAddStrategy(payload);
@@ -169,7 +166,7 @@ export const FeatureStrategyCreate = () => {
                 loading={loading}
                 permission={CREATE_FEATURE_STRATEGY}
                 errors={errors}
-                isChangeRequest={isChangeRequest}
+                isChangeRequest={isChangeRequestEnabled}
             />
             {staleDataNotification}
         </FormTemplate>

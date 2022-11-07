@@ -5,11 +5,36 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
+    styled,
 } from '@mui/material';
 
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useStyles } from './Dialogue.styles';
 import { DIALOGUE_CONFIRM_ID } from 'utils/testIds';
+
+const StyledDialog = styled(Dialog)(({ theme, maxWidth }) => ({
+    '& .MuiDialog-paper': {
+        borderRadius: theme.shape.borderRadiusLarge,
+        maxWidth: !maxWidth ? theme.spacing(85) : undefined,
+    },
+}));
+
+const StyledDialogTitle = styled(DialogTitle)(({ theme }) => ({
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.text.tertiaryContrast,
+    padding: theme.spacing(3.5, 6),
+    fontWeight: theme.fontWeight.medium,
+}));
+
+const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
+    marginTop: theme.spacing(5),
+    padding: theme.spacing(0, 6),
+    marginBottom: theme.spacing(7.5),
+}));
+
+const StyledDialogActions = styled(DialogActions)(({ theme }) => ({
+    padding: theme.spacing(0, 6, 6, 6),
+    gap: theme.spacing(2),
+}));
 
 interface IDialogue {
     primaryButtonText?: string;
@@ -35,12 +60,11 @@ export const Dialogue: React.FC<IDialogue> = ({
     primaryButtonText,
     disabledPrimaryButton = false,
     secondaryButtonText,
-    maxWidth = 'sm',
+    maxWidth,
     fullWidth = false,
     formId,
     permissionButton,
 }) => {
-    const { classes: styles } = useStyles();
     const handleClick = formId
         ? (e: React.SyntheticEvent) => {
               e.preventDefault();
@@ -50,7 +74,7 @@ export const Dialogue: React.FC<IDialogue> = ({
           }
         : onClick;
     return (
-        <Dialog
+        <StyledDialog
             open={open}
             onClose={onClose}
             fullWidth={fullWidth}
@@ -58,17 +82,13 @@ export const Dialogue: React.FC<IDialogue> = ({
             aria-describedby={'simple-modal-description'}
             maxWidth={maxWidth}
         >
-            <DialogTitle className={styles.dialogTitle}>{title}</DialogTitle>
+            <StyledDialogTitle>{title}</StyledDialogTitle>
             <ConditionallyRender
                 condition={Boolean(children)}
-                show={
-                    <DialogContent className={styles.dialogContentPadding}>
-                        {children}
-                    </DialogContent>
-                }
+                show={<StyledDialogContent>{children}</StyledDialogContent>}
             />
 
-            <DialogActions>
+            <StyledDialogActions>
                 <ConditionallyRender
                     condition={Boolean(permissionButton)}
                     show={permissionButton!}
@@ -101,7 +121,7 @@ export const Dialogue: React.FC<IDialogue> = ({
                         </Button>
                     }
                 />
-            </DialogActions>
-        </Dialog>
+            </StyledDialogActions>
+        </StyledDialog>
     );
 };

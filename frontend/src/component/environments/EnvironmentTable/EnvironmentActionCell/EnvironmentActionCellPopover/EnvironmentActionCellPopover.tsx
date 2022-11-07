@@ -47,8 +47,7 @@ const StyledListItemIconNegative = styled(ListItemIcon)(({ theme }) => ({
 interface IEnvironmentActionCellPopoverProps {
     environment: IEnvironment;
     onEdit: () => void;
-    onDeprecate: () => void;
-    onUndeprecate: () => void;
+    onDeprecateToggle: () => void;
     onClone: () => void;
     onDelete: () => void;
 }
@@ -56,8 +55,7 @@ interface IEnvironmentActionCellPopoverProps {
 export const EnvironmentActionCellPopover = ({
     environment,
     onEdit,
-    onDeprecate,
-    onUndeprecate,
+    onDeprecateToggle,
     onClone,
     onDelete,
 }: IEnvironmentActionCellPopoverProps) => {
@@ -149,11 +147,7 @@ export const EnvironmentActionCellPopover = ({
                         {({ hasAccess }) => (
                             <StyledMenuItem
                                 onClick={() => {
-                                    if (environment.enabled) {
-                                        onDeprecate();
-                                    } else {
-                                        onUndeprecate();
-                                    }
+                                    onDeprecateToggle();
                                     handleClose();
                                 }}
                                 disabled={!hasAccess || environment.protected}

@@ -5,6 +5,9 @@ export interface IEnvironment {
     sortOrder: number;
     enabled: boolean;
     protected: boolean;
+    projectCount?: number;
+    apiTokenCount?: number;
+    enabledFeatureCount?: number;
 }
 
 export interface IProjectEnvironment {

@@ -15,6 +15,9 @@ interface IEnvironmentsTable {
     sort_order: number;
     enabled: boolean;
     protected: boolean;
+    project_count?: string;
+    api_token_count?: string;
+    enabled_toggle_count?: string;
 }
 
 const COLUMNS = [
@@ -33,6 +36,13 @@ function mapRow(row: IEnvironmentsTable): IEnvironment {
         sortOrder: row.sort_order,
         enabled: row.enabled,
         protected: row.protected,
+        projectCount: row.project_count ? parseInt(row.project_count, 10) : 0,
+        apiTokenCount: row.api_token_count
+            ? parseInt(row.api_token_count, 10)
+            : 0,
+        enabledToggleCount: row.enabled_toggle_count
+            ? parseInt(row.enabled_toggle_count, 10)
+            : 0,
     };
 }
 
@@ -90,6 +100,18 @@ export default class EnvironmentStore implements IEnvironmentStore {
 
     async get(key: string): Promise<IEnvironment> {
         const row = await this.db<IEnvironmentsTable>(TABLE)
+            .select(
+                '*',
+                this.db.raw(
+                    '(SELECT COUNT(*) FROM project_environments WHERE project_environments.environment_name = environments.name) as project_count',
+                ),
+                this.db.raw(
+                    '(SELECT COUNT(*) FROM api_tokens WHERE api_tokens.environment = environments.name) as api_token_count',
+                ),
+                this.db.raw(
+                    '(SELECT COUNT(*) FROM feature_environments WHERE enabled=true AND feature_environments.environment = environments.name) as enabled_toggle_count',
+                ),
+            )
             .where({ name: key })
             .first();
         if (row) {
@@ -100,7 +122,18 @@ export default class EnvironmentStore implements IEnvironmentStore {
 
     async getAll(query?: Object): Promise<IEnvironment[]> {
         let qB = this.db<IEnvironmentsTable>(TABLE)
-            .select('*')
+            .select(
+                '*',
+                this.db.raw(
+                    '(SELECT COUNT(*) FROM project_environments WHERE project_environments.environment_name = environments.name) as project_count',
+                ),
+                this.db.raw(
+                    '(SELECT COUNT(*) FROM api_tokens WHERE api_tokens.environment = environments.name) as api_token_count',
+                ),
+                this.db.raw(
+                    '(SELECT COUNT(*) FROM feature_environments WHERE enabled=true AND feature_environments.environment = environments.name) as enabled_toggle_count',
+                ),
+            )
             .orderBy([
                 { column: 'sort_order', order: 'asc' },
                 { column: 'created_at', order: 'asc' },

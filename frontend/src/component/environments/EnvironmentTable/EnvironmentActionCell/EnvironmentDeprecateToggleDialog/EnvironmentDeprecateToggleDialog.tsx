@@ -1,37 +1,9 @@
-import { styled, Alert, TableBody, TableRow } from '@mui/material';
+import { Alert } from '@mui/material';
 import React from 'react';
 import { IEnvironment } from 'interfaces/environments';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import { useTable } from 'react-table';
-import { EnvironmentNameCell } from 'component/environments/EnvironmentTable/EnvironmentNameCell/EnvironmentNameCell';
-import { EnvironmentIconCell } from 'component/environments/EnvironmentTable/EnvironmentIconCell/EnvironmentIconCell';
-import { SortableTableHeader, Table, TableCell } from 'component/common/Table';
-
-const StyledTable = styled(Table)(({ theme }) => ({
-    marginTop: theme.spacing(3),
-}));
-
-const COLUMNS = [
-    {
-        id: 'Icon',
-        width: '1%',
-        Cell: ({ row: { original } }: any) => (
-            <EnvironmentIconCell environment={original} />
-        ),
-    },
-    {
-        Header: 'Name',
-        accessor: 'name',
-        Cell: ({ row: { original } }: any) => (
-            <EnvironmentNameCell environment={original} />
-        ),
-    },
-    {
-        Header: 'Type',
-        accessor: 'type',
-    },
-];
+import { EnvironmentTableSingle } from 'component/environments/EnvironmentTable/EnvironmentTableSingle';
 
 interface IEnvironmentDeprecateToggleDialogProps {
     environment: IEnvironment;
@@ -48,13 +20,6 @@ export const EnvironmentDeprecateToggleDialog = ({
 }: IEnvironmentDeprecateToggleDialogProps) => {
     const { enabled } = environment;
     const actionName = enabled ? 'Deprecate' : 'Undeprecate';
-
-    const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-        useTable({
-            columns: COLUMNS as any,
-            data: [environment],
-            disableSortBy: true,
-        });
 
     return (
         <Dialogue
@@ -86,23 +51,7 @@ export const EnvironmentDeprecateToggleDialog = ({
                 }
             />
 
-            <StyledTable {...getTableProps()} rowHeight="compact">
-                <SortableTableHeader headerGroups={headerGroups as any} />
-                <TableBody {...getTableBodyProps()}>
-                    {rows.map(row => {
-                        prepareRow(row);
-                        return (
-                            <TableRow hover {...row.getRowProps()}>
-                                {row.cells.map(cell => (
-                                    <TableCell {...cell.getCellProps()}>
-                                        {cell.render('Cell')}
-                                    </TableCell>
-                                ))}
-                            </TableRow>
-                        );
-                    })}
-                </TableBody>
-            </StyledTable>
+            <EnvironmentTableSingle environment={environment} />
         </Dialogue>
     );
 };

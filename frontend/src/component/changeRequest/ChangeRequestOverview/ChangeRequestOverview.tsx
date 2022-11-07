@@ -47,7 +47,7 @@ export const ChangeRequestOverview: FC = () => {
         projectId,
         id
     );
-    const { applyChanges } = useChangeRequestApi();
+    const { changeState } = useChangeRequestApi();
     const { setToastData, setToastApiError } = useToast();
 
     if (!changeRequest) {
@@ -56,7 +56,9 @@ export const ChangeRequestOverview: FC = () => {
 
     const onApplyChanges = async () => {
         try {
-            await applyChanges(projectId, id);
+            await changeState(projectId, Number(id), {
+                state: 'Applied',
+            });
             refetchChangeRequest();
             setToastData({
                 type: 'success',

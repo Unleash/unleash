@@ -73,7 +73,7 @@ export class ProxyRepository
     }
 
     async start(): Promise<void> {
-        await this.loadDataForToken();
+        await this.dataPolling();
 
         // Reload cached token data whenever something relevant has changed.
         // For now, simply reload all the data on any EventStore event.
@@ -88,11 +88,15 @@ export class ProxyRepository
         clearTimeout(this.timer);
     }
 
-    private async loadDataForToken() {
-        this.timer = setTimeout(async () => {
-            await this.loadDataForToken();
-        }, this.randomizeDelay(this.interval, this.interval * 2)).unref();
+    private async dataPolling() {
+        await this.loadDataForToken();
 
+        this.timer = setTimeout(async () => {
+            await this.dataPolling();
+        }, this.randomizeDelay(this.interval, this.interval * 2)).unref();
+    }
+
+    private async loadDataForToken() {
         try {
             this.features = await this.featuresForToken();
             this.segments = await this.segmentsForToken();

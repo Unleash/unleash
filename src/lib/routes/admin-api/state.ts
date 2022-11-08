@@ -23,6 +23,10 @@ import { OpenAPIV3 } from 'openapi-types';
 
 const upload = multer({ limits: { fileSize: 5242880 } });
 const paramToBool = (param, def) => {
+    if (typeof param === 'boolean') {
+        return param;
+    }
+
     if (param === null || param === undefined) {
         return def;
     }

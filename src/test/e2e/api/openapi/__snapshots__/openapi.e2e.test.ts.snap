@@ -4991,6 +4991,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/projects/{projectId}/features/{featureName}": {
       "delete": {
+        "description": "This endpoint archives the specified feature if the feature belongs to the specified project.",
         "operationId": "archiveFeature",
         "parameters": [
           {
@@ -5014,12 +5015,23 @@ If the provided project does not exist, the list of events will be empty.",
           "200": {
             "description": "This response has no body.",
           },
+          "401": {
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "description": "You either do not have the required permissions or used an invalid URL.",
+          },
+          "404": {
+            "description": "The requested resource was not found.",
+          },
         },
+        "summary": "Archive a feature.",
         "tags": [
           "Features",
         ],
       },
       "get": {
+        "description": "This endpoint returns the information about the requested feature if the feature belongs to the specified project.",
         "operationId": "getFeature",
         "parameters": [
           {
@@ -5050,7 +5062,17 @@ If the provided project does not exist, the list of events will be empty.",
             },
             "description": "featureSchema",
           },
+          "401": {
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "description": "You either do not have the required permissions or used an invalid URL.",
+          },
+          "404": {
+            "description": "The requested resource was not found.",
+          },
         },
+        "summary": "Get a feature.",
         "tags": [
           "Features",
         ],

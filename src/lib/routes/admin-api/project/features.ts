@@ -322,6 +322,9 @@ export default class ProjectFeaturesController extends Controller {
                 openApiService.validPath({
                     operationId: 'getFeature',
                     tags: ['Features'],
+                    description:
+                        'This endpoint returns the information about the requested feature if the feature belongs to the specified project.',
+                    summary: 'Get a feature.',
                     responses: {
                         200: createResponseSchema('featureSchema'),
                         403: {
@@ -374,6 +377,9 @@ export default class ProjectFeaturesController extends Controller {
                 openApiService.validPath({
                     tags: ['Features'],
                     operationId: 'archiveFeature',
+                    description:
+                        'This endpoint archives the specified feature if the feature belongs to the specified project.',
+                    summary: 'Archive a feature.',
                     responses: {
                         200: emptyResponse,
                         403: {

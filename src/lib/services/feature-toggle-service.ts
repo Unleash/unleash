@@ -159,7 +159,7 @@ class FeatureToggleService {
         const id = await this.featureToggleStore.getProjectId(featureName);
         if (id !== projectId) {
             throw new InvalidOperationError(
-                'Project id does not match the project that the feature belongs to',
+                `The operation could not be completed. The feature exists, but the provided project id (${projectId}) does not match the project that the feature belongs to (${id}). Try using ${id} in the request URL instead of ${projectId}.`,
             );
         }
     }
@@ -554,13 +554,14 @@ class FeatureToggleService {
         archived: boolean = false,
         projectId?: string,
     ): Promise<FeatureToggleWithEnvironment> {
-        if (projectId) {
-            await this.validateFeatureContext({ featureName, projectId });
-        }
-        return this.featureStrategiesStore.getFeatureToggleWithEnvs(
+        const feature = this.featureStrategiesStore.getFeatureToggleWithEnvs(
             featureName,
             archived,
         );
+        if (projectId) {
+            await this.validateFeatureContext({ featureName, projectId });
+        }
+        return feature;
     }
 
     /**

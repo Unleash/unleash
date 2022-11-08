@@ -492,20 +492,20 @@ describe('Interacting with features using project IDs that belong to other proje
         await db.stores.userStore.deleteAll();
     });
 
-    test("Getting a feature yields 404 if the provided project id doesn't match the feature's project", async () => {
+    test("Getting a feature yields 403 if the provided project id doesn't match the feature's project", async () => {
         // validate that it isn't returned for the new project
         await app.request
             .get(`/api/admin/projects/${otherProject}/features/${featureName}`)
-            .expect(404);
+            .expect(403);
     });
 
-    test("Archiving a feature yields 404 if the provided project id doesn't match the feature's project", async () => {
+    test("Archiving a feature yields 403 if the provided project id doesn't match the feature's project", async () => {
         // validate that it isn't archived when you provide the other project name
         await app.request
             .delete(
                 `/api/admin/projects/${otherProject}/features/${featureName}`,
             )
-            .expect(404);
+            .expect(403);
     });
 });
 

@@ -1,7 +1,6 @@
 import { ReactNode } from 'react';
-import { Modal, Backdrop } from '@mui/material';
+import { Modal, Backdrop, styled } from '@mui/material';
 import Fade from '@mui/material/Fade';
-import { useStyles } from 'component/common/SidebarModal/SidebarModal.styles';
 import { SIDEBAR_MODAL_ID } from 'utils/testIds';
 
 interface ISidebarModalProps {
@@ -13,14 +12,24 @@ interface ISidebarModalProps {
 
 const TRANSITION_DURATION = 250;
 
+const ModalContentWrapper = styled('div')({
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    height: '100vh',
+    maxWidth: '98vw',
+    width: 1300,
+    overflow: 'auto',
+    boxShadow: '0 0 1rem rgba(0, 0, 0, 0.25)',
+});
+
 export const SidebarModal = ({
     open,
     onClose,
     label,
     children,
 }: ISidebarModalProps) => {
-    const { classes: styles } = useStyles();
-
     return (
         <Modal
             open={open}
@@ -32,7 +41,7 @@ export const SidebarModal = ({
             data-testid={SIDEBAR_MODAL_ID}
         >
             <Fade timeout={TRANSITION_DURATION} in={open}>
-                <div className={styles.modal}>{children}</div>
+                <ModalContentWrapper>{children}</ModalContentWrapper>
             </Fade>
         </Modal>
     );

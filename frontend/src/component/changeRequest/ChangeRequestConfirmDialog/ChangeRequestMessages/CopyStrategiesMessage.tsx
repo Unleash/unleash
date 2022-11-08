@@ -1,7 +1,13 @@
+import { VFC } from 'react';
 import { styled, Typography } from '@mui/material';
-import { formatStrategyName } from '../../../../utils/strategyNames';
-import { IFeatureStrategy } from '../../../../interfaces/strategy';
-import { CopyStrategyMsg } from './CopyStrategyMessage';
+import { formatStrategyName } from 'utils/strategyNames';
+import { IFeatureStrategy, IFeatureStrategyPayload } from 'interfaces/strategy';
+
+interface ICopyStrategiesMessageProps {
+    payload?: IFeatureStrategyPayload[];
+    fromEnvironment?: string;
+    environment?: string;
+}
 
 const MsgContainer = styled('div')(({ theme }) => ({
     '&>*:nth-child(n)': {
@@ -9,21 +15,19 @@ const MsgContainer = styled('div')(({ theme }) => ({
     },
 }));
 
-export const CopyStrategiesMessage = ({
+export const CopyStrategiesMessage: VFC<ICopyStrategiesMessageProps> = ({
     payload,
     fromEnvironment,
     environment,
-}: CopyStrategyMsg) => (
+}) => (
     <MsgContainer>
         <Typography>
             <strong>Copy: </strong>
         </Typography>
-        {/* FIXME: wrong type assertion */}
-        {(payload as IFeatureStrategy[])?.map(strategy => (
+        {payload?.map(strategy => (
             <Typography>
                 <strong>
-                    {formatStrategyName((strategy as IFeatureStrategy)?.name)}{' '}
-                    strategy{' '}
+                    {formatStrategyName(strategy?.name || '')} strategy{' '}
                 </strong>{' '}
             </Typography>
         ))}

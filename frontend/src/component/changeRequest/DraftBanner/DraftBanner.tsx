@@ -65,7 +65,7 @@ const DraftBannerContent: FC<{
 const StickyBanner = styled(Box)(({ theme }) => ({
     position: 'sticky',
     top: -1,
-    zIndex: theme.zIndex.appBar,
+    zIndex: 200 /* has to lower than header.zIndex */,
     borderTop: `1px solid ${theme.palette.warning.border}`,
     borderBottom: `1px solid ${theme.palette.warning.border}`,
     backgroundColor: theme.palette.warning.light,
@@ -88,6 +88,7 @@ export const DraftBanner: VFC<IDraftBannerProps> = ({ project }) => {
                     )
                     .map(changeRequest => (
                         <DraftBannerContent
+                            key={changeRequest.id}
                             changeRequest={changeRequest}
                             onClick={() => {
                                 setIsSidebarOpen(true);

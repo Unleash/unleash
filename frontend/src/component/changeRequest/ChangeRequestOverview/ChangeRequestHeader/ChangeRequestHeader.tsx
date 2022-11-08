@@ -49,7 +49,10 @@ export const ChangeRequestHeader: FC<{ changeRequest: IChangeRequest }> = ({
                                 fontWeight="bold"
                                 component="span"
                             >
-                                {changeRequest?.features.length} feature toggles
+                                {changeRequest.features.length}{' '}
+                                {changeRequest.features.length === 1
+                                    ? 'feature toggle'
+                                    : 'feature toggles'}
                             </Typography>
                         </Typography>
                     </StyledCard>

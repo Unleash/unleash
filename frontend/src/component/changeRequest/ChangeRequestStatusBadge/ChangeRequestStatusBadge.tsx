@@ -13,12 +13,14 @@ const ReviewRequiredBadge: VFC = () => (
     </Badge>
 );
 
+const DraftBadge: VFC = () => <Badge color="warning">Draft</Badge>;
+
 export const ChangeRequestStatusBadge: VFC<IChangeRequestStatusBadgeProps> = ({
     state,
 }) => {
     switch (state) {
         case 'Draft':
-            return <ReviewRequiredBadge />;
+            return <DraftBadge />;
         case 'In review':
             return <ReviewRequiredBadge />;
         case 'Approved':

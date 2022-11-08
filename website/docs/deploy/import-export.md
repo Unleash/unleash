@@ -2,8 +2,13 @@
 id: import_export
 title: Import & Export
 ---
+import ApiRequest from '@site/src/components/ApiRequest'
 
-_since v3.3.0_
+:::info Availability
+
+The import and export API first appeared in Unleash 3.3.0.
+
+:::
 
 Unleash supports import and export of feature toggles and strategies at startup and during runtime. The import mechanism guarantees that:
 - all imported features will be non-archived
@@ -54,17 +59,7 @@ You can customize the export with query parameters:
 
 For example if you want to download just feature-toggles as yaml:
 
-```
-/api/admin/state/export?format=yaml&featureToggles=1&strategies=0&tags=0&projects=0&download=1
-```
-
-Example with curl:
-
-```sh
-curl -X GET -H "Content-Type: application/json" \
-  -H "Authorization: Basic YWRtaW46" \
-  https://unleash.example.com/api/admin/state/export?&featureToggles=1&strategies=0 > export.json
-```
+<ApiRequest verb="get" url="api/admin/state/export?format=yaml&featureToggles=1&strategies=0&tags=0&projects=0&download=1" title="Export only features as YAML."/>
 
 ### API Import {#api-import}
 
@@ -84,28 +79,7 @@ If you want the database to be cleaned before import (**all strategies and featu
 
 Example usage:
 
-```
-POST /api/admin/state/import
-{
-    "features": [
-        {
-            "name": "a-feature-toggle",
-            "enabled": true,
-            "description": "#1 feature-toggle"
-        }
-    ]
-}
-```
-
-Example with curl:
-
-```sh
-curl -X POST -H "Content-Type: application/json" \
-  -H "Authorization: Basic YWRtaW46" -d @export.json \
-  http://localhost:4242/api/admin/state/import
-```
-
-\*) Remember to set correct token for Authorization.
+<ApiRequest verb="post" url="api/admin/state/import" payload={{ "version": 3, "features": [{"name": "a-feature-toggle", "enabled": true, "description": "#1 feature-toggle"}] }} title="Import data into Unleash."/>
 
 ## Startup import {#startup-import}
 

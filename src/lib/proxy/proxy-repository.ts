@@ -89,11 +89,11 @@ export class ProxyRepository
     }
 
     private async dataPolling() {
-        await this.loadDataForToken();
-
         this.timer = setTimeout(async () => {
             await this.dataPolling();
         }, this.randomizeDelay(this.interval, this.interval * 2)).unref();
+
+        await this.loadDataForToken();
     }
 
     private async loadDataForToken() {

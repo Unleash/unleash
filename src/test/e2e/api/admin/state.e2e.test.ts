@@ -55,6 +55,12 @@ test('exports strategies and features as attachment', async () => {
         .expect(200);
 });
 
+test('accepts "true" and "false" as parameter values', () => {
+    return app.request
+        .get('/api/admin/state/export?strategies=true&tags=false')
+        .expect(200);
+});
+
 test('imports strategies and features', async () => {
     return app.request
         .post('/api/admin/state/import')

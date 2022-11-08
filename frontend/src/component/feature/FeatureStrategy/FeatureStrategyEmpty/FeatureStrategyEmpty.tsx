@@ -4,7 +4,6 @@ import { SectionSeparator } from 'component/feature/FeatureView/FeatureOverview/
 import useFeatureStrategyApi from 'hooks/api/actions/useFeatureStrategyApi/useFeatureStrategyApi';
 import useToast from 'hooks/useToast';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
-import { FeatureStrategyMenu } from '../FeatureStrategyMenu/FeatureStrategyMenu';
 import { useStyles } from './FeatureStrategyEmpty.styles';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useFeatureImmutable } from 'hooks/api/getters/useFeature/useFeatureImmutable';
@@ -13,9 +12,10 @@ import { CopyButton } from './CopyButton/CopyButton';
 import { useChangeRequestAddStrategy } from 'hooks/useChangeRequestAddStrategy';
 import { ChangeRequestDialogue } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestConfirmDialog';
 import { CopyStrategiesMessage } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestMessages/CopyStrategiesMessage';
-import { AddStandardStrategyFromTemplate } from './AddStandardStrategyFromTemplate/AddStandardStrategyFromTemplate';
-import { AddRolloutStrategyFromTemplate } from './AddRolloutStrategyFromTemplate/AddRolloutStrategyFromTemplate';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
+import { getFeatureStrategyIcon } from 'utils/strategyNames';
+import { AddFromTemplateCard } from './AddFromTemplateCard/AddFromTemplateCard';
+import { FeatureStrategyMenu } from '../FeatureStrategyMenu/FeatureStrategyMenu';
 
 interface IFeatureStrategyEmptyProps {
     projectId: string;
@@ -176,18 +176,41 @@ export const FeatureStrategyEmpty = ({
                         gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' },
                     }}
                 >
-                    <AddStandardStrategyFromTemplate
+                    <AddFromTemplateCard
+                        title="Standard strategy"
                         projectId={projectId}
                         featureId={featureId}
                         environmentId={environmentId}
                         onAfterAddStrategy={onAfterAddStrategy}
-                    />
-                    <AddRolloutStrategyFromTemplate
+                        Icon={getFeatureStrategyIcon('default')}
+                        strategy={{
+                            name: 'default',
+                            parameters: {},
+                            constraints: [],
+                        }}
+                    >
+                        The standard strategy is strictly on/off for your entire
+                        userbase.
+                    </AddFromTemplateCard>
+                    <AddFromTemplateCard
+                        title="Gradual rollout"
                         projectId={projectId}
                         featureId={featureId}
                         environmentId={environmentId}
                         onAfterAddStrategy={onAfterAddStrategy}
-                    />
+                        Icon={getFeatureStrategyIcon('flexibleRollout')}
+                        strategy={{
+                            name: 'flexibleRollout',
+                            parameters: {
+                                rollout: '50',
+                                stickiness: 'default',
+                                groupId: feature.name,
+                            },
+                            constraints: [],
+                        }}
+                    >
+                        Roll out to a percentage of your userbase.
+                    </AddFromTemplateCard>
                 </Box>
             </div>
         </>

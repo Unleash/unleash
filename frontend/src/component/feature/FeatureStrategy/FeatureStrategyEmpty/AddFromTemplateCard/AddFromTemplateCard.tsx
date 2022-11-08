@@ -1,26 +1,33 @@
-import { VFC } from 'react';
+import { ElementType, FC } from 'react';
 import { ChangeRequestDialogue } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestConfirmDialog';
 import useFeatureStrategyApi from 'hooks/api/actions/useFeatureStrategyApi/useFeatureStrategyApi';
 import useToast from 'hooks/useToast';
 import { AddStrategyMessage } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestMessages/AddStrategyMessage';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
-import { getFeatureStrategyIcon } from 'utils/strategyNames';
 import { useChangeRequestAddStrategy } from 'hooks/useChangeRequestAddStrategy';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
-import { PresetCard } from '../PresetCard/PresetCard';
+import { PresetCard } from './PresetCard/PresetCard';
+import { IFeatureStrategyPayload } from 'interfaces/strategy';
 
-interface IAddRolloutStrategyProps {
+interface IAddFromTemplateCardProps {
+    title: string;
     featureId: string;
     projectId: string;
     environmentId: string;
+    strategy: IFeatureStrategyPayload;
+    Icon: ElementType;
     onAfterAddStrategy: () => void;
 }
 
-export const AddRolloutStrategyFromTemplate: VFC<IAddRolloutStrategyProps> = ({
+export const AddFromTemplateCard: FC<IAddFromTemplateCardProps> = ({
+    title,
+    children,
     featureId,
     projectId,
     environmentId,
+    strategy,
+    Icon,
     onAfterAddStrategy,
 }) => {
     const { addStrategyToFeature } = useFeatureStrategyApi();
@@ -29,16 +36,6 @@ export const AddRolloutStrategyFromTemplate: VFC<IAddRolloutStrategyProps> = ({
     const { feature } = useFeature(projectId, featureId);
     const isChangeRequestEnabled = useChangeRequestsEnabled(environmentId);
 
-    const rolloutStrategy = {
-        name: 'flexibleRollout',
-        parameters: {
-            rollout: '50',
-            stickiness: 'default',
-            groupId: feature.name,
-        },
-        constraints: [],
-    };
-
     const {
         changeRequestDialogDetails,
         onChangeRequestAddStrategy,
@@ -46,16 +43,16 @@ export const AddRolloutStrategyFromTemplate: VFC<IAddRolloutStrategyProps> = ({
         onChangeRequestAddStrategyClose,
     } = useChangeRequestAddStrategy(projectId, featureId, 'addStrategy');
 
-    const onAddGradualRolloutStrategy = async () => {
+    const onStrategy = async () => {
         try {
             if (isChangeRequestEnabled) {
-                onChangeRequestAddStrategy(environmentId, rolloutStrategy);
+                onChangeRequestAddStrategy(environmentId, strategy);
             } else {
                 await addStrategyToFeature(
                     projectId,
                     featureId,
                     environmentId,
-                    rolloutStrategy
+                    strategy
                 );
                 onAfterAddStrategy();
             }
@@ -67,13 +64,13 @@ export const AddRolloutStrategyFromTemplate: VFC<IAddRolloutStrategyProps> = ({
     return (
         <>
             <PresetCard
-                title="Gradual rollout"
-                Icon={getFeatureStrategyIcon('flexibleRollout')}
-                onClick={onAddGradualRolloutStrategy}
+                title={title}
+                Icon={Icon}
+                onClick={onStrategy}
                 projectId={projectId}
                 environmentId={environmentId}
             >
-                Roll out to a percentage of your userbase.
+                {children}
             </PresetCard>
             <ChangeRequestDialogue
                 isOpen={changeRequestDialogDetails.isOpen}

@@ -98,8 +98,12 @@ export class ProxyRepository
 
     private async loadDataForToken() {
         try {
-            this.features = await this.featuresForToken();
-            this.segments = await this.segmentsForToken();
+            const [features, segments] = await Promise.all([
+                this.featuresForToken(),
+                this.segmentsForToken(),
+            ]);
+            this.features = features;
+            this.segments = segments;
         } catch (e) {
             this.logger.error(e);
         }

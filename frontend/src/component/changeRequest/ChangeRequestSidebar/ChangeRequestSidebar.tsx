@@ -1,4 +1,4 @@
-import { VFC } from 'react';
+import { FC, VFC } from 'react';
 import {
     Box,
     Button,
@@ -57,6 +57,15 @@ const BackButton = styled(Button)(({ theme }) => ({
     marginTop: theme.spacing(2),
     marginLeft: 'auto',
 }));
+
+const SubmitChangeRequestButton: FC<{ onClick: () => void; count: number }> = ({
+    onClick,
+    count,
+}) => (
+    <Button sx={{ mt: 2, ml: 'auto' }} variant="contained" onClick={onClick}>
+        Submit change request ({count})
+    </Button>
+);
 
 export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
     open,
@@ -218,17 +227,18 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
                                 }
                                 show={
                                     <>
-                                        <Button
-                                            sx={{ mt: 2, ml: 'auto' }}
-                                            variant="contained"
+                                        <SubmitChangeRequestButton
                                             onClick={() =>
                                                 onReview(
                                                     environmentChangeRequest.id
                                                 )
                                             }
-                                        >
-                                            Request changes
-                                        </Button>
+                                            count={
+                                                environmentChangeRequest
+                                                    .features.length
+                                            }
+                                        />
+
                                         <Button
                                             sx={{ mt: 2, ml: 2 }}
                                             variant="outlined"

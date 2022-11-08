@@ -1,5 +1,5 @@
 import { FC, useState, VFC } from 'react';
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, styled, Typography } from '@mui/material';
 import { useStyles as useAppStyles } from 'component/App.styles';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -11,6 +11,13 @@ interface IDraftBannerProps {
     project: string;
 }
 
+const DraftBannerContentWrapper = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    padding: theme.spacing(1, 1.5),
+    color: theme.palette.warning.main,
+}));
+
 const DraftBannerContent: FC<{
     changeRequest: IChangeRequest;
     onClick: () => void;
@@ -19,15 +26,7 @@ const DraftBannerContent: FC<{
 
     return (
         <Box className={classes.content}>
-            <Box
-                sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    px: 1,
-                    py: 1.5,
-                    color: theme => theme.palette.warning.main,
-                }}
-            >
+            <DraftBannerContentWrapper>
                 <WarningAmberIcon />
                 <Typography variant="body2" sx={{ ml: 1 }}>
                     <strong>Draft mode!</strong> – You have changes{' '}
@@ -53,15 +52,24 @@ const DraftBannerContent: FC<{
                     onClick={onClick}
                     sx={{ ml: 'auto' }}
                 >
-                    Review changes
+                    View changes ({changeRequest.features.length})
                 </Button>
                 <Button variant="text" onClick={() => {}} sx={{ ml: 1 }}>
                     Discard all
                 </Button>
-            </Box>
+            </DraftBannerContentWrapper>
         </Box>
     );
 };
+
+const StickyBanner = styled(Box)(({ theme }) => ({
+    position: 'sticky',
+    top: -1,
+    zIndex: theme.zIndex.appBar,
+    borderTop: `1px solid ${theme.palette.warning.border}`,
+    borderBottom: `1px solid ${theme.palette.warning.border}`,
+    backgroundColor: theme.palette.warning.light,
+}));
 
 export const DraftBanner: VFC<IDraftBannerProps> = ({ project }) => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -72,17 +80,7 @@ export const DraftBanner: VFC<IDraftBannerProps> = ({ project }) => {
     }
 
     return (
-        <Box
-            sx={{
-                position: 'sticky',
-                top: -1,
-                zIndex: theme => theme.zIndex.appBar,
-                borderTop: theme => `1px solid ${theme.palette.warning.border}`,
-                borderBottom: theme =>
-                    `1px solid ${theme.palette.warning.border}`,
-                backgroundColor: theme => theme.palette.warning.light,
-            }}
-        >
+        <StickyBanner>
             {draft &&
                 draft
                     .filter(changeRequest =>
@@ -104,6 +102,6 @@ export const DraftBanner: VFC<IDraftBannerProps> = ({ project }) => {
                     setIsSidebarOpen(false);
                 }}
             />
-        </Box>
+        </StickyBanner>
     );
 };

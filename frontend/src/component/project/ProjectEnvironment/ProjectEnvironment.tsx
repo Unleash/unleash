@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useStyles } from './ProjectEnvironment.styles';
 import { PageContent } from 'component/common/PageContent/PageContent';
@@ -11,17 +11,31 @@ import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironmen
 import useProject, {
     useProjectNameOrId,
 } from 'hooks/api/getters/useProject/useProject';
-import { FormControlLabel, FormGroup, Alert } from '@mui/material';
+import { Alert, styled, TableBody, TableRow } from '@mui/material';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
-import EnvironmentDisableConfirm from './EnvironmentDisableConfirm/EnvironmentDisableConfirm';
 import { Link } from 'react-router-dom';
 import PermissionSwitch from 'component/common/PermissionSwitch/PermissionSwitch';
 import { IProjectEnvironment } from 'interfaces/environments';
 import { getEnabledEnvs } from './helpers';
-import StringTruncator from 'component/common/StringTruncator/StringTruncator';
-import { useThemeStyles } from 'themes/themeStyles';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import { useTable, useGlobalFilter } from 'react-table';
+import {
+    SortableTableHeader,
+    Table,
+    TableCell,
+    TablePlaceholder,
+} from 'component/common/Table';
+import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
+import { Search } from 'component/common/Search/Search';
+import { EnvironmentNameCell } from 'component/environments/EnvironmentTable/EnvironmentNameCell/EnvironmentNameCell';
+import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
+import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
+import { EnvironmentHideDialog } from './EnvironmentHideDialog/EnvironmentHideDialog';
+
+const StyledAlert = styled(Alert)(({ theme }) => ({
+    marginBottom: theme.spacing(4),
+}));
 
 const ProjectEnvironmentList = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -29,7 +43,6 @@ const ProjectEnvironmentList = () => {
     usePageTitle(`Project environments – ${projectName}`);
 
     // api state
-    const [envs, setEnvs] = useState<IProjectEnvironment[]>([]);
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
     const { environments, loading, error, refetchEnvironments } =
@@ -37,22 +50,23 @@ const ProjectEnvironmentList = () => {
     const { project, refetch: refetchProject } = useProject(projectId);
     const { removeEnvironmentFromProject, addEnvironmentToProject } =
         useProjectApi();
-    const { classes: themeStyles } = useThemeStyles();
 
     // local state
-    const [selectedEnv, setSelectedEnv] = useState<IProjectEnvironment>();
-    const [confirmName, setConfirmName] = useState('');
+    const [selectedEnvironment, setSelectedEnvironment] =
+        useState<IProjectEnvironment>();
+    const [hideDialog, setHideDialog] = useState(false);
     const { classes: styles } = useStyles();
     const { isOss } = useUiConfig();
 
-    useEffect(() => {
-        const envs = environments.map(e => ({
-            name: e.name,
-            enabled: project?.environments.includes(e.name),
-        }));
-
-        setEnvs(envs);
-    }, [environments, project?.environments]);
+    // TODO: Maybe this should be fetched from a different endpoint that gives us IProjectEnvironment with the counts for this project context as well?
+    const projectEnvironments = useMemo<IProjectEnvironment[]>(
+        () =>
+            environments.map(environment => ({
+                ...environment,
+                enabled: project?.environments.includes(environment.name),
+            })),
+        [environments, project?.environments]
+    );
 
     const refetch = () => {
         refetchEnvironments();
@@ -70,119 +84,139 @@ const ProjectEnvironmentList = () => {
     };
 
     const errorMsg = (enable: boolean): string => {
-        return `Got an API error when trying to ${
-            enable ? 'enable' : 'disable'
-        } the environment.`;
+        return `Got an API error when trying to set the environment as ${
+            enable ? 'visible' : 'hidden'
+        }`;
     };
 
     const toggleEnv = async (env: IProjectEnvironment) => {
         if (env.enabled) {
-            const enabledEnvs = getEnabledEnvs(envs);
+            const enabledEnvs = getEnabledEnvs(projectEnvironments);
 
             if (enabledEnvs > 1) {
-                setSelectedEnv(env);
+                setSelectedEnvironment(env);
+                setHideDialog(true);
                 return;
             }
             setToastData({
-                title: 'One environment must be active',
-                text: 'You must always have at least one active environment per project',
+                title: 'One environment must be visible',
+                text: 'You must always have at least one visible environment per project',
                 type: 'error',
             });
         } else {
             try {
                 await addEnvironmentToProject(projectId, env.name);
+                refetch();
                 setToastData({
-                    title: 'Environment enabled',
-                    text: 'Environment successfully enabled. You can now use it to segment strategies in your feature toggles.',
+                    title: 'Environment set as visible',
+                    text: 'Environment successfully set as visible.',
                     type: 'success',
                 });
             } catch (error) {
                 setToastApiError(errorMsg(true));
             }
         }
-        refetch();
     };
 
-    const handleDisableEnvironment = async () => {
-        if (selectedEnv && confirmName === selectedEnv.name) {
+    const onHideConfirm = async () => {
+        if (selectedEnvironment) {
             try {
-                await removeEnvironmentFromProject(projectId, selectedEnv.name);
-                setSelectedEnv(undefined);
-                setConfirmName('');
+                await removeEnvironmentFromProject(
+                    projectId,
+                    selectedEnvironment.name
+                );
+                refetch();
                 setToastData({
-                    title: 'Environment disabled',
-                    text: 'Environment successfully disabled.',
+                    title: 'Environment set as hidden',
+                    text: 'Environment successfully set as hidden.',
                     type: 'success',
                 });
             } catch (e) {
                 setToastApiError(errorMsg(false));
+            } finally {
+                setHideDialog(false);
             }
-
-            refetch();
         }
     };
-
-    const handleCancelDisableEnvironment = () => {
-        setSelectedEnv(undefined);
-        setConfirmName('');
-    };
-
-    const genLabel = (env: IProjectEnvironment) => (
-        <div className={themeStyles.flexRow}>
-            <code>
-                <StringTruncator
-                    text={env.name}
-                    maxLength={50}
-                    maxWidth="150"
-                />
-            </code>
-            {/* This is ugly - but regular {" "} doesn't work here*/}
-            <p>
-                &nbsp; environment is{' '}
-                <strong>{env.enabled ? 'enabled' : 'disabled'}</strong>
-            </p>
-        </div>
-    );
 
     const envIsDisabled = (projectName: string) => {
         return isOss() && projectName === 'default';
     };
 
-    const renderEnvironments = () => {
-        return (
-            <FormGroup>
-                {envs.map(env => (
-                    <FormControlLabel
-                        key={env.name}
-                        label={genLabel(env)}
-                        control={
-                            <PermissionSwitch
-                                tooltip={`${
-                                    env.enabled ? 'Disable' : 'Enable'
-                                } environment`}
-                                size="medium"
-                                disabled={envIsDisabled(env.name)}
-                                projectId={projectId}
-                                permission={UPDATE_PROJECT}
-                                checked={env.enabled}
-                                onChange={() => toggleEnv(env)}
-                            />
-                        }
-                    />
-                ))}
-            </FormGroup>
-        );
-    };
+    const COLUMNS = useMemo(
+        () => [
+            {
+                Header: 'Name',
+                accessor: 'name',
+                Cell: ({ row: { original } }: any) => (
+                    <EnvironmentNameCell environment={original} />
+                ),
+                minWidth: 350,
+            },
+            {
+                Header: 'Type',
+                accessor: 'type',
+                Cell: HighlightCell,
+            },
+            {
+                Header: 'Visible in project',
+                accessor: 'enabled',
+                align: 'center',
+                width: 1,
+                Cell: ({ row: { original } }: any) => (
+                    <ActionCell>
+                        <PermissionSwitch
+                            tooltip={
+                                original.enabled
+                                    ? 'Hide environment and disable feature toggles'
+                                    : 'Make it visible'
+                            }
+                            size="medium"
+                            disabled={envIsDisabled(original.name)}
+                            projectId={projectId}
+                            permission={UPDATE_PROJECT}
+                            checked={original.enabled}
+                            onChange={() => toggleEnv(original)}
+                        />
+                    </ActionCell>
+                ),
+                disableGlobalFilter: true,
+            },
+        ],
+        [projectEnvironments]
+    );
 
-    return (
-        <PageContent
-            header={
-                <PageHeader
-                    titleElement={`Configure environments for "${project?.name}" project`}
+    const {
+        getTableProps,
+        getTableBodyProps,
+        headerGroups,
+        rows,
+        prepareRow,
+        state: { globalFilter },
+        setGlobalFilter,
+    } = useTable(
+        {
+            columns: COLUMNS as any,
+            data: projectEnvironments,
+            disableSortBy: true,
+        },
+        useGlobalFilter
+    );
+
+    const header = (
+        <PageHeader
+            title={`Environments (${rows.length})`}
+            actions={
+                <Search
+                    initialValue={globalFilter}
+                    onChange={setGlobalFilter}
                 />
             }
-            isLoading={loading}
-        >
+        />
+    );
+
+    return (
+        <PageContent header={header} isLoading={loading}>
             <ConditionallyRender
                 condition={uiConfig.flags.E}
                 show={
@@ -191,34 +225,76 @@ const ProjectEnvironmentList = () => {
                             condition={Boolean(error)}
                             show={renderError()}
                         />
-                        <Alert severity="info" style={{ marginBottom: '20px' }}>
-                            <b>Important!</b> In order for your application to
-                            retrieve configured activation strategies for a
-                            specific environment, the application
-                            <br /> must use an environment specific API key. You
-                            can look up the environment-specific API keys{' '}
-                            <Link to="/admin/api">here.</Link>
+                        <StyledAlert severity="info">
+                            <strong>Important!</strong> In order for your
+                            application to retrieve configured activation
+                            strategies for a specific environment, the
+                            application must use an environment specific API
+                            token. You can look up the environment-specific{' '}
+                            <Link to="/admin/api">API tokens here</Link>.
                             <br />
                             <br />
                             Your administrator can configure an
-                            environment-specific API key to be used in the SDK.
-                            If you are an administrator you can{' '}
-                            <Link to="/admin/api">create a new API key.</Link>
-                        </Alert>
+                            environment-specific API token to be used in the
+                            SDK. If you are an administrator you can{' '}
+                            <Link to="/admin/api">
+                                create a new API token here
+                            </Link>
+                            .
+                        </StyledAlert>
+                        <SearchHighlightProvider value={globalFilter}>
+                            <Table {...getTableProps()} rowHeight="compact">
+                                <SortableTableHeader
+                                    headerGroups={headerGroups as any}
+                                />
+                                <TableBody {...getTableBodyProps()}>
+                                    {rows.map(row => {
+                                        prepareRow(row);
+                                        return (
+                                            <TableRow
+                                                hover
+                                                {...row.getRowProps()}
+                                            >
+                                                {row.cells.map(cell => (
+                                                    <TableCell
+                                                        {...cell.getCellProps()}
+                                                    >
+                                                        {cell.render('Cell')}
+                                                    </TableCell>
+                                                ))}
+                                            </TableRow>
+                                        );
+                                    })}
+                                </TableBody>
+                            </Table>
+                        </SearchHighlightProvider>
                         <ConditionallyRender
-                            condition={environments.length < 1 && !loading}
-                            show={<div>No environments available.</div>}
-                            elseShow={renderEnvironments()}
-                        />
-                        <EnvironmentDisableConfirm
-                            env={selectedEnv}
-                            open={Boolean(selectedEnv)}
-                            handleDisableEnvironment={handleDisableEnvironment}
-                            handleCancelDisableEnvironment={
-                                handleCancelDisableEnvironment
+                            condition={rows.length === 0}
+                            show={
+                                <ConditionallyRender
+                                    condition={globalFilter?.length > 0}
+                                    show={
+                                        <TablePlaceholder>
+                                            No environments found matching
+                                            &ldquo;
+                                            {globalFilter}
+                                            &rdquo;
+                                        </TablePlaceholder>
+                                    }
+                                    elseShow={
+                                        <TablePlaceholder>
+                                            No environments available. Get
+                                            started by adding one.
+                                        </TablePlaceholder>
+                                    }
+                                />
                             }
-                            confirmName={confirmName}
-                            setConfirmName={setConfirmName}
+                        />
+                        <EnvironmentHideDialog
+                            environment={selectedEnvironment}
+                            open={hideDialog}
+                            setOpen={setHideDialog}
+                            onConfirm={onHideConfirm}
                         />
                     </div>
                 }

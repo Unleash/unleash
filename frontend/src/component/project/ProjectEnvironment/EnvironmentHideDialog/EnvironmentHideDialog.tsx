@@ -1,6 +1,6 @@
 import { styled, Alert } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { IEnvironment } from 'interfaces/environments';
+import { IProjectEnvironment } from 'interfaces/environments';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import Input from 'component/common/Input/Input';
 import { EnvironmentTableSingle } from 'component/environments/EnvironmentTable/EnvironmentTableSingle';
@@ -14,19 +14,19 @@ const StyledInput = styled(Input)(() => ({
     width: '100%',
 }));
 
-interface IEnvironmentDeleteDialogProps {
-    environment: IEnvironment;
+interface IEnvironmentHideDialogProps {
+    environment?: IProjectEnvironment;
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     onConfirm: () => void;
 }
 
-export const EnvironmentDeleteDialog = ({
+export const EnvironmentHideDialog = ({
     environment,
     open,
     setOpen,
     onConfirm,
-}: IEnvironmentDeleteDialogProps) => {
+}: IEnvironmentHideDialogProps) => {
     const [confirmName, setConfirmName] = useState('');
 
     useEffect(() => {
@@ -35,10 +35,10 @@ export const EnvironmentDeleteDialog = ({
 
     return (
         <Dialogue
-            title="Delete environment?"
+            title="Hide environment and disable feature toggles?"
             open={open}
-            primaryButtonText="Delete environment"
-            disabledPrimaryButton={environment.name !== confirmName}
+            primaryButtonText="Hide environment and disable feature toggles"
+            disabledPrimaryButton={environment?.name !== confirmName}
             secondaryButtonText="Close"
             onClick={onConfirm}
             onClose={() => {
@@ -46,20 +46,23 @@ export const EnvironmentDeleteDialog = ({
             }}
         >
             <Alert severity="error">
-                <strong>Danger!</strong> Deleting this environment will result
-                in removing all strategies that are active in this environment
-                across all feature toggles.
+                <strong>Danger!</strong> Hiding an environment will also disable
+                all the feature toggles that are enabled in this environment and
+                it can impact client applications connected to the environment.
+                If you wish to make it visible again you will need to manually
+                set each feature toggle one by one for this environment.
             </Alert>
 
+            {/* TODO: Might need a new component here instead of tablesingle? */}
             <EnvironmentTableSingle
-                environment={environment}
+                environment={environment!}
                 warnEnabledToggles
             />
 
             <StyledLabel>
-                In order to delete this environment, please enter the id of the
+                In order to hide this environment, please enter the id of the
                 environment in the textfield below:{' '}
-                <strong>{environment.name}</strong>
+                <strong>{environment?.name}</strong>
             </StyledLabel>
             <StyledInput
                 label="Environment name"

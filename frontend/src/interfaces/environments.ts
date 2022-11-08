@@ -10,9 +10,9 @@ export interface IEnvironment {
     enabledFeatureCount?: number;
 }
 
-export interface IProjectEnvironment {
+// TODO: Extend with project-context counts
+export interface IProjectEnvironment extends IEnvironment {
     enabled: boolean;
-    name: string;
 }
 
 export interface IEnvironmentPayload {

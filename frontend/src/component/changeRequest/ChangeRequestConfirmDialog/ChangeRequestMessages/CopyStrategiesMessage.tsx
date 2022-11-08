@@ -18,6 +18,7 @@ export const CopyStrategiesMessage = ({
         <Typography>
             <strong>Copy: </strong>
         </Typography>
+        {/* FIXME: wrong type assertion */}
         {(payload as IFeatureStrategy[])?.map(strategy => (
             <Typography>
                 <strong>

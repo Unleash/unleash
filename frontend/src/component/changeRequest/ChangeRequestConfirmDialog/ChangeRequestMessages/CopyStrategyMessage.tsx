@@ -1,9 +1,9 @@
 import { Typography } from '@mui/material';
 import { formatStrategyName } from '../../../../utils/strategyNames';
-import { IFeatureStrategy } from '../../../../interfaces/strategy';
+import { IFeatureStrategyPayload } from '../../../../interfaces/strategy';
 
 export interface CopyStrategyMsg {
-    payload: IFeatureStrategy | IFeatureStrategy[];
+    payload: IFeatureStrategyPayload | IFeatureStrategyPayload[];
     fromEnvironment?: string;
     environment?: string;
 }
@@ -15,7 +15,8 @@ export const CopyStrategyMessage = ({
 }: CopyStrategyMsg) => (
     <Typography>
         <strong>
-            Copy {formatStrategyName((payload as IFeatureStrategy)?.name)}{' '}
+            Copy{' '}
+            {formatStrategyName((payload as IFeatureStrategyPayload)?.name)}{' '}
             strategy{' '}
         </strong>{' '}
         from {fromEnvironment} to {environment}

@@ -1,10 +1,7 @@
 import { useCallback, useState } from 'react';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import {
-    IFeatureStrategy,
-    IFeatureStrategyPayload,
-} from '../interfaces/strategy';
+import { IFeatureStrategyPayload } from '../interfaces/strategy';
 import { useChangeRequestApi } from './api/actions/useChangeRequestApi/useChangeRequestApi';
 import { useChangeRequestOpen } from './api/getters/useChangeRequestOpen/useChangeRequestOpen';
 
@@ -24,8 +21,8 @@ export const useChangeRequestAddStrategy = (
 
     const [changeRequestDialogDetails, setChangeRequestDialogDetails] =
         useState<{
-            strategy?: IFeatureStrategy;
-            strategies?: IFeatureStrategy[];
+            strategy?: IFeatureStrategyPayload;
+            strategies?: IFeatureStrategyPayload[];
             featureName?: string;
             environment?: string;
             fromEnvironment?: string;
@@ -35,7 +32,7 @@ export const useChangeRequestAddStrategy = (
     const onChangeRequestAddStrategy = useCallback(
         (
             environment: string,
-            strategy: IFeatureStrategy,
+            strategy: IFeatureStrategyPayload,
             fromEnvironment?: string
         ) => {
             setChangeRequestDialogDetails({
@@ -52,7 +49,7 @@ export const useChangeRequestAddStrategy = (
     const onChangeRequestAddStrategies = useCallback(
         (
             environment: string,
-            strategies: IFeatureStrategy[],
+            strategies: IFeatureStrategyPayload[],
             fromEnvironment: string
         ) => {
             setChangeRequestDialogDetails({

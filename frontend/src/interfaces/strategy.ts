@@ -16,6 +16,7 @@ export interface IFeatureStrategyParameters {
 }
 
 export interface IFeatureStrategyPayload {
+    id?: string;
     name?: string;
     constraints: IConstraint[];
     parameters: IFeatureStrategyParameters;

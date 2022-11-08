@@ -3,11 +3,13 @@ import Addon from './addon';
 import definition from './webhook-definition';
 import { LogProvider } from '../logger';
 import { IEvent } from '../types/events';
+// import { head } from 'superagent';
 
 interface IParameters {
     url: string;
     bodyTemplate?: string;
     contentType?: string;
+    authorization?: string;
 }
 
 export default class Webhook extends Addon {
@@ -16,7 +18,7 @@ export default class Webhook extends Addon {
     }
 
     async handleEvent(event: IEvent, parameters: IParameters): Promise<void> {
-        const { url, bodyTemplate, contentType } = parameters;
+        const { url, bodyTemplate, contentType, authorization } = parameters;
         const context = {
             event,
         };
@@ -29,9 +31,20 @@ export default class Webhook extends Addon {
             body = JSON.stringify(event);
         }
 
+        let headers;
+
+        if (authorization) {
+            headers = {
+                'Content-Type': contentType || 'application/json',
+                Authorization: authorization,
+            };
+        } else {
+            headers = { 'Content-Type': contentType || 'application/json' };
+        }
+
         const requestOpts = {
             method: 'POST',
-            headers: { 'Content-Type': contentType || 'application/json' },
+            headers: headers,
             body,
         };
         const res = await this.fetchRetry(url, requestOpts);

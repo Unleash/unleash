@@ -865,7 +865,6 @@ test('Should sync proxy for keys on an interval', async () => {
     jest.advanceTimersByTime(60000);
 
     proxyRepository.stop();
-    console.log(spy.mock.calls.length);
     expect(spy.mock.calls.length > 6).toBe(true);
     jest.useRealTimers();
 });

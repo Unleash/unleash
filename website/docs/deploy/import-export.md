@@ -59,7 +59,7 @@ You can customize the export with query parameters:
 
 For example if you want to download just feature-toggles as yaml:
 
-<ApiRequest verb="get" url="api/admin/state/export?format=yaml&featureToggles=1&strategies=0&tags=0&projects=0&download=1" title="Export only features as YAML."/>
+<ApiRequest verb="get" url="api/admin/state/export?format=yaml&featureToggles=1&strategies=0&tags=0&projects=0&download=1" title="Export features only as YAML."/>
 
 ### API Import {#api-import}
 

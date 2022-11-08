@@ -159,7 +159,7 @@ class FeatureToggleService {
         const id = await this.featureToggleStore.getProjectId(featureName);
         if (id !== projectId) {
             throw new InvalidOperationError(
-                `The operation could not be completed. The feature exists, but the provided project id (${projectId}) does not match the project that the feature belongs to (${id}). Try using ${id} in the request URL instead of ${projectId}.`,
+                `The operation could not be completed. The feature exists, but the provided project id ("${projectId}") does not match the project that the feature belongs to ("${id}"). Try using "${id}" in the request URL instead of "${projectId}".`,
             );
         }
     }
@@ -548,16 +548,18 @@ class FeatureToggleService {
      * GET /api/admin/projects/:project/features/:featureName
      * @param featureName
      * @param archived - return archived or non archived toggles
+     * @param projectId - provide if you're requesting the feature in the context of a specific project.
      */
     async getFeature(
         featureName: string,
         archived: boolean = false,
         projectId?: string,
     ): Promise<FeatureToggleWithEnvironment> {
-        const feature = this.featureStrategiesStore.getFeatureToggleWithEnvs(
-            featureName,
-            archived,
-        );
+        const feature =
+            await this.featureStrategiesStore.getFeatureToggleWithEnvs(
+                featureName,
+                archived,
+            );
         if (projectId) {
             await this.validateFeatureContext({ featureName, projectId });
         }
@@ -875,10 +877,12 @@ class FeatureToggleService {
         createdBy: string,
         projectId?: string,
     ): Promise<void> {
+        const feature = await this.featureToggleStore.get(featureName);
+
         if (projectId) {
             await this.validateFeatureContext({ featureName, projectId });
         }
-        const feature = await this.featureToggleStore.get(featureName);
+
         await this.featureToggleStore.archive(featureName);
         const tags = await this.tagStore.getAllTagsForFeature(featureName);
         await this.eventStore.store(

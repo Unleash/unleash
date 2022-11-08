@@ -38,7 +38,10 @@ import { createResponseSchema } from '../../../openapi/util/create-response-sche
 import { FeatureEnvironmentSchema } from '../../../openapi/spec/feature-environment-schema';
 import { SetStrategySortOrderSchema } from '../../../openapi/spec/set-strategy-sort-order-schema';
 
-import { emptyResponse } from '../../../openapi/util/standard-responses';
+import {
+    emptyResponse,
+    getStandardResponses,
+} from '../../../openapi/util/standard-responses';
 import { SegmentService } from '../../../services/segment-service';
 
 interface FeatureStrategyParams {
@@ -319,7 +322,14 @@ export default class ProjectFeaturesController extends Controller {
                 openApiService.validPath({
                     operationId: 'getFeature',
                     tags: ['Features'],
-                    responses: { 200: createResponseSchema('featureSchema') },
+                    responses: {
+                        200: createResponseSchema('featureSchema'),
+                        403: {
+                            description:
+                                'You either do not have the required permissions or used an invalid URL.',
+                        },
+                        ...getStandardResponses(401, 404),
+                    },
                 }),
             ],
         });
@@ -364,7 +374,14 @@ export default class ProjectFeaturesController extends Controller {
                 openApiService.validPath({
                     tags: ['Features'],
                     operationId: 'archiveFeature',
-                    responses: { 200: emptyResponse },
+                    responses: {
+                        200: emptyResponse,
+                        403: {
+                            description:
+                                'You either do not have the required permissions or used an invalid URL.',
+                        },
+                        ...getStandardResponses(401, 404),
+                    },
                 }),
             ],
         });

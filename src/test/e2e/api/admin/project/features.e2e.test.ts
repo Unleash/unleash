@@ -462,6 +462,7 @@ test('Getting feature that does not exist should yield 404', async () => {
 describe('Interacting with features using project IDs that belong to other projects', () => {
     const otherProject = 'project2';
     const featureName = 'new-toggle';
+    const nonExistingProject = 'this-is-not-a-project';
 
     beforeAll(async () => {
         const dummyAdmin = await app.services.userService.createUser({
@@ -493,19 +494,51 @@ describe('Interacting with features using project IDs that belong to other proje
     });
 
     test("Getting a feature yields 403 if the provided project id doesn't match the feature's project", async () => {
-        // validate that it isn't returned for the new project
         await app.request
             .get(`/api/admin/projects/${otherProject}/features/${featureName}`)
             .expect(403);
     });
 
+    test("Getting a feature yields 403 if the provided project doesn't exist", async () => {
+        await app.request
+            .get(
+                `/api/admin/projects/${nonExistingProject}/features/${featureName}`,
+            )
+            .expect(403);
+    });
+
     test("Archiving a feature yields 403 if the provided project id doesn't match the feature's project", async () => {
-        // validate that it isn't archived when you provide the other project name
         await app.request
             .delete(
                 `/api/admin/projects/${otherProject}/features/${featureName}`,
             )
             .expect(403);
+    });
+
+    test("Archiving a feature yields 403 if the provided project doesn't exist", async () => {
+        await app.request
+            .delete(
+                `/api/admin/projects/${nonExistingProject}/features/${featureName}`,
+            )
+            .expect(403);
+    });
+
+    test("Trying to archive a feature that doesn't exist should yield a 404, regardless of whether the project exists or not.", async () => {
+        await app.request
+            .delete(
+                `/api/admin/projects/${nonExistingProject}/features/${
+                    featureName + featureName
+                }`,
+            )
+            .expect(404);
+
+        await app.request
+            .delete(
+                `/api/admin/projects/${otherProject}/features/${
+                    featureName + featureName
+                }`,
+            )
+            .expect(404);
     });
 });
 

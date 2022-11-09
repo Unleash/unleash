@@ -4,18 +4,18 @@ import { SectionSeparator } from 'component/feature/FeatureView/FeatureOverview/
 import useFeatureStrategyApi from 'hooks/api/actions/useFeatureStrategyApi/useFeatureStrategyApi';
 import useToast from 'hooks/useToast';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
-import { FeatureStrategyMenu } from '../FeatureStrategyMenu/FeatureStrategyMenu';
-import { PresetCard } from './PresetCard/PresetCard';
 import { useStyles } from './FeatureStrategyEmpty.styles';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useFeatureImmutable } from 'hooks/api/getters/useFeature/useFeatureImmutable';
-import { getFeatureStrategyIcon } from 'utils/strategyNames';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { CopyButton } from './CopyButton/CopyButton';
-import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
-import { useChangeRequestAddStrategy } from '../../../../hooks/useChangeRequestAddStrategy';
-import { ChangeRequestDialogue } from '../../../changeRequest/ChangeRequestConfirmDialog/ChangeRequestConfirmDialog';
-import { CopyStrategiesMessage } from '../../../changeRequest/ChangeRequestConfirmDialog/ChangeRequestMessages/CopyStrategiesMessage';
+import { useChangeRequestAddStrategy } from 'hooks/useChangeRequestAddStrategy';
+import { ChangeRequestDialogue } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestConfirmDialog';
+import { CopyStrategiesMessage } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestMessages/CopyStrategiesMessage';
+import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
+import { getFeatureStrategyIcon } from 'utils/strategyNames';
+import { AddFromTemplateCard } from './AddFromTemplateCard/AddFromTemplateCard';
+import { FeatureStrategyMenu } from '../FeatureStrategyMenu/FeatureStrategyMenu';
 
 interface IFeatureStrategyEmptyProps {
     projectId: string;
@@ -43,9 +43,7 @@ export const FeatureStrategyEmpty = ({
             environment.strategies &&
             environment.strategies.length > 0
     );
-
-    const { uiConfig } = useUiConfig();
-    const changeRequestsEnabled = uiConfig?.flags?.changeRequests;
+    const isChangeRequestEnabled = useChangeRequestsEnabled(environmentId);
 
     const {
         changeRequestDialogDetails,
@@ -73,7 +71,7 @@ export const FeatureStrategyEmpty = ({
                 environment => environment.name === fromEnvironmentName
             )?.strategies || [];
 
-        if (changeRequestsEnabled) {
+        if (isChangeRequestEnabled) {
             await onChangeRequestAddStrategies(
                 environmentId,
                 strategies,
@@ -100,36 +98,6 @@ export const FeatureStrategyEmpty = ({
                 })
             );
             onAfterAddStrategy(true);
-        } catch (error) {
-            setToastApiError(formatUnknownError(error));
-        }
-    };
-
-    const onAddSimpleStrategy = async () => {
-        try {
-            await addStrategyToFeature(projectId, featureId, environmentId, {
-                name: 'default',
-                parameters: {},
-                constraints: [],
-            });
-            onAfterAddStrategy();
-        } catch (error) {
-            setToastApiError(formatUnknownError(error));
-        }
-    };
-
-    const onAddGradualRolloutStrategy = async () => {
-        try {
-            await addStrategyToFeature(projectId, featureId, environmentId, {
-                name: 'flexibleRollout',
-                parameters: {
-                    rollout: '50',
-                    stickiness: 'default',
-                    groupId: feature.name,
-                },
-                constraints: [],
-            });
-            onAfterAddStrategy();
         } catch (error) {
             setToastApiError(formatUnknownError(error));
         }
@@ -208,25 +176,41 @@ export const FeatureStrategyEmpty = ({
                         gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' },
                     }}
                 >
-                    <PresetCard
+                    <AddFromTemplateCard
                         title="Standard strategy"
-                        Icon={getFeatureStrategyIcon('default')}
-                        onClick={onAddSimpleStrategy}
                         projectId={projectId}
+                        featureId={featureId}
                         environmentId={environmentId}
+                        onAfterAddStrategy={onAfterAddStrategy}
+                        Icon={getFeatureStrategyIcon('default')}
+                        strategy={{
+                            name: 'default',
+                            parameters: {},
+                            constraints: [],
+                        }}
                     >
                         The standard strategy is strictly on/off for your entire
                         userbase.
-                    </PresetCard>
-                    <PresetCard
+                    </AddFromTemplateCard>
+                    <AddFromTemplateCard
                         title="Gradual rollout"
-                        Icon={getFeatureStrategyIcon('flexibleRollout')}
-                        onClick={onAddGradualRolloutStrategy}
                         projectId={projectId}
+                        featureId={featureId}
                         environmentId={environmentId}
+                        onAfterAddStrategy={onAfterAddStrategy}
+                        Icon={getFeatureStrategyIcon('flexibleRollout')}
+                        strategy={{
+                            name: 'flexibleRollout',
+                            parameters: {
+                                rollout: '50',
+                                stickiness: 'default',
+                                groupId: feature.name,
+                            },
+                            constraints: [],
+                        }}
                     >
                         Roll out to a percentage of your userbase.
-                    </PresetCard>
+                    </AddFromTemplateCard>
                 </Box>
             </div>
         </>

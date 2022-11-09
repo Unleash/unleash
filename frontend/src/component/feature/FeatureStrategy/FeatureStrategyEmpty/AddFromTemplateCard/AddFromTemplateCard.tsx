@@ -6,7 +6,6 @@ import { AddStrategyMessage } from 'component/changeRequest/ChangeRequestConfirm
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useChangeRequestAddStrategy } from 'hooks/useChangeRequestAddStrategy';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { PresetCard } from './PresetCard/PresetCard';
 import { IFeatureStrategyPayload } from 'interfaces/strategy';
 
@@ -33,7 +32,6 @@ export const AddFromTemplateCard: FC<IAddFromTemplateCardProps> = ({
     const { addStrategyToFeature } = useFeatureStrategyApi();
     const { setToastApiError } = useToast();
 
-    const { feature } = useFeature(projectId, featureId);
     const isChangeRequestEnabled = useChangeRequestsEnabled(environmentId);
 
     const {

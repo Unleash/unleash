@@ -21,7 +21,7 @@ const COLUMNS = [
     'created_at',
     'health',
     'updated_at',
-    'change_requests_enabled',
+    'change_request_enabled',
 ];
 const TABLE = 'projects';
 
@@ -80,7 +80,7 @@ class ProjectStore implements IProjectStore {
         let projects = this.db(TABLE)
             .select(
                 this.db.raw(
-                    'projects.id, projects.name, projects.description, projects.health, projects.updated_at, projects.change_requests_enabled, count(features.name) AS number_of_features',
+                    'projects.id, projects.name, projects.description, projects.health, projects.updated_at, projects.change_request_enabled, count(features.name) AS number_of_features',
                 ),
             )
             .leftJoin('features', 'features.project', 'projects.id')
@@ -117,7 +117,7 @@ class ProjectStore implements IProjectStore {
             featureCount: Number(row.number_of_features) || 0,
             memberCount: Number(row.number_of_users) || 0,
             updatedAt: row.updated_at,
-            changeRequestsEnabled: row.change_requests_enabled || false,
+            changeRequestsEnabled: row.change_request_enabled || false,
         };
     }
 
@@ -199,7 +199,7 @@ class ProjectStore implements IProjectStore {
         const environments = projects.map((p) => ({
             project_id: p.id,
             environment_name: DEFAULT_ENV,
-            change_requests_enabled: p.change_requests_enabled,
+            change_request_enabled: p.change_request_enabled,
         }));
         await this.db('project_environments')
             .insert(environments)
@@ -249,7 +249,7 @@ class ProjectStore implements IProjectStore {
             .insert({
                 project_id: id,
                 environment_name: environment,
-                change_requests_enabled: project.changeRequestsEnabled,
+                change_request_enabled: project.changeRequestsEnabled,
             })
             .onConflict(['project_id', 'environment_name'])
             .ignore();
@@ -264,7 +264,7 @@ class ProjectStore implements IProjectStore {
             return {
                 project_id: projectId,
                 environment_name: environment,
-                change_requests_enabled: project.changeRequestsEnabled || false,
+                change_request_enabled: project.changeRequestsEnabled || false,
             };
         });
 
@@ -381,7 +381,7 @@ class ProjectStore implements IProjectStore {
         return {
             environmentName: row.environment_name,
             projectId: row.project_id,
-            changeRequestsEnabled: row.change_requests_enabled,
+            changeRequestsEnabled: row.change_request_enabled,
         };
     }
 
@@ -398,7 +398,7 @@ class ProjectStore implements IProjectStore {
             createdAt: row.created_at,
             health: row.health || 100,
             updatedAt: row.updated_at || new Date(),
-            changeRequestsEnabled: row.change_requests_enabled || false,
+            changeRequestsEnabled: row.change_request_enabled || false,
         };
     }
 }

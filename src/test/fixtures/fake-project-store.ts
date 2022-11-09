@@ -52,12 +52,11 @@ export default class FakeProjectStore implements IProjectStore {
     addEnvironmentToProjectWithChangeRequests(
         id: string,
         environment: string,
-        changeRequestsEnabled: boolean,
     ): Promise<void> {
         const environments = this.projectEnvironment.get(id) || new Set();
         environments.add(environment);
         this.projectEnvironment.set(id, environments);
-        return changeRequestsEnabled && Promise.resolve();
+        return Promise.resolve();
     }
 
     addEnvironmentToProjectsWithChangeRequests(

@@ -267,13 +267,13 @@ class ProjectStore implements IProjectStore {
     async addEnvironmentToProjectWithChangeRequests(
         id: string,
         environment: string,
-        changeRequestsEnabled: boolean,
     ): Promise<void> {
+        const project = await this.get(id);
         await this.db('project_environments')
             .insert({
                 project_id: id,
                 environment_name: environment,
-                change_requests_enabled: changeRequestsEnabled,
+                change_requests_enabled: project.changeRequestsEnabled,
             })
             .onConflict(['project_id', 'environment_name'])
             .ignore();

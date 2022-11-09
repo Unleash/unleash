@@ -46,7 +46,6 @@ export interface IProjectStore extends Store<IProject, string> {
     addEnvironmentToProjectWithChangeRequests(
         id: string,
         environment: string,
-        changeRequestsEnabled: boolean,
     ): Promise<void>;
 
     deleteEnvironmentForProject(id: string, environment: string): Promise<void>;

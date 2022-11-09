@@ -1,6 +1,5 @@
 import {
     IEnvironmentProjectLink,
-    IEnvironmentProjectLinkWithChangeRequest,
     IProjectMembersCount,
 } from '../../db/project-store';
 import { IEnvironment, IProject, IProjectWithCount } from '../model';
@@ -43,17 +42,8 @@ export interface IProjectStore extends Store<IProject, string> {
         environments?: IEnvironment[],
     ): Promise<IProject[]>;
     addEnvironmentToProject(id: string, environment: string): Promise<void>;
-    addEnvironmentToProjectWithChangeRequests(
-        id: string,
-        environment: string,
-    ): Promise<void>;
-
     deleteEnvironmentForProject(id: string, environment: string): Promise<void>;
     getEnvironmentsForProject(id: string): Promise<string[]>;
-    getEnvironmentsForProjectWithChangeRequests(
-        id: string,
-    ): Promise<IProjectEnvironmentWithChangeRequests[]>;
-
     getMembersCountByProject(projectId: string): Promise<number>;
     getProjectsByUser(userId: number): Promise<string[]>;
     getMembersCount(): Promise<IProjectMembersCount[]>;
@@ -64,15 +54,8 @@ export interface IProjectStore extends Store<IProject, string> {
     getProjectLinksForEnvironments(
         environments: string[],
     ): Promise<IEnvironmentProjectLink[]>;
-    getProjectLinksForEnvironmentsWithChangeRequests(
-        environments: string[],
-    ): Promise<IEnvironmentProjectLinkWithChangeRequest[]>;
 
     addEnvironmentToProjects(
-        environment: string,
-        projects: string[],
-    ): Promise<void>;
-    addEnvironmentToProjectsWithChangeRequests(
         environment: string,
         projects: string[],
     ): Promise<void>;

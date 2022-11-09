@@ -4,7 +4,6 @@ import { Logger, LogProvider } from '../logger';
 import NotFoundError from '../error/notfound-error';
 import { IEnvironment, IProject, IProjectWithCount } from '../types/model';
 import {
-    IProjectEnvironmentWithChangeRequests,
     IProjectHealthUpdate,
     IProjectInsert,
     IProjectQuery,
@@ -29,11 +28,7 @@ const TABLE = 'projects';
 export interface IEnvironmentProjectLink {
     environmentName: string;
     projectId: string;
-}
-
-export interface IEnvironmentProjectLinkWithChangeRequest
-    extends IEnvironmentProjectLink {
-    changeRequestsEnabled: string;
+    changeRequestsEnabled?: string;
 }
 
 export interface IProjectMembersCount {
@@ -233,15 +228,6 @@ class ProjectStore implements IProjectStore {
         return rows.map(this.mapLinkRow);
     }
 
-    async getProjectLinksForEnvironmentsWithChangeRequests(
-        environments: string[],
-    ): Promise<IEnvironmentProjectLinkWithChangeRequest[]> {
-        let rows = await this.db('project_environments')
-            .select(['project_id', 'environment_name'])
-            .whereIn('environment_name', environments);
-        return rows.map(this.mapLinkRowWithChangeRequest);
-    }
-
     async deleteEnvironmentForProject(
         id: string,
         environment: string,
@@ -283,29 +269,12 @@ class ProjectStore implements IProjectStore {
         environment: string,
         projects: string[],
     ): Promise<void> {
-        const rows = projects.map((project) => {
-            return {
-                project_id: project,
-                environment_name: environment,
-            };
-        });
-
-        await this.db('project_environments')
-            .insert(rows)
-            .onConflict(['project_id', 'environment_name'])
-            .ignore();
-    }
-
-    async addEnvironmentToProjectsWithChangeRequests(
-        environment: string,
-        projects: string[],
-    ): Promise<void> {
         const rows = projects.map(async (projectId) => {
             const project = await this.get(projectId);
             return {
                 project_id: projectId,
                 environment_name: environment,
-                change_requests_enabled: project.changeRequestsEnabled,
+                change_requests_enabled: project.changeRequestsEnabled || false,
             };
         });
 
@@ -328,33 +297,6 @@ class ProjectStore implements IProjectStore {
             .orderBy('environments.sort_order', 'asc')
             .orderBy('project_environments.environment_name', 'asc')
             .pluck('project_environments.environment_name');
-    }
-
-    async getEnvironmentsForProjectWithChangeRequests(
-        id: string,
-    ): Promise<IProjectEnvironmentWithChangeRequests[]> {
-        const rows = await this.db('project_environments')
-            .select(
-                'project_environments.environment_name',
-                'project_environments.change_requests_enabled',
-            )
-            .where({
-                project_id: id,
-            })
-            .innerJoin(
-                'environments',
-                'project_environments.environment_name',
-                'environments.name',
-            )
-            .orderBy('environments.sort_order', 'asc')
-            .orderBy('project_environments.environment_name', 'asc');
-
-        return rows.map((row) => {
-            return {
-                environment: row.environment_name,
-                changeRequestsEnabled: row.change_requests_enabled,
-            };
-        });
     }
 
     async getMembersCount(): Promise<IProjectMembersCount[]> {
@@ -446,14 +388,6 @@ class ProjectStore implements IProjectStore {
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     mapLinkRow(row): IEnvironmentProjectLink {
-        return {
-            environmentName: row.environment_name,
-            projectId: row.project_id,
-        };
-    }
-
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    mapLinkRowWithChangeRequest(row): IEnvironmentProjectLinkWithChangeRequest {
         return {
             environmentName: row.environment_name,
             projectId: row.project_id,

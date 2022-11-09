@@ -12,7 +12,6 @@ import {
 import NotFoundError from '../../lib/error/notfound-error';
 import {
     IEnvironmentProjectLink,
-    IEnvironmentProjectLinkWithChangeRequest,
     IProjectMembersCount,
 } from 'lib/db/project-store';
 
@@ -72,13 +71,6 @@ export default class FakeProjectStore implements IProjectStore {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         id: string,
     ): Promise<IProjectEnvironmentWithChangeRequests[]> {
-        throw new Error('Method not implemented.');
-    }
-
-    getProjectLinksForEnvironmentsWithChangeRequests(
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        environments: string[],
-    ): Promise<IEnvironmentProjectLinkWithChangeRequest[]> {
         throw new Error('Method not implemented.');
     }
 

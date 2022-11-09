@@ -1,4 +1,5 @@
 import {
+    IProjectEnvironmentWithChangeRequests,
     IProjectHealthUpdate,
     IProjectInsert,
     IProjectStore,
@@ -11,6 +12,7 @@ import {
 import NotFoundError from '../../lib/error/notfound-error';
 import {
     IEnvironmentProjectLink,
+    IEnvironmentProjectLinkWithChangeRequest,
     IProjectMembersCount,
 } from 'lib/db/project-store';
 
@@ -45,6 +47,40 @@ export default class FakeProjectStore implements IProjectStore {
         return this.projects.map((p) => {
             return { ...p, memberCount: 0, featureCount: 0 };
         });
+    }
+
+    addEnvironmentToProjectWithChangeRequests(
+        id: string,
+        environment: string,
+        changeRequestsEnabled: boolean,
+    ): Promise<void> {
+        const environments = this.projectEnvironment.get(id) || new Set();
+        environments.add(environment);
+        this.projectEnvironment.set(id, environments);
+        return changeRequestsEnabled && Promise.resolve();
+    }
+
+    addEnvironmentToProjectsWithChangeRequests(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        environment: string,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        projects: string[],
+    ): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
+
+    getEnvironmentsForProjectWithChangeRequests(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        id: string,
+    ): Promise<IProjectEnvironmentWithChangeRequests[]> {
+        throw new Error('Method not implemented.');
+    }
+
+    getProjectLinksForEnvironmentsWithChangeRequests(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        environments: string[],
+    ): Promise<IEnvironmentProjectLinkWithChangeRequest[]> {
+        throw new Error('Method not implemented.');
     }
 
     private createInternal(project: IProjectInsert): IProject {

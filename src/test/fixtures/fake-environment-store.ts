@@ -1,4 +1,4 @@
-import { IEnvironment } from '../../lib/types/model';
+import { IEnvironment, IProjectEnvironment } from '../../lib/types/model';
 import NotFoundError from '../../lib/error/notfound-error';
 import { IEnvironmentStore } from '../../lib/types/stores/environment-store';
 
@@ -123,6 +123,13 @@ export default class FakeEnvironmentStore implements IEnvironmentStore {
 
     async get(key: string): Promise<IEnvironment> {
         return this.environments.find((e) => e.name === key);
+    }
+
+    async getProjectEnvironments(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        projectId: string,
+    ): Promise<IProjectEnvironment[]> {
+        return Promise.reject(new Error('Not implemented'));
     }
 }
 

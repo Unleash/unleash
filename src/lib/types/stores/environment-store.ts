@@ -1,4 +1,8 @@
-import { IEnvironment, IEnvironmentCreate } from '../model';
+import {
+    IEnvironment,
+    IEnvironmentCreate,
+    IProjectEnvironment,
+} from '../model';
 import { Store } from './store';
 
 export interface IEnvironmentStore extends Store<IEnvironment, string> {
@@ -19,4 +23,5 @@ export interface IEnvironmentStore extends Store<IEnvironment, string> {
     disable(environments: IEnvironment[]): Promise<void>;
     enable(environments: IEnvironment[]): Promise<void>;
     count(): Promise<number>;
+    getProjectEnvironments(projectId: string): Promise<IProjectEnvironment[]>;
 }

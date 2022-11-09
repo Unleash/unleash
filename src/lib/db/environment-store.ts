@@ -3,7 +3,11 @@ import { Knex } from 'knex';
 import { Logger, LogProvider } from '../logger';
 import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
-import { IEnvironment, IEnvironmentCreate } from '../types/model';
+import {
+    IEnvironment,
+    IEnvironmentCreate,
+    IProjectEnvironment,
+} from '../types/model';
 import NotFoundError from '../error/notfound-error';
 import { IEnvironmentStore } from '../types/stores/environment-store';
 import { snakeCaseKeys } from '../util/snakeCase';
@@ -18,6 +22,17 @@ interface IEnvironmentsTable {
     project_count?: string;
     api_token_count?: string;
     enabled_toggle_count?: string;
+}
+
+interface IProjectEnvironmentsTable {
+    name: string;
+    created_at?: Date;
+    type: string;
+    sort_order: number;
+    enabled: boolean;
+    protected: boolean;
+    project_api_token_count?: string;
+    project_enabled_toggle_count?: string;
 }
 
 const COLUMNS = [
@@ -42,6 +57,22 @@ function mapRow(row: IEnvironmentsTable): IEnvironment {
             : 0,
         enabledToggleCount: row.enabled_toggle_count
             ? parseInt(row.enabled_toggle_count, 10)
+            : 0,
+    };
+}
+
+function mapRowProject(row: IProjectEnvironmentsTable): IProjectEnvironment {
+    return {
+        name: row.name,
+        type: row.type,
+        sortOrder: row.sort_order,
+        enabled: row.enabled,
+        protected: row.protected,
+        projectApiTokenCount: row.project_api_token_count
+            ? parseInt(row.project_api_token_count, 10)
+            : 0,
+        projectEnabledToggleCount: row.project_enabled_toggle_count
+            ? parseInt(row.project_enabled_toggle_count, 10)
             : 0,
     };
 }
@@ -143,6 +174,29 @@ export default class EnvironmentStore implements IEnvironmentStore {
         }
         const rows = await qB;
         return rows.map(mapRow);
+    }
+
+    async getProjectEnvironments(
+        projectId: string,
+    ): Promise<IProjectEnvironment[]> {
+        let qB = this.db<IProjectEnvironmentsTable>(TABLE)
+            .select(
+                '*',
+                this.db.raw(
+                    '(SELECT COUNT(*) FROM api_tokens LEFT JOIN api_token_project ON api_tokens.secret = api_token_project.secret WHERE api_tokens.environment = environments.name AND (project = :projectId OR project IS null)) as project_api_token_count',
+                    { projectId },
+                ),
+                this.db.raw(
+                    '(SELECT COUNT(*) FROM feature_environments INNER JOIN features on feature_environments.feature_name = features.name WHERE enabled=true AND feature_environments.environment = environments.name AND project = :projectId) as project_enabled_toggle_count',
+                    { projectId },
+                ),
+            )
+            .orderBy([
+                { column: 'sort_order', order: 'asc' },
+                { column: 'created_at', order: 'asc' },
+            ]);
+        const rows = await qB;
+        return rows.map(mapRowProject);
     }
 
     async exists(name: string): Promise<boolean> {

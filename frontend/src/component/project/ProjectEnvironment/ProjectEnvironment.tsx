@@ -7,7 +7,6 @@ import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
 import ApiError from 'component/common/ApiError/ApiError';
 import useToast from 'hooks/useToast';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import useProject, {
     useProjectNameOrId,
 } from 'hooks/api/getters/useProject/useProject';
@@ -32,6 +31,7 @@ import { EnvironmentNameCell } from 'component/environments/EnvironmentTable/Env
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
 import { EnvironmentHideDialog } from './EnvironmentHideDialog/EnvironmentHideDialog';
+import { useProjectEnvironments } from 'hooks/api/getters/useProjectEnvironments/useProjectEnvironments';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(4),
@@ -46,7 +46,7 @@ const ProjectEnvironmentList = () => {
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
     const { environments, loading, error, refetchEnvironments } =
-        useEnvironments();
+        useProjectEnvironments(projectId);
     const { project, refetch: refetchProject } = useProject(projectId);
     const { removeEnvironmentFromProject, addEnvironmentToProject } =
         useProjectApi();
@@ -58,12 +58,13 @@ const ProjectEnvironmentList = () => {
     const { classes: styles } = useStyles();
     const { isOss } = useUiConfig();
 
-    // TODO: Maybe this should be fetched from a different endpoint that gives us IProjectEnvironment with the counts for this project context as well?
     const projectEnvironments = useMemo<IProjectEnvironment[]>(
         () =>
             environments.map(environment => ({
                 ...environment,
-                enabled: project?.environments.includes(environment.name),
+                projectVisible: project?.environments.includes(
+                    environment.name
+                ),
             })),
         [environments, project?.environments]
     );
@@ -90,7 +91,7 @@ const ProjectEnvironmentList = () => {
     };
 
     const toggleEnv = async (env: IProjectEnvironment) => {
-        if (env.enabled) {
+        if (env.projectVisible) {
             const enabledEnvs = getEnabledEnvs(projectEnvironments);
 
             if (enabledEnvs > 1) {
@@ -167,7 +168,7 @@ const ProjectEnvironmentList = () => {
                     <ActionCell>
                         <PermissionSwitch
                             tooltip={
-                                original.enabled
+                                original.projectVisible
                                     ? 'Hide environment and disable feature toggles'
                                     : 'Make it visible'
                             }
@@ -175,7 +176,7 @@ const ProjectEnvironmentList = () => {
                             disabled={envIsDisabled(original.name)}
                             projectId={projectId}
                             permission={UPDATE_PROJECT}
-                            checked={original.enabled}
+                            checked={original.projectVisible}
                             onChange={() => toggleEnv(original)}
                         />
                     </ActionCell>

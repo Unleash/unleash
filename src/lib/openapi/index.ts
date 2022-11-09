@@ -26,7 +26,9 @@ import { dateSchema } from './spec/date-schema';
 import { edgeTokenSchema } from './spec/edge-token-schema';
 import { emailSchema } from './spec/email-schema';
 import { environmentSchema } from './spec/environment-schema';
+import { environmentProjectSchema } from './spec/environment-project-schema';
 import { environmentsSchema } from './spec/environments-schema';
+import { environmentsProjectSchema } from './spec/environments-project-schema';
 import { eventSchema } from './spec/event-schema';
 import { eventsSchema } from './spec/events-schema';
 import { featureEnvironmentMetricsSchema } from './spec/feature-environment-metrics-schema';
@@ -153,7 +155,9 @@ export const schemas = {
     edgeTokenSchema,
     emailSchema,
     environmentSchema,
+    environmentProjectSchema,
     environmentsSchema,
+    environmentsProjectSchema,
     eventSchema,
     eventsSchema,
     featureEnvironmentMetricsSchema,

@@ -141,7 +141,7 @@ const COLUMNS = [
     {
         id: 'Icon',
         width: '1%',
-        Cell: ({ row: { original } }: any) => (
+        Cell: ({ row: { original } }: { row: { original: IEnvironment } }) => (
             <EnvironmentIconCell environment={original} />
         ),
         disableGlobalFilter: true,
@@ -150,7 +150,7 @@ const COLUMNS = [
     {
         Header: 'Name',
         accessor: 'name',
-        Cell: ({ row: { original } }: any) => (
+        Cell: ({ row: { original } }: { row: { original: IEnvironment } }) => (
             <EnvironmentNameCell environment={original} />
         ),
         minWidth: 350,
@@ -179,7 +179,7 @@ const COLUMNS = [
         id: 'Actions',
         align: 'center',
         width: '1%',
-        Cell: ({ row: { original } }: any) => (
+        Cell: ({ row: { original } }: { row: { original: IEnvironment } }) => (
             <EnvironmentActionCell environment={original} />
         ),
         disableGlobalFilter: true,

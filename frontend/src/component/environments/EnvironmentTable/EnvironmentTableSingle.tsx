@@ -29,9 +29,11 @@ export const EnvironmentTableSingle = ({
             {
                 id: 'Icon',
                 width: '1%',
-                Cell: ({ row: { original } }: any) => (
-                    <EnvironmentIconCell environment={original} />
-                ),
+                Cell: ({
+                    row: { original },
+                }: {
+                    row: { original: IEnvironment };
+                }) => <EnvironmentIconCell environment={original} />,
             },
             {
                 Header: 'Name',
@@ -49,7 +51,13 @@ export const EnvironmentTableSingle = ({
                     row.projectCount === 1
                         ? '1 project'
                         : `${row.projectCount} projects`,
-                Cell: ({ row: { original }, value }: any) => (
+                Cell: ({
+                    row: { original },
+                    value,
+                }: {
+                    row: { original: IEnvironment };
+                    value: string;
+                }) => (
                     <TextCell>
                         {value}
                         <ConditionallyRender

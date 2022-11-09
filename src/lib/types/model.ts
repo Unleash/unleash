@@ -127,6 +127,11 @@ export interface IEnvironment {
     enabledToggleCount?: number;
 }
 
+export interface IProjectEnvironment extends IEnvironment {
+    projectApiTokenCount?: number;
+    projectEnabledToggleCount?: number;
+}
+
 export interface IEnvironmentCreate {
     name: string;
     type: string;

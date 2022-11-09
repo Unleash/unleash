@@ -1,6 +1,6 @@
-import { useMemo, VFC } from 'react';
+import { useMemo, useState, VFC } from 'react';
 import { HeaderGroup, Row } from 'react-table';
-import { Alert, Box } from '@mui/material';
+import { Alert, Box, Typography } from '@mui/material';
 import {
     SortableTableHeader,
     Table,
@@ -16,8 +16,16 @@ import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import PermissionSwitch from 'component/common/PermissionSwitch/PermissionSwitch';
 import { UPDATE_FEATURE_ENVIRONMENT } from 'component/providers/AccessProvider/permissions';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import { Dialogue } from 'component/common/Dialogue/Dialogue';
 
 export const ChangeRequestConfiguration: VFC = () => {
+    const [dialogState, setDialogState] = useState<{
+        isOpen: boolean;
+        environment?: string;
+    }>({
+        isOpen: false,
+        environment: '',
+    });
     const projectId = useRequiredPathParam('projectId');
     const data = [
         {
@@ -27,7 +35,9 @@ export const ChangeRequestConfiguration: VFC = () => {
         },
     ] as any[]; // FIXME: type
 
-    const onClick = () => {};
+    const onClick = (environment: string) => () => {
+        setDialogState({ isOpen: true, environment });
+    };
 
     const columns = useMemo(
         () => [
@@ -58,7 +68,7 @@ export const ChangeRequestConfiguration: VFC = () => {
                             projectId={projectId}
                             permission={UPDATE_FEATURE_ENVIRONMENT} // FIXME: permission - enable change request
                             inputProps={{ 'aria-label': original.environment }}
-                            onClick={onClick}
+                            onClick={onClick(original.environment)}
                         />
                     </Box>
                 ),
@@ -115,6 +125,34 @@ export const ChangeRequestConfiguration: VFC = () => {
                     })}
                 </TableBody>
             </Table>
+
+            <Dialogue
+                onClick={() => {
+                    alert('clicked');
+                    /* FIXME: API action */
+                }}
+                open={dialogState.isOpen}
+                onClose={() =>
+                    setDialogState(state => ({ ...state, isOpen: false }))
+                }
+                primaryButtonText="Enable"
+                secondaryButtonText="Cancel"
+                title="Enable change request"
+            >
+                <Typography>
+                    You are about to enable “Change request”
+                    {dialogState.environment
+                        ? ` for ${dialogState.environment}`
+                        : ''}
+                    .
+                </Typography>
+                <Typography>
+                    When enabling change request for an environment, you need to
+                    be sure that your Unleash Admin already have created the
+                    custom project roles in your Unleash instance so you can
+                    assign your project members from the project access page.
+                </Typography>
+            </Dialogue>
         </PageContent>
     );
 };

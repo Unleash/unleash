@@ -26,7 +26,7 @@ export const PlaygroundGuidance = () => {
 
             <PlaygroundGuidanceSection
                 headerText="Select a context field that you'd like to check"
-                bodyText="You can configure as many context fields context fields as you want. You can also leave the context empty to test against an empty context."
+                bodyText="You can configure as many context fields as you want. You can also leave the context empty to test against an empty context."
                 sectionNumber="2"
             />
 

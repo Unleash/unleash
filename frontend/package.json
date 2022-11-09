@@ -67,7 +67,7 @@
     "fast-json-patch": "3.1.1",
     "http-proxy-middleware": "2.0.6",
     "immer": "9.0.16",
-    "jsdom": "20.0.1",
+    "jsdom": "20.0.2",
     "lodash.clonedeep": "4.5.0",
     "millify": "^5.0.1",
     "msw": "0.47.4",

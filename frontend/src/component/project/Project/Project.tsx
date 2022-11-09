@@ -29,6 +29,7 @@ import { DraftBanner } from 'component/changeRequest/DraftBanner/DraftBanner';
 import { MainLayout } from 'component/layout/MainLayout/MainLayout';
 import { ProjectChangeRequests } from '../../changeRequest/ProjectChangeRequests/ProjectChangeRequests';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
+import { ProjectSettings } from './ProjectSettings/ProjectSettings';
 
 const StyledDiv = styled('div')(() => ({
     display: 'flex',
@@ -58,7 +59,7 @@ const Project = () => {
     const { classes: styles } = useStyles();
     const navigate = useNavigate();
     const { pathname } = useLocation();
-    const { isOss } = useUiConfig();
+    const { isOss, uiConfig } = useUiConfig();
     const basePath = `/projects/${projectId}`;
     const projectName = project?.name || projectId;
 
@@ -78,21 +79,34 @@ const Project = () => {
                 path: `${basePath}/health`,
                 name: 'health',
             },
-            {
-                title: 'Access',
-                path: `${basePath}/access`,
-                name: 'access',
-            },
-            {
-                title: 'Environments',
-                path: `${basePath}/environments`,
-                name: 'environments',
-            },
+            ...(!uiConfig?.flags?.changeRequests
+                ? [
+                      {
+                          title: 'Access',
+                          path: `${basePath}/access`,
+                          name: 'access',
+                      },
+                      {
+                          title: 'Environments',
+                          path: `${basePath}/environments`,
+                          name: 'environments',
+                      },
+                  ]
+                : []),
             {
                 title: 'Archive',
                 path: `${basePath}/archive`,
                 name: 'archive',
             },
+            ...(uiConfig?.flags?.changeRequests
+                ? [
+                      {
+                          title: 'Project settings',
+                          path: `${basePath}/settings`,
+                          name: 'settings',
+                      },
+                  ]
+                : []),
             {
                 title: 'Event log',
                 path: `${basePath}/logs`,
@@ -263,6 +277,7 @@ const Project = () => {
                         />
                     }
                 />
+                <Route path="settings/*" element={<ProjectSettings />} />
                 <Route path="*" element={<ProjectOverview />} />
             </Routes>
         </MainLayout>

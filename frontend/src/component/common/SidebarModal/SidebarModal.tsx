@@ -1,13 +1,14 @@
-import { ReactNode } from 'react';
+import { ReactNode, FC } from 'react';
 import { Modal, Backdrop, styled } from '@mui/material';
 import Fade from '@mui/material/Fade';
 import { SIDEBAR_MODAL_ID } from 'utils/testIds';
+import * as React from 'react';
 
 interface ISidebarModalProps {
     open: boolean;
     onClose: () => void;
     label: string;
-    children: ReactNode;
+    children: React.ReactElement<any, any>;
 }
 
 const TRANSITION_DURATION = 250;
@@ -19,17 +20,20 @@ const ModalContentWrapper = styled('div')({
     bottom: 0,
     height: '100vh',
     maxWidth: '98vw',
-    width: 1300,
     overflow: 'auto',
     boxShadow: '0 0 1rem rgba(0, 0, 0, 0.25)',
 });
 
-export const SidebarModal = ({
+const FixedWidthContentWrapper = styled(ModalContentWrapper)({
+    width: 1300,
+});
+
+export const BaseModal: FC<ISidebarModalProps> = ({
     open,
     onClose,
     label,
     children,
-}: ISidebarModalProps) => {
+}) => {
     return (
         <Modal
             open={open}
@@ -41,8 +45,26 @@ export const SidebarModal = ({
             data-testid={SIDEBAR_MODAL_ID}
         >
             <Fade timeout={TRANSITION_DURATION} in={open}>
-                <ModalContentWrapper>{children}</ModalContentWrapper>
+                {children}
             </Fade>
         </Modal>
+    );
+};
+
+export const SidebarModal: FC<ISidebarModalProps> = props => {
+    return (
+        <BaseModal {...props}>
+            <FixedWidthContentWrapper>
+                {props.children}
+            </FixedWidthContentWrapper>
+        </BaseModal>
+    );
+};
+
+export const DynamicSidebarModal: FC<ISidebarModalProps> = props => {
+    return (
+        <BaseModal {...props}>
+            <ModalContentWrapper>{props.children}</ModalContentWrapper>
+        </BaseModal>
     );
 };

@@ -51,19 +51,6 @@ export const useChangeRequestApi = () => {
         }
     };
 
-    const applyChanges = async (project: string, changeRequestId: string) => {
-        const path = `api/admin/projects/${project}/change-requests/${changeRequestId}/apply`;
-        const req = createRequest(path, {
-            method: 'PUT',
-        });
-        try {
-            const response = await makeRequest(req.caller, req.id);
-            return response;
-        } catch (e) {
-            throw e;
-        }
-    };
-
     const discardChangeRequestEvent = async (
         project: string,
         changeRequestId: number,
@@ -82,7 +69,6 @@ export const useChangeRequestApi = () => {
 
     return {
         addChangeRequest,
-        applyChanges,
         changeState,
         discardChangeRequestEvent,
         errors,

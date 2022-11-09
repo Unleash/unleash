@@ -8,6 +8,7 @@ interface IParameters {
     url: string;
     bodyTemplate?: string;
     contentType?: string;
+    authorization?: string;
 }
 
 export default class Webhook extends Addon {
@@ -16,7 +17,7 @@ export default class Webhook extends Addon {
     }
 
     async handleEvent(event: IEvent, parameters: IParameters): Promise<void> {
-        const { url, bodyTemplate, contentType } = parameters;
+        const { url, bodyTemplate, contentType, authorization } = parameters;
         const context = {
             event,
         };
@@ -31,7 +32,10 @@ export default class Webhook extends Addon {
 
         const requestOpts = {
             method: 'POST',
-            headers: { 'Content-Type': contentType || 'application/json' },
+            headers: {
+                'Content-Type': contentType || 'application/json',
+                Authorization: authorization || undefined,
+            },
             body,
         };
         const res = await this.fetchRetry(url, requestOpts);

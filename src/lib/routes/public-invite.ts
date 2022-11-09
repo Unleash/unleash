@@ -89,9 +89,9 @@ export class PublicInviteController extends Controller {
         const { token } = req.params;
         const valid = await this.publicSignupTokenService.validate(token);
         if (valid) {
-            return res.status(200).end();
+            res.status(200).end();
         } else {
-            return res.status(400).end();
+            res.status(400).end();
         }
     }
 
@@ -102,7 +102,8 @@ export class PublicInviteController extends Controller {
         const { token } = req.params;
         const valid = await this.publicSignupTokenService.validate(token);
         if (!valid) {
-            return res.status(400).end();
+            res.status(400).end();
+            return;
         }
         const user = await this.publicSignupTokenService.addTokenUser(
             token,

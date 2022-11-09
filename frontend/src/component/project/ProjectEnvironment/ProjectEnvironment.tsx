@@ -32,6 +32,7 @@ import { HighlightCell } from 'component/common/Table/cells/HighlightCell/Highli
 import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
 import { EnvironmentHideDialog } from './EnvironmentHideDialog/EnvironmentHideDialog';
 import { useProjectEnvironments } from 'hooks/api/getters/useProjectEnvironments/useProjectEnvironments';
+import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(4),
@@ -158,6 +159,14 @@ const ProjectEnvironmentList = () => {
                 Header: 'Type',
                 accessor: 'type',
                 Cell: HighlightCell,
+            },
+            {
+                Header: 'Project API tokens',
+                accessor: (row: IProjectEnvironment) =>
+                    row.projectApiTokenCount === 1
+                        ? '1 token'
+                        : `${row.projectApiTokenCount} tokens`,
+                Cell: TextCell,
             },
             {
                 Header: 'Visible in project',

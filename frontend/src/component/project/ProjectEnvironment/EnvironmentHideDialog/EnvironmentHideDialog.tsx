@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { IProjectEnvironment } from 'interfaces/environments';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import Input from 'component/common/Input/Input';
-import { EnvironmentTableSingle } from 'component/environments/EnvironmentTable/EnvironmentTableSingle';
+import { ProjectEnvironmentTableSingle } from './ProjectEnvironmentTableSingle/ProjectEnvironmentTableSingle';
 
 const StyledLabel = styled('p')(({ theme }) => ({
     marginTop: theme.spacing(3),
@@ -53,11 +53,7 @@ export const EnvironmentHideDialog = ({
                 set each feature toggle one by one for this environment.
             </Alert>
 
-            {/* TODO: Might need a new component here instead of tablesingle? */}
-            <EnvironmentTableSingle
-                environment={environment!}
-                warnEnabledToggles
-            />
+            <ProjectEnvironmentTableSingle environment={environment!} />
 
             <StyledLabel>
                 In order to hide this environment, please enter the id of the

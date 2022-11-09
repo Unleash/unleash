@@ -1,10 +1,9 @@
 import { styled, TableBody, TableRow } from '@mui/material';
-import { IEnvironment } from 'interfaces/environments';
+import { IProjectEnvironment } from 'interfaces/environments';
 import { useTable } from 'react-table';
 import { SortableTableHeader, Table, TableCell } from 'component/common/Table';
 import { EnvironmentIconCell } from 'component/environments/EnvironmentTable/EnvironmentIconCell/EnvironmentIconCell';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useMemo } from 'react';
 
 const StyledTable = styled(Table)(({ theme }) => ({
@@ -13,17 +12,18 @@ const StyledTable = styled(Table)(({ theme }) => ({
 
 const StyledToggleWarning = styled('p')(({ theme }) => ({
     color: theme.palette.error.dark,
+    textAlign: 'center',
 }));
 
-interface IEnvironmentTableSingleProps {
-    environment: IEnvironment;
+interface IProjectEnvironmentTableSingleProps {
+    environment: IProjectEnvironment;
     warnEnabledToggles?: boolean;
 }
 
-export const EnvironmentTableSingle = ({
+export const ProjectEnvironmentTableSingle = ({
     environment,
     warnEnabledToggles,
-}: IEnvironmentTableSingleProps) => {
+}: IProjectEnvironmentTableSingleProps) => {
     const COLUMNS = useMemo(
         () => [
             {
@@ -32,7 +32,7 @@ export const EnvironmentTableSingle = ({
                 Cell: ({
                     row: { original },
                 }: {
-                    row: { original: IEnvironment };
+                    row: { original: IProjectEnvironment };
                 }) => <EnvironmentIconCell environment={original} />,
             },
             {
@@ -46,32 +46,17 @@ export const EnvironmentTableSingle = ({
                 Cell: TextCell,
             },
             {
-                Header: 'Visible in',
-                accessor: (row: IEnvironment) =>
-                    row.projectCount === 1
-                        ? '1 project'
-                        : `${row.projectCount} projects`,
-                Cell: ({
-                    row: { original },
-                    value,
-                }: {
-                    row: { original: IEnvironment };
-                    value: string;
-                }) => (
+                Header: 'Toggles enabled',
+                accessor: (row: IProjectEnvironment) =>
+                    row.projectEnabledToggleCount === 1
+                        ? '1 toggle'
+                        : `${row.projectEnabledToggleCount} toggles`,
+                Cell: ({ value }: { value: number }) => (
                     <TextCell>
-                        {value}
-                        <ConditionallyRender
-                            condition={Boolean(warnEnabledToggles)}
-                            show={
-                                <StyledToggleWarning>
-                                    {original.enabledToggleCount === 1
-                                        ? '1 toggle enabled'
-                                        : `${original.enabledToggleCount} toggles enabled`}
-                                </StyledToggleWarning>
-                            }
-                        />
+                        <StyledToggleWarning>{value}</StyledToggleWarning>
                     </TextCell>
                 ),
+                align: 'center',
             },
         ],
         [warnEnabledToggles]

@@ -38,10 +38,6 @@ export const defaultExperimentalOptions = {
             process.env.UNLEASH_EXPERIMENTAL_CLONE_ENVIRONMENT,
             false,
         ),
-        fixHourMetrics: parseEnvVarBoolean(
-            process.env.UNLEASH_EXPERIMENTAL_FIX_HOUR_METRICS,
-            false,
-        ),
     },
     externalResolver: { isEnabled: (): boolean => false },
 };

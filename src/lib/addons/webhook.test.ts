@@ -104,13 +104,13 @@ test('Should format event with "authorization"', () => {
         url: 'http://test.webhook.com/plain',
         bodyTemplate: '{{event.type}} on toggle {{event.data.name}}',
         contentType: 'text/plain',
-        authorization: "API KEY 123abc"
+        authorization: 'API KEY 123abc',
     };
 
     addon.handleEvent(event, parameters);
     const call = fetchRetryCalls[0];
     expect(fetchRetryCalls.length).toBe(1);
     expect(call.url).toBe(parameters.url);
-    expect(call.options.headers['Authorization']).toBe(parameters.authorization);
+    expect(call.options.headers.Authorization).toBe(parameters.authorization);
     expect(call.options.body).toBe('feature-created on toggle some-toggle');
 });

@@ -34,7 +34,7 @@ export default class Webhook extends Addon {
             method: 'POST',
             headers: {
                 'Content-Type': contentType || 'application/json',
-                'Authorization': authorization || undefined,
+                Authorization: authorization || undefined,
             },
             body,
         };

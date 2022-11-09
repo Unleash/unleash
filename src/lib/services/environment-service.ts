@@ -46,7 +46,7 @@ export default class EnvironmentService {
     }
 
     async getAll(): Promise<IEnvironment[]> {
-        return this.environmentStore.getAll();
+        return this.environmentStore.getAllWithCounts();
     }
 
     async get(name: string): Promise<IEnvironment> {

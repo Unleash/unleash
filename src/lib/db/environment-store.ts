@@ -19,18 +19,15 @@ interface IEnvironmentsTable {
     sort_order: number;
     enabled: boolean;
     protected: boolean;
+}
+
+interface IEnvironmentsWithCountsTable extends IEnvironmentsTable {
     project_count?: string;
     api_token_count?: string;
     enabled_toggle_count?: string;
 }
 
-interface IProjectEnvironmentsTable {
-    name: string;
-    created_at?: Date;
-    type: string;
-    sort_order: number;
-    enabled: boolean;
-    protected: boolean;
+interface IEnvironmentsWithProjectCountsTable extends IEnvironmentsTable {
     project_api_token_count?: string;
     project_enabled_toggle_count?: string;
 }
@@ -51,6 +48,14 @@ function mapRow(row: IEnvironmentsTable): IEnvironment {
         sortOrder: row.sort_order,
         enabled: row.enabled,
         protected: row.protected,
+    };
+}
+
+function mapRowWithCounts(
+    row: IEnvironmentsWithCountsTable,
+): IProjectEnvironment {
+    return {
+        ...mapRow(row),
         projectCount: row.project_count ? parseInt(row.project_count, 10) : 0,
         apiTokenCount: row.api_token_count
             ? parseInt(row.api_token_count, 10)
@@ -61,13 +66,11 @@ function mapRow(row: IEnvironmentsTable): IEnvironment {
     };
 }
 
-function mapRowProject(row: IProjectEnvironmentsTable): IProjectEnvironment {
+function mapRowWithProjectCounts(
+    row: IEnvironmentsWithProjectCountsTable,
+): IProjectEnvironment {
     return {
-        name: row.name,
-        type: row.type,
-        sortOrder: row.sort_order,
-        enabled: row.enabled,
-        protected: row.protected,
+        ...mapRow(row),
         projectApiTokenCount: row.project_api_token_count
             ? parseInt(row.project_api_token_count, 10)
             : 0,
@@ -131,18 +134,6 @@ export default class EnvironmentStore implements IEnvironmentStore {
 
     async get(key: string): Promise<IEnvironment> {
         const row = await this.db<IEnvironmentsTable>(TABLE)
-            .select(
-                '*',
-                this.db.raw(
-                    '(SELECT COUNT(*) FROM project_environments WHERE project_environments.environment_name = environments.name) as project_count',
-                ),
-                this.db.raw(
-                    '(SELECT COUNT(*) FROM api_tokens WHERE api_tokens.environment = environments.name) as api_token_count',
-                ),
-                this.db.raw(
-                    '(SELECT COUNT(*) FROM feature_environments WHERE enabled=true AND feature_environments.environment = environments.name) as enabled_toggle_count',
-                ),
-            )
             .where({ name: key })
             .first();
         if (row) {
@@ -153,6 +144,20 @@ export default class EnvironmentStore implements IEnvironmentStore {
 
     async getAll(query?: Object): Promise<IEnvironment[]> {
         let qB = this.db<IEnvironmentsTable>(TABLE)
+            .select('*')
+            .orderBy([
+                { column: 'sort_order', order: 'asc' },
+                { column: 'created_at', order: 'asc' },
+            ]);
+        if (query) {
+            qB = qB.where(query);
+        }
+        const rows = await qB;
+        return rows.map(mapRow);
+    }
+
+    async getAllWithCounts(query?: Object): Promise<IEnvironment[]> {
+        let qB = this.db<IEnvironmentsWithCountsTable>(TABLE)
             .select(
                 '*',
                 this.db.raw(
@@ -173,13 +178,13 @@ export default class EnvironmentStore implements IEnvironmentStore {
             qB = qB.where(query);
         }
         const rows = await qB;
-        return rows.map(mapRow);
+        return rows.map(mapRowWithCounts);
     }
 
     async getProjectEnvironments(
         projectId: string,
     ): Promise<IProjectEnvironment[]> {
-        let qB = this.db<IProjectEnvironmentsTable>(TABLE)
+        let qB = this.db<IEnvironmentsWithProjectCountsTable>(TABLE)
             .select(
                 '*',
                 this.db.raw(
@@ -196,7 +201,7 @@ export default class EnvironmentStore implements IEnvironmentStore {
                 { column: 'created_at', order: 'asc' },
             ]);
         const rows = await qB;
-        return rows.map(mapRowProject);
+        return rows.map(mapRowWithProjectCounts);
     }
 
     async exists(name: string): Promise<boolean> {

@@ -125,6 +125,10 @@ export default class FakeEnvironmentStore implements IEnvironmentStore {
         return this.environments.find((e) => e.name === key);
     }
 
+    async getAllWithCounts(): Promise<IEnvironment[]> {
+        return Promise.resolve(this.environments);
+    }
+
     async getProjectEnvironments(
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         projectId: string,

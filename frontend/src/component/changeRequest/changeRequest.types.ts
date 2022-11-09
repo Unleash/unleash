@@ -9,12 +9,18 @@ export interface IChangeRequest {
     createdBy: Pick<IUser, 'id' | 'username' | 'imageUrl'>;
     createdAt: Date;
     features: IChangeRequestFeature[];
+    approvals: IChangeRequestApproval[];
 }
 
 export interface IChangeRequestFeature {
     name: string;
     conflict?: string;
     changes: IChangeRequestEvent[];
+}
+
+export interface IChangeRequestApproval {
+    createdBy: Pick<IUser, 'id' | 'username' | 'imageUrl'>;
+    createdAt: Date;
 }
 
 export interface IChangeRequestBase {

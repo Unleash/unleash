@@ -1,4 +1,4 @@
-import { styled } from '@mui/material';
+import { FormControlLabel, styled, Switch } from '@mui/material';
 import { FC } from 'react';
 import { Box } from '@mui/material';
 import { useChangeRequest } from 'hooks/api/getters/useChangeRequest/useChangeRequest';
@@ -15,6 +15,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import { ReviewButton } from './ReviewButton/ReviewButton';
+import { ChangeRequestReviewer } from './ChangeRequestReviewers/ChangeRequestReviewer';
 
 const StyledAsideBox = styled(Box)(({ theme }) => ({
     width: '30%',
@@ -76,7 +77,22 @@ export const ChangeRequestOverview: FC = () => {
             <Box sx={{ display: 'flex' }}>
                 <StyledAsideBox>
                     <ChangeRequestTimeline state={changeRequest.state} />
-                    {/* <ChangeRequestReviewers /> */}
+                    <ConditionallyRender
+                        condition={changeRequest.approvals.length > 0}
+                        show={
+                            <ChangeRequestReviewers>
+                                {changeRequest.approvals.map(approver => (
+                                    <ChangeRequestReviewer
+                                        name={
+                                            approver.createdBy.username ||
+                                            'Test account'
+                                        }
+                                        imageUrl={approver.createdBy.imageUrl}
+                                    />
+                                ))}
+                            </ChangeRequestReviewers>
+                        }
+                    />
                 </StyledAsideBox>
                 <StyledPaper elevation={0}>
                     <StyledInnerContainer>

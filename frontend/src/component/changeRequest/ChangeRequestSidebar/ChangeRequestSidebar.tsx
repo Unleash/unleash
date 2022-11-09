@@ -10,7 +10,7 @@ import {
     useTheme,
 } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
+import { DynamicSidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { CheckCircle, HelpOutline } from '@mui/icons-material';
@@ -31,6 +31,7 @@ interface IChangeRequestSidebarProps {
 const StyledPageContent = styled(PageContent)(({ theme }) => ({
     height: '100vh',
     overflow: 'auto',
+    minWidth: '50vw',
     padding: theme.spacing(7.5, 6),
     [theme.breakpoints.down('md')]: {
         padding: theme.spacing(4, 2),
@@ -147,7 +148,11 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
 
     if (!loading && !draft) {
         return (
-            <SidebarModal open={open} onClose={onClose} label="Review changes">
+            <DynamicSidebarModal
+                open={open}
+                onClose={onClose}
+                label="Review changes"
+            >
                 <StyledPageContent
                     header={
                         <PageHeader
@@ -160,12 +165,16 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
                     {/* FIXME: empty state */}
                     <BackButton onClick={onClose}>Close</BackButton>
                 </StyledPageContent>
-            </SidebarModal>
+            </DynamicSidebarModal>
         );
     }
 
     return (
-        <SidebarModal open={open} onClose={onClose} label="Review changes">
+        <DynamicSidebarModal
+            open={open}
+            onClose={onClose}
+            label="Review changes"
+        >
             <StyledPageContent
                 header={
                     <PageHeader
@@ -343,6 +352,6 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
                     </Box>
                 ))}
             </StyledPageContent>
-        </SidebarModal>
+        </DynamicSidebarModal>
     );
 };

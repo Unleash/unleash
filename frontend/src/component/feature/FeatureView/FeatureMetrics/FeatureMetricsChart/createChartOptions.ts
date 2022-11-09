@@ -65,6 +65,8 @@ export const createChartOptions = (
                     display: true,
                     text: 'Number of requests',
                 },
+                // min: 0,
+                suggestedMin: 0,
                 ticks: { precision: 0 },
             },
             x: {

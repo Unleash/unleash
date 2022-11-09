@@ -7084,10 +7084,10 @@ vite-tsconfig-paths@3.5.2:
     recrawl-sync "^2.0.3"
     tsconfig-paths "^4.0.0"
 
-vite@3.2.1:
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/vite/-/vite-3.2.1.tgz#dc1f54568300a7acdd89c8611e2719c21f1334f4"
-  integrity sha512-ADtMkfHuWq4tskJsri2n2FZkORO8ZyhI+zIz7zTrDAgDEtct1jdxOg3YsZBfHhKjmMoWLOSCr+64qrEDGo/DbQ==
+vite@3.2.3:
+  version "3.2.3"
+  resolved "https://registry.yarnpkg.com/vite/-/vite-3.2.3.tgz#7a68d9ef73eff7ee6dc0718ad3507adfc86944a7"
+  integrity sha512-h8jl1TZ76eGs3o2dIBSsvXDLb1m/Ec1iej8ZMdz+PsaFUsftZeWe2CZOI3qogEsMNaywc17gu0q6cQDzh/weCQ==
   dependencies:
     esbuild "^0.15.9"
     postcss "^8.4.18"

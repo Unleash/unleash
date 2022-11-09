@@ -244,16 +244,6 @@ class ProjectStore implements IProjectStore {
         id: string,
         environment: string,
     ): Promise<void> {
-        await this.db('project_environments')
-            .insert({ project_id: id, environment_name: environment })
-            .onConflict(['project_id', 'environment_name'])
-            .ignore();
-    }
-
-    async addEnvironmentToProjectWithChangeRequests(
-        id: string,
-        environment: string,
-    ): Promise<void> {
         const project = await this.get(id);
         await this.db('project_environments')
             .insert({

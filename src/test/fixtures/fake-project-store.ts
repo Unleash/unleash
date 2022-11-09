@@ -1,5 +1,4 @@
 import {
-    IProjectEnvironmentWithChangeRequests,
     IProjectHealthUpdate,
     IProjectInsert,
     IProjectStore,
@@ -46,32 +45,6 @@ export default class FakeProjectStore implements IProjectStore {
         return this.projects.map((p) => {
             return { ...p, memberCount: 0, featureCount: 0 };
         });
-    }
-
-    addEnvironmentToProjectWithChangeRequests(
-        id: string,
-        environment: string,
-    ): Promise<void> {
-        const environments = this.projectEnvironment.get(id) || new Set();
-        environments.add(environment);
-        this.projectEnvironment.set(id, environments);
-        return Promise.resolve();
-    }
-
-    addEnvironmentToProjectsWithChangeRequests(
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        environment: string,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        projects: string[],
-    ): Promise<void> {
-        throw new Error('Method not implemented.');
-    }
-
-    getEnvironmentsForProjectWithChangeRequests(
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        id: string,
-    ): Promise<IProjectEnvironmentWithChangeRequests[]> {
-        throw new Error('Method not implemented.');
     }
 
     private createInternal(project: IProjectInsert): IProject {

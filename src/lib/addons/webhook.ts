@@ -30,20 +30,12 @@ export default class Webhook extends Addon {
             body = JSON.stringify(event);
         }
 
-        let headers;
-
-        if (authorization) {
-            headers = {
-                'Content-Type': contentType || 'application/json',
-                Authorization: authorization,
-            };
-        } else {
-            headers = { 'Content-Type': contentType || 'application/json' };
-        }
-
         const requestOpts = {
             method: 'POST',
-            headers: headers,
+            headers: {
+                'Content-Type': contentType || 'application/json',
+                'Authorization': authorization || undefined,
+            },
             body,
         };
         const res = await this.fetchRetry(url, requestOpts);

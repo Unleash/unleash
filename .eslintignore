@@ -13,4 +13,4 @@ website
 setupJest.js
 frontend
 dist
-src/migrations/*
+src/migrations

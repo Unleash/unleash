@@ -27,7 +27,13 @@ export interface IProjectQuery {
     id?: string;
 }
 
-export interface IProjectEnvironmentWithChangeRequests {
+export interface IProjectEnvironmentConfig {
+    environment: string;
+    type: string;
+    changeRequestsEnabled: boolean;
+}
+
+export interface IUpdateProjectEnvironmentConfig {
     environment: string;
     changeRequestsEnabled: boolean;
 }
@@ -50,13 +56,18 @@ export interface IProjectStore extends Store<IProject, string> {
     getProjectsWithCounts(query?: IProjectQuery): Promise<IProjectWithCount[]>;
     count(): Promise<number>;
     getAll(query?: IProjectQuery): Promise<IProject[]>;
-
     getProjectLinksForEnvironments(
         environments: string[],
     ): Promise<IEnvironmentProjectLink[]>;
-
     addEnvironmentToProjects(
         environment: string,
         projects: string[],
     ): Promise<void>;
+    getChangeRequestConfigForProject(
+        id: string,
+    ): Promise<IProjectEnvironmentConfig[]>;
+    updateProjectEnvironmentConfig(
+        id: string,
+        data: IUpdateProjectEnvironmentConfig,
+    );
 }

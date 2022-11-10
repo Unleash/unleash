@@ -347,6 +347,7 @@ export interface IProject {
     updatedAt?: Date;
     changeRequestsEnabled?: boolean;
 }
+
 export interface ICustomRole {
     id: number;
     name: string;

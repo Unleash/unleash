@@ -30,7 +30,12 @@ import { IEnvironmentStore } from '../types/stores/environment-store';
 import { IFeatureTypeStore } from '../types/stores/feature-type-store';
 import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
 import { IFeatureEnvironmentStore } from '../types/stores/feature-environment-store';
-import { IProjectQuery, IProjectStore } from '../types/stores/project-store';
+import {
+    IProjectEnvironmentConfig,
+    IProjectQuery,
+    IProjectStore,
+    IUpdateProjectEnvironmentConfig,
+} from '../types/stores/project-store';
 import {
     IProjectAccessModel,
     IRoleDescriptor,
@@ -600,5 +605,18 @@ export default class ProjectService {
             members,
             version: 1,
         };
+    }
+
+    async getChangeRequestConfig(
+        projectId: string,
+    ): Promise<IProjectEnvironmentConfig[]> {
+        return this.store.getChangeRequestConfigForProject(projectId);
+    }
+
+    async updateEnvironmentConfig(
+        projectId: string,
+        data: IUpdateProjectEnvironmentConfig,
+    ): Promise<void> {
+        await this.store.updateProjectEnvironmentConfig(projectId, data);
     }
 }

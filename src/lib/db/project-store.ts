@@ -6,8 +6,10 @@ import { IEnvironment, IProject, IProjectWithCount } from '../types/model';
 import {
     IProjectHealthUpdate,
     IProjectInsert,
+    IProjectEnvironmentConfig,
     IProjectQuery,
     IProjectStore,
+    IUpdateProjectEnvironmentConfig,
 } from '../types/stores/project-store';
 import { DEFAULT_ENV } from '../util/constants';
 import metricsHelper from '../util/metrics-helper';
@@ -223,7 +225,11 @@ class ProjectStore implements IProjectStore {
         environments: string[],
     ): Promise<IEnvironmentProjectLink[]> {
         let rows = await this.db('project_environments')
-            .select(['project_id', 'environment_name'])
+            .select([
+                'project_id',
+                'environment_name',
+                'change_request_enabled',
+            ])
             .whereIn('environment_name', environments);
         return rows.map(this.mapLinkRow);
     }
@@ -287,6 +293,43 @@ class ProjectStore implements IProjectStore {
             .orderBy('environments.sort_order', 'asc')
             .orderBy('project_environments.environment_name', 'asc')
             .pluck('project_environments.environment_name');
+    }
+
+    async getChangeRequestConfigForProject(
+        id: string,
+    ): Promise<IProjectEnvironmentConfig[]> {
+        return this.db('project_environments')
+            .select(
+                'project_environments.environment_name as environment',
+                'environments.type as type',
+                'project_environments.change_request_enabled as changeRequestEnabled',
+            )
+            .where({
+                project_id: id,
+            })
+            .innerJoin(
+                'environments',
+                'project_environments.environment_name',
+                'environments.name',
+            )
+            .orderBy('environments.sort_order', 'asc')
+            .orderBy('project_environments.environment_name', 'asc');
+    }
+
+    async updateProjectEnvironmentConfig(
+        id: string,
+        data: IUpdateProjectEnvironmentConfig,
+    ): Promise<void> {
+        try {
+            await this.db('project_environments')
+                .where({ project_id: id, environment_name: data.environment })
+                .update({ change_request_enabled: data.changeRequestsEnabled });
+        } catch (err) {
+            this.logger.error(
+                'Could not update project environment, error: ',
+                err,
+            );
+        }
     }
 
     async getMembersCount(): Promise<IProjectMembersCount[]> {

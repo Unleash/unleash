@@ -15,11 +15,13 @@ export interface IProjectEnvironment {
 export interface IEnvironmentPayload {
     name: string;
     type: string;
+    changeRequestsEnabled?: boolean;
 }
 
 export interface IEnvironmentEditPayload {
     sortOrder: number;
     type: string;
+    changeRequestsEnabled?: boolean;
 }
 
 export interface IEnvironmentClonePayload {

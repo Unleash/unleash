@@ -385,6 +385,16 @@ export const ProjectFeatureToggles = ({
     );
 
     useEffect(() => {
+        if (!features.some(({ tags }) => tags?.length)) {
+            setHiddenColumns(hiddenColumns => [...hiddenColumns, 'tags']);
+        } else {
+            setHiddenColumns(hiddenColumns =>
+                hiddenColumns.filter(column => column !== 'tags')
+            );
+        }
+    }, [setHiddenColumns, features]);
+
+    useEffect(() => {
         if (loading) {
             return;
         }

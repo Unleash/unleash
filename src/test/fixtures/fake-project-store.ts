@@ -1,7 +1,9 @@
 import {
+    IProjectEnvironmentConfig,
     IProjectHealthUpdate,
     IProjectInsert,
     IProjectStore,
+    IUpdateProjectEnvironmentConfig,
 } from '../../lib/types/stores/project-store';
 import {
     IEnvironment,
@@ -147,6 +149,22 @@ export default class FakeProjectStore implements IProjectStore {
         environment: string,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         projects: string[],
+    ): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
+
+    getChangeRequestConfigForProject(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        id: string,
+    ): Promise<IProjectEnvironmentConfig[]> {
+        throw new Error('Method not implemented.');
+    }
+
+    updateProjectEnvironmentConfig(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        id: string,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        data: IUpdateProjectEnvironmentConfig,
     ): Promise<void> {
         throw new Error('Method not implemented.');
     }

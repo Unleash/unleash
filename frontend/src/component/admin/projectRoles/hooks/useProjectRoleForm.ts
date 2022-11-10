@@ -252,7 +252,7 @@ const useProjectRoleForm = (
             ? `${permission.id}-${permission.environment}`
             : `${permission.id}`;
     };
-    // Clean up when feature is complete *changeRequests*
+    // Clean up when feature is complete changeRequests
     let filteredPermissions = cloneDeep(permissions);
 
     if (!uiConfig?.flags.changeRequests) {

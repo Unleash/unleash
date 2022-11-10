@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, VFC } from 'react';
+import { useCallback, useEffect, useMemo, useState, VFC } from 'react';
 import { SortingRule, useFlexLayout, useSortBy, useTable } from 'react-table';
 import { VirtualizedTable, TablePlaceholder } from 'component/common/Table';
 import { styled, useMediaQuery, useTheme } from '@mui/material';
@@ -42,7 +42,6 @@ import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton
 import { ProjectAccessCreate } from 'component/project/ProjectAccess/ProjectAccessCreate/ProjectAccessCreate';
 import { ProjectAccessEditUser } from 'component/project/ProjectAccess/ProjectAccessEditUser/ProjectAccessEditUser';
 import { ProjectAccessEditGroup } from 'component/project/ProjectAccess/ProjectAccessEditGroup/ProjectAccessEditGroup';
-import useHiddenColumns from 'hooks/useHiddenColumns';
 import { ProjectAccessRoleCell } from './ProjectAccessRoleCell/ProjectAccessRoleCell';
 import {
     PA_ASSIGN_BUTTON_ID,
@@ -71,17 +70,10 @@ const StyledUserAvatars = styled('div')(({ theme }) => ({
 const StyledEmptyAvatar = styled(UserAvatar)(({ theme }) => ({
     marginRight: theme.spacing(-3.5),
 }));
+
 const StyledGroupAvatar = styled(UserAvatar)(({ theme }) => ({
     outline: `${theme.spacing(0.25)} solid ${theme.palette.background.paper}`,
 }));
-
-const hiddenColumnsSmall = [
-    'imageUrl',
-    'username',
-    'role',
-    'added',
-    'lastLogin',
-];
 
 export const ProjectAccessTable: VFC = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -93,6 +85,7 @@ export const ProjectAccessTable: VFC = () => {
     const navigate = useNavigate();
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
+    const isMediumScreen = useMediaQuery(theme.breakpoints.down('lg'));
     const { setToastData } = useToast();
 
     const { access, refetchProjectAccess } = useProjectAccess(projectId);
@@ -137,23 +130,16 @@ export const ProjectAccessTable: VFC = () => {
                                 subtitle={`${row.entity.users?.length} users`}
                             />
                         }
-                        elseShow={<HighlightCell value={value} />}
+                        elseShow={
+                            <HighlightCell
+                                value={value}
+                                subtitle={
+                                    row.entity?.username || row.entity?.email
+                                }
+                            />
+                        }
                     />
                 ),
-                minWidth: 100,
-                searchable: true,
-            },
-            {
-                id: 'username',
-                Header: 'Username',
-                accessor: (row: IProjectAccess) => {
-                    if (row.type === ENTITY_TYPE.USER) {
-                        const userRow = row.entity as IUser;
-                        return userRow.username || userRow.email;
-                    }
-                    return '';
-                },
-                Cell: HighlightCell,
                 minWidth: 100,
                 searchable: true,
             },
@@ -302,9 +288,6 @@ export const ProjectAccessTable: VFC = () => {
         useSortBy,
         useFlexLayout
     );
-
-    useHiddenColumns(setHiddenColumns, hiddenColumnsSmall, isSmallScreen);
-
     useEffect(() => {
         const tableState: PageQueryType = {};
         tableState.sort = sortBy[0].id;
@@ -353,6 +336,20 @@ export const ProjectAccessTable: VFC = () => {
         }
         setRemoveOpen(false);
     };
+
+    useEffect(() => {
+        const hiddenColumns: string[] = [];
+        if (isMediumScreen) {
+            hiddenColumns.push('added', 'lastLogin');
+        }
+        if (isSmallScreen) {
+            hiddenColumns.push('imageUrl', 'username', 'role');
+        }
+        setHiddenColumns(hiddenColumns);
+        // TODO: fix responsive table width jumping
+        const timeout = setTimeout(() => setHiddenColumns(hiddenColumns), 100);
+        return () => clearTimeout(timeout);
+    }, [setHiddenColumns, isSmallScreen, isMediumScreen]);
 
     return (
         <PageContent

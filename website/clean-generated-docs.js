@@ -17,7 +17,12 @@
 // save us loooots of questions.
 const replace = require('replace-in-file');
 
-const escapeCharacters = (input) => input.replace(/(?<!\\)"/g, `\\"`);
+const escapeCharacters = (input) => {
+    inputTrimmed =
+        input.charAt(0) === '"' ? input.substring(1, input.length - 1) : input;
+    const fixed = inputTrimmed.replace(/(?<!\\)"/g, '\\"');
+    return `"${fixed}"`;
+};
 
 const options = {
     files: 'docs/reference/api/**/*.api.mdx',
@@ -25,13 +30,13 @@ const options = {
         /\/ushosted/g,
         /"https:\/\/us.app.unleash-hosted.com(\/ushosted)?"/g,
         '"path":["ushosted",',
-        /(sidebar_label|description|title): "?(.+)"?/, // escape potentially unescaped text fields
+        /(sidebar_label|title): (.+)/g, // escape potentially unescaped text fields
     ],
     to: [
         '',
         '"<your-unleash-url>"',
         '"path":[',
-        (_, key, description) => `${key}: "${escapeCharacters(description)}"`,
+        (_, key, description) => `${key}: ${escapeCharacters(description)}`,
     ],
 };
 

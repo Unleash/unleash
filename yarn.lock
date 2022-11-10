@@ -4884,10 +4884,10 @@ json-parse-even-better-errors@^2.3.0:
   resolved "https://registry.npmjs.org/json-parse-even-better-errors/-/json-parse-even-better-errors-2.3.1.tgz"
   integrity sha512-xyFwyhro/JEof6Ghe2iz2NcXoj2sloNsWr/XsERDK/oiPCfaNhl5ONfp+jQdAZRQQ0IJWNzH9zIZF7li91kh2w==
 
-json-schema-to-ts@2.5.5:
-  version "2.5.5"
-  resolved "https://registry.yarnpkg.com/json-schema-to-ts/-/json-schema-to-ts-2.5.5.tgz#09022355466dc07451b0d1235d4056ae67bceaa1"
-  integrity sha512-GFD5t0fUnX/B0gE9xbHjxv2BwFXRJND2+OKoLoMElJ3XRJ7dOBlLT7KXpg96aETeZ0RJbAZOfqHALBf5k4aIIA==
+json-schema-to-ts@2.6.0:
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/json-schema-to-ts/-/json-schema-to-ts-2.6.0.tgz#17b1492571509ed0a6ea18dd06f26761a47920fe"
+  integrity sha512-j6x2ZFCN3exmGAaGusxZYB2mvgpy8I8UkkNmN1H6zlq+3mdBwSQMIsB5iAltGlBLWG4aPTYqeIkit4okTI0s7g==
   dependencies:
     "@types/json-schema" "^7.0.9"
     ts-algebra "^1.1.1"

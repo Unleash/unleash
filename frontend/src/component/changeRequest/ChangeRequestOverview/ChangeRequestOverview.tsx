@@ -77,6 +77,11 @@ export const ChangeRequestOverview: FC = () => {
         }
     };
 
+    const isSelfReview =
+        changeRequest?.createdBy.id === user?.id &&
+        changeRequest.state === 'In review' &&
+        !isAdmin;
+
     return (
         <>
             <ChangeRequestHeader changeRequest={changeRequest} />
@@ -105,11 +110,7 @@ export const ChangeRequestOverview: FC = () => {
                         Changes
                         <ChangeRequest changeRequest={changeRequest} />
                         <ConditionallyRender
-                            condition={
-                                changeRequest?.createdBy.id === user?.id &&
-                                changeRequest.state === 'In review' &&
-                                !isAdmin
-                            }
+                            condition={isSelfReview}
                             show={
                                 <Alert
                                     sx={theme => ({

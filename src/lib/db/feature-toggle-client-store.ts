@@ -96,11 +96,7 @@ export default class FeatureToggleClientStore
                 'fs.feature_name',
                 'features.name',
             )
-            .leftJoin(
-                this.db('feature_tag').select('*').as('ft'),
-                'ft.feature_name',
-                'features.name',
-            )
+            .leftJoin('feature_tag as ft', 'ft.feature_name', 'features.name')
             .leftJoin(
                 this.db('feature_environments')
                     .select('feature_name', 'enabled', 'environment')
@@ -229,7 +225,7 @@ export default class FeatureToggleClientStore
         return (
             row.tag_type &&
             row.tag_value &&
-            !feature.tags.find(
+            !feature.tags.some(
                 (tag) =>
                     tag.type === row.tag_type && tag.value === row.tag_value,
             )

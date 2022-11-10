@@ -325,7 +325,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         return (
             row.tag_type &&
             row.tag_value &&
-            !feature.tags.find(
+            !feature.tags.some(
                 (tag) =>
                     tag.type === row.tag_type && tag.value === row.tag_value,
             )
@@ -369,11 +369,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 'feature_environments.environment',
                 'environments.name',
             )
-            .leftJoin(
-                this.db('feature_tag').select('*').as('ft'),
-                'ft.feature_name',
-                'features.name',
-            );
+            .leftJoin('feature_tag as ft', 'ft.feature_name', 'features.name');
         if (rows.length > 0) {
             const overview = rows.reduce((acc, r) => {
                 if (acc[r.feature_name] !== undefined) {

@@ -1,4 +1,5 @@
 import { IFeatureStrategy } from './strategy';
+import { ITag } from './tags';
 
 export interface IFeatureToggleListItem {
     type: string;
@@ -7,6 +8,7 @@ export interface IFeatureToggleListItem {
     lastSeenAt?: string;
     createdAt: string;
     environments: IEnvironments[];
+    tags: ITag[];
 }
 
 export interface IEnvironments {

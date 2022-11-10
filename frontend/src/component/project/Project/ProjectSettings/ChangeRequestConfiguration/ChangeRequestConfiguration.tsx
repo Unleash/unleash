@@ -17,14 +17,15 @@ import PermissionSwitch from 'component/common/PermissionSwitch/PermissionSwitch
 import { UPDATE_FEATURE_ENVIRONMENT } from 'component/providers/AccessProvider/permissions';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 export const ChangeRequestConfiguration: VFC = () => {
     const [dialogState, setDialogState] = useState<{
         isOpen: boolean;
-        environment?: string;
+        enableEnvironment?: string;
     }>({
         isOpen: false,
-        environment: '',
+        enableEnvironment: '',
     });
     const projectId = useRequiredPathParam('projectId');
     const data = [
@@ -35,8 +36,8 @@ export const ChangeRequestConfiguration: VFC = () => {
         },
     ] as any[]; // FIXME: type
 
-    const onClick = (environment: string) => () => {
-        setDialogState({ isOpen: true, environment });
+    const onClick = (enableEnvironment: string) => () => {
+        setDialogState({ isOpen: true, enableEnvironment });
     };
 
     const columns = useMemo(
@@ -139,14 +140,21 @@ export const ChangeRequestConfiguration: VFC = () => {
                 secondaryButtonText="Cancel"
                 title="Enable change request"
             >
-                <Typography>
+                <Typography sx={{ mb: 1 }}>
                     You are about to enable “Change request”
-                    {dialogState.environment
-                        ? ` for ${dialogState.environment}`
-                        : ''}
+                    <ConditionallyRender
+                        condition={Boolean(dialogState.enableEnvironment)}
+                        show={
+                            <>
+                                {' '}
+                                for{' '}
+                                <strong>{dialogState.enableEnvironment}</strong>
+                            </>
+                        }
+                    />
                     .
                 </Typography>
-                <Typography>
+                <Typography variant="body2" color="text.secondary">
                     When enabling change request for an environment, you need to
                     be sure that your Unleash Admin already have created the
                     custom project roles in your Unleash instance so you can

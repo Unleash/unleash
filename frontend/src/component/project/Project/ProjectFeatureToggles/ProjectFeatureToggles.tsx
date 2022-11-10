@@ -41,6 +41,8 @@ import { ChangeRequestDialogue } from 'component/changeRequest/ChangeRequestConf
 import { CopyStrategyMessage } from '../../../changeRequest/ChangeRequestConfirmDialog/ChangeRequestMessages/CopyStrategyMessage';
 import { UpdateEnabledMessage } from '../../../changeRequest/ChangeRequestConfirmDialog/ChangeRequestMessages/UpdateEnabledMessage';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
+import { IFeatureToggleListItem } from 'interfaces/featureToggle';
+import { FeatureTagCell } from 'component/common/Table/cells/FeatureTagCell/FeatureTagCell';
 
 interface IProjectFeatureTogglesProps {
     features: IProject['features'];
@@ -199,6 +201,16 @@ export const ProjectFeatureToggles = ({
                 sortType: 'date',
                 minWidth: 120,
             },
+            {
+                id: 'tags',
+                Header: 'Tags',
+                accessor: (row: IFeatureToggleListItem) =>
+                    row.tags
+                        ?.map(({ type, value }) => `${type}:${value}`)
+                        .join(', ') || '',
+                Cell: FeatureTagCell,
+                searchable: true,
+            },
             ...environments.map(name => ({
                 Header: loading ? () => '' : name,
                 maxWidth: 90,
@@ -259,6 +271,7 @@ export const ProjectFeatureToggles = ({
                     createdAt,
                     type,
                     stale,
+                    tags,
                     environments: featureEnvironments,
                 }) => ({
                     name,
@@ -266,6 +279,7 @@ export const ProjectFeatureToggles = ({
                     createdAt,
                     type,
                     stale,
+                    tags,
                     environments: Object.fromEntries(
                         environments.map(env => [
                             env,

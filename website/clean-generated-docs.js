@@ -18,9 +18,9 @@
 const replace = require('replace-in-file');
 
 const escapeCharacters = (input) => {
-    inputTrimmed =
+    unquotedInput =
         input.charAt(0) === '"' ? input.substring(1, input.length - 1) : input;
-    const fixed = inputTrimmed.replace(/(?<!\\)"/g, '\\"');
+    const fixed = unquotedInput.replace(/(?<!\\)"/g, '\\"');
     return `"${fixed}"`;
 };
 
@@ -30,7 +30,7 @@ const options = {
         /\/ushosted/g,
         /"https:\/\/us.app.unleash-hosted.com(\/ushosted)?"/g,
         '"path":["ushosted",',
-        /(sidebar_label|title): (.+)/g, // escape potentially unescaped text fields
+        /^(sidebar_label|title): (.+)/gm, // escape potentially unescaped, single-line text fields
     ],
     to: [
         '',

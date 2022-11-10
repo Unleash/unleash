@@ -4,6 +4,11 @@ import cloneDeep from 'lodash.clonedeep';
 import useProjectRolePermissions from 'hooks/api/getters/useProjectRolePermissions/useProjectRolePermissions';
 import useProjectRolesApi from 'hooks/api/actions/useProjectRolesApi/useProjectRolesApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import {
+    APPLY_CHANGE_REQUEST,
+    APPROVE_CHANGE_REQUEST,
+} from 'component/providers/AccessProvider/permissions';
 
 export interface ICheckedPermission {
     [key: string]: IPermission;
@@ -17,6 +22,7 @@ const useProjectRoleForm = (
     initialRoleDesc = '',
     initialCheckedPermissions = {}
 ) => {
+    const { uiConfig } = useUiConfig();
     const { permissions } = useProjectRolePermissions({
         revalidateIfStale: false,
         revalidateOnReconnect: false,
@@ -246,6 +252,28 @@ const useProjectRoleForm = (
             ? `${permission.id}-${permission.environment}`
             : `${permission.id}`;
     };
+    // Clean up when feature is complete *changeRequests*
+    let filteredPermissions = cloneDeep(permissions);
+
+    if (!uiConfig?.flags.changeRequests) {
+        filteredPermissions.environments = filteredPermissions.environments.map(
+            env => {
+                env.permissions = env.permissions.filter(permission => {
+                    if (!uiConfig?.flags.changeRequests) {
+                        if (
+                            permission.name === APPLY_CHANGE_REQUEST ||
+                            permission.name === APPROVE_CHANGE_REQUEST
+                        ) {
+                            return false;
+                        }
+                    }
+                    return true;
+                });
+
+                return env;
+            }
+        );
+    }
 
     return {
         roleName,
@@ -264,7 +292,7 @@ const useProjectRoleForm = (
         validateNameUniqueness,
         errors,
         getRoleKey,
-        permissions,
+        permissions: filteredPermissions,
     };
 };
 

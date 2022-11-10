@@ -1,8 +1,8 @@
 exports.up = function (db, cb) {
     db.runSql(
         `
-        INSERT INTO permissions (permission, display_name, type) VALUES ('APPROVE_CHANGE_REQUEST', 'Approve a change request in the current environment', 'environment');
-        INSERT INTO permissions (permission, display_name, type) VALUES ('APPLY_CHANGE_REQUEST', 'Apply a change request in the current environment', 'environment');
+        INSERT INTO permissions (permission, display_name, type) VALUES ('APPROVE_CHANGE_REQUEST', 'Approve a change request', 'environment');
+        INSERT INTO permissions (permission, display_name, type) VALUES ('APPLY_CHANGE_REQUEST', 'Apply a change request', 'environment');
         `,
         cb,
     );

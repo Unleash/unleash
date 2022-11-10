@@ -21,14 +21,12 @@ const COLUMNS = [
     'created_at',
     'health',
     'updated_at',
-    'change_request_enabled',
 ];
 const TABLE = 'projects';
 
 export interface IEnvironmentProjectLink {
     environmentName: string;
     projectId: string;
-    changeRequestsEnabled?: string;
 }
 
 export interface IProjectMembersCount {
@@ -80,7 +78,7 @@ class ProjectStore implements IProjectStore {
         let projects = this.db(TABLE)
             .select(
                 this.db.raw(
-                    'projects.id, projects.name, projects.description, projects.health, projects.updated_at, projects.change_request_enabled, count(features.name) AS number_of_features',
+                    'projects.id, projects.name, projects.description, projects.health, projects.updated_at, count(features.name) AS number_of_features',
                 ),
             )
             .leftJoin('features', 'features.project', 'projects.id')
@@ -117,7 +115,6 @@ class ProjectStore implements IProjectStore {
             featureCount: Number(row.number_of_features) || 0,
             memberCount: Number(row.number_of_users) || 0,
             updatedAt: row.updated_at,
-            changeRequestsEnabled: row.change_request_enabled || false,
         };
     }
 
@@ -199,7 +196,6 @@ class ProjectStore implements IProjectStore {
         const environments = projects.map((p) => ({
             project_id: p.id,
             environment_name: DEFAULT_ENV,
-            change_request_enabled: p.change_request_enabled,
         }));
         await this.db('project_environments')
             .insert(environments)
@@ -244,13 +240,8 @@ class ProjectStore implements IProjectStore {
         id: string,
         environment: string,
     ): Promise<void> {
-        const project = await this.get(id);
         await this.db('project_environments')
-            .insert({
-                project_id: id,
-                environment_name: environment,
-                change_request_enabled: project.changeRequestsEnabled,
-            })
+            .insert({ project_id: id, environment_name: environment })
             .onConflict(['project_id', 'environment_name'])
             .ignore();
     }
@@ -259,12 +250,10 @@ class ProjectStore implements IProjectStore {
         environment: string,
         projects: string[],
     ): Promise<void> {
-        const rows = projects.map(async (projectId) => {
-            const project = await this.get(projectId);
+        const rows = projects.map((project) => {
             return {
-                project_id: projectId,
+                project_id: project,
                 environment_name: environment,
-                change_request_enabled: project.changeRequestsEnabled || false,
             };
         });
 
@@ -381,7 +370,6 @@ class ProjectStore implements IProjectStore {
         return {
             environmentName: row.environment_name,
             projectId: row.project_id,
-            changeRequestsEnabled: row.change_request_enabled,
         };
     }
 
@@ -398,7 +386,6 @@ class ProjectStore implements IProjectStore {
             createdAt: row.created_at,
             health: row.health || 100,
             updatedAt: row.updated_at || new Date(),
-            changeRequestsEnabled: row.change_request_enabled || false,
         };
     }
 }

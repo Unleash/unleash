@@ -2255,9 +2255,6 @@ exports[`should serve the OpenAPI spec 1`] = `
       "projectEnvironmentSchema": {
         "additionalProperties": false,
         "properties": {
-          "changeRequestsEnabled": {
-            "type": "boolean",
-          },
           "environment": {
             "type": "string",
           },
@@ -2270,9 +2267,6 @@ exports[`should serve the OpenAPI spec 1`] = `
       "projectSchema": {
         "additionalProperties": false,
         "properties": {
-          "changeRequestsEnabled": {
-            "type": "boolean",
-          },
           "createdAt": {
             "format": "date-time",
             "type": "string",

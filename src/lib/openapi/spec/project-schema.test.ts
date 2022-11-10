@@ -10,22 +10,6 @@ test('projectSchema', () => {
         featureCount: 10,
         memberCount: 3,
         updatedAt: '2022-06-28T17:33:53.963Z',
-        changeRequestsEnabled: false,
-    };
-
-    expect(
-        validateSchema('#/components/schemas/projectSchema', {}),
-    ).not.toBeUndefined();
-
-    expect(
-        validateSchema('#/components/schemas/projectSchema', data),
-    ).toBeUndefined();
-});
-
-test('projectSchema with only required', () => {
-    const data: ProjectSchema = {
-        name: 'Default',
-        id: 'default',
     };
 
     expect(

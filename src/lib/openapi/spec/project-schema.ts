@@ -33,9 +33,6 @@ export const projectSchema = {
             format: 'date-time',
             nullable: true,
         },
-        changeRequestsEnabled: {
-            type: 'boolean',
-        },
     },
     components: {},
 } as const;

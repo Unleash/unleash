@@ -1,5 +1,5 @@
 import { VFC } from 'react';
-import { Box } from '@mui/material';
+import { Alert, Box } from '@mui/material';
 import { ChangeRequestFeatureToggleChange } from '../ChangeRequestOverview/ChangeRequestFeatureToggleChange/ChangeRequestFeatureToggleChange';
 import { objectId } from 'utils/objectId';
 import { ToggleStatusChange } from '../ChangeRequestOverview/ChangeRequestFeatureToggleChange/ToggleStatusChange';
@@ -17,6 +17,7 @@ import {
     GetFeatureStrategyIcon,
 } from 'utils/strategyNames';
 import { hasNameField } from '../changeRequest.types';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface IChangeRequestProps {
     changeRequest: IChangeRequest;
@@ -56,6 +57,7 @@ export const ChangeRequest: VFC<IChangeRequestProps> = ({
                     featureName={featureToggleChange.name}
                     projectId={changeRequest.project}
                     onNavigate={onNavigate}
+                    conflict={featureToggleChange.conflict}
                 >
                     {featureToggleChange.changes.map(change => (
                         <Box
@@ -67,6 +69,15 @@ export const ChangeRequest: VFC<IChangeRequestProps> = ({
                                     theme.palette.dividerAlternative,
                             })}
                         >
+                            <ConditionallyRender
+                                condition={Boolean(change.conflict)}
+                                show={
+                                    <Alert severity="warning" sx={{ mb: 1 }}>
+                                        <strong>Conflict!</strong> This change
+                                        can’t be applied. {change.conflict}.
+                                    </Alert>
+                                }
+                            />
                             {change.action === 'updateEnabled' && (
                                 <ToggleStatusChange
                                     enabled={change.payload.enabled}

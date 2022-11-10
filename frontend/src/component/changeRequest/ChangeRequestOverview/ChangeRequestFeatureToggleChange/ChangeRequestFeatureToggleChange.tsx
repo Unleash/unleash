@@ -1,17 +1,19 @@
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
-import { Box, Card, Typography } from '@mui/material';
+import { Alert, Box, Card, Typography } from '@mui/material';
 import ToggleOnIcon from '@mui/icons-material/ToggleOn';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface IChangeRequestToggleChange {
     featureName: string;
     projectId: string;
+    conflict?: string;
     onNavigate?: () => void;
 }
 
 export const ChangeRequestFeatureToggleChange: FC<
     IChangeRequestToggleChange
-> = ({ featureName, projectId, onNavigate, children }) => {
+> = ({ featureName, projectId, conflict, onNavigate, children }) => {
     return (
         <Card
             elevation={0}
@@ -29,6 +31,14 @@ export const ChangeRequestFeatureToggleChange: FC<
                     padding: theme.spacing(3),
                 })}
             >
+                <ConditionallyRender
+                    condition={Boolean(conflict)}
+                    show={
+                        <Alert severity="warning" sx={{ mb: 2 }}>
+                            <strong>Conflict!</strong> {conflict}.
+                        </Alert>
+                    }
+                />
                 <Box sx={{ display: 'flex', gap: 1 }}>
                     <ToggleOnIcon color="disabled" />
                     <Typography

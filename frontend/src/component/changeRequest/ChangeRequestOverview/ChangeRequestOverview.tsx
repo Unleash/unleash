@@ -78,10 +78,11 @@ export const ChangeRequestOverview: FC = () => {
                 <StyledAsideBox>
                     <ChangeRequestTimeline state={changeRequest.state} />
                     <ConditionallyRender
-                        condition={changeRequest.approvals.length > 0}
+                        condition={changeRequest.approvals?.length > 0}
                         show={
                             <ChangeRequestReviewers>
-                                {changeRequest.approvals.map(approver => (
+                                {/* @ts-expect-error - FIXME: type */}
+                                {changeRequest.approvals?.map(approver => (
                                     <ChangeRequestReviewer
                                         name={
                                             approver.createdBy.username ||

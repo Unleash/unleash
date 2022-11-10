@@ -12,3 +12,5 @@ website/translated_docs
 website
 setupJest.js
 frontend
+dist
+src/migrations/*

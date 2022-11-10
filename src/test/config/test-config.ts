@@ -31,6 +31,7 @@ export function createTestConfig(config?: IUnleashOptions): IUnleashConfig {
                 changeRequests: true,
                 cloneEnvironment: true,
                 variantsPerEnvironment: true,
+                achievements: true,
             },
         },
     };

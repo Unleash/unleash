@@ -43,6 +43,7 @@ process.nextTick(async () => {
                         cloneEnvironment: true,
                         toggleTagFiltering: true,
                         variantsPerEnvironment: true,
+                        achievements: true,
                     },
                 },
                 authentication: {

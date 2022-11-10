@@ -1,6 +1,7 @@
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ITab, VerticalTabs } from 'component/common/VerticalTabs/VerticalTabs';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AchievementsTab } from './AchievementsTab/AchievementsTab';
@@ -13,6 +14,8 @@ export const Profile = () => {
     const location = useLocation();
     const navigate = useNavigate();
 
+    const { uiConfig } = useUiConfig();
+
     const tabs = [
         { id: 'profile', label: 'Profile' },
         { id: 'password', label: 'Change password', path: 'change-password' },
@@ -21,7 +24,12 @@ export const Profile = () => {
             label: 'Personal API tokens',
             path: 'personal-api-tokens',
         },
-        { id: 'achievements', label: 'Achievements', path: 'achievements' },
+        {
+            id: 'achievements',
+            label: 'Achievements',
+            path: 'achievements',
+            hidden: !uiConfig.flags.achievements,
+        },
     ];
 
     const onChange = (tab: ITab) => {

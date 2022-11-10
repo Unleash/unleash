@@ -67,6 +67,7 @@ exports[`should create default config 1`] = `
     },
     "flags": {
       "ENABLE_DARK_MODE_SUPPORT": false,
+      "achievements": false,
       "anonymiseEventLog": false,
       "batchMetrics": false,
       "changeRequests": false,
@@ -83,6 +84,7 @@ exports[`should create default config 1`] = `
   "flagResolver": FlagResolver {
     "experiments": {
       "ENABLE_DARK_MODE_SUPPORT": false,
+      "achievements": false,
       "anonymiseEventLog": false,
       "batchMetrics": false,
       "changeRequests": false,

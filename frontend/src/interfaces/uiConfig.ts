@@ -44,6 +44,7 @@ export interface IFlags {
     changeRequests?: boolean;
     cloneEnvironment?: boolean;
     variantsPerEnvironment?: boolean;
+    achievements?: boolean;
 }
 
 export interface IVersionInfo {

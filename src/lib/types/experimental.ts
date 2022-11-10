@@ -46,6 +46,10 @@ export const defaultExperimentalOptions = {
             process.env.UNLEASH_EXPERIMENTAL_VARIANTS_PER_ENVIRONMENT,
             false,
         ),
+        achievements: parseEnvVarBoolean(
+            process.env.UNLEASH_EXPERIMENTAL_ACHIEVEMENTS,
+            false,
+        ),
     },
     externalResolver: { isEnabled: (): boolean => false },
 };
@@ -63,6 +67,7 @@ export interface IExperimentalOptions {
         cloneEnvironment?: boolean;
         proxyReturnAllToggles?: boolean;
         variantsPerEnvironment?: boolean;
+        achievements?: boolean;
     };
     externalResolver: IExternalFlagResolver;
 }

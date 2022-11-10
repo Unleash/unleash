@@ -20,6 +20,7 @@ import { useNavigate } from 'react-router-dom';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ProfileAchievements } from './ProfileAchievements/ProfileAchievements';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const StyledHeader = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -103,6 +104,8 @@ export const ProfileTab = ({ user }: IProfileTabProps) => {
     const { locationSettings, setLocationSettings } = useLocationSettings();
     const [currentLocale, setCurrentLocale] = useState<string>();
 
+    const { uiConfig } = useUiConfig();
+
     const [possibleLocales, setPossibleLocales] = useState([
         'en-US',
         'en-GB',
@@ -144,7 +147,10 @@ export const ProfileTab = ({ user }: IProfileTabProps) => {
                         <Typography variant="body1">{user.email}</Typography>
                     </StyledInfo>
                 </StyledHeaderContent>
-                <StyledProfileAchievements />
+                <ConditionallyRender
+                    condition={Boolean(uiConfig.flags.achievements)}
+                    show={<StyledProfileAchievements />}
+                />
             </StyledHeader>
             <PageContent>
                 <StyledSectionLabel>Access</StyledSectionLabel>

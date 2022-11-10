@@ -5,6 +5,8 @@ import { Timer } from './Timer';
 import { useNavigate } from 'react-router-dom';
 import { useAchievementsApi } from 'hooks/api/actions/useAchievementsApi/useAchievementsApi';
 import { useAchievements } from 'hooks/api/getters/useAchievements/useAchievements';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledPopup = styled('div')<{ visible: boolean }>(
     ({ theme, visible }) => ({
@@ -77,6 +79,8 @@ export const AchievementPopup = ({
     const { achievements } = useAchievements();
     const { markAchievementSeen } = useAchievementsApi();
 
+    const { uiConfig } = useUiConfig();
+
     const [visible, setVisible] = useState(false);
     const [ready, setReady] = useState(true);
     const [achievement, setAchievement] = useState<IAchievement | null>(null);
@@ -109,25 +113,34 @@ export const AchievementPopup = ({
     }, [ready, newUnlocks]);
 
     return (
-        <StyledPopup
-            visible={visible}
-            onMouseEnter={() => timeout.pause()}
-            onMouseLeave={() => timeout.resume()}
-            onClick={() => navigate('/profile/achievements')}
-        >
-            <StyledHeader>Achievement unlocked!</StyledHeader>
-            <StyledPopupBody>
-                <StyledAvatar variant="rounded" src={achievement?.imageUrl} />
-                <StyledPopupDescription>
-                    <StyledTitle>{achievement?.title}</StyledTitle>
-                    <StyledDescription>
-                        {achievement?.description}
-                    </StyledDescription>
-                    <StyledRarityDescription>
-                        {achievement?.rarity}% of users have this achievement
-                    </StyledRarityDescription>
-                </StyledPopupDescription>
-            </StyledPopupBody>
-        </StyledPopup>
+        <ConditionallyRender
+            condition={Boolean(uiConfig.flags.achievements)}
+            show={
+                <StyledPopup
+                    visible={visible}
+                    onMouseEnter={() => timeout.pause()}
+                    onMouseLeave={() => timeout.resume()}
+                    onClick={() => navigate('/profile/achievements')}
+                >
+                    <StyledHeader>Achievement unlocked!</StyledHeader>
+                    <StyledPopupBody>
+                        <StyledAvatar
+                            variant="rounded"
+                            src={achievement?.imageUrl}
+                        />
+                        <StyledPopupDescription>
+                            <StyledTitle>{achievement?.title}</StyledTitle>
+                            <StyledDescription>
+                                {achievement?.description}
+                            </StyledDescription>
+                            <StyledRarityDescription>
+                                {achievement?.rarity}% of users have this
+                                achievement
+                            </StyledRarityDescription>
+                        </StyledPopupDescription>
+                    </StyledPopupBody>
+                </StyledPopup>
+            }
+        />
     );
 };

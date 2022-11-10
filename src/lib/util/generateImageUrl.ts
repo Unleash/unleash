@@ -4,9 +4,8 @@ export const generateImageUrl = (user: {
     email: string;
     username: string;
     id: number;
-}): string => {
-    return gravatarUrl(user.email || user.username || String(user.id), {
+}): string =>
+    gravatarUrl(user.email || user.username || String(user.id), {
         size: 42,
         default: 'retro',
     });
-};

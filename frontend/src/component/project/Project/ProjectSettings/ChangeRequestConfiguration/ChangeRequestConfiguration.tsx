@@ -1,6 +1,6 @@
 import { useMemo, useState, VFC } from 'react';
-import { HeaderGroup, Row } from 'react-table';
-import { Alert, Box, Typography } from '@mui/material';
+import { HeaderGroup } from 'react-table';
+import { Alert, Box, IconButton, Typography } from '@mui/material';
 import {
     SortableTableHeader,
     Table,
@@ -18,6 +18,7 @@ import { UPDATE_FEATURE_ENVIRONMENT } from 'component/providers/AccessProvider/p
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { ChangeRequestProcessHelp } from './ChangeRequestProcessHelp/ChangeRequestProcessHelp';
 
 export const ChangeRequestConfiguration: VFC = () => {
     const [dialogState, setDialogState] = useState<{
@@ -98,7 +99,12 @@ export const ChangeRequestConfiguration: VFC = () => {
 
     return (
         <PageContent
-            header={<PageHeader titleElement="Change request configuration" />}
+            header={
+                <PageHeader
+                    titleElement="Change request configuration"
+                    actions={<ChangeRequestProcessHelp />}
+                />
+            }
             // isLoading={loading}
         >
             <Alert severity="info" sx={{ mb: 3 }}>

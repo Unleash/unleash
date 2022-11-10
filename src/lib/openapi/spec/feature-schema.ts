@@ -5,6 +5,7 @@ import { overrideSchema } from './override-schema';
 import { parametersSchema } from './parameters-schema';
 import { environmentSchema } from './environment-schema';
 import { featureStrategySchema } from './feature-strategy-schema';
+import { tagSchema } from './tag-schema';
 
 export const featureSchema = {
     $id: '#/components/schemas/featureSchema',
@@ -69,6 +70,12 @@ export const featureSchema = {
                 $ref: '#/components/schemas/variantSchema',
             },
         },
+        tags: {
+            type: 'array',
+            items: {
+                $ref: '#/components/schemas/tagSchema',
+            },
+        },
     },
     components: {
         schemas: {
@@ -78,6 +85,7 @@ export const featureSchema = {
             parametersSchema,
             featureStrategySchema,
             variantSchema,
+            tagSchema,
         },
     },
 } as const;

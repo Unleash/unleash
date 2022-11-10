@@ -41,6 +41,7 @@ export default class FakeFeatureToggleClientStore
             type: t.type || 'Release',
             stale: t.stale || false,
             variants: [],
+            tags: [],
         }));
         return Promise.resolve(clientRows);
     }

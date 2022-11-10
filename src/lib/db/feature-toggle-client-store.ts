@@ -6,6 +6,7 @@ import {
     IFeatureToggleClient,
     IFeatureToggleQuery,
     IStrategyConfig,
+    ITag,
 } from '../types/model';
 import { IFeatureToggleClientStore } from '../types/stores/feature-toggle-client-store';
 import { DEFAULT_ENV } from '../util/constants';
@@ -78,6 +79,8 @@ export default class FeatureToggleClientStore
             'fs.strategy_name as strategy_name',
             'fs.parameters as parameters',
             'fs.constraints as constraints',
+            'ft.tag_type as tag_type',
+            'ft.tag_value as tag_value',
             'segments.id as segment_id',
             'segments.constraints as segment_constraints',
         ];
@@ -91,6 +94,11 @@ export default class FeatureToggleClientStore
                     .where({ environment })
                     .as('fs'),
                 'fs.feature_name',
+                'features.name',
+            )
+            .leftJoin(
+                this.db('feature_tag').select('*').as('ft'),
+                'ft.feature_name',
                 'features.name',
             )
             .leftJoin(
@@ -134,11 +142,15 @@ export default class FeatureToggleClientStore
         const featureToggles = rows.reduce((acc, r) => {
             let feature: PartialDeep<IFeatureToggleClient> = acc[r.name] ?? {
                 strategies: [],
+                tags: [],
             };
             if (this.isUnseenStrategyRow(feature, r)) {
                 feature.strategies.push(
                     FeatureToggleClientStore.rowToStrategy(r),
                 );
+            }
+            if (this.isUnseenTag(feature, r)) {
+                feature.tags.push(FeatureToggleClientStore.rowToTag(r));
             }
             if (featureQuery?.inlineSegmentConstraints && r.segment_id) {
                 this.addSegmentToStrategy(feature, r);
@@ -185,6 +197,13 @@ export default class FeatureToggleClientStore
         };
     }
 
+    private static rowToTag(row: Record<string, any>): ITag {
+        return {
+            value: row.tag_value,
+            type: row.tag_type,
+        };
+    }
+
     private static removeIdsFromStrategies(features: IFeatureToggleClient[]) {
         features.forEach((feature) => {
             feature.strategies.forEach((strategy) => {
@@ -200,6 +219,20 @@ export default class FeatureToggleClientStore
         return (
             row.strategy_id &&
             !feature.strategies.find((s) => s.id === row.strategy_id)
+        );
+    }
+
+    private isUnseenTag(
+        feature: PartialDeep<IFeatureToggleClient>,
+        row: Record<string, any>,
+    ): boolean {
+        return (
+            row.tag_type &&
+            row.tag_value &&
+            !feature.tags.find(
+                (tag) =>
+                    tag.type === row.tag_type && tag.value === row.tag_value,
+            )
         );
     }
 

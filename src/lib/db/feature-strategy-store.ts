@@ -12,6 +12,7 @@ import {
     IFeatureOverview,
     IFeatureStrategy,
     IStrategyConfig,
+    ITag,
 } from '../types/model';
 import { IFeatureStrategiesStore } from '../types/stores/feature-strategies-store';
 import { PartialSome } from '../types/partial';
@@ -317,6 +318,27 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         };
     }
 
+    private isUnseenTag(
+        feature: Record<string, any>,
+        row: Record<string, any>,
+    ): boolean {
+        return (
+            row.tag_type &&
+            row.tag_value &&
+            !feature.tags.find(
+                (tag) =>
+                    tag.type === row.tag_type && tag.value === row.tag_value,
+            )
+        );
+    }
+
+    private static getTag(r: any): ITag {
+        return {
+            value: r.tag_value,
+            type: r.tag_type,
+        };
+    }
+
     async getFeatureOverview(
         projectId: string,
         archived: boolean = false,
@@ -333,6 +355,8 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 'feature_environments.environment as environment',
                 'environments.type as environment_type',
                 'environments.sort_order as environment_sort_order',
+                'ft.tag_type as tag_type',
+                'ft.tag_value as tag_value',
             )
             .modify(FeatureToggleStore.filterByArchived, archived)
             .leftJoin(
@@ -344,6 +368,11 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 'environments',
                 'feature_environments.environment',
                 'environments.name',
+            )
+            .leftJoin(
+                this.db('feature_tag').select('*').as('ft'),
+                'ft.feature_name',
+                'features.name',
             );
         if (rows.length > 0) {
             const overview = rows.reduce((acc, r) => {
@@ -351,6 +380,11 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                     acc[r.feature_name].environments.push(
                         FeatureStrategiesStore.getEnvironment(r),
                     );
+                    if (this.isUnseenTag(acc[r.feature_name], r)) {
+                        acc[r.feature_name].tags.push(
+                            FeatureStrategiesStore.getTag(r),
+                        );
+                    }
                 } else {
                     acc[r.feature_name] = {
                         type: r.type,
@@ -361,7 +395,13 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                         environments: [
                             FeatureStrategiesStore.getEnvironment(r),
                         ],
+                        tags: [],
                     };
+                    if (this.isUnseenTag(acc[r.feature_name], r)) {
+                        acc[r.feature_name].tags.push(
+                            FeatureStrategiesStore.getTag(r),
+                        );
+                    }
                 }
                 return acc;
             }, {});

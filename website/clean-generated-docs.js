@@ -18,7 +18,7 @@
 const replace = require('replace-in-file');
 
 const escapeCharacters = (input) =>
-    input.replace(/["]/g, (match) => `\\${match}`);
+    input.replace(/"/g, '\\"');
 
 const options = {
     files: 'docs/reference/api/**/*.api.mdx',

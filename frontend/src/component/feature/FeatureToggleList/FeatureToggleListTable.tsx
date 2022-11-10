@@ -20,6 +20,7 @@ import { CreateFeatureButton } from '../CreateFeatureButton/CreateFeatureButton'
 import { FeatureStaleCell } from './FeatureStaleCell/FeatureStaleCell';
 import { useSearch } from 'hooks/useSearch';
 import { Search } from 'component/common/Search/Search';
+import { FeatureTagCell } from 'component/common/Table/cells/FeatureTagCell/FeatureTagCell';
 
 export const featuresPlaceholder: FeatureSchema[] = Array(15).fill({
     name: 'Name of the feature',
@@ -73,6 +74,15 @@ const columns = [
         sortType: 'alphanumeric',
         maxWidth: 150,
         filterName: 'project',
+        searchable: true,
+    },
+    {
+        id: 'tags',
+        Header: 'Tags',
+        accessor: (row: FeatureSchema) =>
+            row.tags?.map(({ type, value }) => `${type}:${value}`).join(', ') ||
+            '',
+        Cell: FeatureTagCell,
         searchable: true,
     },
     {
@@ -139,7 +149,7 @@ export const FeatureToggleListTable: VFC = () => {
         setHiddenColumns,
     } = useTable(
         {
-            columns,
+            columns: columns as any[],
             data,
             initialState,
             sortTypes,
@@ -153,14 +163,17 @@ export const FeatureToggleListTable: VFC = () => {
 
     useEffect(() => {
         const hiddenColumns = ['description'];
+        if (!features.some(({ tags }) => tags?.length)) {
+            hiddenColumns.push('tags');
+        }
         if (isMediumScreen) {
             hiddenColumns.push('lastSeenAt', 'stale');
         }
         if (isSmallScreen) {
-            hiddenColumns.push('type', 'createdAt');
+            hiddenColumns.push('type', 'createdAt', 'tags');
         }
         setHiddenColumns(hiddenColumns);
-    }, [setHiddenColumns, isSmallScreen, isMediumScreen]);
+    }, [setHiddenColumns, isSmallScreen, isMediumScreen, features]);
 
     useEffect(() => {
         const tableState: PageQueryType = {};

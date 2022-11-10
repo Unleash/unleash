@@ -70,8 +70,9 @@ export class PublicInviteController extends Controller {
                 openApiService.validPath({
                     tags: ['Public signup tokens'],
                     operationId: 'addPublicSignupTokenUser',
-                    summary:
-                        'Create a user with the "viewer" root role and link them to a signup token',
+                    summary: 'Add a user via a signup token',
+                    description:
+                        'Create a user with the viewer root role and link them to the provided signup token',
                     requestBody: createRequestSchema('createInvitedUserSchema'),
                     responses: {
                         200: createResponseSchema('userSchema'),

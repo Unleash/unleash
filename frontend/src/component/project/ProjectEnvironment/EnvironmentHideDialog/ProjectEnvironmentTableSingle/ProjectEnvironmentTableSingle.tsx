@@ -10,8 +10,10 @@ const StyledTable = styled(Table)(({ theme }) => ({
     marginTop: theme.spacing(3),
 }));
 
-const StyledToggleWarning = styled('p')(({ theme }) => ({
-    color: theme.palette.error.dark,
+const StyledToggleWarning = styled('p', {
+    shouldForwardProp: prop => prop !== 'warning',
+})<{ warning?: boolean }>(({ theme, warning }) => ({
+    color: warning ? theme.palette.error.dark : theme.palette.text.primary,
     textAlign: 'center',
 }));
 
@@ -47,13 +49,12 @@ export const ProjectEnvironmentTableSingle = ({
             },
             {
                 Header: 'Toggles enabled',
-                accessor: (row: IProjectEnvironment) =>
-                    row.projectEnabledToggleCount === 1
-                        ? '1 toggle'
-                        : `${row.projectEnabledToggleCount} toggles`,
+                accessor: 'projectEnabledToggleCount',
                 Cell: ({ value }: { value: number }) => (
                     <TextCell>
-                        <StyledToggleWarning>{value}</StyledToggleWarning>
+                        <StyledToggleWarning warning={value > 0}>
+                            {value === 1 ? '1 toggle' : `${value} toggles`}
+                        </StyledToggleWarning>
                     </TextCell>
                 ),
                 align: 'center',

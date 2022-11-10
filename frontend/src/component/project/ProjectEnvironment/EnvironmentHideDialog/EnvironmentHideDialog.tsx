@@ -46,11 +46,9 @@ export const EnvironmentHideDialog = ({
             }}
         >
             <Alert severity="error">
-                <strong>Danger!</strong> Hiding an environment will also disable
-                all the feature toggles that are enabled in this environment and
-                it can impact client applications connected to the environment.
-                If you wish to make it visible again you will need to manually
-                set each feature toggle one by one for this environment.
+                <strong>Danger!</strong> Hiding an environment will disable all
+                the feature toggles that are enabled in this environment and it
+                can impact client applications connected to the environment.
             </Alert>
 
             <ProjectEnvironmentTableSingle environment={environment!} />

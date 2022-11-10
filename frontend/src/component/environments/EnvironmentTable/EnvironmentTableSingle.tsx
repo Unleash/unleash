@@ -11,8 +11,10 @@ const StyledTable = styled(Table)(({ theme }) => ({
     marginTop: theme.spacing(3),
 }));
 
-const StyledToggleWarning = styled('p')(({ theme }) => ({
-    color: theme.palette.error.dark,
+const StyledToggleWarning = styled('p', {
+    shouldForwardProp: prop => prop !== 'warning',
+})<{ warning?: boolean }>(({ theme, warning }) => ({
+    color: warning ? theme.palette.error.dark : theme.palette.text.primary,
 }));
 
 interface IEnvironmentTableSingleProps {
@@ -63,7 +65,12 @@ export const EnvironmentTableSingle = ({
                         <ConditionallyRender
                             condition={Boolean(warnEnabledToggles)}
                             show={
-                                <StyledToggleWarning>
+                                <StyledToggleWarning
+                                    warning={Boolean(
+                                        original.enabledToggleCount &&
+                                            original.enabledToggleCount > 0
+                                    )}
+                                >
                                     {original.enabledToggleCount === 1
                                         ? '1 toggle enabled'
                                         : `${original.enabledToggleCount} toggles enabled`}

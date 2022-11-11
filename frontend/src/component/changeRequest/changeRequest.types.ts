@@ -12,13 +12,13 @@ export interface IChangeRequest {
     approvals: IChangeRequestApproval[];
 }
 
-export interface IChangeRequestEnviornmentConfig {
+export interface IChangeRequestEnvironmentConfig {
     environment: string;
     type: string;
     changeRequestsEnabled: boolean;
 }
 
-export type ChangeRequestConfig = IChangeRequestEnviornmentConfig[];
+export type ChangeRequestConfig = IChangeRequestEnvironmentConfig[];
 
 export interface IChangeRequestFeature {
     name: string;

@@ -13,6 +13,8 @@ import { ConditionallyRender } from "component/common/ConditionallyRender/Condit
 import { useChangeRequestConfig } from "../../../../../hooks/api/getters/useChangeRequestConfig/useChangeRequestConfig";
 import { useChangeRequestApi } from "../../../../../hooks/api/actions/useChangeRequestApi/useChangeRequestApi";
 import { UPDATE_PROJECT } from "@server/types/permissions";
+import useToast from "../../../../../hooks/useToast";
+import { formatUnknownError } from "../../../../../utils/formatUnknownError";
 
 export const ChangeRequestConfiguration: VFC = () => {
     const [dialogState, setDialogState] = useState<{
@@ -27,6 +29,7 @@ export const ChangeRequestConfiguration: VFC = () => {
     const projectId = useRequiredPathParam('projectId');
     const { data, loading, refetchChangeRequestConfig } = useChangeRequestConfig(projectId);
     const { updateChangeRequestEnvironmentConfig } = useChangeRequestApi()
+    const { setToastData, setToastApiError } = useToast();
 
     const onClick = (enableEnvironment: string, isEnabled: boolean) => () => {
         setDialogState({ isOpen: true, enableEnvironment, isEnabled });
@@ -34,8 +37,18 @@ export const ChangeRequestConfiguration: VFC = () => {
 
     const onConfirm = async () => {
         if (dialogState.enableEnvironment) {
-            await updateChangeRequestEnvironmentConfig(projectId, dialogState.enableEnvironment, !dialogState.isEnabled);
-            await refetchChangeRequestConfig()
+            try {
+                await updateChangeRequestEnvironmentConfig(projectId, dialogState.enableEnvironment, !dialogState.isEnabled);
+                setToastData({
+                    type: 'success',
+                    title: 'Updated change request status',
+                    text: 'Successfully updated change request status.',
+                });
+                refetchChangeRequestConfig()
+            } catch (error){
+                const message = formatUnknownError(error);
+                setToastApiError(message);
+            }
         }
         setDialogState({ isOpen: false, enableEnvironment: '', isEnabled: false});
     }

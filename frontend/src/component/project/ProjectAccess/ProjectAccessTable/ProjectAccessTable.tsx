@@ -75,8 +75,8 @@ const StyledGroupAvatar = styled(UserAvatar)(({ theme }) => ({
     outline: `${theme.spacing(0.25)} solid ${theme.palette.background.paper}`,
 }));
 
-const hiddenColumnsSmall = ['imageUrl', 'role', 'added'];
-const hiddenColumnsMedium = ['added'];
+const hiddenColumnsSmall = ['imageUrl', 'role', 'added', 'lastLogin'];
+const hiddenColumnsMedium = ['lastLogin', 'added'];
 
 export const ProjectAccessTable: VFC = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -88,7 +88,7 @@ export const ProjectAccessTable: VFC = () => {
     const navigate = useNavigate();
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
-    const isMediumScreen = useMediaQuery(theme.breakpoints.down('xl'));
+    const isMediumScreen = useMediaQuery(theme.breakpoints.down('lg'));
     const { setToastData } = useToast();
 
     const { access, refetchProjectAccess } = useProjectAccess(projectId);
@@ -136,7 +136,7 @@ export const ProjectAccessTable: VFC = () => {
                         elseShow={<HighlightCell value={value} />}
                     />
                 ),
-                minWidth: 100,
+                maxWidth: 125,
                 searchable: true,
             },
             {
@@ -165,7 +165,7 @@ export const ProjectAccessTable: VFC = () => {
                         value={value}
                     />
                 ),
-                minWidth: 120,
+                maxWidth: 125,
                 filterName: 'role',
             },
             {
@@ -179,14 +179,34 @@ export const ProjectAccessTable: VFC = () => {
                     <TimeAgoCell value={value} emptyText="Never" />
                 ),
                 sortType: 'date',
-                maxWidth: 150,
+                maxWidth: 100,
+            },
+            {
+                id: 'lastLogin',
+                Header: 'Last login',
+                accessor: (row: IProjectAccess) => {
+                    if (row.type === ENTITY_TYPE.USER) {
+                        const userRow = row.entity as IUser;
+                        return userRow.seenAt || '';
+                    }
+                    const userGroup = row.entity as IGroup;
+                    return userGroup.users
+                        .map(({ seenAt }) => seenAt)
+                        .sort()
+                        .reverse()[0];
+                },
+                Cell: ({ value }: { value: Date }) => (
+                    <TimeAgoCell value={value} emptyText="Never" />
+                ),
+                sortType: 'date',
+                maxWidth: 100,
             },
             {
                 id: 'actions',
                 Header: 'Actions',
                 disableSortBy: true,
                 align: 'center',
-                maxWidth: 200,
+                maxWidth: 150,
                 Cell: ({
                     row: { original: row },
                 }: {

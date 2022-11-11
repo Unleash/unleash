@@ -96,7 +96,7 @@ export const ProjectFeatureToggles = ({
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
     const { uiConfig } = useUiConfig();
-    const changeRequestsEnabled = useChangeRequestsEnabled();
+    const { isChangeRequestEnabled } = useChangeRequestsEnabled(projectId);
     const environments = useEnvironmentsRef(
         loading ? ['a', 'b', 'c'] : newEnvironments
     );
@@ -119,7 +119,7 @@ export const ProjectFeatureToggles = ({
             environment: string,
             enabled: boolean
         ) => {
-            if (changeRequestsEnabled) {
+            if (isChangeRequestEnabled(environment)) {
                 onChangeRequestToggle(featureName, environment, enabled);
                 throw new Error('Additional approval required');
             }

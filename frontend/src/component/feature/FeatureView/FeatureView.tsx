@@ -32,14 +32,14 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { FeatureArchiveDialog } from '../../common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { DraftBanner } from 'component/changeRequest/DraftBanner/DraftBanner';
 import { MainLayout } from 'component/layout/MainLayout/MainLayout';
-import { useChangeRequestsEnabled } from '../../../hooks/useChangeRequestsEnabled';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 export const FeatureView = () => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const { refetch: projectRefetch } = useProject(projectId);
     const { refetchFeature } = useFeature(projectId, featureId);
-    const changeRequestsEnabled = useChangeRequestsEnabled();
+    const { uiConfig } = useUiConfig();
 
     const [openTagDialog, setOpenTagDialog] = useState(false);
     const [showDelDialog, setShowDelDialog] = useState(false);
@@ -88,7 +88,7 @@ export const FeatureView = () => {
         <MainLayout
             ref={ref}
             subheader={
-                changeRequestsEnabled ? (
+                uiConfig?.flags.changeRequests ? (
                     <DraftBanner project={projectId} />
                 ) : null
             }

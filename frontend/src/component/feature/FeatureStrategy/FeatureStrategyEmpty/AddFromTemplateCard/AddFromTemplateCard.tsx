@@ -10,6 +10,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { IFeatureStrategyPayload } from 'interfaces/strategy';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
 interface IAddFromTemplateCardProps {
     title: string;
@@ -40,7 +41,7 @@ export const AddFromTemplateCard: FC<IAddFromTemplateCardProps> = ({
     const { addStrategyToFeature } = useFeatureStrategyApi();
     const { setToastApiError } = useToast();
 
-    const isChangeRequestEnabled = useChangeRequestsEnabled(environmentId);
+    const { isChangeRequestEnabled } = useChangeRequestsEnabled(projectId);
 
     const {
         changeRequestDialogDetails,
@@ -51,7 +52,7 @@ export const AddFromTemplateCard: FC<IAddFromTemplateCardProps> = ({
 
     const onStrategyAdd = async () => {
         try {
-            if (isChangeRequestEnabled) {
+            if (isChangeRequestEnabled(environmentId)) {
                 onChangeRequestAddStrategy(environmentId, strategy);
             } else {
                 await addStrategyToFeature(

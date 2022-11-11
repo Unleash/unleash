@@ -51,7 +51,7 @@ export const FeatureStrategyCreate = () => {
 
     const { feature, refetchFeature } = useFeature(projectId, featureId);
     const ref = useRef<IFeatureToggle>(feature);
-    const isChangeRequestEnabled = useChangeRequestsEnabled(environmentId);
+    const { isChangeRequestEnabled } = useChangeRequestsEnabled(projectId);
     const { refetch: refetchChangeRequests } = useChangeRequestOpen(projectId);
 
     const { data, staleDataNotification, forceRefreshCache } =
@@ -124,7 +124,7 @@ export const FeatureStrategyCreate = () => {
         const payload = createStrategyPayload(strategy);
 
         try {
-            if (isChangeRequestEnabled) {
+            if (isChangeRequestEnabled(environmentId)) {
                 await onStrategyRequestAdd(payload);
             } else {
                 await onAddStrategy(payload);

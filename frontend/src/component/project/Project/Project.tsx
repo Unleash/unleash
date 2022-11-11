@@ -28,7 +28,6 @@ import { ChangeRequestOverview } from 'component/changeRequest/ChangeRequestOver
 import { DraftBanner } from 'component/changeRequest/DraftBanner/DraftBanner';
 import { MainLayout } from 'component/layout/MainLayout/MainLayout';
 import { ProjectChangeRequests } from '../../changeRequest/ProjectChangeRequests/ProjectChangeRequests';
-import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { ProjectSettings } from './ProjectSettings/ProjectSettings';
 
 const StyledDiv = styled('div')(() => ({
@@ -64,8 +63,6 @@ const Project = () => {
     const projectName = project?.name || projectId;
 
     const [showDelDialog, setShowDelDialog] = useState(false);
-
-    const changeRequestsEnabled = useChangeRequestsEnabled();
 
     const tabs = useMemo(() => {
         const tabArray = [
@@ -120,11 +117,11 @@ const Project = () => {
             name: 'change-request' + '',
         };
 
-        if (changeRequestsEnabled) {
+        if (uiConfig?.flags.changeRequests) {
             tabArray.splice(tabArray.length - 2, 0, changeRequestTab);
         }
         return tabArray;
-    }, [changeRequestsEnabled]);
+    }, [uiConfig?.flags.changeRequests]);
 
     const activeTab = [...tabs]
         .reverse()
@@ -149,7 +146,7 @@ const Project = () => {
         <MainLayout
             ref={ref}
             subheader={
-                changeRequestsEnabled ? (
+                uiConfig?.flags.changeRequests ? (
                     <DraftBanner project={projectId} />
                 ) : null
             }
@@ -263,7 +260,7 @@ const Project = () => {
                     path="change-requests"
                     element={
                         <ConditionallyRender
-                            condition={changeRequestsEnabled}
+                            condition={uiConfig?.flags.changeRequests}
                             show={<ProjectChangeRequests />}
                         />
                     }
@@ -272,7 +269,7 @@ const Project = () => {
                     path="change-requests/:id"
                     element={
                         <ConditionallyRender
-                            condition={changeRequestsEnabled}
+                            condition={uiConfig?.flags.changeRequests}
                             show={<ChangeRequestOverview />}
                         />
                     }

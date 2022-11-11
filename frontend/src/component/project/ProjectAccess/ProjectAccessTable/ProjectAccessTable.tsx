@@ -75,8 +75,8 @@ const StyledGroupAvatar = styled(UserAvatar)(({ theme }) => ({
     outline: `${theme.spacing(0.25)} solid ${theme.palette.background.paper}`,
 }));
 
-const hiddenColumnsSmall = ['imageUrl', 'role', 'added', 'lastLogin'];
-const hiddenColumnsMedium = ['lastLogin'];
+const hiddenColumnsSmall = ['imageUrl', 'role', 'added'];
+const hiddenColumnsMedium = ['added'];
 
 export const ProjectAccessTable: VFC = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -116,7 +116,29 @@ export const ProjectAccessTable: VFC = () => {
                 maxWidth: 85,
                 disableSortBy: true,
             },
-
+            {
+                id: 'name',
+                Header: 'Name',
+                accessor: (row: IProjectAccess) => row.entity.name || '',
+                Cell: ({ value, row: { original: row } }: any) => (
+                    <ConditionallyRender
+                        condition={row.type === ENTITY_TYPE.GROUP}
+                        show={
+                            <LinkCell
+                                onClick={() => {
+                                    setSelectedRow(row);
+                                    setGroupOpen(true);
+                                }}
+                                title={value}
+                                subtitle={`${row.entity.users?.length} users`}
+                            />
+                        }
+                        elseShow={<HighlightCell value={value} />}
+                    />
+                ),
+                minWidth: 100,
+                searchable: true,
+            },
             {
                 id: 'username',
                 Header: 'Username',
@@ -152,26 +174,6 @@ export const ProjectAccessTable: VFC = () => {
                 accessor: (row: IProjectAccess) => {
                     const userRow = row.entity as IUser | IGroup;
                     return userRow.addedAt || '';
-                },
-                Cell: ({ value }: { value: Date }) => (
-                    <TimeAgoCell value={value} emptyText="Never" />
-                ),
-                sortType: 'date',
-                maxWidth: 150,
-            },
-            {
-                id: 'lastLogin',
-                Header: 'Last login',
-                accessor: (row: IProjectAccess) => {
-                    if (row.type === ENTITY_TYPE.USER) {
-                        const userRow = row.entity as IUser;
-                        return userRow.seenAt || '';
-                    }
-                    const userGroup = row.entity as IGroup;
-                    return userGroup.users
-                        .map(({ seenAt }) => seenAt)
-                        .sort()
-                        .reverse()[0];
                 },
                 Cell: ({ value }: { value: Date }) => (
                     <TimeAgoCell value={value} emptyText="Never" />

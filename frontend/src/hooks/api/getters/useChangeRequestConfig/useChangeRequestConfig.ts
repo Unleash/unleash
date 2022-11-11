@@ -1,10 +1,10 @@
 import useSWR from 'swr';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import { ChangeRequestConfig } from 'component/changeRequest/changeRequest.types';
+import { IChangeRequestEnvironmentConfig } from "component/changeRequest/changeRequest.types";
 
 export const useChangeRequestConfig = (projectId: string) => {
-    const { data, error, mutate } = useSWR<ChangeRequestConfig>(
+    const { data, error, mutate } = useSWR<IChangeRequestEnvironmentConfig[]>(
         formatApiPath(`api/admin/projects/${projectId}/change-requests/config`),
         fetcher
     );

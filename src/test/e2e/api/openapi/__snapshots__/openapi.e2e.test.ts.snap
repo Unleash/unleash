@@ -1216,6 +1216,7 @@ exports[`should serve the OpenAPI spec 1`] = `
             "items": {
               "$ref": "#/components/schemas/tagSchema",
             },
+            "nullable": true,
             "type": "array",
           },
           "type": {

@@ -19,6 +19,7 @@ import { PartialSome } from '../types/partial';
 import FeatureToggleStore from './feature-toggle-store';
 import { ensureStringValue } from '../util/ensureStringValue';
 import { mapValues } from '../util/map-values';
+import { IFlagResolver } from '../types/experimental';
 
 const COLUMNS = [
     'id',
@@ -112,7 +113,14 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
 
     private readonly timer: Function;
 
-    constructor(db: Knex, eventBus: EventEmitter, getLogger: LogProvider) {
+    private flagResolver: IFlagResolver;
+
+    constructor(
+        db: Knex,
+        eventBus: EventEmitter,
+        getLogger: LogProvider,
+        flagResolver: IFlagResolver,
+    ) {
         this.db = db;
         this.logger = getLogger('feature-toggle-store.ts');
         this.timer = (action) =>
@@ -120,6 +128,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 store: 'feature-toggle-strategies',
                 action,
             });
+        this.flagResolver = flagResolver;
     }
 
     async delete(key: string): Promise<void> {
@@ -343,21 +352,29 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         projectId: string,
         archived: boolean = false,
     ): Promise<IFeatureOverview[]> {
-        const rows = await this.db('features')
-            .where({ project: projectId })
-            .select(
-                'features.name as feature_name',
-                'features.type as type',
-                'features.created_at as created_at',
-                'features.last_seen_at as last_seen_at',
-                'features.stale as stale',
-                'feature_environments.enabled as enabled',
-                'feature_environments.environment as environment',
-                'environments.type as environment_type',
-                'environments.sort_order as environment_sort_order',
-                'ft.tag_type as tag_type',
+        let selectColumns = [
+            'features.name as feature_name',
+            'features.type as type',
+            'features.created_at as created_at',
+            'features.last_seen_at as last_seen_at',
+            'features.stale as stale',
+            'feature_environments.enabled as enabled',
+            'feature_environments.environment as environment',
+            'environments.type as environment_type',
+            'environments.sort_order as environment_sort_order',
+        ];
+
+        if (this.flagResolver.isEnabled('toggleTagFiltering')) {
+            selectColumns = [
+                ...selectColumns,
                 'ft.tag_value as tag_value',
-            )
+                'ft.tag_type as tag_type',
+            ];
+        }
+
+        let query = this.db('features')
+            .where({ project: projectId })
+            .select(selectColumns)
             .modify(FeatureToggleStore.filterByArchived, archived)
             .leftJoin(
                 'feature_environments',
@@ -368,8 +385,18 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 'environments',
                 'feature_environments.environment',
                 'environments.name',
-            )
-            .leftJoin('feature_tag as ft', 'ft.feature_name', 'features.name');
+            );
+
+        if (this.flagResolver.isEnabled('toggleTagFiltering')) {
+            query = query.leftJoin(
+                'feature_tag as ft',
+                'ft.feature_name',
+                'features.name',
+            );
+        }
+
+        const rows = await query;
+
         if (rows.length > 0) {
             const overview = rows.reduce((acc, r) => {
                 if (acc[r.feature_name] !== undefined) {
@@ -401,6 +428,15 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 }
                 return acc;
             }, {});
+
+            if (!this.flagResolver.isEnabled('toggleTagFiltering')) {
+                Object.values(overview).forEach(
+                    (feature: IFeatureOverview & { tags: ITag[] }) => {
+                        delete feature.tags;
+                    },
+                );
+            }
+
             return Object.values(overview).map((o: IFeatureOverview) => ({
                 ...o,
                 environments: o.environments

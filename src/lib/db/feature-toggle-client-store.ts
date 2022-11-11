@@ -15,6 +15,7 @@ import EventEmitter from 'events';
 import FeatureToggleStore from './feature-toggle-store';
 import { ensureStringValue } from '../util/ensureStringValue';
 import { mapValues } from '../util/map-values';
+import { IFlagResolver } from '../types/experimental';
 
 export interface FeaturesTable {
     name: string;
@@ -38,11 +39,14 @@ export default class FeatureToggleClientStore
 
     private timer: Function;
 
+    private flagResolver: IFlagResolver;
+
     constructor(
         db: Knex,
         eventBus: EventEmitter,
         getLogger: LogProvider,
         inlineSegmentConstraints: boolean,
+        flagResolver: IFlagResolver,
     ) {
         this.db = db;
         this.logger = getLogger('feature-toggle-client-store.ts');
@@ -52,6 +56,7 @@ export default class FeatureToggleClientStore
                 store: 'feature-toggle',
                 action,
             });
+        this.flagResolver = flagResolver;
     }
 
     private async getAll(
@@ -79,11 +84,17 @@ export default class FeatureToggleClientStore
             'fs.strategy_name as strategy_name',
             'fs.parameters as parameters',
             'fs.constraints as constraints',
-            'ft.tag_type as tag_type',
-            'ft.tag_value as tag_value',
             'segments.id as segment_id',
             'segments.constraints as segment_constraints',
         ];
+
+        if (isAdmin && this.flagResolver.isEnabled('toggleTagFiltering')) {
+            selectColumns = [
+                ...selectColumns,
+                'ft.tag_value as tag_value',
+                'ft.tag_type as tag_type',
+            ];
+        }
 
         let query = this.db('features')
             .select(selectColumns)
@@ -96,7 +107,6 @@ export default class FeatureToggleClientStore
                 'fs.feature_name',
                 'features.name',
             )
-            .leftJoin('feature_tag as ft', 'ft.feature_name', 'features.name')
             .leftJoin(
                 this.db('feature_environments')
                     .select('feature_name', 'enabled', 'environment')
@@ -111,6 +121,14 @@ export default class FeatureToggleClientStore
                 `fs.id`,
             )
             .leftJoin('segments', `segments.id`, `fss.segment_id`);
+
+        if (isAdmin && this.flagResolver.isEnabled('toggleTagFiltering')) {
+            query = query.leftJoin(
+                'feature_tag as ft',
+                'ft.feature_name',
+                'features.name',
+            );
+        }
 
         if (featureQuery) {
             if (featureQuery.tag) {
@@ -181,6 +199,10 @@ export default class FeatureToggleClientStore
             FeatureToggleClientStore.removeIdsFromStrategies(features);
         }
 
+        if (!isAdmin || !this.flagResolver.isEnabled('toggleTagFiltering')) {
+            FeatureToggleClientStore.removeTagsFromFeatures(features);
+        }
+
         return features;
     }
 
@@ -205,6 +227,12 @@ export default class FeatureToggleClientStore
             feature.strategies.forEach((strategy) => {
                 delete strategy.id;
             });
+        });
+    }
+
+    private static removeTagsFromFeatures(features: IFeatureToggleClient[]) {
+        features.forEach((feature) => {
+            delete feature.tags;
         });
     }
 

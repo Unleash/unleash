@@ -68,7 +68,7 @@ export interface IFeatureToggleClient {
     impressionData?: boolean;
     lastSeenAt?: Date;
     createdAt?: Date;
-    tags: ITag[];
+    tags?: ITag[];
 }
 
 export interface IFeatureEnvironmentInfo {

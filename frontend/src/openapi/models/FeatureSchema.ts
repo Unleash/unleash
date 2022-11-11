@@ -133,7 +133,7 @@ export interface FeatureSchema {
      * @type {Array<TagSchema>}
      * @memberof FeatureSchema
      */
-    tags?: Array<TagSchema>;
+    tags?: Array<TagSchema> | null;
 }
 
 export function FeatureSchemaFromJSON(json: any): FeatureSchema {
@@ -188,6 +188,8 @@ export function FeatureSchemaFromJSONTyped(
             : (json['variants'] as Array<any>).map(VariantSchemaFromJSON),
         tags: !exists(json, 'tags')
             ? undefined
+            : json['tags'] === null
+            ? null
             : (json['tags'] as Array<any>).map(TagSchemaFromJSON),
     };
 }
@@ -243,6 +245,8 @@ export function FeatureSchemaToJSON(value?: FeatureSchema | null): any {
         tags:
             value.tags === undefined
                 ? undefined
+                : value.tags === null
+                ? null
                 : (value.tags as Array<any>).map(TagSchemaToJSON),
     };
 }

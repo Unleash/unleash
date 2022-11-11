@@ -75,6 +75,7 @@ export const featureSchema = {
             items: {
                 $ref: '#/components/schemas/tagSchema',
             },
+            nullable: true,
         },
     },
     components: {

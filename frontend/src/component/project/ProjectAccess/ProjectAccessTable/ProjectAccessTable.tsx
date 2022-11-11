@@ -75,13 +75,8 @@ const StyledGroupAvatar = styled(UserAvatar)(({ theme }) => ({
     outline: `${theme.spacing(0.25)} solid ${theme.palette.background.paper}`,
 }));
 
-const hiddenColumnsSmall = [
-    'imageUrl',
-    'username',
-    'role',
-    'added',
-    'lastLogin',
-];
+const hiddenColumnsSmall = ['imageUrl', 'role', 'added', 'lastLogin'];
+const hiddenColumnsMedium = ['lastLogin'];
 
 export const ProjectAccessTable: VFC = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -93,6 +88,7 @@ export const ProjectAccessTable: VFC = () => {
     const navigate = useNavigate();
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
+    const isMediumScreen = useMediaQuery(theme.breakpoints.down('xl'));
     const { setToastData } = useToast();
 
     const { access, refetchProjectAccess } = useProjectAccess(projectId);
@@ -120,29 +116,7 @@ export const ProjectAccessTable: VFC = () => {
                 maxWidth: 85,
                 disableSortBy: true,
             },
-            {
-                id: 'name',
-                Header: 'Name',
-                accessor: (row: IProjectAccess) => row.entity.name || '',
-                Cell: ({ value, row: { original: row } }: any) => (
-                    <ConditionallyRender
-                        condition={row.type === ENTITY_TYPE.GROUP}
-                        show={
-                            <LinkCell
-                                onClick={() => {
-                                    setSelectedRow(row);
-                                    setGroupOpen(true);
-                                }}
-                                title={value}
-                                subtitle={`${row.entity.users?.length} users`}
-                            />
-                        }
-                        elseShow={<HighlightCell value={value} />}
-                    />
-                ),
-                minWidth: 100,
-                searchable: true,
-            },
+
             {
                 id: 'username',
                 Header: 'Username',
@@ -304,6 +278,7 @@ export const ProjectAccessTable: VFC = () => {
     );
 
     useHiddenColumns(setHiddenColumns, hiddenColumnsSmall, isSmallScreen);
+    useHiddenColumns(setHiddenColumns, hiddenColumnsMedium, isMediumScreen);
 
     useEffect(() => {
         const tableState: PageQueryType = {};

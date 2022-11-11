@@ -17,27 +17,40 @@
 // save us loooots of questions.
 const replace = require('replace-in-file');
 
-const escapeCharacters = (input) => {
-    unquotedInput =
-        input.charAt(0) === '"' ? input.substring(1, input.length - 1) : input;
-    const fixed = unquotedInput.replace(/(?<!\\)"/g, '\\"');
-    return `"${fixed}"`;
-};
-
 const options = {
     files: 'docs/reference/api/**/*.api.mdx',
     from: [
         /\/ushosted/g,
         /"https:\/\/us.app.unleash-hosted.com(\/ushosted)?"/g,
         '"path":["ushosted",',
-        /^(sidebar_label|title): (.+)/gm, // escape potentially unescaped, single-line text fields
     ],
-    to: [
-        '',
-        '"<your-unleash-url>"',
-        '"path":[',
-        (_, key, description) => `${key}: ${escapeCharacters(description)}`,
-    ],
+    to: ['', '"<your-unleash-url>"', '"path":['],
 };
 
 replace(options);
+
+// remove unused tag files: https://github.com/Unleash/unleash/pull/2402
+const fs = require('fs');
+
+const unleashOpenApiDirectory = './docs/reference/api/unleash';
+const unleashApiSidebar = require(`${unleashOpenApiDirectory}/sidebar.js`);
+
+const tagsInSidebar = new Set(
+    unleashApiSidebar
+        .map((item) => item.link?.id)
+        .filter(Boolean)
+        .map((link) => link.substring(link.lastIndexOf('/') + 1)),
+);
+
+const tagsInFiles = fs
+    .readdirSync(unleashOpenApiDirectory)
+    .filter((file) => file.endsWith('.tag.mdx'))
+    .map((file) => file.substring(0, file.indexOf('.')));
+
+const unusedTags = tagsInFiles.filter((tag) => !tagsInSidebar.has(tag));
+
+for (const tag of unusedTags) {
+    const file = `${unleashOpenApiDirectory}/${tag}.tag.mdx`;
+    fs.rmSync(file);
+    console.info('Deleted unused OpenAPI tag file:', file);
+}

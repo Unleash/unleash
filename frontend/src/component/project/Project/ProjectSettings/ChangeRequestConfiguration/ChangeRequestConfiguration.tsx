@@ -69,6 +69,7 @@ export const ChangeRequestConfiguration: VFC = () => {
             {
                 Header: 'Status',
                 accessor: 'changeRequestEnabled',
+                id: 'changeRequestEnabled',
                 align: 'center',
 
                 Cell: ({ value, row: { original } }: any) => (
@@ -97,6 +98,7 @@ export const ChangeRequestConfiguration: VFC = () => {
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
         useTable(
             {
+                // @ts-ignore
                 columns,
                 data,
                 sortTypes,

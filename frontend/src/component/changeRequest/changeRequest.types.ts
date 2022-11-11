@@ -15,7 +15,7 @@ export interface IChangeRequest {
 export interface IChangeRequestEnvironmentConfig {
     environment: string;
     type: string;
-    changeRequestsEnabled: boolean;
+    changeRequestEnabled: boolean;
 }
 
 export interface IChangeRequestFeature {

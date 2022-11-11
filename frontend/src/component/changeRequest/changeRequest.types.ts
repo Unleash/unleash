@@ -18,8 +18,6 @@ export interface IChangeRequestEnvironmentConfig {
     changeRequestsEnabled: boolean;
 }
 
-export type ChangeRequestConfig = IChangeRequestEnvironmentConfig[];
-
 export interface IChangeRequestFeature {
     name: string;
     conflict?: string;

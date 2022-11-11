@@ -12,6 +12,14 @@ export interface IChangeRequest {
     approvals: IChangeRequestApproval[];
 }
 
+export interface IChangeRequestEnviornmentConfig {
+    environment: string;
+    type: string;
+    changeRequestsEnabled: boolean;
+}
+
+export type ChangeRequestConfig = IChangeRequestEnviornmentConfig[];
+
 export interface IChangeRequestFeature {
     name: string;
     conflict?: string;

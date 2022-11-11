@@ -19,75 +19,86 @@ export interface IPermissionButtonProps extends Omit<ButtonProps, 'title'> {
     tooltipProps?: Omit<ITooltipResolverProps, 'children'>;
 }
 
-const PermissionButton: React.FC<IPermissionButtonProps> = ({
-    permission,
-    variant = 'contained',
-    color = 'primary',
-    onClick,
-    children,
-    disabled,
-    projectId,
-    environmentId,
-    tooltipProps,
-    ...rest
-}) => {
-    const { hasAccess } = useContext(AccessContext);
-    const id = useId();
-    let access;
-
-    const handleAccess = () => {
+const PermissionButton: React.FC<IPermissionButtonProps> = React.forwardRef(
+    (
+        {
+            permission,
+            variant = 'contained',
+            color = 'primary',
+            onClick,
+            children,
+            disabled,
+            projectId,
+            environmentId,
+            tooltipProps,
+            ...rest
+        },
+        ref
+    ) => {
+        const { hasAccess } = useContext(AccessContext);
+        const id = useId();
         let access;
-        if (Array.isArray(permission)) {
-            access = permission.some(permission => {
-                if (projectId && environmentId) {
-                    return hasAccess(permission, projectId, environmentId);
-                } else if (projectId) {
-                    return hasAccess(permission, projectId);
-                } else {
-                    return hasAccess(permission);
-                }
-            });
-        } else {
-            if (projectId && environmentId) {
-                access = hasAccess(permission, projectId, environmentId);
-            } else if (projectId) {
-                access = hasAccess(permission, projectId);
-            } else {
-                access = hasAccess(permission);
-            }
-        }
 
-        return access;
-    };
-
-    access = handleAccess();
-
-    return (
-        <TooltipResolver
-            {...tooltipProps}
-            title={formatAccessText(access, tooltipProps?.title)}
-            arrow
-        >
-            <span id={id}>
-                <Button
-                    onClick={onClick}
-                    disabled={disabled || !access}
-                    aria-labelledby={id}
-                    variant={variant}
-                    color={color}
-                    {...rest}
-                    endIcon={
-                        <ConditionallyRender
-                            condition={!access}
-                            show={<Lock titleAccess="Locked" />}
-                        />
+        const handleAccess = () => {
+            let access;
+            if (Array.isArray(permission)) {
+                access = permission.some(permission => {
+                    if (projectId && environmentId) {
+                        return hasAccess(permission, projectId, environmentId);
+                    } else if (projectId) {
+                        return hasAccess(permission, projectId);
+                    } else {
+                        return hasAccess(permission);
                     }
-                >
-                    {children}
-                </Button>
-            </span>
-        </TooltipResolver>
-    );
-};
+                });
+            } else {
+                if (projectId && environmentId) {
+                    access = hasAccess(permission, projectId, environmentId);
+                } else if (projectId) {
+                    access = hasAccess(permission, projectId);
+                } else {
+                    access = hasAccess(permission);
+                }
+            }
+
+            return access;
+        };
+
+        access = handleAccess();
+
+        return (
+            <TooltipResolver
+                {...tooltipProps}
+                title={formatAccessText(access, tooltipProps?.title)}
+                arrow
+            >
+                <span id={id}>
+                    <Button
+                        ref={ref}
+                        onClick={onClick}
+                        disabled={disabled || !access}
+                        aria-labelledby={id}
+                        variant={variant}
+                        color={color}
+                        {...rest}
+                        endIcon={
+                            <>
+                                <ConditionallyRender
+                                    condition={!access}
+                                    show={<Lock titleAccess="Locked" />}
+                                    elseShow={
+                                        Boolean(rest.endIcon) && rest.endIcon
+                                    }
+                                />
+                            </>
+                        }
+                    >
+                        {children}
+                    </Button>
+                </span>
+            </TooltipResolver>
+        );
+    }
+);
 
 export default PermissionButton;

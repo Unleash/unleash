@@ -1,5 +1,5 @@
-import { FormControlLabel, styled, Switch } from '@mui/material';
-import { FC } from 'react';
+import { Alert, styled } from '@mui/material';
+import { FC, useContext } from 'react';
 import { Box } from '@mui/material';
 import { useChangeRequest } from 'hooks/api/getters/useChangeRequest/useChangeRequest';
 import { ChangeRequestHeader } from './ChangeRequestHeader/ChangeRequestHeader';
@@ -12,10 +12,13 @@ import { ChangeRequestReviewStatus } from './ChangeRequestReviewStatus/ChangeReq
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import { ReviewButton } from './ReviewButton/ReviewButton';
 import { ChangeRequestReviewer } from './ChangeRequestReviewers/ChangeRequestReviewer';
+import PermissionButton from 'component/common/PermissionButton/PermissionButton';
+import { APPLY_CHANGE_REQUEST } from 'component/providers/AccessProvider/permissions';
+import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
+import AccessContext from 'contexts/AccessContext';
 
 const StyledAsideBox = styled(Box)(({ theme }) => ({
     width: '30%',
@@ -43,6 +46,9 @@ const StyledInnerContainer = styled(Box)(({ theme }) => ({
 
 export const ChangeRequestOverview: FC = () => {
     const projectId = useRequiredPathParam('projectId');
+    const { user } = useAuthUser();
+    const { isAdmin } = useContext(AccessContext);
+
     const id = useRequiredPathParam('id');
     const { data: changeRequest, refetchChangeRequest } = useChangeRequest(
         projectId,
@@ -71,6 +77,11 @@ export const ChangeRequestOverview: FC = () => {
         }
     };
 
+    const isSelfReview =
+        changeRequest?.createdBy.id === user?.id &&
+        changeRequest.state === 'In review' &&
+        !isAdmin;
+
     return (
         <>
             <ChangeRequestHeader changeRequest={changeRequest} />
@@ -98,6 +109,19 @@ export const ChangeRequestOverview: FC = () => {
                     <StyledInnerContainer>
                         Changes
                         <ChangeRequest changeRequest={changeRequest} />
+                        <ConditionallyRender
+                            condition={isSelfReview}
+                            show={
+                                <Alert
+                                    sx={theme => ({
+                                        marginTop: theme.spacing(1.5),
+                                    })}
+                                    severity="info"
+                                >
+                                    You can not approve your own change request
+                                </Alert>
+                            }
+                        />
                         <ChangeRequestReviewStatus
                             state={changeRequest.state}
                         />
@@ -109,12 +133,17 @@ export const ChangeRequestOverview: FC = () => {
                             <ConditionallyRender
                                 condition={changeRequest.state === 'Approved'}
                                 show={
-                                    <Button
+                                    <PermissionButton
                                         variant="contained"
                                         onClick={onApplyChanges}
+                                        projectId={projectId}
+                                        permission={APPLY_CHANGE_REQUEST}
+                                        environmentId={
+                                            changeRequest.environment
+                                        }
                                     >
                                         Apply changes
-                                    </Button>
+                                    </PermissionButton>
                                 }
                             />
                         </StyledButtonBox>

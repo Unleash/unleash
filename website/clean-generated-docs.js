@@ -17,27 +17,14 @@
 // save us loooots of questions.
 const replace = require('replace-in-file');
 
-const escapeCharacters = (input) => {
-    unquotedInput =
-        input.charAt(0) === '"' ? input.substring(1, input.length - 1) : input;
-    const fixed = unquotedInput.replace(/(?<!\\)"/g, '\\"');
-    return `"${fixed}"`;
-};
-
 const options = {
     files: 'docs/reference/api/**/*.api.mdx',
     from: [
         /\/ushosted/g,
         /"https:\/\/us.app.unleash-hosted.com(\/ushosted)?"/g,
         '"path":["ushosted",',
-        /^(sidebar_label|title): (.+)/gm, // escape potentially unescaped, single-line text fields
     ],
-    to: [
-        '',
-        '"<your-unleash-url>"',
-        '"path":[',
-        (_, key, description) => `${key}: ${escapeCharacters(description)}`,
-    ],
+    to: ['', '"<your-unleash-url>"', '"path":['],
 };
 
 replace(options);

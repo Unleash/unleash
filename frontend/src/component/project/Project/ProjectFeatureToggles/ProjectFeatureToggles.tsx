@@ -195,13 +195,6 @@ export const ProjectFeatureToggles = ({
                 searchable: true,
             },
             {
-                Header: 'Created',
-                accessor: 'createdAt',
-                Cell: DateCell,
-                sortType: 'date',
-                minWidth: 120,
-            },
-            {
                 id: 'tags',
                 Header: 'Tags',
                 accessor: (row: IFeatureToggleListItem) =>
@@ -211,6 +204,13 @@ export const ProjectFeatureToggles = ({
                 Cell: FeatureTagCell,
                 hideInMenu: true,
                 searchable: true,
+            },
+            {
+                Header: 'Created',
+                accessor: 'createdAt',
+                Cell: DateCell,
+                sortType: 'date',
+                minWidth: 120,
             },
             ...environments.map(name => ({
                 Header: loading ? () => '' : name,

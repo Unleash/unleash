@@ -59,6 +59,15 @@ const columns = [
         searchable: true,
     },
     {
+        id: 'tags',
+        Header: 'Tags',
+        accessor: (row: FeatureSchema) =>
+            row.tags?.map(({ type, value }) => `${type}:${value}`).join(', ') ||
+            '',
+        Cell: FeatureTagCell,
+        searchable: true,
+    },
+    {
         Header: 'Created',
         accessor: 'createdAt',
         Cell: DateCell,
@@ -74,15 +83,6 @@ const columns = [
         sortType: 'alphanumeric',
         maxWidth: 150,
         filterName: 'project',
-        searchable: true,
-    },
-    {
-        id: 'tags',
-        Header: 'Tags',
-        accessor: (row: FeatureSchema) =>
-            row.tags?.map(({ type, value }) => `${type}:${value}`).join(', ') ||
-            '',
-        Cell: FeatureTagCell,
         searchable: true,
     },
     {

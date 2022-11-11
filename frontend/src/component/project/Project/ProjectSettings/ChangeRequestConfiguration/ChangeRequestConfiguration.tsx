@@ -1,43 +1,71 @@
 import { useMemo, useState, VFC } from 'react';
-import { HeaderGroup, Row } from 'react-table';
+import { HeaderGroup, useGlobalFilter, useTable } from 'react-table';
 import { Alert, Box, Typography } from '@mui/material';
 import {
     SortableTableHeader,
     Table,
-    TableCell,
     TableBody,
+    TableCell,
     TableRow,
 } from 'component/common/Table';
-import { useGlobalFilter, useTable } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import PermissionSwitch from 'component/common/PermissionSwitch/PermissionSwitch';
-import { UPDATE_FEATURE_ENVIRONMENT } from 'component/providers/AccessProvider/permissions';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { useChangeRequestConfig } from '../../../../../hooks/api/getters/useChangeRequestConfig/useChangeRequestConfig';
+import { useChangeRequestApi } from '../../../../../hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
+import { UPDATE_PROJECT } from '@server/types/permissions';
+import useToast from '../../../../../hooks/useToast';
+import { formatUnknownError } from '../../../../../utils/formatUnknownError';
 
 export const ChangeRequestConfiguration: VFC = () => {
     const [dialogState, setDialogState] = useState<{
         isOpen: boolean;
         enableEnvironment?: string;
+        isEnabled: boolean;
     }>({
         isOpen: false,
         enableEnvironment: '',
+        isEnabled: false,
     });
     const projectId = useRequiredPathParam('projectId');
-    const data = [
-        {
-            environment: 'dev',
-            type: 'test',
-            isEnabled: false,
-        },
-    ] as any[]; // FIXME: type
+    const { data, loading, refetchChangeRequestConfig } =
+        useChangeRequestConfig(projectId);
+    const { updateChangeRequestEnvironmentConfig } = useChangeRequestApi();
+    const { setToastData, setToastApiError } = useToast();
 
-    const onClick = (enableEnvironment: string) => () => {
-        setDialogState({ isOpen: true, enableEnvironment });
+    const onClick = (enableEnvironment: string, isEnabled: boolean) => () => {
+        setDialogState({ isOpen: true, enableEnvironment, isEnabled });
+    };
+
+    const onConfirm = async () => {
+        if (dialogState.enableEnvironment) {
+            try {
+                await updateChangeRequestEnvironmentConfig(
+                    projectId,
+                    dialogState.enableEnvironment,
+                    !dialogState.isEnabled
+                );
+                setToastData({
+                    type: 'success',
+                    title: 'Updated change request status',
+                    text: 'Successfully updated change request status.',
+                });
+                refetchChangeRequestConfig();
+            } catch (error) {
+                const message = formatUnknownError(error);
+                setToastApiError(message);
+            }
+        }
+        setDialogState({
+            isOpen: false,
+            enableEnvironment: '',
+            isEnabled: false,
+        });
     };
 
     const columns = useMemo(
@@ -55,7 +83,8 @@ export const ChangeRequestConfiguration: VFC = () => {
             },
             {
                 Header: 'Status',
-                accessor: 'isEnabled',
+                accessor: 'changeRequestEnabled',
+                id: 'changeRequestEnabled',
                 align: 'center',
 
                 Cell: ({ value, row: { original } }: any) => (
@@ -67,9 +96,12 @@ export const ChangeRequestConfiguration: VFC = () => {
                             checked={value}
                             environmentId={original.environment}
                             projectId={projectId}
-                            permission={UPDATE_FEATURE_ENVIRONMENT} // FIXME: permission - enable change request
+                            permission={UPDATE_PROJECT}
                             inputProps={{ 'aria-label': original.environment }}
-                            onClick={onClick(original.environment)}
+                            onClick={onClick(
+                                original.environment,
+                                original.changeRequestEnabled
+                            )}
                         />
                     </Box>
                 ),
@@ -84,6 +116,7 @@ export const ChangeRequestConfiguration: VFC = () => {
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
         useTable(
             {
+                // @ts-ignore
                 columns,
                 data,
                 sortTypes,
@@ -95,11 +128,10 @@ export const ChangeRequestConfiguration: VFC = () => {
             },
             useGlobalFilter
         );
-
     return (
         <PageContent
             header={<PageHeader titleElement="Change request configuration" />}
-            // isLoading={loading}
+            isLoading={loading}
         >
             <Alert severity="info" sx={{ mb: 3 }}>
                 If change request is enabled for an environment, then any change
@@ -128,20 +160,21 @@ export const ChangeRequestConfiguration: VFC = () => {
             </Table>
 
             <Dialogue
-                onClick={() => {
-                    alert('clicked');
-                    /* FIXME: API action */
-                }}
+                onClick={() => onConfirm()}
                 open={dialogState.isOpen}
                 onClose={() =>
                     setDialogState(state => ({ ...state, isOpen: false }))
                 }
-                primaryButtonText="Enable"
+                primaryButtonText={dialogState.isEnabled ? 'Disable' : 'Enable'}
                 secondaryButtonText="Cancel"
-                title="Enable change request"
+                title={`${
+                    dialogState.isEnabled ? 'Disable' : 'Enable'
+                } change requests`}
             >
                 <Typography sx={{ mb: 1 }}>
-                    You are about to enable “Change request”
+                    You are about to{' '}
+                    {dialogState.isEnabled ? 'disable' : 'enable'} “Change
+                    request”
                     <ConditionallyRender
                         condition={Boolean(dialogState.enableEnvironment)}
                         show={
@@ -154,12 +187,18 @@ export const ChangeRequestConfiguration: VFC = () => {
                     />
                     .
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                    When enabling change request for an environment, you need to
-                    be sure that your Unleash Admin already have created the
-                    custom project roles in your Unleash instance so you can
-                    assign your project members from the project access page.
-                </Typography>
+                <ConditionallyRender
+                    condition={!dialogState.isEnabled}
+                    show={
+                        <Typography variant="body2" color="text.secondary">
+                            When enabling change request for an environment, you
+                            need to be sure that your Unleash Admin already have
+                            created the custom project roles in your Unleash
+                            instance so you can assign your project members from
+                            the project access page.
+                        </Typography>
+                    }
+                />
             </Dialogue>
         </PageContent>
     );

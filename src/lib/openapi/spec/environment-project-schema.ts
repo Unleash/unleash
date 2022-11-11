@@ -1,7 +1,7 @@
 import { FromSchema } from 'json-schema-to-ts';
 
-export const environmentSchema = {
-    $id: '#/components/schemas/environmentSchema',
+export const environmentProjectSchema = {
+    $id: '#/components/schemas/environmentProjectSchema',
     type: 'object',
     additionalProperties: false,
     required: ['name', 'type', 'enabled'],
@@ -21,15 +21,11 @@ export const environmentSchema = {
         sortOrder: {
             type: 'number',
         },
-        projectCount: {
+        projectApiTokenCount: {
             type: 'number',
             nullable: true,
         },
-        apiTokenCount: {
-            type: 'number',
-            nullable: true,
-        },
-        enabledToggleCount: {
+        projectEnabledToggleCount: {
             type: 'number',
             nullable: true,
         },
@@ -37,4 +33,6 @@ export const environmentSchema = {
     components: {},
 } as const;
 
-export type EnvironmentSchema = FromSchema<typeof environmentSchema>;
+export type EnvironmentProjectSchema = FromSchema<
+    typeof environmentProjectSchema
+>;

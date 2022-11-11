@@ -828,7 +828,7 @@ exports[`should serve the OpenAPI spec 1`] = `
         ],
         "type": "object",
       },
-      "environmentSchema": {
+      "environmentProjectSchema": {
         "additionalProperties": false,
         "properties": {
           "enabled": {
@@ -836,6 +836,14 @@ exports[`should serve the OpenAPI spec 1`] = `
           },
           "name": {
             "type": "string",
+          },
+          "projectApiTokenCount": {
+            "nullable": true,
+            "type": "number",
+          },
+          "projectEnabledToggleCount": {
+            "nullable": true,
+            "type": "number",
           },
           "protected": {
             "type": "boolean",
@@ -851,6 +859,63 @@ exports[`should serve the OpenAPI spec 1`] = `
           "name",
           "type",
           "enabled",
+        ],
+        "type": "object",
+      },
+      "environmentSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "apiTokenCount": {
+            "nullable": true,
+            "type": "number",
+          },
+          "enabled": {
+            "type": "boolean",
+          },
+          "enabledToggleCount": {
+            "nullable": true,
+            "type": "number",
+          },
+          "name": {
+            "type": "string",
+          },
+          "projectCount": {
+            "nullable": true,
+            "type": "number",
+          },
+          "protected": {
+            "type": "boolean",
+          },
+          "sortOrder": {
+            "type": "number",
+          },
+          "type": {
+            "type": "string",
+          },
+        },
+        "required": [
+          "name",
+          "type",
+          "enabled",
+        ],
+        "type": "object",
+      },
+      "environmentsProjectSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "environments": {
+            "items": {
+              "$ref": "#/components/schemas/environmentProjectSchema",
+            },
+            "type": "array",
+          },
+          "version": {
+            "type": "integer",
+          },
+        },
+        "required": [
+          "version",
+          "environments",
         ],
         "type": "object",
       },
@@ -4195,6 +4260,36 @@ exports[`should serve the OpenAPI spec 1`] = `
         "responses": {
           "200": {
             "description": "This response has no body.",
+          },
+        },
+        "tags": [
+          "Environments",
+        ],
+      },
+    },
+    "/api/admin/environments/project/{projectId}": {
+      "get": {
+        "operationId": "getProjectEnvironments",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/environmentsProjectSchema",
+                },
+              },
+            },
+            "description": "environmentsProjectSchema",
           },
         },
         "tags": [

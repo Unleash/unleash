@@ -122,6 +122,14 @@ export interface IEnvironment {
     sortOrder: number;
     enabled: boolean;
     protected: boolean;
+    projectCount?: number;
+    apiTokenCount?: number;
+    enabledToggleCount?: number;
+}
+
+export interface IProjectEnvironment extends IEnvironment {
+    projectApiTokenCount?: number;
+    projectEnabledToggleCount?: number;
 }
 
 export interface IEnvironmentCreate {

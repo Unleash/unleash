@@ -4,7 +4,17 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { Badge } from 'component/common/Badge/Badge';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { styled } from '@mui/material';
+import { styled, Typography } from '@mui/material';
+import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
+
+const StyledTooltipTitle = styled(Typography)(({ theme }) => ({
+    fontWeight: 'bold',
+    fontSize: theme.fontSizes.smallerBody,
+}));
+
+const StyledTooltipDescription = styled(Typography)(({ theme }) => ({
+    fontSize: theme.fontSizes.smallerBody,
+}));
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
     marginLeft: theme.spacing(1),
@@ -23,12 +33,31 @@ export const EnvironmentNameCell = ({
         <TextCell>
             <Highlighter search={searchQuery}>{environment.name}</Highlighter>
             <ConditionallyRender
-                condition={!environment.enabled}
-                show={<StyledBadge color="warning">Disabled</StyledBadge>}
-            />
-            <ConditionallyRender
                 condition={environment.protected}
                 show={<StyledBadge color="success">Predefined</StyledBadge>}
+            />
+            <ConditionallyRender
+                condition={!environment.enabled}
+                show={
+                    <HtmlTooltip
+                        sx={{ maxWidth: '270px' }}
+                        title={
+                            <>
+                                <StyledTooltipTitle>
+                                    Deprecated environment
+                                </StyledTooltipTitle>
+                                <StyledTooltipDescription>
+                                    This environment is not auto-enabled for new
+                                    projects. The project owner will need to
+                                    manually enable it in the project.
+                                </StyledTooltipDescription>
+                            </>
+                        }
+                        describeChild
+                    >
+                        <StyledBadge color="neutral">Deprecated</StyledBadge>
+                    </HtmlTooltip>
+                }
             />
         </TextCell>
     );

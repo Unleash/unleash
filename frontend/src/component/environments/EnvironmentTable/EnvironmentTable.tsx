@@ -23,6 +23,9 @@ import { EnvironmentNameCell } from './EnvironmentNameCell/EnvironmentNameCell';
 import { EnvironmentActionCell } from './EnvironmentActionCell/EnvironmentActionCell';
 import { EnvironmentIconCell } from './EnvironmentIconCell/EnvironmentIconCell';
 import { Search } from 'component/common/Search/Search';
+import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
+import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
+import { IEnvironment } from 'interfaces/environments';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(4),
@@ -93,7 +96,7 @@ export const EnvironmentTable = () => {
                 inside each feature toggle.
             </StyledAlert>
             <SearchHighlightProvider value={globalFilter}>
-                <Table {...getTableProps()}>
+                <Table {...getTableProps()} rowHeight="compact">
                     <SortableTableHeader headerGroups={headerGroups as any} />
                     <TableBody {...getTableBodyProps()}>
                         {rows.map(row => {
@@ -138,22 +141,45 @@ const COLUMNS = [
     {
         id: 'Icon',
         width: '1%',
-        Cell: () => <EnvironmentIconCell />,
+        Cell: ({ row: { original } }: { row: { original: IEnvironment } }) => (
+            <EnvironmentIconCell environment={original} />
+        ),
         disableGlobalFilter: true,
+        isDragHandle: true,
     },
     {
         Header: 'Name',
         accessor: 'name',
-        Cell: ({ row: { original } }: any) => (
+        Cell: ({ row: { original } }: { row: { original: IEnvironment } }) => (
             <EnvironmentNameCell environment={original} />
         ),
+        minWidth: 350,
+    },
+    {
+        Header: 'Type',
+        accessor: 'type',
+        Cell: HighlightCell,
+    },
+    {
+        Header: 'Visible in',
+        accessor: (row: IEnvironment) =>
+            row.projectCount === 1
+                ? '1 project'
+                : `${row.projectCount} projects`,
+        Cell: TextCell,
+    },
+    {
+        Header: 'API Tokens',
+        accessor: (row: IEnvironment) =>
+            row.apiTokenCount === 1 ? '1 token' : `${row.apiTokenCount} tokens`,
+        Cell: TextCell,
     },
     {
         Header: 'Actions',
         id: 'Actions',
         align: 'center',
         width: '1%',
-        Cell: ({ row: { original } }: any) => (
+        Cell: ({ row: { original } }: { row: { original: IEnvironment } }) => (
             <EnvironmentActionCell environment={original} />
         ),
         disableGlobalFilter: true,

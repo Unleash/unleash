@@ -1,7 +1,7 @@
 import { IUnleashStores } from '../types/stores';
 import { IUnleashConfig } from '../types/option';
 import { Logger } from '../logger';
-import { IEnvironment, ISortOrder } from '../types/model';
+import { IEnvironment, IProjectEnvironment, ISortOrder } from '../types/model';
 import { UNIQUE_CONSTRAINT_VIOLATION } from '../error/db-error';
 import NameExistsError from '../error/name-exists-error';
 import { sortOrderSchema } from './state-schema';
@@ -46,11 +46,17 @@ export default class EnvironmentService {
     }
 
     async getAll(): Promise<IEnvironment[]> {
-        return this.environmentStore.getAll();
+        return this.environmentStore.getAllWithCounts();
     }
 
     async get(name: string): Promise<IEnvironment> {
         return this.environmentStore.get(name);
+    }
+
+    async getProjectEnvironments(
+        projectId: string,
+    ): Promise<IProjectEnvironment[]> {
+        return this.environmentStore.getProjectEnvironments(projectId);
     }
 
     async updateSortOrder(sortOrder: ISortOrder): Promise<void> {

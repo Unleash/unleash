@@ -76,7 +76,7 @@
     "@tsconfig/docusaurus": "1.0.6",
     "babel-loader": "9.1.0",
     "enhanced-resolve": "5.10.0",
-    "react-router": "6.4.2",
+    "react-router": "6.4.3",
     "replace-in-file": "6.3.5",
     "storybook-addon-root-attribute": "1.0.2",
     "typescript": "4.8.4"

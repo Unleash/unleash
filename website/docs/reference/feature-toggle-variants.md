@@ -30,7 +30,7 @@ A variant has four components that define it:
 
 - an optional **override**
 
-    Overrides let you specify that certain users (as identified either by their user ID or by another [custom stickiness](stickiness) value) will always get this variant, regardless of the variant's weight.
+    Overrides let you specify that certain users (as identified either by their user ID or by another [custom stickiness](./stickiness.md) value) will always get this variant, regardless of the variant's weight.
 
 ![A form for adding new variants. It has fields for name, weight, payload, and overrides.](/img/variant-creation-form.png 'Creating a new toggle variant')
 
@@ -88,7 +88,7 @@ Unleash currently supports these payload types:
 
 ### Variant stickiness
 
-Variant stickiness is calculated on the received user and context, as described in [the stickiness chapter](stickiness). This ensures that the same user will consistently see the same variant barring overrides and weight changes. If no context data is provided, the traffic will be spread randomly for each request.
+Variant stickiness is calculated on the received user and context, as described in [the stickiness chapter](./stickiness.md). This ensures that the same user will consistently see the same variant barring overrides and weight changes. If no context data is provided, the traffic will be spread randomly for each request.
 
 
 ## How do I configure variants

@@ -102,7 +102,7 @@ Custom activation strategies can **not** be used with the Unleash-hosted proxy a
 
 :::
 
-The Unleash Proxy can load [custom activation strategies](../advanced/custom-activation-strategy.md) for front-end client SDKs ([Android](../sdks/android-proxy.md), [JavaScript](../sdks/proxy-javascript.md), [React](../sdks/proxy-react.md), [iOS](../sdks/proxy-ios.md)). For a step-by-step guide, refer to the [_how to use custom strategies_ guide](../how-to/how-to-use-custom-strategies.md#step-3-b).
+The Unleash Proxy can load [custom activation strategies](../reference/custom-activation-strategies.md) for front-end client SDKs ([Android](../sdks/android-proxy.md), [JavaScript](../sdks/proxy-javascript.md), [React](../sdks/proxy-react.md), [iOS](../sdks/proxy-ios.md)). For a step-by-step guide, refer to the [_how to use custom strategies_ guide](../how-to/how-to-use-custom-strategies.md#step-3-b).
 
 To load custom strategies, use either of these two options:
 
@@ -132,7 +132,7 @@ class MyOtherCustomStrategy extends Strategy {
 module.exports = [new MyCustomStrategy(), new MyOtherCustomStrategy()];
 ```
 
-Refer the [custom activation strategy documentation](../advanced/custom-activation-strategy.md#implementation) for more details on how to implement a custom activation strategy.
+Refer the [custom activation strategy documentation](../reference/custom-activation-strategies.md#implementation) for more details on how to implement a custom activation strategy.
 
 ## Unleash Proxy API {#unleash-proxy-api}
 
@@ -183,7 +183,7 @@ The `proxy` endpoint returns information about toggles enabled for the current u
 
 #### Toggle data
 
-The data for a toggle without [variants](../advanced/feature-toggle-variants.md) looks like this:
+The data for a toggle without [variants](../reference/feature-toggle-variants.md) looks like this:
 
 ```json
 {
@@ -206,7 +206,7 @@ Unleash uses a fallback variant called "disabled" to indicate that a toggle has 
 
 :::
 
-If a toggle has variants, then the variant object can also contain an optional `payload` property. The `payload` will contain data about the variant's payload: what type it is, and what the content is. To learn more about variants and their payloads, check [the feature toggle variants documentation](../advanced/feature-toggle-variants.md).
+If a toggle has variants, then the variant object can also contain an optional `payload` property. The `payload` will contain data about the variant's payload: what type it is, and what the content is. To learn more about variants and their payloads, check [the feature toggle variants documentation](../reference/feature-toggle-variants.md).
 
 Variant toggles without payloads look will have their name listed and the `enabled` property set to `true`:
 

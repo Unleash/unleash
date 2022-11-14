@@ -9,7 +9,7 @@ Before Unleash 4.16, custom context fields were only available to Unleash Pro an
 
 :::
 
-This guide shows you how to create [custom context field for the Unleash Context](../user_guide/unleash-context.md#custom-context-fields). You can use custom context fields for [strategy constraints](../advanced/strategy-constraints.md) and for [custom stickiness calculations](../advanced/stickiness.md#custom-stickiness). If there are [standard Unleash Context fields](../user_guide/unleash-context.md#structure) missing from the context fields page, you can use the same steps to add them too.
+This guide shows you how to create [custom context field for the Unleash Context](../user_guide/unleash-context.md#custom-context-fields). You can use custom context fields for [strategy constraints](../advanced/strategy-constraints.md) and for [custom stickiness calculations](../reference/stickiness.md#custom-stickiness). If there are [standard Unleash Context fields](../user_guide/unleash-context.md#structure) missing from the context fields page, you can use the same steps to add them too.
 
 ## Step 1: Navigate to the context field creation form {#step-1-navigate-to-context-fields}
 

@@ -3,7 +3,7 @@ id: unleash_context
 title: Unleash Context
 ---
 
-The **Unleash Context** contains information relating to the current feature toggle request. Unleash uses this context to evaluate [activation strategies](activation-strategies.md) and [strategy constraints](../advanced/strategy-constraints.md) and to calculate [toggle stickiness](../advanced/stickiness.md). The Unleash Context is an important feature of all the [Unleash client SDKs](../sdks/index.md).
+The **Unleash Context** contains information relating to the current feature toggle request. Unleash uses this context to evaluate [activation strategies](activation-strategies.md) and [strategy constraints](../advanced/strategy-constraints.md) and to calculate [toggle stickiness](../reference/stickiness.md). The Unleash Context is an important feature of all the [Unleash client SDKs](../sdks/index.md).
 
 ## Structure
 
@@ -30,7 +30,7 @@ The below table gives a brief overview over what the fields' intended usage is, 
 
 ### The `properties` field
 
-The `properties` field is different from the others. You can use the `properties` field to provide arbitrary data to [custom strategies](../advanced/custom-activation-strategy.md) or to [strategy constraints](../advanced/strategy-constraints.md). The `properties` field is also where you add values for [custom context fields](#custom-context-fields).
+The `properties` field is different from the others. You can use the `properties` field to provide arbitrary data to [custom strategies](../reference/custom-activation-strategies.md) or to [strategy constraints](../advanced/strategy-constraints.md). The `properties` field is also where you add values for [custom context fields](#custom-context-fields).
 
 
 #### A note on properties and constraints
@@ -49,7 +49,7 @@ Before Unleash 4.16, custom context fields were only available to Unleash Pro an
 
 :::
 
-Custom context fields allow you to extend the Unleash Context with more data that is applicable to your situation. Each context field definition consists of a name and an optional description. Additionally, you can choose to define a set of [_legal values_](#legal-values "legal values for custom context fields"), and you can choose whether or not the context field can be used in [custom stickiness calculations](../advanced/stickiness.md#custom-stickiness) for the [gradual rollout strategy](activation-strategies.md#customize-stickiness-beta) and for [feature toggle variants](../advanced/feature-toggle-variants.md).
+Custom context fields allow you to extend the Unleash Context with more data that is applicable to your situation. Each context field definition consists of a name and an optional description. Additionally, you can choose to define a set of [_legal values_](#legal-values "legal values for custom context fields"), and you can choose whether or not the context field can be used in [custom stickiness calculations](../reference/stickiness.md#custom-stickiness) for the [gradual rollout strategy](activation-strategies.md#customize-stickiness-beta) and for [feature toggle variants](../reference/feature-toggle-variants.md).
 
 When interacting with custom context fields in code, they must be accessed via the Unleash Context's `properties` map, using the context field's name as the key.
 
@@ -74,7 +74,7 @@ Using a custom context field called _region_ as an example: if you define the fi
 This feature is currently in beta and is not yet supported by all our SDKs. Check out the [SDK compatibility table](../sdks/index.md#server-side-sdk-compatibility-table) to see what SDKs support it at the moment.
 :::
 
-Any context field _can_ be used to [calculate custom stickiness](../advanced/stickiness.md#custom-stickiness). However, you need to explicitly tell Unleash that you want a field to be used for custom stickiness for it to be possible. You can enable this functionality either when you create the context field or at any later point. For steps on how to do this, see [the _How to define custom context fields_ guide](../how-to/how-to-define-custom-context-fields).
+Any context field _can_ be used to [calculate custom stickiness](../reference/stickiness.md#custom-stickiness). However, you need to explicitly tell Unleash that you want a field to be used for custom stickiness for it to be possible. You can enable this functionality either when you create the context field or at any later point. For steps on how to do this, see [the _How to define custom context fields_ guide](../how-to/how-to-define-custom-context-fields).
 
 
 

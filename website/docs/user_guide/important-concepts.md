@@ -13,7 +13,7 @@ Activation strategies compound, and every single strategy will be evaluated. If 
 
 > Unless you add activation strategies on toggle creation, the toggle will be created with the default strategy. The default strategy says that the toggle is either 100% off or 100% on for all users. This means that any other strategies you add will have no effect. If you want to use strategies to control rollout you need to remove the default strategy.
 
-Unleash comes with a set of built-in strategies, but you can also build your own [custom strategies](../advanced/custom-activation-strategy.md).
+Unleash comes with a set of built-in strategies, but you can also build your own [custom strategies](../reference/custom-activation-strategies.md).
 
 [You can read more about activation strategies here.](./activation_strategy)
 
@@ -43,4 +43,4 @@ This ensures that we can have different data responses for the client API endpoi
 
 Unleash categorizes feature toggles into five distinct types. This categorization makes it easier for you to see what the purpose of a toggle is and helps Unleash with [managing technical debt](/user_guide/technical_debt). A feature toggle's type has no effect on how the toggle behaves or how you can configure it.
 
-[Read more about feature toggle types here.](../advanced/feature-toggle-types.md)
+[Read more about feature toggle types here.](../reference/feature-toggle-types.md)

@@ -3,7 +3,7 @@ title: The Anatomy of Unleash
 ---
 import Figure from '@site/src/components/Figure/Figure.tsx'
 
-This guide's purpose is to give you a conceptual overview of how Unleash works. It covers the various components that exist within an Unleash system and how they interact with each other and with external applications. The diagrams are intended to help you understand the fundamental building blocks, such as [projects](../user_guide/projects.md), [environments](../user_guide/environments.md), [variants](../advanced/feature-toggle-variants.md) and, of course, [feature toggles](../reference/feature-toggles.mdx).
+This guide's purpose is to give you a conceptual overview of how Unleash works. It covers the various components that exist within an Unleash system and how they interact with each other and with external applications. The diagrams are intended to help you understand the fundamental building blocks, such as [projects](../user_guide/projects.md), [environments](../user_guide/environments.md), [variants](../reference/feature-toggle-variants.md) and, of course, [feature toggles](../reference/feature-toggles.mdx).
 
 The end of this guide presents a [short use case, explaining how you might configure Unleash](#use-case) to start working with feature toggles.
 
@@ -15,7 +15,7 @@ Some things in Unleash are configured and defined on the global level. These opt
 - [API access tokens](../reference/api-tokens-and-client-keys.mdx)
 - [Projects](../user_guide/projects.md)
 - [Segments](../reference/segments.mdx)
-- [Strategy types](../user_guide/activation-strategies.md) (including [custom activation strategy types](../advanced/custom-activation-strategy.md))
+- [Strategy types](../user_guide/activation-strategies.md) (including [custom activation strategy types](../reference/custom-activation-strategies.md))
 - [Tag types](../advanced/tags.md)
 - [Unleash context](../user_guide/unleash-context.md) fields (including [custom context fields](../user_guide/unleash-context.md#custom-context-fields))
 - Users, [user groups](../user_guide/rbac.md#user-groups) and [global roles](../user_guide/rbac.md)
@@ -58,7 +58,7 @@ When connecting an SDK to Unleash, it's the **API key that decides which environ
 
 [**Feature toggles**](../reference/feature-toggles.mdx) are at the heart of Unleash’s functionality. Feature toggles belong to projects and live next to project environments. In and of itself, a feature toggle doesn’t do anything. You must assign [**activation strategies**](../user_guide/activation-strategies.md) to it for it to start taking effect.
 
-When creating a feature toggle, you must assign a unique (across your Unleash instance) name, a [feature toggle type](../advanced/feature-toggle-types.md), a [project](../user_guide/projects.md) it belongs to, and an optional description. Everything except for the name can be changed later.
+When creating a feature toggle, you must assign a unique (across your Unleash instance) name, a [feature toggle type](../reference/feature-toggle-types.md), a [project](../user_guide/projects.md) it belongs to, and an optional description. Everything except for the name can be changed later.
 
 <Figure img="/img/anatomy-of-unleash-features.png" caption="Feature toggle states are evaluated independently in each environment." alt="A hierarchy showing a project containing an environment containing a feature toggle configuration."/>
 
@@ -74,7 +74,7 @@ When you check a [feature toggle](../reference/feature-toggles.mdx) in an applic
 
 Activation strategies tie feature toggles and [environments](../user_guide/environments.md) together. When you assign an activation strategy to a feature toggle, you do so in one environment at a time. You can assign the same strategy to the same toggle in different environments, but they will be different instances of the same strategy, and do not stay in sync. Unleash also lets you copy strategies from one environment to another.
 
-Unleash comes with a number of strategies built in (refer the [activation strategies documentation](../user_guide/activation-strategies.md) for more information on those). You can also create your own [custom activation strategies](../advanced/custom-activation-strategy.md) if you need them. All strategies can be further augmented by [**strategy constraints**](../advanced/strategy-constraints.md).
+Unleash comes with a number of strategies built in (refer the [activation strategies documentation](../user_guide/activation-strategies.md) for more information on those). You can also create your own [custom activation strategies](../reference/custom-activation-strategies.md) if you need them. All strategies can be further augmented by [**strategy constraints**](../advanced/strategy-constraints.md).
 
 
 <Figure img="/img/anatomy-of-unleash-environments-strategies.png" caption="Feature toggles exist across environments and can have different activation strategies in each environment."/>
@@ -124,7 +124,7 @@ Segments are only available to Pro and Enterprise users.
 
 ## Variants and feature toggle payloads
 
-By default, a [feature toggle](../reference/feature-toggles.mdx) in Unleash only tells you whether a feature is enabled or disabled, but you can also add more information to your toggles by using [**feature toggle variants**](../advanced/feature-toggle-variants.md). Variants also allow you to run [A/B testing experiments](a-b-testing.md).
+By default, a [feature toggle](../reference/feature-toggles.mdx) in Unleash only tells you whether a feature is enabled or disabled, but you can also add more information to your toggles by using [**feature toggle variants**](../reference/feature-toggle-variants.md). Variants also allow you to run [A/B testing experiments](a-b-testing.md).
 
 Feature toggles are designed to let you decide which users get access to a feature. Variants are designed to let you decide **which version** of the feature a user gets access to. For instance, if user A is part of your beta testing program and gets access to a new beta feature, then you can use variants to decide whether they should get the red version or the green version of the feature.
 

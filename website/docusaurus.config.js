@@ -189,10 +189,6 @@ module.exports = {
                         from: '/user_guide/control_rollout',
                     },
                     {
-                        from: '/advanced/impression_data',
-                        to: '/advanced/impression-data',
-                    },
-                    {
                         from: '/advanced/audit_log',
                         to: '/reference/event-log',
                     },
@@ -221,7 +217,10 @@ module.exports = {
                         to: '/reference/feature-toggle-variants',
                     },
                     {
-                        from: '/advanced/impression-data',
+                        from: [
+                            '/advanced/impression-data',
+                            '/advanced/impression_data',
+                        ],
                         to: '/reference/impression-data',
                     },
                     {

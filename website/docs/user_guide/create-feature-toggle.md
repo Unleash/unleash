@@ -134,6 +134,6 @@ Use the [update variants endpoint](../api/admin/feature-toggles-api-v2.md#update
 
 :::
 
-[Variants](../advanced/feature-toggle-variants.md) give you the ability to further target your users and split them into groups of your choosing, such as for A/B testing. On the toggle overview page, select the variants tab. Use the "new variant" button to add the variants that you want.
+[Variants](../reference/feature-toggle-variants.md) give you the ability to further target your users and split them into groups of your choosing, such as for A/B testing. On the toggle overview page, select the variants tab. Use the "new variant" button to add the variants that you want.
 
 ![](/img/create-toggle-add-variants.png)

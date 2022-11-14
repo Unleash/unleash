@@ -45,9 +45,9 @@ You can add any fields you want to the context used for the evaluation, and you 
 
 ![Playground results: a table of feature names and whether they're enabled or not.](/img/playground-results.png)
 
-The playground's response contains a list of all the feature toggles that have been evaluated based on your configured [environments and projects](#environments-and-projects). In the UI, the playground displays the features in a table. Each feature indicates whether its considered _enabled_ or _disabled_ and which [variant](../advanced/feature-toggle-variants.md) was assigned to it, if any.
+The playground's response contains a list of all the feature toggles that have been evaluated based on your configured [environments and projects](#environments-and-projects). In the UI, the playground displays the features in a table. Each feature indicates whether its considered _enabled_ or _disabled_ and which [variant](../reference/feature-toggle-variants.md) was assigned to it, if any.
 
-As with all of Unleash's client SDKs, the playground respects [stickiness](../advanced/stickiness.md). The [stickiness algorithm](../advanced/stickiness.md#calculation) guarantees that you'll always get the same variants and the same gradual rollout results if you provide the same context, as long as you provide the context field used for calculating stickiness.
+As with all of Unleash's client SDKs, the playground respects [stickiness](../reference/stickiness.md). The [stickiness algorithm](../reference/stickiness.md#calculation) guarantees that you'll always get the same variants and the same gradual rollout results if you provide the same context, as long as you provide the context field used for calculating stickiness.
 
 ### Detailed evaluation results
 
@@ -80,7 +80,7 @@ Even if the playground doesn't recognize or otherwise can't evaluate a specific 
 
 ### Custom Strategies
 
-The playground does not have any implementations for [custom strategies](../advanced/custom-activation-strategy.md) and adding custom strategy implementations to Unleash is not currently supported. Because of this, custom strategies will never be evaluated as `true`.
+The playground does not have any implementations for [custom strategies](../reference/custom-activation-strategies.md) and adding custom strategy implementations to Unleash is not currently supported. Because of this, custom strategies will never be evaluated as `true`.
 
 ### The Application Hostname strategy {#application-hostname}
 

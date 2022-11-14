@@ -9,7 +9,7 @@ At Unleash we care deeply about code quality. Technical debt creeps up over time
 
 When a toggle is no longer useful, we say that it has become _stale_. A stale toggle is a toggle that has served its purpose and that you should remove from the code base. For a toggle to become stale, you have to explicitly mark it as such. You can mark a toggle as stale in the [technical debt dashboard](#the-technical-debt-dashboard).
 
-Unleash also has a concept of _potentially_ stale toggles. These are toggles that have lived longer than what Unleash expects them to based on their [feature toggle type](../advanced/feature-toggle-types.md). However, Unleash can't know for sure whether a toggle is actually stale or not, so it's up to you to make the decision on whether to mark it as stale or to keep it as an active toggle.
+Unleash also has a concept of _potentially_ stale toggles. These are toggles that have lived longer than what Unleash expects them to based on their [feature toggle type](../reference/feature-toggle-types.md). However, Unleash can't know for sure whether a toggle is actually stale or not, so it's up to you to make the decision on whether to mark it as stale or to keep it as an active toggle.
 
 A toggle being (potentially) stale, does not affect how it performs in your application; it's only there to make it easier for you to manage your toggles.
 

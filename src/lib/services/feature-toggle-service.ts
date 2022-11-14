@@ -718,9 +718,7 @@ class FeatureToggleService {
                 userName,
             );
         });
-        await Promise.allSettled(
-            (tasks as Promise<any>[]).concat(variantsTasks),
-        );
+        await Promise.all((tasks as Promise<any>[]).concat(variantsTasks));
         return created;
     }
 

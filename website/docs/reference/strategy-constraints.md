@@ -1,5 +1,4 @@
 ---
-id: strategy_constraints
 title: Strategy Constraints
 ---
 

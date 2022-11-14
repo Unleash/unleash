@@ -326,7 +326,7 @@ module.exports = {
                         'reference/segments',
                         'advanced/enterprise-authentication',
                         'reference/stickiness',
-                        'advanced/strategy_constraints',
+                        'reference/strategy-constraints',
                         'advanced/tags',
                         'user_guide/technical_debt',
                         'user_guide/unleash_context',

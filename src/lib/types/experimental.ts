@@ -26,10 +26,6 @@ export const defaultExperimentalOptions = {
             process.env.UNLEASH_EXPERIMENTAL_BATCH_METRICS,
             false,
         ),
-        publicSignup: parseEnvVarBoolean(
-            process.env.UNLEASH_EXPERIMENTAL_PUBLIC_SIGNUP,
-            false,
-        ),
         responseTimeWithAppName: parseEnvVarBoolean(
             process.env.UNLEASH_EXPERIMENTAL_RESPONSE_TIME_WITH_APP_NAME,
             false,

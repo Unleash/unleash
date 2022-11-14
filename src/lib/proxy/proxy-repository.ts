@@ -101,7 +101,7 @@ export class ProxyRepository
             this.features = await this.featuresForToken();
             this.segments = await this.segmentsForToken();
         } catch (e) {
-            this.logger.error(e);
+            // this.logger.error(e);
         }
     }
 
@@ -113,7 +113,7 @@ export class ProxyRepository
         try {
             await this.loadDataForToken();
         } catch (error) {
-            this.logger.error(error);
+            // this.logger.error(error);
         }
     }
 

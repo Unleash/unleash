@@ -47,7 +47,7 @@ export interface FeatureToggleDTO {
     archivedAt?: Date;
     createdAt?: Date;
     impressionData?: boolean;
-    variants?: IVariant[];
+    variants?: IVariant[]; // Now deprecated, this needs to come out when UNLEASH_EXPERIMENTAL_ENVIRONMENT_VARIANTS is removed
 }
 
 export interface FeatureToggle extends FeatureToggleDTO {
@@ -89,6 +89,7 @@ export interface FeatureToggleLegacy extends FeatureToggle {
 
 export interface IEnvironmentDetail extends IEnvironmentOverview {
     strategies: IStrategyConfig[];
+    variants: IVariant[];
 }
 
 export interface ISortOrder {

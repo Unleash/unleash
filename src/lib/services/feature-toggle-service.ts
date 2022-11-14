@@ -25,6 +25,7 @@ import {
     FeatureStrategyRemoveEvent,
     FeatureStrategyUpdateEvent,
     FeatureVariantEvent,
+    EnvironmentVariantEvent,
 } from '../types/events';
 import NotFoundError from '../error/notfound-error';
 import {
@@ -598,6 +599,16 @@ class FeatureToggleService {
         return this.featureToggleStore.getVariants(featureName);
     }
 
+    async getVariantsForEnv(
+        featureName: string,
+        environment: string,
+    ): Promise<IVariant[]> {
+        return this.featureToggleStore.getVariantsForEnv(
+            featureName,
+            environment,
+        );
+    }
+
     async getFeatureMetadata(featureName: string): Promise<FeatureToggle> {
         return this.featureToggleStore.get(featureName);
     }
@@ -1148,8 +1159,29 @@ class FeatureToggleService {
         createdBy: string,
     ): Promise<FeatureToggle> {
         const oldVariants = await this.getVariants(featureName);
-        const { newDocument } = await applyPatch(oldVariants, newVariants);
+
+        const { newDocument } = applyPatch(oldVariants, newVariants);
         return this.saveVariants(featureName, project, newDocument, createdBy);
+    }
+
+    async updateVariantsOnEnv(
+        featureName: string,
+        project: string,
+        environment: string,
+        newVariants: Operation[],
+        createdBy: string,
+    ): Promise<IVariant[]> {
+        const oldVariants = await this.getVariantsForEnv(
+            featureName,
+            environment,
+        );
+        const { newDocument } = await applyPatch(oldVariants, newVariants);
+        return this.saveVariantsOnEnv(
+            featureName,
+            environment,
+            newDocument,
+            createdBy,
+        );
     }
 
     async saveVariants(
@@ -1163,6 +1195,7 @@ class FeatureToggleService {
         const oldVariants = await this.featureToggleStore.getVariants(
             featureName,
         );
+
         const featureToggle = await this.featureToggleStore.saveVariants(
             project,
             featureName,
@@ -1180,6 +1213,35 @@ class FeatureToggleService {
             }),
         );
         return featureToggle;
+    }
+
+    async saveVariantsOnEnv(
+        featureName: string,
+        environment: string,
+        newVariants: IVariant[],
+        createdBy: string,
+    ): Promise<IVariant[]> {
+        await variantsArraySchema.validateAsync(newVariants);
+        const fixedVariants = this.fixVariantWeights(newVariants);
+        const oldVariants = await this.featureToggleStore.getVariantsForEnv(
+            featureName,
+            environment,
+        );
+
+        await this.eventStore.store(
+            new EnvironmentVariantEvent({
+                featureName,
+                environment,
+                createdBy,
+                oldVariants,
+                newVariants: fixedVariants,
+            }),
+        );
+        return this.featureToggleStore.saveVariantsOnEnv(
+            featureName,
+            environment,
+            fixedVariants,
+        );
     }
 
     fixVariantWeights(variants: IVariant[]): IVariant[] {

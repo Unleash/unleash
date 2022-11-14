@@ -98,7 +98,7 @@ export default class VariantsController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Features'],
-                    operationId: 'getFeatureVariants',
+                    operationId: 'getEnvironmentFeatureVariants',
                     responses: {
                         200: createResponseSchema('featureVariantsSchema'),
                     },

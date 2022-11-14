@@ -6,10 +6,6 @@ export const useChangeRequestsEnabled = (projectId: string) => {
     const { uiConfig } = useUiConfig();
     const { data } = useChangeRequestConfig(projectId);
 
-    const isChangeRequestEnabled = React.useCallback((): boolean => {
-        return Boolean(uiConfig?.flags.changeRequests);
-    }, [uiConfig?.flags.changeRequests]);
-
     const isChangeRequestConfigured = React.useCallback(
         (environment: string): boolean => {
             const enabled = data.some(draft => {
@@ -19,21 +15,21 @@ export const useChangeRequestsEnabled = (projectId: string) => {
                 );
             });
 
-            return isChangeRequestEnabled() && enabled;
+            return Boolean(uiConfig?.flags.changeRequests) && enabled;
         },
         [data]
     );
 
-    const isBannerEnabled = React.useCallback((): boolean => {
+    const isChangeRequestConfiguredInAnyEnv = React.useCallback((): boolean => {
         return (
-            isChangeRequestEnabled() &&
+            Boolean(uiConfig?.flags.changeRequests) &&
             data.some(draft => draft.changeRequestEnabled)
         );
     }, [data]);
 
     return {
-        isChangeRequestEnabled,
+        isChangeRequestEnabled: Boolean(uiConfig?.flags.changeRequests),
         isChangeRequestConfigured,
-        isBannerEnabled,
+        isChangeRequestConfiguredInAnyEnv,
     };
 };

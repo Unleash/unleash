@@ -59,10 +59,10 @@ const Project = () => {
     const { classes: styles } = useStyles();
     const navigate = useNavigate();
     const { pathname } = useLocation();
-    const { isOss, uiConfig } = useUiConfig();
+    const { isOss } = useUiConfig();
     const basePath = `/projects/${projectId}`;
     const projectName = project?.name || projectId;
-    const { isBannerEnabled, isChangeRequestEnabled } =
+    const { isChangeRequestConfiguredInAnyEnv, isChangeRequestEnabled } =
         useChangeRequestsEnabled(projectId);
 
     const [showDelDialog, setShowDelDialog] = useState(false);
@@ -79,7 +79,7 @@ const Project = () => {
                 path: `${basePath}/health`,
                 name: 'health',
             },
-            ...(!isChangeRequestEnabled()
+            ...(!isChangeRequestEnabled
                 ? [
                       {
                           title: 'Access',
@@ -98,7 +98,7 @@ const Project = () => {
                 path: `${basePath}/archive`,
                 name: 'archive',
             },
-            ...(isChangeRequestEnabled()
+            ...(isChangeRequestEnabled
                 ? [
                       {
                           title: 'Project settings',
@@ -120,11 +120,11 @@ const Project = () => {
             name: 'change-request' + '',
         };
 
-        if (uiConfig?.flags.changeRequests) {
+        if (isChangeRequestEnabled) {
             tabArray.splice(tabArray.length - 2, 0, changeRequestTab);
         }
         return tabArray;
-    }, [uiConfig?.flags.changeRequests]);
+    }, [isChangeRequestEnabled]);
 
     const activeTab = [...tabs]
         .reverse()
@@ -149,7 +149,9 @@ const Project = () => {
         <MainLayout
             ref={ref}
             subheader={
-                isBannerEnabled() ? <DraftBanner project={projectId} /> : null
+                isChangeRequestConfiguredInAnyEnv() ? (
+                    <DraftBanner project={projectId} />
+                ) : null
             }
         >
             <div className={styles.header}>
@@ -261,7 +263,7 @@ const Project = () => {
                     path="change-requests"
                     element={
                         <ConditionallyRender
-                            condition={isChangeRequestEnabled()}
+                            condition={isChangeRequestEnabled}
                             show={<ProjectChangeRequests />}
                         />
                     }
@@ -270,7 +272,7 @@ const Project = () => {
                     path="change-requests/:id"
                     element={
                         <ConditionallyRender
-                            condition={isChangeRequestEnabled()}
+                            condition={isChangeRequestEnabled}
                             show={<ChangeRequestOverview />}
                         />
                     }

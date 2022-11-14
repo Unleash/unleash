@@ -40,7 +40,8 @@ export const FeatureView = () => {
     const featureId = useRequiredPathParam('featureId');
     const { refetch: projectRefetch } = useProject(projectId);
     const { refetchFeature } = useFeature(projectId, featureId);
-    const { isBannerEnabled } = useChangeRequestsEnabled(projectId);
+    const { isChangeRequestConfiguredInAnyEnv } =
+        useChangeRequestsEnabled(projectId);
 
     const [openTagDialog, setOpenTagDialog] = useState(false);
     const [showDelDialog, setShowDelDialog] = useState(false);
@@ -89,7 +90,9 @@ export const FeatureView = () => {
         <MainLayout
             ref={ref}
             subheader={
-                isBannerEnabled() ? <DraftBanner project={projectId} /> : null
+                isChangeRequestConfiguredInAnyEnv() ? (
+                    <DraftBanner project={projectId} />
+                ) : null
             }
         >
             <ConditionallyRender

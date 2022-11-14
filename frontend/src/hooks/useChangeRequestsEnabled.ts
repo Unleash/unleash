@@ -6,6 +6,9 @@ export const useChangeRequestsEnabled = (projectId: string) => {
     const { uiConfig } = useUiConfig();
     const { data } = useChangeRequestConfig(projectId);
 
+    // console.log('*** data', data);
+    // console.log('*** uiConfig', uiConfig);
+
     const isChangeRequestConfigured = React.useCallback(
         (environment: string): boolean => {
             const enabled = data.some(draft => {

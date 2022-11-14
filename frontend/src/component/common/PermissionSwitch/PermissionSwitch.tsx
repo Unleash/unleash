@@ -44,6 +44,7 @@ const PermissionSwitch = React.forwardRef<
         <TooltipResolver title={formatAccessText(access, tooltip)} arrow>
             <span data-loading>
                 <Switch
+                    data-testid="toggle-switch"
                     onChange={onChange}
                     disabled={disabled || !access}
                     checked={checked}

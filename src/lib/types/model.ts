@@ -122,6 +122,12 @@ export interface IFeatureEnvironmentVariant extends IVariant {
     environment: string;
 }
 
+export interface IFeatureEnvironmentVariantHolder {
+    featureName: string;
+    environment: string;
+    variants: IVariant[];
+}
+
 export interface IEnvironment {
     name: string;
     type: string;

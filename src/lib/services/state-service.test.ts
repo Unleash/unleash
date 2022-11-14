@@ -658,57 +658,6 @@ test('featureStrategies should not keep existing if dropBeforeImport', async () 
     expect(await stores.featureStrategiesStore.getAll()).toHaveLength(0);
 });
 
-test('Exporting featureEnvironmentVariants should work', async () => {
-    const { stateService, stores } = getSetup();
-    await stores.projectStore.create({
-        id: 'fancy',
-        name: 'extra',
-        description: 'No surprises here',
-    });
-    await stores.environmentStore.create({
-        name: 'dev',
-        type: 'development',
-    });
-    await stores.environmentStore.create({
-        name: 'prod',
-        type: 'production',
-    });
-    await stores.featureToggleStore.create('fancy', {
-        name: 'Some-feature',
-    });
-    await stores.featureToggleStore.create('fancy', {
-        name: 'another-feature',
-    });
-    await stores.strategyStore.createStrategy({ name: 'format' });
-    await stores.featureEnvironmentStore.addEnvironmentToFeature(
-        'Some-feature',
-        'dev',
-        true,
-    );
-    await stores.featureEnvironmentStore.addEnvironmentToFeature(
-        'another-feature',
-        'dev',
-        true,
-    );
-    await stores.featureEnvironmentStore.addEnvironmentToFeature(
-        'another-feature',
-        'prod',
-        true,
-    );
-    await stores.featureToggleStore.saveVariants('fancy', 'Some-feature', [
-        { name: 'blue', weight: 333, stickiness: 'default', weightType: '' },
-        { name: 'green', weight: 333, stickiness: 'default', weightType: '' },
-        { name: 'red', weight: 333, stickiness: 'default', weightType: '' },
-    ]);
-    await stores.featureToggleStore.saveVariants('fancy', 'another-feature', [
-        { name: 'purple', weight: 333, stickiness: 'default', weightType: '' },
-        { name: 'lilac', weight: 333, stickiness: 'default', weightType: '' },
-        { name: 'azure', weight: 333, stickiness: 'default', weightType: '' },
-    ]);
-    const exportedData = await stateService.export({});
-    expect(exportedData.featureEnvironmentVariants).toHaveLength(6);
-});
-
 test('Import v1 and exporting v2 should work', async () => {
     const { stateService } = getSetup();
     await stateService.import({

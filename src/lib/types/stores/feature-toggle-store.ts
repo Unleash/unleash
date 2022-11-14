@@ -1,7 +1,7 @@
 import {
     FeatureToggle,
     FeatureToggleDTO,
-    IFeatureEnvironmentVariant,
+    IFeatureEnvironmentVariantHolder,
     IVariant,
 } from '../model';
 import { Store } from './store';
@@ -21,7 +21,7 @@ export interface IFeatureToggleStore extends Store<FeatureToggle, string> {
     archive(featureName: string): Promise<FeatureToggle>;
     revive(featureName: string): Promise<FeatureToggle>;
     getAll(query?: Partial<IFeatureToggleQuery>): Promise<FeatureToggle[]>;
-    getAllVariants(): Promise<IFeatureEnvironmentVariant[]>;
+    getAllVariants(): Promise<IFeatureEnvironmentVariantHolder[]>;
     getVariants(featureName: string): Promise<IVariant[]>;
     getVariantsForEnv(
         featureName: string,
@@ -37,4 +37,5 @@ export interface IFeatureToggleStore extends Store<FeatureToggle, string> {
         environment: string,
         newVariants: IVariant[],
     ): Promise<IVariant[]>;
+    dropAllVariants(): Promise<void>;
 }

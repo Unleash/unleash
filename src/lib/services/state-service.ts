@@ -23,8 +23,9 @@ import {
     FeatureToggle,
     IEnvironment,
     IFeatureEnvironment,
-    IFeatureStrategy,
     IFeatureEnvironmentVariant,
+    IFeatureEnvironmentVariantHolder,
+    IFeatureStrategy,
     IImportData,
     IImportFile,
     IProject,
@@ -47,7 +48,7 @@ import { IFeatureStrategiesStore } from '../types/stores/feature-strategies-stor
 import { IEnvironmentStore } from '../types/stores/environment-store';
 import { IFeatureEnvironmentStore } from '../types/stores/feature-environment-store';
 import { IUnleashStores } from '../types/stores';
-import { DEFAULT_ENV, ALL_ENVS } from '../util/constants';
+import { ALL_ENVS, DEFAULT_ENV } from '../util/constants';
 import { GLOBAL_ENV } from '../types/environment';
 import { ISegmentStore } from '../types/stores/segment-store';
 import { PartialSome } from '../types/partial';
@@ -154,6 +155,24 @@ export default class StateService {
         });
     }
 
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    replaceFeatureVariantsWithEnvVariants(data: any): any {
+        data.featureEnvironmentVariants = [];
+        data.features.forEach((feature) => {
+            if (feature.variants && feature.variants.length > 0) {
+                data.environments.forEach((environment) => {
+                    data.featureEnvironmentVariants.push({
+                        featureName: feature.name,
+                        environment: environment.name,
+                        variants: feature.variants,
+                    });
+                });
+                feature.variants = [];
+            }
+        });
+        return data;
+    }
+
     async import({
         data,
         userName = 'importUser',
@@ -162,6 +181,9 @@ export default class StateService {
     }: IImportData): Promise<void> {
         if (data.version === 2) {
             this.replaceGlobalEnvWithDefaultEnv(data);
+        }
+        if (data.version < 4) {
+            this.replaceFeatureVariantsWithEnvVariants(data);
         }
         const importData = await stateSchema.validateAsync(data);
 
@@ -242,6 +264,13 @@ export default class StateService {
             });
         }
 
+        if (importData.featureEnvironmentVariants) {
+            await this.importFeatureEnvironmentVariants(
+                importData.featureEnvironmentVariants,
+                userName,
+                dropBeforeImport,
+            );
+        }
         if (importData.segments) {
             await this.importSegments(
                 data.segments,
@@ -669,6 +698,25 @@ export default class StateService {
         );
     }
 
+    async importFeatureEnvironmentVariants(
+        featureEnvironmentVariants: IFeatureEnvironmentVariantHolder[],
+        userName: string,
+        dropBeforeImport: boolean,
+    ): Promise<void> {
+        if (dropBeforeImport) {
+            await this.toggleStore.dropAllVariants();
+        }
+        await Promise.all(
+            featureEnvironmentVariants.map((fEV) => {
+                return this.toggleStore.saveVariantsOnEnv(
+                    fEV.featureName,
+                    fEV.environment,
+                    fEV.variants,
+                );
+            }),
+        );
+    }
+
     async export({
         includeFeatureToggles = true,
         includeStrategies = true,
@@ -735,7 +783,7 @@ export default class StateService {
                 segments,
                 featureStrategySegments,
             ]) => ({
-                version: 3,
+                version: 4,
                 features,
                 strategies,
                 projects,

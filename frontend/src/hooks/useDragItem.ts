@@ -6,18 +6,21 @@ export type MoveListItem = (
     save?: boolean
 ) => void;
 
-export const useDragItem = (
+export const useDragItem = <T extends HTMLElement>(
     listItemIndex: number,
-    moveListItem: MoveListItem
-): RefObject<HTMLTableRowElement> => {
-    const ref = useRef<HTMLTableRowElement>(null);
+    moveListItem: MoveListItem,
+    handle?: RefObject<HTMLElement>
+): RefObject<T> => {
+    const ref = useRef<T>(null);
 
     useEffect(() => {
         if (ref.current) {
-            ref.current.draggable = true;
-            ref.current.style.cursor = 'grab';
             ref.current.dataset.index = String(listItemIndex);
-            return addEventListeners(ref.current, moveListItem);
+            return addEventListeners(
+                ref.current,
+                moveListItem,
+                handle?.current ?? undefined
+            );
         }
     }, [listItemIndex, moveListItem]);
 
@@ -25,8 +28,9 @@ export const useDragItem = (
 };
 
 const addEventListeners = (
-    el: HTMLTableRowElement,
-    moveListItem: MoveListItem
+    el: HTMLElement,
+    moveListItem: MoveListItem,
+    handle?: HTMLElement
 ): (() => void) => {
     const moveDraggedElement = (save: boolean) => {
         if (globalDraggedElement) {
@@ -38,7 +42,20 @@ const addEventListeners = (
         }
     };
 
+    const handleEl = handle ?? el;
+
+    const onMouseEnter = (e: MouseEvent) => {
+        if (e.target === handleEl) {
+            el.draggable = true;
+        }
+    };
+
+    const onMouseLeave = () => {
+        el.draggable = false;
+    };
+
     const onDragStart = () => {
+        el.draggable = true;
         globalDraggedElement = el;
     };
 
@@ -55,12 +72,22 @@ const addEventListeners = (
         globalDraggedElement = null;
     };
 
+    handleEl.addEventListener('mouseenter', onMouseEnter);
+    handleEl.addEventListener('mouseleave', onMouseLeave);
+    if (handle) {
+        el.addEventListener('mouseenter', onMouseLeave);
+    }
     el.addEventListener('dragstart', onDragStart);
     el.addEventListener('dragenter', onDragEnter);
     el.addEventListener('dragover', onDragOver);
     el.addEventListener('drop', onDrop);
 
     return () => {
+        handleEl.removeEventListener('mouseenter', onMouseEnter);
+        handleEl.removeEventListener('mouseleave', onMouseLeave);
+        if (handle) {
+            el.removeEventListener('mouseenter', onMouseLeave);
+        }
         el.removeEventListener('dragstart', onDragStart);
         el.removeEventListener('dragenter', onDragEnter);
         el.removeEventListener('dragover', onDragOver);
@@ -69,4 +96,4 @@ const addEventListeners = (
 };
 
 // The element being dragged in the browser.
-let globalDraggedElement: HTMLTableRowElement | null;
+let globalDraggedElement: HTMLElement | null;

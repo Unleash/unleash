@@ -75,13 +75,8 @@ const StyledGroupAvatar = styled(UserAvatar)(({ theme }) => ({
     outline: `${theme.spacing(0.25)} solid ${theme.palette.background.paper}`,
 }));
 
-const hiddenColumnsSmall = [
-    'imageUrl',
-    'username',
-    'role',
-    'added',
-    'lastLogin',
-];
+const hiddenColumnsSmall = ['imageUrl', 'role', 'added', 'lastLogin'];
+const hiddenColumnsMedium = ['lastLogin', 'added'];
 
 export const ProjectAccessTable: VFC = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -93,6 +88,7 @@ export const ProjectAccessTable: VFC = () => {
     const navigate = useNavigate();
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
+    const isMediumScreen = useMediaQuery(theme.breakpoints.down('lg'));
     const { setToastData } = useToast();
 
     const { access, refetchProjectAccess } = useProjectAccess(projectId);
@@ -140,7 +136,7 @@ export const ProjectAccessTable: VFC = () => {
                         elseShow={<HighlightCell value={value} />}
                     />
                 ),
-                minWidth: 100,
+                maxWidth: 125,
                 searchable: true,
             },
             {
@@ -169,7 +165,7 @@ export const ProjectAccessTable: VFC = () => {
                         value={value}
                     />
                 ),
-                minWidth: 120,
+                maxWidth: 125,
                 filterName: 'role',
             },
             {
@@ -183,7 +179,7 @@ export const ProjectAccessTable: VFC = () => {
                     <TimeAgoCell value={value} emptyText="Never" />
                 ),
                 sortType: 'date',
-                maxWidth: 150,
+                maxWidth: 100,
             },
             {
                 id: 'lastLogin',
@@ -203,14 +199,14 @@ export const ProjectAccessTable: VFC = () => {
                     <TimeAgoCell value={value} emptyText="Never" />
                 ),
                 sortType: 'date',
-                maxWidth: 150,
+                maxWidth: 100,
             },
             {
                 id: 'actions',
                 Header: 'Actions',
                 disableSortBy: true,
                 align: 'center',
-                maxWidth: 200,
+                maxWidth: 150,
                 Cell: ({
                     row: { original: row },
                 }: {
@@ -304,6 +300,7 @@ export const ProjectAccessTable: VFC = () => {
     );
 
     useHiddenColumns(setHiddenColumns, hiddenColumnsSmall, isSmallScreen);
+    useHiddenColumns(setHiddenColumns, hiddenColumnsMedium, isMediumScreen);
 
     useEffect(() => {
         const tableState: PageQueryType = {};

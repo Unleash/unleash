@@ -1,5 +1,5 @@
-import gravatarUrl from 'gravatar-url';
 import Joi from 'joi';
+import { generateImageUrl } from '../util/generateImageUrl';
 
 export interface UserData {
     id: number;
@@ -79,10 +79,7 @@ export default class User implements IUser {
     }
 
     generateImageUrl(): string {
-        return gravatarUrl(this.email || this.username || '' + this.id, {
-            size: 42,
-            default: 'retro',
-        });
+        return generateImageUrl(this);
     }
 }
 

@@ -45,6 +45,16 @@ const webhookDefinition: IAddonDefinition = {
             sensitive: false,
         },
         {
+            name: 'authorization',
+            displayName: 'Authorization',
+            placeholder: '',
+            description:
+                '(Optional) The Authorization header to use. Not used if left blank.',
+            type: 'text',
+            required: false,
+            sensitive: true,
+        },
+        {
             name: 'bodyTemplate',
             displayName: 'Body template',
             placeholder: `{

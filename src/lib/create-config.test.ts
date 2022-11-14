@@ -428,3 +428,37 @@ test('Environment variables for frontend CORS origins takes priority over option
     delete process.env.UNLEASH_FRONTEND_API_ORIGINS;
     expect(create()).toEqual(['*']);
 });
+
+test('baseUriPath defaults to the empty string', async () => {
+    let config = createConfig({});
+    expect(config.server.baseUriPath).toBe('');
+});
+test('BASE_URI_PATH defined in env is passed through', async () => {
+    process.env.BASE_URI_PATH = '/demo';
+    let config = createConfig({});
+    expect(config.server.baseUriPath).toBe('/demo');
+    delete process.env.BASE_URI_PATH;
+});
+
+test('environment variable takes precedence over configured variable', async () => {
+    process.env.BASE_URI_PATH = '/demo';
+    let config = createConfig({
+        server: {
+            baseUriPath: '/other',
+        },
+    });
+    expect(config.server.baseUriPath).toBe('/demo');
+    delete process.env.BASE_URI_PATH;
+});
+
+test.each(['demo', '/demo', '/demo/'])(
+    'Trailing and leading slashes gets normalized for base path %s',
+    async (path) => {
+        let config = createConfig({
+            server: {
+                baseUriPath: path,
+            },
+        });
+        expect(config.server.baseUriPath).toBe('/demo');
+    },
+);

@@ -1,13 +1,16 @@
 ---
-id: sso-saml
 title: How to add SSO with SAML 2.0 Okta
 ---
 
-> The **Single-Sign-On capability** is only available for customers on the Enterprise subscription. Check out the [Unleash plans](https://www.getunleash.io/plans) for details.
+:::note Availability
+
+The **Single-Sign-On capability** is only available for customers on the Enterprise subscription. Check out the [Unleash plans](https://www.getunleash.io/plans) for details.
+
+:::
 
 ## Introduction {#introduction}
 
-In this guide we will do a deep dive on the Single-Sign-On (SSO) integration with SAML 2.0 and connect it with Okta as IdP. Unleash support other identity providers and protocols, have a look at [all available Single-Sign-On options](./sso.md)
+In this guide we will do a deep dive on the Single-Sign-On (SSO) integration with SAML 2.0 and connect it with Okta as IdP. Unleash support other identity providers and protocols, have a look at [all available Single-Sign-On options](../advanced/sso.md)
 
 ## Basic configuration
 

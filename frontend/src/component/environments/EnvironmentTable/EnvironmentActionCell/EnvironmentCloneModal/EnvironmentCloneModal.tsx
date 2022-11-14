@@ -142,6 +142,7 @@ export const EnvironmentCloneModal = ({
         setProjects([]);
         setTokenProjects(['*']);
         setClonePermissions(true);
+        setApiTokenGeneration(APITokenGeneration.LATER);
         setErrors({});
     }, [environment]);
 

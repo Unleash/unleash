@@ -24,6 +24,7 @@ const returns415: (t: jest.Mock) => Response = (t) => ({
 const expectNoCall: (t: jest.Mock) => Response = (t) => ({
     // @ts-ignore
     status: () => ({
+        // @ts-ignore
         end: () => expect(t).toHaveBeenCalledTimes(0),
     }),
 });

@@ -9,6 +9,9 @@ export const projectEnvironmentSchema = {
         environment: {
             type: 'string',
         },
+        changeRequestsEnabled: {
+            type: 'boolean',
+        },
     },
     components: {},
 } as const;

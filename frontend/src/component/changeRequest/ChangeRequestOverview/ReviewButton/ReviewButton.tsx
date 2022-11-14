@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useChangeRequest } from 'hooks/api/getters/useChangeRequest/useChangeRequest';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
@@ -6,21 +6,27 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
 
 import {
-    Button,
     Grow,
     Paper,
     Popper,
     MenuItem,
     MenuList,
     ClickAwayListener,
+    Alert,
 } from '@mui/material';
 
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import { APPROVE_CHANGE_REQUEST } from 'component/providers/AccessProvider/permissions';
+import PermissionButton from 'component/common/PermissionButton/PermissionButton';
+import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
+import AccessContext from 'contexts/AccessContext';
 
 export const ReviewButton = () => {
+    const { isAdmin } = useContext(AccessContext);
     const projectId = useRequiredPathParam('projectId');
     const id = useRequiredPathParam('id');
-    const { refetchChangeRequest } = useChangeRequest(projectId, id);
+    const { user } = useAuthUser();
+    const { refetchChangeRequest, data } = useChangeRequest(projectId, id);
     const { setToastApiError, setToastData } = useToast();
 
     const { changeState } = useChangeRequestApi();
@@ -77,8 +83,9 @@ export const ReviewButton = () => {
 
     return (
         <React.Fragment>
-            <Button
+            <PermissionButton
                 variant="contained"
+                disabled={data?.createdBy.id === user?.id && !isAdmin}
                 aria-controls={open ? 'review-options-menu' : undefined}
                 aria-expanded={open ? 'true' : undefined}
                 aria-label="review changes"
@@ -86,9 +93,12 @@ export const ReviewButton = () => {
                 onClick={onToggle}
                 ref={anchorRef}
                 endIcon={<ArrowDropDownIcon />}
+                permission={APPROVE_CHANGE_REQUEST}
+                projectId={projectId}
+                environmentId={data?.environment}
             >
                 Review changes
-            </Button>
+            </PermissionButton>
             <Popper
                 sx={{
                     zIndex: 1,

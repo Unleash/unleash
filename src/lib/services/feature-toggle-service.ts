@@ -160,7 +160,7 @@ class FeatureToggleService {
         const id = await this.featureToggleStore.getProjectId(featureName);
         if (id !== projectId) {
             throw new InvalidOperationError(
-                'Project id does not match the project that the feature belongs to',
+                `The operation could not be completed. The feature exists, but the provided project id ("${projectId}") does not match the project that the feature belongs to ("${id}"). Try using "${id}" in the request URL instead of "${projectId}".`,
             );
         }
     }
@@ -315,6 +315,11 @@ class FeatureToggleService {
         const { featureName, projectId, environment } = context;
         await this.validateFeatureContext(context);
 
+        if (await this.changeRequestsEnabled(projectId, environment)) {
+            throw new Error(
+                `Strategies can only be created through change requests for ${environment} environment`,
+            );
+        }
         if (strategyConfig.constraints?.length > 0) {
             strategyConfig.constraints = await this.validateConstraints(
                 strategyConfig.constraints,
@@ -383,6 +388,12 @@ class FeatureToggleService {
         const existingStrategy = await this.featureStrategiesStore.get(id);
         this.validateFeatureStrategyContext(existingStrategy, context);
 
+        if (await this.changeRequestsEnabled(projectId, environment)) {
+            throw new Error(
+                `Strategies can only be updated through change requests for ${environment} environment`,
+            );
+        }
+
         if (existingStrategy.id === id) {
             if (updates.constraints?.length > 0) {
                 updates.constraints = await this.validateConstraints(
@@ -430,6 +441,12 @@ class FeatureToggleService {
         userName: string,
     ): Promise<Saved<IStrategyConfig>> {
         const { projectId, environment, featureName } = context;
+
+        if (await this.changeRequestsEnabled(projectId, environment)) {
+            throw new Error(
+                `Strategies can only be updated through change requests for ${environment} environment`,
+            );
+        }
 
         const existingStrategy = await this.featureStrategiesStore.get(id);
         this.validateFeatureStrategyContext(existingStrategy, context);
@@ -482,6 +499,12 @@ class FeatureToggleService {
         const existingStrategy = await this.featureStrategiesStore.get(id);
         const { featureName, projectId, environment } = context;
         this.validateFeatureStrategyContext(existingStrategy, context);
+
+        if (await this.changeRequestsEnabled(projectId, environment)) {
+            throw new Error(
+                `Strategies can only deleted updated through change requests for ${environment} environment`,
+            );
+        }
 
         await this.featureStrategiesStore.delete(id);
 
@@ -549,15 +572,22 @@ class FeatureToggleService {
      * GET /api/admin/projects/:project/features/:featureName
      * @param featureName
      * @param archived - return archived or non archived toggles
+     * @param projectId - provide if you're requesting the feature in the context of a specific project.
      */
     async getFeature(
         featureName: string,
         archived: boolean = false,
+        projectId?: string,
     ): Promise<FeatureToggleWithEnvironment> {
-        return this.featureStrategiesStore.getFeatureToggleWithEnvs(
-            featureName,
-            archived,
-        );
+        const feature =
+            await this.featureStrategiesStore.getFeatureToggleWithEnvs(
+                featureName,
+                archived,
+            );
+        if (projectId) {
+            await this.validateFeatureContext({ featureName, projectId });
+        }
+        return feature;
     }
 
     /**
@@ -885,9 +915,17 @@ class FeatureToggleService {
         return feature;
     }
 
-    // todo: add projectId
-    async archiveToggle(featureName: string, createdBy: string): Promise<void> {
+    async archiveToggle(
+        featureName: string,
+        createdBy: string,
+        projectId?: string,
+    ): Promise<void> {
         const feature = await this.featureToggleStore.get(featureName);
+
+        if (projectId) {
+            await this.validateFeatureContext({ featureName, projectId });
+        }
+
         await this.featureToggleStore.archive(featureName);
         const tags = await this.tagStore.getAllTagsForFeature(featureName);
         await this.eventStore.store(
@@ -908,6 +946,12 @@ class FeatureToggleService {
         createdBy: string,
         user?: User,
     ): Promise<FeatureToggle> {
+        if (await this.changeRequestsEnabled(project, environment)) {
+            throw new Error(
+                `Features can only be updated through change requests for ${environment} environment`,
+            );
+        }
+
         const hasEnvironment =
             await this.featureEnvironmentStore.featureHasEnvironment(
                 environment,
@@ -933,7 +977,11 @@ class FeatureToggleService {
                     if (canAddStrategies) {
                         await this.createStrategy(
                             getDefaultStrategy(featureName),
-                            { environment, projectId: project, featureName },
+                            {
+                                environment,
+                                projectId: project,
+                                featureName,
+                            },
                             createdBy,
                         );
                     } else {
@@ -966,6 +1014,7 @@ class FeatureToggleService {
             }
             return feature;
         }
+
         throw new NotFoundError(
             `Could not find environment ${environment} for feature: ${featureName}`,
         );
@@ -1241,6 +1290,13 @@ class FeatureToggleService {
             return x;
         });
         return variableVariants.concat(fixedVariants);
+    }
+
+    changeRequestsEnabled(
+        project: string,
+        environment: string,
+    ): Promise<boolean> {
+        return this.accessService.isChangeRequestsEnabled(project, environment);
     }
 }
 

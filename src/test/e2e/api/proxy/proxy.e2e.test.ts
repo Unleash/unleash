@@ -10,6 +10,7 @@ import {
 import { startOfHour } from 'date-fns';
 import { IConstraint, IStrategyConfig } from '../../../../lib/types/model';
 import { ProxyRepository } from '../../../../lib/proxy/proxy-repository';
+import { FEATURE_UPDATED } from '../../../../lib/types/events';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -896,5 +897,35 @@ test('Should change fetch interval', async () => {
 
     proxyRepository.stop();
     expect(spy.mock.calls.length > 30).toBe(true);
+    jest.useRealTimers();
+});
+
+test('Should not recursively set off timers on events', async () => {
+    jest.useFakeTimers();
+
+    const frontendToken = await createApiToken(ApiTokenType.FRONTEND);
+    const user = await app.services.apiTokenService.getUserForToken(
+        frontendToken.secret,
+    );
+
+    const spy = jest.spyOn(ProxyRepository.prototype as any, 'dataPolling');
+    const proxyRepository = new ProxyRepository(
+        {
+            getLogger,
+            frontendApi: { refreshIntervalInMs: 5000 },
+        },
+        db.stores,
+        app.services,
+        user,
+    );
+
+    await proxyRepository.start();
+
+    db.stores.eventStore.emit(FEATURE_UPDATED);
+
+    jest.advanceTimersByTime(10000);
+
+    proxyRepository.stop();
+    expect(spy.mock.calls.length < 3).toBe(true);
     jest.useRealTimers();
 });

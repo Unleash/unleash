@@ -18,9 +18,17 @@ import {
 } from '../../openapi/spec/environment-schema';
 import { SortOrderSchema } from '../../openapi/spec/sort-order-schema';
 import { emptyResponse } from '../../openapi/util/standard-responses';
+import {
+    environmentsProjectSchema,
+    EnvironmentsProjectSchema,
+} from '../../openapi/spec/environments-project-schema';
 
 interface EnvironmentParam {
     name: string;
+}
+
+interface ProjectParam {
+    projectId: string;
 }
 
 export class EnvironmentsController extends Controller {
@@ -67,6 +75,22 @@ export class EnvironmentsController extends Controller {
                     operationId: 'getEnvironment',
                     responses: {
                         200: createResponseSchema('environmentSchema'),
+                    },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'get',
+            path: '/project/:projectId',
+            handler: this.getProjectEnvironments,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['Environments'],
+                    operationId: 'getProjectEnvironments',
+                    responses: {
+                        200: createResponseSchema('environmentsProjectSchema'),
                     },
                 }),
             ],
@@ -165,6 +189,23 @@ export class EnvironmentsController extends Controller {
             res,
             environmentSchema.$id,
             await this.service.get(req.params.name),
+        );
+    }
+
+    async getProjectEnvironments(
+        req: Request<ProjectParam>,
+        res: Response<EnvironmentsProjectSchema>,
+    ): Promise<void> {
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            environmentsProjectSchema.$id,
+            {
+                version: 1,
+                environments: await this.service.getProjectEnvironments(
+                    req.params.projectId,
+                ),
+            },
         );
     }
 }

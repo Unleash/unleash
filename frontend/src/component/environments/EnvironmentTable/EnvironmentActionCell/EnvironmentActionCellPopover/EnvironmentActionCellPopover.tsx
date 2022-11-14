@@ -18,7 +18,13 @@ import {
     DELETE_ENVIRONMENT,
     UPDATE_ENVIRONMENT,
 } from 'component/providers/AccessProvider/permissions';
-import { Delete, Edit, AddToPhotos as CopyIcon } from '@mui/icons-material';
+import {
+    Delete,
+    Edit,
+    AddToPhotos as CopyIcon,
+    VisibilityOffOutlined,
+    VisibilityOutlined,
+} from '@mui/icons-material';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
@@ -30,9 +36,18 @@ const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
     borderRadius: theme.shape.borderRadius,
 }));
 
+const StyledMenuItemNegative = styled(StyledMenuItem)(({ theme }) => ({
+    color: theme.palette.error.main,
+}));
+
+const StyledListItemIconNegative = styled(ListItemIcon)(({ theme }) => ({
+    color: theme.palette.error.main,
+}));
+
 interface IEnvironmentActionCellPopoverProps {
     environment: IEnvironment;
     onEdit: () => void;
+    onDeprecateToggle: () => void;
     onClone: () => void;
     onDelete: () => void;
 }
@@ -40,6 +55,7 @@ interface IEnvironmentActionCellPopoverProps {
 export const EnvironmentActionCellPopover = ({
     environment,
     onEdit,
+    onDeprecateToggle,
     onClone,
     onDelete,
 }: IEnvironmentActionCellPopoverProps) => {
@@ -127,24 +143,50 @@ export const EnvironmentActionCellPopover = ({
                             </PermissionHOC>
                         }
                     />
-                    <PermissionHOC permission={DELETE_ENVIRONMENT}>
+                    <PermissionHOC permission={UPDATE_ENVIRONMENT}>
                         {({ hasAccess }) => (
                             <StyledMenuItem
+                                onClick={() => {
+                                    onDeprecateToggle();
+                                    handleClose();
+                                }}
+                                disabled={!hasAccess || environment.protected}
+                            >
+                                <ListItemIcon>
+                                    <ConditionallyRender
+                                        condition={environment.enabled}
+                                        show={<VisibilityOffOutlined />}
+                                        elseShow={<VisibilityOutlined />}
+                                    />
+                                </ListItemIcon>
+                                <ListItemText>
+                                    <Typography variant="body2">
+                                        {environment.enabled
+                                            ? 'Deprecate'
+                                            : 'Undeprecate'}
+                                    </Typography>
+                                </ListItemText>
+                            </StyledMenuItem>
+                        )}
+                    </PermissionHOC>
+                    <PermissionHOC permission={DELETE_ENVIRONMENT}>
+                        {({ hasAccess }) => (
+                            <StyledMenuItemNegative
                                 onClick={() => {
                                     onDelete();
                                     handleClose();
                                 }}
                                 disabled={!hasAccess || environment.protected}
                             >
-                                <ListItemIcon>
+                                <StyledListItemIconNegative>
                                     <Delete />
-                                </ListItemIcon>
+                                </StyledListItemIconNegative>
                                 <ListItemText>
                                     <Typography variant="body2">
                                         Delete
                                     </Typography>
                                 </ListItemText>
-                            </StyledMenuItem>
+                            </StyledMenuItemNegative>
                         )}
                     </PermissionHOC>
                 </StyledMenuList>

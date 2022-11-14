@@ -132,10 +132,10 @@ module.exports = {
                 {
                     label: 'Single Sign-On (SSO)',
                     items: [
-                        'advanced/sso-open-id-connect',
-                        'advanced/sso-saml',
-                        'advanced/sso-saml-keycloak',
-                        'advanced/sso-google',
+                        'how-to/how-to-add-sso-open-id-connect',
+                        'how-to/how-to-add-sso-saml',
+                        'how-to/how-to-add-sso-saml-keycloak',
+                        'how-to/how-to-add-sso-google',
                         'how-to/how-to-setup-sso-keycloak-group-sync',
                     ],
                     type: 'category',

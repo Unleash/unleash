@@ -167,47 +167,40 @@ export default class ClientMetricsServiceV2 {
                 hoursBack,
             );
 
-        if (this.flagResolver.isEnabled('fixHourMetrics')) {
-            const hours = generateHourBuckets(hoursBack);
+        const hours = generateHourBuckets(hoursBack);
 
-            const environments = [
-                ...new Set(metrics.map((x) => x.environment)),
-            ];
+        const environments = [...new Set(metrics.map((x) => x.environment))];
 
-            const applications = [
-                ...new Set(metrics.map((x) => x.appName)),
-            ].slice(0, 100);
+        const applications = [...new Set(metrics.map((x) => x.appName))].slice(
+            0,
+            100,
+        );
 
-            const result = environments.flatMap((environment) =>
-                applications.flatMap((appName) =>
-                    hours.flatMap((hourBucket) => {
-                        const metric = metrics.find(
-                            (item) =>
-                                compareAsc(
-                                    hourBucket.timestamp,
-                                    item.timestamp,
-                                ) === 0 &&
-                                item.appName === appName &&
-                                item.environment === environment,
-                        );
-                        return (
-                            metric || {
-                                timestamp: hourBucket.timestamp,
-                                no: 0,
-                                yes: 0,
-                                appName,
-                                environment,
-                                featureName,
-                            }
-                        );
-                    }),
-                ),
-            );
+        const result = environments.flatMap((environment) =>
+            applications.flatMap((appName) =>
+                hours.flatMap((hourBucket) => {
+                    const metric = metrics.find(
+                        (item) =>
+                            compareAsc(hourBucket.timestamp, item.timestamp) ===
+                                0 &&
+                            item.appName === appName &&
+                            item.environment === environment,
+                    );
+                    return (
+                        metric || {
+                            timestamp: hourBucket.timestamp,
+                            no: 0,
+                            yes: 0,
+                            appName,
+                            environment,
+                            featureName,
+                        }
+                    );
+                }),
+            ),
+        );
 
-            return result.sort((a, b) => compareAsc(a.timestamp, b.timestamp));
-        } else {
-            return metrics;
-        }
+        return result.sort((a, b) => compareAsc(a.timestamp, b.timestamp));
     }
 
     resolveMetricsEnvironment(user: User | ApiUser, data: IClientApp): string {

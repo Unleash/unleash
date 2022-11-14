@@ -213,17 +213,7 @@ const Project = () => {
                         </StyledDiv>
                     </h2>
                 </div>
-                <ConditionallyRender
-                    condition={error}
-                    show={
-                        <ApiError
-                            data-loading
-                            style={{ maxWidth: '400px', margin: '1rem' }}
-                            onClick={refetch}
-                            text="Could not fetch project"
-                        />
-                    }
-                />
+
                 <div className={styles.separator} />
                 <div className={styles.tabContainer}>
                     <Tabs

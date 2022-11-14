@@ -1,5 +1,4 @@
 ---
-id: api_access
 title: How to use the Admin API
 ---
 

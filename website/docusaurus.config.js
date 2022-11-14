@@ -200,6 +200,10 @@ module.exports = {
                         from: '/api/open_api',
                         to: '/reference/api/unleash',
                     },
+                    {
+                        from: '/advanced/api_access',
+                        to: '/how-to/how-to-use-the-admin-api',
+                    },
                 ],
                 createRedirects: function (toPath) {
                     if (

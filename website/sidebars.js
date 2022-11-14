@@ -68,7 +68,7 @@ module.exports = {
                     items: [
                         'user_guide/api-token',
                         'how-to/how-to-create-personal-access-tokens',
-                        'advanced/api_access',
+                        'how-to/how-to-use-the-admin-api',
                         'how-to/how-to-enable-openapi',
                     ],
                 },

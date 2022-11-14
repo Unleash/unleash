@@ -1,5 +1,4 @@
 ---
-id: feature_toggle_types
 title: Feature Toggle Types
 ---
 

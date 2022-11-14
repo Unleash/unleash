@@ -316,7 +316,7 @@ module.exports = {
                         'reference/custom-activation-strategies',
                         'user_guide/environments',
                         'reference/feature-toggles',
-                        'advanced/feature_toggle_types',
+                        'reference/feature-toggle-types',
                         'advanced/toggle_variants',
                         'reference/front-end-api',
                         'reference/playground',

@@ -212,6 +212,10 @@ module.exports = {
                         from: '/advanced/custom-activation-strategy',
                         to: '/reference/custom-activation-strategies',
                     },
+                    {
+                        from: '/advanced/feature_toggle_types',
+                        to: '/reference/feature-toggle-types',
+                    },
                 ],
                 createRedirects: function (toPath) {
                     if (

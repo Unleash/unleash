@@ -519,10 +519,11 @@ class FeatureToggleService {
                 featureName,
                 environment,
             );
+        } else {
+            throw new Error(
+                `Strategies can only deleted updated through change requests for ${environment} environment`,
+            );
         }
-        throw new Error(
-            `Strategies can only deleted updated through change requests for ${environment} environment`,
-        );
     }
 
     async getStrategiesForEnvironment(

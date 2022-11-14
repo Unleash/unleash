@@ -163,12 +163,12 @@ module.exports = {
             items: [
                 {
                     type: 'category',
-                    link: { type: 'doc', id: 'addons/index' },
+                    link: { type: 'doc', id: 'reference/addons/index' },
                     items: [
-                        'addons/datadog',
-                        'addons/slack',
-                        'addons/teams',
-                        'addons/webhook',
+                        'reference/addons/datadog',
+                        'reference/addons/slack',
+                        'reference/addons/teams',
+                        'reference/addons/webhook',
                     ],
                     label: 'Addons',
                 },

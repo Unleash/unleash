@@ -5,7 +5,7 @@ module.exports = {
     url: 'https://docs.getunleash.io',
     baseUrl: '/',
     onBrokenLinks: 'throw',
-    onBrokenMarkdownLinks: 'warn',
+    onBrokenMarkdownLinks: 'throw',
     favicon: 'img/favicon.ico',
     organizationName: 'Unleash', // Usually your GitHub org/user name.
     projectName: 'unleash.github.io', // Usually your repo name.
@@ -147,6 +147,17 @@ module.exports = {
             '@docusaurus/plugin-client-redirects',
             {
                 fromExtensions: ['html', 'htm'],
+                // create programmatic redirects where possible
+                // (https://docusaurus.io/docs/api/plugins/@docusaurus/plugin-client-redirects/)
+                createRedirects(existingPath) {
+                    // redirect /addons to /reference/addons
+                    if (existingPath.startsWith('/addons')) {
+                        return '/reference' + existingPath;
+                    }
+
+                    // don't redirect if no conditions match
+                    return undefined;
+                },
                 redirects: [
                     {
                         to: '/sdks',

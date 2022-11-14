@@ -49,7 +49,7 @@ The reference docs contain technical reference for Unleash and the API. Go here 
 
 The reference docs are organized into the following topics:
 
-- [Addons](/addons)
+- [Addons](/reference/addons/addons.md)
 - [API documentation](/api)
 - [Unleash SDKs](/sdks)
 - [Deployment and management of Unleash](/deploy)

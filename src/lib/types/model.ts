@@ -47,7 +47,7 @@ export interface FeatureToggleDTO {
     archivedAt?: Date;
     createdAt?: Date;
     impressionData?: boolean;
-    variants?: IVariant[]; // Now deprecated, this needs to come out when UNLEASH_EXPERIMENTAL_ENVIRONMENT_VARIANTS is removed
+    variants?: IVariant[]; //Moved here for legacy reasons - features will respond with their variant but not accept them
 }
 
 export interface FeatureToggle extends FeatureToggleDTO {

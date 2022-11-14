@@ -167,4 +167,8 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
     ): Promise<IVariant[]> {
         throw new Error('Method not implemented.');
     }
+
+    dropAllVariants(): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
 }

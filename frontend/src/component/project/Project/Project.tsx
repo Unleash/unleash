@@ -28,8 +28,8 @@ import { ChangeRequestOverview } from 'component/changeRequest/ChangeRequestOver
 import { DraftBanner } from 'component/changeRequest/DraftBanner/DraftBanner';
 import { MainLayout } from 'component/layout/MainLayout/MainLayout';
 import { ProjectChangeRequests } from '../../changeRequest/ProjectChangeRequests/ProjectChangeRequests';
-import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { ProjectSettings } from './ProjectSettings/ProjectSettings';
+import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 
 const StyledDiv = styled('div')(() => ({
     display: 'flex',
@@ -59,13 +59,13 @@ const Project = () => {
     const { classes: styles } = useStyles();
     const navigate = useNavigate();
     const { pathname } = useLocation();
-    const { isOss, uiConfig } = useUiConfig();
+    const { isOss } = useUiConfig();
     const basePath = `/projects/${projectId}`;
     const projectName = project?.name || projectId;
+    const { isChangeRequestConfiguredInAnyEnv, isChangeRequestFlagEnabled } =
+        useChangeRequestsEnabled(projectId);
 
     const [showDelDialog, setShowDelDialog] = useState(false);
-
-    const changeRequestsEnabled = useChangeRequestsEnabled();
 
     const tabs = useMemo(() => {
         const tabArray = [
@@ -79,7 +79,7 @@ const Project = () => {
                 path: `${basePath}/health`,
                 name: 'health',
             },
-            ...(!uiConfig?.flags?.changeRequests
+            ...(!isChangeRequestFlagEnabled
                 ? [
                       {
                           title: 'Access',
@@ -98,7 +98,7 @@ const Project = () => {
                 path: `${basePath}/archive`,
                 name: 'archive',
             },
-            ...(uiConfig?.flags?.changeRequests
+            ...(isChangeRequestFlagEnabled
                 ? [
                       {
                           title: 'Project settings',
@@ -120,11 +120,11 @@ const Project = () => {
             name: 'change-request' + '',
         };
 
-        if (changeRequestsEnabled) {
+        if (isChangeRequestFlagEnabled) {
             tabArray.splice(tabArray.length - 2, 0, changeRequestTab);
         }
         return tabArray;
-    }, [changeRequestsEnabled]);
+    }, [isChangeRequestFlagEnabled]);
 
     const activeTab = [...tabs]
         .reverse()
@@ -149,7 +149,7 @@ const Project = () => {
         <MainLayout
             ref={ref}
             subheader={
-                changeRequestsEnabled ? (
+                isChangeRequestConfiguredInAnyEnv() ? (
                     <DraftBanner project={projectId} />
                 ) : null
             }
@@ -263,7 +263,7 @@ const Project = () => {
                     path="change-requests"
                     element={
                         <ConditionallyRender
-                            condition={changeRequestsEnabled}
+                            condition={isChangeRequestFlagEnabled}
                             show={<ProjectChangeRequests />}
                         />
                     }
@@ -272,7 +272,7 @@ const Project = () => {
                     path="change-requests/:id"
                     element={
                         <ConditionallyRender
-                            condition={changeRequestsEnabled}
+                            condition={isChangeRequestFlagEnabled}
                             show={<ChangeRequestOverview />}
                         />
                     }

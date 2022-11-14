@@ -177,10 +177,6 @@ module.exports = {
                         from: '/user_guide/native_apps/',
                     },
                     {
-                        to: '/advanced/toggle_variants',
-                        from: '/toggle_variants',
-                    },
-                    {
                         to: '/integrations',
                         from: '/integrations/integrations',
                     },
@@ -213,7 +209,10 @@ module.exports = {
                         to: '/reference/feature-toggle-types',
                     },
                     {
-                        from: '/advanced/feature_toggle_variants',
+                        from: [
+                            '/toggle_variants',
+                            '/advanced/feature_toggle_variants',
+                        ],
                         to: '/reference/feature-toggle-variants',
                     },
                     {

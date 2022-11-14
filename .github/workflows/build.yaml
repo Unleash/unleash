@@ -44,6 +44,9 @@ jobs:
           CI: true
           TEST_DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
+      - name: Publish static assets to S3
+        run: |
+          aws s3 cp frontend/build s3://getunleash-static/unleash/main/$(git rev-parse HEAD) --recursive
 
   trigger-ci-build:
     runs-on: ubuntu-latest

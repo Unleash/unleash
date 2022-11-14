@@ -28,7 +28,7 @@ export const useChangeRequestsEnabled = (projectId: string) => {
     }, [data]);
 
     return {
-        isChangeRequestEnabled: Boolean(uiConfig?.flags.changeRequests),
+        isChangeRequestFlagEnabled: Boolean(uiConfig?.flags.changeRequests),
         isChangeRequestConfigured,
         isChangeRequestConfiguredInAnyEnv,
     };

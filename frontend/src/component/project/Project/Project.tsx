@@ -62,7 +62,7 @@ const Project = () => {
     const { isOss } = useUiConfig();
     const basePath = `/projects/${projectId}`;
     const projectName = project?.name || projectId;
-    const { isChangeRequestConfiguredInAnyEnv, isChangeRequestEnabled } =
+    const { isChangeRequestConfiguredInAnyEnv, isChangeRequestFlagEnabled } =
         useChangeRequestsEnabled(projectId);
 
     const [showDelDialog, setShowDelDialog] = useState(false);
@@ -79,7 +79,7 @@ const Project = () => {
                 path: `${basePath}/health`,
                 name: 'health',
             },
-            ...(!isChangeRequestEnabled
+            ...(!isChangeRequestFlagEnabled
                 ? [
                       {
                           title: 'Access',
@@ -98,7 +98,7 @@ const Project = () => {
                 path: `${basePath}/archive`,
                 name: 'archive',
             },
-            ...(isChangeRequestEnabled
+            ...(isChangeRequestFlagEnabled
                 ? [
                       {
                           title: 'Project settings',
@@ -120,11 +120,11 @@ const Project = () => {
             name: 'change-request' + '',
         };
 
-        if (isChangeRequestEnabled) {
+        if (isChangeRequestFlagEnabled) {
             tabArray.splice(tabArray.length - 2, 0, changeRequestTab);
         }
         return tabArray;
-    }, [isChangeRequestEnabled]);
+    }, [isChangeRequestFlagEnabled]);
 
     const activeTab = [...tabs]
         .reverse()
@@ -263,7 +263,7 @@ const Project = () => {
                     path="change-requests"
                     element={
                         <ConditionallyRender
-                            condition={isChangeRequestEnabled}
+                            condition={isChangeRequestFlagEnabled}
                             show={<ProjectChangeRequests />}
                         />
                     }
@@ -272,7 +272,7 @@ const Project = () => {
                     path="change-requests/:id"
                     element={
                         <ConditionallyRender
-                            condition={isChangeRequestEnabled}
+                            condition={isChangeRequestFlagEnabled}
                             show={<ChangeRequestOverview />}
                         />
                     }

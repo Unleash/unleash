@@ -314,58 +314,56 @@ class FeatureToggleService {
         const { featureName, projectId, environment } = context;
         await this.validateFeatureContext(context);
 
-        if (!(await this.changeRequestsEnabled(projectId, environment))) {
-            if (strategyConfig.constraints?.length > 0) {
-                strategyConfig.constraints = await this.validateConstraints(
-                    strategyConfig.constraints,
-                );
-            }
-
-            try {
-                const newFeatureStrategy =
-                    await this.featureStrategiesStore.createStrategyFeatureEnv({
-                        strategyName: strategyConfig.name,
-                        constraints: strategyConfig.constraints,
-                        parameters: strategyConfig.parameters,
-                        sortOrder: strategyConfig.sortOrder,
-                        projectId,
-                        featureName,
-                        environment,
-                    });
-
-                const tags = await this.tagStore.getAllTagsForFeature(
-                    featureName,
-                );
-                const segments = await this.segmentService.getByStrategy(
-                    newFeatureStrategy.id,
-                );
-                const strategy = this.featureStrategyToPublic(
-                    newFeatureStrategy,
-                    segments,
-                );
-                await this.eventStore.store(
-                    new FeatureStrategyAddEvent({
-                        project: projectId,
-                        featureName,
-                        createdBy,
-                        environment,
-                        data: strategy,
-                        tags,
-                    }),
-                );
-                return strategy;
-            } catch (e) {
-                if (e.code === FOREIGN_KEY_VIOLATION) {
-                    throw new BadDataError(
-                        'You have not added the current environment to the project',
-                    );
-                }
-                throw e;
-            }
+        if (await this.changeRequestsEnabled(projectId, environment)) {
+            throw new Error(
+                `Strategies can only be created through change requests for ${environment} environment`,
+            );
         }
-        throw new Error(
-            `Strategies can only be created through change requests for ${environment} environment`,
-        );
+        if (strategyConfig.constraints?.length > 0) {
+            strategyConfig.constraints = await this.validateConstraints(
+                strategyConfig.constraints,
+            );
+        }
+
+        try {
+            const newFeatureStrategy =
+                await this.featureStrategiesStore.createStrategyFeatureEnv({
+                    strategyName: strategyConfig.name,
+                    constraints: strategyConfig.constraints,
+                    parameters: strategyConfig.parameters,
+                    sortOrder: strategyConfig.sortOrder,
+                    projectId,
+                    featureName,
+                    environment,
+                });
+
+            const tags = await this.tagStore.getAllTagsForFeature(featureName);
+            const segments = await this.segmentService.getByStrategy(
+                newFeatureStrategy.id,
+            );
+            const strategy = this.featureStrategyToPublic(
+                newFeatureStrategy,
+                segments,
+            );
+            await this.eventStore.store(
+                new FeatureStrategyAddEvent({
+                    project: projectId,
+                    featureName,
+                    createdBy,
+                    environment,
+                    data: strategy,
+                    tags,
+                }),
+            );
+            return strategy;
+        } catch (e) {
+            if (e.code === FOREIGN_KEY_VIOLATION) {
+                throw new BadDataError(
+                    'You have not added the current environment to the project',
+                );
+            }
+            throw e;
+        }
     }
 
     /**
@@ -389,51 +387,49 @@ class FeatureToggleService {
         const existingStrategy = await this.featureStrategiesStore.get(id);
         this.validateFeatureStrategyContext(existingStrategy, context);
 
-        if (!(await this.changeRequestsEnabled(projectId, environment))) {
-            if (existingStrategy.id === id) {
-                if (updates.constraints?.length > 0) {
-                    updates.constraints = await this.validateConstraints(
-                        updates.constraints,
-                    );
-                }
-
-                const strategy =
-                    await this.featureStrategiesStore.updateStrategy(
-                        id,
-                        updates,
-                    );
-
-                const segments = await this.segmentService.getByStrategy(
-                    strategy.id,
-                );
-
-                // Store event!
-                const tags = await this.tagStore.getAllTagsForFeature(
-                    featureName,
-                );
-                const data = this.featureStrategyToPublic(strategy, segments);
-                const preData = this.featureStrategyToPublic(
-                    existingStrategy,
-                    segments,
-                );
-                await this.eventStore.store(
-                    new FeatureStrategyUpdateEvent({
-                        project: projectId,
-                        featureName,
-                        environment,
-                        createdBy: userName,
-                        data,
-                        preData,
-                        tags,
-                    }),
-                );
-                return data;
-            }
-            throw new NotFoundError(`Could not find strategy with id ${id}`);
+        if (await this.changeRequestsEnabled(projectId, environment)) {
+            throw new Error(
+                `Strategies can only be updated through change requests for ${environment} environment`,
+            );
         }
-        throw new Error(
-            `Strategies can only be updated through change requests for ${environment} environment`,
-        );
+
+        if (existingStrategy.id === id) {
+            if (updates.constraints?.length > 0) {
+                updates.constraints = await this.validateConstraints(
+                    updates.constraints,
+                );
+            }
+
+            const strategy = await this.featureStrategiesStore.updateStrategy(
+                id,
+                updates,
+            );
+
+            const segments = await this.segmentService.getByStrategy(
+                strategy.id,
+            );
+
+            // Store event!
+            const tags = await this.tagStore.getAllTagsForFeature(featureName);
+            const data = this.featureStrategyToPublic(strategy, segments);
+            const preData = this.featureStrategyToPublic(
+                existingStrategy,
+                segments,
+            );
+            await this.eventStore.store(
+                new FeatureStrategyUpdateEvent({
+                    project: projectId,
+                    featureName,
+                    environment,
+                    createdBy: userName,
+                    data,
+                    preData,
+                    tags,
+                }),
+            );
+            return data;
+        }
+        throw new NotFoundError(`Could not find strategy with id ${id}`);
     }
 
     async updateStrategyParameter(
@@ -444,6 +440,12 @@ class FeatureToggleService {
         userName: string,
     ): Promise<Saved<IStrategyConfig>> {
         const { projectId, environment, featureName } = context;
+
+        if (await this.changeRequestsEnabled(projectId, environment)) {
+            throw new Error(
+                `Strategies can only be updated through change requests for ${environment} environment`,
+            );
+        }
 
         const existingStrategy = await this.featureStrategiesStore.get(id);
         this.validateFeatureStrategyContext(existingStrategy, context);
@@ -497,33 +499,33 @@ class FeatureToggleService {
         const { featureName, projectId, environment } = context;
         this.validateFeatureStrategyContext(existingStrategy, context);
 
-        if (!(await this.changeRequestsEnabled(projectId, environment))) {
-            await this.featureStrategiesStore.delete(id);
-
-            const tags = await this.tagStore.getAllTagsForFeature(featureName);
-            const preData = this.featureStrategyToPublic(existingStrategy);
-
-            await this.eventStore.store(
-                new FeatureStrategyRemoveEvent({
-                    featureName,
-                    project: projectId,
-                    environment,
-                    createdBy,
-                    preData,
-                    tags,
-                }),
-            );
-
-            // If there are no strategies left for environment disable it
-            await this.featureEnvironmentStore.disableEnvironmentIfNoStrategies(
-                featureName,
-                environment,
-            );
-        } else {
+        if (await this.changeRequestsEnabled(projectId, environment)) {
             throw new Error(
                 `Strategies can only deleted updated through change requests for ${environment} environment`,
             );
         }
+
+        await this.featureStrategiesStore.delete(id);
+
+        const tags = await this.tagStore.getAllTagsForFeature(featureName);
+        const preData = this.featureStrategyToPublic(existingStrategy);
+
+        await this.eventStore.store(
+            new FeatureStrategyRemoveEvent({
+                featureName,
+                project: projectId,
+                environment,
+                createdBy,
+                preData,
+                tags,
+            }),
+        );
+
+        // If there are no strategies left for environment disable it
+        await this.featureEnvironmentStore.disableEnvironmentIfNoStrategies(
+            featureName,
+            environment,
+        );
     }
 
     async getStrategiesForEnvironment(
@@ -924,6 +926,12 @@ class FeatureToggleService {
         createdBy: string,
         user?: User,
     ): Promise<FeatureToggle> {
+        if (await this.changeRequestsEnabled(project, environment)) {
+            throw new Error(
+                `Features can only be updated through change requests for ${environment} environment`,
+            );
+        }
+
         const hasEnvironment =
             await this.featureEnvironmentStore.featureHasEnvironment(
                 environment,
@@ -931,66 +939,62 @@ class FeatureToggleService {
             );
 
         if (hasEnvironment) {
-            if (!(await this.changeRequestsEnabled(project, environment))) {
-                if (enabled) {
-                    const strategies = await this.getStrategiesForEnvironment(
+            if (enabled) {
+                const strategies = await this.getStrategiesForEnvironment(
+                    project,
+                    featureName,
+                    environment,
+                );
+                if (strategies.length === 0) {
+                    const canAddStrategies =
+                        user &&
+                        (await this.accessService.hasPermission(
+                            user,
+                            CREATE_FEATURE_STRATEGY,
+                            project,
+                            environment,
+                        ));
+                    if (canAddStrategies) {
+                        await this.createStrategy(
+                            getDefaultStrategy(featureName),
+                            {
+                                environment,
+                                projectId: project,
+                                featureName,
+                            },
+                            createdBy,
+                        );
+                    } else {
+                        throw new NoAccessError(CREATE_FEATURE_STRATEGY);
+                    }
+                }
+            }
+            const updatedEnvironmentStatus =
+                await this.featureEnvironmentStore.setEnvironmentEnabledStatus(
+                    environment,
+                    featureName,
+                    enabled,
+                );
+            const feature = await this.featureToggleStore.get(featureName);
+
+            if (updatedEnvironmentStatus > 0) {
+                const tags = await this.tagStore.getAllTagsForFeature(
+                    featureName,
+                );
+                await this.eventStore.store(
+                    new FeatureEnvironmentEvent({
+                        enabled,
                         project,
                         featureName,
                         environment,
-                    );
-                    if (strategies.length === 0) {
-                        const canAddStrategies =
-                            user &&
-                            (await this.accessService.hasPermission(
-                                user,
-                                CREATE_FEATURE_STRATEGY,
-                                project,
-                                environment,
-                            ));
-                        if (canAddStrategies) {
-                            await this.createStrategy(
-                                getDefaultStrategy(featureName),
-                                {
-                                    environment,
-                                    projectId: project,
-                                    featureName,
-                                },
-                                createdBy,
-                            );
-                        } else {
-                            throw new NoAccessError(CREATE_FEATURE_STRATEGY);
-                        }
-                    }
-                }
-                const updatedEnvironmentStatus =
-                    await this.featureEnvironmentStore.setEnvironmentEnabledStatus(
-                        environment,
-                        featureName,
-                        enabled,
-                    );
-                const feature = await this.featureToggleStore.get(featureName);
-
-                if (updatedEnvironmentStatus > 0) {
-                    const tags = await this.tagStore.getAllTagsForFeature(
-                        featureName,
-                    );
-                    await this.eventStore.store(
-                        new FeatureEnvironmentEvent({
-                            enabled,
-                            project,
-                            featureName,
-                            environment,
-                            createdBy,
-                            tags,
-                        }),
-                    );
-                }
-                return feature;
+                        createdBy,
+                        tags,
+                    }),
+                );
             }
-            throw new Error(
-                `Features can only be updated through change requests for ${environment} environment`,
-            );
+            return feature;
         }
+
         throw new NotFoundError(
             `Could not find environment ${environment} for feature: ${featureName}`,
         );

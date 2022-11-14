@@ -56,7 +56,7 @@
     "chart.js": "3.9.1",
     "chartjs-adapter-date-fns": "2.0.0",
     "classnames": "2.3.2",
-    "copy-to-clipboard": "3.3.2",
+    "copy-to-clipboard": "3.3.3",
     "cypress": "9.7.0",
     "date-fns": "2.29.3",
     "debounce": "1.2.1",

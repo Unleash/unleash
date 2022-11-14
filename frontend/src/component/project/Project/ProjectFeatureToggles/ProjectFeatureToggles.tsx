@@ -200,7 +200,7 @@ export const ProjectFeatureToggles = ({
                 accessor: (row: IFeatureToggleListItem) =>
                     row.tags
                         ?.map(({ type, value }) => `${type}:${value}`)
-                        .join(', ') || '',
+                        .join('\n') || '',
                 Cell: FeatureTagCell,
                 hideInMenu: true,
                 searchable: true,

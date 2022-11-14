@@ -62,7 +62,7 @@ const columns = [
         id: 'tags',
         Header: 'Tags',
         accessor: (row: FeatureSchema) =>
-            row.tags?.map(({ type, value }) => `${type}:${value}`).join(', ') ||
+            row.tags?.map(({ type, value }) => `${type}:${value}`).join('\n') ||
             '',
         Cell: FeatureTagCell,
         searchable: true,

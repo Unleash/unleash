@@ -8,7 +8,7 @@ export interface IFeatureToggleListItem {
     lastSeenAt?: string;
     createdAt: string;
     environments: IEnvironments[];
-    tags: ITag[];
+    tags?: ITag[];
 }
 
 export interface IEnvironments {

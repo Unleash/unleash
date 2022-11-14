@@ -156,15 +156,14 @@ export default class FeatureToggleClientStore
         const featureToggles = rows.reduce((acc, r) => {
             let feature: PartialDeep<IFeatureToggleClient> = acc[r.name] ?? {
                 strategies: [],
-                tags: [],
             };
             if (this.isUnseenStrategyRow(feature, r)) {
                 feature.strategies.push(
                     FeatureToggleClientStore.rowToStrategy(r),
                 );
             }
-            if (this.isUnseenTag(feature, r)) {
-                feature.tags.push(FeatureToggleClientStore.rowToTag(r));
+            if (this.isNewTag(feature, r)) {
+                this.addTag(feature, r);
             }
             if (featureQuery?.inlineSegmentConstraints && r.segment_id) {
                 this.addSegmentToStrategy(feature, r);
@@ -199,10 +198,6 @@ export default class FeatureToggleClientStore
             FeatureToggleClientStore.removeIdsFromStrategies(features);
         }
 
-        if (!isAdmin || !this.flagResolver.isEnabled('toggleTagFiltering')) {
-            FeatureToggleClientStore.removeTagsFromFeatures(features);
-        }
-
         return features;
     }
 
@@ -230,12 +225,6 @@ export default class FeatureToggleClientStore
         });
     }
 
-    private static removeTagsFromFeatures(features: IFeatureToggleClient[]) {
-        features.forEach((feature) => {
-            delete feature.tags;
-        });
-    }
-
     private isUnseenStrategyRow(
         feature: PartialDeep<IFeatureToggleClient>,
         row: Record<string, any>,
@@ -246,14 +235,23 @@ export default class FeatureToggleClientStore
         );
     }
 
-    private isUnseenTag(
+    private addTag(
+        feature: Record<string, any>,
+        row: Record<string, any>,
+    ): void {
+        const tags = feature.tags || [];
+        const newTag = FeatureToggleClientStore.rowToTag(row);
+        feature.tags = [...tags, newTag];
+    }
+
+    private isNewTag(
         feature: PartialDeep<IFeatureToggleClient>,
         row: Record<string, any>,
     ): boolean {
         return (
             row.tag_type &&
             row.tag_value &&
-            !feature.tags.some(
+            !feature.tags?.some(
                 (tag) =>
                     tag.type === row.tag_type && tag.value === row.tag_value,
             )

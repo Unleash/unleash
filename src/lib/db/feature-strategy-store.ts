@@ -327,21 +327,30 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         };
     }
 
-    private isUnseenTag(
+    private addTag(
+        feature: Record<string, any>,
+        row: Record<string, any>,
+    ): void {
+        const tags = feature.tags || [];
+        const newTag = FeatureStrategiesStore.rowToTag(row);
+        feature.tags = [...tags, newTag];
+    }
+
+    private isNewTag(
         feature: Record<string, any>,
         row: Record<string, any>,
     ): boolean {
         return (
             row.tag_type &&
             row.tag_value &&
-            !feature.tags.some(
+            !feature.tags?.some(
                 (tag) =>
                     tag.type === row.tag_type && tag.value === row.tag_value,
             )
         );
     }
 
-    private static getTag(r: any): ITag {
+    private static rowToTag(r: any): ITag {
         return {
             value: r.tag_value,
             type: r.tag_type,
@@ -403,10 +412,8 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                     acc[r.feature_name].environments.push(
                         FeatureStrategiesStore.getEnvironment(r),
                     );
-                    if (this.isUnseenTag(acc[r.feature_name], r)) {
-                        acc[r.feature_name].tags.push(
-                            FeatureStrategiesStore.getTag(r),
-                        );
+                    if (this.isNewTag(acc[r.feature_name], r)) {
+                        this.addTag(acc[r.feature_name], r);
                     }
                 } else {
                     acc[r.feature_name] = {
@@ -418,24 +425,13 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                         environments: [
                             FeatureStrategiesStore.getEnvironment(r),
                         ],
-                        tags: [],
                     };
-                    if (this.isUnseenTag(acc[r.feature_name], r)) {
-                        acc[r.feature_name].tags.push(
-                            FeatureStrategiesStore.getTag(r),
-                        );
+                    if (this.isNewTag(acc[r.feature_name], r)) {
+                        this.addTag(acc[r.feature_name], r);
                     }
                 }
                 return acc;
             }, {});
-
-            if (!this.flagResolver.isEnabled('toggleTagFiltering')) {
-                Object.values(overview).forEach(
-                    (feature: IFeatureOverview & { tags: ITag[] }) => {
-                        delete feature.tags;
-                    },
-                );
-            }
 
             return Object.values(overview).map((o: IFeatureOverview) => ({
                 ...o,

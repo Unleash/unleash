@@ -26,7 +26,8 @@ interface IFeatureTagCellProps {
 export const FeatureTagCell: VFC<IFeatureTagCellProps> = ({ row, value }) => {
     const { searchQuery } = useSearchHighlightContext();
 
-    if (row.original.tags?.length === 0) return <TextCell />;
+    if (!row.original.tags || row.original.tags.length === 0)
+        return <TextCell />;
 
     return (
         <TextCell>

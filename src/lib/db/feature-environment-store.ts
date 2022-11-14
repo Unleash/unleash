@@ -13,6 +13,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 const T = {
     featureEnvs: 'feature_environments',
+    featureEnvVariants: 'feature_environment_variant',
     featureStrategies: 'feature_strategies',
     features: 'features',
 };
@@ -284,6 +285,12 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
         await this.db.raw(
             `INSERT INTO ${T.featureEnvs} (
                 SELECT distinct ? AS environment, feature_name, enabled FROM ${T.featureEnvs} INNER JOIN ${T.features} ON ${T.featureEnvs}.feature_name = ${T.features}.name WHERE environment = ? AND project = ANY(?))`,
+            [destinationEnvironment, sourceEnvironment, projects],
+        );
+
+        await this.db.raw(
+            `INSERT INTO ${T.featureEnvVariants} (environment, feature_name, variants) (
+                SELECT distinct ? AS environment, feature_name, variants FROM ${T.featureEnvVariants} INNER JOIN ${T.features} ON ${T.featureEnvVariants}.feature_name = ${T.features}.name WHERE environment = ? AND project = ANY(?))`,
             [destinationEnvironment, sourceEnvironment, projects],
         );
     }

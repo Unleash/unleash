@@ -33,13 +33,14 @@ import { FeatureArchiveDialog } from '../../common/FeatureArchiveDialog/FeatureA
 import { DraftBanner } from 'component/changeRequest/DraftBanner/DraftBanner';
 import { MainLayout } from 'component/layout/MainLayout/MainLayout';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 
 export const FeatureView = () => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const { refetch: projectRefetch } = useProject(projectId);
     const { refetchFeature } = useFeature(projectId, featureId);
-    const { uiConfig } = useUiConfig();
+    const { isBannerEnabled } = useChangeRequestsEnabled(projectId);
 
     const [openTagDialog, setOpenTagDialog] = useState(false);
     const [showDelDialog, setShowDelDialog] = useState(false);
@@ -88,9 +89,7 @@ export const FeatureView = () => {
         <MainLayout
             ref={ref}
             subheader={
-                uiConfig?.flags.changeRequests ? (
-                    <DraftBanner project={projectId} />
-                ) : null
+                isBannerEnabled() ? <DraftBanner project={projectId} /> : null
             }
         >
             <ConditionallyRender

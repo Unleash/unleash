@@ -3,11 +3,14 @@ import useUiConfig from './api/getters/useUiConfig/useUiConfig';
 import { useChangeRequestConfig } from './api/getters/useChangeRequestConfig/useChangeRequestConfig';
 
 export const useChangeRequestsEnabled = (projectId: string) => {
-    // it can be swapped with proper settings instead of feature flag
     const { uiConfig } = useUiConfig();
     const { data } = useChangeRequestConfig(projectId);
 
-    const isChangeRequestEnabled = React.useCallback(
+    const isChangeRequestEnabled = () => {
+        return uiConfig?.flags.changeRequests;
+    };
+
+    const isChangeRequestConfigured = React.useCallback(
         (environment: string) => {
             const enabled = data.some(draft => {
                 return (
@@ -16,12 +19,21 @@ export const useChangeRequestsEnabled = (projectId: string) => {
                 );
             });
 
-            console.log(enabled, data, environment);
-
-            return Boolean(uiConfig?.flags?.changeRequests) && enabled;
+            return isChangeRequestEnabled() && enabled;
         },
         [data]
     );
 
-    return { isChangeRequestEnabled };
+    const isBannerEnabled = React.useCallback(() => {
+        return (
+            isChangeRequestEnabled() &&
+            data.some(draft => draft.changeRequestEnabled)
+        );
+    }, [data]);
+
+    return {
+        isChangeRequestEnabled,
+        isChangeRequestConfigured,
+        isBannerEnabled,
+    };
 };

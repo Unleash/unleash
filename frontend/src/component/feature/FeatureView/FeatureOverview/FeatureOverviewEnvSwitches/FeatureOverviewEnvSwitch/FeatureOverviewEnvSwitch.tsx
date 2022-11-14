@@ -35,7 +35,7 @@ const FeatureOverviewEnvSwitch = ({
     const { refetchFeature } = useFeature(projectId, featureId);
     const { setToastData, setToastApiError } = useToast();
     const { classes: styles } = useStyles();
-    const { isChangeRequestEnabled } = useChangeRequestsEnabled(projectId);
+    const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const {
         onChangeRequestToggle,
         onChangeRequestToggleClose,
@@ -85,7 +85,7 @@ const FeatureOverviewEnvSwitch = ({
     };
 
     const toggleEnvironment = async (e: React.ChangeEvent) => {
-        if (isChangeRequestEnabled(env.name)) {
+        if (isChangeRequestConfigured(env.name)) {
             e.preventDefault();
             onChangeRequestToggle(featureId, env.name, !env.enabled);
             return;

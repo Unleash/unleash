@@ -43,7 +43,7 @@ export const FeatureStrategyEmpty = ({
             environment.strategies &&
             environment.strategies.length > 0
     );
-    const { isChangeRequestEnabled } = useChangeRequestsEnabled(projectId);
+    const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
 
     const {
         changeRequestDialogDetails,
@@ -71,7 +71,7 @@ export const FeatureStrategyEmpty = ({
                 environment => environment.name === fromEnvironmentName
             )?.strategies || [];
 
-        if (isChangeRequestEnabled(environmentId)) {
+        if (isChangeRequestConfigured(environmentId)) {
             await onChangeRequestAddStrategies(
                 environmentId,
                 strategies,

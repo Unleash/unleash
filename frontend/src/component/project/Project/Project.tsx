@@ -29,6 +29,7 @@ import { DraftBanner } from 'component/changeRequest/DraftBanner/DraftBanner';
 import { MainLayout } from 'component/layout/MainLayout/MainLayout';
 import { ProjectChangeRequests } from '../../changeRequest/ProjectChangeRequests/ProjectChangeRequests';
 import { ProjectSettings } from './ProjectSettings/ProjectSettings';
+import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 
 const StyledDiv = styled('div')(() => ({
     display: 'flex',
@@ -61,6 +62,8 @@ const Project = () => {
     const { isOss, uiConfig } = useUiConfig();
     const basePath = `/projects/${projectId}`;
     const projectName = project?.name || projectId;
+    const { isBannerEnabled, isChangeRequestEnabled } =
+        useChangeRequestsEnabled(projectId);
 
     const [showDelDialog, setShowDelDialog] = useState(false);
 
@@ -76,7 +79,7 @@ const Project = () => {
                 path: `${basePath}/health`,
                 name: 'health',
             },
-            ...(!uiConfig?.flags?.changeRequests
+            ...(!isChangeRequestEnabled()
                 ? [
                       {
                           title: 'Access',
@@ -95,7 +98,7 @@ const Project = () => {
                 path: `${basePath}/archive`,
                 name: 'archive',
             },
-            ...(uiConfig?.flags?.changeRequests
+            ...(isChangeRequestEnabled()
                 ? [
                       {
                           title: 'Project settings',
@@ -146,9 +149,7 @@ const Project = () => {
         <MainLayout
             ref={ref}
             subheader={
-                uiConfig?.flags.changeRequests ? (
-                    <DraftBanner project={projectId} />
-                ) : null
+                isBannerEnabled() ? <DraftBanner project={projectId} /> : null
             }
         >
             <div className={styles.header}>

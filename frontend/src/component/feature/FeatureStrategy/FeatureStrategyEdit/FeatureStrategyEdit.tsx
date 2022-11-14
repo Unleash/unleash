@@ -46,7 +46,7 @@ export const FeatureStrategyEdit = () => {
     const { unleashUrl } = uiConfig;
     const navigate = useNavigate();
     const { addChangeRequest } = useChangeRequestApi();
-    const { isChangeRequestEnabled } = useChangeRequestsEnabled(projectId);
+    const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const { refetch: refetchChangeRequests } = useChangeRequestOpen(projectId);
 
     const { feature, refetchFeature } = useFeature(projectId, featureId);
@@ -136,7 +136,7 @@ export const FeatureStrategyEdit = () => {
         const payload = createStrategyPayload(strategy);
 
         try {
-            if (isChangeRequestEnabled(environmentId)) {
+            if (isChangeRequestConfigured(environmentId)) {
                 await onStrategyRequestEdit(payload);
             } else {
                 await onStrategyEdit(payload);
@@ -183,7 +183,7 @@ export const FeatureStrategyEdit = () => {
                 loading={loading}
                 permission={UPDATE_FEATURE_STRATEGY}
                 errors={errors}
-                isChangeRequest={isChangeRequestEnabled}
+                isChangeRequest={isChangeRequestConfigured(environmentId)}
             />
             {staleDataNotification}
         </FormTemplate>

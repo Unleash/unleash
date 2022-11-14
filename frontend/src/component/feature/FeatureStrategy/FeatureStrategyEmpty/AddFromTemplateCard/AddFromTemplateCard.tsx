@@ -41,7 +41,7 @@ export const AddFromTemplateCard: FC<IAddFromTemplateCardProps> = ({
     const { addStrategyToFeature } = useFeatureStrategyApi();
     const { setToastApiError } = useToast();
 
-    const { isChangeRequestEnabled } = useChangeRequestsEnabled(projectId);
+    const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
 
     const {
         changeRequestDialogDetails,
@@ -52,7 +52,7 @@ export const AddFromTemplateCard: FC<IAddFromTemplateCardProps> = ({
 
     const onStrategyAdd = async () => {
         try {
-            if (isChangeRequestEnabled(environmentId)) {
+            if (isChangeRequestConfigured(environmentId)) {
                 onChangeRequestAddStrategy(environmentId, strategy);
             } else {
                 await addStrategyToFeature(

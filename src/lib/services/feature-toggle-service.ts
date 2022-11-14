@@ -739,7 +739,16 @@ class FeatureToggleService {
             }),
         );
 
-        await Promise.allSettled(tasks);
+        const variantsTasks = newToggle.environments.flatMap(async (e) => {
+            const variants = await this.getVariantsForEnv(featureName, e.name);
+            return this.saveVariantsOnEnv(
+                newFeatureName,
+                e.name,
+                variants,
+                userName,
+            );
+        });
+        await Promise.all((tasks as Promise<any>[]).concat(variantsTasks));
         return created;
     }
 

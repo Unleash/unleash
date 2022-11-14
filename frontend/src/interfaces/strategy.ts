@@ -20,7 +20,6 @@ export interface IFeatureStrategyPayload {
     name?: string;
     constraints: IConstraint[];
     parameters: IFeatureStrategyParameters;
-    copyOf?: string;
 }
 
 export interface IStrategy {

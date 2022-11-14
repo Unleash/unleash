@@ -36,6 +36,7 @@ export interface IFeatureStrategy {
     sortOrder?: number;
     constraints: IConstraint[];
     createdAt?: Date;
+    segments?: number[];
 }
 
 export interface FeatureToggleDTO {

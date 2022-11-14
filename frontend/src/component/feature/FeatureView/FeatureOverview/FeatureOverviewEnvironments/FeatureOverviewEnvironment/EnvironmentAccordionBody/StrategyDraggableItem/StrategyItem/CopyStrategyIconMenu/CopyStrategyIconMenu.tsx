@@ -64,7 +64,6 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
         const { id, ...strategyCopy } = {
             ...strategy,
             environment,
-            copyOf: strategy.id,
         };
         if (isChangeRequestConfigured(environmentId)) {
             await onChangeRequestAddStrategy(

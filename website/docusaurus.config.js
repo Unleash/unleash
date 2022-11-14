@@ -220,6 +220,10 @@ module.exports = {
                         from: '/advanced/feature_toggle_variants',
                         to: '/reference/feature-toggle-variants',
                     },
+                    {
+                        from: '/advanced/impression-data',
+                        to: '/reference//impression-data',
+                    },
                 ],
                 createRedirects: function (toPath) {
                     if (

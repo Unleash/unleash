@@ -312,7 +312,7 @@ module.exports = {
                         'reference/api-tokens-and-client-keys',
                         'reference/archived-toggles',
                         'reference/event-log',
-                        'advanced/impression-data',
+                        'reference/impression-data',
                         'reference/custom-activation-strategies',
                         'user_guide/environments',
                         'reference/feature-toggles',

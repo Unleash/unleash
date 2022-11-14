@@ -310,7 +310,7 @@ module.exports = {
                     items: [
                         'user_guide/activation_strategy',
                         'reference/api-tokens-and-client-keys',
-                        'advanced/archived_toggles',
+                        'reference/archived-toggles',
                         'reference/event-log',
                         'advanced/impression-data',
                         'advanced/custom_activation_strategy',

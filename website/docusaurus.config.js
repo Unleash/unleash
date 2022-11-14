@@ -204,6 +204,10 @@ module.exports = {
                         from: '/advanced/api_access',
                         to: '/how-to/how-to-use-the-admin-api',
                     },
+                    {
+                        from: '/advanced/archived_toggles',
+                        to: '/reference/archived-toggles',
+                    },
                 ],
                 createRedirects: function (toPath) {
                     if (

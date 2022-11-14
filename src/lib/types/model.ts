@@ -117,6 +117,11 @@ export interface IVariant {
     }[];
 }
 
+export interface IFeatureEnvironmentVariant extends IVariant {
+    featureName: string;
+    environment: string;
+}
+
 export interface IEnvironment {
     name: string;
     type: string;

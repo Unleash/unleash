@@ -24,6 +24,7 @@ import {
     IEnvironment,
     IFeatureEnvironment,
     IFeatureStrategy,
+    IFeatureEnvironmentVariant,
     IImportData,
     IImportFile,
     IProject,
@@ -683,6 +684,7 @@ export default class StateService {
         tagTypes: ITagType[];
         tags: ITag[];
         featureTags: IFeatureTag[];
+        featureEnvironmentVariants: IFeatureEnvironmentVariant[];
         featureStrategies: IFeatureStrategy[];
         environments: IEnvironment[];
         featureEnvironments: IFeatureEnvironment[];
@@ -709,6 +711,9 @@ export default class StateService {
                 ? this.environmentStore.getAll()
                 : Promise.resolve([]),
             includeFeatureToggles
+                ? this.toggleStore.getAllVariants()
+                : Promise.resolve([]),
+            includeFeatureToggles
                 ? this.featureEnvironmentStore.getAll()
                 : Promise.resolve([]),
             includeSegments ? this.segmentStore.getAll() : Promise.resolve([]),
@@ -725,6 +730,7 @@ export default class StateService {
                 featureTags,
                 featureStrategies,
                 environments,
+                featureEnvironmentVariants,
                 featureEnvironments,
                 segments,
                 featureStrategySegments,
@@ -743,6 +749,7 @@ export default class StateService {
                 featureEnvironments: featureEnvironments.filter((fE) =>
                     features.some((f) => fE.featureName === f.name),
                 ),
+                featureEnvironmentVariants,
                 segments,
                 featureStrategySegments,
             }),

@@ -4,7 +4,12 @@ import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
 import NotFoundError from '../error/notfound-error';
 import { Logger, LogProvider } from '../logger';
-import { FeatureToggle, FeatureToggleDTO, IVariant } from '../types/model';
+import {
+    FeatureToggle,
+    FeatureToggleDTO,
+    IFeatureEnvironmentVariant,
+    IVariant,
+} from '../types/model';
 import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
 
 const FEATURE_COLUMNS = [
@@ -273,6 +278,27 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             .andWhere({ environment });
 
         return this.rowToEnvVariants(row);
+    }
+
+    async getAllVariants(): Promise<IFeatureEnvironmentVariant[]> {
+        const rows = await this.db(`${VARIANTS_TABLE}`).select(
+            'variants',
+            'feature_name',
+            'environment',
+        );
+        return this.rowsToFeatureEnvVariants(rows);
+    }
+
+    rowsToFeatureEnvVariants(rows: any[]): IFeatureEnvironmentVariant[] {
+        return rows.flatMap((row) =>
+            (row.variants as IVariant[]).map((variant) => {
+                return {
+                    featureName: row.feature_name,
+                    environment: row.environment,
+                    ...variant,
+                };
+            }),
+        );
     }
 
     async saveVariants(

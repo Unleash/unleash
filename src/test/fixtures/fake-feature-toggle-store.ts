@@ -4,7 +4,13 @@ import {
     IFeatureToggleStore,
 } from '../../lib/types/stores/feature-toggle-store';
 import NotFoundError from '../../lib/error/notfound-error';
-import { FeatureToggle, FeatureToggleDTO, IVariant } from 'lib/types/model';
+import {
+    FeatureToggle,
+    FeatureToggleDTO,
+    IFeatureEnvironmentVariant,
+    IFeatureEnvironmentVariantHolder,
+    IVariant,
+} from 'lib/types/model';
 
 export default class FakeFeatureToggleStore implements IFeatureToggleStore {
     features: FeatureToggle[] = [];
@@ -125,6 +131,16 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
     async getVariants(featureName: string): Promise<IVariant[]> {
         const feature = await this.get(featureName);
         return feature.variants as IVariant[];
+    }
+
+    async getAllVariants(): Promise<IFeatureEnvironmentVariantHolder[]> {
+        let features = await this.getAll();
+        let variants = features.flatMap((feature) => ({
+            featureName: feature.name,
+            environment: 'development',
+            variants: feature.variants,
+        }));
+        return Promise.resolve(variants);
     }
 
     getVariantsForEnv(

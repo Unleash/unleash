@@ -246,7 +246,7 @@ docker run \
   --pull=always unleashorg/unleash-server
 ```
 
-[Click here to see all options to get started locally.](deploy/getting-started.md)
+[Click here to see all options to get started locally.](reference/deploy/getting-started.md)
 
 ### Accessing your new instance
 

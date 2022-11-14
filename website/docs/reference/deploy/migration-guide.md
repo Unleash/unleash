@@ -1,5 +1,4 @@
 ---
-id: migration_guide
 title: Migration Guide
 ---
 
@@ -15,11 +14,11 @@ You can also read the highlights of **[what's new in v4](/user_guide/v4-whats-ne
 
 If you are upgrading from Unleash Open-Source v3 client SDKs did not need to use an API token in order to connect to Unleash-server. Starting from v4 we have back-ported the API token handling for Enterprise in to the Open-Source version. This means that all client SDKs now need to use a client token in order to connect to Unleash.
 
-Read more in the [API token documentation](../user_guide/api-token).
+Read more in the [API token documentation](../../user_guide/token.mdx).
 
 ### 2. Configuring Unleash {#2-configuring-unleash}
 
-We have done a lot of changes to the options you can pass in to Unleash. If you are manually configuring Unleash you should have a look on the updated [configuring Unleash documentation](./configuring_unleash)
+We have done a lot of changes to the options you can pass in to Unleash. If you are manually configuring Unleash you should have a look on the updated [configuring Unleash documentation](./configuring-unleash.md)
 
 ### 3. Role-based Access Control (RBAC) {#3-role-based-access-control-rbac}
 
@@ -43,7 +42,7 @@ req.session.user = user;
 ```
 
 - [Read more about Securing Unleash v4](./securing-unleash.md)
-- [Read more about RBAC](../user_guide/rbac)
+- [Read more about RBAC](../../user_guide/rbac.md)
 
 ### 4. Legacy v2 routes removed {#4-legacy-v2-routes-removed}
 
@@ -55,7 +54,7 @@ In v2 you could query feature toggles on `/api/features`. This was deprecated in
 
 Unleash no longer ships with a binary that allows you to start Unleash directly from the command line. From v4 you need to either use Unleash via docker or programmatically.
 
-Read more in our [getting started documentation](./getting_started)
+Read more in our [getting started documentation](./getting-started.md)
 
 ## Upgrading from v2.x to v3.x {#upgrading-from-v2x-to-v3x}
 

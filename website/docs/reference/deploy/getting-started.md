@@ -1,5 +1,4 @@
 ---
-id: getting_started
 title: Getting Started
 ---
 
@@ -111,7 +110,7 @@ docker run -p 4242:4242 \
 
 ## Create an api token for your client {#create-an-api-token-for-your-client}
 
-- [API Token creation](../user_guide/api-token)
+- [API Token creation](../../user_guide/token.mdx)
 
 ## Test your server and create a sample API call {#test-your-server-and-create-a-sample-api-call}
 

@@ -1,5 +1,4 @@
 ---
-id: google_auth
 title: Google Auth Hook
 ---
 

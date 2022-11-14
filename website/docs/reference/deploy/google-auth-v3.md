@@ -1,6 +1,5 @@
 ---
-id: google_auth_v3
-title: Google Auth Hook
+title: Google Auth v3
 ---
 
 > You can also find the complete [source code for this guide](https://github.com/Unleash/unleash-examples/tree/main/v3/securing-google-auth) in the unleash-examples project.

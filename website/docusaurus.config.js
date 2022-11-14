@@ -155,6 +155,10 @@ module.exports = {
                         return '/reference' + existingPath;
                     }
 
+                    if (existingPath.startsWith('/deploy')) {
+                        return '/reference' + existingPath;
+                    }
+
                     // don't redirect if no conditions match
                     return undefined;
                 },
@@ -253,6 +257,58 @@ module.exports = {
                     {
                         from: '/advanced/enterprise-authentication',
                         to: '/reference/sso',
+                    },
+                    {
+                        from: '/deploy',
+                        to: '/reference/deploy',
+                    },
+                    {
+                        from: '/deploy/getting_started',
+                        to: '/reference/deploy/getting-started',
+                    },
+                    {
+                        from: '/deploy/configuring_unleash',
+                        to: '/reference/deploy/configuring-unleash',
+                    },
+                    {
+                        from: '/deploy/configuring_unleash_v3',
+                        to: '/reference/deploy/configuring-unleash-v3',
+                    },
+                    {
+                        from: '/deploy/database-setup',
+                        to: '/reference/deploy/database-setup',
+                    },
+                    {
+                        from: '/deploy/database_backup',
+                        to: '/reference/deploy/database-backup',
+                    },
+                    {
+                        from: '/deploy/email',
+                        to: '/reference/deploy/email-service',
+                    },
+                    {
+                        from: '/deploy/google_auth_v3',
+                        to: '/reference/deploy/google-auth-v3',
+                    },
+                    {
+                        from: '/deploy/google_auth',
+                        to: '/reference/deploy/google-auth-hook',
+                    },
+                    {
+                        from: '/deploy/import_export',
+                        to: '/reference/deploy/import-export',
+                    },
+                    {
+                        from: '/deploy/migration_guide',
+                        to: '/reference/deploy/migration-guide',
+                    },
+                    {
+                        from: '/deploy/securing_unleash',
+                        to: '/reference/deploy/securing-unleash',
+                    },
+                    {
+                        from: '/deploy/securing-unleash-v3',
+                        to: '/reference/deploy/securing-unleash-v3',
                     },
                 ],
                 createRedirects: function (toPath) {

@@ -1,5 +1,4 @@
 ---
-id: email
 title: Email service
 ---
 

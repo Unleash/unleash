@@ -1,5 +1,4 @@
 ---
-id: securing-unleash-v3
 title: Securing Unleash v3
 ---
 

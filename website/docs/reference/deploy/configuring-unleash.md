@@ -1,11 +1,10 @@
 ---
-id: configuring_unleash
 title: Configuring Unleash
 ---
 
 import Tabs from '@theme/Tabs'; import TabItem from '@theme/TabItem';
 
-> This is the guide on how to configure **Unleash v4 self-hosted**. If you are still using Unleash v3 you should checkout [configuring Unleash v3](./configuring_unleash_v3)
+> This is the guide on how to configure **Unleash v4 self-hosted**. If you are still using Unleash v3 you should checkout [configuring Unleash v3](./configuring-unleash-v3.md)
 
 ## Must configure
 
@@ -27,11 +26,11 @@ In order for Unleash server to work, you need a running database and its connect
 
 Used to send reset-password mails and welcome mails when onboarding new users. <br /> **NOTE** - If this is not configured, you will not be able to allow your users to reset their own passwords.
 
-For [more details, see here](./email.md)
+For [more details, see here](./email-service.md)
 
 ## Further customization
 
-In order to customize "anything" in Unleash you need to use [Unleash from Node.js](./getting_started#option-two---from-nodejs) or start the [docker image](./getting_started#option-one---use-docker) with environment variables.
+In order to customize "anything" in Unleash you need to use [Unleash from Node.js](./getting-started.md#option-two---from-nodejs) or start the [docker image](./getting-started.md#option-one---use-docker) with environment variables.
 
 ```js
 const unleash = require('unleash-server');
@@ -88,7 +87,7 @@ unleash.start(unleashOptions);
 
 - **databaseUrl** - (_deprecated_) the postgres database url to connect to. Only used if _db_ object is not specified, and overrides the _db_ object and any environment variables that change parts of it (like `DATABASE_SSL`). Should include username/password. This value may also be set via the `DATABASE_URL` environment variable. Alternatively, if you would like to read the database url from a file, you may set the `DATABASE_URL_FILE` environment variable with the full file path. The contents of the file must be the database url exactly.
 - **db** - The database configuration object. See [the database configuration section](#database-configuration) for a full overview of the available properties.
-- **disableLegacyFeaturesApi** (boolean) - whether to disable the [legacy features API](../api/admin/feature-toggles-api.md). Defaults to `false` (`DISABLE_LEGACY_FEATURES_API`). Introduced in Unleash 4.6.
+- **disableLegacyFeaturesApi** (boolean) - whether to disable the [legacy features API](../../api/admin/feature-toggles-api.md). Defaults to `false` (`DISABLE_LEGACY_FEATURES_API`). Introduced in Unleash 4.6.
 - **email** - the email object configuring an SMTP server for sending welcome mails and password reset mails
   - `host` - The server URL to your SMTP server
   - `port` - Which port the SMTP server is running on. Defaults to 465 (Secure SMTP)
@@ -96,7 +95,7 @@ unleash.start(unleashOptions);
   - `sender` - Which email should be set as sender of mails being sent from Unleash?
   - `smtpuser` - Username for your SMTP server
   - `smtppass` - Password for your SMTP server
-- **eventHook** (`function(event, data)`) - (_deprecated in Unleash 4.3_ in favor of the [Webhook addon](../reference/addons/webhook.md)) If provided, this function will be invoked whenever a feature is mutated. The possible values for `event` are `'feature-created'`, `'feature-archived'` and `'feature-revived'`. The `data` argument contains information about the mutation. Its fields are `type` (string) - the event type (same as `event`); `createdBy` (string) - the user who performed the mutation; `data` - the contents of the change. The contents in `data` differs based on the event type; For `'feature-archived'` and `'feature-revived'`, the only field will be `name` - the name of the feature. For `'feature-created'` the data follows a schema defined in the code [here](https://github.com/Unleash/unleash/blob/7b7f0b84e8cddd5880dcf29c231672113224b9a7/src/lib/schema/feature-schema.ts#L77). See an [api here](/api/admin/events).
+- **eventHook** (`function(event, data)`) - (_deprecated in Unleash 4.3_ in favor of the [Webhook addon](../addons/webhook.md)) If provided, this function will be invoked whenever a feature is mutated. The possible values for `event` are `'feature-created'`, `'feature-archived'` and `'feature-revived'`. The `data` argument contains information about the mutation. Its fields are `type` (string) - the event type (same as `event`); `createdBy` (string) - the user who performed the mutation; `data` - the contents of the change. The contents in `data` differs based on the event type; For `'feature-archived'` and `'feature-revived'`, the only field will be `name` - the name of the feature. For `'feature-created'` the data follows a schema defined in the code [here](https://github.com/Unleash/unleash/blob/7b7f0b84e8cddd5880dcf29c231672113224b9a7/src/lib/schema/feature-schema.ts#L77). See an [api here](/api/admin/events).
 - **getLogger** (function) - Used to register a [custom log provider](#how-do-i-configure-the-log-output).
 - **logLevel** (`debug` | `info` | `warn` | `error` | `fatal`) - The lowest level to log at, also configurable using environment variable `LOG_LEVEL`.
 - **preHook** (function) - this is a hook if you need to provide any middlewares to express before `unleash` adds any. Express app instance is injected as first argument.
@@ -129,7 +128,7 @@ unleash.start(unleashOptions);
 - **clientFeatureCaching** - configuring memoization of the /api/client/features endpoint
   - `enabled` - set to true by default - Overridable with (`CLIENT_FEATURE_CACHING_ENABLED`)
   - `maxAge` - the time to cache features, set to 600 milliseconds by default - Overridable with (`CLIENT_FEATURE_CACHING_MAXAGE`) ) (accepts milliseconds)
-- **frontendApi** - Configuration options for the [Unleash front-end API](../reference/front-end-api.md).
+- **frontendApi** - Configuration options for the [Unleash front-end API](../front-end-api.md).
   - `refreshIntervalInMs` - how often (in milliseconds) front-end clients should refresh their data from the cache. Overridable with the `FRONTEND_API_REFRESH_INTERVAL_MS` environment variable.
 
 You can also set the environment variable `ENABLED_ENVIRONMENTS` to a comma delimited string of environment names to override environments.

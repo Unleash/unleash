@@ -1,5 +1,4 @@
 ---
-id: database-setup
 title: Database Setup
 ---
 

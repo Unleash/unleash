@@ -1,11 +1,10 @@
 ---
-id: configuring_unleash_v3
-title: Configuring Unleash
+title: Configuring Unleash v3
 ---
 
-> This is the guide on how to configure **Unleash v3 self-hosted**. If you are using Unleash v4 you should checkout [configuring Unleash](./configuring_unleash)
+> This is the guide on how to configure **Unleash v3 self-hosted**. If you are using Unleash v4 you should checkout [configuring Unleash](./configuring-unleash.md)
 
-In order to customize "anything" in Unleash you need to use [Unleash from Node.js](./getting_started#option-two---from-nodejs):
+In order to customize "anything" in Unleash you need to use [Unleash from Node.js](./getting-started.md#option-two---from-nodejs):
 
 ```js
 const unleash = require('unleash-server');

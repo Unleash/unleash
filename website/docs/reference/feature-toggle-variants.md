@@ -1,5 +1,4 @@
 ---
-id: toggle_variants
 title: Feature Toggle Variants
 ---
 <div class="alert alert--info" role="alert">

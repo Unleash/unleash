@@ -317,7 +317,7 @@ module.exports = {
                         'user_guide/environments',
                         'reference/feature-toggles',
                         'reference/feature-toggle-types',
-                        'advanced/toggle_variants',
+                        'reference/feature-toggle-variants',
                         'reference/front-end-api',
                         'reference/playground',
                         'reference/public-signup',

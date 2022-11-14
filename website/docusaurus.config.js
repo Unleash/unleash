@@ -216,6 +216,10 @@ module.exports = {
                         from: '/advanced/feature_toggle_types',
                         to: '/reference/feature-toggle-types',
                     },
+                    {
+                        from: '/advanced/feature_toggle_variants',
+                        to: '/reference/feature-toggle-variants',
+                    },
                 ],
                 createRedirects: function (toPath) {
                     if (

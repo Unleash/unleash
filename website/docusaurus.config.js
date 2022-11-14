@@ -227,6 +227,22 @@ module.exports = {
                         from: '/advanced/stickiness',
                         to: '/reference/stickiness',
                     },
+                    {
+                        from: '/advanced/sso-google',
+                        to: '/how-to/how-to-add-sso-google',
+                    },
+                    {
+                        from: '/advanced/sso-open-id-connect',
+                        to: '/how-to/how-to-add-sso-open-id-connect',
+                    },
+                    {
+                        from: '/advanced/sso-saml-keycloak',
+                        to: '/how-to/how-to-add-sso-saml-keycloak',
+                    },
+                    {
+                        from: '/advanced/sso-saml',
+                        to: '/how-to/how-to-add-sso-saml',
+                    },
                 ],
                 createRedirects: function (toPath) {
                     if (

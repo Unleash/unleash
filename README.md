@@ -128,11 +128,11 @@ Check out [the CONTRIBUTING.md file](./CONTRIBUTING.md) for contribution guideli
 ### Flexibility and adaptability
 
 - Get an easy overview of all feature toggles across all your environments, applications and services
-- Use included [activation strategies](https://docs.getunleash.io/user_guide/activation_strategy) for most common use cases, or use a [custom activation strategy](https://docs.getunleash.io/advanced/custom_activation_strategy) to support any need you might have
+- Use included [activation strategies](https://docs.getunleash.io/user_guide/activation_strategy) for most common use cases, or use a [custom activation strategy](https://docs.getunleash.io/reference/custom-activation-strategies) to support any need you might have
 - Organise feature toggles by [feature toggle tags](https://docs.getunleash.io/reference/tags)
 - [Canary releases / gradual rollouts](https://docs.getunleash.io/user_guide/activation_strategy#gradual-rollout)
 - Targeted releases: release features to specific [users](https://docs.getunleash.io/user_guide/activation_strategy#userids), [IPs](https://docs.getunleash.io/user_guide/activation_strategy#ips), or [hostnames](https://docs.getunleash.io/user_guide/activation_strategy#hostnames)
-- [Kill switches](https://docs.getunleash.io/advanced/feature_toggle_types#feature-toggle-types)
+- [Kill switches](https://docs.getunleash.io/reference/feature-toggle-types#feature-toggle-types)
 - [A/B testing](https://docs.getunleash.io/topics/a-b-testing)
 - 2 [environments](https://docs.getunleash.io/user_guide/environments)
 - Out-of-the-box integrations with popular tools ([Slack](https://docs.getunleash.io/addons/slack), [Microsoft Teams](https://docs.getunleash.io/addons/teams), [Datadog](https://docs.getunleash.io/addons/datadog)) + integrate with anything with [webhooks](https://docs.getunleash.io/addons/webhook)

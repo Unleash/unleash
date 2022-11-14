@@ -74,7 +74,7 @@ If you see an item marked with a ❌ that you would find useful, feel free to re
 | [IP](../user_guide/activation_strategy#ips) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | [IP](../user_guide/activation_strategy#ips): CIDR syntax | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ | ✅ | ✅ | ✅ |
 | [Hostname](../user_guide/activation_strategy#hostnames) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **Category: [Custom strategies](../advanced/custom_activation_strategy)** |  |  |  |  |  |  |  |  |  |
+| **Category: [Custom strategies](../reference/custom-activation-strategies.md)** |  |  |  |  |  |  |  |  |  |
 | Basic support | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | <span id="strategy-constraints">**Category: [Strategy constraints](../reference/strategy-constraints.md)**</span> |  |  |  |  |  |  |  |  |  |
 | Basic support (`IN`, `NOT_IN` operators) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
@@ -87,11 +87,11 @@ If you see an item marked with a ❌ that you would find useful, feel free to re
 | Can take context | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Override fallback value | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Fallback function | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ | ⭕ | ⭕ | ✅ |
-| **Category: [Variants](../advanced/toggle_variants)** |  |  |  |  |  |  |  |  |  |
+| **Category: [Variants](../reference/feature-toggle-variants.md)** |  |  |  |  |  |  |  |  |  |
 | Basic support | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Custom fallback variant | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ | ✅ |
 | Custom weight | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ | ✅ |
-| [Custom stickiness (beta)](..reference/stickiness#custom-stickiness-beta) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ | ✅ |
+| [Custom stickiness (beta)](../reference/stickiness#custom-stickiness-beta) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ | ✅ |
 | **Category: Local backup** |  |  |  |  |  |  |  |  |  |
 | File based backup | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ | ✅ |
 | **Category: Usage metrics** |  |  |  |  |  |  |  |  |  |

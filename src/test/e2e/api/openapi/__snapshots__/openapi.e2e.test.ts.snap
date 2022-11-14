@@ -7622,7 +7622,7 @@ If the provided project does not exist, the list of events will be empty.",
       "name": "Segments",
     },
     {
-      "description": "Create, update, delete, manage [custom strategies](https://docs.getunleash.io/advanced/custom_activation_strategy).",
+      "description": "Create, update, delete, manage [custom strategies](https://docs.getunleash.io/reference/custom-activation-strategies).",
       "name": "Strategies",
     },
     {

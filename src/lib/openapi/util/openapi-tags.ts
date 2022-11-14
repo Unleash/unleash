@@ -82,7 +82,7 @@ const OPENAPI_TAGS = [
     {
         name: 'Strategies',
         description:
-            'Create, update, delete, manage [custom strategies](https://docs.getunleash.io/advanced/custom_activation_strategy).',
+            'Create, update, delete, manage [custom strategies](https://docs.getunleash.io/reference/custom-activation-strategies).',
     },
     {
         name: 'Tags',

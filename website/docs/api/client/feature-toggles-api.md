@@ -164,7 +164,7 @@ In the example `environment` needs to be `production` AND `userId` must be eithe
 
 ### Variants {#variants}
 
-All feature toggles can also take an array of variants. You can read more about [feature toggle variants](/advanced/toggle_variants).
+All feature toggles can also take an array of variants. You can read more about [feature toggle variants](/reference/feature-toggle-variants).
 
 ```json
 {

@@ -84,7 +84,7 @@ if unleash.isEnabled(name: "ios") {
 }
 ```
 
-You can also set up [variants](https://docs.getunleash.io/docs/advanced/toggle_variants) and use them in a similar fashion:
+You can also set up [variants](https://docs.getunleash.io/docs/reference/feature-toggle-variants) and use them in a similar fashion:
 
 ```swift
 var variant = unleash.getVariant(name: "ios")

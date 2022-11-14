@@ -259,14 +259,17 @@ class ProjectStore implements IProjectStore {
         environment: string,
         projects: string[],
     ): Promise<void> {
-        const rows = projects.map(async (projectId) => {
-            const project = await this.get(projectId);
-            return {
-                project_id: projectId,
-                environment_name: environment,
-                change_request_enabled: project.changeRequestsEnabled || false,
-            };
-        });
+        const rows = await Promise.all(
+            projects.map(async (projectId) => {
+                const project = await this.get(projectId);
+                return {
+                    project_id: projectId,
+                    environment_name: environment,
+                    change_request_enabled:
+                        project.changeRequestsEnabled || false,
+                };
+            }),
+        );
 
         await this.db('project_environments')
             .insert(rows)

@@ -4,7 +4,12 @@ import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
 import NotFoundError from '../error/notfound-error';
 import { Logger, LogProvider } from '../logger';
-import { FeatureToggle, FeatureToggleDTO, IVariant } from '../types/model';
+import {
+    FeatureToggle,
+    FeatureToggleDTO,
+    IFeatureEnvironmentVariantHolder,
+    IVariant,
+} from '../types/model';
 import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
 
 const FEATURE_COLUMNS = [
@@ -253,6 +258,9 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
     }
 
     async getVariants(featureName: string): Promise<IVariant[]> {
+        if (!(await this.exists(featureName))) {
+            throw new NotFoundError('No feature toggle found');
+        }
         const row = await this.db(`${TABLE} as f`)
             .select('fev.variants')
             .join(`${VARIANTS_TABLE} as fev`, 'fev.feature_name', 'f.name')
@@ -275,6 +283,30 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         return this.rowToEnvVariants(row);
     }
 
+    async getAllVariants(): Promise<IFeatureEnvironmentVariantHolder[]> {
+        const rows = await this.db(VARIANTS_TABLE).select(
+            'variants',
+            'feature_name',
+            'environment',
+        );
+        return this.rowsToFeatureEnvVariants(rows);
+    }
+
+    async dropAllVariants(): Promise<void> {
+        await this.db(VARIANTS_TABLE).delete();
+    }
+
+    rowsToFeatureEnvVariants(rows: any[]): IFeatureEnvironmentVariantHolder[] {
+        if (rows.length > 0) {
+            return rows.map((row) => ({
+                featureName: row.feature_name,
+                environment: row.environment,
+                variants: row.variants || [],
+            }));
+        }
+        return [];
+    }
+
     async saveVariants(
         project: string,
         featureName: string,
@@ -283,7 +315,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         const variantsString = JSON.stringify(newVariants);
         const variantRows = await this.db.raw(
             `INSERT INTO feature_environment_variant
-                (select feature_name, environment, ? from feature_environments where feature_name = ?)
+                (select feature_name, environment, ? as variants from feature_environments where feature_name = ?)
             ON CONFLICT (feature_name, environment) DO UPDATE SET variants = ?
             RETURNING variants;`,
             [variantsString, featureName, variantsString],
@@ -294,7 +326,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             .where({ project: project, name: featureName });
 
         const sortedVariants =
-            (variantRows.rows[0].variants as unknown as IVariant[]) || [];
+            (variantRows.rows[0]?.variants as unknown as IVariant[]) || [];
         sortedVariants.sort((a, b) => a.name.localeCompare(b.name));
 
         const toggle = this.rowToFeature(row[0]);
@@ -308,22 +340,15 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         environment: string,
         newVariants: IVariant[],
     ): Promise<IVariant[]> {
-        var row = await this.db(VARIANTS_TABLE)
-            .update({ variants: JSON.stringify(newVariants) })
-            .where({ environment, feature_name: featureName })
+        const row = await this.db(VARIANTS_TABLE)
+            .insert({
+                variants: JSON.stringify(newVariants),
+                environment,
+                feature_name: featureName,
+            })
+            .onConflict(['environment', 'feature_name'])
+            .merge(['variants'])
             .returning('variants');
-
-        // FIXME: can partial updates happen?
-        if (row.length == 0) {
-            this.logger.info('Inserting new variants');
-            row = await this.db(VARIANTS_TABLE)
-                .insert({
-                    environment,
-                    feature_name: featureName,
-                    variants: JSON.stringify(newVariants),
-                })
-                .returning('variants');
-        }
 
         const sortedVariants = (row[0].variants as IVariant[]) || [];
         sortedVariants.sort((a, b) => a.name.localeCompare(b.name));

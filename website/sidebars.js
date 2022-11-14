@@ -325,7 +325,7 @@ module.exports = {
                         'user_guide/rbac',
                         'reference/segments',
                         'advanced/enterprise-authentication',
-                        'advanced/stickiness',
+                        'reference/stickiness',
                         'advanced/strategy_constraints',
                         'advanced/tags',
                         'user_guide/technical_debt',

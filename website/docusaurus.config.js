@@ -222,7 +222,11 @@ module.exports = {
                     },
                     {
                         from: '/advanced/impression-data',
-                        to: '/reference//impression-data',
+                        to: '/reference/impression-data',
+                    },
+                    {
+                        from: '/advanced/stickiness',
+                        to: '/reference/stickiness',
                     },
                 ],
                 createRedirects: function (toPath) {

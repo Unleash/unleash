@@ -1,5 +1,4 @@
 ---
-id: stickiness
 title: Stickiness
 ---
 

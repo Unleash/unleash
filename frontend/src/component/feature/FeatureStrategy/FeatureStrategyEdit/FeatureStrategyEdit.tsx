@@ -101,15 +101,8 @@ export const FeatureStrategyEdit = () => {
             strategyId,
             payload
         );
-        if (uiConfig.flags.SE) {
-            await setStrategySegments({
-                environmentId,
-                projectId,
-                strategyId,
-                segmentIds: segments.map(s => s.id),
-            });
-            await refetchSavedStrategySegments();
-        }
+
+        await refetchSavedStrategySegments();
         setToastData({
             title: 'Strategy updated',
             type: 'success',

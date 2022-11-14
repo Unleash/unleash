@@ -9,6 +9,7 @@ export interface IFeatureStrategy {
     featureName?: string;
     projectId?: string;
     environment?: string;
+    segments: number[];
 }
 
 export interface IFeatureStrategyParameters {
@@ -20,6 +21,7 @@ export interface IFeatureStrategyPayload {
     name?: string;
     constraints: IConstraint[];
     parameters: IFeatureStrategyParameters;
+    segments: [];
 }
 
 export interface IStrategy {

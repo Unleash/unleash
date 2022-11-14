@@ -21,6 +21,18 @@ export const environmentSchema = {
         sortOrder: {
             type: 'number',
         },
+        projectCount: {
+            type: 'number',
+            nullable: true,
+        },
+        apiTokenCount: {
+            type: 'number',
+            nullable: true,
+        },
+        enabledToggleCount: {
+            type: 'number',
+            nullable: true,
+        },
     },
     components: {},
 } as const;

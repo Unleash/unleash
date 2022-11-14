@@ -27,6 +27,7 @@ const T = {
     ROLE_PERMISSION: 'role_permission',
     PERMISSIONS: 'permissions',
     PERMISSION_TYPES: 'permission_types',
+    CHANGE_REQUEST_SETTINGS: 'change_request_settings',
 };
 
 interface IPermissionRow {
@@ -447,5 +448,18 @@ export class AccessStore implements IAccessStore {
                 from ${T.ROLE_PERMISSION} where environment = ?)`,
             [destinationEnvironment, sourceEnvironment],
         );
+    }
+
+    async isChangeRequestsEnabled(
+        project: string,
+        environment: string,
+    ): Promise<boolean> {
+        const result = await this.db.raw(
+            `SELECT EXISTS(SELECT 1 FROM ${T.CHANGE_REQUEST_SETTINGS}
+                       WHERE environment = ? and project = ?) AS present`,
+            [environment, project],
+        );
+        const { present } = result.rows[0];
+        return present;
     }
 }

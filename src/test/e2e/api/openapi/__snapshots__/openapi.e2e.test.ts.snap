@@ -828,7 +828,7 @@ exports[`should serve the OpenAPI spec 1`] = `
         ],
         "type": "object",
       },
-      "environmentSchema": {
+      "environmentProjectSchema": {
         "additionalProperties": false,
         "properties": {
           "enabled": {
@@ -836,6 +836,14 @@ exports[`should serve the OpenAPI spec 1`] = `
           },
           "name": {
             "type": "string",
+          },
+          "projectApiTokenCount": {
+            "nullable": true,
+            "type": "number",
+          },
+          "projectEnabledToggleCount": {
+            "nullable": true,
+            "type": "number",
           },
           "protected": {
             "type": "boolean",
@@ -851,6 +859,63 @@ exports[`should serve the OpenAPI spec 1`] = `
           "name",
           "type",
           "enabled",
+        ],
+        "type": "object",
+      },
+      "environmentSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "apiTokenCount": {
+            "nullable": true,
+            "type": "number",
+          },
+          "enabled": {
+            "type": "boolean",
+          },
+          "enabledToggleCount": {
+            "nullable": true,
+            "type": "number",
+          },
+          "name": {
+            "type": "string",
+          },
+          "projectCount": {
+            "nullable": true,
+            "type": "number",
+          },
+          "protected": {
+            "type": "boolean",
+          },
+          "sortOrder": {
+            "type": "number",
+          },
+          "type": {
+            "type": "string",
+          },
+        },
+        "required": [
+          "name",
+          "type",
+          "enabled",
+        ],
+        "type": "object",
+      },
+      "environmentsProjectSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "environments": {
+            "items": {
+              "$ref": "#/components/schemas/environmentProjectSchema",
+            },
+            "type": "array",
+          },
+          "version": {
+            "type": "integer",
+          },
+        },
+        "required": [
+          "version",
+          "environments",
         ],
         "type": "object",
       },
@@ -4202,6 +4267,36 @@ exports[`should serve the OpenAPI spec 1`] = `
         ],
       },
     },
+    "/api/admin/environments/project/{projectId}": {
+      "get": {
+        "operationId": "getProjectEnvironments",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/environmentsProjectSchema",
+                },
+              },
+            },
+            "description": "environmentsProjectSchema",
+          },
+        },
+        "tags": [
+          "Environments",
+        ],
+      },
+    },
     "/api/admin/environments/sort-order": {
       "put": {
         "operationId": "updateSortOrder",
@@ -4304,7 +4399,7 @@ exports[`should serve the OpenAPI spec 1`] = `
     },
     "/api/admin/events": {
       "get": {
-        "description": "Returns **the last 100** from the Unleash instance when called without a query parameter. When called with a \`project\` parameter, returns **all events** for the specified project.
+        "description": "Returns **the last 100** events from the Unleash instance when called without a query parameter. When called with a \`project\` parameter, returns **all events** for the specified project.
 
 If the provided project does not exist, the list of events will be empty.",
         "operationId": "getEvents",
@@ -7364,6 +7459,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/invite/{token}/signup": {
       "post": {
+        "description": "Create a user with the viewer root role and link them to the provided signup token",
         "operationId": "addPublicSignupTokenUser",
         "parameters": [
           {
@@ -7404,7 +7500,7 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "The provided resource can not be created or updated because it would conflict with the current state of the resource or with an already existing resource, respectively.",
           },
         },
-        "summary": "Create a user with the "viewer" root role and link them to a signup token",
+        "summary": "Add a user via a signup token",
         "tags": [
           "Public signup tokens",
         ],

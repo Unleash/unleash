@@ -15,6 +15,7 @@ import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useSearch } from 'hooks/useSearch';
+import useHiddenColumns from 'hooks/useHiddenColumns';
 import {
     Link,
     Route,
@@ -74,6 +75,9 @@ const StyledEmptyAvatar = styled(UserAvatar)(({ theme }) => ({
 const StyledGroupAvatar = styled(UserAvatar)(({ theme }) => ({
     outline: `${theme.spacing(0.25)} solid ${theme.palette.background.paper}`,
 }));
+
+const hiddenColumnsSmall = ['imageUrl', 'role', 'added', 'lastLogin'];
+const hiddenColumnsMedium = ['lastLogin', 'added'];
 
 export const ProjectAccessTable: VFC = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -144,6 +148,20 @@ export const ProjectAccessTable: VFC = () => {
                 searchable: true,
             },
             {
+                id: 'username',
+                Header: 'Username',
+                accessor: (row: IProjectAccess) => {
+                    if (row.type === ENTITY_TYPE.USER) {
+                        const userRow = row.entity as IUser;
+                        return userRow.username || userRow.email;
+                    }
+                    return '';
+                },
+                Cell: HighlightCell,
+                minWidth: 100,
+                searchable: true,
+            },
+            {
                 id: 'role',
                 Header: 'Role',
                 accessor: (row: IProjectAccess) =>
@@ -155,7 +173,7 @@ export const ProjectAccessTable: VFC = () => {
                         value={value}
                     />
                 ),
-                minWidth: 120,
+                maxWidth: 125,
                 filterName: 'role',
             },
             {
@@ -169,7 +187,7 @@ export const ProjectAccessTable: VFC = () => {
                     <TimeAgoCell value={value} emptyText="Never" />
                 ),
                 sortType: 'date',
-                maxWidth: 150,
+                maxWidth: 100,
             },
             {
                 id: 'lastLogin',
@@ -189,14 +207,14 @@ export const ProjectAccessTable: VFC = () => {
                     <TimeAgoCell value={value} emptyText="Never" />
                 ),
                 sortType: 'date',
-                maxWidth: 150,
+                maxWidth: 100,
             },
             {
                 id: 'actions',
                 Header: 'Actions',
                 disableSortBy: true,
                 align: 'center',
-                maxWidth: 200,
+                maxWidth: 150,
                 Cell: ({
                     row: { original: row },
                 }: {
@@ -288,6 +306,10 @@ export const ProjectAccessTable: VFC = () => {
         useSortBy,
         useFlexLayout
     );
+
+    useHiddenColumns(setHiddenColumns, hiddenColumnsSmall, isSmallScreen);
+    useHiddenColumns(setHiddenColumns, hiddenColumnsMedium, isMediumScreen);
+
     useEffect(() => {
         const tableState: PageQueryType = {};
         tableState.sort = sortBy[0].id;
@@ -336,20 +358,6 @@ export const ProjectAccessTable: VFC = () => {
         }
         setRemoveOpen(false);
     };
-
-    useEffect(() => {
-        const hiddenColumns: string[] = [];
-        if (isMediumScreen) {
-            hiddenColumns.push('added', 'lastLogin');
-        }
-        if (isSmallScreen) {
-            hiddenColumns.push('imageUrl', 'username', 'role');
-        }
-        setHiddenColumns(hiddenColumns);
-        // TODO: fix responsive table width jumping
-        const timeout = setTimeout(() => setHiddenColumns(hiddenColumns), 100);
-        return () => clearTimeout(timeout);
-    }, [setHiddenColumns, isSmallScreen, isMediumScreen]);
 
     return (
         <PageContent

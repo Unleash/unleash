@@ -21,6 +21,8 @@ import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useCh
 import { ChangeRequestStatusBadge } from '../ChangeRequestStatusBadge/ChangeRequestStatusBadge';
 import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate } from 'react-router-dom';
+import useToast from 'hooks/useToast';
+import { formatUnknownError } from 'utils/formatUnknownError';
 
 interface IChangeRequestSidebarProps {
     open: boolean;
@@ -123,26 +125,26 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
         loading,
         refetch: refetchChangeRequest,
     } = useChangeRequestOpen(project);
-    const { changeState } = useChangeRequestApi();
+    const { changeState, discardDraft } = useChangeRequestApi();
     const theme = useTheme();
     const navigate = useNavigate();
+    const { setToastApiError } = useToast();
 
     const onReview = async (draftId: number) => {
         try {
             await changeState(project, draftId, { state: 'In review' });
             refetchChangeRequest();
-        } catch (e) {
-            console.log('something went wrong');
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
         }
     };
-    const onDiscard = async () => {
-        alert('discard');
-    };
-    const onApply = async () => {
+
+    const onDiscard = async (draftId: number) => {
         try {
-            alert('apply');
-        } catch (e) {
-            console.log(e);
+            await discardDraft(project, draftId);
+            refetchChangeRequest();
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
         }
     };
 
@@ -259,36 +261,6 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
                         <Box sx={{ display: 'flex' }}>
                             <ConditionallyRender
                                 condition={
-                                    environmentChangeRequest.state ===
-                                    'Approved'
-                                }
-                                show={<Typography>Applied</Typography>}
-                            />
-                            <ConditionallyRender
-                                condition={
-                                    environmentChangeRequest.state === 'Applied'
-                                }
-                                show={<Typography>Applied</Typography>}
-                            />
-                            <ConditionallyRender
-                                condition={
-                                    environmentChangeRequest.state ===
-                                    'Approved'
-                                }
-                                show={
-                                    <>
-                                        <Button
-                                            sx={{ mt: 2 }}
-                                            variant="contained"
-                                            onClick={onApply}
-                                        >
-                                            Apply changes
-                                        </Button>
-                                    </>
-                                }
-                            />
-                            <ConditionallyRender
-                                condition={
                                     environmentChangeRequest?.state === 'Draft'
                                 }
                                 show={
@@ -308,7 +280,11 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
                                         <Button
                                             sx={{ mt: 2, ml: 2 }}
                                             variant="outlined"
-                                            onClick={onDiscard}
+                                            onClick={() =>
+                                                onDiscard(
+                                                    environmentChangeRequest.id
+                                                )
+                                            }
                                         >
                                             Discard changes
                                         </Button>
@@ -318,7 +294,9 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
                             <ConditionallyRender
                                 condition={
                                     environmentChangeRequest.state ===
-                                    'In review'
+                                        'In review' ||
+                                    environmentChangeRequest.state ===
+                                        'Approved'
                                 }
                                 show={
                                     <>

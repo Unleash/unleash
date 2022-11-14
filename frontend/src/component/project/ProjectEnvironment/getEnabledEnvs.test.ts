@@ -1,8 +1,13 @@
+import { IProjectEnvironment } from 'interfaces/environments';
 import { getEnabledEnvs } from './helpers';
 
-const generateEnv = (enabled: boolean, name: string) => {
+const generateEnv = (enabled: boolean, name: string): IProjectEnvironment => {
     return {
         name,
+        type: 'development',
+        createdAt: new Date().toISOString(),
+        sortOrder: 0,
+        protected: false,
         enabled,
     };
 };

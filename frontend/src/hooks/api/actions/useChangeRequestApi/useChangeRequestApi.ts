@@ -67,10 +67,43 @@ export const useChangeRequestApi = () => {
         }
     };
 
+    const updateChangeRequestEnvironmentConfig = async (
+        project: string,
+        environment: string,
+        enabled: boolean
+    ) => {
+        const path = `api/admin/projects/${project}/environments/${environment}/change-requests/config`;
+        const req = createRequest(path, {
+            method: 'PUT',
+            body: JSON.stringify({ changeRequestsEnabled: enabled }),
+        });
+
+        try {
+            return await makeRequest(req.caller, req.id);
+        } catch (e) {
+            throw e;
+        }
+    };
+
+    const discardDraft = async (projectId: string, draftId: number) => {
+        const path = `api/admin/projects/${projectId}/change-requests/${draftId}`;
+        const req = createRequest(path, {
+            method: 'DELETE',
+        });
+
+        try {
+            return await makeRequest(req.caller, req.id);
+        } catch (e) {
+            throw e;
+        }
+    };
+
     return {
         addChangeRequest,
         changeState,
         discardChangeRequestEvent,
+        updateChangeRequestEnvironmentConfig,
+        discardDraft,
         errors,
         loading,
     };

@@ -5,11 +5,15 @@ export interface IEnvironment {
     sortOrder: number;
     enabled: boolean;
     protected: boolean;
+    projectCount?: number;
+    apiTokenCount?: number;
+    enabledToggleCount?: number;
 }
 
-export interface IProjectEnvironment {
-    enabled: boolean;
-    name: string;
+export interface IProjectEnvironment extends IEnvironment {
+    projectVisible?: boolean;
+    projectApiTokenCount?: number;
+    projectEnabledToggleCount?: number;
 }
 
 export interface IEnvironmentPayload {

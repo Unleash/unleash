@@ -1,7 +1,7 @@
 {
   "name": "unleash-server",
   "description": "Unleash is an enterprise ready feature toggles service. It provides different strategies for handling feature toggles.",
-  "version": "4.18.0-beta.4",
+  "version": "4.18.0-beta.5",
   "keywords": [
     "unleash",
     "feature toggle",
@@ -109,7 +109,7 @@
     "joi": "^17.3.0",
     "js-sha256": "^0.9.0",
     "js-yaml": "^4.1.0",
-    "json-schema-to-ts": "2.5.5",
+    "json-schema-to-ts": "2.6.0",
     "json2csv": "^5.0.7",
     "knex": "^2.0.0",
     "log4js": "^6.0.0",
@@ -139,8 +139,8 @@
   },
   "devDependencies": {
     "@apidevtools/swagger-parser": "10.1.0",
-    "@babel/core": "7.19.6",
-    "@swc/core": "1.3.14",
+    "@babel/core": "7.20.2",
+    "@swc/core": "1.3.16",
     "@swc/jest": "0.2.23",
     "@types/bcryptjs": "2.4.2",
     "@types/cors": "2.8.12",
@@ -160,8 +160,8 @@
     "@types/supertest": "2.0.12",
     "@types/type-is": "1.6.3",
     "@types/uuid": "8.3.4",
-    "@typescript-eslint/eslint-plugin": "5.41.0",
-    "@typescript-eslint/parser": "5.41.0",
+    "@typescript-eslint/eslint-plugin": "5.42.1",
+    "@typescript-eslint/parser": "5.42.1",
     "copyfiles": "2.4.1",
     "coveralls": "3.1.1",
     "del-cli": "5.0.0",
@@ -201,7 +201,7 @@
     "ansi-regex": "^5.0.1",
     "ssh2": "^1.4.0",
     "json-schema": "^0.4.0",
-    "minimatch": "^3.0.5"
+    "minimatch": "^5.0.0"
   },
   "lint-staged": {
     "*.{js,ts}": [

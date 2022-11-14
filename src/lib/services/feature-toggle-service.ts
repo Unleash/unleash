@@ -682,6 +682,15 @@ class FeatureToggleService {
                 projectId,
             );
 
+            if (value.variants) {
+                const toggleInfo = await this.featureToggleStore.saveVariants(
+                    projectId,
+                    featureName,
+                    value.variants,
+                );
+                createdToggle.variants = toggleInfo.variants;
+            }
+
             const tags = await this.tagStore.getAllTagsForFeature(featureName);
 
             await this.eventStore.store(

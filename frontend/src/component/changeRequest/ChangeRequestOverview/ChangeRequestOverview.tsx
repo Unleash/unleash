@@ -92,7 +92,6 @@ export const ChangeRequestOverview: FC = () => {
                         condition={changeRequest.approvals?.length > 0}
                         show={
                             <ChangeRequestReviewers>
-                                {/* @ts-expect-error - FIXME: type */}
                                 {changeRequest.approvals?.map(approver => (
                                     <ChangeRequestReviewer
                                         name={

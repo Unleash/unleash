@@ -113,7 +113,7 @@ export default class VariantsController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Features'],
-                    operationId: 'patchFeatureVariants',
+                    operationId: 'patchEnvironmentsFeatureVariants',
                     requestBody: createRequestSchema('patchesSchema'),
                     responses: {
                         200: createResponseSchema('featureVariantsSchema'),

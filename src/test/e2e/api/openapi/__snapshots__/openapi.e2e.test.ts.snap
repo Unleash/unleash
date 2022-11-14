@@ -5715,7 +5715,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/projects/{projectId}/features/{featureName}/environments/{environment}/variants": {
       "get": {
-        "operationId": "getFeatureVariants",
+        "operationId": "getEnvironmentFeatureVariants",
         "parameters": [
           {
             "in": "path",
@@ -5759,7 +5759,7 @@ If the provided project does not exist, the list of events will be empty.",
         ],
       },
       "patch": {
-        "operationId": "patchFeatureVariants",
+        "operationId": "patchEnvironmentsFeatureVariants",
         "parameters": [
           {
             "in": "path",

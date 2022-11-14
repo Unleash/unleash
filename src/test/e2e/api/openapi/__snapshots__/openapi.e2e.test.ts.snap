@@ -551,7 +551,7 @@ exports[`should serve the OpenAPI spec 1`] = `
       },
       "constraintSchema": {
         "additionalProperties": false,
-        "description": "A strategy constraint. For more information, refer to [the strategy constraint reference documentation](https://docs.getunleash.io/advanced/strategy_constraints)",
+        "description": "A strategy constraint. For more information, refer to [the strategy constraint reference documentation](https://docs.getunleash.io/reference/strategy-constraints)",
         "properties": {
           "caseInsensitive": {
             "default": false,
@@ -569,7 +569,7 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "boolean",
           },
           "operator": {
-            "description": "The operator to use when evaluating this constraint. For more information about the various operators, refer to [the strategy constraint operator documentation](https://docs.getunleash.io/advanced/strategy_constraints#strategy-constraint-operators).",
+            "description": "The operator to use when evaluating this constraint. For more information about the various operators, refer to [the strategy constraint operator documentation](https://docs.getunleash.io/reference/strategy-constraints#strategy-constraint-operators).",
             "enum": [
               "NOT_IN",
               "IN",
@@ -1902,7 +1902,7 @@ exports[`should serve the OpenAPI spec 1`] = `
       },
       "playgroundConstraintSchema": {
         "additionalProperties": false,
-        "description": "A strategy constraint. For more information, refer to [the strategy constraint reference documentation](https://docs.getunleash.io/advanced/strategy_constraints)",
+        "description": "A strategy constraint. For more information, refer to [the strategy constraint reference documentation](https://docs.getunleash.io/reference/strategy-constraints)",
         "properties": {
           "caseInsensitive": {
             "default": false,
@@ -1920,7 +1920,7 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "boolean",
           },
           "operator": {
-            "description": "The operator to use when evaluating this constraint. For more information about the various operators, refer to [the strategy constraint operator documentation](https://docs.getunleash.io/advanced/strategy_constraints#strategy-constraint-operators).",
+            "description": "The operator to use when evaluating this constraint. For more information about the various operators, refer to [the strategy constraint operator documentation](https://docs.getunleash.io/reference/strategy-constraints#strategy-constraint-operators).",
             "enum": [
               "NOT_IN",
               "IN",

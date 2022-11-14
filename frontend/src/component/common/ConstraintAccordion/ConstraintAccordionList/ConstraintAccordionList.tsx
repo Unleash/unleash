@@ -149,7 +149,7 @@ export const ConstraintAccordionList = forwardRef<
                                 >
                                     <a
                                         href={
-                                            'https://docs.getunleash.io/advanced/strategy_constraints'
+                                            'https://docs.getunleash.io/reference/strategy-constraints'
                                         }
                                         target="_blank"
                                         rel="noopener noreferrer"

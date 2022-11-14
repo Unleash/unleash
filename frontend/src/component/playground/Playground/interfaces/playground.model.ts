@@ -18,7 +18,7 @@ export interface PlaygroundConstraintSchema {
      */
     contextName: string;
     /**
-     * The operator to use when evaluating this constraint. For more information about the various operators, refer to [the strategy constraint operator documentation](https://docs.getunleash.io/advanced/strategy_constraints#strategy-constraint-operators).
+     * The operator to use when evaluating this constraint. For more information about the various operators, refer to [the strategy constraint operator documentation](https://docs.getunleash.io/reference/strategy-constraints#strategy-constraint-operators).
      * @type {string}
      * @memberof PlaygroundConstraintSchema
      */

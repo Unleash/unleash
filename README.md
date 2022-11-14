@@ -158,7 +158,7 @@ If you're looking for one of the following features, please take a look at our [
 - more environments
 - [feature toggles project support](https://docs.getunleash.io/user_guide/projects)
 - [advanced segmentation](https://docs.getunleash.io/reference/segments)
-- [additional strategy constraints](https://docs.getunleash.io/advanced/strategy_constraints)
+- [additional strategy constraints](https://docs.getunleash.io/reference/strategy-constraints)
 - tighter security
 - more hosting options (we can even host it for you!)
 

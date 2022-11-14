@@ -44,7 +44,7 @@ Feature toggles are a great way to run A/B tests and to decouple them from your 
 
 Toggles can be used for different purposes and we consider experimentation important enough to have given it its own [toggle type](../advanced/feature_toggle_types#feature-toggle-types). Experiment toggles have a lifetime expectancy suited to let you run an experiment and gather enough data to know whether it was a success or not.
 
-If you're running a basic A/B test where the control group doesn't see any change, then a basic experiment toggle will do the job excellently. With a [gradual rollout](../user_guide/activation_strategy#gradual-rollout), some appropriate [strategy constraints](../advanced/strategy_constraints), and an analytics tool of your choosing, you should be all set to start collecting metrics and measuring.
+If you're running a basic A/B test where the control group doesn't see any change, then a basic experiment toggle will do the job excellently. With a [gradual rollout](../user_guide/activation_strategy#gradual-rollout), some appropriate [strategy constraints](../reference/strategy-constraints.md), and an analytics tool of your choosing, you should be all set to start collecting metrics and measuring.
 
 If you want to run a more advanced experiment, then take a look at using [feature toggle variants](../advanced/toggle_variants). If you have a control group, and want to test multiple potential improvements, then simply add your desired variants to the toggle as discussed in the previous paragraph. If you want to launch a new feature (or a headline) in multiple variations right out the gate, consider using a basic on/off toggle with variants and activate it for all your users.
 

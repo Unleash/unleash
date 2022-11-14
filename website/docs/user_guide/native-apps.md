@@ -15,7 +15,7 @@ There is a js implementation of the proxy-client available. Find it here: [https
 
 ## The Proxy-API {#the-proxy-api}
 
-When accessing the Proxy, [Unleash context fields](unleash_context) from the session context can be added as parameters to the request. The proxy will return only enabled feature toggles and their evaluated value for the given context. You may also use custom context fields in combination with [strategy constraints](/advanced/strategy_constraints).
+When accessing the Proxy, [Unleash context fields](unleash_context) from the session context can be added as parameters to the request. The proxy will return only enabled feature toggles and their evaluated value for the given context. You may also use custom context fields in combination with [strategy constraints](../reference/strategy-constraints.md).
 
 ```sh
 https://hostname.com/api/proxy?appName=webapp&userId=123&country=NO

@@ -156,6 +156,9 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
     };
 
     rowToFeature(row: FeaturesTable): FeatureToggle {
+        if (!row) {
+            throw new NotFoundError('No feature toggle found');
+        }
         return {
             name: row.name,
             description: row.description,

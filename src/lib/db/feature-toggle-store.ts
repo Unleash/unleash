@@ -156,9 +156,6 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
     };
 
     rowToFeature(row: FeaturesTable): FeatureToggle {
-        if (!row) {
-            throw new NotFoundError('No feature toggle found');
-        }
         return {
             name: row.name,
             description: row.description,
@@ -253,6 +250,9 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
     }
 
     async getVariants(featureName: string): Promise<IVariant[]> {
+        if (!(await this.exists(featureName))) {
+            throw new NotFoundError('No feature toggle found');
+        }
         const row = await this.db(`${TABLE} as f`)
             .select('fev.variants')
             .join(`${VARIANTS_TABLE} as fev`, 'fev.feature_name', 'f.name')
@@ -283,7 +283,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         const variantsString = JSON.stringify(newVariants);
         const variantRows = await this.db.raw(
             `INSERT INTO feature_environment_variant
-                (select feature_name, environment, ? from feature_environments where feature_name = ?)
+                (select feature_name, environment, ? as variants from feature_environments where feature_name = ?)
             ON CONFLICT (feature_name, environment) DO UPDATE SET variants = ?
             RETURNING variants;`,
             [variantsString, featureName, variantsString],

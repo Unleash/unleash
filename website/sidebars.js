@@ -324,7 +324,7 @@ module.exports = {
                         'user_guide/projects',
                         'user_guide/rbac',
                         'reference/segments',
-                        'advanced/enterprise-authentication',
+                        'reference/sso',
                         'reference/stickiness',
                         'reference/strategy-constraints',
                         'reference/tags',

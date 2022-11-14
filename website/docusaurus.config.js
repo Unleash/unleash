@@ -251,6 +251,10 @@ module.exports = {
                         from: '/advanced/tags',
                         to: '/reference/tags',
                     },
+                    {
+                        from: '/advanced/enterprise-authentication',
+                        to: '/reference/sso',
+                    },
                 ],
                 createRedirects: function (toPath) {
                     if (

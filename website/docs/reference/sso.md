@@ -1,6 +1,5 @@
 ---
-id: enterprise-authentication
-title: Single-Sign-On
+title: Single Sign-On
 ---
 
 > The **Single-Sign-On capability** is only available for customers on the Enterprise subscription. Check out the [Unleash plans](https://www.getunleash.io/plans) for details.

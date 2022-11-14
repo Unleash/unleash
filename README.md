@@ -154,7 +154,7 @@ Check out [the CONTRIBUTING.md file](./CONTRIBUTING.md) for contribution guideli
 If you're looking for one of the following features, please take a look at our [Pro and Enterprise plans](https://www.getunleash.io/plans):
 
 - [role-based access control (RBAC)](https://docs.getunleash.io/user_guide/rbac)
-- [single sign-on (SSO)](https://docs.getunleash.io/advanced/enterprise-authentication)
+- [single sign-on (SSO)](https://docs.getunleash.io/reference/sso)
 - more environments
 - [feature toggles project support](https://docs.getunleash.io/user_guide/projects)
 - [advanced segmentation](https://docs.getunleash.io/reference/segments)

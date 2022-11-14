@@ -14,20 +14,6 @@ export const useStyles = makeStyles()(theme => ({
             marginBottom: '1rem',
         },
     },
-    description: {
-        textAlign: 'left',
-        marginBottom: '0.5rem',
-    },
-    descriptionContainer: {
-        display: 'flex',
-        justifyContent: 'space-between',
-    },
-    idContainer: {
-        display: 'flex',
-        width: '100%',
-        textAlign: 'left',
-        wordBreak: 'break-all',
-    },
     percentageContainer: {
         display: 'flex',
         justifyContent: 'center',
@@ -90,15 +76,6 @@ export const useStyles = makeStyles()(theme => ({
             position: 'absolute',
             bottom: '5px',
         },
-    },
-    accordion: {
-        boxShadow: 'none',
-        textAlign: 'left',
-    },
-    accordionBody: { padding: '0', wordBreak: 'break-all' },
-    accordionActions: {
-        padding: '0',
-        justifyContent: 'flex-start',
     },
     linkText: {
         [theme.breakpoints.down('md')]: {

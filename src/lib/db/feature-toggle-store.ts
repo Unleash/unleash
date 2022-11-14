@@ -308,10 +308,22 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         environment: string,
         newVariants: IVariant[],
     ): Promise<IVariant[]> {
-        const row = await this.db(VARIANTS_TABLE)
+        var row = await this.db(VARIANTS_TABLE)
             .update({ variants: JSON.stringify(newVariants) })
             .where({ environment, feature_name: featureName })
             .returning('variants');
+
+        // FIXME: can partial updates happen?
+        if (row.length == 0) {
+            this.logger.info('Inserting new variants');
+            row = await this.db(VARIANTS_TABLE)
+                .insert({
+                    environment,
+                    feature_name: featureName,
+                    variants: JSON.stringify(newVariants),
+                })
+                .returning('variants');
+        }
 
         const sortedVariants = (row[0].variants as IVariant[]) || [];
         sortedVariants.sort((a, b) => a.name.localeCompare(b.name));

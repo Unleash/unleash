@@ -7626,7 +7626,7 @@ If the provided project does not exist, the list of events will be empty.",
       "name": "Strategies",
     },
     {
-      "description": "Create, update, and delete [tags and tag types](https://docs.getunleash.io/advanced/tags).",
+      "description": "Create, update, and delete [tags and tag types](https://docs.getunleash.io/reference/tags).",
       "name": "Tags",
     },
     {

@@ -1,6 +1,6 @@
 ---
 id: tags
-title: Tagging Features
+title: Tags
 ---
 
 > This feature was introduced in Unleash 3.11.0

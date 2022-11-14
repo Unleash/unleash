@@ -57,7 +57,7 @@ The Proxy has a large number of configuration options that you can use to adjust
 | `proxyPort` | `PORT` | `3000` | no | The port to run the proxy on. |
 | `proxySecrets` | `UNLEASH_PROXY_SECRETS` | n/a | no | Deprecated alias for `clientKeys`. Please use `clientKeys` instead. |
 | `refreshInterval` | `UNLEASH_FETCH_INTERVAL` | `5000` | no | How often the proxy should query Unleash for updates, defined in ms. |
-| `tags` | `UNLEASH_TAGS` | `undefined` | no | If set, the proxy will only fetch feature toggles with these [tags](../advanced/tags.md). The format should be `tagName:tagValue,tagName2:tagValue2` |
+| `tags` | `UNLEASH_TAGS` | `undefined` | no | If set, the proxy will only fetch feature toggles with these [tags](../reference/tags.md). The format should be `tagName:tagValue,tagName2:tagValue2` |
 | `trustProxy` | `TRUST_PROXY ` | `false` | no | If enabled, the Unleash Proxy will know that it is itself sitting behind a proxy and that the `X-Forwarded-*` header fields (which otherwise may be easily spoofed) can be trusted. The proxy will automatically enrich the IP address in the Unleash Context. Can be `true/false` (trust all proxies) or a string (trust only given IP/CIDR (e.g. `'127.0.0.1'`)). If it is a string, it can also be a list of comma separated values (e.g. `'127.0.0.1,192.168.1.1/24'` |
 | `unleashApiToken` | `UNLEASH_API_TOKEN` | n/a | yes | The [client API token](../reference/api-tokens-and-client-keys.mdx#client-tokens) for connecting to Unleash API. |
 | `unleashAppName` | `UNLEASH_APP_NAME` | `"unleash-proxy" ` | no | The application name to use when registering with Unleash |

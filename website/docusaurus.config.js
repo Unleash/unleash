@@ -247,6 +247,10 @@ module.exports = {
                         from: '/advanced/strategy_constraints',
                         to: '/reference/strategy-constraints',
                     },
+                    {
+                        from: '/advanced/tags',
+                        to: '/reference/tags',
+                    },
                 ],
                 createRedirects: function (toPath) {
                     if (

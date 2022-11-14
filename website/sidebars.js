@@ -327,7 +327,7 @@ module.exports = {
                         'advanced/enterprise-authentication',
                         'reference/stickiness',
                         'reference/strategy-constraints',
-                        'advanced/tags',
+                        'reference/tags',
                         'user_guide/technical_debt',
                         'user_guide/unleash_context',
                         'sdks/unleash-proxy',

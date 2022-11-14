@@ -208,6 +208,10 @@ module.exports = {
                         from: '/advanced/archived_toggles',
                         to: '/reference/archived-toggles',
                     },
+                    {
+                        from: '/advanced/custom-activation-strategy',
+                        to: '/reference/custom-activation-strategies',
+                    },
                 ],
                 createRedirects: function (toPath) {
                     if (

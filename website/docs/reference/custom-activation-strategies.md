@@ -1,5 +1,4 @@
 ---
-id: custom_activation_strategy
 title: Custom Activation Strategies
 ---
 

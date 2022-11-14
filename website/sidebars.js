@@ -313,7 +313,7 @@ module.exports = {
                         'reference/archived-toggles',
                         'reference/event-log',
                         'advanced/impression-data',
-                        'advanced/custom_activation_strategy',
+                        'reference/custom-activation-strategies',
                         'user_guide/environments',
                         'reference/feature-toggles',
                         'advanced/feature_toggle_types',

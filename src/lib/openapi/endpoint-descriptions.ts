@@ -2,7 +2,7 @@ export const endpointDescriptions = {
     admin: {
         events: {
             description:
-                'Returns **the last 100** from the Unleash instance when called without a query parameter. When called with a `project` parameter, returns **all events** for the specified project.\n\nIf the provided project does not exist, the list of events will be empty.',
+                'Returns **the last 100** events from the Unleash instance when called without a query parameter. When called with a `project` parameter, returns **all events** for the specified project.\n\nIf the provided project does not exist, the list of events will be empty.',
             summary:
                 'Get the most recent events from the Unleash instance or all events related to a project.',
         },

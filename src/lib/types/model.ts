@@ -345,8 +345,8 @@ export interface IProject {
     health?: number;
     createdAt?: Date;
     updatedAt?: Date;
+    changeRequestsEnabled?: boolean;
 }
-
 export interface ICustomRole {
     id: number;
     name: string;

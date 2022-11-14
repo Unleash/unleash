@@ -108,7 +108,7 @@ function loadUI(options: IUnleashOptions): IUIConfig {
         E: true,
         ENABLE_DARK_MODE_SUPPORT: false,
     };
-    return mergeAll([uiO, ui]);
+    return mergeAll([ui, uiO]);
 }
 
 const dateHandlingCallback = (connection, callback) => {
@@ -231,12 +231,18 @@ const removeUndefinedKeys = (o: object): object =>
 const formatServerOptions = (
     serverOptions?: Partial<IServerOption>,
 ): Partial<IServerOption> | undefined => {
-    if (!serverOptions) return;
+    if (!serverOptions) {
+        return {
+            baseUriPath: formatBaseUri(process.env.BASE_URI_PATH),
+        };
+    }
 
     /* eslint-disable-next-line */
     return {
         ...serverOptions,
-        baseUriPath: formatBaseUri(serverOptions.baseUriPath),
+        baseUriPath: formatBaseUri(
+            process.env.BASE_URI_PATH || serverOptions.baseUriPath,
+        ),
     };
 };
 

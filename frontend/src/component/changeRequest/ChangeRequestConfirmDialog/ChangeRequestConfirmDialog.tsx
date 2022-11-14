@@ -6,38 +6,39 @@ interface IChangeRequestDialogueProps {
     isOpen: boolean;
     onConfirm: () => void;
     onClose: () => void;
-    featureName?: string;
     environment?: string;
-    enabled?: boolean;
+    showBanner?: boolean;
+    messageComponent: JSX.Element;
 }
 
 export const ChangeRequestDialogue: FC<IChangeRequestDialogueProps> = ({
     isOpen,
     onConfirm,
     onClose,
-    enabled,
-    featureName,
+    showBanner,
     environment,
+    messageComponent,
 }) => (
     <Dialogue
         open={isOpen}
-        primaryButtonText="Add to draft"
+        primaryButtonText="Add suggestion to draft"
         secondaryButtonText="Cancel"
         onClick={onConfirm}
         onClose={onClose}
         title="Request changes"
+        fullWidth
     >
-        <Alert severity="info" sx={{ mb: 2 }}>
-            Change requests is enabled for {environment}. Your changes needs to
-            be approved before they will be live. All the changes you do now
-            will be added into a draft that you can submit for review.
-        </Alert>
+        {showBanner && (
+            <Alert severity="info" sx={{ mb: 2 }}>
+                Change requests feature is enabled for {environment}. Your
+                changes needs to be approved before they will be live. All the
+                changes you do now will be added into a draft that you can
+                submit for review.
+            </Alert>
+        )}
         <Typography variant="body2" color="text.secondary">
-            Change requests:
+            Your suggestion:
         </Typography>
-        <Typography>
-            <strong>{enabled ? 'Disable' : 'Enable'}</strong> feature toggle{' '}
-            <strong>{featureName}</strong> in <strong>{environment}</strong>
-        </Typography>
+        {messageComponent}
     </Dialogue>
 );

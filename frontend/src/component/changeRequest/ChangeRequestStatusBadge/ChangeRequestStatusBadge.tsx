@@ -13,12 +13,14 @@ const ReviewRequiredBadge: VFC = () => (
     </Badge>
 );
 
+const DraftBadge: VFC = () => <Badge color="warning">Draft</Badge>;
+
 export const ChangeRequestStatusBadge: VFC<IChangeRequestStatusBadgeProps> = ({
     state,
 }) => {
     switch (state) {
         case 'Draft':
-            return <ReviewRequiredBadge />;
+            return <DraftBadge />;
         case 'In review':
             return <ReviewRequiredBadge />;
         case 'Approved':
@@ -35,10 +37,7 @@ export const ChangeRequestStatusBadge: VFC<IChangeRequestStatusBadgeProps> = ({
             );
         case 'Cancelled':
             return (
-                <Badge
-                    color="error"
-                    icon={<Close fontSize={'small'} sx={{ mr: 8 }} />}
-                >
+                <Badge color="error" icon={<Close fontSize={'small'} />}>
                     Cancelled
                 </Badge>
             );

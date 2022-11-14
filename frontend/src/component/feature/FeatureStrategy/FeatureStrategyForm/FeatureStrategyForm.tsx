@@ -1,21 +1,16 @@
 import React, { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Button } from '@mui/material';
 import {
     IFeatureStrategy,
     IFeatureStrategyParameters,
     IStrategyParameter,
 } from 'interfaces/strategy';
 import { FeatureStrategyType } from '../FeatureStrategyType/FeatureStrategyType';
-import { FeatureStrategyEnabled } from '../FeatureStrategyEnabled/FeatureStrategyEnabled';
+import { FeatureStrategyEnabled } from './FeatureStrategyEnabled/FeatureStrategyEnabled';
 import { FeatureStrategyConstraints } from '../FeatureStrategyConstraints/FeatureStrategyConstraints';
-import { Button } from '@mui/material';
-import {
-    FeatureStrategyProdGuard,
-    useFeatureStrategyProdGuard,
-} from '../FeatureStrategyProdGuard/FeatureStrategyProdGuard';
 import { IFeatureToggle } from 'interfaces/featureToggle';
 import { useStyles } from './FeatureStrategyForm.styles';
-import { formatFeaturePath } from '../FeatureStrategyEdit/FeatureStrategyEdit';
-import { useNavigate } from 'react-router-dom';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { STRATEGY_FORM_SUBMIT_ID } from 'utils/testIds';
@@ -27,6 +22,12 @@ import { ISegment } from 'interfaces/segment';
 import { IFormErrors } from 'hooks/useFormErrors';
 import { validateParameterValue } from 'utils/validateParameterValue';
 import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
+import { FeatureStrategyChangeRequestAlert } from './FeatureStrategyChangeRequestAlert/FeatureStrategyChangeRequestAlert';
+import {
+    FeatureStrategyProdGuard,
+    useFeatureStrategyProdGuard,
+} from '../FeatureStrategyProdGuard/FeatureStrategyProdGuard';
+import { formatFeaturePath } from '../FeatureStrategyEdit/FeatureStrategyEdit';
 
 interface IFeatureStrategyFormProps {
     feature: IFeatureToggle;
@@ -34,6 +35,7 @@ interface IFeatureStrategyFormProps {
     permission: string;
     onSubmit: () => void;
     loading: boolean;
+    isChangeRequest?: boolean;
     strategy: Partial<IFeatureStrategy>;
     setStrategy: React.Dispatch<
         React.SetStateAction<Partial<IFeatureStrategy>>
@@ -54,6 +56,7 @@ export const FeatureStrategyForm = ({
     segments,
     setSegments,
     errors,
+    isChangeRequest,
 }: IFeatureStrategyFormProps) => {
     const { classes: styles } = useStyles();
     const [showProdGuard, setShowProdGuard] = useState(false);
@@ -115,7 +118,9 @@ export const FeatureStrategyForm = ({
         event.preventDefault();
         if (!validateAllParameters()) {
             return;
-        } else if (enableProdGuard) {
+        }
+
+        if (enableProdGuard && !isChangeRequest) {
             setShowProdGuard(true);
         } else {
             onSubmit();
@@ -124,13 +129,19 @@ export const FeatureStrategyForm = ({
 
     return (
         <form className={styles.form} onSubmit={onSubmitWithValidation}>
-            <div>
-                <FeatureStrategyEnabled
-                    projectId={feature.project}
-                    featureId={feature.name}
-                    environmentId={environmentId}
-                />
-            </div>
+            <ConditionallyRender
+                condition={Boolean(isChangeRequest)}
+                show={
+                    <FeatureStrategyChangeRequestAlert
+                        environment={environmentId}
+                    />
+                }
+            />
+            <FeatureStrategyEnabled
+                projectId={feature.project}
+                featureId={feature.name}
+                environmentId={environmentId}
+            />
             <hr className={styles.hr} />
             <ConditionallyRender
                 condition={Boolean(uiConfig.flags.SE)}
@@ -176,7 +187,7 @@ export const FeatureStrategyForm = ({
                     }
                     data-testid={STRATEGY_FORM_SUBMIT_ID}
                 >
-                    Save strategy
+                    {isChangeRequest ? 'Add change to draft' : 'Save strategy'}
                 </PermissionButton>
                 <Button
                     type="button"

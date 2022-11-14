@@ -20,16 +20,19 @@
     "unleash-server": "file:../build"
   },
   "resolutions": {
-    "async": "^3.2.3",
+    "async": "^3.2.4",
     "db-migrate/rc/minimist": "^1.2.5",
+    "es5-ext": "0.10.62",
     "knex/liftoff/object.map/**/kind-of": "^6.0.3",
     "knex/liftoff/findup-sync/micromatc/kind-of": "^6.0.3",
     "knex/liftoff/findup-sync/micromatc/nanomatch/kind-of": "^6.0.3",
     "knex/liftoff/findup-sync/micromatch/define-property/**/kind-of": "^6.0.3",
+    "node-forge": "^1.0.0",
     "set-value": "^4.0.1",
     "ansi-regex": "^5.0.1",
     "ssh2": "^1.4.0",
-    "json-schema": "^0.4.0"
+    "json-schema": "^0.4.0",
+    "minimatch": "^5.0.0"
   },
   "overrides": {
     "set-value": "^4.0.1",

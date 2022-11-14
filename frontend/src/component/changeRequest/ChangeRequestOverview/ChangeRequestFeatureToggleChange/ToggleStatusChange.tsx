@@ -2,6 +2,7 @@ import { VFC } from 'react';
 import { Link, Box } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Badge } from 'component/common/Badge/Badge';
+import { ChangeItemWrapper } from './StrategyChange';
 
 interface IPlaygroundResultsTable {
     enabled: boolean;
@@ -13,7 +14,7 @@ export const ToggleStatusChange: VFC<IPlaygroundResultsTable> = ({
     onDiscard,
 }) => {
     return (
-        <Box sx={{ p: 1, display: 'flex', justifyContent: 'space-between' }}>
+        <ChangeItemWrapper>
             <Box>
                 New status:{' '}
                 <Badge color={enabled ? 'success' : 'error'}>
@@ -28,6 +29,6 @@ export const ToggleStatusChange: VFC<IPlaygroundResultsTable> = ({
                     </Box>
                 }
             />
-        </Box>
+        </ChangeItemWrapper>
     );
 };

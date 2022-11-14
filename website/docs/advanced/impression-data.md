@@ -8,7 +8,17 @@ Availability The impression data feature was introduced in **Unleash 4.7**. It i
 
 :::
 
-Unleash can provide you with **impression data** about the toggles in your application. Impression data contains information about a specific feature toggle activation check: The client SDK will emit an **impression event** whenever it calls `isEnabled` or `getVariant`.
+Unleash can provide you with **impression data** about the toggles in your application. Impression data contains information about a specific feature toggle activation check: The client SDK will emit an **impression event** when it calls `isEnabled` or `getVariant`. Some front-end SDKs emit impression events only when a toggle is enabled.
+
+:::caution Front-end SDKs and disabled toggles
+
+Older versions of the front-end SDKs and other SDKs that connect the [Unleash proxy](../sdks/unleash-proxy.md) or the [Unleash front-end API](../reference/front-end-api.md) would **not** emit impression events when a toggle is disabled.
+
+This is because impression data is a **per-toggle** setting and the Proxy and front-end API only transmit information about toggles that are enabled. As such, the SDK will never know that it should emit an impression event if a toggle is disabled.
+
+Some of the front-end SDKs now include a include a configuration property that lets you turn on impression data for all toggles regardless of whether they're enabled or not.
+
+:::
 
 Impression data was designed to make it easier for you to **collect analytics data**, **perform A/B tests**, and **enrich experiments** in your applications. It contains information about the feature toggle and the related [Unleash Context](../user_guide/unleash-context.md).
 

@@ -56,6 +56,27 @@ In order for the SDK to download the feature toggle configuration for the correc
 
 ![An API key creation form. The form's fields are "username", "token type", "project", and, crucially, "environment". The development environment is selected.](/img/environments_api_keys.png 'Create Environment specific API Keys')
 
+## Cloning environments
+
+:::note Availability
+
+Environment cloning is an upcoming feature, and is scheduled to become available in one of the next few releases.
+
+:::
+
+Unleash environments can be cloned. Cloning an environment creates a **new** environment based on the selected source environment. When cloning an environment, you select any number of projects whose feature toggle configurations will also be cloned. These projects will have identical configurations for the source and target environments. However, the environments can then be configured independently and will not stay in sync with each other.
+
+When cloning an environment, you must give the new environment
+- a name
+- an environment type
+- a list of projects to clone feature configurations in
+
+You can also clone user permissions into the new environment. When you do that, permissions in the new environment will be the same as in the environment you cloned from. If you don't clone permissions, only admins and project editors can make changes in the new environment. You can change permissions after creation by using [custom project roles](../user_guide/rbac#custom-project-roles).
+
+In order to clone an environment, you can follow the [how to clone environments](../how-to/how-to-clone-environments.mdx) guide.
+
+Once created, the new environment works just as any other environment.
+
 ## Migration
 
 To ease migration we have created a special environment called “default”. All existing activation strategies have been added to this environment. All existing Client API keys have also been scoped to work against the default environment to ensure zero disruption as part of the upgrade.
@@ -110,7 +131,7 @@ In order to support configuration per environment we had to rebuild our feature 
 - Will get access to two preconfigured environments: “development” and “production”. Existing users of Unleash will also get an additional “default” environment to simplify the adoption of environments.
 - Will be possible to turn environments on/off for all projects
 - Will be allowed to update and remove environments.
-- Will be allowed to create new environments.
+- Will be allowed to create new environments and clone existing environments.
 
 ## Rollout Plan
 

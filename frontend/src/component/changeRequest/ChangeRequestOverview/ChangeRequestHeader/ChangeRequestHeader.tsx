@@ -22,7 +22,7 @@ export const ChangeRequestHeader: FC<{ changeRequest: IChangeRequest }> = ({
                 <StyledHeader variant="h1">
                     Change request #{changeRequest.id}
                 </StyledHeader>
-                <ChangeRequestStatusBadge state={changeRequest.state} />;
+                <ChangeRequestStatusBadge state={changeRequest.state} />
             </StyledContainer>
             <StyledInnerContainer>
                 <Typography variant="body2" sx={{ margin: 'auto 0' }}>
@@ -49,7 +49,10 @@ export const ChangeRequestHeader: FC<{ changeRequest: IChangeRequest }> = ({
                                 fontWeight="bold"
                                 component="span"
                             >
-                                {changeRequest?.features.length} feature toggles
+                                {changeRequest.features.length}{' '}
+                                {changeRequest.features.length === 1
+                                    ? 'feature toggle'
+                                    : 'feature toggles'}
                             </Typography>
                         </Typography>
                     </StyledCard>

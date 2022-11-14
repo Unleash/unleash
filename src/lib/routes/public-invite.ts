@@ -70,8 +70,9 @@ export class PublicInviteController extends Controller {
                 openApiService.validPath({
                     tags: ['Public signup tokens'],
                     operationId: 'addPublicSignupTokenUser',
-                    summary:
-                        'Create a user with the "viewer" root role and link them to a signup token',
+                    summary: 'Add a user via a signup token',
+                    description:
+                        'Create a user with the viewer root role and link them to the provided signup token',
                     requestBody: createRequestSchema('createInvitedUserSchema'),
                     responses: {
                         200: createResponseSchema('userSchema'),
@@ -89,9 +90,9 @@ export class PublicInviteController extends Controller {
         const { token } = req.params;
         const valid = await this.publicSignupTokenService.validate(token);
         if (valid) {
-            return res.status(200).end();
+            res.status(200).end();
         } else {
-            return res.status(400).end();
+            res.status(400).end();
         }
     }
 
@@ -102,7 +103,8 @@ export class PublicInviteController extends Controller {
         const { token } = req.params;
         const valid = await this.publicSignupTokenService.validate(token);
         if (!valid) {
-            return res.status(400).end();
+            res.status(400).end();
+            return;
         }
         const user = await this.publicSignupTokenService.addTokenUser(
             token,

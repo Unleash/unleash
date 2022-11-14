@@ -10,6 +10,7 @@ export interface IProjectInsert {
     name: string;
     description: string;
     updatedAt?: Date;
+    changeRequestsEnabled?: boolean;
 }
 
 export interface IProjectArchived {
@@ -24,6 +25,11 @@ export interface IProjectHealthUpdate {
 
 export interface IProjectQuery {
     id?: string;
+}
+
+export interface IProjectEnvironmentWithChangeRequests {
+    environment: string;
+    changeRequestsEnabled: boolean;
 }
 
 export interface IProjectStore extends Store<IProject, string> {
@@ -44,9 +50,11 @@ export interface IProjectStore extends Store<IProject, string> {
     getProjectsWithCounts(query?: IProjectQuery): Promise<IProjectWithCount[]>;
     count(): Promise<number>;
     getAll(query?: IProjectQuery): Promise<IProject[]>;
+
     getProjectLinksForEnvironments(
         environments: string[],
     ): Promise<IEnvironmentProjectLink[]>;
+
     addEnvironmentToProjects(
         environment: string,
         projects: string[],

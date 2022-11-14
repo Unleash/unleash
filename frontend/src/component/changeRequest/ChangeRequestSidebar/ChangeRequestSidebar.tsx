@@ -1,4 +1,4 @@
-import { VFC } from 'react';
+import { FC, VFC } from 'react';
 import {
     Box,
     Button,
@@ -6,17 +6,21 @@ import {
     styled,
     Tooltip,
     Divider,
+    IconButton,
+    useTheme,
 } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
+import { DynamicSidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
-import { HelpOutline } from '@mui/icons-material';
+import { CheckCircle, HelpOutline } from '@mui/icons-material';
 import EnvironmentIcon from 'component/common/EnvironmentIcon/EnvironmentIcon';
 import { ChangeRequest } from '../ChangeRequest/ChangeRequest';
-import { useChangeRequestDraft } from 'hooks/api/getters/useChangeRequestDraft/useChangeRequestDraft';
+import { useChangeRequestOpen } from 'hooks/api/getters/useChangeRequestOpen/useChangeRequestOpen';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { ChangeRequestStatusBadge } from '../ChangeRequestStatusBadge/ChangeRequestStatusBadge';
+import CloseIcon from '@mui/icons-material/Close';
+import { useNavigate } from 'react-router-dom';
 
 interface IChangeRequestSidebarProps {
     open: boolean;
@@ -27,6 +31,7 @@ interface IChangeRequestSidebarProps {
 const StyledPageContent = styled(PageContent)(({ theme }) => ({
     height: '100vh',
     overflow: 'auto',
+    minWidth: '50vw',
     padding: theme.spacing(7.5, 6),
     [theme.breakpoints.down('md')]: {
         padding: theme.spacing(4, 2),
@@ -56,6 +61,58 @@ const BackButton = styled(Button)(({ theme }) => ({
     marginLeft: 'auto',
 }));
 
+const SubmitChangeRequestButton: FC<{ onClick: () => void; count: number }> = ({
+    onClick,
+    count,
+}) => (
+    <Button sx={{ mt: 2, ml: 'auto' }} variant="contained" onClick={onClick}>
+        Submit change request ({count})
+    </Button>
+);
+
+export const StyledSuccessIcon = styled(CheckCircle)(({ theme }) => ({
+    color: theme.palette.success.main,
+    height: '25px',
+    width: '25px',
+    marginRight: theme.spacing(1),
+}));
+
+export const StyledFlexAlignCenterBox = styled(Box)(({ theme }) => ({
+    paddingTop: theme.spacing(3),
+    marginLeft: 'auto',
+    display: 'flex',
+    alignItems: 'center',
+}));
+
+export const Separator = () => (
+    <Typography
+        component="span"
+        sx={{
+            marginLeft: 2,
+            marginRight: 2,
+            color: theme => theme.palette.neutral.light,
+        }}
+    >
+        |
+    </Typography>
+);
+
+export const UpdateCount: FC<{ count: number }> = ({ count }) => (
+    <Box>
+        <Typography component="span" variant="body1" color="text.secondary">
+            Updates:{' '}
+        </Typography>
+        <Typography
+            component="span"
+            sx={{
+                fontWeight: 'bold',
+            }}
+        >
+            {count} {count === 1 ? 'feature toggle' : 'feature toggles'}
+        </Typography>
+    </Box>
+);
+
 export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
     open,
     project,
@@ -65,8 +122,10 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
         draft,
         loading,
         refetch: refetchChangeRequest,
-    } = useChangeRequestDraft(project);
+    } = useChangeRequestOpen(project);
     const { changeState } = useChangeRequestApi();
+    const theme = useTheme();
+    const navigate = useNavigate();
 
     const onReview = async (draftId: number) => {
         try {
@@ -89,7 +148,11 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
 
     if (!loading && !draft) {
         return (
-            <SidebarModal open={open} onClose={onClose} label="Review changes">
+            <DynamicSidebarModal
+                open={open}
+                onClose={onClose}
+                label="Review changes"
+            >
                 <StyledPageContent
                     header={
                         <PageHeader
@@ -102,26 +165,42 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
                     {/* FIXME: empty state */}
                     <BackButton onClick={onClose}>Close</BackButton>
                 </StyledPageContent>
-            </SidebarModal>
+            </DynamicSidebarModal>
         );
     }
 
     return (
-        <SidebarModal open={open} onClose={onClose} label="Review changes">
+        <DynamicSidebarModal
+            open={open}
+            onClose={onClose}
+            label="Review changes"
+        >
             <StyledPageContent
                 header={
                     <PageHeader
                         secondary
+                        actions={
+                            <IconButton onClick={onClose}>
+                                <CloseIcon />
+                            </IconButton>
+                        }
                         titleElement={
                             <>
-                                Review your changes
-                                <Tooltip
-                                    title="You can review your changes from this page.
-                                    Needs a text to explain the process."
-                                    arrow
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                    }}
                                 >
-                                    <StyledHelpOutline />
-                                </Tooltip>
+                                    Review your changes
+                                    <Tooltip
+                                        title="You can review your changes from this page.
+                                    Needs a text to explain the process."
+                                        arrow
+                                    >
+                                        <StyledHelpOutline />
+                                    </Tooltip>
+                                </Box>
                                 <StyledHeaderHint>
                                     Make sure you are sending the right changes
                                     to be reviewed
@@ -143,15 +222,26 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
                         }}
                     >
                         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                            <Box sx={{ display: 'flex' }}>
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                }}
+                            >
                                 <EnvironmentIcon enabled={true} />
                                 <Typography component="span" variant="h2">
-                                    {environmentChangeRequest?.environment}
+                                    {environmentChangeRequest.environment}
                                 </Typography>
+                                <Separator />
+                                <UpdateCount
+                                    count={
+                                        environmentChangeRequest.features.length
+                                    }
+                                />
                             </Box>
                             <Box sx={{ ml: 'auto' }}>
                                 <ChangeRequestStatusBadge
-                                    state={environmentChangeRequest?.state}
+                                    state={environmentChangeRequest.state}
                                 />
                             </Box>
                         </Box>
@@ -169,21 +259,20 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
                         <Box sx={{ display: 'flex' }}>
                             <ConditionallyRender
                                 condition={
-                                    environmentChangeRequest?.state ===
+                                    environmentChangeRequest.state ===
                                     'Approved'
                                 }
                                 show={<Typography>Applied</Typography>}
                             />
                             <ConditionallyRender
                                 condition={
-                                    environmentChangeRequest?.state ===
-                                    'Applied'
+                                    environmentChangeRequest.state === 'Applied'
                                 }
                                 show={<Typography>Applied</Typography>}
                             />
                             <ConditionallyRender
                                 condition={
-                                    environmentChangeRequest?.state ===
+                                    environmentChangeRequest.state ===
                                     'Approved'
                                 }
                                 show={
@@ -204,17 +293,18 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
                                 }
                                 show={
                                     <>
-                                        <Button
-                                            sx={{ mt: 2, ml: 'auto' }}
-                                            variant="contained"
+                                        <SubmitChangeRequestButton
                                             onClick={() =>
                                                 onReview(
                                                     environmentChangeRequest.id
                                                 )
                                             }
-                                        >
-                                            Request changes
-                                        </Button>
+                                            count={
+                                                environmentChangeRequest
+                                                    .features.length
+                                            }
+                                        />
+
                                         <Button
                                             sx={{ mt: 2, ml: 2 }}
                                             variant="outlined"
@@ -225,11 +315,43 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
                                     </>
                                 }
                             />
+                            <ConditionallyRender
+                                condition={
+                                    environmentChangeRequest.state ===
+                                    'In review'
+                                }
+                                show={
+                                    <>
+                                        <StyledFlexAlignCenterBox>
+                                            <StyledSuccessIcon />
+                                            <Typography
+                                                color={
+                                                    theme.palette.success.main
+                                                }
+                                            >
+                                                Draft successfully sent to
+                                                review
+                                            </Typography>
+                                            <Button
+                                                sx={{ marginLeft: 2 }}
+                                                variant="outlined"
+                                                onClick={() => {
+                                                    onClose();
+                                                    navigate(
+                                                        `/projects/${environmentChangeRequest.project}/change-requests/${environmentChangeRequest.id}`
+                                                    );
+                                                }}
+                                            >
+                                                View change request page
+                                            </Button>
+                                        </StyledFlexAlignCenterBox>
+                                    </>
+                                }
+                            />
                         </Box>
                     </Box>
                 ))}
-                <BackButton onClick={onClose}>Close</BackButton>
             </StyledPageContent>
-        </SidebarModal>
+        </DynamicSidebarModal>
     );
 };

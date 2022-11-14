@@ -103,11 +103,23 @@ module.exports = {
                     },
                 },
                 {
+                    label: 'Environments',
+                    items: ['how-to/how-to-clone-environments'],
+                    type: 'category',
+                    link: {
+                        type: 'generated-index',
+                        title: 'How-to: environments',
+                        description: 'Environments how-to guides.',
+                        slug: '/how-to/env',
+                    },
+                },
+                {
                     label: 'Users and permissions',
                     items: [
                         'user_guide/user-management',
                         'how-to/how-to-create-and-assign-custom-project-roles',
                         'how-to/how-to-create-and-manage-user-groups',
+                        'how-to/how-to-set-up-group-sso-sync',
                     ],
                     type: 'category',
                     link: {
@@ -124,6 +136,7 @@ module.exports = {
                         'how-to/how-to-add-sso-saml',
                         'how-to/how-to-add-sso-saml-keycloak',
                         'how-to/how-to-add-sso-google',
+                        'how-to/how-to-setup-sso-keycloak-group-sync',
                     ],
                     type: 'category',
                     link: {

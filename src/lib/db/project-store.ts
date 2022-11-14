@@ -241,7 +241,10 @@ class ProjectStore implements IProjectStore {
         environment: string,
     ): Promise<void> {
         await this.db('project_environments')
-            .insert({ project_id: id, environment_name: environment })
+            .insert({
+                project_id: id,
+                environment_name: environment,
+            })
             .onConflict(['project_id', 'environment_name'])
             .ignore();
     }
@@ -250,12 +253,14 @@ class ProjectStore implements IProjectStore {
         environment: string,
         projects: string[],
     ): Promise<void> {
-        const rows = projects.map((project) => {
-            return {
-                project_id: project,
-                environment_name: environment,
-            };
-        });
+        const rows = await Promise.all(
+            projects.map(async (projectId) => {
+                return {
+                    project_id: projectId,
+                    environment_name: environment,
+                };
+            }),
+        );
 
         await this.db('project_environments')
             .insert(rows)

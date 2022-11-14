@@ -69,9 +69,9 @@ export default class ClientMetricsController extends Controller {
 
         try {
             await this.metricsV2.registerClientMetrics(data, clientIp);
-            return res.status(202).end();
+            res.status(202).end();
         } catch (e) {
-            return res.status(400).end();
+            res.status(400).end();
         }
     }
 }

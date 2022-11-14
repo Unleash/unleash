@@ -2,12 +2,12 @@ import { useCallback, useState } from 'react';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useChangeRequestApi } from './api/actions/useChangeRequestApi/useChangeRequestApi';
-import { useChangeRequestDraft } from './api/getters/useChangeRequestDraft/useChangeRequestDraft';
+import { useChangeRequestOpen } from './api/getters/useChangeRequestOpen/useChangeRequestOpen';
 
 export const useChangeRequestToggle = (project: string) => {
     const { setToastData, setToastApiError } = useToast();
     const { addChangeRequest } = useChangeRequestApi();
-    const { refetch: refetchChangeRequests } = useChangeRequestDraft(project);
+    const { refetch: refetchChangeRequests } = useChangeRequestOpen(project);
 
     const [changeRequestDialogDetails, setChangeRequestDialogDetails] =
         useState<{

@@ -38,7 +38,10 @@ import { createResponseSchema } from '../../../openapi/util/create-response-sche
 import { FeatureEnvironmentSchema } from '../../../openapi/spec/feature-environment-schema';
 import { SetStrategySortOrderSchema } from '../../../openapi/spec/set-strategy-sort-order-schema';
 
-import { emptyResponse } from '../../../openapi/util/standard-responses';
+import {
+    emptyResponse,
+    getStandardResponses,
+} from '../../../openapi/util/standard-responses';
 import { SegmentService } from '../../../services/segment-service';
 
 interface FeatureStrategyParams {
@@ -319,7 +322,17 @@ export default class ProjectFeaturesController extends Controller {
                 openApiService.validPath({
                     operationId: 'getFeature',
                     tags: ['Features'],
-                    responses: { 200: createResponseSchema('featureSchema') },
+                    description:
+                        'This endpoint returns the information about the requested feature if the feature belongs to the specified project.',
+                    summary: 'Get a feature.',
+                    responses: {
+                        200: createResponseSchema('featureSchema'),
+                        403: {
+                            description:
+                                'You either do not have the required permissions or used an invalid URL.',
+                        },
+                        ...getStandardResponses(401, 404),
+                    },
                 }),
             ],
         });
@@ -364,7 +377,17 @@ export default class ProjectFeaturesController extends Controller {
                 openApiService.validPath({
                     tags: ['Features'],
                     operationId: 'archiveFeature',
-                    responses: { 200: emptyResponse },
+                    description:
+                        'This endpoint archives the specified feature if the feature belongs to the specified project.',
+                    summary: 'Archive a feature.',
+                    responses: {
+                        200: emptyResponse,
+                        403: {
+                            description:
+                                'You either do not have the required permissions or used an invalid URL.',
+                        },
+                        ...getStandardResponses(401, 404),
+                    },
                 }),
             ],
         });
@@ -438,8 +461,12 @@ export default class ProjectFeaturesController extends Controller {
         req: Request<FeatureParams, any, any, any>,
         res: Response,
     ): Promise<void> {
-        const { featureName } = req.params;
-        const feature = await this.featureService.getFeature(featureName);
+        const { featureName, projectId } = req.params;
+        const feature = await this.featureService.getFeature(
+            featureName,
+            false,
+            projectId,
+        );
         res.status(200).json(feature);
     }
 
@@ -493,7 +520,6 @@ export default class ProjectFeaturesController extends Controller {
         );
     }
 
-    // TODO: validate projectId
     async archiveFeature(
         req: IAuthRequest<
             { projectId: string; featureName: string },
@@ -503,9 +529,13 @@ export default class ProjectFeaturesController extends Controller {
         >,
         res: Response<void>,
     ): Promise<void> {
-        const { featureName } = req.params;
+        const { featureName, projectId } = req.params;
         const userName = extractUsername(req);
-        await this.featureService.archiveToggle(featureName, userName);
+        await this.featureService.archiveToggle(
+            featureName,
+            userName,
+            projectId,
+        );
         res.status(202).send();
     }
 

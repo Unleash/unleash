@@ -7,7 +7,7 @@ import { Logger, LogProvider } from '../logger';
 import {
     FeatureToggle,
     FeatureToggleDTO,
-    IFeatureEnvironmentVariant,
+    IFeatureEnvironmentVariantHolder,
     IVariant,
 } from '../types/model';
 import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
@@ -280,8 +280,8 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         return this.rowToEnvVariants(row);
     }
 
-    async getAllVariants(): Promise<IFeatureEnvironmentVariant[]> {
-        const rows = await this.db(`${VARIANTS_TABLE}`).select(
+    async getAllVariants(): Promise<IFeatureEnvironmentVariantHolder[]> {
+        const rows = await this.db(VARIANTS_TABLE).select(
             'variants',
             'feature_name',
             'environment',
@@ -289,16 +289,19 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         return this.rowsToFeatureEnvVariants(rows);
     }
 
-    rowsToFeatureEnvVariants(rows: any[]): IFeatureEnvironmentVariant[] {
-        return rows.flatMap((row) =>
-            (row.variants as IVariant[]).map((variant) => {
-                return {
-                    featureName: row.feature_name,
-                    environment: row.environment,
-                    ...variant,
-                };
-            }),
-        );
+    async dropAllVariants(): Promise<void> {
+        await this.db(VARIANTS_TABLE).delete();
+    }
+
+    rowsToFeatureEnvVariants(rows: any[]): IFeatureEnvironmentVariantHolder[] {
+        if (rows.length > 0) {
+            return rows.map((row) => ({
+                featureName: row.feature_name,
+                environment: row.environment,
+                variants: row.variants || [],
+            }));
+        }
+        return [];
     }
 
     async saveVariants(
@@ -320,7 +323,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             .where({ project: project, name: featureName });
 
         const sortedVariants =
-            (variantRows.rows[0].variants as unknown as IVariant[]) || [];
+            (variantRows.rows[0]?.variants as unknown as IVariant[]) || [];
         sortedVariants.sort((a, b) => a.name.localeCompare(b.name));
 
         const toggle = this.rowToFeature(row[0]);
@@ -335,8 +338,13 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         newVariants: IVariant[],
     ): Promise<IVariant[]> {
         const row = await this.db(VARIANTS_TABLE)
-            .update({ variants: JSON.stringify(newVariants) })
-            .where({ environment, feature_name: featureName })
+            .insert({
+                variants: JSON.stringify(newVariants),
+                environment,
+                feature_name: featureName,
+            })
+            .onConflict(['environment', 'feature_name'])
+            .merge(['variants'])
             .returning('variants');
 
         const sortedVariants = (row[0].variants as IVariant[]) || [];

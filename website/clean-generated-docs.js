@@ -28,29 +28,3 @@ const options = {
 };
 
 replace(options);
-
-// remove unused tag files: https://github.com/Unleash/unleash/pull/2402
-const fs = require('fs');
-
-const unleashOpenApiDirectory = './docs/reference/api/unleash';
-const unleashApiSidebar = require(`${unleashOpenApiDirectory}/sidebar.js`);
-
-const tagsInSidebar = new Set(
-    unleashApiSidebar
-        .map((item) => item.link?.id)
-        .filter(Boolean)
-        .map((link) => link.substring(link.lastIndexOf('/') + 1)),
-);
-
-const tagsInFiles = fs
-    .readdirSync(unleashOpenApiDirectory)
-    .filter((file) => file.endsWith('.tag.mdx'))
-    .map((file) => file.substring(0, file.indexOf('.')));
-
-const unusedTags = tagsInFiles.filter((tag) => !tagsInSidebar.has(tag));
-
-for (const tag of unusedTags) {
-    const file = `${unleashOpenApiDirectory}/${tag}.tag.mdx`;
-    fs.rmSync(file);
-    console.info('Deleted unused OpenAPI tag file:', file);
-}

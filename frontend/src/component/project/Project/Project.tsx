@@ -261,7 +261,7 @@ const Project = () => {
                     path="change-requests"
                     element={
                         <ConditionallyRender
-                            condition={uiConfig?.flags.changeRequests}
+                            condition={isChangeRequestEnabled()}
                             show={<ProjectChangeRequests />}
                         />
                     }
@@ -270,7 +270,7 @@ const Project = () => {
                     path="change-requests/:id"
                     element={
                         <ConditionallyRender
-                            condition={uiConfig?.flags.changeRequests}
+                            condition={isChangeRequestEnabled()}
                             show={<ChangeRequestOverview />}
                         />
                     }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
     IFeatureToggleQuery,
     IFeatureToggleStore,
@@ -126,6 +127,13 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         return feature.variants as IVariant[];
     }
 
+    getVariantsForEnv(
+        featureName: string,
+        environment_name: string,
+    ): Promise<IVariant[]> {
+        return this.getVariants(featureName);
+    }
+
     async saveVariants(
         project: string,
         featureName: string,
@@ -134,5 +142,13 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         const feature = await this.get(featureName);
         feature.variants = newVariants;
         return feature;
+    }
+
+    async saveVariantsOnEnv(
+        featureName: string,
+        environment: string,
+        newVariants: IVariant[],
+    ): Promise<IVariant[]> {
+        throw new Error('Method not implemented.');
     }
 }

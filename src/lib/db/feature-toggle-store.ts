@@ -13,7 +13,6 @@ const FEATURE_COLUMNS = [
     'type',
     'project',
     'stale',
-    'variants',
     'created_at',
     'impression_data',
     'last_seen_at',
@@ -25,7 +24,6 @@ export interface FeaturesTable {
     description: string;
     type: string;
     stale: boolean;
-    variants?: string;
     project: string;
     last_seen_at?: Date;
     created_at?: Date;
@@ -34,7 +32,12 @@ export interface FeaturesTable {
     archived_at?: Date;
 }
 
+interface VariantDTO {
+    variants: IVariant[];
+}
+
 const TABLE = 'features';
+const VARIANTS_TABLE = 'feature_environment_variant';
 
 export default class FeatureToggleStore implements IFeatureToggleStore {
     private db: Knex;
@@ -156,15 +159,12 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         if (!row) {
             throw new NotFoundError('No feature toggle found');
         }
-        const sortedVariants = (row.variants as unknown as IVariant[]) || [];
-        sortedVariants.sort((a, b) => a.name.localeCompare(b.name));
         return {
             name: row.name,
             description: row.description,
             type: row.type,
             project: row.project,
             stale: row.stale,
-            variants: sortedVariants,
             createdAt: row.created_at,
             lastSeenAt: row.last_seen_at,
             impressionData: row.impression_data,
@@ -173,13 +173,14 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         };
     }
 
-    rowToVariants(row: FeaturesTable): IVariant[] {
-        if (!row) {
-            throw new NotFoundError('No feature toggle found');
+    rowToEnvVariants(variantRows: VariantDTO[]): IVariant[] {
+        if (!variantRows.length) {
+            return [];
         }
-        const sortedVariants = (row.variants as unknown as IVariant[]) || [];
-        sortedVariants.sort((a, b) => a.name.localeCompare(b.name));
 
+        const sortedVariants =
+            (variantRows[0].variants as unknown as IVariant[]) || [];
+        sortedVariants.sort((a, b) => a.name.localeCompare(b.name));
         return sortedVariants;
     }
 
@@ -193,7 +194,6 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             stale: data.stale,
             created_at: data.createdAt,
             impression_data: data.impressionData,
-            variants: JSON.stringify(data.variants),
         };
         if (!row.created_at) {
             delete row.created_at;
@@ -253,10 +253,26 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
     }
 
     async getVariants(featureName: string): Promise<IVariant[]> {
-        const row = await this.db(TABLE)
-            .select('variants')
-            .where({ name: featureName });
-        return this.rowToVariants(row[0]);
+        const row = await this.db(`${TABLE} as f`)
+            .select('fev.variants')
+            .join(`${VARIANTS_TABLE} as fev`, 'fev.feature_name', 'f.name')
+            .where({ name: featureName })
+            .limit(1);
+
+        return this.rowToEnvVariants(row);
+    }
+
+    async getVariantsForEnv(
+        featureName: string,
+        environment: string,
+    ): Promise<IVariant[]> {
+        const row = await this.db(`${TABLE} as f`)
+            .select('fev.variants')
+            .join(`${VARIANTS_TABLE} as fev`, 'fev.feature_name', 'f.name')
+            .where({ name: featureName })
+            .andWhere({ environment });
+
+        return this.rowToEnvVariants(row);
     }
 
     async saveVariants(
@@ -264,11 +280,43 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         featureName: string,
         newVariants: IVariant[],
     ): Promise<FeatureToggle> {
+        const variantsString = JSON.stringify(newVariants);
+        const variantRows = await this.db.raw(
+            `INSERT INTO feature_environment_variant
+                (select feature_name, environment, ? from feature_environments where feature_name = ?)
+            ON CONFLICT (feature_name, environment) DO UPDATE SET variants = ?
+            RETURNING variants;`,
+            [variantsString, featureName, variantsString],
+        );
+
         const row = await this.db(TABLE)
+            .select(FEATURE_COLUMNS)
+            .where({ project: project, name: featureName });
+
+        const sortedVariants =
+            (variantRows.rows[0].variants as unknown as IVariant[]) || [];
+        sortedVariants.sort((a, b) => a.name.localeCompare(b.name));
+
+        const toggle = this.rowToFeature(row[0]);
+        toggle.variants = sortedVariants;
+
+        return toggle;
+    }
+
+    async saveVariantsOnEnv(
+        featureName: string,
+        environment: string,
+        newVariants: IVariant[],
+    ): Promise<IVariant[]> {
+        const row = await this.db(VARIANTS_TABLE)
             .update({ variants: JSON.stringify(newVariants) })
-            .where({ project: project, name: featureName })
-            .returning(FEATURE_COLUMNS);
-        return this.rowToFeature(row[0]);
+            .where({ environment, feature_name: featureName })
+            .returning('variants');
+
+        const sortedVariants = (row[0].variants as IVariant[]) || [];
+        sortedVariants.sort((a, b) => a.name.localeCompare(b.name));
+
+        return sortedVariants;
     }
 }
 

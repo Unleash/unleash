@@ -1,5 +1,4 @@
 ---
-id: quickstart
 title: Quickstart
 ---
 
@@ -17,7 +16,7 @@ In order to use feature toggles on the client side you need to connect through [
 
 #### Create your first toggle
 
-In order to create a toggle through the UI, [you can follow this guide](create-feature-toggle.md). Once you have created your feature toggle, you are ready to connect your application using an SDK.
+In order to create a toggle through the UI, [you can follow this guide](../how-to/how-to-create-feature-toggles.md). Once you have created your feature toggle, you are ready to connect your application using an SDK.
 
 #### Connecting to the Unleash proxy from your app
 
@@ -67,7 +66,7 @@ Now you are ready to use the feature toggle you created in your client side appl
 
 #### Create your first toggle
 
-In order to create a toggle through the UI, [you can follow this guide](create-feature-toggle.md). Once you have created your feature toggle, you are ready to connect your application using an SDK.
+In order to create a toggle through the UI, [you can follow this guide](../how-to/how-to-create-feature-toggles.md). Once you have created your feature toggle, you are ready to connect your application using an SDK.
 
 #### Connecting to the Unleash instance from your app
 
@@ -148,7 +147,7 @@ password: unleash4all
 
 ### Create your first toggle
 
-In order to create a toggle through the UI, [you can follow this guide](create-feature-toggle.md). Once you have created your feature toggle, you are ready to connect your application using an SDK.
+In order to create a toggle through the UI, [you can follow this guide](../how-to/how-to-create-feature-toggles.md). Once you have created your feature toggle, you are ready to connect your application using an SDK.
 
 If you'd like to create your feature toggles with code, you can hit the create feature endpoint with the following command:
 
@@ -180,7 +179,7 @@ http://CHANGEME/api/admin/features
 
 Next, find the navigation, open up the Admin panel and find the API Access tab. Click the "Add new api key" button and create a client key. This key can be used to connect to the instance with our [SDKs](../reference/sdks/index.md).
 
-You can find more [information about API keys here](token.mdx).
+You can find more [information about API keys here](/how-to/how-to-create-api-tokens.mdx).
 
 Now that you have your API key created, you have what you need to connect to the SDK (NodeJS example):
 
@@ -309,7 +308,7 @@ Follow steps outlined in the [Run Unleash with Docker](#run-unleash-with-docker)
 
 ### Create your first toggle
 
-In order to create a toggle through the UI, [you can follow this guide](create-feature-toggle.md). Once you have created your feature toggle, you are ready to connect your application using an SDK.
+In order to create a toggle through the UI, [you can follow this guide](../how-to/how-to-create-feature-toggles.md). Once you have created your feature toggle, you are ready to connect your application using an SDK.
 
 If you'd like to create your feature toggles with code, you can hit the create feature endpoint with the following command:
 
@@ -341,7 +340,7 @@ http://CHANGEME/api/admin/features
 
 Find the navigation, open up the Admin panel and find the API Access tab. Click the "Add new api key" button and create a client key. This key can be used to connect to the instance with our [SDKs](../reference/sdks/index.md).
 
-You can find more [information about API keys here](token.mdx).
+You can find more [information about API keys here](../how-to/how-to-create-api-tokens.mdx).
 
 Now that you have your API key created, you have what you need to connect to the SDK (NodeJS example):
 

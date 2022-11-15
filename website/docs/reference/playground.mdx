@@ -32,14 +32,14 @@ The playground will only evaluate features belonging to the projects you specify
 
 ### The Unleash context
 
-The [Unleash context](../user_guide/unleash-context.md) represents a client SDK's configuration and used for evaluating your features. You can construct your own context or use a JSON version of a context from a client.
+The [Unleash context](../reference/unleash-context.md) represents a client SDK's configuration and used for evaluating your features. You can construct your own context or use a JSON version of a context from a client.
 
 #### Implicit context fields
 
 You can add any fields you want to the context used for the evaluation, and you can also leave out any fields you want. However, there are some fields that will be set for you if don't provide them:
 
 -   **`appName`**: Unleash clients all require an `appName` to start up. If you do not provide an `appName`, the playground will assign a default value to this property instead.
--   **`currentTime`**: The `currentTime` property of the [Unleash context](../user_guide/unleash-context.md) gets auto-populated with the current time. You can override this manually by providing a value of your own.
+-   **`currentTime`**: The `currentTime` property of the [Unleash context](../reference/unleash-context.md) gets auto-populated with the current time. You can override this manually by providing a value of your own.
 
 ## The response
 
@@ -84,6 +84,6 @@ The playground does not have any implementations for [custom strategies](../refe
 
 ### The Application Hostname strategy {#application-hostname}
 
-The [application hostname strategy](../user_guide/activation-strategies.md#hostnames) is a little different from the other built-in strategies: it depends on external state and _not_ on the Unleash context to evaluate. In short, the strategy checks its application environment to get the hostname, so the Unleash context has no effect on the result of this strategy.
+The [application hostname strategy](../reference/activation-strategies.md#hostnames) is a little different from the other built-in strategies: it depends on external state and _not_ on the Unleash context to evaluate. In short, the strategy checks its application environment to get the hostname, so the Unleash context has no effect on the result of this strategy.
 
 Because the application hostname strategy depends on external state, the playground can't guarantee whether the strategy would be true or false in a client. Further, the result in the playground would most likely be different from what you'd see in a client. Because of this, the playground does not evaluate this strategy.

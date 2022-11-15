@@ -8,7 +8,7 @@ This document is a reference for custom activation strategies. If you're looking
 
 :::
 
-**Custom activation strategies** let you define your own activation strategies to use with Unleash. When the [built-in activation strategies](../user_guide/activation-strategies.md) aren't enough, custom activation strategies are there to provide you with the flexibility you need.
+**Custom activation strategies** let you define your own activation strategies to use with Unleash. When the [built-in activation strategies](../reference/activation-strategies.md) aren't enough, custom activation strategies are there to provide you with the flexibility you need.
 
 Custom activation strategies work exactly like the built-in activation strategies when working in the admin UI.
 

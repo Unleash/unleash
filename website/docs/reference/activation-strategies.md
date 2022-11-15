@@ -1,5 +1,4 @@
 ---
-id: activation_strategy
 title: Activation Strategies
 ---
 

@@ -1,5 +1,4 @@
 ---
-id: create_feature_toggle
 title: How to create a feature toggle
 ---
 
@@ -28,7 +27,7 @@ To be able to create a feature toggle in an Unleash system you will need:
 
 :::info roles
 
-Refer to [the documentation on role-based access control](./rbac.md) for more information about the available roles and their permissions.
+Refer to [the documentation on role-based access control](../reference/rbac.md) for more information about the available roles and their permissions.
 
 :::
 
@@ -52,11 +51,11 @@ In the project that you want to create the toggle in, use the "new feature toggl
 
 :::tip API: Add a strategy
 
-Use the [API for adding a strategy to a feature toggle](../api/admin/feature-toggles-api-v2.md#add-strategy). You can find the configuration options for each strategy in the [activation strategy reference documentation](../user_guide/activation-strategies.md).
+Use the [API for adding a strategy to a feature toggle](../api/admin/feature-toggles-api-v2.md#add-strategy). You can find the configuration options for each strategy in the [activation strategy reference documentation](../reference/activation-strategies.md).
 
 :::
 
-Decide which environment you want to enable the toggle in. Select that environment and add an activation strategy. Different activation strategies will act differently as described in the [activation strategy documentation](../user_guide/activation-strategies.md). The configuration for each strategy differs accordingly. After selecting a strategy, complete the steps to configure it.
+Decide which environment you want to enable the toggle in. Select that environment and add an activation strategy. Different activation strategies will act differently as described in the [activation strategy documentation](../reference/activation-strategies.md). The configuration for each strategy differs accordingly. After selecting a strategy, complete the steps to configure it.
 
 ![](/img/create-toggle-add-strategy.png)
 

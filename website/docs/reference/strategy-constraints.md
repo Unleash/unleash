@@ -17,7 +17,7 @@ When using _advanced strategy constraints_ (any operator that isn't `IN` or `NOT
 
 :::
 
-**Strategy constraints** are conditions that must be satisfied for an [activation strategy](../user_guide/activation_strategy) to be evaluated for a feature toggle.
+**Strategy constraints** are conditions that must be satisfied for an [activation strategy](../reference/activation-strategies) to be evaluated for a feature toggle.
 With strategy constraints, you can:
 - roll out a feature **only to users in a specific region**
 - schedule a feature to be **released at a specific time**
@@ -25,8 +25,8 @@ With strategy constraints, you can:
 - release a feature to users with one of a set of **email addresses**
 - ... and much more!
 
-Strategy constraints use fields from the [Unleash Context](../user_guide/unleash_context) to determine whether a strategy should apply or not.
-You can constrain both on [standard context fields](../user_guide/unleash_context#structure) and on [custom context fields](../user_guide/unleash_context#custom-context-fields).
+Strategy constraints use fields from the [Unleash Context](../reference/unleash-context) to determine whether a strategy should apply or not.
+You can constrain both on [standard context fields](../reference/unleash-context#structure) and on [custom context fields](../reference/unleash-context#custom-context-fields).
 
 This page explains what strategy constraints are in Unleash and how they work. If you want to know *how you add* strategy constraints to an activation strategy, see [the corresponding how-to guide](../how-to/how-to-add-strategy-constraints.md "how to add strategy constraints").
 
@@ -37,12 +37,12 @@ To be able to constrain on a field, it must be listed under the Context Field me
 :::
 
 Unleash only provides a limited set of context fields by default, and they may not fulfill all your needs.
-By using [custom context fields](../user_guide/unleash_context#custom-context-fields), you can tailor strategy constraints to your specific use case, such as:
+By using [custom context fields](../reference/unleash-context#custom-context-fields), you can tailor strategy constraints to your specific use case, such as:
 - based on tenant IDs, release a feature to only specific tenants in a multi-tenant setup
 - release a feature to users in a specific region
 - release a feature only to beta testers
 
-You can also combine strategy constraints with the [gradual rollout strategy](../user_guide/activation_strategy#gradual-rollout) to do a gradual rollout to a **specific segment** of your user base.
+You can also combine strategy constraints with the [gradual rollout strategy](../reference/activation-strategies#gradual-rollout) to do a gradual rollout to a **specific segment** of your user base.
 
 ![A toggle with the gradual rollout strategy. The toggle is constrained on the custom content field "region" and set to only activate if the region is Africa or Europe.](/img/strategy-constraints.png)
 
@@ -62,7 +62,7 @@ To clarify, here's a few example strategy constraints and what they do:
 |-----------------|-----------------|--------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
 | `userId`        | `STR_ENDS_WITH` | `@example.com, @mycompany.com` | Evaluates to `true` for users whose user IDs end with `@example.com` or `@mycompany.com`.                                                           |
 | `currentTime`   | `DATE_AFTER`    | `2022-06-05 21:43:22Z`         | Evaluates to `true` if the current time is after `2022-06-05 21:43:22Z`.                                                                            |
-| `userScore`[^1] | `NUM_GTE`       | `1000`                         | Evaluates to `true` if the [custom context field](../user_guide/unleash_context#custom-context-fields) `userScore` has a value of `1000` or higher. |
+| `userScore`[^1] | `NUM_GTE`       | `1000`                         | Evaluates to `true` if the [custom context field](../reference/unleash-context#custom-context-fields) `userScore` has a value of `1000` or higher. |
 
 ## Strategy constraint operators
 
@@ -108,7 +108,7 @@ The date and time operators are **only available on the `currentTime`** context 
 :::
 
 With the date and time operators, you can enable a feature before and/or after a specified time.
-The operators compare the [Unleash context's](../user_guide/unleash_context) `currentTime` property against the provided value.
+The operators compare the [Unleash context's](../reference/unleash-context) `currentTime` property against the provided value.
 
 You can create a **time span** by combining the two constraint operators using two different constraints on the same strategy.
 In that case the strategy will be evaluated from `DATE_AFTER` and until `DATE_BEFORE`.
@@ -170,11 +170,11 @@ Additionally, you can use negation to get _less than or equal to_ and _greater t
 This section gives a brief overview over to use the client SDKs to interact with strategy constraints. The exact steps will vary depending on which client you are using, so make sure to consult the documentation for your specific client SDK.
 :::
 
-Strategy constraints require [the Unleash Context](../user_guide/unleash_context) to work. All official [Unleash client SDKs](../reference/sdks/index.md) support the option to pass [dynamic context values](../user_guide/unleash_context#structure "Unleash Context, section: structure") to the `isEnabled` function (or the SDK's equivalent).
+Strategy constraints require [the Unleash Context](../reference/unleash-context) to work. All official [Unleash client SDKs](../reference/sdks/index.md) support the option to pass [dynamic context values](../reference/unleash-context#structure "Unleash Context, section: structure") to the `isEnabled` function (or the SDK's equivalent).
 
-If the strategy constraint uses a [**standard Unleash Context field**](../user_guide/unleash_context#structure), set the context field to the value you wish to give it.
+If the strategy constraint uses a [**standard Unleash Context field**](../reference/unleash-context#structure), set the context field to the value you wish to give it.
 
-If the strategy constraint uses a [**custom context field**](../user_guide/unleash_context#custom-context-fields), use the Unleash Context's `properties` field. Use the name of the custom context field as a key and set the value to your desired string.
+If the strategy constraint uses a [**custom context field**](../reference/unleash-context#custom-context-fields), use the Unleash Context's `properties` field. Use the name of the custom context field as a key and set the value to your desired string.
 
 If you set a context field to a value that the SDKs cannot parse correctly for a chosen constraint operator, the strategy constraint will evaluate to false.
 In other words: if you have a strategy constraint operator that expects a number, such as `NUM_GT`, but you set the corresponding context field to a string value, then the expression will be false: `"some string"` is **not** greater than `5`.
@@ -195,6 +195,6 @@ After Unleash 4.9, we updated the [Unleash client specification](https://github.
 
 ## [Deprecated]: Constrain on a specific environment {#constrain-on-a-specific-environment}
 
-Before Unleash 4.3, using strategy constraints was the recommended way to have different toggle configurations per environment. Now that Unleash has environment support built in, we no longer recommend you use strategy constraints for this. Instead, see the [environments documentation](../user_guide/environments).
+Before Unleash 4.3, using strategy constraints was the recommended way to have different toggle configurations per environment. Now that Unleash has environment support built in, we no longer recommend you use strategy constraints for this. Instead, see the [environments documentation](../reference/environments.md).
 
-[^1]: `userScore` is not a default Unleash field, but can be added as a [custom context field](../user_guide/unleash_context#custom-context-fields).
+[^1]: `userScore` is not a default Unleash field, but can be added as a [custom context field](../reference/unleash-context#custom-context-fields).

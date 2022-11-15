@@ -27,12 +27,12 @@ const OPENAPI_TAGS = [
     {
         name: 'Context',
         description:
-            'Create, update, and delete [context fields](https://docs.getunleash.io/user_guide/unleash_context) that Unleash is aware of.',
+            'Create, update, and delete [context fields](https://docs.getunleash.io/reference/unleash-context) that Unleash is aware of.',
     },
     {
         name: 'Environments',
         description:
-            'Create, update, delete, enable or disable [environments](https://docs.getunleash.io/user_guide/environments) for this Unleash instance.',
+            'Create, update, delete, enable or disable [environments](https://docs.getunleash.io/reference/environments) for this Unleash instance.',
     },
     { name: 'Events', description: 'Read events from this Unleash instance.' },
     {
@@ -67,7 +67,7 @@ const OPENAPI_TAGS = [
     {
         name: 'Projects',
         description:
-            'Create, update, and delete [Unleash projects](https://docs.getunleash.io/user_guide/projects).',
+            'Create, update, and delete [Unleash projects](https://docs.getunleash.io/reference/projects).',
     },
     {
         name: 'Public signup tokens',

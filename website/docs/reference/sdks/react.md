@@ -38,7 +38,7 @@ The configuration variables are:
 
 - **`environment`**
 
-  The environment that your application runs in. This corresponds to the environment field in [the Unleash Context](../../user_guide/unleash-context.md). Note that this is separate from the newer [Environments feature](../../user_guide/environments.md).
+  The environment that your application runs in. This corresponds to the environment field in [the Unleash Context](../../reference/unleash-context.md). Note that this is separate from the newer [Environments feature](../../reference/environments.md).
 
 ```jsx
 import { FlagProvider } from '@unleash/proxy-client-react';

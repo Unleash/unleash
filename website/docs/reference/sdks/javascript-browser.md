@@ -48,7 +48,7 @@ Add the proxy's URL and a [proxy client key](../api-tokens-and-client-keys.mdx#p
 
 ### Option B: Connecting directly to Unleash
 
-Use the url to your Unleash instance's front-end API (`<unleash-url>/api/frontend`) as the `url` parameter. For the `clientKey` parameter, use a `FRONTEND` token generated from your Unleash instance. Refer to the [_how to create API tokens_](/user_guide/api-token) guide for the necessary steps.
+Use the url to your Unleash instance's front-end API (`<unleash-url>/api/frontend`) as the `url` parameter. For the `clientKey` parameter, use a `FRONTEND` token generated from your Unleash instance. Refer to the [_how to create API tokens_](/how-to/how-to-create-api-tokens) guide for the necessary steps.
 
 You might also need to set up cross-origin resource sharing (CORS) for your instance. Visit the [CORS section of the front-end API guide](../front-end-api.md#cors) for more information on setting up CORS.
 

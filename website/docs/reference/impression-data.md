@@ -20,7 +20,7 @@ Some of the front-end SDKs now include a include a configuration property that l
 
 :::
 
-Impression data was designed to make it easier for you to **collect analytics data**, **perform A/B tests**, and **enrich experiments** in your applications. It contains information about the feature toggle and the related [Unleash Context](../user_guide/unleash-context.md).
+Impression data was designed to make it easier for you to **collect analytics data**, **perform A/B tests**, and **enrich experiments** in your applications. It contains information about the feature toggle and the related [Unleash Context](../reference/unleash-context.md).
 
 Impression data is **opt-in on a per-toggle basis**. Unleash will not emit impression events for toggles not marked as such. Once you've turned impression data on for a toggle, you can start listening for impression events in your client SDK.
 
@@ -39,7 +39,7 @@ This table describes all the properties on the impression events:
 | --- | --- | --- |
 | `eventType` | The type of the event: `isEnabled` or `getVariant` | All |
 | `eventId` | A globally unique id (GUID) assigned to this event. | All |
-| `context` | A representation of the current [Unleash Context](../user_guide/unleash-context.md). | All |
+| `context` | A representation of the current [Unleash Context](../reference/unleash-context.md). | All |
 | `enabled` | Whether the toggle was enabled or not at when the client made the request. | All |
 | `featureName` | The name of the feature toggle. | All |
 | `variant` | The name of the active variant | `getVariant` events only |

@@ -3,7 +3,7 @@ id: features
 title: /api/client/features
 ---
 
-> In order to access the client API endpoints you need to identify yourself. Unless you're using the `none` authentication method, you'll need to [create a CLIENT token](/user_guide/api-token) and add an Authorization header using the token.
+> In order to access the client API endpoints you need to identify yourself. Unless you're using the `none` authentication method, you'll need to [create a CLIENT token](/how-to/how-to-create-api-tokens) and add an Authorization header using the token.
 
 ### Fetching Feature Toggles {#fetching-feature-toggles}
 
@@ -121,7 +121,7 @@ Before Unleash 4.16, strategy constraints were only available to Unleash Pro and
 
 :::
 
-Strategy definitions may also contain a `constraints` property. Strategy constraints is a feature in Unleash which work on context fields, which is defined as part of the [Unleash Context](../../user_guide/unleash-context.md). The purpose is to define a set of rules where all needs to be satisfied in order for the activation strategy to evaluate to true. A [high level description](https://www.unleash-hosted.com/articles/strategy-constraints) of it is available online.
+Strategy definitions may also contain a `constraints` property. Strategy constraints is a feature in Unleash which work on context fields, which is defined as part of the [Unleash Context](../../reference/unleash-context.md). The purpose is to define a set of rules where all needs to be satisfied in order for the activation strategy to evaluate to true. A [high level description](https://www.unleash-hosted.com/articles/strategy-constraints) of it is available online.
 
 **Example response:**
 

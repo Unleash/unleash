@@ -238,7 +238,7 @@ export const EnvironmentCloneModal = ({
                 modal
                 title={`Clone ${environment.name} environment`}
                 description="Cloning an environment will clone all feature toggles and their configuration (activation strategies, segments, status, etc) into a new environment."
-                documentationLink="https://docs.getunleash.io/user_guide/environments#cloning-environments"
+                documentationLink="https://docs.getunleash.io/reference/environments#cloning-environments"
                 documentationLinkLabel="Cloning environments documentation"
                 formatApiCode={formatApiCode}
             >

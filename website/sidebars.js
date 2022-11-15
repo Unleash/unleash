@@ -11,7 +11,7 @@
 
 module.exports = {
     documentation: [
-        'user_guide/index',
+        'about-the-docs',
         {
             label: 'First steps and tutorials',
             type: 'category',
@@ -23,9 +23,9 @@ module.exports = {
                 slug: '/tutorials',
             },
             items: [
-                'user_guide/unleash_overview',
-                'user_guide/important-concepts',
-                'user_guide/quickstart',
+                'tutorials/unleash-overview',
+                'tutorials/important-concepts',
+                'tutorials/quickstart',
             ],
         },
         {
@@ -66,7 +66,7 @@ module.exports = {
                     },
                     label: 'Unleash API guides',
                     items: [
-                        'user_guide/api-token',
+                        'how-to/how-to-create-api-tokens',
                         'how-to/how-to-create-personal-access-tokens',
                         'how-to/how-to-use-the-admin-api',
                         'how-to/how-to-enable-openapi',
@@ -88,7 +88,7 @@ module.exports = {
                     items: [
                         'how-to/how-to-add-strategy-constraints',
                         'how-to/how-to-capture-impression-data',
-                        'user_guide/create_feature_toggle',
+                        'how-to/how-to-create-feature-toggles',
                         'how-to/how-to-define-custom-context-fields',
                         'how-to/how-to-use-custom-strategies',
                         'how-to/how-to-schedule-feature-releases',
@@ -116,7 +116,7 @@ module.exports = {
                 {
                     label: 'Users and permissions',
                     items: [
-                        'user_guide/user-management',
+                        'how-to/how-to-add-users-to-unleash',
                         'how-to/how-to-create-and-assign-custom-project-roles',
                         'how-to/how-to-create-and-manage-user-groups',
                         'how-to/how-to-set-up-group-sso-sync',
@@ -311,28 +311,28 @@ module.exports = {
                     },
                     label: 'Unleash concepts',
                     items: [
-                        'user_guide/activation_strategy',
+                        'reference/activation-strategies',
                         'reference/api-tokens-and-client-keys',
                         'reference/archived-toggles',
                         'reference/event-log',
                         'reference/impression-data',
                         'reference/custom-activation-strategies',
-                        'user_guide/environments',
+                        'reference/environments',
                         'reference/feature-toggles',
                         'reference/feature-toggle-types',
                         'reference/feature-toggle-variants',
                         'reference/front-end-api',
                         'reference/playground',
                         'reference/public-signup',
-                        'user_guide/projects',
-                        'user_guide/rbac',
+                        'reference/projects',
+                        'reference/rbac',
                         'reference/segments',
                         'reference/sso',
                         'reference/stickiness',
                         'reference/strategy-constraints',
                         'reference/tags',
-                        'user_guide/technical_debt',
-                        'user_guide/unleash_context',
+                        'reference/technical-debt',
+                        'reference/unleash-context',
                         'reference/unleash-proxy',
                     ],
                 },

@@ -6,7 +6,7 @@ In this guide we explain how to use feature toggles in Swift applications via th
 
 ## Introduction {#introduction}
 
-The unleash-proxy-client-swift makes it easy for native applications and other swift platforms to connect to the unleash proxy. The proxy will evaluate a feature toggle for a given [context](../../user_guide/unleash-context.md) and return a list of feature flags relevant for the provided context.
+The unleash-proxy-client-swift makes it easy for native applications and other swift platforms to connect to the unleash proxy. The proxy will evaluate a feature toggle for a given [context](../../reference/unleash-context.md) and return a list of feature flags relevant for the provided context.
 
 The unleash-proxy-client-swift will then cache these toggles in a map in memory and refresh the configuration at a configurable interval, making queries against the toggle configuration extremely fast.
 
@@ -67,7 +67,7 @@ In the example above we import the `UnleashProxyClientSwift` and instantiate the
 
 - `environment` (`String`)
 
-   The application environment. This corresponds to the environment field in [the Unleash Context](../../user_guide/unleash-context.md). Note that this is separate from the newer [Environments feature](../../user_guide/environments.md).
+   The application environment. This corresponds to the environment field in [the Unleash Context](../../reference/unleash-context.md). Note that this is separate from the newer [Environments feature](../../reference/environments.md).
 
 Running `unleash.start()` will make the first request against the proxy and retrieve the feature toggle configuration, and set up the polling interval in the background.
 

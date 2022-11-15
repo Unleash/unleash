@@ -1,5 +1,4 @@
 ---
-id: technical_debt
 title: Technical Debt
 ---
 

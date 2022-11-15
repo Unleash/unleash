@@ -24,17 +24,17 @@ exports[`should serve the OpenAPI UI 1`] = `
         background: #fafafa;
       }
     </style>
-    
+
       <link rel="stylesheet" type="text/css" href="./swagger-ui.css" >
-    
+
   </head>
   <body>
-    
+
       <div id="swagger-ui"></div>
       <script src="./swagger-ui-bundle.js"></script>
       <script src="./swagger-ui-standalone-preset.js"></script>
       <script src="./swagger-ui-init.js"></script>
-    
+
   </body>
 </html>
   "
@@ -7570,7 +7570,7 @@ If the provided project does not exist, the list of events will be empty.",
       "name": "Client",
     },
     {
-      "description": "Create, update, and delete [context fields](https://docs.getunleash.io/user_guide/unleash_context) that Unleash is aware of.",
+      "description": "Create, update, and delete [context fields](https://docs.getunleash.io/reference/unleash-context) that Unleash is aware of.",
       "name": "Context",
     },
     {
@@ -7578,7 +7578,7 @@ If the provided project does not exist, the list of events will be empty.",
       "name": "Edge",
     },
     {
-      "description": "Create, update, delete, enable or disable [environments](https://docs.getunleash.io/user_guide/environments) for this Unleash instance.",
+      "description": "Create, update, delete, enable or disable [environments](https://docs.getunleash.io/reference/environments) for this Unleash instance.",
       "name": "Environments",
     },
     {
@@ -7610,7 +7610,7 @@ If the provided project does not exist, the list of events will be empty.",
       "name": "Playground",
     },
     {
-      "description": "Create, update, and delete [Unleash projects](https://docs.getunleash.io/user_guide/projects).",
+      "description": "Create, update, and delete [Unleash projects](https://docs.getunleash.io/reference/projects).",
       "name": "Projects",
     },
     {

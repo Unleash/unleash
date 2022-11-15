@@ -2,7 +2,7 @@
 title: SDK overview
 ---
 
-In order to connect your application to Unleash you will need a client SDK (software developer kit) for your programming language and an [API token](../user_guide/api-token). The SDK will handle connecting to the Unleash server instance and retrieving feature toggles based on your configuration. All versions of Unleash (OSS, Pro, and Enterprise) use the same client SDKs.
+In order to connect your application to Unleash you will need a client SDK (software developer kit) for your programming language and an [API token](../how-to/how-to-create-api-tokens). The SDK will handle connecting to the Unleash server instance and retrieving feature toggles based on your configuration. All versions of Unleash (OSS, Pro, and Enterprise) use the same client SDKs.
 
 Unleash provides official client SDKs for a number of programming language. Additionally, our community have developed and contributed SDKs for other languages. So if you can't find your favorite language in the list of official SDKs, check out the [list of clients written by our fantastic community](#community-sdks).
 
@@ -66,19 +66,19 @@ If you see an item marked with a ❌ that you would find useful, feel free to re
 | static | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ | N/A |
 | function | ✅ | ✅ | ⭕ | ✅ | ✅ (4.3) | ✅ | ✅ | ⭕ | N/A |
 | **Category: Built-in strategies** |  |  |  |  |  |  |  |  |  |
-| [Standard](../user_guide/activation_strategy#standard) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| [Gradual rollout](../user_guide/activation_strategy#gradual-rollout) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| [Gradual rollout: custom stickiness](../user_guide/activation_strategy#customize-stickiness-beta) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ | ✅ |
-| [UserID](../user_guide/activation_strategy#userids) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| [IP](../user_guide/activation_strategy#ips) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| [IP](../user_guide/activation_strategy#ips): CIDR syntax | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ | ✅ | ✅ | ✅ |
-| [Hostname](../user_guide/activation_strategy#hostnames) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| [Standard](../reference/activation-strategies#standard) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| [Gradual rollout](../reference/activation-strategies#gradual-rollout) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| [Gradual rollout: custom stickiness](../reference/activation-strategies#customize-stickiness-beta) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ | ✅ |
+| [UserID](../reference/activation-strategies#userids) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| [IP](../reference/activation-strategies#ips) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| [IP](../reference/activation-strategies#ips): CIDR syntax | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ | ✅ | ✅ | ✅ |
+| [Hostname](../reference/activation-strategies#hostnames) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | **Category: [Custom strategies](../custom-activation-strategies.md)** |  |  |  |  |  |  |  |  |  |
 | Basic support | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | <span id="strategy-constraints">**Category: [Strategy constraints](../strategy-constraints.md)**</span> |  |  |  |  |  |  |  |  |  |
 | Basic support (`IN`, `NOT_IN` operators) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | <span id="strategy-constraints-advanced-support">Advanced support (Semver, date, numeric and extended string operators)</span> (introduced in) | ✅ (5.1) | ✅ (3.12) | ✅ (3.3) | ✅ (5.1) | ✅ (4.2) | ✅ (2.1) | ✅ (1.3.1) | ⭕ | ✅ (0.8) |
-| **Category: [Unleash Context](../user_guide/unleash_context)** |  |  |  |  |  |  |  |  |  |
+| **Category: [Unleash Context](../reference/unleash-context)** |  |  |  |  |  |  |  |  |  |
 | Static fields (`environment`, `appName`) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Defined fields | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Custom properties | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |

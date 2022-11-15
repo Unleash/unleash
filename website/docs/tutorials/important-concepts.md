@@ -1,5 +1,4 @@
 ---
-id: important-concepts
 title: Important Concepts
 ---
 
@@ -15,7 +14,7 @@ Activation strategies compound, and every single strategy will be evaluated. If 
 
 Unleash comes with a set of built-in strategies, but you can also build your own [custom strategies](../reference/custom-activation-strategies.md).
 
-[You can read more about activation strategies here.](./activation_strategy)
+[You can read more about activation strategies here.](/reference/activation-strategies.md)
 
 ## Local evaluation
 
@@ -27,7 +26,7 @@ All our SDKs perform local evaluation of feature toggles, which means that they 
 
 Since the SDKs perform local evaluation, some of the parameters needed for evaluation must be supplied through the Unleash Context. The unleash context allows you to pass in userIds, sessionIds or other relevant information that is needed in order to perform the evaluation. If, for example, you want to enable a feature for a set of specific userIds, you would need to provide the current userId in the unleash context in order for the evaluation to enable the feature.
 
-[You can read more about the unleash context here.](./unleash_context)
+[You can read more about the unleash context here.](/reference/unleash-context.md)
 
 ## API architecture
 
@@ -41,6 +40,6 @@ This ensures that we can have different data responses for the client API endpoi
 
 ## Feature toggle types
 
-Unleash categorizes feature toggles into five distinct types. This categorization makes it easier for you to see what the purpose of a toggle is and helps Unleash with [managing technical debt](/user_guide/technical_debt). A feature toggle's type has no effect on how the toggle behaves or how you can configure it.
+Unleash categorizes feature toggles into five distinct types. This categorization makes it easier for you to see what the purpose of a toggle is and helps Unleash with [managing technical debt](/reference/technical-debt). A feature toggle's type has no effect on how the toggle behaves or how you can configure it.
 
 [Read more about feature toggle types here.](../reference/feature-toggle-types.md)

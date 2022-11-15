@@ -43,7 +43,7 @@ To schedule a feature release via the UI:
 
 To add an activation strategy via the Admin API, use the feature's `strategies` endpoint to add a new strategy (see the [API documentation for adding strategies to feature toggles](../api/admin/feature-toggles-api-v2.md#add-strategy) for more details).
 
-The payload's `"name"` property should contain the name of the strategy to apply (see [activation strategies reference documentation](../user_guide/activation-strategies.md) for all built-in strategies' _modeling names_).
+The payload's `"name"` property should contain the name of the strategy to apply (see [activation strategies reference documentation](../reference/activation-strategies.md) for all built-in strategies' _modeling names_).
 
 The `"constraint"` object should have the same format as described in the code sample below. The activation date must be in an [RFC 3339-compatible format](https://datatracker.ietf.org/doc/html/rfc3339#section-5.8), e.g. `"1990-12-31T23:59:60Z"`.
 

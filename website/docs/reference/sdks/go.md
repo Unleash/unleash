@@ -2,7 +2,7 @@
 title: GO SDK
 ---
 
-> You will need your `API URL` and your `API token` in order to connect the Client SDK to you Unleash instance. You can find this information in the “Admin” section Unleash management UI. [Read more](../../user_guide/token.mdx)
+> You will need your `API URL` and your `API token` in order to connect the Client SDK to you Unleash instance. You can find this information in the “Admin” section Unleash management UI. [Read more](../../how-to/how-to-create-api-tokens.mdx)
 
 ### 1. Install unleash-client-go {#1-install-unleash-client-go}
 
@@ -64,11 +64,11 @@ The Go client comes with implementations for the built-in activation strategies 
 - RemoteAddressStrategy
 - ApplicationHostnameStrategy
 
-Read more about the strategies in [the activation strategies document](../../user_guide/activation-strategies.md).
+Read more about the strategies in [the activation strategies document](../../reference/activation-strategies.md).
 
 ### Unleash context {#unleash-context}
 
-In order to use some of the common activation strategies you must provide an [_Unleash context_](../../user_guide/unleash-context.md). This client SDK allows you to send in the unleash context as part of the `isEnabled` call:
+In order to use some of the common activation strategies you must provide an [_Unleash context_](../../reference/unleash-context.md). This client SDK allows you to send in the unleash context as part of the `isEnabled` call:
 
 ```go
 ctx := context.Context{

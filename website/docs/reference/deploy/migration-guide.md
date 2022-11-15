@@ -14,7 +14,7 @@ You can also read the highlights of **[what's new in v4](/user_guide/v4-whats-ne
 
 If you are upgrading from Unleash Open-Source v3 client SDKs did not need to use an API token in order to connect to Unleash-server. Starting from v4 we have back-ported the API token handling for Enterprise in to the Open-Source version. This means that all client SDKs now need to use a client token in order to connect to Unleash.
 
-Read more in the [API token documentation](../../user_guide/token.mdx).
+Read more in the [API token documentation](../../how-to/how-to-create-api-tokens.mdx).
 
 ### 2. Configuring Unleash {#2-configuring-unleash}
 
@@ -42,7 +42,7 @@ req.session.user = user;
 ```
 
 - [Read more about Securing Unleash v4](./securing-unleash.md)
-- [Read more about RBAC](../../user_guide/rbac.md)
+- [Read more about RBAC](../../reference/rbac.md)
 
 ### 4. Legacy v2 routes removed {#4-legacy-v2-routes-removed}
 

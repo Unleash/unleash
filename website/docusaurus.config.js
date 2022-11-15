@@ -149,12 +149,11 @@ module.exports = {
                 fromExtensions: ['html', 'htm'],
                 redirects: [
                     {
-                        to: '/user_guide/api-token',
-                        from: '/deploy/user_guide/api-token',
-                    },
-                    {
-                        to: '/user_guide/activation_strategy',
-                        from: '/user_guide/control_rollout',
+                        to: '/how-to/how-to-create-api-tokens',
+                        from: [
+                            '/user_guide/api-token',
+                            '/deploy/user_guide/api-token',
+                        ],
                     },
                     {
                         from: '/advanced/audit_log',
@@ -378,10 +377,62 @@ module.exports = {
                     },
                     {
                         from: [
-                            '/user_guide/native_apps/',
+                            '/user_guide/native_apps',
+                            '/user_guide/proxy-api',
                             '/sdks/unleash-proxy',
                         ],
                         to: '/reference/unleash-proxy',
+                    },
+                    {
+                        to: '/how-to/how-to-create-feature-toggles',
+                        from: '/user_guide/create_feature_toggle',
+                    },
+                    {
+                        to: '/reference/activation-strategies',
+                        from: [
+                            '/user_guide/control_rollout',
+                            '/user_guide/activation_strategy',
+                        ],
+                    },
+                    {
+                        from: '/user_guide/environments',
+                        to: '/reference/environments',
+                    },
+                    {
+                        from: '/user_guide/projects',
+                        to: '/reference/projects',
+                    },
+                    {
+                        from: '/user_guide/rbac',
+                        to: '/reference/rbac',
+                    },
+                    {
+                        from: '/user_guide/technical_debt',
+                        to: '/reference/technical-debt',
+                    },
+                    {
+                        from: '/user_guide/unleash_context',
+                        to: '/reference/unleash-context',
+                    },
+                    {
+                        from: '/user_guide/user-management',
+                        to: '/how-to/how-to-add-users-to-unleash',
+                    },
+                    {
+                        from: '/user_guide/v4-whats-new',
+                        to: '/reference/whats-new-v4',
+                    },
+                    {
+                        from: '/user_guide/important-concepts',
+                        to: '/tutorials/important-concepts',
+                    },
+                    {
+                        from: '/user_guide/quickstart',
+                        to: '/tutorials/quickstart',
+                    },
+                    {
+                        from: '/user_guide/unleash_overview',
+                        to: '/tutorials/unleash-overview',
                     },
                 ],
                 createRedirects: function (toPath) {

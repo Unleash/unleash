@@ -1,32 +1,37 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { TablePlaceholder, VirtualizedTable } from "component/common/Table";
-import ChangePassword from "./ChangePassword/ChangePassword";
-import DeleteUser from "./DeleteUser/DeleteUser";
-import { ConditionallyRender } from "component/common/ConditionallyRender/ConditionallyRender";
-import ConfirmUserAdded from "../ConfirmUserAdded/ConfirmUserAdded";
-import { useUsers } from "hooks/api/getters/useUsers/useUsers";
-import useAdminUsersApi from "hooks/api/actions/useAdminUsersApi/useAdminUsersApi";
-import { IUser } from "interfaces/user";
-import IRole from "interfaces/role";
-import useToast from "hooks/useToast";
-import { formatUnknownError } from "utils/formatUnknownError";
-import { useUsersPlan } from "hooks/useUsersPlan";
-import { PageContent } from "component/common/PageContent/PageContent";
-import { PageHeader } from "component/common/PageHeader/PageHeader";
-import { Button, useMediaQuery } from "@mui/material";
-import { SearchHighlightProvider } from "component/common/Table/SearchHighlightContext/SearchHighlightContext";
-import { UserTypeCell } from "./UserTypeCell/UserTypeCell";
-import { useFlexLayout, useGlobalFilter, useSortBy, useTable } from "react-table";
-import { sortTypes } from "utils/sortTypes";
-import { HighlightCell } from "component/common/Table/cells/HighlightCell/HighlightCell";
-import { TextCell } from "component/common/Table/cells/TextCell/TextCell";
-import { useNavigate } from "react-router-dom";
-import { DateCell } from "component/common/Table/cells/DateCell/DateCell";
-import theme from "themes/theme";
-import { TimeAgoCell } from "component/common/Table/cells/TimeAgoCell/TimeAgoCell";
-import { UsersActionsCell } from "./UsersActionsCell/UsersActionsCell";
-import { Search } from "component/common/Search/Search";
-import { UserAvatar } from "component/common/UserAvatar/UserAvatar";
+import React, { useEffect, useMemo, useState } from 'react';
+import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
+import ChangePassword from './ChangePassword/ChangePassword';
+import DeleteUser from './DeleteUser/DeleteUser';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import ConfirmUserAdded from '../ConfirmUserAdded/ConfirmUserAdded';
+import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
+import useAdminUsersApi from 'hooks/api/actions/useAdminUsersApi/useAdminUsersApi';
+import { IUser } from 'interfaces/user';
+import IRole from 'interfaces/role';
+import useToast from 'hooks/useToast';
+import { formatUnknownError } from 'utils/formatUnknownError';
+import { useUsersPlan } from 'hooks/useUsersPlan';
+import { PageContent } from 'component/common/PageContent/PageContent';
+import { PageHeader } from 'component/common/PageHeader/PageHeader';
+import { Button, useMediaQuery } from '@mui/material';
+import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
+import { UserTypeCell } from './UserTypeCell/UserTypeCell';
+import {
+    useFlexLayout,
+    useGlobalFilter,
+    useSortBy,
+    useTable,
+} from 'react-table';
+import { sortTypes } from 'utils/sortTypes';
+import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
+import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
+import { useNavigate } from 'react-router-dom';
+import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
+import theme from 'themes/theme';
+import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
+import { UsersActionsCell } from './UsersActionsCell/UsersActionsCell';
+import { Search } from 'component/common/Search/Search';
+import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 
 const UsersList = () => {
     const navigate = useNavigate();

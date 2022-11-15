@@ -51,8 +51,6 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
         setAnchorEl(null);
     };
     const { hasAccess } = useContext(AccessContext);
-    const { uiConfig } = useUiConfig();
-    const changeRequestsEnabled = uiConfig?.flags?.changeRequests;
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
 
     const {

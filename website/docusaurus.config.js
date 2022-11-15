@@ -147,21 +147,6 @@ module.exports = {
             '@docusaurus/plugin-client-redirects',
             {
                 fromExtensions: ['html', 'htm'],
-                // create programmatic redirects where possible
-                // (https://docusaurus.io/docs/api/plugins/@docusaurus/plugin-client-redirects/)
-                createRedirects(existingPath) {
-                    // redirect /addons to /reference/addons
-                    if (existingPath.startsWith('/addons')) {
-                        return '/reference' + existingPath;
-                    }
-
-                    if (existingPath.startsWith('/deploy')) {
-                        return '/reference' + existingPath;
-                    }
-
-                    // don't redirect if no conditions match
-                    return undefined;
-                },
                 redirects: [
                     {
                         to: '/sdks',
@@ -309,6 +294,26 @@ module.exports = {
                     {
                         from: '/deploy/securing-unleash-v3',
                         to: '/reference/deploy/securing-unleash-v3',
+                    },
+                    {
+                        from: '/addons',
+                        to: '/reference/addons',
+                    },
+                    {
+                        from: '/addons/datadog',
+                        to: '/reference/addons/datadog',
+                    },
+                    {
+                        from: '/addons/slack',
+                        to: '/reference/addons/slack',
+                    },
+                    {
+                        from: '/addons/teams',
+                        to: '/reference/addons/teams',
+                    },
+                    {
+                        from: '/addons/webhook',
+                        to: '/reference/addons/webhook',
                     },
                 ],
                 createRedirects: function (toPath) {

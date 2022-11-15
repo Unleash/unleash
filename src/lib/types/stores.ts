@@ -61,3 +61,36 @@ export interface IUnleashStores {
     patStore: IPatStore;
     publicSignupTokenStore: IPublicSignupTokenStore;
 }
+
+export {
+    IAccessStore,
+    IAddonStore,
+    IApiTokenStore,
+    IClientApplicationsStore,
+    IClientInstanceStore,
+    IClientMetricsStoreV2,
+    IContextFieldStore,
+    IEnvironmentStore,
+    IEventStore,
+    IFeatureEnvironmentStore,
+    IFeatureStrategiesStore,
+    IFeatureTagStore,
+    IFeatureToggleClientStore,
+    IFeatureToggleStore,
+    IFeatureTypeStore,
+    IGroupStore,
+    IPatStore,
+    IProjectStore,
+    IPublicSignupTokenStore,
+    IResetTokenStore,
+    IRoleStore,
+    ISegmentStore,
+    ISessionStore,
+    ISettingStore,
+    IStrategyStore,
+    ITagStore,
+    ITagTypeStore,
+    IUserFeedbackStore,
+    IUserSplashStore,
+    IUserStore,
+};

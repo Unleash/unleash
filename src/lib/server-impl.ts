@@ -12,18 +12,21 @@ import registerGracefulShutdown from './util/graceful-shutdown';
 import { createDb } from './db/db-pool';
 import sessionDb from './middleware/session-db';
 // Types
-import { IUnleash } from './types/core';
-import { IUnleashConfig, IUnleashOptions, IAuthType } from './types/option';
-import { IUnleashServices } from './types/services';
+import {
+    IAuthType,
+    IUnleash,
+    IUnleashConfig,
+    IUnleashOptions,
+    IUnleashServices,
+    RoleName,
+} from './types';
+import * as errors from './error';
 import User, { IUser } from './types/user';
 import ApiUser from './types/api-user';
 import { Logger, LogLevel } from './logger';
 import AuthenticationRequired from './types/authentication-required';
 import Controller from './routes/controller';
 import { IAuthRequest } from './routes/unleash-types';
-import * as permissions from './types/permissions';
-import * as eventType from './types/events';
-import { RoleName } from './types/model';
 import { SimpleAuthSettings } from './types/settings/simple-auth-settings';
 import { Knex } from 'knex';
 
@@ -161,12 +164,30 @@ async function create(opts: IUnleashOptions): Promise<IUnleash> {
     return createApp(config, false);
 }
 
-// Module exports
+export default {
+    start,
+    create,
+};
+
+export * from './logger';
+export * from './metrics';
+export * from './event-hook';
+export * from './server-impl';
+export * from './create-config';
+export * from './metric-events';
+export * from './default-custom-auth-deny-all';
+export * from './addons';
+export * from './db';
+export * from './middleware';
+export * from './openapi';
+export * from './proxy';
+export * from './routes';
+export * from './services';
+export * from './types';
+export * from './util';
 export {
     start,
     create,
-    permissions,
-    eventType,
     Controller,
     AuthenticationRequired,
     User,
@@ -175,11 +196,7 @@ export {
     RoleName,
     IAuthType,
     Knex,
-};
-
-export default {
-    start,
-    create,
+    errors,
 };
 
 export type {

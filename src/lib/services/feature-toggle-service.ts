@@ -615,10 +615,11 @@ class FeatureToggleService {
         featureName: string,
         environment: string,
     ): Promise<IVariant[]> {
-        return this.featureToggleStore.getVariantsForEnv(
+        const featureEnvironment = await this.featureEnvironmentStore.get({
             featureName,
             environment,
-        );
+        });
+        return featureEnvironment.variants;
     }
 
     async getFeatureMetadata(featureName: string): Promise<FeatureToggle> {
@@ -1244,10 +1245,12 @@ class FeatureToggleService {
     ): Promise<IVariant[]> {
         await variantsArraySchema.validateAsync(newVariants);
         const fixedVariants = this.fixVariantWeights(newVariants);
-        const oldVariants = await this.featureToggleStore.getVariantsForEnv(
-            featureName,
-            environment,
-        );
+        const oldVariants = (
+            await this.featureEnvironmentStore.get({
+                featureName,
+                environment,
+            })
+        ).variants;
 
         await this.eventStore.store(
             new EnvironmentVariantEvent({
@@ -1258,11 +1261,12 @@ class FeatureToggleService {
                 newVariants: fixedVariants,
             }),
         );
-        return this.featureToggleStore.saveVariantsOnEnv(
+        await this.featureEnvironmentStore.addVariantsToFeatureEnvironment(
             featureName,
             environment,
             fixedVariants,
         );
+        return fixedVariants;
     }
 
     fixVariantWeights(variants: IVariant[]): IVariant[] {

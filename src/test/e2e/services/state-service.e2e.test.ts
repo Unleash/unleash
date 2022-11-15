@@ -2,6 +2,7 @@ import { createTestConfig } from '../../config/test-config';
 import dbInit from '../helpers/database-init';
 import StateService from '../../../lib/services/state-service';
 import oldFormat from '../../examples/variantsexport_v3.json';
+import { WeightType } from '../../../lib/types/model';
 
 let stores;
 let db;
@@ -52,12 +53,31 @@ test('Exporting featureEnvironmentVariants should work', async () => {
         'prod',
         true,
     );
-    await stores.featureToggleStore.saveVariantsOnEnv('Some-feature', 'dev', [
-        { name: 'blue', weight: 333, stickiness: 'default', weightType: '' },
-        { name: 'green', weight: 333, stickiness: 'default', weightType: '' },
-        { name: 'red', weight: 333, stickiness: 'default', weightType: '' },
-    ]);
-    await stores.featureToggleStore.saveVariantsOnEnv(
+    await stores.featureEnvironmentStore.addVariantsToFeatureEnvironment(
+        'Some-feature',
+        'dev',
+        [
+            {
+                name: 'blue',
+                weight: 333,
+                stickiness: 'default',
+                weightType: WeightType.VARIABLE,
+            },
+            {
+                name: 'green',
+                weight: 333,
+                stickiness: 'default',
+                weightType: WeightType.VARIABLE,
+            },
+            {
+                name: 'red',
+                weight: 333,
+                stickiness: 'default',
+                weightType: WeightType.VARIABLE,
+            },
+        ],
+    );
+    await stores.featureEnvironmentStore.addVariantsToFeatureEnvironment(
         'another-feature',
         'dev',
         [
@@ -81,7 +101,7 @@ test('Exporting featureEnvironmentVariants should work', async () => {
             },
         ],
     );
-    await stores.featureToggleStore.saveVariantsOnEnv(
+    await stores.featureEnvironmentStore.addVariantsToFeatureEnvironment(
         'another-feature',
         'prod',
         [
@@ -106,7 +126,11 @@ test('Exporting featureEnvironmentVariants should work', async () => {
         ],
     );
     const exportedData = await stateService.export({});
-    expect(exportedData.featureEnvironments).toHaveLength(3);
+    expect(
+        exportedData.featureEnvironments.find(
+            (fE) => fE.featureName === 'Some-feature',
+        ).variants,
+    ).toHaveLength(3);
 });
 
 test('Should import variants from old format and convert to new format (per environment)', async () => {
@@ -115,8 +139,13 @@ test('Should import variants from old format and convert to new format (per envi
         keepExisting: false,
         dropBeforeImport: true,
     });
-    let variants = await stores.featureToggleStore.getAllVariants();
-    expect(variants).toHaveLength(3); // There are 3 environments enabled
+    let featureEnvironments = await stores.featureEnvironmentStore.getAll();
+    expect(featureEnvironments).toHaveLength(4); // There are 3 environments enabled
+    expect(
+        featureEnvironments
+            .filter((fE) => fE.featureName === 'variants-tester')
+            .every((e) => e.variants.length === 4),
+    ).toBeTruthy();
 });
 test('Should import variants in new format (per environment)', async () => {
     await stateService.import({
@@ -130,6 +159,6 @@ test('Should import variants in new format (per environment)', async () => {
         keepExisting: false,
         dropBeforeImport: true,
     });
-    let variants = await stores.featureToggleStore.getAllVariants();
-    expect(variants).toHaveLength(3);
+    let featureEnvironments = await stores.featureEnvironmentStore.getAll();
+    expect(featureEnvironments).toHaveLength(6); // 3 environments, 2 features === 6 rows
 });

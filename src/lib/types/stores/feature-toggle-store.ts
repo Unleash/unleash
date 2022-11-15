@@ -1,9 +1,4 @@
-import {
-    FeatureToggle,
-    FeatureToggleDTO,
-    IFeatureEnvironment,
-    IVariant,
-} from '../model';
+import { FeatureToggle, FeatureToggleDTO, IVariant } from '../model';
 import { Store } from './store';
 
 export interface IFeatureToggleQuery {
@@ -21,21 +16,22 @@ export interface IFeatureToggleStore extends Store<FeatureToggle, string> {
     archive(featureName: string): Promise<FeatureToggle>;
     revive(featureName: string): Promise<FeatureToggle>;
     getAll(query?: Partial<IFeatureToggleQuery>): Promise<FeatureToggle[]>;
-    getAllVariants(): Promise<IFeatureEnvironment[]>;
+    /**
+     * @deprecated - Variants should be fetched from FeatureEnvironmentStore (since variants are now; since 4.18, connected to environments)
+     * @param featureName
+     * TODO: Remove before release 5.0
+     */
     getVariants(featureName: string): Promise<IVariant[]>;
-    getVariantsForEnv(
-        featureName: string,
-        environment_name: string,
-    ): Promise<IVariant[]>;
+    /**
+     * TODO: Remove before release 5.0
+     * @deprecated - Variants should be fetched from FeatureEnvironmentStore (since variants are now; since 4.18, connected to environments)
+     * @param project
+     * @param featureName
+     * @param newVariants
+     */
     saveVariants(
         project: string,
         featureName: string,
         newVariants: IVariant[],
     ): Promise<FeatureToggle>;
-    saveVariantsOnEnv(
-        featureName: string,
-        environment: string,
-        newVariants: IVariant[],
-    ): Promise<IVariant[]>;
-    dropAllVariants(): Promise<void>;
 }

@@ -195,4 +195,11 @@ export default class FakeFeatureEnvironmentStore
     ): Promise<void> {
         throw new Error('Method not implemented.');
     }
+
+    async addFeatureEnvironment(
+        featureEnvironment: IFeatureEnvironment,
+    ): Promise<void> {
+        this.featureEnvironments.push(featureEnvironment);
+        return Promise.resolve();
+    }
 }

@@ -14,6 +14,7 @@ import { v4 as uuidv4 } from 'uuid';
 const T = {
     featureEnvs: 'feature_environments',
     featureStrategies: 'feature_strategies',
+    projectEnvs: 'project_environments',
     features: 'features',
 };
 
@@ -305,6 +306,22 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
             })
             .onConflict(['feature_name', 'environment'])
             .merge(['variants']);
+    }
+
+    async addFeatureEnvironment(
+        featureEnvironment: IFeatureEnvironment,
+    ): Promise<void> {
+        let v = featureEnvironment.variants || [];
+        v.sort((a, b) => a.name.localeCompare(b.name));
+        await this.db(T.featureEnvs)
+            .insert({
+                variants: JSON.stringify(v),
+                enabled: featureEnvironment.enabled,
+                feature_name: featureEnvironment.featureName,
+                environment: featureEnvironment.environment,
+            })
+            .onConflict(['feature_name', 'environment'])
+            .merge(['variants', 'enabled']);
     }
 
     async cloneStrategies(

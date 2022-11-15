@@ -153,6 +153,18 @@ export default class StateService {
         });
     }
 
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    moveVariantsToFeatureEnvironments(data: any) {
+        data.featureEnvironments?.forEach((featureEnvironment) => {
+            let feature = data.features?.find(
+                (f) => f.name === featureEnvironment.featureName,
+            );
+            if (feature) {
+                featureEnvironment.variants = feature.variants || [];
+            }
+        });
+    }
+
     async import({
         data,
         userName = 'importUser',
@@ -161,6 +173,9 @@ export default class StateService {
     }: IImportData): Promise<void> {
         if (data.version === 2) {
             this.replaceGlobalEnvWithDefaultEnv(data);
+        }
+        if (!data.version || data.version < 4) {
+            this.moveVariantsToFeatureEnvironments(data);
         }
         const importData = await stateSchema.validateAsync(data);
 
@@ -259,32 +274,15 @@ export default class StateService {
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async importFeatureEnvironments({ featureEnvironments }): Promise<void> {
         await Promise.all(
-            featureEnvironments.map((env) =>
-                this.toggleStore
-                    .getProjectId(env.featureName)
-                    .then((id) =>
-                        this.featureEnvironmentStore.connectFeatureToEnvironmentsForProject(
-                            env.featureName,
-                            id,
-                        ),
-                    ),
-            ),
-        );
-        await Promise.all(
             featureEnvironments
-                .filter(async (fE) => {
-                    await this.featureEnvironmentStore.exists({
-                        featureName: fE.featureName,
-                        environment: fE.environment,
-                    });
+                .filter(async (env) => {
+                    await this.environmentStore.exists(env.environment);
                 })
-                .map((featureEnvironment) => {
-                    this.featureEnvironmentStore.addVariantsToFeatureEnvironment(
-                        featureEnvironment.featureName,
-                        featureEnvironment.environment,
-                        featureEnvironment.variants,
-                    );
-                }),
+                .map(async (featureEnvironment) =>
+                    this.featureEnvironmentStore.addFeatureEnvironment(
+                        featureEnvironment,
+                    ),
+                ),
         );
     }
 
@@ -372,16 +370,10 @@ export default class StateService {
                 .filter(filterExisting(keepExisting, oldToggles))
                 .filter(filterEqual(oldToggles))
                 .map(async (feature) => {
-                    const { name, project, variants = [] } = feature;
                     await this.toggleStore.create(feature.project, feature);
                     await this.featureEnvironmentStore.connectFeatureToEnvironmentsForProject(
                         feature.name,
                         feature.project,
-                    );
-                    await this.toggleStore.saveVariants(
-                        project,
-                        name,
-                        variants,
                     );
                     await this.eventStore.store({
                         type: FEATURE_IMPORT,
@@ -729,9 +721,6 @@ export default class StateService {
             includeEnvironments
                 ? this.environmentStore.getAll()
                 : Promise.resolve([]),
-            // includeFeatureToggles
-            //     ? this.toggleStore.getAllVariants()
-            //     : Promise.resolve([]),
             includeFeatureToggles
                 ? this.featureEnvironmentStore.getAll()
                 : Promise.resolve([]),
@@ -749,7 +738,6 @@ export default class StateService {
                 featureTags,
                 featureStrategies,
                 environments,
-                // variants,
                 featureEnvironments,
                 segments,
                 featureStrategySegments,

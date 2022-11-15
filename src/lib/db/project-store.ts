@@ -179,14 +179,11 @@ class ProjectStore implements IProjectStore {
             .onConflict('id')
             .ignore();
         if (rows.length > 0) {
-            await this.addDefaultEnvironment(rows);
-            environments
-                ?.filter((env) => env.name !== DEFAULT_ENV)
-                .forEach((env) => {
-                    projects.forEach((project) => {
-                        this.addEnvironmentToProject(project.id, env.name);
-                    });
+            environments.forEach((env) => {
+                projects.forEach(async (project) => {
+                    await this.addEnvironmentToProject(project.id, env.name);
                 });
+            });
             return rows.map(this.mapRow);
         }
         return [];

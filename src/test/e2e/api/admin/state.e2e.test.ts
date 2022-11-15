@@ -319,7 +319,7 @@ test('Roundtrip with strategies in multiple environments works', async () => {
 
 test(`Importing version 2 replaces :global: environment with 'default'`, async () => {
     await app.request
-        .post('/api/admin/state/import')
+        .post('/api/admin/state/import?drop=true')
         .attach('file', 'src/test/examples/exported412-version2.json')
         .expect(202);
     const env = await app.services.environmentService.get(DEFAULT_ENV);

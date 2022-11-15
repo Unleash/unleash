@@ -2,11 +2,12 @@ import {
     Accordion,
     AccordionDetails,
     AccordionSummary,
+    Box,
     Checkbox,
     FormControlLabel,
 } from '@mui/material';
 import { ExpandMore } from '@mui/icons-material';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
     IPermission,
     IProjectEnvironmentPermissions,
@@ -14,6 +15,7 @@ import {
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { ICheckedPermission } from 'component/admin/projectRoles/hooks/useProjectRoleForm';
 import { useStyles } from './EnvironmentPermissionAccordion.styles';
+import EnvironmentIcon from 'component/common/EnvironmentIcon/EnvironmentIcon';
 
 type PermissionMap = { [key: string]: boolean };
 
@@ -32,92 +34,35 @@ const EnvironmentPermissionAccordion = ({
     checkedPermissions,
     getRoleKey,
 }: IEnvironmentPermissionAccordionProps) => {
-    const [permissionMap, setPermissionMap] = useState<PermissionMap>({});
-    const [permissionCount, setPermissionCount] = useState(0);
+    const permissionMap = useMemo(
+        () =>
+            environment?.permissions?.reduce(
+                (acc: PermissionMap, curr: IPermission) => {
+                    acc[getRoleKey(curr)] = true;
+                    return acc;
+                },
+                {}
+            ) || {},
+        [environment?.permissions]
+    );
     const { classes: styles } = useStyles();
-
-    useEffect(() => {
-        const permissionMap = environment?.permissions?.reduce(
-            (acc: PermissionMap, curr: IPermission) => {
-                acc[getRoleKey(curr)] = true;
-                return acc;
-            },
-            {}
-        );
-
-        setPermissionMap(permissionMap);
-        /* eslint-disable-next-line */
-    }, [environment?.permissions?.length]);
-
-    useEffect(() => {
-        let count = 0;
-        Object.keys(checkedPermissions).forEach(key => {
-            if (permissionMap[key]) {
-                count = count + 1;
-            }
-        });
-
-        setPermissionCount(count);
-        /* eslint-disable-next-line */
-    }, [checkedPermissions]);
-
-    const renderPermissions = () => {
-        const envPermissions = environment?.permissions?.map(
-            (permission: IPermission) => {
-                return (
-                    <FormControlLabel
-                        classes={{ root: styles.label }}
-                        key={getRoleKey(permission)}
-                        control={
-                            <Checkbox
-                                checked={
-                                    checkedPermissions[getRoleKey(permission)]
-                                        ? true
-                                        : false
-                                }
-                                onChange={() =>
-                                    handlePermissionChange(
-                                        permission,
-                                        environment.name
-                                    )
-                                }
-                                color="primary"
-                            />
-                        }
-                        label={permission.displayName}
-                    />
-                );
-            }
-        );
-
-        envPermissions.push(
-            <FormControlLabel
-                key={`check-all-environment-${environment?.name}`}
-                classes={{ root: styles.label }}
-                control={
-                    <Checkbox
-                        checked={
-                            checkedPermissions[
-                                `check-all-environment-${environment?.name}`
-                            ]
-                                ? true
-                                : false
-                        }
-                        onChange={() =>
-                            checkAllEnvironmentPermissions(environment?.name)
-                        }
-                        color="primary"
-                    />
-                }
-                label={'Select all permissions for this env'}
-            />
-        );
-
-        return envPermissions;
-    };
+    const permissionCount = useMemo(
+        () =>
+            Object.keys(checkedPermissions).filter(key => permissionMap[key])
+                .length || 0,
+        [checkedPermissions, permissionMap]
+    );
 
     return (
-        <div className={styles.environmentPermissionContainer}>
+        <Box
+            sx={{
+                px: 2,
+                py: 1,
+                mb: 1,
+                border: theme => `1px solid ${theme.palette.divider}`,
+                borderRadius: theme => `${theme.shape.borderRadiusLarge}px`,
+            }}
+        >
             <Accordion style={{ boxShadow: 'none' }}>
                 <AccordionSummary
                     className={styles.accordionSummary}
@@ -129,6 +74,7 @@ const EnvironmentPermissionAccordion = ({
                     }
                 >
                     <div className={styles.accordionHeader}>
+                        <EnvironmentIcon enabled={false} />
                         <StringTruncator
                             text={environment.name}
                             className={styles.header}
@@ -143,10 +89,66 @@ const EnvironmentPermissionAccordion = ({
                     </div>
                 </AccordionSummary>
                 <AccordionDetails className={styles.accordionBody}>
-                    {renderPermissions()}
+                    {environment?.permissions?.map(
+                        (permission: IPermission) => {
+                            return (
+                                <FormControlLabel
+                                    classes={{ root: styles.label }}
+                                    key={getRoleKey(permission)}
+                                    control={
+                                        <Checkbox
+                                            checked={
+                                                checkedPermissions[
+                                                    getRoleKey(permission)
+                                                ]
+                                                    ? true
+                                                    : false
+                                            }
+                                            onChange={() =>
+                                                handlePermissionChange(
+                                                    permission,
+                                                    environment.name
+                                                )
+                                            }
+                                            color="primary"
+                                        />
+                                    }
+                                    label={permission.displayName}
+                                />
+                            );
+                        }
+                    )}
+
+                    <FormControlLabel
+                        key={`check-all-environment-${environment?.name}`}
+                        classes={{ root: styles.label }}
+                        control={
+                            <Checkbox
+                                checked={
+                                    checkedPermissions[
+                                        `check-all-environment-${environment?.name}`
+                                    ]
+                                        ? true
+                                        : false
+                                }
+                                onChange={() =>
+                                    checkAllEnvironmentPermissions(
+                                        environment?.name
+                                    )
+                                }
+                                color="primary"
+                            />
+                        }
+                        label={
+                            <>
+                                <strong>Select all</strong> permissions for this
+                                env
+                            </>
+                        }
+                    />
                 </AccordionDetails>
             </Accordion>
-        </div>
+        </Box>
     );
 };
 

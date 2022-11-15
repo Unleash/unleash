@@ -1,9 +1,6 @@
 import { makeStyles } from 'tss-react/mui';
 
 export const useStyles = makeStyles()(theme => ({
-    environmentPermissionContainer: {
-        marginBottom: '1.25rem',
-    },
     accordionSummary: {
         boxShadow: 'none',
         padding: '0',

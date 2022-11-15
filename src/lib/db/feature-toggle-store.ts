@@ -7,7 +7,7 @@ import { Logger, LogProvider } from '../logger';
 import {
     FeatureToggle,
     FeatureToggleDTO,
-    IFeatureEnvironmentVariants,
+    IFeatureEnvironment,
     IVariant,
 } from '../types/model';
 import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
@@ -291,10 +291,11 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         return this.rowToEnvVariants(row);
     }
 
-    async getAllVariants(): Promise<IFeatureEnvironmentVariants[]> {
+    async getAllVariants(): Promise<IFeatureEnvironment[]> {
         const rows = await this.db(FEATURE_ENVIRONMENTS_TABLE).select(
             'variants',
             'feature_name',
+            'enabled',
             'environment',
         );
         return this.rowsToFeatureEnvVariants(rows);
@@ -304,12 +305,13 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         await this.db(FEATURE_ENVIRONMENTS_TABLE).update({ variants: [] });
     }
 
-    rowsToFeatureEnvVariants(rows: any[]): IFeatureEnvironmentVariants[] {
+    rowsToFeatureEnvVariants(rows: any[]): IFeatureEnvironment[] {
         if (rows.length > 0) {
             return rows.map((row) => ({
                 featureName: row.feature_name,
                 environment: row.environment,
                 variants: row.variants || [],
+                enabled: row.enabled,
             }));
         }
         return [];

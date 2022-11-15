@@ -7,8 +7,7 @@ import NotFoundError from '../../lib/error/notfound-error';
 import {
     FeatureToggle,
     FeatureToggleDTO,
-    IFeatureEnvironmentVariant,
-    IFeatureEnvironmentVariants,
+    IFeatureEnvironment,
     IVariant,
 } from 'lib/types/model';
 
@@ -133,12 +132,13 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         return feature.variants as IVariant[];
     }
 
-    async getAllVariants(): Promise<IFeatureEnvironmentVariants[]> {
+    async getAllVariants(): Promise<IFeatureEnvironment[]> {
         let features = await this.getAll();
         let variants = features.flatMap((feature) => ({
             featureName: feature.name,
             environment: 'development',
             variants: feature.variants,
+            enabled: true,
         }));
         return Promise.resolve(variants);
     }

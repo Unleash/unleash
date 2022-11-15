@@ -38,8 +38,8 @@ export const defaultExperimentalOptions = {
             process.env.UNLEASH_EXPERIMENTAL_CLONE_ENVIRONMENT,
             false,
         ),
-        environmentVariants: parseEnvVarBoolean(
-            process.env.UNLEASH_EXPERIMENTAL_ENVIRONMENT_VARIANTS,
+        variantsPerEnvironment: parseEnvVarBoolean(
+            process.env.UNLEASH_EXPERIMENTAL_VARIANTS_PER_ENVIRONMENT,
             false,
         ),
     },

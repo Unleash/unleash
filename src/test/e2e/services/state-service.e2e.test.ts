@@ -106,7 +106,7 @@ test('Exporting featureEnvironmentVariants should work', async () => {
         ],
     );
     const exportedData = await stateService.export({});
-    expect(exportedData.featureEnvironmentVariants).toHaveLength(3);
+    expect(exportedData.featureEnvironments).toHaveLength(3);
 });
 
 test('Should import variants from old format and convert to new format (per environment)', async () => {

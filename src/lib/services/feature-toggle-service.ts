@@ -78,6 +78,7 @@ import { AccessService } from './access-service';
 import { User } from '../server-impl';
 import { CREATE_FEATURE_STRATEGY } from '../types/permissions';
 import NoAccessError from '../error/no-access-error';
+import { IFlagResolver } from 'lib/types/experimental';
 
 interface IFeatureContext {
     featureName: string;
@@ -115,6 +116,8 @@ class FeatureToggleService {
 
     private accessService: AccessService;
 
+    private flagResolver: IFlagResolver;
+
     constructor(
         {
             featureStrategiesStore,
@@ -136,7 +139,10 @@ class FeatureToggleService {
             | 'featureEnvironmentStore'
             | 'contextFieldStore'
         >,
-        { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
+        {
+            getLogger,
+            flagResolver,
+        }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>,
         segmentService: SegmentService,
         accessService: AccessService,
     ) {
@@ -151,6 +157,7 @@ class FeatureToggleService {
         this.contextFieldStore = contextFieldStore;
         this.segmentService = segmentService;
         this.accessService = accessService;
+        this.flagResolver = flagResolver;
     }
 
     async validateFeatureContext({
@@ -579,15 +586,20 @@ class FeatureToggleService {
         archived: boolean = false,
         projectId?: string,
     ): Promise<FeatureToggleWithEnvironment> {
-        const feature =
-            await this.featureStrategiesStore.getFeatureToggleWithEnvs(
-                featureName,
-                archived,
-            );
         if (projectId) {
             await this.validateFeatureContext({ featureName, projectId });
         }
-        return feature;
+        if (this.flagResolver.isEnabled('environmentVariants')) {
+            return this.featureStrategiesStore.getFeatureToggleWithVariantEnvs(
+                featureName,
+                archived,
+            );
+        } else {
+            return this.featureStrategiesStore.getFeatureToggleWithEnvs(
+                featureName,
+                archived,
+            );
+        }
     }
 
     /**

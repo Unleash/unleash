@@ -619,7 +619,7 @@ class FeatureToggleService {
             featureName,
             environment,
         });
-        return featureEnvironment.variants;
+        return featureEnvironment.variants || [];
     }
 
     async getFeatureMetadata(featureName: string): Promise<FeatureToggle> {

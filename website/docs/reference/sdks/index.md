@@ -50,7 +50,7 @@ If you see an item marked with a ❌ that you would find useful, feel free to re
 
 :::
 
-| Capability | [Java](/sdks/java_sdk) | [Node.js](/sdks/node_sdk) | [Go](/sdks/go_sdk) | [Python](/sdks/python_sdk) | [Ruby](/sdks/ruby_sdk) | [.NET](/sdks/dot_net_sdk) | [PHP](/sdks/php_sdk) | [Rust](https://github.com/unleash/unleash-client-rust) | [Unleash Proxy](../unleash-proxy.md) |
+| Capability | [Java](/reference/sdks/java.md) | [Node.js](/reference/sdks/node.md) | [Go](/reference/sdks/go.md) | [Python](/reference/sdks/python.md) | [Ruby](/reference/sdks/ruby.md) | [.NET](/sdks/dotnet_sdk) | [PHP](/reference/sdks/php.md) | [Rust](https://github.com/unleash/unleash-client-rust) | [Unleash Proxy](/reference/unleash-proxy.md) |
 | --- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
 | **Category: Initialization** |  |  |  |  |  |  |  |  |  |
 | Async initialization | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ | N/A |

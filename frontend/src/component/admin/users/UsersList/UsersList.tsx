@@ -1,39 +1,32 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import {
-    Table,
-    SortableTableHeader,
-    TableBody,
-    TableCell,
-    TableRow,
-    TablePlaceholder,
-} from 'component/common/Table';
-import ChangePassword from './ChangePassword/ChangePassword';
-import DeleteUser from './DeleteUser/DeleteUser';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import ConfirmUserAdded from '../ConfirmUserAdded/ConfirmUserAdded';
-import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
-import useAdminUsersApi from 'hooks/api/actions/useAdminUsersApi/useAdminUsersApi';
-import { IUser } from 'interfaces/user';
-import IRole from 'interfaces/role';
-import useToast from 'hooks/useToast';
-import { formatUnknownError } from 'utils/formatUnknownError';
-import { useUsersPlan } from 'hooks/useUsersPlan';
-import { PageContent } from 'component/common/PageContent/PageContent';
-import { PageHeader } from 'component/common/PageHeader/PageHeader';
-import { Button, useMediaQuery } from '@mui/material';
-import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { UserTypeCell } from './UserTypeCell/UserTypeCell';
-import { useGlobalFilter, useSortBy, useTable } from 'react-table';
-import { sortTypes } from 'utils/sortTypes';
-import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
-import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
-import { useNavigate } from 'react-router-dom';
-import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
-import theme from 'themes/theme';
-import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
-import { UsersActionsCell } from './UsersActionsCell/UsersActionsCell';
-import { Search } from 'component/common/Search/Search';
-import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
+import React, { useEffect, useMemo, useState } from "react";
+import { TablePlaceholder, VirtualizedTable } from "component/common/Table";
+import ChangePassword from "./ChangePassword/ChangePassword";
+import DeleteUser from "./DeleteUser/DeleteUser";
+import { ConditionallyRender } from "component/common/ConditionallyRender/ConditionallyRender";
+import ConfirmUserAdded from "../ConfirmUserAdded/ConfirmUserAdded";
+import { useUsers } from "hooks/api/getters/useUsers/useUsers";
+import useAdminUsersApi from "hooks/api/actions/useAdminUsersApi/useAdminUsersApi";
+import { IUser } from "interfaces/user";
+import IRole from "interfaces/role";
+import useToast from "hooks/useToast";
+import { formatUnknownError } from "utils/formatUnknownError";
+import { useUsersPlan } from "hooks/useUsersPlan";
+import { PageContent } from "component/common/PageContent/PageContent";
+import { PageHeader } from "component/common/PageHeader/PageHeader";
+import { Button, useMediaQuery } from "@mui/material";
+import { SearchHighlightProvider } from "component/common/Table/SearchHighlightContext/SearchHighlightContext";
+import { UserTypeCell } from "./UserTypeCell/UserTypeCell";
+import { useFlexLayout, useGlobalFilter, useSortBy, useTable } from "react-table";
+import { sortTypes } from "utils/sortTypes";
+import { HighlightCell } from "component/common/Table/cells/HighlightCell/HighlightCell";
+import { TextCell } from "component/common/Table/cells/TextCell/TextCell";
+import { useNavigate } from "react-router-dom";
+import { DateCell } from "component/common/Table/cells/DateCell/DateCell";
+import theme from "themes/theme";
+import { TimeAgoCell } from "component/common/Table/cells/TimeAgoCell/TimeAgoCell";
+import { UsersActionsCell } from "./UsersActionsCell/UsersActionsCell";
+import { Search } from "component/common/Search/Search";
+import { UserAvatar } from "component/common/UserAvatar/UserAvatar";
 
 const UsersList = () => {
     const navigate = useNavigate();
@@ -129,14 +122,16 @@ const UsersList = () => {
                 id: 'name',
                 Header: 'Name',
                 accessor: (row: any) => row.name || '',
-                width: '40%',
+                minWidth: '40%',
+                maxWidth: '40%',
                 Cell: HighlightCell,
             },
             {
                 id: 'username',
                 Header: 'Username',
                 accessor: (row: any) => row.username || row.email,
-                width: '40%',
+                minWidth: '40%',
+                maxWidth: '40%',
                 Cell: HighlightCell,
             },
             {
@@ -175,7 +170,8 @@ const UsersList = () => {
                         onDelete={openDelDialog(user)}
                     />
                 ),
-                width: 100,
+                minWidth: 100,
+                maxWidth: 100,
                 disableGlobalFilter: true,
                 disableSortBy: true,
             },
@@ -193,8 +189,6 @@ const UsersList = () => {
     const data = isBillingUsers ? planUsers : users;
 
     const {
-        getTableProps,
-        getTableBodyProps,
         headerGroups,
         rows,
         prepareRow,
@@ -203,7 +197,7 @@ const UsersList = () => {
         setHiddenColumns,
     } = useTable(
         {
-            columns: columns,
+            columns: columns as any,
             data,
             initialState,
             sortTypes,
@@ -215,7 +209,8 @@ const UsersList = () => {
             },
         },
         useGlobalFilter,
-        useSortBy
+        useSortBy,
+        useFlexLayout
     );
 
     useEffect(() => {
@@ -258,23 +253,11 @@ const UsersList = () => {
             }
         >
             <SearchHighlightProvider value={globalFilter}>
-                <Table {...getTableProps()}>
-                    <SortableTableHeader headerGroups={headerGroups} />
-                    <TableBody {...getTableBodyProps()}>
-                        {rows.map(row => {
-                            prepareRow(row);
-                            return (
-                                <TableRow hover {...row.getRowProps()}>
-                                    {row.cells.map(cell => (
-                                        <TableCell {...cell.getCellProps()}>
-                                            {cell.render('Cell')}
-                                        </TableCell>
-                                    ))}
-                                </TableRow>
-                            );
-                        })}
-                    </TableBody>
-                </Table>
+                <VirtualizedTable
+                    rows={rows}
+                    headerGroups={headerGroups}
+                    prepareRow={prepareRow}
+                />
             </SearchHighlightProvider>
             <ConditionallyRender
                 condition={rows.length === 0}

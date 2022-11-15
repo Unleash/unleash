@@ -695,6 +695,20 @@ class FeatureToggleService {
                 projectId,
             );
 
+            if (value.variants && value.variants.length > 0) {
+                const environments =
+                    await this.featureEnvironmentStore.getEnvironmentsForFeature(
+                        featureName,
+                    );
+                environments.forEach(async (featureEnv) => {
+                    await this.featureEnvironmentStore.addVariantsToFeatureEnvironment(
+                        featureName,
+                        featureEnv.environment,
+                        value.variants,
+                    );
+                });
+            }
+
             const tags = await this.tagStore.getAllTagsForFeature(featureName);
 
             await this.eventStore.store(
@@ -752,16 +766,7 @@ class FeatureToggleService {
             }),
         );
 
-        const variantsTasks = newToggle.environments.flatMap(async (e) => {
-            const variants = await this.getVariantsForEnv(featureName, e.name);
-            return this.saveVariantsOnEnv(
-                newFeatureName,
-                e.name,
-                variants,
-                userName,
-            );
-        });
-        await Promise.all((tasks as Promise<any>[]).concat(variantsTasks));
+        await Promise.all(tasks);
         return created;
     }
 

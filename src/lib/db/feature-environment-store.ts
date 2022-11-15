@@ -164,6 +164,24 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
         return present;
     }
 
+    async getEnvironmentsForFeature(
+        featureName: string,
+    ): Promise<IFeatureEnvironment[]> {
+        const envs = await this.db(T.featureEnvs).where(
+            'feature_name',
+            featureName,
+        );
+        if (envs) {
+            return envs.map((r) => ({
+                featureName: r.feature_name,
+                environment: r.environment,
+                variants: r.variants || [],
+                enabled: r.enabled,
+            }));
+        }
+        return [];
+    }
+
     async getEnvironmentMetaData(
         environment: string,
         featureName: string,

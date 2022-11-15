@@ -100,14 +100,12 @@ export const FeatureEnvironmentVariants = () => {
         // TODO: setDeleteOpen(true);
     };
 
-    const rows = [];
-
     return (
         <PageContent
             isLoading={loading}
             header={
                 <PageHeader
-                    title={`Variants (${rows.length})`}
+                    title={`Variants (${allVariants.length})`}
                     actions={
                         <ConditionallyRender
                             condition={!isSmallScreen}

@@ -23,8 +23,7 @@ import {
     FeatureToggle,
     IEnvironment,
     IFeatureEnvironment,
-    IFeatureEnvironmentVariant,
-    IFeatureEnvironmentVariantHolder,
+    IFeatureEnvironmentVariants,
     IFeatureStrategy,
     IImportData,
     IImportFile,
@@ -699,7 +698,7 @@ export default class StateService {
     }
 
     async importFeatureEnvironmentVariants(
-        featureEnvironmentVariants: IFeatureEnvironmentVariantHolder[],
+        featureEnvironmentVariants: IFeatureEnvironmentVariants[],
         userName: string,
         dropBeforeImport: boolean,
     ): Promise<void> {
@@ -732,7 +731,7 @@ export default class StateService {
         tagTypes: ITagType[];
         tags: ITag[];
         featureTags: IFeatureTag[];
-        featureEnvironmentVariants: IFeatureEnvironmentVariant[];
+        featureEnvironmentVariants: IFeatureEnvironmentVariants[];
         featureStrategies: IFeatureStrategy[];
         environments: IEnvironment[];
         featureEnvironments: IFeatureEnvironment[];

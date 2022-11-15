@@ -8,7 +8,7 @@ import {
     FeatureToggle,
     FeatureToggleDTO,
     IFeatureEnvironmentVariant,
-    IFeatureEnvironmentVariantHolder,
+    IFeatureEnvironmentVariants,
     IVariant,
 } from 'lib/types/model';
 
@@ -133,7 +133,7 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         return feature.variants as IVariant[];
     }
 
-    async getAllVariants(): Promise<IFeatureEnvironmentVariantHolder[]> {
+    async getAllVariants(): Promise<IFeatureEnvironmentVariants[]> {
         let features = await this.getAll();
         let variants = features.flatMap((feature) => ({
             featureName: feature.name,

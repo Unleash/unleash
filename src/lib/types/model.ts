@@ -122,7 +122,7 @@ export interface IFeatureEnvironmentVariant extends IVariant {
     environment: string;
 }
 
-export interface IFeatureEnvironmentVariantHolder {
+export interface IFeatureEnvironmentVariants {
     featureName: string;
     environment: string;
     variants: IVariant[];

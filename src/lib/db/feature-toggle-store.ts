@@ -7,7 +7,7 @@ import { Logger, LogProvider } from '../logger';
 import {
     FeatureToggle,
     FeatureToggleDTO,
-    IFeatureEnvironmentVariantHolder,
+    IFeatureEnvironmentVariants,
     IVariant,
 } from '../types/model';
 import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
@@ -283,7 +283,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         return this.rowToEnvVariants(row);
     }
 
-    async getAllVariants(): Promise<IFeatureEnvironmentVariantHolder[]> {
+    async getAllVariants(): Promise<IFeatureEnvironmentVariants[]> {
         const rows = await this.db(VARIANTS_TABLE).select(
             'variants',
             'feature_name',
@@ -296,7 +296,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         await this.db(VARIANTS_TABLE).delete();
     }
 
-    rowsToFeatureEnvVariants(rows: any[]): IFeatureEnvironmentVariantHolder[] {
+    rowsToFeatureEnvVariants(rows: any[]): IFeatureEnvironmentVariants[] {
         if (rows.length > 0) {
             return rows.map((row) => ({
                 featureName: row.feature_name,

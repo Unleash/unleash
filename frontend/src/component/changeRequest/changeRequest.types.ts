@@ -10,6 +10,7 @@ export interface IChangeRequest {
     createdAt: Date;
     features: IChangeRequestFeature[];
     approvals: IChangeRequestApproval[];
+    conflict?: string;
 }
 
 export interface IChangeRequestEnvironmentConfig {

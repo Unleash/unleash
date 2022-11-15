@@ -183,7 +183,7 @@ export const Footer: VFC = () => {
                                         <ListItemText
                                             primary={
                                                 <a
-                                                    href="https://docs.getunleash.io/sdks/android-proxy"
+                                                    href="https://docs.getunleash.io/reference/sdks/android-proxy"
                                                     target="_blank"
                                                 >
                                                     Android SDK

@@ -34,6 +34,10 @@ export const defaultExperimentalOptions = {
             process.env.UNLEASH_EXPERIMENTAL_CLONE_ENVIRONMENT,
             false,
         ),
+        toggleTagFiltering: parseEnvVarBoolean(
+            process.env.UNLEASH_EXPERIMENTAL_TOGGLE_TAG_FILTERING,
+            false,
+        ),
     },
     externalResolver: { isEnabled: (): boolean => false },
 };

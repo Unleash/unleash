@@ -41,6 +41,7 @@ process.nextTick(async () => {
                         syncSSOGroups: true,
                         changeRequests: true,
                         cloneEnvironment: true,
+                        toggleTagFiltering: true,
                     },
                 },
                 authentication: {

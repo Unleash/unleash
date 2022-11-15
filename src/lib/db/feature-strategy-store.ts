@@ -12,12 +12,14 @@ import {
     IFeatureOverview,
     IFeatureStrategy,
     IStrategyConfig,
+    ITag,
 } from '../types/model';
 import { IFeatureStrategiesStore } from '../types/stores/feature-strategies-store';
 import { PartialSome } from '../types/partial';
 import FeatureToggleStore from './feature-toggle-store';
 import { ensureStringValue } from '../util/ensureStringValue';
 import { mapValues } from '../util/map-values';
+import { IFlagResolver } from '../types/experimental';
 
 const COLUMNS = [
     'id',
@@ -111,7 +113,14 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
 
     private readonly timer: Function;
 
-    constructor(db: Knex, eventBus: EventEmitter, getLogger: LogProvider) {
+    private flagResolver: IFlagResolver;
+
+    constructor(
+        db: Knex,
+        eventBus: EventEmitter,
+        getLogger: LogProvider,
+        flagResolver: IFlagResolver,
+    ) {
         this.db = db;
         this.logger = getLogger('feature-toggle-store.ts');
         this.timer = (action) =>
@@ -119,6 +128,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 store: 'feature-toggle-strategies',
                 action,
             });
+        this.flagResolver = flagResolver;
     }
 
     async delete(key: string): Promise<void> {
@@ -317,23 +327,63 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         };
     }
 
+    private addTag(
+        feature: Record<string, any>,
+        row: Record<string, any>,
+    ): void {
+        const tags = feature.tags || [];
+        const newTag = FeatureStrategiesStore.rowToTag(row);
+        feature.tags = [...tags, newTag];
+    }
+
+    private isNewTag(
+        feature: Record<string, any>,
+        row: Record<string, any>,
+    ): boolean {
+        return (
+            row.tag_type &&
+            row.tag_value &&
+            !feature.tags?.some(
+                (tag) =>
+                    tag.type === row.tag_type && tag.value === row.tag_value,
+            )
+        );
+    }
+
+    private static rowToTag(r: any): ITag {
+        return {
+            value: r.tag_value,
+            type: r.tag_type,
+        };
+    }
+
     async getFeatureOverview(
         projectId: string,
         archived: boolean = false,
     ): Promise<IFeatureOverview[]> {
-        const rows = await this.db('features')
+        let selectColumns = [
+            'features.name as feature_name',
+            'features.type as type',
+            'features.created_at as created_at',
+            'features.last_seen_at as last_seen_at',
+            'features.stale as stale',
+            'feature_environments.enabled as enabled',
+            'feature_environments.environment as environment',
+            'environments.type as environment_type',
+            'environments.sort_order as environment_sort_order',
+        ];
+
+        if (this.flagResolver.isEnabled('toggleTagFiltering')) {
+            selectColumns = [
+                ...selectColumns,
+                'ft.tag_value as tag_value',
+                'ft.tag_type as tag_type',
+            ];
+        }
+
+        let query = this.db('features')
             .where({ project: projectId })
-            .select(
-                'features.name as feature_name',
-                'features.type as type',
-                'features.created_at as created_at',
-                'features.last_seen_at as last_seen_at',
-                'features.stale as stale',
-                'feature_environments.enabled as enabled',
-                'feature_environments.environment as environment',
-                'environments.type as environment_type',
-                'environments.sort_order as environment_sort_order',
-            )
+            .select(selectColumns)
             .modify(FeatureToggleStore.filterByArchived, archived)
             .leftJoin(
                 'feature_environments',
@@ -345,12 +395,26 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 'feature_environments.environment',
                 'environments.name',
             );
+
+        if (this.flagResolver.isEnabled('toggleTagFiltering')) {
+            query = query.leftJoin(
+                'feature_tag as ft',
+                'ft.feature_name',
+                'features.name',
+            );
+        }
+
+        const rows = await query;
+
         if (rows.length > 0) {
             const overview = rows.reduce((acc, r) => {
                 if (acc[r.feature_name] !== undefined) {
                     acc[r.feature_name].environments.push(
                         FeatureStrategiesStore.getEnvironment(r),
                     );
+                    if (this.isNewTag(acc[r.feature_name], r)) {
+                        this.addTag(acc[r.feature_name], r);
+                    }
                 } else {
                     acc[r.feature_name] = {
                         type: r.type,
@@ -362,9 +426,13 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                             FeatureStrategiesStore.getEnvironment(r),
                         ],
                     };
+                    if (this.isNewTag(acc[r.feature_name], r)) {
+                        this.addTag(acc[r.feature_name], r);
+                    }
                 }
                 return acc;
             }, {});
+
             return Object.values(overview).map((o: IFeatureOverview) => ({
                 ...o,
                 environments: o.environments

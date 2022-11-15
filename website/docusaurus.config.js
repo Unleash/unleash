@@ -315,6 +315,10 @@ module.exports = {
                         from: '/addons/webhook',
                         to: '/reference/addons/webhook',
                     },
+                    {
+                        from: '/guides/feature_updates_to_slack',
+                        to: '/how-to/how-to-send-feature-updates-to-slack-deprecated',
+                    },
                 ],
                 createRedirects: function (toPath) {
                     if (

@@ -729,9 +729,9 @@ export default class StateService {
             includeEnvironments
                 ? this.environmentStore.getAll()
                 : Promise.resolve([]),
-            includeFeatureToggles
-                ? this.toggleStore.getAllVariants()
-                : Promise.resolve([]),
+            // includeFeatureToggles
+            //     ? this.toggleStore.getAllVariants()
+            //     : Promise.resolve([]),
             includeFeatureToggles
                 ? this.featureEnvironmentStore.getAll()
                 : Promise.resolve([]),
@@ -749,6 +749,7 @@ export default class StateService {
                 featureTags,
                 featureStrategies,
                 environments,
+                // variants,
                 featureEnvironments,
                 segments,
                 featureStrategySegments,
@@ -764,6 +765,7 @@ export default class StateService {
                     features.some((f) => fS.featureName === f.name),
                 ),
                 environments,
+                // variants,
                 featureEnvironments: featureEnvironments.filter((fE) =>
                     features.some((f) => fE.featureName === f.name),
                 ),

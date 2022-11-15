@@ -16,11 +16,12 @@ import PermissionSwitch from 'component/common/PermissionSwitch/PermissionSwitch
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useChangeRequestConfig } from '../../../../../hooks/api/getters/useChangeRequestConfig/useChangeRequestConfig';
-import { useChangeRequestApi } from '../../../../../hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
+import { useChangeRequestConfig } from 'hooks/api/getters/useChangeRequestConfig/useChangeRequestConfig';
+import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { UPDATE_PROJECT } from '@server/types/permissions';
-import useToast from '../../../../../hooks/useToast';
-import { formatUnknownError } from '../../../../../utils/formatUnknownError';
+import useToast from 'hooks/useToast';
+import { formatUnknownError } from 'utils/formatUnknownError';
+import { ChangeRequestProcessHelp } from './ChangeRequestProcessHelp/ChangeRequestProcessHelp';
 
 export const ChangeRequestConfiguration: VFC = () => {
     const [dialogState, setDialogState] = useState<{
@@ -130,7 +131,12 @@ export const ChangeRequestConfiguration: VFC = () => {
         );
     return (
         <PageContent
-            header={<PageHeader titleElement="Change request configuration" />}
+            header={
+                <PageHeader
+                    titleElement="Change request configuration"
+                    actions={<ChangeRequestProcessHelp />}
+                />
+            }
             isLoading={loading}
         >
             <Alert severity="info" sx={{ mb: 3 }}>

@@ -166,10 +166,6 @@ module.exports = {
                         from: '/user_guide/native_apps/',
                     },
                     {
-                        to: '/integrations',
-                        from: '/integrations/integrations',
-                    },
-                    {
                         to: '/user_guide/activation_strategy',
                         from: '/user_guide/control_rollout',
                     },
@@ -318,6 +314,18 @@ module.exports = {
                     {
                         from: '/guides/feature_updates_to_slack',
                         to: '/how-to/how-to-send-feature-updates-to-slack-deprecated',
+                    },
+                    {
+                        from: ['/integrations/integrations', '/integrations'],
+                        to: '/reference/integrations',
+                    },
+                    {
+                        from: '/integrations/jira_server_plugin_installation',
+                        to: '/reference/integrations/jira-server-plugin-installation',
+                    },
+                    {
+                        from: '/integrations/jira_server_plugin_usage',
+                        to: '/reference/integrations/jira-server-plugin-usage',
                     },
                 ],
                 createRedirects: function (toPath) {

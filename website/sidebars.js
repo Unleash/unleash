@@ -286,12 +286,15 @@ module.exports = {
                 {
                     type: 'category',
                     label: 'Integrations',
-                    link: { type: 'doc', id: 'integrations/integrations' },
+                    link: {
+                        type: 'doc',
+                        id: 'reference/integrations/integrations',
+                    },
                     items: [
                         {
                             'Jira Server': [
-                                'integrations/jira_server_plugin_installation',
-                                'integrations/jira_server_plugin_usage',
+                                'reference/integrations/jira-server-plugin-installation',
+                                'reference/integrations/jira-server-plugin-usage',
                             ],
                         },
                         ,

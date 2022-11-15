@@ -1,5 +1,4 @@
 ---
-id: jira_server_plugin_installation
 title: Jira Server Integration - Installation
 ---
 

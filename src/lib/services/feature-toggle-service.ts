@@ -1223,6 +1223,7 @@ class FeatureToggleService {
             featureName,
         );
 
+        fixedVariants.sort((a, b) => a.name.localeCompare(b.name));
         const featureToggle = await this.featureToggleStore.saveVariants(
             project,
             featureName,

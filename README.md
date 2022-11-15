@@ -81,7 +81,7 @@ If you don't want to run Unleash locally, we also provide easy deployment setups
 
 ### Configure and run Unleash anywhere
 
-The above sections show you how to get up and running quickly and easily. When you're ready to start configuring and customizing Unleash for your own environment, check out the documentation for [getting started with self-managed deployments](https://docs.getunleash.io/reference/deploy/getting-started), [Unleash configuration options](https://docs.getunleash.io/reference/deploy/configuring-unleash), or [running Unleash locally via docker](https://docs.getunleash.io/user_guide/quickstart#i-want-to-run-unleash-locally).
+The above sections show you how to get up and running quickly and easily. When you're ready to start configuring and customizing Unleash for your own environment, check out the documentation for [getting started with self-managed deployments](https://docs.getunleash.io/reference/deploy/getting-started), [Unleash configuration options](https://docs.getunleash.io/reference/deploy/configuring-unleash), or [running Unleash locally via docker](https://docs.getunleash.io/tutorials/quickstart#i-want-to-run-unleash-locally).
 
 <br/>
 
@@ -153,7 +153,7 @@ Check out [the CONTRIBUTING.md file](./CONTRIBUTING.md) for contribution guideli
 
 If you're looking for one of the following features, please take a look at our [Pro and Enterprise plans](https://www.getunleash.io/plans):
 
-- [role-based access control (RBAC)](https://docs.getunleash.io/user_guide/rbac)
+- [role-based access control (RBAC)](https://docs.getunleash.io/reference/rbac)
 - [single sign-on (SSO)](https://docs.getunleash.io/reference/sso)
 - more environments
 - [feature toggles project support](https://docs.getunleash.io/reference/projects)
@@ -168,7 +168,7 @@ If you're looking for one of the following features, please take a look at our [
 
 <img src="./website/static/img/unleash-architecture.svg" title="Unleash System Overview" />
 
-Read more in the [_system overview_ section of the Unleash documentation](https://docs.getunleash.io/user_guide/unleash_overview#system-overview).
+Read more in the [_system overview_ section of the Unleash documentation](https://docs.getunleash.io/tutorials/unleash_overview#system-overview).
 
 <br/>
 

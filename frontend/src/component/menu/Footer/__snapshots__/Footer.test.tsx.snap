@@ -23,7 +23,7 @@ exports[`should render DrawerMenu 1`] = `
             className="css-cxwipi-title"
           >
             Unleash 3.x
-
+             
           </h2>
           <br />
           <small>
@@ -109,7 +109,7 @@ exports[`should render DrawerMenu 1`] = `
                     </span>
                   </div>
                 </li>
-
+                 
                 <li
                   className="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding css-17d9xc9-MuiListItem-root-listItem"
                   disabled={false}
@@ -129,7 +129,7 @@ exports[`should render DrawerMenu 1`] = `
                     </span>
                   </div>
                 </li>
-
+                 
                 <li
                   className="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding css-17d9xc9-MuiListItem-root-listItem"
                   disabled={false}
@@ -310,7 +310,7 @@ exports[`should render DrawerMenu 1`] = `
                       className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1nhzl8d-MuiTypography-root"
                     >
                       <a
-                        href="https://docs.getunleash.io/reference/sdks/android_proxy"
+                        href="https://docs.getunleash.io/reference/sdks/android-proxy"
                         target="_blank"
                       >
                         Android SDK
@@ -468,7 +468,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
             className="css-cxwipi-title"
           >
             Unleash 3.x
-
+             
           </h2>
           <br />
           <small>
@@ -554,7 +554,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                     </span>
                   </div>
                 </li>
-
+                 
                 <li
                   className="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding css-17d9xc9-MuiListItem-root-listItem"
                   disabled={false}
@@ -574,7 +574,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                     </span>
                   </div>
                 </li>
-
+                 
                 <li
                   className="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding css-17d9xc9-MuiListItem-root-listItem"
                   disabled={false}

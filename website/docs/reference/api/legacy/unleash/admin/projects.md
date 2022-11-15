@@ -1,5 +1,4 @@
 ---
-id: projects
 title: /api/admin/projects
 ---
 

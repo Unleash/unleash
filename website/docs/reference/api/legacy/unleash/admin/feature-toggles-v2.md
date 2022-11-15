@@ -1,5 +1,4 @@
 ---
-id: feature-toggles-v2
 title: /api/admin/projects/:projectId
 ---
 import ApiRequest from '@site/src/components/ApiRequest'
@@ -172,8 +171,8 @@ This endpoint accepts the following toggle options:
 |------------------|----------|--------------------------------------------------------------------------------------------------------------|-------------------------|
 | `name`           | Yes      | The name of the feature toggle.                                                                              | `"my-feature-toggle"`   |
 | `description`    | No       | The feature toggle's description. Defaults to an empty string.                                               | `"Turn my feature on!"` |
-| `impressionData` | No       | Whether to enable [impression data](../../reference/impression-data.md) for this toggle. Defaults to `false.` | `true`                  |
-| `type`           | No       | The [type of toggle](../../reference/feature-toggle-types.md) you want to create. Defaults to `"release"`     | `"release"`             |
+| `impressionData` | No       | Whether to enable [impression data](/reference/impression-data.md) for this toggle. Defaults to `false.` | `true`                  |
+| `type`           | No       | The [type of toggle](/reference/feature-toggle-types.md) you want to create. Defaults to `"release"`     | `"release"`             |
 
 
 **Example Query**

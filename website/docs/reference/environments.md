@@ -111,8 +111,8 @@ To avoid missing important updates, you will also need to update your addon conf
 
 In order to support configuration per environment we had to rebuild our feature toggle admin API to account for environments as well. This means that we're making the following changes to the API:
 
-- **/api/admin/features** - _deprecated (scheduled for removal in Unleash v5.0). The [old feature toggles admin API](../api/admin/feature-toggles-api.md) still works, but strategy configuration will be assumed to target the “default” environment._
-- **/api/admin/projects/:projectId/features** - New feature API to be used for feature toggles which also adds support for environments. See [the documentation](../api/admin/feature-toggles-api-v2.md) to learn more.
+- **/api/admin/features** - _deprecated (scheduled for removal in Unleash v5.0). The [old feature toggles admin API](/reference/api/legacy/unleash/admin/features.md) still works, but strategy configuration will be assumed to target the “default” environment._
+- **/api/admin/projects/:projectId/features** - New feature API to be used for feature toggles which also adds support for environments. See [the documentation](/reference/api/legacy/unleash/admin/features.md) to learn more.
 
 ## Plan Differences
 

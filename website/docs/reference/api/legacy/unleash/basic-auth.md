@@ -1,5 +1,4 @@
 ---
-id: basic-auth
 title: Basic Auth
 ---
 

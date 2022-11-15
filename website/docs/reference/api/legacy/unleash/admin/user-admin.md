@@ -1,5 +1,4 @@
 ---
-id: user-admin
 title: /api/admin/user-admin
 ---
 

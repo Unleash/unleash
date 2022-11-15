@@ -434,6 +434,14 @@ module.exports = {
                         from: '/user_guide/unleash_overview',
                         to: '/tutorials/unleash-overview',
                     },
+                    {
+                        from: '/api/basic-auth',
+                        to: '/reference/api/legacy/unleash/basic-auth',
+                    },
+                    {
+                        from: '/api',
+                        to: '/reference/api/legacy/unleash',
+                    },
                 ],
                 createRedirects: function (toPath) {
                     if (

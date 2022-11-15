@@ -39,7 +39,7 @@ This section takes you through the required steps to create and activate a featu
 
 :::tip API: create a toggle
 
-Use the [Admin API endpoint for creating a feature toggle](../api/admin/feature-toggles-api-v2.md#create-toggle). The payload accepts all the same fields as the Admin UI form. The Admin UI also displays the corresponding cURL command when you use the form.
+Use the [Admin API endpoint for creating a feature toggle](/reference/api/legacy/unleash/admin/feature-toggles-v2.md#create-toggle). The payload accepts all the same fields as the Admin UI form. The Admin UI also displays the corresponding cURL command when you use the form.
 
 :::
 
@@ -51,7 +51,7 @@ In the project that you want to create the toggle in, use the "new feature toggl
 
 :::tip API: Add a strategy
 
-Use the [API for adding a strategy to a feature toggle](../api/admin/feature-toggles-api-v2.md#add-strategy). You can find the configuration options for each strategy in the [activation strategy reference documentation](../reference/activation-strategies.md).
+Use the [API for adding a strategy to a feature toggle](/reference/api/legacy/unleash/admin/feature-toggles-v2.md#add-strategy). You can find the configuration options for each strategy in the [activation strategy reference documentation](../reference/activation-strategies.md).
 
 :::
 
@@ -63,7 +63,7 @@ Decide which environment you want to enable the toggle in. Select that environme
 
 :::tip API: Enable a toggle
 
-Use the [API for enabling an environment for a toggle](../api/admin/feature-toggles-api-v2.md#enable-env) and specify the environment you'd like to enable.
+Use the [API for enabling an environment for a toggle](/reference/api/legacy/unleash/admin/feature-toggles-v2.md#enable-env) and specify the environment you'd like to enable.
 
 :::
 
@@ -93,7 +93,7 @@ Constraints aren't fixed and can be changed later to further narrow your audienc
 
 :::tip API: Add constraints
 
-You can either [add constraints when you add the strategy](../api/admin/feature-toggles-api-v2.md#add-strategy) or [PUT](../api/admin/feature-toggles-api-v2.md#update-strategy 'PUT an activation strategy') or [PATCH the strategy afterwards](../api/admin/feature-toggles-api-v2.md#put-strategy)
+You can either [add constraints when you add the strategy](/reference/api/legacy/unleash/admin/feature-toggles-v2.md#add-strategy) or [PUT](/reference/api/legacy/unleash/admin/feature-toggles-v2.md#update-strategy 'PUT an activation strategy') or [PATCH the strategy afterwards](/reference/api/legacy/unleash/admin/feature-toggles-v2.md#put-strategy)
 
 :::
 
@@ -111,7 +111,7 @@ This can be done after you have created a strategy.
 
 :::tip API: add segments
 
-Use the [API for adding segments to a strategy](../api/admin/segments.mdx#replace-activation-strategy-segments) to add segments to your strategy.
+Use the [API for adding segments to a strategy](/reference/api/legacy/unleash/admin/segments.mdx#replace-activation-strategy-segments) to add segments to your strategy.
 
 :::
 
@@ -129,7 +129,7 @@ This can be done at any point after you've created your toggle.
 
 :::tip API: add variants
 
-Use the [update variants endpoint](../api/admin/feature-toggles-api-v2.md#update-variants). The payload should be your desired variant configuration.
+Use the [update variants endpoint](/reference/api/legacy/unleash/admin/feature-toggles-v2.md#update-variants). The payload should be your desired variant configuration.
 
 :::
 

@@ -36,7 +36,7 @@ The second API is the admin API, which is utilised in order to control any CRUD 
 
 This ensures that we can have different data responses for the client API endpoints which will include less metadata, and be cached more heavily - optimising the SDK endpoints for best performance.
 
-[Read more about unleash API here.](../api)
+[Read more about the unleash API here.](/reference/api/legacy/unleash/index.md)
 
 ## Feature toggle types
 

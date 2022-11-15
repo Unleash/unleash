@@ -1,5 +1,4 @@
 ---
-id: strategies
 title: /api/admin/strategies
 ---
 

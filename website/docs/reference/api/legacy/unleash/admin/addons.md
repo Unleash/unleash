@@ -1,5 +1,4 @@
 ---
-id: addons
 title: /api/admin/addons
 ---
 

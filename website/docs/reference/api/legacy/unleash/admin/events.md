@@ -1,5 +1,4 @@
 ---
-id: events
 title: /api/admin/events
 ---
 

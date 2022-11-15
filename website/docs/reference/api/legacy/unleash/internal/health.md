@@ -1,5 +1,4 @@
 ---
-id: health
 title: /health
 ---
 

@@ -1,4 +1,4 @@
-import { useMemo, useState, VFC } from 'react';
+import React, { useMemo, useState, VFC } from 'react';
 import { HeaderGroup, useGlobalFilter, useTable } from 'react-table';
 import { Alert, Box, Typography } from '@mui/material';
 import {
@@ -21,6 +21,9 @@ import { useChangeRequestApi } from '../../../../../hooks/api/actions/useChangeR
 import { UPDATE_PROJECT } from '@server/types/permissions';
 import useToast from '../../../../../hooks/useToast';
 import { formatUnknownError } from '../../../../../utils/formatUnknownError';
+import GeneralSelect from '../../../../common/GeneralSelect/GeneralSelect';
+import { TokenType } from '../../../../../interfaces/token';
+import { KeyboardArrowDownOutlined } from '@mui/icons-material';
 
 export const ChangeRequestConfiguration: VFC = () => {
     const [dialogState, setDialogState] = useState<{
@@ -78,6 +81,30 @@ export const ChangeRequestConfiguration: VFC = () => {
             {
                 Header: 'Type',
                 accessor: 'type',
+                disableGlobalFilter: true,
+                disableSortBy: true,
+            },
+            {
+                Header: 'Required approvers',
+                accessor: 'requiredApprovers',
+                align: 'center',
+
+                Cell: ({ value, row: { original } }: any) => (
+                    <GeneralSelect
+                        options={[
+                            { key: '1', label: '1 approver' },
+                            { key: '2', label: '2 approvers' },
+                        ]}
+                        value={'2'}
+                        // onChange={setApprovers}
+                        // label="Environment"
+                        name="environment"
+                        IconComponent={KeyboardArrowDownOutlined}
+                        fullWidth
+                        // className={styles.selectInput}
+                    />
+                ),
+                width: 100,
                 disableGlobalFilter: true,
                 disableSortBy: true,
             },

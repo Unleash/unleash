@@ -157,7 +157,7 @@ export default class StateService {
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     replaceFeatureVariantsWithEnvVariants(data: any): any {
         data.featureEnvironmentVariants = [];
-        data.features.forEach((feature) => {
+        data.features?.forEach((feature) => {
             if (feature.variants && feature.variants.length > 0) {
                 data.environments.forEach((environment) => {
                     data.featureEnvironmentVariants.push({

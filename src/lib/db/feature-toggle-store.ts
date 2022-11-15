@@ -42,7 +42,7 @@ interface VariantDTO {
 }
 
 const TABLE = 'features';
-const VARIANTS_TABLE = 'feature_environment_variant';
+const FEATURE_ENVIRONMENTS_TABLE = 'feature_environments';
 
 export default class FeatureToggleStore implements IFeatureToggleStore {
     private db: Knex;
@@ -262,8 +262,12 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             throw new NotFoundError('No feature toggle found');
         }
         const row = await this.db(`${TABLE} as f`)
-            .select('fev.variants')
-            .join(`${VARIANTS_TABLE} as fev`, 'fev.feature_name', 'f.name')
+            .select('fe.variants')
+            .join(
+                `${FEATURE_ENVIRONMENTS_TABLE} as fe`,
+                'fe.feature_name',
+                'f.name',
+            )
             .where({ name: featureName })
             .limit(1);
 
@@ -276,7 +280,11 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
     ): Promise<IVariant[]> {
         const row = await this.db(`${TABLE} as f`)
             .select('fev.variants')
-            .join(`${VARIANTS_TABLE} as fev`, 'fev.feature_name', 'f.name')
+            .join(
+                `${FEATURE_ENVIRONMENTS_TABLE} as fev`,
+                'fev.feature_name',
+                'f.name',
+            )
             .where({ name: featureName })
             .andWhere({ environment });
 
@@ -284,7 +292,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
     }
 
     async getAllVariants(): Promise<IFeatureEnvironmentVariants[]> {
-        const rows = await this.db(VARIANTS_TABLE).select(
+        const rows = await this.db(FEATURE_ENVIRONMENTS_TABLE).select(
             'variants',
             'feature_name',
             'environment',
@@ -293,7 +301,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
     }
 
     async dropAllVariants(): Promise<void> {
-        await this.db(VARIANTS_TABLE).delete();
+        await this.db(FEATURE_ENVIRONMENTS_TABLE).update({ variants: [] });
     }
 
     rowsToFeatureEnvVariants(rows: any[]): IFeatureEnvironmentVariants[] {
@@ -313,24 +321,17 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         newVariants: IVariant[],
     ): Promise<FeatureToggle> {
         const variantsString = JSON.stringify(newVariants);
-        const variantRows = await this.db.raw(
-            `INSERT INTO feature_environment_variant
-                (select feature_name, environment, ? as variants from feature_environments where feature_name = ?)
-            ON CONFLICT (feature_name, environment) DO UPDATE SET variants = ?
-            RETURNING variants;`,
-            [variantsString, featureName, variantsString],
-        );
+        const variantRows = await this.db('feature_environments')
+            .update('variants', variantsString)
+            .where('feature_name', featureName)
+            .returning('variants');
 
         const row = await this.db(TABLE)
             .select(FEATURE_COLUMNS)
             .where({ project: project, name: featureName });
 
-        const sortedVariants =
-            (variantRows.rows[0]?.variants as unknown as IVariant[]) || [];
-        sortedVariants.sort((a, b) => a.name.localeCompare(b.name));
-
         const toggle = this.rowToFeature(row[0]);
-        toggle.variants = sortedVariants;
+        toggle.variants = variantRows;
 
         return toggle;
     }
@@ -340,11 +341,12 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         environment: string,
         newVariants: IVariant[],
     ): Promise<IVariant[]> {
-        const row = await this.db(VARIANTS_TABLE)
+        const row = await this.db(FEATURE_ENVIRONMENTS_TABLE)
             .insert({
                 variants: JSON.stringify(newVariants),
                 environment,
                 feature_name: featureName,
+                enabled: false,
             })
             .onConflict(['environment', 'feature_name'])
             .merge(['variants'])

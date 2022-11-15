@@ -69,7 +69,7 @@ export default class FeatureToggleClientStore
             'features.project as project',
             'features.stale as stale',
             'features.impression_data as impression_data',
-            'fev.variants as variants',
+            'fe.variants as variants',
             'features.created_at as created_at',
             'features.last_seen_at as last_seen_at',
             'fe.enabled as enabled',
@@ -95,18 +95,15 @@ export default class FeatureToggleClientStore
             )
             .leftJoin(
                 this.db('feature_environments')
-                    .select('feature_name', 'enabled', 'environment')
+                    .select(
+                        'feature_name',
+                        'enabled',
+                        'environment',
+                        'variants',
+                    )
                     .where({ environment })
                     .as('fe'),
                 'fe.feature_name',
-                'features.name',
-            )
-            .leftJoin(
-                this.db('feature_environment_variant')
-                    .select('feature_name', 'environment', 'variants')
-                    .where({ environment })
-                    .as('fev'),
-                'fev.feature_name',
                 'features.name',
             )
             .leftJoin(

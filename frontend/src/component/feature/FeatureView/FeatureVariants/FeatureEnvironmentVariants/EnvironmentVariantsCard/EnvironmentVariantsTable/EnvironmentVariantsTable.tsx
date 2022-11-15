@@ -94,7 +94,6 @@ export const EnvironmentVariantsTable = ({
                 accessor: 'weightType',
                 Cell: TextCell,
                 sortType: 'alphanumeric',
-                filterName: 'type',
             },
             {
                 Header: 'Actions',

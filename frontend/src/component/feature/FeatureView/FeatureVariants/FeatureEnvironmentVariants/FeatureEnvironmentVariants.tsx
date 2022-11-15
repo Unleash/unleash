@@ -8,7 +8,6 @@ import { UPDATE_FEATURE_VARIANTS } from 'component/providers/AccessProvider/perm
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { useSearch } from 'hooks/useSearch';
 import { IFeatureEnvironment, IFeatureVariant } from 'interfaces/featureToggle';
 import { useMemo, useState } from 'react';
 import { EnvironmentVariantModal } from './EnvironmentVariantModal/EnvironmentVariantModal';
@@ -26,17 +25,6 @@ const StyledButtonContainer = styled('div')(({ theme }) => ({
     gap: theme.spacing(1.5),
 }));
 
-const SEARCH_COLUMNS = [
-    {
-        accessor: 'name',
-        searchable: true,
-    },
-    {
-        accessor: 'weightType',
-        filterName: 'type',
-    },
-];
-
 export const FeatureEnvironmentVariants = () => {
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -49,6 +37,7 @@ export const FeatureEnvironmentVariants = () => {
     );
     const { environments: allEnvironments } = useEnvironments();
 
+    const [searchValue, setSearchValue] = useState('');
     const [selectedEnvironment, setSelectedEnvironment] =
         useState<IFeatureEnvironment>();
     const [selectedVariant, setSelectedVariant] = useState<IFeatureVariant>();
@@ -63,18 +52,6 @@ export const FeatureEnvironmentVariants = () => {
                 ),
             })),
         [feature, allEnvironments]
-    );
-
-    const [searchValue, setSearchValue] = useState('');
-
-    const allVariants = environments
-        .map(({ variants }) => variants ?? [])
-        .reduce((a, b) => a.concat(b), []);
-
-    const { getSearchContext } = useSearch(
-        SEARCH_COLUMNS,
-        searchValue,
-        allVariants
     );
 
     const addVariant = (environment: IFeatureEnvironment) => {
@@ -105,7 +82,7 @@ export const FeatureEnvironmentVariants = () => {
             isLoading={loading}
             header={
                 <PageHeader
-                    title={`Variants (${allVariants.length})`}
+                    title="Variants"
                     actions={
                         <ConditionallyRender
                             condition={!isSmallScreen}
@@ -114,8 +91,6 @@ export const FeatureEnvironmentVariants = () => {
                                     <Search
                                         initialValue={searchValue}
                                         onChange={setSearchValue}
-                                        hasFilters
-                                        getSearchContext={getSearchContext}
                                     />
                                 </>
                             }
@@ -128,8 +103,6 @@ export const FeatureEnvironmentVariants = () => {
                             <Search
                                 initialValue={searchValue}
                                 onChange={setSearchValue}
-                                hasFilters
-                                getSearchContext={getSearchContext}
                             />
                         }
                     />

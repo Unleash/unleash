@@ -1,7 +1,6 @@
 import { CloudCircle } from '@mui/icons-material';
 import { styled } from '@mui/material';
-import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
-import { IFeatureEnvironment } from 'interfaces/featureToggle';
+import { IFeatureEnvironment, IFeatureVariant } from 'interfaces/featureToggle';
 import { EnvironmentVariantsTable } from './EnvironmentVariantsTable/EnvironmentVariantsTable';
 
 const StyledCard = styled('div')(({ theme }) => ({
@@ -42,32 +41,39 @@ const StyledName = styled('span', {
 
 interface IEnvironmentVariantsCardProps {
     environment: IFeatureEnvironment;
+    searchValue: string;
+    onAddVariant: () => void;
+    onEditVariant: (variant: IFeatureVariant) => void;
+    onDeleteVariant: (variant: IFeatureVariant) => void;
     children?: React.ReactNode;
 }
 
 export const EnvironmentVariantsCard = ({
     environment,
+    searchValue,
+    onAddVariant,
+    onEditVariant,
+    onDeleteVariant,
     children,
 }: IEnvironmentVariantsCardProps) => {
-    // TODO: Maybe add `deprecated` or `globallyEnabled` to IFeatureEnvironment on the back-end to avoid this
-    const { environments } = useEnvironments();
-
-    const deprecated = !Boolean(
-        environments.find(env => env.name === environment.name)?.enabled
-    );
-
     return (
         <StyledCard>
             <StyledHeader>
                 <div>
-                    <StyledCloudCircle deprecated={deprecated} />
-                    <StyledName deprecated={deprecated}>
+                    <StyledCloudCircle deprecated={environment.deprecated} />
+                    <StyledName deprecated={environment.deprecated}>
                         {environment.name}
                     </StyledName>
                 </div>
                 {children}
             </StyledHeader>
-            <EnvironmentVariantsTable environment={environment} />
+            <EnvironmentVariantsTable
+                environment={environment}
+                searchValue={searchValue}
+                onAddVariant={onAddVariant}
+                onEditVariant={onEditVariant}
+                onDeleteVariant={onDeleteVariant}
+            />
         </StyledCard>
     );
 };

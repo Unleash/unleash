@@ -1,6 +1,6 @@
 import { FeatureVariantsList } from './FeatureVariantsList/FeatureVariantsList';
 import { usePageTitle } from 'hooks/usePageTitle';
-import { FeatureEnvironmentVariantsList } from './FeatureVariantsList/FeatureEnvironmentVariantsList';
+import { FeatureEnvironmentVariants } from './FeatureEnvironmentVariants/FeatureEnvironmentVariants';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const FeatureVariants = () => {
@@ -9,7 +9,7 @@ const FeatureVariants = () => {
     const { uiConfig } = useUiConfig();
 
     if (uiConfig.flags.variantsPerEnvironment) {
-        return <FeatureEnvironmentVariantsList />;
+        return <FeatureEnvironmentVariants />;
     }
 
     return <FeatureVariantsList />;

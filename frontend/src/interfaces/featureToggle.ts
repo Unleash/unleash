@@ -38,6 +38,7 @@ export interface IFeatureEnvironment {
     enabled: boolean;
     strategies: IFeatureStrategy[];
     variants?: IFeatureVariant[];
+    deprecated?: boolean;
 }
 
 export interface IFeatureVariant {

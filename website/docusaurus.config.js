@@ -442,6 +442,82 @@ module.exports = {
                         from: '/api',
                         to: '/reference/api/legacy/unleash',
                     },
+                    {
+                        from: '/api/admin/addons',
+                        to: '/reference/api/legacy/unleash/admin/addons',
+                    },
+                    {
+                        from: '/api/admin/context',
+                        to: '/reference/api/legacy/unleash/admin/context',
+                    },
+                    {
+                        from: '/api/admin/events',
+                        to: '/reference/api/legacy/unleash/admin/events',
+                    },
+                    {
+                        from: '/api/admin/feature-toggles-v2',
+                        to: '/reference/api/legacy/unleash/admin/features-v2',
+                    },
+                    {
+                        from: '/api/admin/feature-types',
+                        to: '/reference/api/legacy/unleash/admin/feature-types',
+                    },
+                    {
+                        from: '/api/admin/features',
+                        to: '/reference/api/legacy/unleash/admin/features',
+                    },
+                    {
+                        from: '/api/admin/features-archive',
+                        to: '/reference/api/legacy/unleash/admin/archive',
+                    },
+                    {
+                        from: '/api/admin/metrics',
+                        to: '/reference/api/legacy/unleash/admin/metrics',
+                    },
+                    {
+                        from: '/api/admin/projects',
+                        to: '/reference/api/legacy/unleash/admin/projects',
+                    },
+                    {
+                        from: '/api/admin/segments',
+                        to: '/reference/api/legacy/unleash/admin/segments',
+                    },
+                    {
+                        from: '/api/admin/state',
+                        to: '/reference/api/legacy/unleash/admin/state',
+                    },
+                    {
+                        from: '/api/admin/strategies',
+                        to: '/reference/api/legacy/unleash/admin/strategies',
+                    },
+                    {
+                        from: '/api/admin/tags',
+                        to: '/reference/api/legacy/unleash/admin/tags',
+                    },
+                    {
+                        from: '/api/admin/user-admin',
+                        to: '/reference/api/legacy/unleash/admin/user-admin',
+                    },
+                    {
+                        from: '/api/client/features',
+                        to: '/reference/api/legacy/unleash/client/features',
+                    },
+                    {
+                        from: '/api/client/metrics',
+                        to: '/reference/api/legacy/unleash/client/metrics',
+                    },
+                    {
+                        from: '/api/client/register',
+                        to: '/reference/api/legacy/unleash/client/register',
+                    },
+                    {
+                        from: '/api/internal/internal',
+                        to: '/reference/api/legacy/unleash/internal/prometheus',
+                    },
+                    {
+                        from: '/api/internal/health',
+                        to: '/reference/api/legacy/unleash/internal/health',
+                    },
                 ],
                 createRedirects: function (toPath) {
                     if (

@@ -30,7 +30,7 @@ With versions earlier than v4.0.0 and `insecure` authentication Basic Auth (with
 
 ## System API's {#system-apis}
 
-- [Internal Backstage API](./internal/internal.md)
+- [Internal Backstage Prometheus API](./internal/prometheus.md)
 
 ### Content-Type {#contenttype}
 

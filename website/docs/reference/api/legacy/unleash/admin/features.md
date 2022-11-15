@@ -3,7 +3,7 @@ title: /api/admin/features
 ---
 
 :::caution Deprecation notice
-Most of this API was deprecated as part of the v4.3 release and will be removed in v5.0. You should use [the project-based API (/api/admin/projects/:projectId)](/reference/api/legacy/unleash/admin/feature-toggles-v2.md) instead. The deprecated endpoints are marked as such in the document below.
+Most of this API was deprecated as part of the v4.3 release and will be removed in v5.0. You should use [the project-based API (/api/admin/projects/:projectId)](/reference/api/legacy/unleash/admin/features-v2.md) instead. The deprecated endpoints are marked as such in the document below.
 :::
 
 
@@ -15,7 +15,7 @@ In order to access the admin API endpoints you need to identify yourself. Unless
 ## Fetching Feature Toggles {#fetching-feature-toggles}
 
 :::caution Deprecation notice
-This endpoint is deprecated. Please use the [project-based endpoint to fetch all toggles](/reference/api/legacy/unleash/admin/feature-toggles-v2.md#fetching-toggles) instead.
+This endpoint is deprecated. Please use the [project-based endpoint to fetch all toggles](/reference/api/legacy/unleash/admin/features-v2.md#fetching-toggles) instead.
 :::
 
 `GET: http://unleash.host.com/api/admin/features`
@@ -107,7 +107,7 @@ Response format is the same as `api/admin/features`
 ## Fetch specific feature toggle {#fetch-specific-feature-toggle}
 
 :::caution Deprecation notice
-This endpoint is deprecated. Please use the [project-based endpoint to fetch specific toggles](/reference/api/legacy/unleash/admin/feature-toggles-v2.md#get-toggle) instead.
+This endpoint is deprecated. Please use the [project-based endpoint to fetch specific toggles](/reference/api/legacy/unleash/admin/features-v2.md#get-toggle) instead.
 :::
 
 `GET: http://unleash.host.com/api/admin/features/:featureName`
@@ -135,7 +135,7 @@ Used to fetch details about a specific featureToggle. This is mostly provded to 
 ## Create a new Feature Toggle {#create-a-new-feature-toggle}
 
 :::caution Deprecation notice
-This endpoint is deprecated. Please use the [project-based endpoint to create feature toggles](/reference/api/legacy/unleash/admin/feature-toggles-v2.md#create-toggle) instead.
+This endpoint is deprecated. Please use the [project-based endpoint to create feature toggles](/reference/api/legacy/unleash/admin/features-v2.md#create-toggle) instead.
 :::
 
 
@@ -171,7 +171,7 @@ Returns 200-response if the feature toggle was created successfully.
 ## Update a Feature Toggle {#update-a-feature-toggle}
 
 :::caution Deprecation notice
-This endpoint is deprecated. Please use the [project-based endpoint to update a feature toggle](/reference/api/legacy/unleash/admin/feature-toggles-v2.md#update-toggle) instead.
+This endpoint is deprecated. Please use the [project-based endpoint to update a feature toggle](/reference/api/legacy/unleash/admin/features-v2.md#update-toggle) instead.
 :::
 
 
@@ -244,7 +244,7 @@ Removes the specified tag from the `(type, value)` tuple from the Feature Toggle
 ## Archive a Feature Toggle {#archive-a-feature-toggle}
 
 :::caution Deprecation notice
-This endpoint is deprecated. Please use the [project-based endpoint to archive toggles](/reference/api/legacy/unleash/admin/feature-toggles-v2.md#archive-toggle) instead.
+This endpoint is deprecated. Please use the [project-based endpoint to archive toggles](/reference/api/legacy/unleash/admin/features-v2.md#archive-toggle) instead.
 :::
 
 
@@ -255,7 +255,7 @@ Used to archive a feature toggle. A feature toggle can never be totally be delet
 ## Enable a Feature Toggle {#enable-a-feature-toggle}
 
 :::caution Deprecation notice
-This endpoint is deprecated. Please use the [project-based endpoint to enable feature toggles](/reference/api/legacy/unleash/admin/feature-toggles-v2.md#enable-env) instead.
+This endpoint is deprecated. Please use the [project-based endpoint to enable feature toggles](/reference/api/legacy/unleash/admin/features-v2.md#enable-env) instead.
 :::
 
 
@@ -289,7 +289,7 @@ None
 ## Disable a Feature Toggle {#disable-a-feature-toggle}
 
 :::caution Deprecation notice
-This endpoint is deprecated. Please use the [project-based endpoint to disable feature toggles](/reference/api/legacy/unleash/admin/feature-toggles-v2.md#disable-env) instead.
+This endpoint is deprecated. Please use the [project-based endpoint to disable feature toggles](/reference/api/legacy/unleash/admin/features-v2.md#disable-env) instead.
 :::
 
 `POST: http://unleash.host.com/api/admin/features/:featureName/toggle/off`
@@ -323,7 +323,7 @@ None
 ## Mark a Feature Toggle as "stale" {#mark-a-feature-toggle-as-stale}
 
 :::caution Deprecation notice
-This endpoint is deprecated. Please use the [project-based endpoint to patch a feature toggle and mark it as stale](/reference/api/legacy/unleash/admin/feature-toggles-v2.md#patch-toggle) instead.
+This endpoint is deprecated. Please use the [project-based endpoint to patch a feature toggle and mark it as stale](/reference/api/legacy/unleash/admin/features-v2.md#patch-toggle) instead.
 :::
 
 
@@ -358,7 +358,7 @@ None
 ## Mark a Feature Toggle as "active" {#mark-a-feature-toggle-as-active}
 
 :::caution Deprecation notice
-This endpoint is deprecated. Please use the [project-based endpoint to patch a feature toggle and mark it as not stale](/reference/api/legacy/unleash/admin/feature-toggles-v2.md#patch-toggle) instead.
+This endpoint is deprecated. Please use the [project-based endpoint to patch a feature toggle and mark it as not stale](/reference/api/legacy/unleash/admin/features-v2.md#patch-toggle) instead.
 :::
 
 `POST: http://unleash.host.com/api/admin/features/:featureName/stale/off`

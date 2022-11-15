@@ -1,5 +1,4 @@
 ---
-id: features-archive
 title: /api/admin/archive
 ---
 

@@ -16,6 +16,8 @@ export interface IChangeRequestEnvironmentConfig {
     environment: string;
     type: string;
     changeRequestEnabled: boolean;
+
+    requiredApprovals: number;
 }
 
 export interface IChangeRequestFeature {

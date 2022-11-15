@@ -16,24 +16,32 @@ import PermissionSwitch from 'component/common/PermissionSwitch/PermissionSwitch
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useChangeRequestConfig } from '../../../../../hooks/api/getters/useChangeRequestConfig/useChangeRequestConfig';
-import { useChangeRequestApi } from '../../../../../hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
+import { useChangeRequestConfig } from 'hooks/api/getters/useChangeRequestConfig/useChangeRequestConfig';
+import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { UPDATE_PROJECT } from '@server/types/permissions';
-import useToast from '../../../../../hooks/useToast';
-import { formatUnknownError } from '../../../../../utils/formatUnknownError';
+import useToast from 'hooks/useToast';
+import { formatUnknownError } from 'utils/formatUnknownError';
+import { ChangeRequestProcessHelp } from './ChangeRequestProcessHelp/ChangeRequestProcessHelp';
 import GeneralSelect from '../../../../common/GeneralSelect/GeneralSelect';
-import { TokenType } from '../../../../../interfaces/token';
 import { KeyboardArrowDownOutlined } from '@mui/icons-material';
+
+interface IUpdateConfiguration {
+    environment: string;
+    isEnabled: boolean;
+    requiredApprovals: number;
+}
 
 export const ChangeRequestConfiguration: VFC = () => {
     const [dialogState, setDialogState] = useState<{
         isOpen: boolean;
-        enableEnvironment?: string;
+        enableEnvironment: string;
         isEnabled: boolean;
+        requiredApprovals: number;
     }>({
         isOpen: false,
         enableEnvironment: '',
         isEnabled: false,
+        requiredApprovals: 1,
     });
     const projectId = useRequiredPathParam('projectId');
     const { data, loading, refetchChangeRequestConfig } =
@@ -41,33 +49,51 @@ export const ChangeRequestConfiguration: VFC = () => {
     const { updateChangeRequestEnvironmentConfig } = useChangeRequestApi();
     const { setToastData, setToastApiError } = useToast();
 
-    const onClick = (enableEnvironment: string, isEnabled: boolean) => () => {
-        setDialogState({ isOpen: true, enableEnvironment, isEnabled });
-    };
+    const onRowChange =
+        (
+            enableEnvironment: string,
+            isEnabled: boolean,
+            requiredApprovals: number
+        ) =>
+        () => {
+            console.log('dialog open');
+            setDialogState({
+                isOpen: true,
+                enableEnvironment,
+                isEnabled,
+                requiredApprovals,
+            });
+        };
+
+    async function updateConfiguration() {
+        try {
+            await updateChangeRequestEnvironmentConfig(
+                projectId,
+                dialogState.enableEnvironment,
+                !dialogState.isEnabled,
+                dialogState.requiredApprovals
+            );
+            setToastData({
+                type: 'success',
+                title: 'Updated change request status',
+                text: 'Successfully updated change request status.',
+            });
+            refetchChangeRequestConfig();
+        } catch (error) {
+            const message = formatUnknownError(error);
+            setToastApiError(message);
+        }
+    }
 
     const onConfirm = async () => {
         if (dialogState.enableEnvironment) {
-            try {
-                await updateChangeRequestEnvironmentConfig(
-                    projectId,
-                    dialogState.enableEnvironment,
-                    !dialogState.isEnabled
-                );
-                setToastData({
-                    type: 'success',
-                    title: 'Updated change request status',
-                    text: 'Successfully updated change request status.',
-                });
-                refetchChangeRequestConfig();
-            } catch (error) {
-                const message = formatUnknownError(error);
-                setToastApiError(message);
-            }
+            await updateConfiguration();
         }
         setDialogState({
             isOpen: false,
             enableEnvironment: '',
             isEnabled: false,
+            requiredApprovals: 1,
         });
     };
 
@@ -92,12 +118,19 @@ export const ChangeRequestConfiguration: VFC = () => {
                 Cell: ({ value, row: { original } }: any) => (
                     <GeneralSelect
                         options={[
-                            { key: '1', label: '1 approver' },
+                            { key: '1', label: '1 approver3' },
                             { key: '2', label: '2 approvers' },
                         ]}
-                        value={'2'}
-                        // onChange={setApprovers}
-                        // label="Environment"
+                        value={original.requiredApprovals}
+                        onChange={approvals => {
+                            console.log(original);
+                            console.log(approvals);
+                            onRowChange(
+                                original.environment,
+                                original.changeRequestEnabled,
+                                Number(approvals)
+                            )();
+                        }}
                         name="environment"
                         IconComponent={KeyboardArrowDownOutlined}
                         fullWidth
@@ -125,9 +158,10 @@ export const ChangeRequestConfiguration: VFC = () => {
                             projectId={projectId}
                             permission={UPDATE_PROJECT}
                             inputProps={{ 'aria-label': original.environment }}
-                            onClick={onClick(
+                            onClick={onRowChange(
                                 original.environment,
-                                original.changeRequestEnabled
+                                original.changeRequestEnabled,
+                                original.requiredApprovals
                             )}
                         />
                     </Box>
@@ -157,7 +191,12 @@ export const ChangeRequestConfiguration: VFC = () => {
         );
     return (
         <PageContent
-            header={<PageHeader titleElement="Change request configuration" />}
+            header={
+                <PageHeader
+                    titleElement="Change request configuration"
+                    actions={<ChangeRequestProcessHelp />}
+                />
+            }
             isLoading={loading}
         >
             <Alert severity="info" sx={{ mb: 3 }}>
@@ -199,6 +238,7 @@ export const ChangeRequestConfiguration: VFC = () => {
                 } change requests`}
             >
                 <Typography sx={{ mb: 1 }}>
+                    {dialogState.requiredApprovals} approvers are required to
                     You are about to{' '}
                     {dialogState.isEnabled ? 'disable' : 'enable'} “Change
                     request”

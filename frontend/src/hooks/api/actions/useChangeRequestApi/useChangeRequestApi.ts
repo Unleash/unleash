@@ -70,12 +70,16 @@ export const useChangeRequestApi = () => {
     const updateChangeRequestEnvironmentConfig = async (
         project: string,
         environment: string,
-        enabled: boolean
+        enabled: boolean,
+        requiredApprovals: number
     ) => {
         const path = `api/admin/projects/${project}/environments/${environment}/change-requests/config`;
         const req = createRequest(path, {
             method: 'PUT',
-            body: JSON.stringify({ changeRequestsEnabled: enabled }),
+            body: JSON.stringify({
+                changeRequestsEnabled: enabled,
+                requiredApprovals,
+            }),
         });
 
         try {

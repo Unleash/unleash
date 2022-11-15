@@ -23,6 +23,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useChangeRequestAddStrategy } from 'hooks/useChangeRequestAddStrategy';
 import { ChangeRequestDialogue } from '../../../../../../../../../changeRequest/ChangeRequestConfirmDialog/ChangeRequestConfirmDialog';
 import { CopyStrategyMessage } from '../../../../../../../../../changeRequest/ChangeRequestConfirmDialog/ChangeRequestMessages/CopyStrategyMessage';
+import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 
 interface ICopyStrategyIconMenuProps {
     environmentId: string;
@@ -53,6 +54,7 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
     const { hasAccess } = useContext(AccessContext);
     const { uiConfig } = useUiConfig();
     const changeRequestsEnabled = uiConfig?.flags?.changeRequests;
+    const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
 
     const {
         changeRequestDialogDetails,
@@ -67,7 +69,7 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
             environment,
             copyOf: strategy.id,
         };
-        if (changeRequestsEnabled) {
+        if (isChangeRequestConfigured(environmentId)) {
             await onChangeRequestAddStrategy(
                 environment,
                 {

@@ -7,7 +7,7 @@ import {
 import { Logger, LogProvider } from '../logger';
 import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
-import { IFeatureEnvironment } from '../types/model';
+import { IFeatureEnvironment, IVariant } from '../types/model';
 import NotFoundError from '../error/notfound-error';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -102,6 +102,7 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
             enabled: r.enabled,
             featureName: r.feature_name,
             environment: r.environment,
+            variants: r.variants,
         }));
     }
 
@@ -286,6 +287,24 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
                 SELECT distinct ? AS environment, feature_name, enabled FROM ${T.featureEnvs} INNER JOIN ${T.features} ON ${T.featureEnvs}.feature_name = ${T.features}.name WHERE environment = ? AND project = ANY(?))`,
             [destinationEnvironment, sourceEnvironment, projects],
         );
+    }
+
+    async addVariantsToFeatureEnvironment(
+        featureName: string,
+        environment: string,
+        variants: IVariant[],
+    ): Promise<void> {
+        let v = variants || [];
+        v.sort((a, b) => a.name.localeCompare(b.name));
+        await this.db(T.featureEnvs)
+            .insert({
+                variants: JSON.stringify(v),
+                enabled: false,
+                feature_name: featureName,
+                environment: environment,
+            })
+            .onConflict(['feature_name', 'environment'])
+            .merge(['variants']);
     }
 
     async cloneStrategies(

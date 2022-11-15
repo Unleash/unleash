@@ -1,4 +1,4 @@
-import { IFeatureEnvironment } from '../model';
+import { IFeatureEnvironment, IVariant } from '../model';
 import { Store } from './store';
 
 export interface FeatureEnvironmentKey {
@@ -56,5 +56,10 @@ export interface IFeatureEnvironmentStore
     cloneStrategies(
         sourceEnvironment: string,
         destinationEnvironment: string,
+    ): Promise<void>;
+    addVariantsToFeatureEnvironment(
+        featureName: string,
+        environment: string,
+        variants: IVariant[],
     ): Promise<void>;
 }

@@ -28,11 +28,6 @@ export const featureEnvironmentsSchema = joi.object().keys({
     environment: joi.string(),
     featureName: joi.string(),
     enabled: joi.boolean(),
-});
-
-export const featureEnvironmentVariantsSchema = joi.object().keys({
-    featureName: nameType,
-    environment: joi.string().required(),
     variants: joi.array().items(variantsSchema).optional(),
 });
 
@@ -66,10 +61,6 @@ export const stateSchema = joi.object().keys({
         .array()
         .optional()
         .items(featureEnvironmentsSchema),
-    featureEnvironmentVariants: joi
-        .array()
-        .optional()
-        .items(featureEnvironmentVariantsSchema),
     environments: joi.array().optional().items(environmentSchema),
     segments: joi.array().optional().items(segmentSchema),
     featureStrategySegments: joi

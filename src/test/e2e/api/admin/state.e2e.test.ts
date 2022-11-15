@@ -4,8 +4,7 @@ import getLogger from '../../../fixtures/no-logger';
 import { DEFAULT_ENV } from '../../../../lib/util/constants';
 import { collectIds } from '../../../../lib/util/collect-ids';
 import { ApiTokenType } from '../../../../lib/types/models/api-token';
-
-const importData = require('../../../examples/import.json');
+import importData from '../../../examples/import.json';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -328,7 +327,7 @@ test(`Importing version 2 replaces :global: environment with 'default'`, async (
     const feature = await app.services.featureToggleServiceV2.getFeatureToggle(
         'this-is-fun',
     );
-    expect(feature.environments).toHaveLength(4);
+    expect(feature.environments).toHaveLength(1);
     expect(feature.environments[0].name).toBe(DEFAULT_ENV);
 });
 

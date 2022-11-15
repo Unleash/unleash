@@ -165,10 +165,12 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         environment: string,
         newVariants: IVariant[],
     ): Promise<IVariant[]> {
-        throw new Error('Method not implemented.');
+        await this.saveVariants('default', featureName, newVariants);
+        return Promise.resolve(newVariants);
     }
 
     dropAllVariants(): Promise<void> {
-        throw new Error('Method not implemented.');
+        this.features.forEach((feature) => (feature.variants = []));
+        return Promise.resolve();
     }
 }

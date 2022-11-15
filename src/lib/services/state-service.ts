@@ -23,7 +23,6 @@ import {
     FeatureToggle,
     IEnvironment,
     IFeatureEnvironment,
-    IFeatureEnvironmentVariants,
     IFeatureStrategy,
     IImportData,
     IImportFile,
@@ -154,24 +153,6 @@ export default class StateService {
         });
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    replaceFeatureVariantsWithEnvVariants(data: any): any {
-        data.featureEnvironmentVariants = [];
-        data.features?.forEach((feature) => {
-            if (feature.variants && feature.variants.length > 0) {
-                data.environments.forEach((environment) => {
-                    data.featureEnvironmentVariants.push({
-                        featureName: feature.name,
-                        environment: environment.name,
-                        variants: feature.variants,
-                    });
-                });
-                feature.variants = [];
-            }
-        });
-        return data;
-    }
-
     async import({
         data,
         userName = 'importUser',
@@ -180,9 +161,6 @@ export default class StateService {
     }: IImportData): Promise<void> {
         if (data.version === 2) {
             this.replaceGlobalEnvWithDefaultEnv(data);
-        }
-        if (data.version < 4) {
-            this.replaceFeatureVariantsWithEnvVariants(data);
         }
         const importData = await stateSchema.validateAsync(data);
 
@@ -263,13 +241,6 @@ export default class StateService {
             });
         }
 
-        if (importData.featureEnvironmentVariants) {
-            await this.importFeatureEnvironmentVariants(
-                importData.featureEnvironmentVariants,
-                userName,
-                dropBeforeImport,
-            );
-        }
         if (importData.segments) {
             await this.importSegments(
                 data.segments,
@@ -298,6 +269,22 @@ export default class StateService {
                         ),
                     ),
             ),
+        );
+        await Promise.all(
+            featureEnvironments
+                .filter(async (fE) => {
+                    await this.featureEnvironmentStore.exists({
+                        featureName: fE.featureName,
+                        environment: fE.environment,
+                    });
+                })
+                .map((featureEnvironment) => {
+                    this.featureEnvironmentStore.addVariantsToFeatureEnvironment(
+                        featureEnvironment.featureName,
+                        featureEnvironment.environment,
+                        featureEnvironment.variants,
+                    );
+                }),
         );
     }
 
@@ -349,6 +336,7 @@ export default class StateService {
             featureName: feature.name,
             environment: DEFAULT_ENV,
             enabled: feature.enabled,
+            variants: feature.variants || [],
         }));
         return {
             features: newFeatures,
@@ -386,6 +374,10 @@ export default class StateService {
                 .map(async (feature) => {
                     const { name, project, variants = [] } = feature;
                     await this.toggleStore.create(feature.project, feature);
+                    await this.featureEnvironmentStore.connectFeatureToEnvironmentsForProject(
+                        feature.name,
+                        feature.project,
+                    );
                     await this.toggleStore.saveVariants(
                         project,
                         name,
@@ -697,25 +689,6 @@ export default class StateService {
         );
     }
 
-    async importFeatureEnvironmentVariants(
-        featureEnvironmentVariants: IFeatureEnvironmentVariants[],
-        userName: string,
-        dropBeforeImport: boolean,
-    ): Promise<void> {
-        if (dropBeforeImport) {
-            await this.toggleStore.dropAllVariants();
-        }
-        await Promise.all(
-            featureEnvironmentVariants.map((fEV) => {
-                return this.toggleStore.saveVariantsOnEnv(
-                    fEV.featureName,
-                    fEV.environment,
-                    fEV.variants,
-                );
-            }),
-        );
-    }
-
     async export({
         includeFeatureToggles = true,
         includeStrategies = true,
@@ -731,7 +704,6 @@ export default class StateService {
         tagTypes: ITagType[];
         tags: ITag[];
         featureTags: IFeatureTag[];
-        featureEnvironmentVariants: IFeatureEnvironmentVariants[];
         featureStrategies: IFeatureStrategy[];
         environments: IEnvironment[];
         featureEnvironments: IFeatureEnvironment[];
@@ -777,7 +749,6 @@ export default class StateService {
                 featureTags,
                 featureStrategies,
                 environments,
-                featureEnvironmentVariants,
                 featureEnvironments,
                 segments,
                 featureStrategySegments,
@@ -796,7 +767,6 @@ export default class StateService {
                 featureEnvironments: featureEnvironments.filter((fE) =>
                     features.some((f) => fE.featureName === f.name),
                 ),
-                featureEnvironmentVariants,
                 segments,
                 featureStrategySegments,
             }),

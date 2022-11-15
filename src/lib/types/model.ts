@@ -100,6 +100,7 @@ export interface IFeatureEnvironment {
     environment: string;
     featureName: string;
     enabled: boolean;
+    variants?: IVariant[];
 }
 
 export interface IVariant {
@@ -115,17 +116,6 @@ export interface IVariant {
         contextName: string;
         values: string[];
     }[];
-}
-
-export interface IFeatureEnvironmentVariant extends IVariant {
-    featureName: string;
-    environment: string;
-}
-
-export interface IFeatureEnvironmentVariants {
-    featureName: string;
-    environment: string;
-    variants: IVariant[];
 }
 
 export interface IEnvironment {

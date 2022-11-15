@@ -23,7 +23,7 @@ exports[`should render DrawerMenu 1`] = `
             className="css-cxwipi-title"
           >
             Unleash 3.x
-             
+
           </h2>
           <br />
           <small>
@@ -109,7 +109,7 @@ exports[`should render DrawerMenu 1`] = `
                     </span>
                   </div>
                 </li>
-                 
+
                 <li
                   className="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding css-17d9xc9-MuiListItem-root-listItem"
                   disabled={false}
@@ -129,7 +129,7 @@ exports[`should render DrawerMenu 1`] = `
                     </span>
                   </div>
                 </li>
-                 
+
                 <li
                   className="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding css-17d9xc9-MuiListItem-root-listItem"
                   disabled={false}
@@ -234,7 +234,7 @@ exports[`should render DrawerMenu 1`] = `
                       className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1nhzl8d-MuiTypography-root"
                     >
                       <a
-                        href="https://docs.getunleash.io/sdks/unleash-proxy"
+                        href="https://docs.getunleash.io/reference/unleash-proxy"
                         target="_blank"
                       >
                         Unleash Proxy
@@ -253,7 +253,7 @@ exports[`should render DrawerMenu 1`] = `
                       className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1nhzl8d-MuiTypography-root"
                     >
                       <a
-                        href="https://docs.getunleash.io/sdks/proxy-javascript"
+                        href="https://docs.getunleash.io/sdks/javascript-browser"
                         target="_blank"
                       >
                         JavaScript SDK
@@ -272,7 +272,7 @@ exports[`should render DrawerMenu 1`] = `
                       className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1nhzl8d-MuiTypography-root"
                     >
                       <a
-                        href="https://docs.getunleash.io/sdks/proxy-react"
+                        href="https://docs.getunleash.io/sdks/react"
                         target="_blank"
                       >
                         React SDK
@@ -291,7 +291,7 @@ exports[`should render DrawerMenu 1`] = `
                       className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1nhzl8d-MuiTypography-root"
                     >
                       <a
-                        href="https://docs.getunleash.io/sdks/proxy-ios"
+                        href="https://docs.getunleash.io/sdks/ios-proxy"
                         target="_blank"
                       >
                         iOS SDK
@@ -468,7 +468,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
             className="css-cxwipi-title"
           >
             Unleash 3.x
-             
+
           </h2>
           <br />
           <small>
@@ -554,7 +554,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                     </span>
                   </div>
                 </li>
-                 
+
                 <li
                   className="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding css-17d9xc9-MuiListItem-root-listItem"
                   disabled={false}
@@ -574,7 +574,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                     </span>
                   </div>
                 </li>
-                 
+
                 <li
                   className="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding css-17d9xc9-MuiListItem-root-listItem"
                   disabled={false}
@@ -679,7 +679,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                       className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1nhzl8d-MuiTypography-root"
                     >
                       <a
-                        href="https://docs.getunleash.io/sdks/unleash-proxy"
+                        href="https://docs.getunleash.io/reference/unleash-proxy"
                         target="_blank"
                       >
                         Unleash Proxy
@@ -698,7 +698,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                       className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1nhzl8d-MuiTypography-root"
                     >
                       <a
-                        href="https://docs.getunleash.io/sdks/proxy-javascript"
+                        href="https://docs.getunleash.io/sdks/javascript-browser"
                         target="_blank"
                       >
                         JavaScript SDK
@@ -717,7 +717,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                       className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1nhzl8d-MuiTypography-root"
                     >
                       <a
-                        href="https://docs.getunleash.io/sdks/proxy-react"
+                        href="https://docs.getunleash.io/sdks/react"
                         target="_blank"
                       >
                         React SDK
@@ -736,7 +736,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                       className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1nhzl8d-MuiTypography-root"
                     >
                       <a
-                        href="https://docs.getunleash.io/sdks/proxy-ios"
+                        href="https://docs.getunleash.io/sdks/ios-proxy"
                         target="_blank"
                       >
                         iOS SDK

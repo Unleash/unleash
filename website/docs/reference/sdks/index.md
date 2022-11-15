@@ -1,7 +1,5 @@
 ---
-id: index
 title: SDK overview
-slug: /sdks
 ---
 
 In order to connect your application to Unleash you will need a client SDK (software developer kit) for your programming language and an [API token](../user_guide/api-token). The SDK will handle connecting to the Unleash server instance and retrieving feature toggles based on your configuration. All versions of Unleash (OSS, Pro, and Enterprise) use the same client SDKs.
@@ -14,25 +12,26 @@ Unleash provides official client SDKs for a number of programming language. Addi
 
 Server-side clients run on your server and communicate directly with your Unleash instance. We provide these official clients:
 
-- [Go SDK](/sdks/go_sdk)
-- [Java SDK](/sdks/java_sdk)
-- [Node.js SDK](/sdks/node_sdk)
-- [PHP SDK](/sdks/php_sdk)
-- [Python SDK](/sdks/python_sdk)
-- [Ruby SDK](/sdks/ruby_sdk)
+- [Go SDK](go.md)
+- [Java SDK](java.md)
+- [Node.js SDK](node.md)
+- [PHP SDK](php.md)
+- [Python SDK](python.md)
+- [Ruby SDK](ruby.md)
 - [Rust SDK](https://github.com/unleash/unleash-client-rust)
-- [.NET SDK](/sdks/dot_net_sdk)
+- [.NET SDK](dotnet.md)
 
 ### Client-side SDKs
 
-Client-side SDKs can connect to the [Unleash Proxy](unleash-proxy.md) or to the [Unleash front-end API](../reference/front-end-api.md), but _not_ to the regular Unleash client API.
+Client-side SDKs can connect to the [Unleash Proxy](../unleash-proxy.md) or to the [Unleash front-end API](../front-end-api.md), but _not_ to the regular Unleash client API.
 
-- [Android SDK](/sdks/android_proxy_sdk)
-- [iOS Proxy SDK](/sdks/proxy-ios)
-- [Javascript SDK](/sdks/proxy-javascript)
-- [React Proxy SDK](/sdks/proxy-react)
-- [Svelte Proxy SDK](/sdks/proxy-svelte)
-- [Vue Proxy SDK](/sdks/proxy-vue)
+
+- [Android SDK](android-proxy.md)
+- [iOS Proxy SDK](ios-proxy.md)
+- [Javascript SDK](javascript-browser.md)
+- [React Proxy SDK](react.md)
+- [Svelte Proxy SDK](svelte.md)
+- [Vue Proxy SDK](vue.md)
 
 ### Server-side SDK compatibility table
 
@@ -51,7 +50,7 @@ If you see an item marked with a ❌ that you would find useful, feel free to re
 
 :::
 
-| Capability | [Java](/sdks/java_sdk) | [Node.js](/sdks/node_sdk) | [Go](/sdks/go_sdk) | [Python](/sdks/python_sdk) | [Ruby](/sdks/ruby_sdk) | [.NET](/sdks/dot_net_sdk) | [PHP](/sdks/php_sdk) | [Rust](https://github.com/unleash/unleash-client-rust) | [Unleash Proxy](unleash-proxy.md) |
+| Capability | [Java](/sdks/java_sdk) | [Node.js](/sdks/node_sdk) | [Go](/sdks/go_sdk) | [Python](/sdks/python_sdk) | [Ruby](/sdks/ruby_sdk) | [.NET](/sdks/dot_net_sdk) | [PHP](/sdks/php_sdk) | [Rust](https://github.com/unleash/unleash-client-rust) | [Unleash Proxy](../unleash-proxy.md) |
 | --- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
 | **Category: Initialization** |  |  |  |  |  |  |  |  |  |
 | Async initialization | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ | N/A |
@@ -74,9 +73,9 @@ If you see an item marked with a ❌ that you would find useful, feel free to re
 | [IP](../user_guide/activation_strategy#ips) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | [IP](../user_guide/activation_strategy#ips): CIDR syntax | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ | ✅ | ✅ | ✅ |
 | [Hostname](../user_guide/activation_strategy#hostnames) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **Category: [Custom strategies](../reference/custom-activation-strategies.md)** |  |  |  |  |  |  |  |  |  |
+| **Category: [Custom strategies](../custom-activation-strategies.md)** |  |  |  |  |  |  |  |  |  |
 | Basic support | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| <span id="strategy-constraints">**Category: [Strategy constraints](../reference/strategy-constraints.md)**</span> |  |  |  |  |  |  |  |  |  |
+| <span id="strategy-constraints">**Category: [Strategy constraints](../strategy-constraints.md)**</span> |  |  |  |  |  |  |  |  |  |
 | Basic support (`IN`, `NOT_IN` operators) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | <span id="strategy-constraints-advanced-support">Advanced support (Semver, date, numeric and extended string operators)</span> (introduced in) | ✅ (5.1) | ✅ (3.12) | ✅ (3.3) | ✅ (5.1) | ✅ (4.2) | ✅ (2.1) | ✅ (1.3.1) | ⭕ | ✅ (0.8) |
 | **Category: [Unleash Context](../user_guide/unleash_context)** |  |  |  |  |  |  |  |  |  |
@@ -87,18 +86,18 @@ If you see an item marked with a ❌ that you would find useful, feel free to re
 | Can take context | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Override fallback value | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Fallback function | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ | ⭕ | ⭕ | ✅ |
-| **Category: [Variants](../reference/feature-toggle-variants.md)** |  |  |  |  |  |  |  |  |  |
+| **Category: [Variants](../feature-toggle-variants.md)** |  |  |  |  |  |  |  |  |  |
 | Basic support | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Custom fallback variant | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ | ✅ |
 | Custom weight | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ | ✅ |
-| [Custom stickiness (beta)](../reference/stickiness#custom-stickiness-beta) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ | ✅ |
+| [Custom stickiness (beta)](../stickiness.md#custom-stickiness-beta) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ | ✅ |
 | **Category: Local backup** |  |  |  |  |  |  |  |  |  |
 | File based backup | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ | ✅ |
 | **Category: Usage metrics** |  |  |  |  |  |  |  |  |  |
 | Can disable metrics | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Client registration | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Basic usage metrics (yes/no) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| [Impression data](../reference/impression-data.md) | ⭕ | ✅ | ⭕ | ⭕ | ⭕ | ⭕ | ✅ | ⭕ | ✅ |
+| [Impression data](../impression-data.md) | ⭕ | ✅ | ⭕ | ⭕ | ⭕ | ⭕ | ✅ | ⭕ | ✅ |
 | **Category: Bootstrap (beta)** |  |  |  |  |  |  |  |  |  |
 | Bootstrap from file | ✅ | ✅ | ✅ | ⭕ | ✅ | ✅ | ✅ | ⭕ | ✅ |
 | Custom Bootstrap implementation | ✅ | ✅ | ✅ | ⭕ | ✅ | ✅ | ✅ | ⭕ | ✅ |
@@ -142,8 +141,8 @@ By default, all SDKs reach out to the Unleash Server at startup to fetch their t
 
 Bootstrapping is also supported by the following front-end client SDKs:
 
-- [Android SDK](/sdks/android_proxy_sdk)
-- [Javascript SDK](/sdks/proxy-javascript)
-- [React Proxy SDK](/sdks/proxy-react)
-- [Svelte Proxy SDK](/sdks/proxy-svelte)
-- [Vue Proxy SDK](/sdks/proxy-vue)
+- [Android SDK](android-proxy.md)
+- [Javascript SDK](javascript-browser.md)
+- [React Proxy SDK](react.md)
+- [Svelte Proxy SDK](svelte.md)
+- [Vue Proxy SDK](vue.md)

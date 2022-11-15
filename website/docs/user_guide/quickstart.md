@@ -13,7 +13,7 @@ NOTE: This is a demo instance set up with the Enterprise version. Some of the fu
 
 ### I want to test toggles in a client side environment
 
-In order to use feature toggles on the client side you need to connect through [the Unleash proxy](sdks/unleash-proxy.md). The Unleash proxy will provide a security and performance layer between your client application and the Unleash instance. For now, you can use the proxy we have set up on the demo instance.
+In order to use feature toggles on the client side you need to connect through [the Unleash proxy](../reference/unleash-proxy.md). The Unleash proxy will provide a security and performance layer between your client application and the Unleash instance. For now, you can use the proxy we have set up on the demo instance.
 
 #### Create your first toggle
 
@@ -30,12 +30,12 @@ Secret key: proxy-123
 
 Now you can open your application code and connect through one of the proxy SDKs:
 
-- [Android Proxy SDK](sdks/android-proxy.md)
-- [iOS Proxy SDK](sdks/proxy-ios.md)
-- [Javascript Proxy SDK](sdks/proxy-javascript.md)
-- [React Proxy SDK](sdks/proxy-react.md)
-- [Svelte Proxy SDK](sdks/proxy-svelte.md)
-- [Vue Proxy SDK](sdks/proxy-vue.md)
+- [Android Proxy SDK](../reference/sdks/android-proxy.md)
+- [iOS Proxy SDK](../reference/sdks/ios-proxy.md)
+- [Javascript Proxy SDK](../reference/sdks/javascript-browser.md)
+- [React Proxy SDK](../reference/sdks/react.md)
+- [Svelte Proxy SDK](../reference/sdks/svelte.md)
+- [Vue Proxy SDK](../reference/sdks/vue.md)
 
 Here is a connection example using the JavaScript Proxy SDK:
 
@@ -85,7 +85,7 @@ curl https://app.unleash-hosted.com/demo/api/client/features \
 -H "Authorization: 56907a2fa53c1d16101d509a10b78e36190b0f918d9f122d";
 ```
 
-Now you can open up your application code and create a connection to Unleash using one of our [SDKs](sdks/index.md). Here's an example using the NodeJS SDK:
+Now you can open up your application code and create a connection to Unleash using one of our [SDKs](../reference/sdks/index.md). Here's an example using the NodeJS SDK:
 
 ```javascript
 const { initialize } = require('unleash-client');
@@ -178,7 +178,7 @@ http://CHANGEME/api/admin/features
 
 ### Connect your SDK
 
-Next, find the navigation, open up the Admin panel and find the API Access tab. Click the "Add new api key" button and create a client key. This key can be used to connect to the instance with our [SDKs](sdks/index.md).
+Next, find the navigation, open up the Admin panel and find the API Access tab. Click the "Add new api key" button and create a client key. This key can be used to connect to the instance with our [SDKs](../reference/sdks/index.md).
 
 You can find more [information about API keys here](token.mdx).
 
@@ -339,7 +339,7 @@ http://CHANGEME/api/admin/features
 
 ### Connect your SDK
 
-Find the navigation, open up the Admin panel and find the API Access tab. Click the "Add new api key" button and create a client key. This key can be used to connect to the instance with our [SDKs](sdks/index.md).
+Find the navigation, open up the Admin panel and find the API Access tab. Click the "Add new api key" button and create a client key. This key can be used to connect to the instance with our [SDKs](../reference/sdks/index.md).
 
 You can find more [information about API keys here](token.mdx).
 

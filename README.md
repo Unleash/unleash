@@ -147,7 +147,7 @@ Check out [the CONTRIBUTING.md file](./CONTRIBUTING.md) for contribution guideli
 - [Audit logs](https://docs.getunleash.io/advanced/audit_log)
 - Enforce [OWASP's secure headers](https://owasp.org/www-project-secure-headers/) via the strict HTTPS-only mode
 - Flexible hosting options: host it on premise or in the cloud (_any_ cloud)
-- Scale [the Unleash Proxy](https://docs.getunleash.io/sdks/unleash-proxy) independently of the Unleash server to support any number of front-end clients without overloading your Unleash instance
+- Scale [the Unleash Proxy](https://docs.getunleash.io/reference/unleash-proxy) independently of the Unleash server to support any number of front-end clients without overloading your Unleash instance
 
 ### Looking for more features?
 
@@ -178,25 +178,25 @@ To connect your application to Unleash you'll need to use a client SDK for your 
 
 **Official server-side SDKs:**
 
-- [Go SDK](https://docs.getunleash.io/sdks/go_sdk)
-- [Java SDK](https://docs.getunleash.io/sdks/java_sdk)
-- [Node.js SDK](https://docs.getunleash.io/sdks/node_sdk)
-- [PHP SDK](https://docs.getunleash.io/sdks/php_sdk)
-- [Python SDK](https://docs.getunleash.io/sdks/python_sdk)
-- [Ruby SDK](https://docs.getunleash.io/sdks/ruby_sdk)
+- [Go SDK](https://docs.getunleash.io/reference/sdks/go)
+- [Java SDK](https://docs.getunleash.io/reference/sdks/java)
+- [Node.js SDK](https://docs.getunleash.io/reference/sdks/node)
+- [PHP SDK](https://docs.getunleash.io/reference/sdks/php)
+- [Python SDK](https://docs.getunleash.io/reference/sdks/python)
+- [Ruby SDK](https://docs.getunleash.io/reference/sdks/ruby)
 - [Rust SDK](https://github.com/unleash/unleash-client-rust)
-- [.NET SDK](https://docs.getunleash.io/sdks/dot_net_sdk)
+- [.NET SDK](https://docs.getunleash.io/reference/sdks/dotnet)
 
 **Official front-end SDKs:**
 
-The front-end SDKs connects via the [Unleash Proxy](https://docs.getunleash.io/sdks/unleash-proxy) in order to ensure privacy, scalability and security.
+The front-end SDKs connects via the [Unleash Proxy](https://docs.getunleash.io/reference/unleash-proxy) in order to ensure privacy, scalability and security.
 
-- [Android Proxy SDK](https://docs.getunleash.io/sdks/android_proxy_sdk)
-- [iOS Proxy SDK](https://docs.getunleash.io/sdks/proxy-ios)
-- [JavaScript Proxy SDK](https://docs.getunleash.io/sdks/proxy-javascript)
-- [React Proxy SDK](https://docs.getunleash.io/sdks/proxy-react)
-- [Svelte Proxy SDK](https://docs.getunleash.io/sdks/proxy-svelte)
-- [Vue Proxy SDK](https://docs.getunleash.io/sdks/proxy-vue)
+- [Android Proxy SDK](https://docs.getunleash.io/reference/sdks/android-proxy)
+- [iOS Proxy SDK](https://docs.getunleash.io/reference/sdks/ios-proxy)
+- [JavaScript Proxy SDK](https://docs.getunleash.io/reference/sdks/javascript-browser)
+- [React Proxy SDK](https://docs.getunleash.io/reference/sdks/react)
+- [Svelte Proxy SDK](https://docs.getunleash.io/reference/sdks/svelte)
+- [Vue Proxy SDK](https://docs.getunleash.io/reference/sdks/vue)
 
 **Community SDKs:**
 

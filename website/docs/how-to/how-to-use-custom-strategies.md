@@ -2,7 +2,7 @@
 title: How to use custom activation strategies
 ---
 
-This guide takes you through how to use [custom activation strategies](../reference/custom-activation-strategies.md) with Unleash. We'll go through how you define a custom strategy in the admin UI, how you add it to a toggle, and how you'd implement it in a [client SDK](../sdks/index.md).
+This guide takes you through how to use [custom activation strategies](../reference/custom-activation-strategies.md) with Unleash. We'll go through how you define a custom strategy in the admin UI, how you add it to a toggle, and how you'd implement it in a [client SDK](../reference/sdks/index.md).
 
 In this example we want to define an activation strategy offers a scheduled release of a feature toggle. This means that we want the feature toggle to be activated after a given date and time.
 
@@ -27,11 +27,11 @@ In this example we want to define an activation strategy offers a scheduled rele
 The steps to implement a custom strategy for your client depend on the kind of client SDK you're using:
 
 - if you're using a server-side client SDK, follow the steps in [option A](#step-3-a 'Step 3 option A: implement the strategy for a server-side client SDK').
-- if you're using a front-end client SDK ([Android](../sdks/android-proxy.md), [JavaScript](../sdks/proxy-javascript.md), [React](../sdks/proxy-react.md), [iOS](../sdks/proxy-ios.md)), follow the steps in [option B](#step-3-b 'Step 3 option B: implementing the strategy for a front-end client SDK')
+- if you're using a front-end client SDK ([Android](../reference/sdks/android-proxy.md), [JavaScript](../reference/sdks/javascript-browser.md), [React](../reference/sdks/react.md), [iOS](../reference/sdks/ios-proxy.md)), follow the steps in [option B](#step-3-b 'Step 3 option B: implementing the strategy for a front-end client SDK')
 
 ### Option A: Implement the strategy for a server-side client SDK {#step-3-a}
 
-1. **Implement the custom strategy** in your [client SDK](../sdks/index.md). The exact way to do this will vary depending on the specific SDK you're using, so refer to the SDK's documentation. The example below shows an example of how you'd implement a custom strategy called "TimeStamp" for the [Node.js client SDK](../sdks/node.md).
+1. **Implement the custom strategy** in your [client SDK](../reference/sdks/index.md). The exact way to do this will vary depending on the specific SDK you're using, so refer to the SDK's documentation. The example below shows an example of how you'd implement a custom strategy called "TimeStamp" for the [Node.js client SDK](../reference/sdks/node.md).
 
    ```js
    const { Strategy } = require('unleash-client');
@@ -81,14 +81,14 @@ The steps to implement a custom strategy for your client depend on the kind of c
 
 ### Option B: Implement the strategy for a front-end client SDK {#step-3-b}
 
-Front-end client SDKs don't evaluate strategies directly, so you need to implement the **custom strategy in the [Unleash Proxy](../sdks/unleash-proxy.md)**. Depending on how you run the Unleash Proxy, follow one of the below series of steps:
+Front-end client SDKs don't evaluate strategies directly, so you need to implement the **custom strategy in the [Unleash Proxy](../reference/unleash-proxy.md)**. Depending on how you run the Unleash Proxy, follow one of the below series of steps:
 
 - If you're running the Unleash Proxy as a Docker container, refer to the [steps for using a containerized Proxy](#step-3-b-docker).
 - If you're using the Unleash Proxy via Node.js, refer to the [steps for using custom strategies via Node.js](#step-3-b-node).
 
 #### With a containerized proxy {#step-3-b-docker}
 
-Strategies are stored in separate JavaScript files and loaded into the container at startup. Refer to [the Unleash Proxy documentation](../sdks/unleash-proxy.md) for a full overview of all the options.
+Strategies are stored in separate JavaScript files and loaded into the container at startup. Refer to [the Unleash Proxy documentation](../reference/unleash-proxy.md) for a full overview of all the options.
 
 1. **Create a strategies directory.** Create a directory that Docker has access to where you can store your strategies. The next steps assume you called it `strategies`
 2. **Initialize a Node.js project** and **install the Unleash Client**:

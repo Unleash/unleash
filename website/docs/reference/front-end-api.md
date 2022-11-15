@@ -10,7 +10,7 @@ The Unleash front-end API is an experimental feature and is currently in develop
 
 :::
 
-The **Unleash front-end API** offers a simplified workflow for connecting a client-side (front-end) applications to Unleash. It provides the exact same API as the [Unleash proxy](../sdks/unleash-proxy.md). The front-end API is a quick and easy way to add Unleash to single-page applications and mobile apps.
+The **Unleash front-end API** offers a simplified workflow for connecting a client-side (front-end) applications to Unleash. It provides the exact same API as the [Unleash proxy](../reference/unleash-proxy.md). The front-end API is a quick and easy way to add Unleash to single-page applications and mobile apps.
 
 <!-- TODO: image illustrating connection -->
 

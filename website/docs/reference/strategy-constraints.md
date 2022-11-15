@@ -7,7 +7,7 @@ title: Strategy Constraints
 Before Unleash 4.16, strategy constraints were only available to Unleash Pro and Enterprise users. From 4.16 onwards, they're **available to everyone**.
 
 
-Unleash 4.9 introduced a more comprehensive set of constraint operators. These require that both Unleash *and* your client SDK of choice support them. See the [SDK compatibility table](../sdks/index.md#strategy-constraints) for more information. Prior to Unleash 4.9, the only available operators were `IN` and `NOT_IN`.
+Unleash 4.9 introduced a more comprehensive set of constraint operators. These require that both Unleash *and* your client SDK of choice support them. See the [SDK compatibility table](../reference/sdks/index.md#strategy-constraints) for more information. Prior to Unleash 4.9, the only available operators were `IN` and `NOT_IN`.
 
 :::
 
@@ -170,7 +170,7 @@ Additionally, you can use negation to get _less than or equal to_ and _greater t
 This section gives a brief overview over to use the client SDKs to interact with strategy constraints. The exact steps will vary depending on which client you are using, so make sure to consult the documentation for your specific client SDK.
 :::
 
-Strategy constraints require [the Unleash Context](../user_guide/unleash_context) to work. All official [Unleash client SDKs](../sdks/index.md) support the option to pass [dynamic context values](../user_guide/unleash_context#structure "Unleash Context, section: structure") to the `isEnabled` function (or the SDK's equivalent).
+Strategy constraints require [the Unleash Context](../user_guide/unleash_context) to work. All official [Unleash client SDKs](../reference/sdks/index.md) support the option to pass [dynamic context values](../user_guide/unleash_context#structure "Unleash Context, section: structure") to the `isEnabled` function (or the SDK's equivalent).
 
 If the strategy constraint uses a [**standard Unleash Context field**](../user_guide/unleash_context#structure), set the context field to the value you wish to give it.
 
@@ -189,7 +189,7 @@ If you use the new constraints with old SDKs, here's how it'll affect _some_ of 
 - The Python client SDK will evaluate the toggle to false, as it cannot evaluate the constraint successfully.
 - The .NET, Ruby, and PHP SDKs raise exceptions if the provided operator is not `IN` or `NOT_IN`.
 
-Please inspect the [SDK compatibility table to see which version of your preferred SDK introduced support for this feature](../sdks/index.md#strategy-constraints).
+Please inspect the [SDK compatibility table to see which version of your preferred SDK introduced support for this feature](../reference/sdks/index.md#strategy-constraints).
 
 After Unleash 4.9, we updated the [Unleash client specification](https://github.com/Unleash/client-specification). Going forward, any constraint that a client does not recognize, **must be evaluated as `false`**
 

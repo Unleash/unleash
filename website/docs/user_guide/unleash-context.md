@@ -3,7 +3,7 @@ id: unleash_context
 title: Unleash Context
 ---
 
-The **Unleash Context** contains information relating to the current feature toggle request. Unleash uses this context to evaluate [activation strategies](activation-strategies.md) and [strategy constraints](../reference/strategy-constraints.md) and to calculate [toggle stickiness](../reference/stickiness.md). The Unleash Context is an important feature of all the [Unleash client SDKs](../sdks/index.md).
+The **Unleash Context** contains information relating to the current feature toggle request. Unleash uses this context to evaluate [activation strategies](activation-strategies.md) and [strategy constraints](../reference/strategy-constraints.md) and to calculate [toggle stickiness](../reference/stickiness.md). The Unleash Context is an important feature of all the [Unleash client SDKs](../reference/sdks/index.md).
 
 ## Structure
 
@@ -71,7 +71,7 @@ Using a custom context field called _region_ as an example: if you define the fi
 ### Custom stickiness
 
 :::note
-This feature is currently in beta and is not yet supported by all our SDKs. Check out the [SDK compatibility table](../sdks/index.md#server-side-sdk-compatibility-table) to see what SDKs support it at the moment.
+This feature is currently in beta and is not yet supported by all our SDKs. Check out the [SDK compatibility table](../reference/sdks/index.md#server-side-sdk-compatibility-table) to see what SDKs support it at the moment.
 :::
 
 Any context field _can_ be used to [calculate custom stickiness](../reference/stickiness.md#custom-stickiness). However, you need to explicitly tell Unleash that you want a field to be used for custom stickiness for it to be possible. You can enable this functionality either when you create the context field or at any later point. For steps on how to do this, see [the _How to define custom context fields_ guide](../how-to/how-to-define-custom-context-fields).
@@ -80,4 +80,4 @@ Any context field _can_ be used to [calculate custom stickiness](../reference/st
 
 [^1]: If you're on Unleash 4.3 or higher, you'll probably want to use [the environments feature](../user_guide/environments.md) instead of relying on the `environment` context field when working with environments.
 
-[^2]: Check the [*strategy constraints: advanced support* row of the compatibility table](../sdks/index.md#strategy-constraints-advanced-support) for an overview of which SDKs provide the `currentTime` property.
+[^2]: Check the [*strategy constraints: advanced support* row of the compatibility table](../reference/sdks/index.md#strategy-constraints-advanced-support) for an overview of which SDKs provide the `currentTime` property.

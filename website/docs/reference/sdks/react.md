@@ -1,15 +1,14 @@
 ---
-id: proxy-react
 title: React Proxy SDK
 ---
 
-This library can be used with the [Unleash Proxy](https://github.com/Unleash/unleash-proxy) or with the [Unleash front-end API](../reference/front-end-api). It is _not_ compatible with the regular Unleash client API.
+This library can be used with the [Unleash Proxy](https://github.com/Unleash/unleash-proxy) or with the [Unleash front-end API](../front-end-api.md). It is _not_ compatible with the regular Unleash client API.
 
 For more detailed information, check out the [React Proxy SDK on GitHub](https://github.com/Unleash/proxy-client-react).
 
 ## Installation
 
-Install the React proxy client and the [JavaScript proxy client](proxy-javascript.md) packages:
+Install the React proxy client and the [JavaScript proxy client](javascript-browser.md) packages:
 
 ```shell npm2yarn
 npm install @unleash/proxy-client-react unleash-proxy-client
@@ -27,7 +26,7 @@ The configuration variables are:
 
 - **`clientKey`**
 
-  One of your proxy's [designated client keys (also known as proxy secrets)](unleash-proxy#configuration-variables).
+  One of your proxy's [designated client keys (also known as proxy secrets)](../unleash-proxy.md#configuration-variables).
 
 - **`refreshInterval`**
 
@@ -39,7 +38,7 @@ The configuration variables are:
 
 - **`environment`**
 
-  The environment that your application runs in. This corresponds to the environment field in [the Unleash Context](../user_guide/unleash-context.md). Note that this is separate from the newer [Environments feature](../user_guide/environments.md).
+  The environment that your application runs in. This corresponds to the environment field in [the Unleash Context](../../user_guide/unleash-context.md). Note that this is separate from the newer [Environments feature](../../user_guide/environments.md).
 
 ```jsx
 import { FlagProvider } from '@unleash/proxy-client-react';

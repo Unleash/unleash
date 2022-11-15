@@ -1,9 +1,8 @@
 ---
-id: proxy-javascript
 title: JavaScript Proxy SDK
 ---
 
-This guide shows you how to use feature toggles in a single-page app with the [Unleash Proxy](/sdks/unleash-proxy) and the [Unleash front-end API](../reference/front-end-api). You can also check out the source code for the [JavaScript Proxy SDK](https://github.com/unleash/unleash-proxy-client-js) on GitHub for more details around the SDK.
+This guide shows you how to use feature toggles in a single-page app with the [Unleash Proxy](../unleash-proxy.md) and the [Unleash front-end API](../front-end-api). You can also check out the source code for the [JavaScript Proxy SDK](https://github.com/unleash/unleash-proxy-client-js) on GitHub for more details around the SDK.
 
 ## Introduction {#introduction}
 
@@ -45,13 +44,13 @@ To connect to an Unleash proxy, you need to have an instance of the proxy runnin
 
 :::
 
-Add the proxy's URL and a [proxy client key](../reference/api-tokens-and-client-keys.mdx#proxy-client-keys). The [_configuration_ section of the Unleash proxy docs](unleash-proxy.md#configuration-variables) contain more info on how to configure client keys for your proxy.
+Add the proxy's URL and a [proxy client key](../api-tokens-and-client-keys.mdx#proxy-client-keys). The [_configuration_ section of the Unleash proxy docs](../unleash-proxy.md#configuration-variables) contain more info on how to configure client keys for your proxy.
 
 ### Option B: Connecting directly to Unleash
 
 Use the url to your Unleash instance's front-end API (`<unleash-url>/api/frontend`) as the `url` parameter. For the `clientKey` parameter, use a `FRONTEND` token generated from your Unleash instance. Refer to the [_how to create API tokens_](/user_guide/api-token) guide for the necessary steps.
 
-You might also need to set up cross-origin resource sharing (CORS) for your instance. Visit the [CORS section of the front-end API guide](../reference/front-end-api.md#cors) for more information on setting up CORS.
+You might also need to set up cross-origin resource sharing (CORS) for your instance. Visit the [CORS section of the front-end API guide](../front-end-api.md#cors) for more information on setting up CORS.
 
 ### Step 3: Check if feature toggle is enabled
 

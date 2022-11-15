@@ -1,13 +1,12 @@
 ---
-id: proxy-ios
 title: iOS Proxy SDK
 ---
 
-In this guide we explain how to use feature toggles in Swift applications via the [Unleash Proxy](./unleash-proxy.md). You can also check out the [source code for the iOS Proxy SDK](https://github.com/Unleash/unleash-proxy-client-swift).
+In this guide we explain how to use feature toggles in Swift applications via the [Unleash Proxy](../unleash-proxy.md). You can also check out the [source code for the iOS Proxy SDK](https://github.com/Unleash/unleash-proxy-client-swift).
 
 ## Introduction {#introduction}
 
-The unleash-proxy-client-swift makes it easy for native applications and other swift platforms to connect to the unleash proxy. The proxy will evaluate a feature toggle for a given [context](/user_guide/unleash_context) and return a list of feature flags relevant for the provided context.
+The unleash-proxy-client-swift makes it easy for native applications and other swift platforms to connect to the unleash proxy. The proxy will evaluate a feature toggle for a given [context](../../user_guide/unleash-context.md) and return a list of feature flags relevant for the provided context.
 
 The unleash-proxy-client-swift will then cache these toggles in a map in memory and refresh the configuration at a configurable interval, making queries against the toggle configuration extremely fast.
 
@@ -56,7 +55,7 @@ In the example above we import the `UnleashProxyClientSwift` and instantiate the
 
 - `clientKey` (`String`)
 
-   One of the configured [proxy keys / proxy secrets](unleash-proxy#configuration-variables).
+   One of the configured [proxy keys / proxy secrets](../unleash-proxy.md#configuration-variables).
 
 - `refreshInterval` (`Int`)
 
@@ -68,7 +67,7 @@ In the example above we import the `UnleashProxyClientSwift` and instantiate the
 
 - `environment` (`String`)
 
-   The application environment. This corresponds to the environment field in [the Unleash Context](../user_guide/unleash-context.md). Note that this is separate from the newer [Environments feature](../user_guide/environments.md).
+   The application environment. This corresponds to the environment field in [the Unleash Context](../../user_guide/unleash-context.md). Note that this is separate from the newer [Environments feature](../../user_guide/environments.md).
 
 Running `unleash.start()` will make the first request against the proxy and retrieve the feature toggle configuration, and set up the polling interval in the background.
 

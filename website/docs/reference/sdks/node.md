@@ -1,5 +1,4 @@
 ---
-id: node_sdk
 title: Node SDK
 ---
 
@@ -7,7 +6,7 @@ import Tabs from '@theme/Tabs'; import TabItem from '@theme/TabItem';
 
 In this guide we explain how to use feature toggles in a Node application using Unleash-hosted. We will be using the open source Unleash [Node.js Client SDK](https://github.com/Unleash/unleash-client-node).
 
-> You will need your `API URL` and your `API token` in order to connect the Client SDK to you Unleash instance. You can find this information in the “Admin” section Unleash management UI. [Read more](../user_guide/api-token)
+> You will need your `API URL` and your `API token` in order to connect the Client SDK to you Unleash instance. You can find this information in the “Admin” section Unleash management UI. [Read more](../../user_guide/token.mdx)
 
 ## Step 1: Install the client SDK {#step-1-install-the-client-sdk}
 

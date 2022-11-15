@@ -102,7 +102,7 @@ Custom activation strategies can **not** be used with the Unleash-hosted proxy a
 
 :::
 
-The Unleash Proxy can load [custom activation strategies](../reference/custom-activation-strategies.md) for front-end client SDKs ([Android](../sdks/android-proxy.md), [JavaScript](../sdks/proxy-javascript.md), [React](../sdks/proxy-react.md), [iOS](../sdks/proxy-ios.md)). For a step-by-step guide, refer to the [_how to use custom strategies_ guide](../how-to/how-to-use-custom-strategies.md#step-3-b).
+The Unleash Proxy can load [custom activation strategies](../reference/custom-activation-strategies.md) for front-end client SDKs ([Android](./sdks/android-proxy.md), [JavaScript](./sdks/javascript-browser.md), [React](./sdks/react.md), [iOS](./sdks/ios-proxy.md)). For a step-by-step guide, refer to the [_how to use custom strategies_ guide](../how-to/how-to-use-custom-strategies.md#step-3-b).
 
 To load custom strategies, use either of these two options:
 
@@ -273,10 +273,10 @@ The Unleash Proxy takes the heavy lifting of evaluating toggles and only returns
 However in some settings you would like a bit more logic around it to make it as fast as possible, and keep up to date with changes.
 
 - [Android Proxy SDK](sdks/android-proxy.md)
-- [iOS Proxy SDK](sdks/proxy-ios.md)
-- [Javascript Proxy SDK](sdks/proxy-javascript.md)
-- [React Proxy SDK](sdks/proxy-react.md)
-- [Svelte Proxy SDK](sdks/proxy-svelte.md)
-- [Vue Proxy SDK](sdks/proxy-vue.md)
+- [iOS Proxy SDK](sdks/ios-proxy.md)
+- [Javascript Proxy SDK](sdks/javascript-browser.md)
+- [React Proxy SDK](sdks/react.md)
+- [Svelte Proxy SDK](sdks/svelte.md)
+- [Vue Proxy SDK](sdks/vue.md)
 
 The proxy is also ideal fit for serverless functions such as AWS Lambda. In that scenario the proxy can run on a small container near the serverless function, preferably in the same VPC, giving the lambda extremely fast access to feature flags, at a predictable cost.

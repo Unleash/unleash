@@ -4,7 +4,7 @@ title: Impression data
 
 :::info
 
-Availability The impression data feature was introduced in **Unleash 4.7**. It is available in the JavaScript-based proxy clients and in some server-side SDKs. Please refer to the [SDK compatibility table](../sdks/index.md#server-side-sdk-compatibility-table) for an overview of server-side SDKs that support it.
+Availability The impression data feature was introduced in **Unleash 4.7**. It is available in the JavaScript-based proxy clients and in some server-side SDKs. Please refer to the [SDK compatibility table](../reference/sdks/index.md#server-side-sdk-compatibility-table) for an overview of server-side SDKs that support it.
 
 :::
 
@@ -12,7 +12,7 @@ Unleash can provide you with **impression data** about the toggles in your appli
 
 :::caution Front-end SDKs and disabled toggles
 
-Older versions of the front-end SDKs and other SDKs that connect the [Unleash proxy](../sdks/unleash-proxy.md) or the [Unleash front-end API](../reference/front-end-api.md) would **not** emit impression events when a toggle is disabled.
+Older versions of the front-end SDKs and other SDKs that connect the [Unleash proxy](../reference/unleash-proxy.md) or the [Unleash front-end API](../reference/front-end-api.md) would **not** emit impression events when a toggle is disabled.
 
 This is because impression data is a **per-toggle** setting and the Proxy and front-end API only transmit information about toggles that are enabled. As such, the SDK will never know that it should emit an impression event if a toggle is disabled.
 
@@ -87,7 +87,7 @@ You can enable impression data via the impression data toggle in the admin UI's 
 
 ## Example setup
 
-The exact setup will vary depending on your [client SDK](../sdks/index.md). The below example configures the [Unleash Proxy client](/sdks/proxy-javascript) to listen for impression events and log them to the console. If "my-feature-toggle" is configured to emit impression data, then it will trigger an impression event as soon as Unleash is ready.
+The exact setup will vary depending on your [client SDK](../reference/sdks/index.md). The below example configures the [Unleash Proxy client../reference/sdks/javascript-browser) to listen for impression events and log them to the console. If "my-feature-toggle" is configured to emit impression data, then it will trigger an impression event as soon as Unleash is ready.
 
 ```js
 const unleash = new UnleashClient({

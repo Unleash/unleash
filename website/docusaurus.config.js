@@ -149,21 +149,8 @@ module.exports = {
                 fromExtensions: ['html', 'htm'],
                 redirects: [
                     {
-                        to: '/sdks',
-                        from: [
-                            '/user_guide/client-sdk',
-                            '/client-sdk',
-                            '/user_guide/connect_sdk',
-                            '/sdks/community',
-                        ],
-                    },
-                    {
                         to: '/user_guide/api-token',
                         from: '/deploy/user_guide/api-token',
-                    },
-                    {
-                        to: '/sdks/unleash-proxy',
-                        from: '/user_guide/native_apps/',
                     },
                     {
                         to: '/user_guide/activation_strategy',
@@ -326,6 +313,75 @@ module.exports = {
                     {
                         from: '/integrations/jira_server_plugin_usage',
                         to: '/reference/integrations/jira-server-plugin-usage',
+                    },
+                    {
+                        from: [
+                            '/sdks',
+                            '/user_guide/client-sdk',
+                            '/client-sdk',
+                            '/user_guide/connect_sdk',
+                            '/sdks/community',
+                        ],
+                        to: '/reference/sdks',
+                    },
+                    {
+                        from: '/sdks/go_sdk',
+                        to: '/reference/sdks/go',
+                    },
+                    {
+                        from: '/sdks/java_sdk',
+                        to: '/reference/sdks/java',
+                    },
+                    {
+                        from: '/sdks/node_sdk',
+                        to: '/reference/sdks/node',
+                    },
+                    {
+                        from: '/sdks/php_sdk',
+                        to: '/reference/sdks/php',
+                    },
+                    {
+                        from: '/sdks/python_sdk',
+                        to: '/reference/sdks/python',
+                    },
+                    {
+                        from: '/sdks/dot_net_sdk',
+                        to: '/reference/sdks/dotnet',
+                    },
+                    {
+                        from: '/sdks/ruby_sdk',
+                        to: '/reference/sdks/ruby',
+                    },
+                    {
+                        from: '/sdks/android_proxy_sdk',
+                        to: '/reference/sdks/android-proxy',
+                    },
+                    {
+                        from: '/sdks/proxy-ios',
+                        to: '/reference/sdks/ios-proxy',
+                    },
+                    {
+                        from: '/sdks/javascript-browser',
+                        to: '/reference/sdks/javascript-browser',
+                    },
+                    {
+                        from: '/sdks/react',
+                        to: '/reference/sdks/react',
+                    },
+                    {
+                        from: '/sdks/proxy-vue',
+                        to: '/reference/sdks/vue',
+                    },
+                    {
+                        from: '/sdks/proxy-svelte',
+                        to: '/reference/sdks/svelte',
+                    },
+                    {
+                        from: [
+                            '/user_guide/native_apps/',
+                            '/sdks/unleash-proxy',
+                        ],
+                        to: '/reference/unleash-proxy',
                     },
                 ],
                 createRedirects: function (toPath) {

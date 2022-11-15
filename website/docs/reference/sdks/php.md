@@ -1,11 +1,10 @@
 ---
-id: php_sdk
 title: PHP SDK
 ---
 
 In this guide we explain how to use feature toggles in a PHP application using Unleash-hosted. We will be using the open source Unleash [PHP Client SDK](https://github.com/Unleash/unleash-client-php).
 
-> You will need your `API URL` and your `API token` in order to connect the Client SDK to you Unleash instance. You can find this information in the “Admin” section Unleash management UI. [Read more](../user_guide/api-token)
+> You will need your `API URL` and your `API token` in order to connect the Client SDK to you Unleash instance. You can find this information in the “Admin” section Unleash management UI. [Read more](../../user_guide/api-token)
 
 ## Step 1: Install the client SDK {#step-1-install-the-client-sdk}
 
@@ -56,7 +55,7 @@ Read more about the [Unleash architecture](https://www.unleash-hosted.com/articl
 
 ## Step 4: Provide Unleash Context {#step-4-provide-unleash-context}
 
-It is the client SDK that computes whether a feature toggle should be considered enabled or disabled for specific use request. This is the job of the [activation strategies](../user_guide/activation-strategies.md), which are implemented in the client SDK.
+It is the client SDK that computes whether a feature toggle should be considered enabled or disabled for specific use request. This is the job of the [activation strategies](../../user_guide/activation-strategies.md), which are implemented in the client SDK.
 
 The activation strategies is an implementation of rules based on data, which you provide as part of the Unleash Context.
 

@@ -65,6 +65,7 @@ const columns = [
             row.tags?.map(({ type, value }) => `${type}:${value}`).join('\n') ||
             '',
         Cell: FeatureTagCell,
+        width: 80,
         searchable: true,
     },
     {

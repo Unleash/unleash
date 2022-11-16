@@ -117,10 +117,10 @@ export const FeatureEnvironmentVariants = () => {
             </StyledAlert>
             {environments.map(environment => {
                 const variants = environment.variants ?? [];
-                const otherEnvsHaveVariants = feature.environments.some(
-                    ({ name, variants }) =>
-                        name !== environment.name && variants?.length
-                );
+                // const otherEnvsHaveVariants = feature.environments.some(
+                //     ({ name, variants }) =>
+                //         name !== environment.name && variants?.length
+                // );
 
                 return (
                     <EnvironmentVariantsCard
@@ -147,7 +147,7 @@ export const FeatureEnvironmentVariants = () => {
                                     >
                                         Add variant
                                     </PermissionButton>
-                                    <ConditionallyRender
+                                    {/* <ConditionallyRender
                                         condition={otherEnvsHaveVariants}
                                         show={
                                             <PermissionButton
@@ -160,7 +160,7 @@ export const FeatureEnvironmentVariants = () => {
                                                 Copy variants from
                                             </PermissionButton>
                                         }
-                                    />
+                                    /> */}
                                 </StyledButtonContainer>
                             }
                         />

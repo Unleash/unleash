@@ -4,6 +4,7 @@ import { emptyFeature } from './emptyFeature';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { formatApiPath } from 'utils/formatPath';
 import { IFeatureToggle } from 'interfaces/featureToggle';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 export interface IUseFeatureOutput {
     feature: IFeatureToggle;
@@ -25,9 +26,11 @@ export const useFeature = (
 ): IUseFeatureOutput => {
     const path = formatFeatureApiPath(projectId, featureId);
 
+    const { uiConfig } = useUiConfig();
+
     const { data, error, mutate } = useSWR<IFeatureResponse>(
         ['useFeature', path],
-        () => featureFetcher(path),
+        () => featureFetcher(path, uiConfig.flags.variantsPerEnvironment),
         options
     );
 
@@ -45,9 +48,14 @@ export const useFeature = (
 };
 
 export const featureFetcher = async (
-    path: string
+    path: string,
+    variantsPerEnvironment?: boolean
 ): Promise<IFeatureResponse> => {
-    const res = await fetch(path);
+    const variantEnvironments = variantsPerEnvironment
+        ? '?variantEnvironments=true'
+        : '';
+
+    const res = await fetch(path + variantEnvironments);
 
     if (res.status === 404) {
         return { status: 404 };

@@ -165,7 +165,7 @@ class FeatureToggleService {
         projectId,
     }: IFeatureContext): Promise<void> {
         const id = await this.featureToggleStore.getProjectId(featureName);
-        if (id !== projectId) {
+        if (id && id !== projectId) {
             throw new InvalidOperationError(
                 `The operation could not be completed. The feature exists, but the provided project id ("${projectId}") does not match the project that the feature belongs to ("${id}"). Try using "${id}" in the request URL instead of "${projectId}".`,
             );
@@ -697,6 +697,20 @@ class FeatureToggleService {
                 projectId,
             );
 
+            if (value.variants && value.variants.length > 0) {
+                const environments =
+                    await this.featureEnvironmentStore.getEnvironmentsForFeature(
+                        featureName,
+                    );
+                environments.forEach(async (featureEnv) => {
+                    await this.featureEnvironmentStore.addVariantsToFeatureEnvironment(
+                        featureName,
+                        featureEnv.environment,
+                        value.variants,
+                    );
+                });
+            }
+
             const tags = await this.tagStore.getAllTagsForFeature(featureName);
 
             await this.eventStore.store(
@@ -754,16 +768,7 @@ class FeatureToggleService {
             }),
         );
 
-        const variantsTasks = newToggle.environments.flatMap(async (e) => {
-            const variants = await this.getVariantsForEnv(featureName, e.name);
-            return this.saveVariantsOnEnv(
-                newFeatureName,
-                e.name,
-                variants,
-                userName,
-            );
-        });
-        await Promise.all((tasks as Promise<any>[]).concat(variantsTasks));
+        await Promise.all(tasks);
         return created;
     }
 
@@ -1220,6 +1225,7 @@ class FeatureToggleService {
             featureName,
         );
 
+        fixedVariants.sort((a, b) => a.name.localeCompare(b.name));
         const featureToggle = await this.featureToggleStore.saveVariants(
             project,
             featureName,

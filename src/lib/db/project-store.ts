@@ -178,7 +178,7 @@ class ProjectStore implements IProjectStore {
             .returning(COLUMNS)
             .onConflict('id')
             .ignore();
-        if (rows.length > 0) {
+        if (environments && rows.length > 0) {
             environments.forEach((env) => {
                 projects.forEach(async (project) => {
                     await this.addEnvironmentToProject(project.id, env.name);

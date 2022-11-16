@@ -12,6 +12,9 @@ export interface IFeatureEnvironmentStore
         environment: string,
         featureName: string,
     ): Promise<boolean>;
+    getEnvironmentsForFeature(
+        featureName: string,
+    ): Promise<IFeatureEnvironment[]>;
     isEnvironmentEnabled(
         featureName: string,
         environment: string,

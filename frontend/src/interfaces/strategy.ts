@@ -9,7 +9,7 @@ export interface IFeatureStrategy {
     featureName?: string;
     projectId?: string;
     environment?: string;
-    segments: number[];
+    segments?: number[];
 }
 
 export interface IFeatureStrategyParameters {

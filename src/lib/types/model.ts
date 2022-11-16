@@ -47,7 +47,7 @@ export interface FeatureToggleDTO {
     archivedAt?: Date;
     createdAt?: Date;
     impressionData?: boolean;
-    variants?: IVariant[]; //Moved here for legacy reasons - features will respond with their variant but not accept them
+    variants?: IVariant[];
 }
 
 export interface FeatureToggle extends FeatureToggleDTO {

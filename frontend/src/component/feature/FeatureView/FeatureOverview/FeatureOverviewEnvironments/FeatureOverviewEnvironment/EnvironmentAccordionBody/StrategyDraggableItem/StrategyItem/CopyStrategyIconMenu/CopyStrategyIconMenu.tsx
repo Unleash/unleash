@@ -8,7 +8,7 @@ import {
     Tooltip,
 } from '@mui/material';
 import { AddToPhotos as CopyIcon, Lock } from '@mui/icons-material';
-import { IFeatureStrategy } from 'interfaces/strategy';
+import { IFeatureStrategy, IFeatureStrategyPayload } from 'interfaces/strategy';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { IFeatureEnvironment } from 'interfaces/featureToggle';
 import AccessContext from 'contexts/AccessContext';
@@ -27,7 +27,7 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 interface ICopyStrategyIconMenuProps {
     environmentId: string;
     environments: IFeatureEnvironment['name'][];
-    strategy: IFeatureStrategy;
+    strategy: IFeatureStrategyPayload;
 }
 
 export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
@@ -60,14 +60,14 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
         onChangeRequestAddStrategyConfirm,
     } = useChangeRequestAddStrategy(projectId, featureId, 'addStrategy');
 
-    const onCopyStrategy = async (environment: string) => {
+    const onCopyStrategy = async (targetEnvironment: string) => {
         const { id, ...strategyCopy } = {
             ...strategy,
-            environment,
+            targetEnvironment,
         };
-        if (isChangeRequestConfigured(environmentId)) {
+        if (isChangeRequestConfigured(targetEnvironment)) {
             await onChangeRequestAddStrategy(
-                environment,
+                targetEnvironment,
                 {
                     id,
                     ...strategyCopy,
@@ -81,14 +81,14 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
             await addStrategyToFeature(
                 projectId,
                 featureId,
-                environment,
+                targetEnvironment,
                 strategy
             );
             refetchFeature();
             refetchFeatureImmutable();
             setToastData({
                 title: `Strategy created`,
-                text: `Successfully copied a strategy to ${environment}`,
+                text: `Successfully copied a strategy to ${targetEnvironment}`,
                 type: 'success',
             });
         } catch (error) {

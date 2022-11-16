@@ -298,9 +298,14 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                     env.strategies = [];
                 }
                 if (r.strategy_id) {
-                    env.strategies.push(
-                        FeatureStrategiesStore.getAdminStrategy(r),
+                    const found = env.strategies.find(
+                        (strategy) => strategy.id === r.strategy_id,
                     );
+                    if (!found) {
+                        env.strategies.push(
+                            FeatureStrategiesStore.getAdminStrategy(r),
+                        );
+                    }
                 }
                 if (r.segments) {
                     this.addSegmentIdsToStrategy(env, r);

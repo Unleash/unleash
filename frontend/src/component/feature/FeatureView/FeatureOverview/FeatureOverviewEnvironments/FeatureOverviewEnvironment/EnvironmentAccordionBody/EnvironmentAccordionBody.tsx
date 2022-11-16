@@ -127,6 +127,8 @@ const EnvironmentAccordionBody = ({
         );
     };
 
+    console.log(strategies);
+
     return (
         <div className={styles.accordionBody}>
             <div className={styles.accordionBodyInnerContainer}>

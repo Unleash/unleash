@@ -452,7 +452,6 @@ test(`should not show environment on feature toggle, when environment is disable
         .attach('file', 'src/test/examples/import-state.json')
         .expect(202);
 
-    // TODO use environment service addEnvironmentToProject during import
     const { body } = await app.request
         .get('/api/admin/projects/default/features/my-feature')
         .expect(200);

@@ -42,10 +42,6 @@ export const EnvironmentVariantsTable = ({
 
     const variants = environment.variants ?? [];
 
-    if (variants.length === 0) {
-        return null;
-    }
-
     const columns = useMemo(
         () => [
             {
@@ -126,13 +122,7 @@ export const EnvironmentVariantsTable = ({
 
     const { data, getSearchText } = useSearch(columns, searchValue, variants);
 
-    const {
-        headerGroups,
-        rows,
-        prepareRow,
-        state: { sortBy },
-        setHiddenColumns,
-    } = useTable(
+    const { headerGroups, rows, prepareRow, setHiddenColumns } = useTable(
         {
             columns: columns as any[],
             data,
@@ -156,6 +146,10 @@ export const EnvironmentVariantsTable = ({
         }
         setHiddenColumns(hiddenColumns);
     }, [setHiddenColumns, isMediumScreen, isLargeScreen]);
+
+    if (variants.length === 0) {
+        return null;
+    }
 
     return (
         <>

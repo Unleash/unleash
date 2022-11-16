@@ -19,6 +19,7 @@ import SelectMenu from 'component/common/select';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import { OverrideConfig } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantModal/VariantOverrides/VariantOverrides';
 import { updateWeight } from 'component/common/util';
+import cloneDeep from 'lodash.clonedeep';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',
@@ -120,6 +121,9 @@ export const EnvironmentVariantModal = ({
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
 
+    const [variants, setVariants] = useState<IFeatureVariant[]>([]);
+    const [editing, setEditing] = useState(false);
+
     const [name, setName] = useState('');
     const [customPercentage, setCustomPercentage] = useState(false);
     const [percentage, setPercentage] = useState('');
@@ -138,13 +142,29 @@ export const EnvironmentVariantModal = ({
     };
 
     useEffect(() => {
-        setName('');
-        setCustomPercentage(false);
-        setPercentage('');
-        setPayload(EMPTY_PAYLOAD);
-        overridesDispatch({ type: 'CLEAR' });
+        setVariants(environment?.variants || []);
+
+        if (variant) {
+            setEditing(true);
+            setName(variant.name);
+            setCustomPercentage(variant.weightType === WeightTypes.FIX);
+            setPercentage(String(variant.weight / 10));
+            setPayload(variant.payload || EMPTY_PAYLOAD);
+            overridesDispatch(
+                variant.overrides
+                    ? { type: 'SET', payload: variant.overrides || [] }
+                    : { type: 'CLEAR' }
+            );
+        } else {
+            setEditing(false);
+            setName('');
+            setCustomPercentage(false);
+            setPercentage('');
+            setPayload(EMPTY_PAYLOAD);
+            overridesDispatch({ type: 'CLEAR' });
+        }
         setErrors({});
-    }, [open]);
+    }, [open, variant]);
 
     const createPatch = (newVariants: IFeatureVariant[]) => {
         return jsonpatch.compare(variants, newVariants);
@@ -168,7 +188,18 @@ export const EnvironmentVariantModal = ({
                 .filter(o => o.values && o.values.length > 0),
         };
 
-        const updatedVariants: IFeatureVariant[] = [...variants, newVariant];
+        const updatedVariants = cloneDeep(variants);
+
+        if (editing) {
+            const variantIdxToUpdate = updatedVariants.findIndex(
+                (variant: IFeatureVariant) => variant.name === newVariant.name
+            );
+            updatedVariants[variantIdxToUpdate] = newVariant;
+        } else {
+            updatedVariants.push(newVariant);
+        }
+
+        // TODO: use `FeatureEnvironmentVariants` methods instead? Both for payload and update.
 
         const newVariants = updateWeight(updatedVariants, 1000);
 
@@ -186,7 +217,7 @@ export const EnvironmentVariantModal = ({
                 getAddEnvironmentVariantPayload()
             );
             setToastData({
-                title: 'Variant successfully added!',
+                title: `Variant successfully ${editing ? 'edited' : 'added'}!`,
                 type: 'success',
             });
             refetch();
@@ -213,7 +244,7 @@ export const EnvironmentVariantModal = ({
 
     const isNameNotEmpty = (name: string) => name.length;
     const isNameUnique = (name: string) =>
-        !environment?.variants?.some(variant => variant.name === name);
+        editing || !variants.some(variant => variant.name === name);
     const isValid = isNameNotEmpty(name) && isNameUnique(name);
 
     const onSetName = (name: string) => {
@@ -236,8 +267,6 @@ export const EnvironmentVariantModal = ({
         }
     };
 
-    const editing = Boolean(variant);
-    const variants = environment?.variants || [];
     const customPercentageVisible =
         (editing && variants.length > 1) || (!editing && variants.length > 0);
 
@@ -247,12 +276,12 @@ export const EnvironmentVariantModal = ({
             onClose={() => {
                 setOpen(false);
             }}
-            label="Add variant"
+            label={editing ? 'Edit variant' : 'Add variant'}
         >
             <FormTemplate
                 loading={loading}
                 modal
-                title="Add variant"
+                title={editing ? 'Edit variant' : 'Add variant'}
                 description=""
                 documentationLink=""
                 documentationLinkLabel=""
@@ -274,6 +303,7 @@ export const EnvironmentVariantModal = ({
                             errorText={errors.name}
                             value={name}
                             onChange={e => onSetName(e.target.value)}
+                            disabled={editing}
                             required
                         />
                         <ConditionallyRender
@@ -344,7 +374,7 @@ export const EnvironmentVariantModal = ({
                             color="primary"
                             disabled={!isValid}
                         >
-                            Add variant
+                            {editing ? 'Save' : 'Add'} variant
                         </Button>
                         <StyledCancelButton
                             onClick={() => {

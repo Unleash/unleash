@@ -1,6 +1,6 @@
 import React, { useMemo, useState, VFC } from 'react';
 import { HeaderGroup, useGlobalFilter, useTable } from 'react-table';
-import { Alert, Box, Typography } from '@mui/material';
+import { Alert, Box, styled, Typography } from '@mui/material';
 import {
     SortableTableHeader,
     Table,
@@ -17,7 +17,10 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useChangeRequestConfig } from 'hooks/api/getters/useChangeRequestConfig/useChangeRequestConfig';
-import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
+import {
+    IChangeRequestConfig,
+    useChangeRequestApi,
+} from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { UPDATE_PROJECT } from '@server/types/permissions';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
@@ -25,11 +28,11 @@ import { ChangeRequestProcessHelp } from './ChangeRequestProcessHelp/ChangeReque
 import GeneralSelect from '../../../../common/GeneralSelect/GeneralSelect';
 import { KeyboardArrowDownOutlined } from '@mui/icons-material';
 
-interface IUpdateConfiguration {
-    environment: string;
-    isEnabled: boolean;
-    requiredApprovals: number;
-}
+const StyledBox = styled(Box)(({ theme }) => ({
+    padding: theme.spacing(1),
+    display: 'flex',
+    justifyContent: 'center',
+}));
 
 export const ChangeRequestConfiguration: VFC = () => {
     const [dialogState, setDialogState] = useState<{
@@ -56,7 +59,6 @@ export const ChangeRequestConfiguration: VFC = () => {
             requiredApprovals: number
         ) =>
         () => {
-            console.log('dialog open');
             setDialogState({
                 isOpen: true,
                 enableEnvironment,
@@ -64,26 +66,6 @@ export const ChangeRequestConfiguration: VFC = () => {
                 requiredApprovals,
             });
         };
-
-    async function updateConfiguration() {
-        try {
-            await updateChangeRequestEnvironmentConfig(
-                projectId,
-                dialogState.enableEnvironment,
-                !dialogState.isEnabled,
-                dialogState.requiredApprovals
-            );
-            setToastData({
-                type: 'success',
-                title: 'Updated change request status',
-                text: 'Successfully updated change request status.',
-            });
-            refetchChangeRequestConfig();
-        } catch (error) {
-            const message = formatUnknownError(error);
-            setToastApiError(message);
-        }
-    }
 
     const onConfirm = async () => {
         if (dialogState.enableEnvironment) {
@@ -96,6 +78,38 @@ export const ChangeRequestConfiguration: VFC = () => {
             requiredApprovals: 1,
         });
     };
+
+    async function updateConfiguration(config?: IChangeRequestConfig) {
+        try {
+            await updateChangeRequestEnvironmentConfig(
+                config || {
+                    project: projectId,
+                    environment: dialogState.enableEnvironment,
+                    enabled: !dialogState.isEnabled,
+                    requiredApprovals: dialogState.requiredApprovals,
+                }
+            );
+            setToastData({
+                type: 'success',
+                title: 'Updated change request status',
+                text: 'Successfully updated change request status.',
+            });
+            await refetchChangeRequestConfig();
+        } catch (error) {
+            const message = formatUnknownError(error);
+            setToastApiError(message);
+        }
+    }
+
+    const approvalOptions = Array.from(Array(10).keys())
+        .map(key => String(key + 1))
+        .map(key => {
+            const labelText = key === '1' ? 'approval' : 'approvals';
+            return {
+                key,
+                label: `${key} ${labelText}`,
+            };
+        });
 
     const columns = useMemo(
         () => [
@@ -111,28 +125,30 @@ export const ChangeRequestConfiguration: VFC = () => {
                 disableSortBy: true,
             },
             {
-                Header: 'Required approvers',
-                accessor: 'requiredApprovers',
+                Header: 'Required approvals',
                 align: 'center',
 
-                Cell: ({ value, row: { original } }: any) => (
-                    <GeneralSelect
-                        options={[
-                            { key: '1', label: '1 approver3' },
-                            { key: '2', label: '2 approvers' },
-                        ]}
-                        value={original.requiredApprovals || 1}
-                        onChange={approvals => {
-                            onRowChange(
-                                original.environment,
-                                original.changeRequestEnabled,
-                                Number(approvals)
-                            )();
-                        }}
-                        name="environment"
-                        IconComponent={KeyboardArrowDownOutlined}
-                        fullWidth
-                        // className={styles.selectInput}
+                Cell: ({ row: { original } }: any) => (
+                    <ConditionallyRender
+                        condition={original.changeRequestEnabled}
+                        show={
+                            <GeneralSelect
+                                options={approvalOptions}
+                                value={original.requiredApprovals || 1}
+                                onChange={approvals => {
+                                    updateConfiguration({
+                                        project: projectId,
+                                        environment: original.environment,
+                                        enabled: original.changeRequestEnabled,
+                                        requiredApprovals: Number(approvals),
+                                    });
+                                }}
+                                name="environment"
+                                IconComponent={KeyboardArrowDownOutlined}
+                                fullWidth
+                                // className={styles.selectInput}
+                            />
+                        }
                     />
                 ),
                 width: 100,
@@ -146,10 +162,7 @@ export const ChangeRequestConfiguration: VFC = () => {
                 align: 'center',
 
                 Cell: ({ value, row: { original } }: any) => (
-                    <Box
-                        sx={{ display: 'flex', justifyContent: 'center' }}
-                        data-loading
-                    >
+                    <StyledBox data-loading>
                         <PermissionSwitch
                             checked={value}
                             environmentId={original.environment}
@@ -162,7 +175,7 @@ export const ChangeRequestConfiguration: VFC = () => {
                                 original.requiredApprovals
                             )}
                         />
-                    </Box>
+                    </StyledBox>
                 ),
                 width: 100,
                 disableGlobalFilter: true,
@@ -236,7 +249,6 @@ export const ChangeRequestConfiguration: VFC = () => {
                 } change requests`}
             >
                 <Typography sx={{ mb: 1 }}>
-                    {dialogState.requiredApprovals} approvers are required to
                     You are about to{' '}
                     {dialogState.isEnabled ? 'disable' : 'enable'} “Change
                     request”

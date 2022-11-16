@@ -2,7 +2,7 @@ import { DragEventHandler, FC, ReactNode } from 'react';
 import { DragIndicator } from '@mui/icons-material';
 import { styled, IconButton, Box } from '@mui/material';
 import classNames from 'classnames';
-import { IFeatureStrategy, IFeatureStrategyPayload } from 'interfaces/strategy';
+import { IFeatureStrategyPayload } from 'interfaces/strategy';
 import {
     getFeatureStrategyIcon,
     formatStrategyName,
@@ -12,7 +12,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { useStyles } from './StrategyItemContainer.styles';
 
 interface IStrategyItemContainerProps {
-    strategy: IFeatureStrategyPayload;
+    strategy: IFeatureStrategy;
     onDragStart?: DragEventHandler<HTMLButtonElement>;
     onDragEnd?: DragEventHandler<HTMLButtonElement>;
     actions?: ReactNode;
@@ -48,7 +48,7 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
     className,
 }) => {
     const { classes: styles } = useStyles();
-    const Icon = getFeatureStrategyIcon(strategy.name || '');
+    const Icon = getFeatureStrategyIcon(strategy.name);
 
     return (
         <Box sx={{ position: 'relative' }}>
@@ -85,7 +85,7 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
                     <StringTruncator
                         maxWidth="150"
                         maxLength={15}
-                        text={formatStrategyName(strategy.name || '')}
+                        text={formatStrategyName(strategy.name)}
                     />
                     <div className={styles.actions}>{actions}</div>
                 </div>

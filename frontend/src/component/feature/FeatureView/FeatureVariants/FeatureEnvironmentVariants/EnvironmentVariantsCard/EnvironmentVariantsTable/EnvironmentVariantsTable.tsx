@@ -7,11 +7,17 @@ import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightC
 import { calculateVariantWeight } from 'component/common/util';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useSearch } from 'hooks/useSearch';
-import { IFeatureEnvironment, IFeatureVariant } from 'interfaces/featureToggle';
+import {
+    IFeatureEnvironment,
+    IFeatureVariant,
+    IOverride,
+    IPayload,
+} from 'interfaces/featureToggle';
 import { useEffect, useMemo } from 'react';
 import { useFlexLayout, useSortBy, useTable } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
-import { PayloadOverridesCell } from './PayloadOverridesCell/PayloadOverridesCell';
+import { PayloadCell } from './PayloadCell/PayloadCell';
+import { OverridesCell } from './OverridesCell/OverridesCell';
 import { VariantsActionCell } from './VariantsActionsCell/VariantsActionsCell';
 
 const StyledTableContainer = styled('div')(({ theme }) => ({
@@ -50,21 +56,26 @@ export const EnvironmentVariantsTable = ({
                 searchable: true,
             },
             {
-                Header: 'Payload/Overrides',
-                accessor: 'data',
-                Cell: ({
-                    row: {
-                        original: { overrides, payload },
-                    },
-                }: any) => {
-                    return (
-                        <PayloadOverridesCell
-                            overrides={overrides}
-                            payload={payload}
-                        />
-                    );
-                },
+                Header: 'Payload',
+                accessor: 'payload',
+                Cell: PayloadCell,
                 disableSortBy: true,
+                searchable: true,
+                filterParsing: (value: IPayload) => value?.value,
+            },
+            {
+                Header: 'Overrides',
+                accessor: 'overrides',
+                Cell: OverridesCell,
+                disableSortBy: true,
+                searchable: true,
+                filterParsing: (value: IOverride[]) =>
+                    value
+                        ?.map(
+                            ({ contextName, values }) =>
+                                `${contextName}:${values.join()}`
+                        )
+                        .join('\n') || '',
             },
             {
                 Header: 'Weight',
@@ -139,7 +150,7 @@ export const EnvironmentVariantsTable = ({
             hiddenColumns.push('weightType');
         }
         if (isMediumScreen) {
-            hiddenColumns.push('data');
+            hiddenColumns.push('payload', 'overrides');
         }
         setHiddenColumns(hiddenColumns);
     }, [setHiddenColumns, isMediumScreen, isLargeScreen]);

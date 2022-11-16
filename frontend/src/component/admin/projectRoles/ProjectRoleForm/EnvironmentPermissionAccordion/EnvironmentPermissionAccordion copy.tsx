@@ -13,17 +13,21 @@ import {
     Typography,
 } from '@mui/material';
 import { ExpandMore } from '@mui/icons-material';
-import { IPermission } from 'interfaces/project';
+import {
+    IPermission,
+    IProjectEnvironmentPermissions,
+} from 'interfaces/project';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { ICheckedPermission } from 'component/admin/projectRoles/hooks/useProjectRoleForm';
 import EnvironmentIcon from 'component/common/EnvironmentIcon/EnvironmentIcon';
 
+type PermissionMap = { [key: string]: boolean };
+
 interface IEnvironmentPermissionAccordionProps {
-    permissions: IPermission[];
+    environment: IProjectEnvironmentPermissions;
+    handlePermissionChange: (permission: IPermission, type: string) => void;
+    checkAllEnvironmentPermissions: (envName: string) => void;
     checkedPermissions: ICheckedPermission;
-    title: string;
-    onPermissionChange: (permission: IPermission) => void;
-    onCheckAll: () => void;
     getRoleKey: (permission: { id: number; environment?: string }) => string;
 }
 
@@ -44,23 +48,22 @@ const StyledTitle = styled(StringTruncator)(({ theme }) => ({
 const EnvironmentPermissionAccordion: VFC<
     IEnvironmentPermissionAccordionProps
 > = ({
-    title,
-    permissions,
+    environment,
+    handlePermissionChange,
+    checkAllEnvironmentPermissions,
     checkedPermissions,
-    onPermissionChange,
-    onCheckAll,
     getRoleKey,
 }) => {
     const permissionMap = useMemo(
         () =>
-            permissions?.reduce(
-                (acc: Record<string, boolean>, curr: IPermission) => {
+            environment?.permissions?.reduce(
+                (acc: PermissionMap, curr: IPermission) => {
                     acc[getRoleKey(curr)] = true;
                     return acc;
                 },
                 {}
             ) || {},
-        [permissions]
+        [environment?.permissions]
     );
     const permissionCount = useMemo(
         () =>
@@ -94,13 +97,13 @@ const EnvironmentPermissionAccordion: VFC<
                     <AccordionHeader>
                         <EnvironmentIcon enabled={false} />
                         <StyledTitle
-                            text={title}
+                            text={environment.name}
                             maxWidth="120"
                             maxLength={25}
                         />{' '}
                         <Typography variant="body2" color="text.secondary">
-                            ({permissionCount} / {permissions?.length}{' '}
-                            permissions)
+                            ({permissionCount} /{' '}
+                            {environment?.permissions?.length} permissions)
                         </Typography>
                     </AccordionHeader>
                 </AccordionSummary>
@@ -115,47 +118,56 @@ const EnvironmentPermissionAccordion: VFC<
                     <Button
                         variant="text"
                         size="small"
-                        onClick={onCheckAll}
+                        onClick={() =>
+                            checkAllEnvironmentPermissions(environment?.name)
+                        }
                         sx={{
                             fontWeight: theme =>
                                 theme.typography.fontWeightRegular,
                         }}
                     >
-                        {permissionCount === permissions?.length
+                        {checkedPermissions[
+                            `check-all-environment-${environment?.name}`
+                        ]
                             ? 'Unselect all '
                             : 'Select all '}
                         environment permissions
                     </Button>
                     <Box>
-                        {permissions?.map((permission: IPermission) => {
-                            return (
-                                <FormControlLabel
-                                    sx={{
-                                        minWidth: {
-                                            sm: '300px',
-                                            xs: 'auto',
-                                        },
-                                    }}
-                                    key={getRoleKey(permission)}
-                                    control={
-                                        <Checkbox
-                                            checked={
-                                                checkedPermissions[
-                                                    getRoleKey(permission)
-                                                ]
-                                                    ? true
-                                                    : false
-                                            }
-                                            onChange={() =>
-                                                onPermissionChange(permission)
-                                            }
-                                            color="primary"
-                                        />
-                                    }
-                                    label={permission.displayName}
-                                />
-                            );
-                        })}
+                        {environment?.permissions?.map(
+                            (permission: IPermission) => {
+                                return (
+                                    <FormControlLabel
+                                        sx={{
+                                            minWidth: {
+                                                sm: '300px',
+                                                xs: 'auto',
+                                            },
+                                        }}
+                                        key={getRoleKey(permission)}
+                                        control={
+                                            <Checkbox
+                                                checked={
+                                                    checkedPermissions[
+                                                        getRoleKey(permission)
+                                                    ]
+                                                        ? true
+                                                        : false
+                                                }
+                                                onChange={() =>
+                                                    handlePermissionChange(
+                                                        permission,
+                                                        environment.name
+                                                    )
+                                                }
+                                                color="primary"
+                                            />
+                                        }
+                                        label={permission.displayName}
+                                    />
+                                );
+                            }
+                        )}
                     </Box>
                 </AccordionDetails>
             </Accordion>

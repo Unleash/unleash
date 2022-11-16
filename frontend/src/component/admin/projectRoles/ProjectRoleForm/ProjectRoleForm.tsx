@@ -101,6 +101,7 @@ const ProjectRoleForm: React.FC<IProjectRoleForm> = ({
             </div>
             <h3 className={styles.header}>
                 <TopicIcon /> Project permissions
+                {/* FIXME: refactor */}
             </h3>
             <div>
                 {project.map(permission => (
@@ -154,12 +155,15 @@ const ProjectRoleForm: React.FC<IProjectRoleForm> = ({
             <div>
                 {environments.map(environment => (
                     <EnvironmentPermissionAccordion
-                        environment={environment}
+                        title={environment.name}
+                        permissions={environment.permissions}
                         key={environment.name}
                         checkedPermissions={checkedPermissions}
-                        handlePermissionChange={handlePermissionChange}
-                        checkAllEnvironmentPermissions={
-                            checkAllEnvironmentPermissions
+                        onPermissionChange={(permission: IPermission) =>
+                            handlePermissionChange(permission, environment.name)
+                        }
+                        onCheckAll={() =>
+                            checkAllEnvironmentPermissions(environment.name)
                         }
                         getRoleKey={getRoleKey}
                     />

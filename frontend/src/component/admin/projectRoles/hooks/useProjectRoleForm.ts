@@ -15,6 +15,9 @@ export interface ICheckedPermission {
 }
 
 export const PROJECT_CHECK_ALL_KEY = 'check-all-project';
+/**
+ * @deprecated
+ */
 export const ENVIRONMENT_CHECK_ALL_KEY = 'check-all-environment';
 
 const useProjectRoleForm = (
@@ -133,6 +136,9 @@ const useProjectRoleForm = (
         setCheckedPermissions(checkedPermissionsCopy);
     };
 
+    /**
+     * @deprecated
+     */
     const checkAllProjectPermissions = () => {
         const { project } = permissions;
         const checkedPermissionsCopy = cloneDeep(checkedPermissions);
@@ -162,6 +168,9 @@ const useProjectRoleForm = (
         setCheckedPermissions(checkedPermissionsCopy);
     };
 
+    /**
+     * @deprecated
+     */
     const checkAllEnvironmentPermissions = (envName: string) => {
         const { environments } = permissions;
         const checkedPermissionsCopy = cloneDeep(checkedPermissions);

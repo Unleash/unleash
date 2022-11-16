@@ -8,6 +8,7 @@ import { StrategyExecution } from './StrategyExecution/StrategyExecution';
 import { useStyles } from './FeatureStrategyItem.styles';
 import { StrategyItemContainer } from 'component/common/StrategyItemContainer/StrategyItemContainer';
 import { objectId } from 'utils/objectId';
+import { IFeatureStrategy } from 'interfaces/strategy';
 
 interface IFeatureStrategyItemProps {
     strategy: PlaygroundStrategySchema;

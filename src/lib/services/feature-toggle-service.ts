@@ -585,11 +585,13 @@ class FeatureToggleService {
         featureName: string,
         archived: boolean = false,
         projectId?: string,
+        environmentVariants: boolean = false,
     ): Promise<FeatureToggleWithEnvironment> {
         if (projectId) {
             await this.validateFeatureContext({ featureName, projectId });
         }
-        if (this.flagResolver.isEnabled('variantsPerEnvironment')) {
+
+        if (environmentVariants) {
             return this.featureStrategiesStore.getFeatureToggleWithVariantEnvs(
                 featureName,
                 archived,

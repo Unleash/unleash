@@ -26,7 +26,7 @@ import {
 import TimeAgo from 'react-timeago';
 import { InputProps as StandardInputProps } from '@mui/material/Input/Input';
 import { ChangeRequestComment } from './ChangeRequestComments/ChangeRequestComment';
-import { AddComment } from './ChangeRequestComments/AddComment';
+import { AddCommentField } from './ChangeRequestComments/AddCommentField';
 
 const StyledAsideBox = styled(Box)(({ theme }) => ({
     width: '30%',
@@ -139,7 +139,7 @@ export const ChangeRequestOverview: FC = () => {
                                 comment={comment}
                             />
                         ))}
-                        <AddComment
+                        <AddCommentField
                             imageUrl={changeRequest?.createdBy?.imageUrl}
                             commentText={commentText}
                             onAddComment={onAddComment}

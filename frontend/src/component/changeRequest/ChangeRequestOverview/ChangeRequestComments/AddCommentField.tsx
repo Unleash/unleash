@@ -9,7 +9,7 @@ const AddCommentWrapper = styled(Box)(({ theme }) => ({
     marginBottom: theme.spacing(1),
 }));
 
-export const AddComment: FC<{
+export const AddCommentField: FC<{
     imageUrl: string;
     commentText: string;
     onAddComment: () => void;

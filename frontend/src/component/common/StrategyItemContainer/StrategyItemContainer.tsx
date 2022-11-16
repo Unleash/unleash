@@ -2,7 +2,7 @@ import { DragEventHandler, FC, ReactNode } from 'react';
 import { DragIndicator } from '@mui/icons-material';
 import { styled, IconButton, Box } from '@mui/material';
 import classNames from 'classnames';
-import { IFeatureStrategyPayload } from 'interfaces/strategy';
+import { IFeatureStrategy } from 'interfaces/strategy';
 import {
     getFeatureStrategyIcon,
     formatStrategyName,

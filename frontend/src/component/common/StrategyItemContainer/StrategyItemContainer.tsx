@@ -2,7 +2,7 @@ import { DragEventHandler, FC, ReactNode } from 'react';
 import { DragIndicator } from '@mui/icons-material';
 import { styled, IconButton, Box } from '@mui/material';
 import classNames from 'classnames';
-import { IFeatureStrategy } from 'interfaces/strategy';
+import { IFeatureStrategy, IFeatureStrategyPayload } from 'interfaces/strategy';
 import {
     getFeatureStrategyIcon,
     formatStrategyName,
@@ -12,7 +12,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { useStyles } from './StrategyItemContainer.styles';
 
 interface IStrategyItemContainerProps {
-    strategy: IFeatureStrategy;
+    strategy: IFeatureStrategyPayload;
     onDragStart?: DragEventHandler<HTMLButtonElement>;
     onDragEnd?: DragEventHandler<HTMLButtonElement>;
     actions?: ReactNode;

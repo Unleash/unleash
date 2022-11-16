@@ -21,7 +21,7 @@ export interface IFeatureStrategyPayload {
     name?: string;
     constraints: IConstraint[];
     parameters: IFeatureStrategyParameters;
-    segments: [];
+    segments?: [];
 }
 
 export interface IStrategy {

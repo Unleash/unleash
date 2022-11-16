@@ -227,6 +227,7 @@ export const FeatureEnvironmentVariants = () => {
                 refetch={refetchFeature}
             />
             <VariantDeleteDialog
+                variant={selectedVariant!}
                 open={deleteOpen}
                 setOpen={setDeleteOpen}
                 onConfirm={onDeleteConfirm}

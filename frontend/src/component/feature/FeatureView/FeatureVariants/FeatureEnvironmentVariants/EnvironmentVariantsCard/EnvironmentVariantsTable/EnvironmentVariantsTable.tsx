@@ -1,5 +1,4 @@
-import { Add } from '@mui/icons-material';
-import { Button, styled, useMediaQuery, useTheme } from '@mui/material';
+import { styled, useMediaQuery, useTheme } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
@@ -22,7 +21,6 @@ const StyledTableContainer = styled('div')(({ theme }) => ({
 interface IEnvironmentVariantsTableProps {
     environment: IFeatureEnvironment;
     searchValue: string;
-    onAddVariant: () => void;
     onEditVariant: (variant: IFeatureVariant) => void;
     onDeleteVariant: (variant: IFeatureVariant) => void;
 }
@@ -30,7 +28,6 @@ interface IEnvironmentVariantsTableProps {
 export const EnvironmentVariantsTable = ({
     environment,
     searchValue,
-    onAddVariant,
     onEditVariant,
     onDeleteVariant,
 }: IEnvironmentVariantsTableProps) => {
@@ -147,39 +144,30 @@ export const EnvironmentVariantsTable = ({
         setHiddenColumns(hiddenColumns);
     }, [setHiddenColumns, isMediumScreen, isLargeScreen]);
 
-    if (variants.length === 0) {
-        return null;
-    }
-
     return (
-        <>
-            <StyledTableContainer>
-                <SearchHighlightProvider value={getSearchText(searchValue)}>
-                    <VirtualizedTable
-                        rows={rows}
-                        headerGroups={headerGroups}
-                        prepareRow={prepareRow}
-                    />
-                </SearchHighlightProvider>
-                <ConditionallyRender
-                    condition={rows.length === 0}
-                    show={
-                        <ConditionallyRender
-                            condition={searchValue?.length > 0}
-                            show={
-                                <TablePlaceholder>
-                                    No variants found matching &ldquo;
-                                    {searchValue}
-                                    &rdquo;
-                                </TablePlaceholder>
-                            }
-                        />
-                    }
+        <StyledTableContainer>
+            <SearchHighlightProvider value={getSearchText(searchValue)}>
+                <VirtualizedTable
+                    rows={rows}
+                    headerGroups={headerGroups}
+                    prepareRow={prepareRow}
                 />
-            </StyledTableContainer>
-            <Button onClick={onAddVariant} variant="text" startIcon={<Add />}>
-                add variant
-            </Button>
-        </>
+            </SearchHighlightProvider>
+            <ConditionallyRender
+                condition={rows.length === 0}
+                show={
+                    <ConditionallyRender
+                        condition={searchValue?.length > 0}
+                        show={
+                            <TablePlaceholder>
+                                No variants found matching &ldquo;
+                                {searchValue}
+                                &rdquo;
+                            </TablePlaceholder>
+                        }
+                    />
+                }
+            />
+        </StyledTableContainer>
     );
 };

@@ -7,9 +7,7 @@ import {
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import useToast from 'hooks/useToast';
 import { FormEvent, useEffect, useState } from 'react';
-import { formatUnknownError } from 'utils/formatUnknownError';
 import Input from 'component/common/Input/Input';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -157,7 +155,6 @@ export const EnvironmentVariantModal = ({
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
 
-    const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
 
     const [name, setName] = useState('');
@@ -235,16 +232,7 @@ export const EnvironmentVariantModal = ({
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
-        try {
-            onConfirm(getUpdatedVariants());
-            setToastData({
-                title: `Variant successfully ${editing ? 'edited' : 'added'}!`,
-                type: 'success',
-            });
-        } catch (error: unknown) {
-            setToastApiError(formatUnknownError(error));
-        }
+        onConfirm(getUpdatedVariants());
     };
 
     const formatApiCode = () => {

@@ -25,6 +25,9 @@ export const VariantsActionCell = ({
                 permission={UPDATE_FEATURE_VARIANTS}
                 projectId={projectId}
                 onClick={() => editVariant(variant)}
+                tooltipProps={{
+                    title: 'Edit variant',
+                }}
             >
                 <Edit />
             </PermissionIconButton>
@@ -34,6 +37,9 @@ export const VariantsActionCell = ({
                 data-testid={`VARIANT_DELETE_BUTTON_${variant.name}`}
                 projectId={projectId}
                 onClick={() => deleteVariant(variant)}
+                tooltipProps={{
+                    title: 'Delete variant',
+                }}
             >
                 <Delete />
             </PermissionIconButton>

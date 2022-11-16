@@ -1,7 +1,11 @@
-import { CloudCircle } from '@mui/icons-material';
-import { styled } from '@mui/material';
+import { Add, CloudCircle } from '@mui/icons-material';
+import { Button, Divider, styled } from '@mui/material';
 import { IFeatureEnvironment, IFeatureVariant } from 'interfaces/featureToggle';
 import { EnvironmentVariantsTable } from './EnvironmentVariantsTable/EnvironmentVariantsTable';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
+import { useMemo } from 'react';
+import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 
 const StyledCard = styled('div')(({ theme }) => ({
     padding: theme.spacing(3),
@@ -12,7 +16,7 @@ const StyledCard = styled('div')(({ theme }) => ({
     },
 }));
 
-const StyledHeader = styled('div')(({ theme }) => ({
+const StyledHeader = styled('div')(() => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -39,12 +43,27 @@ const StyledName = styled('span', {
     marginLeft: theme.spacing(1.25),
 }));
 
+const StyledDivider = styled(Divider)(({ theme }) => ({
+    margin: theme.spacing(3, 0),
+}));
+
+const StyledDescription = styled('p')(({ theme }) => ({
+    fontSize: theme.fontSizes.smallBody,
+    color: theme.palette.text.secondary,
+    marginBottom: theme.spacing(1.5),
+}));
+
+const StyledGeneralSelect = styled(GeneralSelect)(({ theme }) => ({
+    minWidth: theme.spacing(20),
+}));
+
 interface IEnvironmentVariantsCardProps {
     environment: IFeatureEnvironment;
     searchValue: string;
     onAddVariant: () => void;
     onEditVariant: (variant: IFeatureVariant) => void;
     onDeleteVariant: (variant: IFeatureVariant) => void;
+    onUpdateStickiness: (variant: IFeatureVariant[]) => void;
     children?: React.ReactNode;
 }
 
@@ -54,8 +73,39 @@ export const EnvironmentVariantsCard = ({
     onAddVariant,
     onEditVariant,
     onDeleteVariant,
+    onUpdateStickiness,
     children,
 }: IEnvironmentVariantsCardProps) => {
+    const { context } = useUnleashContext();
+
+    const variants = environment.variants ?? [];
+    const stickiness = variants[0]?.stickiness || 'default';
+
+    const stickinessOptions = useMemo(
+        () => [
+            'default',
+            ...context.filter(c => c.stickiness).map(c => c.name),
+        ],
+        [context]
+    );
+
+    const options = stickinessOptions.map(c => ({ key: c, label: c }));
+    if (!stickinessOptions.includes(stickiness)) {
+        options.push({ key: stickiness, label: stickiness });
+    }
+
+    const updateStickiness = async (stickiness: string) => {
+        const newVariants = [...variants].map(variant => ({
+            ...variant,
+            stickiness,
+        }));
+        onUpdateStickiness(newVariants);
+    };
+
+    const onStickinessChange = (value: string) => {
+        updateStickiness(value).catch(console.warn);
+    };
+
     return (
         <StyledCard>
             <StyledHeader>
@@ -67,12 +117,52 @@ export const EnvironmentVariantsCard = ({
                 </div>
                 {children}
             </StyledHeader>
-            <EnvironmentVariantsTable
-                environment={environment}
-                searchValue={searchValue}
-                onAddVariant={onAddVariant}
-                onEditVariant={onEditVariant}
-                onDeleteVariant={onDeleteVariant}
+            <ConditionallyRender
+                condition={variants.length > 0}
+                show={
+                    <>
+                        <EnvironmentVariantsTable
+                            environment={environment}
+                            searchValue={searchValue}
+                            onEditVariant={onEditVariant}
+                            onDeleteVariant={onDeleteVariant}
+                        />
+                        <Button
+                            onClick={onAddVariant}
+                            variant="text"
+                            startIcon={<Add />}
+                        >
+                            add variant
+                        </Button>
+                        <ConditionallyRender
+                            condition={variants.length > 1}
+                            show={
+                                <>
+                                    <StyledDivider />
+                                    <p>Stickiness</p>
+                                    <StyledDescription>
+                                        By overriding the stickiness you can
+                                        control which parameter is used to
+                                        ensure consistent traffic allocation
+                                        across variants.{' '}
+                                        <a
+                                            href="https://docs.getunleash.io/advanced/toggle_variants"
+                                            target="_blank"
+                                            rel="noreferrer"
+                                        >
+                                            Read more
+                                        </a>
+                                    </StyledDescription>
+                                    <StyledGeneralSelect
+                                        options={options}
+                                        value={stickiness}
+                                        onChange={onStickinessChange}
+                                    />
+                                </>
+                            }
+                        />
+                    </>
+                }
             />
         </StyledCard>
     );

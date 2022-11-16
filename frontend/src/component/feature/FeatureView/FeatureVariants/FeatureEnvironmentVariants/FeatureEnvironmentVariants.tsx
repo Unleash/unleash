@@ -17,6 +17,8 @@ import { EnvironmentVariantModal } from './EnvironmentVariantModal/EnvironmentVa
 import { EnvironmentVariantsCard } from './EnvironmentVariantsCard/EnvironmentVariantsCard';
 import VariantDeleteDialog from './VariantDeleteDialog/VariantDeleteDialog';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
+import { formatUnknownError } from 'utils/formatUnknownError';
+import useToast from 'hooks/useToast';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(4),
@@ -31,6 +33,7 @@ const StyledButtonContainer = styled('div')(({ theme }) => ({
 }));
 
 export const FeatureEnvironmentVariants = () => {
+    const { setToastData, setToastApiError } = useToast();
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -84,6 +87,8 @@ export const FeatureEnvironmentVariants = () => {
         const environmentVariants = environment.variants ?? [];
         const patch = getPayload(environmentVariants, variants);
 
+        if (patch.length === 0) return;
+
         await patchFeatureEnvironmentVariants(
             projectId,
             featureId,
@@ -132,8 +137,33 @@ export const FeatureEnvironmentVariants = () => {
 
     const onVariantConfirm = async (updatedVariants: IFeatureVariant[]) => {
         if (selectedEnvironment) {
-            await updateVariants(selectedEnvironment, updatedVariants);
-            setModalOpen(false);
+            try {
+                await updateVariants(selectedEnvironment, updatedVariants);
+                setModalOpen(false);
+                setToastData({
+                    title: `Variant ${
+                        selectedVariant ? 'updated' : 'added'
+                    } successfully`,
+                    type: 'success',
+                });
+            } catch (error: unknown) {
+                setToastApiError(formatUnknownError(error));
+            }
+        }
+    };
+
+    const onUpdateStickiness = async (
+        environment: IFeatureEnvironment,
+        updatedVariants: IFeatureVariant[]
+    ) => {
+        try {
+            await updateVariants(environment, updatedVariants);
+            setToastData({
+                title: 'Variant stickiness updated successfully',
+                type: 'success',
+            });
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
         }
     };
 
@@ -192,6 +222,9 @@ export const FeatureEnvironmentVariants = () => {
                         }
                         onDeleteVariant={(variant: IFeatureVariant) =>
                             deleteVariant(environment, variant)
+                        }
+                        onUpdateStickiness={(variants: IFeatureVariant[]) =>
+                            onUpdateStickiness(environment, variants)
                         }
                     >
                         <ConditionallyRender

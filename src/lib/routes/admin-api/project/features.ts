@@ -463,7 +463,6 @@ export default class ProjectFeaturesController extends Controller {
     ): Promise<void> {
         const { featureName, projectId } = req.params;
         const { variantEnvironments } = req.query;
-        console.log('Variant envs', variantEnvironments);
         const feature = await this.featureService.getFeature(
             featureName,
             false,

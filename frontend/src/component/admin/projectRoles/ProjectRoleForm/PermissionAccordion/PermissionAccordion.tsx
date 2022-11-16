@@ -1,4 +1,4 @@
-import { ReactNode, useMemo, VFC } from 'react';
+import { ReactNode, useMemo, useState, VFC } from 'react';
 import {
     Accordion,
     AccordionDetails,
@@ -22,6 +22,7 @@ interface IEnvironmentPermissionAccordionProps {
     checkedPermissions: ICheckedPermission;
     title: string;
     Icon: ReactNode;
+    isInitiallyExpanded?: boolean;
     onPermissionChange: (permission: IPermission) => void;
     onCheckAll: () => void;
     getRoleKey: (permission: { id: number; environment?: string }) => string;
@@ -41,17 +42,17 @@ const StyledTitle = styled(StringTruncator)(({ theme }) => ({
     marginRight: theme.spacing(1),
 }));
 
-export const PermissionAccordion: VFC<
-    IEnvironmentPermissionAccordionProps
-> = ({
+export const PermissionAccordion: VFC<IEnvironmentPermissionAccordionProps> = ({
     title,
     permissions,
     checkedPermissions,
     Icon,
+    isInitiallyExpanded,
     onPermissionChange,
     onCheckAll,
     getRoleKey,
 }) => {
+    const [expanded, setExpanded] = useState(isInitiallyExpanded);
     const permissionMap = useMemo(
         () =>
             permissions?.reduce(
@@ -78,14 +79,21 @@ export const PermissionAccordion: VFC<
     return (
         <Box
             sx={{
-                px: 2,
-                py: 1,
-                mb: 1,
-                border: theme => `1px solid ${theme.palette.divider}`,
-                borderRadius: theme => `${theme.shape.borderRadiusLarge}px`,
+                my: 2,
+                pb: 1,
             }}
         >
-            <Accordion style={{ boxShadow: 'none' }}>
+            <Accordion
+                expanded={expanded}
+                onChange={() => setExpanded(!expanded)}
+                sx={{
+                    boxShadow: 'none',
+                    px: 2,
+                    py: 1,
+                    border: theme => `1px solid ${theme.palette.divider}`,
+                    borderRadius: theme => `${theme.shape.borderRadiusLarge}px`,
+                }}
+            >
                 <AccordionSummary
                     expandIcon={
                         <IconButton>
@@ -127,8 +135,8 @@ export const PermissionAccordion: VFC<
                                 theme.typography.fontWeightRegular,
                         }}
                     >
-                        {isAllChecked ? 'Unselect all ' : 'Select all '}
-                        environment permissions
+                        {isAllChecked ? 'Unselect ' : 'Select '}
+                        all permissions
                     </Button>
                     <Box>
                         {permissions?.map((permission: IPermission) => {

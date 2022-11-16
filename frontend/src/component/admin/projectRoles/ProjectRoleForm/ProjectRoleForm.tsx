@@ -1,6 +1,6 @@
 import React, { Dispatch, FC, ReactNode, SetStateAction } from 'react';
 import { Topic as TopicIcon } from '@mui/icons-material';
-import { Button, Checkbox, FormControlLabel, TextField } from '@mui/material';
+import { Box, Button, TextField, Typography } from '@mui/material';
 import Input from 'component/common/Input/Input';
 import { PermissionAccordion } from './PermissionAccordion/PermissionAccordion';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -11,7 +11,6 @@ import {
     IProjectRolePermissions,
 } from 'interfaces/project';
 import { ICheckedPermission } from '../hooks/useProjectRoleForm';
-import { useStyles } from './ProjectRoleForm.styles';
 
 interface IProjectRoleForm {
     roleName: string;
@@ -55,18 +54,13 @@ const ProjectRoleForm: FC<IProjectRoleForm> = ({
     clearErrors,
     getRoleKey,
 }: IProjectRoleForm) => {
-    const { classes: styles } = useStyles();
-
     const { project, environments } = permissions;
 
     return (
         <form onSubmit={onSubmit}>
-            <div className={styles.container}>
-                <p className={styles.inputDescription}>
-                    What is your role name?
-                </p>
+            <Box sx={{ maxWidth: '400px' }}>
+                <Typography sx={{ mb: 1 }}>What is your role name?</Typography>
                 <Input
-                    className={styles.input}
                     label="Role name"
                     value={roleName}
                     onChange={e => setRoleName(e.target.value)}
@@ -75,76 +69,44 @@ const ProjectRoleForm: FC<IProjectRoleForm> = ({
                     onFocus={() => clearErrors()}
                     onBlur={validateNameUniqueness}
                     autoFocus
+                    sx={{ width: '100%', marginBottom: '1rem' }}
                 />
 
-                <p className={styles.inputDescription}>
-                    What is this role for?
-                </p>
+                <Typography sx={{ mb: 1 }}>What is this role for?</Typography>
                 <TextField
-                    className={styles.input}
                     label="Role description"
                     variant="outlined"
                     multiline
                     maxRows={4}
                     value={roleDesc}
                     onChange={e => setRoleDesc(e.target.value)}
+                    sx={{ width: '100%', marginBottom: '1rem' }}
                 />
-            </div>
-            <div className={styles.permissionErrorContainer}>
+            </Box>
+            <div>
                 <ConditionallyRender
                     condition={Boolean(errors.permissions)}
                     show={
-                        <span className={styles.errorMessage}>
+                        <Typography variant="body2" color="error.main">
                             You must select at least one permission for a role.
-                        </span>
+                        </Typography>
                     }
                 />
             </div>
-            <h3 className={styles.header}>
-                <TopicIcon /> Project permissions
-                {/* FIXME: refactor */}
-            </h3>
-            <div>
-                {project.map(permission => (
-                    <FormControlLabel
-                        key={getRoleKey(permission)}
-                        classes={{ root: styles.label }}
-                        control={
-                            <Checkbox
-                                checked={
-                                    checkedPermissions[getRoleKey(permission)]
-                                        ? true
-                                        : false
-                                }
-                                onChange={() =>
-                                    handlePermissionChange(permission)
-                                }
-                                color="primary"
-                            />
-                        }
-                        label={permission.displayName}
-                    />
-                ))}
-                <FormControlLabel
-                    classes={{ root: styles.label }}
-                    control={
-                        <Checkbox
-                            checked // FIXME: refactor
-                            onChange={() => checkAllProjectPermissions()}
-                            color="primary"
-                        />
-                    }
-                    label={
-                        <>
-                            <strong>Select all</strong> project permissions
-                        </>
-                    }
-                />
-            </div>
-            <h3 className={styles.header}>
-                Environment permissions
-                {/* FIXME: remove */}
-            </h3>
+            <PermissionAccordion
+                isInitiallyExpanded
+                title="Project permissions"
+                Icon={
+                    <TopicIcon color="disabled" sx={{ mr: 1.25, ml: 0.25 }} />
+                }
+                permissions={project}
+                checkedPermissions={checkedPermissions}
+                onPermissionChange={(permission: IPermission) =>
+                    handlePermissionChange(permission)
+                }
+                onCheckAll={checkAllProjectPermissions}
+                getRoleKey={getRoleKey}
+            />
             <div>
                 {environments.map(environment => (
                     <PermissionAccordion
@@ -163,12 +125,18 @@ const ProjectRoleForm: FC<IProjectRoleForm> = ({
                     />
                 ))}
             </div>
-            <div className={styles.buttonContainer}>
+            <Box
+                sx={{
+                    marginTop: 'auto',
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                }}
+            >
                 {children}
-                <Button onClick={onCancel} className={styles.cancelButton}>
+                <Button onClick={onCancel} sx={{ ml: 2 }}>
                     Cancel
                 </Button>
-            </div>
+            </Box>
         </form>
     );
 };

@@ -86,7 +86,6 @@ export const FeatureStrategyEmpty = ({
                     const { id, ...strategyCopy } = {
                         ...strategy,
                         environment: environmentId,
-                        copyOf: strategy.id,
                     };
 
                     return addStrategyToFeature(

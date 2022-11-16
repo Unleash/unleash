@@ -68,7 +68,7 @@ const DraftBannerContent: FC<{
 const StickyBanner = styled(Box)(({ theme }) => ({
     position: 'sticky',
     top: -1,
-    zIndex: 200 /* has to lower than header.zIndex */,
+    zIndex: 250 /* has to lower than header.zIndex and higher than body.zIndex */,
     borderTop: `1px solid ${theme.palette.warning.border}`,
     borderBottom: `1px solid ${theme.palette.warning.border}`,
     backgroundColor: theme.palette.warning.light,

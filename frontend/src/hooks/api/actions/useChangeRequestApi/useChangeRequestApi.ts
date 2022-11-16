@@ -98,12 +98,31 @@ export const useChangeRequestApi = () => {
         }
     };
 
+    const addComment = async (
+        projectId: string,
+        changeSetId: string,
+        text: string
+    ) => {
+        const path = `/api/admin/projects/${projectId}/change-requests/${changeSetId}/comments`;
+        const req = createRequest(path, {
+            method: 'POST',
+            body: JSON.stringify({ text }),
+        });
+
+        try {
+            return await makeRequest(req.caller, req.id);
+        } catch (e) {
+            throw e;
+        }
+    };
+
     return {
         addChangeRequest,
         changeState,
         discardChangeRequestEvent,
         updateChangeRequestEnvironmentConfig,
         discardDraft,
+        addComment,
         errors,
         loading,
     };

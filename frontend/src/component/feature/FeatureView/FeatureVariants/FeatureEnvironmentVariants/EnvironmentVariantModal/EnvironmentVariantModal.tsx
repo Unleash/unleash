@@ -1,5 +1,3 @@
-import * as jsonpatch from 'fast-json-patch';
-
 import { Button, styled } from '@mui/material';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
@@ -12,13 +10,11 @@ import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { IFeatureEnvironment, IFeatureVariant } from 'interfaces/featureToggle';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import { Operation } from 'fast-json-patch';
 import { useOverrides } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantModal/VariantOverrides/useOverrides';
 import SelectMenu from 'component/common/select';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import { OverrideConfig } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantModal/VariantOverrides/VariantOverrides';
-import { updateWeight } from 'component/common/util';
 import cloneDeep from 'lodash.clonedeep';
 import { CloudCircle } from '@mui/icons-material';
 
@@ -128,7 +124,11 @@ interface IEnvironmentVariantModalProps {
     variant?: IFeatureVariant;
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    refetch: () => void;
+    getPayload: (
+        variants: IFeatureVariant[],
+        newVariants: IFeatureVariant[]
+    ) => Operation[];
+    onConfirm: (updatedVariants: IFeatureVariant[]) => void;
 }
 
 export const EnvironmentVariantModal = ({
@@ -136,12 +136,11 @@ export const EnvironmentVariantModal = ({
     variant,
     open,
     setOpen,
-    refetch,
+    getPayload,
+    onConfirm,
 }: IEnvironmentVariantModalProps) => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
-
-    const { patchFeatureEnvironmentVariants, loading } = useFeatureApi();
 
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
@@ -189,11 +188,7 @@ export const EnvironmentVariantModal = ({
         setErrors({});
     }, [open, variant]);
 
-    const createPatch = (newVariants: IFeatureVariant[]) => {
-        return jsonpatch.compare(variants, newVariants);
-    };
-
-    const getAddEnvironmentVariantPayload = (): Operation[] => {
+    const getUpdatedVariants = (): IFeatureVariant[] => {
         const newVariant: IFeatureVariant = {
             name,
             weight: Number(percentage || 100) * 10,
@@ -222,29 +217,18 @@ export const EnvironmentVariantModal = ({
             updatedVariants.push(newVariant);
         }
 
-        // TODO: use `FeatureEnvironmentVariants` methods instead? Both for payload and update.
-
-        const newVariants = updateWeight(updatedVariants, 1000);
-
-        return createPatch(newVariants);
+        return updatedVariants;
     };
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         try {
-            await patchFeatureEnvironmentVariants(
-                projectId,
-                featureId,
-                environment?.name!,
-                getAddEnvironmentVariantPayload()
-            );
+            onConfirm(getUpdatedVariants());
             setToastData({
                 title: `Variant successfully ${editing ? 'edited' : 'added'}!`,
                 type: 'success',
             });
-            refetch();
-            setOpen(false);
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }
@@ -259,7 +243,7 @@ export const EnvironmentVariantModal = ({
     --header 'Authorization: INSERT_API_KEY' \\
     --header 'Content-Type: application/json' \\
     --data-raw '${JSON.stringify(
-        getAddEnvironmentVariantPayload(),
+        getPayload(variants, getUpdatedVariants()),
         undefined,
         2
     )}'`;
@@ -299,7 +283,6 @@ export const EnvironmentVariantModal = ({
             label={editing ? 'Edit variant' : 'Add variant'}
         >
             <FormTemplate
-                loading={loading}
                 modal
                 title={editing ? 'Edit variant' : 'Add variant'}
                 description=""

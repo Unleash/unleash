@@ -130,6 +130,13 @@ export const FeatureEnvironmentVariants = () => {
         }
     };
 
+    const onVariantConfirm = async (updatedVariants: IFeatureVariant[]) => {
+        if (selectedEnvironment) {
+            await updateVariants(selectedEnvironment, updatedVariants);
+            setModalOpen(false);
+        }
+    };
+
     return (
         <PageContent
             isLoading={loading}
@@ -224,7 +231,8 @@ export const FeatureEnvironmentVariants = () => {
                 variant={selectedVariant}
                 open={modalOpen}
                 setOpen={setModalOpen}
-                refetch={refetchFeature}
+                getPayload={getPayload}
+                onConfirm={onVariantConfirm}
             />
             <VariantDeleteDialog
                 variant={selectedVariant}

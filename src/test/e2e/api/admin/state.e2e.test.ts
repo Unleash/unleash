@@ -463,4 +463,5 @@ test(`should not show environment on feature toggle, when environment is disable
 
     expect(body.environments).toHaveLength(1);
     expect(body.environments[0].name).toBe('state-visible-environment');
+    expect(body.environments[0].isEnabled).toBeTruthy();
 });

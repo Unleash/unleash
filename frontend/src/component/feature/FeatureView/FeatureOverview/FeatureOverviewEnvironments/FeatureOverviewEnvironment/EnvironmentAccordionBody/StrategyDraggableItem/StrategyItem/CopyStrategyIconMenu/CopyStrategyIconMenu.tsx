@@ -82,14 +82,14 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
             await addStrategyToFeature(
                 projectId,
                 featureId,
-                environmentId,
+                environment,
                 strategy
             );
             refetchFeature();
             refetchFeatureImmutable();
             setToastData({
                 title: `Strategy created`,
-                text: `Successfully copied a strategy to ${environmentId}`,
+                text: `Successfully copied a strategy to ${environment}`,
                 type: 'success',
             });
         } catch (error) {

@@ -6,6 +6,7 @@ import {
     IFeatureToggleClient,
     IFeatureToggleQuery,
     IStrategyConfig,
+    ITag,
 } from '../types/model';
 import { IFeatureToggleClientStore } from '../types/stores/feature-toggle-client-store';
 import { DEFAULT_ENV } from '../util/constants';
@@ -14,6 +15,7 @@ import EventEmitter from 'events';
 import FeatureToggleStore from './feature-toggle-store';
 import { ensureStringValue } from '../util/ensureStringValue';
 import { mapValues } from '../util/map-values';
+import { IFlagResolver } from '../types/experimental';
 
 export interface FeaturesTable {
     name: string;
@@ -37,11 +39,14 @@ export default class FeatureToggleClientStore
 
     private timer: Function;
 
+    private flagResolver: IFlagResolver;
+
     constructor(
         db: Knex,
         eventBus: EventEmitter,
         getLogger: LogProvider,
         inlineSegmentConstraints: boolean,
+        flagResolver: IFlagResolver,
     ) {
         this.db = db;
         this.logger = getLogger('feature-toggle-client-store.ts');
@@ -51,6 +56,7 @@ export default class FeatureToggleClientStore
                 store: 'feature-toggle',
                 action,
             });
+        this.flagResolver = flagResolver;
     }
 
     private async getAll(
@@ -81,6 +87,14 @@ export default class FeatureToggleClientStore
             'segments.id as segment_id',
             'segments.constraints as segment_constraints',
         ];
+
+        if (isAdmin && this.flagResolver.isEnabled('toggleTagFiltering')) {
+            selectColumns = [
+                ...selectColumns,
+                'ft.tag_value as tag_value',
+                'ft.tag_type as tag_type',
+            ];
+        }
 
         let query = this.db('features')
             .select(selectColumns)
@@ -113,6 +127,14 @@ export default class FeatureToggleClientStore
             )
             .leftJoin('segments', `segments.id`, `fss.segment_id`);
 
+        if (isAdmin && this.flagResolver.isEnabled('toggleTagFiltering')) {
+            query = query.leftJoin(
+                'feature_tag as ft',
+                'ft.feature_name',
+                'features.name',
+            );
+        }
+
         if (featureQuery) {
             if (featureQuery.tag) {
                 const tagQuery = this.db
@@ -144,6 +166,9 @@ export default class FeatureToggleClientStore
                 feature.strategies.push(
                     FeatureToggleClientStore.rowToStrategy(r),
                 );
+            }
+            if (this.isNewTag(feature, r)) {
+                this.addTag(feature, r);
             }
             if (featureQuery?.inlineSegmentConstraints && r.segment_id) {
                 this.addSegmentToStrategy(feature, r);
@@ -190,6 +215,13 @@ export default class FeatureToggleClientStore
         };
     }
 
+    private static rowToTag(row: Record<string, any>): ITag {
+        return {
+            value: row.tag_value,
+            type: row.tag_type,
+        };
+    }
+
     private static removeIdsFromStrategies(features: IFeatureToggleClient[]) {
         features.forEach((feature) => {
             feature.strategies.forEach((strategy) => {
@@ -205,6 +237,29 @@ export default class FeatureToggleClientStore
         return (
             row.strategy_id &&
             !feature.strategies.find((s) => s.id === row.strategy_id)
+        );
+    }
+
+    private addTag(
+        feature: Record<string, any>,
+        row: Record<string, any>,
+    ): void {
+        const tags = feature.tags || [];
+        const newTag = FeatureToggleClientStore.rowToTag(row);
+        feature.tags = [...tags, newTag];
+    }
+
+    private isNewTag(
+        feature: PartialDeep<IFeatureToggleClient>,
+        row: Record<string, any>,
+    ): boolean {
+        return (
+            row.tag_type &&
+            row.tag_value &&
+            !feature.tags?.some(
+                (tag) =>
+                    tag.type === row.tag_type && tag.value === row.tag_value,
+            )
         );
     }
 

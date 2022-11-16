@@ -200,6 +200,7 @@ export default class FakeFeatureStrategiesStore
             type: t.type || 'Release',
             stale: t.stale || false,
             variants: [],
+            tags: [],
         }));
         return Promise.resolve(clientRows);
     }

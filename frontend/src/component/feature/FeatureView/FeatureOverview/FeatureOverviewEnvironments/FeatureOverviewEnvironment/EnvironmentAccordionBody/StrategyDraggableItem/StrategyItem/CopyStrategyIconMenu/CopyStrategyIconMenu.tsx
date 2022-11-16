@@ -19,10 +19,10 @@ import useFeatureStrategyApi from 'hooks/api/actions/useFeatureStrategyApi/useFe
 import useToast from 'hooks/useToast';
 import { useFeatureImmutable } from 'hooks/api/getters/useFeature/useFeatureImmutable';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useChangeRequestAddStrategy } from 'hooks/useChangeRequestAddStrategy';
 import { ChangeRequestDialogue } from '../../../../../../../../../changeRequest/ChangeRequestConfirmDialog/ChangeRequestConfirmDialog';
 import { CopyStrategyMessage } from '../../../../../../../../../changeRequest/ChangeRequestConfirmDialog/ChangeRequestMessages/CopyStrategyMessage';
+import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 
 interface ICopyStrategyIconMenuProps {
     environmentId: string;
@@ -51,8 +51,7 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
         setAnchorEl(null);
     };
     const { hasAccess } = useContext(AccessContext);
-    const { uiConfig } = useUiConfig();
-    const changeRequestsEnabled = uiConfig?.flags?.changeRequests;
+    const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
 
     const {
         changeRequestDialogDetails,
@@ -67,7 +66,7 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
             environment,
             copyOf: strategy.id,
         };
-        if (changeRequestsEnabled) {
+        if (isChangeRequestConfigured(environmentId)) {
             await onChangeRequestAddStrategy(
                 environment,
                 {
@@ -83,14 +82,14 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
             await addStrategyToFeature(
                 projectId,
                 featureId,
-                environmentId,
+                environment,
                 strategy
             );
             refetchFeature();
             refetchFeatureImmutable();
             setToastData({
                 title: `Strategy created`,
-                text: `Successfully copied a strategy to ${environmentId}`,
+                text: `Successfully copied a strategy to ${environment}`,
                 type: 'success',
             });
         } catch (error) {

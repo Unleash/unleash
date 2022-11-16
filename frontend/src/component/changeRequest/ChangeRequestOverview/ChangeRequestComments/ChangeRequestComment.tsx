@@ -33,7 +33,11 @@ export const ChangeRequestComment: FC<{ comment: IChangeRequestComment }> = ({
                 <Box>
                     <strong>{comment.createdBy.username}</strong>{' '}
                     <Typography color="text.secondary" component="span">
-                        commented <TimeAgo date={new Date(comment.createdAt)} />
+                        commented{' '}
+                        <TimeAgo
+                            minPeriod={60}
+                            date={new Date(comment.createdAt)}
+                        />
                     </Typography>
                 </Box>
             </CommentHeader>

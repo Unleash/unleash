@@ -1,65 +1,66 @@
-import React, { ReactNode } from 'react';
+import React, { Dispatch, FC, ReactNode, SetStateAction } from 'react';
 import { Topic as TopicIcon } from '@mui/icons-material';
 import { Button, Checkbox, FormControlLabel, TextField } from '@mui/material';
 import Input from 'component/common/Input/Input';
-import EnvironmentPermissionAccordion from './EnvironmentPermissionAccordion/EnvironmentPermissionAccordion';
-import useProjectRolePermissions from 'hooks/api/getters/useProjectRolePermissions/useProjectRolePermissions';
+import { PermissionAccordion } from './PermissionAccordion/PermissionAccordion';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { IPermission } from 'interfaces/project';
+import EnvironmentIcon from 'component/common/EnvironmentIcon/EnvironmentIcon';
 import {
-    ICheckedPermission,
-    PROJECT_CHECK_ALL_KEY,
-} from '../hooks/useProjectRoleForm';
+    IPermission,
+    IProjectEnvironmentPermissions,
+    IProjectRolePermissions,
+} from 'interfaces/project';
+import { ICheckedPermission } from '../hooks/useProjectRoleForm';
 import { useStyles } from './ProjectRoleForm.styles';
 
 interface IProjectRoleForm {
     roleName: string;
     roleDesc: string;
-    setRoleName: React.Dispatch<React.SetStateAction<string>>;
-    setRoleDesc: React.Dispatch<React.SetStateAction<string>>;
     checkedPermissions: ICheckedPermission;
-    handlePermissionChange: (permission: IPermission, type: string) => void;
+    errors: { [key: string]: string };
+    children: ReactNode;
+    permissions:
+        | IProjectRolePermissions
+        | {
+              project: IPermission[];
+              environments: IProjectEnvironmentPermissions[];
+          };
+    setRoleName: Dispatch<SetStateAction<string>>;
+    setRoleDesc: Dispatch<SetStateAction<string>>;
+    handlePermissionChange: (permission: IPermission) => void;
     checkAllProjectPermissions: () => void;
     checkAllEnvironmentPermissions: (envName: string) => void;
-    handleSubmit: (e: any) => void;
-    handleCancel: () => void;
-    errors: { [key: string]: string };
-    mode?: string;
+    onSubmit: (e: any) => void;
+    onCancel: () => void;
     clearErrors: () => void;
     validateNameUniqueness?: () => void;
     getRoleKey: (permission: { id: number; environment?: string }) => string;
-    children: ReactNode;
 }
 
-const ProjectRoleForm: React.FC<IProjectRoleForm> = ({
+const ProjectRoleForm: FC<IProjectRoleForm> = ({
     children,
-    handleSubmit,
-    handleCancel,
     roleName,
     roleDesc,
+    checkedPermissions,
+    errors,
+    permissions,
+    onSubmit,
+    onCancel,
     setRoleName,
     setRoleDesc,
-    checkedPermissions,
     handlePermissionChange,
     checkAllProjectPermissions,
     checkAllEnvironmentPermissions,
-    errors,
-    mode,
     validateNameUniqueness,
     clearErrors,
     getRoleKey,
 }: IProjectRoleForm) => {
     const { classes: styles } = useStyles();
-    const { permissions } = useProjectRolePermissions({
-        revalidateIfStale: false,
-        revalidateOnReconnect: false,
-        revalidateOnFocus: false,
-    });
 
     const { project, environments } = permissions;
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={onSubmit}>
             <div className={styles.container}>
                 <p className={styles.inputDescription}>
                     What is your role name?
@@ -116,10 +117,7 @@ const ProjectRoleForm: React.FC<IProjectRoleForm> = ({
                                         : false
                                 }
                                 onChange={() =>
-                                    handlePermissionChange(
-                                        permission,
-                                        'project'
-                                    )
+                                    handlePermissionChange(permission)
                                 }
                                 color="primary"
                             />
@@ -128,15 +126,10 @@ const ProjectRoleForm: React.FC<IProjectRoleForm> = ({
                     />
                 ))}
                 <FormControlLabel
-                    key={PROJECT_CHECK_ALL_KEY}
                     classes={{ root: styles.label }}
                     control={
                         <Checkbox
-                            checked={
-                                checkedPermissions[PROJECT_CHECK_ALL_KEY]
-                                    ? true
-                                    : false
-                            }
+                            checked // FIXME: refactor
                             onChange={() => checkAllProjectPermissions()}
                             color="primary"
                         />
@@ -154,13 +147,14 @@ const ProjectRoleForm: React.FC<IProjectRoleForm> = ({
             </h3>
             <div>
                 {environments.map(environment => (
-                    <EnvironmentPermissionAccordion
+                    <PermissionAccordion
                         title={environment.name}
+                        Icon={<EnvironmentIcon enabled={false} />}
                         permissions={environment.permissions}
                         key={environment.name}
                         checkedPermissions={checkedPermissions}
                         onPermissionChange={(permission: IPermission) =>
-                            handlePermissionChange(permission, environment.name)
+                            handlePermissionChange(permission)
                         }
                         onCheckAll={() =>
                             checkAllEnvironmentPermissions(environment.name)
@@ -171,7 +165,7 @@ const ProjectRoleForm: React.FC<IProjectRoleForm> = ({
             </div>
             <div className={styles.buttonContainer}>
                 {children}
-                <Button onClick={handleCancel} className={styles.cancelButton}>
+                <Button onClick={onCancel} className={styles.cancelButton}>
                     Cancel
                 </Button>
             </div>

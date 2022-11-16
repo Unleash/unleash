@@ -1,4 +1,4 @@
-import { useMemo, VFC } from 'react';
+import { ReactNode, useMemo, VFC } from 'react';
 import {
     Accordion,
     AccordionDetails,
@@ -16,12 +16,12 @@ import { ExpandMore } from '@mui/icons-material';
 import { IPermission } from 'interfaces/project';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { ICheckedPermission } from 'component/admin/projectRoles/hooks/useProjectRoleForm';
-import EnvironmentIcon from 'component/common/EnvironmentIcon/EnvironmentIcon';
 
 interface IEnvironmentPermissionAccordionProps {
     permissions: IPermission[];
     checkedPermissions: ICheckedPermission;
     title: string;
+    Icon: ReactNode;
     onPermissionChange: (permission: IPermission) => void;
     onCheckAll: () => void;
     getRoleKey: (permission: { id: number; environment?: string }) => string;
@@ -41,12 +41,13 @@ const StyledTitle = styled(StringTruncator)(({ theme }) => ({
     marginRight: theme.spacing(1),
 }));
 
-const EnvironmentPermissionAccordion: VFC<
+export const PermissionAccordion: VFC<
     IEnvironmentPermissionAccordionProps
 > = ({
     title,
     permissions,
     checkedPermissions,
+    Icon,
     onPermissionChange,
     onCheckAll,
     getRoleKey,
@@ -67,6 +68,11 @@ const EnvironmentPermissionAccordion: VFC<
             Object.keys(checkedPermissions).filter(key => permissionMap[key])
                 .length || 0,
         [checkedPermissions, permissionMap]
+    );
+
+    const isAllChecked = useMemo(
+        () => permissionCount === permissions?.length,
+        [permissionCount, permissions]
     );
 
     return (
@@ -92,7 +98,7 @@ const EnvironmentPermissionAccordion: VFC<
                     }}
                 >
                     <AccordionHeader>
-                        <EnvironmentIcon enabled={false} />
+                        {Icon}
                         <StyledTitle
                             text={title}
                             maxWidth="120"
@@ -121,9 +127,7 @@ const EnvironmentPermissionAccordion: VFC<
                                 theme.typography.fontWeightRegular,
                         }}
                     >
-                        {permissionCount === permissions?.length
-                            ? 'Unselect all '
-                            : 'Select all '}
+                        {isAllChecked ? 'Unselect all ' : 'Select all '}
                         environment permissions
                     </Button>
                     <Box>
@@ -162,5 +166,3 @@ const EnvironmentPermissionAccordion: VFC<
         </Box>
     );
 };
-
-export default EnvironmentPermissionAccordion;

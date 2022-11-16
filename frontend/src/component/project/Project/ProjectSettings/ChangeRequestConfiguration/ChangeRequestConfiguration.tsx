@@ -27,11 +27,15 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { ChangeRequestProcessHelp } from './ChangeRequestProcessHelp/ChangeRequestProcessHelp';
 import GeneralSelect from '../../../../common/GeneralSelect/GeneralSelect';
 import { KeyboardArrowDownOutlined } from '@mui/icons-material';
+import { useTheme } from '@mui/material/styles';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     padding: theme.spacing(1),
     display: 'flex',
     justifyContent: 'center',
+    '& .MuiInputBase-input': {
+        fontSize: theme.fontSizes.smallBody,
+    },
 }));
 
 export const ChangeRequestConfiguration: VFC = () => {
@@ -46,6 +50,7 @@ export const ChangeRequestConfiguration: VFC = () => {
         isEnabled: false,
         requiredApprovals: 1,
     });
+    const theme = useTheme();
     const projectId = useRequiredPathParam('projectId');
     const { data, loading, refetchChangeRequestConfig } =
         useChangeRequestConfig(projectId);
@@ -108,6 +113,7 @@ export const ChangeRequestConfiguration: VFC = () => {
             return {
                 key,
                 label: `${key} ${labelText}`,
+                sx: { 'font-size': theme.fontSizes.smallBody },
             };
         });
 
@@ -131,20 +137,24 @@ export const ChangeRequestConfiguration: VFC = () => {
                     <ConditionallyRender
                         condition={original.changeRequestEnabled}
                         show={
-                            <GeneralSelect
-                                options={approvalOptions}
-                                value={original.requiredApprovals || 1}
-                                onChange={approvals => {
-                                    updateConfiguration({
-                                        project: projectId,
-                                        environment: original.environment,
-                                        enabled: original.changeRequestEnabled,
-                                        requiredApprovals: Number(approvals),
-                                    });
-                                }}
-                                IconComponent={KeyboardArrowDownOutlined}
-                                fullWidth
-                            />
+                            <StyledBox data-loading>
+                                <GeneralSelect
+                                    options={approvalOptions}
+                                    value={original.requiredApprovals || 1}
+                                    onChange={approvals => {
+                                        updateConfiguration({
+                                            project: projectId,
+                                            environment: original.environment,
+                                            enabled:
+                                                original.changeRequestEnabled,
+                                            requiredApprovals:
+                                                Number(approvals),
+                                        });
+                                    }}
+                                    IconComponent={KeyboardArrowDownOutlined}
+                                    fullWidth
+                                />
+                            </StyledBox>
                         }
                     />
                 ),

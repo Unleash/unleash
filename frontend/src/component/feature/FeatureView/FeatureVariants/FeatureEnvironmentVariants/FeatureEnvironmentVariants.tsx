@@ -220,14 +220,14 @@ export const FeatureEnvironmentVariants = () => {
                 );
             })}
             <EnvironmentVariantModal
-                environment={selectedEnvironment!}
+                environment={selectedEnvironment}
                 variant={selectedVariant}
                 open={modalOpen}
                 setOpen={setModalOpen}
                 refetch={refetchFeature}
             />
             <VariantDeleteDialog
-                variant={selectedVariant!}
+                variant={selectedVariant}
                 open={deleteOpen}
                 setOpen={setDeleteOpen}
                 onConfirm={onDeleteConfirm}

@@ -6,19 +6,19 @@ const StyledLabel = styled('p')(({ theme }) => ({
     marginTop: theme.spacing(3),
 }));
 
-interface IUseDeleteVariantMarkupProps {
-    variant: IFeatureVariant;
+interface IVariantDeleteDialogProps {
+    variant?: IFeatureVariant;
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     onConfirm: () => void;
 }
 
-const useDeleteVariantMarkup = ({
+const VariantDeleteDialog = ({
     variant,
     open,
     setOpen,
     onConfirm,
-}: IUseDeleteVariantMarkupProps) => {
+}: IVariantDeleteDialogProps) => {
     return (
         <Dialogue
             title="Delete variant?"
@@ -34,10 +34,11 @@ const useDeleteVariantMarkup = ({
                 Deleting this variant will change which variant users receive.
             </Alert>
             <StyledLabel>
-                You are about to delete variant: <strong>{variant.name}</strong>
+                You are about to delete variant:{' '}
+                <strong>{variant?.name}</strong>
             </StyledLabel>
         </Dialogue>
     );
 };
 
-export default useDeleteVariantMarkup;
+export default VariantDeleteDialog;

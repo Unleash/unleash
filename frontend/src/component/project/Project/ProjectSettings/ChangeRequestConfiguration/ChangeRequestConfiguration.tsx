@@ -121,10 +121,8 @@ export const ChangeRequestConfiguration: VFC = () => {
                             { key: '1', label: '1 approver3' },
                             { key: '2', label: '2 approvers' },
                         ]}
-                        value={original.requiredApprovals}
+                        value={original.requiredApprovals || 1}
                         onChange={approvals => {
-                            console.log(original);
-                            console.log(approvals);
                             onRowChange(
                                 original.environment,
                                 original.changeRequestEnabled,

@@ -41,6 +41,8 @@ import { ChangeRequestDialogue } from 'component/changeRequest/ChangeRequestConf
 import { CopyStrategyMessage } from '../../../changeRequest/ChangeRequestConfirmDialog/ChangeRequestMessages/CopyStrategyMessage';
 import { UpdateEnabledMessage } from '../../../changeRequest/ChangeRequestConfirmDialog/ChangeRequestMessages/UpdateEnabledMessage';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
+import { IFeatureToggleListItem } from 'interfaces/featureToggle';
+import { FeatureTagCell } from 'component/common/Table/cells/FeatureTagCell/FeatureTagCell';
 
 interface IProjectFeatureTogglesProps {
     features: IProject['features'];
@@ -193,6 +195,17 @@ export const ProjectFeatureToggles = ({
                 searchable: true,
             },
             {
+                id: 'tags',
+                Header: 'Tags',
+                accessor: (row: IFeatureToggleListItem) =>
+                    row.tags
+                        ?.map(({ type, value }) => `${type}:${value}`)
+                        .join('\n') || '',
+                Cell: FeatureTagCell,
+                hideInMenu: true,
+                searchable: true,
+            },
+            {
                 Header: 'Created',
                 accessor: 'createdAt',
                 Cell: DateCell,
@@ -259,6 +272,7 @@ export const ProjectFeatureToggles = ({
                     createdAt,
                     type,
                     stale,
+                    tags,
                     environments: featureEnvironments,
                 }) => ({
                     name,
@@ -266,6 +280,7 @@ export const ProjectFeatureToggles = ({
                     createdAt,
                     type,
                     stale,
+                    tags,
                     environments: Object.fromEntries(
                         environments.map(env => [
                             env,
@@ -369,6 +384,16 @@ export const ProjectFeatureToggles = ({
         useFlexLayout,
         useSortBy
     );
+
+    useEffect(() => {
+        if (!features.some(({ tags }) => tags?.length)) {
+            setHiddenColumns(hiddenColumns => [...hiddenColumns, 'tags']);
+        } else {
+            setHiddenColumns(hiddenColumns =>
+                hiddenColumns.filter(column => column !== 'tags')
+            );
+        }
+    }, [setHiddenColumns, features]);
 
     useEffect(() => {
         if (loading) {

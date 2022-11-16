@@ -19,12 +19,6 @@ import PermissionButton from 'component/common/PermissionButton/PermissionButton
 import { APPLY_CHANGE_REQUEST } from 'component/providers/AccessProvider/permissions';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import AccessContext from 'contexts/AccessContext';
-import {
-    StyledAvatar,
-    StyledCard,
-} from './ChangeRequestHeader/ChangeRequestHeader.styles';
-import TimeAgo from 'react-timeago';
-import { InputProps as StandardInputProps } from '@mui/material/Input/Input';
 import { ChangeRequestComment } from './ChangeRequestComments/ChangeRequestComment';
 import { AddCommentField } from './ChangeRequestComments/AddCommentField';
 
@@ -140,7 +134,7 @@ export const ChangeRequestOverview: FC = () => {
                             />
                         ))}
                         <AddCommentField
-                            imageUrl={changeRequest?.createdBy?.imageUrl}
+                            imageUrl={user?.imageUrl || ''}
                             commentText={commentText}
                             onAddComment={onAddComment}
                             onTypeComment={setCommentText}

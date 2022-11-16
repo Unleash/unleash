@@ -48,7 +48,7 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
     className,
 }) => {
     const { classes: styles } = useStyles();
-    const Icon = getFeatureStrategyIcon(strategy.name);
+    const Icon = getFeatureStrategyIcon(strategy.name || '');
 
     return (
         <Box sx={{ position: 'relative' }}>
@@ -85,7 +85,7 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
                     <StringTruncator
                         maxWidth="150"
                         maxLength={15}
-                        text={formatStrategyName(strategy.name)}
+                        text={formatStrategyName(strategy.name || '')}
                     />
                     <div className={styles.actions}>{actions}</div>
                 </div>

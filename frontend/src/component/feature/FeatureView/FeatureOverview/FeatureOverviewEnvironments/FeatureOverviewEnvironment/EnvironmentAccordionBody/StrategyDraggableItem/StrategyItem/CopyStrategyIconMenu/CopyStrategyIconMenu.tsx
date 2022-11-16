@@ -61,7 +61,6 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
     } = useChangeRequestAddStrategy(projectId, featureId, 'addStrategy');
 
     const onCopyStrategy = async (environment: string) => {
-        console.log('onCopyStrategy()', environment);
         const { id, ...strategyCopy } = {
             ...strategy,
             environment,

@@ -111,6 +111,7 @@ const UsersList = () => {
                 disableGlobalFilter: true,
                 sortType: 'date',
                 minWidth: 120,
+                maxWidth: 120,
             },
             {
                 Header: 'Avatar',
@@ -122,6 +123,8 @@ const UsersList = () => {
                 ),
                 disableGlobalFilter: true,
                 disableSortBy: true,
+                minWidth: 50,
+                maxWidth: 50,
             },
             {
                 id: 'name',
@@ -161,6 +164,7 @@ const UsersList = () => {
                 disableGlobalFilter: true,
                 sortType: 'date',
                 minWidth: 150,
+                maxWidth: 150,
             },
             {
                 Header: 'Actions',

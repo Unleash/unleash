@@ -332,10 +332,15 @@ class FeatureToggleService {
                     environment,
                 });
 
-            await this.segmentService.updateStrategySegments(
-                newFeatureStrategy.id,
-                strategyConfig.segments,
-            );
+            if (
+                strategyConfig.segments &&
+                Array.isArray(strategyConfig.segments)
+            ) {
+                await this.segmentService.updateStrategySegments(
+                    newFeatureStrategy.id,
+                    strategyConfig.segments,
+                );
+            }
 
             const tags = await this.tagStore.getAllTagsForFeature(featureName);
             const segments = await this.segmentService.getByStrategy(
@@ -399,10 +404,12 @@ class FeatureToggleService {
                 updates,
             );
 
-            await this.segmentService.updateStrategySegments(
-                strategy.id,
-                updates.segments || [],
-            );
+            if (updates.segments && Array.isArray(updates.segments)) {
+                await this.segmentService.updateStrategySegments(
+                    strategy.id,
+                    updates.segments,
+                );
+            }
 
             const segments = await this.segmentService.getByStrategy(
                 strategy.id,

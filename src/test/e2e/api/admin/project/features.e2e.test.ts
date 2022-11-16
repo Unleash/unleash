@@ -2661,6 +2661,7 @@ test.only('should create a strategy with segments', async () => {
         parameters: {
             userId: 'string',
         },
+        segments: [],
     });
 
     await app.request

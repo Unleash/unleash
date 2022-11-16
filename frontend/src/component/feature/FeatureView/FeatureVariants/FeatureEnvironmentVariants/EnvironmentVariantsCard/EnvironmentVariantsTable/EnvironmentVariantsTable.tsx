@@ -110,7 +110,7 @@ export const EnvironmentVariantsTable = ({
                 disableSortBy: true,
             },
         ],
-        [projectId, variants]
+        [projectId, variants, environment]
     );
 
     const initialState = useMemo(

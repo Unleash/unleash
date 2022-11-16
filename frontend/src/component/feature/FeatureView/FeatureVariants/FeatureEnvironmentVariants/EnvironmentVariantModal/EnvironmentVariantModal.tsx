@@ -20,6 +20,31 @@ import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashCon
 import { OverrideConfig } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantModal/VariantOverrides/VariantOverrides';
 import { updateWeight } from 'component/common/util';
 import cloneDeep from 'lodash.clonedeep';
+import { CloudCircle } from '@mui/icons-material';
+
+const StyledFormSubtitle = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    marginTop: theme.spacing(-1.5),
+    marginBottom: theme.spacing(4),
+}));
+
+const StyledCloudCircle = styled(CloudCircle, {
+    shouldForwardProp: prop => prop !== 'deprecated',
+})<{ deprecated?: boolean }>(({ theme, deprecated }) => ({
+    color: deprecated
+        ? theme.palette.neutral.border
+        : theme.palette.primary.main,
+}));
+
+const StyledName = styled('span', {
+    shouldForwardProp: prop => prop !== 'deprecated',
+})<{ deprecated?: boolean }>(({ theme, deprecated }) => ({
+    color: deprecated
+        ? theme.palette.text.secondary
+        : theme.palette.text.primary,
+    marginLeft: theme.spacing(1.25),
+}));
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',
@@ -282,6 +307,12 @@ export const EnvironmentVariantModal = ({
                 documentationLinkLabel=""
                 formatApiCode={formatApiCode}
             >
+                <StyledFormSubtitle>
+                    <StyledCloudCircle deprecated={environment?.deprecated} />
+                    <StyledName deprecated={environment?.deprecated}>
+                        {environment?.name}
+                    </StyledName>
+                </StyledFormSubtitle>
                 <StyledForm onSubmit={handleSubmit}>
                     <div>
                         <StyledInputDescription>

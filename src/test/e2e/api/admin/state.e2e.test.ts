@@ -460,6 +460,9 @@ test(`should not show environment on feature toggle, when environment is disable
         .get('/api/admin/projects/default/features/my-feature')
         .expect(200);
 
-    expect(body.environments).toHaveLength(1);
+    expect(body.environments).toHaveLength(2);
     expect(body.environments[0].name).toBe('state-visible-environment');
+    expect(body.environments[0].enabled).toBeTruthy();
+    expect(body.environments[1].name).toBe('state-hidden-environment');
+    expect(body.environments[1].enabled).toBeFalsy();
 });

@@ -12,8 +12,11 @@ import {
     StyledDivider,
 } from './ChangeRequestReviewStatus.styles';
 import { ChangeRequestState } from 'component/changeRequest/changeRequest.types';
+import { useChangeRequestsEnabled } from '../../../../hooks/useChangeRequestsEnabled';
+import { useRequiredPathParam } from '../../../../hooks/useRequiredPathParam';
 interface ISuggestChangeReviewsStatusProps {
     state: ChangeRequestState;
+    environment: string;
 }
 
 const resolveBorder = (state: ChangeRequestState, theme: Theme) => {
@@ -51,9 +54,8 @@ const resolveIconColors = (state: ChangeRequestState, theme: Theme) => {
 
 export const ChangeRequestReviewStatus: FC<
     ISuggestChangeReviewsStatusProps
-> = ({ state }) => {
+> = ({ state, environment }) => {
     const theme = useTheme();
-
     return (
         <StyledOuterContainer>
             <StyledButtonContainer {...resolveIconColors(state, theme)}>
@@ -64,7 +66,7 @@ export const ChangeRequestReviewStatus: FC<
                 />
             </StyledButtonContainer>
             <StyledReviewStatusContainer border={resolveBorder(state, theme)}>
-                <ResolveComponent state={state} />
+                <ResolveComponent state={state} environment={environment} />
             </StyledReviewStatusContainer>
         </StyledOuterContainer>
     );
@@ -72,9 +74,10 @@ export const ChangeRequestReviewStatus: FC<
 
 interface IResolveComponentProps {
     state: ChangeRequestState;
+    environment: string;
 }
 
-const ResolveComponent = ({ state }: IResolveComponentProps) => {
+const ResolveComponent = ({ state, environment }: IResolveComponentProps) => {
     if (!state) {
         return null;
     }
@@ -91,7 +94,7 @@ const ResolveComponent = ({ state }: IResolveComponentProps) => {
         return <Cancelled />;
     }
 
-    return <ReviewRequired />;
+    return <ReviewRequired environment={environment} />;
 };
 
 const Approved = () => {
@@ -125,8 +128,16 @@ const Approved = () => {
     );
 };
 
-const ReviewRequired = () => {
+interface IReviewRequiredProps {
+    environment: string;
+}
+
+const ReviewRequired = ({ environment }: IReviewRequiredProps) => {
     const theme = useTheme();
+    const projectId = useRequiredPathParam('projectId');
+    const { getChangeRequestRequiredApprovals } =
+        useChangeRequestsEnabled(projectId);
+    const approvals = getChangeRequestRequiredApprovals(environment);
 
     return (
         <>
@@ -137,7 +148,7 @@ const ReviewRequired = () => {
                         Review required
                     </StyledReviewTitle>
                     <Typography>
-                        At least 1 approving review must be submitted before
+                        At least {approvals} approvals must be submitted before
                         changes can be applied
                     </Typography>
                 </Box>

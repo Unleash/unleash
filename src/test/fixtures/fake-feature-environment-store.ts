@@ -202,4 +202,11 @@ export default class FakeFeatureEnvironmentStore
         this.featureEnvironments.push(featureEnvironment);
         return Promise.resolve();
     }
+
+    getEnvironmentsForFeature(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        featureName: string,
+    ): Promise<IFeatureEnvironment[]> {
+        throw new Error('Method not implemented.');
+    }
 }

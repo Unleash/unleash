@@ -1,6 +1,13 @@
 import { FC } from 'react';
-import { Box, Button, TextField } from '@mui/material';
+import { Box, Button, styled, TextField } from '@mui/material';
 import { StyledAvatar } from '../ChangeRequestHeader/ChangeRequestHeader.styles';
+
+const AddCommentWrapper = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    gap: theme.spacing(2),
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(1),
+}));
 
 export const AddComment: FC<{
     imageUrl: string;
@@ -9,14 +16,7 @@ export const AddComment: FC<{
     onTypeComment: (text: string) => void;
 }> = ({ imageUrl, commentText, onTypeComment, onAddComment }) => (
     <>
-        <Box
-            sx={{
-                display: 'flex',
-                gap: 2,
-                marginTop: 2,
-                marginBottom: 1,
-            }}
-        >
+        <AddCommentWrapper>
             <StyledAvatar src={imageUrl} />
             <TextField
                 variant="outlined"
@@ -27,7 +27,7 @@ export const AddComment: FC<{
                 onChange={e => onTypeComment(e.target.value)}
                 value={commentText}
             />
-        </Box>
+        </AddCommentWrapper>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
             <Button
                 variant="outlined"

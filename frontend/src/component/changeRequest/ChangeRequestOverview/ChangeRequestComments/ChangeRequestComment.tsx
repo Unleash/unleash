@@ -1,45 +1,43 @@
 import { StyledAvatar } from '../ChangeRequestHeader/ChangeRequestHeader.styles';
 import Paper from '@mui/material/Paper';
-import { Box, Typography } from '@mui/material';
+import { Box, styled, Typography } from '@mui/material';
 import TimeAgo from 'react-timeago';
 import { IChangeRequestComment } from '../../changeRequest.types';
 import { FC } from 'react';
 
+const ChangeRequestCommentWrapper = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    gap: theme.spacing(2),
+    marginTop: theme.spacing(2),
+}));
+const CommentPaper = styled(Paper)(({ theme }) => ({
+    width: '100%',
+    padding: theme.spacing(2),
+    backgroundColor: theme.palette.tertiary.light,
+}));
+
+const CommentHeader = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    borderBottom: '1px solid',
+    borderColor: theme.palette.divider,
+    paddingBottom: theme.spacing(1),
+}));
+
 export const ChangeRequestComment: FC<{ comment: IChangeRequestComment }> = ({
     comment,
 }) => (
-    <Box
-        sx={{
-            display: 'flex',
-            gap: 2,
-            marginTop: 2,
-        }}
-    >
+    <ChangeRequestCommentWrapper>
         <StyledAvatar sx={{ marginTop: 1 }} src={comment.createdBy.imageUrl} />
-        <Paper
-            variant="outlined"
-            sx={theme => ({
-                width: '100%',
-                padding: 2,
-                backgroundColor: theme.palette.tertiary.light,
-            })}
-        >
-            <Box
-                sx={theme => ({
-                    display: 'flex',
-                    borderBottom: '1px solid',
-                    borderColor: theme.palette.divider,
-                    paddingBottom: 1,
-                })}
-            >
+        <CommentPaper variant="outlined">
+            <CommentHeader>
                 <Box>
                     <strong>{comment.createdBy.username}</strong>{' '}
                     <Typography color="text.secondary" component="span">
                         commented <TimeAgo date={new Date(comment.createdAt)} />
                     </Typography>
                 </Box>
-            </Box>
+            </CommentHeader>
             <Box sx={{ paddingTop: 2 }}>{comment.text}</Box>
-        </Paper>
-    </Box>
+        </CommentPaper>
+    </ChangeRequestCommentWrapper>
 );

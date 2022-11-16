@@ -34,11 +34,11 @@ const StyledFieldColumn = styled('div')(({ theme }) => ({
     display: 'flex',
 }));
 
-const StyledInputListField = styled(InputListField)(({ theme }) => ({
+const StyledInputListField = styled(InputListField)(() => ({
     width: '100%',
 }));
 
-const StyledTextField = styled(TextField)(({ theme }) => ({
+const StyledTextField = styled(TextField)(() => ({
     width: '100%',
 }));
 

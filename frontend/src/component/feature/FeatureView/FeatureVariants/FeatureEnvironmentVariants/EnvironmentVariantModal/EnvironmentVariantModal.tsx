@@ -1,4 +1,9 @@
-import { Button, styled } from '@mui/material';
+import {
+    Button,
+    FormControlLabel,
+    InputAdornment,
+    styled,
+} from '@mui/material';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -8,7 +13,11 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import Input from 'component/common/Input/Input';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { IFeatureEnvironment, IFeatureVariant } from 'interfaces/featureToggle';
+import {
+    IFeatureEnvironment,
+    IFeatureVariant,
+    IPayload,
+} from 'interfaces/featureToggle';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { Operation } from 'fast-json-patch';
 import { useOverrides } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantModal/VariantOverrides/useOverrides';
@@ -17,6 +26,8 @@ import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashCon
 import { OverrideConfig } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantModal/VariantOverrides/VariantOverrides';
 import cloneDeep from 'lodash.clonedeep';
 import { CloudCircle } from '@mui/icons-material';
+import PermissionSwitch from 'component/common/PermissionSwitch/PermissionSwitch';
+import { UPDATE_FEATURE_VARIANTS } from 'component/providers/AccessProvider/permissions';
 
 const StyledFormSubtitle = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -57,12 +68,16 @@ const StyledInputDescription = styled('p')(({ theme }) => ({
     },
 }));
 
+const StyledFormControlLabel = styled(FormControlLabel)(({ theme }) => ({
+    marginTop: theme.spacing(4),
+}));
+
 const StyledInputSecondaryDescription = styled('p')(({ theme }) => ({
     color: theme.palette.text.secondary,
     marginBottom: theme.spacing(1),
 }));
 
-const StyledInput = styled(Input)(({ theme }) => ({
+const StyledInput = styled(Input)(() => ({
     width: '100%',
 }));
 
@@ -102,7 +117,7 @@ const payloadOptions = [
     { key: 'csv', label: 'csv' },
 ];
 
-enum WeightTypes {
+enum WeightType {
     FIX = 'fix',
     VARIABLE = 'variable',
 }
@@ -148,7 +163,7 @@ export const EnvironmentVariantModal = ({
     const [name, setName] = useState('');
     const [customPercentage, setCustomPercentage] = useState(false);
     const [percentage, setPercentage] = useState('');
-    const [payload, setPayload] = useState(EMPTY_PAYLOAD);
+    const [payload, setPayload] = useState<IPayload>(EMPTY_PAYLOAD);
     const [overrides, overridesDispatch] = useOverrides([]);
     const { context } = useUnleashContext();
 
@@ -170,7 +185,7 @@ export const EnvironmentVariantModal = ({
     useEffect(() => {
         if (variant) {
             setName(variant.name);
-            setCustomPercentage(variant.weightType === WeightTypes.FIX);
+            setCustomPercentage(variant.weightType === WeightType.FIX);
             setPercentage(String(variant.weight / 10));
             setPayload(variant.payload || EMPTY_PAYLOAD);
             overridesDispatch(
@@ -192,9 +207,7 @@ export const EnvironmentVariantModal = ({
         const newVariant: IFeatureVariant = {
             name,
             weight: Number(percentage || 100) * 10,
-            weightType: customPercentage
-                ? WeightTypes.FIX
-                : WeightTypes.VARIABLE,
+            weightType: customPercentage ? WeightType.FIX : WeightType.VARIABLE,
             stickiness:
                 variants?.length > 0 ? variants[0].stickiness : 'default',
             payload: payload.value ? payload : undefined,
@@ -252,7 +265,28 @@ export const EnvironmentVariantModal = ({
     const isNameNotEmpty = (name: string) => name.length;
     const isNameUnique = (name: string) =>
         editing || !variants.some(variant => variant.name === name);
-    const isValid = isNameNotEmpty(name) && isNameUnique(name);
+    const isValidPercentage = (percentage: string) => {
+        if (!customPercentage) return true;
+        if (percentage === '') return false;
+
+        const percentageNumber = Number(percentage);
+        return percentageNumber >= 0 && percentageNumber <= 100;
+    };
+    const isValidPayload = (payload: IPayload): boolean => {
+        try {
+            if (payload.type === 'json') {
+                JSON.parse(payload.value);
+            }
+            return true;
+        } catch (e: unknown) {
+            return false;
+        }
+    };
+    const isValid =
+        isNameNotEmpty(name) &&
+        isNameUnique(name) &&
+        isValidPercentage(percentage) &&
+        isValidPayload(payload);
 
     const onSetName = (name: string) => {
         clearError(ErrorField.NAME);
@@ -263,6 +297,18 @@ export const EnvironmentVariantModal = ({
             );
         }
         setName(name);
+    };
+
+    const onSetPercentage = (percentage: string) => {
+        if (percentage === '' || isValidPercentage(percentage)) {
+            setPercentage(percentage);
+        }
+    };
+
+    const validatePayload = (payload: IPayload) => {
+        if (!isValidPayload(payload)) {
+            setError(ErrorField.PAYLOAD, 'Invalid JSON.');
+        }
     };
 
     const onAddOverride = () => {
@@ -285,10 +331,11 @@ export const EnvironmentVariantModal = ({
             <FormTemplate
                 modal
                 title={editing ? 'Edit variant' : 'Add variant'}
-                description=""
-                documentationLink=""
-                documentationLinkLabel=""
+                description="Variants allows you to return a variant object if the feature toggle is considered enabled for the current request."
+                documentationLink="https://docs.getunleash.io/advanced/toggle_variants"
+                documentationLinkLabel="Feature toggle variants documentation"
                 formatApiCode={formatApiCode}
+                loading={!open}
             >
                 <StyledFormSubtitle>
                     <StyledCloudCircle deprecated={environment?.deprecated} />
@@ -317,7 +364,51 @@ export const EnvironmentVariantModal = ({
                         />
                         <ConditionallyRender
                             condition={customPercentageVisible}
-                            show={<>custom percentage here</>}
+                            show={
+                                <StyledFormControlLabel
+                                    label="Custom percentage"
+                                    control={
+                                        <PermissionSwitch
+                                            permission={UPDATE_FEATURE_VARIANTS}
+                                            projectId={projectId}
+                                            checked={customPercentage}
+                                            onChange={e =>
+                                                setCustomPercentage(
+                                                    e.target.checked
+                                                )
+                                            }
+                                        />
+                                    }
+                                />
+                            }
+                        />
+                        <ConditionallyRender
+                            condition={customPercentage}
+                            show={
+                                <StyledInput
+                                    type="number"
+                                    label="Variant weight"
+                                    value={percentage}
+                                    onChange={e =>
+                                        onSetPercentage(e.target.value)
+                                    }
+                                    required={customPercentage}
+                                    disabled={!customPercentage}
+                                    aria-valuemin={0}
+                                    aria-valuemax={100}
+                                    InputProps={{
+                                        inputProps: {
+                                            min: 0,
+                                            max: 100,
+                                        },
+                                        endAdornment: (
+                                            <InputAdornment position="end">
+                                                %
+                                            </InputAdornment>
+                                        ),
+                                    }}
+                                />
+                            }
                         />
                         <StyledInputDescription>
                             Payload
@@ -344,17 +435,19 @@ export const EnvironmentVariantModal = ({
                                 multiline={payload.type !== 'string'}
                                 rows={payload.type === 'string' ? 1 : 4}
                                 value={payload.value}
-                                onChange={e =>
+                                onChange={e => {
+                                    clearError(ErrorField.PAYLOAD);
                                     setPayload(payload => ({
                                         ...payload,
                                         value: e.target.value,
-                                    }))
-                                }
+                                    }));
+                                }}
                                 placeholder={
                                     payload.type === 'json'
                                         ? '{ "hello": "world" }'
                                         : ''
                                 }
+                                onBlur={() => validatePayload(payload)}
                                 error={Boolean(errors.payload)}
                                 errorText={errors.payload}
                             />

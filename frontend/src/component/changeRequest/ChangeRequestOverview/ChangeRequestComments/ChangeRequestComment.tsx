@@ -1,9 +1,9 @@
-import { StyledAvatar } from '../ChangeRequestHeader/ChangeRequestHeader.styles';
+import { FC } from 'react';
 import Paper from '@mui/material/Paper';
 import { Box, styled, Typography } from '@mui/material';
 import TimeAgo from 'react-timeago';
+import { StyledAvatar } from './StyledAvatar';
 import { IChangeRequestComment } from '../../changeRequest.types';
-import { FC } from 'react';
 
 const ChangeRequestCommentWrapper = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -27,7 +27,7 @@ export const ChangeRequestComment: FC<{ comment: IChangeRequestComment }> = ({
     comment,
 }) => (
     <ChangeRequestCommentWrapper>
-        <StyledAvatar sx={{ marginTop: 1 }} src={comment.createdBy.imageUrl} />
+        <StyledAvatar src={comment.createdBy.imageUrl} />
         <CommentPaper variant="outlined">
             <CommentHeader>
                 <Box>

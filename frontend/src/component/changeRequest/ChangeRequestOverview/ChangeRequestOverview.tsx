@@ -133,8 +133,11 @@ export const ChangeRequestOverview: FC = () => {
                     <StyledInnerContainer>
                         Changes
                         <ChangeRequest changeRequest={changeRequest} />
-                        {changeRequest.comments.map(comment => (
-                            <ChangeRequestComment comment={comment} />
+                        {changeRequest.comments?.map(comment => (
+                            <ChangeRequestComment
+                                key={comment.id}
+                                comment={comment}
+                            />
                         ))}
                         <AddComment
                             imageUrl={changeRequest?.createdBy?.imageUrl}

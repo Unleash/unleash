@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { Box, Button, styled, TextField } from '@mui/material';
-import { StyledAvatar } from '../ChangeRequestHeader/ChangeRequestHeader.styles';
+import { StyledAvatar } from './StyledAvatar';
 
 const AddCommentWrapper = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -32,7 +32,10 @@ export const AddComment: FC<{
             <Button
                 variant="outlined"
                 onClick={onAddComment}
-                disabled={commentText.trim().length === 0}
+                disabled={
+                    commentText.trim().length === 0 ||
+                    commentText.trim().length > 1000
+                }
             >
                 Comment
             </Button>

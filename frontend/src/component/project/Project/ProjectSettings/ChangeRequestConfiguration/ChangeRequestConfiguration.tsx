@@ -127,7 +127,6 @@ export const ChangeRequestConfiguration: VFC = () => {
             {
                 Header: 'Required approvals',
                 align: 'center',
-
                 Cell: ({ row: { original } }: any) => (
                     <ConditionallyRender
                         condition={original.changeRequestEnabled}
@@ -143,10 +142,8 @@ export const ChangeRequestConfiguration: VFC = () => {
                                         requiredApprovals: Number(approvals),
                                     });
                                 }}
-                                name="environment"
                                 IconComponent={KeyboardArrowDownOutlined}
                                 fullWidth
-                                // className={styles.selectInput}
                             />
                         }
                     />

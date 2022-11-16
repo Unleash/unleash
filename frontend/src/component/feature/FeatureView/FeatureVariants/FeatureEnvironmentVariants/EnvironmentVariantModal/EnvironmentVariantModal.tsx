@@ -121,9 +121,6 @@ export const EnvironmentVariantModal = ({
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
 
-    const [variants, setVariants] = useState<IFeatureVariant[]>([]);
-    const [editing, setEditing] = useState(false);
-
     const [name, setName] = useState('');
     const [customPercentage, setCustomPercentage] = useState(false);
     const [percentage, setPercentage] = useState('');
@@ -141,11 +138,13 @@ export const EnvironmentVariantModal = ({
         setErrors(errors => ({ ...errors, [field]: error }));
     };
 
-    useEffect(() => {
-        setVariants(environment?.variants || []);
+    const editing = Boolean(variant);
+    const variants = environment?.variants || [];
+    const customPercentageVisible =
+        (editing && variants.length > 1) || (!editing && variants.length > 0);
 
+    useEffect(() => {
         if (variant) {
-            setEditing(true);
             setName(variant.name);
             setCustomPercentage(variant.weightType === WeightTypes.FIX);
             setPercentage(String(variant.weight / 10));
@@ -156,7 +155,6 @@ export const EnvironmentVariantModal = ({
                     : { type: 'CLEAR' }
             );
         } else {
-            setEditing(false);
             setName('');
             setCustomPercentage(false);
             setPercentage('');
@@ -266,9 +264,6 @@ export const EnvironmentVariantModal = ({
             });
         }
     };
-
-    const customPercentageVisible =
-        (editing && variants.length > 1) || (!editing && variants.length > 0);
 
     return (
         <SidebarModal

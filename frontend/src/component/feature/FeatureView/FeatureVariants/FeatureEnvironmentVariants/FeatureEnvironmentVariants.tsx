@@ -57,6 +57,7 @@ export const FeatureEnvironmentVariants = () => {
                 deprecated: !allEnvironments.some(
                     ({ name, enabled }) => name === environment.name && enabled
                 ),
+                variants: environment.variants ?? [],
             })),
         [feature, allEnvironments]
     );
@@ -121,8 +122,9 @@ export const FeatureEnvironmentVariants = () => {
             const variants = selectedEnvironment.variants ?? [];
 
             const updatedVariants = variants.filter(
-                v => v.name !== selectedVariant.name
+                ({ name }) => name !== selectedVariant.name
             );
+
             await updateVariants(selectedEnvironment, updatedVariants);
             setDeleteOpen(false);
         }
@@ -167,7 +169,6 @@ export const FeatureEnvironmentVariants = () => {
                 the Client SDK.
             </StyledAlert>
             {environments.map(environment => {
-                const variants = environment.variants ?? [];
                 // const otherEnvsHaveVariants = feature.environments.some(
                 //     ({ name, variants }) =>
                 //         name !== environment.name && variants?.length
@@ -187,7 +188,7 @@ export const FeatureEnvironmentVariants = () => {
                         }
                     >
                         <ConditionallyRender
-                            condition={variants.length === 0}
+                            condition={environment.variants.length === 0}
                             show={
                                 <StyledButtonContainer>
                                     <PermissionButton

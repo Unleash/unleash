@@ -217,11 +217,17 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
     async connectProject(
         environment: string,
         projectId: string,
+        idempotent?: boolean, // default false to respect old behavior
     ): Promise<void> {
-        await this.db('project_environments').insert({
+        const query = this.db('project_environments').insert({
             environment_name: environment,
             project_id: projectId,
         });
+        if (idempotent) {
+            await query.onConflict(['environment_name', 'project_id']).ignore();
+        } else {
+            await query;
+        }
     }
 
     async connectFeatures(
@@ -258,17 +264,22 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
     async connectFeatureToEnvironmentsForProject(
         featureName: string,
         projectId: string,
+        config?: [{ environment: string; enabled: boolean }],
     ): Promise<void> {
         const environmentsToEnable = await this.db('project_environments')
             .select('environment_name')
             .where({ project_id: projectId });
         await Promise.all(
             environmentsToEnable.map(async (env) => {
+                const enabled =
+                    config
+                        ?.filter((c) => c.environment === env.environment_name)
+                        .map((c) => c.enabled)[0] || false;
                 await this.db('feature_environments')
                     .insert({
                         environment: env.environment_name,
                         feature_name: featureName,
-                        enabled: false,
+                        enabled: enabled,
                     })
                     .onConflict(['environment', 'feature_name'])
                     .ignore();

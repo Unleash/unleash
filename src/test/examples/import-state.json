@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 5,
   "features": [
     {
       "name": "my-feature",
@@ -17,7 +17,7 @@
       "id": "2ea91298-4565-4db2-8a23-50757001a076",
       "featureName": "my-feature",
       "projectId": "default",
-      "environment": "state-visible-environment",
+      "environment": "development",
       "strategyName": "gradualRolloutRandom",
       "parameters": {
         "percentage": "100"
@@ -28,26 +28,26 @@
   ],
   "environments": [
     {
-      "name": "state-visible-environment",
-      "type": "production",
-      "displayName": "Visible"
+      "name": "development",
+      "type": "development",
+      "displayName": "Dev"
     },
     {
-      "name": "state-hidden-environment",
+      "name": "production",
       "type": "production",
-      "displayName": "Hidden"
+      "displayName": "Prod"
     }
   ],
   "featureEnvironments": [
     {
       "enabled": true,
       "featureName": "my-feature",
-      "environment": "state-visible-environment"
+      "environment": "development"
     },
     {
       "enabled": false,
       "featureName": "my-feature",
-      "environment": "state-hidden-environment"
+      "environment": "production"
     }
   ]
 }

@@ -200,6 +200,30 @@ export default class StateService {
                 dropBeforeImport,
                 keepExisting,
             });
+
+            if (
+                featureEnvironments
+                    .map((fe) => fe.environment)
+                    .filter((eName) => eName !== 'default').length > 0
+            ) {
+                // make sure the project and environment are connected before adding the feature
+                const linkTasks = featureEnvironments.map(async (fe) =>
+                    Promise.all(
+                        features
+                            .filter(
+                                (f) => f.project && f.name === fe.featureName,
+                            )
+                            .map(async (f) =>
+                                this.featureEnvironmentStore.connectProject(
+                                    fe.environment,
+                                    f.project,
+                                    true, // make it idempotent
+                                ),
+                            ),
+                    ),
+                );
+                await Promise.all(linkTasks);
+            }
             await this.importFeatureEnvironments({
                 featureEnvironments,
             });
@@ -266,6 +290,7 @@ export default class StateService {
                         this.featureEnvironmentStore.connectFeatureToEnvironmentsForProject(
                             env.featureName,
                             id,
+                            featureEnvironments,
                         ),
                     ),
             ),

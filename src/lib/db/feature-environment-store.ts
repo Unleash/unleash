@@ -87,6 +87,7 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
                 enabled: md.enabled,
                 featureName,
                 environment,
+                variants: md.variants,
             };
         }
         throw new NotFoundError(

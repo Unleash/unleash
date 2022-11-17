@@ -110,7 +110,7 @@ const UsersList = () => {
                 Cell: DateCell,
                 disableGlobalFilter: true,
                 sortType: 'date',
-                minWidth: 120,
+                width: 120,
                 maxWidth: 120,
             },
             {
@@ -123,24 +123,19 @@ const UsersList = () => {
                 ),
                 disableGlobalFilter: true,
                 disableSortBy: true,
-                minWidth: 50,
-                maxWidth: 50,
+                maxWidth: 80,
             },
             {
                 id: 'name',
                 Header: 'Name',
                 accessor: (row: any) => row.name || '',
-                minWidth: '40%',
-                maxWidth: '40%',
-                Cell: HighlightCell,
-            },
-            {
-                id: 'username',
-                Header: 'Username',
-                accessor: (row: any) => row.username || row.email,
-                minWidth: '40%',
-                maxWidth: '40%',
-                Cell: HighlightCell,
+                minWidth: 200,
+                Cell: ({ row: { original: user } }: any) => (
+                    <HighlightCell
+                        value={user.name}
+                        subtitle={user.email || user.username}
+                    />
+                ),
             },
             {
                 id: 'role',
@@ -149,6 +144,7 @@ const UsersList = () => {
                     roles.find((role: IRole) => role.id === row.rootRole)
                         ?.name || '',
                 disableGlobalFilter: true,
+                maxWidth: 120,
             },
             {
                 id: 'last-login',
@@ -163,7 +159,6 @@ const UsersList = () => {
                 ),
                 disableGlobalFilter: true,
                 sortType: 'date',
-                minWidth: 150,
                 maxWidth: 150,
             },
             {
@@ -179,8 +174,7 @@ const UsersList = () => {
                         onDelete={openDelDialog(user)}
                     />
                 ),
-                minWidth: 100,
-                maxWidth: 100,
+                width: 150,
                 disableGlobalFilter: true,
                 disableSortBy: true,
             },
@@ -228,10 +222,10 @@ const UsersList = () => {
             hiddenColumns.push('type');
         }
         if (isSmallScreen) {
-            hiddenColumns.push('createdAt', 'username');
+            hiddenColumns.push('createdAt', 'last-login');
         }
         if (isExtraSmallScreen) {
-            hiddenColumns.push('imageUrl', 'role', 'last-login');
+            hiddenColumns.push('imageUrl', 'role');
         }
         setHiddenColumns(hiddenColumns);
     }, [setHiddenColumns, isExtraSmallScreen, isSmallScreen, isBillingUsers]);

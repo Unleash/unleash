@@ -1,21 +1,21 @@
-import { Response, Request } from 'express';
+import { Request, Response } from 'express';
 import Controller from '../controller';
 import { IUnleashConfig, IUnleashServices } from '../../types';
 import { Logger } from '../../logger';
-import { NONE } from '../../types/permissions';
+import { NONE } from '../../types';
 import ApiUser from '../../types/api-user';
 import {
+    createRequestSchema,
+    createResponseSchema,
+    emptyResponse,
+    ProxyClientSchema,
     proxyFeaturesSchema,
     ProxyFeaturesSchema,
-} from '../../openapi/spec/proxy-features-schema';
+    ProxyMetricsSchema,
+} from '../../openapi';
 import { Context } from 'unleash-client';
-import { enrichContextWithIp } from '../../proxy/create-context';
-import { ProxyMetricsSchema } from '../../openapi/spec/proxy-metrics-schema';
-import { ProxyClientSchema } from '../../openapi/spec/proxy-client-schema';
-import { createResponseSchema } from '../../openapi/util/create-response-schema';
-import { createRequestSchema } from '../../openapi/util/create-request-schema';
-import { emptyResponse } from '../../openapi/util/standard-responses';
-import { corsOriginMiddleware } from '../../middleware/cors-origin-middleware';
+import { enrichContextWithIp } from '../../proxy';
+import { corsOriginMiddleware } from '../../middleware';
 
 interface ApiUserRequest<
     PARAM = any,
@@ -133,10 +133,19 @@ export default class ProxyController extends Controller {
         req: ApiUserRequest,
         res: Response<ProxyFeaturesSchema>,
     ) {
-        const toggles = await this.services.proxyService.getProxyFeatures(
-            req.user,
-            ProxyController.createContext(req),
-        );
+        const { query } = req;
+        let toggles;
+        if (Boolean(query.all)) {
+            toggles = await this.services.proxyService.getAllProxyFeatures(
+                req.user,
+                ProxyController.createContext(req),
+            );
+        } else {
+            toggles = await this.services.proxyService.getProxyFeatures(
+                req.user,
+                ProxyController.createContext(req),
+            );
+        }
         this.services.openApiService.respondWithValidation(
             200,
             res,

@@ -1,7 +1,6 @@
-import { IUnleashConfig } from '../types/option';
+import { IUnleashConfig, IUnleashServices, IUnleashStores } from '../types';
 import { Logger } from '../logger';
-import { IUnleashServices, IUnleashStores } from '../types';
-import { ProxyFeatureSchema } from '../openapi/spec/proxy-feature-schema';
+import { ProxyFeatureSchema, ProxyMetricsSchema } from '../openapi';
 import ApiUser from '../types/api-user';
 import {
     Context,
@@ -10,10 +9,9 @@ import {
     Unleash,
     UnleashEvents,
 } from 'unleash-client';
-import { ProxyRepository } from '../proxy/proxy-repository';
+import { ProxyRepository } from '../proxy';
 import assert from 'assert';
 import { ApiTokenType } from '../types/models/api-token';
-import { ProxyMetricsSchema } from '../openapi/spec/proxy-metrics-schema';
 
 type Config = Pick<IUnleashConfig, 'getLogger' | 'frontendApi'>;
 
@@ -57,6 +55,21 @@ export class ProxyService {
                 variant: client.forceGetVariant(feature.name, context),
                 impressionData: Boolean(feature.impressionData),
             }));
+    }
+
+    async getAllProxyFeatures(
+        token: ApiUser,
+        context: Context,
+    ): Promise<ProxyFeatureSchema[]> {
+        const client = await this.clientForProxyToken(token);
+        const definitions = client.getFeatureToggleDefinitions() || [];
+
+        return definitions.map((feature) => ({
+            name: feature.name,
+            enabled: Boolean(feature.enabled),
+            variant: client.forceGetVariant(feature.name, context),
+            impressionData: Boolean(feature.impressionData),
+        }));
     }
 
     async registerProxyMetrics(

@@ -1,16 +1,19 @@
 import { IUnleashTest, setupAppWithAuth } from '../../helpers/test-helper';
 import dbInit, { ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
-import { randomId } from '../../../../lib/util/random-id';
+import { randomId } from '../../../../lib/util';
 import {
     ApiTokenType,
     IApiToken,
     IApiTokenCreate,
 } from '../../../../lib/types/models/api-token';
 import { startOfHour } from 'date-fns';
-import { IConstraint, IStrategyConfig } from '../../../../lib/types/model';
-import { ProxyRepository } from '../../../../lib/proxy/proxy-repository';
-import { FEATURE_UPDATED } from '../../../../lib/types/events';
+import {
+    FEATURE_UPDATED,
+    IConstraint,
+    IStrategyConfig,
+} from '../../../../lib/types';
+import { ProxyRepository } from '../../../../lib/proxy';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -928,4 +931,52 @@ test('Should not recursively set off timers on events', async () => {
     proxyRepository.stop();
     expect(spy.mock.calls.length < 3).toBe(true);
     jest.useRealTimers();
+});
+
+test('should return all features when specified', async () => {
+    const frontendToken = await createApiToken(ApiTokenType.FRONTEND);
+    await createFeatureToggle({
+        name: 'enabledFeature1',
+        enabled: true,
+        strategies: [{ name: 'default', constraints: [], parameters: {} }],
+    });
+    await createFeatureToggle({
+        name: 'enabledFeature2',
+        enabled: true,
+        strategies: [{ name: 'default', constraints: [], parameters: {} }],
+    });
+    await createFeatureToggle({
+        name: 'disabledFeature',
+        enabled: false,
+        strategies: [{ name: 'default', constraints: [], parameters: {} }],
+    });
+    await app.request
+        .get('/api/frontend?all=true')
+        .set('Authorization', frontendToken.secret)
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect((res) => {
+            expect(res.body).toEqual({
+                toggles: [
+                    {
+                        name: 'enabledFeature1',
+                        enabled: true,
+                        impressionData: false,
+                        variant: { enabled: false, name: 'disabled' },
+                    },
+                    {
+                        name: 'enabledFeature2',
+                        enabled: true,
+                        impressionData: false,
+                        variant: { enabled: false, name: 'disabled' },
+                    },
+                    {
+                        name: 'disabledFeature',
+                        enabled: false,
+                        impressionData: false,
+                        variant: { enabled: false, name: 'disabled' },
+                    },
+                ],
+            });
+        });
 });

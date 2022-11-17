@@ -44,7 +44,9 @@ export interface IFeatureEnvironmentStore
     connectFeatureToEnvironmentsForProject(
         featureName: string,
         projectId: string,
-        config?: [{ environment: string; enabled: boolean }],
+        config?: [
+            { featureName: string; environment: string; enabled: boolean },
+        ],
     ): Promise<void>;
 
     connectProject(

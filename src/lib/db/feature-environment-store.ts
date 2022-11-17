@@ -264,7 +264,9 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
     async connectFeatureToEnvironmentsForProject(
         featureName: string,
         projectId: string,
-        config?: [{ environment: string; enabled: boolean }],
+        config?: [
+            { featureName: string; environment: string; enabled: boolean },
+        ],
     ): Promise<void> {
         const environmentsToEnable = await this.db('project_environments')
             .select('environment_name')
@@ -272,9 +274,12 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
         await Promise.all(
             environmentsToEnable.map(async (env) => {
                 const enabled =
-                    config
-                        ?.filter((c) => c.environment === env.environment_name)
-                        .map((c) => c.enabled)[0] || false;
+                    config?.find(
+                        (c) =>
+                            c.featureName === featureName &&
+                            c.environment === env.environment_name &&
+                            c.enabled,
+                    )?.enabled || false;
                 await this.db('feature_environments')
                     .insert({
                         environment: env.environment_name,

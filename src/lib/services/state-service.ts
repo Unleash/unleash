@@ -201,32 +201,18 @@ export default class StateService {
                 keepExisting,
             });
 
-            if (
-                featureEnvironments
-                    .map((fe) => fe.environment)
-                    .filter((eName) => eName !== 'default').length > 0
-            ) {
-                // make sure the project and environment are connected before adding the feature
-                const linkTasks = featureEnvironments.map(async (fe) =>
-                    Promise.all(
-                        features
-                            .filter(
-                                (f) => f.project && f.name === fe.featureName,
-                            )
-                            .map(async (f) =>
-                                this.featureEnvironmentStore.connectProject(
-                                    fe.environment,
-                                    f.project,
-                                    true, // make it idempotent
-                                ),
-                            ),
-                    ),
-                );
-                await Promise.all(linkTasks);
+            if (featureEnvironments) {
+                // make sure the project and environment are connected
+                // before importing featureEnvironments
+                await this.linkFeatureEnvironments({
+                    features,
+                    featureEnvironments,
+                });
+                await this.importFeatureEnvironments({
+                    featureEnvironments,
+                });
             }
-            await this.importFeatureEnvironments({
-                featureEnvironments,
-            });
+
             await this.importFeatureStrategies({
                 featureStrategies,
                 dropBeforeImport,
@@ -278,6 +264,26 @@ export default class StateService {
                 data.featureStrategySegments,
             );
         }
+    }
+
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    async linkFeatureEnvironments({
+        features,
+        featureEnvironments,
+    }): Promise<void> {
+        const linkTasks = featureEnvironments.map(async (fe) => {
+            const project = features.find(
+                (f) => f.project && f.name === fe.featureName,
+            ).project;
+            if (project) {
+                return this.featureEnvironmentStore.connectProject(
+                    fe.environment,
+                    project,
+                    true, // make it idempotent
+                );
+            }
+        });
+        await Promise.all(linkTasks);
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types

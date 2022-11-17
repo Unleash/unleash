@@ -16,6 +16,8 @@ import {
 import { Context } from 'unleash-client';
 import { enrichContextWithIp } from '../../proxy';
 import { corsOriginMiddleware } from '../../middleware';
+import { proxyFeaturesQueryParameters } from '../../openapi/spec/proxy-features-query-parameters';
+import { OpenAPIV3 } from 'openapi-types';
 
 interface ApiUserRequest<
     PARAM = any,
@@ -54,6 +56,8 @@ export default class ProxyController extends Controller {
                 this.services.openApiService.validPath({
                     tags: ['Unstable'],
                     operationId: 'getFrontendFeatures',
+                    parameters:
+                        proxyFeaturesQueryParameters as unknown as OpenAPIV3.ParameterObject[],
                     responses: {
                         200: createResponseSchema('proxyFeaturesSchema'),
                     },

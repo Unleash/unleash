@@ -25,7 +25,7 @@ export const PayloadCell = ({ value: payload }: IPayloadCellProps) => {
 
     if (!payload) return <TextCell />;
 
-    if (payload.type === 'string') {
+    if (payload.type === 'string' && payload.value.length < 20) {
         return (
             <TextCell>
                 <Highlighter search={searchQuery}>{payload.value}</Highlighter>

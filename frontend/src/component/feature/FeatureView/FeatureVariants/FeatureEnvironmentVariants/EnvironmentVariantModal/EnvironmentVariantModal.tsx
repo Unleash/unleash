@@ -68,6 +68,7 @@ const StyledInputDescription = styled('p')(({ theme }) => ({
 
 const StyledFormControlLabel = styled(FormControlLabel)(({ theme }) => ({
     marginTop: theme.spacing(4),
+    marginBottom: theme.spacing(1.5),
 }));
 
 const StyledInputSecondaryDescription = styled('p')(({ theme }) => ({

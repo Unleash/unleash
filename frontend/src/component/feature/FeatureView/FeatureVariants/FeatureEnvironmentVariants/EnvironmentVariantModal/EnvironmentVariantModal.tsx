@@ -125,12 +125,16 @@ const EMPTY_PAYLOAD = { type: 'string', value: '' };
 
 enum ErrorField {
     NAME = 'name',
+    PERCENTAGE = 'percentage',
     PAYLOAD = 'payload',
+    OTHER = 'other',
 }
 
 interface IEnvironmentVariantModalErrors {
     [ErrorField.NAME]?: string;
+    [ErrorField.PERCENTAGE]?: string;
     [ErrorField.PAYLOAD]?: string;
+    [ErrorField.OTHER]?: string;
 }
 
 interface IEnvironmentVariantModalProps {
@@ -204,7 +208,7 @@ export const EnvironmentVariantModal = ({
     const getUpdatedVariants = (): IFeatureVariant[] => {
         const newVariant: IFeatureVariant = {
             name,
-            weight: Number(percentage || 100) * 10,
+            weight: Number(customPercentage ? percentage : 100) * 10,
             weightType: customPercentage ? WeightType.FIX : WeightType.VARIABLE,
             stickiness:
                 variants?.length > 0 ? variants[0].stickiness : 'default',
@@ -236,12 +240,11 @@ export const EnvironmentVariantModal = ({
         onConfirm(getUpdatedVariants());
     };
 
-    const formatApiCode = () => {
-        return `curl --location --request PATCH '${
-            uiConfig.unleashUrl
-        }/api/admin/projects/${projectId}/features/${featureId}/environments/${
-            environment?.name
-        }/variants' \\
+    const formatApiCode = () => `curl --location --request PATCH '${
+        uiConfig.unleashUrl
+    }/api/admin/projects/${projectId}/features/${featureId}/environments/${
+        environment?.name
+    }/variants' \\
     --header 'Authorization: INSERT_API_KEY' \\
     --header 'Content-Type: application/json' \\
     --data-raw '${JSON.stringify(
@@ -249,7 +252,6 @@ export const EnvironmentVariantModal = ({
         undefined,
         2
     )}'`;
-    };
 
     const isNameNotEmpty = (name: string) => name.length;
     const isNameUnique = (name: string) =>
@@ -377,6 +379,8 @@ export const EnvironmentVariantModal = ({
                                 <StyledInput
                                     type="number"
                                     label="Variant weight"
+                                    error={Boolean(errors.percentage)}
+                                    errorText={errors.percentage}
                                     value={percentage}
                                     onChange={e =>
                                         onSetPercentage(e.target.value)
@@ -386,10 +390,6 @@ export const EnvironmentVariantModal = ({
                                     aria-valuemin={0}
                                     aria-valuemax={100}
                                     InputProps={{
-                                        inputProps: {
-                                            min: 0,
-                                            max: 100,
-                                        },
                                         endAdornment: (
                                             <InputAdornment position="end">
                                                 %

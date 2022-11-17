@@ -4,7 +4,6 @@ import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { IChangeRequest } from 'component/changeRequest/changeRequest.types';
 import useUiConfig from '../useUiConfig/useUiConfig';
-import { withFallback } from 'utils/withFallback';
 
 const fetcher = (path: string) => {
     return fetch(path)
@@ -16,7 +15,7 @@ export const useChangeRequestOpen = (project: string) => {
     const { isOss } = useUiConfig();
     const { data, error, mutate } = useSWR<IChangeRequest[]>(
         formatApiPath(`api/admin/projects/${project}/change-requests/open`),
-        withFallback(isOss())(fetcher, Promise.resolve([]))
+        isOss() ? () => Promise.resolve([]) : fetcher
     );
 
     return useMemo(

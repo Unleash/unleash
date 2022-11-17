@@ -1,4 +1,5 @@
 import {
+    Alert,
     Button,
     FormControlLabel,
     InputAdornment,
@@ -97,6 +98,10 @@ const StyledSelectMenu = styled(SelectMenu)(({ theme }) => ({
     marginRight: theme.spacing(10),
 }));
 
+const StyledAlert = styled(Alert)(({ theme }) => ({
+    marginTop: theme.spacing(4),
+}));
+
 const StyledButtonContainer = styled('div')(({ theme }) => ({
     marginTop: 'auto',
     display: 'flex',
@@ -142,10 +147,10 @@ interface IEnvironmentVariantModalProps {
     variant?: IFeatureVariant;
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    getPayload: (
+    getApiPayload: (
         variants: IFeatureVariant[],
         newVariants: IFeatureVariant[]
-    ) => Operation[];
+    ) => { patch: Operation[]; error?: string };
     onConfirm: (updatedVariants: IFeatureVariant[]) => void;
 }
 
@@ -154,7 +159,7 @@ export const EnvironmentVariantModal = ({
     variant,
     open,
     setOpen,
-    getPayload,
+    getApiPayload,
     onConfirm,
 }: IEnvironmentVariantModalProps) => {
     const projectId = useRequiredPathParam('projectId');
@@ -235,6 +240,20 @@ export const EnvironmentVariantModal = ({
         return updatedVariants;
     };
 
+    const apiPayload = getApiPayload(variants, getUpdatedVariants());
+
+    useEffect(() => {
+        clearError(ErrorField.PERCENTAGE);
+        clearError(ErrorField.OTHER);
+        if (apiPayload.error) {
+            if (apiPayload.error.includes('%')) {
+                setError(ErrorField.PERCENTAGE, apiPayload.error);
+            } else {
+                setError(ErrorField.OTHER, apiPayload.error);
+            }
+        }
+    }, [apiPayload.error]);
+
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         onConfirm(getUpdatedVariants());
@@ -247,11 +266,7 @@ export const EnvironmentVariantModal = ({
     }/variants' \\
     --header 'Authorization: INSERT_API_KEY' \\
     --header 'Content-Type: application/json' \\
-    --data-raw '${JSON.stringify(
-        getPayload(variants, getUpdatedVariants()),
-        undefined,
-        2
-    )}'`;
+    --data-raw '${JSON.stringify(apiPayload.patch, undefined, 2)}'`;
 
     const isNameNotEmpty = (name: string) => name.length;
     const isNameUnique = (name: string) =>
@@ -277,7 +292,8 @@ export const EnvironmentVariantModal = ({
         isNameNotEmpty(name) &&
         isNameUnique(name) &&
         isValidPercentage(percentage) &&
-        isValidPayload(payload);
+        isValidPayload(payload) &&
+        !apiPayload.error;
 
     const onSetName = (name: string) => {
         clearError(ErrorField.NAME);
@@ -410,12 +426,13 @@ export const EnvironmentVariantModal = ({
                                 label="Type"
                                 value={payload.type}
                                 options={payloadOptions}
-                                onChange={e =>
+                                onChange={e => {
+                                    clearError(ErrorField.PAYLOAD);
                                     setPayload(payload => ({
                                         ...payload,
                                         type: e.target.value,
-                                    }))
-                                }
+                                    }));
+                                }}
                             />
                             <StyledInput
                                 id="variant-payload-value"
@@ -457,6 +474,13 @@ export const EnvironmentVariantModal = ({
                             Add override
                         </Button>
                     </div>
+                    <StyledAlert
+                        severity="error"
+                        hidden={!Boolean(errors.other)}
+                    >
+                        <strong>Error: </strong>
+                        {errors.other}
+                    </StyledAlert>
 
                     <StyledButtonContainer>
                         <Button

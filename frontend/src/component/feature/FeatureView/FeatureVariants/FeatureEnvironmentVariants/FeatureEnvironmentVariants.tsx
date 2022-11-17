@@ -59,12 +59,19 @@ export const FeatureEnvironmentVariants = () => {
         return jsonpatch.compare(variants, newVariants);
     };
 
-    const getPayload = (
+    const getApiPayload = (
         variants: IFeatureVariant[],
         newVariants: IFeatureVariant[]
-    ) => {
-        const updatedNewVariants = updateWeight(newVariants, 1000);
-        return createPatch(variants, updatedNewVariants);
+    ): {
+        patch: jsonpatch.Operation[];
+        error?: string;
+    } => {
+        try {
+            const updatedNewVariants = updateWeight(newVariants, 1000);
+            return { patch: createPatch(variants, updatedNewVariants) };
+        } catch (error: unknown) {
+            return { patch: [], error: formatUnknownError(error) };
+        }
     };
 
     const updateVariants = async (
@@ -72,7 +79,7 @@ export const FeatureEnvironmentVariants = () => {
         variants: IFeatureVariant[]
     ) => {
         const environmentVariants = environment.variants ?? [];
-        const patch = getPayload(environmentVariants, variants);
+        const { patch } = getApiPayload(environmentVariants, variants);
 
         if (patch.length === 0) return;
 
@@ -270,7 +277,7 @@ export const FeatureEnvironmentVariants = () => {
                 variant={selectedVariant}
                 open={modalOpen}
                 setOpen={setModalOpen}
-                getPayload={getPayload}
+                getApiPayload={getApiPayload}
                 onConfirm={onVariantConfirm}
             />
             <VariantDeleteDialog

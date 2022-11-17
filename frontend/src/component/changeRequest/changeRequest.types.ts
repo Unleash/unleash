@@ -10,12 +10,15 @@ export interface IChangeRequest {
     createdAt: Date;
     features: IChangeRequestFeature[];
     approvals: IChangeRequestApproval[];
+    comments: IChangeRequestComment[];
+    conflict?: string;
 }
 
 export interface IChangeRequestEnvironmentConfig {
     environment: string;
     type: string;
     changeRequestEnabled: boolean;
+    requiredApprovals: number;
 }
 
 export interface IChangeRequestFeature {
@@ -27,6 +30,13 @@ export interface IChangeRequestFeature {
 export interface IChangeRequestApproval {
     createdBy: Pick<IUser, 'id' | 'username' | 'imageUrl'>;
     createdAt: Date;
+}
+
+export interface IChangeRequestComment {
+    text: string;
+    createdBy: Pick<IUser, 'username' | 'imageUrl'>;
+    createdAt: Date;
+    id: string;
 }
 
 export interface IChangeRequestBase {

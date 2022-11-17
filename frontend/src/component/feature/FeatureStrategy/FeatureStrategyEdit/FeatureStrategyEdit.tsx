@@ -101,15 +101,8 @@ export const FeatureStrategyEdit = () => {
             strategyId,
             payload
         );
-        if (uiConfig.flags.SE) {
-            await setStrategySegments({
-                environmentId,
-                projectId,
-                strategyId,
-                segmentIds: segments.map(s => s.id),
-            });
-            await refetchSavedStrategySegments();
-        }
+
+        await refetchSavedStrategySegments();
         setToastData({
             title: 'Strategy updated',
             type: 'success',
@@ -133,7 +126,8 @@ export const FeatureStrategyEdit = () => {
     };
 
     const onSubmit = async () => {
-        const payload = createStrategyPayload(strategy);
+        const segmentsToSubmit = uiConfig?.flags.SE ? segments : [];
+        const payload = createStrategyPayload(strategy, segmentsToSubmit);
 
         try {
             if (isChangeRequestConfigured(environmentId)) {
@@ -191,11 +185,13 @@ export const FeatureStrategyEdit = () => {
 };
 
 export const createStrategyPayload = (
-    strategy: Partial<IFeatureStrategy>
+    strategy: Partial<IFeatureStrategy>,
+    segments: ISegment[]
 ): IFeatureStrategyPayload => ({
     name: strategy.name,
     constraints: strategy.constraints ?? [],
     parameters: strategy.parameters ?? {},
+    segments: segments.map(segment => segment.id),
 });
 
 export const formatFeaturePath = (

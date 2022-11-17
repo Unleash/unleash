@@ -36,6 +36,7 @@ export interface IFeatureStrategy {
     sortOrder?: number;
     constraints: IConstraint[];
     createdAt?: Date;
+    segments?: number[];
 }
 
 export interface FeatureToggleDTO {
@@ -68,6 +69,7 @@ export interface IFeatureToggleClient {
     impressionData?: boolean;
     lastSeenAt?: Date;
     createdAt?: Date;
+    tags?: ITag[];
 }
 
 export interface IFeatureEnvironmentInfo {

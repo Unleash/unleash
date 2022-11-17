@@ -314,11 +314,6 @@ class FeatureToggleService {
         const { featureName, projectId, environment } = context;
         await this.validateFeatureContext(context);
 
-        if (await this.changeRequestsEnabled(projectId, environment)) {
-            throw new Error(
-                `Strategies can only be created through change requests for ${environment} environment`,
-            );
-        }
         if (strategyConfig.constraints?.length > 0) {
             strategyConfig.constraints = await this.validateConstraints(
                 strategyConfig.constraints,
@@ -336,6 +331,16 @@ class FeatureToggleService {
                     featureName,
                     environment,
                 });
+
+            if (
+                strategyConfig.segments &&
+                Array.isArray(strategyConfig.segments)
+            ) {
+                await this.segmentService.updateStrategySegments(
+                    newFeatureStrategy.id,
+                    strategyConfig.segments,
+                );
+            }
 
             const tags = await this.tagStore.getAllTagsForFeature(featureName);
             const segments = await this.segmentService.getByStrategy(
@@ -387,12 +392,6 @@ class FeatureToggleService {
         const existingStrategy = await this.featureStrategiesStore.get(id);
         this.validateFeatureStrategyContext(existingStrategy, context);
 
-        if (await this.changeRequestsEnabled(projectId, environment)) {
-            throw new Error(
-                `Strategies can only be updated through change requests for ${environment} environment`,
-            );
-        }
-
         if (existingStrategy.id === id) {
             if (updates.constraints?.length > 0) {
                 updates.constraints = await this.validateConstraints(
@@ -404,6 +403,13 @@ class FeatureToggleService {
                 id,
                 updates,
             );
+
+            if (updates.segments && Array.isArray(updates.segments)) {
+                await this.segmentService.updateStrategySegments(
+                    strategy.id,
+                    updates.segments,
+                );
+            }
 
             const segments = await this.segmentService.getByStrategy(
                 strategy.id,
@@ -440,12 +446,6 @@ class FeatureToggleService {
         userName: string,
     ): Promise<Saved<IStrategyConfig>> {
         const { projectId, environment, featureName } = context;
-
-        if (await this.changeRequestsEnabled(projectId, environment)) {
-            throw new Error(
-                `Strategies can only be updated through change requests for ${environment} environment`,
-            );
-        }
 
         const existingStrategy = await this.featureStrategiesStore.get(id);
         this.validateFeatureStrategyContext(existingStrategy, context);
@@ -498,12 +498,6 @@ class FeatureToggleService {
         const existingStrategy = await this.featureStrategiesStore.get(id);
         const { featureName, projectId, environment } = context;
         this.validateFeatureStrategyContext(existingStrategy, context);
-
-        if (await this.changeRequestsEnabled(projectId, environment)) {
-            throw new Error(
-                `Strategies can only deleted updated through change requests for ${environment} environment`,
-            );
-        }
 
         await this.featureStrategiesStore.delete(id);
 
@@ -926,12 +920,6 @@ class FeatureToggleService {
         createdBy: string,
         user?: User,
     ): Promise<FeatureToggle> {
-        if (await this.changeRequestsEnabled(project, environment)) {
-            throw new Error(
-                `Features can only be updated through change requests for ${environment} environment`,
-            );
-        }
-
         const hasEnvironment =
             await this.featureEnvironmentStore.featureHasEnvironment(
                 environment,
@@ -1219,13 +1207,6 @@ class FeatureToggleService {
             return x;
         });
         return variableVariants.concat(fixedVariants);
-    }
-
-    changeRequestsEnabled(
-        project: string,
-        environment: string,
-    ): Promise<boolean> {
-        return this.accessService.isChangeRequestsEnabled(project, environment);
     }
 }
 

@@ -1,5 +1,5 @@
-import { Alert, styled } from '@mui/material';
-import { FC, useContext } from 'react';
+import { Alert, Button, styled, TextField, Typography } from '@mui/material';
+import { FC, useContext, useState } from 'react';
 import { Box } from '@mui/material';
 import { useChangeRequest } from 'hooks/api/getters/useChangeRequest/useChangeRequest';
 import { ChangeRequestHeader } from './ChangeRequestHeader/ChangeRequestHeader';
@@ -19,6 +19,8 @@ import PermissionButton from 'component/common/PermissionButton/PermissionButton
 import { APPLY_CHANGE_REQUEST } from 'component/providers/AccessProvider/permissions';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import AccessContext from 'contexts/AccessContext';
+import { ChangeRequestComment } from './ChangeRequestComments/ChangeRequestComment';
+import { AddCommentField } from './ChangeRequestComments/AddCommentField';
 
 const StyledAsideBox = styled(Box)(({ theme }) => ({
     width: '30%',
@@ -48,13 +50,14 @@ export const ChangeRequestOverview: FC = () => {
     const projectId = useRequiredPathParam('projectId');
     const { user } = useAuthUser();
     const { isAdmin } = useContext(AccessContext);
+    const [commentText, setCommentText] = useState('');
 
     const id = useRequiredPathParam('id');
     const { data: changeRequest, refetchChangeRequest } = useChangeRequest(
         projectId,
         id
     );
-    const { changeState } = useChangeRequestApi();
+    const { changeState, addComment } = useChangeRequestApi();
     const { setToastData, setToastApiError } = useToast();
 
     if (!changeRequest) {
@@ -77,11 +80,29 @@ export const ChangeRequestOverview: FC = () => {
         }
     };
 
+    const onAddComment = async () => {
+        try {
+            await addComment(projectId, id, commentText);
+            setCommentText('');
+            refetchChangeRequest();
+            setToastData({
+                type: 'success',
+                title: 'Success',
+                text: 'Comment added',
+            });
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
+    };
+
     const isSelfReview =
         changeRequest?.createdBy.id === user?.id &&
         changeRequest.state === 'In review' &&
         !isAdmin;
 
+    const hasApprovedAlready = changeRequest.approvals.some(
+        approval => approval.createdBy.id === user?.id
+    );
     return (
         <>
             <ChangeRequestHeader changeRequest={changeRequest} />
@@ -109,6 +130,18 @@ export const ChangeRequestOverview: FC = () => {
                     <StyledInnerContainer>
                         Changes
                         <ChangeRequest changeRequest={changeRequest} />
+                        {changeRequest.comments?.map(comment => (
+                            <ChangeRequestComment
+                                key={comment.id}
+                                comment={comment}
+                            />
+                        ))}
+                        <AddCommentField
+                            imageUrl={user?.imageUrl || ''}
+                            commentText={commentText}
+                            onAddComment={onAddComment}
+                            onTypeComment={setCommentText}
+                        />
                         <ConditionallyRender
                             condition={isSelfReview}
                             show={
@@ -124,10 +157,14 @@ export const ChangeRequestOverview: FC = () => {
                         />
                         <ChangeRequestReviewStatus
                             state={changeRequest.state}
+                            environment={changeRequest.environment}
                         />
                         <StyledButtonBox>
                             <ConditionallyRender
-                                condition={changeRequest.state === 'In review'}
+                                condition={
+                                    changeRequest.state === 'In review' &&
+                                    !hasApprovedAlready
+                                }
                                 show={<ReviewButton />}
                             />
                             <ConditionallyRender

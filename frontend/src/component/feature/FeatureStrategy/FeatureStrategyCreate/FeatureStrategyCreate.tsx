@@ -90,14 +90,7 @@ export const FeatureStrategyCreate = () => {
             environmentId,
             payload
         );
-        if (uiConfig.flags.SE) {
-            await setStrategySegments({
-                environmentId,
-                projectId,
-                strategyId: created.id,
-                segmentIds: segments.map(s => s.id),
-            });
-        }
+
         setToastData({
             title: 'Strategy created',
             type: 'success',
@@ -121,7 +114,7 @@ export const FeatureStrategyCreate = () => {
     };
 
     const onSubmit = async () => {
-        const payload = createStrategyPayload(strategy);
+        const payload = createStrategyPayload(strategy, segments);
 
         try {
             if (isChangeRequestConfigured(environmentId)) {

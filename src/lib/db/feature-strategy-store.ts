@@ -11,11 +11,12 @@ import {
     IEnvironmentOverview,
     IFeatureOverview,
     IFeatureStrategy,
+    IFeatureToggleClient,
     IStrategyConfig,
     ITag,
 } from '../types/model';
 import { IFeatureStrategiesStore } from '../types/stores/feature-strategies-store';
-import { PartialSome } from '../types/partial';
+import { PartialDeep, PartialSome } from '../types/partial';
 import FeatureToggleStore from './feature-toggle-store';
 import { ensureStringValue } from '../util/ensureStringValue';
 import { mapValues } from '../util/map-values';
@@ -237,6 +238,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 'feature_strategies.parameters as parameters',
                 'feature_strategies.constraints as constraints',
                 'feature_strategies.sort_order as sort_order',
+                'fss.segment_id as segments',
             )
             .leftJoin(
                 'feature_environments',
@@ -259,6 +261,11 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 'feature_environments.environment',
                 'environments.name',
             )
+            .leftJoin(
+                'feature_strategy_segment as fss',
+                `fss.feature_strategy_id`,
+                `feature_strategies.id`,
+            )
             .where('features.name', featureName)
             .modify(FeatureToggleStore.filterByArchived, archived);
         stopTimer();
@@ -267,6 +274,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 if (acc.environments === undefined) {
                     acc.environments = {};
                 }
+
                 acc.name = r.name;
                 acc.impressionData = r.impression_data;
                 acc.description = r.description;
@@ -281,6 +289,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                         name: r.environment,
                     };
                 }
+
                 const env = acc.environments[r.environment];
                 env.enabled = r.enabled;
                 env.type = r.environment_type;
@@ -289,9 +298,17 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                     env.strategies = [];
                 }
                 if (r.strategy_id) {
-                    env.strategies.push(
-                        FeatureStrategiesStore.getAdminStrategy(r),
+                    const found = env.strategies.find(
+                        (strategy) => strategy.id === r.strategy_id,
                     );
+                    if (!found) {
+                        env.strategies.push(
+                            FeatureStrategiesStore.getAdminStrategy(r),
+                        );
+                    }
+                }
+                if (r.segments) {
+                    this.addSegmentIdsToStrategy(env, r);
                 }
                 acc.environments[r.environment] = env;
                 return acc;
@@ -316,6 +333,22 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         throw new NotFoundError(
             `Could not find feature toggle with name ${featureName}`,
         );
+    }
+
+    private addSegmentIdsToStrategy(
+        feature: PartialDeep<IFeatureToggleClient>,
+        row: Record<string, any>,
+    ) {
+        const strategy = feature.strategies.find(
+            (s) => s.id === row.strategy_id,
+        );
+        if (!strategy) {
+            return;
+        }
+        if (!strategy.segments) {
+            strategy.segments = [];
+        }
+        strategy.segments.push(row.segments);
     }
 
     private static getEnvironment(r: any): IEnvironmentOverview {

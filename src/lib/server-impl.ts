@@ -20,7 +20,7 @@ import {
     IUnleashServices,
     RoleName,
 } from './types';
-import * as errors from './error';
+
 import User, { IUser } from './types/user';
 import ApiUser from './types/api-user';
 import { Logger, LogLevel } from './logger';
@@ -169,22 +169,6 @@ export default {
     create,
 };
 
-export * from './logger';
-export * from './metrics';
-export * from './event-hook';
-export * from './server-impl';
-export * from './create-config';
-export * from './metric-events';
-export * from './default-custom-auth-deny-all';
-export * from './addons';
-export * from './db';
-export * from './middleware';
-export * from './openapi';
-export * from './proxy';
-export * from './routes';
-export * from './services';
-export * from './types';
-export * from './util';
 export {
     start,
     create,
@@ -196,7 +180,6 @@ export {
     RoleName,
     IAuthType,
     Knex,
-    errors,
 };
 
 export type {

@@ -61,17 +61,19 @@ Support for scoped admin tokens with more fine-grained permissions is currently 
 
 When using a personal access token to modify resources, the event log will list the token creator's name for that operation.
 
-All personal access tokens have a lifetime and **will stop working after the expiration** date.
+Personal access tokens with a lifetime **will stop working after the expiration date**.
 
 Use personal access tokens to:
 
 - Provide more fine-grained permissions for automation than an admin token provides
 - Give temporary access to an automation tool
 
+Note: While it is possible to set the expiration date to **never**, we don't recommend it. 
+
 Do **not** use personal access tokens for:
 
 -   [Client SDKs](../sdks/index.md): You will _not_ be able to read toggle data from multiple environments. Use [client tokens](#client-tokens) instead.
--   Write custom Unleash UIs: Personal access tokens have a lifetime and will expire, use [admin tokens](#admin-tokens) tokens instead.
+-   Write custom Unleash UIs: Personal access tokens may expire and their permissions may change. It's better to use [admin tokens](#admin-tokens) tokens instead.
 
 ### Client tokens
 

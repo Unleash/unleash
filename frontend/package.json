@@ -54,7 +54,7 @@
     "@uiw/react-codemirror": "4.13.2",
     "@vitejs/plugin-react": "2.2.0",
     "chart.js": "3.9.1",
-    "chartjs-adapter-date-fns": "2.0.0",
+    "chartjs-adapter-date-fns": "2.0.1",
     "classnames": "2.3.2",
     "copy-to-clipboard": "3.3.3",
     "cypress": "9.7.0",

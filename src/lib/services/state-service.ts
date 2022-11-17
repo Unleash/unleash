@@ -287,6 +287,15 @@ export default class StateService {
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    enabledInConfiguration(feature: string, env) {
+        const config = {};
+        env.filter((e) => e.featureName === feature).forEach((e) => {
+            config[e.environment] = e.enabled || false;
+        });
+        return config;
+    }
+
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async importFeatureEnvironments({ featureEnvironments }): Promise<void> {
         await Promise.all(
             featureEnvironments.map((env) =>
@@ -296,7 +305,10 @@ export default class StateService {
                         this.featureEnvironmentStore.connectFeatureToEnvironmentsForProject(
                             env.featureName,
                             id,
-                            featureEnvironments,
+                            this.enabledInConfiguration(
+                                env.featureName,
+                                featureEnvironments,
+                            ),
                         ),
                     ),
             ),

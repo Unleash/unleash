@@ -101,8 +101,7 @@ export const ChangeRequestConfiguration: VFC = () => {
             });
             await refetchChangeRequestConfig();
         } catch (error) {
-            const message = formatUnknownError(error);
-            setToastApiError(message);
+            setToastApiError(formatUnknownError(error));
         }
     }
 
@@ -116,6 +115,15 @@ export const ChangeRequestConfiguration: VFC = () => {
                 sx: { 'font-size': theme.fontSizes.smallBody },
             };
         });
+
+    function onRequiredApprovalsChange(original: any, approvals: string) {
+        updateConfiguration({
+            project: projectId,
+            environment: original.environment,
+            enabled: original.changeRequestEnabled,
+            requiredApprovals: Number(approvals),
+        });
+    }
 
     const columns = useMemo(
         () => [
@@ -142,14 +150,10 @@ export const ChangeRequestConfiguration: VFC = () => {
                                     options={approvalOptions}
                                     value={original.requiredApprovals || 1}
                                     onChange={approvals => {
-                                        updateConfiguration({
-                                            project: projectId,
-                                            environment: original.environment,
-                                            enabled:
-                                                original.changeRequestEnabled,
-                                            requiredApprovals:
-                                                Number(approvals),
-                                        });
+                                        onRequiredApprovalsChange(
+                                            original,
+                                            approvals
+                                        );
                                     }}
                                     IconComponent={KeyboardArrowDownOutlined}
                                     fullWidth

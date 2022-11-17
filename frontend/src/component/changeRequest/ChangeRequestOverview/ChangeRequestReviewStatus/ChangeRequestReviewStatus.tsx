@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import React, { FC } from 'react';
 import { Box, Theme, Typography, useTheme } from '@mui/material';
 import { ReactComponent as ChangesAppliedIcon } from 'assets/icons/merge.svg';
 import {
@@ -12,12 +12,34 @@ import {
     StyledDivider,
 } from './ChangeRequestReviewStatus.styles';
 import { ChangeRequestState } from 'component/changeRequest/changeRequest.types';
-import { useChangeRequestsEnabled } from '../../../../hooks/useChangeRequestsEnabled';
 import { useRequiredPathParam } from '../../../../hooks/useRequiredPathParam';
+import { useChangeRequestConfig } from '../../../../hooks/api/getters/useChangeRequestConfig/useChangeRequestConfig';
 interface ISuggestChangeReviewsStatusProps {
     state: ChangeRequestState;
     environment: string;
 }
+
+export const useChangeRequestRequiredApprovals = (projectId: string) => {
+    const { data } = useChangeRequestConfig(projectId);
+
+    const getChangeRequestRequiredApprovals = React.useCallback(
+        (environment: string): number => {
+            const config = data.find(draft => {
+                return (
+                    draft.environment === environment &&
+                    draft.changeRequestEnabled
+                );
+            });
+
+            return config?.requiredApprovals || 1;
+        },
+        [data]
+    );
+
+    return {
+        getChangeRequestRequiredApprovals,
+    };
+};
 
 const resolveBorder = (state: ChangeRequestState, theme: Theme) => {
     if (state === 'Approved') {
@@ -136,7 +158,7 @@ const ReviewRequired = ({ environment }: IReviewRequiredProps) => {
     const theme = useTheme();
     const projectId = useRequiredPathParam('projectId');
     const { getChangeRequestRequiredApprovals } =
-        useChangeRequestsEnabled(projectId);
+        useChangeRequestRequiredApprovals(projectId);
     const approvals = getChangeRequestRequiredApprovals(environment);
 
     return (

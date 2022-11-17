@@ -20,20 +20,6 @@ export const useChangeRequestsEnabled = (projectId: string) => {
         [data]
     );
 
-    const getChangeRequestRequiredApprovals = React.useCallback(
-        (environment: string): number => {
-            const config = data.find(draft => {
-                return (
-                    draft.environment === environment &&
-                    draft.changeRequestEnabled
-                );
-            });
-
-            return config?.requiredApprovals || 1;
-        },
-        [data]
-    );
-
     const isChangeRequestConfiguredInAnyEnv = React.useCallback((): boolean => {
         return (
             Boolean(uiConfig?.flags.changeRequests) &&
@@ -45,6 +31,5 @@ export const useChangeRequestsEnabled = (projectId: string) => {
         isChangeRequestFlagEnabled: Boolean(uiConfig?.flags.changeRequests),
         isChangeRequestConfigured,
         isChangeRequestConfiguredInAnyEnv,
-        getChangeRequestRequiredApprovals,
     };
 };

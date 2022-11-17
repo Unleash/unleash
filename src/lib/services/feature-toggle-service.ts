@@ -311,7 +311,7 @@ class FeatureToggleService {
         context: IFeatureStrategyContext,
         createdBy: string,
     ): Promise<Saved<IStrategyConfig>> {
-        await this.verifyChangeRequestsDisabled(
+        await this.stopWhenChangeRequestsEnabled(
             context.projectId,
             context.environment,
         );
@@ -403,7 +403,7 @@ class FeatureToggleService {
         context: IFeatureStrategyContext,
         userName: string,
     ): Promise<Saved<IStrategyConfig>> {
-        await this.verifyChangeRequestsDisabled(
+        await this.stopWhenChangeRequestsEnabled(
             context.projectId,
             context.environment,
         );
@@ -523,7 +523,7 @@ class FeatureToggleService {
         context: IFeatureStrategyContext,
         createdBy: string,
     ): Promise<void> {
-        await this.verifyChangeRequestsDisabled(
+        await this.stopWhenChangeRequestsEnabled(
             context.projectId,
             context.environment,
         );
@@ -960,7 +960,7 @@ class FeatureToggleService {
         createdBy: string,
         user?: User,
     ): Promise<FeatureToggle> {
-        await this.verifyChangeRequestsDisabled(project, environment);
+        await this.stopWhenChangeRequestsEnabled(project, environment);
         return this.unprotectedUpdateEnabled(
             project,
             featureName,
@@ -1268,7 +1268,7 @@ class FeatureToggleService {
         return variableVariants.concat(fixedVariants);
     }
 
-    private async verifyChangeRequestsDisabled(
+    private async stopWhenChangeRequestsEnabled(
         project: string,
         environment: string,
     ) {

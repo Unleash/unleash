@@ -446,15 +446,15 @@ test(`should not show environment on feature toggle, when environment is disable
         .attach('file', 'src/test/examples/import-state.json')
         .expect(202);
 
-    await app.request
-        .post('/api/admin/projects/default/environments')
-        .send({ environment: 'state-visible-environment' })
-        .expect(200);
-
     const { body } = await app.request
         .get('/api/admin/projects/default/features/my-feature')
         .expect(200);
 
-    expect(body.environments).toHaveLength(1);
-    expect(body.environments[0].name).toBe('state-visible-environment');
+    // sort to have predictable test results
+    const result = body.environments.sort((e1, e2) => e1.name < e2.name);
+    expect(result).toHaveLength(2);
+    expect(result[0].name).toBe('development');
+    expect(result[0].enabled).toBeTruthy();
+    expect(result[1].name).toBe('production');
+    expect(result[1].enabled).toBeFalsy();
 });

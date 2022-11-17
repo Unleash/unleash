@@ -74,6 +74,9 @@ const addEventListeners = (
 
     handleEl.addEventListener('mouseenter', onMouseEnter);
     handleEl.addEventListener('mouseleave', onMouseLeave);
+    if (handle) {
+        el.addEventListener('mouseenter', onMouseLeave);
+    }
     el.addEventListener('dragstart', onDragStart);
     el.addEventListener('dragenter', onDragEnter);
     el.addEventListener('dragover', onDragOver);
@@ -82,6 +85,9 @@ const addEventListeners = (
     return () => {
         handleEl.removeEventListener('mouseenter', onMouseEnter);
         handleEl.removeEventListener('mouseleave', onMouseLeave);
+        if (handle) {
+            el.removeEventListener('mouseenter', onMouseLeave);
+        }
         el.removeEventListener('dragstart', onDragStart);
         el.removeEventListener('dragenter', onDragEnter);
         el.removeEventListener('dragover', onDragOver);

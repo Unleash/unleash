@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, VFC } from 'react';
+import { useCallback, useEffect, useMemo, useState, VFC } from 'react';
 import { SortingRule, useFlexLayout, useSortBy, useTable } from 'react-table';
 import { VirtualizedTable, TablePlaceholder } from 'component/common/Table';
 import { styled, useMediaQuery, useTheme } from '@mui/material';
@@ -15,6 +15,7 @@ import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useSearch } from 'hooks/useSearch';
+import useHiddenColumns from 'hooks/useHiddenColumns';
 import {
     Link,
     Route,
@@ -42,7 +43,6 @@ import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton
 import { ProjectAccessCreate } from 'component/project/ProjectAccess/ProjectAccessCreate/ProjectAccessCreate';
 import { ProjectAccessEditUser } from 'component/project/ProjectAccess/ProjectAccessEditUser/ProjectAccessEditUser';
 import { ProjectAccessEditGroup } from 'component/project/ProjectAccess/ProjectAccessEditGroup/ProjectAccessEditGroup';
-import useHiddenColumns from 'hooks/useHiddenColumns';
 import { ProjectAccessRoleCell } from './ProjectAccessRoleCell/ProjectAccessRoleCell';
 import {
     PA_ASSIGN_BUTTON_ID,
@@ -71,6 +71,7 @@ const StyledUserAvatars = styled('div')(({ theme }) => ({
 const StyledEmptyAvatar = styled(UserAvatar)(({ theme }) => ({
     marginRight: theme.spacing(-3.5),
 }));
+
 const StyledGroupAvatar = styled(UserAvatar)(({ theme }) => ({
     outline: `${theme.spacing(0.25)} solid ${theme.palette.background.paper}`,
 }));
@@ -133,10 +134,17 @@ export const ProjectAccessTable: VFC = () => {
                                 subtitle={`${row.entity.users?.length} users`}
                             />
                         }
-                        elseShow={<HighlightCell value={value} />}
+                        elseShow={
+                            <HighlightCell
+                                value={value}
+                                subtitle={
+                                    row.entity?.username || row.entity?.email
+                                }
+                            />
+                        }
                     />
                 ),
-                maxWidth: 125,
+                minWidth: 100,
                 searchable: true,
             },
             {

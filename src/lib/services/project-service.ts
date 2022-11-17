@@ -16,8 +16,7 @@ import {
     ProjectGroupRemovedEvent,
     ProjectGroupUpdateRoleEvent,
 } from '../types/events';
-import { IUnleashStores } from '../types';
-import { IUnleashConfig } from '../types/option';
+import { IUnleashStores, IUnleashConfig } from '../types';
 import {
     FeatureToggle,
     IProject,
@@ -193,6 +192,13 @@ export default class ProjectService {
             featureEnvs.map((env) => env.environment),
             newEnvs,
         );
+    }
+
+    async addEnvironmentToProject(
+        project: string,
+        environment: string,
+    ): Promise<void> {
+        await this.store.addEnvironmentToProject(project, environment);
     }
 
     async changeProject(

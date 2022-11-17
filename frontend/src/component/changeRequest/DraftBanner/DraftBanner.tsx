@@ -28,7 +28,7 @@ const DraftBannerContent: FC<{
         <Box className={classes.content}>
             <DraftBannerContentWrapper>
                 <WarningAmberIcon />
-                <Typography variant="body2" sx={{ ml: 1 }}>
+                <Typography variant="body2" sx={{ ml: 1, maxWidth: '500px' }}>
                     <strong>Draft mode!</strong> – You have changes{' '}
                     <ConditionallyRender
                         condition={Boolean(changeRequest.environment)}
@@ -46,6 +46,12 @@ const DraftBannerContent: FC<{
                         condition={changeRequest.state === 'In review'}
                         show={'that are in review'}
                     />
+                    <ConditionallyRender
+                        condition={changeRequest.state === 'Approved'}
+                        show={
+                            'that are approved. Adding more changes will clear the approvals and require a new review'
+                        }
+                    />
                 </Typography>
                 <Button
                     variant="contained"
@@ -53,9 +59,6 @@ const DraftBannerContent: FC<{
                     sx={{ ml: 'auto' }}
                 >
                     View changes ({changeRequest.features.length})
-                </Button>
-                <Button variant="text" onClick={() => {}} sx={{ ml: 1 }}>
-                    Discard all
                 </Button>
             </DraftBannerContentWrapper>
         </Box>
@@ -65,7 +68,7 @@ const DraftBannerContent: FC<{
 const StickyBanner = styled(Box)(({ theme }) => ({
     position: 'sticky',
     top: -1,
-    zIndex: 200 /* has to lower than header.zIndex */,
+    zIndex: 250 /* has to lower than header.zIndex and higher than body.zIndex */,
     borderTop: `1px solid ${theme.palette.warning.border}`,
     borderBottom: `1px solid ${theme.palette.warning.border}`,
     backgroundColor: theme.palette.warning.light,
@@ -84,7 +87,9 @@ export const DraftBanner: VFC<IDraftBannerProps> = ({ project }) => {
             {draft &&
                 draft
                     .filter(changeRequest =>
-                        ['Draft', 'In review'].includes(changeRequest.state)
+                        ['Draft', 'In review', 'Approved'].includes(
+                            changeRequest.state
+                        )
                     )
                     .map(changeRequest => (
                         <DraftBannerContent

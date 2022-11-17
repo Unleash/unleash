@@ -51,7 +51,7 @@ export const FeatureStrategyCreate = () => {
 
     const { feature, refetchFeature } = useFeature(projectId, featureId);
     const ref = useRef<IFeatureToggle>(feature);
-    const isChangeRequestEnabled = useChangeRequestsEnabled(environmentId);
+    const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const { refetch: refetchChangeRequests } = useChangeRequestOpen(projectId);
 
     const { data, staleDataNotification, forceRefreshCache } =
@@ -90,14 +90,7 @@ export const FeatureStrategyCreate = () => {
             environmentId,
             payload
         );
-        if (uiConfig.flags.SE) {
-            await setStrategySegments({
-                environmentId,
-                projectId,
-                strategyId: created.id,
-                segmentIds: segments.map(s => s.id),
-            });
-        }
+
         setToastData({
             title: 'Strategy created',
             type: 'success',
@@ -121,10 +114,10 @@ export const FeatureStrategyCreate = () => {
     };
 
     const onSubmit = async () => {
-        const payload = createStrategyPayload(strategy);
+        const payload = createStrategyPayload(strategy, segments);
 
         try {
-            if (isChangeRequestEnabled) {
+            if (isChangeRequestConfigured(environmentId)) {
                 await onStrategyRequestAdd(payload);
             } else {
                 await onAddStrategy(payload);
@@ -166,7 +159,7 @@ export const FeatureStrategyCreate = () => {
                 loading={loading}
                 permission={CREATE_FEATURE_STRATEGY}
                 errors={errors}
-                isChangeRequest={isChangeRequestEnabled}
+                isChangeRequest={isChangeRequestConfigured(environmentId)}
             />
             {staleDataNotification}
         </FormTemplate>

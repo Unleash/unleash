@@ -332,6 +332,16 @@ class FeatureToggleService {
                     environment,
                 });
 
+            if (
+                strategyConfig.segments &&
+                Array.isArray(strategyConfig.segments)
+            ) {
+                await this.segmentService.updateStrategySegments(
+                    newFeatureStrategy.id,
+                    strategyConfig.segments,
+                );
+            }
+
             const tags = await this.tagStore.getAllTagsForFeature(featureName);
             const segments = await this.segmentService.getByStrategy(
                 newFeatureStrategy.id,
@@ -393,6 +403,13 @@ class FeatureToggleService {
                 id,
                 updates,
             );
+
+            if (updates.segments && Array.isArray(updates.segments)) {
+                await this.segmentService.updateStrategySegments(
+                    strategy.id,
+                    updates.segments,
+                );
+            }
 
             const segments = await this.segmentService.getByStrategy(
                 strategy.id,
@@ -928,7 +945,11 @@ class FeatureToggleService {
                     if (canAddStrategies) {
                         await this.createStrategy(
                             getDefaultStrategy(featureName),
-                            { environment, projectId: project, featureName },
+                            {
+                                environment,
+                                projectId: project,
+                                featureName,
+                            },
                             createdBy,
                         );
                     } else {
@@ -961,6 +982,7 @@ class FeatureToggleService {
             }
             return feature;
         }
+
         throw new NotFoundError(
             `Could not find environment ${environment} for feature: ${featureName}`,
         );

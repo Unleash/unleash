@@ -165,7 +165,7 @@ export const FeatureStrategyRemove = ({
 }: IFeatureStrategyRemoveProps) => {
     const [openDialogue, setOpenDialogue] = useState(false);
 
-    const changeRequestsEnabled = useChangeRequestsEnabled(environmentId);
+    const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
 
     const onRemove = useOnRemove({
         featureId,
@@ -215,7 +215,7 @@ export const FeatureStrategyRemove = ({
                 }
             />
             <ConditionallyRender
-                condition={changeRequestsEnabled}
+                condition={isChangeRequestConfigured(environmentId)}
                 show={
                     <SuggestFeatureStrategyRemoveDialogue
                         isOpen={openDialogue}

@@ -6,7 +6,6 @@ import useProjectRolesApi from 'hooks/api/actions/useProjectRolesApi/useProjectR
 import useProjectRole from 'hooks/api/getters/useProjectRole/useProjectRole';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
-import { IPermission } from 'interfaces/project';
 import { useNavigate } from 'react-router-dom';
 import useProjectRoleForm from '../hooks/useProjectRoleForm';
 import ProjectRoleForm from '../ProjectRoleForm/ProjectRoleForm';
@@ -24,38 +23,20 @@ const EditProjectRole = () => {
     const {
         roleName,
         roleDesc,
+        permissions,
+        checkedPermissions,
+        errors,
         setRoleName,
         setRoleDesc,
-        checkedPermissions,
         handlePermissionChange,
-        checkAllProjectPermissions,
-        checkAllEnvironmentPermissions,
+        onToggleAllProjectPermissions,
+        onToggleAllEnvironmentPermissions,
         getProjectRolePayload,
         validatePermissions,
         validateName,
-        errors,
         clearErrors,
         getRoleKey,
-        handleInitialCheckedPermissions,
-        permissions,
-    } = useProjectRoleForm(role.name, role.description);
-
-    useEffect(() => {
-        const initialCheckedPermissions = role?.permissions?.reduce(
-            (acc: { [key: string]: IPermission }, curr: IPermission) => {
-                acc[getRoleKey(curr)] = curr;
-                return acc;
-            },
-            {}
-        );
-
-        handleInitialCheckedPermissions(initialCheckedPermissions || {});
-        /* eslint-disable-next-line */
-    }, [
-        role?.permissions?.length,
-        permissions?.project?.length,
-        permissions?.environments?.length,
-    ]);
+    } = useProjectRoleForm(role.name, role.description, role?.permissions);
 
     const formatApiCode = () => {
         return `curl --location --request PUT '${
@@ -69,7 +50,7 @@ const EditProjectRole = () => {
     const { refetch } = useProjectRole(projectId);
     const { editRole, loading } = useProjectRolesApi();
 
-    const handleSubmit = async (e: Event) => {
+    const onSubmit = async (e: Event) => {
         e.preventDefault();
         const payload = getProjectRolePayload();
 
@@ -93,7 +74,7 @@ const EditProjectRole = () => {
         }
     };
 
-    const handleCancel = () => {
+    const onCancel = () => {
         navigate(GO_BACK);
     };
 
@@ -109,17 +90,19 @@ to resources within a project"
             formatApiCode={formatApiCode}
         >
             <ProjectRoleForm
-                handleSubmit={handleSubmit}
-                handleCancel={handleCancel}
+                permissions={permissions}
+                onSubmit={onSubmit}
+                onCancel={onCancel}
                 roleName={roleName}
                 setRoleName={setRoleName}
                 roleDesc={roleDesc}
                 setRoleDesc={setRoleDesc}
                 checkedPermissions={checkedPermissions}
                 handlePermissionChange={handlePermissionChange}
-                checkAllProjectPermissions={checkAllProjectPermissions}
-                checkAllEnvironmentPermissions={checkAllEnvironmentPermissions}
-                mode="Edit"
+                checkAllProjectPermissions={onToggleAllProjectPermissions}
+                checkAllEnvironmentPermissions={
+                    onToggleAllEnvironmentPermissions
+                }
                 errors={errors}
                 clearErrors={clearErrors}
                 getRoleKey={getRoleKey}

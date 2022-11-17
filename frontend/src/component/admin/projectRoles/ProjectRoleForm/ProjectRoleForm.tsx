@@ -1,134 +1,69 @@
-import Input from 'component/common/Input/Input';
-import EnvironmentPermissionAccordion from './EnvironmentPermissionAccordion/EnvironmentPermissionAccordion';
-import { Button, Checkbox, FormControlLabel, TextField } from '@mui/material';
-import useProjectRolePermissions from 'hooks/api/getters/useProjectRolePermissions/useProjectRolePermissions';
-
-import { useStyles } from './ProjectRoleForm.styles';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import React, { ReactNode } from 'react';
-import { IPermission } from 'interfaces/project';
+import React, { Dispatch, FC, ReactNode, SetStateAction } from 'react';
 import {
-    ICheckedPermission,
-    PROJECT_CHECK_ALL_KEY,
-} from '../hooks/useProjectRoleForm';
+    Topic as TopicIcon,
+    CloudCircle as CloudCircleIcon,
+} from '@mui/icons-material';
+import { Box, Button, TextField, Typography } from '@mui/material';
+import Input from 'component/common/Input/Input';
+import { PermissionAccordion } from './PermissionAccordion/PermissionAccordion';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import EnvironmentIcon from 'component/common/EnvironmentIcon/EnvironmentIcon';
+import {
+    IPermission,
+    IProjectEnvironmentPermissions,
+    IProjectRolePermissions,
+} from 'interfaces/project';
+import { ICheckedPermission } from '../hooks/useProjectRoleForm';
 
 interface IProjectRoleForm {
     roleName: string;
     roleDesc: string;
-    setRoleName: React.Dispatch<React.SetStateAction<string>>;
-    setRoleDesc: React.Dispatch<React.SetStateAction<string>>;
     checkedPermissions: ICheckedPermission;
-    handlePermissionChange: (permission: IPermission, type: string) => void;
+    errors: { [key: string]: string };
+    children: ReactNode;
+    permissions:
+        | IProjectRolePermissions
+        | {
+              project: IPermission[];
+              environments: IProjectEnvironmentPermissions[];
+          };
+    setRoleName: Dispatch<SetStateAction<string>>;
+    setRoleDesc: Dispatch<SetStateAction<string>>;
+    handlePermissionChange: (permission: IPermission) => void;
     checkAllProjectPermissions: () => void;
     checkAllEnvironmentPermissions: (envName: string) => void;
-    handleSubmit: (e: any) => void;
-    handleCancel: () => void;
-    errors: { [key: string]: string };
-    mode?: string;
+    onSubmit: (e: any) => void;
+    onCancel: () => void;
     clearErrors: () => void;
     validateNameUniqueness?: () => void;
     getRoleKey: (permission: { id: number; environment?: string }) => string;
-    children: ReactNode;
 }
 
-const ProjectRoleForm: React.FC<IProjectRoleForm> = ({
+const ProjectRoleForm: FC<IProjectRoleForm> = ({
     children,
-    handleSubmit,
-    handleCancel,
     roleName,
     roleDesc,
+    checkedPermissions,
+    errors,
+    permissions,
+    onSubmit,
+    onCancel,
     setRoleName,
     setRoleDesc,
-    checkedPermissions,
     handlePermissionChange,
     checkAllProjectPermissions,
     checkAllEnvironmentPermissions,
-    errors,
-    mode,
     validateNameUniqueness,
     clearErrors,
     getRoleKey,
 }: IProjectRoleForm) => {
-    const { classes: styles } = useStyles();
-    const { permissions } = useProjectRolePermissions({
-        revalidateIfStale: false,
-        revalidateOnReconnect: false,
-        revalidateOnFocus: false,
-    });
-
     const { project, environments } = permissions;
 
-    const renderProjectPermissions = () => {
-        const projectPermissions = project.map(permission => {
-            return (
-                <FormControlLabel
-                    key={getRoleKey(permission)}
-                    classes={{ root: styles.label }}
-                    control={
-                        <Checkbox
-                            checked={
-                                checkedPermissions[getRoleKey(permission)]
-                                    ? true
-                                    : false
-                            }
-                            onChange={() =>
-                                handlePermissionChange(permission, 'project')
-                            }
-                            color="primary"
-                        />
-                    }
-                    label={permission.displayName}
-                />
-            );
-        });
-
-        projectPermissions.push(
-            <FormControlLabel
-                key={PROJECT_CHECK_ALL_KEY}
-                classes={{ root: styles.label }}
-                control={
-                    <Checkbox
-                        checked={
-                            checkedPermissions[PROJECT_CHECK_ALL_KEY]
-                                ? true
-                                : false
-                        }
-                        onChange={() => checkAllProjectPermissions()}
-                        color="primary"
-                    />
-                }
-                label={'Select all project permissions'}
-            />
-        );
-
-        return projectPermissions;
-    };
-
-    const renderEnvironmentPermissions = () => {
-        return environments.map(environment => {
-            return (
-                <EnvironmentPermissionAccordion
-                    environment={environment}
-                    key={environment.name}
-                    checkedPermissions={checkedPermissions}
-                    handlePermissionChange={handlePermissionChange}
-                    checkAllEnvironmentPermissions={
-                        checkAllEnvironmentPermissions
-                    }
-                    getRoleKey={getRoleKey}
-                />
-            );
-        });
-    };
-
     return (
-        <form onSubmit={handleSubmit}>
-            <div className={styles.container}>
-                <p className={styles.inputDescription}>
-                    What is your role name?
-                </p>
+        <form onSubmit={onSubmit}>
+            <Box sx={{ maxWidth: '400px' }}>
+                <Typography sx={{ mb: 1 }}>What is your role name?</Typography>
                 <Input
-                    className={styles.input}
                     label="Role name"
                     value={roleName}
                     onChange={e => setRoleName(e.target.value)}
@@ -137,41 +72,76 @@ const ProjectRoleForm: React.FC<IProjectRoleForm> = ({
                     onFocus={() => clearErrors()}
                     onBlur={validateNameUniqueness}
                     autoFocus
+                    sx={{ width: '100%', marginBottom: '1rem' }}
                 />
 
-                <p className={styles.inputDescription}>
-                    What is this role for?
-                </p>
+                <Typography sx={{ mb: 1 }}>What is this role for?</Typography>
                 <TextField
-                    className={styles.input}
                     label="Role description"
                     variant="outlined"
                     multiline
                     maxRows={4}
                     value={roleDesc}
                     onChange={e => setRoleDesc(e.target.value)}
+                    sx={{ width: '100%', marginBottom: '1rem' }}
                 />
-            </div>
-            <div className={styles.permissionErrorContainer}>
+            </Box>
+            <div>
                 <ConditionallyRender
                     condition={Boolean(errors.permissions)}
                     show={
-                        <span className={styles.errorMessage}>
+                        <Typography variant="body2" color="error.main">
                             You must select at least one permission for a role.
-                        </span>
+                        </Typography>
                     }
                 />
             </div>
-            <h3 className={styles.header}>Project permissions</h3>
-            <div>{renderProjectPermissions()}</div>
-            <h3 className={styles.header}>Environment permissions</h3>
-            <div>{renderEnvironmentPermissions()}</div>
-            <div className={styles.buttonContainer}>
+            <PermissionAccordion
+                isInitiallyExpanded
+                title="Project permissions"
+                Icon={<TopicIcon color="disabled" sx={{ mr: 1 }} />}
+                permissions={project}
+                checkedPermissions={checkedPermissions}
+                onPermissionChange={(permission: IPermission) =>
+                    handlePermissionChange(permission)
+                }
+                onCheckAll={checkAllProjectPermissions}
+                getRoleKey={getRoleKey}
+                context="project"
+            />
+            <div>
+                {environments.map(environment => (
+                    <PermissionAccordion
+                        title={environment.name}
+                        Icon={
+                            <CloudCircleIcon sx={{ mr: 1 }} color="disabled" />
+                        }
+                        permissions={environment.permissions}
+                        key={environment.name}
+                        checkedPermissions={checkedPermissions}
+                        onPermissionChange={(permission: IPermission) =>
+                            handlePermissionChange(permission)
+                        }
+                        onCheckAll={() =>
+                            checkAllEnvironmentPermissions(environment.name)
+                        }
+                        getRoleKey={getRoleKey}
+                        context="environment"
+                    />
+                ))}
+            </div>
+            <Box
+                sx={{
+                    marginTop: 'auto',
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                }}
+            >
                 {children}
-                <Button onClick={handleCancel} className={styles.cancelButton}>
+                <Button onClick={onCancel} sx={{ ml: 2 }}>
                     Cancel
                 </Button>
-            </div>
+            </Box>
         </form>
     );
 };

@@ -25,29 +25,39 @@ interface IChangeRequestProps {
     onNavigate?: () => void;
 }
 
-const StyledSingleChangeBox = styled(Box)<{
-    hasConflict: boolean;
-    isAfterWarning: boolean;
-    isLast: boolean;
-    inInConflictFeature: boolean;
-}>(({ theme, hasConflict, inInConflictFeature, isAfterWarning, isLast }) => ({
-    borderLeft: '1px solid',
-    borderRight: '1px solid',
-    borderTop: '1px solid',
-    borderBottom: isLast ? '1px solid' : 'none',
-    borderRadius: isLast
-        ? `0 0
+const StyledSingleChangeBox = styled(Box, {
+    shouldForwardProp: (prop: string) => !prop.startsWith('$'),
+})<{
+    $hasConflict: boolean;
+    $isAfterWarning: boolean;
+    $isLast: boolean;
+    $isInConflictFeature: boolean;
+}>(
+    ({
+        theme,
+        $hasConflict,
+        $isInConflictFeature,
+        $isAfterWarning,
+        $isLast,
+    }) => ({
+        borderLeft: '1px solid',
+        borderRight: '1px solid',
+        borderTop: '1px solid',
+        borderBottom: $isLast ? '1px solid' : 'none',
+        borderRadius: $isLast
+            ? `0 0
                 ${theme.shape.borderRadiusLarge}px ${theme.shape.borderRadiusLarge}px`
-        : 0,
-    borderColor:
-        hasConflict || inInConflictFeature
-            ? theme.palette.warning.border
-            : theme.palette.dividerAlternative,
-    borderTopColor:
-        (hasConflict || isAfterWarning) && !inInConflictFeature
-            ? theme.palette.warning.border
-            : theme.palette.dividerAlternative,
-}));
+            : 0,
+        borderColor:
+            $hasConflict || $isInConflictFeature
+                ? theme.palette.warning.border
+                : theme.palette.dividerAlternative,
+        borderTopColor:
+            ($hasConflict || $isAfterWarning) && !$isInConflictFeature
+                ? theme.palette.warning.border
+                : theme.palette.dividerAlternative,
+    })
+);
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     borderRadius: 0,
@@ -94,14 +104,14 @@ export const ChangeRequest: VFC<IChangeRequestProps> = ({
                     {featureToggleChange.changes.map((change, index) => (
                         <StyledSingleChangeBox
                             key={objectId(change)}
-                            hasConflict={Boolean(change.conflict)}
-                            inInConflictFeature={Boolean(
+                            $hasConflict={Boolean(change.conflict)}
+                            $isInConflictFeature={Boolean(
                                 featureToggleChange.conflict
                             )}
-                            isAfterWarning={Boolean(
+                            $isAfterWarning={Boolean(
                                 featureToggleChange.changes[index - 1]?.conflict
                             )}
-                            isLast={
+                            $isLast={
                                 index + 1 === featureToggleChange.changes.length
                             }
                         >

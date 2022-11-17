@@ -327,8 +327,8 @@ export const EnvironmentVariantModal = ({
                 loading={!open}
             >
                 <StyledFormSubtitle>
-                    <StyledCloudCircle deprecated={environment?.deprecated} />
-                    <StyledName deprecated={environment?.deprecated}>
+                    <StyledCloudCircle deprecated={!environment?.enabled} />
+                    <StyledName deprecated={!environment?.enabled}>
                         {environment?.name}
                     </StyledName>
                 </StyledFormSubtitle>

@@ -110,8 +110,8 @@ export const EnvironmentVariantsCard = ({
         <StyledCard>
             <StyledHeader>
                 <div>
-                    <StyledCloudCircle deprecated={environment.deprecated} />
-                    <StyledName deprecated={environment.deprecated}>
+                    <StyledCloudCircle deprecated={!environment.enabled} />
+                    <StyledName deprecated={!environment.enabled}>
                         {environment.name}
                     </StyledName>
                 </div>

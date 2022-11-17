@@ -8,11 +8,10 @@ import PermissionButton from 'component/common/PermissionButton/PermissionButton
 import { Search } from 'component/common/Search/Search';
 import { updateWeight } from 'component/common/util';
 import { UPDATE_FEATURE_VARIANTS } from 'component/providers/AccessProvider/permissions';
-import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { IFeatureEnvironment, IFeatureVariant } from 'interfaces/featureToggle';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { EnvironmentVariantModal } from './EnvironmentVariantModal/EnvironmentVariantModal';
 import { EnvironmentVariantsCard } from './EnvironmentVariantsCard/EnvironmentVariantsCard';
 import { VariantDeleteDialog } from './VariantDeleteDialog/VariantDeleteDialog';
@@ -45,7 +44,6 @@ export const FeatureEnvironmentVariants = () => {
         featureId
     );
     const { patchFeatureEnvironmentVariants } = useFeatureApi();
-    const { environments: allEnvironments } = useEnvironments();
 
     const [searchValue, setSearchValue] = useState('');
     const [selectedEnvironment, setSelectedEnvironment] =
@@ -53,18 +51,6 @@ export const FeatureEnvironmentVariants = () => {
     const [selectedVariant, setSelectedVariant] = useState<IFeatureVariant>();
     const [modalOpen, setModalOpen] = useState(false);
     const [deleteOpen, setDeleteOpen] = useState(false);
-
-    const environments = useMemo(
-        () =>
-            feature.environments.map(environment => ({
-                ...environment,
-                deprecated: !allEnvironments.some(
-                    ({ name, enabled }) => name === environment.name && enabled
-                ),
-                variants: environment.variants ?? [],
-            })),
-        [feature, allEnvironments]
-    );
 
     const createPatch = (
         variants: IFeatureVariant[],
@@ -230,10 +216,10 @@ export const FeatureEnvironmentVariants = () => {
                 variants you should use the <code>getVariant()</code> method in
                 the Client SDK.
             </StyledAlert>
-            {environments.map(environment => {
-                const otherEnvsWithVariants = environments.filter(
+            {feature.environments.map(environment => {
+                const otherEnvsWithVariants = feature.environments.filter(
                     ({ name, variants }) =>
-                        name !== environment.name && variants.length
+                        name !== environment.name && variants?.length
                 );
 
                 return (
@@ -253,7 +239,7 @@ export const FeatureEnvironmentVariants = () => {
                         }
                     >
                         <ConditionallyRender
-                            condition={environment.variants.length === 0}
+                            condition={environment.variants?.length === 0}
                             show={
                                 <StyledButtonContainer>
                                     <PermissionButton

@@ -13,7 +13,7 @@ interface IVariantDeleteDialogProps {
     onConfirm: () => void;
 }
 
-const VariantDeleteDialog = ({
+export const VariantDeleteDialog = ({
     variant,
     open,
     setOpen,
@@ -40,5 +40,3 @@ const VariantDeleteDialog = ({
         </Dialogue>
     );
 };
-
-export default VariantDeleteDialog;

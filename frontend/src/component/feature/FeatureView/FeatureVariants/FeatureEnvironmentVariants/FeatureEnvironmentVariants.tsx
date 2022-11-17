@@ -15,7 +15,7 @@ import { IFeatureEnvironment, IFeatureVariant } from 'interfaces/featureToggle';
 import { useMemo, useState } from 'react';
 import { EnvironmentVariantModal } from './EnvironmentVariantModal/EnvironmentVariantModal';
 import { EnvironmentVariantsCard } from './EnvironmentVariantsCard/EnvironmentVariantsCard';
-import VariantDeleteDialog from './VariantDeleteDialog/VariantDeleteDialog';
+import { VariantDeleteDialog } from './VariantDeleteDialog/VariantDeleteDialog';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';

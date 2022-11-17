@@ -50,7 +50,9 @@ export const PayloadCell = ({ value: payload }: IPayloadCellProps) => {
                     underline="always"
                     highlighted={
                         searchQuery.length > 0 &&
-                        payload.value.includes(searchQuery)
+                        payload.value
+                            .toLowerCase()
+                            .includes(searchQuery.toLowerCase())
                     }
                 >
                     {payload.type}

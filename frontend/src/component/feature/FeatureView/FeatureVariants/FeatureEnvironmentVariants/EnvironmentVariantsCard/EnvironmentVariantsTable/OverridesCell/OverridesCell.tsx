@@ -49,7 +49,8 @@ export const OverridesCell = ({ value: overrides }: IOverridesCellProps) => {
                         overrides
                             ?.map(overrideToString)
                             .join('\n')
-                            .includes(searchQuery)
+                            .toLowerCase()
+                            .includes(searchQuery.toLowerCase())
                     }
                 >
                     {overrides.length === 1

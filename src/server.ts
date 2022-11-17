@@ -1,7 +1,7 @@
-import * as unleash from './lib/server-impl';
+import { start } from './lib/server-impl';
 
 try {
-    unleash.start();
+    start();
 } catch (error) {
     // eslint-disable-next-line no-console
     console.error(error);

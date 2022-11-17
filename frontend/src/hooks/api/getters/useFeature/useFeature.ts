@@ -1,5 +1,5 @@
 import useSWR, { SWRConfiguration } from 'swr';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { emptyFeature } from './emptyFeature';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { formatApiPath } from 'utils/formatPath';
@@ -27,16 +27,23 @@ export const useFeature = (
     const path = formatFeatureApiPath(projectId, featureId);
 
     const { uiConfig } = useUiConfig();
+    const {
+        flags: { variantsPerEnvironment },
+    } = uiConfig;
 
     const { data, error, mutate } = useSWR<IFeatureResponse>(
         ['useFeature', path],
-        () => featureFetcher(path, uiConfig.flags.variantsPerEnvironment),
+        () => featureFetcher(path, variantsPerEnvironment),
         options
     );
 
     const refetchFeature = useCallback(() => {
         mutate().catch(console.warn);
     }, [mutate]);
+
+    useEffect(() => {
+        mutate();
+    }, [mutate, variantsPerEnvironment]);
 
     return {
         feature: data?.body || emptyFeature,

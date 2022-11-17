@@ -100,6 +100,9 @@ export const ChangeRequestOverview: FC = () => {
         changeRequest.state === 'In review' &&
         !isAdmin;
 
+    const hasApprovedAlready = changeRequest.approvals.some(
+        approval => approval.createdBy.id === user?.id
+    );
     return (
         <>
             <ChangeRequestHeader changeRequest={changeRequest} />
@@ -154,10 +157,14 @@ export const ChangeRequestOverview: FC = () => {
                         />
                         <ChangeRequestReviewStatus
                             state={changeRequest.state}
+                            environment={changeRequest.environment}
                         />
                         <StyledButtonBox>
                             <ConditionallyRender
-                                condition={changeRequest.state === 'In review'}
+                                condition={
+                                    changeRequest.state === 'In review' &&
+                                    !hasApprovedAlready
+                                }
                                 show={<ReviewButton />}
                             />
                             <ConditionallyRender

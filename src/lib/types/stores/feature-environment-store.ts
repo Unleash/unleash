@@ -69,4 +69,6 @@ export interface IFeatureEnvironmentStore
     addFeatureEnvironment(
         featureEnvironment: IFeatureEnvironment,
     ): Promise<void>;
+
+    clonePreviousVariants(environment: string, project: string): Promise<void>;
 }

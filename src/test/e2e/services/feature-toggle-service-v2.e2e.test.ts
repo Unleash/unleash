@@ -8,11 +8,13 @@ import User from '../../../lib/types/user';
 import { IConstraint } from '../../../lib/types/model';
 import { AccessService } from '../../../lib/services/access-service';
 import { GroupService } from '../../../lib/services/group-service';
+import EnvironmentService from '../../../lib/services/environment-service';
 
 let stores;
 let db;
 let service: FeatureToggleService;
 let segmentService: SegmentService;
+let environmentService: EnvironmentService;
 
 const mockConstraints = (): IConstraint[] => {
     return Array.from({ length: 5 }).map(() => ({
@@ -30,6 +32,7 @@ beforeAll(async () => {
     );
     stores = db.stores;
     segmentService = new SegmentService(stores, config);
+    environmentService = new EnvironmentService(stores, config);
     const groupService = new GroupService(stores, config);
     const accessService = new AccessService(stores, config, groupService);
     service = new FeatureToggleService(
@@ -205,4 +208,38 @@ test('should not get empty rows as features', async () => {
 
     expect(features.length).toBe(7);
     expect(namelessFeature).toBeUndefined();
+});
+
+test('adding and removing an environment preserves variants', async () => {
+    const featureName = 'something-that-has-variants';
+    const prodEnv = 'mock-prod-env';
+
+    await stores.environmentStore.create({
+        name: prodEnv,
+        type: 'production',
+    });
+
+    await service.createFeatureToggle(
+        'default',
+        {
+            name: featureName,
+            description: 'Second toggle',
+            variants: [
+                {
+                    name: 'variant1',
+                    weight: 100,
+                    weightType: 'fix',
+                    stickiness: 'default',
+                },
+            ],
+        },
+        'random_user',
+    );
+
+    await environmentService.addEnvironmentToProject(prodEnv, 'default');
+    await environmentService.removeEnvironmentFromProject(prodEnv, 'default');
+    await environmentService.addEnvironmentToProject(prodEnv, 'default');
+
+    const toggle = await service.getFeature(featureName, false, null, false);
+    expect(toggle.variants).toHaveLength(1);
 });

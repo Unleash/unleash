@@ -22,6 +22,7 @@ interface IFeatureEnvironmentRow {
     environment: string;
     feature_name: string;
     enabled: boolean;
+    variants?: [];
 }
 
 interface ISegmentRow {
@@ -288,24 +289,27 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
                 'fe.feature_name',
                 'fe.variants',
             ])
-            .distinct()
+            .distinctOn(['environment', 'feature_name'])
             .join(`${T.featureEnvs} as fe`, 'f.name', 'fe.feature_name')
             .whereNot({ environment })
             .andWhere({ project });
 
         const newRows = rows.map((row) => {
+            const r = row as any as IFeatureEnvironmentRow;
             return {
-                variants: JSON.stringify(row.variants),
-                enabled: row.enabled,
-                environment: row.environment,
-                feature_name: row.feature_name,
+                variants: JSON.stringify(r.variants),
+                enabled: r.enabled,
+                environment: r.environment,
+                feature_name: r.feature_name,
             };
         });
 
-        await this.db(T.featureEnvs)
-            .insert(newRows)
-            .onConflict(['environment', 'feature_name'])
-            .merge(['variants']);
+        if (newRows.length > 0) {
+            await this.db(T.featureEnvs)
+                .insert(newRows)
+                .onConflict(['environment', 'feature_name'])
+                .merge(['variants']);
+        }
     }
 
     async connectFeatureToEnvironmentsForProject(

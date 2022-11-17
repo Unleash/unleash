@@ -15,6 +15,7 @@ let db;
 let service: FeatureToggleService;
 let segmentService: SegmentService;
 let environmentService: EnvironmentService;
+let unleashConfig;
 
 const mockConstraints = (): IConstraint[] => {
     return Array.from({ length: 5 }).map(() => ({
@@ -30,9 +31,9 @@ beforeAll(async () => {
         'feature_toggle_service_v2_service_serial',
         config.getLogger,
     );
+    unleashConfig = config;
     stores = db.stores;
     segmentService = new SegmentService(stores, config);
-    environmentService = new EnvironmentService(stores, config);
     const groupService = new GroupService(stores, config);
     const accessService = new AccessService(stores, config, groupService);
     service = new FeatureToggleService(
@@ -210,7 +211,7 @@ test('should not get empty rows as features', async () => {
     expect(namelessFeature).toBeUndefined();
 });
 
-test('adding and removing an environment preserves variants', async () => {
+test('adding and removing an environment preserves variants when variants per env is off', async () => {
     const featureName = 'something-that-has-variants';
     const prodEnv = 'mock-prod-env';
 
@@ -235,6 +236,15 @@ test('adding and removing an environment preserves variants', async () => {
         },
         'random_user',
     );
+
+    //force the variantEnvironments flag off so that we can test legacy behavior
+    environmentService = new EnvironmentService(stores, {
+        ...unleashConfig,
+        flagResolver: {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            isEnabled: (toggleName: string) => false,
+        },
+    });
 
     await environmentService.addEnvironmentToProject(prodEnv, 'default');
     await environmentService.removeEnvironmentFromProject(prodEnv, 'default');

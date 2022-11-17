@@ -19,6 +19,7 @@ import { VariantDeleteDialog } from './VariantDeleteDialog/VariantDeleteDialog';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
+import { EnvironmentVariantsCopyFrom } from './EnvironmentVariantsCopyFrom/EnvironmentVariantsCopyFrom';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(4),
@@ -152,6 +153,22 @@ export const FeatureEnvironmentVariants = () => {
         }
     };
 
+    const onCopyVariantsFrom = async (
+        fromEnvironment: IFeatureEnvironment,
+        toEnvironment: IFeatureEnvironment
+    ) => {
+        try {
+            const variants = fromEnvironment.variants ?? [];
+            await updateVariants(toEnvironment, variants);
+            setToastData({
+                title: 'Variants copied successfully',
+                type: 'success',
+            });
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
+    };
+
     const onUpdateStickiness = async (
         environment: IFeatureEnvironment,
         updatedVariants: IFeatureVariant[]
@@ -206,10 +223,10 @@ export const FeatureEnvironmentVariants = () => {
                 the Client SDK.
             </StyledAlert>
             {environments.map(environment => {
-                // const otherEnvsHaveVariants = feature.environments.some(
-                //     ({ name, variants }) =>
-                //         name !== environment.name && variants?.length
-                // );
+                const otherEnvsWithVariants = environments.filter(
+                    ({ name, variants }) =>
+                        name !== environment.name && variants.length
+                );
 
                 return (
                     <EnvironmentVariantsCard
@@ -239,20 +256,15 @@ export const FeatureEnvironmentVariants = () => {
                                     >
                                         Add variant
                                     </PermissionButton>
-                                    {/* <ConditionallyRender
-                                        condition={otherEnvsHaveVariants}
-                                        show={
-                                            <PermissionButton
-                                                variant="outlined"
-                                                permission={
-                                                    UPDATE_FEATURE_VARIANTS
-                                                }
-                                                projectId={projectId}
-                                            >
-                                                Copy variants from
-                                            </PermissionButton>
+                                    <EnvironmentVariantsCopyFrom
+                                        environment={environment}
+                                        permission={UPDATE_FEATURE_VARIANTS}
+                                        projectId={projectId}
+                                        onCopyVariantsFrom={onCopyVariantsFrom}
+                                        otherEnvsWithVariants={
+                                            otherEnvsWithVariants
                                         }
-                                    /> */}
+                                    />
                                 </StyledButtonContainer>
                             }
                         />

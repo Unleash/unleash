@@ -23,6 +23,7 @@ interface IEnvironmentPermissionAccordionProps {
     title: string;
     Icon: ReactNode;
     isInitiallyExpanded?: boolean;
+    context: 'project' | 'environment';
     onPermissionChange: (permission: IPermission) => void;
     onCheckAll: () => void;
     getRoleKey: (permission: { id: number; environment?: string }) => string;
@@ -48,6 +49,7 @@ export const PermissionAccordion: VFC<IEnvironmentPermissionAccordionProps> = ({
     checkedPermissions,
     Icon,
     isInitiallyExpanded,
+    context,
     onPermissionChange,
     onCheckAll,
     getRoleKey,
@@ -88,7 +90,7 @@ export const PermissionAccordion: VFC<IEnvironmentPermissionAccordionProps> = ({
                 onChange={() => setExpanded(!expanded)}
                 sx={{
                     boxShadow: 'none',
-                    px: 2,
+                    px: 3,
                     py: 1,
                     border: theme => `1px solid ${theme.palette.divider}`,
                     borderRadius: theme => `${theme.shape.borderRadiusLarge}px`,
@@ -136,7 +138,7 @@ export const PermissionAccordion: VFC<IEnvironmentPermissionAccordionProps> = ({
                         }}
                     >
                         {isAllChecked ? 'Unselect ' : 'Select '}
-                        all permissions
+                        all {context} permissions
                     </Button>
                     <Box>
                         {permissions?.map((permission: IPermission) => {

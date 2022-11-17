@@ -1,5 +1,8 @@
 import React, { Dispatch, FC, ReactNode, SetStateAction } from 'react';
-import { Topic as TopicIcon } from '@mui/icons-material';
+import {
+    Topic as TopicIcon,
+    CloudCircle as CloudCircleIcon,
+} from '@mui/icons-material';
 import { Box, Button, TextField, Typography } from '@mui/material';
 import Input from 'component/common/Input/Input';
 import { PermissionAccordion } from './PermissionAccordion/PermissionAccordion';
@@ -96,9 +99,7 @@ const ProjectRoleForm: FC<IProjectRoleForm> = ({
             <PermissionAccordion
                 isInitiallyExpanded
                 title="Project permissions"
-                Icon={
-                    <TopicIcon color="disabled" sx={{ mr: 1.25, ml: 0.25 }} />
-                }
+                Icon={<TopicIcon color="disabled" sx={{ mr: 1 }} />}
                 permissions={project}
                 checkedPermissions={checkedPermissions}
                 onPermissionChange={(permission: IPermission) =>
@@ -106,12 +107,15 @@ const ProjectRoleForm: FC<IProjectRoleForm> = ({
                 }
                 onCheckAll={checkAllProjectPermissions}
                 getRoleKey={getRoleKey}
+                context="project"
             />
             <div>
                 {environments.map(environment => (
                     <PermissionAccordion
                         title={environment.name}
-                        Icon={<EnvironmentIcon enabled={false} />}
+                        Icon={
+                            <CloudCircleIcon sx={{ mr: 1 }} color="disabled" />
+                        }
                         permissions={environment.permissions}
                         key={environment.name}
                         checkedPermissions={checkedPermissions}
@@ -122,6 +126,7 @@ const ProjectRoleForm: FC<IProjectRoleForm> = ({
                             checkAllEnvironmentPermissions(environment.name)
                         }
                         getRoleKey={getRoleKey}
+                        context="environment"
                     />
                 ))}
             </div>

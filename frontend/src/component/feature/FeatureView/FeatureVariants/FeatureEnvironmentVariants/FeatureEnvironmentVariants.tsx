@@ -131,8 +131,16 @@ export const FeatureEnvironmentVariants = () => {
                 ({ name }) => name !== selectedVariant.name
             );
 
-            await updateVariants(selectedEnvironment, updatedVariants);
-            setDeleteOpen(false);
+            try {
+                await updateVariants(selectedEnvironment, updatedVariants);
+                setDeleteOpen(false);
+                setToastData({
+                    title: `Variant deleted successfully`,
+                    type: 'success',
+                });
+            } catch (error: unknown) {
+                setToastApiError(formatUnknownError(error));
+            }
         }
     };
 

@@ -38,6 +38,10 @@ export const defaultExperimentalOptions = {
             process.env.UNLEASH_EXPERIMENTAL_TOGGLE_TAG_FILTERING,
             false,
         ),
+        variantsPerEnvironment: parseEnvVarBoolean(
+            process.env.UNLEASH_EXPERIMENTAL_VARIANTS_PER_ENVIRONMENT,
+            false,
+        ),
     },
     externalResolver: { isEnabled: (): boolean => false },
 };
@@ -53,6 +57,7 @@ export interface IExperimentalOptions {
         syncSSOGroups?: boolean;
         changeRequests?: boolean;
         cloneEnvironment?: boolean;
+        variantsPerEnvironment?: boolean;
     };
     externalResolver: IExternalFlagResolver;
 }

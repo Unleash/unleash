@@ -33,7 +33,6 @@ export const DateTimePicker = ({
     max,
     value,
     onChange,
-    InputProps,
     ...rest
 }: IDateTimePickerProps) => {
     const getDate = type === 'datetime' ? formatDateTime : formatDate;

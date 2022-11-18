@@ -28,13 +28,15 @@ exports.up = function (db, callback) {
                 feature_strategies.strategy_name as strategy_name,
                 feature_strategies.parameters as parameters,
                 feature_strategies.constraints as constraints,
-                feature_strategies.sort_order as sort_order
+                feature_strategies.sort_order as sort_order,
+                fss.segment_id as segments
             FROM
                 features
             LEFT JOIN feature_environments ON feature_environments.feature_name = features.name
             LEFT JOIN feature_strategies ON feature_strategies.feature_name = feature_environments.feature_name
             and feature_strategies.environment = feature_environments.environment
-            LEFT JOIN environments ON feature_environments.environment = environments.name;
+            LEFT JOIN environments ON feature_environments.environment = environments.name
+            LEFT JOIN feature_strategy_segment as fss ON fss.feature_strategy_id = feature_strategies.id;
         `,
         callback,
     );

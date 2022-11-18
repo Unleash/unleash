@@ -140,10 +140,10 @@ test('Should import variants from old format and convert to new format (per envi
         dropBeforeImport: true,
     });
     let featureEnvironments = await stores.featureEnvironmentStore.getAll();
-    expect(featureEnvironments).toHaveLength(4); // There are 3 environments enabled
+    expect(featureEnvironments).toHaveLength(6); // There are 3 environments enabled and 2 features
     expect(
         featureEnvironments
-            .filter((fE) => fE.featureName === 'variants-tester')
+            .filter((fE) => fE.featureName === 'variants-tester' && fE.enabled)
             .every((e) => e.variants.length === 4),
     ).toBeTruthy();
 });

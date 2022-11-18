@@ -328,7 +328,7 @@ test(`Importing version 2 replaces :global: environment with 'default'`, async (
     const feature = await app.services.featureToggleServiceV2.getFeatureToggle(
         'this-is-fun',
     );
-    expect(feature.environments).toHaveLength(4); // Should this be 1? it's 1 in our branch it's 4 in master but without the drop=true
+    expect(feature.environments).toHaveLength(1);
     expect(feature.environments[0].name).toBe(DEFAULT_ENV);
 });
 

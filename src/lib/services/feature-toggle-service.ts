@@ -1228,7 +1228,6 @@ class FeatureToggleService {
         createdBy: string,
     ): Promise<FeatureToggle> {
         const oldVariants = await this.getVariants(featureName);
-
         const { newDocument } = applyPatch(oldVariants, newVariants);
         return this.saveVariants(featureName, project, newDocument, createdBy);
     }
@@ -1264,7 +1263,6 @@ class FeatureToggleService {
         const oldVariants = await this.featureToggleStore.getVariants(
             featureName,
         );
-
         const featureToggle = await this.featureToggleStore.saveVariants(
             project,
             featureName,

@@ -1206,7 +1206,6 @@ class FeatureToggleService {
             featureName,
         );
 
-        fixedVariants.sort((a, b) => a.name.localeCompare(b.name));
         const featureToggle = await this.featureToggleStore.saveVariants(
             project,
             featureName,
@@ -1294,7 +1293,9 @@ class FeatureToggleService {
             }
             return x;
         });
-        return variableVariants.concat(fixedVariants);
+        return variableVariants
+            .concat(fixedVariants)
+            .sort((a, b) => a.name.localeCompare(b.name));
     }
 }
 

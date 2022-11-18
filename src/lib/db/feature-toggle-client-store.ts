@@ -185,7 +185,7 @@ export default class FeatureToggleClientStore
             feature.project = r.project;
             feature.stale = r.stale;
             feature.type = r.type;
-            feature.variants = r.variants;
+            feature.variants = r.variants || [];
             feature.project = r.project;
             if (isAdmin) {
                 feature.lastSeenAt = r.last_seen_at;

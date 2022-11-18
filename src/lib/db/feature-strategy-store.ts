@@ -260,11 +260,10 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
 
                 const variants = r.variants || [];
                 variants.sort((a, b) => a.name.localeCompare(b.name));
-                if (!withEnvironmentVariants) {
-                    acc.variants = variants;
-                } else {
+                if (withEnvironmentVariants) {
                     env.variants = variants;
                 }
+                acc.variants = variants;
 
                 env.enabled = r.enabled;
                 env.type = r.environment_type;

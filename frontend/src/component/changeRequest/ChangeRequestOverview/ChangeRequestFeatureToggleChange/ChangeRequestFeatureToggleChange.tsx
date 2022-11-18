@@ -56,7 +56,6 @@ export const ChangeRequestFeatureToggleChange: FC<
             <Box
                 sx={{
                     display: 'flex',
-                    gap: 1,
                     pt: conflict ? 0 : 2,
                     pb: 2,
                     px: 3,
@@ -67,7 +66,7 @@ export const ChangeRequestFeatureToggleChange: FC<
                     component={Link}
                     to={`/projects/${projectId}/features/${featureName}`}
                     color="primary"
-                    sx={{ textDecoration: 'none' }}
+                    sx={{ textDecoration: 'none', marginLeft: 1 }}
                     onClick={onNavigate}
                 >
                     {featureName}

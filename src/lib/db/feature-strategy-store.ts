@@ -11,11 +11,12 @@ import {
     IEnvironmentOverview,
     IFeatureOverview,
     IFeatureStrategy,
+    IFeatureToggleClient,
     IStrategyConfig,
     ITag,
 } from '../types/model';
 import { IFeatureStrategiesStore } from '../types/stores/feature-strategies-store';
-import { PartialSome } from '../types/partial';
+import { PartialDeep, PartialSome } from '../types/partial';
 import FeatureToggleStore from './feature-toggle-store';
 import { ensureStringValue } from '../util/ensureStringValue';
 import { mapValues } from '../util/map-values';
@@ -234,14 +235,13 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         const rows = await this.db('features_view')
             .where('name', featureName)
             .modify(FeatureToggleStore.filterByArchived, archived);
-
         stopTimer();
-
         if (rows.length > 0) {
             const featureToggle = rows.reduce((acc, r) => {
                 if (acc.environments === undefined) {
                     acc.environments = {};
                 }
+
                 acc.name = r.name;
                 acc.impressionData = r.impression_data;
                 acc.description = r.description;
@@ -272,9 +272,17 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                     env.strategies = [];
                 }
                 if (r.strategy_id) {
-                    env.strategies.push(
-                        FeatureStrategiesStore.getAdminStrategy(r),
+                    const found = env.strategies.find(
+                        (strategy) => strategy.id === r.strategy_id,
                     );
+                    if (!found) {
+                        env.strategies.push(
+                            FeatureStrategiesStore.getAdminStrategy(r),
+                        );
+                    }
+                }
+                if (r.segments) {
+                    this.addSegmentIdsToStrategy(env, r);
                 }
                 acc.environments[r.environment] = env;
                 return acc;
@@ -297,6 +305,22 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         throw new NotFoundError(
             `Could not find feature toggle with name ${featureName}`,
         );
+    }
+
+    private addSegmentIdsToStrategy(
+        feature: PartialDeep<IFeatureToggleClient>,
+        row: Record<string, any>,
+    ) {
+        const strategy = feature.strategies.find(
+            (s) => s.id === row.strategy_id,
+        );
+        if (!strategy) {
+            return;
+        }
+        if (!strategy.segments) {
+            strategy.segments = [];
+        }
+        strategy.segments.push(row.segments);
     }
 
     private static getEnvironment(r: any): IEnvironmentOverview {

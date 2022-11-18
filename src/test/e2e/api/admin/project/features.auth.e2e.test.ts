@@ -1,9 +1,8 @@
 import dbInit, { ITestDb } from '../../../helpers/database-init';
 import { IUnleashTest, setupAppWithAuth } from '../../../helpers/test-helper';
 import getLogger from '../../../../fixtures/no-logger';
-import { DEFAULT_ENV } from '../../../../../lib/util/constants';
-import { RoleName } from '../../../../../lib/server-impl';
-import { CREATE_FEATURE_STRATEGY } from '../../../../../lib/types/permissions';
+import { DEFAULT_ENV } from '../../../../../lib/util';
+import { RoleName, CREATE_FEATURE_STRATEGY } from '../../../../../lib/types';
 
 let app: IUnleashTest;
 let db: ITestDb;

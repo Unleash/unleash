@@ -47,9 +47,14 @@ export interface IFeatureEnvironmentStore
     connectFeatureToEnvironmentsForProject(
         featureName: string,
         projectId: string,
+        enabledIn?: { [environment: string]: boolean },
     ): Promise<void>;
 
-    connectProject(environment: string, projectId: string): Promise<void>;
+    connectProject(
+        environment: string,
+        projectId: string,
+        idempotent?: boolean,
+    ): Promise<void>;
     disconnectProject(environment: string, projectId: string): Promise<void>;
     copyEnvironmentFeaturesByProjects(
         sourceEnvironment: string,

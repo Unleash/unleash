@@ -215,9 +215,19 @@ export default class StateService {
                 dropBeforeImport,
                 keepExisting,
             });
-            await this.importFeatureEnvironments({
-                featureEnvironments,
-            });
+
+            if (featureEnvironments) {
+                // make sure the project and environment are connected
+                // before importing featureEnvironments
+                await this.linkFeatureEnvironments({
+                    features,
+                    featureEnvironments,
+                });
+                await this.importFeatureEnvironments({
+                    featureEnvironments,
+                });
+            }
+
             await this.importFeatureStrategies({
                 featureStrategies,
                 dropBeforeImport,
@@ -272,17 +282,51 @@ export default class StateService {
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    async linkFeatureEnvironments({
+        features,
+        featureEnvironments,
+    }): Promise<void> {
+        const linkTasks = featureEnvironments.map(async (fe) => {
+            const project = features.find(
+                (f) => f.project && f.name === fe.featureName,
+            ).project;
+            if (project) {
+                return this.featureEnvironmentStore.connectProject(
+                    fe.environment,
+                    project,
+                    true, // make it idempotent
+                );
+            }
+        });
+        await Promise.all(linkTasks);
+    }
+
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    enabledInConfiguration(feature: string, env) {
+        const config = {};
+        env.filter((e) => e.featureName === feature).forEach((e) => {
+            config[e.environment] = e.enabled || false;
+        });
+        return config;
+    }
+
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async importFeatureEnvironments({ featureEnvironments }): Promise<void> {
         await Promise.all(
-            featureEnvironments
-                .filter(async (env) => {
-                    await this.environmentStore.exists(env.environment);
-                })
-                .map(async (featureEnvironment) =>
-                    this.featureEnvironmentStore.addFeatureEnvironment(
-                        featureEnvironment,
+            featureEnvironments.map((env) =>
+                this.toggleStore
+                    .getProjectId(env.featureName)
+                    .then((id) =>
+                        this.featureEnvironmentStore.connectFeatureToEnvironmentsForProject(
+                            env.featureName,
+                            id,
+                            this.enabledInConfiguration(
+                                env.featureName,
+                                featureEnvironments,
+                            ),
+                        ),
                     ),
-                ),
+            ),
         );
     }
 
@@ -371,9 +415,10 @@ export default class StateService {
                 .filter(filterEqual(oldToggles))
                 .map(async (feature) => {
                     await this.toggleStore.create(feature.project, feature);
-                    await this.featureEnvironmentStore.connectFeatureToEnvironmentsForProject(
-                        feature.name,
-                        feature.project,
+                    await this.toggleStore.saveVariants(
+                        project,
+                        name,
+                        variants,
                     );
                     await this.eventStore.store({
                         type: FEATURE_IMPORT,

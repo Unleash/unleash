@@ -19,9 +19,6 @@ export const createFeatureStrategySchema = {
                 $ref: '#/components/schemas/constraintSchema',
             },
         },
-        copyOf: {
-            type: 'string',
-        },
         parameters: {
             $ref: '#/components/schemas/parametersSchema',
         },

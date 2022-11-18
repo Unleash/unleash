@@ -202,6 +202,7 @@ export const ProjectFeatureToggles = ({
                         ?.map(({ type, value }) => `${type}:${value}`)
                         .join('\n') || '',
                 Cell: FeatureTagCell,
+                width: 80,
                 hideInMenu: true,
                 searchable: true,
             },

@@ -769,7 +769,6 @@ export default class StateService {
                     features.some((f) => fS.featureName === f.name),
                 ),
                 environments,
-                // variants,
                 featureEnvironments: featureEnvironments.filter((fE) =>
                     features.some((f) => fE.featureName === f.name),
                 ),

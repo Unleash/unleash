@@ -326,7 +326,6 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
         const environmentsToEnable = await this.db('project_environments')
             .select('environment_name')
             .where({ project_id: projectId });
-        // console.log(`Connecting ${featureName} to ${projectId} to`, environmentsToEnable);
         await Promise.all(
             environmentsToEnable.map(async (env) => {
                 await this.db('feature_environments')

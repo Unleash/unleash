@@ -158,7 +158,7 @@ class FeatureToggleService {
         projectId,
     }: IFeatureContext): Promise<void> {
         const id = await this.featureToggleStore.getProjectId(featureName);
-        if (id && id !== projectId) {
+        if (id !== projectId) {
             throw new InvalidOperationError(
                 `The operation could not be completed. The feature exists, but the provided project id ("${projectId}") does not match the project that the feature belongs to ("${id}"). Try using "${id}" in the request URL instead of "${projectId}".`,
             );

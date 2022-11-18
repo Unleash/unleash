@@ -24,13 +24,13 @@ const overridesReducer = (
             return state.filter((_, index) => index !== action.payload);
         case 'UPDATE_VALUES_AT':
             const [index1, values] = action.payload;
-            return state.map((item, i) =>
-                i === index1 ? { ...item, values } : item
+            return state.map((item, index) =>
+                index === index1 ? { ...item, values } : item
             );
         case 'UPDATE_TYPE_AT':
             const [index2, contextName] = action.payload;
-            return state.map((item, i) =>
-                i === index2 ? { ...item, contextName } : item
+            return state.map((item, index) =>
+                index === index2 ? { ...item, contextName } : item
             );
     }
 };

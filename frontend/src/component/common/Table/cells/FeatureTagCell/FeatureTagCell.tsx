@@ -47,7 +47,8 @@ export const FeatureTagCell: VFC<IFeatureTagCellProps> = ({ row, value }) => {
                 <StyledLink
                     underline="always"
                     highlighted={
-                        searchQuery.length > 0 && value.includes(searchQuery)
+                        searchQuery.length > 0 &&
+                        value.toLowerCase().includes(searchQuery.toLowerCase())
                     }
                 >
                     {row.original.tags?.length === 1

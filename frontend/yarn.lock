@@ -2715,10 +2715,10 @@
     "@typescript-eslint/types" "5.23.0"
     eslint-visitor-keys "^3.0.0"
 
-"@uiw/codemirror-extensions-basic-setup@4.13.2":
-  version "4.13.2"
-  resolved "https://registry.yarnpkg.com/@uiw/codemirror-extensions-basic-setup/-/codemirror-extensions-basic-setup-4.13.2.tgz#c745f57f1f9e7d14ab54fe1b706cd983a51519b6"
-  integrity sha512-ATJA7WaZ5g7/0teNBQRIalK3RxfU9X7hviwh6BOelaeJrJjkY6x+jVaACYywP1GStsIKcjNCumakpmRPO9w4sQ==
+"@uiw/codemirror-extensions-basic-setup@4.15.0":
+  version "4.15.0"
+  resolved "https://registry.yarnpkg.com/@uiw/codemirror-extensions-basic-setup/-/codemirror-extensions-basic-setup-4.15.0.tgz#f31ef2c0c3fc1a3b72d54af9485dddc1ea0c88d0"
+  integrity sha512-ZmaaGbmmxydf8a8mah7+Hqd09skAPU8BcMe/cubyWyZ14S3+lBGWtctpcorxb4Xh1J24tYaOJ9zf8oZKqbN6ag==
   dependencies:
     "@codemirror/autocomplete" "^6.0.0"
     "@codemirror/commands" "^6.0.0"
@@ -2728,32 +2728,32 @@
     "@codemirror/state" "^6.0.0"
     "@codemirror/view" "^6.0.0"
 
-"@uiw/codemirror-theme-duotone@4.14.0":
-  version "4.14.0"
-  resolved "https://registry.yarnpkg.com/@uiw/codemirror-theme-duotone/-/codemirror-theme-duotone-4.14.0.tgz#d3c06377ec743ecd460baff6905886d2f6335ee2"
-  integrity sha512-yLFR3YtdT5WZBD20PaCufGVnOwvZpvZd3wNyzS7YWOlJV6KXI3X3D0feWwVwkqPsYiZ2a22OhjcksMo/ofSpsA==
+"@uiw/codemirror-theme-duotone@4.15.1":
+  version "4.15.1"
+  resolved "https://registry.yarnpkg.com/@uiw/codemirror-theme-duotone/-/codemirror-theme-duotone-4.15.1.tgz#79ef08adf9edae72d2bab4e9fedb42540784a470"
+  integrity sha512-LeG3gGpkKS0vy4zMfLqAxqHBtPsgC+4Q3MIRHcinoRaDGcdHZC8teX5W4E3fGntMZ/7DTUMj+Q4Um2NnGskHXg==
   dependencies:
-    "@uiw/codemirror-themes" "4.14.0"
+    "@uiw/codemirror-themes" "4.15.1"
 
-"@uiw/codemirror-themes@4.14.0":
-  version "4.14.0"
-  resolved "https://registry.yarnpkg.com/@uiw/codemirror-themes/-/codemirror-themes-4.14.0.tgz#b08368e24952fb1c9b1839896fb92de2b2f2c4b5"
-  integrity sha512-WycC0UZoIQoh1E13fe+vH/AxaKjhZnRAf5eT1rAXLHS8yFV/wIZVefw3byA42PQKDEDjeoQ1QtTS7sz/ZxWEeQ==
+"@uiw/codemirror-themes@4.15.1":
+  version "4.15.1"
+  resolved "https://registry.yarnpkg.com/@uiw/codemirror-themes/-/codemirror-themes-4.15.1.tgz#5f660816ddf5389c2e0ec13644856a12bdbd14ad"
+  integrity sha512-+3NKdmptuZTGE56LQ3j8daOAKer2STEDklkJS9AGHAGoN1o7IdA+s2Pbp3hf5oGxukNb29UA+gskfb5grszWMg==
   dependencies:
     "@codemirror/language" "^6.0.0"
     "@codemirror/state" "^6.0.0"
     "@codemirror/view" "^6.0.0"
 
-"@uiw/react-codemirror@4.13.2":
-  version "4.13.2"
-  resolved "https://registry.yarnpkg.com/@uiw/react-codemirror/-/react-codemirror-4.13.2.tgz#06e3aaba2fc6fef15aec6c15f3e08bbcb1e87c31"
-  integrity sha512-sMfb8F82yLSqyq1gEUlr14E4KGXDfvsCnkGLLwJZqsq/TvJTRVcy0GX87wn3GXBtGhNp5TvGFUDaCnFzbU4bIQ==
+"@uiw/react-codemirror@4.15.0":
+  version "4.15.0"
+  resolved "https://registry.yarnpkg.com/@uiw/react-codemirror/-/react-codemirror-4.15.0.tgz#f7a4543ddcd88f1ea764c032d94f6ff430733561"
+  integrity sha512-eXynlOftIh/n8lyU7XeIgvVehFXluJ+4EqmxTKEYxtm5t1LV5jNYD/TCpPOEpltLEfh5UtJUxCDOp8RmChoHGA==
   dependencies:
     "@babel/runtime" "^7.18.6"
     "@codemirror/commands" "^6.1.0"
     "@codemirror/state" "^6.1.1"
     "@codemirror/theme-one-dark" "^6.0.0"
-    "@uiw/codemirror-extensions-basic-setup" "4.13.2"
+    "@uiw/codemirror-extensions-basic-setup" "4.15.0"
     codemirror "^6.0.0"
 
 "@vitejs/plugin-react@2.2.0":
@@ -3284,10 +3284,10 @@ chart.js@3.9.1:
   resolved "https://registry.yarnpkg.com/chart.js/-/chart.js-3.9.1.tgz#3abf2c775169c4c71217a107163ac708515924b8"
   integrity sha512-Ro2JbLmvg83gXF5F4sniaQ+lTbSv18E+TIf2cOeiH1Iqd2PGFOtem+DUufMZsCJwFE7ywPOpfXFBwRTGq7dh6w==
 
-chartjs-adapter-date-fns@2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/chartjs-adapter-date-fns/-/chartjs-adapter-date-fns-2.0.0.tgz#5e53b2f660b993698f936f509c86dddf9ed44c6b"
-  integrity sha512-rmZINGLe+9IiiEB0kb57vH3UugAtYw33anRiw5kS2Tu87agpetDDoouquycWc9pRsKtQo5j+vLsYHyr8etAvFw==
+chartjs-adapter-date-fns@2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/chartjs-adapter-date-fns/-/chartjs-adapter-date-fns-2.0.1.tgz#3d007d4985391362fb15c96310fff8376a434bae"
+  integrity sha512-v3WV9rdnQ05ce3A0ZCjzUekJCAbfm6+3HqSoeY2BIkdMYZoYr/4T+ril1tZyDl869lz6xdNVMXejUFT9YKpw4A==
 
 check-error@^1.0.2:
   version "1.0.2"

@@ -1,8 +1,12 @@
 import { Request, Response } from 'express';
 import Controller from '../controller';
-import { IUnleashConfig, IUnleashServices } from '../../types';
+import {
+    IFlagResolver,
+    IUnleashConfig,
+    IUnleashServices,
+    NONE,
+} from '../../types';
 import { Logger } from '../../logger';
-import { NONE } from '../../types';
 import ApiUser from '../../types/api-user';
 import {
     createRequestSchema,
@@ -16,8 +20,6 @@ import {
 import { Context } from 'unleash-client';
 import { enrichContextWithIp } from '../../proxy';
 import { corsOriginMiddleware } from '../../middleware';
-import { proxyFeaturesQueryParameters } from '../../openapi/spec/proxy-features-query-parameters';
-import { OpenAPIV3 } from 'openapi-types';
 
 interface ApiUserRequest<
     PARAM = any,
@@ -38,10 +40,17 @@ export default class ProxyController extends Controller {
 
     private services: Services;
 
-    constructor(config: IUnleashConfig, services: Services) {
+    private flagResolver: IFlagResolver;
+
+    constructor(
+        config: IUnleashConfig,
+        services: Services,
+        flagResolver: IFlagResolver,
+    ) {
         super(config);
         this.logger = config.getLogger('proxy-api/index.ts');
         this.services = services;
+        this.flagResolver = flagResolver;
 
         // Support CORS requests for the frontend endpoints.
         // Preflight requests are handled in `app.ts`.
@@ -56,8 +65,6 @@ export default class ProxyController extends Controller {
                 this.services.openApiService.validPath({
                     tags: ['Unstable'],
                     operationId: 'getFrontendFeatures',
-                    parameters:
-                        proxyFeaturesQueryParameters as unknown as OpenAPIV3.ParameterObject[],
                     responses: {
                         200: createResponseSchema('proxyFeaturesSchema'),
                     },
@@ -137,9 +144,8 @@ export default class ProxyController extends Controller {
         req: ApiUserRequest,
         res: Response<ProxyFeaturesSchema>,
     ) {
-        const { query } = req;
         let toggles;
-        if (Boolean(query.all)) {
+        if (this.flagResolver.isEnabled('proxyReturnAllToggles')) {
             toggles = await this.services.proxyService.getAllProxyFeatures(
                 req.user,
                 ProxyController.createContext(req),

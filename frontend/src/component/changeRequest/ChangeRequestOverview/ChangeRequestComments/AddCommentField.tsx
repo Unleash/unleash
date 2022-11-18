@@ -4,7 +4,6 @@ import { StyledAvatar } from './StyledAvatar';
 
 const AddCommentWrapper = styled(Box)(({ theme }) => ({
     display: 'flex',
-    gap: theme.spacing(2),
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(1),
 }));

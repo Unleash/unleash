@@ -77,7 +77,7 @@ export const OverrideConfig: VFC<IOverrideConfigProps> = ({
         <>
             {overrides.map((override, index) => {
                 const definition = context.find(
-                    c => c.name === override.contextName
+                    ({ name }) => name === override.contextName
                 );
                 const legalValues =
                     definition?.legalValues?.map(({ value }) => value) || [];

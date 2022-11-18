@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
     IFeatureToggleQuery,
     IFeatureToggleStore,
@@ -145,6 +144,7 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
 
     getVariantsForEnv(
         featureName: string,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         environment_name: string,
     ): Promise<IVariant[]> {
         return this.getVariants(featureName);

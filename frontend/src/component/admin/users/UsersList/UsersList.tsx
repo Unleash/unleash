@@ -1,12 +1,5 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import {
-    Table,
-    SortableTableHeader,
-    TableBody,
-    TableCell,
-    TableRow,
-    TablePlaceholder,
-} from 'component/common/Table';
+import React, { useEffect, useMemo, useState } from 'react';
+import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
 import ChangePassword from './ChangePassword/ChangePassword';
 import DeleteUser from './DeleteUser/DeleteUser';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -23,7 +16,12 @@ import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { Button, useMediaQuery } from '@mui/material';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { UserTypeCell } from './UserTypeCell/UserTypeCell';
-import { useGlobalFilter, useSortBy, useTable } from 'react-table';
+import {
+    useFlexLayout,
+    useGlobalFilter,
+    useSortBy,
+    useTable,
+} from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
@@ -112,7 +110,8 @@ const UsersList = () => {
                 Cell: DateCell,
                 disableGlobalFilter: true,
                 sortType: 'date',
-                minWidth: 120,
+                width: 120,
+                maxWidth: 120,
             },
             {
                 Header: 'Avatar',
@@ -124,20 +123,19 @@ const UsersList = () => {
                 ),
                 disableGlobalFilter: true,
                 disableSortBy: true,
+                maxWidth: 80,
             },
             {
                 id: 'name',
                 Header: 'Name',
                 accessor: (row: any) => row.name || '',
-                width: '40%',
-                Cell: HighlightCell,
-            },
-            {
-                id: 'username',
-                Header: 'Username',
-                accessor: (row: any) => row.username || row.email,
-                width: '40%',
-                Cell: HighlightCell,
+                minWidth: 200,
+                Cell: ({ row: { original: user } }: any) => (
+                    <HighlightCell
+                        value={user.name}
+                        subtitle={user.email || user.username}
+                    />
+                ),
             },
             {
                 id: 'role',
@@ -146,6 +144,7 @@ const UsersList = () => {
                     roles.find((role: IRole) => role.id === row.rootRole)
                         ?.name || '',
                 disableGlobalFilter: true,
+                maxWidth: 120,
             },
             {
                 id: 'last-login',
@@ -160,7 +159,7 @@ const UsersList = () => {
                 ),
                 disableGlobalFilter: true,
                 sortType: 'date',
-                minWidth: 150,
+                maxWidth: 150,
             },
             {
                 Header: 'Actions',
@@ -175,7 +174,7 @@ const UsersList = () => {
                         onDelete={openDelDialog(user)}
                     />
                 ),
-                width: 100,
+                width: 150,
                 disableGlobalFilter: true,
                 disableSortBy: true,
             },
@@ -193,8 +192,6 @@ const UsersList = () => {
     const data = isBillingUsers ? planUsers : users;
 
     const {
-        getTableProps,
-        getTableBodyProps,
         headerGroups,
         rows,
         prepareRow,
@@ -203,7 +200,7 @@ const UsersList = () => {
         setHiddenColumns,
     } = useTable(
         {
-            columns: columns,
+            columns: columns as any,
             data,
             initialState,
             sortTypes,
@@ -215,7 +212,8 @@ const UsersList = () => {
             },
         },
         useGlobalFilter,
-        useSortBy
+        useSortBy,
+        useFlexLayout
     );
 
     useEffect(() => {
@@ -224,10 +222,10 @@ const UsersList = () => {
             hiddenColumns.push('type');
         }
         if (isSmallScreen) {
-            hiddenColumns.push('createdAt', 'username');
+            hiddenColumns.push('createdAt', 'last-login');
         }
         if (isExtraSmallScreen) {
-            hiddenColumns.push('imageUrl', 'role', 'last-login');
+            hiddenColumns.push('imageUrl', 'role');
         }
         setHiddenColumns(hiddenColumns);
     }, [setHiddenColumns, isExtraSmallScreen, isSmallScreen, isBillingUsers]);
@@ -258,23 +256,11 @@ const UsersList = () => {
             }
         >
             <SearchHighlightProvider value={globalFilter}>
-                <Table {...getTableProps()}>
-                    <SortableTableHeader headerGroups={headerGroups} />
-                    <TableBody {...getTableBodyProps()}>
-                        {rows.map(row => {
-                            prepareRow(row);
-                            return (
-                                <TableRow hover {...row.getRowProps()}>
-                                    {row.cells.map(cell => (
-                                        <TableCell {...cell.getCellProps()}>
-                                            {cell.render('Cell')}
-                                        </TableCell>
-                                    ))}
-                                </TableRow>
-                            );
-                        })}
-                    </TableBody>
-                </Table>
+                <VirtualizedTable
+                    rows={rows}
+                    headerGroups={headerGroups}
+                    prepareRow={prepareRow}
+                />
             </SearchHighlightProvider>
             <ConditionallyRender
                 condition={rows.length === 0}

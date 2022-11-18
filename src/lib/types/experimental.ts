@@ -40,6 +40,10 @@ export const defaultExperimentalOptions = {
         ),
         proxyReturnAllToggles: parseEnvVarBoolean(
             process.env.UNLEASH_EXPERIMENTAL_PROXY_RETURN_ALL_TOGGLES,
+            false
+        ),
+        variantsPerEnvironment: parseEnvVarBoolean(
+            process.env.UNLEASH_EXPERIMENTAL_VARIANTS_PER_ENVIRONMENT,
             false,
         ),
     },
@@ -58,6 +62,8 @@ export interface IExperimentalOptions {
         changeRequests?: boolean;
         cloneEnvironment?: boolean;
         proxyReturnAllToggles?: boolean;
+        variantsPerEnvironment?: boolean;
+
     };
     externalResolver: IExternalFlagResolver;
 }

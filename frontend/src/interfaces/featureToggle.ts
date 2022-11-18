@@ -37,6 +37,7 @@ export interface IFeatureEnvironment {
     name: string;
     enabled: boolean;
     strategies: IFeatureStrategy[];
+    variants?: IFeatureVariant[];
 }
 
 export interface IFeatureVariant {

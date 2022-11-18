@@ -7,7 +7,6 @@ import { IChangeRequestComment } from '../../changeRequest.types';
 
 const ChangeRequestCommentWrapper = styled(Box)(({ theme }) => ({
     display: 'flex',
-    gap: theme.spacing(2),
     marginTop: theme.spacing(2),
 }));
 const CommentPaper = styled(Paper)(({ theme }) => ({

@@ -42,6 +42,7 @@ process.nextTick(async () => {
                         changeRequests: true,
                         cloneEnvironment: true,
                         toggleTagFiltering: true,
+                        variantsPerEnvironment: true,
                     },
                 },
                 authentication: {

@@ -46,9 +46,12 @@ export const EnvironmentDeleteDialog = ({
             }}
         >
             <Alert severity="error">
-                <strong>Danger!</strong> Deleting this environment will result
-                in removing all strategies that are active in this environment
-                across all feature toggles.
+                <strong>
+                    Danger! This action is not reversible. Please proceed with
+                    caution.
+                </strong>{' '}
+                Deleting this environment will result in removing all strategies
+                that are active in this environment across all feature toggles.
             </Alert>
 
             <EnvironmentTableSingle

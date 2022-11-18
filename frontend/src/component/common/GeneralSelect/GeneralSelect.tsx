@@ -9,12 +9,15 @@ import {
 } from '@mui/material';
 import { SELECT_ITEM_ID } from 'utils/testIds';
 import { KeyboardArrowDownOutlined } from '@mui/icons-material';
+import { SxProps } from '@mui/system';
+import { Theme } from '@mui/material/styles';
 
 export interface ISelectOption {
     key: string;
     title?: string;
     label?: string;
     disabled?: boolean;
+    sx?: SxProps<Theme>;
 }
 
 export interface IGeneralSelectProps extends Omit<SelectProps, 'onChange'> {
@@ -68,6 +71,7 @@ const GeneralSelect: React.FC<IGeneralSelectProps> = ({
             >
                 {options.map(option => (
                     <MenuItem
+                        sx={option.sx}
                         key={option.key}
                         value={option.key}
                         title={option.title || ''}

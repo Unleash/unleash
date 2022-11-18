@@ -73,9 +73,10 @@ exports[`should create default config 1`] = `
       "cloneEnvironment": false,
       "embedProxy": false,
       "embedProxyFrontend": false,
-      "publicSignup": false,
       "responseTimeWithAppName": false,
       "syncSSOGroups": false,
+      "toggleTagFiltering": false,
+      "variantsPerEnvironment": false,
     },
   },
   "flagResolver": FlagResolver {
@@ -87,9 +88,10 @@ exports[`should create default config 1`] = `
       "cloneEnvironment": false,
       "embedProxy": false,
       "embedProxyFrontend": false,
-      "publicSignup": false,
       "responseTimeWithAppName": false,
       "syncSSOGroups": false,
+      "toggleTagFiltering": false,
+      "variantsPerEnvironment": false,
     },
     "externalResolver": {
       "isEnabled": [Function],

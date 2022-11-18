@@ -10,9 +10,10 @@ import {
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useStyles } from './StrategyItemContainer.styles';
+import { PlaygroundStrategySchema } from 'component/playground/Playground/interfaces/playground.model';
 
 interface IStrategyItemContainerProps {
-    strategy: IFeatureStrategy;
+    strategy: IFeatureStrategy | PlaygroundStrategySchema;
     onDragStart?: DragEventHandler<HTMLButtonElement>;
     onDragEnd?: DragEventHandler<HTMLButtonElement>;
     actions?: ReactNode;

@@ -11,6 +11,13 @@ import {
 import { IPermission } from 'lib/types/model';
 
 class AccessStoreMock implements IAccessStore {
+    isChangeRequestsEnabled(
+        project: string,
+        environment: string,
+    ): Promise<boolean> {
+        throw new Error('Method not implemented.');
+    }
+
     addAccessToProject(
         users: IAccessInfo[],
         groups: IAccessInfo[],

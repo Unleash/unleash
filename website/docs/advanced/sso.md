@@ -18,7 +18,7 @@ In order to configure Single-Sign-On you will need to log in to the Unleash inst
 
 Unleash enterprise supports multiple authentication providers.
 
-- [OpenID Connect with Okta](./sso-open-id-connect.md)
-- [SAML 2.0 with Okta](./sso-saml.md)
-- [SAML 2.0 with Keycloak](./sso-saml-keycloak.md)
-- [Google Authentication](./sso-google.md) (deprecated)
+- [OpenID Connect with Okta](../how-to/how-to-add-sso-open-id-connect.md)
+- [SAML 2.0 with Okta](../how-to/how-to-add-sso-saml.md)
+- [SAML 2.0 with Keycloak](../how-to/how-to-add-sso-saml-keycloak.md)
+- [Google Authentication](../how-to/how-to-add-sso-google.md) (deprecated)

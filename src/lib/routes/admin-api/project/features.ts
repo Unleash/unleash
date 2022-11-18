@@ -598,7 +598,11 @@ export default class ProjectFeaturesController extends Controller {
         res: Response<FeatureStrategySchema>,
     ): Promise<void> {
         const { projectId, featureName, environment } = req.params;
-        const { copyOf, ...strategyConfig } = req.body;
+        const { ...strategyConfig } = req.body;
+
+        if (!strategyConfig.segmentIds) {
+            strategyConfig.segmentIds = [];
+        }
 
         const userName = extractUsername(req);
         const strategy = await this.featureService.createStrategy(
@@ -606,16 +610,6 @@ export default class ProjectFeaturesController extends Controller {
             { environment, projectId, featureName },
             userName,
         );
-
-        if (copyOf) {
-            this.logger.info(
-                `Cloning segments from: strategyId=${copyOf} to: strategyId=${strategy.id} `,
-            );
-            await this.segmentService.cloneStrategySegments(
-                copyOf,
-                strategy.id,
-            );
-        }
 
         const updatedStrategy = await this.featureService.getStrategy(
             strategy.id,
@@ -661,6 +655,11 @@ export default class ProjectFeaturesController extends Controller {
     ): Promise<void> {
         const { strategyId, environment, projectId, featureName } = req.params;
         const userName = extractUsername(req);
+
+        if (!req.body.segmentIds) {
+            req.body.segmentIds = [];
+        }
+
         const updatedStrategy = await this.featureService.updateStrategy(
             strategyId,
             req.body,

@@ -43,6 +43,30 @@ const StyledTitle = styled(StringTruncator)(({ theme }) => ({
     marginRight: theme.spacing(1),
 }));
 
+const getPermissionGroupName = (
+    permission: IPermission
+): [groupName: string, order: number] => {
+    const { name } = permission;
+
+    if (name.endsWith('_PROJECT') || name === 'MOVE_FEATURE_TOGGLE') {
+        return ['Project', 0];
+    }
+    if (name.endsWith('_FEATURE') || name === 'UPDATE_FEATURE_ENVIRONMENT') {
+        return ['Feature toggles', 1];
+    }
+    if (name.endsWith('_VARIANTS')) {
+        return ['Variants', 2];
+    }
+    if (name.endsWith('_STRATEGY')) {
+        return ['Strategies', 3];
+    }
+    if (name.endsWith('_CHANGE_REQUEST')) {
+        return ['Change requests', 4];
+    }
+
+    return ['Other', 5];
+};
+
 export const PermissionAccordion: VFC<IEnvironmentPermissionAccordionProps> = ({
     title,
     permissions,
@@ -76,6 +100,27 @@ export const PermissionAccordion: VFC<IEnvironmentPermissionAccordionProps> = ({
     const isAllChecked = useMemo(
         () => permissionCount === permissions?.length,
         [permissionCount, permissions]
+    );
+
+    const permissionGroups = useMemo(
+        () =>
+            permissions
+                ?.reduce((prev, next) => {
+                    const [groupName, order] = getPermissionGroupName(next);
+                    const id = prev.findIndex(el => el.groupName === groupName);
+                    if (id === -1) {
+                        prev.push({
+                            groupName,
+                            order,
+                            groupPermissions: [next],
+                        });
+                    } else {
+                        prev[id].groupPermissions.push(next);
+                    }
+                    return prev;
+                }, [] as Array<{ groupName: string; order: number; groupPermissions: IPermission[] }>)
+                .sort((a, b) => a.order - b.order),
+        [permissions]
     );
 
     return (
@@ -141,35 +186,50 @@ export const PermissionAccordion: VFC<IEnvironmentPermissionAccordionProps> = ({
                         all {context} permissions
                     </Button>
                     <Box>
-                        {permissions?.map((permission: IPermission) => {
-                            return (
-                                <FormControlLabel
-                                    sx={{
-                                        minWidth: {
-                                            sm: '300px',
-                                            xs: 'auto',
-                                        },
-                                    }}
-                                    key={getRoleKey(permission)}
-                                    control={
-                                        <Checkbox
-                                            checked={
-                                                checkedPermissions[
-                                                    getRoleKey(permission)
-                                                ]
-                                                    ? true
-                                                    : false
+                        {permissionGroups.map(
+                            ({ groupName, groupPermissions }) => (
+                                <Box key={groupName} sx={{ mt: 1 }}>
+                                    <Typography
+                                        variant="body2"
+                                        color="text.secondary"
+                                        sx={{ mb: 0.5 }}
+                                    >
+                                        {groupName}
+                                    </Typography>
+                                    {groupPermissions.map(permission => (
+                                        <FormControlLabel
+                                            sx={{
+                                                minWidth: {
+                                                    sm: '300px',
+                                                    xs: 'auto',
+                                                },
+                                            }}
+                                            key={getRoleKey(permission)}
+                                            control={
+                                                <Checkbox
+                                                    checked={
+                                                        checkedPermissions[
+                                                            getRoleKey(
+                                                                permission
+                                                            )
+                                                        ]
+                                                            ? true
+                                                            : false
+                                                    }
+                                                    onChange={() =>
+                                                        onPermissionChange(
+                                                            permission
+                                                        )
+                                                    }
+                                                    color="primary"
+                                                />
                                             }
-                                            onChange={() =>
-                                                onPermissionChange(permission)
-                                            }
-                                            color="primary"
+                                            label={permission.displayName}
                                         />
-                                    }
-                                    label={permission.displayName}
-                                />
-                            );
-                        })}
+                                    ))}
+                                </Box>
+                            )
+                        )}
                     </Box>
                 </AccordionDetails>
             </Accordion>

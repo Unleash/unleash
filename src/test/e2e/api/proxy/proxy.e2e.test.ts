@@ -934,6 +934,7 @@ test('Should not recursively set off timers on events', async () => {
 });
 
 test('should return all features when specified', async () => {
+    app.config.experimental.flags.proxyReturnAllToggles = true;
     const frontendToken = await createApiToken(ApiTokenType.FRONTEND);
     await createFeatureToggle({
         name: 'enabledFeature1',
@@ -951,7 +952,7 @@ test('should return all features when specified', async () => {
         strategies: [{ name: 'default', constraints: [], parameters: {} }],
     });
     await app.request
-        .get('/api/frontend?all=true')
+        .get('/api/frontend')
         .set('Authorization', frontendToken.secret)
         .expect('Content-Type', /json/)
         .expect(200)

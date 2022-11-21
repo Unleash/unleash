@@ -7,7 +7,7 @@ import {
 import { Logger, LogProvider } from '../logger';
 import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
-import { IFeatureEnvironment } from '../types/model';
+import { IFeatureEnvironment, IVariant } from '../types/model';
 import NotFoundError from '../error/notfound-error';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -21,6 +21,7 @@ interface IFeatureEnvironmentRow {
     environment: string;
     feature_name: string;
     enabled: boolean;
+    variants?: [];
 }
 
 interface ISegmentRow {
@@ -86,6 +87,7 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
                 enabled: md.enabled,
                 featureName,
                 environment,
+                variants: md.variants,
             };
         }
         throw new NotFoundError(
@@ -102,6 +104,7 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
             enabled: r.enabled,
             featureName: r.feature_name,
             environment: r.environment,
+            variants: r.variants,
         }));
     }
 
@@ -160,6 +163,24 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
         );
         const { present } = result.rows[0];
         return present;
+    }
+
+    async getEnvironmentsForFeature(
+        featureName: string,
+    ): Promise<IFeatureEnvironment[]> {
+        const envs = await this.db(T.featureEnvs).where(
+            'feature_name',
+            featureName,
+        );
+        if (envs) {
+            return envs.map((r) => ({
+                featureName: r.feature_name,
+                environment: r.environment,
+                variants: r.variants || [],
+                enabled: r.enabled,
+            }));
+        }
+        return [];
     }
 
     async getEnvironmentMetaData(
@@ -261,6 +282,41 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
             .del();
     }
 
+    // TODO: remove this once variants per env are GA
+    async clonePreviousVariants(
+        environment: string,
+        project: string,
+    ): Promise<void> {
+        const rows = await this.db(`${T.features} as f`)
+            .select([
+                this.db.raw(`'${environment}' as environment`),
+                'fe.enabled',
+                'fe.feature_name',
+                'fe.variants',
+            ])
+            .distinctOn(['environment', 'feature_name'])
+            .join(`${T.featureEnvs} as fe`, 'f.name', 'fe.feature_name')
+            .whereNot({ environment })
+            .andWhere({ project });
+
+        const newRows = rows.map((row) => {
+            const r = row as any as IFeatureEnvironmentRow;
+            return {
+                variants: JSON.stringify(r.variants),
+                enabled: r.enabled,
+                environment: r.environment,
+                feature_name: r.feature_name,
+            };
+        });
+
+        if (newRows.length > 0) {
+            await this.db(T.featureEnvs)
+                .insert(newRows)
+                .onConflict(['environment', 'feature_name'])
+                .merge(['variants']);
+        }
+    }
+
     async connectFeatureToEnvironmentsForProject(
         featureName: string,
         projectId: string,
@@ -293,6 +349,40 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
                 SELECT distinct ? AS environment, feature_name, enabled FROM ${T.featureEnvs} INNER JOIN ${T.features} ON ${T.featureEnvs}.feature_name = ${T.features}.name WHERE environment = ? AND project = ANY(?))`,
             [destinationEnvironment, sourceEnvironment, projects],
         );
+    }
+
+    async addVariantsToFeatureEnvironment(
+        featureName: string,
+        environment: string,
+        variants: IVariant[],
+    ): Promise<void> {
+        let v = variants || [];
+        v.sort((a, b) => a.name.localeCompare(b.name));
+        await this.db(T.featureEnvs)
+            .insert({
+                variants: JSON.stringify(v),
+                enabled: false,
+                feature_name: featureName,
+                environment: environment,
+            })
+            .onConflict(['feature_name', 'environment'])
+            .merge(['variants']);
+    }
+
+    async addFeatureEnvironment(
+        featureEnvironment: IFeatureEnvironment,
+    ): Promise<void> {
+        let v = featureEnvironment.variants || [];
+        v.sort((a, b) => a.name.localeCompare(b.name));
+        await this.db(T.featureEnvs)
+            .insert({
+                variants: JSON.stringify(v),
+                enabled: featureEnvironment.enabled,
+                feature_name: featureEnvironment.featureName,
+                environment: featureEnvironment.environment,
+            })
+            .onConflict(['feature_name', 'environment'])
+            .merge(['variants', 'enabled']);
     }
 
     async cloneStrategies(

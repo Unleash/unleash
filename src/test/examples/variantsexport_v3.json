@@ -1,0 +1,245 @@
+{
+  "version": 3,
+  "features": [
+    {
+      "name": "UX-toggle1",
+      "description": "Toggle to make UX great",
+      "type": "release",
+      "project": "default",
+      "stale": false,
+      "variants": [],
+      "createdAt": "2022-08-19T11:12:02.559Z",
+      "lastSeenAt": null,
+      "impressionData": false,
+      "archivedAt": null,
+      "archived": false
+    },
+    {
+      "name": "variants-tester",
+      "description": "",
+      "type": "release",
+      "project": "default",
+      "stale": false,
+      "variants": [
+        {
+          "name": "azure",
+          "weight": 250,
+          "weightType": "variable",
+          "stickiness": "default",
+          "overrides": []
+        },
+        {
+          "name": "lilac",
+          "weight": 250,
+          "weightType": "variable",
+          "stickiness": "default",
+          "overrides": []
+        },
+        {
+          "name": "maroon",
+          "weight": 250,
+          "weightType": "variable",
+          "stickiness": "default",
+          "overrides": []
+        },
+        {
+          "name": "purple",
+          "weight": 250,
+          "weightType": "variable",
+          "stickiness": "default",
+          "overrides": []
+        }
+      ],
+      "createdAt": "2022-11-14T12:06:52.562Z",
+      "lastSeenAt": null,
+      "impressionData": false,
+      "archivedAt": null,
+      "archived": false
+    }
+  ],
+  "strategies": [
+    {
+      "name": "gradualRolloutRandom",
+      "description": "Randomly activate the feature toggle. No stickiness.",
+      "parameters": [
+        {
+          "name": "percentage",
+          "type": "percentage",
+          "description": "",
+          "required": false
+        }
+      ],
+      "deprecated": true
+    },
+    {
+      "name": "gradualRolloutSessionId",
+      "description": "Gradually activate feature toggle. Stickiness based on session id.",
+      "parameters": [
+        {
+          "name": "percentage",
+          "type": "percentage",
+          "description": "",
+          "required": false
+        },
+        {
+          "name": "groupId",
+          "type": "string",
+          "description": "Used to define a activation groups, which allows you to correlate across feature toggles.",
+          "required": true
+        }
+      ],
+      "deprecated": true
+    },
+    {
+      "name": "gradualRolloutUserId",
+      "description": "Gradually activate feature toggle for logged in users. Stickiness based on user id.",
+      "parameters": [
+        {
+          "name": "percentage",
+          "type": "percentage",
+          "description": "",
+          "required": false
+        },
+        {
+          "name": "groupId",
+          "type": "string",
+          "description": "Used to define a activation groups, which allows you to correlate across feature toggles.",
+          "required": true
+        }
+      ],
+      "deprecated": true
+    }
+  ],
+  "projects": [
+    {
+      "id": "default",
+      "name": "Default",
+      "description": "Default project",
+      "createdAt": "2022-06-15T09:04:10.979Z",
+      "health": 100,
+      "updatedAt": "2022-11-14T12:05:01.328Z"
+    }
+  ],
+  "tagTypes": [
+    {
+      "name": "simple",
+      "description": "Used to simplify filtering of features",
+      "icon": "#"
+    }
+  ],
+  "tags": [],
+  "featureTags": [],
+  "featureStrategies": [
+    {
+      "id": "6fe19ea2-c00e-41f4-a4b0-407dd87837c3",
+      "featureName": "UX-toggle1",
+      "projectId": "default",
+      "environment": "development",
+      "strategyName": "default",
+      "parameters": {},
+      "constraints": [],
+      "createdAt": "2022-08-19T11:12:32.398Z"
+    },
+    {
+      "id": "f1834062-484f-4211-a39b-41f229c12a01",
+      "featureName": "UX-toggle1",
+      "projectId": "default",
+      "environment": "production",
+      "strategyName": "flexibleRollout",
+      "parameters": {
+        "groupId": "UX-toggle1",
+        "rollout": "50",
+        "stickiness": "default"
+      },
+      "constraints": [],
+      "createdAt": "2022-08-19T11:12:45.779Z"
+    },
+    {
+      "id": "ff954a04-1155-4420-ba83-1ded384f137c",
+      "featureName": "UX-toggle1",
+      "projectId": "default",
+      "environment": "development",
+      "strategyName": "userWithId",
+      "parameters": {
+        "userIds": ""
+      },
+      "constraints": [],
+      "createdAt": "2022-08-19T11:12:55.382Z"
+    },
+    {
+      "id": "6a0f8da5-398f-4d26-9089-5a87e39dbca6",
+      "featureName": "variants-tester",
+      "projectId": "default",
+      "environment": "development",
+      "strategyName": "flexibleRollout",
+      "parameters": {
+        "groupId": "variants-tester",
+        "rollout": "100",
+        "stickiness": "default"
+      },
+      "constraints": [],
+      "createdAt": "2022-11-14T12:07:37.873Z"
+    },
+    {
+      "id": "5c35bdd1-e30b-491f-b3ed-b1c7e08c5abc",
+      "featureName": "variants-tester",
+      "projectId": "default",
+      "environment": "production",
+      "strategyName": "flexibleRollout",
+      "parameters": {
+        "groupId": "variants-tester",
+        "rollout": "100",
+        "stickiness": "default"
+      },
+      "constraints": [],
+      "createdAt": "2022-11-14T12:07:38.227Z"
+    }
+  ],
+  "environments": [
+    {
+      "name": "default",
+      "type": "development",
+      "sortOrder": 100,
+      "enabled": true,
+      "protected": true
+    },
+    {
+      "name": "development",
+      "type": "development",
+      "sortOrder": 100,
+      "enabled": true,
+      "protected": false
+    },
+    {
+      "name": "production",
+      "type": "production",
+      "sortOrder": 200,
+      "enabled": true,
+      "protected": false
+    }
+  ],
+  "featureEnvironments": [
+    {
+      "enabled": true,
+      "featureName": "UX-toggle1",
+      "environment": "development"
+    },
+    {
+      "enabled": true,
+      "featureName": "variants-tester",
+      "environment": "production"
+    },
+    {
+      "enabled": true,
+      "featureName": "variants-tester",
+      "environment": "development"
+    },
+    {
+      "enabled": true,
+      "featureName": "UX-toggle1",
+      "environment": "production"
+    }
+  ],
+  "segments": [],
+  "featureStrategySegments": []
+}

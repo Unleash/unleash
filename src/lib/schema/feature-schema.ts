@@ -28,7 +28,7 @@ export const strategiesSchema = joi.object().keys({
     parameters: joi.object(),
 });
 
-const variantValueSchema = joi
+export const variantValueSchema = joi
     .string()
     .required()
     // perform additional validation

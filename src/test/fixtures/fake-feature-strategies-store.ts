@@ -153,6 +153,13 @@ export default class FakeFeatureStrategiesStore
         );
     }
 
+    getFeatureToggleWithVariantEnvs(
+        featureName: string,
+        archived?: boolean,
+    ): Promise<FeatureToggleWithEnvironment> {
+        return this.getFeatureToggleWithEnvs(featureName, archived);
+    }
+
     async getFeatureOverview(
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         projectId: string,

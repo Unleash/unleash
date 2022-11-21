@@ -8,6 +8,8 @@ export const FEATURE_DELETED = 'feature-deleted';
 export const FEATURE_UPDATED = 'feature-updated';
 export const FEATURE_METADATA_UPDATED = 'feature-metadata-updated';
 export const FEATURE_VARIANTS_UPDATED = 'feature-variants-updated';
+export const FEATURE_ENVIRONMENT_VARIANTS_UPDATED =
+    'feature-environment-variants-updated';
 export const FEATURE_PROJECT_CHANGE = 'feature-project-change';
 export const FEATURE_ARCHIVED = 'feature-archived';
 export const FEATURE_REVIVED = 'feature-revived';
@@ -187,6 +189,30 @@ export class FeatureVariantEvent extends BaseEvent {
         super(FEATURE_VARIANTS_UPDATED, p.createdBy, p.tags);
         this.project = p.project;
         this.featureName = p.featureName;
+        this.data = { variants: p.newVariants };
+        this.preData = { variants: p.oldVariants };
+    }
+}
+
+export class EnvironmentVariantEvent extends BaseEvent {
+    readonly environment: string;
+
+    readonly featureName: string;
+
+    readonly data: { variants: IVariant[] };
+
+    readonly preData: { variants: IVariant[] };
+
+    constructor(p: {
+        featureName: string;
+        environment: string;
+        createdBy: string;
+        newVariants: IVariant[];
+        oldVariants: IVariant[];
+    }) {
+        super(FEATURE_ENVIRONMENT_VARIANTS_UPDATED, p.createdBy);
+        this.featureName = p.featureName;
+        this.environment = p.environment;
         this.data = { variants: p.newVariants };
         this.preData = { variants: p.oldVariants };
     }

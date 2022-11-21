@@ -93,22 +93,6 @@ export const seedDatabaseForPlaygroundTest = async (
 
     return Promise.all(
         features.map(async (feature) => {
-            // create feature
-            const toggle = await database.stores.featureToggleStore.create(
-                feature.project,
-                {
-                    ...feature,
-                    createdAt: undefined,
-                    variants: [
-                        ...(feature.variants ?? []).map((variant) => ({
-                            ...variant,
-                            weightType: WeightType.VARIABLE,
-                            stickiness: 'default',
-                        })),
-                    ],
-                },
-            );
-
             // create environment if necessary
             await database.stores.environmentStore
                 .create({
@@ -121,6 +105,35 @@ export const seedDatabaseForPlaygroundTest = async (
                     // env already exists, and because of the async nature
                     // of things, this is the easiest way to make it work.
                 });
+
+            // create feature
+            const toggle = await database.stores.featureToggleStore.create(
+                feature.project,
+                {
+                    ...feature,
+                    createdAt: undefined,
+                    variants: null,
+                },
+            );
+
+            // enable/disable the feature in environment
+            await database.stores.featureEnvironmentStore.addEnvironmentToFeature(
+                feature.name,
+                environment,
+                feature.enabled,
+            );
+
+            await database.stores.featureToggleStore.saveVariants(
+                feature.project,
+                feature.name,
+                [
+                    ...(feature.variants ?? []).map((variant) => ({
+                        ...variant,
+                        weightType: WeightType.VARIABLE,
+                        stickiness: 'default',
+                    })),
+                ],
+            );
 
             // assign strategies
             await Promise.all(
@@ -150,13 +163,6 @@ export const seedDatabaseForPlaygroundTest = async (
                         }
                     },
                 ),
-            );
-
-            // enable/disable the feature in environment
-            await database.stores.featureEnvironmentStore.addEnvironmentToFeature(
-                feature.name,
-                environment,
-                feature.enabled,
             );
 
             return toggle;

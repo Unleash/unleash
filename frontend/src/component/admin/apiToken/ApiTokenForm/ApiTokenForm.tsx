@@ -6,6 +6,7 @@ import {
     RadioGroup,
     Typography,
     Box,
+    Link,
 } from '@mui/material';
 import { KeyboardArrowDownOutlined } from '@mui/icons-material';
 import React from 'react';
@@ -19,7 +20,6 @@ import { ApiTokenFormErrorType } from './useApiTokenForm';
 import { useStyles } from './ApiTokenForm.styles';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { TokenType } from 'interfaces/token';
-import { CorsTokenAlert } from 'component/admin/cors/CorsTokenAlert';
 
 interface IApiTokenFormProps {
     username: string;
@@ -93,6 +93,8 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
                   disabled: !environment.enabled,
               }));
 
+    const isUnleashCloud = Boolean(uiConfig?.flags?.UNLEASH_CLOUD) || true;
+
     return (
         <form onSubmit={handleSubmit} className={styles.form}>
             <div className={styles.container}>
@@ -110,7 +112,7 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
                     onFocus={() => clearErrors('username')}
                     autoFocus
                 />
-                <FormControl sx={{mb:2, width: '100%'}}>
+                <FormControl sx={{ mb: 2, width: '100%' }}>
                     <label id="token-type" className={styles.inputDescription}>
                         What do you want to connect?
                     </label>
@@ -125,25 +127,9 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
                             <FormControlLabel
                                 key={key}
                                 value={key}
-                                control={
-                                    <Radio
-                                        sx={{ ml: 0.75 }}
-                                    />
-                                }
-                                label={
-                                    <>
-                                        <Typography>{label}</Typography>
-                                        <Typography
-                                            variant="body2"
-                                            color="text.secondary"
-                                        >
-                                            {title}
-                                        </Typography>
-                                    </>
-                                }
                                 sx={{
                                     border: theme =>
-                                        `1px solid ${theme.palette.neutral.border}`,
+                                        `1px solid ${theme.palette.dividerAlternative}`,
                                     borderRadius: theme =>
                                         `${theme.shape.borderRadiusMedium}px`,
                                     pr: 2,
@@ -151,6 +137,57 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
                                     mx: 0,
                                     mb: 1,
                                 }}
+                                control={
+                                    <Radio
+                                        sx={{
+                                            ml: 0.75,
+                                            alignSelf: 'flex-start',
+                                        }}
+                                    />
+                                }
+                                label={
+                                    <Box>
+                                        <Box>
+                                            <Typography>{label}</Typography>
+                                            <Typography
+                                                variant="body2"
+                                                color="text.secondary"
+                                            >
+                                                {title}
+                                            </Typography>
+                                        </Box>
+                                        <ConditionallyRender
+                                            condition={
+                                                key === TokenType.FRONTEND &&
+                                                isUnleashCloud
+                                            }
+                                            show={
+                                                <Typography
+                                                    variant="body2"
+                                                    sx={{
+                                                        mt: 1,
+                                                        mb: 0.5,
+                                                        background: theme =>
+                                                            theme.palette
+                                                                .warning.light,
+                                                        p: 1,
+                                                        borderRadius: theme =>
+                                                            `${theme.shape.borderRadiusMedium}px`,
+                                                    }}
+                                                >
+                                                    This option is limited to 10{' '}
+                                                    <abbr title="Requests per second">
+                                                        RPS
+                                                    </abbr>
+                                                    , if you exceed this limit
+                                                    we will charge extra.{' '}
+                                                    <Link>Read more</Link>
+                                                    {/* FIXME: link */}
+                                                </Typography>
+                                            }
+                                        />
+                                    </Box>
+                                }
                             />
                         ))}
                     </RadioGroup>
@@ -182,20 +219,18 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
                     className={styles.selectInput}
                 />
             </div>
-            <div className={styles.buttonContainer}>
+            <Box
+                sx={{
+                    marginTop: 'auto',
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                }}
+            >
                 {children}
                 <Button onClick={handleCancel} className={styles.cancelButton}>
                     Cancel
                 </Button>
-            </div>
-            <ConditionallyRender
-                condition={type === TokenType.FRONTEND}
-                show={
-                    <Box sx={{ mt: 4 }}>
-                        <CorsTokenAlert />
-                    </Box>
-                }
-            />
+            </Box>
         </form>
     );
 };

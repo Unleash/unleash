@@ -23,11 +23,6 @@ export const useStyles = makeStyles()(theme => ({
             minWidth: 'auto',
         },
     },
-    buttonContainer: {
-        marginTop: 'auto',
-        display: 'flex',
-        justifyContent: 'flex-end',
-    },
     cancelButton: {
         marginLeft: '1.5rem',
     },

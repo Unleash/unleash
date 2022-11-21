@@ -2,6 +2,7 @@ import { Divider, styled } from '@mui/material';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import { FeatureOverviewSidePanelDetails } from './FeatureOverviewSidePanelDetails/FeatureOverviewSidePanelDetails';
 import { FeatureOverviewSidePanelEnvironmentSwitches } from './FeatureOverviewSidePanelEnvironmentSwitches/FeatureOverviewSidePanelEnvironmentSwitches';
 import { FeatureOverviewSidePanelTags } from './FeatureOverviewSidePanelTags/FeatureOverviewSidePanelTags';
 
@@ -52,6 +53,15 @@ export const FeatureOverviewSidePanel = () => {
                             tooltip="When a feature is switched off in an environment, it will always return false. When switched on, it will return true or false depending on its strategies."
                             placement="top"
                         />
+                    </StyledHeader>
+                }
+                feature={feature}
+            />
+            <Divider />
+            <FeatureOverviewSidePanelDetails
+                header={
+                    <StyledHeader data-loading>
+                        Feature toggle details
                     </StyledHeader>
                 }
                 feature={feature}

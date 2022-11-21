@@ -6,6 +6,10 @@ import { Link, styled } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 
 const StyledContainer = styled('div')(({ theme }) => ({
+    padding: theme.spacing(3),
+}));
+
+const StyledSwitchLabel = styled('div')(() => ({
     display: 'flex',
     flexDirection: 'column',
 }));
@@ -38,7 +42,7 @@ export const FeatureOverviewSidePanelEnvironmentSwitches = ({
     const [environmentName, setEnvironmentName] = useState('');
 
     return (
-        <>
+        <StyledContainer>
             {header}
             {feature.environments.map(environment => {
                 const strategiesLabel =
@@ -72,13 +76,13 @@ export const FeatureOverviewSidePanelEnvironmentSwitches = ({
                             setShowInfoBox(true);
                         }}
                     >
-                        <StyledContainer>
+                        <StyledSwitchLabel>
                             <StyledLabel>{environment.name}</StyledLabel>
                             <StyledSubLabel>
                                 {strategiesLabel}
                                 {variantsLink}
                             </StyledSubLabel>
-                        </StyledContainer>
+                        </StyledSwitchLabel>
                     </FeatureOverviewSidePanelEnvironmentSwitch>
                 );
             })}
@@ -89,6 +93,6 @@ export const FeatureOverviewSidePanelEnvironmentSwitches = ({
                 featureId={feature.name}
                 environmentName={environmentName}
             />
-        </>
+        </StyledContainer>
     );
 };

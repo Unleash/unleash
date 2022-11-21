@@ -1,15 +1,15 @@
-import { styled } from '@mui/material';
+import { Divider, styled } from '@mui/material';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { FeatureOverviewSidePanelEnvironmentSwitches } from './FeatureOverviewSidePanelEnvironmentSwitches/FeatureOverviewSidePanelEnvironmentSwitches';
+import { FeatureOverviewSidePanelTags } from './FeatureOverviewSidePanelTags/FeatureOverviewSidePanelTags';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
     backgroundColor: theme.palette.background.paper,
     display: 'flex',
     flexDirection: 'column',
-    padding: '1.5rem',
     maxWidth: '350px',
     minWidth: '350px',
     marginRight: '1rem',
@@ -52,6 +52,15 @@ export const FeatureOverviewSidePanel = () => {
                             tooltip="When a feature is switched off in an environment, it will always return false. When switched on, it will return true or false depending on its strategies."
                             placement="top"
                         />
+                    </StyledHeader>
+                }
+                feature={feature}
+            />
+            <Divider />
+            <FeatureOverviewSidePanelTags
+                header={
+                    <StyledHeader data-loading>
+                        Tags for this feature toggle
                     </StyledHeader>
                 }
                 feature={feature}

@@ -110,7 +110,7 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
                     onFocus={() => clearErrors('username')}
                     autoFocus
                 />
-                <FormControl className={styles.radioGroup}>
+                <FormControl sx={{mb:2, width: '100%'}}>
                     <label id="token-type" className={styles.inputDescription}>
                         What do you want to connect?
                     </label>
@@ -125,8 +125,11 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
                             <FormControlLabel
                                 key={key}
                                 value={key}
-                                className={styles.radioItem}
-                                control={<Radio className={styles.radio} />}
+                                control={
+                                    <Radio
+                                        sx={{ ml: 0.75 }}
+                                    />
+                                }
                                 label={
                                     <>
                                         <Typography>{label}</Typography>
@@ -138,6 +141,16 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
                                         </Typography>
                                     </>
                                 }
+                                sx={{
+                                    border: theme =>
+                                        `1px solid ${theme.palette.neutral.border}`,
+                                    borderRadius: theme =>
+                                        `${theme.shape.borderRadiusMedium}px`,
+                                    pr: 2,
+                                    py: 1,
+                                    mx: 0,
+                                    mb: 1,
+                                }}
                             />
                         ))}
                     </RadioGroup>

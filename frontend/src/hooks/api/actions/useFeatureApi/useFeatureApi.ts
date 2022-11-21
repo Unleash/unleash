@@ -202,6 +202,26 @@ const useFeatureApi = () => {
         }
     };
 
+    const patchFeatureEnvironmentVariants = async (
+        projectId: string,
+        featureId: string,
+        environmentName: string,
+        patchPayload: Operation[]
+    ) => {
+        const path = `api/admin/projects/${projectId}/features/${featureId}/environments/${environmentName}/variants`;
+        const req = createRequest(path, {
+            method: 'PATCH',
+            body: JSON.stringify(patchPayload),
+        });
+
+        try {
+            const res = await makeRequest(req.caller, req.id);
+            return res;
+        } catch (e) {
+            throw e;
+        }
+    };
+
     const cloneFeatureToggle = async (
         projectId: string,
         featureId: string,
@@ -235,6 +255,7 @@ const useFeatureApi = () => {
         archiveFeatureToggle,
         patchFeatureToggle,
         patchFeatureVariants,
+        patchFeatureEnvironmentVariants,
         cloneFeatureToggle,
         loading,
     };

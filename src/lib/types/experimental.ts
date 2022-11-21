@@ -57,7 +57,7 @@ export interface IExperimentalOptions {
         syncSSOGroups?: boolean;
         changeRequests?: boolean;
         cloneEnvironment?: boolean;
-        environmentVariants?: boolean;
+        variantsPerEnvironment?: boolean;
     };
     externalResolver: IExternalFlagResolver;
 }

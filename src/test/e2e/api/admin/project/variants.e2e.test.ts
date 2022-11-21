@@ -21,6 +21,11 @@ test('Can get variants for a feature', async () => {
     const featureName = 'feature-variants';
     const variantName = 'fancy-variant';
     await db.stores.featureToggleStore.create('default', { name: featureName });
+    await db.stores.featureEnvironmentStore.addEnvironmentToFeature(
+        featureName,
+        'default',
+        true,
+    );
     await db.stores.featureToggleStore.saveVariants('default', featureName, [
         {
             name: variantName,
@@ -89,6 +94,11 @@ test('Can patch variants for a feature and get a response of new variant', async
     await db.stores.featureToggleStore.create('default', {
         name: featureName,
     });
+    await db.stores.featureEnvironmentStore.addEnvironmentToFeature(
+        featureName,
+        'default',
+        true,
+    );
     await db.stores.featureToggleStore.saveVariants(
         'default',
         featureName,
@@ -126,6 +136,13 @@ test('Can add variant for a feature', async () => {
     await db.stores.featureToggleStore.create('default', {
         name: featureName,
     });
+
+    await db.stores.featureEnvironmentStore.addEnvironmentToFeature(
+        featureName,
+        'default',
+        true,
+    );
+
     await db.stores.featureToggleStore.saveVariants(
         'default',
         featureName,
@@ -174,6 +191,13 @@ test('Can remove variant for a feature', async () => {
     await db.stores.featureToggleStore.create('default', {
         name: featureName,
     });
+
+    await db.stores.featureEnvironmentStore.addEnvironmentToFeature(
+        featureName,
+        'default',
+        true,
+    );
+
     await db.stores.featureToggleStore.saveVariants(
         'default',
         featureName,
@@ -211,6 +235,11 @@ test('PUT overwrites current variant on feature', async () => {
     await db.stores.featureToggleStore.create('default', {
         name: featureName,
     });
+    await db.stores.featureEnvironmentStore.addEnvironmentToFeature(
+        featureName,
+        'default',
+        true,
+    );
     await db.stores.featureToggleStore.saveVariants(
         'default',
         featureName,
@@ -316,6 +345,12 @@ test('PATCHING with all variable weightTypes forces weights to sum to no less th
     await db.stores.featureToggleStore.create('default', {
         name: featureName,
     });
+
+    await db.stores.featureEnvironmentStore.addEnvironmentToFeature(
+        featureName,
+        'default',
+        true,
+    );
 
     const newVariants: IVariant[] = [];
 
@@ -434,6 +469,12 @@ test('Patching with a fixed variant and variable variants splits remaining weigh
         name: featureName,
     });
 
+    await db.stores.featureEnvironmentStore.addEnvironmentToFeature(
+        featureName,
+        'default',
+        true,
+    );
+
     const newVariants: IVariant[] = [];
     const observer = jsonpatch.observe(newVariants);
     newVariants.push({
@@ -525,6 +566,12 @@ test('Multiple fixed variants gets added together to decide how much weight vari
         name: featureName,
     });
 
+    await db.stores.featureEnvironmentStore.addEnvironmentToFeature(
+        featureName,
+        'default',
+        true,
+    );
+
     const newVariants: IVariant[] = [];
 
     const observer = jsonpatch.observe(newVariants);
@@ -570,6 +617,12 @@ test('If sum of fixed variant weight exceed 1000 fails with 400', async () => {
         name: featureName,
     });
 
+    await db.stores.featureEnvironmentStore.addEnvironmentToFeature(
+        featureName,
+        'default',
+        true,
+    );
+
     const newVariants: IVariant[] = [];
 
     const observer = jsonpatch.observe(newVariants);
@@ -610,6 +663,12 @@ test('If sum of fixed variant weight equals 1000 variable variants gets weight 0
     await db.stores.featureToggleStore.create('default', {
         name: featureName,
     });
+
+    await db.stores.featureEnvironmentStore.addEnvironmentToFeature(
+        featureName,
+        'default',
+        true,
+    );
 
     const newVariants: IVariant[] = [];
 
@@ -673,6 +732,12 @@ test('PATCH endpoint validates uniqueness of variant names', async () => {
         name: featureName,
     });
 
+    await db.stores.featureEnvironmentStore.addEnvironmentToFeature(
+        featureName,
+        'default',
+        true,
+    );
+
     await db.stores.featureToggleStore.saveVariants(
         'default',
         featureName,
@@ -711,6 +776,13 @@ test('PUT endpoint validates uniqueness of variant names', async () => {
     await db.stores.featureToggleStore.create('default', {
         name: featureName,
     });
+
+    await db.stores.featureEnvironmentStore.addEnvironmentToFeature(
+        featureName,
+        'default',
+        true,
+    );
+
     await app.request
         .put(`/api/admin/projects/default/features/${featureName}/variants`)
         .send([
@@ -740,6 +812,12 @@ test('Variants should be sorted by their name when PUT', async () => {
     await db.stores.featureToggleStore.create('default', {
         name: featureName,
     });
+
+    await db.stores.featureEnvironmentStore.addEnvironmentToFeature(
+        featureName,
+        'default',
+        true,
+    );
 
     await app.request
         .put(`/api/admin/projects/default/features/${featureName}/variants`)
@@ -783,6 +861,12 @@ test('Variants should be sorted by name when PATCHed as well', async () => {
     await db.stores.featureToggleStore.create('default', {
         name: featureName,
     });
+
+    await db.stores.featureEnvironmentStore.addEnvironmentToFeature(
+        featureName,
+        'default',
+        true,
+    );
 
     const variants: IVariant[] = [];
     const observer = jsonpatch.observe(variants);

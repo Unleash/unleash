@@ -1,4 +1,4 @@
-import { parseEnvVarBoolean } from '../util/parseEnvVar';
+import { parseEnvVarBoolean } from '../util';
 
 export type IFlags = Partial<Record<string, boolean>>;
 
@@ -38,6 +38,10 @@ export const defaultExperimentalOptions = {
             process.env.UNLEASH_EXPERIMENTAL_TOGGLE_TAG_FILTERING,
             false,
         ),
+        proxyReturnAllToggles: parseEnvVarBoolean(
+            process.env.UNLEASH_EXPERIMENTAL_PROXY_RETURN_ALL_TOGGLES,
+            false,
+        ),
         variantsPerEnvironment: parseEnvVarBoolean(
             process.env.UNLEASH_EXPERIMENTAL_VARIANTS_PER_ENVIRONMENT,
             false,
@@ -57,6 +61,7 @@ export interface IExperimentalOptions {
         syncSSOGroups?: boolean;
         changeRequests?: boolean;
         cloneEnvironment?: boolean;
+        proxyReturnAllToggles?: boolean;
         variantsPerEnvironment?: boolean;
     };
     externalResolver: IExternalFlagResolver;

@@ -1,4 +1,4 @@
-import React, { useMemo, useState, VFC } from 'react';
+import React, { useContext, useMemo, useState, VFC } from 'react';
 import { HeaderGroup, useGlobalFilter, useTable } from 'react-table';
 import { Alert, Box, styled, Typography } from '@mui/material';
 import {
@@ -28,6 +28,7 @@ import { ChangeRequestProcessHelp } from './ChangeRequestProcessHelp/ChangeReque
 import GeneralSelect from '../../../../common/GeneralSelect/GeneralSelect';
 import { KeyboardArrowDownOutlined } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
+import AccessContext from '../../../../../contexts/AccessContext';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     padding: theme.spacing(1),
@@ -56,6 +57,7 @@ export const ChangeRequestConfiguration: VFC = () => {
         useChangeRequestConfig(projectId);
     const { updateChangeRequestEnvironmentConfig } = useChangeRequestApi();
     const { setToastData, setToastApiError } = useToast();
+    const { hasAccess } = useContext(AccessContext);
 
     const onRowChange =
         (
@@ -155,6 +157,7 @@ export const ChangeRequestConfiguration: VFC = () => {
                                             approvals
                                         );
                                     }}
+                                    disabled={!hasAccess(UPDATE_PROJECT)}
                                     IconComponent={KeyboardArrowDownOutlined}
                                     fullWidth
                                 />

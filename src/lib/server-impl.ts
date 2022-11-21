@@ -29,6 +29,8 @@ import Controller from './routes/controller';
 import { IAuthRequest } from './routes/unleash-types';
 import { SimpleAuthSettings } from './types/settings/simple-auth-settings';
 import { Knex } from 'knex';
+import * as permissions from './types/permissions';
+import * as eventType from './types/events';
 
 async function createApp(
     config: IUnleashConfig,
@@ -180,6 +182,8 @@ export {
     RoleName,
     IAuthType,
     Knex,
+    permissions,
+    eventType,
 };
 
 export type {

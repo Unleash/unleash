@@ -21,6 +21,7 @@ import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import AccessContext from 'contexts/AccessContext';
 import { ChangeRequestComment } from './ChangeRequestComments/ChangeRequestComment';
 import { AddCommentField } from './ChangeRequestComments/AddCommentField';
+import { useChangeRequestOpen } from 'hooks/api/getters/useChangeRequestOpen/useChangeRequestOpen';
 
 const StyledAsideBox = styled(Box)(({ theme }) => ({
     width: '30%',
@@ -58,6 +59,8 @@ export const ChangeRequestOverview: FC = () => {
         id
     );
     const { changeState, addComment } = useChangeRequestApi();
+    const { refetch: refetchChangeRequestOpen } =
+        useChangeRequestOpen(projectId);
     const { setToastData, setToastApiError } = useToast();
 
     if (!changeRequest) {
@@ -70,6 +73,7 @@ export const ChangeRequestOverview: FC = () => {
                 state: 'Applied',
             });
             refetchChangeRequest();
+            refetchChangeRequestOpen();
             setToastData({
                 type: 'success',
                 title: 'Success',

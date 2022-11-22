@@ -20,6 +20,7 @@ import { APPROVE_CHANGE_REQUEST } from 'component/providers/AccessProvider/permi
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import AccessContext from 'contexts/AccessContext';
+import { useChangeRequestOpen } from '../../../../hooks/api/getters/useChangeRequestOpen/useChangeRequestOpen';
 
 export const ReviewButton = () => {
     const { isAdmin } = useContext(AccessContext);
@@ -27,6 +28,8 @@ export const ReviewButton = () => {
     const id = useRequiredPathParam('id');
     const { user } = useAuthUser();
     const { refetchChangeRequest, data } = useChangeRequest(projectId, id);
+    const { refetch: refetchChangeRequestOpen } =
+        useChangeRequestOpen(projectId);
     const { setToastApiError, setToastData } = useToast();
 
     const { changeState } = useChangeRequestApi();
@@ -40,6 +43,7 @@ export const ReviewButton = () => {
                 state: 'Approved',
             });
             refetchChangeRequest();
+            refetchChangeRequestOpen();
             setToastData({
                 type: 'success',
                 title: 'Success',

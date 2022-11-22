@@ -1,5 +1,4 @@
 import useSWR from 'swr';
-import { useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { IChangeRequest } from 'component/changeRequest/changeRequest.types';
@@ -18,13 +17,10 @@ export const useChangeRequestOpen = (project: string) => {
         isOss() ? () => Promise.resolve([]) : fetcher
     );
 
-    return useMemo(
-        () => ({
-            draft: data,
-            loading: !error && !data,
-            refetch: () => mutate(),
-            error,
-        }),
-        [data, error, mutate]
-    );
+    return {
+        draft: data,
+        loading: !error && !data,
+        refetch: mutate,
+        error,
+    };
 };

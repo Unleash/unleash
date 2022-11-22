@@ -232,7 +232,6 @@ export const FeatureEnvironmentVariants = () => {
                 return (
                     <EnvironmentVariantsCard
                         key={environment.name}
-                        permission={UPDATE_FEATURE_ENVIRONMENT_VARIANTS}
                         projectId={projectId}
                         environment={environment}
                         searchValue={searchValue}

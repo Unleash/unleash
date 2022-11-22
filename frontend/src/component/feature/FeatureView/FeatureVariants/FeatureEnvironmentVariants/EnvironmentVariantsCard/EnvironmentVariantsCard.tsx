@@ -7,6 +7,7 @@ import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { useMemo } from 'react';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
+import { UPDATE_FEATURE_ENVIRONMENT_VARIANTS } from 'component/providers/AccessProvider/permissions';
 
 const StyledCard = styled('div')(({ theme }) => ({
     padding: theme.spacing(3),
@@ -62,7 +63,6 @@ interface IEnvironmentVariantsCardProps {
     projectId: string;
     environment: IFeatureEnvironment;
     searchValue: string;
-    permission: string;
     onAddVariant: () => void;
     onEditVariant: (variant: IFeatureVariant) => void;
     onDeleteVariant: (variant: IFeatureVariant) => void;
@@ -74,7 +74,6 @@ export const EnvironmentVariantsCard = ({
     projectId,
     environment,
     searchValue,
-    permission,
     onAddVariant,
     onEditVariant,
     onDeleteVariant,
@@ -133,7 +132,7 @@ export const EnvironmentVariantsCard = ({
                             onDeleteVariant={onDeleteVariant}
                         />
                         <PermissionButton
-                            permission={permission}
+                            permission={UPDATE_FEATURE_ENVIRONMENT_VARIANTS}
                             projectId={projectId}
                             environmentId={environment.name}
                             onClick={onAddVariant}

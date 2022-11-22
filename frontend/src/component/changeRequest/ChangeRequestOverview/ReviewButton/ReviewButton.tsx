@@ -20,7 +20,7 @@ import { APPROVE_CHANGE_REQUEST } from 'component/providers/AccessProvider/permi
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import AccessContext from 'contexts/AccessContext';
-import { useChangeRequestOpen } from '../../../../hooks/api/getters/useChangeRequestOpen/useChangeRequestOpen';
+import { useChangeRequestOpen } from 'hooks/api/getters/useChangeRequestOpen/useChangeRequestOpen';
 
 export const ReviewButton = () => {
     const { isAdmin } = useContext(AccessContext);

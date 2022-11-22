@@ -7,6 +7,8 @@ import { FeatureOverviewSidePanelEnvironmentSwitches } from './FeatureOverviewSi
 import { FeatureOverviewSidePanelTags } from './FeatureOverviewSidePanelTags/FeatureOverviewSidePanelTags';
 
 const StyledContainer = styled('div')(({ theme }) => ({
+    position: 'sticky',
+    top: theme.spacing(2),
     borderRadius: theme.shape.borderRadiusLarge,
     backgroundColor: theme.palette.background.paper,
     display: 'flex',

@@ -3,7 +3,6 @@ import { styled } from '@mui/material';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { formatDateYMD } from 'utils/formatDate';
 import { parseISO } from 'date-fns';
-// import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -40,10 +39,6 @@ export const FeatureOverviewSidePanelDetails = ({
                     )}
                 </span>
             </div>
-            {/* <StyledLabel>Maintainer:</StyledLabel>
-            <div>
-                <UserAvatar user={feature.} />
-            </div> */}
         </StyledContainer>
     );
 };

@@ -1245,6 +1245,7 @@ class FeatureToggleService {
         );
         const { newDocument } = await applyPatch(oldVariants, newVariants);
         return this.saveVariantsOnEnv(
+            project,
             featureName,
             environment,
             newDocument,
@@ -1283,6 +1284,7 @@ class FeatureToggleService {
     }
 
     async saveVariantsOnEnv(
+        projectId: string,
         featureName: string,
         environment: string,
         newVariants: IVariant[],
@@ -1301,6 +1303,7 @@ class FeatureToggleService {
             new EnvironmentVariantEvent({
                 featureName,
                 environment,
+                project: projectId,
                 createdBy,
                 oldVariants,
                 newVariants: fixedVariants,

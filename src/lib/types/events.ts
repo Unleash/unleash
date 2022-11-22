@@ -195,6 +195,8 @@ export class FeatureVariantEvent extends BaseEvent {
 }
 
 export class EnvironmentVariantEvent extends BaseEvent {
+    readonly project: string;
+
     readonly environment: string;
 
     readonly featureName: string;
@@ -206,6 +208,7 @@ export class EnvironmentVariantEvent extends BaseEvent {
     constructor(p: {
         featureName: string;
         environment: string;
+        project: string;
         createdBy: string;
         newVariants: IVariant[];
         oldVariants: IVariant[];
@@ -213,6 +216,7 @@ export class EnvironmentVariantEvent extends BaseEvent {
         super(FEATURE_ENVIRONMENT_VARIANTS_UPDATED, p.createdBy);
         this.featureName = p.featureName;
         this.environment = p.environment;
+        this.project = p.project;
         this.data = { variants: p.newVariants };
         this.preData = { variants: p.oldVariants };
     }

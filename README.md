@@ -81,7 +81,7 @@ If you don't want to run Unleash locally, we also provide easy deployment setups
 
 ### Configure and run Unleash anywhere
 
-The above sections show you how to get up and running quickly and easily. When you're ready to start configuring and customizing Unleash for your own environment, check out the documentation for [getting started with self-managed deployments](https://docs.getunleash.io/deploy/getting_started), [Unleash configuration options](https://docs.getunleash.io/deploy/configuring_unleash), or [running Unleash locally via docker](https://docs.getunleash.io/user_guide/quickstart#i-want-to-run-unleash-locally).
+The above sections show you how to get up and running quickly and easily. When you're ready to start configuring and customizing Unleash for your own environment, check out the documentation for [getting started with self-managed deployments](https://docs.getunleash.io/reference/deploy/getting-started), [Unleash configuration options](https://docs.getunleash.io/reference/deploy/configuring-unleash), or [running Unleash locally via docker](https://docs.getunleash.io/tutorials/quickstart#i-want-to-run-unleash-locally).
 
 <br/>
 
@@ -128,17 +128,17 @@ Check out [the CONTRIBUTING.md file](./CONTRIBUTING.md) for contribution guideli
 ### Flexibility and adaptability
 
 - Get an easy overview of all feature toggles across all your environments, applications and services
-- Use included [activation strategies](https://docs.getunleash.io/user_guide/activation_strategy) for most common use cases, or use a [custom activation strategy](https://docs.getunleash.io/advanced/custom_activation_strategy) to support any need you might have
-- Organise feature toggles by [feature toggle tags](https://docs.getunleash.io/advanced/tags)
-- [Canary releases / gradual rollouts](https://docs.getunleash.io/user_guide/activation_strategy#gradual-rollout)
-- Targeted releases: release features to specific [users](https://docs.getunleash.io/user_guide/activation_strategy#userids), [IPs](https://docs.getunleash.io/user_guide/activation_strategy#ips), or [hostnames](https://docs.getunleash.io/user_guide/activation_strategy#hostnames)
-- [Kill switches](https://docs.getunleash.io/advanced/feature_toggle_types#feature-toggle-types)
+- Use included [activation strategies](https://docs.getunleash.io/reference/activation-strategies) for most common use cases, or use a [custom activation strategy](https://docs.getunleash.io/reference/custom-activation-strategies) to support any need you might have
+- Organise feature toggles by [feature toggle tags](https://docs.getunleash.io/reference/tags)
+- [Canary releases / gradual rollouts](https://docs.getunleash.io/reference/activation-strategies#gradual-rollout)
+- Targeted releases: release features to specific [users](https://docs.getunleash.io/reference/activation-strategies#userids), [IPs](https://docs.getunleash.io/reference/activation-strategies#ips), or [hostnames](https://docs.getunleash.io/reference/activation-strategies#hostnames)
+- [Kill switches](https://docs.getunleash.io/reference/feature-toggle-types#feature-toggle-types)
 - [A/B testing](https://docs.getunleash.io/topics/a-b-testing)
-- 2 [environments](https://docs.getunleash.io/user_guide/environments)
+- 2 [environments](https://docs.getunleash.io/reference/environments)
 - Out-of-the-box integrations with popular tools ([Slack](https://docs.getunleash.io/addons/slack), [Microsoft Teams](https://docs.getunleash.io/addons/teams), [Datadog](https://docs.getunleash.io/addons/datadog)) + integrate with anything with [webhooks](https://docs.getunleash.io/addons/webhook)
-- [Dashboard for managing technical debt](https://docs.getunleash.io/user_guide/technical_debt) and [stale toggles](https://docs.getunleash.io/user_guide/technical_debt#stale-and-potentially-stale-toggles)
+- [Dashboard for managing technical debt](https://docs.getunleash.io/reference/technical-debt) and [stale toggles](https://docs.getunleash.io/reference/technical-debt#stale-and-potentially-stale-toggles)
 - API-first: _everything_ can be automated. No exceptions.
-- [12 official client SDKs](https://docs.getunleash.io/sdks#official-sdks), and ten [community-contributed client SDKs](https://docs.getunleash.io/sdks#community-sdks)
+- [12 official client SDKs](https://docs.getunleash.io/reference/sdks#official-sdks), and ten [community-contributed client SDKs](https://docs.getunleash.io/reference/sdks#community-sdks)
 - Run it via Docker with the [official Docker image](https://hub.docker.com/r/unleashorg/unleash-server) or as a pure Node.js application
 
 ### Security and performance
@@ -147,18 +147,18 @@ Check out [the CONTRIBUTING.md file](./CONTRIBUTING.md) for contribution guideli
 - [Audit logs](https://docs.getunleash.io/advanced/audit_log)
 - Enforce [OWASP's secure headers](https://owasp.org/www-project-secure-headers/) via the strict HTTPS-only mode
 - Flexible hosting options: host it on premise or in the cloud (_any_ cloud)
-- Scale [the Unleash Proxy](https://docs.getunleash.io/sdks/unleash-proxy) independently of the Unleash server to support any number of front-end clients without overloading your Unleash instance
+- Scale [the Unleash Proxy](https://docs.getunleash.io/reference/unleash-proxy) independently of the Unleash server to support any number of front-end clients without overloading your Unleash instance
 
 ### Looking for more features?
 
 If you're looking for one of the following features, please take a look at our [Pro and Enterprise plans](https://www.getunleash.io/plans):
 
-- [role-based access control (RBAC)](https://docs.getunleash.io/user_guide/rbac)
-- [single sign-on (SSO)](https://docs.getunleash.io/advanced/enterprise-authentication)
+- [role-based access control (RBAC)](https://docs.getunleash.io/reference/rbac)
+- [single sign-on (SSO)](https://docs.getunleash.io/reference/sso)
 - more environments
-- [feature toggles project support](https://docs.getunleash.io/user_guide/projects)
+- [feature toggles project support](https://docs.getunleash.io/reference/projects)
 - [advanced segmentation](https://docs.getunleash.io/reference/segments)
-- [additional strategy constraints](https://docs.getunleash.io/advanced/strategy_constraints)
+- [additional strategy constraints](https://docs.getunleash.io/reference/strategy-constraints)
 - tighter security
 - more hosting options (we can even host it for you!)
 
@@ -168,7 +168,7 @@ If you're looking for one of the following features, please take a look at our [
 
 <img src="./website/static/img/unleash-architecture.svg" title="Unleash System Overview" />
 
-Read more in the [_system overview_ section of the Unleash documentation](https://docs.getunleash.io/user_guide/unleash_overview#system-overview).
+Read more in the [_system overview_ section of the Unleash documentation](https://docs.getunleash.io/tutorials/unleash_overview#system-overview).
 
 <br/>
 
@@ -178,29 +178,29 @@ To connect your application to Unleash you'll need to use a client SDK for your 
 
 **Official server-side SDKs:**
 
-- [Go SDK](https://docs.getunleash.io/sdks/go_sdk)
-- [Java SDK](https://docs.getunleash.io/sdks/java_sdk)
-- [Node.js SDK](https://docs.getunleash.io/sdks/node_sdk)
-- [PHP SDK](https://docs.getunleash.io/sdks/php_sdk)
-- [Python SDK](https://docs.getunleash.io/sdks/python_sdk)
-- [Ruby SDK](https://docs.getunleash.io/sdks/ruby_sdk)
+- [Go SDK](https://docs.getunleash.io/reference/sdks/go)
+- [Java SDK](https://docs.getunleash.io/reference/sdks/java)
+- [Node.js SDK](https://docs.getunleash.io/reference/sdks/node)
+- [PHP SDK](https://docs.getunleash.io/reference/sdks/php)
+- [Python SDK](https://docs.getunleash.io/reference/sdks/python)
+- [Ruby SDK](https://docs.getunleash.io/reference/sdks/ruby)
 - [Rust SDK](https://github.com/unleash/unleash-client-rust)
-- [.NET SDK](https://docs.getunleash.io/sdks/dot_net_sdk)
+- [.NET SDK](https://docs.getunleash.io/reference/sdks/dotnet)
 
 **Official front-end SDKs:**
 
-The front-end SDKs connects via the [Unleash Proxy](https://docs.getunleash.io/sdks/unleash-proxy) in order to ensure privacy, scalability and security.
+The front-end SDKs connects via the [Unleash Proxy](https://docs.getunleash.io/reference/unleash-proxy) in order to ensure privacy, scalability and security.
 
-- [Android Proxy SDK](https://docs.getunleash.io/sdks/android_proxy_sdk)
-- [iOS Proxy SDK](https://docs.getunleash.io/sdks/proxy-ios)
-- [JavaScript Proxy SDK](https://docs.getunleash.io/sdks/proxy-javascript)
-- [React Proxy SDK](https://docs.getunleash.io/sdks/proxy-react)
-- [Svelte Proxy SDK](https://docs.getunleash.io/sdks/proxy-svelte)
-- [Vue Proxy SDK](https://docs.getunleash.io/sdks/proxy-vue)
+- [Android Proxy SDK](https://docs.getunleash.io/reference/sdks/android-proxy)
+- [iOS Proxy SDK](https://docs.getunleash.io/reference/sdks/ios-proxy)
+- [JavaScript Proxy SDK](https://docs.getunleash.io/reference/sdks/javascript-browser)
+- [React Proxy SDK](https://docs.getunleash.io/reference/sdks/react)
+- [Svelte Proxy SDK](https://docs.getunleash.io/reference/sdks/svelte)
+- [Vue Proxy SDK](https://docs.getunleash.io/reference/sdks/vue)
 
 **Community SDKs:**
 
-If none of the official SDKs fit your need, there's also a number of [community-developed SDKs](https://docs.getunleash.io/sdks#community-sdks) where you might find an implementation for your preferred language (such as [Elixir](https://gitlab.com/afontaine/unleash_ex), [Dart](https://pub.dev/packages/unleash), [Clojure](https://github.com/AppsFlyer/unleash-client-clojure), and more).
+If none of the official SDKs fit your need, there's also a number of [community-developed SDKs](https://docs.getunleash.io/reference/sdks#community-sdks) where you might find an implementation for your preferred language (such as [Elixir](https://gitlab.com/afontaine/unleash_ex), [Dart](https://pub.dev/packages/unleash), [Clojure](https://github.com/AppsFlyer/unleash-client-clojure), and more).
 
 <br/>
 

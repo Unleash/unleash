@@ -9,7 +9,7 @@ export const ApiTokenDocs = () => {
             <p>
                 Read the{' '}
                 <a
-                    href="https://docs.getunleash.io/sdks"
+                    href="https://docs.getunleash.io/reference/sdks"
                     target="_blank"
                     rel="noreferrer"
                 >

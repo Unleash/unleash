@@ -1,0 +1,369 @@
+---
+title: /api/admin/segments
+---
+
+import ApiRequest from '@site/src/components/ApiRequest'; export const basePath = "api/admin/segments"; export const path = (p) => `${basePath}/${p}`;
+
+:::info Availability
+
+Segments are available to Unleash Pro and Unleash Enterprise users since **Unleash 4.13**.
+
+:::
+
+:::note
+
+To use the admin API, you'll need to [create and use an admin API token](/how-to/how-to-create-api-tokens.mdx).
+
+:::
+
+The segments API lets you create, read, update, and delete [segments](/reference/segments.mdx).
+
+## Get all segments
+
+Retrieve all segments that exist in this Unleash instance. Returns a list of [segment objects](#segment-type-description).
+
+<ApiRequest verb="Get" url={basePath} title="Retrieve all existing segments."/>
+
+<details>
+
+<summary>Example responses</summary>
+
+### 200 OK
+
+``` json
+[
+  {
+    "id": 1,
+    "name": "my-segment",
+    "description": "a segment description",
+    "constraints": [],
+    "createdBy": "user@example.com",
+    "createdAt": "2022-04-01T14:02:25.491Z"
+  }
+]
+```
+
+</details>
+
+## Create segment
+
+Create a new segment with the specified configuration.
+
+<ApiRequest verb="post" url={basePath} title="Create a new segment."
+payload={{
+  "name": "my-segment",
+  "description": "a segment description",
+  "constraints": []
+}}
+/>
+
+
+<details>
+
+<summary>Example responses</summary>
+
+### 201 Created
+
+The segment was successfully created. This response has no body.
+
+### 400 Bad Request
+
+A segment with the provided name already exists.
+
+</details>
+
+### Payload structure
+
+Use a JSON object with the following properties to create a new segment.
+
+| Property      | Type                                       | Required | Description                      | Example value                                    |
+|---------------|--------------------------------------------|----------|----------------------------------|--------------------------------------------------|
+| `name`        | string                                     | Yes      | The name of the segment.         | `"mobile-users"`                                 |
+| `description` | string                                     | No       | A description of the segment.    | `"This segment is for users on mobile devices."` |
+| `constraints` | list of [constraint objects](#constraint-type-description) | Yes      | The constraints in this segment. | `[]`                                             |
+
+## Get segment by ID
+
+Retrieves the segment with the specified ID.
+<ApiRequest verb="Get" url={path("<segment-id>")} title="Retrieve the segment with the provided ID."/>
+
+<details>
+
+<summary>Example responses</summary>
+
+### 200 OK
+
+``` json
+{
+  "id": 1,
+  "name": "my-segment",
+  "description": "a segment description",
+  "constraints": [],
+  "createdBy": "user@example.com",
+  "createdAt": "2022-04-01T14:02:25.491Z"
+}
+```
+
+### 404 Not Found
+
+No segment with the provided ID exists.
+
+</details>
+
+## Update an existing segment
+
+Replace the data of the specified segment with the provided payload.
+
+
+<ApiRequest verb="put" url={path("<segment-id>")} title="Update a segment with new data."
+payload={{
+  "name": "my-segment",
+  "description": "this is a newly provided description.",
+  "constraints": []
+}}
+/>
+
+<details>
+
+<summary>Example responses</summary>
+
+### 204 No Content
+
+The update was successful. This response has no body.
+
+### 404 Not Found
+
+No segment with the provided ID exists.
+
+</details>
+
+## Delete a segment
+
+Delete the request with the specified ID.
+
+<ApiRequest verb="delete" url={path("<segment-id>")} title="Delete a segment." />
+
+<details>
+
+<summary>Example responses</summary>
+
+### 204 No Content
+
+The segment was deleted successfully.
+
+### 404 Not Found
+
+No segment with the provided ID exists.
+
+### 409 Conflict
+
+The segment is being used by at least one strategy and can not be deleted. To delete the segment, first remove it from any strategies that use it.
+
+</details>
+
+## List strategies that use a specific segment
+
+Retrieve all strategies that use the specified segment. Returns a list of [activation strategy objects](#activation-strategy-type-description).
+
+<ApiRequest verb="Get" url={path("<segment-id>/strategies")} title="Retrieve all activation strategies that use the specified segment."/>
+
+<details>
+
+<summary>Example responses</summary>
+
+### 200 OK
+
+``` json
+[
+  {
+    "id": "strategy-id",
+    "featureName": "my-feature",
+    "projectId": "my-project",
+    "environment": "development",
+    "strategyName": "my strategy",
+    "parameters": {},
+    "constraints": [],
+    "createdAt": "2022-04-01T14:02:25.491Z"
+  }
+]
+```
+
+### 404 Not Found
+
+No segment with the provided id exists.
+
+</details>
+
+## List segments applied to a specific strategy
+
+Retrieve all segments that are applied to the specified strategy. Returns a list of [segment objects](#segment-type-description).
+
+<ApiRequest verb="Get" url={path("strategies/<strategy-id>")} title="Retrieve all segments that are used by the specified strategy."/>
+
+<details>
+
+<summary>Example responses</summary>
+
+### 200 OK
+
+``` json
+[
+  {
+    "id": 1,
+    "name": "my-segment",
+    "description": "a segment description",
+    "constraints": [],
+    "createdBy": "user@example.com",
+    "createdAt": "2022-04-01T14:02:25.491Z"
+  }
+]
+```
+
+### 404 Not Found
+
+No strategy with the provided id exists.
+
+</details>
+
+
+## Replace activation strategy segments
+
+Replace the segments applied to the specified activation strategy with the provided segment list.
+
+<ApiRequest verb="post" url={path("strategies")} title="Replace the segments to the specified strategy."
+payload={{
+  "projectId": "my-project",
+  "strategyId": "my-strategy",
+  "environmentId": "development",
+  "segmentIds": [61, 62, 63, 64]
+}}
+/>
+
+### Remove all segments from an activation strategy
+
+To remove all segments from an activation strategy, use this endpoint and provide an empty list of `segmentIds`. For instance, the following payload would remove all segments from the strategy "my-strategy".
+
+``` json
+{
+  "projectId": "my-project",
+  "strategyId": "my-strategy",
+  "environmentId": "development",
+  "segmentIds": []
+}
+```
+
+<details>
+
+<summary>Example responses</summary>
+
+### 201 Created
+
+The strategy's list of segments was successfully updated.
+
+### 403 Forbidden
+
+You do not have access to edit this activation strategy.
+
+### 404 Not Found
+
+No strategy with the provided ID exists.
+
+</details>
+
+### Payload structure
+
+Use a JSON object with the following properties to update the list of applied segments.
+
+| Property        | Type                          | Required | Description                                       | Example value   |
+|-----------------|-------------------------------|----------|---------------------------------------------------|-----------------|
+| `projectId`     | string                        | Yes      | The ID of the feature toggle's project.           | `"my-project"`  |
+| `strategyId`    | string                        | Yes      | The ID of the strategy.                           | `"my-strategy"` |
+| `environmentId` | string                        | Yes      | The ID of the environment.                        | `"development"` |
+| `segmentIds`    | list of segment IDs (numbers) | Yes      | The list of segment IDs to apply to the strategy. | `[]`            |
+
+## API types
+
+This section describes the data objects returned by the endpoints in the segments API. For information on a specific endpoint, refer to its specific description above.
+
+### Segment {#segment-type-description}
+
+#### Example
+
+``` json
+{
+  "id": 12054,
+  "name": "segment name",
+  "description": "segment description",
+  "constraints": [],
+  "createdBy": "you@example.com",
+  "createdAt": "2022-05-23T15:45:22.000Z"
+}
+```
+
+#### Description
+
+| Property      | Type                                                       | Required | Description                                                               | Example value                    |
+|---------------|------------------------------------------------------------|----------|---------------------------------------------------------------------------|----------------------------------|
+| `id`          | number                                                     | Yes      | The segment's ID.                                                         | `546`                            |
+| `name`        | string                                                     | Yes      | The segment's name                                                        | `"my-segment"`                   |
+| `description` | string                                                     | No       | An optional description of the segment.                                   | `"segment description"`          |
+| `constraints` | list of [constraint objects](#constraint-type-description) | Yes      | The list of constraint objects in the segment.                            | `[]`                             |
+| `createdBy`   | string                                                     | No       | An identifier for who created the segment.                                | `"you@example.com"`              |
+| `createdAt`   | timestamp string                                           | Yes      | The time when the segment was created. Format: `YYYY-MM-DDThh:mm:ss.sTZD` | `"2022-04-23T13:56:24.45+01:00"` |
+
+
+### Constraint {#constraint-type-description}
+
+#### Example
+
+```json
+{
+    "contextName": "appName",
+    "operator": "STR_CONTAINS",
+    "values": [],
+    "inverted": false,
+    "caseInsensitive": false
+}
+```
+
+#### Description
+
+:::note `values` and `value`
+
+Some constraint operators only support single values. If a constraint uses one of these operators, the payload will contain a `value` property with the correct value. However, for backwards compatibility reasons, the payload will *also* contain a `values` property. If the operator accepts multiple values, the `value` property will not be present. Visit the [strategy constraints documentation](/reference/strategy-constraints.md) for more information on what operators support what number of values.
+
+:::
+
+| Property          | Type                                                                                          | Required | Description                                                                                                                                                       | Example value            |
+|-------------------|-----------------------------------------------------------------------------------------------|----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------|
+| `contextName`     | string                                                                                        | Yes      | The name of the context field targeted by the constraint.                                                                                                         | `"myContextField"`       |
+| `operator`        | string, the name of one of the [constraint operators](/reference/strategy-constraints.md) | Yes      | The operator to apply to the context field.                                                                                                                       | `"DATE_BEFORE"`          |
+| `values`          | a list of strings                                                                             | Yes      | The list of values to apply the constraint operator to.                                                                                                           | `["value a", "value b"]` |
+| `value`           | string                                                                                        | No       | The value to apply the constraint operator to.                                                                                                                    | `"15"`                   |
+| `inverted`        | boolean                                                                                       | No       | Whether the result of [the constraint will be negated or not](/reference/strategy-constraints.md#constraint-negation).                                        | `false`                  |
+| `caseInsensitive` | boolean string                                                                                | No       | Whether the constraint operator is case sensitive or not. Only [applies to some string-based operators](/reference/strategy-constraints.md#string-operators). | `false`                  |
+
+
+### Activation strategy {#activation-strategy-type-description}
+
+#### Example
+
+``` json
+{
+  "id": "64fbe72b-d107-4b26-b6b8-4fead08d286c",
+  "environment": "development",
+  "featureName": "my-feature",
+  "projectId": "my-project",
+  "strategyName": "flexibleRollout"
+}
+```
+
+#### Description
+
+| Property       | Type                                                          | Required | Description                                                                                                                                                       | Example value                            |
+|----------------|---------------------------------------------------------------|----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------|
+| `id`           | GUID string                                                 | No       | The ID of the strategy.                                                                                                                                           | `"64fbe72b-d107-4b26-b6b8-4fead08d286c"` |
+| `environment`  | string                                                        | Yes      | The name of the strategy's environment.                                                                                                                           | `"development"`                          |
+| `featureName`  | string                                                        | Yes      | The name of the feature the strategy is applied to.                                                                                                               | `"my-feature"`                           |
+| `projectId`    | string                                                        | Yes      | The name of the current project.                                                                                                                                  | `"my-project"`                           |
+| `strategyName` | string                                                        | Yes      | The name of the strategy.                                                                                                                                         | `"flexibleRollout"`                           |

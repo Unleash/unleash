@@ -111,6 +111,7 @@ export const EnvironmentVariantsTable = ({
                     <VariantsActionCell
                         variant={original}
                         projectId={projectId}
+                        environmentId={environment.name}
                         editVariant={onEditVariant}
                         deleteVariant={onDeleteVariant}
                     />

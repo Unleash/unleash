@@ -5,7 +5,11 @@ import { IUnleashConfig } from '../../../types/option';
 import { IUnleashServices } from '../../../types';
 import { Request, Response } from 'express';
 import { Operation } from 'fast-json-patch';
-import { NONE, UPDATE_FEATURE_VARIANTS } from '../../../types/permissions';
+import {
+    NONE,
+    UPDATE_FEATURE_ENVIRONMENT_VARIANT,
+    UPDATE_FEATURE_VARIANTS,
+} from '../../../types/permissions';
 import { IVariant } from '../../../types/model';
 import { extractUsername } from '../../../util/extract-user';
 import { IAuthRequest } from '../../unleash-types';
@@ -108,7 +112,7 @@ export default class VariantsController extends Controller {
         this.route({
             method: 'patch',
             path: ENV_PREFIX,
-            permission: UPDATE_FEATURE_VARIANTS,
+            permission: UPDATE_FEATURE_ENVIRONMENT_VARIANT,
             handler: this.patchVariantsOnEnv,
             middleware: [
                 openApiService.validPath({
@@ -124,7 +128,7 @@ export default class VariantsController extends Controller {
         this.route({
             method: 'put',
             path: ENV_PREFIX,
-            permission: UPDATE_FEATURE_VARIANTS,
+            permission: UPDATE_FEATURE_ENVIRONMENT_VARIANT,
             handler: this.overwriteVariantsOnEnv,
             middleware: [
                 openApiService.validPath({

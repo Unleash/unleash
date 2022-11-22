@@ -6,6 +6,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { useMemo } from 'react';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
+import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 
 const StyledCard = styled('div')(({ theme }) => ({
     padding: theme.spacing(3),
@@ -58,8 +59,10 @@ const StyledGeneralSelect = styled(GeneralSelect)(({ theme }) => ({
 }));
 
 interface IEnvironmentVariantsCardProps {
+    projectId: string;
     environment: IFeatureEnvironment;
     searchValue: string;
+    permission: string;
     onAddVariant: () => void;
     onEditVariant: (variant: IFeatureVariant) => void;
     onDeleteVariant: (variant: IFeatureVariant) => void;
@@ -68,8 +71,10 @@ interface IEnvironmentVariantsCardProps {
 }
 
 export const EnvironmentVariantsCard = ({
+    projectId,
     environment,
     searchValue,
+    permission,
     onAddVariant,
     onEditVariant,
     onDeleteVariant,
@@ -127,13 +132,16 @@ export const EnvironmentVariantsCard = ({
                             onEditVariant={onEditVariant}
                             onDeleteVariant={onDeleteVariant}
                         />
-                        <Button
+                        <PermissionButton
+                            permission={permission}
+                            projectId={projectId}
+                            environmentId={environment.name}
                             onClick={onAddVariant}
                             variant="text"
                             startIcon={<Add />}
                         >
                             add variant
-                        </Button>
+                        </PermissionButton>
                         <ConditionallyRender
                             condition={variants.length > 1}
                             show={

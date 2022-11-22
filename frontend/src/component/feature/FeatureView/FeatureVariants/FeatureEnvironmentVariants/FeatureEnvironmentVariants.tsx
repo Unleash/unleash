@@ -7,7 +7,7 @@ import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { Search } from 'component/common/Search/Search';
 import { updateWeight } from 'component/common/util';
-import { UPDATE_FEATURE_VARIANTS } from 'component/providers/AccessProvider/permissions';
+import { UPDATE_FEATURE_ENVIRONMENT_VARIANTS, UPDATE_FEATURE_VARIANTS } from 'component/providers/AccessProvider/permissions';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { IFeatureEnvironment, IFeatureVariant } from 'interfaces/featureToggle';
@@ -232,6 +232,8 @@ export const FeatureEnvironmentVariants = () => {
                 return (
                     <EnvironmentVariantsCard
                         key={environment.name}
+                        permission={UPDATE_FEATURE_ENVIRONMENT_VARIANTS}
+                        projectId={projectId}
                         environment={environment}
                         searchValue={searchValue}
                         onAddVariant={() => addVariant(environment)}
@@ -252,15 +254,17 @@ export const FeatureEnvironmentVariants = () => {
                                     <PermissionButton
                                         onClick={() => addVariant(environment)}
                                         variant="outlined"
-                                        permission={UPDATE_FEATURE_VARIANTS}
+                                        permission={UPDATE_FEATURE_ENVIRONMENT_VARIANTS}
                                         projectId={projectId}
+                                        environmentId={environment.name}
                                     >
                                         Add variant
                                     </PermissionButton>
                                     <EnvironmentVariantsCopyFrom
                                         environment={environment}
-                                        permission={UPDATE_FEATURE_VARIANTS}
+                                        permission={UPDATE_FEATURE_ENVIRONMENT_VARIANTS}
                                         projectId={projectId}
+                                        environmentId={environment.name}
                                         onCopyVariantsFrom={onCopyVariantsFrom}
                                         otherEnvsWithVariants={
                                             otherEnvsWithVariants

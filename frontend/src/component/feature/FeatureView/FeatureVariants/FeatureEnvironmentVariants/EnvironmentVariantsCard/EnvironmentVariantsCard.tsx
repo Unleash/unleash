@@ -1,5 +1,5 @@
 import { Add, CloudCircle } from '@mui/icons-material';
-import { Button, Divider, styled } from '@mui/material';
+import { Divider, styled } from '@mui/material';
 import { IFeatureEnvironment, IFeatureVariant } from 'interfaces/featureToggle';
 import { EnvironmentVariantsTable } from './EnvironmentVariantsTable/EnvironmentVariantsTable';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';

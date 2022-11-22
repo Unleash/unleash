@@ -11,8 +11,10 @@ import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import useTags from 'hooks/api/getters/useTags/useTags';
 import FeatureOverviewTags from './FeatureOverviewTags/FeatureOverviewTags';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const FeatureOverviewMetaData = () => {
+    const { uiConfig } = useUiConfig();
     const { classes: styles } = useStyles();
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
@@ -78,7 +80,10 @@ const FeatureOverviewMetaData = () => {
                 </div>
             </div>
             <ConditionallyRender
-                condition={tags.length > 0}
+                condition={
+                    tags.length > 0 &&
+                    !Boolean(uiConfig.flags.variantsPerEnvironment)
+                }
                 show={
                     <div className={styles.paddingContainerBottom}>
                         <FeatureOverviewTags projectId={projectId} />

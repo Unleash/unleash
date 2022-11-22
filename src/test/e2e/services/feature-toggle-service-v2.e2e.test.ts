@@ -253,3 +253,61 @@ test('adding and removing an environment preserves variants when variants per en
     const toggle = await service.getFeature(featureName, false, null, false);
     expect(toggle.variants).toHaveLength(1);
 });
+
+test('cloning a feature toggle copies variant environments correctly', async () => {
+    const newToggleName = 'Molly';
+    const clonedToggleName = 'Dolly';
+    const targetEnv = 'gene-lab';
+
+    await service.createFeatureToggle(
+        'default',
+        {
+            name: newToggleName,
+        },
+        'test',
+    );
+
+    await stores.environmentStore.create({
+        name: 'gene-lab',
+        type: 'production',
+    });
+
+    await stores.featureEnvironmentStore.connectFeatureToEnvironmentsForProject(
+        newToggleName,
+        'default',
+    );
+
+    await stores.featureEnvironmentStore.addVariantsToFeatureEnvironment(
+        newToggleName,
+        targetEnv,
+        [
+            {
+                name: 'variant1',
+                weight: 100,
+                weightType: 'fix',
+                stickiness: 'default',
+            },
+        ],
+    );
+
+    await service.cloneFeatureToggle(
+        newToggleName,
+        'default',
+        clonedToggleName,
+        true,
+        'test-user',
+    );
+
+    const clonedToggle =
+        await stores.featureStrategiesStore.getFeatureToggleWithVariantEnvs(
+            clonedToggleName,
+        );
+
+    const defaultEnv = clonedToggle.environments.find(
+        (x) => x.name === 'default',
+    );
+    const newEnv = clonedToggle.environments.find((x) => x.name === targetEnv);
+
+    expect(defaultEnv.variants).toHaveLength(0);
+    expect(newEnv.variants).toHaveLength(1);
+});

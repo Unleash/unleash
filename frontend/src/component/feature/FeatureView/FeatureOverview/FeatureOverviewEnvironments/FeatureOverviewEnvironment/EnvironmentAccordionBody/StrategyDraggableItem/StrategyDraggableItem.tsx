@@ -1,10 +1,14 @@
 import { DragEventHandler, RefObject, useRef } from 'react';
-import { Box } from '@mui/material';
+import { Box, useMediaQuery, useTheme } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
 import { IFeatureEnvironment } from 'interfaces/featureToggle';
 import { IFeatureStrategy } from 'interfaces/strategy';
 import { StrategyItem } from './StrategyItem/StrategyItem';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import { Badge } from 'component/common/Badge/Badge';
+import { IChangeRequestEvent } from 'component/changeRequest/changeRequest.types';
+import { useStrategyChangeFromRequest } from './StrategyItem/useStrategyChangeFromRequest';
 
 interface IStrategyDraggableItemProps {
     strategy: IFeatureStrategy;
@@ -32,7 +36,15 @@ export const StrategyDraggableItem = ({
     onDragOver,
     onDragEnd,
 }: IStrategyDraggableItemProps) => {
+    const projectId = useRequiredPathParam('projectId');
+    const featureId = useRequiredPathParam('featureId');
     const ref = useRef<HTMLDivElement>(null);
+    const change = useStrategyChangeFromRequest(
+        projectId,
+        featureId,
+        environmentName,
+        strategy.id
+    );
 
     return (
         <Box
@@ -53,7 +65,34 @@ export const StrategyDraggableItem = ({
                 onDragStart={onDragStartRef(ref, index)}
                 onDragEnd={onDragEnd}
                 orderNumber={index + 1}
+                headerChildren={<ChangeRequestStatusBadge change={change} />}
             />
         </Box>
+    );
+};
+
+const ChangeRequestStatusBadge = ({
+    change,
+}: {
+    change: IChangeRequestEvent | undefined;
+}) => {
+    const theme = useTheme();
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
+    if (isSmallScreen) {
+        return null;
+    }
+
+    return (
+        <>
+            <ConditionallyRender
+                condition={change?.action === 'updateStrategy'}
+                show={<Badge color="warning">Modified in draft</Badge>}
+            />
+            <ConditionallyRender
+                condition={change?.action === 'deleteStrategy'}
+                show={<Badge color="error">Deleted in draft</Badge>}
+            />
+        </>
     );
 };

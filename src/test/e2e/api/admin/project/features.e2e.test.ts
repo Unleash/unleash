@@ -2703,7 +2703,7 @@ test.only('should add multiple segments to a strategy', async () => {
                 (strat) => strat.id === strategyOne.id,
             );
 
-            expect(strategy.segments).toEqual([
+            expect(strategy.segments.sort()).toEqual([
                 segment.id,
                 segmentTwo.id,
                 segmentThree.id,

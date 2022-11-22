@@ -125,6 +125,8 @@ export const FeatureOverviewSidePanelTags = ({
             <AddTagDialog open={openTagDialog} setOpen={setOpenTagDialog} />
             <Dialogue
                 open={showDelDialog}
+                primaryButtonText="Delete tag"
+                secondaryButtonText="Cancel"
                 onClose={() => {
                     setShowDelDialog(false);
                     setSelectedTag(undefined);
@@ -134,8 +136,13 @@ export const FeatureOverviewSidePanelTags = ({
                     handleDelete();
                     setSelectedTag(undefined);
                 }}
-                title="Are you sure you want to delete this tag?"
-            />
+                title="Delete tag?"
+            >
+                You are about to delete tag:{' '}
+                <strong>
+                    {selectedTag?.type}:{selectedTag?.value}
+                </strong>
+            </Dialogue>
         </StyledContainer>
     );
 };

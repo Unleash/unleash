@@ -15,6 +15,7 @@ import { simpleAuthSettingsKey } from '../../../lib/types/settings/simple-auth-s
 import { addDays, minutesToMilliseconds } from 'date-fns';
 import { GroupService } from '../../../lib/services/group-service';
 import { randomId } from '../../../lib/util/random-id';
+import { BadDataError } from '../../../lib/error';
 
 let db;
 let stores;
@@ -100,6 +101,19 @@ test('should create user with password', async () => {
         'A very strange P4ssw0rd_',
     );
     expect(user.username).toBe('test');
+});
+
+test('should not be able to login with deleted user', async () => {
+    const user = await userService.createUser({
+        username: 'deleted_user',
+        password: 'unleash4all',
+        rootRole: adminRole.id,
+    });
+    await userService.deleteUser(user.id);
+
+    await expect(
+        userService.loginUser('deleted_user', 'unleash4all'),
+    ).rejects.toThrow(new NotFoundError(`No user found`));
 });
 
 test('should not login user if simple auth is disabled', async () => {
@@ -225,16 +239,14 @@ test('should login and create user via SSO', async () => {
 test('should throw if rootRole is wrong via SSO', async () => {
     expect.assertions(1);
 
-    try {
-        await userService.loginUserSSO({
+    await expect(
+        userService.loginUserSSO({
             email: 'some@test.com',
             rootRole: RoleName.MEMBER,
             name: 'some',
             autoCreate: true,
-        });
-    } catch (e) {
-        expect(e.message).toBe('Could not find rootRole=Member');
-    }
+        }),
+    ).rejects.toThrow(new BadDataError(`Could not find rootRole=Member`));
 });
 
 test('should update user name when signing in via SSO', async () => {
@@ -284,14 +296,12 @@ test('should update name if it is different via SSO', async () => {
 test('should throw if autoCreate is false via SSO', async () => {
     expect.assertions(1);
 
-    try {
-        await userService.loginUserSSO({
+    await expect(
+        userService.loginUserSSO({
             email: 'some@test.com',
             rootRole: RoleName.MEMBER,
             name: 'some',
             autoCreate: false,
-        });
-    } catch (e) {
-        expect(e.message).toBe('No user found');
-    }
+        }),
+    ).rejects.toThrow(new NotFoundError(`No user found`));
 });

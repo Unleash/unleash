@@ -351,8 +351,12 @@ export class AccessService {
         return this.store.getRolesForUserId(userId);
     }
 
-    async unlinkUserRoles(userId: number): Promise<void> {
-        return this.store.unlinkUserRoles(userId);
+    async wipeUserPermissions(userId: number): Promise<void> {
+        await this.store.unlinkUserRoles(userId);
+        await this.store.unlinkUserGroups(userId);
+        await this.store.clearUserPersonalAccessTokens(userId);
+        await this.store.clearPublicSignupUserTokens(userId);
+        return Promise.resolve();
     }
 
     async getUsersForRole(roleId: number): Promise<IUser[]> {

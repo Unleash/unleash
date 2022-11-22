@@ -28,6 +28,8 @@ const T = {
     PERMISSIONS: 'permissions',
     PERMISSION_TYPES: 'permission_types',
     CHANGE_REQUEST_SETTINGS: 'change_request_settings',
+    PERSONAL_ACCESS_TOKENS: 'personal_access_tokens',
+    PUBLIC_SIGNUP_TOKENS_USER: 'public_signup_tokens_user',
 };
 
 interface IPermissionRow {
@@ -209,6 +211,30 @@ export class AccessStore implements IAccessStore {
 
     async unlinkUserRoles(userId: number): Promise<void> {
         return this.db(T.ROLE_USER)
+            .where({
+                user_id: userId,
+            })
+            .delete();
+    }
+
+    async unlinkUserGroups(userId: number): Promise<void> {
+        return this.db(T.GROUP_USER)
+            .where({
+                user_id: userId,
+            })
+            .delete();
+    }
+
+    async clearUserPersonalAccessTokens(userId: number): Promise<void> {
+        return this.db(T.PERSONAL_ACCESS_TOKENS)
+            .where({
+                user_id: userId,
+            })
+            .delete();
+    }
+
+    async clearPublicSignupUserTokens(userId: number): Promise<void> {
+        return this.db(T.PUBLIC_SIGNUP_TOKENS_USER)
             .where({
                 user_id: userId,
             })

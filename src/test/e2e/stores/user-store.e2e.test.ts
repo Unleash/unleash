@@ -27,13 +27,6 @@ test('should insert new user with email', async () => {
     expect(users[0].id).toBeTruthy();
 });
 
-test('should not allow two users with same email', async () => {
-    await expect(async () => {
-        await stores.userStore.insert({ email: 'me2@mail.com' });
-        await stores.userStore.insert({ email: 'me2@mail.com' });
-    }).rejects.toThrow(/duplicate key value violates unique constraint/);
-});
-
 test('should insert new user with email and return it', async () => {
     const user = { email: 'me2@mail.com' };
     const newUser = await stores.userStore.upsert(user);
@@ -159,4 +152,15 @@ test('should always lowercase emails on updates', async () => {
 
     storedUser = await store.get(storedUser.id);
     expect(storedUser.email).toBe(updatedUser.email.toLowerCase());
+});
+
+test('should delete user', async () => {
+    const user = await stores.userStore.upsert({
+        email: 'deleteuser@mail.com',
+    });
+    await stores.userStore.delete(user.id);
+
+    await expect(() => stores.userStore.get(user.id)).rejects.toThrow(
+        new NotFoundError('No user found'),
+    );
 });

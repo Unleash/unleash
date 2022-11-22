@@ -15,6 +15,7 @@ import { styled } from '@mui/material';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 
 const StyledContainer = styled('div')(({ theme }) => ({
+    marginLeft: theme.spacing(-1.5),
     '&:not(:last-of-type)': {
         marginBottom: theme.spacing(2),
     },

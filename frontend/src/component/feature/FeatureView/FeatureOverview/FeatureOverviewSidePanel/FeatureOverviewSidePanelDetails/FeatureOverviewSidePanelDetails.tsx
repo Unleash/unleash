@@ -30,7 +30,7 @@ export const FeatureOverviewSidePanelDetails = ({
     return (
         <StyledContainer>
             {header}
-            <div>
+            <div data-loading>
                 <StyledLabel>Created at:</StyledLabel>
                 <span>
                     {formatDateYMD(

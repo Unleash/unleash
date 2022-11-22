@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import { promisify } from 'util';
-import { IUnleashConfig } from '../types/option';
+import { IUnleashConfig } from '../types';
 import Controller from './controller';
 import { IAuthRequest } from './unleash-types';
 import { IUnleashServices } from '../types';
@@ -59,7 +59,7 @@ class LogoutController extends Controller {
         res.clearCookie(this.cookieName);
 
         if (this.clearSiteDataOnLogout) {
-            res.set('Clear-Site-Data', '"cookies", "storage"');
+            res.set('Clear-Site-Data', '"cookies", "cache"');
         }
         if (req.user?.id) {
             await this.sessionService.deleteSessionsForUser(req.user.id);

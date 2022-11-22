@@ -351,12 +351,13 @@ export class AccessService {
         return this.store.getRolesForUserId(userId);
     }
 
-    async wipeUserPermissions(userId: number): Promise<void> {
-        await this.store.unlinkUserRoles(userId);
-        await this.store.unlinkUserGroups(userId);
-        await this.store.clearUserPersonalAccessTokens(userId);
-        await this.store.clearPublicSignupUserTokens(userId);
-        return Promise.resolve();
+    async wipeUserPermissions(userId: number): Promise<void[]> {
+        return Promise.all([
+            this.store.unlinkUserRoles(userId),
+            this.store.unlinkUserGroups(userId),
+            this.store.clearUserPersonalAccessTokens(userId),
+            this.store.clearPublicSignupUserTokens(userId),
+        ]);
     }
 
     async getUsersForRole(roleId: number): Promise<IUser[]> {

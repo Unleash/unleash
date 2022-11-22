@@ -7104,10 +7104,10 @@ vite@^3.0.0:
   optionalDependencies:
     fsevents "~2.3.2"
 
-vitest@0.25.2:
-  version "0.25.2"
-  resolved "https://registry.yarnpkg.com/vitest/-/vitest-0.25.2.tgz#b8afd2ad4ea3c759f383792b5c3a2998ceb15fcc"
-  integrity sha512-qqkzfzglEFbQY7IGkgSJkdOhoqHjwAao/OrphnHboeYHC5JzsVFoLCaB2lnAy8krhj7sbrFTVRApzpkTOeuDWQ==
+vitest@0.25.3:
+  version "0.25.3"
+  resolved "https://registry.yarnpkg.com/vitest/-/vitest-0.25.3.tgz#4e5ed481e4da6a0ce014bdb71dfc9661fd62b722"
+  integrity sha512-/UzHfXIKsELZhL7OaM2xFlRF8HRZgAHtPctacvNK8H4vOcbJJAMEgbWNGSAK7Y9b1NBe5SeM7VTuz2RsTHFJJA==
   dependencies:
     "@types/chai" "^4.3.3"
     "@types/chai-subset" "^1.3.3"

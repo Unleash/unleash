@@ -7,7 +7,7 @@ import { Request, Response } from 'express';
 import { Operation } from 'fast-json-patch';
 import {
     NONE,
-    UPDATE_FEATURE_ENVIRONMENT_VARIANT,
+    UPDATE_FEATURE_ENVIRONMENT_VARIANTS,
     UPDATE_FEATURE_VARIANTS,
 } from '../../../types/permissions';
 import { IVariant } from '../../../types/model';
@@ -112,7 +112,7 @@ export default class VariantsController extends Controller {
         this.route({
             method: 'patch',
             path: ENV_PREFIX,
-            permission: UPDATE_FEATURE_ENVIRONMENT_VARIANT,
+            permission: UPDATE_FEATURE_ENVIRONMENT_VARIANTS,
             handler: this.patchVariantsOnEnv,
             middleware: [
                 openApiService.validPath({
@@ -128,7 +128,7 @@ export default class VariantsController extends Controller {
         this.route({
             method: 'put',
             path: ENV_PREFIX,
-            permission: UPDATE_FEATURE_ENVIRONMENT_VARIANT,
+            permission: UPDATE_FEATURE_ENVIRONMENT_VARIANTS,
             handler: this.overwriteVariantsOnEnv,
             middleware: [
                 openApiService.validPath({

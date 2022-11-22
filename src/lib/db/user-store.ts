@@ -85,7 +85,7 @@ class UserStore implements IUserStore {
 
     async insert(user: ICreateUser): Promise<User> {
         const rows = await this.db(TABLE)
-            .insert({ ...mapUserToColumns(user), deleted_at: null })
+            .insert(mapUserToColumns(user))
             .returning(USER_COLUMNS);
         return rowToUser(rows[0]);
     }
@@ -203,7 +203,7 @@ class UserStore implements IUserStore {
 
     async exists(id: number): Promise<boolean> {
         const result = await this.db.raw(
-            `SELECT EXISTS (SELECT 1 FROM ${TABLE} WHERE id = ? and is_deleted = false) AS present`,
+            `SELECT EXISTS (SELECT 1 FROM ${TABLE} WHERE id = ? and deleted_at = null) AS present`,
             [id],
         );
         const { present } = result.rows[0];

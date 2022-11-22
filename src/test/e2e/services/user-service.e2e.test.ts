@@ -109,6 +109,7 @@ test('should not be able to login with deleted user', async () => {
         password: 'unleash4all',
         rootRole: adminRole.id,
     });
+
     await userService.deleteUser(user.id);
 
     await expect(

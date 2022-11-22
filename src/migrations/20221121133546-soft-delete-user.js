@@ -3,7 +3,7 @@
 exports.up = function (db, callback) {
     db.runSql(
         `
-            ALTER TABLE users ADD COLUMN IF NOT EXISTS deleted_at TIMESTAMP WITH TIME ZONE;;
+            ALTER TABLE users ADD COLUMN IF NOT EXISTS deleted_at TIMESTAMP WITH TIME ZONE;
         `,
         callback,
     );

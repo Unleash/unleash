@@ -1,10 +1,7 @@
 import { Edit, Delete } from '@mui/icons-material';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
-import {
-    UPDATE_FEATURE_ENVIRONMENT_VARIANTS,
-    UPDATE_FEATURE_VARIANTS,
-} from 'component/providers/AccessProvider/permissions';
+import { UPDATE_FEATURE_ENVIRONMENT_VARIANTS } from 'component/providers/AccessProvider/permissions';
 import { IFeatureVariant } from 'interfaces/featureToggle';
 
 interface IVarintsActionCellProps {

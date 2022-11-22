@@ -84,6 +84,16 @@ export const PUBLIC_SIGNUP_TOKEN_CREATED = 'public-signup-token-created';
 export const PUBLIC_SIGNUP_TOKEN_USER_ADDED = 'public-signup-token-user-added';
 export const PUBLIC_SIGNUP_TOKEN_TOKEN_UPDATED = 'public-signup-token-updated';
 
+export const CHANGE_REQUEST_CREATED = 'change-request-created';
+export const CHANGE_REQUEST_DISCARDED = 'change-request-discarded';
+export const CHANGE_ADDED = 'change-added';
+export const CHANGE_DISCARDED = 'change-discarded';
+export const CHANGE_REQUEST_APPROVED = 'change-request-approved';
+export const CHANGE_REQUEST_APPROVAL_ADDED = 'change-request-approval-added';
+export const CHANGE_REQUEST_CANCELLED = 'change-request-cancelled';
+export const CHANGE_REQUEST_SENT_TO_REVIEW = 'change-request-sent-to-review';
+export const CHANGE_REQUEST_APPLIED = 'change-request-applied';
+
 export interface IBaseEvent {
     type: string;
     createdBy: string;

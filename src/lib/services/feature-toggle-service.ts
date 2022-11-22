@@ -1035,7 +1035,7 @@ class FeatureToggleService {
                             environment,
                         ));
                     if (canAddStrategies) {
-                        await this.createStrategy(
+                        await this.unprotectedCreateStrategy(
                             getDefaultStrategy(featureName),
                             {
                                 environment,

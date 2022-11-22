@@ -63,22 +63,21 @@ export const FeatureOverviewSidePanelTags = ({
     const canUpdateTags = hasAccess(UPDATE_FEATURE, feature.project);
 
     const handleDelete = async () => {
-        if (selectedTag) {
-            try {
-                await deleteTagFromFeature(
-                    feature.name,
-                    selectedTag.type,
-                    selectedTag.value
-                );
-                refetch();
-                setToastData({
-                    type: 'success',
-                    title: 'Tag deleted',
-                    text: 'Successfully deleted tag',
-                });
-            } catch (error: unknown) {
-                setToastApiError(formatUnknownError(error));
-            }
+        if (!selectedTag) return;
+        try {
+            await deleteTagFromFeature(
+                feature.name,
+                selectedTag.type,
+                selectedTag.value
+            );
+            refetch();
+            setToastData({
+                type: 'success',
+                title: 'Tag deleted',
+                text: 'Successfully deleted tag',
+            });
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
         }
     };
 

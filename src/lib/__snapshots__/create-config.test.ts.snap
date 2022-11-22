@@ -77,7 +77,7 @@ exports[`should create default config 1`] = `
       "responseTimeWithAppName": false,
       "syncSSOGroups": false,
       "toggleTagFiltering": false,
-      "variantsPerEnvironment": false,
+      "variantsPerEnvironment": true,
     },
   },
   "flagResolver": FlagResolver {
@@ -93,7 +93,7 @@ exports[`should create default config 1`] = `
       "responseTimeWithAppName": false,
       "syncSSOGroups": false,
       "toggleTagFiltering": false,
-      "variantsPerEnvironment": false,
+      "variantsPerEnvironment": true,
     },
     "externalResolver": {
       "isEnabled": [Function],

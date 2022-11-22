@@ -113,6 +113,7 @@ export const FeatureOverviewSidePanelTags = ({
                             show={<StyledDivider />}
                         />
                         <StyledButton
+                            data-loading
                             variant="outlined"
                             startIcon={<Add />}
                             onClick={() => setOpenTagDialog(true)}

@@ -15,11 +15,11 @@ const StyledSwitchLabel = styled('div')(() => ({
 }));
 
 const StyledLabel = styled('p')(({ theme }) => ({
-    fontSize: theme.fontSizes.smallBody,
+    fontSize: theme.fontSizes.bodySize,
 }));
 
 const StyledSubLabel = styled('p')(({ theme }) => ({
-    fontSize: theme.fontSizes.smallerBody,
+    fontSize: theme.fontSizes.smallBody,
     color: theme.palette.text.secondary,
 }));
 

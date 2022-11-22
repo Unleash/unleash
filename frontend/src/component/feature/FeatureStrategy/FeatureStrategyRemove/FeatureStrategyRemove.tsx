@@ -15,7 +15,7 @@ import PermissionIconButton from 'component/common/PermissionIconButton/Permissi
 import { Delete } from '@mui/icons-material';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
-import { useChangeRequestOpen } from 'hooks/api/getters/useChangeRequestOpen/useChangeRequestOpen';
+import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 
 interface IFeatureStrategyRemoveProps {
     projectId: string;
@@ -131,7 +131,8 @@ const useOnSuggestRemove = ({
     strategyId,
 }: IRemoveProps) => {
     const { addChangeRequest } = useChangeRequestApi();
-    const { refetch: refetchChangeRequests } = useChangeRequestOpen(projectId);
+    const { refetch: refetchChangeRequests } =
+        usePendingChangeRequests(projectId);
     const { setToastData, setToastApiError } = useToast();
     const onSuggestRemove = async (event: React.FormEvent) => {
         try {

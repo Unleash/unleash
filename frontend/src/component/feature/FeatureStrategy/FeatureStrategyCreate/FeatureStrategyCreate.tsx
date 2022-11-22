@@ -29,7 +29,7 @@ import { IFeatureToggle } from 'interfaces/featureToggle';
 import { comparisonModerator } from '../featureStrategy.utils';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
-import { useChangeRequestOpen } from 'hooks/api/getters/useChangeRequestOpen/useChangeRequestOpen';
+import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 
 export const FeatureStrategyCreate = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -52,7 +52,8 @@ export const FeatureStrategyCreate = () => {
     const { feature, refetchFeature } = useFeature(projectId, featureId);
     const ref = useRef<IFeatureToggle>(feature);
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
-    const { refetch: refetchChangeRequests } = useChangeRequestOpen(projectId);
+    const { refetch: refetchChangeRequests } =
+        usePendingChangeRequests(projectId);
 
     const { data, staleDataNotification, forceRefreshCache } =
         useCollaborateData<IFeatureToggle>(

@@ -24,7 +24,7 @@ export const VariantDeleteDialog = ({
             title="Delete variant?"
             open={open}
             primaryButtonText="Delete variant"
-            secondaryButtonText="Close"
+            secondaryButtonText="Cancel"
             onClick={onConfirm}
             onClose={() => {
                 setOpen(false);

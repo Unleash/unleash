@@ -158,6 +158,7 @@ test('should delete user', async () => {
     const user = await stores.userStore.upsert({
         email: 'deleteuser@mail.com',
     });
+
     await stores.userStore.delete(user.id);
 
     await expect(() => stores.userStore.get(user.id)).rejects.toThrow(

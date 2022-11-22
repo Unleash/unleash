@@ -72,7 +72,7 @@ export const FeatureOverviewSidePanelEnvironmentSwitches = ({
                 return (
                     <FeatureOverviewSidePanelEnvironmentSwitch
                         key={environment.name}
-                        env={environment}
+                        environment={environment}
                         showInfoBox={() => {
                             setEnvironmentName(environment.name);
                             setShowInfoBox(true);

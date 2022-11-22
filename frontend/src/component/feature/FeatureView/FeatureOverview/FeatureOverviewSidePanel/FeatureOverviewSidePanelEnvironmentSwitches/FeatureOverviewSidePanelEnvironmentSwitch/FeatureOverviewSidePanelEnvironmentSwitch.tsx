@@ -20,25 +20,27 @@ const StyledContainer = styled('div')(({ theme }) => ({
     },
 }));
 
-const StyledLabel = styled('label')(({ theme }) => ({
+const StyledLabel = styled('label')(() => ({
     display: 'inline-flex',
     alignItems: 'center',
     cursor: 'pointer',
 }));
 
 interface IFeatureOverviewSidePanelEnvironmentSwitchProps {
-    env: IFeatureEnvironment;
+    environment: IFeatureEnvironment;
     callback?: () => void;
     showInfoBox: () => void;
     children?: React.ReactNode;
 }
 
 export const FeatureOverviewSidePanelEnvironmentSwitch = ({
-    env,
+    environment,
     callback,
     showInfoBox,
     children,
 }: IFeatureOverviewSidePanelEnvironmentSwitchProps) => {
+    const { name, enabled } = environment;
+
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const { toggleFeatureEnvironmentOn, toggleFeatureEnvironmentOff } =
@@ -55,11 +57,11 @@ export const FeatureOverviewSidePanelEnvironmentSwitch = ({
 
     const handleToggleEnvironmentOn = async () => {
         try {
-            await toggleFeatureEnvironmentOn(projectId, featureId, env.name);
+            await toggleFeatureEnvironmentOn(projectId, featureId, name);
             setToastData({
                 type: 'success',
-                title: `Available in ${env.name}`,
-                text: `${featureId} is now available in ${env.name} based on its defined strategies.`,
+                title: `Available in ${name}`,
+                text: `${featureId} is now available in ${name} based on its defined strategies.`,
             });
             refetchFeature();
             if (callback) {
@@ -79,11 +81,11 @@ export const FeatureOverviewSidePanelEnvironmentSwitch = ({
 
     const handleToggleEnvironmentOff = async () => {
         try {
-            await toggleFeatureEnvironmentOff(projectId, featureId, env.name);
+            await toggleFeatureEnvironmentOff(projectId, featureId, name);
             setToastData({
                 type: 'success',
-                title: `Unavailable in ${env.name}`,
-                text: `${featureId} is unavailable in ${env.name} and its strategies will no longer have any effect.`,
+                title: `Unavailable in ${name}`,
+                text: `${featureId} is unavailable in ${name} and its strategies will no longer have any effect.`,
             });
             refetchFeature();
             if (callback) {
@@ -95,12 +97,12 @@ export const FeatureOverviewSidePanelEnvironmentSwitch = ({
     };
 
     const toggleEnvironment = async (e: React.ChangeEvent) => {
-        if (isChangeRequestConfigured(env.name)) {
+        if (isChangeRequestConfigured(name)) {
             e.preventDefault();
-            onChangeRequestToggle(featureId, env.name, !env.enabled);
+            onChangeRequestToggle(featureId, name, !enabled);
             return;
         }
-        if (env.enabled) {
+        if (enabled) {
             await handleToggleEnvironmentOff();
             return;
         }
@@ -110,9 +112,9 @@ export const FeatureOverviewSidePanelEnvironmentSwitch = ({
     const defaultContent = (
         <>
             {' '}
-            <span data-loading>{env.enabled ? 'enabled' : 'disabled'} in</span>
+            <span data-loading>{enabled ? 'enabled' : 'disabled'} in</span>
             &nbsp;
-            <StringTruncator text={env.name} maxWidth="120" maxLength={15} />
+            <StringTruncator text={name} maxWidth="120" maxLength={15} />
         </>
     );
 
@@ -120,11 +122,16 @@ export const FeatureOverviewSidePanelEnvironmentSwitch = ({
         <StyledContainer>
             <StyledLabel>
                 <PermissionSwitch
+                    tooltip={
+                        enabled
+                            ? `Disable feature in ${name}`
+                            : `Enable feature in ${name}`
+                    }
                     permission={UPDATE_FEATURE_ENVIRONMENT}
                     projectId={projectId}
-                    checked={env.enabled}
+                    checked={enabled}
                     onChange={toggleEnvironment}
-                    environmentId={env.name}
+                    environmentId={name}
                 />
                 {children ?? defaultContent}
             </StyledLabel>

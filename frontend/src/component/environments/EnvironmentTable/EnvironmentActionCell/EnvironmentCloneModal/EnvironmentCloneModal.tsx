@@ -94,12 +94,12 @@ enum ErrorField {
     PROJECTS = 'projects',
 }
 
-interface ICreatePersonalAPITokenErrors {
+interface IEnvironmentCloneModalErrors {
     [ErrorField.NAME]?: string;
     [ErrorField.PROJECTS]?: string;
 }
 
-interface ICreatePersonalAPITokenProps {
+interface IEnvironmentCloneModalProps {
     environment: IEnvironment;
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -111,7 +111,7 @@ export const EnvironmentCloneModal = ({
     open,
     setOpen,
     newToken,
-}: ICreatePersonalAPITokenProps) => {
+}: IEnvironmentCloneModalProps) => {
     const { environments, refetchEnvironments } = useEnvironments();
     const { cloneEnvironment, loading } = useEnvironmentApi();
     const { createToken } = useApiTokensApi();
@@ -126,7 +126,7 @@ export const EnvironmentCloneModal = ({
     const [clonePermissions, setClonePermissions] = useState(true);
     const [apiTokenGeneration, setApiTokenGeneration] =
         useState<APITokenGeneration>(APITokenGeneration.LATER);
-    const [errors, setErrors] = useState<ICreatePersonalAPITokenErrors>({});
+    const [errors, setErrors] = useState<IEnvironmentCloneModalErrors>({});
 
     const clearError = (field: ErrorField) => {
         setErrors(errors => ({ ...errors, [field]: undefined }));

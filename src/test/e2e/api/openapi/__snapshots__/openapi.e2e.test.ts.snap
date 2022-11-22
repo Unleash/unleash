@@ -709,9 +709,6 @@ exports[`should serve the OpenAPI spec 1`] = `
             },
             "type": "array",
           },
-          "copyOf": {
-            "type": "string",
-          },
           "name": {
             "type": "string",
           },
@@ -1210,6 +1207,13 @@ exports[`should serve the OpenAPI spec 1`] = `
             "items": {
               "$ref": "#/components/schemas/featureStrategySchema",
             },
+            "type": "array",
+          },
+          "tags": {
+            "items": {
+              "$ref": "#/components/schemas/tagSchema",
+            },
+            "nullable": true,
             "type": "array",
           },
           "type": {

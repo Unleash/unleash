@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button } from '@mui/material';
+import { Alert, Button } from '@mui/material';
 import {
     IFeatureStrategy,
     IFeatureStrategyParameters,
@@ -141,7 +141,27 @@ export const FeatureStrategyForm = ({
                 projectId={feature.project}
                 featureId={feature.name}
                 environmentId={environmentId}
-            />
+            >
+                <ConditionallyRender
+                    condition={Boolean(isChangeRequest)}
+                    show={
+                        <Alert severity="success">
+                            This feature toggle is currently enabled in the{' '}
+                            <strong>{environmentId}</strong> environment. Any
+                            changes made here will be available to users as soon
+                            as these changes are approved and applied.
+                        </Alert>
+                    }
+                    elseShow={
+                        <Alert severity="success">
+                            This feature toggle is currently enabled in the{' '}
+                            <strong>{environmentId}</strong> environment. Any
+                            changes made here will be available to users as soon
+                            as you hit <strong>save</strong>.
+                        </Alert>
+                    }
+                />
+            </FeatureStrategyEnabled>
             <hr className={styles.hr} />
             <ConditionallyRender
                 condition={Boolean(uiConfig.flags.SE)}

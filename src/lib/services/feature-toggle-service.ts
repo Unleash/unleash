@@ -311,6 +311,22 @@ class FeatureToggleService {
         context: IFeatureStrategyContext,
         createdBy: string,
     ): Promise<Saved<IStrategyConfig>> {
+        await this.stopWhenChangeRequestsEnabled(
+            context.projectId,
+            context.environment,
+        );
+        return this.unprotectedCreateStrategy(
+            strategyConfig,
+            context,
+            createdBy,
+        );
+    }
+
+    async unprotectedCreateStrategy(
+        strategyConfig: Unsaved<IStrategyConfig>,
+        context: IFeatureStrategyContext,
+        createdBy: string,
+    ): Promise<Saved<IStrategyConfig>> {
         const { featureName, projectId, environment } = context;
         await this.validateFeatureContext(context);
 
@@ -331,6 +347,16 @@ class FeatureToggleService {
                     featureName,
                     environment,
                 });
+
+            if (
+                strategyConfig.segments &&
+                Array.isArray(strategyConfig.segments)
+            ) {
+                await this.segmentService.updateStrategySegments(
+                    newFeatureStrategy.id,
+                    strategyConfig.segments,
+                );
+            }
 
             const tags = await this.tagStore.getAllTagsForFeature(featureName);
             const segments = await this.segmentService.getByStrategy(
@@ -371,8 +397,20 @@ class FeatureToggleService {
      * @param context - Which context does this strategy live in (projectId, featureName, environment)
      * @param userName - Human readable id of the user performing the update
      */
-
     async updateStrategy(
+        id: string,
+        updates: Partial<IFeatureStrategy>,
+        context: IFeatureStrategyContext,
+        userName: string,
+    ): Promise<Saved<IStrategyConfig>> {
+        await this.stopWhenChangeRequestsEnabled(
+            context.projectId,
+            context.environment,
+        );
+        return this.unprotectedUpdateStrategy(id, updates, context, userName);
+    }
+
+    async unprotectedUpdateStrategy(
         id: string,
         updates: Partial<IFeatureStrategy>,
         context: IFeatureStrategyContext,
@@ -393,6 +431,13 @@ class FeatureToggleService {
                 id,
                 updates,
             );
+
+            if (updates.segments && Array.isArray(updates.segments)) {
+                await this.segmentService.updateStrategySegments(
+                    strategy.id,
+                    updates.segments,
+                );
+            }
 
             const segments = await this.segmentService.getByStrategy(
                 strategy.id,
@@ -474,6 +519,18 @@ class FeatureToggleService {
      * @param createdBy - Which user does this strategy belong to
      */
     async deleteStrategy(
+        id: string,
+        context: IFeatureStrategyContext,
+        createdBy: string,
+    ): Promise<void> {
+        await this.stopWhenChangeRequestsEnabled(
+            context.projectId,
+            context.environment,
+        );
+        return this.unprotectedDeleteStrategy(id, context, createdBy);
+    }
+
+    async unprotectedDeleteStrategy(
         id: string,
         context: IFeatureStrategyContext,
         createdBy: string,
@@ -903,6 +960,25 @@ class FeatureToggleService {
         createdBy: string,
         user?: User,
     ): Promise<FeatureToggle> {
+        await this.stopWhenChangeRequestsEnabled(project, environment);
+        return this.unprotectedUpdateEnabled(
+            project,
+            featureName,
+            environment,
+            enabled,
+            createdBy,
+            user,
+        );
+    }
+
+    async unprotectedUpdateEnabled(
+        project: string,
+        featureName: string,
+        environment: string,
+        enabled: boolean,
+        createdBy: string,
+        user?: User,
+    ): Promise<FeatureToggle> {
         const hasEnvironment =
             await this.featureEnvironmentStore.featureHasEnvironment(
                 environment,
@@ -928,7 +1004,11 @@ class FeatureToggleService {
                     if (canAddStrategies) {
                         await this.createStrategy(
                             getDefaultStrategy(featureName),
-                            { environment, projectId: project, featureName },
+                            {
+                                environment,
+                                projectId: project,
+                                featureName,
+                            },
                             createdBy,
                         );
                     } else {
@@ -961,6 +1041,7 @@ class FeatureToggleService {
             }
             return feature;
         }
+
         throw new NotFoundError(
             `Could not find environment ${environment} for feature: ${featureName}`,
         );
@@ -1185,6 +1266,22 @@ class FeatureToggleService {
             return x;
         });
         return variableVariants.concat(fixedVariants);
+    }
+
+    private async stopWhenChangeRequestsEnabled(
+        project: string,
+        environment: string,
+    ) {
+        if (
+            await this.accessService.isChangeRequestsEnabled(
+                project,
+                environment,
+            )
+        ) {
+            throw new Error(
+                `Change requests are enabled for ${project} in ${environment} environment`,
+            );
+        }
     }
 }
 

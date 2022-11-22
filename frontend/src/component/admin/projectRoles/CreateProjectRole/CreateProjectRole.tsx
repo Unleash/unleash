@@ -17,24 +17,25 @@ const CreateProjectRole = () => {
     const {
         roleName,
         roleDesc,
+        permissions,
+        checkedPermissions,
+        errors,
         setRoleName,
         setRoleDesc,
-        checkedPermissions,
         handlePermissionChange,
-        checkAllProjectPermissions,
-        checkAllEnvironmentPermissions,
+        onToggleAllProjectPermissions: checkAllProjectPermissions,
+        onToggleAllEnvironmentPermissions: checkAllEnvironmentPermissions,
         getProjectRolePayload,
         validatePermissions,
         validateName,
         validateNameUniqueness,
-        errors,
         clearErrors,
         getRoleKey,
     } = useProjectRoleForm();
 
     const { createRole, loading } = useProjectRolesApi();
 
-    const handleSubmit = async (e: Event) => {
+    const onSubmit = async (e: Event) => {
         e.preventDefault();
         clearErrors();
         const validName = validateName();
@@ -66,7 +67,7 @@ const CreateProjectRole = () => {
 --data-raw '${JSON.stringify(getProjectRolePayload(), undefined, 2)}'`;
     };
 
-    const handleCancel = () => {
+    const onCancel = () => {
         navigate(GO_BACK);
     };
 
@@ -83,8 +84,9 @@ const CreateProjectRole = () => {
         >
             <ProjectRoleForm
                 errors={errors}
-                handleSubmit={handleSubmit}
-                handleCancel={handleCancel}
+                permissions={permissions}
+                onSubmit={onSubmit}
+                onCancel={onCancel}
                 roleName={roleName}
                 setRoleName={setRoleName}
                 roleDesc={roleDesc}
@@ -93,7 +95,6 @@ const CreateProjectRole = () => {
                 handlePermissionChange={handlePermissionChange}
                 checkAllProjectPermissions={checkAllProjectPermissions}
                 checkAllEnvironmentPermissions={checkAllEnvironmentPermissions}
-                mode="Create"
                 clearErrors={clearErrors}
                 validateNameUniqueness={validateNameUniqueness}
                 getRoleKey={getRoleKey}

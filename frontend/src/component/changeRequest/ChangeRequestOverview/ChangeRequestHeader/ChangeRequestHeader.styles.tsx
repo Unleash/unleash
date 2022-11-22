@@ -9,14 +9,12 @@ export const StyledPaper = styled(Paper)(({ theme }) => ({
 export const StyledContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
-    gap: 2,
     marginBottom: theme.spacing(2),
 }));
 
 export const StyledInnerContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
-    gap: theme.spacing(1.5),
 }));
 
 export const StyledHeader = styled(Typography)(({ theme }) => ({
@@ -31,7 +29,9 @@ export const StyledCard = styled(Card)(({ theme }) => ({
     backgroundColor: theme.palette.tertiary.light,
 }));
 
-export const StyledAvatar = styled(Avatar)(() => ({
+export const StyledAvatar = styled(Avatar)(({ theme }) => ({
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
     height: '30px',
     width: '30px',
 }));

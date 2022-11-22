@@ -1,6 +1,5 @@
 import { INPUT_ERROR_TEXT } from 'utils/testIds';
 import { useStyles } from './Input.styles';
-import React from 'react';
 import { TextField, OutlinedTextFieldProps } from '@mui/material';
 
 interface IInputProps extends Omit<OutlinedTextFieldProps, 'variant'> {
@@ -26,7 +25,6 @@ const Input = ({
     className,
     value,
     onChange,
-    InputProps,
     ...rest
 }: IInputProps) => {
     const { classes: styles } = useStyles();

@@ -140,6 +140,40 @@ export class SegmentService {
         await this.segmentStore.addToStrategy(id, strategyId);
     }
 
+    async updateStrategySegments(
+        strategyId: string,
+        segmentIds: number[],
+    ): Promise<void> {
+        if (segmentIds.length > this.config.strategySegmentsLimit) {
+            throw new BadDataError(
+                `Strategies may not have more than ${this.config.strategySegmentsLimit} segments`,
+            );
+        }
+
+        const segments = await this.getByStrategy(strategyId);
+        const currentSegmentIds = segments.map((segment) => segment.id);
+
+        const segmentIdsToRemove = currentSegmentIds.filter(
+            (id) => !segmentIds.includes(id),
+        );
+
+        await Promise.all(
+            segmentIdsToRemove.map((segmentId) =>
+                this.removeFromStrategy(segmentId, strategyId),
+            ),
+        );
+
+        const segmentIdsToAdd = segmentIds.filter(
+            (id) => !currentSegmentIds.includes(id),
+        );
+
+        await Promise.all(
+            segmentIdsToAdd.map((segmentId) =>
+                this.addToStrategy(segmentId, strategyId),
+            ),
+        );
+    }
+
     // Used by unleash-enterprise.
     async removeFromStrategy(id: number, strategyId: string): Promise<void> {
         await this.segmentStore.removeFromStrategy(id, strategyId);

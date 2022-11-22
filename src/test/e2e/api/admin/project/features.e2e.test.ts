@@ -13,7 +13,12 @@ import {
 import ApiUser from '../../../../../lib/types/api-user';
 import { ApiTokenType } from '../../../../../lib/types/models/api-token';
 import IncompatibleProjectError from '../../../../../lib/error/incompatible-project-error';
-import { IVariant, RoleName, WeightType } from '../../../../../lib/types/model';
+import {
+    IStrategyConfig,
+    IVariant,
+    RoleName,
+    WeightType,
+} from '../../../../../lib/types/model';
 import { v4 as uuidv4 } from 'uuid';
 import supertest from 'supertest';
 import { randomId } from '../../../../../lib/util/random-id';
@@ -23,6 +28,60 @@ let db: ITestDb;
 const sortOrderFirst = 0;
 const sortOrderSecond = 10;
 const sortOrderDefault = 9999;
+
+const createFeatureToggle = (featureName: string, project = 'default') => {
+    return app.request.post(`/api/admin/projects/${project}/features`).send({
+        name: featureName,
+    });
+};
+
+const createSegment = async (segmentName: string) => {
+    const segment = await app.services.segmentService.create(
+        {
+            name: segmentName,
+            description: '',
+            constraints: [
+                {
+                    contextName: 'appName',
+                    operator: 'IN',
+                    values: ['test'],
+                    caseInsensitive: false,
+                    inverted: false,
+                },
+            ],
+        },
+        { username: 'testuser', email: 'test@test.com' },
+    );
+
+    return segment;
+};
+
+const createStrategy = async (
+    featureName: string,
+    payload: IStrategyConfig,
+) => {
+    return app.request
+        .post(
+            `/api/admin/projects/default/features/${featureName}/environments/default/strategies`,
+        )
+        .send(payload)
+        .expect(200);
+};
+
+const updateStrategy = async (
+    featureName: string,
+    strategyId: string,
+    payload: IStrategyConfig,
+) => {
+    const { body } = await app.request
+        .put(
+            `/api/admin/projects/default/features/${featureName}/environments/default/strategies/${strategyId}`,
+        )
+        .send(payload)
+        .expect(200);
+
+    return body;
+};
 
 beforeAll(async () => {
     db = await dbInit('feature_strategy_api_serial', getLogger);
@@ -2569,4 +2628,85 @@ test('should return strategies in correct order when new strategies are added', 
     expect(strategiesReOrdered[2].id).toBe(strategyOne.id);
     expect(strategiesReOrdered[3].sortOrder).toBe(9999);
     expect(strategiesReOrdered[3].id).toBe(strategyThree.id);
+});
+
+test.only('should create a strategy with segments', async () => {
+    const feature = { name: uuidv4(), impressionData: false };
+    await createFeatureToggle(feature.name);
+    const segment = await createSegment('segmentOne');
+    const { body: strategyOne } = await createStrategy(feature.name, {
+        name: 'default',
+        parameters: {
+            userId: 'string',
+        },
+        segments: [segment.id],
+    });
+
+    // Can get the strategy with segment ids
+    await app.request
+        .get(`/api/admin/projects/default/features/${feature.name}`)
+        .expect((res) => {
+            const defaultEnv = res.body.environments.find(
+                (env) => env.name === 'default',
+            );
+            const strategy = defaultEnv.strategies.find(
+                (strat) => strat.id === strategyOne.id,
+            );
+
+            expect(strategy.segments).toEqual([segment.id]);
+        });
+
+    await updateStrategy(feature.name, strategyOne.id, {
+        name: 'default',
+        parameters: {
+            userId: 'string',
+        },
+        segments: [],
+    });
+
+    await app.request
+        .get(`/api/admin/projects/default/features/${feature.name}`)
+        .expect((res) => {
+            const defaultEnv = res.body.environments.find(
+                (env) => env.name === 'default',
+            );
+            const strategy = defaultEnv.strategies.find(
+                (strat) => strat.id === strategyOne.id,
+            );
+
+            expect(strategy.segments).toBe(undefined);
+        });
+});
+
+test.only('should add multiple segments to a strategy', async () => {
+    const feature = { name: uuidv4(), impressionData: false };
+    await createFeatureToggle(feature.name);
+    const segment = await createSegment('seg1');
+    const segmentTwo = await createSegment('seg2');
+    const segmentThree = await createSegment('seg3');
+    const { body: strategyOne } = await createStrategy(feature.name, {
+        name: 'default',
+        parameters: {
+            userId: 'string',
+        },
+        segments: [segment.id, segmentTwo.id, segmentThree.id],
+    });
+
+    // Can get the strategy with segment ids
+    await app.request
+        .get(`/api/admin/projects/default/features/${feature.name}`)
+        .expect((res) => {
+            const defaultEnv = res.body.environments.find(
+                (env) => env.name === 'default',
+            );
+            const strategy = defaultEnv.strategies.find(
+                (strat) => strat.id === strategyOne.id,
+            );
+
+            expect(strategy.segments).toEqual([
+                segment.id,
+                segmentTwo.id,
+                segmentThree.id,
+            ]);
+        });
 });

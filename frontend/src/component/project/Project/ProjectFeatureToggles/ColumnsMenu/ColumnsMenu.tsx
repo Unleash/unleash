@@ -25,6 +25,7 @@ interface IColumnsMenuProps {
         id: string;
         isVisible: boolean;
         toggleHidden: (state: boolean) => void;
+        hideInMenu?: boolean;
     }[];
     staticColumns?: string[];
     dividerBefore?: string[];
@@ -143,51 +144,56 @@ export const ColumnsMenu: VFC<IColumnsMenuProps> = ({
                     </IconButton>
                 </Box>
                 <MenuList>
-                    {allColumns.map(column => [
-                        <ConditionallyRender
-                            condition={dividerBefore.includes(column.id)}
-                            show={<Divider className={classes.divider} />}
-                        />,
-                        <MenuItem
-                            onClick={() =>
-                                column.toggleHidden(column.isVisible)
-                            }
-                            disabled={staticColumns.includes(column.id)}
-                            className={classes.menuItem}
-                        >
-                            <ListItemIcon>
-                                <Checkbox
-                                    edge="start"
-                                    checked={column.isVisible}
-                                    disableRipple
-                                    inputProps={{
-                                        'aria-labelledby': column.id,
-                                    }}
-                                    size="medium"
-                                    className={classes.checkbox}
-                                />
-                            </ListItemIcon>
-                            <ListItemText
-                                id={column.id}
-                                primary={
-                                    <Typography variant="body2">
-                                        <ConditionallyRender
-                                            condition={Boolean(
-                                                typeof column.Header ===
-                                                    'string' && column.Header
-                                            )}
-                                            show={() => <>{column.Header}</>}
-                                            elseShow={() => column.id}
-                                        />
-                                    </Typography>
+                    {allColumns
+                        .filter(({ hideInMenu }) => !hideInMenu)
+                        .map(column => [
+                            <ConditionallyRender
+                                condition={dividerBefore.includes(column.id)}
+                                show={<Divider className={classes.divider} />}
+                            />,
+                            <MenuItem
+                                onClick={() =>
+                                    column.toggleHidden(column.isVisible)
                                 }
-                            />
-                        </MenuItem>,
-                        <ConditionallyRender
-                            condition={dividerAfter.includes(column.id)}
-                            show={<Divider className={classes.divider} />}
-                        />,
-                    ])}
+                                disabled={staticColumns.includes(column.id)}
+                                className={classes.menuItem}
+                            >
+                                <ListItemIcon>
+                                    <Checkbox
+                                        edge="start"
+                                        checked={column.isVisible}
+                                        disableRipple
+                                        inputProps={{
+                                            'aria-labelledby': column.id,
+                                        }}
+                                        size="medium"
+                                        className={classes.checkbox}
+                                    />
+                                </ListItemIcon>
+                                <ListItemText
+                                    id={column.id}
+                                    primary={
+                                        <Typography variant="body2">
+                                            <ConditionallyRender
+                                                condition={Boolean(
+                                                    typeof column.Header ===
+                                                        'string' &&
+                                                        column.Header
+                                                )}
+                                                show={() => (
+                                                    <>{column.Header}</>
+                                                )}
+                                                elseShow={() => column.id}
+                                            />
+                                        </Typography>
+                                    }
+                                />
+                            </MenuItem>,
+                            <ConditionallyRender
+                                condition={dividerAfter.includes(column.id)}
+                                show={<Divider className={classes.divider} />}
+                            />,
+                        ])}
                 </MenuList>
             </Popover>
         </Box>

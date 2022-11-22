@@ -26,16 +26,20 @@ export const defaultExperimentalOptions = {
             process.env.UNLEASH_EXPERIMENTAL_BATCH_METRICS,
             false,
         ),
-        publicSignup: parseEnvVarBoolean(
-            process.env.UNLEASH_EXPERIMENTAL_PUBLIC_SIGNUP,
-            false,
-        ),
         responseTimeWithAppName: parseEnvVarBoolean(
             process.env.UNLEASH_EXPERIMENTAL_RESPONSE_TIME_WITH_APP_NAME,
             false,
         ),
         cloneEnvironment: parseEnvVarBoolean(
             process.env.UNLEASH_EXPERIMENTAL_CLONE_ENVIRONMENT,
+            false,
+        ),
+        toggleTagFiltering: parseEnvVarBoolean(
+            process.env.UNLEASH_EXPERIMENTAL_TOGGLE_TAG_FILTERING,
+            false,
+        ),
+        variantsPerEnvironment: parseEnvVarBoolean(
+            process.env.UNLEASH_EXPERIMENTAL_VARIANTS_PER_ENVIRONMENT,
             false,
         ),
     },
@@ -53,6 +57,7 @@ export interface IExperimentalOptions {
         syncSSOGroups?: boolean;
         changeRequests?: boolean;
         cloneEnvironment?: boolean;
+        variantsPerEnvironment?: boolean;
     };
     externalResolver: IExternalFlagResolver;
 }

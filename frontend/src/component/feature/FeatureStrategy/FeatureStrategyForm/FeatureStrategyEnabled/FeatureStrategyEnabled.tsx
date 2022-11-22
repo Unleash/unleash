@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { Link } from 'react-router-dom';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Alert } from '@mui/material';
@@ -12,11 +12,12 @@ interface IFeatureStrategyEnabledProps {
     environmentId: string;
 }
 
-export const FeatureStrategyEnabled = ({
+export const FeatureStrategyEnabled: FC<IFeatureStrategyEnabledProps> = ({
     projectId,
     featureId,
     environmentId,
-}: IFeatureStrategyEnabledProps) => {
+    children,
+}) => {
     const featurePagePath = formatFeaturePath(projectId, featureId);
     const { feature } = useFeature(projectId, featureId);
 
@@ -29,14 +30,7 @@ export const FeatureStrategyEnabled = ({
     return (
         <ConditionallyRender
             condition={isFeatureEnabledInEnvironment(feature, environmentId)}
-            show={
-                <Alert severity="success">
-                    This feature toggle is currently enabled in the{' '}
-                    <strong>{environmentId}</strong> environment. Any changes
-                    made here will be available to users as soon as you hit{' '}
-                    <strong>save</strong>.
-                </Alert>
-            }
+            show={children}
             elseShow={
                 <Alert severity="warning">
                     This feature toggle is currently disabled in the{' '}

@@ -32,7 +32,7 @@ test('should return instance statistics', async () => {
 });
 
 test('should return instance statistics with correct number of projects', async () => {
-    stores.projectStore.create({
+    await stores.projectStore.create({
         id: 'test',
         name: 'Test',
         description: 'lorem',

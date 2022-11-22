@@ -14,6 +14,7 @@ interface IEnvironmentVariantsCopyFromProps {
     environment: IFeatureEnvironment;
     permission: string;
     projectId: string;
+    environmentId: string;
     onCopyVariantsFrom: (
         fromEnvironment: IFeatureEnvironment,
         toEnvironment: IFeatureEnvironment
@@ -25,6 +26,7 @@ export const EnvironmentVariantsCopyFrom = ({
     environment,
     permission,
     projectId,
+    environmentId,
     onCopyVariantsFrom,
     otherEnvsWithVariants,
 }: IEnvironmentVariantsCopyFromProps) => {
@@ -48,6 +50,7 @@ export const EnvironmentVariantsCopyFrom = ({
                         variant="outlined"
                         permission={permission}
                         projectId={projectId}
+                        environmentId={environmentId}
                     >
                         Copy variants from
                     </PermissionButton>

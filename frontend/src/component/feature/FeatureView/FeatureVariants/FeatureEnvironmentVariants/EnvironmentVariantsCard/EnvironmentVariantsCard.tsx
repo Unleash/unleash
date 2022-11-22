@@ -1,11 +1,13 @@
 import { Add, CloudCircle } from '@mui/icons-material';
-import { Button, Divider, styled } from '@mui/material';
+import { Divider, styled } from '@mui/material';
 import { IFeatureEnvironment, IFeatureVariant } from 'interfaces/featureToggle';
 import { EnvironmentVariantsTable } from './EnvironmentVariantsTable/EnvironmentVariantsTable';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { useMemo } from 'react';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
+import PermissionButton from 'component/common/PermissionButton/PermissionButton';
+import { UPDATE_FEATURE_ENVIRONMENT_VARIANTS } from 'component/providers/AccessProvider/permissions';
 
 const StyledCard = styled('div')(({ theme }) => ({
     padding: theme.spacing(3),
@@ -58,6 +60,7 @@ const StyledGeneralSelect = styled(GeneralSelect)(({ theme }) => ({
 }));
 
 interface IEnvironmentVariantsCardProps {
+    projectId: string;
     environment: IFeatureEnvironment;
     searchValue: string;
     onAddVariant: () => void;
@@ -68,6 +71,7 @@ interface IEnvironmentVariantsCardProps {
 }
 
 export const EnvironmentVariantsCard = ({
+    projectId,
     environment,
     searchValue,
     onAddVariant,
@@ -127,13 +131,16 @@ export const EnvironmentVariantsCard = ({
                             onEditVariant={onEditVariant}
                             onDeleteVariant={onDeleteVariant}
                         />
-                        <Button
+                        <PermissionButton
+                            permission={UPDATE_FEATURE_ENVIRONMENT_VARIANTS}
+                            projectId={projectId}
+                            environmentId={environment.name}
                             onClick={onAddVariant}
                             variant="text"
                             startIcon={<Add />}
                         >
                             add variant
-                        </Button>
+                        </PermissionButton>
                         <ConditionallyRender
                             condition={variants.length > 1}
                             show={

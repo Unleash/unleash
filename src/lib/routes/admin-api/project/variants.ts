@@ -221,9 +221,10 @@ export default class VariantsController extends Controller {
         req: IAuthRequest<FeatureEnvironmentParams, any, IVariant[], any>,
         res: Response<FeatureVariantsSchema>,
     ): Promise<void> {
-        const { featureName, environment } = req.params;
+        const { featureName, environment, projectId } = req.params;
         const userName = extractUsername(req);
         const variants = await this.featureService.saveVariantsOnEnv(
+            projectId,
             featureName,
             environment,
             req.body,

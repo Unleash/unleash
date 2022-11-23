@@ -133,7 +133,10 @@ export const ChangeRequestOverview: FC = () => {
                 <StyledPaper elevation={0}>
                     <StyledInnerContainer>
                         Changes
-                        <ChangeRequest changeRequest={changeRequest} />
+                        <ChangeRequest
+                            changeRequest={changeRequest}
+                            onRefetch={refetchChangeRequest}
+                        />
                         {changeRequest.comments?.map(comment => (
                             <ChangeRequestComment
                                 key={comment.id}

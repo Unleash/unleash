@@ -77,6 +77,7 @@ export class ApiTokenService {
             'getLogger' | 'authentication' | 'flagResolver'
         >,
     ) {
+        this.flagResolver = config.flagResolver;
         this.store = apiTokenStore;
         this.eventStore = eventStore;
         this.environmentStore = environmentStore;
@@ -86,16 +87,17 @@ export class ApiTokenService {
             () => this.fetchActiveTokens(),
             minutesToMilliseconds(1),
         ).unref();
-        this.seenTimer = setInterval(
-            () => this.updateLastSeen(),
-            minutesToMilliseconds(1),
-        ).unref();
+        if (this.flagResolver.isEnabled('tokensLastSeen')) {
+            this.seenTimer = setInterval(
+                () => this.updateLastSeen(),
+                minutesToMilliseconds(1),
+            ).unref();
+        }
         if (config.authentication.initApiTokens.length > 0) {
             process.nextTick(async () =>
                 this.initApiTokens(config.authentication.initApiTokens),
             );
         }
-        this.flagResolver = config.flagResolver;
     }
 
     async fetchActiveTokens(): Promise<void> {
@@ -108,10 +110,7 @@ export class ApiTokenService {
     }
 
     async updateLastSeen(): Promise<void> {
-        if (
-            this.lastSeenSecrets.length > 0 &&
-            this.flagResolver.isEnabled('tokensLastSeen')
-        ) {
+        if (this.lastSeenSecrets.length > 0) {
             await this.store.markSeenAt(this.lastSeenSecrets);
             this.lastSeenSecrets = [];
         }

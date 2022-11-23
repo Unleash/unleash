@@ -311,3 +311,53 @@ test('cloning a feature toggle copies variant environments correctly', async () 
     expect(defaultEnv.variants).toHaveLength(0);
     expect(newEnv.variants).toHaveLength(1);
 });
+
+test('Cloning a feature toggle also clones segments correctly', async () => {
+    const featureName = 'ToggleWithSegments';
+    const clonedFeatureName = 'AWholeNewFeatureToggle';
+
+    let segment = await segmentService.create(
+        {
+            name: 'SomeSegment',
+            constraints: mockConstraints(),
+        },
+        {
+            email: 'test@example.com',
+        },
+    );
+
+    await service.createFeatureToggle(
+        'default',
+        {
+            name: featureName,
+        },
+        'test-user',
+    );
+
+    const config: Omit<FeatureStrategySchema, 'id'> = {
+        name: 'default',
+        constraints: [],
+        parameters: {},
+        segments: [segment.id],
+    };
+
+    await service.createStrategy(
+        config,
+        { projectId: 'default', featureName, environment: DEFAULT_ENV },
+        'test-user',
+    );
+
+    await service.cloneFeatureToggle(
+        featureName,
+        'default',
+        clonedFeatureName,
+        true,
+        'test-user',
+    );
+
+    let feature = await service.getFeature(clonedFeatureName);
+    expect(
+        feature.environments.find((x) => x.name === 'default').strategies[0]
+            .segments,
+    ).toHaveLength(1);
+});

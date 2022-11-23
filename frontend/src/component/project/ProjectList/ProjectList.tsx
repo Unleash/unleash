@@ -21,7 +21,6 @@ import { TablePlaceholder } from 'component/common/Table';
 import { useMediaQuery } from '@mui/material';
 import theme from 'themes/theme';
 import { Search } from 'component/common/Search/Search';
-import { useLastViewedProject } from '../../../hooks/useLastViewedProject';
 
 type PageQueryType = Partial<Record<'search', string>>;
 
@@ -62,8 +61,6 @@ export const ProjectListNew = () => {
     const [searchValue, setSearchValue] = useState(
         searchParams.get('search') || ''
     );
-
-    const { lastViewed } = useLastViewedProject();
 
     useEffect(() => {
         const tableState: PageQueryType = {};
@@ -155,9 +152,6 @@ export const ProjectListNew = () => {
             ? `${filteredProjects.length} of ${projects.length}`
             : projects.length;
 
-    if (lastViewed) {
-        return <Navigate to={`/projects/${lastViewed}`} replace />;
-    }
     if (projects?.length === 1) {
         return <Navigate to={`/projects/${projects[0].id}`} replace />;
     }

@@ -228,6 +228,17 @@ class UserStore implements IUserStore {
             .first();
         return rowToUser(row);
     }
+
+    async markSeenAt(secrets: string[]): Promise<void> {
+        const now = new Date();
+        try {
+            await this.db('personal_access_tokens')
+                .whereIn('secret', secrets)
+                .update({ seen_at: now });
+        } catch (err) {
+            this.logger.error('Could not update lastSeen, error: ', err);
+        }
+    }
 }
 
 module.exports = UserStore;

@@ -17,6 +17,7 @@ const patMiddleware = (
                     apiToken,
                 );
                 req.user = user;
+                userService.addPATSeen(apiToken);
             }
         } catch (error) {
             logger.error(error);

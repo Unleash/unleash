@@ -28,6 +28,8 @@ import PasswordMismatch from '../error/password-mismatch';
 import BadDataError from '../error/bad-data-error';
 import { isDefined } from '../util/isDefined';
 import { TokenUserSchema } from '../openapi/spec/token-user-schema';
+import { IFlagResolver } from 'lib/types/experimental';
+import { minutesToMilliseconds } from 'date-fns';
 
 const systemUser = new User({ id: -1, username: 'system' });
 
@@ -78,12 +80,22 @@ class UserService {
 
     private passwordResetTimeouts: { [key: string]: NodeJS.Timeout } = {};
 
+    private seenTimer: NodeJS.Timeout;
+
+    private lastSeenSecrets: string[] = [];
+
+    private flagResolver: IFlagResolver;
+
     constructor(
         stores: Pick<IUnleashStores, 'userStore' | 'eventStore'>,
         {
             getLogger,
             authentication,
-        }: Pick<IUnleashConfig, 'getLogger' | 'authentication'>,
+            flagResolver,
+        }: Pick<
+            IUnleashConfig,
+            'getLogger' | 'authentication' | 'flagResolver'
+        >,
         services: {
             accessService: AccessService;
             resetTokenService: ResetTokenService;
@@ -92,6 +104,7 @@ class UserService {
             settingService: SettingService;
         },
     ) {
+        this.flagResolver = flagResolver;
         this.logger = getLogger('service/user-service.js');
         this.store = stores.userStore;
         this.eventStore = stores.eventStore;
@@ -102,6 +115,12 @@ class UserService {
         this.settingService = services.settingService;
         if (authentication && authentication.createAdminUser) {
             process.nextTick(() => this.initAdminUser());
+        }
+        if (this.flagResolver.isEnabled('tokensLastSeen')) {
+            this.seenTimer = setInterval(
+                () => this.updateLastSeen(),
+                minutesToMilliseconds(1),
+            ).unref();
         }
     }
 
@@ -425,6 +444,22 @@ class UserService {
 
     async getUserByPersonalAccessToken(secret: string): Promise<IUser> {
         return this.store.getUserByPersonalAccessToken(secret);
+    }
+
+    async updateLastSeen(): Promise<void> {
+        if (this.lastSeenSecrets.length > 0) {
+            await this.store.markSeenAt(this.lastSeenSecrets);
+            this.lastSeenSecrets = [];
+        }
+    }
+
+    addPATSeen(secret: string): void {
+        this.lastSeenSecrets.push(secret);
+    }
+
+    destroy(): void {
+        clearInterval(this.seenTimer);
+        this.seenTimer = null;
     }
 }
 

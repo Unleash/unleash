@@ -34,9 +34,13 @@ export const EnvironmentVariantsCopyFrom = ({
         useState<null | HTMLElement>(null);
     const copyFromOpen = Boolean(copyFromAnchorEl);
 
+    const variants = environment.variants ?? [];
+
     return (
         <ConditionallyRender
-            condition={otherEnvsWithVariants.length > 0}
+            condition={
+                otherEnvsWithVariants.length > 0 && variants.length === 0
+            }
             show={
                 <>
                     <PermissionButton

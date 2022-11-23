@@ -21,7 +21,7 @@ import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import AccessContext from 'contexts/AccessContext';
 import { ChangeRequestComment } from './ChangeRequestComments/ChangeRequestComment';
 import { AddCommentField } from './ChangeRequestComments/AddCommentField';
-import { usePendingChangeRequest } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
+import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 
 const StyledAsideBox = styled(Box)(({ theme }) => ({
     width: '30%',

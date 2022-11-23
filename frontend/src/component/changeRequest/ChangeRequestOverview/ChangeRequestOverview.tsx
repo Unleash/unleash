@@ -99,6 +99,23 @@ export const ChangeRequestOverview: FC = () => {
         }
     };
 
+    const onCancelChanges = async () => {
+        try {
+            await changeState(projectId, Number(id), {
+                state: 'Cancelled',
+            });
+            refetchChangeRequest();
+            refetchChangeRequestOpen();
+            setToastData({
+                type: 'success',
+                title: 'Success',
+                text: 'Changes cancelled',
+            });
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
+    };
+
     const isSelfReview =
         changeRequest?.createdBy.id === user?.id &&
         changeRequest.state === 'In review' &&
@@ -188,6 +205,23 @@ export const ChangeRequestOverview: FC = () => {
                                     >
                                         Apply changes
                                     </PermissionButton>
+                                }
+                            />
+                            <ConditionallyRender
+                                condition={
+                                    changeRequest.state !== 'Applied' &&
+                                    changeRequest.state !== 'Cancelled' &&
+                                    (changeRequest.createdBy.id === user?.id ||
+                                        isAdmin)
+                                }
+                                show={
+                                    <Button
+                                        sx={{ ml: 2 }}
+                                        variant="outlined"
+                                        onClick={onCancelChanges}
+                                    >
+                                        Cancel changes
+                                    </Button>
                                 }
                             />
                         </StyledButtonBox>

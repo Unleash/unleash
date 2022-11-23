@@ -6,6 +6,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { ChangeRequestSidebar } from '../ChangeRequestSidebar/ChangeRequestSidebar';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { IChangeRequest } from '../changeRequest.types';
+import { changesCount } from '../changeCount';
 
 interface IDraftBannerProps {
     project: string;
@@ -58,7 +59,7 @@ const DraftBannerContent: FC<{
                     onClick={onClick}
                     sx={{ ml: 'auto' }}
                 >
-                    View changes ({changeRequest.features.length})
+                    View changes ({changesCount(changeRequest)})
                 </Button>
             </DraftBannerContentWrapper>
         </Box>

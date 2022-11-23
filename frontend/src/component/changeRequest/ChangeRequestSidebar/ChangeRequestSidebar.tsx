@@ -23,6 +23,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate } from 'react-router-dom';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { changesCount } from '../changeCount';
 
 interface IChangeRequestSidebarProps {
     open: boolean;
@@ -271,10 +272,9 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
                                                     environmentChangeRequest.id
                                                 )
                                             }
-                                            count={
+                                            count={changesCount(
                                                 environmentChangeRequest
-                                                    .features.length
-                                            }
+                                            )}
                                         />
 
                                         <Button

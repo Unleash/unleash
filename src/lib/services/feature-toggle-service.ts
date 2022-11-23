@@ -801,9 +801,7 @@ class FeatureToggleService {
                     featureName: newFeatureName,
                     environment: e.name,
                 };
-                return this.createStrategy(s, context, userName).then((s2) =>
-                    this.segmentService.cloneStrategySegments(s.id, s2.id),
-                );
+                return this.createStrategy(s, context, userName);
             }),
         );
 

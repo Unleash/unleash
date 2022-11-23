@@ -6,7 +6,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { ChangeRequestSidebar } from '../ChangeRequestSidebar/ChangeRequestSidebar';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { IChangeRequest } from '../changeRequest.types';
-import { changesCount } from '../changeCount';
+import { changesCount } from '../changesCount';
 
 interface IDraftBannerProps {
     project: string;

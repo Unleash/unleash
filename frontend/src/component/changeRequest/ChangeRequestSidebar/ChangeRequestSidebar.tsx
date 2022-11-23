@@ -23,7 +23,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate } from 'react-router-dom';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { changesCount } from '../changeCount';
+import { changesCount } from '../changesCount';
 
 interface IChangeRequestSidebarProps {
     open: boolean;

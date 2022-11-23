@@ -1279,7 +1279,7 @@ class FeatureToggleService {
             )
         ) {
             throw new Error(
-                `The change requests are enabled in project ${project} for environment ${environment}`,
+                `Change requests are enabled in project "${project}" for environment "${environment}"`,
             );
         }
     }

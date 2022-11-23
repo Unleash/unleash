@@ -2,6 +2,7 @@
 id: unleash-proxy
 title: Unleash Proxy
 ---
+import Figure from '@site/src/components/Figure/Figure.tsx'
 
 > The unleash-proxy is compatible with all Unleash Enterprise versions and Unleash Open-Source v4. You should reach out to **support@getunleash.io** if you want the Unleash Team to host the Unleash Proxy for you.
 
@@ -138,7 +139,7 @@ Refer the [custom activation strategy documentation](../reference/custom-activat
 
 The Unleash Proxy has a very simple API. It takes the [Unleash Context](../reference/unleash-context) as input and will return the feature toggles relevant for that specific context.
 
-![The Unleash Proxy](/img/The-Unleash-Proxy-API.png)
+<Figure img="/img/The-Unleash-Proxy-API.png" caption="When sending requests to the Unleash proxy's /proxy endpoint, the request should contain the current Unleash context as the payload. The proxy will return all enabled toggles for the provided context."/>
 
 ### OpenAPI integration and API documentation {#openapi}
 

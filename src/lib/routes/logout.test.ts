@@ -66,7 +66,7 @@ test('should set "Clear-Site-Data" header', async () => {
     await request
         .get(`${baseUriPath}/logout`)
         .expect(302)
-        .expect('Clear-Site-Data', '"cookies", "cache"');
+        .expect('Clear-Site-Data', '"cookies", "storage"');
 });
 
 test('should not set "Clear-Site-Data" header', async () => {

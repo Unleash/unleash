@@ -59,7 +59,7 @@ class LogoutController extends Controller {
         res.clearCookie(this.cookieName);
 
         if (this.clearSiteDataOnLogout) {
-            res.set('Clear-Site-Data', '"cookies", "cache"');
+            res.set('Clear-Site-Data', '"cookies", "storage"');
         }
         if (req.user?.id) {
             await this.sessionService.deleteSessionsForUser(req.user.id);

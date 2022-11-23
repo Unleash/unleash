@@ -80,7 +80,7 @@ const CreateFeature = () => {
             title="Create feature toggle"
             description="Feature toggles support different use cases, each with their own specific needs such as simple static routing or more complex routing.
             The feature toggle is disabled when created and you decide when to enable"
-            documentationLink="https://docs.getunleash.io/advanced/feature_toggle_types"
+            documentationLink="https://docs.getunleash.io/reference/feature-toggle-types"
             documentationLinkLabel="Feature toggle types documentation"
             formatApiCode={formatApiCode}
         >

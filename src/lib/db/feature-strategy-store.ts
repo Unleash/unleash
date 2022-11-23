@@ -216,57 +216,24 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         featureName: string,
         archived: boolean = false,
     ): Promise<FeatureToggleWithEnvironment> {
+        return this.loadFeatureToggleWithEnvs(featureName, archived, false);
+    }
+
+    async getFeatureToggleWithVariantEnvs(
+        featureName: string,
+        archived: boolean = false,
+    ): Promise<FeatureToggleWithEnvironment> {
+        return this.loadFeatureToggleWithEnvs(featureName, archived, true);
+    }
+
+    async loadFeatureToggleWithEnvs(
+        featureName: string,
+        archived: boolean,
+        withEnvironmentVariants: boolean,
+    ): Promise<FeatureToggleWithEnvironment> {
         const stopTimer = this.timer('getFeatureAdmin');
-        const rows = await this.db('features')
-            .select(
-                'features.name as name',
-                'features.description as description',
-                'features.type as type',
-                'features.project as project',
-                'features.stale as stale',
-                'features.variants as variants',
-                'features.impression_data as impression_data',
-                'features.created_at as created_at',
-                'features.last_seen_at as last_seen_at',
-                'feature_environments.enabled as enabled',
-                'feature_environments.environment as environment',
-                'environments.name as environment_name',
-                'environments.type as environment_type',
-                'environments.sort_order as environment_sort_order',
-                'feature_strategies.id as strategy_id',
-                'feature_strategies.strategy_name as strategy_name',
-                'feature_strategies.parameters as parameters',
-                'feature_strategies.constraints as constraints',
-                'feature_strategies.sort_order as sort_order',
-                'fss.segment_id as segments',
-            )
-            .leftJoin(
-                'feature_environments',
-                'feature_environments.feature_name',
-                'features.name',
-            )
-            .leftJoin('feature_strategies', function () {
-                this.on(
-                    'feature_strategies.feature_name',
-                    '=',
-                    'feature_environments.feature_name',
-                ).andOn(
-                    'feature_strategies.environment',
-                    '=',
-                    'feature_environments.environment',
-                );
-            })
-            .leftJoin(
-                'environments',
-                'feature_environments.environment',
-                'environments.name',
-            )
-            .leftJoin(
-                'feature_strategy_segment as fss',
-                `fss.feature_strategy_id`,
-                `feature_strategies.id`,
-            )
-            .where('features.name', featureName)
+        const rows = await this.db('features_view')
+            .where('name', featureName)
             .modify(FeatureToggleStore.filterByArchived, archived);
         stopTimer();
         if (rows.length > 0) {
@@ -280,7 +247,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 acc.description = r.description;
                 acc.project = r.project;
                 acc.stale = r.stale;
-                acc.variants = r.variants;
+
                 acc.createdAt = r.created_at;
                 acc.lastSeenAt = r.last_seen_at;
                 acc.type = r.type;
@@ -289,8 +256,15 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                         name: r.environment,
                     };
                 }
-
                 const env = acc.environments[r.environment];
+
+                const variants = r.variants || [];
+                variants.sort((a, b) => a.name.localeCompare(b.name));
+                if (withEnvironmentVariants) {
+                    env.variants = variants;
+                }
+                acc.variants = variants;
+
                 env.enabled = r.enabled;
                 env.type = r.environment_type;
                 env.sortOrder = r.environment_sort_order;
@@ -325,8 +299,6 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 );
                 return e;
             });
-            featureToggle.variants = featureToggle.variants || [];
-            featureToggle.variants.sort((a, b) => a.name.localeCompare(b.name));
             featureToggle.archived = archived;
             return featureToggle;
         }

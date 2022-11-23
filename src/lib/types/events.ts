@@ -8,6 +8,8 @@ export const FEATURE_DELETED = 'feature-deleted';
 export const FEATURE_UPDATED = 'feature-updated';
 export const FEATURE_METADATA_UPDATED = 'feature-metadata-updated';
 export const FEATURE_VARIANTS_UPDATED = 'feature-variants-updated';
+export const FEATURE_ENVIRONMENT_VARIANTS_UPDATED =
+    'feature-environment-variants-updated';
 export const FEATURE_PROJECT_CHANGE = 'feature-project-change';
 export const FEATURE_ARCHIVED = 'feature-archived';
 export const FEATURE_REVIVED = 'feature-revived';
@@ -81,6 +83,16 @@ export const PAT_CREATED = 'pat-created';
 export const PUBLIC_SIGNUP_TOKEN_CREATED = 'public-signup-token-created';
 export const PUBLIC_SIGNUP_TOKEN_USER_ADDED = 'public-signup-token-user-added';
 export const PUBLIC_SIGNUP_TOKEN_TOKEN_UPDATED = 'public-signup-token-updated';
+
+export const CHANGE_REQUEST_CREATED = 'change-request-created';
+export const CHANGE_REQUEST_DISCARDED = 'change-request-discarded';
+export const CHANGE_ADDED = 'change-added';
+export const CHANGE_DISCARDED = 'change-discarded';
+export const CHANGE_REQUEST_APPROVED = 'change-request-approved';
+export const CHANGE_REQUEST_APPROVAL_ADDED = 'change-request-approval-added';
+export const CHANGE_REQUEST_CANCELLED = 'change-request-cancelled';
+export const CHANGE_REQUEST_SENT_TO_REVIEW = 'change-request-sent-to-review';
+export const CHANGE_REQUEST_APPLIED = 'change-request-applied';
 
 export interface IBaseEvent {
     type: string;
@@ -187,6 +199,34 @@ export class FeatureVariantEvent extends BaseEvent {
         super(FEATURE_VARIANTS_UPDATED, p.createdBy, p.tags);
         this.project = p.project;
         this.featureName = p.featureName;
+        this.data = { variants: p.newVariants };
+        this.preData = { variants: p.oldVariants };
+    }
+}
+
+export class EnvironmentVariantEvent extends BaseEvent {
+    readonly project: string;
+
+    readonly environment: string;
+
+    readonly featureName: string;
+
+    readonly data: { variants: IVariant[] };
+
+    readonly preData: { variants: IVariant[] };
+
+    constructor(p: {
+        featureName: string;
+        environment: string;
+        project: string;
+        createdBy: string;
+        newVariants: IVariant[];
+        oldVariants: IVariant[];
+    }) {
+        super(FEATURE_ENVIRONMENT_VARIANTS_UPDATED, p.createdBy);
+        this.featureName = p.featureName;
+        this.environment = p.environment;
+        this.project = p.project;
         this.data = { variants: p.newVariants };
         this.preData = { variants: p.oldVariants };
     }

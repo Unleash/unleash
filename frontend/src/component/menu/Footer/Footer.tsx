@@ -32,7 +32,7 @@ export const Footer: VFC = () => {
                                         <ListItemText
                                             primary={
                                                 <a
-                                                    href="https://docs.getunleash.io/sdks/node_sdk"
+                                                    href="https://docs.getunleash.io/reference/sdks/node"
                                                     target="_blank"
                                                 >
                                                     Node.js
@@ -44,7 +44,7 @@ export const Footer: VFC = () => {
                                         <ListItemText
                                             primary={
                                                 <a
-                                                    href="https://docs.getunleash.io/sdks/java_sdk"
+                                                    href="https://docs.getunleash.io/reference/sdks/java"
                                                     target="_blank"
                                                 >
                                                     Java
@@ -56,7 +56,7 @@ export const Footer: VFC = () => {
                                         <ListItemText
                                             primary={
                                                 <a
-                                                    href="https://docs.getunleash.io/sdks/go_sdk"
+                                                    href="https://docs.getunleash.io/reference/sdks/go"
                                                     target="_blank"
                                                 >
                                                     Go
@@ -68,7 +68,7 @@ export const Footer: VFC = () => {
                                         <ListItemText
                                             primary={
                                                 <a
-                                                    href="https://docs.getunleash.io/sdks/ruby_sdk"
+                                                    href="https://docs.getunleash.io/reference/sdks/ruby"
                                                     target="_blank"
                                                 >
                                                     Ruby
@@ -80,7 +80,7 @@ export const Footer: VFC = () => {
                                         <ListItemText
                                             primary={
                                                 <a
-                                                    href="https://docs.getunleash.io/sdks/python_sdk"
+                                                    href="https://docs.getunleash.io/reference/sdks/python"
                                                     target="_blank"
                                                 >
                                                     Python
@@ -92,7 +92,7 @@ export const Footer: VFC = () => {
                                         <ListItemText
                                             primary={
                                                 <a
-                                                    href="https://docs.getunleash.io/sdks/dot_net_sdk"
+                                                    href="https://docs.getunleash.io/reference/sdks/dotnet"
                                                     target="_blank"
                                                 >
                                                     .NET
@@ -104,7 +104,7 @@ export const Footer: VFC = () => {
                                         <ListItemText
                                             primary={
                                                 <a
-                                                    href="https://docs.getunleash.io/sdks/php_sdk"
+                                                    href="https://docs.getunleash.io/reference/sdks/php"
                                                     target="_blank"
                                                 >
                                                     PHP
@@ -116,7 +116,7 @@ export const Footer: VFC = () => {
                                         <ListItemText
                                             primary={
                                                 <a
-                                                    href="https://docs.getunleash.io/sdks"
+                                                    href="https://docs.getunleash.io/reference/sdks"
                                                     target="_blank"
                                                 >
                                                     All SDKs
@@ -135,7 +135,7 @@ export const Footer: VFC = () => {
                                         <ListItemText
                                             primary={
                                                 <a
-                                                    href="https://docs.getunleash.io/sdks/unleash-proxy"
+                                                    href="https://docs.getunleash.io/reference/unleash-proxy"
                                                     target="_blank"
                                                 >
                                                     Unleash Proxy
@@ -147,7 +147,7 @@ export const Footer: VFC = () => {
                                         <ListItemText
                                             primary={
                                                 <a
-                                                    href="https://docs.getunleash.io/sdks/proxy-javascript"
+                                                    href="https://docs.getunleash.io/reference/sdks/javascript-browser"
                                                     target="_blank"
                                                 >
                                                     JavaScript SDK
@@ -159,7 +159,7 @@ export const Footer: VFC = () => {
                                         <ListItemText
                                             primary={
                                                 <a
-                                                    href="https://docs.getunleash.io/sdks/proxy-react"
+                                                    href="https://docs.getunleash.io/reference/sdks/react"
                                                     target="_blank"
                                                 >
                                                     React SDK
@@ -171,7 +171,7 @@ export const Footer: VFC = () => {
                                         <ListItemText
                                             primary={
                                                 <a
-                                                    href="https://docs.getunleash.io/sdks/proxy-ios"
+                                                    href="https://docs.getunleash.io/reference/sdks/ios-proxy"
                                                     target="_blank"
                                                 >
                                                     iOS SDK
@@ -183,7 +183,7 @@ export const Footer: VFC = () => {
                                         <ListItemText
                                             primary={
                                                 <a
-                                                    href="https://docs.getunleash.io/sdks/android_proxy_sdk"
+                                                    href="https://docs.getunleash.io/reference/sdks/android-proxy"
                                                     target="_blank"
                                                 >
                                                     Android SDK

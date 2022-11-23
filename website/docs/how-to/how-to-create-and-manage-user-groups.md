@@ -8,7 +8,7 @@ User groups are available to Unleash Enterprise users since **Unleash 4.14**.
 
 :::
 
-This guide takes you through how to use user groups to manage permissions on your projects. User groups allow you to manage large groups of users more easily than assigning roles directly to those users. Refer to the section on [user groups](../user_guide/rbac.md#user-groups) in the RBAC documentation for more information.
+This guide takes you through how to use user groups to manage permissions on your projects. User groups allow you to manage large groups of users more easily than assigning roles directly to those users. Refer to the section on [user groups](../reference/rbac.md#user-groups) in the RBAC documentation for more information.
 
 ## Creating user groups
 

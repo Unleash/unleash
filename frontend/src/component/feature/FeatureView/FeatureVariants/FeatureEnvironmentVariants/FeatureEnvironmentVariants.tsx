@@ -7,7 +7,7 @@ import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { Search } from 'component/common/Search/Search';
 import { updateWeight } from 'component/common/util';
-import { UPDATE_FEATURE_VARIANTS } from 'component/providers/AccessProvider/permissions';
+import { UPDATE_FEATURE_ENVIRONMENT_VARIANTS } from 'component/providers/AccessProvider/permissions';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { IFeatureEnvironment, IFeatureVariant } from 'interfaces/featureToggle';
@@ -234,7 +234,6 @@ export const FeatureEnvironmentVariants = () => {
                         key={environment.name}
                         environment={environment}
                         searchValue={searchValue}
-                        onAddVariant={() => addVariant(environment)}
                         onEditVariant={(variant: IFeatureVariant) =>
                             editVariant(environment, variant)
                         }
@@ -245,30 +244,25 @@ export const FeatureEnvironmentVariants = () => {
                             onUpdateStickiness(environment, variants)
                         }
                     >
-                        <ConditionallyRender
-                            condition={environment.variants?.length === 0}
-                            show={
-                                <StyledButtonContainer>
-                                    <PermissionButton
-                                        onClick={() => addVariant(environment)}
-                                        variant="outlined"
-                                        permission={UPDATE_FEATURE_VARIANTS}
-                                        projectId={projectId}
-                                    >
-                                        Add variant
-                                    </PermissionButton>
-                                    <EnvironmentVariantsCopyFrom
-                                        environment={environment}
-                                        permission={UPDATE_FEATURE_VARIANTS}
-                                        projectId={projectId}
-                                        onCopyVariantsFrom={onCopyVariantsFrom}
-                                        otherEnvsWithVariants={
-                                            otherEnvsWithVariants
-                                        }
-                                    />
-                                </StyledButtonContainer>
-                            }
-                        />
+                        <StyledButtonContainer>
+                            <EnvironmentVariantsCopyFrom
+                                environment={environment}
+                                permission={UPDATE_FEATURE_ENVIRONMENT_VARIANTS}
+                                projectId={projectId}
+                                environmentId={environment.name}
+                                onCopyVariantsFrom={onCopyVariantsFrom}
+                                otherEnvsWithVariants={otherEnvsWithVariants}
+                            />
+                            <PermissionButton
+                                onClick={() => addVariant(environment)}
+                                variant="outlined"
+                                permission={UPDATE_FEATURE_ENVIRONMENT_VARIANTS}
+                                projectId={projectId}
+                                environmentId={environment.name}
+                            >
+                                Add variant
+                            </PermissionButton>
+                        </StyledButtonContainer>
                     </EnvironmentVariantsCard>
                 );
             })}

@@ -69,7 +69,7 @@ export const StrategyParameter = ({
                         Parameters let you provide arguments to your strategy
                         that it can access for evaluation. Read more in the{' '}
                         <a
-                            href="https://docs.getunleash.io/advanced/custom_activation_strategy#parameter-types"
+                            href="https://docs.getunleash.io/reference/custom-activation-strategies#parameter-types"
                             target="_blank"
                             rel="noreferrer"
                         >

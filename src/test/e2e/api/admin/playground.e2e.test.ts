@@ -69,12 +69,25 @@ const playgroundRequest = async (
 
 describe('Playground API E2E', () => {
     // utility function for seeding the database before runs
-    const seedDatabase = (
+    const seedDatabase = async (
         database: ITestDb,
         features: ClientFeatureSchema[],
         environment: string,
-    ): Promise<FeatureToggle[]> =>
-        Promise.all(
+    ): Promise<FeatureToggle[]> => {
+        // create environment if necessary
+        await database.stores.environmentStore
+            .create({
+                name: environment,
+                type: 'development',
+                enabled: true,
+            })
+            .catch(() => {
+                // purposefully left empty: env creation may fail if the
+                // env already exists, and because of the async nature
+                // of things, this is the easiest way to make it work.
+            });
+
+        return Promise.all(
             features.map(async (feature) => {
                 // create feature
                 const toggle = await database.stores.featureToggleStore.create(
@@ -82,28 +95,28 @@ describe('Playground API E2E', () => {
                     {
                         ...feature,
                         createdAt: undefined,
-                        variants: [
-                            ...(feature.variants ?? []).map((variant) => ({
-                                ...variant,
-                                weightType: WeightType.VARIABLE,
-                                stickiness: 'default',
-                            })),
-                        ],
+                        variants: null,
                     },
                 );
 
-                // create environment if necessary
-                await database.stores.environmentStore
-                    .create({
-                        name: environment,
-                        type: 'development',
-                        enabled: true,
-                    })
-                    .catch(() => {
-                        // purposefully left empty: env creation may fail if the
-                        // env already exists, and because of the async nature
-                        // of things, this is the easiest way to make it work.
-                    });
+                // enable/disable the feature in environment
+                await database.stores.featureEnvironmentStore.addEnvironmentToFeature(
+                    feature.name,
+                    environment,
+                    feature.enabled,
+                );
+
+                await database.stores.featureToggleStore.saveVariants(
+                    feature.project,
+                    feature.name,
+                    [
+                        ...(feature.variants ?? []).map((variant) => ({
+                            ...variant,
+                            weightType: WeightType.VARIABLE,
+                            stickiness: 'default',
+                        })),
+                    ],
+                );
 
                 // assign strategies
                 await Promise.all(
@@ -122,16 +135,10 @@ describe('Playground API E2E', () => {
                     ),
                 );
 
-                // enable/disable the feature in environment
-                await database.stores.featureEnvironmentStore.addEnvironmentToFeature(
-                    feature.name,
-                    environment,
-                    feature.enabled,
-                );
-
                 return toggle;
             }),
         );
+    };
 
     test('Returned features should be a subset of the provided toggles', async () => {
         await fc.assert(

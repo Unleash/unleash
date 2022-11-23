@@ -46,7 +46,7 @@ import { IFeatureStrategiesStore } from '../types/stores/feature-strategies-stor
 import { IEnvironmentStore } from '../types/stores/environment-store';
 import { IFeatureEnvironmentStore } from '../types/stores/feature-environment-store';
 import { IUnleashStores } from '../types/stores';
-import { DEFAULT_ENV, ALL_ENVS } from '../util/constants';
+import { ALL_ENVS, DEFAULT_ENV } from '../util/constants';
 import { GLOBAL_ENV } from '../types/environment';
 import { ISegmentStore } from '../types/stores/segment-store';
 import { PartialSome } from '../types/partial';
@@ -153,6 +153,18 @@ export default class StateService {
         });
     }
 
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    moveVariantsToFeatureEnvironments(data: any) {
+        data.featureEnvironments?.forEach((featureEnvironment) => {
+            let feature = data.features?.find(
+                (f) => f.name === featureEnvironment.featureName,
+            );
+            if (feature) {
+                featureEnvironment.variants = feature.variants || [];
+            }
+        });
+    }
+
     async import({
         data,
         userName = 'importUser',
@@ -161,6 +173,9 @@ export default class StateService {
     }: IImportData): Promise<void> {
         if (data.version === 2) {
             this.replaceGlobalEnvWithDefaultEnv(data);
+        }
+        if (!data.version || data.version < 4) {
+            this.moveVariantsToFeatureEnvironments(data);
         }
         const importData = await stateSchema.validateAsync(data);
 
@@ -199,15 +214,10 @@ export default class StateService {
                 userName,
                 dropBeforeImport,
                 keepExisting,
+                featureEnvironments,
             });
 
             if (featureEnvironments) {
-                // make sure the project and environment are connected
-                // before importing featureEnvironments
-                await this.linkFeatureEnvironments({
-                    features,
-                    featureEnvironments,
-                });
                 await this.importFeatureEnvironments({
                     featureEnvironments,
                 });
@@ -267,27 +277,7 @@ export default class StateService {
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    async linkFeatureEnvironments({
-        features,
-        featureEnvironments,
-    }): Promise<void> {
-        const linkTasks = featureEnvironments.map(async (fe) => {
-            const project = features.find(
-                (f) => f.project && f.name === fe.featureName,
-            ).project;
-            if (project) {
-                return this.featureEnvironmentStore.connectProject(
-                    fe.environment,
-                    project,
-                    true, // make it idempotent
-                );
-            }
-        });
-        await Promise.all(linkTasks);
-    }
-
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    enabledInConfiguration(feature: string, env) {
+    enabledIn(feature: string, env) {
         const config = {};
         env.filter((e) => e.featureName === feature).forEach((e) => {
             config[e.environment] = e.enabled || false;
@@ -298,20 +288,15 @@ export default class StateService {
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async importFeatureEnvironments({ featureEnvironments }): Promise<void> {
         await Promise.all(
-            featureEnvironments.map((env) =>
-                this.toggleStore
-                    .getProjectId(env.featureName)
-                    .then((id) =>
-                        this.featureEnvironmentStore.connectFeatureToEnvironmentsForProject(
-                            env.featureName,
-                            id,
-                            this.enabledInConfiguration(
-                                env.featureName,
-                                featureEnvironments,
-                            ),
-                        ),
+            featureEnvironments
+                .filter(async (env) => {
+                    await this.environmentStore.exists(env.environment);
+                })
+                .map(async (featureEnvironment) =>
+                    this.featureEnvironmentStore.addFeatureEnvironment(
+                        featureEnvironment,
                     ),
-            ),
+                ),
         );
     }
 
@@ -363,6 +348,7 @@ export default class StateService {
             featureName: feature.name,
             environment: DEFAULT_ENV,
             enabled: feature.enabled,
+            variants: feature.variants || [],
         }));
         return {
             features: newFeatures,
@@ -377,6 +363,7 @@ export default class StateService {
         userName,
         dropBeforeImport,
         keepExisting,
+        featureEnvironments,
     }): Promise<void> {
         this.logger.info(`Importing ${features.length} feature toggles`);
         const oldToggles = dropBeforeImport
@@ -398,12 +385,11 @@ export default class StateService {
                 .filter(filterExisting(keepExisting, oldToggles))
                 .filter(filterEqual(oldToggles))
                 .map(async (feature) => {
-                    const { name, project, variants = [] } = feature;
                     await this.toggleStore.create(feature.project, feature);
-                    await this.toggleStore.saveVariants(
-                        project,
-                        name,
-                        variants,
+                    await this.featureEnvironmentStore.connectFeatureToEnvironmentsForProject(
+                        feature.name,
+                        feature.project,
+                        this.enabledIn(feature.name, featureEnvironments),
                     );
                     await this.eventStore.store({
                         type: FEATURE_IMPORT,
@@ -772,7 +758,7 @@ export default class StateService {
                 segments,
                 featureStrategySegments,
             ]) => ({
-                version: 3,
+                version: 4,
                 features,
                 strategies,
                 projects,

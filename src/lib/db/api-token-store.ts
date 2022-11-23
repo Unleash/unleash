@@ -203,7 +203,7 @@ export class ApiTokenStore implements IApiTokenStore {
         const now = new Date();
         try {
             await this.db(TABLE)
-                .whereIn('secrets', secrets)
+                .whereIn('secret', secrets)
                 .update({ seen_at: now });
         } catch (err) {
             this.logger.error('Could not update lastSeen, error: ', err);

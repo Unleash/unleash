@@ -52,9 +52,13 @@ export class ApiTokenService {
 
     private timer: NodeJS.Timeout;
 
+    private seenTimer: NodeJS.Timeout;
+
     private activeTokens: IApiToken[] = [];
 
     private eventStore: IEventStore;
+
+    private lastSeenSecrets: string[] = [];
 
     constructor(
         {
@@ -76,6 +80,10 @@ export class ApiTokenService {
             () => this.fetchActiveTokens(),
             minutesToMilliseconds(1),
         ).unref();
+        this.seenTimer = setInterval(
+            () => this.updateLastSeen(),
+            minutesToMilliseconds(1),
+        ).unref();
         if (config.authentication.initApiTokens.length > 0) {
             process.nextTick(async () =>
                 this.initApiTokens(config.authentication.initApiTokens),
@@ -89,6 +97,13 @@ export class ApiTokenService {
         } finally {
             // eslint-disable-next-line no-unsafe-finally
             return;
+        }
+    }
+
+    async updateLastSeen(): Promise<void> {
+        if (this.lastSeenSecrets.length > 0) {
+            await this.store.markSeenAt(this.lastSeenSecrets);
+            this.lastSeenSecrets = [];
         }
     }
 
@@ -137,6 +152,8 @@ export class ApiTokenService {
         }
 
         if (token) {
+            this.lastSeenSecrets.push(token.secret);
+
             return new ApiUser({
                 username: token.username,
                 permissions: resolveTokenPermissions(token.type),
@@ -269,6 +286,8 @@ export class ApiTokenService {
 
     destroy(): void {
         clearInterval(this.timer);
+        clearInterval(this.seenTimer);
         this.timer = null;
+        this.seenTimer = null;
     }
 }

@@ -114,60 +114,6 @@ export const ProjectFeatureToggles = ({
         changeRequestDialogDetails,
     } = useChangeRequestToggle(projectId);
 
-    const onToggle = useCallback(
-        async (
-            projectId: string,
-            featureName: string,
-            environment: string,
-            enabled: boolean
-        ) => {
-            if (isChangeRequestConfigured(environment)) {
-                onChangeRequestToggle(featureName, environment, enabled);
-                throw new Error('Additional approval required');
-            }
-            try {
-                if (enabled) {
-                    await toggleFeatureEnvironmentOn(
-                        projectId,
-                        featureName,
-                        environment
-                    );
-                } else {
-                    await toggleFeatureEnvironmentOff(
-                        projectId,
-                        featureName,
-                        environment
-                    );
-                }
-                refetch();
-            } catch (error) {
-                const message = formatUnknownError(error);
-                if (message === ENVIRONMENT_STRATEGY_ERROR) {
-                    setStrategiesDialogState({
-                        open: true,
-                        featureId: featureName,
-                        environmentName: environment,
-                    });
-                } else {
-                    setToastApiError(message);
-                }
-                throw error; // caught when reverting optimistic update
-            }
-
-            setToastData({
-                type: 'success',
-                title: 'Updated toggle status',
-                text: 'Successfully updated toggle status.',
-            });
-            refetch();
-        },
-        [
-            toggleFeatureEnvironmentOff,
-            toggleFeatureEnvironmentOn,
-            isChangeRequestConfigured,
-        ]
-    );
-
     const columns = useMemo(
         () => [
             {
@@ -228,15 +174,75 @@ export const ProjectFeatureToggles = ({
                 }: {
                     value: { name: string; enabled: boolean };
                     row: { original: ListItemType };
-                }) => (
-                    <FeatureToggleSwitch
-                        value={value?.enabled || false}
-                        projectId={projectId}
-                        featureName={feature?.name}
-                        environmentName={value?.name}
-                        onToggle={onToggle}
-                    />
-                ),
+                }) => {
+                    const onToggle = useCallback(
+                        async (
+                            projectId: string,
+                            featureName: string,
+                            environment: string,
+                            enabled: boolean
+                        ) => {
+                            if (isChangeRequestConfigured(environment)) {
+                                onChangeRequestToggle(
+                                    featureName,
+                                    environment,
+                                    enabled
+                                );
+                                throw new Error('Additional approval required');
+                            }
+                            try {
+                                if (enabled) {
+                                    await toggleFeatureEnvironmentOn(
+                                        projectId,
+                                        featureName,
+                                        environment
+                                    );
+                                } else {
+                                    await toggleFeatureEnvironmentOff(
+                                        projectId,
+                                        featureName,
+                                        environment
+                                    );
+                                }
+                                refetch();
+                            } catch (error) {
+                                const message = formatUnknownError(error);
+                                if (message === ENVIRONMENT_STRATEGY_ERROR) {
+                                    setStrategiesDialogState({
+                                        open: true,
+                                        featureId: featureName,
+                                        environmentName: environment,
+                                    });
+                                } else {
+                                    setToastApiError(message);
+                                }
+                                throw error; // caught when reverting optimistic update
+                            }
+
+                            setToastData({
+                                type: 'success',
+                                title: 'Updated toggle status',
+                                text: 'Successfully updated toggle status.',
+                            });
+                            refetch();
+                        },
+                        [
+                            toggleFeatureEnvironmentOff,
+                            toggleFeatureEnvironmentOn,
+                            isChangeRequestConfigured,
+                        ]
+                    );
+
+                    return (
+                        <FeatureToggleSwitch
+                            value={value?.enabled || false}
+                            projectId={projectId}
+                            featureName={feature?.name}
+                            environmentName={value?.name}
+                            onToggle={onToggle}
+                        />
+                    );
+                },
                 sortType: (v1: any, v2: any, id: string) => {
                     const a = v1?.values?.[id]?.enabled;
                     const b = v2?.values?.[id]?.enabled;

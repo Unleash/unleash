@@ -77,7 +77,9 @@ class UserStore implements IUserStore {
     }
 
     async update(id: number, fields: IUserUpdateFields): Promise<User> {
-        await this.db(TABLE).where('id', id).update(mapUserToColumns(fields));
+        await this.activeUsers()
+            .where('id', id)
+            .update(mapUserToColumns(fields));
         return this.get(id);
     }
 
@@ -98,7 +100,7 @@ class UserStore implements IUserStore {
     }
 
     buildSelectUser(q: IUserLookup): any {
-        const query = this.db(TABLE);
+        const query = this.activeUsers();
         if (q.id) {
             return query.where('id', q.id);
         }
@@ -111,6 +113,10 @@ class UserStore implements IUserStore {
         throw new Error('Can only find users with id, username or email.');
     }
 
+    activeUsers(): any {
+        return this.db(TABLE).where('deleted_at', null);
+    }
+
     async hasUser(idQuery: IUserLookup): Promise<number | undefined> {
         const query = this.buildSelectUser(idQuery);
         const item = await query.first('id');
@@ -118,14 +124,13 @@ class UserStore implements IUserStore {
     }
 
     async getAll(): Promise<User[]> {
-        const users = await this.db.select(USER_COLUMNS).from(TABLE);
+        const users = await this.activeUsers().select(USER_COLUMNS);
         return users.map(rowToUser);
     }
 
     async search(query: string): Promise<User[]> {
-        const users = await this.db
+        const users = await this.activeUsers()
             .select(USER_COLUMNS_PUBLIC)
-            .from(TABLE)
             .where('name', 'ILIKE', `%${query}%`)
             .orWhere('username', 'ILIKE', `${query}%`)
             .orWhere('email', 'ILIKE', `${query}%`);
@@ -133,9 +138,8 @@ class UserStore implements IUserStore {
     }
 
     async getAllWithId(userIdList: number[]): Promise<User[]> {
-        const users = await this.db
+        const users = await this.activeUsers()
             .select(USER_COLUMNS_PUBLIC)
-            .from(TABLE)
             .whereIn('id', userIdList);
         return users.map(rowToUser);
     }
@@ -146,11 +150,18 @@ class UserStore implements IUserStore {
     }
 
     async delete(id: number): Promise<void> {
-        return this.db(TABLE).where({ id }).del();
+        return this.activeUsers()
+            .where({ id })
+            .update({
+                deleted_at: new Date(),
+                email: null,
+                username: null,
+                name: this.db.raw('name || ?', '(Deleted)'),
+            });
     }
 
     async getPasswordHash(userId: number): Promise<string> {
-        const item = await this.db(TABLE)
+        const item = await this.activeUsers()
             .where('id', userId)
             .first('password_hash');
 
@@ -162,7 +173,7 @@ class UserStore implements IUserStore {
     }
 
     async setPasswordHash(userId: number, passwordHash: string): Promise<void> {
-        return this.db(TABLE).where('id', userId).update({
+        return this.activeUsers().where('id', userId).update({
             password_hash: passwordHash,
         });
     }
@@ -179,12 +190,11 @@ class UserStore implements IUserStore {
     }
 
     async deleteAll(): Promise<void> {
-        await this.db(TABLE).del();
+        await this.activeUsers().del();
     }
 
     async count(): Promise<number> {
-        return this.db
-            .from(TABLE)
+        return this.activeUsers()
             .count('*')
             .then((res) => Number(res[0].count));
     }
@@ -193,7 +203,7 @@ class UserStore implements IUserStore {
 
     async exists(id: number): Promise<boolean> {
         const result = await this.db.raw(
-            `SELECT EXISTS (SELECT 1 FROM ${TABLE} WHERE id = ?) AS present`,
+            `SELECT EXISTS (SELECT 1 FROM ${TABLE} WHERE id = ? and deleted_at = null) AS present`,
             [id],
         );
         const { present } = result.rows[0];
@@ -201,14 +211,13 @@ class UserStore implements IUserStore {
     }
 
     async get(id: number): Promise<User> {
-        const row = await this.db(TABLE).where({ id }).first();
+        const row = await this.activeUsers().where({ id }).first();
         return rowToUser(row);
     }
 
     async getUserByPersonalAccessToken(secret: string): Promise<User> {
-        const row = await this.db
+        const row = await this.activeUsers()
             .select(USER_COLUMNS.map((column) => `${TABLE}.${column}`))
-            .from(TABLE)
             .leftJoin(
                 'personal_access_tokens',
                 'personal_access_tokens.user_id',

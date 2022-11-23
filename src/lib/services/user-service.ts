@@ -454,7 +454,9 @@ class UserService {
     }
 
     addPATSeen(secret: string): void {
-        this.lastSeenSecrets.push(secret);
+        if (this.flagResolver.isEnabled('tokensLastSeen')) {
+            this.lastSeenSecrets.push(secret);
+        }
     }
 
     destroy(): void {

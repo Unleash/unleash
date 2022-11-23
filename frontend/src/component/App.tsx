@@ -63,7 +63,7 @@ export const App = () => {
                                             path="/"
                                             element={
                                                 <Navigate
-                                                    to="/features"
+                                                    to="/projects"
                                                     replace
                                                 />
                                             }

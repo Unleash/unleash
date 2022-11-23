@@ -4,6 +4,7 @@ import { setLocalStorageItem } from 'utils/storage';
 import mainTheme from 'themes/theme';
 import darkTheme from 'themes/dark-theme';
 import { Theme } from '@emotion/react';
+import useUiConfig from './api/getters/useUiConfig/useUiConfig';
 
 interface IUseThemeModeOutput {
     resolveTheme: () => Theme;
@@ -13,6 +14,8 @@ interface IUseThemeModeOutput {
 
 export const useThemeMode = (): IUseThemeModeOutput => {
     const { themeMode, setThemeMode } = useContext(UIContext);
+    const { uiConfig } = useUiConfig();
+    const key = `${uiConfig.baseUriPath}:unleash-theme`;
 
     const resolveTheme = () => {
         if (themeMode === 'light') {
@@ -25,10 +28,10 @@ export const useThemeMode = (): IUseThemeModeOutput => {
     const onSetThemeMode = () => {
         setThemeMode((prev: themeMode) => {
             if (prev === 'light') {
-                setLocalStorageItem('unleash-theme', 'dark');
+                setLocalStorageItem(key, 'dark');
                 return 'dark';
             }
-            setLocalStorageItem('unleash-theme', 'light');
+            setLocalStorageItem(key, 'light');
             return 'light';
         });
     };

@@ -1,0 +1,37 @@
+---
+title: How to create API Tokens
+---
+
+import newTokenImage from '/img/admin_create_token_form.png';
+
+:::info Permissions
+
+Creating API tokens requires you to have the `CREATE_API_TOKEN` permission. This means that, as of now, **only instance admins can create API tokens.**
+
+All users can see tokens with `CLIENT` level access, but only instance admins can see tokens with `ADMIN` level access.
+
+:::
+
+Unleash SDKs use API tokens to authenticate to the Unleash API. Unleash supports different types of API tokens, each with different levels of access and privileges. Refer to the [API tokens and client keys](../reference/api-tokens-and-client-keys.mdx) article for complete overview of the different token types.
+
+## Step 1: Navigate to the API token creation form {#step-1}
+
+Navigate to the _API access_ page in the admin UI (available at the URL `/admin/api`). Use the navigation menu item "Configure" and select "API access".
+
+![The admin UI navigation "Configure" submenu with the API access item highlighted.](/img/admin_configure_api.png)
+
+On the API access page, use the "New API token" button to navigate to the token creation form.
+
+![The API access page with the "New API token" button highlighted.](/img/admin_new_api_key_button.png)
+
+## Step 2: Fill in the API token form {#step-2}
+
+![API token creation form. ](/img/admin_create_token_form.png)
+
+Fill in the form with the desired values for the token you want to create. Refer to the [API tokens and client keys](../reference/api-tokens-and-client-keys.mdx#token-data) article for a detailed explanation of what all the fields mean.
+
+## Using API tokens
+
+When you have created the API token, it will be listed on the API access page. If you have the required permissions to see the token, you can copy it for easy use in your applications.
+
+![API access token table with a "copy token" button highlighted.](/img/admin_copy_token.png)

@@ -12,7 +12,7 @@ export const OperatorUpgradeAlert = () => {
 const OperatorDocsLink = () => {
     return (
         <a
-            href="https://docs.getunleash.io/advanced/strategy_constraints#strategy-constraint-operators"
+            href="https://docs.getunleash.io/reference/strategy-constraints#strategy-constraint-operators"
             target="_blank"
             rel="noreferrer"
             style={{ color: 'inherit' }}

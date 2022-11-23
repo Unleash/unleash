@@ -215,7 +215,8 @@ test('get a single user', async () => {
 test('should delete user', async () => {
     const user = await userStore.insert({ email: 'some@mail.com' });
 
-    return app.request.delete(`/api/admin/user-admin/${user.id}`).expect(200);
+    await app.request.delete(`/api/admin/user-admin/${user.id}`).expect(200);
+    await app.request.get(`/api/admin/user-admin/${user.id}`).expect(404);
 });
 
 test('validator should require strong password', async () => {
@@ -341,7 +342,7 @@ test('generates USER_CREATED event', async () => {
 
 test('generates USER_DELETED event', async () => {
     const user = await userStore.insert({ email: 'some@mail.com' });
-    await app.request.delete(`/api/admin/user-admin/${user.id}`);
+    await app.request.delete(`/api/admin/user-admin/${user.id}`).expect(200);
 
     const events = await eventStore.getEvents();
     expect(events[0].type).toBe(USER_DELETED);

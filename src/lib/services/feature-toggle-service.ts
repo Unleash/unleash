@@ -768,18 +768,30 @@ class FeatureToggleService {
         await this.validateName(newFeatureName);
 
         const cToggle =
-            await this.featureStrategiesStore.getFeatureToggleWithEnvs(
+            await this.featureStrategiesStore.getFeatureToggleWithVariantEnvs(
                 featureName,
             );
 
-        const newToggle = { ...cToggle, name: newFeatureName };
+        const newToggle = {
+            ...cToggle,
+            name: newFeatureName,
+            variants: undefined,
+        };
         const created = await this.createFeatureToggle(
             projectId,
             newToggle,
             userName,
         );
 
-        const tasks = newToggle.environments.flatMap((e) =>
+        const variantTasks = newToggle.environments.map((e) => {
+            return this.featureEnvironmentStore.addVariantsToFeatureEnvironment(
+                newToggle.name,
+                e.name,
+                e.variants,
+            );
+        });
+
+        const strategyTasks = newToggle.environments.flatMap((e) =>
             e.strategies.map((s) => {
                 if (replaceGroupId && s.parameters.hasOwnProperty('groupId')) {
                     s.parameters.groupId = newFeatureName;
@@ -795,7 +807,7 @@ class FeatureToggleService {
             }),
         );
 
-        await Promise.all(tasks);
+        await Promise.all([...strategyTasks, ...variantTasks]);
         return created;
     }
 
@@ -1035,7 +1047,7 @@ class FeatureToggleService {
                             environment,
                         ));
                     if (canAddStrategies) {
-                        await this.createStrategy(
+                        await this.unprotectedCreateStrategy(
                             getDefaultStrategy(featureName),
                             {
                                 environment,
@@ -1245,6 +1257,7 @@ class FeatureToggleService {
         );
         const { newDocument } = await applyPatch(oldVariants, newVariants);
         return this.saveVariantsOnEnv(
+            project,
             featureName,
             environment,
             newDocument,
@@ -1283,6 +1296,7 @@ class FeatureToggleService {
     }
 
     async saveVariantsOnEnv(
+        projectId: string,
         featureName: string,
         environment: string,
         newVariants: IVariant[],
@@ -1301,6 +1315,7 @@ class FeatureToggleService {
             new EnvironmentVariantEvent({
                 featureName,
                 environment,
+                project: projectId,
                 createdBy,
                 oldVariants,
                 newVariants: fixedVariants,

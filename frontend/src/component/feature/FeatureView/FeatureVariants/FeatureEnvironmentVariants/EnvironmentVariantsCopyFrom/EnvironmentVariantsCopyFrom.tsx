@@ -14,6 +14,7 @@ interface IEnvironmentVariantsCopyFromProps {
     environment: IFeatureEnvironment;
     permission: string;
     projectId: string;
+    environmentId: string;
     onCopyVariantsFrom: (
         fromEnvironment: IFeatureEnvironment,
         toEnvironment: IFeatureEnvironment
@@ -25,6 +26,7 @@ export const EnvironmentVariantsCopyFrom = ({
     environment,
     permission,
     projectId,
+    environmentId,
     onCopyVariantsFrom,
     otherEnvsWithVariants,
 }: IEnvironmentVariantsCopyFromProps) => {
@@ -32,9 +34,13 @@ export const EnvironmentVariantsCopyFrom = ({
         useState<null | HTMLElement>(null);
     const copyFromOpen = Boolean(copyFromAnchorEl);
 
+    const variants = environment.variants ?? [];
+
     return (
         <ConditionallyRender
-            condition={otherEnvsWithVariants.length > 0}
+            condition={
+                otherEnvsWithVariants.length > 0 && variants.length === 0
+            }
             show={
                 <>
                     <PermissionButton
@@ -48,6 +54,7 @@ export const EnvironmentVariantsCopyFrom = ({
                         variant="outlined"
                         permission={permission}
                         projectId={projectId}
+                        environmentId={environmentId}
                     >
                         Copy variants from
                     </PermissionButton>

@@ -52,7 +52,10 @@ export const useEventSearch = (
     // Append results to the page when more data has been fetched.
     useEffect(() => {
         if (data) {
-            setEvents(prev => [...(prev ?? []), ...data.events]);
+            setEvents(prev => [
+                ...(prev?.slice(0, offset) || []),
+                ...data.events,
+            ]);
             if (data.totalEvents) {
                 setTotalEvents(data.totalEvents);
             }

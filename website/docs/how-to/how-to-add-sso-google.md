@@ -10,7 +10,7 @@ Single Sign-on via the Google Authenticator provider is deprecated. We recommend
 
 ## Introduction {#introduction}
 
-In this guide we will do a deep dive on the Single-Sign-On (SSO) using Google Authentication. Unleash supports other identity providers and protocols, have a look at [all available Single-Sign-On options](../advanced/sso.md)
+In this guide we will do a deep dive on the Single-Sign-On (SSO) using Google Authentication. Unleash supports other identity providers and protocols, have a look at [all available Single-Sign-On options](../reference/sso.md)
 
 ## Basic configuration
 

@@ -551,7 +551,7 @@ exports[`should serve the OpenAPI spec 1`] = `
       },
       "constraintSchema": {
         "additionalProperties": false,
-        "description": "A strategy constraint. For more information, refer to [the strategy constraint reference documentation](https://docs.getunleash.io/advanced/strategy_constraints)",
+        "description": "A strategy constraint. For more information, refer to [the strategy constraint reference documentation](https://docs.getunleash.io/reference/strategy-constraints)",
         "properties": {
           "caseInsensitive": {
             "default": false,
@@ -569,7 +569,7 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "boolean",
           },
           "operator": {
-            "description": "The operator to use when evaluating this constraint. For more information about the various operators, refer to [the strategy constraint operator documentation](https://docs.getunleash.io/advanced/strategy_constraints#strategy-constraint-operators).",
+            "description": "The operator to use when evaluating this constraint. For more information about the various operators, refer to [the strategy constraint operator documentation](https://docs.getunleash.io/reference/strategy-constraints#strategy-constraint-operators).",
             "enum": [
               "NOT_IN",
               "IN",
@@ -1906,7 +1906,7 @@ exports[`should serve the OpenAPI spec 1`] = `
       },
       "playgroundConstraintSchema": {
         "additionalProperties": false,
-        "description": "A strategy constraint. For more information, refer to [the strategy constraint reference documentation](https://docs.getunleash.io/advanced/strategy_constraints)",
+        "description": "A strategy constraint. For more information, refer to [the strategy constraint reference documentation](https://docs.getunleash.io/reference/strategy-constraints)",
         "properties": {
           "caseInsensitive": {
             "default": false,
@@ -1924,7 +1924,7 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "boolean",
           },
           "operator": {
-            "description": "The operator to use when evaluating this constraint. For more information about the various operators, refer to [the strategy constraint operator documentation](https://docs.getunleash.io/advanced/strategy_constraints#strategy-constraint-operators).",
+            "description": "The operator to use when evaluating this constraint. For more information about the various operators, refer to [the strategy constraint operator documentation](https://docs.getunleash.io/reference/strategy-constraints#strategy-constraint-operators).",
             "enum": [
               "NOT_IN",
               "IN",
@@ -7726,11 +7726,11 @@ If the provided project does not exist, the list of events will be empty.",
       "name": "Auth",
     },
     {
-      "description": "Endpoints for [Unleash server-side clients](https://docs.getunleash.io/sdks).",
+      "description": "Endpoints for [Unleash server-side clients](https://docs.getunleash.io/reference/sdks).",
       "name": "Client",
     },
     {
-      "description": "Create, update, and delete [context fields](https://docs.getunleash.io/user_guide/unleash_context) that Unleash is aware of.",
+      "description": "Create, update, and delete [context fields](https://docs.getunleash.io/reference/unleash-context) that Unleash is aware of.",
       "name": "Context",
     },
     {
@@ -7738,7 +7738,7 @@ If the provided project does not exist, the list of events will be empty.",
       "name": "Edge",
     },
     {
-      "description": "Create, update, delete, enable or disable [environments](https://docs.getunleash.io/user_guide/environments) for this Unleash instance.",
+      "description": "Create, update, delete, enable or disable [environments](https://docs.getunleash.io/reference/environments) for this Unleash instance.",
       "name": "Environments",
     },
     {
@@ -7770,7 +7770,7 @@ If the provided project does not exist, the list of events will be empty.",
       "name": "Playground",
     },
     {
-      "description": "Create, update, and delete [Unleash projects](https://docs.getunleash.io/user_guide/projects).",
+      "description": "Create, update, and delete [Unleash projects](https://docs.getunleash.io/reference/projects).",
       "name": "Projects",
     },
     {
@@ -7782,11 +7782,11 @@ If the provided project does not exist, the list of events will be empty.",
       "name": "Segments",
     },
     {
-      "description": "Create, update, delete, manage [custom strategies](https://docs.getunleash.io/advanced/custom_activation_strategy).",
+      "description": "Create, update, delete, manage [custom strategies](https://docs.getunleash.io/reference/custom-activation-strategies).",
       "name": "Strategies",
     },
     {
-      "description": "Create, update, and delete [tags and tag types](https://docs.getunleash.io/advanced/tags).",
+      "description": "Create, update, and delete [tags and tag types](https://docs.getunleash.io/reference/tags).",
       "name": "Tags",
     },
     {

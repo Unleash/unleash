@@ -64,7 +64,7 @@ export const SplashPageOperators = () => {
                 <footer className={styles.footer}>
                     <p>
                         <a
-                            href="https://docs.getunleash.io/advanced/strategy_constraints#numeric-operators"
+                            href="https://docs.getunleash.io/reference/strategy-constraints#numeric-operators"
                             target="_blank"
                             rel="noreferrer"
                             className={styles.link}

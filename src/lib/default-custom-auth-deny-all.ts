@@ -1,7 +1,7 @@
 import { IUnleashConfig } from './types/option';
 
 const customAuthWarning =
-    'You have to configure a custom authentication middleware. Read https://docs.getunleash.io/docs/deploy/configuring_unleash for more details';
+    'You have to configure a custom authentication middleware. Read https://docs.getunleash.io/docs/reference/deploy/configuring-unleash for more details';
 
 export function defaultCustomAuthDenyAll(
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types

@@ -258,7 +258,7 @@ export const FeatureVariantsList = () => {
                     is used to ensure consistent traffic allocation across
                     variants.{' '}
                     <a
-                        href="https://docs.getunleash.io/advanced/toggle_variants"
+                        href="https://docs.getunleash.io/reference/feature-toggle-variants"
                         target="_blank"
                         rel="noreferrer"
                     >

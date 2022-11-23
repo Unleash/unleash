@@ -19,7 +19,6 @@ import {
 } from 'utils/strategyNames';
 import { hasNameField } from '../changeRequest.types';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useChangeRequestOpen } from '../../../hooks/api/getters/useChangeRequestOpen/useChangeRequestOpen';
 
 interface IChangeRequestProps {
     changeRequest: IChangeRequest;

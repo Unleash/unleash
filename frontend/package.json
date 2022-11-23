@@ -29,9 +29,9 @@
     "@codemirror/lang-json": "6.0.1",
     "@emotion/react": "11.10.5",
     "@emotion/styled": "11.10.5",
-    "@mui/icons-material": "5.10.14",
-    "@mui/lab": "5.0.0-alpha.108",
-    "@mui/material": "5.10.14",
+    "@mui/icons-material": "5.10.15",
+    "@mui/lab": "5.0.0-alpha.109",
+    "@mui/material": "5.10.15",
     "@openapitools/openapi-generator-cli": "2.5.2",
     "@testing-library/dom": "8.19.0",
     "@testing-library/jest-dom": "5.16.5",
@@ -93,7 +93,7 @@
     "vite-plugin-env-compatible": "1.1.1",
     "vite-plugin-svgr": "2.2.2",
     "vite-tsconfig-paths": "3.6.0",
-    "vitest": "0.25.2",
+    "vitest": "0.25.3",
     "whatwg-fetch": "3.6.2"
   },
   "resolutions": {

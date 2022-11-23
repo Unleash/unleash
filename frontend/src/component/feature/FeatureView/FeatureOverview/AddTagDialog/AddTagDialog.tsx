@@ -1,4 +1,4 @@
-import { Typography } from '@mui/material';
+import { styled, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import Input from 'component/common/Input/Input';
@@ -10,6 +10,11 @@ import useTags from 'hooks/api/getters/useTags/useTags';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import { ITag } from 'interfaces/tags';
+
+const StyledInput = styled(Input)(() => ({
+    width: '100%',
+}));
 
 interface IAddTagDialogProps {
     open: boolean;
@@ -28,7 +33,7 @@ const AddTagDialog = ({ open, setOpen }: IAddTagDialogProps) => {
     const { classes: styles } = useStyles();
     const featureId = useRequiredPathParam('featureId');
     const { addTagToFeature, loading } = useFeatureApi();
-    const { refetch } = useTags(featureId);
+    const { tags, refetch } = useTags(featureId);
     const [errors, setErrors] = useState({ tagError: '' });
     const { setToastData } = useToast();
     const [tag, setTag] = useState(DEFAULT_TAG);
@@ -37,12 +42,6 @@ const AddTagDialog = ({ open, setOpen }: IAddTagDialogProps) => {
         setOpen(false);
         setErrors({ tagError: '' });
         setTag(DEFAULT_TAG);
-    };
-
-    const setValue = (field: string, value: string) => {
-        const newTag = { ...tag };
-        newTag[field] = trim(value);
-        setTag(newTag);
     };
 
     const onSubmit = async (evt: React.SyntheticEvent) => {
@@ -68,6 +67,26 @@ const AddTagDialog = ({ open, setOpen }: IAddTagDialogProps) => {
         }
     };
 
+    const isValueNotEmpty = (name: string) => name.length;
+    const isTagUnique = (tag: ITag) =>
+        !tags.some(
+            ({ type, value }) => type === tag.type && value === tag.value
+        );
+    const isValid = isValueNotEmpty(tag.value) && isTagUnique(tag);
+
+    const onUpdateTag = (key: string, value: string) => {
+        setErrors({ tagError: '' });
+        const updatedTag = { ...tag, [key]: trim(value) };
+
+        if (!isTagUnique(updatedTag)) {
+            setErrors({
+                tagError: 'Tag already exists for this feature toggle.',
+            });
+        }
+
+        setTag(updatedTag);
+    };
+
     const formId = 'add-tag-form';
 
     return (
@@ -78,7 +97,7 @@ const AddTagDialog = ({ open, setOpen }: IAddTagDialogProps) => {
                 primaryButtonText="Add tag"
                 title="Add tags to feature toggle"
                 onClick={onSubmit}
-                disabledPrimaryButton={loading}
+                disabledPrimaryButton={loading || !isValid}
                 onClose={onCancel}
                 formId={formId}
             >
@@ -92,10 +111,10 @@ const AddTagDialog = ({ open, setOpen }: IAddTagDialogProps) => {
                                 autoFocus
                                 name="type"
                                 value={tag.type}
-                                onChange={type => setValue('type', type)}
+                                onChange={type => onUpdateTag('type', type)}
                             />
                             <br />
-                            <Input
+                            <StyledInput
                                 label="Value"
                                 name="value"
                                 placeholder="Your tag"
@@ -103,8 +122,9 @@ const AddTagDialog = ({ open, setOpen }: IAddTagDialogProps) => {
                                 error={Boolean(errors.tagError)}
                                 errorText={errors.tagError}
                                 onChange={e =>
-                                    setValue('value', e.target.value)
+                                    onUpdateTag('value', e.target.value)
                                 }
+                                required
                             />
                         </section>
                     </form>

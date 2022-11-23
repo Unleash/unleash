@@ -264,7 +264,7 @@ class UserService {
 
     async deleteUser(userId: number, updatedBy?: User): Promise<void> {
         const user = await this.store.get(userId);
-        await this.accessService.unlinkUserRoles(userId);
+        await this.accessService.wipeUserPermissions(userId);
         await this.sessionService.deleteSessionsForUser(userId);
 
         await this.store.delete(userId);

@@ -2,7 +2,7 @@ import EnvironmentStrategyDialog from 'component/common/EnvironmentStrategiesDia
 import { IFeatureToggle } from 'interfaces/featureToggle';
 import { useState } from 'react';
 import { FeatureOverviewSidePanelEnvironmentSwitch } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewSidePanel/FeatureOverviewSidePanelEnvironmentSwitches/FeatureOverviewSidePanelEnvironmentSwitch/FeatureOverviewSidePanelEnvironmentSwitch';
-import { Link, styled } from '@mui/material';
+import { Link, styled, Tooltip } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 
 const StyledContainer = styled('div')(({ theme }) => ({
@@ -15,11 +15,11 @@ const StyledSwitchLabel = styled('div')(() => ({
 }));
 
 const StyledLabel = styled('p')(({ theme }) => ({
-    fontSize: theme.fontSizes.smallBody,
+    fontSize: theme.fontSizes.bodySize,
 }));
 
 const StyledSubLabel = styled('p')(({ theme }) => ({
-    fontSize: theme.fontSizes.smallerBody,
+    fontSize: theme.fontSizes.smallBody,
     color: theme.palette.text.secondary,
 }));
 
@@ -55,22 +55,24 @@ export const FeatureOverviewSidePanelEnvironmentSwitches = ({
                 const variantsLink = variants.length > 0 && (
                     <>
                         {' - '}
-                        <StyledLink
-                            component={RouterLink}
-                            to={`/projects/${feature.project}/features/${feature.name}/variants`}
-                            underline="hover"
-                        >
-                            {variants.length === 1
-                                ? '1 variant'
-                                : `${variants.length} variants`}
-                        </StyledLink>
+                        <Tooltip title="View variants" arrow describeChild>
+                            <StyledLink
+                                component={RouterLink}
+                                to={`/projects/${feature.project}/features/${feature.name}/variants`}
+                                underline="hover"
+                            >
+                                {variants.length === 1
+                                    ? '1 variant'
+                                    : `${variants.length} variants`}
+                            </StyledLink>
+                        </Tooltip>
                     </>
                 );
 
                 return (
                     <FeatureOverviewSidePanelEnvironmentSwitch
                         key={environment.name}
-                        env={environment}
+                        environment={environment}
                         showInfoBox={() => {
                             setEnvironmentName(environment.name);
                             setShowInfoBox(true);

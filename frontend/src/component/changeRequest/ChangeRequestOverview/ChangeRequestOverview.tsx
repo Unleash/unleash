@@ -21,7 +21,7 @@ import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import AccessContext from 'contexts/AccessContext';
 import { ChangeRequestComment } from './ChangeRequestComments/ChangeRequestComment';
 import { AddCommentField } from './ChangeRequestComments/AddCommentField';
-import { useChangeRequestOpen } from 'hooks/api/getters/useChangeRequestOpen/useChangeRequestOpen';
+import { usePendingChangeRequest } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 
 const StyledAsideBox = styled(Box)(({ theme }) => ({
     width: '30%',
@@ -60,7 +60,7 @@ export const ChangeRequestOverview: FC = () => {
     );
     const { changeState, addComment } = useChangeRequestApi();
     const { refetch: refetchChangeRequestOpen } =
-        useChangeRequestOpen(projectId);
+        usePendingChangeRequests(projectId);
     const { setToastData, setToastApiError } = useToast();
 
     if (!changeRequest) {

@@ -1,4 +1,4 @@
-import { useChangeRequestOpen } from 'hooks/api/getters/useChangeRequestOpen/useChangeRequestOpen';
+import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 
 export const useStrategyChangeFromRequest = (
     projectId: string,
@@ -6,7 +6,7 @@ export const useStrategyChangeFromRequest = (
     environment: string,
     strategyId: string
 ) => {
-    const { draft } = useChangeRequestOpen(projectId);
+    const { draft } = usePendingChangeRequests(projectId);
 
     const environmentDraft = draft?.find(
         draft => draft.environment === environment

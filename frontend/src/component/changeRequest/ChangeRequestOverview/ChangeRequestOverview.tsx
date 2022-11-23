@@ -186,23 +186,6 @@ export const ChangeRequestOverview: FC = () => {
                         <StyledButtonBox>
                             <ConditionallyRender
                                 condition={
-                                    changeRequest.state !== 'Applied' &&
-                                    changeRequest.state !== 'Cancelled' &&
-                                    (changeRequest.createdBy.id === user?.id ||
-                                        isAdmin)
-                                }
-                                show={
-                                    <Button
-                                        sx={{ mr: 2 }}
-                                        variant="outlined"
-                                        onClick={onCancelChanges}
-                                    >
-                                        Cancel changes
-                                    </Button>
-                                }
-                            />
-                            <ConditionallyRender
-                                condition={
                                     changeRequest.state === 'In review' &&
                                     !hasApprovedAlready
                                 }
@@ -222,6 +205,23 @@ export const ChangeRequestOverview: FC = () => {
                                     >
                                         Apply changes
                                     </PermissionButton>
+                                }
+                            />
+                            <ConditionallyRender
+                                condition={
+                                    changeRequest.state !== 'Applied' &&
+                                    changeRequest.state !== 'Cancelled' &&
+                                    (changeRequest.createdBy.id === user?.id ||
+                                        isAdmin)
+                                }
+                                show={
+                                    <Button
+                                        sx={{ ml: 2 }}
+                                        variant="outlined"
+                                        onClick={onCancelChanges}
+                                    >
+                                        Cancel changes
+                                    </Button>
                                 }
                             />
                         </StyledButtonBox>

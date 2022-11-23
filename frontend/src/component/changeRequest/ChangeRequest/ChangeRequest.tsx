@@ -19,6 +19,7 @@ import {
 } from 'utils/strategyNames';
 import { hasNameField } from '../changeRequest.types';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { useChangeRequestOpen } from '../../../hooks/api/getters/useChangeRequestOpen/useChangeRequestOpen';
 
 interface IChangeRequestProps {
     changeRequest: IChangeRequest;
@@ -92,9 +93,9 @@ export const ChangeRequest: VFC<IChangeRequestProps> = ({
         }
     };
 
-    const showDiscard = !['Approved', 'Cancelled', 'Applied'].includes(
-        changeRequest.state
-    );
+    const showDiscard =
+        !['Cancelled', 'Applied'].includes(changeRequest.state) &&
+        changeRequest.features.flatMap(feature => feature.changes).length > 1;
 
     return (
         <Box>

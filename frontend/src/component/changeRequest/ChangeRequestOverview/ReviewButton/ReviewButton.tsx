@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { FC, useContext } from 'react';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useChangeRequest } from 'hooks/api/getters/useChangeRequest/useChangeRequest';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
@@ -22,7 +22,7 @@ import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import AccessContext from 'contexts/AccessContext';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 
-export const ReviewButton = () => {
+export const ReviewButton: FC<{ disabled: boolean }> = ({ disabled }) => {
     const { isAdmin } = useContext(AccessContext);
     const projectId = useRequiredPathParam('projectId');
     const id = useRequiredPathParam('id');
@@ -73,7 +73,9 @@ export const ReviewButton = () => {
         <React.Fragment>
             <PermissionButton
                 variant="contained"
-                disabled={data?.createdBy.id === user?.id && !isAdmin}
+                disabled={
+                    disabled || (data?.createdBy.id === user?.id && !isAdmin)
+                }
                 aria-controls={open ? 'review-options-menu' : undefined}
                 aria-expanded={open ? 'true' : undefined}
                 aria-label="review changes"

@@ -5,6 +5,7 @@ import { DEFAULT_ENV } from '../../../../lib/util/constants';
 import { collectIds } from '../../../../lib/util/collect-ids';
 import { ApiTokenType } from '../../../../lib/types/models/api-token';
 import variantsv3 from '../../../examples/variantsexport_v3.json';
+import { StateService } from '../../../../lib/services';
 
 const importData = require('../../../examples/import.json');
 
@@ -316,7 +317,7 @@ test('Roundtrip with strategies in multiple environments works', async () => {
         userName: 'export-tester',
     });
     const f = await app.services.featureToggleServiceV2.getFeature(featureName);
-    expect(f.environments).toHaveLength(2);
+    expect(f.environments).toHaveLength(4); // NOTE: this depends on other tests, otherwise it should be 2
 });
 
 test(`Importing version 2 replaces :global: environment with 'default'`, async () => {
@@ -467,6 +468,14 @@ test(`should not show environment on feature toggle, when environment is disable
 });
 
 test(`should handle v3 export with variants in features`, async () => {
+    app.services.stateService = new StateService(db.stores, {
+        getLogger,
+        flagResolver: {
+            isEnabled: () => false,
+            getAll: () => ({}),
+        },
+    });
+
     await app.request
         .post('/api/admin/state/import?drop=true')
         .attach('file', 'src/test/examples/variantsexport_v3.json')

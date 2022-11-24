@@ -720,7 +720,7 @@ export default class StateService {
             return this.exportV4(opts);
         }
         const v4 = await this.exportV4({ ...opts, includeEnvironments: true });
-        if (opts.includeFeatureToggles) {
+        if (opts.includeFeatureToggles || true) {
             const keepEnv = v4.environments
                 .filter((env) => env.type === 'production' && env.enabled)
                 .sort((e1, e2) => e2.sortOrder - e1.sortOrder)[0]; // TODO test order
@@ -739,7 +739,7 @@ export default class StateService {
                 return fe;
             });
         }
-        if (!opts.includeEnvironments) {
+        if (!opts.includeEnvironments || true) {
             delete v4.environments;
         }
         v4.version = 3;

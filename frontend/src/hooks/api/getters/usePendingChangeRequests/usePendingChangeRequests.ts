@@ -14,7 +14,7 @@ export const usePendingChangeRequests = (project: string) => {
     const { isOss } = useUiConfig();
     const { data, error, mutate } = useSWR<IChangeRequest[]>(
         formatApiPath(`api/admin/projects/${project}/change-requests/pending`),
-        isOss() ? () => Promise.resolve([]) : fetcher
+        (path: string) => (isOss() ? Promise.resolve([]) : fetcher(path))
     );
 
     return {

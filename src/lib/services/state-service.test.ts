@@ -613,7 +613,11 @@ test('Should export projects', async () => {
 });
 
 test('exporting to new format works', async () => {
-    const { stateService, stores } = getSetup();
+    const stores = createStores();
+    const stateService = new StateService(stores, {
+        getLogger,
+        flagResolver: { isEnabled: () => true, getAll: () => ({}) },
+    });
     await stores.projectStore.create({
         id: 'fancy',
         name: 'extra',
@@ -648,7 +652,7 @@ test('exporting to new format works', async () => {
         type: 'simple',
         value: 'Test',
     });
-    const exported = await stateService.exportV4({});
+    const exported = await stateService.export({});
     expect(exported.featureStrategies).toHaveLength(1);
 });
 

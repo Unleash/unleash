@@ -261,7 +261,7 @@ export const ProjectFeatureToggles = ({
                 disableSortBy: true,
             },
         ],
-        [projectId, environments, loading]
+        [projectId, environments, loading, isChangeRequestConfigured]
     );
 
     const [searchValue, setSearchValue] = useState(

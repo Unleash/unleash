@@ -35,6 +35,8 @@ import { sortTypes } from 'utils/sortTypes';
 import { CreatePersonalAPIToken } from './CreatePersonalAPIToken/CreatePersonalAPIToken';
 import { DeletePersonalAPIToken } from './DeletePersonalAPIToken/DeletePersonalAPIToken';
 import { PersonalAPITokenDialog } from './PersonalAPITokenDialog/PersonalAPITokenDialog';
+import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(3),
@@ -80,6 +82,7 @@ interface IPersonalAPITokensTabProps {
 }
 
 export const PersonalAPITokensTab = ({ user }: IPersonalAPITokensTabProps) => {
+    const { uiConfig } = useUiConfig();
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const isExtraSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -132,6 +135,13 @@ export const PersonalAPITokensTab = ({ user }: IPersonalAPITokensTabProps) => {
                 Header: 'Created',
                 accessor: 'createdAt',
                 Cell: DateCell,
+                sortType: 'date',
+                maxWidth: 150,
+            },
+            {
+                Header: 'Last seen',
+                accessor: 'seenAt',
+                Cell: TimeAgoCell,
                 sortType: 'date',
                 maxWidth: 150,
             },
@@ -198,6 +208,9 @@ export const PersonalAPITokensTab = ({ user }: IPersonalAPITokensTabProps) => {
 
     useEffect(() => {
         const hiddenColumns = [];
+        if (!uiConfig.flags.tokensLastSeen) {
+            hiddenColumns.push('seenAt');
+        }
         if (isSmallScreen) {
             hiddenColumns.push('createdAt');
         }
@@ -205,7 +218,12 @@ export const PersonalAPITokensTab = ({ user }: IPersonalAPITokensTabProps) => {
             hiddenColumns.push('expiresAt');
         }
         setHiddenColumns(hiddenColumns);
-    }, [setHiddenColumns, isSmallScreen, isExtraSmallScreen]);
+    }, [
+        setHiddenColumns,
+        isSmallScreen,
+        isExtraSmallScreen,
+        uiConfig.flags.tokensLastSeen,
+    ]);
 
     useEffect(() => {
         const tableState: PageQueryType = {};

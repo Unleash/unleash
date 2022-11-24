@@ -7,6 +7,7 @@ import {
     Typography,
     Box,
     Link,
+    Alert,
 } from '@mui/material';
 import { KeyboardArrowDownOutlined } from '@mui/icons-material';
 import React from 'react';
@@ -93,10 +94,22 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
                   disabled: !environment.enabled,
               }));
 
-    const isUnleashCloud = Boolean(uiConfig?.flags?.UNLEASH_CLOUD) || true;
+    const isUnleashCloud = Boolean(uiConfig?.flags?.UNLEASH_CLOUD);
 
     return (
         <form onSubmit={handleSubmit} className={styles.form}>
+            <ConditionallyRender
+                condition={isUnleashCloud}
+                show={
+                    <Alert severity="info" sx={{ mb: 4 }}>
+                        Please be aware of our{' '}
+                        <Link href="https://www.getunleash.io/fair-use-policy">
+                            fair use policy
+                        </Link>
+                        .
+                    </Alert>
+                }
+            />
             <div className={styles.container}>
                 <p className={styles.inputDescription}>
                     What would you like to call this token?
@@ -127,16 +140,7 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
                             <FormControlLabel
                                 key={key}
                                 value={key}
-                                sx={{
-                                    border: theme =>
-                                        `1px solid ${theme.palette.dividerAlternative}`,
-                                    borderRadius: theme =>
-                                        `${theme.shape.borderRadiusMedium}px`,
-                                    pr: 2,
-                                    py: 1,
-                                    mx: 0,
-                                    mb: 1,
-                                }}
+                                sx={{ mb: 1 }}
                                 control={
                                     <Radio
                                         sx={{
@@ -156,36 +160,6 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
                                                 {title}
                                             </Typography>
                                         </Box>
-                                        <ConditionallyRender
-                                            condition={
-                                                key === TokenType.FRONTEND &&
-                                                isUnleashCloud
-                                            }
-                                            show={
-                                                <Typography
-                                                    variant="body2"
-                                                    sx={{
-                                                        mt: 1,
-                                                        mb: 0.5,
-                                                        background: theme =>
-                                                            theme.palette
-                                                                .warning.light,
-                                                        p: 1,
-                                                        borderRadius: theme =>
-                                                            `${theme.shape.borderRadiusMedium}px`,
-                                                    }}
-                                                >
-                                                    This option is limited to 10{' '}
-                                                    <abbr title="Requests per second">
-                                                        RPS
-                                                    </abbr>
-                                                    , if you exceed this limit
-                                                    we will charge extra.{' '}
-                                                    <Link>Read more</Link>
-                                                    {/* FIXME: link */}
-                                                </Typography>
-                                            }
-                                        />
                                     </Box>
                                 }
                             />

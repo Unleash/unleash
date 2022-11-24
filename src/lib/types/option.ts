@@ -117,6 +117,7 @@ export interface IUnleashOptions {
     inlineSegmentConstraints?: boolean;
     clientFeatureCaching?: Partial<IClientCachingOption>;
     flagResolver?: IFlagResolver;
+    accessControlMaxAge?: number;
 }
 
 export interface IEmailOption {
@@ -202,4 +203,5 @@ export interface IUnleashConfig {
     segmentValuesLimit: number;
     strategySegmentsLimit: number;
     clientFeatureCaching: IClientCachingOption;
+    accessControlMaxAge: number;
 }

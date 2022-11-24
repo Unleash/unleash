@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 import cors from 'cors';
-import { IUnleashServices } from '../types';
+import { IUnleashConfig, IUnleashServices } from '../types';
 
 export const allowRequestOrigin = (
     requestOrigin: string,
@@ -13,9 +13,10 @@ export const allowRequestOrigin = (
 
 // Check the request's Origin header against a list of allowed origins.
 // The list may include '*', which `cors` does not support natively.
-export const corsOriginMiddleware = ({
-    settingService,
-}: Pick<IUnleashServices, 'settingService'>): RequestHandler => {
+export const corsOriginMiddleware = (
+    { settingService }: Pick<IUnleashServices, 'settingService'>,
+    config: IUnleashConfig,
+): RequestHandler => {
     return cors(async (req, callback) => {
         try {
             const { frontendApiOrigins = [] } =
@@ -25,6 +26,7 @@ export const corsOriginMiddleware = ({
                     req.header('Origin'),
                     frontendApiOrigins,
                 ),
+                maxAge: config.accessControlMaxAge,
             });
         } catch (error) {
             callback(error);

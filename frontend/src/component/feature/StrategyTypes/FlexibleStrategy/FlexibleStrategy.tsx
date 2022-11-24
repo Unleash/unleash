@@ -14,10 +14,10 @@ import {
 } from 'utils/parseParameter';
 
 const builtInStickinessOptions = [
-    { key: 'default', label: 'default' },
-    { key: 'userId', label: 'userId' },
-    { key: 'sessionId', label: 'sessionId' },
-    { key: 'random', label: 'random' },
+    { name: 'default', label: 'default', stickiness: true },
+    { name: 'userId', label: 'userId', stickiness: true },
+    { name: 'sessionId', label: 'sessionId', stickiness: true },
+    { name: 'random', label: 'random', stickiness: true},
 ];
 
 interface IFlexibleStrategyProps {
@@ -42,19 +42,18 @@ const FlexibleStrategy = ({
     };
 
     const resolveStickiness = () =>
-        builtInStickinessOptions.concat(
+        builtInStickinessOptions.filter(
+            // @ts-expect-error
+            c => !context.find(s => s.name === c.name)).concat(
             context
                 // @ts-expect-error
                 .filter(c => c.stickiness)
-                .filter(
-                    // @ts-expect-error
-                    c => !builtInStickinessOptions.find(s => s.key === c.name)
-                )
                 // @ts-expect-error
                 .map(c => ({ key: c.name, label: c.name }))
         );
 
     const stickinessOptions = resolveStickiness();
+    console.log(parameters);
 
     const rollout =
         parameters.rollout !== undefined

@@ -38,7 +38,9 @@ const FeatureSettingsProjectConfirm = ({
         );
     }, [feature, project]);
 
-    const hasPendingChangeRequests = changeRequests?.length > 0;
+    const hasPendingChangeRequests = changeRequests
+        ? changeRequests.length > 0
+        : false;
 
     return (
         <ConditionallyRender

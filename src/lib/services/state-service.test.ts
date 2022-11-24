@@ -18,7 +18,10 @@ const oldExportExample = require('./state-service-export-v1.json');
 function getSetup() {
     const stores = createStores();
     return {
-        stateService: new StateService(stores, { getLogger }),
+        stateService: new StateService(stores, {
+            getLogger,
+            flagResolver: { isEnabled: () => true, getAll: () => ({}) },
+        }),
         stores,
     };
 }
@@ -560,7 +563,7 @@ test('exporting to new format works', async () => {
         type: 'simple',
         value: 'Test',
     });
-    const exported = await stateService.export({});
+    const exported = await stateService.exportV4({});
     expect(exported.featureStrategies).toHaveLength(1);
 });
 

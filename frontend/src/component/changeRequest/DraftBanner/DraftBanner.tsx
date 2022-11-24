@@ -4,7 +4,7 @@ import { useStyles as useAppStyles } from 'component/App.styles';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ChangeRequestSidebar } from '../ChangeRequestSidebar/ChangeRequestSidebar';
-import { useChangeRequestOpen } from 'hooks/api/getters/useChangeRequestOpen/useChangeRequestOpen';
+import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { IChangeRequest } from '../changeRequest.types';
 
 interface IDraftBannerProps {
@@ -76,7 +76,7 @@ const StickyBanner = styled(Box)(({ theme }) => ({
 
 export const DraftBanner: VFC<IDraftBannerProps> = ({ project }) => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-    const { draft, loading } = useChangeRequestOpen(project);
+    const { draft, loading } = usePendingChangeRequests(project);
 
     if ((!loading && !draft) || draft?.length === 0) {
         return null;

@@ -6,6 +6,8 @@ import ProjectInfo from './ProjectInfo/ProjectInfo';
 import { useStyles } from './Project.styles';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import { useLastViewedProject } from '../../../hooks/useLastViewedProject';
+import { useEffect } from 'react';
 
 const refreshInterval = 15 * 1000;
 
@@ -16,6 +18,11 @@ const ProjectOverview = () => {
     const { members, features, health, description, environments } = project;
     const { classes: styles } = useStyles();
     usePageTitle(`Project overview – ${projectName}`);
+    const { setLastViewed } = useLastViewedProject();
+
+    useEffect(() => {
+        setLastViewed(projectName);
+    }, [projectName, setLastViewed]);
 
     return (
         <div>

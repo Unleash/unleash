@@ -1,17 +1,16 @@
-import { VFC } from 'react';
-import { Link, Box } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { ReactNode, VFC } from 'react';
+import { Box } from '@mui/material';
 import { Badge } from 'component/common/Badge/Badge';
 import { ChangeItemWrapper } from './StrategyChange';
 
-interface IPlaygroundResultsTable {
+interface IToggleStatusChange {
     enabled: boolean;
-    onDiscard?: () => void;
+    discard?: ReactNode;
 }
 
-export const ToggleStatusChange: VFC<IPlaygroundResultsTable> = ({
+export const ToggleStatusChange: VFC<IToggleStatusChange> = ({
     enabled,
-    onDiscard,
+    discard,
 }) => {
     return (
         <ChangeItemWrapper>
@@ -21,14 +20,7 @@ export const ToggleStatusChange: VFC<IPlaygroundResultsTable> = ({
                     {enabled ? ' Enabled' : 'Disabled'}
                 </Badge>
             </Box>
-            <ConditionallyRender
-                condition={Boolean(onDiscard)}
-                show={
-                    <Box>
-                        <Link onClick={onDiscard}>Discard</Link>
-                    </Box>
-                }
-            />
+            {discard}
         </ChangeItemWrapper>
     );
 };

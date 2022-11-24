@@ -1,5 +1,9 @@
 import joi from 'joi';
-import { featureSchema, featureTagSchema } from '../schema/feature-schema';
+import {
+    featureSchema,
+    featureTagSchema,
+    variantsSchema,
+} from '../schema/feature-schema';
 import strategySchema from './strategy-schema';
 import { tagSchema } from './tag-schema';
 import { tagTypeSchema } from './tag-type-schema';
@@ -24,6 +28,7 @@ export const featureEnvironmentsSchema = joi.object().keys({
     environment: joi.string(),
     featureName: joi.string(),
     enabled: joi.boolean(),
+    variants: joi.array().items(variantsSchema).optional(),
 });
 
 export const environmentSchema = joi.object().keys({

@@ -1,4 +1,4 @@
-import { DragEventHandler, VFC } from 'react';
+import { DragEventHandler, FC } from 'react';
 import { Edit } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import { IFeatureEnvironment } from 'interfaces/featureToggle';
@@ -20,15 +20,17 @@ interface IStrategyItemProps {
     onDragEnd?: DragEventHandler<HTMLButtonElement>;
     otherEnvironments?: IFeatureEnvironment['name'][];
     orderNumber?: number;
+    headerChildren?: JSX.Element[] | JSX.Element;
 }
 
-export const StrategyItem: VFC<IStrategyItemProps> = ({
+export const StrategyItem: FC<IStrategyItemProps> = ({
     environmentId,
     strategy,
     onDragStart,
     onDragEnd,
     otherEnvironments,
     orderNumber,
+    headerChildren,
 }) => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
@@ -48,6 +50,7 @@ export const StrategyItem: VFC<IStrategyItemProps> = ({
             orderNumber={orderNumber}
             actions={
                 <>
+                    {headerChildren}
                     <ConditionallyRender
                         condition={Boolean(
                             otherEnvironments && otherEnvironments?.length > 0

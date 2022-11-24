@@ -75,7 +75,7 @@ export default class FeatureToggleClientStore
             'features.project as project',
             'features.stale as stale',
             'features.impression_data as impression_data',
-            'features.variants as variants',
+            'fe.variants as variants',
             'features.created_at as created_at',
             'features.last_seen_at as last_seen_at',
             'fe.enabled as enabled',
@@ -109,7 +109,12 @@ export default class FeatureToggleClientStore
             )
             .leftJoin(
                 this.db('feature_environments')
-                    .select('feature_name', 'enabled', 'environment')
+                    .select(
+                        'feature_name',
+                        'enabled',
+                        'environment',
+                        'variants',
+                    )
                     .where({ environment })
                     .as('fe'),
                 'fe.feature_name',
@@ -180,7 +185,7 @@ export default class FeatureToggleClientStore
             feature.project = r.project;
             feature.stale = r.stale;
             feature.type = r.type;
-            feature.variants = r.variants;
+            feature.variants = r.variants || [];
             feature.project = r.project;
             if (isAdmin) {
                 feature.lastSeenAt = r.last_seen_at;

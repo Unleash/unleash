@@ -199,6 +199,18 @@ class AccessStoreMock implements IAccessStore {
     ): Promise<void> {
         return Promise.resolve(undefined);
     }
+
+    clearUserPersonalAccessTokens(userId: number): Promise<void> {
+        return Promise.resolve(undefined);
+    }
+
+    unlinkUserGroups(userId: number): Promise<void> {
+        return Promise.resolve(undefined);
+    }
+
+    clearPublicSignupUserTokens(userId: number): Promise<void> {
+        return Promise.resolve(undefined);
+    }
 }
 
 module.exports = AccessStoreMock;

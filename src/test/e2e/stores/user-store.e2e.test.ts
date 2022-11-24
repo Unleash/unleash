@@ -160,3 +160,15 @@ test('should always lowercase emails on updates', async () => {
     storedUser = await store.get(storedUser.id);
     expect(storedUser.email).toBe(updatedUser.email.toLowerCase());
 });
+
+test('should delete user', async () => {
+    const user = await stores.userStore.upsert({
+        email: 'deleteuser@mail.com',
+    });
+
+    await stores.userStore.delete(user.id);
+
+    await expect(() => stores.userStore.get(user.id)).rejects.toThrow(
+        new NotFoundError('No user found'),
+    );
+});

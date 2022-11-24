@@ -1,4 +1,4 @@
-import React, { useMemo, useState, VFC } from 'react';
+import React, { useContext, useMemo, useState, VFC } from 'react';
 import { HeaderGroup, useGlobalFilter, useTable } from 'react-table';
 import { Alert, Box, styled, Typography } from '@mui/material';
 import {
@@ -25,9 +25,10 @@ import { UPDATE_PROJECT } from '@server/types/permissions';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { ChangeRequestProcessHelp } from './ChangeRequestProcessHelp/ChangeRequestProcessHelp';
-import GeneralSelect from '../../../../common/GeneralSelect/GeneralSelect';
+import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { KeyboardArrowDownOutlined } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
+import AccessContext from 'contexts/AccessContext';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     padding: theme.spacing(1),
@@ -141,27 +142,34 @@ export const ChangeRequestConfiguration: VFC = () => {
             {
                 Header: 'Required approvals',
                 align: 'center',
-                Cell: ({ row: { original } }: any) => (
-                    <ConditionallyRender
-                        condition={original.changeRequestEnabled}
-                        show={
-                            <StyledBox data-loading>
-                                <GeneralSelect
-                                    options={approvalOptions}
-                                    value={original.requiredApprovals || 1}
-                                    onChange={approvals => {
-                                        onRequiredApprovalsChange(
-                                            original,
-                                            approvals
-                                        );
-                                    }}
-                                    IconComponent={KeyboardArrowDownOutlined}
-                                    fullWidth
-                                />
-                            </StyledBox>
-                        }
-                    />
-                ),
+                Cell: ({ row: { original } }: any) => {
+                    const { hasAccess } = useContext(AccessContext);
+
+                    return (
+                        <ConditionallyRender
+                            condition={original.changeRequestEnabled}
+                            show={
+                                <StyledBox data-loading>
+                                    <GeneralSelect
+                                        options={approvalOptions}
+                                        value={original.requiredApprovals || 1}
+                                        onChange={approvals => {
+                                            onRequiredApprovalsChange(
+                                                original,
+                                                approvals
+                                            );
+                                        }}
+                                        disabled={!hasAccess(UPDATE_PROJECT)}
+                                        IconComponent={
+                                            KeyboardArrowDownOutlined
+                                        }
+                                        fullWidth
+                                    />
+                                </StyledBox>
+                            }
+                        />
+                    );
+                },
                 width: 100,
                 disableGlobalFilter: true,
                 disableSortBy: true,

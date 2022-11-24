@@ -3,7 +3,7 @@ title: The Anatomy of Unleash
 ---
 import Figure from '@site/src/components/Figure/Figure.tsx'
 
-This guide's purpose is to give you a conceptual overview of how Unleash works. It covers the various components that exist within an Unleash system and how they interact with each other and with external applications. The diagrams are intended to help you understand the fundamental building blocks, such as [projects](../user_guide/projects.md), [environments](../user_guide/environments.md), [variants](../advanced/feature-toggle-variants.md) and, of course, [feature toggles](../reference/feature-toggles.mdx).
+This guide's purpose is to give you a conceptual overview of how Unleash works. It covers the various components that exist within an Unleash system and how they interact with each other and with external applications. The diagrams are intended to help you understand the fundamental building blocks, such as [projects](../reference/projects.md), [environments](../reference/environments.md), [variants](../reference/feature-toggle-variants.md) and, of course, [feature toggles](../reference/feature-toggles.mdx).
 
 The end of this guide presents a [short use case, explaining how you might configure Unleash](#use-case) to start working with feature toggles.
 
@@ -13,17 +13,17 @@ The end of this guide presents a [short use case, explaining how you might confi
 Some things in Unleash are configured and defined on the global level. These options apply across the entire Unleash instance. The most important global configuration options for day-to-day operations are:
 
 - [API access tokens](../reference/api-tokens-and-client-keys.mdx)
-- [Projects](../user_guide/projects.md)
+- [Projects](../reference/projects.md)
 - [Segments](../reference/segments.mdx)
-- [Strategy types](../user_guide/activation-strategies.md) (including [custom activation strategy types](../advanced/custom-activation-strategy.md))
-- [Tag types](../advanced/tags.md)
-- [Unleash context](../user_guide/unleash-context.md) fields (including [custom context fields](../user_guide/unleash-context.md#custom-context-fields))
-- Users, [user groups](../user_guide/rbac.md#user-groups) and [global roles](../user_guide/rbac.md)
+- [Strategy types](../reference/activation-strategies.md) (including [custom activation strategy types](../reference/custom-activation-strategies.md))
+- [Tag types](../reference/tags.md)
+- [Unleash context](../reference/unleash-context.md) fields (including [custom context fields](../reference/unleash-context.md#custom-context-fields))
+- Users, [user groups](../reference/rbac.md#user-groups) and [global roles](../reference/rbac.md)
 
 
 ## Projects
 
-[**Projects**](../user_guide/projects.md) contain [feature toggles](../reference/feature-toggles.mdx) and their configurations, and a set of active [environments](../user_guide/environments.md).
+[**Projects**](../reference/projects.md) contain [feature toggles](../reference/feature-toggles.mdx) and their configurations, and a set of active [environments](../reference/environments.md).
 
 All Unleash instances must have at least one project at any given time. New instances get a project called “Default”.
 
@@ -35,7 +35,7 @@ Pro and Enterprise customers can create, rename, and delete projects as they wis
 
 <Figure img="/img/anatomy-of-unleash-customer-tiers.png" caption="Feature toggles can be activated or deactivated independently in different environments. For instance, a feature toggle can be active in the development environment, and deactivated in the production environment. Even if their configuration is otherwise identical, deactivated feature toggles will never be considered enabled."/>
 
-[**Environments**](../user_guide/environments.md) in Unleash let you change how a feature toggle works in your application’s different environments. For instance, while you are developing a feature, it’s likely that you’ll want it to be available in your development environment, but not in your production environment: environments let you do that. You might also want to enable a feature for only some users in your development environment, but no users in your production environment: environments let you do that.
+[**Environments**](../reference/environments.md) in Unleash let you change how a feature toggle works in your application’s different environments. For instance, while you are developing a feature, it’s likely that you’ll want it to be available in your development environment, but not in your production environment: environments let you do that. You might also want to enable a feature for only some users in your development environment, but no users in your production environment: environments let you do that.
 
 Environments exist on two different levels within Unleash. The set of **all available environments is defined on the global level**. Additionally, **each project** can choose which of these global environments should be **available on the project level**. The set of environments available to any given project is **always a subset** of the set of globally available environments.
 
@@ -56,9 +56,9 @@ When connecting an SDK to Unleash, it's the **API key that decides which environ
 
 ## Features (feature  toggles)
 
-[**Feature toggles**](../reference/feature-toggles.mdx) are at the heart of Unleash’s functionality. Feature toggles belong to projects and live next to project environments. In and of itself, a feature toggle doesn’t do anything. You must assign [**activation strategies**](../user_guide/activation-strategies.md) to it for it to start taking effect.
+[**Feature toggles**](../reference/feature-toggles.mdx) are at the heart of Unleash’s functionality. Feature toggles belong to projects and live next to project environments. In and of itself, a feature toggle doesn’t do anything. You must assign [**activation strategies**](../reference/activation-strategies.md) to it for it to start taking effect.
 
-When creating a feature toggle, you must assign a unique (across your Unleash instance) name, a [feature toggle type](../advanced/feature-toggle-types.md), a [project](../user_guide/projects.md) it belongs to, and an optional description. Everything except for the name can be changed later.
+When creating a feature toggle, you must assign a unique (across your Unleash instance) name, a [feature toggle type](../reference/feature-toggle-types.md), a [project](../reference/projects.md) it belongs to, and an optional description. Everything except for the name can be changed later.
 
 <Figure img="/img/anatomy-of-unleash-features.png" caption="Feature toggle states are evaluated independently in each environment." alt="A hierarchy showing a project containing an environment containing a feature toggle configuration."/>
 
@@ -66,15 +66,15 @@ When creating a feature toggle, you must assign a unique (across your Unleash in
 
 <Figure img="/img/anatomy-of-unleash-strategy.png" caption="Activation strategies are applied to feature toggles on a per-environment basis and decide whether a feature is enabled or not." alt="A hierarchy displaying an environment containing a feature toggle configuration with an activation strategy."/>
 
-[**Activation strategies**](../user_guide/activation-strategies.md) (or just **strategies** for short) are the part of feature toggles that tell Unleash **who should get a feature**. An activation strategy is assigned to **one **feature toggle in **one **environment.
+[**Activation strategies**](../reference/activation-strategies.md) (or just **strategies** for short) are the part of feature toggles that tell Unleash **who should get a feature**. An activation strategy is assigned to **one **feature toggle in **one **environment.
 
 When you check a [feature toggle](../reference/feature-toggles.mdx) in an application, the following decides the result:
 1. Is the toggle active in the current environment? If not, it will be disabled.
 2. If the toggle **is** active in the current environment, the toggle’s strategies decide the result. As long as **at least one** of a toggle’s strategies resolve to true for the current context (user or application), then the toggle will be considered enabled. In other words, if you have a hundred strategies and ninety-nine of them resolve to false, but one of them resolves to true, then the toggle is enabled.
 
-Activation strategies tie feature toggles and [environments](../user_guide/environments.md) together. When you assign an activation strategy to a feature toggle, you do so in one environment at a time. You can assign the same strategy to the same toggle in different environments, but they will be different instances of the same strategy, and do not stay in sync. Unleash also lets you copy strategies from one environment to another.
+Activation strategies tie feature toggles and [environments](../reference/environments.md) together. When you assign an activation strategy to a feature toggle, you do so in one environment at a time. You can assign the same strategy to the same toggle in different environments, but they will be different instances of the same strategy, and do not stay in sync. Unleash also lets you copy strategies from one environment to another.
 
-Unleash comes with a number of strategies built in (refer the [activation strategies documentation](../user_guide/activation-strategies.md) for more information on those). You can also create your own [custom activation strategies](../advanced/custom-activation-strategy.md) if you need them. All strategies can be further augmented by [**strategy constraints**](../advanced/strategy-constraints.md).
+Unleash comes with a number of strategies built in (refer the [activation strategies documentation](../reference/activation-strategies.md) for more information on those). You can also create your own [custom activation strategies](../reference/custom-activation-strategies.md) if you need them. All strategies can be further augmented by [**strategy constraints**](../reference/strategy-constraints.md).
 
 
 <Figure img="/img/anatomy-of-unleash-environments-strategies.png" caption="Feature toggles exist across environments and can have different activation strategies in each environment."/>
@@ -83,7 +83,7 @@ Unleash comes with a number of strategies built in (refer the [activation strate
 
 ## Strategy constraints
 
-[**Strategy constraints**](../advanced/strategy-constraints.md) (or just **constraints**) help you fine-tune your strategies. They are an extra layer of prerequisites that help you narrow the audience of a strategy down. Strategy constraints are applied to [**activation strategies**](../user_guide/activation-strategies.md).
+[**Strategy constraints**](../reference/strategy-constraints.md) (or just **constraints**) help you fine-tune your strategies. They are an extra layer of prerequisites that help you narrow the audience of a strategy down. Strategy constraints are applied to [**activation strategies**](../reference/activation-strategies.md).
 
 For example, if you wanted to roll a feature out to 50% of users with **a specific email domain **(such as “@mycompany.com”), then strategy constraints would let you target only users with that email domain.
 
@@ -104,7 +104,7 @@ Note that even if all the constraints are met, the strategy itself might not res
 :::
 
 
-You can define constraints on whatever properties you want in your [Unleash context](../user_guide/unleash-context.md).
+You can define constraints on whatever properties you want in your [Unleash context](../reference/unleash-context.md).
 
 Constraints are applied to individual strategies and do not stay in sync with each other. When you need to have the same constraints applied to multiple strategies and need those constraints to stay in sync, use [**segments**](../reference/segments.mdx).
 
@@ -112,7 +112,7 @@ Constraints are applied to individual strategies and do not stay in sync with ea
 
 ## Segments
 
-[**Segments**](../reference/segments.mdx) add extra functionality on top of [**strategy constraints**](../advanced/strategy-constraints.md). A segment is a reusable collection of strategy constraints with a name and an optional description. When you apply a segment to a [strategy](../user_guide/activation-strategies.md), the strategy will be evaluated as if all of the segment's constraints were applied to it.
+[**Segments**](../reference/segments.mdx) add extra functionality on top of [**strategy constraints**](../reference/strategy-constraints.md). A segment is a reusable collection of strategy constraints with a name and an optional description. When you apply a segment to a [strategy](../reference/activation-strategies.md), the strategy will be evaluated as if all of the segment's constraints were applied to it.
 
 Segments let you apply a set of constraints to multiple strategies **and** keep the constraints in sync between those strategies. Whenever you apply a segment to a strategy, you essentially create a **reference** to that segment. This means that whenever you change the segment by adding, removing, or changing constraints, this change propagates to all the strategies that reference this segment.
 
@@ -124,7 +124,7 @@ Segments are only available to Pro and Enterprise users.
 
 ## Variants and feature toggle payloads
 
-By default, a [feature toggle](../reference/feature-toggles.mdx) in Unleash only tells you whether a feature is enabled or disabled, but you can also add more information to your toggles by using [**feature toggle variants**](../advanced/feature-toggle-variants.md). Variants also allow you to run [A/B testing experiments](a-b-testing.md).
+By default, a [feature toggle](../reference/feature-toggles.mdx) in Unleash only tells you whether a feature is enabled or disabled, but you can also add more information to your toggles by using [**feature toggle variants**](../reference/feature-toggle-variants.md). Variants also allow you to run [A/B testing experiments](a-b-testing.md).
 
 Feature toggles are designed to let you decide which users get access to a feature. Variants are designed to let you decide **which version** of the feature a user gets access to. For instance, if user A is part of your beta testing program and gets access to a new beta feature, then you can use variants to decide whether they should get the red version or the green version of the feature.
 
@@ -132,7 +132,7 @@ When you create new variants for a feature, they must be given a name and a **we
 
 You can use the variant payload to attach arbitrary data to a variant. Variants can have different kinds of payloads.
 
-A feature toggle can have as many variants as you want. Importantly, variants are independent of [environments](../user_guide/environments.md). In other words: you’ll always have the exact same variants with the exact same weightings and the exact same payloads in all environments.
+A feature toggle can have as many variants as you want. Importantly, variants are independent of [environments](../reference/environments.md). In other words: you’ll always have the exact same variants with the exact same weightings and the exact same payloads in all environments.
 
 <Figure img="/img/anatomy-of-unleash-variants.png" caption="Feature toggle variants are the same for all environments."/>
 
@@ -154,9 +154,9 @@ Because you’d like to see the new color scheme while you’re developing it, y
 
 ### In your application
 
-You configure an [Unleash SDK for your server](../sdks/index.md) to communicate with Unleash. When rendering the page, you check the state of the new-color-scheme feature and render a different stylesheet based on the results.
+You configure an [Unleash SDK for your server](../reference/sdks/index.md) to communicate with Unleash. When rendering the page, you check the state of the new-color-scheme feature and render a different stylesheet based on the results.
 
-In pseudocode (loosely based on the [Node.js SDK](../sdks/node.md)), that might look like this:
+In pseudocode (loosely based on the [Node.js SDK](../reference/sdks/node.md)), that might look like this:
 
 ```js
 if (unleash.isEnabled(“new-color-scheme”)) {

@@ -11,6 +11,7 @@ import { IFeatureStrategiesStore } from '../types/stores/feature-strategies-stor
 import { IFeatureEnvironmentStore } from '../types/stores/feature-environment-store';
 import { IProjectStore } from 'lib/types/stores/project-store';
 import MinimumOneEnvironmentError from '../error/minimum-one-environment-error';
+import { IFlagResolver } from 'lib/types/experimental';
 
 export default class EnvironmentService {
     private logger: Logger;
@@ -22,6 +23,8 @@ export default class EnvironmentService {
     private projectStore: IProjectStore;
 
     private featureEnvironmentStore: IFeatureEnvironmentStore;
+
+    private flagResolver: IFlagResolver;
 
     constructor(
         {
@@ -36,13 +39,17 @@ export default class EnvironmentService {
             | 'featureEnvironmentStore'
             | 'projectStore'
         >,
-        { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
+        {
+            getLogger,
+            flagResolver,
+        }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>,
     ) {
         this.logger = getLogger('services/environment-service.ts');
         this.environmentStore = environmentStore;
         this.featureStrategiesStore = featureStrategiesStore;
         this.featureEnvironmentStore = featureEnvironmentStore;
         this.projectStore = projectStore;
+        this.flagResolver = flagResolver;
     }
 
     async getAll(): Promise<IEnvironment[]> {
@@ -90,6 +97,13 @@ export default class EnvironmentService {
                 environment,
                 projectId,
             );
+
+            if (!this.flagResolver.isEnabled('variantsPerEnvironment')) {
+                await this.featureEnvironmentStore.clonePreviousVariants(
+                    environment,
+                    projectId,
+                );
+            }
         } catch (e) {
             if (e.code === UNIQUE_CONSTRAINT_VIOLATION) {
                 throw new NameExistsError(

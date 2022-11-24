@@ -8,7 +8,7 @@ export const useChangeRequestConfig = (projectId: string) => {
     const { isOss } = useUiConfig();
     const { data, error, mutate } = useSWR<IChangeRequestEnvironmentConfig[]>(
         formatApiPath(`api/admin/projects/${projectId}/change-requests/config`),
-        isOss() ? () => Promise.resolve([]) : fetcher
+        (path: string) => (isOss() ? Promise.resolve([]) : fetcher(path))
     );
 
     return {

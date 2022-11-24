@@ -1,5 +1,5 @@
 import { useContext, useEffect, useMemo, useState } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 import { mutate } from 'swr';
 import { getProjectFetcher } from 'hooks/api/getters/useProject/getProjectFetcher';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
@@ -151,6 +151,10 @@ export const ProjectListNew = () => {
         filteredProjects.length < projects.length
             ? `${filteredProjects.length} of ${projects.length}`
             : projects.length;
+
+    if (projects?.length === 1) {
+        return <Navigate to={`/projects/${projects[0].id}`} replace />;
+    }
 
     return (
         <div ref={ref}>

@@ -21,6 +21,7 @@ import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import AccessContext from 'contexts/AccessContext';
 import { ChangeRequestComment } from './ChangeRequestComments/ChangeRequestComment';
 import { AddCommentField } from './ChangeRequestComments/AddCommentField';
+import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 
 const StyledAsideBox = styled(Box)(({ theme }) => ({
     width: '30%',
@@ -58,6 +59,8 @@ export const ChangeRequestOverview: FC = () => {
         id
     );
     const { changeState, addComment } = useChangeRequestApi();
+    const { refetch: refetchChangeRequestOpen } =
+        usePendingChangeRequests(projectId);
     const { setToastData, setToastApiError } = useToast();
 
     if (!changeRequest) {
@@ -70,6 +73,7 @@ export const ChangeRequestOverview: FC = () => {
                 state: 'Applied',
             });
             refetchChangeRequest();
+            refetchChangeRequestOpen();
             setToastData({
                 type: 'success',
                 title: 'Success',
@@ -89,6 +93,23 @@ export const ChangeRequestOverview: FC = () => {
                 type: 'success',
                 title: 'Success',
                 text: 'Comment added',
+            });
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
+    };
+
+    const onCancelChanges = async () => {
+        try {
+            await changeState(projectId, Number(id), {
+                state: 'Cancelled',
+            });
+            refetchChangeRequest();
+            refetchChangeRequestOpen();
+            setToastData({
+                type: 'success',
+                title: 'Success',
+                text: 'Changes cancelled',
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
@@ -129,7 +150,10 @@ export const ChangeRequestOverview: FC = () => {
                 <StyledPaper elevation={0}>
                     <StyledInnerContainer>
                         Changes
-                        <ChangeRequest changeRequest={changeRequest} />
+                        <ChangeRequest
+                            changeRequest={changeRequest}
+                            onRefetch={refetchChangeRequest}
+                        />
                         {changeRequest.comments?.map(comment => (
                             <ChangeRequestComment
                                 key={comment.id}
@@ -181,6 +205,23 @@ export const ChangeRequestOverview: FC = () => {
                                     >
                                         Apply changes
                                     </PermissionButton>
+                                }
+                            />
+                            <ConditionallyRender
+                                condition={
+                                    changeRequest.state !== 'Applied' &&
+                                    changeRequest.state !== 'Cancelled' &&
+                                    (changeRequest.createdBy.id === user?.id ||
+                                        isAdmin)
+                                }
+                                show={
+                                    <Button
+                                        sx={{ ml: 2 }}
+                                        variant="outlined"
+                                        onClick={onCancelChanges}
+                                    >
+                                        Cancel changes
+                                    </Button>
                                 }
                             />
                         </StyledButtonBox>

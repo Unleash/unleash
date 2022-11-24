@@ -1,4 +1,4 @@
-import { IFeatureEnvironment } from '../model';
+import { IFeatureEnvironment, IVariant } from '../model';
 import { Store } from './store';
 
 export interface FeatureEnvironmentKey {
@@ -12,6 +12,9 @@ export interface IFeatureEnvironmentStore
         environment: string,
         featureName: string,
     ): Promise<boolean>;
+    getEnvironmentsForFeature(
+        featureName: string,
+    ): Promise<IFeatureEnvironment[]>;
     isEnvironmentEnabled(
         featureName: string,
         environment: string,
@@ -62,4 +65,15 @@ export interface IFeatureEnvironmentStore
         sourceEnvironment: string,
         destinationEnvironment: string,
     ): Promise<void>;
+    addVariantsToFeatureEnvironment(
+        featureName: string,
+        environment: string,
+        variants: IVariant[],
+    ): Promise<void>;
+
+    addFeatureEnvironment(
+        featureEnvironment: IFeatureEnvironment,
+    ): Promise<void>;
+
+    clonePreviousVariants(environment: string, project: string): Promise<void>;
 }

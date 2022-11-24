@@ -91,6 +91,7 @@ export interface FeatureToggleLegacy extends FeatureToggle {
 
 export interface IEnvironmentDetail extends IEnvironmentOverview {
     strategies: IStrategyConfig[];
+    variants: IVariant[];
 }
 
 export interface ISortOrder {
@@ -101,6 +102,7 @@ export interface IFeatureEnvironment {
     environment: string;
     featureName: string;
     enabled: boolean;
+    variants?: IVariant[];
 }
 
 export interface IVariant {

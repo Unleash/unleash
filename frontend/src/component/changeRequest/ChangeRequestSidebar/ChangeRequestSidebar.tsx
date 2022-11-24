@@ -16,7 +16,7 @@ import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { CheckCircle, HelpOutline } from '@mui/icons-material';
 import EnvironmentIcon from 'component/common/EnvironmentIcon/EnvironmentIcon';
 import { ChangeRequest } from '../ChangeRequest/ChangeRequest';
-import { useChangeRequestOpen } from 'hooks/api/getters/useChangeRequestOpen/useChangeRequestOpen';
+import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { ChangeRequestStatusBadge } from '../ChangeRequestStatusBadge/ChangeRequestStatusBadge';
 import CloseIcon from '@mui/icons-material/Close';
@@ -124,7 +124,7 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
         draft,
         loading,
         refetch: refetchChangeRequest,
-    } = useChangeRequestOpen(project);
+    } = usePendingChangeRequests(project);
     const { changeState, discardDraft } = useChangeRequestApi();
     const theme = useTheme();
     const navigate = useNavigate();

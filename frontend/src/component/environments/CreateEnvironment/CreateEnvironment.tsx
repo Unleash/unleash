@@ -88,7 +88,7 @@ const CreateEnvironment = () => {
                             development or test environment without
                             enabling the feature toggle in the
                             production environment."
-                    documentationLink="https://docs.getunleash.io/user_guide/environments"
+                    documentationLink="https://docs.getunleash.io/reference/environments"
                     documentationLinkLabel="Environments documentation"
                     formatApiCode={formatApiCode}
                 >

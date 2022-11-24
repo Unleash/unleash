@@ -10,7 +10,7 @@ The **Single-Sign-On capability** is only available for customers on the Enterpr
 
 ## Introduction {#introduction}
 
-In this guide we will do a deep dive on the Single-Sign-On (SSO) using the OpenID Connect protocol and connect it with Okta as IdP. Unleash supports other identity providers and protocols, have a look at [all available Single-Sign-On options](../advanced/sso.md)
+In this guide we will do a deep dive on the Single-Sign-On (SSO) using the OpenID Connect protocol and connect it with Okta as IdP. Unleash supports other identity providers and protocols, have a look at [all available Single-Sign-On options](../reference/sso.md)
 
 ## Basic configuration
 

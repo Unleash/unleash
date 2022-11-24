@@ -8,6 +8,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
 import type { IChangeRequest } from '../changeRequest.types';
 import {
+    Discard,
     StrategyAddedChange,
     StrategyDeletedChange,
     StrategyEditedChange,
@@ -91,6 +92,10 @@ export const ChangeRequest: VFC<IChangeRequestProps> = ({
         }
     };
 
+    const showDiscard =
+        !['Cancelled', 'Applied'].includes(changeRequest.state) &&
+        changeRequest.features.flatMap(feature => feature.changes).length > 1;
+
     return (
         <Box>
             {changeRequest.features?.map(featureToggleChange => (
@@ -131,12 +136,34 @@ export const ChangeRequest: VFC<IChangeRequestProps> = ({
                                 {change.action === 'updateEnabled' && (
                                     <ToggleStatusChange
                                         enabled={change.payload.enabled}
-                                        onDiscard={onDiscard(change.id)}
+                                        discard={
+                                            <ConditionallyRender
+                                                condition={showDiscard}
+                                                show={
+                                                    <Discard
+                                                        onDiscard={onDiscard(
+                                                            change.id
+                                                        )}
+                                                    />
+                                                }
+                                            />
+                                        }
                                     />
                                 )}
                                 {change.action === 'addStrategy' && (
                                     <StrategyAddedChange
-                                        onDiscard={onDiscard(change.id)}
+                                        discard={
+                                            <ConditionallyRender
+                                                condition={showDiscard}
+                                                show={
+                                                    <Discard
+                                                        onDiscard={onDiscard(
+                                                            change.id
+                                                        )}
+                                                    />
+                                                }
+                                            />
+                                        }
                                     >
                                         <GetFeatureStrategyIcon
                                             strategyName={change.payload.name}
@@ -149,7 +176,18 @@ export const ChangeRequest: VFC<IChangeRequestProps> = ({
                                 )}
                                 {change.action === 'deleteStrategy' && (
                                     <StrategyDeletedChange
-                                        onDiscard={onDiscard(change.id)}
+                                        discard={
+                                            <ConditionallyRender
+                                                condition={showDiscard}
+                                                show={
+                                                    <Discard
+                                                        onDiscard={onDiscard(
+                                                            change.id
+                                                        )}
+                                                    />
+                                                }
+                                            />
+                                        }
                                     >
                                         {hasNameField(change.payload) && (
                                             <>
@@ -167,7 +205,18 @@ export const ChangeRequest: VFC<IChangeRequestProps> = ({
                                 )}
                                 {change.action === 'updateStrategy' && (
                                     <StrategyEditedChange
-                                        onDiscard={onDiscard(change.id)}
+                                        discard={
+                                            <ConditionallyRender
+                                                condition={showDiscard}
+                                                show={
+                                                    <Discard
+                                                        onDiscard={onDiscard(
+                                                            change.id
+                                                        )}
+                                                    />
+                                                }
+                                            />
+                                        }
                                     >
                                         <GetFeatureStrategyIcon
                                             strategyName={change.payload.name}

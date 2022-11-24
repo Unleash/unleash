@@ -3,7 +3,7 @@ import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { IFeatureStrategyPayload } from '../interfaces/strategy';
 import { useChangeRequestApi } from './api/actions/useChangeRequestApi/useChangeRequestApi';
-import { useChangeRequestOpen } from './api/getters/useChangeRequestOpen/useChangeRequestOpen';
+import { usePendingChangeRequests } from './api/getters/usePendingChangeRequests/usePendingChangeRequests';
 
 export type ChangeRequestStrategyAction =
     | 'addStrategy'
@@ -17,7 +17,7 @@ export const useChangeRequestAddStrategy = (
 ) => {
     const { setToastData, setToastApiError } = useToast();
     const { addChangeRequest } = useChangeRequestApi();
-    const { refetch } = useChangeRequestOpen(project);
+    const { refetch } = usePendingChangeRequests(project);
 
     const [changeRequestDialogDetails, setChangeRequestDialogDetails] =
         useState<{

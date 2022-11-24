@@ -241,7 +241,6 @@ export const ChangeRequestOverview: FC = () => {
                                         sx={{ ml: 2 }}
                                         variant="outlined"
                                         onClick={onCancelChanges}
-                                        disabled={!allowChangeRequestActions}
                                     >
                                         Cancel changes
                                     </Button>

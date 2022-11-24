@@ -11,9 +11,8 @@ const AddCommentWrapper = styled(Box)(({ theme }) => ({
 export const AddCommentField: FC<{
     imageUrl: string;
     commentText: string;
-    onAddComment: () => void;
     onTypeComment: (text: string) => void;
-}> = ({ imageUrl, commentText, onTypeComment, onAddComment }) => (
+}> = ({ imageUrl, commentText, onTypeComment, children }) => (
     <>
         <AddCommentWrapper>
             <StyledAvatar src={imageUrl} />
@@ -28,16 +27,7 @@ export const AddCommentField: FC<{
             />
         </AddCommentWrapper>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <Button
-                variant="outlined"
-                onClick={onAddComment}
-                disabled={
-                    commentText.trim().length === 0 ||
-                    commentText.trim().length > 1000
-                }
-            >
-                Comment
-            </Button>
+            {children}
         </Box>
     </>
 );

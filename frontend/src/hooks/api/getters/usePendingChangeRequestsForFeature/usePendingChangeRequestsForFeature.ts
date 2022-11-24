@@ -10,15 +10,20 @@ const fetcher = (path: string) => {
         .then(res => res.json());
 };
 
-export const usePendingChangeRequests = (project: string) => {
+export const usePendingChangeRequestsForFeature = (
+    project: string,
+    featureName: string
+) => {
     const { isOss } = useUiConfig();
     const { data, error, mutate } = useSWR<IChangeRequest[]>(
-        formatApiPath(`api/admin/projects/${project}/change-requests/pending`),
+        formatApiPath(
+            `api/admin/projects/${project}/change-requests/pending/${featureName}`
+        ),
         (path: string) => (isOss() ? Promise.resolve([]) : fetcher(path))
     );
 
     return {
-        draft: data,
+        changeRequests: data,
         loading: !error && !data,
         refetch: mutate,
         error,

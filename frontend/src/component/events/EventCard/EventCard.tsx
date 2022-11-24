@@ -25,7 +25,7 @@ const StyledContainerListItem = styled('li')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
     padding: theme.spacing(0.5),
     [theme.breakpoints.up('md')]: {
-        gridTemplateColumns: 'auto minmax(0, 1fr)',
+        gridTemplateColumns: '2fr 3fr',
     },
 
     '& dl': {

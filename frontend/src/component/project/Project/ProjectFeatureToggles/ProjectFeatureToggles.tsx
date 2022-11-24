@@ -161,7 +161,11 @@ export const ProjectFeatureToggles = ({
             });
             refetch();
         },
-        [toggleFeatureEnvironmentOff, toggleFeatureEnvironmentOn] // eslint-disable-line react-hooks/exhaustive-deps
+        [
+            toggleFeatureEnvironmentOff,
+            toggleFeatureEnvironmentOn,
+            isChangeRequestConfigured,
+        ]
     );
 
     const columns = useMemo(
@@ -257,7 +261,7 @@ export const ProjectFeatureToggles = ({
                 disableSortBy: true,
             },
         ],
-        [projectId, environments, onToggle, loading]
+        [projectId, environments, loading, onToggle]
     );
 
     const [searchValue, setSearchValue] = useState(

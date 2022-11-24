@@ -2,6 +2,7 @@
 
 exports[`should create default config 1`] = `
 {
+  "accessControlMaxAge": 172800,
   "additionalCspAllowedDomains": {
     "defaultSrc": [],
     "fontSrc": [],

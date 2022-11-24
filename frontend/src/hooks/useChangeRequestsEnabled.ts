@@ -17,7 +17,7 @@ export const useChangeRequestsEnabled = (projectId: string) => {
 
             return Boolean(uiConfig?.flags.changeRequests) && enabled;
         },
-        [data]
+        [JSON.stringify(data)]
     );
 
     const isChangeRequestConfiguredInAnyEnv = React.useCallback((): boolean => {
@@ -25,7 +25,7 @@ export const useChangeRequestsEnabled = (projectId: string) => {
             Boolean(uiConfig?.flags.changeRequests) &&
             data.some(draft => draft.changeRequestEnabled)
         );
-    }, [data]);
+    }, [JSON.stringify(data)]);
 
     return {
         isChangeRequestFlagEnabled: Boolean(uiConfig?.flags.changeRequests),

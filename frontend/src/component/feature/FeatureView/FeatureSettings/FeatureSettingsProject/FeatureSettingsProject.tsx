@@ -11,6 +11,7 @@ import FeatureSettingsProjectConfirm from './FeatureSettingsProjectConfirm/Featu
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
+import { usePendingChangeRequestsForFeature } from 'hooks/api/getters/usePendingChangeRequestsForFeature/usePendingChangeRequestsForFeature';
 
 const FeatureSettingsProject = () => {
     const { hasAccess } = useContext(AccessContext);
@@ -23,6 +24,10 @@ const FeatureSettingsProject = () => {
     const [project, setProject] = useState(projectId);
     const { projects } = useProjects();
     const navigate = useNavigate();
+    const { changeRequests } = usePendingChangeRequestsForFeature(
+        projectId,
+        featureId
+    );
 
     const onConfirm = async () => {
         try {
@@ -69,6 +74,7 @@ const FeatureSettingsProject = () => {
                 Save
             </PermissionButton>
             <FeatureSettingsProjectConfirm
+                changeRequests={changeRequests}
                 projectId={project}
                 open={showConfirmDialog}
                 feature={feature}

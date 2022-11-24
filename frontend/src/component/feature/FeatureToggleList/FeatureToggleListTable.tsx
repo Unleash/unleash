@@ -1,7 +1,18 @@
 import { useEffect, useMemo, useState, VFC } from 'react';
-import { Link, useMediaQuery, useTheme } from '@mui/material';
+import {
+    Box,
+    IconButton,
+    Link,
+    Tooltip,
+    useMediaQuery,
+    useTheme,
+} from '@mui/material';
 import { Link as RouterLink, useSearchParams } from 'react-router-dom';
 import { SortingRule, useFlexLayout, useSortBy, useTable } from 'react-table';
+import {
+    Star as StarIcon,
+    StarBorder as StarBorderIcon,
+} from '@mui/icons-material';
 import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
 import { useFeatures } from 'hooks/api/getters/useFeatures/useFeatures';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
@@ -34,73 +45,6 @@ export type PageQueryType = Partial<
     Record<'sort' | 'order' | 'search', string>
 >;
 
-const columns = [
-    {
-        Header: 'Seen',
-        accessor: 'lastSeenAt',
-        Cell: FeatureSeenCell,
-        sortType: 'date',
-        align: 'center',
-        maxWidth: 85,
-    },
-    {
-        Header: 'Type',
-        accessor: 'type',
-        Cell: FeatureTypeCell,
-        align: 'center',
-        maxWidth: 85,
-    },
-    {
-        Header: 'Name',
-        accessor: 'name',
-        minWidth: 150,
-        Cell: FeatureNameCell,
-        sortType: 'alphanumeric',
-        searchable: true,
-    },
-    {
-        id: 'tags',
-        Header: 'Tags',
-        accessor: (row: FeatureSchema) =>
-            row.tags?.map(({ type, value }) => `${type}:${value}`).join('\n') ||
-            '',
-        Cell: FeatureTagCell,
-        width: 80,
-        searchable: true,
-    },
-    {
-        Header: 'Created',
-        accessor: 'createdAt',
-        Cell: DateCell,
-        sortType: 'date',
-        maxWidth: 150,
-    },
-    {
-        Header: 'Project ID',
-        accessor: 'project',
-        Cell: ({ value }: { value: string }) => (
-            <LinkCell title={value} to={`/projects/${value}`} />
-        ),
-        sortType: 'alphanumeric',
-        maxWidth: 150,
-        filterName: 'project',
-        searchable: true,
-    },
-    {
-        Header: 'State',
-        accessor: 'stale',
-        Cell: FeatureStaleCell,
-        sortType: 'boolean',
-        maxWidth: 120,
-        filterName: 'state',
-        filterParsing: (value: any) => (value ? 'stale' : 'active'),
-    },
-    // Always hidden -- for search
-    {
-        accessor: 'description',
-    },
-];
-
 const defaultSort: SortingRule<string> = { id: 'createdAt' };
 
 const { value: storedParams, setValue: setStoredParams } = createLocalStorage(
@@ -127,6 +71,116 @@ export const FeatureToggleListTable: VFC = () => {
         globalFilter: searchParams.get('search') || '',
     }));
     const [searchValue, setSearchValue] = useState(initialState.globalFilter);
+
+    const columns = useMemo(
+        () => [
+            {
+                Header: (
+                    <Tooltip
+                        title="Pin favorite features to the top"
+                        placement="bottom-start"
+                    >
+                        <IconButton
+                            sx={{
+                                mx: -0.75,
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}
+                        >
+                            <StarBorderIcon />
+                        </IconButton>
+                    </Tooltip>
+                ),
+                accessor: 'favorite',
+                Cell: ({ value }: { value: boolean }) => (
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        }}
+                    >
+                        <IconButton color="primary">
+                            <ConditionallyRender
+                                condition={value}
+                                show={<StarIcon />}
+                                elseShow={<StarBorderIcon />}
+                            />
+                        </IconButton>
+                    </Box>
+                ),
+                maxWidth: 60,
+                disableSortBy: true,
+            },
+            {
+                Header: 'Seen',
+                accessor: 'lastSeenAt',
+                Cell: FeatureSeenCell,
+                sortType: 'date',
+                align: 'center',
+                maxWidth: 85,
+            },
+            {
+                Header: 'Type',
+                accessor: 'type',
+                Cell: FeatureTypeCell,
+                align: 'center',
+                maxWidth: 85,
+            },
+            {
+                Header: 'Name',
+                accessor: 'name',
+                minWidth: 150,
+                Cell: FeatureNameCell,
+                sortType: 'alphanumeric',
+                searchable: true,
+            },
+            {
+                id: 'tags',
+                Header: 'Tags',
+                accessor: (row: FeatureSchema) =>
+                    row.tags
+                        ?.map(({ type, value }) => `${type}:${value}`)
+                        .join('\n') || '',
+                Cell: FeatureTagCell,
+                width: 80,
+                searchable: true,
+            },
+            {
+                Header: 'Created',
+                accessor: 'createdAt',
+                Cell: DateCell,
+                sortType: 'date',
+                maxWidth: 150,
+            },
+            {
+                Header: 'Project ID',
+                accessor: 'project',
+                Cell: ({ value }: { value: string }) => (
+                    <LinkCell title={value} to={`/projects/${value}`} />
+                ),
+                sortType: 'alphanumeric',
+                maxWidth: 150,
+                filterName: 'project',
+                searchable: true,
+            },
+            {
+                Header: 'State',
+                accessor: 'stale',
+                Cell: FeatureStaleCell,
+                sortType: 'boolean',
+                maxWidth: 120,
+                filterName: 'state',
+                filterParsing: (value: any) => (value ? 'stale' : 'active'),
+            },
+            // Always hidden -- for search
+            {
+                accessor: 'description',
+            },
+        ],
+        []
+    );
 
     const {
         data: searchedData,

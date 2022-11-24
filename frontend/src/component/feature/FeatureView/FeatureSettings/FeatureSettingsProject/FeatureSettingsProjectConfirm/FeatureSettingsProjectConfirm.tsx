@@ -80,26 +80,35 @@ const FeatureSettingsProjectConfirm = ({
                             projects, both projects must have the exact same
                             environments enabled.
                         </p>
-                        <p>
-                            In addition the feature toggle must not have any
-                            pending change requests. This feature toggle is
-                            currently referenced in the following change
-                            requests:
-                        </p>
-                        <List>
-                            {changeRequests?.map(changeRequest => {
-                                return (
-                                    <ListItem key={changeRequest.id}>
-                                        <Link
-                                            to={`/projects/${currentProjectId}/change-requests/${changeRequest.id}`}
-                                        >
-                                            View change request{' '}
-                                            {changeRequest.id}
-                                        </Link>
-                                    </ListItem>
-                                );
-                            })}
-                        </List>
+                        <ConditionallyRender
+                            condition={hasPendingChangeRequests}
+                            show={
+                                <>
+                                    <p>
+                                        In addition the feature toggle must not
+                                        have any pending change requests. This
+                                        feature toggle is currently referenced
+                                        in the following change requests:
+                                    </p>
+                                    <List>
+                                        {changeRequests?.map(changeRequest => {
+                                            return (
+                                                <ListItem
+                                                    key={changeRequest.id}
+                                                >
+                                                    <Link
+                                                        to={`/projects/${currentProjectId}/change-requests/${changeRequest.id}`}
+                                                    >
+                                                        View change request{' '}
+                                                        {changeRequest.id}
+                                                    </Link>
+                                                </ListItem>
+                                            );
+                                        })}
+                                    </List>
+                                </>
+                            }
+                        />
                     </div>
                 </Dialogue>
             }

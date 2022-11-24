@@ -58,6 +58,10 @@ const FeatureSettingsProjectConfirm = ({
                             project.
                         </Alert>
                     </div>
+                    <p>
+                        Are you sure you want to change the project for this
+                        toggle?
+                    </p>
                 </Dialogue>
             }
             elseShow={

@@ -22,6 +22,7 @@ import AccessContext from 'contexts/AccessContext';
 import { ChangeRequestComment } from './ChangeRequestComments/ChangeRequestComment';
 import { AddCommentField } from './ChangeRequestComments/AddCommentField';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
+import { useChangeRequestsEnabled } from '../../../hooks/useChangeRequestsEnabled';
 
 const StyledAsideBox = styled(Box)(({ theme }) => ({
     width: '30%',
@@ -62,10 +63,15 @@ export const ChangeRequestOverview: FC = () => {
     const { refetch: refetchChangeRequestOpen } =
         usePendingChangeRequests(projectId);
     const { setToastData, setToastApiError } = useToast();
+    const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
 
     if (!changeRequest) {
         return null;
     }
+
+    const allowChangeRequestActions = isChangeRequestConfigured(
+        changeRequest.environment
+    );
 
     const onApplyChanges = async () => {
         try {
@@ -163,9 +169,20 @@ export const ChangeRequestOverview: FC = () => {
                         <AddCommentField
                             imageUrl={user?.imageUrl || ''}
                             commentText={commentText}
-                            onAddComment={onAddComment}
                             onTypeComment={setCommentText}
-                        />
+                        >
+                            <Button
+                                variant="outlined"
+                                onClick={onAddComment}
+                                disabled={
+                                    !allowChangeRequestActions ||
+                                    commentText.trim().length === 0 ||
+                                    commentText.trim().length > 1000
+                                }
+                            >
+                                Comment
+                            </Button>
+                        </AddCommentField>
                         <ConditionallyRender
                             condition={isSelfReview}
                             show={
@@ -189,7 +206,11 @@ export const ChangeRequestOverview: FC = () => {
                                     changeRequest.state === 'In review' &&
                                     !hasApprovedAlready
                                 }
-                                show={<ReviewButton />}
+                                show={
+                                    <ReviewButton
+                                        disabled={!allowChangeRequestActions}
+                                    />
+                                }
                             />
                             <ConditionallyRender
                                 condition={changeRequest.state === 'Approved'}
@@ -202,6 +223,7 @@ export const ChangeRequestOverview: FC = () => {
                                         environmentId={
                                             changeRequest.environment
                                         }
+                                        disabled={!allowChangeRequestActions}
                                     >
                                         Apply changes
                                     </PermissionButton>
@@ -219,6 +241,7 @@ export const ChangeRequestOverview: FC = () => {
                                         sx={{ ml: 2 }}
                                         variant="outlined"
                                         onClick={onCancelChanges}
+                                        disabled={!allowChangeRequestActions}
                                     >
                                         Cancel changes
                                     </Button>

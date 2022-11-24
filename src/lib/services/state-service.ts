@@ -719,6 +719,7 @@ export default class StateService {
         if (this.flagResolver.isEnabled('variantsPerEnvironment')) {
             return this.exportV4(opts);
         }
+        // adapt v4 to v3
         const v4 = await this.exportV4({ ...opts, includeEnvironments: true });
         if (opts.includeFeatureToggles || true) {
             const keepEnv = v4.environments

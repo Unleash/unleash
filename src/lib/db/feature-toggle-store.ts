@@ -13,7 +13,6 @@ const FEATURE_COLUMNS = [
     'type',
     'project',
     'stale',
-    'variants',
     'created_at',
     'impression_data',
     'last_seen_at',
@@ -25,7 +24,6 @@ export interface FeaturesTable {
     description: string;
     type: string;
     stale: boolean;
-    variants?: string;
     project: string;
     last_seen_at?: Date;
     created_at?: Date;
@@ -161,8 +159,6 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         if (!row) {
             throw new NotFoundError('No feature toggle found');
         }
-        const sortedVariants = (row.variants as unknown as IVariant[]) || [];
-        sortedVariants.sort((a, b) => a.name.localeCompare(b.name));
         return {
             name: row.name,
             description: row.description,

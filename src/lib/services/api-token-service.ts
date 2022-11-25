@@ -59,7 +59,7 @@ export class ApiTokenService {
 
     private eventStore: IEventStore;
 
-    private lastSeenSecrets: string[] = [];
+    private lastSeenSecrets: Set<string> = new Set<string>();
 
     private flagResolver: IFlagResolver;
 
@@ -110,9 +110,10 @@ export class ApiTokenService {
     }
 
     async updateLastSeen(): Promise<void> {
-        if (this.lastSeenSecrets.length > 0) {
-            await this.store.markSeenAt(this.lastSeenSecrets);
-            this.lastSeenSecrets = [];
+        if (this.lastSeenSecrets.size > 0) {
+            let toStore = new Set<string>();
+            [this.lastSeenSecrets, toStore] = [toStore, this.lastSeenSecrets];
+            await this.store.markSeenAt([...toStore]);
         }
     }
 
@@ -162,7 +163,7 @@ export class ApiTokenService {
 
         if (token) {
             if (this.flagResolver.isEnabled('tokensLastSeen')) {
-                this.lastSeenSecrets.push(token.secret);
+                this.lastSeenSecrets.add(token.secret);
             }
 
             return new ApiUser({

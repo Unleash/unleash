@@ -43,7 +43,7 @@ const InitialRedirect = () => {
         //eslint-disable-next-line
     }, [loading]);
 
-    return <Navigate to={redirectTo || '/'} />;
+    return <Navigate to={redirectTo} />;
 };
 
 export const App = () => {

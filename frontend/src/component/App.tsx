@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense, useEffect } from 'react';
 import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Error } from 'component/layout/Error/Error';
@@ -19,7 +19,6 @@ import { useStyles } from './App.styles';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useProjects from '../hooks/api/getters/useProjects/useProjects';
 import { useLastViewedProject } from '../hooks/useLastViewedProject';
-import useQueryParams from '../hooks/useQueryParams';
 
 const MainApp = () => {
     const { classes: styles } = useStyles();
@@ -31,35 +30,26 @@ const MainApp = () => {
 
     const { lastViewed } = useLastViewedProject();
     const navigate = useNavigate();
-    const query = useQueryParams();
     const { projects, loading } = useProjects();
-    const [redirect, setRedirect] = useState<string | undefined>();
 
     useEffect(() => {
-        if (query && projects) {
-            const getRedirect = () => {
-                if (projects.length === 1) {
-                    return `/projects/${projects[0].id}`;
-                }
+        const redirect = () => {
+            let to = '/';
+            if (projects && lastViewed) {
+                to = `/projects/${lastViewed}`;
+            }
 
-                return '/projects';
-            };
+            if (projects && !lastViewed && projects.length === 1) {
+                to = `/projects/${projects[0].id}`;
+            }
+            navigate(to);
+        };
 
-            setRedirect(query.get('redirect') || getRedirect());
+        if (!loading) {
+            redirect();
         }
-    }, [projects, query]);
-
-    useEffect(() => {
-        if (!loading && lastViewed) {
-            setRedirect(`/projects/${lastViewed}`);
-        }
-    }, [lastViewed, loading]);
-
-    useEffect(() => {
-        if (!loading && redirect) {
-            navigate(redirect);
-        }
-    }, [loading, navigate, redirect]);
+        //eslint-disable-next-line
+    }, [loading]);
 
     return (
         <div className={styles.container}>

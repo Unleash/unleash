@@ -1,4 +1,4 @@
-import { Suspense, useEffect } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Error } from 'component/layout/Error/Error';
@@ -18,79 +18,79 @@ import { SplashPageRedirect } from 'component/splash/SplashPageRedirect/SplashPa
 import { useStyles } from './App.styles';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useProjects from '../hooks/api/getters/useProjects/useProjects';
-import { IProjectCard } from '../interfaces/project';
 import { useLastViewedProject } from '../hooks/useLastViewedProject';
 import useQueryParams from '../hooks/useQueryParams';
 
-export const App = () => {
+const MainApp = () => {
     const { classes: styles } = useStyles();
-    const { authDetails } = useAuthDetails();
-    const { user } = useAuthUser();
     const { isOss } = useUiConfig();
-    const hasFetchedAuth = Boolean(authDetails || user);
 
     const availableRoutes = isOss()
         ? routes.filter(route => !route.enterprise)
         : routes;
 
-    const MainApp = () => {
-        const { lastViewed } = useLastViewedProject();
-        const navigate = useNavigate();
-        const query = useQueryParams();
-        const { projects, refetch } = useProjects();
+    const { lastViewed } = useLastViewedProject();
+    const navigate = useNavigate();
+    const query = useQueryParams();
+    const { projects, loading } = useProjects();
+    const [redirect, setRedirect] = useState<string | undefined>();
 
-        useEffect(() => {
-            if (projects) {
-                const getRedirect = (projects: IProjectCard[]) => {
-                    if (lastViewed) {
-                        return `/projects/${lastViewed}`;
-                    }
-
-                    if (projects.length === 1) {
-                        return `/projects/${projects[0].id}`;
-                    }
-
-                    return '/projects';
-                };
-
-                if (!projects) {
-                    refetch();
-                } else {
-                    const redirect =
-                        query.get('redirect') || getRedirect(projects);
-                    navigate(redirect);
+    useEffect(() => {
+        if (query && projects) {
+            const getRedirect = () => {
+                if (projects.length === 1) {
+                    return `/projects/${projects[0].id}`;
                 }
-            }
-        }, [lastViewed, navigate, projects, query, refetch]);
 
-        return (
-            <div className={styles.container}>
-                <ToastRenderer />
-                <Routes>
-                    {availableRoutes.map(route => (
-                        <Route
-                            key={route.path}
-                            path={route.path}
-                            element={
-                                <LayoutPicker
-                                    isStandalone={route.isStandalone === true}
-                                >
-                                    <ProtectedRoute route={route} />
-                                </LayoutPicker>
-                            }
-                        />
-                    ))}
+                return '/projects';
+            };
+
+            setRedirect(query.get('redirect') || getRedirect());
+        }
+    }, [projects, query]);
+
+    useEffect(() => {
+        if (!loading && lastViewed) {
+            setRedirect(`/projects/${lastViewed}`);
+        }
+    }, [lastViewed, loading]);
+
+    useEffect(() => {
+        if (!loading && redirect) {
+            navigate(redirect);
+        }
+    }, [loading, navigate, redirect]);
+
+    return (
+        <div className={styles.container}>
+            <ToastRenderer />
+            <Routes>
+                {availableRoutes.map(route => (
                     <Route
-                        path="/"
-                        element={<Navigate to="/projects" replace />}
+                        key={route.path}
+                        path={route.path}
+                        element={
+                            <LayoutPicker
+                                isStandalone={route.isStandalone === true}
+                            >
+                                <ProtectedRoute route={route} />
+                            </LayoutPicker>
+                        }
                     />
-                    <Route path="*" element={<NotFound />} />
-                </Routes>
-                <FeedbackNPS openUrl="http://feedback.unleash.run" />
-                <SplashPageRedirect />
-            </div>
-        );
-    };
+                ))}
+                <Route path="/" element={<Navigate to="/projects" replace />} />
+                <Route path="*" element={<NotFound />} />
+            </Routes>
+            <FeedbackNPS openUrl="http://feedback.unleash.run" />
+            <SplashPageRedirect />
+        </div>
+    );
+};
+
+export const App = () => {
+    const { authDetails } = useAuthDetails();
+    const { user } = useAuthUser();
+    const hasFetchedAuth = Boolean(authDetails || user);
 
     return (
         <ErrorBoundary FallbackComponent={Error}>

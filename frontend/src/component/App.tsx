@@ -29,8 +29,6 @@ export const App = () => {
     const { isOss } = useUiConfig();
     const hasFetchedAuth = Boolean(authDetails || user);
 
-    const { projects, refetch } = useProjects();
-
     const availableRoutes = isOss()
         ? routes.filter(route => !route.enterprise)
         : routes;
@@ -39,9 +37,10 @@ export const App = () => {
         const { lastViewed } = useLastViewedProject();
         const navigate = useNavigate();
         const query = useQueryParams();
+        const { projects, refetch } = useProjects();
 
         useEffect(() => {
-            if (hasFetchedAuth) {
+            if (projects) {
                 const getRedirect = (projects: IProjectCard[]) => {
                     if (lastViewed) {
                         return `/projects/${lastViewed}`;
@@ -54,17 +53,15 @@ export const App = () => {
                     return '/projects';
                 };
 
-                if (hasFetchedAuth) {
-                    if (!projects) {
-                        refetch();
-                    } else {
-                        const redirect =
-                            query.get('redirect') || getRedirect(projects);
-                        navigate(redirect);
-                    }
+                if (!projects) {
+                    refetch();
+                } else {
+                    const redirect =
+                        query.get('redirect') || getRedirect(projects);
+                    navigate(redirect);
                 }
             }
-        }, [lastViewed, navigate, query]);
+        }, [lastViewed, navigate, projects, query, refetch]);
 
         return (
             <div className={styles.container}>

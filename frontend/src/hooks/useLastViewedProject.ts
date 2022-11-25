@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { setLocalStorageItem, getLocalStorageItem } from '../utils/storage';
+import { setSessionStorageItem, getSessionStorageItem } from '../utils/storage';
 import useUiConfig from './api/getters/useUiConfig/useUiConfig';
 
 export const useLastViewedProject = () => {
@@ -7,12 +7,12 @@ export const useLastViewedProject = () => {
     const key = `${uiConfig.baseUriPath}:unleash-lastViewedProject`;
 
     const [lastViewed, setLastViewed] = useState(() => {
-        return getLocalStorageItem(key);
+        return getSessionStorageItem(key);
     });
 
     useEffect(() => {
         if (lastViewed) {
-            setLocalStorageItem(key, lastViewed);
+            setSessionStorageItem(key, lastViewed);
         }
     }, [lastViewed, key]);
 

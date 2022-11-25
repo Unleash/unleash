@@ -82,7 +82,7 @@ class UserService {
 
     private seenTimer: NodeJS.Timeout;
 
-    private lastSeenSecrets: string[] = [];
+    private lastSeenSecrets: Set<string> = new Set<string>();
 
     private flagResolver: IFlagResolver;
 
@@ -447,15 +447,16 @@ class UserService {
     }
 
     async updateLastSeen(): Promise<void> {
-        if (this.lastSeenSecrets.length > 0) {
-            await this.store.markSeenAt(this.lastSeenSecrets);
-            this.lastSeenSecrets = [];
+        if (this.lastSeenSecrets.size > 0) {
+            let toStore = new Set<string>();
+            [this.lastSeenSecrets, toStore] = [toStore, this.lastSeenSecrets];
+            await this.store.markSeenAt([...toStore]);
         }
     }
 
     addPATSeen(secret: string): void {
         if (this.flagResolver.isEnabled('tokensLastSeen')) {
-            this.lastSeenSecrets.push(secret);
+            this.lastSeenSecrets.add(secret);
         }
     }
 

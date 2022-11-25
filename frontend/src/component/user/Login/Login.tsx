@@ -10,24 +10,52 @@ import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import { parseRedirectParam } from 'component/user/Login/parseRedirectParam';
 import { useLastViewedProject } from '../../../hooks/useLastViewedProject';
+import useProjects from '../../../hooks/api/getters/useProjects/useProjects';
+import { useEffect, useState } from 'react';
+import { IProjectCard } from '../../../interfaces/project';
+import Loader from '../../common/Loader/Loader';
 
 const Login = () => {
     const { classes: styles } = useStyles();
     const { authDetails } = useAuthDetails();
     const { user } = useAuthUser();
+    const { projects, refetch, loading } = useProjects();
     const { lastViewed } = useLastViewedProject();
     const query = useQueryParams();
     const resetPassword = query.get('reset') === 'true';
     const invited = query.get('invited') === 'true';
 
-    const getRedirect = () => {
-        return lastViewed == null ? '/projects' : `/projects/${lastViewed}`;
-    };
+    const [redirectTo, setRedirectTo] = useState<string | undefined>();
 
-    const redirect = query.get('redirect') || getRedirect();
+    useEffect(() => {
+        const getRedirect = (projects: IProjectCard[]) => {
+            if (lastViewed) {
+                return `/projects/${lastViewed}`;
+            }
 
-    if (user) {
-        return <Navigate to={parseRedirectParam(redirect)} replace />;
+            if (projects.length === 1) {
+                return `/projects/${projects[0].id}`;
+            }
+
+            return '/projects';
+        };
+
+        if (user) {
+            if (!projects) {
+                refetch();
+            } else {
+                const redirect = query.get('redirect') || getRedirect(projects);
+                setRedirectTo(redirect);
+            }
+        }
+    }, [lastViewed, query, user, projects, refetch]);
+
+    if (loading) {
+        return <Loader />;
+    }
+
+    if (user && projects && redirectTo) {
+        return <Navigate to={parseRedirectParam(redirectTo)} replace />;
     }
 
     return (
@@ -59,7 +87,7 @@ const Login = () => {
                         </h2>
                     }
                 />
-                <Authentication redirect={redirect} />
+                <Authentication redirect={redirectTo || '/'} />
             </div>
         </StandaloneLayout>
     );

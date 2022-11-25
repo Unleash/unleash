@@ -1,4 +1,5 @@
 import { FeatureToggle, IStrategyConfig, ITag, IVariant } from './model';
+import { IApiToken } from './models/api-token';
 
 export const APPLICATION_CREATED = 'application-created';
 

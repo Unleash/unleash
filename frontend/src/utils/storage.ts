@@ -27,23 +27,3 @@ function parseStoredItem<T>(data: string | null): T | undefined {
         console.warn(err);
     }
 }
-
-// Get an item from sessionStorage.
-// Returns undefined if the browser denies access.
-export function getSessionStorageItem<T>(key: string): T | undefined {
-    try {
-        return parseStoredItem<T>(window.sessionStorage.getItem(key));
-    } catch (err: unknown) {
-        console.warn(err);
-    }
-}
-
-// Store an item in sessionStorage.
-// Does nothing if the browser denies access.
-export function setSessionStorageItem(key: string, value: unknown) {
-    try {
-        window.sessionStorage.setItem(key, JSON.stringify(value));
-    } catch (err: unknown) {
-        console.warn(err);
-    }
-}

@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 import { Logger } from '../logger';
 import { ADMIN, CLIENT, FRONTEND } from '../types/permissions';
-import { IUnleashStores } from '../types/stores';
+import { IEventStore, IUnleashStores } from '../types/stores';
 import { IUnleashConfig } from '../types/option';
 import ApiUser from '../types/api-user';
 import {
@@ -20,6 +20,12 @@ import BadDataError from '../error/bad-data-error';
 import { minutesToMilliseconds } from 'date-fns';
 import { IEnvironmentStore } from 'lib/types/stores/environment-store';
 import { constantTimeCompare } from '../util/constantTimeCompare';
+import {
+    ApiTokenCreatedEvent,
+    ApiTokenDeletedEvent,
+    ApiTokenUpdatedEvent,
+} from '../types';
+import { omitKeys } from '../util';
 
 const resolveTokenPermissions = (tokenType: string) => {
     if (tokenType === ApiTokenType.ADMIN) {
@@ -48,14 +54,21 @@ export class ApiTokenService {
 
     private activeTokens: IApiToken[] = [];
 
+    private eventStore: IEventStore;
+
     constructor(
         {
             apiTokenStore,
             environmentStore,
-        }: Pick<IUnleashStores, 'apiTokenStore' | 'environmentStore'>,
+            eventStore,
+        }: Pick<
+            IUnleashStores,
+            'apiTokenStore' | 'environmentStore' | 'eventStore'
+        >,
         config: Pick<IUnleashConfig, 'getLogger' | 'authentication'>,
     ) {
         this.store = apiTokenStore;
+        this.eventStore = eventStore;
         this.environmentStore = environmentStore;
         this.logger = config.getLogger('/services/api-token-service.ts');
         this.fetchActiveTokens();
@@ -95,7 +108,7 @@ export class ApiTokenService {
         try {
             const createAll = tokens
                 .map(mapLegacyTokenWithSecret)
-                .map((t) => this.insertNewApiToken(t));
+                .map((t) => this.insertNewApiToken(t, 'init-api-tokens'));
             await Promise.all(createAll);
         } catch (e) {
             this.logger.error('Unable to create initial Admin API tokens');
@@ -140,12 +153,31 @@ export class ApiTokenService {
     public async updateExpiry(
         secret: string,
         expiresAt: Date,
+        updatedBy: string,
     ): Promise<IApiToken> {
-        return this.store.setExpiry(secret, expiresAt);
+        const previous = await this.store.get(secret);
+        const token = await this.store.setExpiry(secret, expiresAt);
+        await this.eventStore.store(
+            new ApiTokenUpdatedEvent({
+                createdBy: updatedBy,
+                previousToken: omitKeys(previous, 'secret'),
+                apiToken: omitKeys(token, 'secret'),
+            }),
+        );
+        return token;
     }
 
-    public async delete(secret: string): Promise<void> {
-        return this.store.delete(secret);
+    public async delete(secret: string, deletedBy: string): Promise<void> {
+        if (await this.store.exists(secret)) {
+            const token = await this.store.get(secret);
+            await this.store.delete(secret);
+            await this.eventStore.store(
+                new ApiTokenDeletedEvent({
+                    createdBy: deletedBy,
+                    apiToken: omitKeys(token, 'secret'),
+                }),
+            );
+        }
     }
 
     /**
@@ -153,13 +185,15 @@ export class ApiTokenService {
      */
     public async createApiToken(
         newToken: Omit<ILegacyApiTokenCreate, 'secret'>,
+        createdBy: string = 'unleash-system',
     ): Promise<IApiToken> {
         const token = mapLegacyToken(newToken);
-        return this.createApiTokenWithProjects(token);
+        return this.createApiTokenWithProjects(token, createdBy);
     }
 
     public async createApiTokenWithProjects(
         newToken: Omit<IApiTokenCreate, 'secret'>,
+        createdBy: string = 'unleash-system',
     ): Promise<IApiToken> {
         validateApiToken(newToken);
 
@@ -168,7 +202,7 @@ export class ApiTokenService {
 
         const secret = this.generateSecretKey(newToken);
         const createNewToken = { ...newToken, secret };
-        return this.insertNewApiToken(createNewToken);
+        return this.insertNewApiToken(createNewToken, createdBy);
     }
 
     // TODO: Remove this service method after embedded proxy has been released in
@@ -180,15 +214,22 @@ export class ApiTokenService {
 
         const secret = this.generateSecretKey(newToken);
         const createNewToken = { ...newToken, secret };
-        return this.insertNewApiToken(createNewToken);
+        return this.insertNewApiToken(createNewToken, 'system-migration');
     }
 
     private async insertNewApiToken(
         newApiToken: IApiTokenCreate,
+        createdBy: string,
     ): Promise<IApiToken> {
         try {
             const token = await this.store.insert(newApiToken);
             this.activeTokens.push(token);
+            await this.eventStore.store(
+                new ApiTokenCreatedEvent({
+                    createdBy,
+                    apiToken: omitKeys(token, 'secret'),
+                }),
+            );
             return token;
         } catch (error) {
             if (error.code === FOREIGN_KEY_VIOLATION) {

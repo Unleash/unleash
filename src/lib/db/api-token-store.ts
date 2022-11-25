@@ -173,7 +173,10 @@ export class ApiTokenStore implements IApiTokenStore {
     }
 
     async get(key: string): Promise<IApiToken> {
-        const row = await this.makeTokenProjectQuery().where('secret', key);
+        const row = await this.makeTokenProjectQuery().where(
+            'tokens.secret',
+            key,
+        );
         return toTokens(row)[0];
     }
 

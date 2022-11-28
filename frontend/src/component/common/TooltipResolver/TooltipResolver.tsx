@@ -5,7 +5,7 @@ import { HtmlTooltip } from '../HtmlTooltip/HtmlTooltip';
 export interface ITooltipResolverProps extends Omit<TooltipProps, 'title'> {
     title?: string;
     titleComponent?: ReactNode;
-    variant?: 'default' | 'white';
+    variant?: 'default' | 'custom';
 }
 
 export const TooltipResolver = ({
@@ -19,7 +19,7 @@ export const TooltipResolver = ({
         return children;
     }
 
-    if (variant === 'white') {
+    if (variant === 'custom') {
         return (
             <HtmlTooltip {...rest} title={title || titleComponent} arrow>
                 {children}

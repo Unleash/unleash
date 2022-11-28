@@ -52,7 +52,7 @@ function resolveCreateButtonData(
                     </ProFeatureTooltip>
                 ),
                 sx: { maxWidth: '320px' },
-                variant: 'white',
+                variant: 'custom',
             },
             endIcon: <ProPlanIcon />,
         };

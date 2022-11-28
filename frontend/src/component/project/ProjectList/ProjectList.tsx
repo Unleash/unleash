@@ -18,9 +18,11 @@ import { Add } from '@mui/icons-material';
 import ApiError from 'component/common/ApiError/ApiError';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { TablePlaceholder } from 'component/common/Table';
-import { useMediaQuery } from '@mui/material';
+import { Typography, useMediaQuery } from '@mui/material';
 import theme from 'themes/theme';
 import { Search } from 'component/common/Search/Search';
+import { ReactComponent as ProPlanIcon } from 'assets/icons/pro-enterprise-feature-badge.svg';
+import { ProFeatureTooltip } from '../../common/ProFeatureTooltip/ProFeatureTooltip';
 
 type PageQueryType = Partial<Record<'search', string>>;
 
@@ -33,6 +35,15 @@ function resolveCreateButtonData(isOss: boolean, hasAccess: boolean) {
         return {
             title: 'You must be on a paid subscription to create new projects',
             disabled: true,
+            tooltip: {
+                title: (
+                    <ProFeatureTooltip
+                        text={
+                            'To be able to add more projects you need to upgrade to Pro version'
+                        }
+                    />
+                ),
+            },
         };
     } else if (!hasAccess) {
         return {
@@ -152,9 +163,9 @@ export const ProjectListNew = () => {
             ? `${filteredProjects.length} of ${projects.length}`
             : projects.length;
 
-    if (projects?.length === 1) {
-        return <Navigate to={`/projects/${projects[0].id}`} replace />;
-    }
+    // if (projects?.length === 1) {
+    //     return <Navigate to={`/projects/${projects[0].id}`} replace />;
+    // }
 
     return (
         <div ref={ref}>
@@ -182,6 +193,8 @@ export const ProjectListNew = () => {
                                     maxWidth="700px"
                                     permission={CREATE_PROJECT}
                                     disabled={createButtonData.disabled}
+                                    tooltipProps={createButtonData.tooltip}
+                                    endIcon={<ProPlanIcon />}
                                 >
                                     New project
                                 </ResponsiveButton>

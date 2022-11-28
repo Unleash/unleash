@@ -88,10 +88,7 @@ export class ApiTokenService {
             minutesToMilliseconds(1),
         ).unref();
         if (this.flagResolver.isEnabled('tokensLastSeen')) {
-            this.seenTimer = setInterval(
-                () => this.updateLastSeen(),
-                minutesToMilliseconds(1),
-            ).unref();
+            this.updateLastSeen();
         }
         if (config.authentication.initApiTokens.length > 0) {
             process.nextTick(async () =>
@@ -115,6 +112,11 @@ export class ApiTokenService {
             [this.lastSeenSecrets, toStore] = [toStore, this.lastSeenSecrets];
             await this.store.markSeenAt([...toStore]);
         }
+
+        this.seenTimer = setTimeout(
+            async () => this.updateLastSeen(),
+            minutesToMilliseconds(1),
+        ).unref();
     }
 
     public async getAllTokens(): Promise<IApiToken[]> {
@@ -298,7 +300,7 @@ export class ApiTokenService {
 
     destroy(): void {
         clearInterval(this.timer);
-        clearInterval(this.seenTimer);
+        clearTimeout(this.seenTimer);
         this.timer = null;
         this.seenTimer = null;
     }

@@ -15,7 +15,7 @@ These ADRs describe decisions that concern the entire codebase. They apply to ba
 
 * [Domain language](./general/ADR/domain-language.md)
 
-## Backend ADRs
+## Back-end ADRs
 
 We are currently in the process of defining ADRs for the backend, currently we have created the following ADRS:
 

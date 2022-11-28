@@ -13,27 +13,27 @@ One such example is the decision to re-write Unleash to TypeScript.
 
 These ADRs describe decisions that concern the entire codebase. They apply to back-end code, front-end code, and code that doesn't neatly fit into either of those categories.
 
-* [Domain language](./general/ADR/domain-language.md)
+* [Domain language](./Overarching/domain-language.mddomain-language.md)
 
 ## Back-end ADRs
 
 We are in the process of defining ADRs for the back end. At the time of writing we have created the following ADRS:
 
-* [Naming](./back-end/ADR/naming.md)
-* [Preferred export](./back-end/ADR/preferred-export.md)
+* [Naming](./Back-end/naming.md)
+* [Preferred export](./Back-end/preferred-export.md)
 
 ## Front-end ADRs
 
 We have created a set of ADRs to help guide the development of the front end:
 
-* [Component naming](./front-end/ADR/component-naming.md)
-* [Interface naming](./front-end/ADR/interface-naming.md)
-* [Preferred component props usage](./front-end/ADR/preferred-component-props-usage.md)
-* [Preferred export](./front-end/ADR/preferred-export.md)
-* [Preferred function type](./front-end/ADR/preferred-function-type.md)
-* [Preferred style import placement](./front-end/ADR/preferred-styles-import-placement.md)
-* [Preferred styling method](./front-end/ADR/preferred-styling-method.md)
-* [Preferred data mutation method](./front-end/ADR/preferred-data-mutation-method.md)
-* [Preferred data fetching method](./front-end/ADR/preferred-data-fetching-method.md)
-* [Preferred folder structure](./front-end/ADR/preferred-folder-structure.md)
-* [Preferred form architecture](./front-end/ADR/preferred-form-architecture.md)
+* [Component naming](./Front-end/component-naming.md)
+* [Interface naming](./Front-end/interface-naming.md)
+* [Preferred component props usage](./Front-end/preferred-component-props-usage.md)
+* [Preferred export](./Front-end/preferred-export.md)
+* [Preferred function type](./Front-end/preferred-function-type.md)
+* [Preferred style import placement](./Front-end/preferred-styles-import-placement.md)
+* [Preferred styling method](./Front-end/preferred-styling-method.md)
+* [Preferred data mutation method](./Front-end/preferred-data-mutation-method.md)
+* [Preferred data fetching method](./Front-end/preferred-data-fetching-method.md)
+* [Preferred folder structure](./Front-end/preferred-folder-structure.md)
+* [Preferred form architecture](./Front-end/preferred-form-architecture.md)

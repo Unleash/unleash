@@ -4,7 +4,10 @@ title: Architectural Decision Records
 
 ## Introduction {#introduction}
 
-Architectural decision records are a record of design decisions we have made in the past because we belived they would help our code quality over time. Any ADR can be challenged, but two conditions must be met to change an ADR: (1) The proposed solution must provide a tangible benefit in terms of code quality, and (2) the proposed solutions benefit must be worth retroactively refitted to the entire codebase. One such example is the decision to re-write unleash to typescript.
+Architectural decision records are a record of design decisions we have made in the past because we belived they would help our code quality over time. Any ADR can be challenged, but two conditions must be met to change an ADR: 
+1. The proposed solution must provide a tangible benefit in terms of code quality.
+2. The benefits of the proposed solution must outweigh the effort of retroactively changing the entire codebase. 
+One such example is the decision to re-write Unleash to TypeScript.
 
 ## Crosscutting ADRs
 

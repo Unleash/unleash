@@ -26,7 +26,10 @@ A naming convention used for deleting a single change of a change request, or di
 
 * *Pending*
 
-A naming convention used to describe a change requests state. A pending change request is in one of these three states: `Draft | In review | Approved`
+A *pending* change request is one that has not yet been applied or discarded. In other words, it is in one of these three states:
+1. `Draft`
+2. `In review`
+3. `Approved`
 
 * *Closed*
 

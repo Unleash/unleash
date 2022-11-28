@@ -13,7 +13,7 @@ One such example is the decision to re-write Unleash to TypeScript.
 
 These ADRs describe decisions that concern the entire codebase. They apply to back-end code, front-end code, and code that doesn't neatly fit into either of those categories.
 
-* [Domain language](./Overarching/domain-language.mddomain-language.md)
+* [Domain language](./Overarching/domain-language.md)
 
 ## Back-end ADRs
 

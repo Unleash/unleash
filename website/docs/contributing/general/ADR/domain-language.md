@@ -13,23 +13,12 @@ We have decided to use the same domain language for the features we develop. Eac
 ## Change requests domain language
 
 * *Change request*: An entity referring to the overarching data structure of a change request. A change request contains changes, and can be approved or rejected.
-
-* *Changes*
-
-An entity referring to a single change within a change request
-
-* *Discard*
-
-A naming convention used for deleting a single change of a change request, or discarding an entire change request
-
-* *Pending*
-
-A *pending* change request is one that has not yet been applied or discarded. In other words, it is in one of these three states:
-1. `Draft`
-2. `In review`
-3. `Approved`
-
-* *Closed*
-
-A *closed* change request has either been applied or cancelled and can no longer be changed. Change requests that are either `Applied` or `Cancelled` are considered closed.
+* *Change*: A term referring to a single change within a change request
+* *Changes*: A term referring to a group of changes within a change request
+* *Discard*: A term used for deleting a single change of a change request, or discarding an entire change request. 
+* *Pending*: A *pending* change request is one that has not yet been applied or discarded. In other words, it is in one of these three states:
+    1. `Draft`
+    2. `In review`
+    3. `Approved`
+* *Closed*: A *closed* change request has either been applied or cancelled and can no longer be changed. Change requests that are either `Applied` or `Cancelled` are considered closed.
 

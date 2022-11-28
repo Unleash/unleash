@@ -30,5 +30,5 @@ A naming convention used to describe a change requests state. A pending change r
 
 * *Closed*
 
-A naming convention used to describe a change requests state. A closed change request is in one of two states: `Applied | Cancelled`
+A *closed* change request has either been applied or cancelled and can no longer be changed. Change requests that are either `Applied` or `Cancelled` are considered closed.
 

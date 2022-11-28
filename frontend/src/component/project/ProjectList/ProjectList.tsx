@@ -21,7 +21,6 @@ import { TablePlaceholder } from 'component/common/Table';
 import { useMediaQuery } from '@mui/material';
 import theme from 'themes/theme';
 import { Search } from 'component/common/Search/Search';
-import { ReactComponent as ProPlanIcon } from 'assets/icons/pro-enterprise-feature-badge.svg';
 import { ProFeatureTooltip } from '../../common/ProFeatureTooltip/ProFeatureTooltip';
 import { ITooltipResolverProps } from '../../common/TooltipResolver/TooltipResolver';
 
@@ -32,7 +31,6 @@ type projectMap = {
 };
 
 interface ICreateButtonData {
-    title: string;
     disabled: boolean;
     tooltip?: Omit<ITooltipResolverProps, 'children'>;
 }
@@ -43,10 +41,9 @@ function resolveCreateButtonData(
 ): ICreateButtonData {
     if (isOss) {
         return {
-            title: 'You must be on a paid subscription to create new projects',
             disabled: true,
             tooltip: {
-                title: (
+                titleComponent: (
                     <ProFeatureTooltip
                         text={
                             'To be able to add more projects you need to upgrade to Pro version'
@@ -58,12 +55,14 @@ function resolveCreateButtonData(
         };
     } else if (!hasAccess) {
         return {
-            title: 'You do not have permission to create new projects',
+            tooltip: {
+                title: 'You do not have permission to create new projects',
+            },
             disabled: true,
         };
     } else {
         return {
-            title: 'Click to create a new project',
+            tooltip: { title: 'Click to create a new project' },
             disabled: false,
         };
     }
@@ -205,7 +204,6 @@ export const ProjectListNew = () => {
                                     permission={CREATE_PROJECT}
                                     disabled={createButtonData.disabled}
                                     tooltipProps={createButtonData.tooltip}
-                                    endIcon={<ProPlanIcon />}
                                 >
                                     New project
                                 </ResponsiveButton>

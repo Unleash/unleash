@@ -10,7 +10,7 @@ exports.up = function (db, cb) {
 exports.down = function (db, cb) {
     db.runSql(
         `
-      ALTER TABLE change_request_approvals DROP COLUMN min_approvals;
+      ALTER TABLE change_requests DROP COLUMN min_approvals;
 `,
         cb,
     );

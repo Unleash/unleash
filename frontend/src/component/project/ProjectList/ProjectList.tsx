@@ -1,5 +1,5 @@
 import { useContext, useEffect, useMemo, useState } from 'react';
-import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { mutate } from 'swr';
 import { getProjectFetcher } from 'hooks/api/getters/useProject/getProjectFetcher';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
@@ -18,11 +18,12 @@ import { Add } from '@mui/icons-material';
 import ApiError from 'component/common/ApiError/ApiError';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { TablePlaceholder } from 'component/common/Table';
-import { Typography, useMediaQuery } from '@mui/material';
+import { useMediaQuery } from '@mui/material';
 import theme from 'themes/theme';
 import { Search } from 'component/common/Search/Search';
 import { ReactComponent as ProPlanIcon } from 'assets/icons/pro-enterprise-feature-badge.svg';
 import { ProFeatureTooltip } from '../../common/ProFeatureTooltip/ProFeatureTooltip';
+import { ITooltipResolverProps } from '../../common/TooltipResolver/TooltipResolver';
 
 type PageQueryType = Partial<Record<'search', string>>;
 
@@ -30,7 +31,16 @@ type projectMap = {
     [index: string]: boolean;
 };
 
-function resolveCreateButtonData(isOss: boolean, hasAccess: boolean) {
+interface ICreateButtonData {
+    title: string;
+    disabled: boolean;
+    tooltip?: Omit<ITooltipResolverProps, 'children'>;
+}
+
+function resolveCreateButtonData(
+    isOss: boolean,
+    hasAccess: boolean
+): ICreateButtonData {
     if (isOss) {
         return {
             title: 'You must be on a paid subscription to create new projects',
@@ -43,6 +53,7 @@ function resolveCreateButtonData(isOss: boolean, hasAccess: boolean) {
                         }
                     />
                 ),
+                variant: 'white',
             },
         };
     } else if (!hasAccess) {

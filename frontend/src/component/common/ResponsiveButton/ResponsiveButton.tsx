@@ -2,12 +2,13 @@ import { useMediaQuery } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import PermissionButton from '../PermissionButton/PermissionButton';
 import PermissionIconButton from '../PermissionIconButton/PermissionIconButton';
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { ITooltipResolverProps } from '../TooltipResolver/TooltipResolver';
 
 interface IResponsiveButtonProps {
     Icon: React.ElementType;
-    tooltipProps: Omit<ITooltipResolverProps, 'children'>;
+    endIcon: ReactNode;
+    tooltipProps?: Omit<ITooltipResolverProps, 'children'>;
     onClick: () => void;
     disabled?: boolean;
     permission: string;

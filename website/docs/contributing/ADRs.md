@@ -22,9 +22,9 @@ We are in the process of defining ADRs for the back end. At the time of writing 
 * [Naming](./backend/ADR/naming.md)
 * [Preferred export](./backend/ADR/preferred-export.md)
 
-## Frontend ADRs
+## Front-end ADRs
 
-We have created a set of ADRs to help guide the development of the frontend:
+We have created a set of ADRs to help guide the development of the front end:
 
 * [Component naming](./frontend/ADR/component-naming.md)
 * [Interface naming](./frontend/ADR/interface-naming.md)

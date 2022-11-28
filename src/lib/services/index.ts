@@ -37,6 +37,7 @@ import PatService from './pat-service';
 import { PublicSignupTokenService } from './public-signup-token-service';
 import { LastSeenService } from './client-metrics/last-seen-service';
 import { InstanceStatsService } from './instance-stats-service';
+import { FavoritesService } from './favorites-service';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -123,6 +124,7 @@ export const createServices = (
         config,
         versionService,
     );
+    const favoritesService = new FavoritesService(stores, config);
 
     return {
         accessService,
@@ -163,6 +165,7 @@ export const createServices = (
         publicSignupTokenService,
         lastSeenService,
         instanceStatsService,
+        favoritesService,
     };
 };
 
@@ -204,4 +207,5 @@ export {
     PublicSignupTokenService,
     LastSeenService,
     InstanceStatsService,
+    FavoritesService,
 };

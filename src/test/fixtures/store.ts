@@ -29,6 +29,7 @@ import FakeSegmentStore from './fake-segment-store';
 import FakeGroupStore from './fake-group-store';
 import FakePatStore from './fake-pat-store';
 import FakePublicSignupStore from './fake-public-signup-store';
+import FakeFavoriteFeaturesStore from './fake-favorite-features-store';
 
 const createStores: () => IUnleashStores = () => {
     const db = {
@@ -69,6 +70,7 @@ const createStores: () => IUnleashStores = () => {
         groupStore: new FakeGroupStore(),
         patStore: new FakePatStore(),
         publicSignupTokenStore: new FakePublicSignupStore(),
+        favoriteFeaturesStore: new FakeFavoriteFeaturesStore(),
     };
 };
 

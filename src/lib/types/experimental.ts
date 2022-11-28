@@ -50,6 +50,10 @@ export const defaultExperimentalOptions = {
             process.env.UNLEASH_EXPERIMENTAL_TOKENS_LAST_SEEN,
             false,
         ),
+        favorites: parseEnvVarBoolean(
+            process.env.UNLEASH_EXPERIMENTAL_FAVORITES,
+            false,
+        ),
     },
     externalResolver: { isEnabled: (): boolean => false },
 };
@@ -68,6 +72,7 @@ export interface IExperimentalOptions {
         proxyReturnAllToggles?: boolean;
         variantsPerEnvironment?: boolean;
         tokensLastSeen?: boolean;
+        favorites?: boolean;
     };
     externalResolver: IExternalFlagResolver;
 }

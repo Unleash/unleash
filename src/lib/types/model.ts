@@ -70,6 +70,8 @@ export interface IFeatureToggleClient {
     lastSeenAt?: Date;
     createdAt?: Date;
     tags?: ITag[];
+
+    favorite?: boolean;
 }
 
 export interface IFeatureEnvironmentInfo {

@@ -32,6 +32,7 @@ import SegmentStore from './segment-store';
 import GroupStore from './group-store';
 import PatStore from './pat-store';
 import { PublicSignupTokenStore } from './public-signup-token-store';
+import { FavoriteFeaturesStore } from './favorite-features-store';
 
 export const createStores = (
     config: IUnleashConfig,
@@ -94,6 +95,11 @@ export const createStores = (
             getLogger,
         ),
         patStore: new PatStore(db, getLogger),
+        favoriteFeaturesStore: new FavoriteFeaturesStore(
+            db,
+            eventBus,
+            getLogger,
+        ),
     };
 };
 

@@ -21,6 +21,7 @@ import FeatureToggleStore from './feature-toggle-store';
 import { ensureStringValue } from '../util/ensureStringValue';
 import { mapValues } from '../util/map-values';
 import { IFlagResolver } from '../types/experimental';
+import { IFeatureProjectUserParams } from '../routes/admin-api/project/features';
 
 const COLUMNS = [
     'id',
@@ -57,6 +58,13 @@ interface IFeatureStrategiesTable {
     constraints: string;
     sort_order: number;
     created_at?: Date;
+}
+
+export interface ILoadFeatureToggleWithEnvsParams {
+    featureName: string;
+    archived: boolean;
+    withEnvironmentVariants: boolean;
+    userId: number;
 }
 
 function mapRow(row: IFeatureStrategiesTable): IFeatureStrategy {
@@ -214,27 +222,53 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
 
     async getFeatureToggleWithEnvs(
         featureName: string,
+        userId?: number,
         archived: boolean = false,
     ): Promise<FeatureToggleWithEnvironment> {
-        return this.loadFeatureToggleWithEnvs(featureName, archived, false);
+        return this.loadFeatureToggleWithEnvs({
+            featureName,
+            archived,
+            withEnvironmentVariants: false,
+            userId,
+        });
     }
 
     async getFeatureToggleWithVariantEnvs(
         featureName: string,
+        userId?: number,
         archived: boolean = false,
     ): Promise<FeatureToggleWithEnvironment> {
-        return this.loadFeatureToggleWithEnvs(featureName, archived, true);
+        return this.loadFeatureToggleWithEnvs({
+            featureName,
+            archived,
+            withEnvironmentVariants: true,
+            userId,
+        });
     }
 
-    async loadFeatureToggleWithEnvs(
-        featureName: string,
-        archived: boolean,
-        withEnvironmentVariants: boolean,
-    ): Promise<FeatureToggleWithEnvironment> {
+    async loadFeatureToggleWithEnvs({
+        featureName,
+        archived,
+        withEnvironmentVariants,
+        userId,
+    }: ILoadFeatureToggleWithEnvsParams): Promise<FeatureToggleWithEnvironment> {
         const stopTimer = this.timer('getFeatureAdmin');
-        const rows = await this.db('features_view')
+        let query = this.db('features_view')
             .where('name', featureName)
             .modify(FeatureToggleStore.filterByArchived, archived);
+
+        let selectColumns = ['features_view.*'];
+        if (userId && this.flagResolver.isEnabled('favorites')) {
+            query = query.leftJoin(`favorite_features as ff`, function () {
+                this.on('ff.feature', 'features_view.name').andOnVal(
+                    'ff.user_id',
+                    '=',
+                    userId,
+                );
+            });
+            selectColumns = [...selectColumns, 'ff.feature as favorite'];
+        }
+        const rows = await query.select(selectColumns);
         stopTimer();
         if (rows.length > 0) {
             const featureToggle = rows.reduce((acc, r) => {
@@ -243,6 +277,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 }
 
                 acc.name = r.name;
+                acc.favorite = r.favorite != null;
                 acc.impressionData = r.impression_data;
                 acc.description = r.description;
                 acc.project = r.project;
@@ -362,10 +397,25 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         };
     }
 
-    async getFeatureOverview(
-        projectId: string,
-        archived: boolean = false,
-    ): Promise<IFeatureOverview[]> {
+    async getFeatureOverview({
+        projectId,
+        archived,
+        userId,
+    }: IFeatureProjectUserParams): Promise<IFeatureOverview[]> {
+        let query = this.db('features')
+            .where({ project: projectId })
+            .modify(FeatureToggleStore.filterByArchived, archived)
+            .leftJoin(
+                'feature_environments',
+                'feature_environments.feature_name',
+                'features.name',
+            )
+            .leftJoin(
+                'environments',
+                'feature_environments.environment',
+                'environments.name',
+            );
+
         let selectColumns = [
             'features.name as feature_name',
             'features.type as type',
@@ -379,35 +429,29 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         ];
 
         if (this.flagResolver.isEnabled('toggleTagFiltering')) {
+            query = query.leftJoin(
+                'feature_tag as ft',
+                'ft.feature_name',
+                'features.name',
+            );
             selectColumns = [
                 ...selectColumns,
                 'ft.tag_value as tag_value',
                 'ft.tag_type as tag_type',
             ];
         }
-
-        let query = this.db('features')
-            .where({ project: projectId })
-            .select(selectColumns)
-            .modify(FeatureToggleStore.filterByArchived, archived)
-            .leftJoin(
-                'feature_environments',
-                'feature_environments.feature_name',
-                'features.name',
-            )
-            .leftJoin(
-                'environments',
-                'feature_environments.environment',
-                'environments.name',
-            );
-
-        if (this.flagResolver.isEnabled('toggleTagFiltering')) {
-            query = query.leftJoin(
-                'feature_tag as ft',
-                'ft.feature_name',
-                'features.name',
-            );
+        if (userId && this.flagResolver.isEnabled('favorites')) {
+            query = query.leftJoin(`favorite_features as ff`, function () {
+                this.on('ff.feature', 'features.name').andOnVal(
+                    'ff.user_id',
+                    '=',
+                    userId,
+                );
+            });
+            selectColumns = [...selectColumns, 'ff.feature as favorite'];
         }
+
+        query = query.select(selectColumns);
 
         const rows = await query;
 
@@ -423,6 +467,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 } else {
                     acc[r.feature_name] = {
                         type: r.type,
+                        favorite: r.favorite != null,
                         name: r.feature_name,
                         createdAt: r.created_at,
                         lastSeenAt: r.last_seen_at,

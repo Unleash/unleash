@@ -342,7 +342,7 @@ module.exports = {
             ],
         },
         {
-            label: 'Contributing',
+            label: 'Developer contribution docs',
             type: 'category',
             collapsed: true,
             link: {

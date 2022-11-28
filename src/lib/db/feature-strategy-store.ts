@@ -64,7 +64,7 @@ export interface ILoadFeatureToggleWithEnvsParams {
     featureName: string;
     archived: boolean;
     withEnvironmentVariants: boolean;
-    userId: number;
+    userId?: number;
 }
 
 function mapRow(row: IFeatureStrategiesTable): IFeatureStrategy {

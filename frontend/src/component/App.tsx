@@ -1,4 +1,4 @@
-import { Suspense } from 'react';
+import { Suspense, useCallback, useEffect, useState } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Error } from 'component/layout/Error/Error';
@@ -17,13 +17,47 @@ import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import { SplashPageRedirect } from 'component/splash/SplashPageRedirect/SplashPageRedirect';
 import { useStyles } from './App.styles';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import useProjects from '../hooks/api/getters/useProjects/useProjects';
+import { useLastViewedProject } from '../hooks/useLastViewedProject';
+
+const InitialRedirect = () => {
+    const { lastViewed } = useLastViewedProject();
+    const { projects, loading } = useProjects();
+
+    const [redirectTo, setRedirectTo] = useState<string | undefined>();
+
+    const getRedirect = useCallback(() => {
+        if (projects && lastViewed) {
+            return `/projects/${lastViewed}`;
+        }
+
+        if (projects && !lastViewed && projects.length === 1) {
+            return `/projects/${projects[0].id}`;
+        }
+
+        return '/projects';
+    }, [lastViewed, projects]);
+
+    useEffect(() => {
+        if (!loading) {
+            setRedirectTo(getRedirect());
+        }
+    }, [loading, getRedirect]);
+
+    if (loading || !redirectTo) {
+        return <Loader />;
+    }
+
+    return <Navigate to={redirectTo} />;
+};
 
 export const App = () => {
-    const { classes: styles } = useStyles();
     const { authDetails } = useAuthDetails();
     const { user } = useAuthUser();
-    const { isOss } = useUiConfig();
     const hasFetchedAuth = Boolean(authDetails || user);
+
+    const { classes: styles } = useStyles();
+    const { isOss } = useUiConfig();
 
     const availableRoutes = isOss()
         ? routes.filter(route => !route.enterprise)
@@ -38,44 +72,41 @@ export const App = () => {
                             condition={!hasFetchedAuth}
                             show={<Loader />}
                             elseShow={
-                                <div className={styles.container}>
-                                    <ToastRenderer />
-                                    <Routes>
-                                        {availableRoutes.map(route => (
-                                            <Route
-                                                key={route.path}
-                                                path={route.path}
-                                                element={
-                                                    <LayoutPicker
-                                                        isStandalone={
-                                                            route.isStandalone ===
-                                                            true
-                                                        }
-                                                    >
-                                                        <ProtectedRoute
-                                                            route={route}
-                                                        />
-                                                    </LayoutPicker>
-                                                }
-                                            />
-                                        ))}
-                                        <Route
-                                            path="/"
-                                            element={
-                                                <Navigate
-                                                    to="/projects"
-                                                    replace
+                                <>
+                                    <div className={styles.container}>
+                                        <ToastRenderer />
+                                        <Routes>
+                                            {availableRoutes.map(route => (
+                                                <Route
+                                                    key={route.path}
+                                                    path={route.path}
+                                                    element={
+                                                        <LayoutPicker
+                                                            isStandalone={
+                                                                route.isStandalone ===
+                                                                true
+                                                            }
+                                                        >
+                                                            <ProtectedRoute
+                                                                route={route}
+                                                            />
+                                                        </LayoutPicker>
+                                                    }
                                                 />
-                                            }
-                                        />
-                                        <Route
-                                            path="*"
-                                            element={<NotFound />}
-                                        />
-                                    </Routes>
-                                    <FeedbackNPS openUrl="http://feedback.unleash.run" />
-                                    <SplashPageRedirect />
-                                </div>
+                                            ))}
+                                            <Route
+                                                path="/"
+                                                element={<InitialRedirect />}
+                                            />
+                                            <Route
+                                                path="*"
+                                                element={<NotFound />}
+                                            />
+                                        </Routes>
+                                        <FeedbackNPS openUrl="http://feedback.unleash.run" />
+                                        <SplashPageRedirect />
+                                    </div>
+                                </>
                             }
                         />
                     </PlausibleProvider>

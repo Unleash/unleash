@@ -173,10 +173,6 @@ export const ProjectListNew = () => {
             ? `${filteredProjects.length} of ${projects.length}`
             : projects.length;
 
-    // if (projects?.length === 1) {
-    //     return <Navigate to={`/projects/${projects[0].id}`} replace />;
-    // }
-
     return (
         <div ref={ref}>
             <PageContent

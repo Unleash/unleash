@@ -9,22 +9,15 @@ import Authentication from '../Authentication/Authentication';
 import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import { parseRedirectParam } from 'component/user/Login/parseRedirectParam';
-import { useLastViewedProject } from '../../../hooks/useLastViewedProject';
 
 const Login = () => {
     const { classes: styles } = useStyles();
     const { authDetails } = useAuthDetails();
     const { user } = useAuthUser();
-    const { lastViewed } = useLastViewedProject();
     const query = useQueryParams();
     const resetPassword = query.get('reset') === 'true';
     const invited = query.get('invited') === 'true';
-
-    const getRedirect = () => {
-        return lastViewed == null ? '/projects' : `/projects/${lastViewed}`;
-    };
-
-    const redirect = query.get('redirect') || getRedirect();
+    const redirect = query.get('redirect') || '/';
 
     if (user) {
         return <Navigate to={parseRedirectParam(redirect)} replace />;

@@ -149,7 +149,7 @@
     "@types/faker": "5.5.9",
     "@types/jest": "29.2.3",
     "@types/js-yaml": "4.0.5",
-    "@types/make-fetch-happen": "10.0.0",
+    "@types/make-fetch-happen": "10.0.1",
     "@types/memoizee": "0.4.8",
     "@types/mime": "3.0.1",
     "@types/node": "16.18.3",

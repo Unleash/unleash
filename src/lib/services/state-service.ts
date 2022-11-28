@@ -46,11 +46,10 @@ import { IFeatureStrategiesStore } from '../types/stores/feature-strategies-stor
 import { IEnvironmentStore } from '../types/stores/environment-store';
 import { IFeatureEnvironmentStore } from '../types/stores/feature-environment-store';
 import { IUnleashStores } from '../types/stores';
-import { ALL_ENVS, DEFAULT_ENV } from '../util/constants';
+import { DEFAULT_ENV } from '../util/constants';
 import { GLOBAL_ENV } from '../types/environment';
 import { ISegmentStore } from '../types/stores/segment-store';
 import { PartialSome } from '../types/partial';
-import { IApiTokenStore } from 'lib/types/stores/api-token-store';
 
 export interface IBackupOption {
     includeFeatureToggles: boolean;
@@ -93,8 +92,6 @@ export default class StateService {
 
     private segmentStore: ISegmentStore;
 
-    private apiTokenStore: IApiTokenStore;
-
     constructor(
         stores: IUnleashStores,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
@@ -110,7 +107,6 @@ export default class StateService {
         this.featureTagStore = stores.featureTagStore;
         this.environmentStore = stores.environmentStore;
         this.segmentStore = stores.segmentStore;
-        this.apiTokenStore = stores.apiTokenStore;
         this.logger = getLogger('services/state-service.js');
     }
 
@@ -472,15 +468,6 @@ export default class StateService {
                 data: env,
             }));
             await this.eventStore.batchStore(importedEnvironmentEvents);
-
-            const apiTokens = await this.apiTokenStore.getAll();
-            const envNames = importedEnvs.map((env) => env.name);
-            apiTokens
-                .filter((apiToken) => !(apiToken.environment === ALL_ENVS))
-                .filter((apiToken) => !envNames.includes(apiToken.environment))
-                .forEach((apiToken) =>
-                    this.apiTokenStore.delete(apiToken.secret),
-                );
         }
         return importedEnvs;
     }

@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense, useCallback, useEffect, useState } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Error } from 'component/layout/Error/Error';
@@ -24,24 +24,29 @@ const InitialRedirect = () => {
     const { lastViewed } = useLastViewedProject();
     const { projects, loading } = useProjects();
 
-    const [redirectTo, setRedirectTo] = useState<string>('/projects');
+    const [redirectTo, setRedirectTo] = useState<string | undefined>();
+
+    const getRedirect = useCallback(() => {
+        if (projects && lastViewed) {
+            return `/projects/${lastViewed}`;
+        }
+
+        if (projects && !lastViewed && projects.length === 1) {
+            return `/projects/${projects[0].id}`;
+        }
+
+        return '/projects';
+    }, [lastViewed, projects]);
 
     useEffect(() => {
-        const redirect = () => {
-            if (projects && lastViewed) {
-                setRedirectTo(`/projects/${lastViewed}`);
-            }
-
-            if (projects && !lastViewed && projects.length === 1) {
-                setRedirectTo(`/projects/${projects[0].id}`);
-            }
-        };
-
         if (!loading) {
-            redirect();
+            setRedirectTo(getRedirect());
         }
-        //eslint-disable-next-line
-    }, [loading]);
+    }, [loading, getRedirect]);
+
+    if (loading || !redirectTo) {
+        return <Loader />;
+    }
 
     return <Navigate to={redirectTo} />;
 };

@@ -341,5 +341,22 @@ module.exports = {
                 },
             ],
         },
+        {
+            label: 'Contributing',
+            type: 'category',
+            collapsed: false,
+            link: {
+                type: 'generated-index',
+                title: 'Developer Guide',
+                description: 'Learn how to contribute to unleash.',
+                slug: '/developer-guide',
+            },
+            items: [
+                'contributing/developer-guide',
+                'contributing/frontend/overview',
+                'contributing/backend/overview',
+                'contributing/ADRs',
+            ],
+        },
     ],
 };

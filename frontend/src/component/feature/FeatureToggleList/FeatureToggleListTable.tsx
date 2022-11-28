@@ -1,18 +1,7 @@
 import { useEffect, useMemo, useState, VFC } from 'react';
-import {
-    Box,
-    IconButton,
-    Link,
-    Tooltip,
-    useMediaQuery,
-    useTheme,
-} from '@mui/material';
+import { Link, useMediaQuery, useTheme } from '@mui/material';
 import { Link as RouterLink, useSearchParams } from 'react-router-dom';
 import { SortingRule, useFlexLayout, useSortBy, useTable } from 'react-table';
-import {
-    Star as StarIcon,
-    StarBorder as StarBorderIcon,
-} from '@mui/icons-material';
 import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
 import { useFeatures } from 'hooks/api/getters/useFeatures/useFeatures';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
@@ -24,7 +13,6 @@ import { FeatureNameCell } from 'component/common/Table/cells/FeatureNameCell/Fe
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
-import { sortTypes } from 'utils/sortTypes';
 import { createLocalStorage } from 'utils/createLocalStorage';
 import { FeatureSchema } from 'openapi';
 import { CreateFeatureButton } from '../CreateFeatureButton/CreateFeatureButton';
@@ -32,6 +20,9 @@ import { FeatureStaleCell } from './FeatureStaleCell/FeatureStaleCell';
 import { useSearch } from 'hooks/useSearch';
 import { Search } from 'component/common/Search/Search';
 import { FeatureTagCell } from 'component/common/Table/cells/FeatureTagCell/FeatureTagCell';
+import { FavoriteIconCell } from './FavoriteIconCell/FavoriteIconCell';
+import { FavoriteIconHeader } from './FavoriteIconHeader/FavoriteIconHeader';
+import { usePinnedFavorites } from 'hooks/usePinnedFavorites';
 
 export const featuresPlaceholder: FeatureSchema[] = Array(15).fill({
     name: 'Name of the feature',
@@ -42,14 +33,14 @@ export const featuresPlaceholder: FeatureSchema[] = Array(15).fill({
 });
 
 export type PageQueryType = Partial<
-    Record<'sort' | 'order' | 'search', string>
+    Record<'sort' | 'order' | 'search' | 'favorites', string>
 >;
 
 const defaultSort: SortingRule<string> = { id: 'createdAt' };
 
 const { value: storedParams, setValue: setStoredParams } = createLocalStorage(
     'FeatureToggleListTable:v1',
-    defaultSort
+    { ...defaultSort, favorites: false }
 );
 
 export const FeatureToggleListTable: VFC = () => {
@@ -70,47 +61,28 @@ export const FeatureToggleListTable: VFC = () => {
         hiddenColumns: ['description'],
         globalFilter: searchParams.get('search') || '',
     }));
+    const { isFavoritesPinned, sortTypes, onTogglePinFavorites } =
+        usePinnedFavorites(
+            searchParams.has('favorites')
+                ? searchParams.get('favorites') === 'true'
+                : storedParams.favorites
+        );
     const [searchValue, setSearchValue] = useState(initialState.globalFilter);
 
     const columns = useMemo(
         () => [
             {
                 Header: (
-                    <Tooltip
-                        title="Pin favorite features to the top"
-                        placement="bottom-start"
-                    >
-                        <IconButton
-                            sx={{
-                                mx: -0.75,
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                            }}
-                        >
-                            <StarBorderIcon />
-                        </IconButton>
-                    </Tooltip>
+                    <FavoriteIconHeader
+                        isActive={isFavoritesPinned}
+                        onClick={onTogglePinFavorites}
+                    />
                 ),
                 accessor: 'favorite',
                 Cell: ({ value }: { value: boolean }) => (
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                        }}
-                    >
-                        <IconButton color="primary">
-                            <ConditionallyRender
-                                condition={value}
-                                show={<StarIcon />}
-                                elseShow={<StarBorderIcon />}
-                            />
-                        </IconButton>
-                    </Box>
+                    <FavoriteIconCell value={value} />
                 ),
-                maxWidth: 60,
+                maxWidth: 50,
                 disableSortBy: true,
             },
             {
@@ -179,7 +151,7 @@ export const FeatureToggleListTable: VFC = () => {
                 accessor: 'description',
             },
         ],
-        []
+        [isFavoritesPinned]
     );
 
     const {
@@ -228,7 +200,7 @@ export const FeatureToggleListTable: VFC = () => {
             hiddenColumns.push('type', 'createdAt', 'tags');
         }
         setHiddenColumns(hiddenColumns);
-    }, [setHiddenColumns, isSmallScreen, isMediumScreen, features]);
+    }, [setHiddenColumns, isSmallScreen, isMediumScreen, features, columns]);
 
     useEffect(() => {
         const tableState: PageQueryType = {};
@@ -239,12 +211,19 @@ export const FeatureToggleListTable: VFC = () => {
         if (searchValue) {
             tableState.search = searchValue;
         }
+        if (isFavoritesPinned) {
+            tableState.favorites = 'true';
+        }
 
         setSearchParams(tableState, {
             replace: true,
         });
-        setStoredParams({ id: sortBy[0].id, desc: sortBy[0].desc || false });
-    }, [sortBy, searchValue, setSearchParams]);
+        setStoredParams({
+            id: sortBy[0].id,
+            desc: sortBy[0].desc || false,
+            favorites: isFavoritesPinned || false,
+        });
+    }, [sortBy, searchValue, setSearchParams, isFavoritesPinned]);
 
     return (
         <PageContent

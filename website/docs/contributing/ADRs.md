@@ -17,7 +17,7 @@ These ADRs describe decisions that concern the entire codebase. They apply to ba
 
 ## Back-end ADRs
 
-We are currently in the process of defining ADRs for the backend, currently we have created the following ADRS:
+We are in the process of defining ADRs for the back end. At the time of writing we have created the following ADRS:
 
 * [Naming](./backend/ADR/naming.md)
 * [Preferred export](./backend/ADR/preferred-export.md)

@@ -1,4 +1,5 @@
 import { FeatureToggle, IStrategyConfig, ITag, IVariant } from './model';
+import { IApiToken } from './models/api-token';
 
 export const APPLICATION_CREATED = 'application-created';
 
@@ -93,6 +94,10 @@ export const CHANGE_REQUEST_APPROVAL_ADDED = 'change-request-approval-added';
 export const CHANGE_REQUEST_CANCELLED = 'change-request-cancelled';
 export const CHANGE_REQUEST_SENT_TO_REVIEW = 'change-request-sent-to-review';
 export const CHANGE_REQUEST_APPLIED = 'change-request-applied';
+
+export const API_TOKEN_CREATED = 'api-token-created';
+export const API_TOKEN_UPDATED = 'api-token-updated';
+export const API_TOKEN_DELETED = 'api-token-deleted';
 
 export interface IBaseEvent {
     type: string;
@@ -602,5 +607,63 @@ export class PublicSignupTokenUserAddedEvent extends BaseEvent {
     constructor(eventData: { createdBy: string; data: any }) {
         super(PUBLIC_SIGNUP_TOKEN_USER_ADDED, eventData.createdBy);
         this.data = eventData.data;
+    }
+}
+
+export class ApiTokenCreatedEvent extends BaseEvent {
+    readonly data: any;
+
+    readonly environment: string;
+
+    readonly project: string;
+
+    constructor(eventData: {
+        createdBy: string;
+        apiToken: Omit<IApiToken, 'secret'>;
+    }) {
+        super(API_TOKEN_CREATED, eventData.createdBy);
+        this.data = eventData.apiToken;
+        this.environment = eventData.apiToken.environment;
+        this.project = eventData.apiToken.project;
+    }
+}
+
+export class ApiTokenDeletedEvent extends BaseEvent {
+    readonly preData: any;
+
+    readonly environment: string;
+
+    readonly project: string;
+
+    constructor(eventData: {
+        createdBy: string;
+        apiToken: Omit<IApiToken, 'secret'>;
+    }) {
+        super(API_TOKEN_DELETED, eventData.createdBy);
+        this.preData = eventData.apiToken;
+        this.environment = eventData.apiToken.environment;
+        this.project = eventData.apiToken.project;
+    }
+}
+
+export class ApiTokenUpdatedEvent extends BaseEvent {
+    readonly preData: any;
+
+    readonly data: any;
+
+    readonly environment: string;
+
+    readonly project: string;
+
+    constructor(eventData: {
+        createdBy: string;
+        previousToken: Omit<IApiToken, 'secret'>;
+        apiToken: Omit<IApiToken, 'secret'>;
+    }) {
+        super(API_TOKEN_UPDATED, eventData.createdBy);
+        this.preData = eventData.previousToken;
+        this.data = eventData.apiToken;
+        this.environment = eventData.apiToken.environment;
+        this.project = eventData.apiToken.project;
     }
 }

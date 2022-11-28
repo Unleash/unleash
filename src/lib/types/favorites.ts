@@ -3,5 +3,5 @@ export interface IFavoriteFeature {
 }
 
 export interface IFavoriteProject {
-    projct: string;
+    project: string;
 }

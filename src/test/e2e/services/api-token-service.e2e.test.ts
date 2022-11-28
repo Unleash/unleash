@@ -120,15 +120,18 @@ test('should update expiry of token', async () => {
     const time = new Date('2022-01-01');
     const newTime = new Date('2023-01-01');
 
-    const token = await apiTokenService.createApiToken({
-        username: 'default-client',
-        type: ApiTokenType.CLIENT,
-        expiresAt: time,
-        project: '*',
-        environment: DEFAULT_ENV,
-    });
+    const token = await apiTokenService.createApiToken(
+        {
+            username: 'default-client',
+            type: ApiTokenType.CLIENT,
+            expiresAt: time,
+            project: '*',
+            environment: DEFAULT_ENV,
+        },
+        'tester',
+    );
 
-    await apiTokenService.updateExpiry(token.secret, newTime);
+    await apiTokenService.updateExpiry(token.secret, newTime, 'tester');
 
     const [updatedToken] = await apiTokenService.getAllTokens();
 

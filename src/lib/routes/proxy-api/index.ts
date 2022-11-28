@@ -54,7 +54,7 @@ export default class ProxyController extends Controller {
 
         // Support CORS requests for the frontend endpoints.
         // Preflight requests are handled in `app.ts`.
-        this.app.use(corsOriginMiddleware(services));
+        this.app.use(corsOriginMiddleware(services, config));
 
         this.route({
             method: 'get',

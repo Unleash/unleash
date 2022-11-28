@@ -54,6 +54,10 @@ export const defaultExperimentalOptions = {
             process.env.UNLEASH_EXPERIMENTAL_FAVORITES,
             false,
         ),
+        networkView: parseEnvVarBoolean(
+            process.env.UNLEASH_EXPERIMENTAL_NETWORK_VIEW,
+            false,
+        ),
     },
     externalResolver: { isEnabled: (): boolean => false },
 };
@@ -73,6 +77,7 @@ export interface IExperimentalOptions {
         variantsPerEnvironment?: boolean;
         tokensLastSeen?: boolean;
         favorites?: boolean;
+        networkView?: boolean;
     };
     externalResolver: IExternalFlagResolver;
 }

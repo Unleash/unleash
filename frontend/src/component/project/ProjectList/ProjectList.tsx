@@ -1,5 +1,5 @@
 import { useContext, useEffect, useMemo, useState } from 'react';
-import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { mutate } from 'swr';
 import { getProjectFetcher } from 'hooks/api/getters/useProject/getProjectFetcher';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
@@ -21,6 +21,9 @@ import { TablePlaceholder } from 'component/common/Table';
 import { useMediaQuery } from '@mui/material';
 import theme from 'themes/theme';
 import { Search } from 'component/common/Search/Search';
+import { ProFeatureTooltip } from '../../common/ProFeatureTooltip/ProFeatureTooltip';
+import { ITooltipResolverProps } from '../../common/TooltipResolver/TooltipResolver';
+import { ReactComponent as ProPlanIcon } from 'assets/icons/pro-enterprise-feature-badge.svg';
 
 type PageQueryType = Partial<Record<'search', string>>;
 
@@ -28,20 +31,39 @@ type projectMap = {
     [index: string]: boolean;
 };
 
-function resolveCreateButtonData(isOss: boolean, hasAccess: boolean) {
+interface ICreateButtonData {
+    disabled: boolean;
+    tooltip?: Omit<ITooltipResolverProps, 'children'>;
+}
+
+function resolveCreateButtonData(
+    isOss: boolean,
+    hasAccess: boolean
+): ICreateButtonData {
     if (isOss) {
         return {
-            title: 'You must be on a paid subscription to create new projects',
             disabled: true,
+            tooltip: {
+                titleComponent: (
+                    <ProFeatureTooltip
+                        text={
+                            'To be able to add more projects you need to upgrade to Pro version'
+                        }
+                    />
+                ),
+                variant: 'white',
+            },
         };
     } else if (!hasAccess) {
         return {
-            title: 'You do not have permission to create new projects',
+            tooltip: {
+                title: 'You do not have permission to create new projects',
+            },
             disabled: true,
         };
     } else {
         return {
-            title: 'Click to create a new project',
+            tooltip: { title: 'Click to create a new project' },
             disabled: false,
         };
     }
@@ -152,10 +174,6 @@ export const ProjectListNew = () => {
             ? `${filteredProjects.length} of ${projects.length}`
             : projects.length;
 
-    if (projects?.length === 1) {
-        return <Navigate to={`/projects/${projects[0].id}`} replace />;
-    }
-
     return (
         <div ref={ref}>
             <PageContent
@@ -178,10 +196,12 @@ export const ProjectListNew = () => {
                                 />
                                 <ResponsiveButton
                                     Icon={Add}
+                                    endIcon={<ProPlanIcon />}
                                     onClick={() => navigate('/projects/create')}
                                     maxWidth="700px"
                                     permission={CREATE_PROJECT}
                                     disabled={createButtonData.disabled}
+                                    tooltipProps={createButtonData.tooltip}
                                 >
                                     New project
                                 </ResponsiveButton>

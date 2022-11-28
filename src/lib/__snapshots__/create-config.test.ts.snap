@@ -2,6 +2,7 @@
 
 exports[`should create default config 1`] = `
 {
+  "accessControlMaxAge": 172800,
   "additionalCspAllowedDomains": {
     "defaultSrc": [],
     "fontSrc": [],
@@ -74,6 +75,7 @@ exports[`should create default config 1`] = `
       "embedProxy": false,
       "embedProxyFrontend": false,
       "favorites": false,
+      "networkView": false,
       "proxyReturnAllToggles": false,
       "responseTimeWithAppName": false,
       "syncSSOGroups": false,
@@ -91,6 +93,7 @@ exports[`should create default config 1`] = `
       "cloneEnvironment": false,
       "embedProxy": false,
       "embedProxyFrontend": false,
+      "networkView": false,
       "favorites": false,
       "proxyReturnAllToggles": false,
       "responseTimeWithAppName": false,

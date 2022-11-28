@@ -6,6 +6,8 @@ import {
     RadioGroup,
     Typography,
     Box,
+    Link,
+    Alert,
 } from '@mui/material';
 import { KeyboardArrowDownOutlined } from '@mui/icons-material';
 import React from 'react';
@@ -19,7 +21,6 @@ import { ApiTokenFormErrorType } from './useApiTokenForm';
 import { useStyles } from './ApiTokenForm.styles';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { TokenType } from 'interfaces/token';
-import { CorsTokenAlert } from 'component/admin/cors/CorsTokenAlert';
 
 interface IApiTokenFormProps {
     username: string;
@@ -93,8 +94,22 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
                   disabled: !environment.enabled,
               }));
 
+    const isUnleashCloud = Boolean(uiConfig?.flags?.UNLEASH_CLOUD);
+
     return (
         <form onSubmit={handleSubmit} className={styles.form}>
+            <ConditionallyRender
+                condition={isUnleashCloud}
+                show={
+                    <Alert severity="info" sx={{ mb: 4 }}>
+                        Please be aware of our{' '}
+                        <Link href="https://www.getunleash.io/fair-use-policy">
+                            fair use policy
+                        </Link>
+                        .
+                    </Alert>
+                }
+            />
             <div className={styles.container}>
                 <p className={styles.inputDescription}>
                     What would you like to call this token?
@@ -110,7 +125,7 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
                     onFocus={() => clearErrors('username')}
                     autoFocus
                 />
-                <FormControl className={styles.radioGroup}>
+                <FormControl sx={{ mb: 2, width: '100%' }}>
                     <label id="token-type" className={styles.inputDescription}>
                         What do you want to connect?
                     </label>
@@ -125,18 +140,27 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
                             <FormControlLabel
                                 key={key}
                                 value={key}
-                                className={styles.radioItem}
-                                control={<Radio className={styles.radio} />}
+                                sx={{ mb: 1 }}
+                                control={
+                                    <Radio
+                                        sx={{
+                                            ml: 0.75,
+                                            alignSelf: 'flex-start',
+                                        }}
+                                    />
+                                }
                                 label={
-                                    <>
-                                        <Typography>{label}</Typography>
-                                        <Typography
-                                            variant="body2"
-                                            color="text.secondary"
-                                        >
-                                            {title}
-                                        </Typography>
-                                    </>
+                                    <Box>
+                                        <Box>
+                                            <Typography>{label}</Typography>
+                                            <Typography
+                                                variant="body2"
+                                                color="text.secondary"
+                                            >
+                                                {title}
+                                            </Typography>
+                                        </Box>
+                                    </Box>
                                 }
                             />
                         ))}
@@ -169,20 +193,18 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
                     className={styles.selectInput}
                 />
             </div>
-            <div className={styles.buttonContainer}>
+            <Box
+                sx={{
+                    marginTop: 'auto',
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                }}
+            >
                 {children}
                 <Button onClick={handleCancel} className={styles.cancelButton}>
                     Cancel
                 </Button>
-            </div>
-            <ConditionallyRender
-                condition={type === TokenType.FRONTEND}
-                show={
-                    <Box sx={{ mt: 4 }}>
-                        <CorsTokenAlert />
-                    </Box>
-                }
-            />
+            </Box>
         </form>
     );
 };

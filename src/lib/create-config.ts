@@ -450,6 +450,10 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         DEFAULT_STRATEGY_SEGMENTS_LIMIT,
     );
 
+    const accessControlMaxAge = options.accessControlMaxAge
+        ? options.accessControlMaxAge
+        : parseEnvVarNumber(process.env.ACCESS_CONTROL_MAX_AGE, 172800);
+
     const clientFeatureCaching = loadClientCachingOptions(options);
 
     return {
@@ -481,6 +485,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         segmentValuesLimit,
         strategySegmentsLimit,
         clientFeatureCaching,
+        accessControlMaxAge,
     };
 }
 

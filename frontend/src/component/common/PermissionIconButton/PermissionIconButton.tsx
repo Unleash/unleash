@@ -1,10 +1,10 @@
 import { IconButton, IconButtonProps } from '@mui/material';
-import React, { useContext, ReactNode } from 'react';
+import React, { ReactNode, useContext } from 'react';
 import AccessContext from 'contexts/AccessContext';
 import { Link } from 'react-router-dom';
 import {
-    TooltipResolver,
     ITooltipResolverProps,
+    TooltipResolver,
 } from 'component/common/TooltipResolver/TooltipResolver';
 import { formatAccessText } from 'utils/formatAccessText';
 import { useId } from 'hooks/useId';

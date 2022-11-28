@@ -50,7 +50,13 @@ export const FeatureOverviewSidePanel = () => {
             <FeatureOverviewSidePanelEnvironmentSwitches
                 header={
                     <StyledHeader data-loading>
-                        Enabled in environments ({feature.environments.length})
+                        Enabled in environments (
+                        {
+                            feature.environments.filter(
+                                ({ enabled }) => enabled
+                            ).length
+                        }
+                        )
                         <HelpIcon
                             tooltip="When a feature is switched off in an environment, it will always return false. When switched on, it will return true or false depending on its strategies."
                             placement="top"

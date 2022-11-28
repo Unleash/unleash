@@ -130,6 +130,7 @@ unleash.start(unleashOptions);
   - `maxAge` - the time to cache features, set to 600 milliseconds by default - Overridable with (`CLIENT_FEATURE_CACHING_MAXAGE`) ) (accepts milliseconds)
 - **frontendApi** - Configuration options for the [Unleash front-end API](../front-end-api.md).
   - `refreshIntervalInMs` - how often (in milliseconds) front-end clients should refresh their data from the cache. Overridable with the `FRONTEND_API_REFRESH_INTERVAL_MS` environment variable.
+- **accessControlMaxAge** - You can configure the max-age of the Access-Control-Max-Age header. Defaults to 172800 seconds. Overridable with the `ACCESS_CONTROL_MAX_AGE` environment variable.
 
 You can also set the environment variable `ENABLED_ENVIRONMENTS` to a comma delimited string of environment names to override environments.
 

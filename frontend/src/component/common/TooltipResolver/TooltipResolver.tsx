@@ -1,10 +1,10 @@
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { Tooltip, TooltipProps } from '@mui/material';
 import { HtmlTooltip } from '../HtmlTooltip/HtmlTooltip';
 
 export interface ITooltipResolverProps extends Omit<TooltipProps, 'title'> {
-    title?: string | undefined;
-    titleComponent?: ReactNode | undefined;
+    title?: string;
+    titleComponent?: ReactNode;
     variant?: 'default' | 'white';
 }
 

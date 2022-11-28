@@ -1,5 +1,6 @@
 import { ReactComponent as ProPlanIcon } from 'assets/icons/pro-enterprise-feature-badge.svg';
 import { Box, Link, styled, Typography } from '@mui/material';
+import { usePlausibleTracker } from '../../../hooks/usePlausibleTracker';
 
 export interface ProFeatureTooltipProps {
     text: string;
@@ -23,6 +24,11 @@ const StyledTitle = styled(Typography)(({ theme }) => ({
 }));
 
 export const ProFeatureTooltip = ({ text }: ProFeatureTooltipProps) => {
+    const { trackEvent } = usePlausibleTracker();
+
+    const handleClick = () => {
+        trackEvent('upgrade_plan_clicked');
+    };
     return (
         <ProFeatureTooltipWrapper>
             <StyledTitle>
@@ -33,7 +39,10 @@ export const ProFeatureTooltip = ({ text }: ProFeatureTooltipProps) => {
             </StyledTitle>
             <Typography sx={{ alignContent: 'center' }}>{text}</Typography>
             <Typography sx={{ alignContent: 'center' }}>
-                <Link target={'https://www.getunleash.io/plans'}>
+                <Link
+                    target={'https://www.getunleash.io/plans'}
+                    onClick={handleClick}
+                >
                     Upgrade now
                 </Link>
             </Typography>

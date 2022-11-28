@@ -23,6 +23,7 @@ import theme from 'themes/theme';
 import { Search } from 'component/common/Search/Search';
 import { ProFeatureTooltip } from '../../common/ProFeatureTooltip/ProFeatureTooltip';
 import { ITooltipResolverProps } from '../../common/TooltipResolver/TooltipResolver';
+import { ReactComponent as ProPlanIcon } from 'assets/icons/pro-enterprise-feature-badge.svg';
 
 type PageQueryType = Partial<Record<'search', string>>;
 
@@ -195,6 +196,7 @@ export const ProjectListNew = () => {
                                 />
                                 <ResponsiveButton
                                     Icon={Add}
+                                    endIcon={<ProPlanIcon />}
                                     onClick={() => navigate('/projects/create')}
                                     maxWidth="700px"
                                     permission={CREATE_PROJECT}

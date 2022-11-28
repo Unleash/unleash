@@ -7,6 +7,7 @@ import { ITooltipResolverProps } from '../TooltipResolver/TooltipResolver';
 
 interface IResponsiveButtonProps {
     Icon: React.ElementType;
+    endIcon?: React.ReactNode;
     tooltipProps?: Omit<ITooltipResolverProps, 'children'>;
     onClick: () => void;
     disabled?: boolean;

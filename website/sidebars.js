@@ -344,7 +344,7 @@ module.exports = {
         {
             label: 'Contributing',
             type: 'category',
-            collapsed: false,
+            collapsed: true,
             link: {
                 type: 'generated-index',
                 title: 'Developer Guide',

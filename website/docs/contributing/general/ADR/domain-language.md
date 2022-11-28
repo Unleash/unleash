@@ -12,9 +12,7 @@ We have decided to use the same domain language for the features we develop. Eac
 
 ## Change requests domain language
 
-* *Change request*
-
-An entity referring to the overarching data structure of a change request. A change request contains changes, and can be approved or rejected.
+* *Change request*: An entity referring to the overarching data structure of a change request. A change request contains changes, and can be approved or rejected.
 
 * *Changes*
 

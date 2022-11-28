@@ -1509,10 +1509,10 @@
   resolved "https://registry.npmjs.org/@types/json5/-/json5-0.0.29.tgz"
   integrity sha1-7ihweulOEdK4J7y+UnC86n8+ce4=
 
-"@types/make-fetch-happen@10.0.0":
-  version "10.0.0"
-  resolved "https://registry.yarnpkg.com/@types/make-fetch-happen/-/make-fetch-happen-10.0.0.tgz#be630e59c57644438e70d7ab5c473144c28dbb2f"
-  integrity sha512-wey8GZ/osY25cJEvQFNAXGfEGHTZYKMPGd1v0mrmD1vEYDkgRaq7TW+N9tir9YVlF5s1T60VGNWUx8rZExLP0A==
+"@types/make-fetch-happen@10.0.1":
+  version "10.0.1"
+  resolved "https://registry.yarnpkg.com/@types/make-fetch-happen/-/make-fetch-happen-10.0.1.tgz#9e718d8f5f6ed388e2020bb9b4fbd2dc23009b38"
+  integrity sha512-DFKsprsL3krCqtCD+WAnWDrCJBinI0GwcgXqeIFC1ZhWZbmoTAv6Rgl+P8On/rfQIuYp2OmZymjvm9ZukWh8ZA==
   dependencies:
     "@types/node-fetch" "*"
     "@types/retry" "*"

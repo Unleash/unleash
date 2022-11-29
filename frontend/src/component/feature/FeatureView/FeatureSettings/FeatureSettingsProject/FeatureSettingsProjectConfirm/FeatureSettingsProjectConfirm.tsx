@@ -5,7 +5,10 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { useStyles } from './FeatureSettingsProjectConfirm.styles';
 import { arraysHaveSameItems } from 'utils/arraysHaveSameItems';
-import { Alert } from '@mui/material';
+import { Alert, List, ListItem } from '@mui/material';
+import { Link } from 'react-router-dom';
+import { IChangeRequest } from 'component/changeRequest/changeRequest.types';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
 interface IFeatureSettingsProjectConfirm {
     projectId: string;
@@ -13,6 +16,7 @@ interface IFeatureSettingsProjectConfirm {
     onClose: () => void;
     onClick: (args: any) => void;
     feature: IFeatureToggle;
+    changeRequests: IChangeRequest[] | undefined;
 }
 
 const FeatureSettingsProjectConfirm = ({
@@ -21,7 +25,9 @@ const FeatureSettingsProjectConfirm = ({
     onClose,
     onClick,
     feature,
+    changeRequests,
 }: IFeatureSettingsProjectConfirm) => {
+    const currentProjectId = useRequiredPathParam('projectId');
     const { project } = useProject(projectId);
     const { classes: styles } = useStyles();
 
@@ -32,9 +38,13 @@ const FeatureSettingsProjectConfirm = ({
         );
     }, [feature, project]);
 
+    const hasPendingChangeRequests = changeRequests
+        ? changeRequests.length > 0
+        : false;
+
     return (
         <ConditionallyRender
-            condition={hasSameEnvironments}
+            condition={hasSameEnvironments && !hasPendingChangeRequests}
             show={
                 <Dialogue
                     open={open}
@@ -49,11 +59,11 @@ const FeatureSettingsProjectConfirm = ({
                             This feature toggle is compatible with the new
                             project.
                         </Alert>
-                        <p>
-                            Are you sure you want to change the project for this
-                            toggle?
-                        </p>
                     </div>
+                    <p>
+                        Are you sure you want to change the project for this
+                        toggle?
+                    </p>
                 </Dialogue>
             }
             elseShow={
@@ -72,6 +82,35 @@ const FeatureSettingsProjectConfirm = ({
                             projects, both projects must have the exact same
                             environments enabled.
                         </p>
+                        <ConditionallyRender
+                            condition={hasPendingChangeRequests}
+                            show={
+                                <>
+                                    <p>
+                                        In addition the feature toggle must not
+                                        have any pending change requests. This
+                                        feature toggle is currently referenced
+                                        in the following change requests:
+                                    </p>
+                                    <List>
+                                        {changeRequests?.map(changeRequest => {
+                                            return (
+                                                <ListItem
+                                                    key={changeRequest.id}
+                                                >
+                                                    <Link
+                                                        to={`/projects/${currentProjectId}/change-requests/${changeRequest.id}`}
+                                                    >
+                                                        View change request{' '}
+                                                        {changeRequest.id}
+                                                    </Link>
+                                                </ListItem>
+                                            );
+                                        })}
+                                    </List>
+                                </>
+                            }
+                        />
                     </div>
                 </Dialogue>
             }

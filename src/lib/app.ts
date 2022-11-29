@@ -80,7 +80,7 @@ export default async function getApp(
         `${baseUriPath}/api/frontend*`,
         conditionalMiddleware(
             () => config.flagResolver.isEnabled('embedProxy'),
-            corsOriginMiddleware(services),
+            corsOriginMiddleware(services, config),
         ),
     );
 

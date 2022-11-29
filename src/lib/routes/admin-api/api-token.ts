@@ -35,6 +35,7 @@ import {
 import { UpdateApiTokenSchema } from '../../openapi/spec/update-api-token-schema';
 import { emptyResponse } from '../../openapi/util/standard-responses';
 import { ProxyService } from '../../services/proxy-service';
+import { extractUsername } from '../../util';
 
 interface TokenParam {
     token: string;
@@ -159,7 +160,10 @@ export class ApiTokenController extends Controller {
         res: Response<ApiTokenSchema>,
     ): Promise<any> {
         const createToken = await createApiToken.validateAsync(req.body);
-        const token = await this.apiTokenService.createApiToken(createToken);
+        const token = await this.apiTokenService.createApiToken(
+            createToken,
+            extractUsername(req),
+        );
         this.openApiService.respondWithValidation(
             201,
             res,
@@ -181,7 +185,11 @@ export class ApiTokenController extends Controller {
             return res.status(400).send();
         }
 
-        await this.apiTokenService.updateExpiry(token, new Date(expiresAt));
+        await this.apiTokenService.updateExpiry(
+            token,
+            new Date(expiresAt),
+            extractUsername(req),
+        );
         return res.status(200).end();
     }
 
@@ -191,7 +199,7 @@ export class ApiTokenController extends Controller {
     ): Promise<void> {
         const { token } = req.params;
 
-        await this.apiTokenService.delete(token);
+        await this.apiTokenService.delete(token, extractUsername(req));
         this.proxyService.deleteClientForProxyToken(token);
         res.status(200).end();
     }

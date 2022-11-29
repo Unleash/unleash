@@ -19,6 +19,7 @@ import {
 } from 'utils/strategyNames';
 import { hasNameField } from '../changeRequest.types';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 
 interface IChangeRequestProps {
     changeRequest: IChangeRequest;
@@ -91,8 +92,15 @@ export const ChangeRequest: VFC<IChangeRequestProps> = ({
             setToastApiError(formatUnknownError(error));
         }
     };
+    const { isChangeRequestConfigured } = useChangeRequestsEnabled(
+        changeRequest.project
+    );
+    const allowChangeRequestActions = isChangeRequestConfigured(
+        changeRequest.environment
+    );
 
     const showDiscard =
+        allowChangeRequestActions &&
         !['Cancelled', 'Applied'].includes(changeRequest.state) &&
         changeRequest.features.flatMap(feature => feature.changes).length > 1;
 

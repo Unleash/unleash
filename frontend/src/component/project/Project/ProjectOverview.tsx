@@ -21,8 +21,8 @@ const ProjectOverview = () => {
     const { setLastViewed } = useLastViewedProject();
 
     useEffect(() => {
-        setLastViewed(projectName);
-    }, [projectName, setLastViewed]);
+        setLastViewed(projectId);
+    }, [projectId, setLastViewed]);
 
     return (
         <div>

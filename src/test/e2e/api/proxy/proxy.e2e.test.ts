@@ -981,3 +981,13 @@ test('should return all features when specified', async () => {
             });
         });
 });
+
+test.only('should return maxAge header on options call', async () => {
+    await app.request
+        .options('/api/frontend')
+        .set('Origin', 'https://example.com')
+        .expect(204)
+        .expect((res) => {
+            expect(res.headers['access-control-max-age']).toBe('172800');
+        });
+});

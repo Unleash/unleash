@@ -74,7 +74,6 @@ const EventDiff = ({ entry }: IEventDiffProps) => {
             );
         }
 
-        console.log('***key', idx);
         return <div key={idx}>{change}</div>;
     };
 

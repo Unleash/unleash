@@ -5,18 +5,18 @@ exports.up = function (db, callback) {
         `
             CREATE TABLE IF NOT EXISTS favorite_features
             (
-                feature varchar(255) not null references features (name) on DELETE CASCADE,
-                user_id integer not null references users (id) ON DELETE CASCADE,
-                created_at timestamp with time zone not null default now(),
-                primary key (feature, user_id)
+                feature VARCHAR(255) NOT NULL REFERENCES features (name) ON DELETE CASCADE,
+                user_id INTEGER NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+                created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
+                PRIMARY KEY (feature, user_id)
             );
 
             CREATE TABLE IF NOT EXISTS favorite_projects
             (
-                project varchar(255) not null references projects (id) on DELETE CASCADE,
-                user_id integer not null references users (id) ON DELETE CASCADE,
-                created_at timestamp with time zone not null default now(),
-                primary key (project, user_id)
+                project VARCHAR(255) NOT NULL REFERENCES projects (id) ON DELETE CASCADE,
+                user_id INTEGER NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+                created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
+                PRIMARY KEY (project, user_id)
             );
         `,
         callback,

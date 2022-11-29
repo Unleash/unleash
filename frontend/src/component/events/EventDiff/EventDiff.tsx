@@ -74,6 +74,7 @@ const EventDiff = ({ entry }: IEventDiffProps) => {
             );
         }
 
+        console.log('***key', idx);
         return <div key={idx}>{change}</div>;
     };
 
@@ -85,7 +86,7 @@ const EventDiff = ({ entry }: IEventDiffProps) => {
         // Just show the data if there is no diff yet.
         const data = entry.data || entry.preData;
         changes = [
-            <div style={entry.data ? styles.N : styles.D}>
+            <div key={0} style={entry.data ? styles.N : styles.D}>
                 {JSON.stringify(data, null, 2)}
             </div>,
         ];

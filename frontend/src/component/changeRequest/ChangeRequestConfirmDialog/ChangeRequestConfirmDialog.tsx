@@ -3,8 +3,8 @@ import { Alert, Typography } from '@mui/material';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { oneOf } from 'utils/oneOf';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { useChangeRequestInReviewWarning } from '../useChangeRequestInReviewWarning';
 
 interface IChangeRequestDialogueProps {
     isOpen: boolean;
@@ -23,21 +23,24 @@ export const ChangeRequestDialogue: FC<IChangeRequestDialogueProps> = ({
     environment,
     messageComponent,
 }) => {
-    const { projectId } = useRequiredPathParam('projectId');
+    const projectId = useRequiredPathParam('projectId');
     const { draft } = usePendingChangeRequests(projectId);
+    const { changeRequestInReviewOrApproved, alert } =
+        useChangeRequestInReviewWarning(draft);
 
     if (!draft) return null;
 
-    const hasChangeRequestInReviewForEnvironment = draft.some(
-        changeRequest =>
-            changeRequest.environment === environment &&
-            oneOf(['In review', 'Approved'], changeRequest.state)
-    );
+    const hasChangeRequestInReviewForEnvironment =
+        changeRequestInReviewOrApproved(environment || '');
+
+    const primaryButtonText = hasChangeRequestInReviewForEnvironment
+        ? 'Add to existing change request'
+        : 'Add suggestion to draft"';
 
     return (
         <Dialogue
             open={isOpen}
-            primaryButtonText="Add suggestion to draft"
+            primaryButtonText={primaryButtonText}
             secondaryButtonText="Cancel"
             onClick={onConfirm}
             onClose={onClose}
@@ -46,7 +49,7 @@ export const ChangeRequestDialogue: FC<IChangeRequestDialogueProps> = ({
         >
             <ConditionallyRender
                 condition={hasChangeRequestInReviewForEnvironment}
-                show={<Alert>Hello world</Alert>}
+                show={alert}
             />
             <ConditionallyRender
                 condition={Boolean(showBanner)}

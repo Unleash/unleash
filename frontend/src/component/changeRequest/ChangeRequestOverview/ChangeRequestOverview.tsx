@@ -167,7 +167,7 @@ export const ChangeRequestOverview: FC = () => {
                             />
                         ))}
                         <AddCommentField
-                            imageUrl={user?.imageUrl || ''}
+                            user={user}
                             commentText={commentText}
                             onTypeComment={setCommentText}
                         >

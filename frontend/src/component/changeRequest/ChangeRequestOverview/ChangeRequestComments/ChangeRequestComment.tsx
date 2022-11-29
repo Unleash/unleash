@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import Paper from '@mui/material/Paper';
-import { Box, styled, Typography } from '@mui/material';
+import { Box, styled, Typography, Tooltip } from '@mui/material';
 import TimeAgo from 'react-timeago';
 import { StyledAvatar } from './StyledAvatar';
 import { IChangeRequestComment } from '../../changeRequest.types';
@@ -26,7 +26,9 @@ export const ChangeRequestComment: FC<{ comment: IChangeRequestComment }> = ({
     comment,
 }) => (
     <ChangeRequestCommentWrapper>
-        <StyledAvatar src={comment.createdBy.imageUrl} />
+        <Tooltip title={comment.createdBy.username}>
+            <StyledAvatar src={comment.createdBy.imageUrl} />
+        </Tooltip>
         <CommentPaper variant="outlined">
             <CommentHeader>
                 <Box>

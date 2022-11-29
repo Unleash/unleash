@@ -86,14 +86,11 @@ export const FeatureToggleListTable: VFC = () => {
                               />
                           ),
                           accessor: 'favorite',
-                          Cell: ({
-                              value,
-                              row: { original: feature },
-                          }: any) => (
+                          Cell: ({ row: { original: feature } }: any) => (
                               <FavoriteIconCell
-                                  value={value}
+                                  value={feature?.favorite}
                                   onClick={() =>
-                                      value
+                                      feature?.favorite
                                           ? removeFavoriteFeature(
                                                 feature.project,
                                                 feature.name

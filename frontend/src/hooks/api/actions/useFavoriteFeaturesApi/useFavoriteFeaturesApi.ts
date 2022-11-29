@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { useFeatures } from 'hooks/api/getters/useFeatures/useFeatures';
 import useAPI from '../useApi/useApi';
 
 export const useFavoriteFeaturesApi = () => {
@@ -8,10 +9,11 @@ export const useFavoriteFeaturesApi = () => {
         propagateErrors: true,
     });
     const { setToastData, setToastApiError } = useToast();
+    const { refetchFeatures } = useFeatures();
 
     const addFavoriteFeature = useCallback(
         async (projectId: string, featureName: string) => {
-            const path = `api/admin/${projectId}/features/${featureName}/favorites`;
+            const path = `api/admin/projects/${projectId}/features/${featureName}/favorites`;
             const req = createRequest(
                 path,
                 { method: 'POST' },
@@ -25,6 +27,7 @@ export const useFavoriteFeaturesApi = () => {
                     title: 'Toggle added to favorites',
                     type: 'success',
                 });
+                refetchFeatures();
             } catch (error) {
                 setToastApiError(formatUnknownError(error));
             }
@@ -34,7 +37,7 @@ export const useFavoriteFeaturesApi = () => {
 
     const removeFavoriteFeature = useCallback(
         async (projectId: string, featureName: string) => {
-            const path = `api/admin/${projectId}/features/${featureName}/favorites`;
+            const path = `api/admin/projects/${projectId}/features/${featureName}/favorites`;
             const req = createRequest(
                 path,
                 { method: 'DELETE' },
@@ -48,6 +51,7 @@ export const useFavoriteFeaturesApi = () => {
                     title: 'Toggle removed from favorites',
                     type: 'success',
                 });
+                refetchFeatures();
             } catch (error) {
                 setToastApiError(formatUnknownError(error));
             }

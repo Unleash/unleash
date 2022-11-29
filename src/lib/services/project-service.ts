@@ -592,10 +592,10 @@ export default class ProjectService {
         const environments = await this.store.getEnvironmentsForProject(
             projectId,
         );
-        const features = await this.featureToggleService.getFeatureOverview(
+        const features = await this.featureToggleService.getFeatureOverview({
             projectId,
             archived,
-        );
+        });
         const members = await this.store.getMembersCountByProject(projectId);
         return {
             name: project.name,

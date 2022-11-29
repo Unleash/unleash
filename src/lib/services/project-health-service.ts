@@ -63,10 +63,10 @@ export default class ProjectHealthService {
         const environments = await this.projectStore.getEnvironmentsForProject(
             projectId,
         );
-        const features = await this.featureToggleService.getFeatureOverview(
+        const features = await this.featureToggleService.getFeatureOverview({
             projectId,
             archived,
-        );
+        });
         const members = await this.projectStore.getMembersCountByProject(
             projectId,
         );

@@ -314,7 +314,9 @@ test('Roundtrip with strategies in multiple environments works', async () => {
         keepExisting: false,
         userName: 'export-tester',
     });
-    const f = await app.services.featureToggleServiceV2.getFeature(featureName);
+    const f = await app.services.featureToggleServiceV2.getFeature({
+        featureName,
+    });
     expect(f.environments).toHaveLength(4);
 });
 

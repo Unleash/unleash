@@ -28,6 +28,20 @@ export interface FeaturesTable {
     created_at?: Date;
 }
 
+export interface IGetAllFeatures {
+    featureQuery?: IFeatureToggleQuery;
+    archived: boolean;
+    isAdmin: boolean;
+    includeStrategyIds?: boolean;
+    userId?: number;
+}
+
+export interface IGetAdminFeatures {
+    featureQuery?: IFeatureToggleQuery;
+    archived?: boolean;
+    userId?: number;
+}
+
 export default class FeatureToggleClientStore
     implements IFeatureToggleClientStore
 {
@@ -59,12 +73,13 @@ export default class FeatureToggleClientStore
         this.flagResolver = flagResolver;
     }
 
-    private async getAll(
-        featureQuery?: IFeatureToggleQuery,
-        archived: boolean = false,
-        isAdmin: boolean = true,
-        includeStrategyIds?: boolean,
-    ): Promise<IFeatureToggleClient[]> {
+    private async getAll({
+        featureQuery,
+        archived,
+        isAdmin,
+        includeStrategyIds,
+        userId,
+    }: IGetAllFeatures): Promise<IFeatureToggleClient[]> {
         const environment = featureQuery?.environment || DEFAULT_ENV;
         const stopTimer = this.timer('getFeatureAdmin');
 
@@ -88,16 +103,7 @@ export default class FeatureToggleClientStore
             'segments.constraints as segment_constraints',
         ];
 
-        if (isAdmin && this.flagResolver.isEnabled('toggleTagFiltering')) {
-            selectColumns = [
-                ...selectColumns,
-                'ft.tag_value as tag_value',
-                'ft.tag_type as tag_type',
-            ];
-        }
-
         let query = this.db('features')
-            .select(selectColumns)
             .modify(FeatureToggleStore.filterByArchived, archived)
             .leftJoin(
                 this.db('feature_strategies')
@@ -127,13 +133,33 @@ export default class FeatureToggleClientStore
             )
             .leftJoin('segments', `segments.id`, `fss.segment_id`);
 
-        if (isAdmin && this.flagResolver.isEnabled('toggleTagFiltering')) {
-            query = query.leftJoin(
-                'feature_tag as ft',
-                'ft.feature_name',
-                'features.name',
-            );
+        if (isAdmin) {
+            if (this.flagResolver.isEnabled('toggleTagFiltering')) {
+                query = query.leftJoin(
+                    'feature_tag as ft',
+                    'ft.feature_name',
+                    'features.name',
+                );
+                selectColumns = [
+                    ...selectColumns,
+                    'ft.tag_value as tag_value',
+                    'ft.tag_type as tag_type',
+                ];
+            }
+
+            if (userId && this.flagResolver.isEnabled('favorites')) {
+                query = query.leftJoin(`favorite_features as ff`, function () {
+                    this.on('ff.feature', 'features.name').andOnVal(
+                        'ff.user_id',
+                        '=',
+                        userId,
+                    );
+                });
+                selectColumns = [...selectColumns, 'ff.feature as favorite'];
+            }
         }
+
+        query = query.select(selectColumns);
 
         if (featureQuery) {
             if (featureQuery.tag) {
@@ -181,6 +207,7 @@ export default class FeatureToggleClientStore
             feature.impressionData = r.impression_data;
             feature.enabled = !!r.enabled;
             feature.name = r.name;
+            feature.favorite = r.favorite != null;
             feature.description = r.description;
             feature.project = r.project;
             feature.stale = r.stale;
@@ -292,14 +319,20 @@ export default class FeatureToggleClientStore
         featureQuery?: IFeatureToggleQuery,
         includeStrategyIds?: boolean,
     ): Promise<IFeatureToggleClient[]> {
-        return this.getAll(featureQuery, false, false, includeStrategyIds);
+        return this.getAll({
+            featureQuery,
+            archived: false,
+            isAdmin: false,
+            includeStrategyIds,
+        });
     }
 
-    async getAdmin(
-        featureQuery?: IFeatureToggleQuery,
-        archived: boolean = false,
-    ): Promise<IFeatureToggleClient[]> {
-        return this.getAll(featureQuery, archived, true);
+    async getAdmin({
+        featureQuery,
+        userId,
+        archived,
+    }: IGetAdminFeatures): Promise<IFeatureToggleClient[]> {
+        return this.getAll({ featureQuery, archived, isAdmin: true, userId });
     }
 }
 

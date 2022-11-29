@@ -10,7 +10,6 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { IFeatureStrategyPayload } from 'interfaces/strategy';
-import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
 interface IAddFromTemplateCardProps {
     title: string;

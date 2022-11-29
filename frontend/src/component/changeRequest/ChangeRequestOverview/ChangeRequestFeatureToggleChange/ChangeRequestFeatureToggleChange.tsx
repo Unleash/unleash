@@ -61,7 +61,7 @@ export const ChangeRequestFeatureToggleChange: FC<
                     px: 3,
                 }}
             >
-                <ToggleOnIcon color="disabled" />
+                <Typography>Feature toggle name: </Typography>
                 <Typography
                     component={Link}
                     to={`/projects/${projectId}/features/${featureName}`}
@@ -69,7 +69,7 @@ export const ChangeRequestFeatureToggleChange: FC<
                     sx={{ textDecoration: 'none', marginLeft: 1 }}
                     onClick={onNavigate}
                 >
-                    {featureName}
+                    <strong>{featureName}</strong>
                 </Typography>
             </Box>
         </Box>

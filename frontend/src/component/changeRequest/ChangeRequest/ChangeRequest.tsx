@@ -1,12 +1,23 @@
-import { VFC } from 'react';
-import { Alert, Box, styled } from '@mui/material';
+import React, { FC, VFC } from 'react';
+import {
+    Alert,
+    Box,
+    Popover,
+    styled,
+    Tooltip,
+    Typography,
+} from '@mui/material';
 import { ChangeRequestFeatureToggleChange } from '../ChangeRequestOverview/ChangeRequestFeatureToggleChange/ChangeRequestFeatureToggleChange';
 import { objectId } from 'utils/objectId';
 import { ToggleStatusChange } from '../ChangeRequestOverview/ChangeRequestFeatureToggleChange/ToggleStatusChange';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
-import type { IChangeRequest } from '../changeRequest.types';
+import type {
+    IChangeRequest,
+    IChangeRequestDeleteStrategy,
+    IChangeRequestUpdateStrategy,
+} from '../changeRequest.types';
 import {
     Discard,
     StrategyAddedChange,
@@ -17,9 +28,13 @@ import {
     formatStrategyName,
     GetFeatureStrategyIcon,
 } from 'utils/strategyNames';
-import { hasNameField } from '../changeRequest.types';
+import {
+    hasNameField,
+    IChangeRequestAddStrategy,
+} from '../changeRequest.types';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
+import EventDiff from '../../events/EventDiff/EventDiff';
 
 interface IChangeRequestProps {
     changeRequest: IChangeRequest;
@@ -68,6 +83,64 @@ const StyledAlert = styled(Alert)(({ theme }) => ({
         borderStyle: 'none none solid none',
     },
 }));
+
+const CodeSnippetPopover: FC<{
+    change:
+        | IChangeRequestAddStrategy
+        | IChangeRequestUpdateStrategy
+        | IChangeRequestDeleteStrategy;
+}> = ({ change }) => {
+    const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
+
+    const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handlePopoverClose = () => {
+        setAnchorEl(null);
+    };
+
+    const open = Boolean(anchorEl);
+
+    return (
+        <>
+            <GetFeatureStrategyIcon strategyName={change.payload.name} />
+
+            <Typography
+                onMouseEnter={handlePopoverOpen}
+                onMouseLeave={handlePopoverClose}
+            >
+                {formatStrategyName(change.payload.name)}
+            </Typography>
+            <Popover
+                id={String(change.id)}
+                sx={{
+                    pointerEvents: 'none',
+                }}
+                open={open}
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                }}
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'left',
+                }}
+                onClose={handlePopoverClose}
+                disableRestoreFocus
+            >
+                <Box sx={{ paddingLeft: 3, paddingRight: 3 }}>
+                    <EventDiff
+                        entry={{
+                            data: change.payload,
+                        }}
+                    />
+                </Box>
+            </Popover>
+        </>
+    );
+};
 
 export const ChangeRequest: VFC<IChangeRequestProps> = ({
     changeRequest,
@@ -173,13 +246,7 @@ export const ChangeRequest: VFC<IChangeRequestProps> = ({
                                             />
                                         }
                                     >
-                                        <GetFeatureStrategyIcon
-                                            strategyName={change.payload.name}
-                                        />
-
-                                        {formatStrategyName(
-                                            change.payload.name
-                                        )}
+                                        <CodeSnippetPopover change={change} />
                                     </StrategyAddedChange>
                                 )}
                                 {change.action === 'deleteStrategy' && (
@@ -198,16 +265,9 @@ export const ChangeRequest: VFC<IChangeRequestProps> = ({
                                         }
                                     >
                                         {hasNameField(change.payload) && (
-                                            <>
-                                                <GetFeatureStrategyIcon
-                                                    strategyName={
-                                                        change.payload.name
-                                                    }
-                                                />
-                                                {formatStrategyName(
-                                                    change.payload.name
-                                                )}
-                                            </>
+                                            <CodeSnippetPopover
+                                                change={change}
+                                            />
                                         )}
                                     </StrategyDeletedChange>
                                 )}
@@ -226,12 +286,7 @@ export const ChangeRequest: VFC<IChangeRequestProps> = ({
                                             />
                                         }
                                     >
-                                        <GetFeatureStrategyIcon
-                                            strategyName={change.payload.name}
-                                        />
-                                        {formatStrategyName(
-                                            change.payload.name
-                                        )}
+                                        <CodeSnippetPopover change={change} />
                                     </StrategyEditedChange>
                                 )}
                             </Box>

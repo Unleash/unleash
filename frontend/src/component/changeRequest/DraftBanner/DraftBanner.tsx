@@ -28,9 +28,8 @@ const DraftBannerContent: FC<{
     return (
         <Box className={classes.content}>
             <DraftBannerContentWrapper>
-                <WarningAmberIcon />
-                <Typography variant="body2" sx={{ ml: 1, maxWidth: '500px' }}>
-                    <strong>Draft mode!</strong> – You have changes{' '}
+                <Typography variant="body2">
+                    <strong>Change request mode</strong> – You have changes{' '}
                     <ConditionallyRender
                         condition={Boolean(changeRequest.environment)}
                         show={

@@ -69,7 +69,7 @@ export const ChangeRequestFeatureToggleChange: FC<
                     sx={{ textDecoration: 'none', marginLeft: 1 }}
                     onClick={onNavigate}
                 >
-                    {featureName}
+                    <strong>{featureName}</strong>
                 </Typography>
             </Box>
         </Box>

@@ -30,7 +30,7 @@ export const StrategyAddedChange: FC<{ discard?: ReactNode }> = ({
         <ChangeItemWrapper>
             <ChangeItemInfo>
                 <Typography
-                    sx={theme => ({ color: theme.palette.success.main })}
+                    sx={theme => ({ color: theme.palette.success.dark })}
                 >
                     + Adding strategy:
                 </Typography>

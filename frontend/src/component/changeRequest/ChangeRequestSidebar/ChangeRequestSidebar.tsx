@@ -218,6 +218,7 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
                         key={environmentChangeRequest.id}
                         sx={{
                             padding: 2,
+                            mt: 2,
                             border: '2px solid',
                             borderColor: theme => theme.palette.neutral.light,
                             borderRadius: theme =>
@@ -304,7 +305,7 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
                                             <StyledSuccessIcon />
                                             <Typography
                                                 color={
-                                                    theme.palette.success.main
+                                                    theme.palette.success.dark
                                                 }
                                             >
                                                 Draft successfully sent to

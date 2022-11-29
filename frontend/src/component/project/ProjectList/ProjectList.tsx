@@ -21,8 +21,8 @@ import { TablePlaceholder } from 'component/common/Table';
 import { useMediaQuery } from '@mui/material';
 import theme from 'themes/theme';
 import { Search } from 'component/common/Search/Search';
-import { ProFeatureTooltip } from '../../common/ProFeatureTooltip/ProFeatureTooltip';
-import { ITooltipResolverProps } from '../../common/TooltipResolver/TooltipResolver';
+import { ProFeatureTooltip } from 'component/common/ProFeatureTooltip/ProFeatureTooltip';
+import { ITooltipResolverProps } from 'component/common/TooltipResolver/TooltipResolver';
 import { ReactComponent as ProPlanIcon } from 'assets/icons/pro-enterprise-feature-badge.svg';
 
 type PageQueryType = Partial<Record<'search', string>>;
@@ -34,6 +34,7 @@ type projectMap = {
 interface ICreateButtonData {
     disabled: boolean;
     tooltip?: Omit<ITooltipResolverProps, 'children'>;
+    endIcon?: React.ReactNode;
 }
 
 function resolveCreateButtonData(
@@ -45,14 +46,15 @@ function resolveCreateButtonData(
             disabled: true,
             tooltip: {
                 titleComponent: (
-                    <ProFeatureTooltip
-                        text={
-                            'To be able to add more projects you need to upgrade to Pro version'
-                        }
-                    />
+                    <ProFeatureTooltip>
+                        To be able to add more projects you need to upgrade to
+                        Pro or Enterprise plan
+                    </ProFeatureTooltip>
                 ),
-                variant: 'white',
+                sx: { maxWidth: '320px' },
+                variant: 'custom',
             },
+            endIcon: <ProPlanIcon />,
         };
     } else if (!hasAccess) {
         return {
@@ -196,7 +198,7 @@ export const ProjectListNew = () => {
                                 />
                                 <ResponsiveButton
                                     Icon={Add}
-                                    endIcon={<ProPlanIcon />}
+                                    endIcon={createButtonData.endIcon}
                                     onClick={() => navigate('/projects/create')}
                                     maxWidth="700px"
                                     permission={CREATE_PROJECT}

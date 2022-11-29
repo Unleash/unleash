@@ -1,5 +1,5 @@
 import { VFC } from 'react';
-import { Alert, Box, styled } from '@mui/material';
+import { Alert, Box, styled, Tooltip } from '@mui/material';
 import { ChangeRequestFeatureToggleChange } from '../ChangeRequestOverview/ChangeRequestFeatureToggleChange/ChangeRequestFeatureToggleChange';
 import { objectId } from 'utils/objectId';
 import { ToggleStatusChange } from '../ChangeRequestOverview/ChangeRequestFeatureToggleChange/ToggleStatusChange';
@@ -20,6 +20,7 @@ import {
 import { hasNameField } from '../changeRequest.types';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
+import EventDiff from '../../events/EventDiff/EventDiff';
 
 interface IChangeRequestProps {
     changeRequest: IChangeRequest;
@@ -177,9 +178,21 @@ export const ChangeRequest: VFC<IChangeRequestProps> = ({
                                             strategyName={change.payload.name}
                                         />
 
-                                        {formatStrategyName(
-                                            change.payload.name
-                                        )}
+                                        <Tooltip
+                                            title={
+                                                <EventDiff
+                                                    entry={{
+                                                        data: change.payload,
+                                                    }}
+                                                />
+                                            }
+                                        >
+                                            <span>
+                                                {formatStrategyName(
+                                                    change.payload.name
+                                                )}
+                                            </span>
+                                        </Tooltip>
                                     </StrategyAddedChange>
                                 )}
                                 {change.action === 'deleteStrategy' && (
@@ -204,9 +217,21 @@ export const ChangeRequest: VFC<IChangeRequestProps> = ({
                                                         change.payload.name
                                                     }
                                                 />
-                                                {formatStrategyName(
-                                                    change.payload.name
-                                                )}
+                                                <Tooltip
+                                                    title={
+                                                        <EventDiff
+                                                            entry={{
+                                                                data: change.payload,
+                                                            }}
+                                                        />
+                                                    }
+                                                >
+                                                    <span>
+                                                        {formatStrategyName(
+                                                            change.payload.name
+                                                        )}
+                                                    </span>
+                                                </Tooltip>
                                             </>
                                         )}
                                     </StrategyDeletedChange>
@@ -229,9 +254,21 @@ export const ChangeRequest: VFC<IChangeRequestProps> = ({
                                         <GetFeatureStrategyIcon
                                             strategyName={change.payload.name}
                                         />
-                                        {formatStrategyName(
-                                            change.payload.name
-                                        )}
+                                        <Tooltip
+                                            title={
+                                                <EventDiff
+                                                    entry={{
+                                                        data: change.payload,
+                                                    }}
+                                                />
+                                            }
+                                        >
+                                            <span>
+                                                {formatStrategyName(
+                                                    change.payload.name
+                                                )}
+                                            </span>
+                                        </Tooltip>
                                     </StrategyEditedChange>
                                 )}
                             </Box>

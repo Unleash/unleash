@@ -98,6 +98,7 @@ type ChangeRequestEditStrategy = ChangeRequestAddStrategy & { id: string };
 
 type ChangeRequestDeleteStrategy = {
     id: string;
+    name: string;
 };
 
 export type ChangeRequestAction =

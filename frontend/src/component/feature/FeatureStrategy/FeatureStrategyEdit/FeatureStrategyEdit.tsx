@@ -38,7 +38,6 @@ export const FeatureStrategyEdit = () => {
     const [strategy, setStrategy] = useState<Partial<IFeatureStrategy>>({});
     const [segments, setSegments] = useState<ISegment[]>([]);
     const { updateStrategyOnFeature, loading } = useFeatureStrategyApi();
-    const { setStrategySegments } = useSegmentsApi();
     const { strategyDefinition } = useStrategy(strategy.name);
     const { setToastData, setToastApiError } = useToast();
     const errors = useFormErrors();

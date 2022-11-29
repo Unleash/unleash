@@ -43,7 +43,6 @@ export const FeatureStrategyCreate = () => {
 
     const { addStrategyToFeature, loading } = useFeatureStrategyApi();
     const { addChangeRequest } = useChangeRequestApi();
-    const { setStrategySegments } = useSegmentsApi();
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
     const { unleashUrl } = uiConfig;
@@ -85,7 +84,7 @@ export const FeatureStrategyCreate = () => {
     }, [featureId, strategyDefinition]);
 
     const onAddStrategy = async (payload: IFeatureStrategyPayload) => {
-        const created = await addStrategyToFeature(
+        await addStrategyToFeature(
             projectId,
             featureId,
             environmentId,

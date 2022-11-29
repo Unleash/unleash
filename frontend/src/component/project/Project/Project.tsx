@@ -1,7 +1,6 @@
 import { useNavigate } from 'react-router';
 import useProject from 'hooks/api/getters/useProject/useProject';
 import useLoading from 'hooks/useLoading';
-import ApiError from 'component/common/ApiError/ApiError';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useStyles } from './Project.styles';
 import { styled, Tab, Tabs } from '@mui/material';
@@ -53,7 +52,7 @@ const StyledText = styled(StyledTitle)(({ theme }) => ({
 const Project = () => {
     const projectId = useRequiredPathParam('projectId');
     const params = useQueryParams();
-    const { project, error, loading, refetch } = useProject(projectId);
+    const { project, loading } = useProject(projectId);
     const ref = useLoading(loading);
     const { setToastData } = useToast();
     const { classes: styles } = useStyles();
@@ -117,7 +116,7 @@ const Project = () => {
         const changeRequestTab = {
             title: 'Change requests',
             path: `${basePath}/change-requests`,
-            name: 'change-request' + '',
+            name: 'change-request',
         };
 
         if (isChangeRequestFlagEnabled) {

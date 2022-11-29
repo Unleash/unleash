@@ -8,7 +8,7 @@ import {
     Tooltip,
 } from '@mui/material';
 import { AddToPhotos as CopyIcon, Lock } from '@mui/icons-material';
-import { IFeatureStrategy, IFeatureStrategyPayload } from 'interfaces/strategy';
+import { IFeatureStrategyPayload } from 'interfaces/strategy';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { IFeatureEnvironment } from 'interfaces/featureToggle';
 import AccessContext from 'contexts/AccessContext';

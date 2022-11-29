@@ -8,21 +8,24 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 
 interface IFavoriteIconCellProps {
     value?: boolean;
+    onClick?: () => void;
 }
 
 export const FavoriteIconCell: VFC<IFavoriteIconCellProps> = ({
     value = false,
+    onClick,
 }) => (
     <Box sx={{ pl: 1.25 }}>
         <ConditionallyRender
             condition={value}
             show={
-                <IconButton color="primary" size="small">
+                <IconButton onClick={onClick} color="primary" size="small">
                     <StarIcon fontSize="small" />
                 </IconButton>
             }
             elseShow={
                 <IconButton
+                    onClick={onClick}
                     size="small"
                     sx={{
                         color: 'transparent',

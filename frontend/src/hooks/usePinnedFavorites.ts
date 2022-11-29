@@ -5,7 +5,6 @@ const sortTypesWithFavorites = Object.fromEntries(
     Object.entries(sortTypes).map(([key, value]) => [
         key,
         (v1: any, v2: any, id: string, desc?: boolean) => {
-            console.log({ v1, v2, id, desc });
             if (v1?.original?.favorite && !v2?.original?.favorite)
                 return desc ? 1 : -1;
             if (!v1?.original?.favorite && v2?.original?.favorite)

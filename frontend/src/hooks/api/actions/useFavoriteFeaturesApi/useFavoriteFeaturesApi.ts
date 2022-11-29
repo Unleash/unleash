@@ -1,0 +1,64 @@
+import { useCallback } from 'react';
+import useToast from 'hooks/useToast';
+import { formatUnknownError } from 'utils/formatUnknownError';
+import useAPI from '../useApi/useApi';
+
+export const useFavoriteFeaturesApi = () => {
+    const { makeRequest, createRequest, errors, loading } = useAPI({
+        propagateErrors: true,
+    });
+    const { setToastData, setToastApiError } = useToast();
+
+    const addFavoriteFeature = useCallback(
+        async (projectId: string, featureName: string) => {
+            const path = `api/admin/${projectId}/features/${featureName}/favorites`;
+            const req = createRequest(
+                path,
+                { method: 'POST' },
+                'addFavoriteFeature'
+            );
+
+            try {
+                await makeRequest(req.caller, req.id);
+
+                setToastData({
+                    title: 'Toggle added to favorites',
+                    type: 'success',
+                });
+            } catch (error) {
+                setToastApiError(formatUnknownError(error));
+            }
+        },
+        [createRequest, makeRequest]
+    );
+
+    const removeFavoriteFeature = useCallback(
+        async (projectId: string, featureName: string) => {
+            const path = `api/admin/${projectId}/features/${featureName}/favorites`;
+            const req = createRequest(
+                path,
+                { method: 'DELETE' },
+                'removeFavoriteFeature'
+            );
+
+            try {
+                await makeRequest(req.caller, req.id);
+
+                setToastData({
+                    title: 'Toggle removed from favorites',
+                    type: 'success',
+                });
+            } catch (error) {
+                setToastApiError(formatUnknownError(error));
+            }
+        },
+        [createRequest, makeRequest]
+    );
+
+    return {
+        addFavoriteFeature,
+        removeFavoriteFeature,
+        errors,
+        loading,
+    };
+};

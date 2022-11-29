@@ -20,9 +20,11 @@ import { FeatureStaleCell } from './FeatureStaleCell/FeatureStaleCell';
 import { useSearch } from 'hooks/useSearch';
 import { Search } from 'component/common/Search/Search';
 import { FeatureTagCell } from 'component/common/Table/cells/FeatureTagCell/FeatureTagCell';
+import { usePinnedFavorites } from 'hooks/usePinnedFavorites';
+import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';
 import { FavoriteIconCell } from './FavoriteIconCell/FavoriteIconCell';
 import { FavoriteIconHeader } from './FavoriteIconHeader/FavoriteIconHeader';
-import { usePinnedFavorites } from 'hooks/usePinnedFavorites';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 export const featuresPlaceholder: FeatureSchema[] = Array(15).fill({
     name: 'Name of the feature',
@@ -68,23 +70,46 @@ export const FeatureToggleListTable: VFC = () => {
                 : storedParams.favorites
         );
     const [searchValue, setSearchValue] = useState(initialState.globalFilter);
+    const { addFavoriteFeature, removeFavoriteFeature } =
+        useFavoriteFeaturesApi();
+    const { uiConfig } = useUiConfig();
 
     const columns = useMemo(
         () => [
-            {
-                Header: (
-                    <FavoriteIconHeader
-                        isActive={isFavoritesPinned}
-                        onClick={onTogglePinFavorites}
-                    />
-                ),
-                accessor: 'favorite',
-                Cell: ({ value }: { value: boolean }) => (
-                    <FavoriteIconCell value={value} />
-                ),
-                maxWidth: 50,
-                disableSortBy: true,
-            },
+            ...(uiConfig?.flags?.favorites
+                ? [
+                      {
+                          Header: (
+                              <FavoriteIconHeader
+                                  isActive={isFavoritesPinned}
+                                  onClick={onTogglePinFavorites}
+                              />
+                          ),
+                          accessor: 'favorite',
+                          Cell: ({
+                              value,
+                              row: { original: feature },
+                          }: any) => (
+                              <FavoriteIconCell
+                                  value={value}
+                                  onClick={() =>
+                                      value
+                                          ? removeFavoriteFeature(
+                                                feature.project,
+                                                feature.name
+                                            )
+                                          : addFavoriteFeature(
+                                                feature.project,
+                                                feature.name
+                                            )
+                                  }
+                              />
+                          ),
+                          maxWidth: 50,
+                          disableSortBy: true,
+                      },
+                  ]
+                : []),
             {
                 Header: 'Seen',
                 accessor: 'lastSeenAt',

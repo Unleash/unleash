@@ -117,10 +117,7 @@ class UserService {
             process.nextTick(() => this.initAdminUser());
         }
         if (this.flagResolver.isEnabled('tokensLastSeen')) {
-            this.seenTimer = setInterval(
-                () => this.updateLastSeen(),
-                minutesToMilliseconds(1),
-            ).unref();
+            this.updateLastSeen();
         }
     }
 
@@ -448,10 +445,15 @@ class UserService {
 
     async updateLastSeen(): Promise<void> {
         if (this.lastSeenSecrets.size > 0) {
-            let toStore = new Set<string>();
-            [this.lastSeenSecrets, toStore] = [toStore, this.lastSeenSecrets];
-            await this.store.markSeenAt([...toStore]);
+            const toStore = [...this.lastSeenSecrets];
+            this.lastSeenSecrets = new Set<string>();
+            await this.store.markSeenAt(toStore);
         }
+
+        this.seenTimer = setTimeout(
+            async () => this.updateLastSeen(),
+            minutesToMilliseconds(3),
+        ).unref();
     }
 
     addPATSeen(secret: string): void {
@@ -461,7 +463,7 @@ class UserService {
     }
 
     destroy(): void {
-        clearInterval(this.seenTimer);
+        clearTimeout(this.seenTimer);
         this.seenTimer = null;
     }
 }

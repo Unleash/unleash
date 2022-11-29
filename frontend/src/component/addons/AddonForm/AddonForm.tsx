@@ -130,9 +130,13 @@ export const AddonForm: VFC<IAddonFormProps> = ({
         (param: string): ChangeEventHandler<HTMLInputElement> =>
         event => {
             event.preventDefault();
+            const value =
+                trim(event.target.value) === ''
+                    ? undefined
+                    : event.target.value;
             setFormValues(
                 produce(draft => {
-                    draft.parameters[param] = event.target.value;
+                    draft.parameters[param] = value;
                 })
             );
         };

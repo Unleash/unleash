@@ -20,8 +20,8 @@ export const useChangeRequestInReviewWarning = (
         alert: (
             <Alert sx={{ margin: '1rem 0' }} severity="warning">
                 You currently have a change request in review for this
-                environment. Adding a new change will add to this change request
-                will automatically update it, and all existing approvals will be
+                environment. Adding a new change will add the change to the
+                existing change request, and all existing approvals will be
                 reset. Are you sure you want to continue?
             </Alert>
         ),

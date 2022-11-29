@@ -33,7 +33,7 @@ export const ChangeRequestDialogue: FC<IChangeRequestDialogueProps> = ({
 
     const primaryButtonText = hasChangeRequestInReviewForEnvironment
         ? 'Add to existing change request'
-        : 'Add suggestion to draft"';
+        : 'Add suggestion to draft';
 
     return (
         <Dialogue

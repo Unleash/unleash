@@ -115,7 +115,7 @@ export class ApiTokenService {
 
         this.seenTimer = setTimeout(
             async () => this.updateLastSeen(),
-            minutesToMilliseconds(1),
+            minutesToMilliseconds(3),
         ).unref();
     }
 

@@ -4,7 +4,7 @@ import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useChangeRequestInReviewWarning } from '../useChangeRequestInReviewWarning';
+import { useChangeRequestInReviewWarning } from 'hooks/useChangeRequestInReviewWarning';
 
 interface IChangeRequestDialogueProps {
     isOpen: boolean;
@@ -27,8 +27,6 @@ export const ChangeRequestDialogue: FC<IChangeRequestDialogueProps> = ({
     const { draft } = usePendingChangeRequests(projectId);
     const { changeRequestInReviewOrApproved, alert } =
         useChangeRequestInReviewWarning(draft);
-
-    if (!draft) return null;
 
     const hasChangeRequestInReviewForEnvironment =
         changeRequestInReviewOrApproved(environment || '');

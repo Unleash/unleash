@@ -108,9 +108,9 @@ export class ApiTokenService {
 
     async updateLastSeen(): Promise<void> {
         if (this.lastSeenSecrets.size > 0) {
-            let toStore = new Set<string>();
-            [this.lastSeenSecrets, toStore] = [toStore, this.lastSeenSecrets];
-            await this.store.markSeenAt([...toStore]);
+            let toStore = [...this.lastSeenSecrets];
+            this.lastSeenSecrets = new Set<string>();
+            await this.store.markSeenAt(toStore);
         }
 
         this.seenTimer = setTimeout(

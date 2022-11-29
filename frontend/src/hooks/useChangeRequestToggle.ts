@@ -31,7 +31,7 @@ export const useChangeRequestToggle = (project: string) => {
     );
 
     const onChangeRequestToggleClose = useCallback(() => {
-        setChangeRequestDialogDetails({ isOpen: false });
+        setChangeRequestDialogDetails(prev => ({ ...prev, isOpen: false }));
     }, []);
 
     const onChangeRequestToggleConfirm = useCallback(async () => {
@@ -48,14 +48,14 @@ export const useChangeRequestToggle = (project: string) => {
                 }
             );
             refetchChangeRequests();
-            setChangeRequestDialogDetails({ isOpen: false });
+            setChangeRequestDialogDetails(prev => ({ ...prev, isOpen: false }));
             setToastData({
                 type: 'success',
                 title: 'Changes added to the draft!',
             });
         } catch (error) {
             setToastApiError(formatUnknownError(error));
-            setChangeRequestDialogDetails({ isOpen: false });
+            setChangeRequestDialogDetails(prev => ({ ...prev, isOpen: false }));
         }
     }, [addChangeRequest]);
 

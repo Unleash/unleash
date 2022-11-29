@@ -11,36 +11,14 @@ import {
     StyledReviewTitle,
     StyledDivider,
 } from './ChangeRequestReviewStatus.styles';
-import { ChangeRequestState } from 'component/changeRequest/changeRequest.types';
-import { useRequiredPathParam } from '../../../../hooks/useRequiredPathParam';
-import { useChangeRequestConfig } from '../../../../hooks/api/getters/useChangeRequestConfig/useChangeRequestConfig';
+import {
+    ChangeRequestState,
+    IChangeRequest,
+} from 'component/changeRequest/changeRequest.types';
+
 interface ISuggestChangeReviewsStatusProps {
-    state: ChangeRequestState;
-    environment: string;
+    changeRequest: IChangeRequest;
 }
-
-export const useChangeRequestRequiredApprovals = (projectId: string) => {
-    const { data } = useChangeRequestConfig(projectId);
-
-    const getChangeRequestRequiredApprovals = React.useCallback(
-        (environment: string): number => {
-            const config = data.find(draft => {
-                return (
-                    draft.environment === environment &&
-                    draft.changeRequestEnabled
-                );
-            });
-
-            return config?.requiredApprovals || 1;
-        },
-        [data]
-    );
-
-    return {
-        getChangeRequestRequiredApprovals,
-    };
-};
-
 const resolveBorder = (state: ChangeRequestState, theme: Theme) => {
     if (state === 'Approved') {
         return `2px solid ${theme.palette.success.main}`;
@@ -76,30 +54,35 @@ const resolveIconColors = (state: ChangeRequestState, theme: Theme) => {
 
 export const ChangeRequestReviewStatus: FC<
     ISuggestChangeReviewsStatusProps
-> = ({ state, environment }) => {
+> = ({ changeRequest }) => {
     const theme = useTheme();
     return (
         <StyledOuterContainer>
-            <StyledButtonContainer {...resolveIconColors(state, theme)}>
+            <StyledButtonContainer
+                {...resolveIconColors(changeRequest.state, theme)}
+            >
                 <ChangesAppliedIcon
                     style={{
                         transform: `scale(1.5)`,
                     }}
                 />
             </StyledButtonContainer>
-            <StyledReviewStatusContainer border={resolveBorder(state, theme)}>
-                <ResolveComponent state={state} environment={environment} />
+            <StyledReviewStatusContainer
+                border={resolveBorder(changeRequest.state, theme)}
+            >
+                <ResolveComponent changeRequest={changeRequest} />
             </StyledReviewStatusContainer>
         </StyledOuterContainer>
     );
 };
 
 interface IResolveComponentProps {
-    state: ChangeRequestState;
-    environment: string;
+    changeRequest: IChangeRequest;
 }
 
-const ResolveComponent = ({ state, environment }: IResolveComponentProps) => {
+const ResolveComponent = ({ changeRequest }: IResolveComponentProps) => {
+    const { state } = changeRequest;
+
     if (!state) {
         return null;
     }
@@ -116,7 +99,7 @@ const ResolveComponent = ({ state, environment }: IResolveComponentProps) => {
         return <Cancelled />;
     }
 
-    return <ReviewRequired environment={environment} />;
+    return <ReviewRequired minApprovals={changeRequest.minApprovals} />;
 };
 
 const Approved = () => {
@@ -151,15 +134,11 @@ const Approved = () => {
 };
 
 interface IReviewRequiredProps {
-    environment: string;
+    minApprovals: number;
 }
 
-const ReviewRequired = ({ environment }: IReviewRequiredProps) => {
+const ReviewRequired = ({ minApprovals }: IReviewRequiredProps) => {
     const theme = useTheme();
-    const projectId = useRequiredPathParam('projectId');
-    const { getChangeRequestRequiredApprovals } =
-        useChangeRequestRequiredApprovals(projectId);
-    const approvals = getChangeRequestRequiredApprovals(environment);
 
     return (
         <>
@@ -170,8 +149,8 @@ const ReviewRequired = ({ environment }: IReviewRequiredProps) => {
                         Review required
                     </StyledReviewTitle>
                     <Typography>
-                        At least {approvals} approvals must be submitted before
-                        changes can be applied
+                        At least {minApprovals} approval(s) must be submitted
+                        before changes can be applied
                     </Typography>
                 </Box>
             </StyledFlexAlignCenterBox>

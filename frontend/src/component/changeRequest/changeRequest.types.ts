@@ -6,6 +6,7 @@ export interface IChangeRequest {
     state: ChangeRequestState;
     project: string;
     environment: string;
+    minApprovals: number;
     createdBy: Pick<IUser, 'id' | 'username' | 'imageUrl'>;
     createdAt: Date;
     features: IChangeRequestFeature[];

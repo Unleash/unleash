@@ -197,8 +197,7 @@ export const ChangeRequestOverview: FC = () => {
                             }
                         />
                         <ChangeRequestReviewStatus
-                            state={changeRequest.state}
-                            environment={changeRequest.environment}
+                            changeRequest={changeRequest}
                         />
                         <StyledButtonBox>
                             <ConditionallyRender

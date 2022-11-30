@@ -514,7 +514,9 @@ test('should change project when checks pass', async () => {
         projectA.id,
     );
 
-    const updatedFeature = await featureToggleService.getFeature(toggle.name);
+    const updatedFeature = await featureToggleService.getFeature({
+        featureName: toggle.name,
+    });
     expect(updatedFeature.project).toBe(projectB.id);
 });
 

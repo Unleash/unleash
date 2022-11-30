@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState, VFC } from 'react';
+import { useEffect, useMemo, useState, VFC } from 'react';
 import { SortingRule, useFlexLayout, useSortBy, useTable } from 'react-table';
 import { VirtualizedTable, TablePlaceholder } from 'component/common/Table';
 import { styled, useMediaQuery, useTheme } from '@mui/material';

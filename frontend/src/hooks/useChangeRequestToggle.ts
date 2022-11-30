@@ -6,7 +6,7 @@ import { usePendingChangeRequests } from './api/getters/usePendingChangeRequests
 
 export const useChangeRequestToggle = (project: string) => {
     const { setToastData, setToastApiError } = useToast();
-    const { addChangeRequest } = useChangeRequestApi();
+    const { addChange } = useChangeRequestApi();
     const { refetch: refetchChangeRequests } =
         usePendingChangeRequests(project);
 
@@ -31,33 +31,29 @@ export const useChangeRequestToggle = (project: string) => {
     );
 
     const onChangeRequestToggleClose = useCallback(() => {
-        setChangeRequestDialogDetails({ isOpen: false });
+        setChangeRequestDialogDetails(prev => ({ ...prev, isOpen: false }));
     }, []);
 
     const onChangeRequestToggleConfirm = useCallback(async () => {
         try {
-            await addChangeRequest(
-                project,
-                changeRequestDialogDetails.environment!,
-                {
-                    feature: changeRequestDialogDetails.featureName!,
-                    action: 'updateEnabled',
-                    payload: {
-                        enabled: Boolean(changeRequestDialogDetails.enabled),
-                    },
-                }
-            );
+            await addChange(project, changeRequestDialogDetails.environment!, {
+                feature: changeRequestDialogDetails.featureName!,
+                action: 'updateEnabled',
+                payload: {
+                    enabled: Boolean(changeRequestDialogDetails.enabled),
+                },
+            });
             refetchChangeRequests();
-            setChangeRequestDialogDetails({ isOpen: false });
+            setChangeRequestDialogDetails(prev => ({ ...prev, isOpen: false }));
             setToastData({
                 type: 'success',
                 title: 'Changes added to the draft!',
             });
         } catch (error) {
             setToastApiError(formatUnknownError(error));
-            setChangeRequestDialogDetails({ isOpen: false });
+            setChangeRequestDialogDetails(prev => ({ ...prev, isOpen: false }));
         }
-    }, [addChangeRequest]);
+    }, [addChange]);
 
     return {
         onChangeRequestToggle,

@@ -28,6 +28,8 @@ import { ISegmentStore } from './stores/segment-store';
 import { IGroupStore } from './stores/group-store';
 import { IPatStore } from './stores/pat-store';
 import { IPublicSignupTokenStore } from './stores/public-signup-token-store';
+import { IFavoriteFeaturesStore } from './stores/favorite-features';
+import { IFavoriteProjectsStore } from './stores/favorite-projects';
 
 export interface IUnleashStores {
     accessStore: IAccessStore;
@@ -60,6 +62,8 @@ export interface IUnleashStores {
     segmentStore: ISegmentStore;
     patStore: IPatStore;
     publicSignupTokenStore: IPublicSignupTokenStore;
+    favoriteFeaturesStore: IFavoriteFeaturesStore;
+    favoriteProjectsStore: IFavoriteProjectsStore;
 }
 
 export {
@@ -93,4 +97,6 @@ export {
     IUserFeedbackStore,
     IUserSplashStore,
     IUserStore,
+    IFavoriteFeaturesStore,
+    IFavoriteProjectsStore,
 };

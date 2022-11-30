@@ -179,11 +179,12 @@ class FeatureController extends Controller {
     }
 
     async getAllToggles(
-        req: Request,
+        req: IAuthRequest,
         res: Response<FeaturesSchema>,
     ): Promise<void> {
         const query = await this.prepQuery(req.query);
-        const features = await this.service.getFeatureToggles(query);
+        const { user } = req;
+        const features = await this.service.getFeatureToggles(query, user.id);
 
         this.openApiService.respondWithValidation(
             200,

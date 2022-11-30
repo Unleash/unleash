@@ -1,7 +1,6 @@
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
 import { Alert, Box, Card, Typography } from '@mui/material';
-import ToggleOnIcon from '@mui/icons-material/ToggleOn';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface IChangeRequestToggleChange {
@@ -61,7 +60,7 @@ export const ChangeRequestFeatureToggleChange: FC<
                     px: 3,
                 }}
             >
-                <ToggleOnIcon color="disabled" />
+                <Typography>Feature toggle name: </Typography>
                 <Typography
                     component={Link}
                     to={`/projects/${projectId}/features/${featureName}`}
@@ -69,7 +68,7 @@ export const ChangeRequestFeatureToggleChange: FC<
                     sx={{ textDecoration: 'none', marginLeft: 1 }}
                     onClick={onNavigate}
                 >
-                    {featureName}
+                    <strong>{featureName}</strong>
                 </Typography>
             </Box>
         </Box>

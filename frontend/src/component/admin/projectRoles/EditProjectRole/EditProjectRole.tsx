@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { UpdateButton } from 'component/common/UpdateButton/UpdateButton';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';

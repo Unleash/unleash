@@ -161,7 +161,12 @@ export const ChangeRequestConfiguration: VFC = () => {
                                                 approvals
                                             );
                                         }}
-                                        disabled={!hasAccess(UPDATE_PROJECT)}
+                                        disabled={
+                                            !hasAccess(
+                                                UPDATE_PROJECT,
+                                                projectId
+                                            )
+                                        }
                                         IconComponent={
                                             KeyboardArrowDownOutlined
                                         }
@@ -186,7 +191,6 @@ export const ChangeRequestConfiguration: VFC = () => {
                     <StyledBox data-loading>
                         <PermissionSwitch
                             checked={value}
-                            environmentId={original.environment}
                             projectId={projectId}
                             permission={UPDATE_PROJECT}
                             inputProps={{ 'aria-label': original.environment }}

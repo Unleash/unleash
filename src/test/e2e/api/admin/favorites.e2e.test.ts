@@ -20,8 +20,6 @@ const createFeature = async (featureName: string) => {
         })
         .set('Content-Type', 'application/json')
         .expect(201);
-
-    // await projectService.addEnvironmentToProject('default', environment);
 };
 
 const loginRegularUser = () =>
@@ -37,6 +35,20 @@ const createUserEditorAccess = async (name, email) => {
     const user = await userStore.insert({ name, email });
     await accessService.addUserToRole(user.id, editorRole.id, 'default');
     return user;
+};
+
+const favoriteFeature = async (featureName: string) => {
+    await app.request
+        .post(`/api/admin/projects/default/features/${featureName}/favorites`)
+        .set('Content-Type', 'application/json')
+        .expect(200);
+};
+
+const unfavoriteFeature = async (featureName: string) => {
+    await app.request
+        .delete(`/api/admin/projects/default/features/${featureName}/favorites`)
+        .set('Content-Type', 'application/json')
+        .expect(200);
 };
 
 beforeAll(async () => {
@@ -67,14 +79,10 @@ beforeEach(async () => {
     await loginRegularUser();
 });
 
-test('should have favorites true in project endpoint', async () => {
+test('should be favorited in project endpoint', async () => {
     const featureName = 'test-feature';
     await createFeature(featureName);
-
-    await app.request
-        .post(`/api/admin/projects/default/features/${featureName}/favorites`)
-        .set('Content-Type', 'application/json')
-        .expect(200);
+    await favoriteFeature(featureName);
 
     const { body } = await app.request
         .get(`/api/admin/projects/default/features`)
@@ -88,7 +96,7 @@ test('should have favorites true in project endpoint', async () => {
     });
 });
 
-test('should have favorites false by default', async () => {
+test('feature should not be favorited by default', async () => {
     const featureName = 'test-feature';
     await createFeature(featureName);
 
@@ -104,14 +112,10 @@ test('should have favorites false by default', async () => {
     });
 });
 
-test('should have favorites true in admin endpoint', async () => {
+test('should be favorited in admin endpoint', async () => {
     const featureName = 'test-feature';
     await createFeature(featureName);
-
-    await app.request
-        .post(`/api/admin/projects/default/features/${featureName}/favorites`)
-        .set('Content-Type', 'application/json')
-        .expect(200);
+    await favoriteFeature(featureName);
 
     const { body } = await app.request
         .get(`/api/admin/features`)
@@ -125,14 +129,10 @@ test('should have favorites true in admin endpoint', async () => {
     });
 });
 
-test('should have favorites true in project single feature endpoint', async () => {
+test('should be favorited in project single feature endpoint', async () => {
     const featureName = 'test-feature';
     await createFeature(featureName);
-
-    await app.request
-        .post(`/api/admin/projects/default/features/${featureName}/favorites`)
-        .set('Content-Type', 'application/json')
-        .expect(200);
+    await favoriteFeature(featureName);
 
     const { body } = await app.request
         .get(`/api/admin/projects/default/features/${featureName}`)
@@ -145,19 +145,12 @@ test('should have favorites true in project single feature endpoint', async () =
     });
 });
 
-test('should have favorites false after deleting favorite', async () => {
+test('should be able to unfavorite feature', async () => {
     const featureName = 'test-feature';
     await createFeature(featureName);
 
-    await app.request
-        .post(`/api/admin/projects/default/features/${featureName}/favorites`)
-        .set('Content-Type', 'application/json')
-        .expect(200);
-
-    await app.request
-        .delete(`/api/admin/projects/default/features/${featureName}/favorites`)
-        .set('Content-Type', 'application/json')
-        .expect(200);
+    await favoriteFeature(featureName);
+    await unfavoriteFeature(featureName);
 
     const { body } = await app.request
         .get(`/api/admin/projects/default/features/${featureName}`)

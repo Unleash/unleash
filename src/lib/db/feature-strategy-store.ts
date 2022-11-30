@@ -259,14 +259,16 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
 
         let selectColumns = ['features_view.*'];
         if (userId && this.flagResolver.isEnabled('favorites')) {
-            query = query.leftJoin(`favorite_features as ff`, function () {
-                this.on('ff.feature', 'features_view.name').andOnVal(
-                    'ff.user_id',
-                    '=',
-                    userId,
-                );
+            query = query.leftJoin(`favorite_features`, function () {
+                this.on(
+                    'favorite_features.feature',
+                    'features_view.name',
+                ).andOnVal('favorite_features.user_id', '=', userId);
             });
-            selectColumns = [...selectColumns, 'ff.feature as favorite'];
+            selectColumns = [
+                ...selectColumns,
+                'favorite_features.feature as favorite',
+            ];
         }
         const rows = await query.select(selectColumns);
         stopTimer();

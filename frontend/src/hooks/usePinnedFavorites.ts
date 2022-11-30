@@ -7,7 +7,7 @@ type WithFavorite = {
     [key: string]: any;
 };
 
-const sortTypesWithFavorites: Record<
+export const sortTypesWithFavorites: Record<
     keyof typeof sortTypes,
     SortByFn<object> // TODO: possible type improvement in react-table v8
 > = Object.assign(
@@ -19,9 +19,9 @@ const sortTypesWithFavorites: Record<
             id: string,
             desc?: boolean
         ) => {
-            if (v1?.original?.favorite && !v2?.original?.favorite)
+            if (v1?.values?.favorite && !v2?.values?.favorite)
                 return desc ? 1 : -1;
-            if (!v1?.original?.favorite && v2?.original?.favorite)
+            if (!v1?.values?.favorite && v2?.values?.favorite)
                 return desc ? -1 : 1;
             return value(v1, v2, id, desc);
         },

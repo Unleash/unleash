@@ -46,6 +46,7 @@ const tokenRowReducer = (acc, tokenRow) => {
             expiresAt: token.expires_at,
             createdAt: token.created_at,
             alias: token.alias,
+            seenAt: token.seen_at,
         };
     }
     const currentToken = acc[tokenRow.secret];

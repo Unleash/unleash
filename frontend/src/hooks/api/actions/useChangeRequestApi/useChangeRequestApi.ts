@@ -1,6 +1,7 @@
 import useAPI from '../useApi/useApi';
+import { usePlausibleTracker } from '../../../usePlausibleTracker';
 
-export interface IChangeRequestsSchema {
+export interface IChangeSchema {
     feature: string;
     action:
         | 'updateEnabled'
@@ -18,15 +19,22 @@ export interface IChangeRequestConfig {
 }
 
 export const useChangeRequestApi = () => {
+    const { trackEvent } = usePlausibleTracker();
     const { makeRequest, createRequest, errors, loading } = useAPI({
         propagateErrors: true,
     });
 
-    const addChangeRequest = async (
+    const addChange = async (
         project: string,
         environment: string,
-        payload: IChangeRequestsSchema
+        payload: IChangeSchema
     ) => {
+        trackEvent('change_request', {
+            props: {
+                eventType: 'change added',
+            },
+        });
+
         const path = `api/admin/projects/${project}/environments/${environment}/change-requests`;
         const req = createRequest(path, {
             method: 'POST',
@@ -43,8 +51,14 @@ export const useChangeRequestApi = () => {
     const changeState = async (
         project: string,
         changeRequestId: number,
-        payload: any
+        payload: { state: 'Approved' | 'Applied' | 'Cancelled' | 'In review' }
     ) => {
+        trackEvent('change_request', {
+            props: {
+                eventType: payload.state,
+            },
+        });
+
         const path = `api/admin/projects/${project}/change-requests/${changeRequestId}/state`;
         const req = createRequest(path, {
             method: 'PUT',
@@ -114,6 +128,12 @@ export const useChangeRequestApi = () => {
         changeRequestId: string,
         text: string
     ) => {
+        trackEvent('change_request', {
+            props: {
+                eventType: 'comment added',
+            },
+        });
+
         const path = `/api/admin/projects/${projectId}/change-requests/${changeRequestId}/comments`;
         const req = createRequest(path, {
             method: 'POST',
@@ -128,7 +148,7 @@ export const useChangeRequestApi = () => {
     };
 
     return {
-        addChangeRequest,
+        addChange,
         changeState,
         discardChange,
         updateChangeRequestEnvironmentConfig,

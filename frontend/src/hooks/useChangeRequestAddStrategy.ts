@@ -16,7 +16,7 @@ export const useChangeRequestAddStrategy = (
     action: ChangeRequestStrategyAction
 ) => {
     const { setToastData, setToastApiError } = useToast();
-    const { addChangeRequest } = useChangeRequestApi();
+    const { addChange } = useChangeRequestApi();
     const { refetch } = usePendingChangeRequests(project);
 
     const [changeRequestDialogDetails, setChangeRequestDialogDetails] =
@@ -69,15 +69,11 @@ export const useChangeRequestAddStrategy = (
 
     const onChangeRequestAddStrategyConfirm = useCallback(async () => {
         try {
-            await addChangeRequest(
-                project,
-                changeRequestDialogDetails.environment!,
-                {
-                    feature: changeRequestDialogDetails.featureName!,
-                    action: action,
-                    payload: changeRequestDialogDetails.strategy!,
-                }
-            );
+            await addChange(project, changeRequestDialogDetails.environment!, {
+                feature: changeRequestDialogDetails.featureName!,
+                action: action,
+                payload: changeRequestDialogDetails.strategy!,
+            });
             refetch();
             setChangeRequestDialogDetails({ isOpen: false });
             setToastData({
@@ -88,13 +84,13 @@ export const useChangeRequestAddStrategy = (
             setToastApiError(formatUnknownError(error));
             setChangeRequestDialogDetails({ isOpen: false });
         }
-    }, [addChangeRequest]);
+    }, [addChange]);
 
     const onChangeRequestAddStrategiesConfirm = useCallback(async () => {
         try {
             await Promise.all(
                 changeRequestDialogDetails.strategies!.map(strategy => {
-                    return addChangeRequest(
+                    return addChange(
                         project,
                         changeRequestDialogDetails.environment!,
                         {
@@ -115,7 +111,7 @@ export const useChangeRequestAddStrategy = (
             setToastApiError(formatUnknownError(error));
             setChangeRequestDialogDetails({ isOpen: false });
         }
-    }, [addChangeRequest]);
+    }, [addChange]);
 
     return {
         onChangeRequestAddStrategy,

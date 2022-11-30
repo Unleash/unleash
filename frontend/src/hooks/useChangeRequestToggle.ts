@@ -6,7 +6,7 @@ import { usePendingChangeRequests } from './api/getters/usePendingChangeRequests
 
 export const useChangeRequestToggle = (project: string) => {
     const { setToastData, setToastApiError } = useToast();
-    const { addChangeRequest } = useChangeRequestApi();
+    const { addChange } = useChangeRequestApi();
     const { refetch: refetchChangeRequests } =
         usePendingChangeRequests(project);
 
@@ -36,17 +36,13 @@ export const useChangeRequestToggle = (project: string) => {
 
     const onChangeRequestToggleConfirm = useCallback(async () => {
         try {
-            await addChangeRequest(
-                project,
-                changeRequestDialogDetails.environment!,
-                {
-                    feature: changeRequestDialogDetails.featureName!,
-                    action: 'updateEnabled',
-                    payload: {
-                        enabled: Boolean(changeRequestDialogDetails.enabled),
-                    },
-                }
-            );
+            await addChange(project, changeRequestDialogDetails.environment!, {
+                feature: changeRequestDialogDetails.featureName!,
+                action: 'updateEnabled',
+                payload: {
+                    enabled: Boolean(changeRequestDialogDetails.enabled),
+                },
+            });
             refetchChangeRequests();
             setChangeRequestDialogDetails(prev => ({ ...prev, isOpen: false }));
             setToastData({
@@ -57,7 +53,7 @@ export const useChangeRequestToggle = (project: string) => {
             setToastApiError(formatUnknownError(error));
             setChangeRequestDialogDetails(prev => ({ ...prev, isOpen: false }));
         }
-    }, [addChangeRequest]);
+    }, [addChange]);
 
     return {
         onChangeRequestToggle,

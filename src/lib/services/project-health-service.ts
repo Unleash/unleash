@@ -62,8 +62,8 @@ export default class ProjectHealthService {
     // TODO: duplicate from project-service.
     async getProjectOverview(
         projectId: string,
-        userId?: number,
         archived: boolean = false,
+        userId?: number,
     ): Promise<IProjectOverview> {
         const project = await this.projectStore.get(projectId);
         const environments = await this.projectStore.getEnvironmentsForProject(
@@ -99,8 +99,8 @@ export default class ProjectHealthService {
     ): Promise<IProjectHealthReport> {
         const overview = await this.getProjectOverview(
             projectId,
-            undefined,
             false,
+            undefined,
         );
         return {
             ...overview,

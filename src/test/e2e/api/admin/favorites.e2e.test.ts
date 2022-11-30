@@ -65,6 +65,20 @@ const unfavoriteProject = async (projectName = 'default') => {
         .expect(200);
 };
 
+const getProject = async (projectName = 'default') => {
+    return app.request
+        .get(`/api/admin/projects/${projectName}`)
+        .set('Content-Type', 'application/json')
+        .expect(200);
+};
+
+const getProjects = async () => {
+    return app.request
+        .get(`/api/admin/projects`)
+        .set('Content-Type', 'application/json')
+        .expect(200);
+};
+
 beforeAll(async () => {
     db = await dbInit('favorites_api_serial', getLogger);
     app = await setupAppWithAuth(db.stores);
@@ -179,10 +193,7 @@ test('should be able to unfavorite feature', async () => {
 test('should be favorited in projects list', async () => {
     await favoriteProject();
 
-    const { body } = await app.request
-        .get(`/api/admin/projects`)
-        .set('Content-Type', 'application/json')
-        .expect(200);
+    const { body } = await getProjects();
 
     expect(body.projects).toHaveLength(1);
     expect(body.projects[0]).toMatchObject({
@@ -194,10 +205,7 @@ test('should be favorited in projects list', async () => {
 test('should be favorited in single project endpoint', async () => {
     await favoriteProject();
 
-    const { body } = await app.request
-        .get(`/api/admin/projects/default`)
-        .set('Content-Type', 'application/json')
-        .expect(200);
+    const { body } = await getProject();
 
     expect(body).toMatchObject({
         name: 'Default',
@@ -209,10 +217,7 @@ test('project should not be favorited by default', async () => {
     await favoriteProject();
     await unfavoriteProject();
 
-    const { body } = await app.request
-        .get(`/api/admin/projects/default`)
-        .set('Content-Type', 'application/json')
-        .expect(200);
+    const { body } = await getProject();
 
     expect(body).toMatchObject({
         name: 'Default',

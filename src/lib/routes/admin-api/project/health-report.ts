@@ -80,8 +80,8 @@ export default class ProjectHealthReport extends Controller {
         const { user } = req;
         const overview = await this.projectHealthService.getProjectOverview(
             projectId,
-            user.id,
             archived,
+            user.id,
         );
         this.openApiService.respondWithValidation(
             200,

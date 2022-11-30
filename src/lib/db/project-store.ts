@@ -88,7 +88,6 @@ class ProjectStore implements IProjectStore {
         const projectTimer = this.timer('getProjectsWithCount');
         let projects = this.db(TABLE)
             .leftJoin('features', 'features.project', 'projects.id')
-            .groupBy('projects.id')
             .orderBy('projects.name', 'asc');
         if (query) {
             projects = projects.where(query);
@@ -97,7 +96,9 @@ class ProjectStore implements IProjectStore {
             this.db.raw(
                 'projects.id, projects.name, projects.description, projects.health, projects.updated_at, count(features.name) AS number_of_features',
             ),
-        ] as (String | Raw<any>)[];
+        ] as (string | Raw<any>)[];
+
+        let groupByColumns = ['projects.id'];
 
         if (userId && this.flagResolver.isEnabled('favorites')) {
             projects = projects.leftJoin(`favorite_projects`, function () {
@@ -109,11 +110,16 @@ class ProjectStore implements IProjectStore {
             });
             selectColumns = [
                 ...selectColumns,
-                this.db.raw('min(favorite_projects.project) as project'),
+                this.db.raw(
+                    'favorite_projects.project is not null as favorite',
+                ),
             ];
+            groupByColumns = [...groupByColumns, 'favorite_projects.project'];
         }
 
-        const projectAndFeatureCount = await projects.select(selectColumns);
+        const projectAndFeatureCount = await projects
+            .select(selectColumns)
+            .groupBy(groupByColumns);
 
         const projectsWithFeatureCount = projectAndFeatureCount.map(
             this.mapProjectWithCountRow,
@@ -138,7 +144,7 @@ class ProjectStore implements IProjectStore {
             id: row.id,
             description: row.description,
             health: row.health,
-            favorite: row.project !== null,
+            favorite: row.favorite,
             featureCount: Number(row.number_of_features) || 0,
             memberCount: Number(row.number_of_users) || 0,
             updatedAt: row.updated_at,

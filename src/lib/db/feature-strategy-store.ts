@@ -22,6 +22,7 @@ import { ensureStringValue } from '../util/ensureStringValue';
 import { mapValues } from '../util/map-values';
 import { IFlagResolver } from '../types/experimental';
 import { IFeatureProjectUserParams } from '../routes/admin-api/project/features';
+import Raw = Knex.Raw;
 
 const COLUMNS = [
     'id',
@@ -257,7 +258,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             .where('name', featureName)
             .modify(FeatureToggleStore.filterByArchived, archived);
 
-        let selectColumns = ['features_view.*'];
+        let selectColumns = ['features_view.*'] as (string | Raw<any>)[];
         if (userId && this.flagResolver.isEnabled('favorites')) {
             query = query.leftJoin(`favorite_features`, function () {
                 this.on(
@@ -267,7 +268,9 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             });
             selectColumns = [
                 ...selectColumns,
-                'favorite_features.feature as favorite',
+                this.db.raw(
+                    'favorite_features.feature is not null as favorite',
+                ),
             ];
         }
         const rows = await query.select(selectColumns);
@@ -279,7 +282,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 }
 
                 acc.name = r.name;
-                acc.favorite = r.favorite != null;
+                acc.favorite = r.favorite;
                 acc.impressionData = r.impression_data;
                 acc.description = r.description;
                 acc.project = r.project;
@@ -428,7 +431,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             'feature_environments.environment as environment',
             'environments.type as environment_type',
             'environments.sort_order as environment_sort_order',
-        ];
+        ] as (string | Raw<any>)[];
 
         if (this.flagResolver.isEnabled('toggleTagFiltering')) {
             query = query.leftJoin(
@@ -443,14 +446,19 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             ];
         }
         if (userId && this.flagResolver.isEnabled('favorites')) {
-            query = query.leftJoin(`favorite_features as ff`, function () {
-                this.on('ff.feature', 'features.name').andOnVal(
-                    'ff.user_id',
+            query = query.leftJoin(`favorite_features`, function () {
+                this.on('favorite_features.feature', 'features.name').andOnVal(
+                    'favorite_features.user_id',
                     '=',
                     userId,
                 );
             });
-            selectColumns = [...selectColumns, 'ff.feature as favorite'];
+            selectColumns = [
+                ...selectColumns,
+                this.db.raw(
+                    'favorite_features.feature is not null as favorite',
+                ),
+            ];
         }
 
         query = query.select(selectColumns);
@@ -469,7 +477,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 } else {
                     acc[r.feature_name] = {
                         type: r.type,
-                        favorite: r.favorite != null,
+                        favorite: r.favorite,
                         name: r.feature_name,
                         createdAt: r.created_at,
                         lastSeenAt: r.last_seen_at,

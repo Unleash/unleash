@@ -147,15 +147,11 @@ export const ChangeRequest: VFC<IChangeRequestProps> = ({
     onRefetch,
     onNavigate,
 }) => {
-    const { discardChangeRequestEvent } = useChangeRequestApi();
+    const { discardChange } = useChangeRequestApi();
     const { setToastData, setToastApiError } = useToast();
     const onDiscard = (id: number) => async () => {
         try {
-            await discardChangeRequestEvent(
-                changeRequest.project,
-                changeRequest.id,
-                id
-            );
+            await discardChange(changeRequest.project, changeRequest.id, id);
             setToastData({
                 title: 'Change discarded from change request draft.',
                 type: 'success',

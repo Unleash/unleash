@@ -58,7 +58,7 @@ export const useChangeRequestApi = () => {
         }
     };
 
-    const discardChangeRequestEvent = async (
+    const discardChange = async (
         project: string,
         changeRequestId: number,
         changeRequestEventId: number
@@ -111,10 +111,10 @@ export const useChangeRequestApi = () => {
 
     const addComment = async (
         projectId: string,
-        changeSetId: string,
+        changeRequestId: string,
         text: string
     ) => {
-        const path = `/api/admin/projects/${projectId}/change-requests/${changeSetId}/comments`;
+        const path = `/api/admin/projects/${projectId}/change-requests/${changeRequestId}/comments`;
         const req = createRequest(path, {
             method: 'POST',
             body: JSON.stringify({ text }),
@@ -130,7 +130,7 @@ export const useChangeRequestApi = () => {
     return {
         addChangeRequest,
         changeState,
-        discardChangeRequestEvent,
+        discardChange,
         updateChangeRequestEnvironmentConfig,
         discardDraft,
         addComment,

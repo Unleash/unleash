@@ -1,14 +1,6 @@
 import { Button } from '@mui/material';
 import classnames from 'classnames';
-import React, {
-    Dispatch,
-    SetStateAction,
-    SyntheticEvent,
-    useCallback,
-    useEffect,
-    useState,
-} from 'react';
-import { useNavigate } from 'react-router';
+import React, { SyntheticEvent, useCallback, useEffect, useState } from 'react';
 import { useThemeStyles } from 'themes/themeStyles';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import PasswordChecker from './PasswordChecker/PasswordChecker';

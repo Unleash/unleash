@@ -1,7 +1,6 @@
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
 import { Alert, Box, Card, Typography } from '@mui/material';
-import ToggleOnIcon from '@mui/icons-material/ToggleOn';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface IChangeRequestToggleChange {

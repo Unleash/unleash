@@ -1,7 +1,6 @@
 import { FC, useState, VFC } from 'react';
 import { Box, Button, styled, Typography } from '@mui/material';
 import { useStyles as useAppStyles } from 'component/App.styles';
-import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ChangeRequestSidebar } from '../ChangeRequestSidebar/ChangeRequestSidebar';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';

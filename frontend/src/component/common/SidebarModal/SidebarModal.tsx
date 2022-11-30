@@ -1,4 +1,4 @@
-import { ReactNode, FC } from 'react';
+import { FC } from 'react';
 import { Modal, Backdrop, styled } from '@mui/material';
 import Fade from '@mui/material/Fade';
 import { SIDEBAR_MODAL_ID } from 'utils/testIds';

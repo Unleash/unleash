@@ -7,7 +7,12 @@ import {
 import { Logger } from '../logger';
 import { IFavoriteFeaturesStore } from '../types/stores/favorite-features';
 import { IFavoriteFeature, IFavoriteProject } from '../types/favorites';
-import { FAVORITE_FEATURE_ADDED, FAVORITE_FEATURE_REMOVED } from '../types';
+import {
+    FAVORITE_FEATURE_ADDED,
+    FAVORITE_FEATURE_REMOVED,
+    FAVORITE_PROJECT_ADDED,
+    FAVORITE_PROJECT_REMOVED,
+} from '../types';
 import User from '../types/user';
 import { extractUsernameFromUser } from '../util';
 import { IFavoriteProjectKey } from '../types/stores/favorite-projects';
@@ -91,20 +96,36 @@ export class FavoritesService {
         project,
         user,
     }: IFavoriteProjectProps): Promise<IFavoriteProject> {
-        return this.favoriteProjectsStore.addFavoriteProject({
+        const data = this.favoriteProjectsStore.addFavoriteProject({
             project,
             userId: user.id,
         });
+        await this.eventStore.store({
+            type: FAVORITE_PROJECT_ADDED,
+            createdBy: extractUsernameFromUser(user),
+            data: {
+                project: project,
+            },
+        });
+        return data;
     }
 
     async removeFavoriteProject({
         project,
         user,
     }: IFavoriteProjectProps): Promise<void> {
-        return this.favoriteProjectsStore.delete({
+        const data = this.favoriteProjectsStore.delete({
             project: project,
             userId: user.id,
         });
+        await this.eventStore.store({
+            type: FAVORITE_PROJECT_REMOVED,
+            createdBy: extractUsernameFromUser(user),
+            data: {
+                project: project,
+            },
+        });
+        return data;
     }
 
     async isFavoriteProject(favorite: IFavoriteProjectKey): Promise<boolean> {

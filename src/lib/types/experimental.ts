@@ -8,7 +8,7 @@ export const defaultExperimentalOptions = {
         anonymiseEventLog: false,
         embedProxy: parseEnvVarBoolean(
             process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY,
-            false,
+            true,
         ),
         changeRequests: parseEnvVarBoolean(
             process.env.UNLEASH_EXPERIMENTAL_CHANGE_REQUESTS,
@@ -20,7 +20,7 @@ export const defaultExperimentalOptions = {
         ),
         embedProxyFrontend: parseEnvVarBoolean(
             process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY_FRONTEND,
-            false,
+            true,
         ),
         batchMetrics: parseEnvVarBoolean(
             process.env.UNLEASH_EXPERIMENTAL_BATCH_METRICS,

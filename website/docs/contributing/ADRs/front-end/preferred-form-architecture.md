@@ -14,4 +14,4 @@ We have decided to architecture our forms in the following way:
 * Create a reusable form component that does not contain any logic
 * Create separate Create and Edit components that use the form component and the form hook to create the form and implements it's own logic for submitting the form.
 
-In this way, we keep as much of the form as possible DRY, but we avoid passing state internally in the form so the form doesn't need to know wheter it is in create or edit mode. This allows us to keep one thing in mind when working, and not have to worry about dual states of the component.
+In this way, we keep as much of the form as possible DRY, but we avoid passing state internally in the form so the form doesn't need to know whether it is in create or edit mode. This allows us to keep one thing in mind when working, and not have to worry about dual states of the component.

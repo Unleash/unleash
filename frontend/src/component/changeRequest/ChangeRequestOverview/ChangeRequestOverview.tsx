@@ -23,6 +23,7 @@ import { ChangeRequestComment } from './ChangeRequestComments/ChangeRequestComme
 import { AddCommentField } from './ChangeRequestComments/AddCommentField';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { useChangeRequestsEnabled } from '../../../hooks/useChangeRequestsEnabled';
+import { Dialogue } from 'component/common/Dialogue/Dialogue';
 
 const StyledAsideBox = styled(Box)(({ theme }) => ({
     width: '30%',
@@ -50,6 +51,7 @@ const StyledInnerContainer = styled(Box)(({ theme }) => ({
 
 export const ChangeRequestOverview: FC = () => {
     const projectId = useRequiredPathParam('projectId');
+    const [showCancelDialog, setShowCancelDialog] = useState(false);
     const { user } = useAuthUser();
     const { isAdmin } = useContext(AccessContext);
     const [commentText, setCommentText] = useState('');
@@ -110,6 +112,7 @@ export const ChangeRequestOverview: FC = () => {
             await changeState(projectId, Number(id), {
                 state: 'Cancelled',
             });
+            setShowCancelDialog(false);
             refetchChangeRequest();
             refetchChangeRequestOpen();
             setToastData({
@@ -121,6 +124,9 @@ export const ChangeRequestOverview: FC = () => {
             setToastApiError(formatUnknownError(error));
         }
     };
+
+    const onCancel = () => setShowCancelDialog(true);
+    const onCancelAbort = () => setShowCancelDialog(false);
 
     const isSelfReview =
         changeRequest?.createdBy.id === user?.id &&
@@ -239,7 +245,7 @@ export const ChangeRequestOverview: FC = () => {
                                     <Button
                                         sx={{ ml: 2 }}
                                         variant="outlined"
-                                        onClick={onCancelChanges}
+                                        onClick={onCancel}
                                     >
                                         Cancel changes
                                     </Button>
@@ -248,6 +254,24 @@ export const ChangeRequestOverview: FC = () => {
                         </StyledButtonBox>
                     </StyledInnerContainer>
                 </StyledPaper>
+                <Dialogue
+                    open={showCancelDialog}
+                    onClick={onCancelChanges}
+                    onClose={onCancelAbort}
+                    title="Cancel change request"
+                >
+                    <Typography sx={{ marginBottom: 2 }}>
+                        You are about to cancel this change request
+                    </Typography>
+                    <Typography
+                        variant="body2"
+                        sx={theme => ({ color: theme.palette.neutral.dark })}
+                    >
+                        The change request will be moved to closed, and it can't
+                        be applied anymore. Once cancelled, the change request
+                        can't be reopened.
+                    </Typography>
+                </Dialogue>
             </Box>
         </>
     );

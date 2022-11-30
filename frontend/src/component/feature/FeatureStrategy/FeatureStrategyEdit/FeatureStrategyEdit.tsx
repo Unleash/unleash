@@ -43,7 +43,7 @@ export const FeatureStrategyEdit = () => {
     const { uiConfig } = useUiConfig();
     const { unleashUrl } = uiConfig;
     const navigate = useNavigate();
-    const { addChangeRequest } = useChangeRequestApi();
+    const { addChange } = useChangeRequestApi();
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const { refetch: refetchChangeRequests } =
         usePendingChangeRequests(projectId);
@@ -110,7 +110,7 @@ export const FeatureStrategyEdit = () => {
     };
 
     const onStrategyRequestEdit = async (payload: IFeatureStrategyPayload) => {
-        await addChangeRequest(projectId, environmentId, {
+        await addChange(projectId, environmentId, {
             action: 'updateStrategy',
             feature: featureId,
             payload: { ...payload, id: strategyId },

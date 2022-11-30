@@ -32,7 +32,6 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { FeatureArchiveDialog } from '../../common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { DraftBanner } from 'component/changeRequest/DraftBanner/DraftBanner';
 import { MainLayout } from 'component/layout/MainLayout/MainLayout';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 
 export const FeatureView = () => {

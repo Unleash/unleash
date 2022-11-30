@@ -15,7 +15,6 @@ import {
 } from 'interfaces/strategy';
 import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { ISegment } from 'interfaces/segment';
-import { useSegmentsApi } from 'hooks/api/actions/useSegmentsApi/useSegmentsApi';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { formatStrategyName } from 'utils/strategyNames';
 import { useFormErrors } from 'hooks/useFormErrors';
@@ -38,7 +37,6 @@ export const FeatureStrategyEdit = () => {
     const [strategy, setStrategy] = useState<Partial<IFeatureStrategy>>({});
     const [segments, setSegments] = useState<ISegment[]>([]);
     const { updateStrategyOnFeature, loading } = useFeatureStrategyApi();
-    const { setStrategySegments } = useSegmentsApi();
     const { strategyDefinition } = useStrategy(strategy.name);
     const { setToastData, setToastApiError } = useToast();
     const errors = useFormErrors();

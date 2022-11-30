@@ -15,7 +15,7 @@ import { PageContent } from '../../../common/PageContent/PageContent';
 import { PageHeader } from '../../../common/PageHeader/PageHeader';
 
 export const InstanceStats: VFC = () => {
-    const { stats, loading } = useInstanceStats();
+    const { stats } = useInstanceStats();
 
     let versionTitle;
     let version;

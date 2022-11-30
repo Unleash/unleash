@@ -18,7 +18,6 @@ import {
 } from '../FeatureStrategyEdit/FeatureStrategyEdit';
 import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { ISegment } from 'interfaces/segment';
-import { useSegmentsApi } from 'hooks/api/actions/useSegmentsApi/useSegmentsApi';
 import { formatStrategyName } from 'utils/strategyNames';
 import { useFormErrors } from 'hooks/useFormErrors';
 import { createFeatureStrategy } from 'utils/createFeatureStrategy';
@@ -43,7 +42,6 @@ export const FeatureStrategyCreate = () => {
 
     const { addStrategyToFeature, loading } = useFeatureStrategyApi();
     const { addChange } = useChangeRequestApi();
-    const { setStrategySegments } = useSegmentsApi();
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
     const { unleashUrl } = uiConfig;
@@ -85,7 +83,7 @@ export const FeatureStrategyCreate = () => {
     }, [featureId, strategyDefinition]);
 
     const onAddStrategy = async (payload: IFeatureStrategyPayload) => {
-        const created = await addStrategyToFeature(
+        await addStrategyToFeature(
             projectId,
             featureId,
             environmentId,

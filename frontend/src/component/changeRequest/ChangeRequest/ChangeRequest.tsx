@@ -1,12 +1,5 @@
 import React, { FC, VFC } from 'react';
-import {
-    Alert,
-    Box,
-    Popover,
-    styled,
-    Tooltip,
-    Typography,
-} from '@mui/material';
+import { Alert, Box, Popover, styled, Typography } from '@mui/material';
 import { ChangeRequestFeatureToggleChange } from '../ChangeRequestOverview/ChangeRequestFeatureToggleChange/ChangeRequestFeatureToggleChange';
 import { objectId } from 'utils/objectId';
 import { ToggleStatusChange } from '../ChangeRequestOverview/ChangeRequestFeatureToggleChange/ToggleStatusChange';

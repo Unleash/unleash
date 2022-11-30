@@ -33,6 +33,7 @@ import GroupStore from './group-store';
 import PatStore from './pat-store';
 import { PublicSignupTokenStore } from './public-signup-token-store';
 import { FavoriteFeaturesStore } from './favorite-features-store';
+import { FavoriteProjectsStore } from './favorite-projects-store';
 
 export const createStores = (
     config: IUnleashConfig,
@@ -56,7 +57,12 @@ export const createStores = (
         contextFieldStore: new ContextFieldStore(db, getLogger),
         settingStore: new SettingStore(db, getLogger),
         userStore: new UserStore(db, getLogger),
-        projectStore: new ProjectStore(db, eventBus, getLogger),
+        projectStore: new ProjectStore(
+            db,
+            eventBus,
+            getLogger,
+            config.flagResolver,
+        ),
         tagStore: new TagStore(db, eventBus, getLogger),
         tagTypeStore: new TagTypeStore(db, eventBus, getLogger),
         addonStore: new AddonStore(db, eventBus, getLogger),
@@ -96,6 +102,11 @@ export const createStores = (
         ),
         patStore: new PatStore(db, getLogger),
         favoriteFeaturesStore: new FavoriteFeaturesStore(
+            db,
+            eventBus,
+            getLogger,
+        ),
+        favoriteProjectsStore: new FavoriteProjectsStore(
             db,
             eventBus,
             getLogger,

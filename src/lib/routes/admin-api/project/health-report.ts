@@ -17,6 +17,7 @@ import {
     healthReportSchema,
     HealthReportSchema,
 } from '../../../openapi/spec/health-report-schema';
+import { IAuthRequest } from '../../unleash-types';
 
 export default class ProjectHealthReport extends Controller {
     private projectHealthService: ProjectHealthService;
@@ -71,13 +72,15 @@ export default class ProjectHealthReport extends Controller {
     }
 
     async getProjectHealthOverview(
-        req: Request<IProjectParam, unknown, unknown, IArchivedQuery>,
+        req: IAuthRequest<IProjectParam, unknown, unknown, IArchivedQuery>,
         res: Response<HealthOverviewSchema>,
     ): Promise<void> {
         const { projectId } = req.params;
         const { archived } = req.query;
+        const { user } = req;
         const overview = await this.projectHealthService.getProjectOverview(
             projectId,
+            user.id,
             archived,
         );
         this.openApiService.respondWithValidation(

@@ -120,8 +120,11 @@ export default class ProjectService {
         this.logger = config.getLogger('services/project-service.js');
     }
 
-    async getProjects(query?: IProjectQuery): Promise<IProjectWithCount[]> {
-        return this.store.getProjectsWithCounts(query);
+    async getProjects(
+        query?: IProjectQuery,
+        userId?: number,
+    ): Promise<IProjectWithCount[]> {
+        return this.store.getProjectsWithCounts(query, userId);
     }
 
     async getProject(id: string): Promise<IProject> {

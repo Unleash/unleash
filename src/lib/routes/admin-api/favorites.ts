@@ -52,6 +52,34 @@ export default class FavoritesController extends Controller {
                 }),
             ],
         });
+
+        this.route({
+            method: 'post',
+            path: '/:projectId/favorites',
+            handler: this.addFavoriteProject,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['Features'],
+                    operationId: 'addFavoriteProject',
+                    responses: { 200: emptyResponse },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'delete',
+            path: '/:projectId/favorites',
+            handler: this.removeFavoriteProject,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['Features'],
+                    operationId: 'removeFavoriteProject',
+                    responses: { 200: emptyResponse },
+                }),
+            ],
+        });
     }
 
     async addFavoriteFeature(
@@ -75,6 +103,32 @@ export default class FavoritesController extends Controller {
         const { user } = req;
         await this.favoritesService.removeFavoriteFeature({
             feature: featureName,
+            userId: user.id,
+        });
+        res.status(200).end();
+    }
+
+    async addFavoriteProject(
+        req: IAuthRequest<{ projectId: string }>,
+        res: Response,
+    ): Promise<void> {
+        const { projectId } = req.params;
+        const { user } = req;
+        await this.favoritesService.addFavoriteProject({
+            project: projectId,
+            userId: user.id,
+        });
+        res.status(200).end();
+    }
+
+    async removeFavoriteProject(
+        req: IAuthRequest<{ projectId: string }>,
+        res: Response,
+    ): Promise<void> {
+        const { projectId } = req.params;
+        const { user } = req;
+        await this.favoritesService.removeFavoriteProject({
+            project: projectId,
             userId: user.id,
         });
         res.status(200).end();

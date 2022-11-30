@@ -13,6 +13,8 @@ import { DEFAULT_ENV } from '../util/constants';
 import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
 import EventEmitter from 'events';
+import { IFlagResolver } from '../types';
+import Raw = Knex.Raw;
 
 const COLUMNS = [
     'id',
@@ -39,9 +41,16 @@ class ProjectStore implements IProjectStore {
 
     private logger: Logger;
 
+    private flagResolver: IFlagResolver;
+
     private timer: Function;
 
-    constructor(db: Knex, eventBus: EventEmitter, getLogger: LogProvider) {
+    constructor(
+        db: Knex,
+        eventBus: EventEmitter,
+        getLogger: LogProvider,
+        flagResolver: IFlagResolver,
+    ) {
         this.db = db;
         this.logger = getLogger('project-store.ts');
         this.timer = (action) =>
@@ -49,6 +58,7 @@ class ProjectStore implements IProjectStore {
                 store: 'project',
                 action,
             });
+        this.flagResolver = flagResolver;
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -73,21 +83,37 @@ class ProjectStore implements IProjectStore {
 
     async getProjectsWithCounts(
         query?: IProjectQuery,
+        userId?: number,
     ): Promise<IProjectWithCount[]> {
         const projectTimer = this.timer('getProjectsWithCount');
         let projects = this.db(TABLE)
-            .select(
-                this.db.raw(
-                    'projects.id, projects.name, projects.description, projects.health, projects.updated_at, count(features.name) AS number_of_features',
-                ),
-            )
             .leftJoin('features', 'features.project', 'projects.id')
             .groupBy('projects.id')
             .orderBy('projects.name', 'asc');
         if (query) {
             projects = projects.where(query);
         }
-        const projectAndFeatureCount = await projects;
+        let selectColumns = [
+            this.db.raw(
+                'projects.id, projects.name, projects.description, projects.health, projects.updated_at, count(features.name) AS number_of_features',
+            ),
+        ] as (String | Raw<any>)[];
+
+        if (userId && this.flagResolver.isEnabled('favorites')) {
+            projects = projects.leftJoin(`favorite_projects`, function () {
+                this.on('favorite_projects.project', 'projects.id').andOnVal(
+                    'favorite_projects.user_id',
+                    '=',
+                    userId,
+                );
+            });
+            selectColumns = [
+                ...selectColumns,
+                this.db.raw('min(favorite_projects.project) as project'),
+            ];
+        }
+
+        const projectAndFeatureCount = await projects.select(selectColumns);
 
         const projectsWithFeatureCount = projectAndFeatureCount.map(
             this.mapProjectWithCountRow,
@@ -112,6 +138,7 @@ class ProjectStore implements IProjectStore {
             id: row.id,
             description: row.description,
             health: row.health,
+            favorite: row.project !== null,
             featureCount: Number(row.number_of_features) || 0,
             memberCount: Number(row.number_of_users) || 0,
             updatedAt: row.updated_at,

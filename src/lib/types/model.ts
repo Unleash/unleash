@@ -70,7 +70,6 @@ export interface IFeatureToggleClient {
     lastSeenAt?: Date;
     createdAt?: Date;
     tags?: ITag[];
-
     favorite?: boolean;
 }
 
@@ -176,6 +175,7 @@ export interface IProjectOverview {
     members: number;
     version: number;
     health: number;
+    favorite?: boolean;
     updatedAt?: Date;
 }
 
@@ -371,6 +371,7 @@ export interface ICustomRole {
 export interface IProjectWithCount extends IProject {
     featureCount: number;
     memberCount: number;
+    favorite?: boolean;
 }
 
 export interface ISegment {

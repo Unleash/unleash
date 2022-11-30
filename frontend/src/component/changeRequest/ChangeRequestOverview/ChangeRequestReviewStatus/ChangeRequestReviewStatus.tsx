@@ -69,6 +69,12 @@ export const ChangeRequestReviewStatus: FC<
                 />
             </StyledButtonContainer>
             <StyledReviewStatusContainer
+                sx={{
+                    backgroundColor:
+                        changeRequest.state === 'In review'
+                            ? theme.palette.warning.light
+                            : 'initial',
+                }}
                 border={resolveBorder(changeRequest.state, theme)}
             >
                 <ResolveComponent changeRequest={changeRequest} />

@@ -197,8 +197,7 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
                                 >
                                     Review your changes
                                     <Tooltip
-                                        title="You can review your changes from this page.
-                                    Needs a text to explain the process."
+                                        title="Here you can see all the changes that you are suggesting and you can send them for review. You can still discard the changes after you sent them for review or even cancel the entire review if you need it."
                                         arrow
                                     >
                                         <StyledHelpOutline />

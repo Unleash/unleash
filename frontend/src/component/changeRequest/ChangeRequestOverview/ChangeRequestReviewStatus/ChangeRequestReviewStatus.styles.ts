@@ -22,6 +22,13 @@ export const StyledErrorIcon = styled(Cancel)(({ theme }) => ({
     marginRight: theme.spacing(1),
 }));
 
+export const StyledWarningIcon = styled(Cancel)(({ theme }) => ({
+    color: theme.palette.warning.main,
+    height: '35px',
+    width: '35px',
+    marginRight: theme.spacing(1),
+}));
+
 export const StyledSuccessIcon = styled(CheckCircle)(({ theme }) => ({
     color: theme.palette.success.main,
     height: '35px',

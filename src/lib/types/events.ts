@@ -99,10 +99,10 @@ export const API_TOKEN_CREATED = 'api-token-created';
 export const API_TOKEN_UPDATED = 'api-token-updated';
 export const API_TOKEN_DELETED = 'api-token-deleted';
 
-export const FAVORITE_FEATURE_ADDED = 'favorite-feature-added';
-export const FAVORITE_FEATURE_REMOVED = 'favorite-feature-removed';
-export const FAVORITE_PROJECT_ADDED = 'favorite-project-added';
-export const FAVORITE_PROJECT_REMOVED = 'favorite-project-removed';
+export const FEATURE_FAVORITED = 'feature-favorited';
+export const FEATURE_UNFAVORITED = 'feature-unfavorited';
+export const PROJECT_FAVORITED = 'project-favorited';
+export const PROJECT_UNFAVORITED = 'project-unfavorited';
 
 export interface IBaseEvent {
     type: string;

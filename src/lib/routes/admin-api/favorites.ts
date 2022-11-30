@@ -88,9 +88,9 @@ export default class FavoritesController extends Controller {
     ): Promise<void> {
         const { featureName } = req.params;
         const { user } = req;
-        await this.favoritesService.addFavoriteFeature({
+        await this.favoritesService.favoriteFeature({
             feature: featureName,
-            user: user,
+            user,
         });
         res.status(200).end();
     }
@@ -101,9 +101,9 @@ export default class FavoritesController extends Controller {
     ): Promise<void> {
         const { featureName } = req.params;
         const { user } = req;
-        await this.favoritesService.removeFavoriteFeature({
+        await this.favoritesService.unfavoriteFeature({
             feature: featureName,
-            user: user,
+            user,
         });
         res.status(200).end();
     }
@@ -114,9 +114,9 @@ export default class FavoritesController extends Controller {
     ): Promise<void> {
         const { projectId } = req.params;
         const { user } = req;
-        await this.favoritesService.addFavoriteProject({
+        await this.favoritesService.favoriteProject({
             project: projectId,
-            user: user,
+            user,
         });
         res.status(200).end();
     }
@@ -127,7 +127,7 @@ export default class FavoritesController extends Controller {
     ): Promise<void> {
         const { projectId } = req.params;
         const { user } = req;
-        await this.favoritesService.removeFavoriteProject({
+        await this.favoritesService.unfavoriteProject({
             project: projectId,
             user: user,
         });

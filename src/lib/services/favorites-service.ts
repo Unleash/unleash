@@ -8,10 +8,10 @@ import { Logger } from '../logger';
 import { IFavoriteFeaturesStore } from '../types/stores/favorite-features';
 import { IFavoriteFeature, IFavoriteProject } from '../types/favorites';
 import {
-    FAVORITE_FEATURE_ADDED,
-    FAVORITE_FEATURE_REMOVED,
-    FAVORITE_PROJECT_ADDED,
-    FAVORITE_PROJECT_REMOVED,
+    FEATURE_FAVORITED,
+    FEATURE_UNFAVORITED,
+    PROJECT_FAVORITED,
+    PROJECT_UNFAVORITED,
 } from '../types';
 import User from '../types/user';
 import { extractUsernameFromUser } from '../util';
@@ -56,7 +56,7 @@ export class FavoritesService {
         this.eventStore = eventStore;
     }
 
-    async addFavoriteFeature({
+    async favoriteFeature({
         feature,
         user,
     }: IFavoriteFeatureProps): Promise<IFavoriteFeature> {
@@ -65,16 +65,16 @@ export class FavoritesService {
             userId: user.id,
         });
         await this.eventStore.store({
-            type: FAVORITE_FEATURE_ADDED,
+            type: FEATURE_FAVORITED,
             createdBy: extractUsernameFromUser(user),
             data: {
-                feature: feature,
+                feature,
             },
         });
         return data;
     }
 
-    async removeFavoriteFeature({
+    async unfavoriteFeature({
         feature,
         user,
     }: IFavoriteFeatureProps): Promise<void> {
@@ -83,16 +83,16 @@ export class FavoritesService {
             userId: user.id,
         });
         await this.eventStore.store({
-            type: FAVORITE_FEATURE_REMOVED,
+            type: FEATURE_UNFAVORITED,
             createdBy: extractUsernameFromUser(user),
             data: {
-                feature: feature,
+                feature,
             },
         });
         return data;
     }
 
-    async addFavoriteProject({
+    async favoriteProject({
         project,
         user,
     }: IFavoriteProjectProps): Promise<IFavoriteProject> {
@@ -101,16 +101,16 @@ export class FavoritesService {
             userId: user.id,
         });
         await this.eventStore.store({
-            type: FAVORITE_PROJECT_ADDED,
+            type: PROJECT_FAVORITED,
             createdBy: extractUsernameFromUser(user),
             data: {
-                project: project,
+                project,
             },
         });
         return data;
     }
 
-    async removeFavoriteProject({
+    async unfavoriteProject({
         project,
         user,
     }: IFavoriteProjectProps): Promise<void> {
@@ -119,10 +119,10 @@ export class FavoritesService {
             userId: user.id,
         });
         await this.eventStore.store({
-            type: FAVORITE_PROJECT_REMOVED,
+            type: PROJECT_UNFAVORITED,
             createdBy: extractUsernameFromUser(user),
             data: {
-                project: project,
+                project,
             },
         });
         return data;

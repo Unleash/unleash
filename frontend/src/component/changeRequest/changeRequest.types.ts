@@ -25,7 +25,7 @@ export interface IChangeRequestEnvironmentConfig {
 export interface IChangeRequestFeature {
     name: string;
     conflict?: string;
-    changes: IChangeRequestEvent[];
+    changes: IChange[];
 }
 
 export interface IChangeRequestApproval {
@@ -82,7 +82,7 @@ export interface IChangeRequestEnabled extends IChangeRequestBase {
     payload: ChangeRequestEnabled;
 }
 
-export type IChangeRequestEvent =
+export type IChange =
     | IChangeRequestAddStrategy
     | IChangeRequestDeleteStrategy
     | IChangeRequestUpdateStrategy

@@ -30,6 +30,7 @@ import FakeGroupStore from './fake-group-store';
 import FakePatStore from './fake-pat-store';
 import FakePublicSignupStore from './fake-public-signup-store';
 import FakeFavoriteFeaturesStore from './fake-favorite-features-store';
+import FakeFavoriteProjectsStore from './fake-favorite-projects-store';
 
 const createStores: () => IUnleashStores = () => {
     const db = {
@@ -71,6 +72,7 @@ const createStores: () => IUnleashStores = () => {
         patStore: new FakePatStore(),
         publicSignupTokenStore: new FakePublicSignupStore(),
         favoriteFeaturesStore: new FakeFavoriteFeaturesStore(),
+        favoriteProjectsStore: new FakeFavoriteProjectsStore(),
     };
 };
 

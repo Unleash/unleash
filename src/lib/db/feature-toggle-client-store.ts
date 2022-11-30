@@ -16,6 +16,7 @@ import FeatureToggleStore from './feature-toggle-store';
 import { ensureStringValue } from '../util/ensureStringValue';
 import { mapValues } from '../util/map-values';
 import { IFlagResolver } from '../types/experimental';
+import Raw = Knex.Raw;
 
 export interface FeaturesTable {
     name: string;
@@ -101,7 +102,7 @@ export default class FeatureToggleClientStore
             'fs.constraints as constraints',
             'segments.id as segment_id',
             'segments.constraints as segment_constraints',
-        ];
+        ] as (string | Raw<any>)[];
 
         let query = this.db('features')
             .modify(FeatureToggleStore.filterByArchived, archived)
@@ -148,14 +149,18 @@ export default class FeatureToggleClientStore
             }
 
             if (userId && this.flagResolver.isEnabled('favorites')) {
-                query = query.leftJoin(`favorite_features as ff`, function () {
-                    this.on('ff.feature', 'features.name').andOnVal(
-                        'ff.user_id',
-                        '=',
-                        userId,
-                    );
+                query = query.leftJoin(`favorite_features`, function () {
+                    this.on(
+                        'favorite_features.feature',
+                        'features.name',
+                    ).andOnVal('favorite_features.user_id', '=', userId);
                 });
-                selectColumns = [...selectColumns, 'ff.feature as favorite'];
+                selectColumns = [
+                    ...selectColumns,
+                    this.db.raw(
+                        'favorite_features.feature is not null as favorite',
+                    ),
+                ];
             }
         }
 
@@ -207,7 +212,7 @@ export default class FeatureToggleClientStore
             feature.impressionData = r.impression_data;
             feature.enabled = !!r.enabled;
             feature.name = r.name;
-            feature.favorite = r.favorite != null;
+            feature.favorite = r.favorite;
             feature.description = r.description;
             feature.project = r.project;
             feature.stale = r.stale;

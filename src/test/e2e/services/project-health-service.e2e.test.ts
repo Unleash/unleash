@@ -9,6 +9,7 @@ import { IUnleashStores } from '../../../lib/types';
 import { IUser } from '../../../lib/server-impl';
 import { SegmentService } from '../../../lib/services/segment-service';
 import { GroupService } from '../../../lib/services/group-service';
+import { FavoritesService } from '../../../lib/services';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -17,6 +18,7 @@ let groupService;
 let accessService;
 let projectHealthService;
 let featureToggleService;
+let favoritesService;
 let user: IUser;
 
 beforeAll(async () => {
@@ -42,10 +44,12 @@ beforeAll(async () => {
         featureToggleService,
         groupService,
     );
+    favoritesService = new FavoritesService(stores, config);
     projectHealthService = new ProjectHealthService(
         stores,
         config,
         featureToggleService,
+        favoritesService,
     );
 });
 

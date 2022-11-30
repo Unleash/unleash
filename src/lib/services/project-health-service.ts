@@ -14,6 +14,7 @@ import { IProjectStore } from '../types/stores/project-store';
 import FeatureToggleService from './feature-toggle-service';
 import { hoursToMilliseconds } from 'date-fns';
 import Timer = NodeJS.Timer;
+import { FavoritesService } from './favorites-service';
 
 export default class ProjectHealthService {
     private logger: Logger;
@@ -30,6 +31,8 @@ export default class ProjectHealthService {
 
     private featureToggleService: FeatureToggleService;
 
+    private favoritesService: FavoritesService;
+
     constructor(
         {
             projectStore,
@@ -41,6 +44,7 @@ export default class ProjectHealthService {
         >,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
         featureToggleService: FeatureToggleService,
+        favoritesService: FavoritesService,
     ) {
         this.logger = getLogger('services/project-health-service.ts');
         this.projectStore = projectStore;
@@ -52,12 +56,14 @@ export default class ProjectHealthService {
             hoursToMilliseconds(1),
         ).unref();
         this.featureToggleService = featureToggleService;
+        this.favoritesService = favoritesService;
     }
 
     // TODO: duplicate from project-service.
     async getProjectOverview(
         projectId: string,
         archived: boolean = false,
+        userId?: number,
     ): Promise<IProjectOverview> {
         const project = await this.projectStore.get(projectId);
         const environments = await this.projectStore.getEnvironmentsForProject(
@@ -70,10 +76,16 @@ export default class ProjectHealthService {
         const members = await this.projectStore.getMembersCountByProject(
             projectId,
         );
+
+        const favorite = await this.favoritesService.isFavoriteProject(
+            projectId,
+            userId,
+        );
         return {
             name: project.name,
             description: project.description,
             health: project.health,
+            favorite: favorite,
             updatedAt: project.updatedAt,
             environments,
             features,
@@ -85,7 +97,11 @@ export default class ProjectHealthService {
     async getProjectHealthReport(
         projectId: string,
     ): Promise<IProjectHealthReport> {
-        const overview = await this.getProjectOverview(projectId, false);
+        const overview = await this.getProjectOverview(
+            projectId,
+            false,
+            undefined,
+        );
         return {
             ...overview,
             potentiallyStaleCount: await this.potentiallyStaleCount(

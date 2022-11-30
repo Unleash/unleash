@@ -84,10 +84,12 @@ export const createServices = (
     );
     const environmentService = new EnvironmentService(stores, config);
     const featureTagService = new FeatureTagService(stores, config);
+    const favoritesService = new FavoritesService(stores, config);
     const projectHealthService = new ProjectHealthService(
         stores,
         config,
         featureToggleServiceV2,
+        favoritesService,
     );
     const projectService = new ProjectService(
         stores,
@@ -124,7 +126,6 @@ export const createServices = (
         config,
         versionService,
     );
-    const favoritesService = new FavoritesService(stores, config);
 
     return {
         accessService,

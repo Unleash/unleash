@@ -1,5 +1,5 @@
 import { VFC } from 'react';
-import { Box, IconButton } from '@mui/material';
+import { Box, IconButton, styled } from '@mui/material';
 import {
     Star as StarIcon,
     StarBorder as StarBorderIcon,
@@ -10,6 +10,13 @@ interface IFavoriteIconCellProps {
     value?: boolean;
     onClick?: () => void;
 }
+
+const InactiveIconButton = styled(IconButton)(({ theme }) => ({
+    color: 'transparent',
+    '&:hover, &:focus': {
+        color: theme.palette.primary.main,
+    },
+}));
 
 export const FavoriteIconCell: VFC<IFavoriteIconCellProps> = ({
     value = false,
@@ -24,18 +31,9 @@ export const FavoriteIconCell: VFC<IFavoriteIconCellProps> = ({
                 </IconButton>
             }
             elseShow={
-                <IconButton
-                    onClick={onClick}
-                    size="small"
-                    sx={{
-                        color: 'transparent',
-                        '&:hover, &:focus': {
-                            color: theme => theme.palette.primary.main,
-                        },
-                    }}
-                >
+                <InactiveIconButton onClick={onClick} size="small">
                     <StarBorderIcon fontSize="small" />
-                </IconButton>
+                </InactiveIconButton>
             }
         />
     </Box>

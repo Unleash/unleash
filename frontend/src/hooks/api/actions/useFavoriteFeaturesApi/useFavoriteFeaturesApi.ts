@@ -11,7 +11,7 @@ export const useFavoriteFeaturesApi = () => {
     const { setToastData, setToastApiError } = useToast();
     const { refetchFeatures } = useFeatures();
 
-    const addFavoriteFeature = useCallback(
+    const favorite = useCallback(
         async (projectId: string, featureName: string) => {
             const path = `api/admin/projects/${projectId}/features/${featureName}/favorites`;
             const req = createRequest(
@@ -35,7 +35,7 @@ export const useFavoriteFeaturesApi = () => {
         [createRequest, makeRequest]
     );
 
-    const removeFavoriteFeature = useCallback(
+    const unfavorite = useCallback(
         async (projectId: string, featureName: string) => {
             const path = `api/admin/projects/${projectId}/features/${featureName}/favorites`;
             const req = createRequest(
@@ -60,8 +60,8 @@ export const useFavoriteFeaturesApi = () => {
     );
 
     return {
-        addFavoriteFeature,
-        removeFavoriteFeature,
+        favorite,
+        unfavorite,
         errors,
         loading,
     };

@@ -63,15 +63,14 @@ export const FeatureToggleListTable: VFC = () => {
         hiddenColumns: ['description'],
         globalFilter: searchParams.get('search') || '',
     }));
-    const { isFavoritesPinned, sortTypes, onTogglePinFavorites } =
+    const { isFavoritesPinned, sortTypes, onChangeIsFavoritePinned } =
         usePinnedFavorites(
             searchParams.has('favorites')
                 ? searchParams.get('favorites') === 'true'
                 : storedParams.favorites
         );
     const [searchValue, setSearchValue] = useState(initialState.globalFilter);
-    const { addFavoriteFeature, removeFavoriteFeature } =
-        useFavoriteFeaturesApi();
+    const { favorite, unfavorite } = useFavoriteFeaturesApi();
     const { uiConfig } = useUiConfig();
 
     const columns = useMemo(
@@ -82,7 +81,7 @@ export const FeatureToggleListTable: VFC = () => {
                           Header: (
                               <FavoriteIconHeader
                                   isActive={isFavoritesPinned}
-                                  onClick={onTogglePinFavorites}
+                                  onClick={onChangeIsFavoritePinned}
                               />
                           ),
                           accessor: 'favorite',
@@ -91,11 +90,11 @@ export const FeatureToggleListTable: VFC = () => {
                                   value={feature?.favorite}
                                   onClick={() =>
                                       feature?.favorite
-                                          ? removeFavoriteFeature(
+                                          ? unfavorite(
                                                 feature.project,
                                                 feature.name
                                             )
-                                          : addFavoriteFeature(
+                                          : favorite(
                                                 feature.project,
                                                 feature.name
                                             )

@@ -1,17 +1,31 @@
 import { useMemo, useState } from 'react';
 import { sortTypes } from 'utils/sortTypes';
+import type { Row, SortByFn } from 'react-table';
 
-const sortTypesWithFavorites = Object.fromEntries(
-    Object.entries(sortTypes).map(([key, value]) => [
-        key,
-        (v1: any, v2: any, id: string, desc?: boolean) => {
+type WithFavorite = {
+    favorite: boolean;
+    [key: string]: any;
+};
+
+const sortTypesWithFavorites: Record<
+    keyof typeof sortTypes,
+    SortByFn<object> // TODO: possible type improvement in react-table v8
+> = Object.assign(
+    {},
+    ...Object.entries(sortTypes).map(([key, value]) => ({
+        [key]: (
+            v1: Row<WithFavorite>,
+            v2: Row<WithFavorite>,
+            id: string,
+            desc?: boolean
+        ) => {
             if (v1?.original?.favorite && !v2?.original?.favorite)
                 return desc ? 1 : -1;
             if (!v1?.original?.favorite && v2?.original?.favorite)
                 return desc ? -1 : 1;
-            return value(v1, v2, id);
+            return value(v1, v2, id, desc);
         },
-    ])
+    }))
 );
 
 /**
@@ -20,7 +34,7 @@ const sortTypesWithFavorites = Object.fromEntries(
 export const usePinnedFavorites = (initialState = false) => {
     const [isFavoritesPinned, setIsFavoritesPinned] = useState(initialState);
 
-    const onTogglePinFavorites = () => {
+    const onChangeIsFavoritePinned = () => {
         setIsFavoritesPinned(!isFavoritesPinned);
     };
 
@@ -31,7 +45,7 @@ export const usePinnedFavorites = (initialState = false) => {
 
     return {
         isFavoritesPinned,
-        onTogglePinFavorites,
+        onChangeIsFavoritePinned,
         sortTypes: enhancedSortTypes,
     };
 };

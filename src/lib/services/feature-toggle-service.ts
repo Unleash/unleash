@@ -675,9 +675,7 @@ class FeatureToggleService {
     }
 
     /**
-     *
-     * Warn: Legacy!
-     *
+     * @deprecated Legacy!
      *
      * Used to retrieve metadata of all feature toggles defined in Unleash.
      * @param query - Allow you to limit search based on criteria such as project, tags, namePrefix. See @IFeatureToggleQuery

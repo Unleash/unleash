@@ -345,8 +345,11 @@ class FeatureController extends Controller {
         res.status(200).json(feature);
     }
 
-    // TODO: remove?
-    // Kept to keep backward compatibility
+    /**
+     * @deprecated TODO: remove?
+     *
+     * Kept to keep backward compatibility
+     */
     async toggle(req: IAuthRequest, res: Response): Promise<void> {
         const userName = extractUsername(req);
         const { featureName } = req.params;

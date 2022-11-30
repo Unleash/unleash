@@ -1549,6 +1549,9 @@ exports[`should serve the OpenAPI spec 1`] = `
             },
             "type": "array",
           },
+          "favorite": {
+            "type": "boolean",
+          },
           "features": {
             "items": {
               "$ref": "#/components/schemas/featureSchema",
@@ -1593,6 +1596,9 @@ exports[`should serve the OpenAPI spec 1`] = `
               "type": "string",
             },
             "type": "array",
+          },
+          "favorite": {
+            "type": "boolean",
           },
           "features": {
             "items": {
@@ -2351,6 +2357,9 @@ exports[`should serve the OpenAPI spec 1`] = `
           },
           "description": {
             "type": "string",
+          },
+          "favorite": {
+            "type": "boolean",
           },
           "featureCount": {
             "type": "number",
@@ -5025,6 +5034,50 @@ If the provided project does not exist, the list of events will be empty.",
         },
         "tags": [
           "Projects",
+        ],
+      },
+    },
+    "/api/admin/projects/{projectId}/favorites": {
+      "delete": {
+        "operationId": "removeFavoriteProject",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": {
+          "200": {
+            "description": "This response has no body.",
+          },
+        },
+        "tags": [
+          "Features",
+        ],
+      },
+      "post": {
+        "operationId": "addFavoriteProject",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": {
+          "200": {
+            "description": "This response has no body.",
+          },
+        },
+        "tags": [
+          "Features",
         ],
       },
     },

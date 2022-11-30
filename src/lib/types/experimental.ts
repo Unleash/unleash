@@ -1,8 +1,9 @@
 import { parseEnvVarBoolean } from '../util';
 
-export type IFlags = Partial<Record<string, boolean>>;
+export type IFlags = IExperimentalOptions['flags'];
+export type IFlagKey = keyof IFlags;
 
-export const defaultExperimentalOptions = {
+export const defaultExperimentalOptions: IExperimentalOptions = {
     flags: {
         ENABLE_DARK_MODE_SUPPORT: false,
         anonymiseEventLog: false,
@@ -52,13 +53,15 @@ export const defaultExperimentalOptions = {
 
 export interface IExperimentalOptions {
     flags: {
-        [key: string]: boolean;
+        E?: boolean;
         ENABLE_DARK_MODE_SUPPORT?: boolean;
         embedProxy?: boolean;
         embedProxyFrontend?: boolean;
         batchMetrics?: boolean;
         anonymiseEventLog?: boolean;
         changeRequests?: boolean;
+        responseTimeWithAppName?: boolean;
+        toggleTagFiltering?: boolean;
         proxyReturnAllToggles?: boolean;
         variantsPerEnvironment?: boolean;
         favorites?: boolean;
@@ -74,9 +77,9 @@ export interface IFlagContext {
 
 export interface IFlagResolver {
     getAll: (context?: IFlagContext) => IFlags;
-    isEnabled: (expName: string, context?: IFlagContext) => boolean;
+    isEnabled: (expName: IFlagKey, context?: IFlagContext) => boolean;
 }
 
 export interface IExternalFlagResolver {
-    isEnabled: (flagName: string, context?: IFlagContext) => boolean;
+    isEnabled: (flagName: IFlagKey, context?: IFlagContext) => boolean;
 }

@@ -14,9 +14,11 @@ test('should produce UI flags with extra dynamic flags', () => {
         ...defaultExperimentalOptions,
         flags: { extraFlag: false },
     };
+    // @ts-expect-error
     const resolver = new FlagResolver(config);
     const result = resolver.getAll();
 
+    // @ts-expect-error
     expect(result.extraFlag).toBe(false);
 });
 
@@ -29,15 +31,17 @@ test('should use external resolver for dynamic flags', () => {
         },
     };
 
-    const resolver = new FlagResolver({
-        flags: {
-            extraFlag: false,
-        },
+    const config = {
+        flags: { extraFlag: false },
         externalResolver,
-    });
+    };
+
+    // @ts-expect-error
+    const resolver = new FlagResolver(config);
 
     const result = resolver.getAll();
 
+    // @ts-expect-error
     expect(result.extraFlag).toBe(true);
 });
 
@@ -48,16 +52,17 @@ test('should not use external resolver for enabled experiments', () => {
         },
     };
 
-    const resolver = new FlagResolver({
-        flags: {
-            should_be_enabled: true,
-            extraFlag: false,
-        },
+    const config = {
+        flags: { should_be_enabled: true, extraFlag: false },
         externalResolver,
-    });
+    };
+
+    // @ts-expect-error
+    const resolver = new FlagResolver(config);
 
     const result = resolver.getAll();
 
+    // @ts-expect-error
     expect(result.should_be_enabled).toBe(true);
 });
 
@@ -67,15 +72,18 @@ test('should load experimental flags', () => {
             return false;
         },
     };
-    const resolver = new FlagResolver({
-        flags: {
-            extraFlag: false,
-            someFlag: true,
-        },
-        externalResolver,
-    });
 
+    const config = {
+        flags: { extraFlag: false, someFlag: true },
+        externalResolver,
+    };
+
+    // @ts-expect-error
+    const resolver = new FlagResolver(config);
+
+    // @ts-expect-error
     expect(resolver.isEnabled('someFlag')).toBe(true);
+    // @ts-expect-error
     expect(resolver.isEnabled('extraFlag')).toBe(false);
 });
 
@@ -88,14 +96,16 @@ test('should load experimental flags from external provider', () => {
         },
     };
 
-    const resolver = new FlagResolver({
-        flags: {
-            extraFlag: false,
-            someFlag: true,
-        },
+    const config = {
+        flags: { extraFlag: false, someFlag: true },
         externalResolver,
-    });
+    };
 
+    // @ts-expect-error
+    const resolver = new FlagResolver(config);
+
+    // @ts-expect-error
     expect(resolver.isEnabled('someFlag')).toBe(true);
+    // @ts-expect-error
     expect(resolver.isEnabled('extraFlag')).toBe(true);
 });

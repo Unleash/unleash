@@ -77,10 +77,10 @@ export default class ProjectHealthService {
             projectId,
         );
 
-        const favorite = await this.favoritesService.isFavoriteProject(
-            projectId,
+        const favorite = await this.favoritesService.isFavoriteProject({
+            project: projectId,
             userId,
-        );
+        });
         return {
             name: project.name,
             description: project.description,

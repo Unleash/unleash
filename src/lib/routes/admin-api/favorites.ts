@@ -90,7 +90,7 @@ export default class FavoritesController extends Controller {
         const { user } = req;
         await this.favoritesService.addFavoriteFeature({
             feature: featureName,
-            userId: user.id,
+            user: user,
         });
         res.status(200).end();
     }
@@ -103,7 +103,7 @@ export default class FavoritesController extends Controller {
         const { user } = req;
         await this.favoritesService.removeFavoriteFeature({
             feature: featureName,
-            userId: user.id,
+            user: user,
         });
         res.status(200).end();
     }
@@ -116,7 +116,7 @@ export default class FavoritesController extends Controller {
         const { user } = req;
         await this.favoritesService.addFavoriteProject({
             project: projectId,
-            userId: user.id,
+            user: user,
         });
         res.status(200).end();
     }
@@ -129,7 +129,7 @@ export default class FavoritesController extends Controller {
         const { user } = req;
         await this.favoritesService.removeFavoriteProject({
             project: projectId,
-            userId: user.id,
+            user: user,
         });
         res.status(200).end();
     }

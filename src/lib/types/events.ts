@@ -99,6 +99,11 @@ export const API_TOKEN_CREATED = 'api-token-created';
 export const API_TOKEN_UPDATED = 'api-token-updated';
 export const API_TOKEN_DELETED = 'api-token-deleted';
 
+export const FAVORITE_FEATURE_ADDED = 'favorite-feature-added';
+export const FAVORITE_FEATURE_REMOVED = 'favorite-feature-removed';
+export const FAVORITE_PROJECT_ADDED = 'favorite-project-added';
+export const FAVORITE_PROJECT_REMOVED = 'favorite-project-removed';
+
 export interface IBaseEvent {
     type: string;
     createdBy: string;

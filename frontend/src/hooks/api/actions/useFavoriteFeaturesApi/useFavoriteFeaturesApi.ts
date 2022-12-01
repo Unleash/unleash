@@ -4,6 +4,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { useFeatures } from 'hooks/api/getters/useFeatures/useFeatures';
 import useAPI from '../useApi/useApi';
 import useProject from 'hooks/api/getters/useProject/useProject';
+import { usePlausibleTracker } from '../../../usePlausibleTracker';
 
 export const useFavoriteFeaturesApi = () => {
     const { makeRequest, createRequest, errors, loading } = useAPI({
@@ -11,6 +12,7 @@ export const useFavoriteFeaturesApi = () => {
     });
     const { setToastData, setToastApiError } = useToast();
     const { refetchFeatures } = useFeatures();
+    const { trackEvent } = usePlausibleTracker();
 
     const favorite = useCallback(
         async (projectId: string, featureName: string) => {
@@ -27,6 +29,11 @@ export const useFavoriteFeaturesApi = () => {
                 setToastData({
                     title: 'Toggle added to favorites',
                     type: 'success',
+                });
+                trackEvent('favorite', {
+                    props: {
+                        eventType: `feature favorited`,
+                    },
                 });
                 refetchFeatures();
             } catch (error) {
@@ -51,6 +58,11 @@ export const useFavoriteFeaturesApi = () => {
                 setToastData({
                     title: 'Toggle removed from favorites',
                     type: 'success',
+                });
+                trackEvent('favorite', {
+                    props: {
+                        eventType: `feature unfavorited`,
+                    },
                 });
                 refetchFeatures();
             } catch (error) {

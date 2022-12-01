@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { sortTypes } from 'utils/sortTypes';
 import type { Row, SortByFn } from 'react-table';
+import { usePlausibleTracker } from './usePlausibleTracker';
 
 type WithFavorite = {
     favorite: boolean;
@@ -33,8 +34,14 @@ export const sortTypesWithFavorites: Record<
  */
 export const usePinnedFavorites = (initialState = false) => {
     const [isFavoritesPinned, setIsFavoritesPinned] = useState(initialState);
+    const { trackEvent } = usePlausibleTracker();
 
     const onChangeIsFavoritePinned = () => {
+        trackEvent('favorite', {
+            props: {
+                eventType: `features ${isFavoritesPinned ? 'un' : ''}pinned `,
+            },
+        });
         setIsFavoritesPinned(!isFavoritesPinned);
     };
 

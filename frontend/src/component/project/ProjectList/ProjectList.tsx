@@ -148,6 +148,7 @@ export const ProjectListNew = () => {
                         health={project.health}
                         id={project.id}
                         featureCount={project.featureCount}
+                        isFavorite={project.favorite}
                     />
                 </Link>
             );

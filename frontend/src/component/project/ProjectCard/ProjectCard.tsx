@@ -16,6 +16,8 @@ import { DEFAULT_PROJECT_ID } from 'hooks/api/getters/useDefaultProject/useDefau
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { DeleteProjectDialogue } from '../Project/DeleteProject/DeleteProjectDialogue';
 import { ConditionallyRender } from '../../common/ConditionallyRender/ConditionallyRender';
+import { FavoriteIconButton } from '../../common/FavoriteIconButton/FavoriteIconButton';
+import { useFavoriteProjectsApi } from '../../../hooks/api/actions/useFavoriteProjectsApi/useFavoriteProjectsApi';
 
 interface IProjectCardProps {
     name: string;
@@ -24,6 +26,7 @@ interface IProjectCardProps {
     memberCount: number;
     id: string;
     onHover: () => void;
+    isFavorite?: boolean;
 }
 
 export const ProjectCard = ({
@@ -33,6 +36,7 @@ export const ProjectCard = ({
     memberCount,
     onHover,
     id,
+    isFavorite = false,
 }: IProjectCardProps) => {
     const { classes } = useStyles();
     const { hasAccess } = useContext(AccessContext);
@@ -40,6 +44,7 @@ export const ProjectCard = ({
     const [anchorEl, setAnchorEl] = useState<Element | null>(null);
     const [showDelDialog, setShowDelDialog] = useState(false);
     const navigate = useNavigate();
+    const { favorite, unfavorite } = useFavoriteProjectsApi();
 
     const handleClick = (event: React.SyntheticEvent) => {
         event.preventDefault();
@@ -49,9 +54,23 @@ export const ProjectCard = ({
     const canDeleteProject =
         hasAccess(DELETE_PROJECT, id) && id !== DEFAULT_PROJECT_ID;
 
+    const onFavorite = async (e : Event) => {
+        e.preventDefault();
+        if (isFavorite) {
+            await unfavorite(id);
+        } else {
+            await favorite(id);
+        }
+        // refetch();
+    };
+
     return (
         <Card className={classes.projectCard} onMouseEnter={onHover}>
             <div className={classes.header} data-loading>
+                <FavoriteIconButton
+                    onClick={onFavorite}
+                    isFavorite={isFavorite}
+                />
                 <h2 className={classes.title}>{name}</h2>
 
                 <PermissionIconButton

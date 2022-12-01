@@ -8,6 +8,7 @@ export interface IProjectCard {
     description: string;
     featureCount: number;
     memberCount?: number;
+    favorite?: boolean;
 }
 
 export interface IProject {

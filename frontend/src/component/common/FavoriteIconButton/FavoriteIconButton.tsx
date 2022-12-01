@@ -11,7 +11,7 @@ import {
 } from '@mui/icons-material';
 
 interface IFavoriteIconButtonProps {
-    onClick: () => void;
+    onClick: (e? : any) => void;
     isFavorite: boolean;
 }
 

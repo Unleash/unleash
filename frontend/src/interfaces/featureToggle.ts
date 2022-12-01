@@ -26,6 +26,8 @@ export interface IFeatureToggle {
     description?: string;
     environments: IFeatureEnvironment[];
     name: string;
+
+    favorite: boolean;
     project: string;
     type: string;
     variants: IFeatureVariant[];

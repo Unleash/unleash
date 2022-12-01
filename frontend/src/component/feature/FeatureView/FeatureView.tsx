@@ -1,5 +1,5 @@
 import { IconButton, Tab, Tabs, useMediaQuery } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
     Archive,
     FileCopy,
@@ -40,11 +40,13 @@ import { FeatureArchiveDialog } from '../../common/FeatureArchiveDialog/FeatureA
 import { DraftBanner } from 'component/changeRequest/DraftBanner/DraftBanner';
 import { MainLayout } from 'component/layout/MainLayout/MainLayout';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
+import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';
 
 export const FeatureView = () => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const { refetch: projectRefetch } = useProject(projectId);
+    const { favorite, unfavorite } = useFavoriteFeaturesApi();
     const { refetchFeature } = useFeature(projectId, featureId);
     const { isChangeRequestConfiguredInAnyEnv } =
         useChangeRequestsEnabled(projectId);
@@ -92,6 +94,15 @@ export const FeatureView = () => {
         return <FeatureNotFound />;
     }
 
+    const onFavorite = async () => {
+        if (feature?.favorite) {
+            await unfavorite(projectId, feature.name);
+        } else {
+            await favorite(projectId, feature.name);
+        }
+        refetchFeature();
+    };
+
     return (
         <MainLayout
             ref={ref}
@@ -112,9 +123,10 @@ export const FeatureView = () => {
                                         size="large"
                                         data-loading
                                         sx={{ mr: 1 }}
+                                        onClick={onFavorite}
                                     >
                                         <ConditionallyRender
-                                            condition={true}
+                                            condition={feature.favorite}
                                             show={<StarIcon color="primary" />}
                                             elseShow={<StarBorderIcon />}
                                         />

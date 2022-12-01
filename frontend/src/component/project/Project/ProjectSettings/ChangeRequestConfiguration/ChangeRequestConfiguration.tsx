@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { Alert } from '@mui/material';
+import { Alert, Link, styled } from '@mui/material';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import AccessContext from 'contexts/AccessContext';
 import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
@@ -9,31 +9,46 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { useProjectNameOrId } from 'hooks/api/getters/useProject/useProject';
 import { ChangeRequestTable } from './ChangeRequestTable';
+import { ProFeatureTooltip } from '../../../../common/ProFeatureTooltip/ProFeatureTooltip';
+
+const StyledLink = styled(Link)(({ theme }) => ({
+    fontSize: theme.fontSizes.smallBody,
+    width: 'fit-content',
+}));
 
 export const ChangeRequestConfiguration = () => {
     const projectId = useRequiredPathParam('projectId');
     const projectName = useProjectNameOrId(projectId);
     const { hasAccess } = useContext(AccessContext);
-    const { isOss } = useUiConfig();
+    const { isOss, uiConfig } = useUiConfig();
+    const isPro = !(
+        Boolean(uiConfig.versionInfo?.current.oss) ||
+        Boolean(uiConfig.versionInfo?.current.enterprise)
+    );
     usePageTitle(`Project change request – ${projectName}`);
 
-    if (isOss()) {
+    if (isOss() || isPro) {
         return (
             <PageContent
                 header={<PageHeader title="Change request configuration" />}
+                sx={{ justifyContent: 'center' }}
             >
-                <Alert severity="error">
-                    Controlling change request configuration requires the
-                    Enterprise version of Unleash. Check out{' '}
-                    <a
-                        href="https://www.getunleash.io"
-                        target="_blank"
-                        rel="noreferrer"
-                    >
-                        getunleash.io
-                    </a>{' '}
-                    to find out more.
-                </Alert>
+                <ProFeatureTooltip
+                    title={'Enterprise feature'}
+                    origin={'Project Change Request Configuration'}
+                    center
+                >
+                    <>
+                        If you want to use{' '}
+                        <StyledLink
+                            href={'https://www.getunleash.io/plans'} // TODO: Add link to change request docs when available
+                            target="_blank"
+                        >
+                            "Change Requests"
+                        </StyledLink>{' '}
+                        you will need to upgrade to Enterprise plan
+                    </>
+                </ProFeatureTooltip>
             </PageContent>
         );
     }

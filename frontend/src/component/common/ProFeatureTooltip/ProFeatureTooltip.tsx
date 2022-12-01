@@ -30,12 +30,14 @@ export interface ProFeatureTooltipProps {
     children: React.ReactNode;
     title: string;
     origin: string;
+    center?: boolean;
 }
 
 export const ProFeatureTooltip = ({
     title,
     origin,
     children,
+    center,
 }: ProFeatureTooltipProps) => {
     const tracker = usePlausibleTracker();
     const handleClick = () => {
@@ -46,7 +48,12 @@ export const ProFeatureTooltip = ({
         }
     };
     return (
-        <ProFeatureTooltipWrapper>
+        <ProFeatureTooltipWrapper
+            sx={{
+                alignItems: center ? 'center' : 'start',
+                textAlign: center ? 'center' : 'left',
+            }}
+        >
             <StyledTitle>
                 <ProPlanIcon />
                 {title}

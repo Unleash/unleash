@@ -1,6 +1,5 @@
 import { styled } from '@mui/material';
 import { VerticalTab } from './VerticalTab/VerticalTab';
-import { ITooltipResolverProps } from '../TooltipResolver/TooltipResolver';
 
 const StyledTabPage = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -32,8 +31,6 @@ export interface ITab {
     label: string;
     path?: string;
     hidden?: boolean;
-    disabled?: boolean;
-    tooltipProps?: Omit<ITooltipResolverProps, 'children'>;
 }
 
 interface IVerticalTabsProps {
@@ -58,9 +55,7 @@ export const VerticalTabs = ({
                         key={tab.id}
                         label={tab.label}
                         selected={tab.id === value}
-                        disabled={tab.disabled}
                         onClick={() => onChange(tab)}
-                        tooltipProps={tab.tooltipProps}
                     />
                 ))}
         </StyledTabs>

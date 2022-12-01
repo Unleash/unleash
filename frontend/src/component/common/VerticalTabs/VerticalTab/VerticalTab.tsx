@@ -1,8 +1,4 @@
 import { Button, styled } from '@mui/material';
-import {
-    ITooltipResolverProps,
-    TooltipResolver,
-} from '../../TooltipResolver/TooltipResolver';
 
 const StyledTab = styled(Button)<{ selected: boolean }>(
     ({ theme, selected }) => ({
@@ -42,26 +38,22 @@ interface IVerticalTabProps {
     label: string;
     selected?: boolean;
     onClick: () => void;
-    tooltipProps?: Omit<ITooltipResolverProps, 'children'>;
 }
 
 export const VerticalTab = ({
     label,
     selected,
     onClick,
-    tooltipProps,
 }: IVerticalTabProps) => (
-    <TooltipResolver {...tooltipProps} arrow onClick={e => e.preventDefault()}>
-        <StyledTab
-            selected={Boolean(selected)}
-            onClick={onClick}
-            disableRipple
-            disableElevation
-            disableFocusRipple
-            disableTouchRipple
-            fullWidth
-        >
-            {label}
-        </StyledTab>
-    </TooltipResolver>
+    <StyledTab
+        selected={Boolean(selected)}
+        onClick={onClick}
+        disableRipple
+        disableElevation
+        disableFocusRipple
+        disableTouchRipple
+        fullWidth
+    >
+        {label}
+    </StyledTab>
 );

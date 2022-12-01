@@ -121,6 +121,7 @@ exports[`should create default config 1`] = `
   },
   "preHook": undefined,
   "preRouterHook": undefined,
+  "prometheusApi": undefined,
   "secureHeaders": false,
   "segmentValuesLimit": 100,
   "server": {

@@ -10,7 +10,7 @@ import { createResponseSchema } from '../../openapi/util/create-response-schema'
 import { ApplicationSchema } from '../../openapi/spec/application-schema';
 import { ApplicationsSchema } from '../../openapi/spec/applications-schema';
 import { emptyResponse } from '../../openapi/util/standard-responses';
-import { RequestPerSecondSegmentedSchema } from 'lib/openapi/spec/requests-per-second-segmented-schema';
+import { RequestsPerSecondSegmentedSchema } from 'lib/openapi/spec/requests-per-second-segmented-schema';
 import { IFlagResolver } from 'lib/types';
 
 type RpsError = string;
@@ -114,7 +114,7 @@ class MetricsController extends Controller {
                     operationId: 'getRequestsPerSecond',
                     responses: {
                         200: createResponseSchema(
-                            'requestPerSecondSegmentedSchema',
+                            'requestsPerSecondSegmentedSchema',
                         ),
                     },
                 }),
@@ -179,7 +179,7 @@ class MetricsController extends Controller {
 
     async getRps(
         req: Request,
-        res: Response<RequestPerSecondSegmentedSchema | RpsError>,
+        res: Response<RequestsPerSecondSegmentedSchema | RpsError>,
     ): Promise<void> {
         if (!this.flagResolver.isEnabled('networkView')) {
             res.status(404).send('Not enabled');

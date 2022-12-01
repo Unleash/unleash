@@ -119,3 +119,5 @@ export * from './feature-strategy-segment-schema';
 export * from './public-signup-token-create-schema';
 export * from './public-signup-token-update-schema';
 export * from './feature-environment-metrics-schema';
+export * from './requests-per-second-schema';
+export * from './requests-per-second-segmented-schema';

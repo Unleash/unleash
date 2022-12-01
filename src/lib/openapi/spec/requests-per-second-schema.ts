@@ -1,9 +1,8 @@
 import { FromSchema } from 'json-schema-to-ts';
 
-export const requestPerSecondSchema = {
-    $id: '#/components/schemas/requestPerSecondSchema',
+export const requestsPerSecondSchema = {
+    $id: '#/components/schemas/requestsPerSecondSchema',
     type: 'object',
-    required: [],
     properties: {
         status: {
             type: 'string',
@@ -54,4 +53,6 @@ export const requestPerSecondSchema = {
     components: {},
 } as const;
 
-export type RequestPerSecondSchema = FromSchema<typeof requestPerSecondSchema>;
+export type RequestsPerSecondSchema = FromSchema<
+    typeof requestsPerSecondSchema
+>;

@@ -2703,6 +2703,68 @@ exports[`should serve the OpenAPI spec 1`] = `
         ],
         "type": "object",
       },
+      "requestsPerSecondSchema": {
+        "properties": {
+          "data": {
+            "properties": {
+              "result": {
+                "description": "An array of values per metric. Each one represents a line in the graph labeled by its metric name",
+                "items": {
+                  "properties": {
+                    "metric": {
+                      "description": "A key value set representing the metric",
+                      "properties": {
+                        "appName": {
+                          "type": "string",
+                        },
+                      },
+                      "type": "object",
+                    },
+                    "values": {
+                      "description": "An array of arrays. Each element of the array is an array of size 2 consisting of the 2 axis for the graph: in position zero the x axis represented as a number and position one the y axis represented as string",
+                      "items": {
+                        "items": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                            },
+                            {
+                              "type": "number",
+                            },
+                          ],
+                        },
+                        "type": "array",
+                      },
+                      "type": "array",
+                    },
+                  },
+                  "type": "object",
+                },
+                "type": "array",
+              },
+              "resultType": {
+                "type": "string",
+              },
+            },
+            "type": "object",
+          },
+          "status": {
+            "type": "string",
+          },
+        },
+        "type": "object",
+      },
+      "requestsPerSecondSegmentedSchema": {
+        "properties": {
+          "adminMetrics": {
+            "$ref": "#/components/schemas/requestsPerSecondSchema",
+          },
+          "clientMetrics": {
+            "$ref": "#/components/schemas/requestsPerSecondSchema",
+          },
+        },
+        "type": "object",
+      },
       "resetPasswordSchema": {
         "additionalProperties": false,
         "properties": {
@@ -5008,6 +5070,26 @@ If the provided project does not exist, the list of events will be empty.",
         "responses": {
           "202": {
             "description": "This response has no body.",
+          },
+        },
+        "tags": [
+          "Metrics",
+        ],
+      },
+    },
+    "/api/admin/metrics/rps": {
+      "get": {
+        "operationId": "getRequestsPerSecond",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/requestsPerSecondSegmentedSchema",
+                },
+              },
+            },
+            "description": "requestsPerSecondSegmentedSchema",
           },
         },
         "tags": [

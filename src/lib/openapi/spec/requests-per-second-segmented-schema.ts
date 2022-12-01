@@ -1,27 +1,23 @@
 import { FromSchema } from 'json-schema-to-ts';
-import { requestPerSecondSchema } from './requests-per-second-schema';
-export const requestPerSecondSegmentedSchema = {
-    $id: '#/components/schemas/requestPerSecondSegmentedSchema',
+import { requestsPerSecondSchema } from './requests-per-second-schema';
+export const requestsPerSecondSegmentedSchema = {
+    $id: '#/components/schemas/requestsPerSecondSegmentedSchema',
     type: 'object',
-    required: [],
     properties: {
         clientMetrics: {
-            $ref: '#/components/schemas/requestPerSecondSchema',
+            $ref: '#/components/schemas/requestsPerSecondSchema',
         },
         adminMetrics: {
-            $ref: '#/components/schemas/requestPerSecondSchema',
-        },
-        additionalProperties: {
-            $ref: '#/components/schemas/requestPerSecondSchema',
+            $ref: '#/components/schemas/requestsPerSecondSchema',
         },
     },
     components: {
         schemas: {
-            requestPerSecondSchema,
+            requestsPerSecondSchema,
         },
     },
 } as const;
 
-export type RequestPerSecondSegmentedSchema = FromSchema<
-    typeof requestPerSecondSegmentedSchema
+export type RequestsPerSecondSegmentedSchema = FromSchema<
+    typeof requestsPerSecondSegmentedSchema
 >;

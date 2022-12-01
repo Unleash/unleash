@@ -5,7 +5,7 @@ export const useStyles = makeStyles()(theme => ({
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        height: '100%',
+        minHeight: '100vh',
         backgroundColor: theme.palette.background.paper,
     },
     img: {

@@ -130,14 +130,14 @@ const useOnSuggestRemove = ({
     environmentId,
     strategyId,
 }: IRemoveProps) => {
-    const { addChangeRequest } = useChangeRequestApi();
+    const { addChange } = useChangeRequestApi();
     const { refetch: refetchChangeRequests } =
         usePendingChangeRequests(projectId);
     const { setToastData, setToastApiError } = useToast();
     const onSuggestRemove = async (event: React.FormEvent) => {
         try {
             event.preventDefault();
-            await addChangeRequest(projectId, environmentId, {
+            await addChange(projectId, environmentId, {
                 action: 'deleteStrategy',
                 feature: featureId,
                 payload: {

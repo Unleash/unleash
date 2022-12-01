@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { SWRConfiguration } from 'swr';
 import { dequal } from 'dequal';
 import { StaleDataNotification } from 'component/common/StaleDataNotification/StaleDataNotification';
-import { IFeatureToggle } from 'interfaces/featureToggle';
 
 interface IFormatUnleashGetterOutput<Type> {
     data: Type;

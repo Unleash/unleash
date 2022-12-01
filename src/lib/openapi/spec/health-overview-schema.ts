@@ -45,6 +45,9 @@ export const healthOverviewSchema = {
             format: 'date-time',
             nullable: true,
         },
+        favorite: {
+            type: 'boolean',
+        },
     },
     components: {
         schemas: {

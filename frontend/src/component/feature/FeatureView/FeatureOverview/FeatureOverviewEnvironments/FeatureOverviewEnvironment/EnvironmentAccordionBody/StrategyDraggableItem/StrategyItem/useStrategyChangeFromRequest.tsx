@@ -21,6 +21,7 @@ export const useStrategyChangeFromRequest = (
         ) {
             return change.payload.id === strategyId;
         }
+        return false;
     });
 
     return change;

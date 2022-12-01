@@ -1,7 +1,7 @@
 import { VFC } from 'react';
 import { styled, Typography } from '@mui/material';
 import { formatStrategyName } from 'utils/strategyNames';
-import { IFeatureStrategy, IFeatureStrategyPayload } from 'interfaces/strategy';
+import { IFeatureStrategyPayload } from 'interfaces/strategy';
 
 interface ICopyStrategiesMessageProps {
     payload?: IFeatureStrategyPayload[];

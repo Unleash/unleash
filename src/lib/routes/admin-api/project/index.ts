@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import Controller from '../../controller';
 import { IUnleashConfig } from '../../../types/option';
 import { IUnleashServices } from '../../../types/services';
@@ -15,6 +15,7 @@ import {
 import { OpenApiService } from '../../../services/openapi-service';
 import { serializeDates } from '../../../types/serialize-dates';
 import { createResponseSchema } from '../../../openapi/util/create-response-schema';
+import { IAuthRequest } from '../../unleash-types';
 
 export default class ProjectApi extends Controller {
     private projectService: ProjectService;
@@ -49,12 +50,16 @@ export default class ProjectApi extends Controller {
     }
 
     async getProjects(
-        req: Request,
+        req: IAuthRequest,
         res: Response<ProjectsSchema>,
     ): Promise<void> {
-        const projects = await this.projectService.getProjects({
-            id: 'default',
-        });
+        const { user } = req;
+        const projects = await this.projectService.getProjects(
+            {
+                id: 'default',
+            },
+            user.id,
+        );
 
         this.openApiService.respondWithValidation(
             200,

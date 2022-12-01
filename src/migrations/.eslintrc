@@ -5,15 +5,10 @@
     "plugins": [],
     "rules": {},
     "settings": {},
-    "parserOptions": {
-        "project": "../../tsconfig.json"
-    },
+    "parserOptions": {},
     "overrides": [
         {
-            "files": "*.js",
-            "rules": {
-                "@typescript-eslint/indent": "off"
-            }
+            "files": "*.js"
         }
     ]
 }

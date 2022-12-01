@@ -7,7 +7,6 @@ import { Box, Button, TextField, Typography } from '@mui/material';
 import Input from 'component/common/Input/Input';
 import { PermissionAccordion } from './PermissionAccordion/PermissionAccordion';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import EnvironmentIcon from 'component/common/EnvironmentIcon/EnvironmentIcon';
 import {
     IPermission,
     IProjectEnvironmentPermissions,

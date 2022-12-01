@@ -31,8 +31,12 @@ export const ChangeRequestProcessHelp: VFC<
                     </Typography>
                 }
             />
-            <IconButton title="Change request process" ref={ref}>
-                <HelpOutline onClick={() => setIsOpen(true)} />
+            <IconButton
+                title="Change request process"
+                ref={ref}
+                onClick={() => setIsOpen(true)}
+            >
+                <HelpOutline />
             </IconButton>
             <Popover
                 open={isOpen}
@@ -64,20 +68,20 @@ export const ChangeRequestProcessHelp: VFC<
                             <li>
                                 These changes can be seen by everyone but only
                                 who has <strong>“Review change request”</strong>{' '}
-                                permission can Approve or Reject them
+                                permission can Approve them
                             </li>
                             <ul>
                                 <li>
-                                    If changes are Approved then someone who has
+                                    If changes are Approved then someone who has{' '}
                                     <strong>“Apply change request”</strong>{' '}
                                     permission needs to apply these changes to
                                     be live on the feature toggles and request
                                     is Closed
                                 </li>
                                 <li>
-                                    If changes are Rejected then these goes
-                                    automatically to Cancelled and request is
-                                    Closed.
+                                    If changes are Cancelled by the author or
+                                    admin then change request goes automatically
+                                    to Cancelled and request is Closed.
                                 </li>
                             </ul>
                         </ol>

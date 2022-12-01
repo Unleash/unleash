@@ -29,6 +29,7 @@ import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { KeyboardArrowDownOutlined } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
 import AccessContext from 'contexts/AccessContext';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     padding: theme.spacing(1),
@@ -40,6 +41,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
 }));
 
 export const ChangeRequestConfiguration: VFC = () => {
+    const { trackEvent } = usePlausibleTracker();
     const [dialogState, setDialogState] = useState<{
         isOpen: boolean;
         enableEnvironment: string;
@@ -159,7 +161,12 @@ export const ChangeRequestConfiguration: VFC = () => {
                                                 approvals
                                             );
                                         }}
-                                        disabled={!hasAccess(UPDATE_PROJECT)}
+                                        disabled={
+                                            !hasAccess(
+                                                UPDATE_PROJECT,
+                                                projectId
+                                            )
+                                        }
                                         IconComponent={
                                             KeyboardArrowDownOutlined
                                         }
@@ -184,7 +191,6 @@ export const ChangeRequestConfiguration: VFC = () => {
                     <StyledBox data-loading>
                         <PermissionSwitch
                             checked={value}
-                            environmentId={original.environment}
                             projectId={projectId}
                             permission={UPDATE_PROJECT}
                             inputProps={{ 'aria-label': original.environment }}
@@ -256,7 +262,17 @@ export const ChangeRequestConfiguration: VFC = () => {
             </Table>
 
             <Dialogue
-                onClick={() => onConfirm()}
+                onClick={() => {
+                    trackEvent('change_request', {
+                        props: {
+                            eventType: `change request ${
+                                !dialogState.isEnabled ? 'enabled' : 'disabled'
+                            }`,
+                        },
+                    });
+
+                    onConfirm();
+                }}
                 open={dialogState.isOpen}
                 onClose={() =>
                     setDialogState(state => ({ ...state, isOpen: false }))

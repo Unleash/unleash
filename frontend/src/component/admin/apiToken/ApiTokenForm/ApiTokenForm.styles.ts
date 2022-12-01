@@ -17,25 +17,11 @@ export const useStyles = makeStyles()(theme => ({
             minWidth: '379px',
         },
     },
-    radioGroup: {
-        marginBottom: theme.spacing(2),
-    },
-    radioItem: {
-        marginBottom: theme.spacing(1),
-    },
-    radio: {
-        marginLeft: theme.spacing(1.5),
-    },
     label: {
         minWidth: '300px',
         [theme.breakpoints.down(600)]: {
             minWidth: 'auto',
         },
-    },
-    buttonContainer: {
-        marginTop: 'auto',
-        display: 'flex',
-        justifyContent: 'flex-end',
     },
     cancelButton: {
         marginLeft: '1.5rem',

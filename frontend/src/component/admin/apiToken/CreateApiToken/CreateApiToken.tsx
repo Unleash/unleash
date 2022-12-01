@@ -1,5 +1,6 @@
-import FormTemplate from 'component/common/FormTemplate/FormTemplate';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import ApiTokenForm from '../ApiTokenForm/ApiTokenForm';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import useApiTokensApi from 'hooks/api/actions/useApiTokensApi/useApiTokensApi';
@@ -8,7 +9,6 @@ import useToast from 'hooks/useToast';
 import { useApiTokenForm } from 'component/admin/apiToken/ApiTokenForm/useApiTokenForm';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { ConfirmToken } from '../ConfirmToken/ConfirmToken';
-import { useState } from 'react';
 import { scrollToTop } from 'component/common/util';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { usePageTitle } from 'hooks/usePageTitle';
@@ -109,6 +109,7 @@ export const CreateApiToken = () => {
                 open={showConfirm}
                 closeConfirm={closeConfirm}
                 token={token}
+                type={type}
             />
         </FormTemplate>
     );

@@ -25,6 +25,7 @@ import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi
 import { FavoriteIconCell } from './FavoriteIconCell/FavoriteIconCell';
 import { FavoriteIconHeader } from './FavoriteIconHeader/FavoriteIconHeader';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { usePlausibleTracker } from '../../../hooks/usePlausibleTracker';
 
 export const featuresPlaceholder: FeatureSchema[] = Array(15).fill({
     name: 'Name of the feature',
@@ -172,7 +173,7 @@ export const FeatureToggleListTable: VFC = () => {
                 accessor: 'description',
             },
         ],
-        [isFavoritesPinned]
+        [isFavoritesPinned, uiConfig?.flags?.favorites]
     );
 
     const {

@@ -22,7 +22,7 @@ const data = [
         id: 5,
         favorite: false,
     },
-].map(d => ({ values: d })) as unknown as Row<object>[];
+].map(d => ({ values: d, original: d })) as unknown as Row<object>[];
 
 test('puts favorite items first', () => {
     const output = data.sort((a, b) =>

@@ -1,18 +1,16 @@
 import { Fragment } from 'react';
-import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
 import { SegmentItem } from '../../../../common/SegmentItem/SegmentItem';
+import { ISegment } from 'interfaces/segment';
 
 interface IFeatureOverviewSegmentProps {
-    strategyId: string;
+    segments?: ISegment[];
 }
 
 export const FeatureOverviewSegment = ({
-    strategyId,
+    segments,
 }: IFeatureOverviewSegmentProps) => {
-    const { segments } = useSegments(strategyId);
-
     if (!segments || segments.length === 0) {
         return null;
     }

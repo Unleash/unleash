@@ -11,25 +11,41 @@ import {
 } from '@mui/icons-material';
 
 interface IFavoriteIconButtonProps {
-    onClick: (e? : any) => void;
+    onClick: (event?: any) => void;
     isFavorite: boolean;
+    size?: 'medium' | 'large';
 }
 
 export const FavoriteIconButton: VFC<IFavoriteIconButtonProps> = ({
     onClick,
     isFavorite,
+    size = 'large',
 }) => {
     return (
-        <IconButton
-            size="large"
-            data-loading
-            sx={{ mr: 1 }}
-            onClick={onClick}
-        >
+        <IconButton size={size} data-loading sx={{ mr: 1 }} onClick={onClick}>
             <ConditionallyRender
                 condition={isFavorite}
-                show={<StarIcon color="primary" />}
-                elseShow={<StarBorderIcon />}
+                show={
+                    <StarIcon
+                        color="primary"
+                        sx={{
+                            fontSize: theme =>
+                                size === 'medium'
+                                    ? theme.spacing(2)
+                                    : theme.spacing(3),
+                        }}
+                    />
+                }
+                elseShow={
+                    <StarBorderIcon
+                        sx={{
+                            fontSize: theme =>
+                                size === 'medium'
+                                    ? theme.spacing(2)
+                                    : theme.spacing(3),
+                        }}
+                    />
+                }
             />
         </IconButton>
     );

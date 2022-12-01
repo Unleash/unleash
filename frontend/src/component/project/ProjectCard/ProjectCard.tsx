@@ -14,10 +14,11 @@ import {
 import AccessContext from 'contexts/AccessContext';
 import { DEFAULT_PROJECT_ID } from 'hooks/api/getters/useDefaultProject/useDefaultProjectId';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import useProjects from 'hooks/api/getters/useProjects/useProjects';
+import { useFavoriteProjectsApi } from 'hooks/api/actions/useFavoriteProjectsApi/useFavoriteProjectsApi';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { FavoriteIconButton } from 'component/common/FavoriteIconButton/FavoriteIconButton';
 import { DeleteProjectDialogue } from '../Project/DeleteProject/DeleteProjectDialogue';
-import { ConditionallyRender } from '../../common/ConditionallyRender/ConditionallyRender';
-import { FavoriteIconButton } from '../../common/FavoriteIconButton/FavoriteIconButton';
-import { useFavoriteProjectsApi } from '../../../hooks/api/actions/useFavoriteProjectsApi/useFavoriteProjectsApi';
 
 interface IProjectCardProps {
     name: string;
@@ -45,6 +46,7 @@ export const ProjectCard = ({
     const [showDelDialog, setShowDelDialog] = useState(false);
     const navigate = useNavigate();
     const { favorite, unfavorite } = useFavoriteProjectsApi();
+    const { refetch } = useProjects();
 
     const handleClick = (event: React.SyntheticEvent) => {
         event.preventDefault();
@@ -54,14 +56,14 @@ export const ProjectCard = ({
     const canDeleteProject =
         hasAccess(DELETE_PROJECT, id) && id !== DEFAULT_PROJECT_ID;
 
-    const onFavorite = async (e : Event) => {
+    const onFavorite = async (e: Event) => {
         e.preventDefault();
         if (isFavorite) {
             await unfavorite(id);
         } else {
             await favorite(id);
         }
-        // refetch();
+        refetch();
     };
 
     return (
@@ -70,6 +72,7 @@ export const ProjectCard = ({
                 <FavoriteIconButton
                     onClick={onFavorite}
                     isFavorite={isFavorite}
+                    size="medium"
                 />
                 <h2 className={classes.title}>{name}</h2>
 

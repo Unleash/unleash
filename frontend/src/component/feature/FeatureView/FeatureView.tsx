@@ -41,6 +41,7 @@ import { DraftBanner } from 'component/changeRequest/DraftBanner/DraftBanner';
 import { MainLayout } from 'component/layout/MainLayout/MainLayout';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';
+import { FavoriteIconButton } from '../../common/FavoriteIconButton/FavoriteIconButton';
 
 export const FeatureView = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -119,18 +120,10 @@ export const FeatureView = () => {
                         <div className={styles.header}>
                             <div className={styles.innerContainer}>
                                 <div className={styles.toggleInfoContainer}>
-                                    <IconButton
-                                        size="large"
-                                        data-loading
-                                        sx={{ mr: 1 }}
+                                    <FavoriteIconButton
                                         onClick={onFavorite}
-                                    >
-                                        <ConditionallyRender
-                                            condition={feature.favorite}
-                                            show={<StarIcon color="primary" />}
-                                            elseShow={<StarBorderIcon />}
-                                        />
-                                    </IconButton>
+                                        isFavorite={feature?.favorite}
+                                    />
                                     <h1
                                         className={styles.featureViewHeader}
                                         data-loading

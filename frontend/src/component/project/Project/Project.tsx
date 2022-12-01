@@ -7,7 +7,7 @@ import { styled, Tab, Tabs } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
 import useToast from 'hooks/useToast';
 import useQueryParams from 'hooks/useQueryParams';
-import { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { ProjectAccess } from '../ProjectAccess/ProjectAccess';
 import ProjectEnvironment from '../ProjectEnvironment/ProjectEnvironment';
 import { ProjectFeaturesArchive } from './ProjectFeaturesArchive/ProjectFeaturesArchive';
@@ -29,6 +29,8 @@ import { MainLayout } from 'component/layout/MainLayout/MainLayout';
 import { ProjectChangeRequests } from '../../changeRequest/ProjectChangeRequests/ProjectChangeRequests';
 import { ProjectSettings } from './ProjectSettings/ProjectSettings';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
+import { FavoriteIconButton } from '../../common/FavoriteIconButton/FavoriteIconButton';
+import { useFavoriteProjectsApi } from '../../../hooks/api/actions/useFavoriteProjectsApi/useFavoriteProjectsApi';
 
 const StyledDiv = styled('div')(() => ({
     display: 'flex',
@@ -52,7 +54,7 @@ const StyledText = styled(StyledTitle)(({ theme }) => ({
 const Project = () => {
     const projectId = useRequiredPathParam('projectId');
     const params = useQueryParams();
-    const { project, loading } = useProject(projectId);
+    const { project, loading, refetch } = useProject(projectId);
     const ref = useLoading(loading);
     const { setToastData } = useToast();
     const { classes: styles } = useStyles();
@@ -63,6 +65,7 @@ const Project = () => {
     const projectName = project?.name || projectId;
     const { isChangeRequestConfiguredInAnyEnv, isChangeRequestFlagEnabled } =
         useChangeRequestsEnabled(projectId);
+    const { favorite, unfavorite } = useFavoriteProjectsApi();
 
     const [showDelDialog, setShowDelDialog] = useState(false);
 
@@ -144,6 +147,15 @@ const Project = () => {
         /* eslint-disable-next-line */
     }, []);
 
+    const onFavorite = async () => {
+        if (project?.favorite) {
+            await unfavorite(projectId);
+        } else {
+            await favorite(projectId);
+        }
+        refetch();
+    };
+
     return (
         <MainLayout
             ref={ref}
@@ -155,7 +167,12 @@ const Project = () => {
         >
             <div className={styles.header}>
                 <div className={styles.innerContainer}>
+                    <FavoriteIconButton
+                        onClick={onFavorite}
+                        isFavorite={project?.favorite}
+                    />
                     <h2 className={styles.title}>
+
                         <div>
                             <StyledName data-loading>{projectName}</StyledName>
                             <ConditionallyRender

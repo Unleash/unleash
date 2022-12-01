@@ -9,6 +9,7 @@ export interface IFeatureToggleListItem {
     createdAt: string;
     environments: IEnvironments[];
     tags?: ITag[];
+    favorite?: boolean;
 }
 
 export interface IEnvironments {

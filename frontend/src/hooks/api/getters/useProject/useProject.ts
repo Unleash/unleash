@@ -21,6 +21,7 @@ const useProject = (id: string, options: SWRConfiguration = {}) => {
         mutate();
     }, [mutate]);
 
+    console.log(data?.features);
     return {
         project: data || fallbackProject,
         loading: !error && !data,

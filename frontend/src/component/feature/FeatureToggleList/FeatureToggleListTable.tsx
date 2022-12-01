@@ -22,8 +22,8 @@ import { Search } from 'component/common/Search/Search';
 import { FeatureTagCell } from 'component/common/Table/cells/FeatureTagCell/FeatureTagCell';
 import { usePinnedFavorites } from 'hooks/usePinnedFavorites';
 import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';
-import { FavoriteIconCell } from './FavoriteIconCell/FavoriteIconCell';
-import { FavoriteIconHeader } from './FavoriteIconHeader/FavoriteIconHeader';
+import { FavoriteIconCell } from 'component/common/Table/cells/FavoriteIconCell/FavoriteIconCell';
+import { FavoriteIconHeader } from 'component/common/Table/FavoriteIconHeader/FavoriteIconHeader';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 export const featuresPlaceholder: FeatureSchema[] = Array(15).fill({
@@ -172,7 +172,7 @@ export const FeatureToggleListTable: VFC = () => {
                 accessor: 'description',
             },
         ],
-        [isFavoritesPinned]
+        [isFavoritesPinned, uiConfig?.flags?.favorites]
     );
 
     const {

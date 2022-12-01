@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useTheme } from '@mui/system';
+import { useMediaQuery, useTheme } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useFlexLayout, useSortBy, useTable, SortingRule } from 'react-table';
@@ -15,7 +15,6 @@ import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { FeatureSeenCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureSeenCell';
 import { FeatureTypeCell } from 'component/common/Table/cells/FeatureTypeCell/FeatureTypeCell';
-import { sortTypes } from 'utils/sortTypes';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { IProject } from 'interfaces/project';
 import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
@@ -25,23 +24,26 @@ import { createLocalStorage } from 'utils/createLocalStorage';
 import useToast from 'hooks/useToast';
 import { ENVIRONMENT_STRATEGY_ERROR } from 'constants/apiErrors';
 import EnvironmentStrategyDialog from 'component/common/EnvironmentStrategiesDialog/EnvironmentStrategyDialog';
+import { FeatureStaleDialog } from 'component/common/FeatureStaleDialog/FeatureStaleDialog';
+import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
+import { useSearch } from 'hooks/useSearch';
+import { Search } from 'component/common/Search/Search';
+import { useChangeRequestToggle } from 'hooks/useChangeRequestToggle';
+import { ChangeRequestDialogue } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestConfirmDialog';
+import { UpdateEnabledMessage } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestMessages/UpdateEnabledMessage';
+import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
+import { IFeatureToggleListItem } from 'interfaces/featureToggle';
+import { FeatureTagCell } from 'component/common/Table/cells/FeatureTagCell/FeatureTagCell';
+import { FavoriteIconHeader } from 'component/common/Table/FavoriteIconHeader/FavoriteIconHeader';
+import { FavoriteIconCell } from 'component/common/Table/cells/FavoriteIconCell/FavoriteIconCell';
 import { useEnvironmentsRef } from './hooks/useEnvironmentsRef';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import { FeatureToggleSwitch } from './FeatureToggleSwitch/FeatureToggleSwitch';
 import { ActionsCell } from './ActionsCell/ActionsCell';
 import { ColumnsMenu } from './ColumnsMenu/ColumnsMenu';
 import { useStyles } from './ProjectFeatureToggles.styles';
-import { FeatureStaleDialog } from 'component/common/FeatureStaleDialog/FeatureStaleDialog';
-import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
-import { useSearch } from 'hooks/useSearch';
-import { useMediaQuery } from '@mui/material';
-import { Search } from 'component/common/Search/Search';
-import { useChangeRequestToggle } from 'hooks/useChangeRequestToggle';
-import { ChangeRequestDialogue } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestConfirmDialog';
-import { UpdateEnabledMessage } from '../../../changeRequest/ChangeRequestConfirmDialog/ChangeRequestMessages/UpdateEnabledMessage';
-import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
-import { IFeatureToggleListItem } from 'interfaces/featureToggle';
-import { FeatureTagCell } from 'component/common/Table/cells/FeatureTagCell/FeatureTagCell';
+import { usePinnedFavorites } from 'hooks/usePinnedFavorites';
+import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';
 
 interface IProjectFeatureTogglesProps {
     features: IProject['features'];
@@ -51,7 +53,7 @@ interface IProjectFeatureTogglesProps {
 
 type ListItemType = Pick<
     IProject['features'][number],
-    'name' | 'lastSeenAt' | 'createdAt' | 'type' | 'stale'
+    'name' | 'lastSeenAt' | 'createdAt' | 'type' | 'stale' | 'favorite'
 > & {
     environments: {
         [key in string]: {
@@ -65,6 +67,7 @@ const staticColumns = ['Actions', 'name'];
 
 const defaultSort: SortingRule<string> & {
     columns?: string[];
+    favorites?: boolean;
 } = { id: 'createdAt' };
 
 export const ProjectFeatureToggles = ({
@@ -103,9 +106,15 @@ export const ProjectFeatureToggles = ({
     );
     const { refetch } = useProject(projectId);
     const { setToastData, setToastApiError } = useToast();
-
+    const { isFavoritesPinned, sortTypes, onChangeIsFavoritePinned } =
+        usePinnedFavorites(
+            searchParams.has('favorites')
+                ? searchParams.get('favorites') === 'true'
+                : storedParams.favorites
+        );
     const { toggleFeatureEnvironmentOn, toggleFeatureEnvironmentOff } =
         useFeatureApi();
+    const { favorite, unfavorite } = useFavoriteFeaturesApi();
     const {
         onChangeRequestToggle,
         onChangeRequestToggleClose,
@@ -169,6 +178,38 @@ export const ProjectFeatureToggles = ({
 
     const columns = useMemo(
         () => [
+            ...(uiConfig?.flags?.favorites
+                ? [
+                      {
+                          id: 'Favorites',
+                          Header: (
+                              <FavoriteIconHeader
+                                  isActive={isFavoritesPinned}
+                                  onClick={onChangeIsFavoritePinned}
+                              />
+                          ),
+                          accessor: 'favorite',
+                          Cell: ({ row: { original: feature } }: any) => (
+                              <FavoriteIconCell
+                                  value={feature?.favorite}
+                                  onClick={() =>
+                                      feature?.favorite
+                                          ? unfavorite(
+                                                feature.project,
+                                                feature.name
+                                            )
+                                          : favorite(
+                                                feature.project,
+                                                feature.name
+                                            )
+                                  }
+                              />
+                          ),
+                          maxWidth: 50,
+                          disableSortBy: true,
+                      },
+                  ]
+                : []),
             {
                 Header: 'Seen',
                 accessor: 'lastSeenAt',
@@ -260,7 +301,14 @@ export const ProjectFeatureToggles = ({
                 disableSortBy: true,
             },
         ],
-        [projectId, environments, loading, onToggle]
+        [
+            projectId,
+            environments,
+            loading,
+            onToggle,
+            isFavoritesPinned,
+            uiConfig?.flags?.favorites,
+        ]
     );
 
     const [searchValue, setSearchValue] = useState(
@@ -277,6 +325,7 @@ export const ProjectFeatureToggles = ({
                     type,
                     stale,
                     tags,
+                    favorite,
                     environments: featureEnvironments,
                 }) => ({
                     name,
@@ -285,6 +334,7 @@ export const ProjectFeatureToggles = ({
                     type,
                     stale,
                     tags,
+                    favorite,
                     environments: Object.fromEntries(
                         environments.map(env => [
                             env,

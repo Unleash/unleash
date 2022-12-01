@@ -1,6 +1,13 @@
-import { Tab, Tabs, useMediaQuery } from '@mui/material';
+import { IconButton, Tab, Tabs, useMediaQuery } from '@mui/material';
 import React, { useState } from 'react';
-import { Archive, FileCopy, Label, WatchLater } from '@mui/icons-material';
+import {
+    Archive,
+    FileCopy,
+    Label,
+    WatchLater,
+    Star as StarIcon,
+    StarBorder as StarBorderIcon,
+} from '@mui/icons-material';
 import {
     Link,
     Route,
@@ -101,6 +108,17 @@ export const FeatureView = () => {
                         <div className={styles.header}>
                             <div className={styles.innerContainer}>
                                 <div className={styles.toggleInfoContainer}>
+                                    <IconButton
+                                        size="large"
+                                        data-loading
+                                        sx={{ mr: 1 }}
+                                    >
+                                        <ConditionallyRender
+                                            condition={true}
+                                            show={<StarIcon color="primary" />}
+                                            elseShow={<StarBorderIcon />}
+                                        />
+                                    </IconButton>
                                     <h1
                                         className={styles.featureViewHeader}
                                         data-loading

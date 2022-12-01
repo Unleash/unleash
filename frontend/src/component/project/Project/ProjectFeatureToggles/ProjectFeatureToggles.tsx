@@ -176,6 +176,18 @@ export const ProjectFeatureToggles = ({
         ]
     );
 
+    const onFavorite = useCallback(
+        async (feature: IFeatureToggleListItem) => {
+            if (feature?.favorite) {
+                await unfavorite(projectId, feature.name);
+            } else {
+                await favorite(projectId, feature.name);
+            }
+            refetch();
+        },
+        [projectId, refetch]
+    );
+
     const columns = useMemo(
         () => [
             ...(uiConfig?.flags?.favorites
@@ -192,20 +204,7 @@ export const ProjectFeatureToggles = ({
                           Cell: ({ row: { original: feature } }: any) => (
                               <FavoriteIconCell
                                   value={feature?.favorite}
-                                  onClick={async () => {
-                                      if (feature?.favorite) {
-                                          await unfavorite(
-                                              feature.project,
-                                              feature.name
-                                          );
-                                      } else {
-                                          await favorite(
-                                              feature.project,
-                                              feature.name
-                                          );
-                                      }
-                                      refetch();
-                                  }}
+                                  onClick={() => onFavorite(feature)}
                               />
                           ),
                           maxWidth: 50,

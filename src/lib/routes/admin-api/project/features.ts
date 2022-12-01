@@ -403,10 +403,8 @@ export default class ProjectFeaturesController extends Controller {
         res: Response<FeaturesSchema>,
     ): Promise<void> {
         const { projectId } = req.params;
-        const { user } = req;
         const features = await this.featureService.getFeatureOverview({
             projectId,
-            userId: user.id,
         });
         this.openApiService.respondWithValidation(
             200,

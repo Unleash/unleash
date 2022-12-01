@@ -456,6 +456,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
 
     const clientFeatureCaching = loadClientCachingOptions(options);
 
+    const prometheusApi = options.prometheusApi || process.env.PROMETHEUS_API;
     return {
         db,
         session,
@@ -486,6 +487,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         strategySegmentsLimit,
         clientFeatureCaching,
         accessControlMaxAge,
+        prometheusApi,
     };
 }
 

@@ -60,7 +60,7 @@ const Project = () => {
     const { classes: styles } = useStyles();
     const navigate = useNavigate();
     const { pathname } = useLocation();
-    const { isOss } = useUiConfig();
+    const { isOss, uiConfig } = useUiConfig();
     const basePath = `/projects/${projectId}`;
     const projectName = project?.name || projectId;
     const { isChangeRequestConfiguredInAnyEnv, isChangeRequestFlagEnabled } =
@@ -167,12 +167,16 @@ const Project = () => {
         >
             <div className={styles.header}>
                 <div className={styles.innerContainer}>
-                    <FavoriteIconButton
-                        onClick={onFavorite}
-                        isFavorite={project?.favorite}
+                    <ConditionallyRender
+                        condition={Boolean(uiConfig?.flags?.favorites)}
+                        show={() => (
+                            <FavoriteIconButton
+                                onClick={onFavorite}
+                                isFavorite={project?.favorite}
+                            />
+                        )}
                     />
                     <h2 className={styles.title}>
-
                         <div>
                             <StyledName data-loading>{projectName}</StyledName>
                             <ConditionallyRender

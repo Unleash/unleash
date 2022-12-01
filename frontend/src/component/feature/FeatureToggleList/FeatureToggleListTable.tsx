@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, VFC } from 'react';
+import { useCallback, useEffect, useMemo, useState, VFC } from 'react';
 import { Link, useMediaQuery, useTheme } from '@mui/material';
 import { Link as RouterLink, useSearchParams } from 'react-router-dom';
 import { SortingRule, useFlexLayout, useSortBy, useTable } from 'react-table';
@@ -50,7 +50,7 @@ export const FeatureToggleListTable: VFC = () => {
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const isMediumScreen = useMediaQuery(theme.breakpoints.down('lg'));
-    const { features = [], loading } = useFeatures();
+    const { features = [], loading, refetchFeatures } = useFeatures();
     const [searchParams, setSearchParams] = useSearchParams();
     const [initialState] = useState(() => ({
         sortBy: [
@@ -73,6 +73,17 @@ export const FeatureToggleListTable: VFC = () => {
     const [searchValue, setSearchValue] = useState(initialState.globalFilter);
     const { favorite, unfavorite } = useFavoriteFeaturesApi();
     const { uiConfig } = useUiConfig();
+    const onFavorite = useCallback(
+        async (feature: any) => {
+            if (feature?.favorite) {
+                await unfavorite(feature.project, feature.name);
+            } else {
+                await favorite(feature.project, feature.name);
+            }
+            refetchFeatures();
+        },
+        [favorite, refetchFeatures, unfavorite]
+    );
 
     const columns = useMemo(
         () => [
@@ -89,17 +100,7 @@ export const FeatureToggleListTable: VFC = () => {
                           Cell: ({ row: { original: feature } }: any) => (
                               <FavoriteIconCell
                                   value={feature?.favorite}
-                                  onClick={() =>
-                                      feature?.favorite
-                                          ? unfavorite(
-                                                feature.project,
-                                                feature.name
-                                            )
-                                          : favorite(
-                                                feature.project,
-                                                feature.name
-                                            )
-                                  }
+                                  onClick={() => onFavorite(feature)}
                               />
                           ),
                           maxWidth: 50,

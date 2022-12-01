@@ -1,17 +1,14 @@
 import { useCallback } from 'react';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { useFeatures } from 'hooks/api/getters/useFeatures/useFeatures';
-import useAPI from '../useApi/useApi';
-import useProject from 'hooks/api/getters/useProject/useProject';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import useAPI from '../useApi/useApi';
 
 export const useFavoriteFeaturesApi = () => {
     const { makeRequest, createRequest, errors, loading } = useAPI({
         propagateErrors: true,
     });
     const { setToastData, setToastApiError } = useToast();
-    const { refetchFeatures } = useFeatures();
     const { trackEvent } = usePlausibleTracker();
 
     const favorite = useCallback(
@@ -35,7 +32,6 @@ export const useFavoriteFeaturesApi = () => {
                         eventType: `feature favorited`,
                     },
                 });
-                refetchFeatures();
             } catch (error) {
                 setToastApiError(formatUnknownError(error));
             }
@@ -64,7 +60,6 @@ export const useFavoriteFeaturesApi = () => {
                         eventType: `feature unfavorited`,
                     },
                 });
-                refetchFeatures();
             } catch (error) {
                 setToastApiError(formatUnknownError(error));
             }

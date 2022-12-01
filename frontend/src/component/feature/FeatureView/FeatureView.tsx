@@ -36,12 +36,13 @@ import AddTagDialog from './FeatureOverview/AddTagDialog/AddTagDialog';
 import { FeatureStatusChip } from 'component/common/FeatureStatusChip/FeatureStatusChip';
 import { FeatureNotFound } from 'component/feature/FeatureView/FeatureNotFound/FeatureNotFound';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { FeatureArchiveDialog } from '../../common/FeatureArchiveDialog/FeatureArchiveDialog';
+import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { DraftBanner } from 'component/changeRequest/DraftBanner/DraftBanner';
 import { MainLayout } from 'component/layout/MainLayout/MainLayout';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';
-import { FavoriteIconButton } from '../../common/FavoriteIconButton/FavoriteIconButton';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { FavoriteIconButton } from 'component/common/FavoriteIconButton/FavoriteIconButton';
 
 export const FeatureView = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -51,6 +52,7 @@ export const FeatureView = () => {
     const { refetchFeature } = useFeature(projectId, featureId);
     const { isChangeRequestConfiguredInAnyEnv } =
         useChangeRequestsEnabled(projectId);
+    const { uiConfig } = useUiConfig();
 
     const [openTagDialog, setOpenTagDialog] = useState(false);
     const [showDelDialog, setShowDelDialog] = useState(false);
@@ -120,9 +122,16 @@ export const FeatureView = () => {
                         <div className={styles.header}>
                             <div className={styles.innerContainer}>
                                 <div className={styles.toggleInfoContainer}>
-                                    <FavoriteIconButton
-                                        onClick={onFavorite}
-                                        isFavorite={feature?.favorite}
+                                    <ConditionallyRender
+                                        condition={Boolean(
+                                            uiConfig?.flags?.favorites
+                                        )}
+                                        show={() => (
+                                            <FavoriteIconButton
+                                                onClick={onFavorite}
+                                                isFavorite={feature?.favorite}
+                                            />
+                                        )}
                                     />
                                     <h1
                                         className={styles.featureViewHeader}

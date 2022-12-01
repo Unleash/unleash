@@ -41,7 +41,7 @@ export const ProjectCard = ({
 }: IProjectCardProps) => {
     const { classes } = useStyles();
     const { hasAccess } = useContext(AccessContext);
-    const { isOss } = useUiConfig();
+    const { isOss, uiConfig } = useUiConfig();
     const [anchorEl, setAnchorEl] = useState<Element | null>(null);
     const [showDelDialog, setShowDelDialog] = useState(false);
     const navigate = useNavigate();
@@ -69,10 +69,15 @@ export const ProjectCard = ({
     return (
         <Card className={classes.projectCard} onMouseEnter={onHover}>
             <div className={classes.header} data-loading>
-                <FavoriteIconButton
-                    onClick={onFavorite}
-                    isFavorite={isFavorite}
-                    size="medium"
+                <ConditionallyRender
+                    condition={Boolean(uiConfig?.flags?.favorites)}
+                    show={() => (
+                        <FavoriteIconButton
+                            onClick={onFavorite}
+                            isFavorite={isFavorite}
+                            size="medium"
+                        />
+                    )}
                 />
                 <h2 className={classes.title}>{name}</h2>
 

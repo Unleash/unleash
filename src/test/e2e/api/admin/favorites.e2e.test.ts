@@ -111,16 +111,21 @@ test('should be favorited in project endpoint', async () => {
     const featureName = 'test-feature';
     await createFeature(featureName);
     await favoriteFeature(featureName);
+    await favoriteProject();
 
     const { body } = await app.request
-        .get(`/api/admin/projects/default/features`)
+        .get(`/api/admin/projects/default`)
         .set('Content-Type', 'application/json')
         .expect(200);
 
-    expect(body.features).toHaveLength(1);
-    expect(body.features[0]).toMatchObject({
-        name: featureName,
+    expect(body).toMatchObject({
         favorite: true,
+        features: [
+            {
+                name: featureName,
+                favorite: true,
+            },
+        ],
     });
 });
 
@@ -129,12 +134,11 @@ test('feature should not be favorited by default', async () => {
     await createFeature(featureName);
 
     const { body } = await app.request
-        .get(`/api/admin/projects/default/features`)
+        .get(`/api/admin/projects/default/features/${featureName}`)
         .set('Content-Type', 'application/json')
         .expect(200);
 
-    expect(body.features).toHaveLength(1);
-    expect(body.features[0]).toMatchObject({
+    expect(body).toMatchObject({
         name: featureName,
         favorite: false,
     });

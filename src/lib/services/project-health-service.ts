@@ -72,6 +72,7 @@ export default class ProjectHealthService {
         const features = await this.featureToggleService.getFeatureOverview({
             projectId,
             archived,
+            userId,
         });
         const members = await this.projectStore.getMembersCountByProject(
             projectId,

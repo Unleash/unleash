@@ -38,6 +38,10 @@ interface IColumnsMenuProps {
     ) => void;
 }
 
+const columnNameMap: Record<string, string> = {
+    favorite: 'Favorite',
+};
+
 export const ColumnsMenu: VFC<IColumnsMenuProps> = ({
     allColumns,
     staticColumns = [],
@@ -183,7 +187,10 @@ export const ColumnsMenu: VFC<IColumnsMenuProps> = ({
                                                 show={() => (
                                                     <>{column.Header}</>
                                                 )}
-                                                elseShow={() => column.id}
+                                                elseShow={() =>
+                                                    columnNameMap[column.id] ||
+                                                    column.id
+                                                }
                                             />
                                         </Typography>
                                     }

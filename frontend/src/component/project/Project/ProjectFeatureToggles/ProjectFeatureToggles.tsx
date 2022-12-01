@@ -181,7 +181,7 @@ export const ProjectFeatureToggles = ({
             ...(uiConfig?.flags?.favorites
                 ? [
                       {
-                          id: 'Favorites',
+                          id: 'favorite',
                           Header: (
                               <FavoriteIconHeader
                                   isActive={isFavoritesPinned}
@@ -238,18 +238,20 @@ export const ProjectFeatureToggles = ({
                 sortType: 'alphanumeric',
                 searchable: true,
             },
-            {
-                id: 'tags',
-                Header: 'Tags',
-                accessor: (row: IFeatureToggleListItem) =>
-                    row.tags
-                        ?.map(({ type, value }) => `${type}:${value}`)
-                        .join('\n') || '',
-                Cell: FeatureTagCell,
-                width: 80,
-                hideInMenu: true,
-                searchable: true,
-            },
+            // FIXME: no tags on project feature toggles from backend
+            // {
+            //     id: 'tags',
+            //     Header: 'Tags',
+            //     accessor: (row: IFeatureToggleListItem) =>
+            //         row.tags
+            //             ?.map(({ type, value }) => `${type}:${value}`)
+            //             .join('\n') || '',
+            //     Cell: FeatureTagCell,
+            //     width: 80,
+            //     hideInMenu: true,
+            //     searchable: true,
+            //     isVisible: false,
+            // },
             {
                 Header: 'Created',
                 accessor: 'createdAt',
@@ -260,28 +262,25 @@ export const ProjectFeatureToggles = ({
             ...environments.map(name => ({
                 Header: loading ? () => '' : name,
                 maxWidth: 90,
-                accessor: `environments.${name}`,
+                id: `environments.${name}`,
+                accessor: `environments.${name}.enabled`,
                 align: 'center',
                 Cell: ({
                     value,
                     row: { original: feature },
                 }: {
-                    value: { name: string; enabled: boolean };
+                    value: boolean;
                     row: { original: ListItemType };
                 }) => (
                     <FeatureToggleSwitch
-                        value={value?.enabled || false}
+                        value={value}
                         projectId={projectId}
                         featureName={feature?.name}
-                        environmentName={value?.name}
+                        environmentName={name}
                         onToggle={onToggle}
                     />
                 ),
-                sortType: (v1: any, v2: any, id: string) => {
-                    const a = v1?.values?.[id]?.enabled;
-                    const b = v2?.values?.[id]?.enabled;
-                    return a === b ? 0 : a ? -1 : 1;
-                },
+                sortType: 'boolean',
                 filterName: name,
                 filterParsing: (value: any) =>
                     value.enabled ? 'enabled' : 'disabled',
@@ -374,7 +373,6 @@ export const ProjectFeatureToggles = ({
 
     const initialState = useMemo(
         () => {
-            const searchParams = new URLSearchParams();
             const allColumnIds = columns.map(
                 (column: any) => column?.accessor || column?.id
             );
@@ -414,9 +412,7 @@ export const ProjectFeatureToggles = ({
         [environments] // eslint-disable-line react-hooks/exhaustive-deps
     );
 
-    const getRowId = useCallback((row: any) => {
-        return row.name;
-    }, []);
+    const getRowId = useCallback((row: any) => row.name, []);
 
     const {
         allColumns,
@@ -439,15 +435,16 @@ export const ProjectFeatureToggles = ({
         useSortBy
     );
 
-    useEffect(() => {
-        if (!features.some(({ tags }) => tags?.length)) {
-            setHiddenColumns(hiddenColumns => [...hiddenColumns, 'tags']);
-        } else {
-            setHiddenColumns(hiddenColumns =>
-                hiddenColumns.filter(column => column !== 'tags')
-            );
-        }
-    }, [setHiddenColumns, features]);
+    // TODO: update after tags are added, move to other useEffect
+    // useEffect(() => {
+    //     if (!features.some(({ tags }) => tags?.length)) {
+    //         setHiddenColumns(hiddenColumns => [...hiddenColumns, 'tags']);
+    //     } else {
+    //         setHiddenColumns(hiddenColumns =>
+    //             hiddenColumns.filter(column => column !== 'tags')
+    //         );
+    //     }
+    // }, [setHiddenColumns, features]);
 
     useEffect(() => {
         if (loading) {
@@ -460,6 +457,9 @@ export const ProjectFeatureToggles = ({
         }
         if (searchValue) {
             tableState.search = searchValue;
+        }
+        if (isFavoritesPinned) {
+            tableState.favorites = 'true';
         }
         tableState.columns = allColumns
             .map(({ id }) => id)
@@ -477,9 +477,17 @@ export const ProjectFeatureToggles = ({
             id: sortBy[0].id,
             desc: sortBy[0].desc || false,
             columns: tableState.columns.split(','),
+            favorites: isFavoritesPinned || false,
         }));
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [loading, sortBy, hiddenColumns, searchValue, setSearchParams]);
+    }, [
+        loading,
+        sortBy,
+        hiddenColumns,
+        searchValue,
+        setSearchParams,
+        isFavoritesPinned,
+    ]);
 
     return (
         <PageContent

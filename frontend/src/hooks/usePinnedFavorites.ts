@@ -19,9 +19,9 @@ export const sortTypesWithFavorites: Record<
             id: string,
             desc?: boolean
         ) => {
-            if (v1?.values?.favorite && !v2?.values?.favorite)
+            if (v1?.original?.favorite && !v2?.original?.favorite)
                 return desc ? 1 : -1;
-            if (!v1?.values?.favorite && v2?.values?.favorite)
+            if (!v1?.original?.favorite && v2?.original?.favorite)
                 return desc ? -1 : 1;
             return value(v1, v2, id, desc);
         },
@@ -38,10 +38,9 @@ export const usePinnedFavorites = (initialState = false) => {
         setIsFavoritesPinned(!isFavoritesPinned);
     };
 
-    const enhancedSortTypes = useMemo(
-        () => (isFavoritesPinned ? sortTypesWithFavorites : sortTypes),
-        [isFavoritesPinned]
-    );
+    const enhancedSortTypes = useMemo(() => {
+        return isFavoritesPinned ? sortTypesWithFavorites : sortTypes;
+    }, [isFavoritesPinned]);
 
     return {
         isFavoritesPinned,

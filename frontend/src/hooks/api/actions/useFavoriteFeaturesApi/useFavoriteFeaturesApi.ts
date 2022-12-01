@@ -3,6 +3,7 @@ import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useFeatures } from 'hooks/api/getters/useFeatures/useFeatures';
 import useAPI from '../useApi/useApi';
+import useProject from 'hooks/api/getters/useProject/useProject';
 
 export const useFavoriteFeaturesApi = () => {
     const { makeRequest, createRequest, errors, loading } = useAPI({

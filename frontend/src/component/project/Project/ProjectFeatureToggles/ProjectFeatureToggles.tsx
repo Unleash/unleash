@@ -192,17 +192,20 @@ export const ProjectFeatureToggles = ({
                           Cell: ({ row: { original: feature } }: any) => (
                               <FavoriteIconCell
                                   value={feature?.favorite}
-                                  onClick={() =>
-                                      feature?.favorite
-                                          ? unfavorite(
-                                                feature.project,
-                                                feature.name
-                                            )
-                                          : favorite(
-                                                feature.project,
-                                                feature.name
-                                            )
-                                  }
+                                  onClick={async () => {
+                                      if (feature?.favorite) {
+                                          await unfavorite(
+                                              feature.project,
+                                              feature.name
+                                          );
+                                      } else {
+                                          await favorite(
+                                              feature.project,
+                                              feature.name
+                                          );
+                                      }
+                                      refetch();
+                                  }}
                               />
                           ),
                           maxWidth: 50,

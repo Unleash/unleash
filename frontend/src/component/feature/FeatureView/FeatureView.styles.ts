@@ -20,7 +20,7 @@ export const useStyles = makeStyles()(theme => ({
         display: 'flex',
     },
     innerContainer: {
-        padding: '1rem 2rem',
+        padding: theme.spacing(2, 4, 2, 2),
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',

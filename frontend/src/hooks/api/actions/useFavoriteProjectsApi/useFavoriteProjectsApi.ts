@@ -1,10 +1,10 @@
 import { useCallback } from 'react';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import useAPI from '../useApi/useApi';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
-export const useFavoriteFeaturesApi = () => {
+export const useFavoriteProjectsApi = () => {
     const { makeRequest, createRequest, errors, loading } = useAPI({
         propagateErrors: true,
     });
@@ -12,24 +12,24 @@ export const useFavoriteFeaturesApi = () => {
     const { trackEvent } = usePlausibleTracker();
 
     const favorite = useCallback(
-        async (projectId: string, featureName: string) => {
-            const path = `api/admin/projects/${projectId}/features/${featureName}/favorites`;
+        async (projectId: string) => {
+            const path = `api/admin/projects/${projectId}/favorites`;
             const req = createRequest(
                 path,
                 { method: 'POST' },
-                'addFavoriteFeature'
+                'addFavoriteProject'
             );
 
             try {
                 await makeRequest(req.caller, req.id);
 
                 setToastData({
-                    title: 'Toggle added to favorites',
+                    title: 'Project added to favorites',
                     type: 'success',
                 });
                 trackEvent('favorite', {
                     props: {
-                        eventType: `feature favorited`,
+                        eventType: `project favorited`,
                     },
                 });
             } catch (error) {
@@ -40,24 +40,24 @@ export const useFavoriteFeaturesApi = () => {
     );
 
     const unfavorite = useCallback(
-        async (projectId: string, featureName: string) => {
-            const path = `api/admin/projects/${projectId}/features/${featureName}/favorites`;
+        async (projectId: string) => {
+            const path = `api/admin/projects/${projectId}/favorites`;
             const req = createRequest(
                 path,
                 { method: 'DELETE' },
-                'removeFavoriteFeature'
+                'removeFavoriteProject'
             );
 
             try {
                 await makeRequest(req.caller, req.id);
 
                 setToastData({
-                    title: 'Toggle removed from favorites',
+                    title: 'Project removed from favorites',
                     type: 'success',
                 });
                 trackEvent('favorite', {
                     props: {
-                        eventType: `feature unfavorited`,
+                        eventType: `project unfavorited`,
                     },
                 });
             } catch (error) {

@@ -122,7 +122,7 @@ test('Can patch variants for a feature and get a response of new variant', async
 
 test('Can patch variants for a feature patches all environments independently', async () => {
     const featureName = 'feature-to-patch';
-    const addedVariantName = 'not-so-cool-variant-name';
+    const addedVariantName = 'patched-variant-name';
     const variants = (name: string) => [
         {
             name,
@@ -183,6 +183,7 @@ test('Can patch variants for a feature patches all environments independently', 
         .expect((res) => {
             expect(res.body.version).toBe(1);
             expect(res.body.variants).toHaveLength(2);
+            // it picks variants from the first environment (sorted by name)
             expect(res.body.variants[0].name).toBe('dev-variant');
             expect(res.body.variants[1].name).toBe(addedVariantName);
         });
@@ -194,14 +195,14 @@ test('Can patch variants for a feature patches all environments independently', 
         .expect((res) => {
             const environments = res.body.environments;
             expect(environments).toHaveLength(2);
-            console.log(environments);
             const developmentVariants = environments.find(
                 (x) => x.name === 'development',
             ).variants;
             const productionVariants = environments.find(
                 (x) => x.name === 'production',
             ).variants;
-            console.log(environments.map((e) => e.variants));
+            expect(developmentVariants).toHaveLength(2);
+            expect(productionVariants).toHaveLength(2);
             expect(
                 developmentVariants.find((x) => x.name === addedVariantName),
             ).toBeTruthy();
@@ -412,6 +413,11 @@ test('Invalid variant in PATCH also throws 400 exception', async () => {
     await db.stores.featureToggleStore.create('default', {
         name: featureName,
     });
+    await db.stores.featureEnvironmentStore.addEnvironmentToFeature(
+        featureName,
+        'default',
+        true,
+    );
 
     const invalidPatch = `[{
         "op": "add",
@@ -536,6 +542,11 @@ test('PATCHING with no variable variants fails with 400', async () => {
     await db.stores.featureToggleStore.create('default', {
         name: featureName,
     });
+    await db.stores.featureEnvironmentStore.addEnvironmentToFeature(
+        featureName,
+        'default',
+        true,
+    );
 
     const newVariants: IVariant[] = [];
 

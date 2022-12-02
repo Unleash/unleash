@@ -645,6 +645,7 @@ class FeatureToggleService {
 
     /**
      * GET /api/admin/projects/:project/features/:featureName/variants
+     * @deprecated - Variants should be fetched from FeatureEnvironmentStore (since variants are now; since 4.18, connected to environments)
      * @param featureName
      * @return The list of variants
      */
@@ -1247,9 +1248,26 @@ class FeatureToggleService {
         newVariants: Operation[],
         createdBy: string,
     ): Promise<FeatureToggle> {
-        const oldVariants = await this.getVariants(featureName);
-        const { newDocument } = applyPatch(oldVariants, newVariants);
-        return this.saveVariants(featureName, project, newDocument, createdBy);
+        // const oldVariants = await this.getVariants(featureName);
+        // const { newDocument } = applyPatch(oldVariants, newVariants);
+        // NOTE: saveVariants iterates over all feature_environments overriding the variants in all environments
+        // this.saveVariants(featureName, project, newDocument, createdBy);
+        const ft =
+            await this.featureStrategiesStore.getFeatureToggleWithVariantEnvs(
+                featureName,
+            );
+        const promises = ft.environments.map((env) =>
+            this.updateVariantsOnEnv(
+                featureName,
+                project,
+                env.name,
+                newVariants,
+                createdBy,
+            ).then((resultingVariants) => (env.variants = resultingVariants)),
+        );
+        await Promise.all(promises);
+        ft.variants = ft.environments[0].variants;
+        return ft;
     }
 
     async updateVariantsOnEnv(
@@ -1270,6 +1288,7 @@ class FeatureToggleService {
             environment,
             newDocument,
             createdBy,
+            oldVariants,
         );
     }
 
@@ -1309,15 +1328,18 @@ class FeatureToggleService {
         environment: string,
         newVariants: IVariant[],
         createdBy: string,
+        oldVariants?: IVariant[],
     ): Promise<IVariant[]> {
         await variantsArraySchema.validateAsync(newVariants);
         const fixedVariants = this.fixVariantWeights(newVariants);
-        const oldVariants = (
-            await this.featureEnvironmentStore.get({
-                featureName,
-                environment,
-            })
-        ).variants;
+        const theOldVariants: IVariant[] =
+            oldVariants ||
+            (
+                await this.featureEnvironmentStore.get({
+                    featureName,
+                    environment,
+                })
+            ).variants;
 
         await this.eventStore.store(
             new EnvironmentVariantEvent({
@@ -1325,7 +1347,7 @@ class FeatureToggleService {
                 environment,
                 project: projectId,
                 createdBy,
-                oldVariants,
+                oldVariants: theOldVariants,
                 newVariants: fixedVariants,
             }),
         );

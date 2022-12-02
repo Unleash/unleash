@@ -13,6 +13,7 @@ import { AccessProvider } from '../providers/AccessProvider/AccessProvider';
 import { AnnouncerProvider } from '../common/Announcer/AnnouncerProvider/AnnouncerProvider';
 import { testServerRoute, testServerSetup } from '../../utils/testServer';
 import { UIProviderContainer } from '../providers/UIProvider/UIProviderContainer';
+import { FC } from 'react';
 
 const server = testServerSetup();
 
@@ -215,6 +216,22 @@ const otherRequests = (feature: string) => {
     });
 };
 
+const UnleashUiSetup: FC<{ path: string }> = ({ children, path }) => (
+    <UIProviderContainer>
+        <AccessProvider>
+            <MemoryRouter initialEntries={['/projects/default/features/test']}>
+                <ThemeProvider>
+                    <AnnouncerProvider>
+                        <Routes>
+                            <Route path={path} element={children} />
+                        </Routes>
+                    </AnnouncerProvider>
+                </ThemeProvider>
+            </MemoryRouter>
+        </AccessProvider>
+    </UIProviderContainer>
+);
+
 test('create change request', async () => {
     pendingChangeRequest();
     changeRequestsEnabledIn('production');
@@ -224,28 +241,9 @@ test('create change request', async () => {
     otherRequests('test');
 
     render(
-        <UIProviderContainer>
-            <AccessProvider>
-                <MemoryRouter
-                    initialEntries={['/projects/default/features/test']}
-                >
-                    <ThemeProvider>
-                        <AnnouncerProvider>
-                            <Routes>
-                                <Route
-                                    path="/projects/:projectId/features/:featureId/*"
-                                    element={
-                                        <>
-                                            <FeatureView />
-                                        </>
-                                    }
-                                />
-                            </Routes>
-                        </AnnouncerProvider>
-                    </ThemeProvider>
-                </MemoryRouter>
-            </AccessProvider>
-        </UIProviderContainer>
+        <UnleashUiSetup path="/projects/:projectId/features/:featureId/*">
+            <FeatureView />
+        </UnleashUiSetup>
     );
 
     const featureToggleStatusBox = screen.getByTestId('feature-toggle-status');

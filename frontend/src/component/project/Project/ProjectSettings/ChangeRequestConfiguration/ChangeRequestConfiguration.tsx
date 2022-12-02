@@ -53,6 +53,7 @@ export const ChangeRequestConfiguration: VFC = () => {
         isEnabled: false,
         requiredApprovals: 1,
     });
+
     const theme = useTheme();
     const projectId = useRequiredPathParam('projectId');
     const { data, loading, refetchChangeRequestConfig } =
@@ -79,12 +80,7 @@ export const ChangeRequestConfiguration: VFC = () => {
         if (dialogState.enableEnvironment) {
             await updateConfiguration();
         }
-        setDialogState({
-            isOpen: false,
-            enableEnvironment: '',
-            isEnabled: false,
-            requiredApprovals: 1,
-        });
+        setDialogState(state => ({ ...state, isOpen: false }));
     };
 
     async function updateConfiguration(config?: IChangeRequestConfig) {

@@ -1,5 +1,6 @@
-import { defaultExperimentalOptions } from '../types/experimental';
+import { defaultExperimentalOptions, IFlagKey } from '../types/experimental';
 import FlagResolver from './flag-resolver';
+import { IExperimentalOptions } from '../../../dist/lib/types/experimental';
 
 test('should produce empty exposed flags', () => {
     const resolver = new FlagResolver(defaultExperimentalOptions);
@@ -14,11 +15,10 @@ test('should produce UI flags with extra dynamic flags', () => {
         ...defaultExperimentalOptions,
         flags: { extraFlag: false },
     };
-    // @ts-expect-error
-    const resolver = new FlagResolver(config);
-    const result = resolver.getAll();
 
-    // @ts-expect-error
+    const resolver = new FlagResolver(config as IExperimentalOptions);
+    const result = resolver.getAll() as typeof config.flags;
+
     expect(result.extraFlag).toBe(false);
 });
 
@@ -36,12 +36,10 @@ test('should use external resolver for dynamic flags', () => {
         externalResolver,
     };
 
-    // @ts-expect-error
-    const resolver = new FlagResolver(config);
+    const resolver = new FlagResolver(config as IExperimentalOptions);
 
-    const result = resolver.getAll();
+    const result = resolver.getAll() as typeof config.flags;
 
-    // @ts-expect-error
     expect(result.extraFlag).toBe(true);
 });
 
@@ -57,12 +55,10 @@ test('should not use external resolver for enabled experiments', () => {
         externalResolver,
     };
 
-    // @ts-expect-error
-    const resolver = new FlagResolver(config);
+    const resolver = new FlagResolver(config as IExperimentalOptions);
 
-    const result = resolver.getAll();
+    const result = resolver.getAll() as typeof config.flags;
 
-    // @ts-expect-error
     expect(result.should_be_enabled).toBe(true);
 });
 
@@ -78,13 +74,10 @@ test('should load experimental flags', () => {
         externalResolver,
     };
 
-    // @ts-expect-error
-    const resolver = new FlagResolver(config);
+    const resolver = new FlagResolver(config as IExperimentalOptions);
 
-    // @ts-expect-error
-    expect(resolver.isEnabled('someFlag')).toBe(true);
-    // @ts-expect-error
-    expect(resolver.isEnabled('extraFlag')).toBe(false);
+    expect(resolver.isEnabled('someFlag' as IFlagKey)).toBe(true);
+    expect(resolver.isEnabled('extraFlag' as IFlagKey)).toBe(false);
 });
 
 test('should load experimental flags from external provider', () => {
@@ -101,11 +94,8 @@ test('should load experimental flags from external provider', () => {
         externalResolver,
     };
 
-    // @ts-expect-error
-    const resolver = new FlagResolver(config);
+    const resolver = new FlagResolver(config as IExperimentalOptions);
 
-    // @ts-expect-error
-    expect(resolver.isEnabled('someFlag')).toBe(true);
-    // @ts-expect-error
-    expect(resolver.isEnabled('extraFlag')).toBe(true);
+    expect(resolver.isEnabled('someFlag' as IFlagKey)).toBe(true);
+    expect(resolver.isEnabled('extraFlag' as IFlagKey)).toBe(true);
 });

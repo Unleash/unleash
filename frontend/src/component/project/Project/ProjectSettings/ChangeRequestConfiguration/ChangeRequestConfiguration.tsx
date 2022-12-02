@@ -9,7 +9,10 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { useProjectNameOrId } from 'hooks/api/getters/useProject/useProject';
 import { ChangeRequestTable } from './ChangeRequestTable';
-import { ProFeatureTooltip } from 'component/common/ProFeatureTooltip/ProFeatureTooltip';
+import {
+    PlausibleOrigin,
+    PremiumFeature,
+} from 'component/common/PremiumFeature/PremiumFeature';
 
 const StyledLink = styled(Link)(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
@@ -33,9 +36,9 @@ export const ChangeRequestConfiguration = () => {
                 header={<PageHeader title="Change request configuration" />}
                 sx={{ justifyContent: 'center' }}
             >
-                <ProFeatureTooltip
-                    title={'Enterprise feature'}
-                    origin={'Project Change Request Configuration'}
+                <PremiumFeature
+                    origin={PlausibleOrigin.CHANGE_REQUEST}
+                    enterpriseOnly
                     center
                 >
                     <>
@@ -48,7 +51,7 @@ export const ChangeRequestConfiguration = () => {
                         </StyledLink>{' '}
                         you will need to upgrade to Enterprise plan
                     </>
-                </ProFeatureTooltip>
+                </PremiumFeature>
             </PageContent>
         );
     }

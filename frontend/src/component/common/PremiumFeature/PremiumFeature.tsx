@@ -2,7 +2,7 @@ import { ReactComponent as ProPlanIcon } from 'assets/icons/pro-enterprise-featu
 import { Box, Link, styled, Typography } from '@mui/material';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
-const ProFeatureTooltipWrapper = styled(Box)(({ theme }) => ({
+const PremiumFeatureWrapper = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     padding: theme.spacing(1, 0.5),
@@ -26,19 +26,30 @@ const StyledLink = styled(Link)(({ theme }) => ({
     width: 'fit-content',
 }));
 
-export interface ProFeatureTooltipProps {
+export enum FeatureLevelTitle {
+    PRO = 'Pro & Enterprise feature',
+    ENTERPRISE = 'Enterprise feature',
+}
+
+export enum PlausibleOrigin {
+    PROJECT = 'Projects',
+    ACCESS = 'Access',
+    CHANGE_REQUEST = 'Change Request',
+}
+
+export interface PremiumFeatureProps {
     children: React.ReactNode;
-    title: string;
-    origin: string;
+    origin: PlausibleOrigin;
+    enterpriseOnly?: boolean;
     center?: boolean;
 }
 
-export const ProFeatureTooltip = ({
-    title,
+export const PremiumFeature = ({
+    enterpriseOnly = false,
     origin,
     children,
     center,
-}: ProFeatureTooltipProps) => {
+}: PremiumFeatureProps) => {
     const tracker = usePlausibleTracker();
     const handleClick = () => {
         if (origin) {
@@ -48,7 +59,7 @@ export const ProFeatureTooltip = ({
         }
     };
     return (
-        <ProFeatureTooltipWrapper
+        <PremiumFeatureWrapper
             sx={{
                 alignItems: center ? 'center' : 'start',
                 textAlign: center ? 'center' : 'left',
@@ -56,7 +67,9 @@ export const ProFeatureTooltip = ({
         >
             <StyledTitle>
                 <ProPlanIcon />
-                {title}
+                {enterpriseOnly
+                    ? FeatureLevelTitle.ENTERPRISE
+                    : FeatureLevelTitle.PRO}
             </StyledTitle>
             <StyledBody>{children}</StyledBody>
             <StyledLink
@@ -66,6 +79,6 @@ export const ProFeatureTooltip = ({
             >
                 Upgrade now
             </StyledLink>
-        </ProFeatureTooltipWrapper>
+        </PremiumFeatureWrapper>
     );
 };

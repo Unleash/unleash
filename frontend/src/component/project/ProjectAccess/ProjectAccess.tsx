@@ -9,7 +9,10 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { ProjectAccessTable } from 'component/project/ProjectAccess/ProjectAccessTable/ProjectAccessTable';
 import { useProjectNameOrId } from 'hooks/api/getters/useProject/useProject';
-import { ProFeatureTooltip } from '../../common/ProFeatureTooltip/ProFeatureTooltip';
+import {
+    PlausibleOrigin,
+    PremiumFeature,
+} from '../../common/PremiumFeature/PremiumFeature';
 
 const StyledLink = styled(Link)(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
@@ -34,11 +37,7 @@ export const ProjectAccess = () => {
                     }}
                     alignSelf={'center'}
                 >
-                    <ProFeatureTooltip
-                        title={'Pro & Enterprise feature'}
-                        origin={'Project Change Request Configuration'}
-                        center
-                    >
+                    <PremiumFeature origin={PlausibleOrigin.ACCESS} center>
                         <>
                             Controlling access to projects requires a paid
                             version of Unleash. Check out{' '}
@@ -51,7 +50,7 @@ export const ProjectAccess = () => {
                             </StyledLink>{' '}
                             to find out more.
                         </>
-                    </ProFeatureTooltip>
+                    </PremiumFeature>
                 </Box>
             </PageContent>
         );

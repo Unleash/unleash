@@ -30,7 +30,7 @@ const AUTH_PASSWORD = Cypress.env('AUTH_PASSWORD');
 Cypress.Commands.add('login', (user = AUTH_USER, password = AUTH_PASSWORD) =>
     cy.session(user, () => {
         cy.visit('/');
-        cy.wait(1500);
+        cy.wait(2000);
         cy.get("[data-testid='LOGIN_EMAIL_ID']").type(user);
 
         if (AUTH_PASSWORD) {

@@ -45,7 +45,7 @@ export const ProjectSettings = () => {
         >
             <Routes>
                 <Route
-                    path={`${tabs[0].id}/*`}
+                    path="environments/*"
                     element={<ProjectEnvironmentList />}
                 />
                 <Route path={`${tabs[1].id}/*`} element={<ProjectAccess />} />

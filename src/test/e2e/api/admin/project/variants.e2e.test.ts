@@ -120,6 +120,103 @@ test('Can patch variants for a feature and get a response of new variant', async
         });
 });
 
+test('Can patch variants for a feature patches all environments independently', async () => {
+    const featureName = 'feature-to-patch';
+    const addedVariantName = 'not-so-cool-variant-name';
+    const variants = (name: string) => [
+        {
+            name,
+            stickiness: 'default',
+            weight: 1000,
+            weightType: WeightType.VARIABLE,
+        },
+    ];
+
+    await db.stores.environmentStore.create({
+        name: 'development',
+        type: 'development',
+    });
+    await db.stores.environmentStore.create({
+        name: 'production',
+        type: 'production',
+    });
+    await db.stores.featureToggleStore.create('default', {
+        name: featureName,
+    });
+    await db.stores.featureEnvironmentStore.addEnvironmentToFeature(
+        featureName,
+        'development',
+        true,
+    );
+    await db.stores.featureEnvironmentStore.addEnvironmentToFeature(
+        featureName,
+        'production',
+        true,
+    );
+    await db.stores.featureEnvironmentStore.addVariantsToFeatureEnvironment(
+        featureName,
+        'development',
+        variants('dev-variant'),
+    );
+    await db.stores.featureEnvironmentStore.addVariantsToFeatureEnvironment(
+        featureName,
+        'production',
+        variants('prod-variant'),
+    );
+
+    const patch = [
+        {
+            op: 'add',
+            path: '/1',
+            value: {
+                name: addedVariantName,
+                weightType: 'fix',
+                weight: 50,
+            },
+        },
+    ];
+
+    await app.request
+        .patch(`/api/admin/projects/default/features/${featureName}/variants`)
+        .send(patch)
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.version).toBe(1);
+            expect(res.body.variants).toHaveLength(2);
+            expect(res.body.variants[0].name).toBe('dev-variant');
+            expect(res.body.variants[1].name).toBe(addedVariantName);
+        });
+
+    await app.request
+        .get(
+            `/api/admin/projects/default/features/${featureName}?variantEnvironments=true`,
+        )
+        .expect((res) => {
+            const environments = res.body.environments;
+            expect(environments).toHaveLength(2);
+            console.log(environments);
+            const developmentVariants = environments.find(
+                (x) => x.name === 'development',
+            ).variants;
+            const productionVariants = environments.find(
+                (x) => x.name === 'production',
+            ).variants;
+            console.log(environments.map((e) => e.variants));
+            expect(
+                developmentVariants.find((x) => x.name === addedVariantName),
+            ).toBeTruthy();
+            expect(
+                productionVariants.find((x) => x.name === addedVariantName),
+            ).toBeTruthy();
+            expect(
+                developmentVariants.find((x) => x.name === 'dev-variant'),
+            ).toBeTruthy();
+            expect(
+                productionVariants.find((x) => x.name === 'prod-variant'),
+            ).toBeTruthy();
+        });
+});
+
 test('Can add variant for a feature', async () => {
     const featureName = 'feature-variants-patch-add';
     const variantName = 'fancy-variant-patch';

@@ -232,13 +232,17 @@ const UnleashUiSetup: FC<{ path: string }> = ({ children, path }) => (
     </UIProviderContainer>
 );
 
-test('create change request', async () => {
+const setupHttpRoutes = () => {
     pendingChangeRequest();
     changeRequestsEnabledIn('production');
     uiConfigForEnterprise();
     featureList('test');
     feature('test');
     otherRequests('test');
+};
+
+test('create change request', async () => {
+    setupHttpRoutes();
 
     render(
         <UnleashUiSetup path="/projects/:projectId/features/:featureId/*">

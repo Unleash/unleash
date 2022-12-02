@@ -3,6 +3,7 @@ title: Feature Toggle Variants
 ---
 <div class="alert alert--info" role="alert">
   <em>Feature toggle variants</em> were introduced in <em>Unleash v3.2.0</em>.
+  <em>Feature toggle variants</em> are attached to environments since <em>Unleash v4.19.0</em>.
 </div>
 <br/>
 
@@ -12,7 +13,7 @@ Variants facilitate A/B testing and experimentation by letting you create contro
 
 ## What are variants?
 
-Whenever you create a feature toggle, you can assign it any number of _variants_. This is commonly done in cases where you want to serve your users different versions of a feature to see which performs better.
+Whenever you create a feature toggle, you can assign it any number of _variants_ which can be different depending on the enviroment. This is commonly done in cases where you want to serve your users different versions of a feature to see which performs better.
 
 A variant has four components that define it:
 - a **name**:

@@ -1,6 +1,6 @@
 import { ReactComponent as ProPlanIcon } from 'assets/icons/pro-enterprise-feature-badge.svg';
 import { Box, Link, styled, Typography } from '@mui/material';
-import { usePlausibleTracker } from '../../../hooks/usePlausibleTracker';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const ProFeatureTooltipWrapper = styled(Box)(({ theme }) => ({
     display: 'flex',

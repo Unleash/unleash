@@ -9,7 +9,7 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { ProjectAccessTable } from 'component/project/ProjectAccess/ProjectAccessTable/ProjectAccessTable';
 import { useProjectNameOrId } from 'hooks/api/getters/useProject/useProject';
-import { ProFeatureTooltip } from '../../common/ProFeatureTooltip/ProFeatureTooltip';
+import { ProFeatureTooltip } from 'component/common/ProFeatureTooltip/ProFeatureTooltip';
 
 const StyledLink = styled(Link)(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,

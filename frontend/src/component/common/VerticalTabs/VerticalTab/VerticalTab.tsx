@@ -4,7 +4,7 @@ const StyledTab = styled(Button)<{ selected: boolean }>(
     ({ theme, selected }) => ({
         '&.MuiButton-root': {
             cursor: 'pointer',
-            height: '51px',
+            height: theme.spacing(6.5),
             border: 0,
             backgroundColor: selected
                 ? theme.palette.background.paper

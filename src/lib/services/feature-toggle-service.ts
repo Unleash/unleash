@@ -78,6 +78,7 @@ import { AccessService } from './access-service';
 import { User } from '../server-impl';
 import { CREATE_FEATURE_STRATEGY } from '../types/permissions';
 import NoAccessError from '../error/no-access-error';
+import { IFeatureProjectUserParams } from '../routes/admin-api/project/features';
 
 interface IFeatureContext {
     featureName: string;
@@ -86,6 +87,14 @@ interface IFeatureContext {
 
 interface IFeatureStrategyContext extends IFeatureContext {
     environment: string;
+}
+
+export interface IGetFeatureParams {
+    featureName: string;
+    archived?: boolean;
+    projectId?: string;
+    environmentVariants?: boolean;
+    userId?: number;
 }
 
 const oneOf = (values: string[], match: string) => {
@@ -608,12 +617,13 @@ class FeatureToggleService {
      * @param archived - return archived or non archived toggles
      * @param projectId - provide if you're requesting the feature in the context of a specific project.
      */
-    async getFeature(
-        featureName: string,
-        archived: boolean = false,
-        projectId?: string,
-        environmentVariants: boolean = false,
-    ): Promise<FeatureToggleWithEnvironment> {
+    async getFeature({
+        featureName,
+        archived,
+        projectId,
+        environmentVariants,
+        userId,
+    }: IGetFeatureParams): Promise<FeatureToggleWithEnvironment> {
         if (projectId) {
             await this.validateFeatureContext({ featureName, projectId });
         }
@@ -621,11 +631,13 @@ class FeatureToggleService {
         if (environmentVariants) {
             return this.featureStrategiesStore.getFeatureToggleWithVariantEnvs(
                 featureName,
+                userId,
                 archived,
             );
         } else {
             return this.featureStrategiesStore.getFeatureToggleWithEnvs(
                 featureName,
+                userId,
                 archived,
             );
         }
@@ -663,9 +675,7 @@ class FeatureToggleService {
     }
 
     /**
-     *
-     * Warn: Legacy!
-     *
+     * @deprecated Legacy!
      *
      * Used to retrieve metadata of all feature toggles defined in Unleash.
      * @param query - Allow you to limit search based on criteria such as project, tags, namePrefix. See @IFeatureToggleQuery
@@ -674,19 +684,20 @@ class FeatureToggleService {
      */
     async getFeatureToggles(
         query?: IFeatureToggleQuery,
+        userId?: number,
         archived: boolean = false,
     ): Promise<FeatureToggle[]> {
-        return this.featureToggleClientStore.getAdmin(query, archived);
+        return this.featureToggleClientStore.getAdmin({
+            featureQuery: query,
+            userId,
+            archived,
+        });
     }
 
     async getFeatureOverview(
-        projectId: string,
-        archived: boolean = false,
+        params: IFeatureProjectUserParams,
     ): Promise<IFeatureOverview[]> {
-        return this.featureStrategiesStore.getFeatureOverview(
-            projectId,
-            archived,
-        );
+        return this.featureStrategiesStore.getFeatureOverview(params);
     }
 
     async getFeatureToggle(
@@ -694,7 +705,6 @@ class FeatureToggleService {
     ): Promise<FeatureToggleWithEnvironment> {
         return this.featureStrategiesStore.getFeatureToggleWithEnvs(
             featureName,
-            false,
         );
     }
 
@@ -1171,7 +1181,7 @@ class FeatureToggleService {
     }
 
     async getArchivedFeatures(): Promise<FeatureToggle[]> {
-        return this.getFeatureToggles({}, true);
+        return this.getFeatureToggles({}, undefined, true);
     }
 
     // TODO: add project id.
@@ -1379,7 +1389,7 @@ class FeatureToggleService {
             )
         ) {
             throw new Error(
-                `Change requests are enabled for ${project} in ${environment} environment`,
+                `Change requests are enabled in project "${project}" for environment "${environment}"`,
             );
         }
     }

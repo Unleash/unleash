@@ -25,8 +25,9 @@ import { EnvironmentsController } from './environments';
 import ConstraintsController from './constraints';
 import PatController from './user/pat';
 import { PublicSignupController } from './public-signup';
-import { conditionalMiddleware } from '../../middleware/conditional-middleware';
 import InstanceAdminController from './instance-admin';
+import FavoritesController from './favorites';
+import { conditionalMiddleware } from '../../middleware';
 
 class AdminApi extends Controller {
     constructor(config: IUnleashConfig, services: IUnleashServices) {
@@ -110,14 +111,18 @@ class AdminApi extends Controller {
         );
         this.app.use(
             '/invite-link',
-            conditionalMiddleware(
-                () => config.flagResolver.isEnabled('publicSignup'),
-                new PublicSignupController(config, services).router,
-            ),
+            new PublicSignupController(config, services).router,
         );
         this.app.use(
             '/instance-admin',
             new InstanceAdminController(config, services).router,
+        );
+        this.app.use(
+            `/projects`,
+            conditionalMiddleware(
+                () => config.flagResolver.isEnabled('favorites'),
+                new FavoritesController(config, services).router,
+            ),
         );
     }
 }

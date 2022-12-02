@@ -26,6 +26,7 @@ import {
     ApiTokenUpdatedEvent,
 } from '../types';
 import { omitKeys } from '../util';
+import { IFlagResolver } from 'lib/types/experimental';
 
 const resolveTokenPermissions = (tokenType: string) => {
     if (tokenType === ApiTokenType.ADMIN) {
@@ -52,9 +53,15 @@ export class ApiTokenService {
 
     private timer: NodeJS.Timeout;
 
+    private seenTimer: NodeJS.Timeout;
+
     private activeTokens: IApiToken[] = [];
 
     private eventStore: IEventStore;
+
+    private lastSeenSecrets: Set<string> = new Set<string>();
+
+    private flagResolver: IFlagResolver;
 
     constructor(
         {
@@ -65,8 +72,12 @@ export class ApiTokenService {
             IUnleashStores,
             'apiTokenStore' | 'environmentStore' | 'eventStore'
         >,
-        config: Pick<IUnleashConfig, 'getLogger' | 'authentication'>,
+        config: Pick<
+            IUnleashConfig,
+            'getLogger' | 'authentication' | 'flagResolver'
+        >,
     ) {
+        this.flagResolver = config.flagResolver;
         this.store = apiTokenStore;
         this.eventStore = eventStore;
         this.environmentStore = environmentStore;
@@ -76,6 +87,9 @@ export class ApiTokenService {
             () => this.fetchActiveTokens(),
             minutesToMilliseconds(1),
         ).unref();
+        if (this.flagResolver.isEnabled('tokensLastSeen')) {
+            this.updateLastSeen();
+        }
         if (config.authentication.initApiTokens.length > 0) {
             process.nextTick(async () =>
                 this.initApiTokens(config.authentication.initApiTokens),
@@ -90,6 +104,19 @@ export class ApiTokenService {
             // eslint-disable-next-line no-unsafe-finally
             return;
         }
+    }
+
+    async updateLastSeen(): Promise<void> {
+        if (this.lastSeenSecrets.size > 0) {
+            const toStore = [...this.lastSeenSecrets];
+            this.lastSeenSecrets = new Set<string>();
+            await this.store.markSeenAt(toStore);
+        }
+
+        this.seenTimer = setTimeout(
+            async () => this.updateLastSeen(),
+            minutesToMilliseconds(3),
+        ).unref();
     }
 
     public async getAllTokens(): Promise<IApiToken[]> {
@@ -137,6 +164,10 @@ export class ApiTokenService {
         }
 
         if (token) {
+            if (this.flagResolver.isEnabled('tokensLastSeen')) {
+                this.lastSeenSecrets.add(token.secret);
+            }
+
             return new ApiUser({
                 username: token.username,
                 permissions: resolveTokenPermissions(token.type),
@@ -269,6 +300,8 @@ export class ApiTokenService {
 
     destroy(): void {
         clearInterval(this.timer);
+        clearTimeout(this.seenTimer);
         this.timer = null;
+        this.seenTimer = null;
     }
 }

@@ -1186,6 +1186,9 @@ exports[`should serve the OpenAPI spec 1`] = `
             },
             "type": "array",
           },
+          "favorite": {
+            "type": "boolean",
+          },
           "impressionData": {
             "type": "boolean",
           },
@@ -1546,6 +1549,9 @@ exports[`should serve the OpenAPI spec 1`] = `
             },
             "type": "array",
           },
+          "favorite": {
+            "type": "boolean",
+          },
           "features": {
             "items": {
               "$ref": "#/components/schemas/featureSchema",
@@ -1590,6 +1596,9 @@ exports[`should serve the OpenAPI spec 1`] = `
               "type": "string",
             },
             "type": "array",
+          },
+          "favorite": {
+            "type": "boolean",
           },
           "features": {
             "items": {
@@ -2348,6 +2357,9 @@ exports[`should serve the OpenAPI spec 1`] = `
           },
           "description": {
             "type": "string",
+          },
+          "favorite": {
+            "type": "boolean",
           },
           "featureCount": {
             "type": "number",
@@ -4765,6 +4777,138 @@ If the provided project does not exist, the list of events will be empty.",
         },
         "tags": [
           "Instance Admin",
+        ],
+      },
+    },
+    "/api/admin/invite-link/tokens": {
+      "get": {
+        "operationId": "getAllPublicSignupTokens",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/publicSignupTokensSchema",
+                },
+              },
+            },
+            "description": "publicSignupTokensSchema",
+          },
+        },
+        "summary": "Retrieve all existing public signup tokens",
+        "tags": [
+          "Public signup tokens",
+        ],
+      },
+      "post": {
+        "operationId": "createPublicSignupToken",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/publicSignupTokenCreateSchema",
+              },
+            },
+          },
+          "description": "publicSignupTokenCreateSchema",
+          "required": true,
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/publicSignupTokenSchema",
+                },
+              },
+            },
+            "description": "The resource was successfully created.",
+            "headers": {
+              "location": {
+                "description": "The location of the newly created resource.",
+                "schema": {
+                  "format": "uri",
+                  "type": "string",
+                },
+              },
+            },
+          },
+        },
+        "summary": "Create a public signup token",
+        "tags": [
+          "Public signup tokens",
+        ],
+      },
+    },
+    "/api/admin/invite-link/tokens/{token}": {
+      "get": {
+        "description": "Get information about a specific token. The \`:token\` part of the URL should be the token's secret.",
+        "operationId": "getPublicSignupToken",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "token",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/publicSignupTokenSchema",
+                },
+              },
+            },
+            "description": "publicSignupTokenSchema",
+          },
+        },
+        "summary": "Retrieve a token",
+        "tags": [
+          "Public signup tokens",
+        ],
+      },
+      "put": {
+        "operationId": "updatePublicSignupToken",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "token",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/publicSignupTokenUpdateSchema",
+              },
+            },
+          },
+          "description": "publicSignupTokenUpdateSchema",
+          "required": true,
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/publicSignupTokenSchema",
+                },
+              },
+            },
+            "description": "publicSignupTokenSchema",
+          },
+        },
+        "summary": "Update a public signup token",
+        "tags": [
+          "Public signup tokens",
         ],
       },
     },

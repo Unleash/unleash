@@ -1,4 +1,4 @@
-import { VFC } from 'react';
+import React, { FC, VFC } from 'react';
 import { Alert, Box, styled } from '@mui/material';
 import { ChangeRequestFeatureToggleChange } from '../ChangeRequestOverview/ChangeRequestFeatureToggleChange/ChangeRequestFeatureToggleChange';
 import { objectId } from 'utils/objectId';
@@ -6,20 +6,25 @@ import { ToggleStatusChange } from '../ChangeRequestOverview/ChangeRequestFeatur
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
-import type { IChangeRequest } from '../changeRequest.types';
+import type {
+    IChange,
+    IChangeRequest,
+    IChangeRequestFeature,
+} from '../changeRequest.types';
+import { hasNameField } from '../changeRequest.types';
 import {
     Discard,
     StrategyAddedChange,
     StrategyDeletedChange,
     StrategyEditedChange,
 } from '../ChangeRequestOverview/ChangeRequestFeatureToggleChange/StrategyChange';
-import {
-    formatStrategyName,
-    GetFeatureStrategyIcon,
-} from 'utils/strategyNames';
-import { hasNameField } from '../changeRequest.types';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
+import { StrategyExecution } from '../../feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyExecution/StrategyExecution';
+import {
+    CodeSnippetPopover,
+    PopoverDiff,
+} from './CodeSnippetPopover/CodeSnippetPopover';
 
 interface IChangeRequestProps {
     changeRequest: IChangeRequest;
@@ -69,29 +74,13 @@ const StyledAlert = styled(Alert)(({ theme }) => ({
     },
 }));
 
-export const ChangeRequest: VFC<IChangeRequestProps> = ({
-    changeRequest,
-    onRefetch,
-    onNavigate,
-}) => {
-    const { discardChangeRequestEvent } = useChangeRequestApi();
-    const { setToastData, setToastApiError } = useToast();
-    const onDiscard = (id: number) => async () => {
-        try {
-            await discardChangeRequestEvent(
-                changeRequest.project,
-                changeRequest.id,
-                id
-            );
-            setToastData({
-                title: 'Change discarded from change request draft.',
-                type: 'success',
-            });
-            onRefetch?.();
-        } catch (error: unknown) {
-            setToastApiError(formatUnknownError(error));
-        }
-    };
+const Change: FC<{
+    onDiscard: () => Promise<void>;
+    index: number;
+    changeRequest: IChangeRequest;
+    change: IChange;
+    feature: IChangeRequestFeature;
+}> = ({ index, change, feature, changeRequest, onDiscard }) => {
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(
         changeRequest.project
     );
@@ -105,137 +94,142 @@ export const ChangeRequest: VFC<IChangeRequestProps> = ({
         changeRequest.features.flatMap(feature => feature.changes).length > 1;
 
     return (
-        <Box>
-            {changeRequest.features?.map(featureToggleChange => (
-                <ChangeRequestFeatureToggleChange
-                    key={featureToggleChange.name}
-                    featureName={featureToggleChange.name}
-                    projectId={changeRequest.project}
-                    onNavigate={onNavigate}
-                    conflict={featureToggleChange.conflict}
-                >
-                    {featureToggleChange.changes.map((change, index) => (
-                        <StyledSingleChangeBox
-                            key={objectId(change)}
-                            $hasConflict={Boolean(change.conflict)}
-                            $isInConflictFeature={Boolean(
-                                featureToggleChange.conflict
-                            )}
-                            $isAfterWarning={Boolean(
-                                featureToggleChange.changes[index - 1]?.conflict
-                            )}
-                            $isLast={
-                                index + 1 === featureToggleChange.changes.length
+        <StyledSingleChangeBox
+            key={objectId(change)}
+            $hasConflict={Boolean(change.conflict)}
+            $isInConflictFeature={Boolean(feature.conflict)}
+            $isAfterWarning={Boolean(feature.changes[index - 1]?.conflict)}
+            $isLast={index + 1 === feature.changes.length}
+        >
+            <ConditionallyRender
+                condition={Boolean(change.conflict) && !feature.conflict}
+                show={
+                    <StyledAlert severity="warning">
+                        <strong>Conflict!</strong> This change can’t be applied.{' '}
+                        {change.conflict}.
+                    </StyledAlert>
+                }
+            />
+            <Box sx={{ p: 2 }}>
+                {change.action === 'updateEnabled' && (
+                    <ToggleStatusChange
+                        enabled={change.payload.enabled}
+                        discard={
+                            <ConditionallyRender
+                                condition={showDiscard}
+                                show={<Discard onDiscard={onDiscard} />}
+                            />
+                        }
+                    />
+                )}
+                {change.action === 'addStrategy' && (
+                    <>
+                        <StrategyAddedChange
+                            discard={
+                                <ConditionallyRender
+                                    condition={showDiscard}
+                                    show={<Discard onDiscard={onDiscard} />}
+                                />
                             }
                         >
+                            <CodeSnippetPopover change={change}>
+                                <PopoverDiff
+                                    change={change}
+                                    feature={feature.name}
+                                    environmentName={changeRequest.environment}
+                                    project={changeRequest.project}
+                                />
+                            </CodeSnippetPopover>
+                        </StrategyAddedChange>
+                        <StrategyExecution strategy={change.payload} />
+                    </>
+                )}
+                {change.action === 'deleteStrategy' && (
+                    <StrategyDeletedChange
+                        discard={
                             <ConditionallyRender
-                                condition={
-                                    Boolean(change.conflict) &&
-                                    !featureToggleChange.conflict
-                                }
-                                show={
-                                    <StyledAlert severity="warning">
-                                        <strong>Conflict!</strong> This change
-                                        can’t be applied. {change.conflict}.
-                                    </StyledAlert>
-                                }
+                                condition={showDiscard}
+                                show={<Discard onDiscard={onDiscard} />}
                             />
-                            <Box sx={{ p: 2 }}>
-                                {change.action === 'updateEnabled' && (
-                                    <ToggleStatusChange
-                                        enabled={change.payload.enabled}
-                                        discard={
-                                            <ConditionallyRender
-                                                condition={showDiscard}
-                                                show={
-                                                    <Discard
-                                                        onDiscard={onDiscard(
-                                                            change.id
-                                                        )}
-                                                    />
-                                                }
-                                            />
-                                        }
-                                    />
-                                )}
-                                {change.action === 'addStrategy' && (
-                                    <StrategyAddedChange
-                                        discard={
-                                            <ConditionallyRender
-                                                condition={showDiscard}
-                                                show={
-                                                    <Discard
-                                                        onDiscard={onDiscard(
-                                                            change.id
-                                                        )}
-                                                    />
-                                                }
-                                            />
-                                        }
-                                    >
-                                        <GetFeatureStrategyIcon
-                                            strategyName={change.payload.name}
-                                        />
+                        }
+                    >
+                        {hasNameField(change.payload) && (
+                            <CodeSnippetPopover change={change}>
+                                <PopoverDiff
+                                    change={change}
+                                    feature={feature.name}
+                                    environmentName={changeRequest.environment}
+                                    project={changeRequest.project}
+                                />
+                            </CodeSnippetPopover>
+                        )}
+                    </StrategyDeletedChange>
+                )}
+                {change.action === 'updateStrategy' && (
+                    <>
+                        <StrategyEditedChange
+                            discard={
+                                <ConditionallyRender
+                                    condition={showDiscard}
+                                    show={<Discard onDiscard={onDiscard} />}
+                                />
+                            }
+                        >
+                            <CodeSnippetPopover change={change}>
+                                <PopoverDiff
+                                    change={change}
+                                    feature={feature.name}
+                                    environmentName={changeRequest.environment}
+                                    project={changeRequest.project}
+                                />
+                            </CodeSnippetPopover>
+                        </StrategyEditedChange>
+                        <StrategyExecution strategy={change.payload} />
+                    </>
+                )}
+            </Box>
+        </StyledSingleChangeBox>
+    );
+};
 
-                                        {formatStrategyName(
-                                            change.payload.name
-                                        )}
-                                    </StrategyAddedChange>
-                                )}
-                                {change.action === 'deleteStrategy' && (
-                                    <StrategyDeletedChange
-                                        discard={
-                                            <ConditionallyRender
-                                                condition={showDiscard}
-                                                show={
-                                                    <Discard
-                                                        onDiscard={onDiscard(
-                                                            change.id
-                                                        )}
-                                                    />
-                                                }
-                                            />
-                                        }
-                                    >
-                                        {hasNameField(change.payload) && (
-                                            <>
-                                                <GetFeatureStrategyIcon
-                                                    strategyName={
-                                                        change.payload.name
-                                                    }
-                                                />
-                                                {formatStrategyName(
-                                                    change.payload.name
-                                                )}
-                                            </>
-                                        )}
-                                    </StrategyDeletedChange>
-                                )}
-                                {change.action === 'updateStrategy' && (
-                                    <StrategyEditedChange
-                                        discard={
-                                            <ConditionallyRender
-                                                condition={showDiscard}
-                                                show={
-                                                    <Discard
-                                                        onDiscard={onDiscard(
-                                                            change.id
-                                                        )}
-                                                    />
-                                                }
-                                            />
-                                        }
-                                    >
-                                        <GetFeatureStrategyIcon
-                                            strategyName={change.payload.name}
-                                        />
-                                        {formatStrategyName(
-                                            change.payload.name
-                                        )}
-                                    </StrategyEditedChange>
-                                )}
-                            </Box>
-                        </StyledSingleChangeBox>
+export const ChangeRequest: VFC<IChangeRequestProps> = ({
+    changeRequest,
+    onRefetch,
+    onNavigate,
+}) => {
+    const { discardChange } = useChangeRequestApi();
+    const { setToastData, setToastApiError } = useToast();
+    const onDiscard = (id: number) => async () => {
+        try {
+            await discardChange(changeRequest.project, changeRequest.id, id);
+            setToastData({
+                title: 'Change discarded from change request draft.',
+                type: 'success',
+            });
+            onRefetch?.();
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
+    };
+
+    return (
+        <Box>
+            {changeRequest.features?.map(feature => (
+                <ChangeRequestFeatureToggleChange
+                    key={feature.name}
+                    featureName={feature.name}
+                    projectId={changeRequest.project}
+                    onNavigate={onNavigate}
+                    conflict={feature.conflict}
+                >
+                    {feature.changes.map((change, index) => (
+                        <Change
+                            onDiscard={onDiscard(change.id)}
+                            index={index}
+                            changeRequest={changeRequest}
+                            change={change}
+                            feature={feature}
+                        />
                     ))}
                 </ChangeRequestFeatureToggleChange>
             ))}

@@ -26,9 +26,11 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { Search } from 'component/common/Search/Search';
 import useHiddenColumns from 'hooks/useHiddenColumns';
+import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
 
 const hiddenColumnsSmall = ['Icon', 'createdAt'];
 const hiddenColumnsFlagE = ['projects', 'environment'];
+const hiddenColumnsFlagTokensLastSeen = ['seenAt'];
 
 export const ApiTokenTable = () => {
     const { tokens, loading } = useApiTokens();
@@ -59,6 +61,11 @@ export const ApiTokenTable = () => {
 
     useHiddenColumns(setHiddenColumns, hiddenColumnsSmall, isSmallScreen);
     useHiddenColumns(setHiddenColumns, hiddenColumnsFlagE, !uiConfig.flags.E);
+    useHiddenColumns(
+        setHiddenColumns,
+        hiddenColumnsFlagTokensLastSeen,
+        !uiConfig.flags.tokensLastSeen
+    );
 
     return (
         <PageContent
@@ -203,6 +210,13 @@ const COLUMNS = [
         Header: 'Created',
         accessor: 'createdAt',
         Cell: DateCell,
+        minWidth: 150,
+        disableGlobalFilter: true,
+    },
+    {
+        Header: 'Last seen',
+        accessor: 'seenAt',
+        Cell: TimeAgoCell,
         minWidth: 150,
         disableGlobalFilter: true,
     },

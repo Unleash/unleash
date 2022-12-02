@@ -6,6 +6,7 @@ export interface IChangeRequest {
     state: ChangeRequestState;
     project: string;
     environment: string;
+    minApprovals: number;
     createdBy: Pick<IUser, 'id' | 'username' | 'imageUrl'>;
     createdAt: Date;
     features: IChangeRequestFeature[];
@@ -24,7 +25,7 @@ export interface IChangeRequestEnvironmentConfig {
 export interface IChangeRequestFeature {
     name: string;
     conflict?: string;
-    changes: IChangeRequestEvent[];
+    changes: IChange[];
 }
 
 export interface IChangeRequestApproval {
@@ -81,7 +82,7 @@ export interface IChangeRequestEnabled extends IChangeRequestBase {
     payload: ChangeRequestEnabled;
 }
 
-export type IChangeRequestEvent =
+export type IChange =
     | IChangeRequestAddStrategy
     | IChangeRequestDeleteStrategy
     | IChangeRequestUpdateStrategy
@@ -98,6 +99,7 @@ type ChangeRequestEditStrategy = ChangeRequestAddStrategy & { id: string };
 
 type ChangeRequestDeleteStrategy = {
     id: string;
+    name: string;
 };
 
 export type ChangeRequestAction =

@@ -1,4 +1,5 @@
 import { IFeatureToggleClient, IFeatureToggleQuery } from '../model';
+import { IGetAdminFeatures } from '../../db/feature-toggle-client-store';
 
 export interface IFeatureToggleClientStore {
     getClient(
@@ -7,8 +8,5 @@ export interface IFeatureToggleClientStore {
     ): Promise<IFeatureToggleClient[]>;
 
     // @Deprecated
-    getAdmin(
-        featureQuery: Partial<IFeatureToggleQuery>,
-        archived: boolean,
-    ): Promise<IFeatureToggleClient[]>;
+    getAdmin(params: IGetAdminFeatures): Promise<IFeatureToggleClient[]>;
 }

@@ -1,6 +1,13 @@
-import { Tab, Tabs, useMediaQuery } from '@mui/material';
-import React, { useState } from 'react';
-import { Archive, FileCopy, Label, WatchLater } from '@mui/icons-material';
+import { IconButton, Tab, Tabs, useMediaQuery } from '@mui/material';
+import React, { useCallback, useState } from 'react';
+import {
+    Archive,
+    FileCopy,
+    Label,
+    WatchLater,
+    Star as StarIcon,
+    StarBorder as StarBorderIcon,
+} from '@mui/icons-material';
 import {
     Link,
     Route,
@@ -29,19 +36,23 @@ import AddTagDialog from './FeatureOverview/AddTagDialog/AddTagDialog';
 import { FeatureStatusChip } from 'component/common/FeatureStatusChip/FeatureStatusChip';
 import { FeatureNotFound } from 'component/feature/FeatureView/FeatureNotFound/FeatureNotFound';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { FeatureArchiveDialog } from '../../common/FeatureArchiveDialog/FeatureArchiveDialog';
+import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { DraftBanner } from 'component/changeRequest/DraftBanner/DraftBanner';
 import { MainLayout } from 'component/layout/MainLayout/MainLayout';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
+import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { FavoriteIconButton } from 'component/common/FavoriteIconButton/FavoriteIconButton';
 
 export const FeatureView = () => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const { refetch: projectRefetch } = useProject(projectId);
+    const { favorite, unfavorite } = useFavoriteFeaturesApi();
     const { refetchFeature } = useFeature(projectId, featureId);
     const { isChangeRequestConfiguredInAnyEnv } =
         useChangeRequestsEnabled(projectId);
+    const { uiConfig } = useUiConfig();
 
     const [openTagDialog, setOpenTagDialog] = useState(false);
     const [showDelDialog, setShowDelDialog] = useState(false);
@@ -86,6 +97,15 @@ export const FeatureView = () => {
         return <FeatureNotFound />;
     }
 
+    const onFavorite = async () => {
+        if (feature?.favorite) {
+            await unfavorite(projectId, feature.name);
+        } else {
+            await favorite(projectId, feature.name);
+        }
+        refetchFeature();
+    };
+
     return (
         <MainLayout
             ref={ref}
@@ -102,6 +122,17 @@ export const FeatureView = () => {
                         <div className={styles.header}>
                             <div className={styles.innerContainer}>
                                 <div className={styles.toggleInfoContainer}>
+                                    <ConditionallyRender
+                                        condition={Boolean(
+                                            uiConfig?.flags?.favorites
+                                        )}
+                                        show={() => (
+                                            <FavoriteIconButton
+                                                onClick={onFavorite}
+                                                isFavorite={feature?.favorite}
+                                            />
+                                        )}
+                                    />
                                     <h1
                                         className={styles.featureViewHeader}
                                         data-loading

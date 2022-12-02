@@ -77,7 +77,6 @@ export const ProjectListNew = () => {
     const { classes: styles } = useStyles();
     const { projects, loading, error, refetch } = useProjects();
     const [fetchedProjects, setFetchedProjects] = useState<projectMap>({});
-    const ref = useLoading(loading);
     const { isOss } = useUiConfig();
 
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -99,9 +98,19 @@ export const ProjectListNew = () => {
 
     const filteredProjects = useMemo(() => {
         const regExp = new RegExp(searchValue, 'i');
-        return searchValue
-            ? projects.filter(project => regExp.test(project.name))
-            : projects;
+        return (
+            searchValue
+                ? projects.filter(project => regExp.test(project.name))
+                : projects
+        ).sort((a, b) => {
+            if (a?.favorite && !b?.favorite) {
+                return -1;
+            }
+            if (!a?.favorite && b?.favorite) {
+                return 1;
+            }
+            return 0;
+        });
     }, [projects, searchValue]);
 
     const handleHover = (projectId: string) => {
@@ -129,124 +138,126 @@ export const ProjectListNew = () => {
         );
     };
 
-    const renderProjects = () => {
-        if (loading) {
-            return renderLoading();
-        }
-
-        return filteredProjects.map((project: IProjectCard) => {
-            return (
-                <Link
-                    key={project.id}
-                    to={`/projects/${project.id}`}
-                    className={styles.cardLink}
-                >
-                    <ProjectCard
-                        onHover={() => handleHover(project.id)}
-                        name={project.name}
-                        memberCount={project.memberCount ?? 0}
-                        health={project.health}
-                        id={project.id}
-                        featureCount={project.featureCount}
-                    />
-                </Link>
-            );
-        });
-    };
-
-    const renderLoading = () => {
-        return loadingData.map((project: IProjectCard) => {
-            return (
-                <ProjectCard
-                    data-loading
-                    onHover={() => {}}
-                    key={project.id}
-                    name={project.name}
-                    id={project.id}
-                    memberCount={2}
-                    health={95}
-                    featureCount={4}
-                />
-            );
-        });
-    };
-
     let projectCount =
         filteredProjects.length < projects.length
             ? `${filteredProjects.length} of ${projects.length}`
             : projects.length;
 
     return (
-        <div ref={ref}>
-            <PageContent
-                header={
-                    <PageHeader
-                        title={`Projects (${projectCount})`}
-                        actions={
-                            <>
-                                <ConditionallyRender
-                                    condition={!isSmallScreen}
-                                    show={
-                                        <>
-                                            <Search
-                                                initialValue={searchValue}
-                                                onChange={setSearchValue}
-                                            />
-                                            <PageHeader.Divider />
-                                        </>
-                                    }
-                                />
-                                <ResponsiveButton
-                                    Icon={Add}
-                                    endIcon={createButtonData.endIcon}
-                                    onClick={() => navigate('/projects/create')}
-                                    maxWidth="700px"
-                                    permission={CREATE_PROJECT}
-                                    disabled={createButtonData.disabled}
-                                    tooltipProps={createButtonData.tooltip}
-                                >
-                                    New project
-                                </ResponsiveButton>
-                            </>
-                        }
-                    >
-                        <ConditionallyRender
-                            condition={isSmallScreen}
-                            show={
-                                <Search
-                                    initialValue={searchValue}
-                                    onChange={setSearchValue}
-                                />
-                            }
-                        />
-                    </PageHeader>
-                }
-            >
-                <ConditionallyRender condition={error} show={renderError()} />
-                <div className={styles.container}>
-                    <ConditionallyRender
-                        condition={filteredProjects.length < 1 && !loading}
-                        show={
+        <PageContent
+            isLoading={loading}
+            header={
+                <PageHeader
+                    title={`Projects (${projectCount})`}
+                    actions={
+                        <>
                             <ConditionallyRender
-                                condition={searchValue?.length > 0}
+                                condition={!isSmallScreen}
                                 show={
-                                    <TablePlaceholder>
-                                        No projects found matching &ldquo;
-                                        {searchValue}
-                                        &rdquo;
-                                    </TablePlaceholder>
-                                }
-                                elseShow={
-                                    <TablePlaceholder>
-                                        No projects available.
-                                    </TablePlaceholder>
+                                    <>
+                                        <Search
+                                            initialValue={searchValue}
+                                            onChange={setSearchValue}
+                                        />
+                                        <PageHeader.Divider />
+                                    </>
                                 }
                             />
+                            <ResponsiveButton
+                                Icon={Add}
+                                endIcon={createButtonData.endIcon}
+                                onClick={() => navigate('/projects/create')}
+                                maxWidth="700px"
+                                permission={CREATE_PROJECT}
+                                disabled={createButtonData.disabled}
+                                tooltipProps={createButtonData.tooltip}
+                            >
+                                New project
+                            </ResponsiveButton>
+                        </>
+                    }
+                >
+                    <ConditionallyRender
+                        condition={isSmallScreen}
+                        show={
+                            <Search
+                                initialValue={searchValue}
+                                onChange={setSearchValue}
+                            />
                         }
-                        elseShow={renderProjects()}
                     />
-                </div>
-            </PageContent>
-        </div>
+                </PageHeader>
+            }
+        >
+            <ConditionallyRender condition={error} show={renderError()} />
+            <div className={styles.container}>
+                <ConditionallyRender
+                    condition={filteredProjects.length < 1 && !loading}
+                    show={
+                        <ConditionallyRender
+                            condition={searchValue?.length > 0}
+                            show={
+                                <TablePlaceholder>
+                                    No projects found matching &ldquo;
+                                    {searchValue}
+                                    &rdquo;
+                                </TablePlaceholder>
+                            }
+                            elseShow={
+                                <TablePlaceholder>
+                                    No projects available.
+                                </TablePlaceholder>
+                            }
+                        />
+                    }
+                    elseShow={
+                        <ConditionallyRender
+                            condition={loading}
+                            show={() =>
+                                loadingData.map((project: IProjectCard) => (
+                                    <ProjectCard
+                                        data-loading
+                                        onHover={() => {}}
+                                        key={project.id}
+                                        name={project.name}
+                                        id={project.id}
+                                        memberCount={2}
+                                        health={95}
+                                        featureCount={4}
+                                    />
+                                ))
+                            }
+                            elseShow={() =>
+                                filteredProjects.map(
+                                    (project: IProjectCard) => (
+                                        <Link
+                                            key={project.id}
+                                            to={`/projects/${project.id}`}
+                                            className={styles.cardLink}
+                                        >
+                                            <ProjectCard
+                                                onHover={() =>
+                                                    handleHover(project.id)
+                                                }
+                                                name={project.name}
+                                                memberCount={
+                                                    project.memberCount ?? 0
+                                                }
+                                                health={project.health}
+                                                id={project.id}
+                                                featureCount={
+                                                    project.featureCount
+                                                }
+                                                isFavorite={project.favorite}
+                                            />
+                                        </Link>
+                                    )
+                                )
+                            }
+                        />
+                    }
+                />
+            </div>
+        </PageContent>
     );
 };

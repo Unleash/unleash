@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
 import { FC } from 'react';
-import { Typography } from '@mui/material';
+import { Typography, Tooltip } from '@mui/material';
 import TimeAgo from 'react-timeago';
 import { IChangeRequest } from 'component/changeRequest/changeRequest.types';
 import { ChangeRequestStatusBadge } from 'component/changeRequest/ChangeRequestStatusBadge/ChangeRequestStatusBadge';
@@ -29,7 +29,9 @@ export const ChangeRequestHeader: FC<{ changeRequest: IChangeRequest }> = ({
                     Created <TimeAgo date={new Date(changeRequest.createdAt)} />{' '}
                     by
                 </Typography>
-                <StyledAvatar src={changeRequest?.createdBy?.imageUrl} />
+                <Tooltip title={changeRequest?.createdBy?.username}>
+                    <StyledAvatar src={changeRequest?.createdBy?.imageUrl} />
+                </Tooltip>
                 <Box>
                     <StyledCard variant="outlined">
                         <Typography variant="body2">

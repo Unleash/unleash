@@ -45,6 +45,7 @@ export interface IFlags {
     cloneEnvironment?: boolean;
     variantsPerEnvironment?: boolean;
     tokensLastSeen?: boolean;
+    favorites?: boolean;
     networkView?: boolean;
 }
 

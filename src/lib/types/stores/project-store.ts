@@ -34,21 +34,37 @@ export interface IProjectEnvironmentWithChangeRequests {
 
 export interface IProjectStore extends Store<IProject, string> {
     hasProject(id: string): Promise<boolean>;
+
     updateHealth(healthUpdate: IProjectHealthUpdate): Promise<void>;
+
     create(project: IProjectInsert): Promise<IProject>;
+
     update(update: IProjectInsert): Promise<void>;
+
     importProjects(
         projects: IProjectInsert[],
         environments?: IEnvironment[],
     ): Promise<IProject[]>;
+
     addEnvironmentToProject(id: string, environment: string): Promise<void>;
+
     deleteEnvironmentForProject(id: string, environment: string): Promise<void>;
+
     getEnvironmentsForProject(id: string): Promise<string[]>;
+
     getMembersCountByProject(projectId: string): Promise<number>;
+
     getProjectsByUser(userId: number): Promise<string[]>;
+
     getMembersCount(): Promise<IProjectMembersCount[]>;
-    getProjectsWithCounts(query?: IProjectQuery): Promise<IProjectWithCount[]>;
+
+    getProjectsWithCounts(
+        query?: IProjectQuery,
+        userId?: number,
+    ): Promise<IProjectWithCount[]>;
+
     count(): Promise<number>;
+
     getAll(query?: IProjectQuery): Promise<IProject[]>;
 
     getProjectLinksForEnvironments(

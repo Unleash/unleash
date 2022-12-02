@@ -19,6 +19,53 @@ const server = testServerSetup();
 test('create change request', async () => {
     testServerRoute(
         server,
+        'api/admin/projects/default/change-requests/pending',
+        [
+            {
+                id: 156,
+                environment: 'production',
+                state: 'Draft',
+                minApprovals: 1,
+                project: 'default',
+                createdBy: {
+                    id: 1,
+                    username: 'admin',
+                    imageUrl:
+                        'https://gravatar.com/avatar/21232f297a57a5a743894a0e4a801fc3?size=42&default=retro',
+                },
+                createdAt: '2022-12-02T09:19:12.242Z',
+                features: [
+                    {
+                        name: 'test',
+                        changes: [
+                            {
+                                id: 292,
+                                action: 'addStrategy',
+                                payload: {
+                                    name: 'default',
+                                    segments: [],
+                                    parameters: {},
+                                    constraints: [],
+                                },
+                                createdAt: '2022-12-02T09:19:12.245Z',
+                                createdBy: {
+                                    id: 1,
+                                    username: 'admin',
+                                    imageUrl:
+                                        'https://gravatar.com/avatar/21232f297a57a5a743894a0e4a801fc3?size=42&default=retro',
+                                },
+                            },
+                        ],
+                    },
+                ],
+                approvals: [],
+                comments: [],
+            },
+        ]
+    );
+
+    testServerRoute(
+        server,
         '/api/admin/projects/default/change-requests/config',
         [
             {
@@ -144,7 +191,11 @@ test('create change request', async () => {
                             <Routes>
                                 <Route
                                     path="/projects/:projectId/features/:featureId/*"
-                                    element={<FeatureView />}
+                                    element={
+                                        <>
+                                            <FeatureView />
+                                        </>
+                                    }
                                 />
                             </Routes>
                         </AnnouncerProvider>
@@ -155,10 +206,11 @@ test('create change request', async () => {
     );
 
     const featureToggleStatusBox = screen.getByTestId('feature-toggle-status');
+    await screen.findByText('Change request mode'); // pending change request
 
     await within(featureToggleStatusBox).findByText('production');
     const toggle = screen.getAllByRole('checkbox')[1];
     fireEvent.click(toggle);
 
-    await screen.findByText('Request changes');
+    await screen.findByText('Request changes'); // change request confirmation dialog
 });

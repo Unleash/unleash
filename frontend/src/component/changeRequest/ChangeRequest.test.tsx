@@ -17,7 +17,7 @@ import { FC } from 'react';
 
 const server = testServerSetup();
 
-const pendingChangeRequest = () =>
+const pendingChangeRequest = (featureName: string) =>
     testServerRoute(
         server,
         'api/admin/projects/default/change-requests/pending',
@@ -37,7 +37,7 @@ const pendingChangeRequest = () =>
                 createdAt: '2022-12-02T09:19:12.242Z',
                 features: [
                     {
-                        name: 'test',
+                        name: featureName,
                         changes: [
                             {
                                 id: 292,
@@ -122,7 +122,7 @@ const uiConfigForEnterprise = () =>
         disablePasswordAuth: false,
     });
 
-const featureList = (name: string) =>
+const featureList = (featureName: string) =>
     testServerRoute(server, '/api/admin/projects/default', {
         name: 'Default',
         description: 'Default project',
@@ -132,7 +132,7 @@ const featureList = (name: string) =>
         features: [
             {
                 type: 'release',
-                name,
+                name: featureName,
                 createdAt: '2022-11-14T08:16:33.338Z',
                 lastSeenAt: null,
                 stale: false,
@@ -157,7 +157,7 @@ const featureList = (name: string) =>
     });
 
 const feature = (name: string) =>
-    testServerRoute(server, '/api/admin/projects/default/features/test', {
+    testServerRoute(server, `/api/admin/projects/default/features/${name}`, {
         environments: [
             {
                 name: 'development',
@@ -187,14 +187,14 @@ const feature = (name: string) =>
     });
 
 const otherRequests = (feature: string) => {
-    testServerRoute(server, 'api/admin/client-metrics/features/test', {
+    testServerRoute(server, `api/admin/client-metrics/features/${feature}`, {
         version: 1,
         maturity: 'stable',
         featureName: feature,
         lastHourUsage: [],
         seenApplications: [],
     });
-    testServerRoute(server, 'api/admin/features/test/tags', {
+    testServerRoute(server, `api/admin/features/${feature}/tags`, {
         version: 1,
         tags: [],
     });
@@ -216,14 +216,18 @@ const otherRequests = (feature: string) => {
     });
 };
 
-const UnleashUiSetup: FC<{ path: string }> = ({ children, path }) => (
+const UnleashUiSetup: FC<{ path: string; pathTemplate: string }> = ({
+    children,
+    path,
+    pathTemplate,
+}) => (
     <UIProviderContainer>
         <AccessProvider>
-            <MemoryRouter initialEntries={['/projects/default/features/test']}>
+            <MemoryRouter initialEntries={[path]}>
                 <ThemeProvider>
                     <AnnouncerProvider>
                         <Routes>
-                            <Route path={path} element={children} />
+                            <Route path={pathTemplate} element={children} />
                         </Routes>
                     </AnnouncerProvider>
                 </ThemeProvider>
@@ -233,19 +237,23 @@ const UnleashUiSetup: FC<{ path: string }> = ({ children, path }) => (
 );
 
 const setupHttpRoutes = () => {
-    pendingChangeRequest();
+    const featureName = 'test';
+    pendingChangeRequest(featureName);
     changeRequestsEnabledIn('production');
     uiConfigForEnterprise();
-    featureList('test');
-    feature('test');
-    otherRequests('test');
+    featureList(featureName);
+    feature(featureName);
+    otherRequests(featureName);
 };
 
 test('create change request', async () => {
     setupHttpRoutes();
 
     render(
-        <UnleashUiSetup path="/projects/:projectId/features/:featureId/*">
+        <UnleashUiSetup
+            pathTemplate="/projects/:projectId/features/:featureId/*"
+            path="/projects/default/features/test"
+        >
             <FeatureView />
         </UnleashUiSetup>
     );

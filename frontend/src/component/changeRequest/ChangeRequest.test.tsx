@@ -121,11 +121,7 @@ const uiConfigForEnterprise = () =>
         disablePasswordAuth: false,
     });
 
-test('create change request', async () => {
-    pendingChangeRequest();
-    changeRequestsEnabledIn('production');
-    uiConfigForEnterprise();
-
+const featureList = (name: string) =>
     testServerRoute(server, '/api/admin/projects/default', {
         name: 'Default',
         description: 'Default project',
@@ -135,7 +131,7 @@ test('create change request', async () => {
         features: [
             {
                 type: 'release',
-                name: 'test',
+                name,
                 createdAt: '2022-11-14T08:16:33.338Z',
                 lastSeenAt: null,
                 stale: false,
@@ -158,6 +154,8 @@ test('create change request', async () => {
         members: 0,
         version: 1,
     });
+
+const feature = (name: string) =>
     testServerRoute(server, '/api/admin/projects/default/features/test', {
         environments: [
             {
@@ -175,7 +173,7 @@ test('create change request', async () => {
                 strategies: [],
             },
         ],
-        name: 'test',
+        name,
         impressionData: false,
         description: '',
         project: 'default',
@@ -186,6 +184,44 @@ test('create change request', async () => {
         type: 'release',
         archived: false,
     });
+
+const otherRequests = (feature: string) => {
+    testServerRoute(server, 'api/admin/client-metrics/features/test', {
+        version: 1,
+        maturity: 'stable',
+        featureName: feature,
+        lastHourUsage: [],
+        seenApplications: [],
+    });
+    testServerRoute(server, 'api/admin/features/test/tags', {
+        version: 1,
+        tags: [],
+    });
+    testServerRoute(server, 'api/admin/user', {
+        user: {
+            isAPI: false,
+            id: 17,
+            name: 'Some User',
+            email: 'user@example.com',
+            imageUrl:
+                'https://gravatar.com/avatar/8aa1132e102345f8c79322340e15340?size=42&default=retro',
+            seenAt: '2022-11-28T14:55:18.982Z',
+            loginAttempts: 0,
+            createdAt: '2022-11-23T13:31:17.061Z',
+        },
+        permissions: [{ permission: 'ADMIN' }],
+        feedback: [],
+        splash: {},
+    });
+};
+
+test('create change request', async () => {
+    pendingChangeRequest();
+    changeRequestsEnabledIn('production');
+    uiConfigForEnterprise();
+    featureList('test');
+    feature('test');
+    otherRequests('test');
 
     render(
         <UIProviderContainer>

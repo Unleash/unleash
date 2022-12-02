@@ -16,12 +16,12 @@ export const ProjectSettings = () => {
 
     const tabs: ITab[] = [
         {
-            id: 'access',
-            label: 'Access',
-        },
-        {
             id: 'environments',
             label: 'Environments',
+        },
+        {
+            id: 'access',
+            label: 'Access',
         },
         {
             id: 'change-requests',
@@ -44,11 +44,11 @@ export const ProjectSettings = () => {
             onChange={onChange}
         >
             <Routes>
-                <Route path={`${tabs[0].id}/*`} element={<ProjectAccess />} />
                 <Route
-                    path={`${tabs[1].id}/*`}
+                    path={`${tabs[0].id}/*`}
                     element={<ProjectEnvironmentList />}
                 />
+                <Route path={`${tabs[1].id}/*`} element={<ProjectAccess />} />
                 <Route
                     path={`${tabs[2].id}/*`}
                     element={<ChangeRequestConfiguration />}

@@ -43,7 +43,7 @@ export const ProFeatureTooltip = ({
     const handleClick = () => {
         if (origin) {
             tracker.trackEvent('upgrade_plan_clicked', {
-                props: { origin: origin },
+                props: { origin },
             });
         }
     };

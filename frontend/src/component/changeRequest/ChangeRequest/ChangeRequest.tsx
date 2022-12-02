@@ -224,6 +224,7 @@ export const ChangeRequest: VFC<IChangeRequestProps> = ({
                 >
                     {feature.changes.map((change, index) => (
                         <Change
+                            key={index}
                             onDiscard={onDiscard(change.id)}
                             index={index}
                             changeRequest={changeRequest}

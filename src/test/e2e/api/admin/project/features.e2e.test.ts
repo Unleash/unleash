@@ -513,7 +513,6 @@ test('Trying to toggle environment that does not exist yields 404', async () => 
 });
 
 test('Getting feature that does not exist should yield 404', async () => {
-    // Todo: FIX TEST
     await app.request
         .get('/api/admin/projects/default/features/non.existing.feature')
         .expect(403);

@@ -8,7 +8,6 @@ import { ProjectCard } from '../ProjectCard/ProjectCard';
 import { useStyles } from './ProjectList.styles';
 import { IProjectCard } from 'interfaces/project';
 import loadingData from './loadingData';
-import useLoading from 'hooks/useLoading';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import AccessContext from 'contexts/AccessContext';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
@@ -46,7 +45,10 @@ function resolveCreateButtonData(
             disabled: true,
             tooltip: {
                 titleComponent: (
-                    <ProFeatureTooltip title={'Pro & Enterprise feature'}>
+                    <ProFeatureTooltip
+                        title={'Pro & Enterprise feature'}
+                        origin={'Project'}
+                    >
                         To be able to add more projects you need to upgrade to
                         Pro or Enterprise plan
                     </ProFeatureTooltip>

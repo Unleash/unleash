@@ -5,33 +5,37 @@ import { IChangeRequestEnvironmentConfig } from 'component/changeRequest/changeR
 import useUiConfig from '../useUiConfig/useUiConfig';
 import { useEffect } from 'react';
 
-const useConditionalSWR = <Data = any, Error = any>(
-    key: Key,
-    fetcher: BareFetcher<Data> | null
-): SWRResponse<Data, Error> => {
-    const { isOss } = useUiConfig();
-
-    const result = useSWR(key, fetcher);
-
-    useEffect(() => {
-        result.mutate();
-    }, [isOss()]);
-
-    return result;
-};
+// const useConditionalSWR = <Data = any, Error = any>(
+//     key: Key,
+//     fetcher: BareFetcher<Data> | null
+// ): SWRResponse<Data, Error> => {
+//     const { isOss } = useUiConfig();
+//
+//     const result = useSWR(key, fetcher);
+//
+//     useEffect(() => {
+//         result.mutate();
+//     }, [isOss()]);
+//
+//     return result;
+// };
 
 export const useChangeRequestConfig = (projectId: string) => {
-    const { data, error, mutate } = useConditionalSWR<
-        IChangeRequestEnvironmentConfig[]
-    >(
+    const { isOss } = useUiConfig();
+
+    const { data, error, mutate } = useSWR<IChangeRequestEnvironmentConfig[]>(
         formatApiPath(`api/admin/projects/${projectId}/change-requests/config`),
-        fetcher
+        (path: string) => (isOss() ? Promise.resolve([]) : fetcher(path))
     );
+
+    useEffect(() => {
+        mutate();
+    }, [isOss()]);
 
     return {
         data: data || [],
         loading: !error && !data,
-        refetchChangeRequestConfig: () => mutate(),
+        refetchChangeRequestConfig: mutate,
         error,
     };
 };

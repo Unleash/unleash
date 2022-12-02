@@ -16,7 +16,7 @@ import { UIProviderContainer } from '../providers/UIProvider/UIProviderContainer
 
 const server = testServerSetup();
 
-test('create change request', async () => {
+const pendingChangeRequest = () =>
     testServerRoute(
         server,
         'api/admin/projects/default/change-requests/pending',
@@ -64,6 +64,7 @@ test('create change request', async () => {
         ]
     );
 
+const changeRequestsEnabledIn = (env: string) =>
     testServerRoute(
         server,
         '/api/admin/projects/default/change-requests/config',
@@ -71,16 +72,17 @@ test('create change request', async () => {
             {
                 environment: 'development',
                 type: 'development',
-                changeRequestEnabled: false,
+                changeRequestEnabled: env === 'development',
             },
             {
                 environment: 'production',
                 type: 'production',
-                changeRequestEnabled: true,
+                changeRequestEnabled: env === 'production',
             },
         ]
     );
 
+const uiConfigForEnterprise = () =>
     testServerRoute(server, '/api/admin/ui-config', {
         environment: 'Open Source',
         flags: {
@@ -118,6 +120,11 @@ test('create change request', async () => {
         },
         disablePasswordAuth: false,
     });
+
+test('create change request', async () => {
+    pendingChangeRequest();
+    changeRequestsEnabledIn('production');
+    uiConfigForEnterprise();
 
     testServerRoute(server, '/api/admin/projects/default', {
         name: 'Default',

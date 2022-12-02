@@ -1248,10 +1248,6 @@ class FeatureToggleService {
         newVariants: Operation[],
         createdBy: string,
     ): Promise<FeatureToggle> {
-        // const oldVariants = await this.getVariants(featureName);
-        // const { newDocument } = applyPatch(oldVariants, newVariants);
-        // NOTE: saveVariants iterates over all feature_environments overriding the variants in all environments
-        // this.saveVariants(featureName, project, newDocument, createdBy);
         const ft =
             await this.featureStrategiesStore.getFeatureToggleWithVariantEnvs(
                 featureName,

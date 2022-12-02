@@ -1,6 +1,6 @@
 import { defaultExperimentalOptions, IFlagKey } from '../types/experimental';
 import FlagResolver from './flag-resolver';
-import { IExperimentalOptions } from '../../../dist/lib/types/experimental';
+import { IExperimentalOptions } from '../types/experimental';
 
 test('should produce empty exposed flags', () => {
     const resolver = new FlagResolver(defaultExperimentalOptions);

@@ -46,8 +46,8 @@ function resolveCreateButtonData(
             tooltip: {
                 titleComponent: (
                     <ProFeatureTooltip
-                        title={'Pro & Enterprise feature'}
-                        origin={'Project'}
+                        title="Pro & Enterprise feature"
+                        origin="Project"
                     >
                         To be able to add more projects you need to upgrade to
                         Pro or Enterprise plan

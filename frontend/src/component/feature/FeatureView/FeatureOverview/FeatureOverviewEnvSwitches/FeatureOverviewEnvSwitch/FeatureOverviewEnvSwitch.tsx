@@ -43,8 +43,6 @@ const FeatureOverviewEnvSwitch = ({
         changeRequestDialogDetails,
     } = useChangeRequestToggle(projectId);
 
-    // console.log('**** is prod ', isChangeRequestConfigured('production'));
-
     const handleToggleEnvironmentOn = async () => {
         try {
             await toggleFeatureEnvironmentOn(projectId, featureId, env.name);
@@ -87,7 +85,6 @@ const FeatureOverviewEnvSwitch = ({
     };
 
     const toggleEnvironment = async (e: React.ChangeEvent) => {
-        console.log('****', 'toggle click event');
         if (isChangeRequestConfigured(env.name)) {
             e.preventDefault();
             onChangeRequestToggle(featureId, env.name, !env.enabled);

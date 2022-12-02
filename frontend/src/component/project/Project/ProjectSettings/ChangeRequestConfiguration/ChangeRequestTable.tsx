@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useMemo, useState, VFC } from 'react';
+import React, { useContext, useMemo, useState, VFC } from 'react';
 import { HeaderGroup, useGlobalFilter, useTable } from 'react-table';
 import { Alert, Box, styled, Typography } from '@mui/material';
 import {
@@ -29,6 +29,7 @@ import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { KeyboardArrowDownOutlined } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
 import AccessContext from 'contexts/AccessContext';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     padding: theme.spacing(1),
@@ -40,6 +41,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
 }));
 
 export const ChangeRequestTable: VFC = () => {
+    const { trackEvent } = usePlausibleTracker();
     const [dialogState, setDialogState] = useState<{
         isOpen: boolean;
         enableEnvironment: string;
@@ -51,6 +53,7 @@ export const ChangeRequestTable: VFC = () => {
         isEnabled: false,
         requiredApprovals: 1,
     });
+
     const theme = useTheme();
     const projectId = useRequiredPathParam('projectId');
     const { data, loading, refetchChangeRequestConfig } =
@@ -77,44 +80,29 @@ export const ChangeRequestTable: VFC = () => {
         if (dialogState.enableEnvironment) {
             await updateConfiguration();
         }
-        setDialogState({
-            isOpen: false,
-            enableEnvironment: '',
-            isEnabled: false,
-            requiredApprovals: 1,
-        });
+        setDialogState(state => ({ ...state, isOpen: false }));
     };
 
-    const updateConfiguration = useCallback(
-        async (config?: IChangeRequestConfig) => {
-            try {
-                await updateChangeRequestEnvironmentConfig(
-                    config || {
-                        project: projectId,
-                        environment: dialogState.enableEnvironment,
-                        enabled: !dialogState.isEnabled,
-                        requiredApprovals: dialogState.requiredApprovals,
-                    }
-                );
-                setToastData({
-                    type: 'success',
-                    title: 'Updated change request status',
-                    text: 'Successfully updated change request status.',
-                });
-                await refetchChangeRequestConfig();
-            } catch (error) {
-                setToastApiError(formatUnknownError(error));
-            }
-        },
-        [
-            dialogState,
-            projectId,
-            refetchChangeRequestConfig,
-            setToastApiError,
-            setToastData,
-            updateChangeRequestEnvironmentConfig,
-        ]
-    );
+    async function updateConfiguration(config?: IChangeRequestConfig) {
+        try {
+            await updateChangeRequestEnvironmentConfig(
+                config || {
+                    project: projectId,
+                    environment: dialogState.enableEnvironment,
+                    enabled: !dialogState.isEnabled,
+                    requiredApprovals: dialogState.requiredApprovals,
+                }
+            );
+            setToastData({
+                type: 'success',
+                title: 'Updated change request status',
+                text: 'Successfully updated change request status.',
+            });
+            await refetchChangeRequestConfig();
+        } catch (error) {
+            setToastApiError(formatUnknownError(error));
+        }
+    }
 
     const approvalOptions = Array.from(Array(10).keys())
         .map(key => String(key + 1))
@@ -127,17 +115,14 @@ export const ChangeRequestTable: VFC = () => {
             };
         });
 
-    const onRequiredApprovalsChange = useCallback(
-        (original: any, approvals: string) => {
-            updateConfiguration({
-                project: projectId,
-                environment: original.environment,
-                enabled: original.changeRequestEnabled,
-                requiredApprovals: Number(approvals),
-            });
-        },
-        [projectId, updateConfiguration]
-    );
+    function onRequiredApprovalsChange(original: any, approvals: string) {
+        updateConfiguration({
+            project: projectId,
+            environment: original.environment,
+            enabled: original.changeRequestEnabled,
+            requiredApprovals: Number(approvals),
+        });
+    }
 
     const columns = useMemo(
         () => [
@@ -172,7 +157,12 @@ export const ChangeRequestTable: VFC = () => {
                                                 approvals
                                             );
                                         }}
-                                        disabled={!hasAccess(UPDATE_PROJECT)}
+                                        disabled={
+                                            !hasAccess(
+                                                UPDATE_PROJECT,
+                                                projectId
+                                            )
+                                        }
                                         IconComponent={
                                             KeyboardArrowDownOutlined
                                         }
@@ -197,7 +187,6 @@ export const ChangeRequestTable: VFC = () => {
                     <StyledBox data-loading>
                         <PermissionSwitch
                             checked={value}
-                            environmentId={original.environment}
                             projectId={projectId}
                             permission={UPDATE_PROJECT}
                             inputProps={{ 'aria-label': original.environment }}
@@ -214,7 +203,7 @@ export const ChangeRequestTable: VFC = () => {
                 disableSortBy: true,
             },
         ],
-        [approvalOptions, onRequiredApprovalsChange, projectId]
+        []
     );
 
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
@@ -269,7 +258,17 @@ export const ChangeRequestTable: VFC = () => {
             </Table>
 
             <Dialogue
-                onClick={() => onConfirm()}
+                onClick={() => {
+                    trackEvent('change_request', {
+                        props: {
+                            eventType: `change request ${
+                                !dialogState.isEnabled ? 'enabled' : 'disabled'
+                            }`,
+                        },
+                    });
+
+                    onConfirm();
+                }}
                 open={dialogState.isOpen}
                 onClose={() =>
                     setDialogState(state => ({ ...state, isOpen: false }))

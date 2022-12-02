@@ -25,6 +25,7 @@ import {
     FeatureStrategyRemoveEvent,
     FeatureStrategyUpdateEvent,
     FeatureVariantEvent,
+    EnvironmentVariantEvent,
 } from '../types/events';
 import NotFoundError from '../error/notfound-error';
 import {
@@ -77,6 +78,7 @@ import { AccessService } from './access-service';
 import { User } from '../server-impl';
 import { CREATE_FEATURE_STRATEGY } from '../types/permissions';
 import NoAccessError from '../error/no-access-error';
+import { IFeatureProjectUserParams } from '../routes/admin-api/project/features';
 
 interface IFeatureContext {
     featureName: string;
@@ -85,6 +87,14 @@ interface IFeatureContext {
 
 interface IFeatureStrategyContext extends IFeatureContext {
     environment: string;
+}
+
+export interface IGetFeatureParams {
+    featureName: string;
+    archived?: boolean;
+    projectId?: string;
+    environmentVariants?: boolean;
+    userId?: number;
 }
 
 const oneOf = (values: string[], match: string) => {
@@ -607,20 +617,30 @@ class FeatureToggleService {
      * @param archived - return archived or non archived toggles
      * @param projectId - provide if you're requesting the feature in the context of a specific project.
      */
-    async getFeature(
-        featureName: string,
-        archived: boolean = false,
-        projectId?: string,
-    ): Promise<FeatureToggleWithEnvironment> {
-        const feature =
-            await this.featureStrategiesStore.getFeatureToggleWithEnvs(
-                featureName,
-                archived,
-            );
+    async getFeature({
+        featureName,
+        archived,
+        projectId,
+        environmentVariants,
+        userId,
+    }: IGetFeatureParams): Promise<FeatureToggleWithEnvironment> {
         if (projectId) {
             await this.validateFeatureContext({ featureName, projectId });
         }
-        return feature;
+
+        if (environmentVariants) {
+            return this.featureStrategiesStore.getFeatureToggleWithVariantEnvs(
+                featureName,
+                userId,
+                archived,
+            );
+        } else {
+            return this.featureStrategiesStore.getFeatureToggleWithEnvs(
+                featureName,
+                userId,
+                archived,
+            );
+        }
     }
 
     /**
@@ -630,6 +650,17 @@ class FeatureToggleService {
      */
     async getVariants(featureName: string): Promise<IVariant[]> {
         return this.featureToggleStore.getVariants(featureName);
+    }
+
+    async getVariantsForEnv(
+        featureName: string,
+        environment: string,
+    ): Promise<IVariant[]> {
+        const featureEnvironment = await this.featureEnvironmentStore.get({
+            featureName,
+            environment,
+        });
+        return featureEnvironment.variants || [];
     }
 
     async getFeatureMetadata(featureName: string): Promise<FeatureToggle> {
@@ -644,9 +675,7 @@ class FeatureToggleService {
     }
 
     /**
-     *
-     * Warn: Legacy!
-     *
+     * @deprecated Legacy!
      *
      * Used to retrieve metadata of all feature toggles defined in Unleash.
      * @param query - Allow you to limit search based on criteria such as project, tags, namePrefix. See @IFeatureToggleQuery
@@ -655,19 +684,20 @@ class FeatureToggleService {
      */
     async getFeatureToggles(
         query?: IFeatureToggleQuery,
+        userId?: number,
         archived: boolean = false,
     ): Promise<FeatureToggle[]> {
-        return this.featureToggleClientStore.getAdmin(query, archived);
+        return this.featureToggleClientStore.getAdmin({
+            featureQuery: query,
+            userId,
+            archived,
+        });
     }
 
     async getFeatureOverview(
-        projectId: string,
-        archived: boolean = false,
+        params: IFeatureProjectUserParams,
     ): Promise<IFeatureOverview[]> {
-        return this.featureStrategiesStore.getFeatureOverview(
-            projectId,
-            archived,
-        );
+        return this.featureStrategiesStore.getFeatureOverview(params);
     }
 
     async getFeatureToggle(
@@ -675,7 +705,6 @@ class FeatureToggleService {
     ): Promise<FeatureToggleWithEnvironment> {
         return this.featureStrategiesStore.getFeatureToggleWithEnvs(
             featureName,
-            false,
         );
     }
 
@@ -704,6 +733,20 @@ class FeatureToggleService {
                 featureName,
                 projectId,
             );
+
+            if (value.variants && value.variants.length > 0) {
+                const environments =
+                    await this.featureEnvironmentStore.getEnvironmentsForFeature(
+                        featureName,
+                    );
+                environments.forEach(async (featureEnv) => {
+                    await this.featureEnvironmentStore.addVariantsToFeatureEnvironment(
+                        featureName,
+                        featureEnv.environment,
+                        value.variants,
+                    );
+                });
+            }
 
             const tags = await this.tagStore.getAllTagsForFeature(featureName);
 
@@ -735,18 +778,30 @@ class FeatureToggleService {
         await this.validateName(newFeatureName);
 
         const cToggle =
-            await this.featureStrategiesStore.getFeatureToggleWithEnvs(
+            await this.featureStrategiesStore.getFeatureToggleWithVariantEnvs(
                 featureName,
             );
 
-        const newToggle = { ...cToggle, name: newFeatureName };
+        const newToggle = {
+            ...cToggle,
+            name: newFeatureName,
+            variants: undefined,
+        };
         const created = await this.createFeatureToggle(
             projectId,
             newToggle,
             userName,
         );
 
-        const tasks = newToggle.environments.flatMap((e) =>
+        const variantTasks = newToggle.environments.map((e) => {
+            return this.featureEnvironmentStore.addVariantsToFeatureEnvironment(
+                newToggle.name,
+                e.name,
+                e.variants,
+            );
+        });
+
+        const strategyTasks = newToggle.environments.flatMap((e) =>
             e.strategies.map((s) => {
                 if (replaceGroupId && s.parameters.hasOwnProperty('groupId')) {
                     s.parameters.groupId = newFeatureName;
@@ -756,13 +811,11 @@ class FeatureToggleService {
                     featureName: newFeatureName,
                     environment: e.name,
                 };
-                return this.createStrategy(s, context, userName).then((s2) =>
-                    this.segmentService.cloneStrategySegments(s.id, s2.id),
-                );
+                return this.createStrategy(s, context, userName);
             }),
         );
 
-        await Promise.allSettled(tasks);
+        await Promise.all([...strategyTasks, ...variantTasks]);
         return created;
     }
 
@@ -1002,7 +1055,7 @@ class FeatureToggleService {
                             environment,
                         ));
                     if (canAddStrategies) {
-                        await this.createStrategy(
+                        await this.unprotectedCreateStrategy(
                             getDefaultStrategy(featureName),
                             {
                                 environment,
@@ -1128,7 +1181,7 @@ class FeatureToggleService {
     }
 
     async getArchivedFeatures(): Promise<FeatureToggle[]> {
-        return this.getFeatureToggles({}, true);
+        return this.getFeatureToggles({}, undefined, true);
     }
 
     // TODO: add project id.
@@ -1195,8 +1248,29 @@ class FeatureToggleService {
         createdBy: string,
     ): Promise<FeatureToggle> {
         const oldVariants = await this.getVariants(featureName);
-        const { newDocument } = await applyPatch(oldVariants, newVariants);
+        const { newDocument } = applyPatch(oldVariants, newVariants);
         return this.saveVariants(featureName, project, newDocument, createdBy);
+    }
+
+    async updateVariantsOnEnv(
+        featureName: string,
+        project: string,
+        environment: string,
+        newVariants: Operation[],
+        createdBy: string,
+    ): Promise<IVariant[]> {
+        const oldVariants = await this.getVariantsForEnv(
+            featureName,
+            environment,
+        );
+        const { newDocument } = await applyPatch(oldVariants, newVariants);
+        return this.saveVariantsOnEnv(
+            project,
+            featureName,
+            environment,
+            newDocument,
+            createdBy,
+        );
     }
 
     async saveVariants(
@@ -1227,6 +1301,40 @@ class FeatureToggleService {
             }),
         );
         return featureToggle;
+    }
+
+    async saveVariantsOnEnv(
+        projectId: string,
+        featureName: string,
+        environment: string,
+        newVariants: IVariant[],
+        createdBy: string,
+    ): Promise<IVariant[]> {
+        await variantsArraySchema.validateAsync(newVariants);
+        const fixedVariants = this.fixVariantWeights(newVariants);
+        const oldVariants = (
+            await this.featureEnvironmentStore.get({
+                featureName,
+                environment,
+            })
+        ).variants;
+
+        await this.eventStore.store(
+            new EnvironmentVariantEvent({
+                featureName,
+                environment,
+                project: projectId,
+                createdBy,
+                oldVariants,
+                newVariants: fixedVariants,
+            }),
+        );
+        await this.featureEnvironmentStore.addVariantsToFeatureEnvironment(
+            featureName,
+            environment,
+            fixedVariants,
+        );
+        return fixedVariants;
     }
 
     fixVariantWeights(variants: IVariant[]): IVariant[] {
@@ -1265,7 +1373,9 @@ class FeatureToggleService {
             }
             return x;
         });
-        return variableVariants.concat(fixedVariants);
+        return variableVariants
+            .concat(fixedVariants)
+            .sort((a, b) => a.name.localeCompare(b.name));
     }
 
     private async stopWhenChangeRequestsEnabled(
@@ -1279,7 +1389,7 @@ class FeatureToggleService {
             )
         ) {
             throw new Error(
-                `Change requests are enabled for ${project} in ${environment} environment`,
+                `Change requests are enabled in project "${project}" for environment "${environment}"`,
             );
         }
     }

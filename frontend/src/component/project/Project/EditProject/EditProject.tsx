@@ -85,7 +85,7 @@ const EditProject = () => {
             loading={loading}
             title="Edit project"
             description="Projects allows you to group feature toggles together in the management UI."
-            documentationLink="https://docs.getunleash.io/user_guide/projects"
+            documentationLink="https://docs.getunleash.io/reference/projects"
             documentationLinkLabel="Projects documentation"
             formatApiCode={formatApiCode}
         >

@@ -4,6 +4,8 @@ import getLogger from '../../../fixtures/no-logger';
 import { DEFAULT_ENV } from '../../../../lib/util/constants';
 import { collectIds } from '../../../../lib/util/collect-ids';
 import { ApiTokenType } from '../../../../lib/types/models/api-token';
+import variantsv3 from '../../../examples/variantsexport_v3.json';
+import { StateService } from '../../../../lib/services';
 
 const importData = require('../../../examples/import.json');
 
@@ -314,13 +316,15 @@ test('Roundtrip with strategies in multiple environments works', async () => {
         keepExisting: false,
         userName: 'export-tester',
     });
-    const f = await app.services.featureToggleServiceV2.getFeature(featureName);
-    expect(f.environments).toHaveLength(4);
+    const f = await app.services.featureToggleServiceV2.getFeature({
+        featureName,
+    });
+    expect(f.environments).toHaveLength(4); // NOTE: this depends on other tests, otherwise it should be 2
 });
 
 test(`Importing version 2 replaces :global: environment with 'default'`, async () => {
     await app.request
-        .post('/api/admin/state/import')
+        .post('/api/admin/state/import?drop=true')
         .attach('file', 'src/test/examples/exported412-version2.json')
         .expect(202);
     const env = await app.services.environmentService.get(DEFAULT_ENV);
@@ -328,7 +332,7 @@ test(`Importing version 2 replaces :global: environment with 'default'`, async (
     const feature = await app.services.featureToggleServiceV2.getFeatureToggle(
         'this-is-fun',
     );
-    expect(feature.environments).toHaveLength(4);
+    expect(feature.environments).toHaveLength(1);
     expect(feature.environments[0].name).toBe(DEFAULT_ENV);
 });
 
@@ -463,4 +467,34 @@ test(`should not show environment on feature toggle, when environment is disable
     expect(result[0].enabled).toBeTruthy();
     expect(result[1].name).toBe('production');
     expect(result[1].enabled).toBeFalsy();
+});
+
+test(`should handle v3 export with variants in features`, async () => {
+    app.services.stateService = new StateService(db.stores, {
+        getLogger,
+        flagResolver: {
+            isEnabled: () => false,
+            getAll: () => ({}),
+        },
+    });
+
+    await app.request
+        .post('/api/admin/state/import?drop=true')
+        .attach('file', 'src/test/examples/variantsexport_v3.json')
+        .expect(202);
+
+    const exported = await app.services.stateService.export({});
+    let exportedFeatures = exported.features
+        .map((f) => {
+            delete f.createdAt;
+            return f;
+        })
+        .sort();
+    let importedFeatures = variantsv3.features
+        .map((f) => {
+            delete f.createdAt;
+            return f;
+        })
+        .sort();
+    expect(exportedFeatures).toStrictEqual(importedFeatures);
 });

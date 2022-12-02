@@ -1,4 +1,4 @@
-import React, { useMemo, useState, VFC } from 'react';
+import React, { useContext, useMemo, useState, VFC } from 'react';
 import { HeaderGroup, useGlobalFilter, useTable } from 'react-table';
 import { Alert, Box, styled, Typography } from '@mui/material';
 import {
@@ -25,9 +25,11 @@ import { UPDATE_PROJECT } from '@server/types/permissions';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { ChangeRequestProcessHelp } from './ChangeRequestProcessHelp/ChangeRequestProcessHelp';
-import GeneralSelect from '../../../../common/GeneralSelect/GeneralSelect';
+import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { KeyboardArrowDownOutlined } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
+import AccessContext from 'contexts/AccessContext';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     padding: theme.spacing(1),
@@ -39,6 +41,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
 }));
 
 export const ChangeRequestConfiguration: VFC = () => {
+    const { trackEvent } = usePlausibleTracker();
     const [dialogState, setDialogState] = useState<{
         isOpen: boolean;
         enableEnvironment: string;
@@ -50,6 +53,7 @@ export const ChangeRequestConfiguration: VFC = () => {
         isEnabled: false,
         requiredApprovals: 1,
     });
+
     const theme = useTheme();
     const projectId = useRequiredPathParam('projectId');
     const { data, loading, refetchChangeRequestConfig } =
@@ -76,12 +80,7 @@ export const ChangeRequestConfiguration: VFC = () => {
         if (dialogState.enableEnvironment) {
             await updateConfiguration();
         }
-        setDialogState({
-            isOpen: false,
-            enableEnvironment: '',
-            isEnabled: false,
-            requiredApprovals: 1,
-        });
+        setDialogState(state => ({ ...state, isOpen: false }));
     };
 
     async function updateConfiguration(config?: IChangeRequestConfig) {
@@ -141,27 +140,39 @@ export const ChangeRequestConfiguration: VFC = () => {
             {
                 Header: 'Required approvals',
                 align: 'center',
-                Cell: ({ row: { original } }: any) => (
-                    <ConditionallyRender
-                        condition={original.changeRequestEnabled}
-                        show={
-                            <StyledBox data-loading>
-                                <GeneralSelect
-                                    options={approvalOptions}
-                                    value={original.requiredApprovals || 1}
-                                    onChange={approvals => {
-                                        onRequiredApprovalsChange(
-                                            original,
-                                            approvals
-                                        );
-                                    }}
-                                    IconComponent={KeyboardArrowDownOutlined}
-                                    fullWidth
-                                />
-                            </StyledBox>
-                        }
-                    />
-                ),
+                Cell: ({ row: { original } }: any) => {
+                    const { hasAccess } = useContext(AccessContext);
+
+                    return (
+                        <ConditionallyRender
+                            condition={original.changeRequestEnabled}
+                            show={
+                                <StyledBox data-loading>
+                                    <GeneralSelect
+                                        options={approvalOptions}
+                                        value={original.requiredApprovals || 1}
+                                        onChange={approvals => {
+                                            onRequiredApprovalsChange(
+                                                original,
+                                                approvals
+                                            );
+                                        }}
+                                        disabled={
+                                            !hasAccess(
+                                                UPDATE_PROJECT,
+                                                projectId
+                                            )
+                                        }
+                                        IconComponent={
+                                            KeyboardArrowDownOutlined
+                                        }
+                                        fullWidth
+                                    />
+                                </StyledBox>
+                            }
+                        />
+                    );
+                },
                 width: 100,
                 disableGlobalFilter: true,
                 disableSortBy: true,
@@ -176,7 +187,6 @@ export const ChangeRequestConfiguration: VFC = () => {
                     <StyledBox data-loading>
                         <PermissionSwitch
                             checked={value}
-                            environmentId={original.environment}
                             projectId={projectId}
                             permission={UPDATE_PROJECT}
                             inputProps={{ 'aria-label': original.environment }}
@@ -248,7 +258,17 @@ export const ChangeRequestConfiguration: VFC = () => {
             </Table>
 
             <Dialogue
-                onClick={() => onConfirm()}
+                onClick={() => {
+                    trackEvent('change_request', {
+                        props: {
+                            eventType: `change request ${
+                                !dialogState.isEnabled ? 'enabled' : 'disabled'
+                            }`,
+                        },
+                    });
+
+                    onConfirm();
+                }}
                 open={dialogState.isOpen}
                 onClose={() =>
                     setDialogState(state => ({ ...state, isOpen: false }))

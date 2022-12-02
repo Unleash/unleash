@@ -44,6 +44,9 @@ export interface IFlags {
     changeRequests?: boolean;
     cloneEnvironment?: boolean;
     variantsPerEnvironment?: boolean;
+    tokensLastSeen?: boolean;
+    favorites?: boolean;
+    networkView?: boolean;
 }
 
 export interface IVersionInfo {

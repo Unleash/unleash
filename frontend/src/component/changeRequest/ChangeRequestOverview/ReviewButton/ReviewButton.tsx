@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { FC, useContext } from 'react';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useChangeRequest } from 'hooks/api/getters/useChangeRequest/useChangeRequest';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
@@ -12,7 +12,6 @@ import {
     MenuItem,
     MenuList,
     ClickAwayListener,
-    Alert,
 } from '@mui/material';
 
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
@@ -20,13 +19,16 @@ import { APPROVE_CHANGE_REQUEST } from 'component/providers/AccessProvider/permi
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import AccessContext from 'contexts/AccessContext';
+import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 
-export const ReviewButton = () => {
+export const ReviewButton: FC<{ disabled: boolean }> = ({ disabled }) => {
     const { isAdmin } = useContext(AccessContext);
     const projectId = useRequiredPathParam('projectId');
     const id = useRequiredPathParam('id');
     const { user } = useAuthUser();
     const { refetchChangeRequest, data } = useChangeRequest(projectId, id);
+    const { refetch: refetchChangeRequestOpen } =
+        usePendingChangeRequests(projectId);
     const { setToastApiError, setToastData } = useToast();
 
     const { changeState } = useChangeRequestApi();
@@ -40,26 +42,11 @@ export const ReviewButton = () => {
                 state: 'Approved',
             });
             refetchChangeRequest();
+            refetchChangeRequestOpen();
             setToastData({
                 type: 'success',
                 title: 'Success',
                 text: 'Changes approved',
-            });
-        } catch (error: unknown) {
-            setToastApiError(formatUnknownError(error));
-        }
-    };
-
-    const onReject = async () => {
-        try {
-            await changeState(projectId, Number(id), {
-                state: 'Cancelled',
-            });
-            refetchChangeRequest();
-            setToastData({
-                type: 'success',
-                title: 'Success',
-                text: 'Changes rejected',
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
@@ -85,7 +72,9 @@ export const ReviewButton = () => {
         <React.Fragment>
             <PermissionButton
                 variant="contained"
-                disabled={data?.createdBy.id === user?.id && !isAdmin}
+                disabled={
+                    disabled || (data?.createdBy.id === user?.id && !isAdmin)
+                }
                 aria-controls={open ? 'review-options-menu' : undefined}
                 aria-expanded={open ? 'true' : undefined}
                 aria-label="review changes"
@@ -127,9 +116,6 @@ export const ReviewButton = () => {
                                 >
                                     <MenuItem onClick={onApprove}>
                                         Approve changes
-                                    </MenuItem>
-                                    <MenuItem onClick={onReject}>
-                                        Reject changes
                                     </MenuItem>
                                 </MenuList>
                             </ClickAwayListener>

@@ -1,5 +1,5 @@
-import { Add, CloudCircle } from '@mui/icons-material';
-import { Button, Divider, styled } from '@mui/material';
+import { CloudCircle } from '@mui/icons-material';
+import { styled } from '@mui/material';
 import { IFeatureEnvironment, IFeatureVariant } from 'interfaces/featureToggle';
 import { EnvironmentVariantsTable } from './EnvironmentVariantsTable/EnvironmentVariantsTable';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -43,10 +43,6 @@ const StyledName = styled('span', {
     marginLeft: theme.spacing(1.25),
 }));
 
-const StyledDivider = styled(Divider)(({ theme }) => ({
-    margin: theme.spacing(3, 0),
-}));
-
 const StyledDescription = styled('p')(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
     color: theme.palette.text.secondary,
@@ -60,7 +56,6 @@ const StyledGeneralSelect = styled(GeneralSelect)(({ theme }) => ({
 interface IEnvironmentVariantsCardProps {
     environment: IFeatureEnvironment;
     searchValue: string;
-    onAddVariant: () => void;
     onEditVariant: (variant: IFeatureVariant) => void;
     onDeleteVariant: (variant: IFeatureVariant) => void;
     onUpdateStickiness: (variant: IFeatureVariant[]) => void;
@@ -70,7 +65,6 @@ interface IEnvironmentVariantsCardProps {
 export const EnvironmentVariantsCard = ({
     environment,
     searchValue,
-    onAddVariant,
     onEditVariant,
     onDeleteVariant,
     onUpdateStickiness,
@@ -127,18 +121,10 @@ export const EnvironmentVariantsCard = ({
                             onEditVariant={onEditVariant}
                             onDeleteVariant={onDeleteVariant}
                         />
-                        <Button
-                            onClick={onAddVariant}
-                            variant="text"
-                            startIcon={<Add />}
-                        >
-                            add variant
-                        </Button>
                         <ConditionallyRender
                             condition={variants.length > 1}
                             show={
                                 <>
-                                    <StyledDivider />
                                     <p>Stickiness</p>
                                     <StyledDescription>
                                         By overriding the stickiness you can

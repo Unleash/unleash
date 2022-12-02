@@ -2,7 +2,7 @@ import {
     FeatureEnvironmentKey,
     IFeatureEnvironmentStore,
 } from '../../lib/types/stores/feature-environment-store';
-import { IFeatureEnvironment } from '../../lib/types/model';
+import { IFeatureEnvironment, IVariant } from '../../lib/types/model';
 import NotFoundError from '../../lib/error/notfound-error';
 
 export default class FakeFeatureEnvironmentStore
@@ -16,6 +16,20 @@ export default class FakeFeatureEnvironmentStore
         enabled: boolean,
     ): Promise<void> {
         this.featureEnvironments.push({ environment, enabled, featureName });
+    }
+
+    async addVariantsToFeatureEnvironment(
+        featureName: string,
+        environment: string,
+        variants: IVariant[],
+    ): Promise<void> {
+        this.featureEnvironments
+            .filter(
+                (fe) =>
+                    fe.featureName === featureName &&
+                    fe.environment === environment,
+            )
+            .map((fe) => (fe.variants = variants));
     }
 
     async delete(key: FeatureEnvironmentKey): Promise<void> {
@@ -178,6 +192,29 @@ export default class FakeFeatureEnvironmentStore
         sourceEnvironment: string,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         destinationEnvironment: string,
+    ): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
+
+    async addFeatureEnvironment(
+        featureEnvironment: IFeatureEnvironment,
+    ): Promise<void> {
+        this.featureEnvironments.push(featureEnvironment);
+        return Promise.resolve();
+    }
+
+    getEnvironmentsForFeature(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        featureName: string,
+    ): Promise<IFeatureEnvironment[]> {
+        throw new Error('Method not implemented.');
+    }
+
+    clonePreviousVariants(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        environment: string,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        project: string,
     ): Promise<void> {
         throw new Error('Method not implemented.');
     }

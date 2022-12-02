@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { UpdateButton } from 'component/common/UpdateButton/UpdateButton';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
@@ -85,7 +84,7 @@ const EditProjectRole = () => {
             description="A project role can be
 customised to limit access
 to resources within a project"
-            documentationLink="https://docs.getunleash.io/user_guide/rbac#custom-project-roles"
+            documentationLink="https://docs.getunleash.io/reference/rbac#custom-project-roles"
             documentationLinkLabel="Project roles documentation"
             formatApiCode={formatApiCode}
         >

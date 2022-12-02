@@ -9,6 +9,7 @@ import {
 } from '../../lib/types/model';
 import NotFoundError from '../../lib/error/notfound-error';
 import { IFeatureStrategiesStore } from '../../lib/types/stores/feature-strategies-store';
+import { IFeatureProjectUserParams } from '../../lib/routes/admin-api/project/features';
 
 interface ProjectEnvironment {
     projectName: string;
@@ -140,6 +141,7 @@ export default class FakeFeatureStrategiesStore
 
     async getFeatureToggleWithEnvs(
         featureName: string,
+        userId?: number,
         archived: boolean = false,
     ): Promise<FeatureToggleWithEnvironment> {
         const toggle = this.featureToggles.find(
@@ -153,13 +155,12 @@ export default class FakeFeatureStrategiesStore
         );
     }
 
-    async getFeatureOverview(
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        projectId: string,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        archived: boolean,
-    ): Promise<IFeatureOverview[]> {
-        return Promise.resolve([]);
+    getFeatureToggleWithVariantEnvs(
+        featureName: string,
+        userId?: number,
+        archived?: boolean,
+    ): Promise<FeatureToggleWithEnvironment> {
+        return this.getFeatureToggleWithEnvs(featureName, userId, archived);
     }
 
     async getFeatures(
@@ -301,6 +302,13 @@ export default class FakeFeatureStrategiesStore
 
     getStrategiesBySegment(): Promise<IFeatureStrategy[]> {
         throw new Error('Method not implemented.');
+    }
+
+    getFeatureOverview(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        params: IFeatureProjectUserParams,
+    ): Promise<IFeatureOverview[]> {
+        return Promise.resolve([]);
     }
 }
 

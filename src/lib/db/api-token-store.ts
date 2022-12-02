@@ -46,6 +46,7 @@ const tokenRowReducer = (acc, tokenRow) => {
             expiresAt: token.expires_at,
             createdAt: token.created_at,
             alias: token.alias,
+            seenAt: token.seen_at,
         };
     }
     const currentToken = acc[tokenRow.secret];
@@ -173,7 +174,10 @@ export class ApiTokenStore implements IApiTokenStore {
     }
 
     async get(key: string): Promise<IApiToken> {
-        const row = await this.makeTokenProjectQuery().where('secret', key);
+        const row = await this.makeTokenProjectQuery().where(
+            'tokens.secret',
+            key,
+        );
         return toTokens(row)[0];
     }
 
@@ -200,7 +204,7 @@ export class ApiTokenStore implements IApiTokenStore {
         const now = new Date();
         try {
             await this.db(TABLE)
-                .whereIn('secrets', secrets)
+                .whereIn('secret', secrets)
                 .update({ seen_at: now });
         } catch (err) {
             this.logger.error('Could not update lastSeen, error: ', err);

@@ -22,17 +22,17 @@ const OPENAPI_TAGS = [
     {
         name: 'Client',
         description:
-            'Endpoints for [Unleash server-side clients](https://docs.getunleash.io/sdks).',
+            'Endpoints for [Unleash server-side clients](https://docs.getunleash.io/reference/sdks).',
     },
     {
         name: 'Context',
         description:
-            'Create, update, and delete [context fields](https://docs.getunleash.io/user_guide/unleash_context) that Unleash is aware of.',
+            'Create, update, and delete [context fields](https://docs.getunleash.io/reference/unleash-context) that Unleash is aware of.',
     },
     {
         name: 'Environments',
         description:
-            'Create, update, delete, enable or disable [environments](https://docs.getunleash.io/user_guide/environments) for this Unleash instance.',
+            'Create, update, delete, enable or disable [environments](https://docs.getunleash.io/reference/environments) for this Unleash instance.',
     },
     { name: 'Events', description: 'Read events from this Unleash instance.' },
     {
@@ -67,7 +67,7 @@ const OPENAPI_TAGS = [
     {
         name: 'Projects',
         description:
-            'Create, update, and delete [Unleash projects](https://docs.getunleash.io/user_guide/projects).',
+            'Create, update, and delete [Unleash projects](https://docs.getunleash.io/reference/projects).',
     },
     {
         name: 'Public signup tokens',
@@ -82,12 +82,12 @@ const OPENAPI_TAGS = [
     {
         name: 'Strategies',
         description:
-            'Create, update, delete, manage [custom strategies](https://docs.getunleash.io/advanced/custom_activation_strategy).',
+            'Create, update, delete, manage [custom strategies](https://docs.getunleash.io/reference/custom-activation-strategies).',
     },
     {
         name: 'Tags',
         description:
-            'Create, update, and delete [tags and tag types](https://docs.getunleash.io/advanced/tags).',
+            'Create, update, and delete [tags and tag types](https://docs.getunleash.io/reference/tags).',
     },
     { name: 'Users', description: 'Manage users and passwords.' },
     {

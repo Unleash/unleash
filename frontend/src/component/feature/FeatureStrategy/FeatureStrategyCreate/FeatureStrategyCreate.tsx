@@ -18,7 +18,6 @@ import {
 } from '../FeatureStrategyEdit/FeatureStrategyEdit';
 import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { ISegment } from 'interfaces/segment';
-import { useSegmentsApi } from 'hooks/api/actions/useSegmentsApi/useSegmentsApi';
 import { formatStrategyName } from 'utils/strategyNames';
 import { useFormErrors } from 'hooks/useFormErrors';
 import { createFeatureStrategy } from 'utils/createFeatureStrategy';
@@ -29,7 +28,7 @@ import { IFeatureToggle } from 'interfaces/featureToggle';
 import { comparisonModerator } from '../featureStrategy.utils';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
-import { useChangeRequestOpen } from 'hooks/api/getters/useChangeRequestOpen/useChangeRequestOpen';
+import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 
 export const FeatureStrategyCreate = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -42,8 +41,7 @@ export const FeatureStrategyCreate = () => {
     const errors = useFormErrors();
 
     const { addStrategyToFeature, loading } = useFeatureStrategyApi();
-    const { addChangeRequest } = useChangeRequestApi();
-    const { setStrategySegments } = useSegmentsApi();
+    const { addChange } = useChangeRequestApi();
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
     const { unleashUrl } = uiConfig;
@@ -52,7 +50,8 @@ export const FeatureStrategyCreate = () => {
     const { feature, refetchFeature } = useFeature(projectId, featureId);
     const ref = useRef<IFeatureToggle>(feature);
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
-    const { refetch: refetchChangeRequests } = useChangeRequestOpen(projectId);
+    const { refetch: refetchChangeRequests } =
+        usePendingChangeRequests(projectId);
 
     const { data, staleDataNotification, forceRefreshCache } =
         useCollaborateData<IFeatureToggle>(
@@ -84,7 +83,7 @@ export const FeatureStrategyCreate = () => {
     }, [featureId, strategyDefinition]);
 
     const onAddStrategy = async (payload: IFeatureStrategyPayload) => {
-        const created = await addStrategyToFeature(
+        await addStrategyToFeature(
             projectId,
             featureId,
             environmentId,
@@ -99,7 +98,7 @@ export const FeatureStrategyCreate = () => {
     };
 
     const onStrategyRequestAdd = async (payload: IFeatureStrategyPayload) => {
-        await addChangeRequest(projectId, environmentId, {
+        await addChange(projectId, environmentId, {
             action: 'addStrategy',
             feature: featureId,
             payload,

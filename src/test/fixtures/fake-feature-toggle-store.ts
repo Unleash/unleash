@@ -3,7 +3,12 @@ import {
     IFeatureToggleStore,
 } from '../../lib/types/stores/feature-toggle-store';
 import NotFoundError from '../../lib/error/notfound-error';
-import { FeatureToggle, FeatureToggleDTO, IVariant } from 'lib/types/model';
+import {
+    FeatureToggle,
+    FeatureToggleDTO,
+    IFeatureEnvironment,
+    IVariant,
+} from 'lib/types/model';
 
 export default class FakeFeatureToggleStore implements IFeatureToggleStore {
     features: FeatureToggle[] = [];
@@ -126,6 +131,25 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         return feature.variants as IVariant[];
     }
 
+    async getAllVariants(): Promise<IFeatureEnvironment[]> {
+        let features = await this.getAll();
+        let variants = features.flatMap((feature) => ({
+            featureName: feature.name,
+            environment: 'development',
+            variants: feature.variants,
+            enabled: true,
+        }));
+        return Promise.resolve(variants);
+    }
+
+    getVariantsForEnv(
+        featureName: string,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        environment_name: string,
+    ): Promise<IVariant[]> {
+        return this.getVariants(featureName);
+    }
+
     async saveVariants(
         project: string,
         featureName: string,
@@ -134,5 +158,19 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         const feature = await this.get(featureName);
         feature.variants = newVariants;
         return feature;
+    }
+
+    async saveVariantsOnEnv(
+        featureName: string,
+        environment: string,
+        newVariants: IVariant[],
+    ): Promise<IVariant[]> {
+        await this.saveVariants('default', featureName, newVariants);
+        return Promise.resolve(newVariants);
+    }
+
+    dropAllVariants(): Promise<void> {
+        this.features.forEach((feature) => (feature.variants = []));
+        return Promise.resolve();
     }
 }

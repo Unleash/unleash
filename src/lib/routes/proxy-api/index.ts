@@ -1,21 +1,25 @@
-import { Response, Request } from 'express';
+import { Request, Response } from 'express';
 import Controller from '../controller';
-import { IUnleashConfig, IUnleashServices } from '../../types';
+import {
+    IFlagResolver,
+    IUnleashConfig,
+    IUnleashServices,
+    NONE,
+} from '../../types';
 import { Logger } from '../../logger';
-import { NONE } from '../../types/permissions';
 import ApiUser from '../../types/api-user';
 import {
+    createRequestSchema,
+    createResponseSchema,
+    emptyResponse,
+    ProxyClientSchema,
     proxyFeaturesSchema,
     ProxyFeaturesSchema,
-} from '../../openapi/spec/proxy-features-schema';
+    ProxyMetricsSchema,
+} from '../../openapi';
 import { Context } from 'unleash-client';
-import { enrichContextWithIp } from '../../proxy/create-context';
-import { ProxyMetricsSchema } from '../../openapi/spec/proxy-metrics-schema';
-import { ProxyClientSchema } from '../../openapi/spec/proxy-client-schema';
-import { createResponseSchema } from '../../openapi/util/create-response-schema';
-import { createRequestSchema } from '../../openapi/util/create-request-schema';
-import { emptyResponse } from '../../openapi/util/standard-responses';
-import { corsOriginMiddleware } from '../../middleware/cors-origin-middleware';
+import { enrichContextWithIp } from '../../proxy';
+import { corsOriginMiddleware } from '../../middleware';
 
 interface ApiUserRequest<
     PARAM = any,
@@ -36,14 +40,21 @@ export default class ProxyController extends Controller {
 
     private services: Services;
 
-    constructor(config: IUnleashConfig, services: Services) {
+    private flagResolver: IFlagResolver;
+
+    constructor(
+        config: IUnleashConfig,
+        services: Services,
+        flagResolver: IFlagResolver,
+    ) {
         super(config);
         this.logger = config.getLogger('proxy-api/index.ts');
         this.services = services;
+        this.flagResolver = flagResolver;
 
         // Support CORS requests for the frontend endpoints.
         // Preflight requests are handled in `app.ts`.
-        this.app.use(corsOriginMiddleware(services));
+        this.app.use(corsOriginMiddleware(services, config));
 
         this.route({
             method: 'get',
@@ -133,10 +144,18 @@ export default class ProxyController extends Controller {
         req: ApiUserRequest,
         res: Response<ProxyFeaturesSchema>,
     ) {
-        const toggles = await this.services.proxyService.getProxyFeatures(
-            req.user,
-            ProxyController.createContext(req),
-        );
+        let toggles;
+        if (this.flagResolver.isEnabled('proxyReturnAllToggles')) {
+            toggles = await this.services.proxyService.getAllProxyFeatures(
+                req.user,
+                ProxyController.createContext(req),
+            );
+        } else {
+            toggles = await this.services.proxyService.getProxyFeatures(
+                req.user,
+                ProxyController.createContext(req),
+            );
+        }
         this.services.openApiService.respondWithValidation(
             200,
             res,

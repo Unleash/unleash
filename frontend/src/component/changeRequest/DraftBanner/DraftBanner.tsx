@@ -1,11 +1,11 @@
 import { FC, useState, VFC } from 'react';
 import { Box, Button, styled, Typography } from '@mui/material';
 import { useStyles as useAppStyles } from 'component/App.styles';
-import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ChangeRequestSidebar } from '../ChangeRequestSidebar/ChangeRequestSidebar';
-import { useChangeRequestOpen } from 'hooks/api/getters/useChangeRequestOpen/useChangeRequestOpen';
+import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { IChangeRequest } from '../changeRequest.types';
+import { changesCount } from '../changesCount';
 
 interface IDraftBannerProps {
     project: string;
@@ -27,9 +27,8 @@ const DraftBannerContent: FC<{
     return (
         <Box className={classes.content}>
             <DraftBannerContentWrapper>
-                <WarningAmberIcon />
-                <Typography variant="body2" sx={{ ml: 1, maxWidth: '500px' }}>
-                    <strong>Draft mode!</strong> – You have changes{' '}
+                <Typography variant="body2">
+                    <strong>Change request mode</strong> – You have changes{' '}
                     <ConditionallyRender
                         condition={Boolean(changeRequest.environment)}
                         show={
@@ -58,7 +57,7 @@ const DraftBannerContent: FC<{
                     onClick={onClick}
                     sx={{ ml: 'auto' }}
                 >
-                    View changes ({changeRequest.features.length})
+                    View changes ({changesCount(changeRequest)})
                 </Button>
             </DraftBannerContentWrapper>
         </Box>
@@ -76,7 +75,7 @@ const StickyBanner = styled(Box)(({ theme }) => ({
 
 export const DraftBanner: VFC<IDraftBannerProps> = ({ project }) => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-    const { draft, loading } = useChangeRequestOpen(project);
+    const { draft, loading } = usePendingChangeRequests(project);
 
     if ((!loading && !draft) || draft?.length === 0) {
         return null;

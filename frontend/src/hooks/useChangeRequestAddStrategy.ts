@@ -3,7 +3,7 @@ import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { IFeatureStrategyPayload } from '../interfaces/strategy';
 import { useChangeRequestApi } from './api/actions/useChangeRequestApi/useChangeRequestApi';
-import { useChangeRequestOpen } from './api/getters/useChangeRequestOpen/useChangeRequestOpen';
+import { usePendingChangeRequests } from './api/getters/usePendingChangeRequests/usePendingChangeRequests';
 
 export type ChangeRequestStrategyAction =
     | 'addStrategy'
@@ -16,8 +16,8 @@ export const useChangeRequestAddStrategy = (
     action: ChangeRequestStrategyAction
 ) => {
     const { setToastData, setToastApiError } = useToast();
-    const { addChangeRequest } = useChangeRequestApi();
-    const { refetch } = useChangeRequestOpen(project);
+    const { addChange } = useChangeRequestApi();
+    const { refetch } = usePendingChangeRequests(project);
 
     const [changeRequestDialogDetails, setChangeRequestDialogDetails] =
         useState<{
@@ -69,15 +69,11 @@ export const useChangeRequestAddStrategy = (
 
     const onChangeRequestAddStrategyConfirm = useCallback(async () => {
         try {
-            await addChangeRequest(
-                project,
-                changeRequestDialogDetails.environment!,
-                {
-                    feature: changeRequestDialogDetails.featureName!,
-                    action: action,
-                    payload: changeRequestDialogDetails.strategy!,
-                }
-            );
+            await addChange(project, changeRequestDialogDetails.environment!, {
+                feature: changeRequestDialogDetails.featureName!,
+                action: action,
+                payload: changeRequestDialogDetails.strategy!,
+            });
             refetch();
             setChangeRequestDialogDetails({ isOpen: false });
             setToastData({
@@ -88,13 +84,13 @@ export const useChangeRequestAddStrategy = (
             setToastApiError(formatUnknownError(error));
             setChangeRequestDialogDetails({ isOpen: false });
         }
-    }, [addChangeRequest]);
+    }, [addChange]);
 
     const onChangeRequestAddStrategiesConfirm = useCallback(async () => {
         try {
             await Promise.all(
                 changeRequestDialogDetails.strategies!.map(strategy => {
-                    return addChangeRequest(
+                    return addChange(
                         project,
                         changeRequestDialogDetails.environment!,
                         {
@@ -115,7 +111,7 @@ export const useChangeRequestAddStrategy = (
             setToastApiError(formatUnknownError(error));
             setChangeRequestDialogDetails({ isOpen: false });
         }
-    }, [addChangeRequest]);
+    }, [addChange]);
 
     return {
         onChangeRequestAddStrategy,

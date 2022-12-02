@@ -1,4 +1,4 @@
-import { parseEnvVarBoolean } from '../util/parseEnvVar';
+import { parseEnvVarBoolean } from '../util';
 
 export type IFlags = Partial<Record<string, boolean>>;
 
@@ -8,7 +8,7 @@ export const defaultExperimentalOptions = {
         anonymiseEventLog: false,
         embedProxy: parseEnvVarBoolean(
             process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY,
-            false,
+            true,
         ),
         changeRequests: parseEnvVarBoolean(
             process.env.UNLEASH_EXPERIMENTAL_CHANGE_REQUESTS,
@@ -20,7 +20,7 @@ export const defaultExperimentalOptions = {
         ),
         embedProxyFrontend: parseEnvVarBoolean(
             process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY_FRONTEND,
-            false,
+            true,
         ),
         batchMetrics: parseEnvVarBoolean(
             process.env.UNLEASH_EXPERIMENTAL_BATCH_METRICS,
@@ -38,8 +38,24 @@ export const defaultExperimentalOptions = {
             process.env.UNLEASH_EXPERIMENTAL_TOGGLE_TAG_FILTERING,
             false,
         ),
+        proxyReturnAllToggles: parseEnvVarBoolean(
+            process.env.UNLEASH_EXPERIMENTAL_PROXY_RETURN_ALL_TOGGLES,
+            false,
+        ),
         variantsPerEnvironment: parseEnvVarBoolean(
             process.env.UNLEASH_EXPERIMENTAL_VARIANTS_PER_ENVIRONMENT,
+            false,
+        ),
+        tokensLastSeen: parseEnvVarBoolean(
+            process.env.UNLEASH_EXPERIMENTAL_TOKENS_LAST_SEEN,
+            false,
+        ),
+        favorites: parseEnvVarBoolean(
+            process.env.UNLEASH_EXPERIMENTAL_FAVORITES,
+            false,
+        ),
+        networkView: parseEnvVarBoolean(
+            process.env.UNLEASH_EXPERIMENTAL_NETWORK_VIEW,
             false,
         ),
     },
@@ -57,7 +73,11 @@ export interface IExperimentalOptions {
         syncSSOGroups?: boolean;
         changeRequests?: boolean;
         cloneEnvironment?: boolean;
+        proxyReturnAllToggles?: boolean;
         variantsPerEnvironment?: boolean;
+        tokensLastSeen?: boolean;
+        favorites?: boolean;
+        networkView?: boolean;
     };
     externalResolver: IExternalFlagResolver;
 }

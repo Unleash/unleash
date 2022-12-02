@@ -1,4 +1,4 @@
-import { Alert, Button, styled, TextField, Typography } from '@mui/material';
+import { Alert, Button, styled, Typography } from '@mui/material';
 import { FC, useContext, useState } from 'react';
 import { Box } from '@mui/material';
 import { useChangeRequest } from 'hooks/api/getters/useChangeRequest/useChangeRequest';
@@ -21,6 +21,9 @@ import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import AccessContext from 'contexts/AccessContext';
 import { ChangeRequestComment } from './ChangeRequestComments/ChangeRequestComment';
 import { AddCommentField } from './ChangeRequestComments/AddCommentField';
+import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
+import { useChangeRequestsEnabled } from '../../../hooks/useChangeRequestsEnabled';
+import { Dialogue } from 'component/common/Dialogue/Dialogue';
 
 const StyledAsideBox = styled(Box)(({ theme }) => ({
     width: '30%',
@@ -48,6 +51,7 @@ const StyledInnerContainer = styled(Box)(({ theme }) => ({
 
 export const ChangeRequestOverview: FC = () => {
     const projectId = useRequiredPathParam('projectId');
+    const [showCancelDialog, setShowCancelDialog] = useState(false);
     const { user } = useAuthUser();
     const { isAdmin } = useContext(AccessContext);
     const [commentText, setCommentText] = useState('');
@@ -58,11 +62,18 @@ export const ChangeRequestOverview: FC = () => {
         id
     );
     const { changeState, addComment } = useChangeRequestApi();
+    const { refetch: refetchChangeRequestOpen } =
+        usePendingChangeRequests(projectId);
     const { setToastData, setToastApiError } = useToast();
+    const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
 
     if (!changeRequest) {
         return null;
     }
+
+    const allowChangeRequestActions = isChangeRequestConfigured(
+        changeRequest.environment
+    );
 
     const onApplyChanges = async () => {
         try {
@@ -70,6 +81,7 @@ export const ChangeRequestOverview: FC = () => {
                 state: 'Applied',
             });
             refetchChangeRequest();
+            refetchChangeRequestOpen();
             setToastData({
                 type: 'success',
                 title: 'Success',
@@ -94,6 +106,27 @@ export const ChangeRequestOverview: FC = () => {
             setToastApiError(formatUnknownError(error));
         }
     };
+
+    const onCancelChanges = async () => {
+        try {
+            await changeState(projectId, Number(id), {
+                state: 'Cancelled',
+            });
+            setShowCancelDialog(false);
+            refetchChangeRequest();
+            refetchChangeRequestOpen();
+            setToastData({
+                type: 'success',
+                title: 'Success',
+                text: 'Changes cancelled',
+            });
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
+    };
+
+    const onCancel = () => setShowCancelDialog(true);
+    const onCancelAbort = () => setShowCancelDialog(false);
 
     const isSelfReview =
         changeRequest?.createdBy.id === user?.id &&
@@ -129,7 +162,10 @@ export const ChangeRequestOverview: FC = () => {
                 <StyledPaper elevation={0}>
                     <StyledInnerContainer>
                         Changes
-                        <ChangeRequest changeRequest={changeRequest} />
+                        <ChangeRequest
+                            changeRequest={changeRequest}
+                            onRefetch={refetchChangeRequest}
+                        />
                         {changeRequest.comments?.map(comment => (
                             <ChangeRequestComment
                                 key={comment.id}
@@ -137,11 +173,22 @@ export const ChangeRequestOverview: FC = () => {
                             />
                         ))}
                         <AddCommentField
-                            imageUrl={user?.imageUrl || ''}
+                            user={user}
                             commentText={commentText}
-                            onAddComment={onAddComment}
                             onTypeComment={setCommentText}
-                        />
+                        >
+                            <Button
+                                variant="outlined"
+                                onClick={onAddComment}
+                                disabled={
+                                    !allowChangeRequestActions ||
+                                    commentText.trim().length === 0 ||
+                                    commentText.trim().length > 1000
+                                }
+                            >
+                                Comment
+                            </Button>
+                        </AddCommentField>
                         <ConditionallyRender
                             condition={isSelfReview}
                             show={
@@ -156,8 +203,7 @@ export const ChangeRequestOverview: FC = () => {
                             }
                         />
                         <ChangeRequestReviewStatus
-                            state={changeRequest.state}
-                            environment={changeRequest.environment}
+                            changeRequest={changeRequest}
                         />
                         <StyledButtonBox>
                             <ConditionallyRender
@@ -165,7 +211,11 @@ export const ChangeRequestOverview: FC = () => {
                                     changeRequest.state === 'In review' &&
                                     !hasApprovedAlready
                                 }
-                                show={<ReviewButton />}
+                                show={
+                                    <ReviewButton
+                                        disabled={!allowChangeRequestActions}
+                                    />
+                                }
                             />
                             <ConditionallyRender
                                 condition={changeRequest.state === 'Approved'}
@@ -178,14 +228,50 @@ export const ChangeRequestOverview: FC = () => {
                                         environmentId={
                                             changeRequest.environment
                                         }
+                                        disabled={!allowChangeRequestActions}
                                     >
                                         Apply changes
                                     </PermissionButton>
                                 }
                             />
+                            <ConditionallyRender
+                                condition={
+                                    changeRequest.state !== 'Applied' &&
+                                    changeRequest.state !== 'Cancelled' &&
+                                    (changeRequest.createdBy.id === user?.id ||
+                                        isAdmin)
+                                }
+                                show={
+                                    <Button
+                                        sx={{ ml: 2 }}
+                                        variant="outlined"
+                                        onClick={onCancel}
+                                    >
+                                        Cancel changes
+                                    </Button>
+                                }
+                            />
                         </StyledButtonBox>
                     </StyledInnerContainer>
                 </StyledPaper>
+                <Dialogue
+                    open={showCancelDialog}
+                    onClick={onCancelChanges}
+                    onClose={onCancelAbort}
+                    title="Cancel change request"
+                >
+                    <Typography sx={{ marginBottom: 2 }}>
+                        You are about to cancel this change request
+                    </Typography>
+                    <Typography
+                        variant="body2"
+                        sx={theme => ({ color: theme.palette.neutral.dark })}
+                    >
+                        The change request will be moved to closed, and it can't
+                        be applied anymore. Once cancelled, the change request
+                        can't be reopened.
+                    </Typography>
+                </Dialogue>
             </Box>
         </>
     );

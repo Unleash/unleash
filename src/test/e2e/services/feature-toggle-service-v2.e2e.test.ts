@@ -8,11 +8,14 @@ import User from '../../../lib/types/user';
 import { IConstraint } from '../../../lib/types/model';
 import { AccessService } from '../../../lib/services/access-service';
 import { GroupService } from '../../../lib/services/group-service';
+import EnvironmentService from '../../../lib/services/environment-service';
 
 let stores;
 let db;
 let service: FeatureToggleService;
 let segmentService: SegmentService;
+let environmentService: EnvironmentService;
+let unleashConfig;
 
 const mockConstraints = (): IConstraint[] => {
     return Array.from({ length: 5 }).map(() => ({
@@ -28,6 +31,7 @@ beforeAll(async () => {
         'feature_toggle_service_v2_service_serial',
         config.getLogger,
     );
+    unleashConfig = config;
     stores = db.stores;
     segmentService = new SegmentService(stores, config);
     const groupService = new GroupService(stores, config);
@@ -163,8 +167,10 @@ test('should ignore name in the body when updating feature toggle', async () => 
     };
 
     await service.updateFeatureToggle(projectId, update, userName, featureName);
-    const featureOne = await service.getFeature(featureName);
-    const featureTwo = await service.getFeature(secondFeatureName);
+    const featureOne = await service.getFeature({ featureName });
+    const featureTwo = await service.getFeature({
+        featureName: secondFeatureName,
+    });
 
     expect(featureOne.description).toBe(`I'm changed`);
     expect(featureTwo.description).toBe('Second toggle');
@@ -205,4 +211,159 @@ test('should not get empty rows as features', async () => {
 
     expect(features.length).toBe(7);
     expect(namelessFeature).toBeUndefined();
+});
+
+test('adding and removing an environment preserves variants when variants per env is off', async () => {
+    const featureName = 'something-that-has-variants';
+    const prodEnv = 'mock-prod-env';
+
+    await stores.environmentStore.create({
+        name: prodEnv,
+        type: 'production',
+    });
+
+    await service.createFeatureToggle(
+        'default',
+        {
+            name: featureName,
+            description: 'Second toggle',
+            variants: [
+                {
+                    name: 'variant1',
+                    weight: 100,
+                    weightType: 'fix',
+                    stickiness: 'default',
+                },
+            ],
+        },
+        'random_user',
+    );
+
+    //force the variantEnvironments flag off so that we can test legacy behavior
+    environmentService = new EnvironmentService(stores, {
+        ...unleashConfig,
+        flagResolver: {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            isEnabled: (toggleName: string) => false,
+        },
+    });
+
+    await environmentService.addEnvironmentToProject(prodEnv, 'default');
+    await environmentService.removeEnvironmentFromProject(prodEnv, 'default');
+    await environmentService.addEnvironmentToProject(prodEnv, 'default');
+
+    const toggle = await service.getFeature({
+        featureName,
+        projectId: null,
+        environmentVariants: false,
+    });
+    expect(toggle.variants).toHaveLength(1);
+});
+
+test('cloning a feature toggle copies variant environments correctly', async () => {
+    const newToggleName = 'Molly';
+    const clonedToggleName = 'Dolly';
+    const targetEnv = 'gene-lab';
+
+    await service.createFeatureToggle(
+        'default',
+        {
+            name: newToggleName,
+        },
+        'test',
+    );
+
+    await stores.environmentStore.create({
+        name: 'gene-lab',
+        type: 'production',
+    });
+
+    await stores.featureEnvironmentStore.connectFeatureToEnvironmentsForProject(
+        newToggleName,
+        'default',
+    );
+
+    await stores.featureEnvironmentStore.addVariantsToFeatureEnvironment(
+        newToggleName,
+        targetEnv,
+        [
+            {
+                name: 'variant1',
+                weight: 100,
+                weightType: 'fix',
+                stickiness: 'default',
+            },
+        ],
+    );
+
+    await service.cloneFeatureToggle(
+        newToggleName,
+        'default',
+        clonedToggleName,
+        true,
+        'test-user',
+    );
+
+    const clonedToggle =
+        await stores.featureStrategiesStore.getFeatureToggleWithVariantEnvs(
+            clonedToggleName,
+        );
+
+    const defaultEnv = clonedToggle.environments.find(
+        (x) => x.name === 'default',
+    );
+    const newEnv = clonedToggle.environments.find((x) => x.name === targetEnv);
+
+    expect(defaultEnv.variants).toHaveLength(0);
+    expect(newEnv.variants).toHaveLength(1);
+});
+
+test('Cloning a feature toggle also clones segments correctly', async () => {
+    const featureName = 'ToggleWithSegments';
+    const clonedFeatureName = 'AWholeNewFeatureToggle';
+
+    let segment = await segmentService.create(
+        {
+            name: 'SomeSegment',
+            constraints: mockConstraints(),
+        },
+        {
+            email: 'test@example.com',
+        },
+    );
+
+    await service.createFeatureToggle(
+        'default',
+        {
+            name: featureName,
+        },
+        'test-user',
+    );
+
+    const config: Omit<FeatureStrategySchema, 'id'> = {
+        name: 'default',
+        constraints: [],
+        parameters: {},
+        segments: [segment.id],
+    };
+
+    await service.createStrategy(
+        config,
+        { projectId: 'default', featureName, environment: DEFAULT_ENV },
+        'test-user',
+    );
+
+    await service.cloneFeatureToggle(
+        featureName,
+        'default',
+        clonedFeatureName,
+        true,
+        'test-user',
+    );
+
+    let feature = await service.getFeature({ featureName: clonedFeatureName });
+    expect(
+        feature.environments.find((x) => x.name === 'default').strategies[0]
+            .segments,
+    ).toHaveLength(1);
 });

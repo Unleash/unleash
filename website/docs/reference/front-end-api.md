@@ -10,7 +10,7 @@ The Unleash front-end API is an experimental feature and is currently in develop
 
 :::
 
-The **Unleash front-end API** offers a simplified workflow for connecting a client-side (front-end) applications to Unleash. It provides the exact same API as the [Unleash proxy](../sdks/unleash-proxy.md). The front-end API is a quick and easy way to add Unleash to single-page applications and mobile apps.
+The **Unleash front-end API** offers a simplified workflow for connecting a client-side (front-end) applications to Unleash. It provides the exact same API as the [Unleash proxy](../reference/unleash-proxy.md). The front-end API is a quick and easy way to add Unleash to single-page applications and mobile apps.
 
 <!-- TODO: image illustrating connection -->
 
@@ -32,7 +32,7 @@ When using the front-end API in an SDK, there's three things you need to configu
 
 ### Front-end API tokens
 
-As a client-side API, you should use a [front-end API token](../reference/api-tokens-and-client-keys.mdx#front-end-tokens) to interact with it. Refer to the [how to create API tokens](../user_guide/token.mdx) guide for steps on how to create API tokens.
+As a client-side API, you should use a [front-end API token](../reference/api-tokens-and-client-keys.mdx#front-end-tokens) to interact with it. Refer to the [how to create API tokens](../how-to/how-to-create-api-tokens.mdx) guide for steps on how to create API tokens.
 
 ### Cross-origin resource sharing (CORS) configuration {#cors}
 
@@ -46,7 +46,7 @@ The client needs to point to the correct API endpoint. The front-end API is avai
 
 ### API token
 
-You can create appropriate token, with type `FRONTEND` on `<YOUR_UNLEASH_URL>/admin/api/create-token` page or with a request to `/api/admin/api-tokens`. See our guide on [how to create API tokens](../user_guide/token.mdx) for more details.
+You can create appropriate token, with type `FRONTEND` on `<YOUR_UNLEASH_URL>/admin/api/create-token` page or with a request to `/api/admin/api-tokens`. See our guide on [how to create API tokens](../how-to/how-to-create-api-tokens.mdx) for more details.
 
 ### Refresh interval for tokens
 

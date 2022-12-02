@@ -15,7 +15,6 @@ import {
 } from 'interfaces/strategy';
 import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { ISegment } from 'interfaces/segment';
-import { useSegmentsApi } from 'hooks/api/actions/useSegmentsApi/useSegmentsApi';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { formatStrategyName } from 'utils/strategyNames';
 import { useFormErrors } from 'hooks/useFormErrors';
@@ -27,7 +26,7 @@ import { IFeatureToggle } from 'interfaces/featureToggle';
 import { comparisonModerator } from '../featureStrategy.utils';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
-import { useChangeRequestOpen } from 'hooks/api/getters/useChangeRequestOpen/useChangeRequestOpen';
+import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 
 export const FeatureStrategyEdit = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -38,16 +37,16 @@ export const FeatureStrategyEdit = () => {
     const [strategy, setStrategy] = useState<Partial<IFeatureStrategy>>({});
     const [segments, setSegments] = useState<ISegment[]>([]);
     const { updateStrategyOnFeature, loading } = useFeatureStrategyApi();
-    const { setStrategySegments } = useSegmentsApi();
     const { strategyDefinition } = useStrategy(strategy.name);
     const { setToastData, setToastApiError } = useToast();
     const errors = useFormErrors();
     const { uiConfig } = useUiConfig();
     const { unleashUrl } = uiConfig;
     const navigate = useNavigate();
-    const { addChangeRequest } = useChangeRequestApi();
+    const { addChange } = useChangeRequestApi();
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
-    const { refetch: refetchChangeRequests } = useChangeRequestOpen(projectId);
+    const { refetch: refetchChangeRequests } =
+        usePendingChangeRequests(projectId);
 
     const { feature, refetchFeature } = useFeature(projectId, featureId);
 
@@ -111,7 +110,7 @@ export const FeatureStrategyEdit = () => {
     };
 
     const onStrategyRequestEdit = async (payload: IFeatureStrategyPayload) => {
-        await addChangeRequest(projectId, environmentId, {
+        await addChange(projectId, environmentId, {
             action: 'updateStrategy',
             feature: featureId,
             payload: { ...payload, id: strategyId },
@@ -249,6 +248,6 @@ export const featureStrategyHelp = `
 `;
 
 export const featureStrategyDocsLink =
-    'https://docs.getunleash.io/user_guide/activation_strategy';
+    'https://docs.getunleash.io/reference/activation-strategies';
 
 export const featureStrategyDocsLinkLabel = 'Strategies documentation';

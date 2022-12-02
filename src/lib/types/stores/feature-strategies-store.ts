@@ -6,6 +6,7 @@ import {
     IVariant,
 } from '../model';
 import { Store } from './store';
+import { IFeatureProjectUserParams } from '../../routes/admin-api/project/features';
 
 export interface FeatureConfigurationClient {
     name: string;
@@ -32,11 +33,16 @@ export interface IFeatureStrategiesStore
     ): Promise<IFeatureStrategy[]>;
     getFeatureToggleWithEnvs(
         featureName: string,
+        userId?: number,
         archived?: boolean,
     ): Promise<FeatureToggleWithEnvironment>;
+    getFeatureToggleWithVariantEnvs(
+        featureName: string,
+        userId?: number,
+        archived?,
+    ): Promise<FeatureToggleWithEnvironment>;
     getFeatureOverview(
-        projectId: string,
-        archived: boolean,
+        params: IFeatureProjectUserParams,
     ): Promise<IFeatureOverview[]>;
     getStrategyById(id: string): Promise<IFeatureStrategy>;
     updateStrategy(

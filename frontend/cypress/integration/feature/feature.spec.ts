@@ -42,7 +42,7 @@ describe('feature', () => {
 
     beforeEach(() => {
         cy.login();
-        cy.visit('/');
+        cy.visit('/features');
     });
 
     it('can create a feature toggle', () => {

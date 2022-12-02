@@ -1,5 +1,3 @@
-import { formatRelative } from 'date-fns';
-
 export const formatDateYMDHMS = (
     date: number | string | Date,
     locale: string

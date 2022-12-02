@@ -65,7 +65,7 @@
     ]
   },
   "devDependencies": {
-    "@babel/core": "7.20.2",
+    "@babel/core": "7.20.5",
     "@docusaurus/module-type-aliases": "2.2.0",
     "@storybook/addon-actions": "6.5.13",
     "@storybook/addon-essentials": "6.5.13",
@@ -75,7 +75,7 @@
     "@storybook/testing-library": "0.0.13",
     "@tsconfig/docusaurus": "1.0.6",
     "babel-loader": "9.1.0",
-    "enhanced-resolve": "5.10.0",
+    "enhanced-resolve": "5.12.0",
     "react-router": "6.4.3",
     "replace-in-file": "6.3.5",
     "storybook-addon-root-attribute": "1.0.2",

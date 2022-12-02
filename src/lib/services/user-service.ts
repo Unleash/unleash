@@ -28,6 +28,8 @@ import PasswordMismatch from '../error/password-mismatch';
 import BadDataError from '../error/bad-data-error';
 import { isDefined } from '../util/isDefined';
 import { TokenUserSchema } from '../openapi/spec/token-user-schema';
+import { IFlagResolver } from 'lib/types/experimental';
+import { minutesToMilliseconds } from 'date-fns';
 
 const systemUser = new User({ id: -1, username: 'system' });
 
@@ -78,12 +80,22 @@ class UserService {
 
     private passwordResetTimeouts: { [key: string]: NodeJS.Timeout } = {};
 
+    private seenTimer: NodeJS.Timeout;
+
+    private lastSeenSecrets: Set<string> = new Set<string>();
+
+    private flagResolver: IFlagResolver;
+
     constructor(
         stores: Pick<IUnleashStores, 'userStore' | 'eventStore'>,
         {
             getLogger,
             authentication,
-        }: Pick<IUnleashConfig, 'getLogger' | 'authentication'>,
+            flagResolver,
+        }: Pick<
+            IUnleashConfig,
+            'getLogger' | 'authentication' | 'flagResolver'
+        >,
         services: {
             accessService: AccessService;
             resetTokenService: ResetTokenService;
@@ -92,6 +104,7 @@ class UserService {
             settingService: SettingService;
         },
     ) {
+        this.flagResolver = flagResolver;
         this.logger = getLogger('service/user-service.js');
         this.store = stores.userStore;
         this.eventStore = stores.eventStore;
@@ -102,6 +115,9 @@ class UserService {
         this.settingService = services.settingService;
         if (authentication && authentication.createAdminUser) {
             process.nextTick(() => this.initAdminUser());
+        }
+        if (this.flagResolver.isEnabled('tokensLastSeen')) {
+            this.updateLastSeen();
         }
     }
 
@@ -264,7 +280,7 @@ class UserService {
 
     async deleteUser(userId: number, updatedBy?: User): Promise<void> {
         const user = await this.store.get(userId);
-        await this.accessService.unlinkUserRoles(userId);
+        await this.accessService.wipeUserPermissions(userId);
         await this.sessionService.deleteSessionsForUser(userId);
 
         await this.store.delete(userId);
@@ -425,6 +441,30 @@ class UserService {
 
     async getUserByPersonalAccessToken(secret: string): Promise<IUser> {
         return this.store.getUserByPersonalAccessToken(secret);
+    }
+
+    async updateLastSeen(): Promise<void> {
+        if (this.lastSeenSecrets.size > 0) {
+            const toStore = [...this.lastSeenSecrets];
+            this.lastSeenSecrets = new Set<string>();
+            await this.store.markSeenAt(toStore);
+        }
+
+        this.seenTimer = setTimeout(
+            async () => this.updateLastSeen(),
+            minutesToMilliseconds(3),
+        ).unref();
+    }
+
+    addPATSeen(secret: string): void {
+        if (this.flagResolver.isEnabled('tokensLastSeen')) {
+            this.lastSeenSecrets.add(secret);
+        }
+    }
+
+    destroy(): void {
+        clearTimeout(this.seenTimer);
+        this.seenTimer = null;
     }
 }
 

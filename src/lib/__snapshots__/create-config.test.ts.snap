@@ -2,6 +2,7 @@
 
 exports[`should create default config 1`] = `
 {
+  "accessControlMaxAge": 172800,
   "additionalCspAllowedDomains": {
     "defaultSrc": [],
     "fontSrc": [],
@@ -71,11 +72,15 @@ exports[`should create default config 1`] = `
       "batchMetrics": false,
       "changeRequests": false,
       "cloneEnvironment": false,
-      "embedProxy": false,
-      "embedProxyFrontend": false,
+      "embedProxy": true,
+      "embedProxyFrontend": true,
+      "favorites": false,
+      "networkView": false,
+      "proxyReturnAllToggles": false,
       "responseTimeWithAppName": false,
       "syncSSOGroups": false,
       "toggleTagFiltering": false,
+      "tokensLastSeen": false,
       "variantsPerEnvironment": false,
     },
   },
@@ -86,11 +91,15 @@ exports[`should create default config 1`] = `
       "batchMetrics": false,
       "changeRequests": false,
       "cloneEnvironment": false,
-      "embedProxy": false,
-      "embedProxyFrontend": false,
+      "embedProxy": true,
+      "embedProxyFrontend": true,
+      "favorites": false,
+      "networkView": false,
+      "proxyReturnAllToggles": false,
       "responseTimeWithAppName": false,
       "syncSSOGroups": false,
       "toggleTagFiltering": false,
+      "tokensLastSeen": false,
       "variantsPerEnvironment": false,
     },
     "externalResolver": {

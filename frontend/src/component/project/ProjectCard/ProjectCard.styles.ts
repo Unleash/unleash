@@ -2,7 +2,7 @@ import { makeStyles } from 'tss-react/mui';
 
 export const useStyles = makeStyles()(theme => ({
     projectCard: {
-        padding: '1rem',
+        padding: theme.spacing(1, 2, 2, 2),
         width: '220px',
         height: '204px',
         display: 'flex',
@@ -22,7 +22,6 @@ export const useStyles = makeStyles()(theme => ({
     header: {
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'space-between',
     },
     title: {
         fontWeight: 'normal',
@@ -54,6 +53,8 @@ export const useStyles = makeStyles()(theme => ({
     },
     actionsBtn: {
         transform: 'translateX(15px)',
+        marginLeft: 'auto',
+        marginRight: theme.spacing(1),
     },
     icon: {
         color: theme.palette.grey[700],

@@ -11,8 +11,12 @@ import {
 } from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { usePageTitle } from 'hooks/usePageTitle';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { FeatureOverviewSidePanel } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewSidePanel/FeatureOverviewSidePanel';
 
 const FeatureOverview = () => {
+    const { uiConfig } = useUiConfig();
     const { classes: styles } = useStyles();
     const navigate = useNavigate();
     const projectId = useRequiredPathParam('projectId');
@@ -25,7 +29,11 @@ const FeatureOverview = () => {
         <div className={styles.container}>
             <div>
                 <FeatureOverviewMetaData />
-                <FeatureOverviewEnvSwitches />
+                <ConditionallyRender
+                    condition={Boolean(uiConfig.flags.variantsPerEnvironment)}
+                    show={<FeatureOverviewSidePanel />}
+                    elseShow={<FeatureOverviewEnvSwitches />}
+                />
             </div>
             <div className={styles.mainContent}>
                 <FeatureOverviewEnvironments />

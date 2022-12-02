@@ -4,7 +4,7 @@ import supertest from 'supertest';
 import EventEmitter from 'events';
 import getApp from '../../../lib/app';
 import { createTestConfig } from '../../config/test-config';
-import { IAuthType } from '../../../lib/types/option';
+import { IAuthType, IUnleashConfig } from '../../../lib/types/option';
 import { createServices } from '../../../lib/services';
 import sessionDb from '../../../lib/middleware/session-db';
 import { IUnleashStores } from '../../../lib/types';
@@ -16,6 +16,7 @@ export interface IUnleashTest {
     request: supertest.SuperAgentTest;
     destroy: () => Promise<void>;
     services: IUnleashServices;
+    config: IUnleashConfig;
 }
 
 async function createApp(
@@ -49,7 +50,7 @@ async function createApp(
     };
 
     // TODO: use create from server-impl instead?
-    return { request, destroy, services };
+    return { request, destroy, services, config };
 }
 
 export async function setupApp(stores: IUnleashStores): Promise<IUnleashTest> {

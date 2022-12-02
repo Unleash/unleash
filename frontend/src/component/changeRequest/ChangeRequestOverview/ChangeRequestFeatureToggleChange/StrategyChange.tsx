@@ -1,5 +1,5 @@
 import { Box, Link, styled, Typography } from '@mui/material';
-import { FC } from 'react';
+import { FC, ReactNode } from 'react';
 
 interface IStrategyChangeProps {
     onDiscard: () => void;
@@ -16,34 +16,34 @@ const ChangeItemInfo: FC = styled(Box)(({ theme }) => ({
     gap: theme.spacing(1),
 }));
 
-const Discard: FC<IStrategyChangeProps> = ({ onDiscard }) => (
+export const Discard: FC<IStrategyChangeProps> = ({ onDiscard }) => (
     <Box>
         <Link onClick={onDiscard}>Discard</Link>
     </Box>
 );
 
-export const StrategyAddedChange: FC<IStrategyChangeProps> = ({
+export const StrategyAddedChange: FC<{ discard?: ReactNode }> = ({
     children,
-    onDiscard,
+    discard,
 }) => {
     return (
         <ChangeItemWrapper>
             <ChangeItemInfo>
                 <Typography
-                    sx={theme => ({ color: theme.palette.success.main })}
+                    sx={theme => ({ color: theme.palette.success.dark })}
                 >
                     + Adding strategy:
                 </Typography>
                 {children}
             </ChangeItemInfo>
-            <Discard onDiscard={onDiscard} />
+            {discard}
         </ChangeItemWrapper>
     );
 };
 
-export const StrategyEditedChange: FC<IStrategyChangeProps> = ({
+export const StrategyEditedChange: FC<{ discard?: ReactNode }> = ({
     children,
-    onDiscard,
+    discard,
 }) => {
     return (
         <ChangeItemWrapper>
@@ -51,13 +51,13 @@ export const StrategyEditedChange: FC<IStrategyChangeProps> = ({
                 <Typography>Editing strategy:</Typography>
                 {children}
             </ChangeItemInfo>
-            <Discard onDiscard={onDiscard} />
+            {discard}
         </ChangeItemWrapper>
     );
 };
 
-export const StrategyDeletedChange: FC<IStrategyChangeProps> = ({
-    onDiscard,
+export const StrategyDeletedChange: FC<{ discard?: ReactNode }> = ({
+    discard,
     children,
 }) => {
     return (
@@ -68,7 +68,7 @@ export const StrategyDeletedChange: FC<IStrategyChangeProps> = ({
                 </Typography>
                 {children}
             </ChangeItemInfo>
-            <Discard onDiscard={onDiscard} />
+            {discard}
         </ChangeItemWrapper>
     );
 };

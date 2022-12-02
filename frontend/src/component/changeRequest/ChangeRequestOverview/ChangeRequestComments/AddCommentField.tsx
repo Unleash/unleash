@@ -1,6 +1,7 @@
 import { FC } from 'react';
-import { Box, Button, styled, TextField } from '@mui/material';
+import { Box, styled, TextField, Tooltip } from '@mui/material';
 import { StyledAvatar } from './StyledAvatar';
+import { IUser } from 'interfaces/user';
 
 const AddCommentWrapper = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -9,14 +10,15 @@ const AddCommentWrapper = styled(Box)(({ theme }) => ({
 }));
 
 export const AddCommentField: FC<{
-    imageUrl: string;
+    user: IUser | undefined;
     commentText: string;
-    onAddComment: () => void;
     onTypeComment: (text: string) => void;
-}> = ({ imageUrl, commentText, onTypeComment, onAddComment }) => (
+}> = ({ user, commentText, onTypeComment, children }) => (
     <>
         <AddCommentWrapper>
-            <StyledAvatar src={imageUrl} />
+            <Tooltip title={user?.name || user?.username}>
+                <StyledAvatar src={user?.imageUrl || ''} />
+            </Tooltip>
             <TextField
                 variant="outlined"
                 placeholder="Add your comment here"
@@ -28,16 +30,7 @@ export const AddCommentField: FC<{
             />
         </AddCommentWrapper>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <Button
-                variant="outlined"
-                onClick={onAddComment}
-                disabled={
-                    commentText.trim().length === 0 ||
-                    commentText.trim().length > 1000
-                }
-            >
-                Comment
-            </Button>
+            {children}
         </Box>
     </>
 );

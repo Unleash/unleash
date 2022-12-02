@@ -1,14 +1,13 @@
 import { useNavigate } from 'react-router';
 import useProject from 'hooks/api/getters/useProject/useProject';
 import useLoading from 'hooks/useLoading';
-import ApiError from 'component/common/ApiError/ApiError';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useStyles } from './Project.styles';
 import { styled, Tab, Tabs } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
 import useToast from 'hooks/useToast';
 import useQueryParams from 'hooks/useQueryParams';
-import { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { ProjectAccess } from '../ProjectAccess/ProjectAccess';
 import ProjectEnvironment from '../ProjectEnvironment/ProjectEnvironment';
 import { ProjectFeaturesArchive } from './ProjectFeaturesArchive/ProjectFeaturesArchive';
@@ -30,6 +29,8 @@ import { MainLayout } from 'component/layout/MainLayout/MainLayout';
 import { ProjectChangeRequests } from '../../changeRequest/ProjectChangeRequests/ProjectChangeRequests';
 import { ProjectSettings } from './ProjectSettings/ProjectSettings';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
+import { FavoriteIconButton } from '../../common/FavoriteIconButton/FavoriteIconButton';
+import { useFavoriteProjectsApi } from '../../../hooks/api/actions/useFavoriteProjectsApi/useFavoriteProjectsApi';
 
 const StyledDiv = styled('div')(() => ({
     display: 'flex',
@@ -53,17 +54,18 @@ const StyledText = styled(StyledTitle)(({ theme }) => ({
 const Project = () => {
     const projectId = useRequiredPathParam('projectId');
     const params = useQueryParams();
-    const { project, error, loading, refetch } = useProject(projectId);
+    const { project, loading, refetch } = useProject(projectId);
     const ref = useLoading(loading);
     const { setToastData } = useToast();
     const { classes: styles } = useStyles();
     const navigate = useNavigate();
     const { pathname } = useLocation();
-    const { isOss } = useUiConfig();
+    const { isOss, uiConfig } = useUiConfig();
     const basePath = `/projects/${projectId}`;
     const projectName = project?.name || projectId;
     const { isChangeRequestConfiguredInAnyEnv, isChangeRequestFlagEnabled } =
         useChangeRequestsEnabled(projectId);
+    const { favorite, unfavorite } = useFavoriteProjectsApi();
 
     const [showDelDialog, setShowDelDialog] = useState(false);
 
@@ -117,7 +119,7 @@ const Project = () => {
         const changeRequestTab = {
             title: 'Change requests',
             path: `${basePath}/change-requests`,
-            name: 'change-request' + '',
+            name: 'change-request',
         };
 
         if (isChangeRequestFlagEnabled) {
@@ -145,6 +147,15 @@ const Project = () => {
         /* eslint-disable-next-line */
     }, []);
 
+    const onFavorite = async () => {
+        if (project?.favorite) {
+            await unfavorite(projectId);
+        } else {
+            await favorite(projectId);
+        }
+        refetch();
+    };
+
     return (
         <MainLayout
             ref={ref}
@@ -156,6 +167,15 @@ const Project = () => {
         >
             <div className={styles.header}>
                 <div className={styles.innerContainer}>
+                    <ConditionallyRender
+                        condition={Boolean(uiConfig?.flags?.favorites)}
+                        show={() => (
+                            <FavoriteIconButton
+                                onClick={onFavorite}
+                                isFavorite={project?.favorite}
+                            />
+                        )}
+                    />
                     <h2 className={styles.title}>
                         <div>
                             <StyledName data-loading>{projectName}</StyledName>

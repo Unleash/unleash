@@ -11,6 +11,7 @@ const fallbackProject: IProject = {
     members: 0,
     version: '1',
     description: 'Default',
+    favorite: false,
 };
 
 const useProject = (id: string, options: SWRConfiguration = {}) => {

@@ -2,12 +2,13 @@ import { useCallback, useState } from 'react';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useChangeRequestApi } from './api/actions/useChangeRequestApi/useChangeRequestApi';
-import { useChangeRequestOpen } from './api/getters/useChangeRequestOpen/useChangeRequestOpen';
+import { usePendingChangeRequests } from './api/getters/usePendingChangeRequests/usePendingChangeRequests';
 
 export const useChangeRequestToggle = (project: string) => {
     const { setToastData, setToastApiError } = useToast();
-    const { addChangeRequest } = useChangeRequestApi();
-    const { refetch: refetchChangeRequests } = useChangeRequestOpen(project);
+    const { addChange } = useChangeRequestApi();
+    const { refetch: refetchChangeRequests } =
+        usePendingChangeRequests(project);
 
     const [changeRequestDialogDetails, setChangeRequestDialogDetails] =
         useState<{
@@ -30,33 +31,29 @@ export const useChangeRequestToggle = (project: string) => {
     );
 
     const onChangeRequestToggleClose = useCallback(() => {
-        setChangeRequestDialogDetails({ isOpen: false });
+        setChangeRequestDialogDetails(prev => ({ ...prev, isOpen: false }));
     }, []);
 
     const onChangeRequestToggleConfirm = useCallback(async () => {
         try {
-            await addChangeRequest(
-                project,
-                changeRequestDialogDetails.environment!,
-                {
-                    feature: changeRequestDialogDetails.featureName!,
-                    action: 'updateEnabled',
-                    payload: {
-                        enabled: Boolean(changeRequestDialogDetails.enabled),
-                    },
-                }
-            );
+            await addChange(project, changeRequestDialogDetails.environment!, {
+                feature: changeRequestDialogDetails.featureName!,
+                action: 'updateEnabled',
+                payload: {
+                    enabled: Boolean(changeRequestDialogDetails.enabled),
+                },
+            });
             refetchChangeRequests();
-            setChangeRequestDialogDetails({ isOpen: false });
+            setChangeRequestDialogDetails(prev => ({ ...prev, isOpen: false }));
             setToastData({
                 type: 'success',
                 title: 'Changes added to the draft!',
             });
         } catch (error) {
             setToastApiError(formatUnknownError(error));
-            setChangeRequestDialogDetails({ isOpen: false });
+            setChangeRequestDialogDetails(prev => ({ ...prev, isOpen: false }));
         }
-    }, [addChangeRequest]);
+    }, [addChange]);
 
     return {
         onChangeRequestToggle,

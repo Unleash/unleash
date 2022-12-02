@@ -10,7 +10,7 @@ const ClientApi = require('./client-api');
 const Controller = require('./controller');
 import { HealthCheckController } from './health-check';
 import ProxyController from './proxy-api';
-import { conditionalMiddleware } from '../middleware/conditional-middleware';
+import { conditionalMiddleware } from '../middleware';
 import EdgeController from './edge-api';
 import { PublicInviteController } from './public-invite';
 
@@ -47,7 +47,8 @@ class IndexRouter extends Controller {
             '/api/frontend',
             conditionalMiddleware(
                 () => config.flagResolver.isEnabled('embedProxy'),
-                new ProxyController(config, services).router,
+                new ProxyController(config, services, config.flagResolver)
+                    .router,
             ),
         );
 

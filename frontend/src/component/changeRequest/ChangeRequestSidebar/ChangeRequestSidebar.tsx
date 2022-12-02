@@ -16,13 +16,14 @@ import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { CheckCircle, HelpOutline } from '@mui/icons-material';
 import EnvironmentIcon from 'component/common/EnvironmentIcon/EnvironmentIcon';
 import { ChangeRequest } from '../ChangeRequest/ChangeRequest';
-import { useChangeRequestOpen } from 'hooks/api/getters/useChangeRequestOpen/useChangeRequestOpen';
+import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { ChangeRequestStatusBadge } from '../ChangeRequestStatusBadge/ChangeRequestStatusBadge';
 import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate } from 'react-router-dom';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { changesCount } from '../changesCount';
 
 interface IChangeRequestSidebarProps {
     open: boolean;
@@ -124,7 +125,7 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
         draft,
         loading,
         refetch: refetchChangeRequest,
-    } = useChangeRequestOpen(project);
+    } = usePendingChangeRequests(project);
     const { changeState, discardDraft } = useChangeRequestApi();
     const theme = useTheme();
     const navigate = useNavigate();
@@ -196,8 +197,7 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
                                 >
                                     Review your changes
                                     <Tooltip
-                                        title="You can review your changes from this page.
-                                    Needs a text to explain the process."
+                                        title="Here you can see all the changes that you are suggesting and you can send them for review. You can still discard the changes after you sent them for review or even cancel the entire review if you need it."
                                         arrow
                                     >
                                         <StyledHelpOutline />
@@ -217,6 +217,7 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
                         key={environmentChangeRequest.id}
                         sx={{
                             padding: 2,
+                            mt: 2,
                             border: '2px solid',
                             borderColor: theme => theme.palette.neutral.light,
                             borderRadius: theme =>
@@ -271,10 +272,9 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
                                                     environmentChangeRequest.id
                                                 )
                                             }
-                                            count={
+                                            count={changesCount(
                                                 environmentChangeRequest
-                                                    .features.length
-                                            }
+                                            )}
                                         />
 
                                         <Button
@@ -304,7 +304,7 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
                                             <StyledSuccessIcon />
                                             <Typography
                                                 color={
-                                                    theme.palette.success.main
+                                                    theme.palette.success.dark
                                                 }
                                             >
                                                 Draft successfully sent to

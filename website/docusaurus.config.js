@@ -5,7 +5,7 @@ module.exports = {
     url: 'https://docs.getunleash.io',
     baseUrl: '/',
     onBrokenLinks: 'throw',
-    onBrokenMarkdownLinks: 'warn',
+    onBrokenMarkdownLinks: 'throw',
     favicon: 'img/favicon.ico',
     organizationName: 'Unleash', // Usually your GitHub org/user name.
     projectName: 'unleash.github.io', // Usually your repo name.
@@ -149,37 +149,11 @@ module.exports = {
                 fromExtensions: ['html', 'htm'],
                 redirects: [
                     {
-                        to: '/sdks',
+                        to: '/how-to/how-to-create-api-tokens',
                         from: [
-                            '/user_guide/client-sdk',
-                            '/client-sdk',
-                            '/user_guide/connect_sdk',
-                            '/sdks/community',
+                            '/user_guide/api-token',
+                            '/deploy/user_guide/api-token',
                         ],
-                    },
-                    {
-                        to: '/user_guide/api-token',
-                        from: '/deploy/user_guide/api-token',
-                    },
-                    {
-                        to: '/sdks/unleash-proxy',
-                        from: '/user_guide/native_apps/',
-                    },
-                    {
-                        to: '/advanced/toggle_variants',
-                        from: '/toggle_variants',
-                    },
-                    {
-                        to: '/integrations',
-                        from: '/integrations/integrations',
-                    },
-                    {
-                        to: '/user_guide/activation_strategy',
-                        from: '/user_guide/control_rollout',
-                    },
-                    {
-                        from: '/advanced/impression_data',
-                        to: '/advanced/impression-data',
                     },
                     {
                         from: '/advanced/audit_log',
@@ -188,6 +162,40 @@ module.exports = {
                     {
                         from: '/api/open_api',
                         to: '/reference/api/unleash',
+                    },
+                    {
+                        from: '/advanced/api_access',
+                        to: '/how-to/how-to-use-the-admin-api',
+                    },
+                    {
+                        from: '/advanced/archived_toggles',
+                        to: '/reference/archived-toggles',
+                    },
+                    {
+                        from: '/advanced/custom-activation-strategy',
+                        to: '/reference/custom-activation-strategies',
+                    },
+                    {
+                        from: '/advanced/feature_toggle_types',
+                        to: '/reference/feature-toggle-types',
+                    },
+                    {
+                        from: [
+                            '/toggle_variants',
+                            '/advanced/feature_toggle_variants',
+                        ],
+                        to: '/reference/feature-toggle-variants',
+                    },
+                    {
+                        from: [
+                            '/advanced/impression-data',
+                            '/advanced/impression_data',
+                        ],
+                        to: '/reference/impression-data',
+                    },
+                    {
+                        from: '/advanced/stickiness',
+                        to: '/reference/stickiness',
                     },
                     {
                         from: '/advanced/sso-google',
@@ -204,6 +212,311 @@ module.exports = {
                     {
                         from: '/advanced/sso-saml',
                         to: '/how-to/how-to-add-sso-saml',
+                    },
+                    {
+                        from: '/advanced/strategy_constraints',
+                        to: '/reference/strategy-constraints',
+                    },
+                    {
+                        from: '/advanced/tags',
+                        to: '/reference/tags',
+                    },
+                    {
+                        from: '/advanced/enterprise-authentication',
+                        to: '/reference/sso',
+                    },
+                    {
+                        from: '/deploy',
+                        to: '/reference/deploy',
+                    },
+                    {
+                        from: '/deploy/getting_started',
+                        to: '/reference/deploy/getting-started',
+                    },
+                    {
+                        from: '/deploy/configuring_unleash',
+                        to: '/reference/deploy/configuring-unleash',
+                    },
+                    {
+                        from: '/deploy/configuring_unleash_v3',
+                        to: '/reference/deploy/configuring-unleash-v3',
+                    },
+                    {
+                        from: '/deploy/database-setup',
+                        to: '/reference/deploy/database-setup',
+                    },
+                    {
+                        from: '/deploy/database_backup',
+                        to: '/reference/deploy/database-backup',
+                    },
+                    {
+                        from: '/deploy/email',
+                        to: '/reference/deploy/email-service',
+                    },
+                    {
+                        from: '/deploy/google_auth_v3',
+                        to: '/reference/deploy/google-auth-v3',
+                    },
+                    {
+                        from: '/deploy/google_auth',
+                        to: '/reference/deploy/google-auth-hook',
+                    },
+                    {
+                        from: '/deploy/import_export',
+                        to: '/reference/deploy/import-export',
+                    },
+                    {
+                        from: '/deploy/migration_guide',
+                        to: '/reference/deploy/migration-guide',
+                    },
+                    {
+                        from: '/deploy/securing_unleash',
+                        to: '/reference/deploy/securing-unleash',
+                    },
+                    {
+                        from: '/deploy/securing-unleash-v3',
+                        to: '/reference/deploy/securing-unleash-v3',
+                    },
+                    {
+                        from: '/addons',
+                        to: '/reference/addons',
+                    },
+                    {
+                        from: '/addons/datadog',
+                        to: '/reference/addons/datadog',
+                    },
+                    {
+                        from: '/addons/slack',
+                        to: '/reference/addons/slack',
+                    },
+                    {
+                        from: '/addons/teams',
+                        to: '/reference/addons/teams',
+                    },
+                    {
+                        from: '/addons/webhook',
+                        to: '/reference/addons/webhook',
+                    },
+                    {
+                        from: '/guides/feature_updates_to_slack',
+                        to: '/how-to/how-to-send-feature-updates-to-slack-deprecated',
+                    },
+                    {
+                        from: ['/integrations/integrations', '/integrations'],
+                        to: '/reference/integrations',
+                    },
+                    {
+                        from: '/integrations/jira_server_plugin_installation',
+                        to: '/reference/integrations/jira-server-plugin-installation',
+                    },
+                    {
+                        from: '/integrations/jira_server_plugin_usage',
+                        to: '/reference/integrations/jira-server-plugin-usage',
+                    },
+                    {
+                        from: [
+                            '/sdks',
+                            '/user_guide/client-sdk',
+                            '/client-sdk',
+                            '/user_guide/connect_sdk',
+                            '/sdks/community',
+                        ],
+                        to: '/reference/sdks',
+                    },
+                    {
+                        from: '/sdks/go_sdk',
+                        to: '/reference/sdks/go',
+                    },
+                    {
+                        from: '/sdks/java_sdk',
+                        to: '/reference/sdks/java',
+                    },
+                    {
+                        from: '/sdks/node_sdk',
+                        to: '/reference/sdks/node',
+                    },
+                    {
+                        from: '/sdks/php_sdk',
+                        to: '/reference/sdks/php',
+                    },
+                    {
+                        from: '/sdks/python_sdk',
+                        to: '/reference/sdks/python',
+                    },
+                    {
+                        from: '/sdks/dot_net_sdk',
+                        to: '/reference/sdks/dotnet',
+                    },
+                    {
+                        from: '/sdks/ruby_sdk',
+                        to: '/reference/sdks/ruby',
+                    },
+                    {
+                        from: '/sdks/android_proxy_sdk',
+                        to: '/reference/sdks/android-proxy',
+                    },
+                    {
+                        from: '/sdks/proxy-ios',
+                        to: '/reference/sdks/ios-proxy',
+                    },
+                    {
+                        from: '/sdks/javascript-browser',
+                        to: '/reference/sdks/javascript-browser',
+                    },
+                    {
+                        from: '/sdks/react',
+                        to: '/reference/sdks/react',
+                    },
+                    {
+                        from: '/sdks/proxy-vue',
+                        to: '/reference/sdks/vue',
+                    },
+                    {
+                        from: '/sdks/proxy-svelte',
+                        to: '/reference/sdks/svelte',
+                    },
+                    {
+                        from: [
+                            '/user_guide/native_apps',
+                            '/user_guide/proxy-api',
+                            '/sdks/unleash-proxy',
+                        ],
+                        to: '/reference/unleash-proxy',
+                    },
+                    {
+                        to: '/how-to/how-to-create-feature-toggles',
+                        from: '/user_guide/create_feature_toggle',
+                    },
+                    {
+                        to: '/reference/activation-strategies',
+                        from: [
+                            '/user_guide/control_rollout',
+                            '/user_guide/activation_strategy',
+                        ],
+                    },
+                    {
+                        from: '/user_guide/environments',
+                        to: '/reference/environments',
+                    },
+                    {
+                        from: '/user_guide/projects',
+                        to: '/reference/projects',
+                    },
+                    {
+                        from: '/user_guide/rbac',
+                        to: '/reference/rbac',
+                    },
+                    {
+                        from: '/user_guide/technical_debt',
+                        to: '/reference/technical-debt',
+                    },
+                    {
+                        from: '/user_guide/unleash_context',
+                        to: '/reference/unleash-context',
+                    },
+                    {
+                        from: '/user_guide/user-management',
+                        to: '/how-to/how-to-add-users-to-unleash',
+                    },
+                    {
+                        from: '/user_guide/v4-whats-new',
+                        to: '/reference/whats-new-v4',
+                    },
+                    {
+                        from: '/user_guide/important-concepts',
+                        to: '/tutorials/important-concepts',
+                    },
+                    {
+                        from: '/user_guide/quickstart',
+                        to: '/tutorials/quickstart',
+                    },
+                    {
+                        from: '/user_guide/unleash_overview',
+                        to: '/tutorials/unleash-overview',
+                    },
+                    {
+                        from: '/api/basic-auth',
+                        to: '/reference/api/legacy/unleash/basic-auth',
+                    },
+                    {
+                        from: '/api',
+                        to: '/reference/api/legacy/unleash',
+                    },
+                    {
+                        from: '/api/admin/addons',
+                        to: '/reference/api/legacy/unleash/admin/addons',
+                    },
+                    {
+                        from: '/api/admin/context',
+                        to: '/reference/api/legacy/unleash/admin/context',
+                    },
+                    {
+                        from: '/api/admin/events',
+                        to: '/reference/api/legacy/unleash/admin/events',
+                    },
+                    {
+                        from: '/api/admin/feature-toggles-v2',
+                        to: '/reference/api/legacy/unleash/admin/features-v2',
+                    },
+                    {
+                        from: '/api/admin/feature-types',
+                        to: '/reference/api/legacy/unleash/admin/feature-types',
+                    },
+                    {
+                        from: '/api/admin/features',
+                        to: '/reference/api/legacy/unleash/admin/features',
+                    },
+                    {
+                        from: '/api/admin/features-archive',
+                        to: '/reference/api/legacy/unleash/admin/archive',
+                    },
+                    {
+                        from: '/api/admin/metrics',
+                        to: '/reference/api/legacy/unleash/admin/metrics',
+                    },
+                    {
+                        from: '/api/admin/projects',
+                        to: '/reference/api/legacy/unleash/admin/projects',
+                    },
+                    {
+                        from: '/api/admin/segments',
+                        to: '/reference/api/legacy/unleash/admin/segments',
+                    },
+                    {
+                        from: '/api/admin/state',
+                        to: '/reference/api/legacy/unleash/admin/state',
+                    },
+                    {
+                        from: '/api/admin/strategies',
+                        to: '/reference/api/legacy/unleash/admin/strategies',
+                    },
+                    {
+                        from: '/api/admin/tags',
+                        to: '/reference/api/legacy/unleash/admin/tags',
+                    },
+                    {
+                        from: '/api/admin/user-admin',
+                        to: '/reference/api/legacy/unleash/admin/user-admin',
+                    },
+                    {
+                        from: '/api/client/features',
+                        to: '/reference/api/legacy/unleash/client/features',
+                    },
+                    {
+                        from: '/api/client/metrics',
+                        to: '/reference/api/legacy/unleash/client/metrics',
+                    },
+                    {
+                        from: '/api/client/register',
+                        to: '/reference/api/legacy/unleash/client/register',
+                    },
+                    {
+                        from: '/api/internal/internal',
+                        to: '/reference/api/legacy/unleash/internal/prometheus',
+                    },
+                    {
+                        from: '/api/internal/health',
+                        to: '/reference/api/legacy/unleash/internal/health',
                     },
                 ],
                 createRedirects: function (toPath) {

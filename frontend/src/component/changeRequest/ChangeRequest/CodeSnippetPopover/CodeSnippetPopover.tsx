@@ -9,9 +9,10 @@ import {
     GetFeatureStrategyIcon,
 } from '../../../../utils/strategyNames';
 import { Popover, Typography } from '@mui/material';
-import { useFeature } from '../../../../hooks/api/getters/useFeature/useFeature';
+import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { StyledCodeSection } from '../../../events/EventCard/EventCard';
 import EventDiff from '../../../events/EventDiff/EventDiff';
+import omit from 'lodash.omit';
 
 const useCurrentStrategy = (
     change:
@@ -47,6 +48,7 @@ export const PopoverDiff: FC<{
         feature,
         environmentName
     );
+
     const changeRequestStrategy =
         change.action === 'deleteStrategy' ? undefined : change.payload;
 
@@ -54,7 +56,7 @@ export const PopoverDiff: FC<{
         <StyledCodeSection>
             <EventDiff
                 entry={{
-                    preData: currentStrategy,
+                    preData: omit(currentStrategy, 'sortOrder'),
                     data: changeRequestStrategy,
                 }}
             />

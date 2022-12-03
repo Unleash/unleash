@@ -339,7 +339,7 @@ export const EnvironmentVariantModal = ({
                 modal
                 title={editing ? 'Edit variant' : 'Add variant'}
                 description="Variants allows you to return a variant object if the feature toggle is considered enabled for the current request."
-                documentationLink="https://docs.getunleash.io/advanced/toggle_variants"
+                documentationLink="https://docs.getunleash.io/reference/feature-toggle-variants"
                 documentationLinkLabel="Feature toggle variants documentation"
                 formatApiCode={formatApiCode}
                 loading={!open}

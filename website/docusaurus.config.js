@@ -183,6 +183,7 @@ module.exports = {
                         from: [
                             '/toggle_variants',
                             '/advanced/feature_toggle_variants',
+                            '/advanced/toggle_variants',
                         ],
                         to: '/reference/feature-toggle-variants',
                     },
@@ -451,7 +452,7 @@ module.exports = {
                         to: '/reference/api/legacy/unleash/admin/context',
                     },
                     {
-                        from: '/api/admin/events',
+                        from: [ '/api/admin/events', '/docs/api/admin/events' ],
                         to: '/reference/api/legacy/unleash/admin/events',
                     },
                     {

@@ -452,7 +452,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
 
     const accessControlMaxAge = options.accessControlMaxAge
         ? options.accessControlMaxAge
-        : parseEnvVarNumber(process.env.ACCESS_CONTROL_MAX_AGE, 172800);
+        : parseEnvVarNumber(process.env.ACCESS_CONTROL_MAX_AGE, 86400);
 
     const clientFeatureCaching = loadClientCachingOptions(options);
 

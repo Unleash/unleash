@@ -1014,13 +1014,21 @@ class FeatureToggleService {
         user?: User,
     ): Promise<FeatureToggle> {
         await this.stopWhenChangeRequestsEnabled(project, environment);
+        if (enabled) {
+            await this.stopWhenCannotCreateStrategies(
+                project,
+                environment,
+                featureName,
+                user,
+            );
+        }
+
         return this.unprotectedUpdateEnabled(
             project,
             featureName,
             environment,
             enabled,
             createdBy,
-            user,
         );
     }
 
@@ -1030,7 +1038,6 @@ class FeatureToggleService {
         environment: string,
         enabled: boolean,
         createdBy: string,
-        user?: User,
     ): Promise<FeatureToggle> {
         const hasEnvironment =
             await this.featureEnvironmentStore.featureHasEnvironment(
@@ -1046,27 +1053,15 @@ class FeatureToggleService {
                     environment,
                 );
                 if (strategies.length === 0) {
-                    const canAddStrategies =
-                        user &&
-                        (await this.accessService.hasPermission(
-                            user,
-                            CREATE_FEATURE_STRATEGY,
-                            project,
+                    await this.unprotectedCreateStrategy(
+                        getDefaultStrategy(featureName),
+                        {
                             environment,
-                        ));
-                    if (canAddStrategies) {
-                        await this.unprotectedCreateStrategy(
-                            getDefaultStrategy(featureName),
-                            {
-                                environment,
-                                projectId: project,
-                                featureName,
-                            },
-                            createdBy,
-                        );
-                    } else {
-                        throw new NoAccessError(CREATE_FEATURE_STRATEGY);
-                    }
+                            projectId: project,
+                            featureName,
+                        },
+                        createdBy,
+                    );
                 }
             }
             const updatedEnvironmentStatus =
@@ -1392,6 +1387,44 @@ class FeatureToggleService {
                 `Change requests are enabled in project "${project}" for environment "${environment}"`,
             );
         }
+    }
+
+    private async stopWhenCannotCreateStrategies(
+        project: string,
+        environment: string,
+        featureName: string,
+        user: User,
+    ) {
+        const hasEnvironment =
+            await this.featureEnvironmentStore.featureHasEnvironment(
+                environment,
+                featureName,
+            );
+
+        if (hasEnvironment) {
+            const strategies = await this.getStrategiesForEnvironment(
+                project,
+                featureName,
+                environment,
+            );
+            if (strategies.length === 0) {
+                const canAddStrategies =
+                    user &&
+                    (await this.accessService.hasPermission(
+                        user,
+                        CREATE_FEATURE_STRATEGY,
+                        project,
+                        environment,
+                    ));
+                if (!canAddStrategies) {
+                    throw new NoAccessError(CREATE_FEATURE_STRATEGY);
+                }
+            }
+        }
+
+        throw new NotFoundError(
+            `Could not find environment ${environment} for feature: ${featureName}`,
+        );
     }
 }
 

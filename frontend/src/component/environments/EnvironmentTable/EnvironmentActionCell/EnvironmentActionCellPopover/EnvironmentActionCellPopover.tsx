@@ -118,31 +118,26 @@ export const EnvironmentActionCellPopover = ({
                             </StyledMenuItem>
                         )}
                     </PermissionHOC>
-                    <ConditionallyRender
-                        condition={Boolean(uiConfig.flags.cloneEnvironment)}
-                        show={
-                            <PermissionHOC permission={ADMIN}>
-                                {({ hasAccess }) => (
-                                    <StyledMenuItem
-                                        onClick={() => {
-                                            onClone();
-                                            handleClose();
-                                        }}
-                                        disabled={!hasAccess}
-                                    >
-                                        <ListItemIcon>
-                                            <CopyIcon />
-                                        </ListItemIcon>
-                                        <ListItemText>
-                                            <Typography variant="body2">
-                                                Clone
-                                            </Typography>
-                                        </ListItemText>
-                                    </StyledMenuItem>
-                                )}
-                            </PermissionHOC>
-                        }
-                    />
+                        <PermissionHOC permission={ADMIN}>
+                            {({ hasAccess }) => (
+                                <StyledMenuItem
+                                    onClick={() => {
+                                        onClone();
+                                        handleClose();
+                                    }}
+                                    disabled={!hasAccess}
+                                >
+                                    <ListItemIcon>
+                                        <CopyIcon />
+                                    </ListItemIcon>
+                                    <ListItemText>
+                                        <Typography variant="body2">
+                                            Clone
+                                        </Typography>
+                                    </ListItemText>
+                                </StyledMenuItem>
+                            )}
+                        </PermissionHOC>
                     <PermissionHOC permission={UPDATE_ENVIRONMENT}>
                         {({ hasAccess }) => (
                             <StyledMenuItem

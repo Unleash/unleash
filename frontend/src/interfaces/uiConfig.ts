@@ -42,7 +42,6 @@ export interface IFlags {
     embedProxyFrontend?: boolean;
     syncSSOGroups?: boolean;
     changeRequests?: boolean;
-    cloneEnvironment?: boolean;
     variantsPerEnvironment?: boolean;
     tokensLastSeen?: boolean;
     favorites?: boolean;

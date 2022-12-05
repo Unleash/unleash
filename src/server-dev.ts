@@ -40,7 +40,6 @@ process.nextTick(async () => {
                         responseTimeWithAppName: true,
                         syncSSOGroups: true,
                         changeRequests: true,
-                        cloneEnvironment: true,
                         toggleTagFiltering: true,
                         favorites: true,
                         variantsPerEnvironment: true,

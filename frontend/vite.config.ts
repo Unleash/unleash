@@ -62,6 +62,9 @@ export default mergeConfig(
                     changeOrigin: true,
                 },
             },
+            fs: {
+                allow: ['..'],
+            },
         },
         plugins: [react(), tsconfigPaths(), svgr(), envCompatible()],
         esbuild: {

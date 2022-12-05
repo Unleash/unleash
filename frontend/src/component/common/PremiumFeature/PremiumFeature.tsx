@@ -59,6 +59,7 @@ export const PremiumFeature = ({
             });
         }
     };
+    
     return (
         <PremiumFeatureWrapper
             sx={{

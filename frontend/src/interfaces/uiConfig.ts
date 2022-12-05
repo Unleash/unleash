@@ -40,7 +40,6 @@ export interface IFlags {
     UG?: boolean;
     ENABLE_DARK_MODE_SUPPORT?: boolean;
     embedProxyFrontend?: boolean;
-    syncSSOGroups?: boolean;
     changeRequests?: boolean;
     variantsPerEnvironment?: boolean;
     tokensLastSeen?: boolean;

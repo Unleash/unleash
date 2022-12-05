@@ -40,7 +40,6 @@ export const OidcAuth = () => {
     const { hasAccess } = useContext(AccessContext);
     const { config } = useAuthSettings('oidc');
     const { updateSettings, errors, loading } = useAuthSettingsApi('oidc');
-    const ssoSyncShown = Boolean(uiConfig.flags.syncSSOGroups);
 
     useEffect(() => {
         if (config.discoverUrl) {
@@ -240,15 +239,10 @@ export const OidcAuth = () => {
                         />
                     </Grid>
                 </Grid>
-                <ConditionallyRender
-                    condition={ssoSyncShown}
-                    show={
-                        <SsoGroupSettings
-                            ssoType="OIDC"
-                            data={data}
-                            setValue={setValue}
-                        />
-                    }
+                <SsoGroupSettings
+                    ssoType="OIDC"
+                    data={data}
+                    setValue={setValue}
                 />
                 <AutoCreateForm data={data} setValue={setValue} />
 

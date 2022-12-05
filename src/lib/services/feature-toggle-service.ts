@@ -1015,7 +1015,7 @@ class FeatureToggleService {
         createdBy: string,
         user?: User,
     ): Promise<FeatureToggle> {
-        await this.stopWhenChangeRequestsEnabled(project, environment);
+        await this.stopWhenChangeRequestsEnabled(project, environment, user);
         if (enabled) {
             await this.stopWhenCannotCreateStrategies(
                 project,

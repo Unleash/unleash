@@ -1,10 +1,10 @@
-name: 'Run npm version and push tags'
+name: Run npm version and push tags
 
 on:
   workflow_dispatch:
     inputs:
-      - name: version
-        description: 'What version would you like to use?'
+      version: 
+        description: What version would you like to use?
 
 jobs:
   build:

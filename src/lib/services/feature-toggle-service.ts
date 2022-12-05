@@ -1398,9 +1398,7 @@ class FeatureToggleService {
             this.accessService.isChangeRequestsEnabled(project, environment),
         ]);
         if (changeRequestEnabled && !canSkipChangeRequest) {
-            throw new Error(
-                `Change requests are enabled in project "${project}" for environment "${environment}"`,
-            );
+            throw new NoAccessError(SKIP_CHANGE_REQUEST);
         }
     }
 

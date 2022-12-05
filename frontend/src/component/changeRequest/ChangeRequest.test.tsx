@@ -156,7 +156,7 @@ const featureList = (featureName: string) =>
         version: 1,
     });
 
-const feature = (name: string) =>
+const feature = ({ name, enabled }: { name: string; enabled: boolean }) =>
     testServerRoute(server, `/api/admin/projects/default/features/${name}`, {
         environments: [
             {
@@ -168,7 +168,7 @@ const feature = (name: string) =>
             },
             {
                 name: 'production',
-                enabled: false,
+                enabled,
                 type: 'production',
                 sortOrder: 200,
                 strategies: [],
@@ -236,18 +236,40 @@ const UnleashUiSetup: FC<{ path: string; pathTemplate: string }> = ({
     </UIProviderContainer>
 );
 
-const setupHttpRoutes = () => {
-    const featureName = 'test';
+const setupHttpRoutes = ({
+    featureName,
+    enabled,
+}: {
+    featureName: string;
+    enabled: boolean;
+}) => {
     pendingChangeRequest(featureName);
     changeRequestsEnabledIn('production');
     uiConfigForEnterprise();
     featureList(featureName);
-    feature(featureName);
+    feature({ name: featureName, enabled });
     otherRequests(featureName);
 };
 
-test('create change request', async () => {
-    setupHttpRoutes();
+const verifyBannerForPendingChangeRequest = async () => {
+    return screen.findByText('Change request mode');
+};
+
+const changeToggle = async (environment: string) => {
+    const featureToggleStatusBox = screen.getByTestId('feature-toggle-status');
+    await within(featureToggleStatusBox).findByText(environment);
+    const toggle = screen.getAllByRole('checkbox')[1];
+    fireEvent.click(toggle);
+};
+
+const verifyChangeRequestBanner = async (bannerMainText: string) => {
+    await screen.findByText('Your suggestion:');
+    const message = screen.getByTestId('update-enabled-message').textContent;
+    expect(message).toBe(bannerMainText);
+};
+
+test('add toggle change to pending change request', async () => {
+    setupHttpRoutes({ featureName: 'test', enabled: false });
 
     render(
         <UnleashUiSetup
@@ -258,12 +280,9 @@ test('create change request', async () => {
         </UnleashUiSetup>
     );
 
-    const featureToggleStatusBox = screen.getByTestId('feature-toggle-status');
-    await screen.findByText('Change request mode'); // pending change request
+    await verifyBannerForPendingChangeRequest();
 
-    await within(featureToggleStatusBox).findByText('production');
-    const toggle = screen.getAllByRole('checkbox')[1];
-    fireEvent.click(toggle);
+    await changeToggle('production');
 
-    await screen.findByText('Request changes'); // change request confirmation dialog
+    await verifyChangeRequestBanner('Enable feature toggle test in production');
 });

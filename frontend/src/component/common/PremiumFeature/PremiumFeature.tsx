@@ -51,6 +51,7 @@ export const PremiumFeature = ({
     center,
 }: PremiumFeatureProps) => {
     const tracker = usePlausibleTracker();
+    
     const handleClick = () => {
         if (origin) {
             tracker.trackEvent('upgrade_plan_clicked', {

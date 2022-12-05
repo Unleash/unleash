@@ -2,7 +2,7 @@ name: Run npm version and push tags
 
 
 concurrency: 
-  group: ${{ github.head_ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 on:

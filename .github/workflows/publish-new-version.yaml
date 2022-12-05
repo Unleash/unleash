@@ -15,4 +15,4 @@ jobs:
 
       - name: npm version
         run: |
-          npm version $(inputs.version)
+          npm version ${{ github.event.inputs.version }}

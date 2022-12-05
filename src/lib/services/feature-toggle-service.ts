@@ -79,6 +79,7 @@ import { User } from '../server-impl';
 import { CREATE_FEATURE_STRATEGY } from '../types/permissions';
 import NoAccessError from '../error/no-access-error';
 import { IFeatureProjectUserParams } from '../routes/admin-api/project/features';
+import { SKIP_CHANGE_REQUEST } from '../../../frontend/src/component/providers/AccessProvider/permissions';
 
 interface IFeatureContext {
     featureName: string;
@@ -1375,13 +1376,18 @@ class FeatureToggleService {
     private async stopWhenChangeRequestsEnabled(
         project: string,
         environment: string,
+        user: User,
     ) {
-        if (
-            await this.accessService.isChangeRequestsEnabled(
+        const [canSkipChangeRequest, changeRequestEnabled] = await Promise.all([
+            this.accessService.hasPermission(
+                user,
+                SKIP_CHANGE_REQUEST,
                 project,
                 environment,
-            )
-        ) {
+            ),
+            this.accessService.isChangeRequestsEnabled(project, environment),
+        ]);
+        if (changeRequestEnabled && !canSkipChangeRequest) {
             throw new Error(
                 `Change requests are enabled in project "${project}" for environment "${environment}"`,
             );

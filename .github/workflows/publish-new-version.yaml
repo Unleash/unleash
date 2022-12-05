@@ -35,6 +35,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - name: setup git config
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "<>"
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:

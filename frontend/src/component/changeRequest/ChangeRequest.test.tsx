@@ -262,7 +262,7 @@ const changeToggle = async (environment: string) => {
     fireEvent.click(toggle);
 };
 
-const verifyChangeRequestBanner = async (bannerMainText: string) => {
+const verifyChangeRequestDialog = async (bannerMainText: string) => {
     await screen.findByText('Your suggestion:');
     const message = screen.getByTestId('update-enabled-message').textContent;
     expect(message).toBe(bannerMainText);
@@ -284,5 +284,5 @@ test('add toggle change to pending change request', async () => {
 
     await changeToggle('production');
 
-    await verifyChangeRequestBanner('Enable feature toggle test in production');
+    await verifyChangeRequestDialog('Enable feature toggle test in production');
 });

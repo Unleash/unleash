@@ -12,7 +12,7 @@ import { useProjectNameOrId } from 'hooks/api/getters/useProject/useProject';
 import {
     PlausibleOrigin,
     PremiumFeature,
-} from '../../common/PremiumFeature/PremiumFeature';
+} from 'component/common/PremiumFeature/PremiumFeature';
 
 const StyledLink = styled(Link)(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,

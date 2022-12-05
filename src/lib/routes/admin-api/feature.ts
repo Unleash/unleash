@@ -273,6 +273,7 @@ class FeatureController extends Controller {
                         environment: DEFAULT_ENV,
                     },
                     userName,
+                    req.user,
                 ),
             ),
         );
@@ -319,6 +320,7 @@ class FeatureController extends Controller {
                         s,
                         { projectId, featureName, environment: DEFAULT_ENV },
                         userName,
+                        req.user,
                     ),
                 ),
             );

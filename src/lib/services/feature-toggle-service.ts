@@ -76,10 +76,12 @@ import { SetStrategySortOrderSchema } from 'lib/openapi/spec/set-strategy-sort-o
 import { getDefaultStrategy } from '../util/feature-evaluator/helpers';
 import { AccessService } from './access-service';
 import { User } from '../server-impl';
-import { CREATE_FEATURE_STRATEGY } from '../types/permissions';
+import {
+    CREATE_FEATURE_STRATEGY,
+    SKIP_CHANGE_REQUEST,
+} from '../types/permissions';
 import NoAccessError from '../error/no-access-error';
 import { IFeatureProjectUserParams } from '../routes/admin-api/project/features';
-import { SKIP_CHANGE_REQUEST } from '../../../frontend/src/component/providers/AccessProvider/permissions';
 
 interface IFeatureContext {
     featureName: string;
@@ -322,10 +324,12 @@ class FeatureToggleService {
         strategyConfig: Unsaved<IStrategyConfig>,
         context: IFeatureStrategyContext,
         createdBy: string,
+        user?: User,
     ): Promise<Saved<IStrategyConfig>> {
         await this.stopWhenChangeRequestsEnabled(
             context.projectId,
             context.environment,
+            user,
         );
         return this.unprotectedCreateStrategy(
             strategyConfig,
@@ -414,10 +418,12 @@ class FeatureToggleService {
         updates: Partial<IFeatureStrategy>,
         context: IFeatureStrategyContext,
         userName: string,
+        user?: User,
     ): Promise<Saved<IStrategyConfig>> {
         await this.stopWhenChangeRequestsEnabled(
             context.projectId,
             context.environment,
+            user,
         );
         return this.unprotectedUpdateStrategy(id, updates, context, userName);
     }
@@ -534,10 +540,12 @@ class FeatureToggleService {
         id: string,
         context: IFeatureStrategyContext,
         createdBy: string,
+        user?: User,
     ): Promise<void> {
         await this.stopWhenChangeRequestsEnabled(
             context.projectId,
             context.environment,
+            user,
         );
         return this.unprotectedDeleteStrategy(id, context, createdBy);
     }
@@ -1376,7 +1384,7 @@ class FeatureToggleService {
     private async stopWhenChangeRequestsEnabled(
         project: string,
         environment: string,
-        user: User,
+        user?: User,
     ) {
         const [canSkipChangeRequest, changeRequestEnabled] = await Promise.all([
             this.accessService.hasPermission(

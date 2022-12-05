@@ -167,6 +167,7 @@ class FeatureToggleService {
         projectId,
     }: IFeatureContext): Promise<void> {
         const id = await this.featureToggleStore.getProjectId(featureName);
+
         if (id !== projectId) {
             throw new InvalidOperationError(
                 `The operation could not be completed. The feature exists, but the provided project id ("${projectId}") does not match the project that the feature belongs to ("${id}"). Try using "${id}" in the request URL instead of "${projectId}".`,
@@ -1014,13 +1015,21 @@ class FeatureToggleService {
         user?: User,
     ): Promise<FeatureToggle> {
         await this.stopWhenChangeRequestsEnabled(project, environment);
+        if (enabled) {
+            await this.stopWhenCannotCreateStrategies(
+                project,
+                environment,
+                featureName,
+                user,
+            );
+        }
+
         return this.unprotectedUpdateEnabled(
             project,
             featureName,
             environment,
             enabled,
             createdBy,
-            user,
         );
     }
 
@@ -1030,7 +1039,6 @@ class FeatureToggleService {
         environment: string,
         enabled: boolean,
         createdBy: string,
-        user?: User,
     ): Promise<FeatureToggle> {
         const hasEnvironment =
             await this.featureEnvironmentStore.featureHasEnvironment(
@@ -1038,66 +1046,52 @@ class FeatureToggleService {
                 featureName,
             );
 
-        if (hasEnvironment) {
-            if (enabled) {
-                const strategies = await this.getStrategiesForEnvironment(
+        if (!hasEnvironment) {
+            throw new NotFoundError(
+                `Could not find environment ${environment} for feature: ${featureName}`,
+            );
+        }
+
+        if (enabled) {
+            const strategies = await this.getStrategiesForEnvironment(
+                project,
+                featureName,
+                environment,
+            );
+            if (strategies.length === 0) {
+                await this.unprotectedCreateStrategy(
+                    getDefaultStrategy(featureName),
+                    {
+                        environment,
+                        projectId: project,
+                        featureName,
+                    },
+                    createdBy,
+                );
+            }
+        }
+        const updatedEnvironmentStatus =
+            await this.featureEnvironmentStore.setEnvironmentEnabledStatus(
+                environment,
+                featureName,
+                enabled,
+            );
+        const feature = await this.featureToggleStore.get(featureName);
+
+        if (updatedEnvironmentStatus > 0) {
+            const tags = await this.tagStore.getAllTagsForFeature(featureName);
+            await this.eventStore.store(
+                new FeatureEnvironmentEvent({
+                    enabled,
                     project,
                     featureName,
                     environment,
-                );
-                if (strategies.length === 0) {
-                    const canAddStrategies =
-                        user &&
-                        (await this.accessService.hasPermission(
-                            user,
-                            CREATE_FEATURE_STRATEGY,
-                            project,
-                            environment,
-                        ));
-                    if (canAddStrategies) {
-                        await this.unprotectedCreateStrategy(
-                            getDefaultStrategy(featureName),
-                            {
-                                environment,
-                                projectId: project,
-                                featureName,
-                            },
-                            createdBy,
-                        );
-                    } else {
-                        throw new NoAccessError(CREATE_FEATURE_STRATEGY);
-                    }
-                }
-            }
-            const updatedEnvironmentStatus =
-                await this.featureEnvironmentStore.setEnvironmentEnabledStatus(
-                    environment,
-                    featureName,
-                    enabled,
-                );
-            const feature = await this.featureToggleStore.get(featureName);
-
-            if (updatedEnvironmentStatus > 0) {
-                const tags = await this.tagStore.getAllTagsForFeature(
-                    featureName,
-                );
-                await this.eventStore.store(
-                    new FeatureEnvironmentEvent({
-                        enabled,
-                        project,
-                        featureName,
-                        environment,
-                        createdBy,
-                        tags,
-                    }),
-                );
-            }
-            return feature;
+                    createdBy,
+                    tags,
+                }),
+            );
         }
-
-        throw new NotFoundError(
-            `Could not find environment ${environment} for feature: ${featureName}`,
-        );
+        return feature;
     }
 
     // @deprecated
@@ -1391,6 +1385,40 @@ class FeatureToggleService {
             throw new Error(
                 `Change requests are enabled in project "${project}" for environment "${environment}"`,
             );
+        }
+    }
+
+    private async stopWhenCannotCreateStrategies(
+        project: string,
+        environment: string,
+        featureName: string,
+        user: User,
+    ) {
+        const hasEnvironment =
+            await this.featureEnvironmentStore.featureHasEnvironment(
+                environment,
+                featureName,
+            );
+
+        if (hasEnvironment) {
+            const strategies = await this.getStrategiesForEnvironment(
+                project,
+                featureName,
+                environment,
+            );
+            if (strategies.length === 0) {
+                const canAddStrategies =
+                    user &&
+                    (await this.accessService.hasPermission(
+                        user,
+                        CREATE_FEATURE_STRATEGY,
+                        project,
+                        environment,
+                    ));
+                if (!canAddStrategies) {
+                    throw new NoAccessError(CREATE_FEATURE_STRATEGY);
+                }
+            }
         }
     }
 }

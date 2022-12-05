@@ -128,41 +128,31 @@ export const GroupForm: FC<IGroupForm> = ({
                     data-testid={UG_DESC_ID}
                 />
                 <ConditionallyRender
-                    condition={
-                        Boolean(uiConfig.flags.syncSSOGroups) && !isOss()
-                    }
+                    condition={isGroupSyncingEnabled}
                     show={
-                        <ConditionallyRender
-                            condition={isGroupSyncingEnabled}
-                            show={
-                                <>
-                                    <StyledInputDescription>
-                                        Is this group associated with SSO
-                                        groups?
-                                    </StyledInputDescription>
-                                    <StyledItemList
-                                        label="SSO group ID / name"
-                                        value={mappingsSSO}
-                                        onChange={setMappingsSSO}
-                                    />
-                                </>
-                            }
-                            elseShow={() => (
-                                <StyledDescriptionBlock>
-                                    <Box sx={{ display: 'flex' }}>
-                                        You can enable SSO groups syncronization
-                                        if needed
-                                        <HelpIcon tooltip="SSO groups syncronization allows SSO groups to be mapped to Unleash groups, so that user group membership is properly synchronized." />
-                                    </Box>
-                                    <Link data-loading to={`/admin/auth`}>
-                                        <span data-loading>
-                                            View SSO configuration
-                                        </span>
-                                    </Link>
-                                </StyledDescriptionBlock>
-                            )}
-                        />
+                        <>
+                            <StyledInputDescription>
+                                Is this group associated with SSO groups?
+                            </StyledInputDescription>
+                            <StyledItemList
+                                label="SSO group ID / name"
+                                value={mappingsSSO}
+                                onChange={setMappingsSSO}
+                            />
+                        </>
                     }
+                    elseShow={() => (
+                        <StyledDescriptionBlock>
+                            <Box sx={{ display: 'flex' }}>
+                                You can enable SSO groups syncronization if
+                                needed
+                                <HelpIcon tooltip="SSO groups syncronization allows SSO groups to be mapped to Unleash groups, so that user group membership is properly synchronized." />
+                            </Box>
+                            <Link data-loading to={`/admin/auth`}>
+                                <span data-loading>View SSO configuration</span>
+                            </Link>
+                        </StyledDescriptionBlock>
+                    )}
                 />
                 <ConditionallyRender
                     condition={mode === 'Create'}

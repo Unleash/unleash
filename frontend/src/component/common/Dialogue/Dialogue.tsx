@@ -28,11 +28,11 @@ const StyledDialogTitle = styled(DialogTitle)(({ theme }) => ({
 const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
     marginTop: theme.spacing(5),
     padding: theme.spacing(0, 6),
-    marginBottom: theme.spacing(7.5),
+    marginBottom: theme.spacing(1.5),
 }));
 
 const StyledDialogActions = styled(DialogActions)(({ theme }) => ({
-    padding: theme.spacing(0, 6, 6, 6),
+    padding: theme.spacing(6),
     gap: theme.spacing(2),
 }));
 

@@ -1,0 +1,18 @@
+name: 'Publish npm version'
+
+on:
+  workflow_dispatch:
+    inputs:
+      - name: version
+        description: 'What version would you like to use?'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: npm version
+        run: |
+          npm version $(inputs.version)

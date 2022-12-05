@@ -39,7 +39,7 @@ export enum PlausibleOrigin {
 
 export interface PremiumFeatureProps {
     children: React.ReactNode;
-    origin: PlausibleOrigin;
+    origin?: PlausibleOrigin;
     enterpriseOnly?: boolean;
     center?: boolean;
 }

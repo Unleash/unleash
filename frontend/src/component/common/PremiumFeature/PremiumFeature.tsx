@@ -26,7 +26,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
     width: 'fit-content',
 }));
 
-export enum FeatureLevelTitle {
+enum FeatureLevelTitle {
     PRO = 'Pro & Enterprise feature',
     ENTERPRISE = 'Enterprise feature',
 }

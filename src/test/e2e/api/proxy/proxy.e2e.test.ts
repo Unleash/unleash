@@ -988,6 +988,6 @@ test('should return maxAge header on options call', async () => {
         .set('Origin', 'https://example.com')
         .expect(204)
         .expect((res) => {
-            expect(res.headers['access-control-max-age']).toBe('172800');
+            expect(res.headers['access-control-max-age']).toBe('86400');
         });
 });

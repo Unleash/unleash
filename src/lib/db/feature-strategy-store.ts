@@ -305,9 +305,11 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 }
 
                 // this code sets variants at the feature level (should be deprecated with variants per environment)
-                const currentVariants = new Set(acc.variants);
+                const currentVariants = new Map(
+                    acc.variants?.map((v) => [v.name, v]),
+                );
                 variants.forEach((variant) => {
-                    currentVariants.add(variant);
+                    currentVariants.set(variant.name, variant);
                 });
                 acc.variants = Array.from(currentVariants.values());
 

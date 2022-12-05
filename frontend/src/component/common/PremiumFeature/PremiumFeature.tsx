@@ -40,18 +40,18 @@ export enum PlausibleOrigin {
 export interface PremiumFeatureProps {
     children: React.ReactNode;
     origin?: PlausibleOrigin;
-    enterpriseOnly?: boolean;
     center?: boolean;
+    enterpriseOnly?: boolean;
 }
 
 export const PremiumFeature = ({
-    enterpriseOnly = false,
-    origin,
     children,
+    origin,
     center,
+    enterpriseOnly = false,
 }: PremiumFeatureProps) => {
     const tracker = usePlausibleTracker();
-    
+
     const handleClick = () => {
         if (origin) {
             tracker.trackEvent('upgrade_plan_clicked', {
@@ -59,7 +59,7 @@ export const PremiumFeature = ({
             });
         }
     };
-    
+
     return (
         <PremiumFeatureWrapper
             sx={{

@@ -1,5 +1,10 @@
 name: Run npm version and push tags
 
+
+concurrency: 
+  group: ${{ github.head_ref }}
+  cancel-in-progress: true
+
 on:
   workflow_dispatch:
     inputs:

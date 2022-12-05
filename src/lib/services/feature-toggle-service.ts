@@ -1045,54 +1045,52 @@ class FeatureToggleService {
                 featureName,
             );
 
-        if (hasEnvironment) {
-            if (enabled) {
-                const strategies = await this.getStrategiesForEnvironment(
+        if (!hasEnvironment) {
+            throw new NotFoundError(
+                `Could not find environment ${environment} for feature: ${featureName}`,
+            );
+        }
+
+        if (enabled) {
+            const strategies = await this.getStrategiesForEnvironment(
+                project,
+                featureName,
+                environment,
+            );
+            if (strategies.length === 0) {
+                await this.unprotectedCreateStrategy(
+                    getDefaultStrategy(featureName),
+                    {
+                        environment,
+                        projectId: project,
+                        featureName,
+                    },
+                    createdBy,
+                );
+            }
+        }
+        const updatedEnvironmentStatus =
+            await this.featureEnvironmentStore.setEnvironmentEnabledStatus(
+                environment,
+                featureName,
+                enabled,
+            );
+        const feature = await this.featureToggleStore.get(featureName);
+
+        if (updatedEnvironmentStatus > 0) {
+            const tags = await this.tagStore.getAllTagsForFeature(featureName);
+            await this.eventStore.store(
+                new FeatureEnvironmentEvent({
+                    enabled,
                     project,
                     featureName,
                     environment,
-                );
-                if (strategies.length === 0) {
-                    await this.unprotectedCreateStrategy(
-                        getDefaultStrategy(featureName),
-                        {
-                            environment,
-                            projectId: project,
-                            featureName,
-                        },
-                        createdBy,
-                    );
-                }
-            }
-            const updatedEnvironmentStatus =
-                await this.featureEnvironmentStore.setEnvironmentEnabledStatus(
-                    environment,
-                    featureName,
-                    enabled,
-                );
-            const feature = await this.featureToggleStore.get(featureName);
-
-            if (updatedEnvironmentStatus > 0) {
-                const tags = await this.tagStore.getAllTagsForFeature(
-                    featureName,
-                );
-                await this.eventStore.store(
-                    new FeatureEnvironmentEvent({
-                        enabled,
-                        project,
-                        featureName,
-                        environment,
-                        createdBy,
-                        tags,
-                    }),
-                );
-            }
-            return feature;
+                    createdBy,
+                    tags,
+                }),
+            );
         }
-
-        throw new NotFoundError(
-            `Could not find environment ${environment} for feature: ${featureName}`,
-        );
+        return feature;
     }
 
     // @deprecated

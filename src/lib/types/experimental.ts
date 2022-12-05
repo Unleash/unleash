@@ -14,10 +14,6 @@ export const defaultExperimentalOptions = {
             process.env.UNLEASH_EXPERIMENTAL_CHANGE_REQUESTS,
             false,
         ),
-        syncSSOGroups: parseEnvVarBoolean(
-            process.env.UNLEASH_EXPERIMENTAL_SYNC_SSO_GROUPS,
-            false,
-        ),
         embedProxyFrontend: parseEnvVarBoolean(
             process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY_FRONTEND,
             true,
@@ -66,7 +62,6 @@ export interface IExperimentalOptions {
         embedProxyFrontend?: boolean;
         batchMetrics?: boolean;
         anonymiseEventLog?: boolean;
-        syncSSOGroups?: boolean;
         changeRequests?: boolean;
         proxyReturnAllToggles?: boolean;
         variantsPerEnvironment?: boolean;

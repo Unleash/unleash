@@ -38,7 +38,6 @@ process.nextTick(async () => {
                         batchMetrics: true,
                         anonymiseEventLog: false,
                         responseTimeWithAppName: true,
-                        syncSSOGroups: true,
                         changeRequests: true,
                         toggleTagFiltering: true,
                         favorites: true,

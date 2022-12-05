@@ -132,8 +132,7 @@ export const GroupForm: FC<IGroupForm> = ({
                     show={
                         <>
                             <StyledInputDescription>
-                                Is this group associated with SSO
-                                groups?
+                                Is this group associated with SSO groups?
                             </StyledInputDescription>
                             <StyledItemList
                                 label="SSO group ID / name"
@@ -145,14 +144,12 @@ export const GroupForm: FC<IGroupForm> = ({
                     elseShow={() => (
                         <StyledDescriptionBlock>
                             <Box sx={{ display: 'flex' }}>
-                                You can enable SSO groups syncronization
-                                if needed
+                                You can enable SSO groups syncronization if
+                                needed
                                 <HelpIcon tooltip="SSO groups syncronization allows SSO groups to be mapped to Unleash groups, so that user group membership is properly synchronized." />
                             </Box>
                             <Link data-loading to={`/admin/auth`}>
-                                <span data-loading>
-                                    View SSO configuration
-                                </span>
+                                <span data-loading>View SSO configuration</span>
                             </Link>
                         </StyledDescriptionBlock>
                     )}

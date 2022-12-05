@@ -1387,12 +1387,14 @@ class FeatureToggleService {
         user?: User,
     ) {
         const [canSkipChangeRequest, changeRequestEnabled] = await Promise.all([
-            this.accessService.hasPermission(
-                user,
-                SKIP_CHANGE_REQUEST,
-                project,
-                environment,
-            ),
+            user
+                ? this.accessService.hasPermission(
+                      user,
+                      SKIP_CHANGE_REQUEST,
+                      project,
+                      environment,
+                  )
+                : Promise.resolve(false),
             this.accessService.isChangeRequestsEnabled(project, environment),
         ]);
         if (changeRequestEnabled && !canSkipChangeRequest) {

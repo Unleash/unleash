@@ -1421,10 +1421,6 @@ class FeatureToggleService {
                 }
             }
         }
-
-        throw new NotFoundError(
-            `Could not find environment ${environment} for feature: ${featureName}`,
-        );
     }
 }
 

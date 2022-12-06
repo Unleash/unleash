@@ -50,7 +50,8 @@ jobs:
       - name: npm version
         run: |
           npm version ${{ github.event.inputs.version }}
-          git push origin main --follow-tags
+          git push origin main
+          git push --tags
         env:
           CI: true
           TEST_DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres

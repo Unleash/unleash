@@ -211,6 +211,7 @@ export const ChangeRequestsTabs = ({
     return (
         <PageContent
             isLoading={loading}
+            bodyClass={classes.bodyClass}
             headerClass={classes.header}
             header={
                 <PageHeader

@@ -240,6 +240,7 @@ const Project = () => {
                         value={activeTab?.path}
                         indicatorColor="primary"
                         textColor="primary"
+                        variant="scrollable"
                     >
                         {tabs.map(tab => (
                             <Tab

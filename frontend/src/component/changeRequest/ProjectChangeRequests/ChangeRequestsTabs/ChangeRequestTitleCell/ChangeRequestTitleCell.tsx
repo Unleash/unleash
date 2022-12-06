@@ -29,7 +29,7 @@ export const ChangeRequestTitleCell = ({
     }
 
     return (
-        <TextCell>
+        <TextCell sx={{ minWidth: '200px' }}>
             <StyledLink>
                 <Link
                     component={RouterLink}

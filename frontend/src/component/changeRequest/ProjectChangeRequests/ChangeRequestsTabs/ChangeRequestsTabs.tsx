@@ -211,6 +211,7 @@ export const ChangeRequestsTabs = ({
     return (
         <PageContent
             isLoading={loading}
+            bodyClass={classes.bodyClass}
             headerClass={classes.header}
             header={
                 <PageHeader
@@ -220,6 +221,8 @@ export const ChangeRequestsTabs = ({
                                 value={tabs[activeTab]?.title}
                                 indicatorColor="primary"
                                 textColor="primary"
+                                variant="scrollable"
+                                allowScrollButtonsMobile
                             >
                                 {tabs.map((tab, index) => (
                                     <Tab

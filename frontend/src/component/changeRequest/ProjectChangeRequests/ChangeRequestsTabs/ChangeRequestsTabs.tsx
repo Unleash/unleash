@@ -221,6 +221,8 @@ export const ChangeRequestsTabs = ({
                                 value={tabs[activeTab]?.title}
                                 indicatorColor="primary"
                                 textColor="primary"
+                                variant="scrollable"
+                                allowScrollButtonsMobile
                             >
                                 {tabs.map((tab, index) => (
                                     <Tab

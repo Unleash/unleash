@@ -302,13 +302,7 @@ export const ProjectFeatureToggles = ({
                 disableSortBy: true,
             },
         ],
-        [
-            projectId,
-            environments,
-            loading,
-            onToggle,
-            uiConfig?.flags?.favorites,
-        ]
+        [projectId, environments, loading, onToggle, uiConfig?.flags?.favorites]
     );
 
     const [searchValue, setSearchValue] = useState(

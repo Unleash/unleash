@@ -156,6 +156,9 @@ export default class ProxyController extends Controller {
                 ProxyController.createContext(req),
             );
         }
+
+        res.set('Cache-control', 'public, max-age=2');
+
         this.services.openApiService.respondWithValidation(
             200,
             res,

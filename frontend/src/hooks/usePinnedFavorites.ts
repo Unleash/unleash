@@ -36,13 +36,13 @@ export const usePinnedFavorites = (initialState = false) => {
     const [isFavoritesPinned, setIsFavoritesPinned] = useState(initialState);
     const { trackEvent } = usePlausibleTracker();
 
-    const onChangeIsFavoritePinned = () => {
+    const onChangeIsFavoritePinned = (newState: boolean) => {
         trackEvent('favorite', {
             props: {
-                eventType: `features ${isFavoritesPinned ? 'un' : ''}pinned `,
+                eventType: `features ${!newState ? 'un' : ''}pinned `,
             },
         });
-        setIsFavoritesPinned(!isFavoritesPinned);
+        setIsFavoritesPinned(newState);
     };
 
     const enhancedSortTypes = useMemo(() => {

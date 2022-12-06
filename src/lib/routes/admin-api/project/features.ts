@@ -618,6 +618,7 @@ export default class ProjectFeaturesController extends Controller {
             strategyConfig,
             { environment, projectId, featureName },
             userName,
+            req.user,
         );
 
         const updatedStrategy = await this.featureService.getStrategy(
@@ -674,6 +675,7 @@ export default class ProjectFeaturesController extends Controller {
             req.body,
             { environment, projectId, featureName },
             userName,
+            req.user,
         );
         res.status(200).json(updatedStrategy);
     }
@@ -692,6 +694,7 @@ export default class ProjectFeaturesController extends Controller {
             newDocument,
             { environment, projectId, featureName },
             userName,
+            req.user,
         );
         res.status(200).json(updatedStrategy);
     }
@@ -720,6 +723,7 @@ export default class ProjectFeaturesController extends Controller {
             strategyId,
             { environment, projectId, featureName },
             userName,
+            req.user,
         );
         res.status(200).json(strategy);
     }

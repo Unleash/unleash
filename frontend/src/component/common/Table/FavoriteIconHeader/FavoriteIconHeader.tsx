@@ -1,4 +1,4 @@
-import { VFC } from 'react';
+import { useState, VFC } from 'react';
 import { IconButton, Tooltip } from '@mui/material';
 import {
     Star as StarIcon,
@@ -8,17 +8,23 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 
 interface IFavoriteIconHeaderProps {
     isActive: boolean;
-    onClick: () => void;
+    onClick: (isPinned: boolean) => void;
 }
 
 export const FavoriteIconHeader: VFC<IFavoriteIconHeaderProps> = ({
     isActive = false,
     onClick,
 }) => {
+    const [internalState, setInternalState] = useState(isActive);
+    const onToggle = () => {
+        setInternalState(!internalState);
+        onClick(!internalState);
+    };
+
     return (
         <Tooltip
             title={
-                isActive
+                internalState
                     ? 'Unpin favorite features from the top'
                     : 'Pin favorite features to the top'
             }
@@ -31,11 +37,11 @@ export const FavoriteIconHeader: VFC<IFavoriteIconHeaderProps> = ({
                     alignItems: 'center',
                     justifyContent: 'center',
                 }}
-                onClick={onClick}
+                onClick={onToggle}
                 size="small"
             >
                 <ConditionallyRender
-                    condition={isActive}
+                    condition={internalState}
                     show={<StarIcon fontSize="small" />}
                     elseShow={<StarBorderIcon fontSize="small" />}
                 />

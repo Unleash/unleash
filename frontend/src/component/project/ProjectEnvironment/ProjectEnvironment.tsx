@@ -153,7 +153,6 @@ const ProjectEnvironmentList = () => {
                 Cell: ({ row: { original } }: any) => (
                     <EnvironmentNameCell environment={original} />
                 ),
-                minWidth: 350,
             },
             {
                 Header: 'Type',

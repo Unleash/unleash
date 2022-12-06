@@ -241,7 +241,6 @@ const Project = () => {
                         indicatorColor="primary"
                         textColor="primary"
                         variant="scrollable"
-                        allowScrollButtonsMobile
                     >
                         {tabs.map(tab => (
                             <Tab

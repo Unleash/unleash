@@ -303,7 +303,15 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 if (withEnvironmentVariants) {
                     env.variants = variants;
                 }
-                acc.variants = variants;
+
+                // this code sets variants at the feature level (should be deprecated with variants per environment)
+                const currentVariants = new Map(
+                    acc.variants?.map((v) => [v.name, v]),
+                );
+                variants.forEach((variant) => {
+                    currentVariants.set(variant.name, variant);
+                });
+                acc.variants = Array.from(currentVariants.values());
 
                 env.enabled = r.enabled;
                 env.type = r.environment_type;

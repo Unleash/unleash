@@ -50,7 +50,25 @@ Once a change is added to a draft, the draft needs to be completed before anothe
 
 ![Change request banner](/img/change-request-banner.png)
 
-## Project roles
+Once a change request is sent to review by the user who created it. It becomes available for everyone in the change request tab in the project. From here, you can navigate to the change request overview page, which will give you information about the changes the change request contains, the state the change request is in, and what action needs to be taken next.
 
-## API Access
+![Change request banner](/img/change-request-overview.png)
+
+From here, if you have the correct permissions, you can approve and apply the change request. Once applied the changes will be live in production.
+## Change request permissions
+
+As a result of adding change requests, we have added three new environment specific permissions: 
+* Approve change request
+* Apply change request
+* Skip change request
+
+These permisssions can be used to compose [project roles](../how-to/how-to-create-and-assign-custom-project-roles.md).
+
+Once you have created a custom project role that has the correct permissions, you can assign it to a user or group of users in the project settings access section. These users will then assume permissions according to the role they have been assigned.
+
+### Circumventing change requests
+
+In the event that you need API access to directly turn something off without going through the change request procedure, you can leverage the skip change request permission. The holder of this permission can bypass the change request procedure and directly change the feature toggle configuration, depending on the other permissions they have. The skip change request permission is only valid for circumventing the change request flow, you still need to explicitly grant the user the permissions for the actions you'd like to perform. IE: Changing a toggle status in an environment, or adding a strategy to a toggle in an environment.
+
+
 

@@ -10,7 +10,7 @@ feature.
 
 :::
 
-Feature flagging is a powerful tool, and because it's powerful you sometimes need to practice caution. The ability to have complete control over your production environment comes at the cost of being able to make mistakes in production. Change requests are here to alleviate that fear. Introduced in 4.18.0, you can now group changes in a change request instead of applying them directly to production. This allows you to make changes to multiple feature toggles configuration and status (on/off) grouped together, and applied together at the same time. 
+Feature flagging is a powerful tool, and because it's so powerful, you sometimes need to practice caution. The ability to have complete control over your production environment comes at the cost of the potential to make mistakes in production. Change requests were introduced in version 4.18.0 to alleviate this fear. Change requests allow you to group changes together and apply them to production at the same time, instead of applying changes directly to production. This allows you to make multiple changes to feature toggles and their configuration and status (on/off) all at once, reducing the risk of errors in production.
 
 Our goal is developer effeciency, but we also recognize that we have users and customers in highly regulated industries, governed by law and strict requirements. Therefore, we have added a capability to change requests that will allow you to enforce the _4 eyes principle_.
 

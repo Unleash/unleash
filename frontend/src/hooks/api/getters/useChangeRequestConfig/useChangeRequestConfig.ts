@@ -1,20 +1,21 @@
-import useSWR from 'swr';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { IChangeRequestEnvironmentConfig } from 'component/changeRequest/changeRequest.types';
-import useUiConfig from '../useUiConfig/useUiConfig';
+import { useEnterpriseSWR } from '../useEnterpriseSWR/useEnterpriseSWR';
 
 export const useChangeRequestConfig = (projectId: string) => {
-    const { isOss } = useUiConfig();
-    const { data, error, mutate } = useSWR<IChangeRequestEnvironmentConfig[]>(
+    const { data, error, mutate } = useEnterpriseSWR<
+        IChangeRequestEnvironmentConfig[]
+    >(
         formatApiPath(`api/admin/projects/${projectId}/change-requests/config`),
-        (path: string) => (isOss() ? Promise.resolve([]) : fetcher(path))
+        fetcher,
+        []
     );
 
     return {
         data: data || [],
         loading: !error && !data,
-        refetchChangeRequestConfig: () => mutate(),
+        refetchChangeRequestConfig: mutate,
         error,
     };
 };

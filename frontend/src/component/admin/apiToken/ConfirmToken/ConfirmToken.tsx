@@ -1,5 +1,5 @@
-import { Alert, Box, Typography } from '@mui/material';
-import { useNavigate, Link } from 'react-router-dom';
+import { Alert, Typography } from '@mui/material';
+import { Link } from 'react-router-dom';
 import { useThemeStyles } from 'themes/themeStyles';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { UserToken } from './UserToken/UserToken';

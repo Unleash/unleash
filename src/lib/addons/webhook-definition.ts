@@ -73,7 +73,7 @@ const webhookDefinition: IAddonDefinition = {
   "timestamp": "{{event.data.createdAt}}"
 }`,
             description:
-                "(Optional) You may format the body using a mustache template. If you don't specify anything, the format will similar to the events format (https://docs.getunleash.io/docs/api/admin/events)",
+                "(Optional) You may format the body using a mustache template. If you don't specify anything, the format will similar to the events format (https://docs.getunleash.io/reference/api/legacy/unleash/admin/events)",
             type: 'textfield',
             required: false,
             sensitive: false,

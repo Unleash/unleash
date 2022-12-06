@@ -1,6 +1,6 @@
 import { Fragment, useMemo, VFC } from 'react';
 import { Box, Chip } from '@mui/material';
-import { IFeatureStrategy } from 'interfaces/strategy';
+import { IFeatureStrategy, IFeatureStrategyPayload } from 'interfaces/strategy';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import PercentageCircle from 'component/common/PercentageCircle/PercentageCircle';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
@@ -19,7 +19,7 @@ import {
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 
 interface IStrategyExecutionProps {
-    strategy: IFeatureStrategy;
+    strategy: IFeatureStrategyPayload;
 }
 
 const NoItems: VFC = () => (
@@ -35,7 +35,10 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
     const { classes: styles } = useStyles();
     const { strategies } = useStrategies();
     const { uiConfig } = useUiConfig();
-    const { segments } = useSegments(strategy.id);
+    const { segments } = useSegments();
+    const strategySegments = segments?.filter(segment => {
+        return strategy.segments?.includes(segment.id);
+    });
 
     const definition = strategies.find(strategyDefinition => {
         return strategyDefinition.name === strategy.name;
@@ -243,9 +246,11 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
     }
 
     const listItems = [
-        Boolean(uiConfig.flags.SE) && segments && segments.length > 0 && (
-            <FeatureOverviewSegment strategyId={strategy.id} />
-        ),
+        Boolean(uiConfig.flags.SE) &&
+            strategySegments &&
+            strategySegments.length > 0 && (
+                <FeatureOverviewSegment segments={strategySegments} />
+            ),
         constraints.length > 0 && (
             <ConstraintAccordionList
                 constraints={constraints}

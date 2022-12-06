@@ -8,19 +8,15 @@ export const defaultExperimentalOptions = {
         anonymiseEventLog: false,
         embedProxy: parseEnvVarBoolean(
             process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY,
-            false,
+            true,
         ),
         changeRequests: parseEnvVarBoolean(
             process.env.UNLEASH_EXPERIMENTAL_CHANGE_REQUESTS,
             false,
         ),
-        syncSSOGroups: parseEnvVarBoolean(
-            process.env.UNLEASH_EXPERIMENTAL_SYNC_SSO_GROUPS,
-            false,
-        ),
         embedProxyFrontend: parseEnvVarBoolean(
             process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY_FRONTEND,
-            false,
+            true,
         ),
         batchMetrics: parseEnvVarBoolean(
             process.env.UNLEASH_EXPERIMENTAL_BATCH_METRICS,
@@ -28,10 +24,6 @@ export const defaultExperimentalOptions = {
         ),
         responseTimeWithAppName: parseEnvVarBoolean(
             process.env.UNLEASH_EXPERIMENTAL_RESPONSE_TIME_WITH_APP_NAME,
-            false,
-        ),
-        cloneEnvironment: parseEnvVarBoolean(
-            process.env.UNLEASH_EXPERIMENTAL_CLONE_ENVIRONMENT,
             false,
         ),
         toggleTagFiltering: parseEnvVarBoolean(
@@ -50,6 +42,10 @@ export const defaultExperimentalOptions = {
             process.env.UNLEASH_EXPERIMENTAL_TOKENS_LAST_SEEN,
             false,
         ),
+        favorites: parseEnvVarBoolean(
+            process.env.UNLEASH_EXPERIMENTAL_FAVORITES,
+            false,
+        ),
         networkView: parseEnvVarBoolean(
             process.env.UNLEASH_EXPERIMENTAL_NETWORK_VIEW,
             false,
@@ -66,12 +62,11 @@ export interface IExperimentalOptions {
         embedProxyFrontend?: boolean;
         batchMetrics?: boolean;
         anonymiseEventLog?: boolean;
-        syncSSOGroups?: boolean;
         changeRequests?: boolean;
-        cloneEnvironment?: boolean;
         proxyReturnAllToggles?: boolean;
         variantsPerEnvironment?: boolean;
         tokensLastSeen?: boolean;
+        favorites?: boolean;
         networkView?: boolean;
     };
     externalResolver: IExternalFlagResolver;

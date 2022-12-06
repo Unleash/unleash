@@ -18,7 +18,95 @@ const oldExportExample = require('./state-service-export-v1.json');
 function getSetup() {
     const stores = createStores();
     return {
-        stateService: new StateService(stores, { getLogger }),
+        stateService: new StateService(stores, {
+            getLogger,
+            flagResolver: { isEnabled: () => true, getAll: () => ({}) },
+        }),
+        stores,
+    };
+}
+
+async function setupV3VariantsCompatibilityScenario(
+    variantsPerEnvironment: boolean,
+) {
+    const stores = createStores();
+    await stores.environmentStore.create({
+        name: 'env-1',
+        type: 'production',
+        sortOrder: 3,
+    });
+    await stores.environmentStore.create({
+        name: 'env-2',
+        type: 'production',
+        sortOrder: 1,
+    });
+    await stores.environmentStore.create({
+        name: 'env-3',
+        type: 'production',
+        sortOrder: 2,
+    });
+    await stores.featureToggleStore.create('some-project', {
+        name: 'Feature-with-variants',
+    });
+    await stores.featureEnvironmentStore.addEnvironmentToFeature(
+        'Feature-with-variants',
+        'env-1',
+        true,
+    );
+    await stores.featureEnvironmentStore.addEnvironmentToFeature(
+        'Feature-with-variants',
+        'env-2',
+        true,
+    );
+    await stores.featureEnvironmentStore.addEnvironmentToFeature(
+        'Feature-with-variants',
+        'env-3',
+        true,
+    );
+    await stores.featureEnvironmentStore.addVariantsToFeatureEnvironment(
+        'Feature-with-variants',
+        'env-1',
+        [
+            {
+                name: 'env-1-variant',
+                stickiness: 'default',
+                weight: 1000,
+                weightType: 'variable',
+            },
+        ],
+    );
+    await stores.featureEnvironmentStore.addVariantsToFeatureEnvironment(
+        'Feature-with-variants',
+        'env-2',
+        [
+            {
+                name: 'env-2-variant',
+                stickiness: 'default',
+                weight: 1000,
+                weightType: 'variable',
+            },
+        ],
+    );
+    await stores.featureEnvironmentStore.addVariantsToFeatureEnvironment(
+        'Feature-with-variants',
+        'env-3',
+        [
+            {
+                name: 'env-3-variant',
+                stickiness: 'default',
+                weight: 1000,
+                weightType: 'variable',
+            },
+        ],
+    );
+    return {
+        stateService: new StateService(stores, {
+            getLogger,
+            flagResolver: {
+                isEnabled: () => variantsPerEnvironment,
+                getAll: () => ({}),
+            },
+        }),
         stores,
     };
 }
@@ -525,7 +613,11 @@ test('Should export projects', async () => {
 });
 
 test('exporting to new format works', async () => {
-    const { stateService, stores } = getSetup();
+    const stores = createStores();
+    const stateService = new StateService(stores, {
+        getLogger,
+        flagResolver: { isEnabled: () => true, getAll: () => ({}) },
+    });
     await stores.projectStore.create({
         id: 'fancy',
         name: 'extra',
@@ -562,6 +654,50 @@ test('exporting to new format works', async () => {
     });
     const exported = await stateService.export({});
     expect(exported.featureStrategies).toHaveLength(1);
+});
+
+test('exporting with no environments should fail', async () => {
+    const { stateService, stores } = await setupV3VariantsCompatibilityScenario(
+        false,
+    );
+    await stores.environmentStore.deleteAll();
+
+    expect(stateService.export({})).rejects.toThrowError();
+});
+
+// This test should be removed as soon as variants per environment is GA
+test('exporting variants to v3 format should pick variants from the correct env', async () => {
+    const { stateService } = await setupV3VariantsCompatibilityScenario(false);
+
+    const exported = await stateService.export({});
+    expect(exported.features).toHaveLength(1);
+    // env 2 has the lowest sortOrder so we expect env-2-variant to be selected
+    expect(exported.features[0].variants).toStrictEqual([
+        {
+            name: 'env-2-variant',
+            stickiness: 'default',
+            weight: 1000,
+            weightType: 'variable',
+        },
+    ]);
+    exported.featureEnvironments.forEach((fe) =>
+        expect(fe.variants).toBeUndefined(),
+    );
+    expect(exported.environments).toHaveLength(3);
+});
+
+test('exporting variants to v4 format should not include variants in features', async () => {
+    const { stateService } = await setupV3VariantsCompatibilityScenario(true);
+    const exported = await stateService.export({});
+
+    expect(exported.features).toHaveLength(1);
+    expect(exported.features[0].variants).toBeUndefined();
+
+    exported.featureEnvironments.forEach((fe) => {
+        expect(fe.variants).toHaveLength(1);
+        expect(fe.variants[0].name).toBe(`${fe.environment}-variant`);
+    });
+    expect(exported.environments).toHaveLength(3);
 });
 
 test('featureStrategies can keep existing', async () => {

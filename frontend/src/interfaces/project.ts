@@ -8,6 +8,7 @@ export interface IProjectCard {
     description: string;
     featureCount: number;
     memberCount?: number;
+    favorite?: boolean;
 }
 
 export interface IProject {
@@ -18,6 +19,8 @@ export interface IProject {
     description?: string;
     environments: string[];
     health: number;
+
+    favorite: boolean;
     features: IFeatureToggleListItem[];
 }
 

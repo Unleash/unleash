@@ -34,6 +34,9 @@ export const featureSchema = {
         stale: {
             type: 'boolean',
         },
+        favorite: {
+            type: 'boolean',
+        },
         impressionData: {
             type: 'boolean',
         },

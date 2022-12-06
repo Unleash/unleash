@@ -515,7 +515,7 @@ test('Trying to toggle environment that does not exist yields 404', async () => 
 test('Getting feature that does not exist should yield 404', async () => {
     await app.request
         .get('/api/admin/projects/default/features/non.existing.feature')
-        .expect(404);
+        .expect(403);
 });
 
 describe('Interacting with features using project IDs that belong to other projects', () => {
@@ -2630,7 +2630,7 @@ test('should return strategies in correct order when new strategies are added', 
     expect(strategiesReOrdered[3].id).toBe(strategyThree.id);
 });
 
-test.only('should create a strategy with segments', async () => {
+test('should create a strategy with segments', async () => {
     const feature = { name: uuidv4(), impressionData: false };
     await createFeatureToggle(feature.name);
     const segment = await createSegment('segmentOne');
@@ -2678,7 +2678,7 @@ test.only('should create a strategy with segments', async () => {
         });
 });
 
-test.only('should add multiple segments to a strategy', async () => {
+test('should add multiple segments to a strategy', async () => {
     const feature = { name: uuidv4(), impressionData: false };
     await createFeatureToggle(feature.name);
     const segment = await createSegment('seg1');

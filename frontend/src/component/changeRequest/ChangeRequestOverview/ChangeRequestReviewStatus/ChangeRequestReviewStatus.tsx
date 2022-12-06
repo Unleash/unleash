@@ -8,6 +8,7 @@ import {
     StyledFlexAlignCenterBox,
     StyledSuccessIcon,
     StyledErrorIcon,
+    StyledWarningIcon,
     StyledReviewTitle,
     StyledDivider,
 } from './ChangeRequestReviewStatus.styles';
@@ -68,6 +69,12 @@ export const ChangeRequestReviewStatus: FC<
                 />
             </StyledButtonContainer>
             <StyledReviewStatusContainer
+                sx={{
+                    backgroundColor:
+                        changeRequest.state === 'In review'
+                            ? theme.palette.warning.light
+                            : 'initial',
+                }}
                 border={resolveBorder(changeRequest.state, theme)}
             >
                 <ResolveComponent changeRequest={changeRequest} />
@@ -143,9 +150,9 @@ const ReviewRequired = ({ minApprovals }: IReviewRequiredProps) => {
     return (
         <>
             <StyledFlexAlignCenterBox>
-                <StyledErrorIcon />
+                <StyledWarningIcon />
                 <Box>
-                    <StyledReviewTitle color={theme.palette.error.main}>
+                    <StyledReviewTitle color={theme.palette.warning.main}>
                         Review required
                     </StyledReviewTitle>
                     <Typography>
@@ -158,8 +165,8 @@ const ReviewRequired = ({ minApprovals }: IReviewRequiredProps) => {
             <StyledDivider />
 
             <StyledFlexAlignCenterBox>
-                <StyledErrorIcon />
-                <StyledReviewTitle color={theme.palette.error.main}>
+                <StyledWarningIcon />
+                <StyledReviewTitle color={theme.palette.warning.main}>
                     Apply changes is blocked
                 </StyledReviewTitle>
             </StyledFlexAlignCenterBox>

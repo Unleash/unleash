@@ -1,8 +1,7 @@
 import { VFC } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import { GO_BACK } from 'constants/navigate';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface IErrorProps {

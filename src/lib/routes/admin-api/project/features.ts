@@ -63,6 +63,11 @@ interface StrategyIdParams extends FeatureStrategyParams {
     strategyId: string;
 }
 
+export interface IFeatureProjectUserParams extends ProjectParam {
+    archived?: boolean;
+    userId?: number;
+}
+
 const PATH = '/:projectId/features';
 const PATH_FEATURE = `${PATH}/:featureName`;
 const PATH_FEATURE_CLONE = `${PATH_FEATURE}/clone`;
@@ -394,13 +399,13 @@ export default class ProjectFeaturesController extends Controller {
     }
 
     async getFeatures(
-        req: Request<ProjectParam, any, any, any>,
+        req: IAuthRequest<ProjectParam, any, any, any>,
         res: Response<FeaturesSchema>,
     ): Promise<void> {
         const { projectId } = req.params;
-        const features = await this.featureService.getFeatureOverview(
+        const features = await this.featureService.getFeatureOverview({
             projectId,
-        );
+        });
         this.openApiService.respondWithValidation(
             200,
             res,
@@ -458,17 +463,19 @@ export default class ProjectFeaturesController extends Controller {
     }
 
     async getFeature(
-        req: Request<FeatureParams, any, any, any>,
+        req: IAuthRequest<FeatureParams, any, any, any>,
         res: Response,
     ): Promise<void> {
         const { featureName, projectId } = req.params;
         const { variantEnvironments } = req.query;
-        const feature = await this.featureService.getFeature(
+        const { user } = req;
+        const feature = await this.featureService.getFeature({
             featureName,
-            false,
+            archived: false,
             projectId,
-            variantEnvironments === 'true',
-        );
+            environmentVariants: variantEnvironments === 'true',
+            userId: user.id,
+        });
         res.status(200).json(feature);
     }
 
@@ -611,6 +618,7 @@ export default class ProjectFeaturesController extends Controller {
             strategyConfig,
             { environment, projectId, featureName },
             userName,
+            req.user,
         );
 
         const updatedStrategy = await this.featureService.getStrategy(
@@ -667,6 +675,7 @@ export default class ProjectFeaturesController extends Controller {
             req.body,
             { environment, projectId, featureName },
             userName,
+            req.user,
         );
         res.status(200).json(updatedStrategy);
     }
@@ -685,6 +694,7 @@ export default class ProjectFeaturesController extends Controller {
             newDocument,
             { environment, projectId, featureName },
             userName,
+            req.user,
         );
         res.status(200).json(updatedStrategy);
     }
@@ -713,6 +723,7 @@ export default class ProjectFeaturesController extends Controller {
             strategyId,
             { environment, projectId, featureName },
             userName,
+            req.user,
         );
         res.status(200).json(strategy);
     }

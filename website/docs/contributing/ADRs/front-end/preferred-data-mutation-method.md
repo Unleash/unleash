@@ -17,7 +17,7 @@ Example:
 import { ITagPayload } from 'interfaces/tags';
 import useAPI from '../useApi/useApi';
 
-const useTagTypesApi = () => {
+export const useTagTypesApi = () => {
     const { makeRequest, createRequest, errors, loading } = useAPI({
         propagateErrors: true,
     });
@@ -87,6 +87,4 @@ const useTagTypesApi = () => {
         loading,
     };
 };
-
-export default useTagTypesApi;
 ```

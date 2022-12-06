@@ -27,10 +27,9 @@ export function createTestConfig(config?: IUnleashOptions): IUnleashConfig {
                 embedProxy: true,
                 embedProxyFrontend: true,
                 batchMetrics: true,
-                syncSSOGroups: true,
                 changeRequests: true,
-                cloneEnvironment: true,
                 variantsPerEnvironment: true,
+                favorites: true,
             },
         },
     };

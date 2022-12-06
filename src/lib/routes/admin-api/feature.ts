@@ -179,11 +179,12 @@ class FeatureController extends Controller {
     }
 
     async getAllToggles(
-        req: Request,
+        req: IAuthRequest,
         res: Response<FeaturesSchema>,
     ): Promise<void> {
         const query = await this.prepQuery(req.query);
-        const features = await this.service.getFeatureToggles(query);
+        const { user } = req;
+        const features = await this.service.getFeatureToggles(query, user.id);
 
         this.openApiService.respondWithValidation(
             200,
@@ -272,6 +273,7 @@ class FeatureController extends Controller {
                         environment: DEFAULT_ENV,
                     },
                     userName,
+                    req.user,
                 ),
             ),
         );
@@ -318,6 +320,7 @@ class FeatureController extends Controller {
                         s,
                         { projectId, featureName, environment: DEFAULT_ENV },
                         userName,
+                        req.user,
                     ),
                 ),
             );
@@ -344,8 +347,11 @@ class FeatureController extends Controller {
         res.status(200).json(feature);
     }
 
-    // TODO: remove?
-    // Kept to keep backward compatibility
+    /**
+     * @deprecated TODO: remove?
+     *
+     * Kept to keep backward compatibility
+     */
     async toggle(req: IAuthRequest, res: Response): Promise<void> {
         const userName = extractUsername(req);
         const { featureName } = req.params;

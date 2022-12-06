@@ -307,7 +307,6 @@ export const ProjectFeatureToggles = ({
             environments,
             loading,
             onToggle,
-            isFavoritesPinned,
             uiConfig?.flags?.favorites,
         ]
     );

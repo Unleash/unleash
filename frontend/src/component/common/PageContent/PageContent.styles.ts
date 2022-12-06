@@ -21,7 +21,9 @@ export const useStyles = makeStyles()(theme => ({
         [theme.breakpoints.down('md')]: {
             padding: theme.spacing(2),
         },
-        overflowX: 'auto',
+        [theme.breakpoints.down('sm')]: {
+            overflowX: 'auto',
+        },
     },
     paddingDisabled: {
         padding: '0',

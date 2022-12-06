@@ -1,13 +1,14 @@
-import useSWR, { BareFetcher, Key, SWRResponse } from 'swr';
+import useSWR, { BareFetcher, Key, SWRConfiguration, SWRResponse } from 'swr';
 import { useEffect } from 'react';
 import useUiConfig from '../useUiConfig/useUiConfig';
 
 export const useConditionalSWR = <Data = any, Error = any, T = boolean>(
     key: Key,
     fetcher: BareFetcher<Data>,
-    condition: T
+    condition: T,
+    options: SWRConfiguration = {}
 ): SWRResponse<Data, Error> => {
-    const result = useSWR(key, fetcher);
+    const result = useSWR(key, fetcher, options);
 
     useEffect(() => {
         result.mutate();
@@ -19,7 +20,8 @@ export const useConditionalSWR = <Data = any, Error = any, T = boolean>(
 export const useEnterpriseSWR = <Data = any, Error = any>(
     key: Key,
     fetcher: BareFetcher<Data>,
-    fallback: Data
+    fallback: Data,
+    options: SWRConfiguration = {}
 ) => {
     const { isEnterprise } = useUiConfig();
 
@@ -27,7 +29,8 @@ export const useEnterpriseSWR = <Data = any, Error = any>(
         key,
         (path: string) =>
             isEnterprise() ? fetcher(path) : Promise.resolve(fallback),
-        isEnterprise()
+        isEnterprise(),
+        options
     );
 
     return result;

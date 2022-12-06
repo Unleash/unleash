@@ -19,15 +19,15 @@ export const useConditionalSWR = <Data = any, Error = any, T = boolean>(
 export const useEnterpriseSWR = <Data = any, Error = any>(
     key: Key,
     fetcher: BareFetcher<Data>,
-    ossFallback: Data
+    fallback: Data
 ) => {
-    const { isOss } = useUiConfig();
+    const { isEnterprise } = useUiConfig();
 
     const result = useConditionalSWR(
         key,
         (path: string) =>
-            isOss() ? Promise.resolve(ossFallback) : fetcher(path),
-        isOss()
+            isEnterprise() ? fetcher(path) : Promise.resolve(fallback),
+        isEnterprise()
     );
 
     return result;

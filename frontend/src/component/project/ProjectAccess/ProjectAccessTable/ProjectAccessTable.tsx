@@ -170,6 +170,7 @@ export const ProjectAccessTable: VFC = () => {
                 Cell: ({ value, row: { original: row } }: any) => (
                     <ProjectAccessRoleCell
                         roleId={row.entity.roleId}
+                        projectId={projectId}
                         value={value}
                     />
                 ),

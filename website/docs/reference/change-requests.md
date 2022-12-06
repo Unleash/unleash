@@ -50,7 +50,9 @@ Once a change is added to a draft, the draft needs to be completed before anothe
 
 ![Change request banner](/img/change-request-banner.png)
 
-Once a change request is sent to review by the user who created it. It becomes available for everyone in the change request tab in the project. From here, you can navigate to the change request overview page, which will give you information about the changes the change request contains, the state the change request is in, and what action needs to be taken next.
+Once a change request is sent to review by the user who created it, it becomes available for everyone in the change request tab in the project. 
+
+From here, you can navigate to the change request overview page. This page will give you information about the changes the change request contains, the state the change request is in, and what action needs to be taken next.
 
 ![Change request banner](/img/change-request-overview.png)
 

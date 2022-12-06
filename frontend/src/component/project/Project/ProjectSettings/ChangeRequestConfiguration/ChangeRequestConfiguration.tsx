@@ -23,14 +23,11 @@ export const ChangeRequestConfiguration = () => {
     const projectId = useRequiredPathParam('projectId');
     const projectName = useProjectNameOrId(projectId);
     const { hasAccess } = useContext(AccessContext);
-    const { isOss, uiConfig } = useUiConfig();
-    const isPro = !(
-        Boolean(uiConfig.versionInfo?.current.oss) ||
-        Boolean(uiConfig.versionInfo?.current.enterprise)
-    );
+    const { isOss, isPro } = useUiConfig();
+
     usePageTitle(`Project change request – ${projectName}`);
 
-    if (isOss() || isPro) {
+    if (isOss() || isPro()) {
         return (
             <PageContent
                 header={<PageHeader title="Change request configuration" />}

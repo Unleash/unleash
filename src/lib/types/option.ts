@@ -79,6 +79,7 @@ export interface IServerOption {
     cdnPrefix?: string;
     unleashUrl: string;
     serverMetrics: boolean;
+    enableHeapSnapshotEnpoint: boolean;
     enableRequestLogger: boolean;
     gracefulShutdownEnable: boolean;
     gracefulShutdownTimeout: number;

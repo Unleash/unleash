@@ -8,7 +8,6 @@ import { ProjectCard } from '../ProjectCard/ProjectCard';
 import { useStyles } from './ProjectList.styles';
 import { IProjectCard } from 'interfaces/project';
 import loadingData from './loadingData';
-import useLoading from 'hooks/useLoading';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import AccessContext from 'contexts/AccessContext';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
@@ -21,7 +20,10 @@ import { TablePlaceholder } from 'component/common/Table';
 import { useMediaQuery } from '@mui/material';
 import theme from 'themes/theme';
 import { Search } from 'component/common/Search/Search';
-import { ProFeatureTooltip } from 'component/common/ProFeatureTooltip/ProFeatureTooltip';
+import {
+    PlausibleOrigin,
+    PremiumFeature,
+} from 'component/common/PremiumFeature/PremiumFeature';
 import { ITooltipResolverProps } from 'component/common/TooltipResolver/TooltipResolver';
 import { ReactComponent as ProPlanIcon } from 'assets/icons/pro-enterprise-feature-badge.svg';
 
@@ -46,10 +48,10 @@ function resolveCreateButtonData(
             disabled: true,
             tooltip: {
                 titleComponent: (
-                    <ProFeatureTooltip>
+                    <PremiumFeature origin={PlausibleOrigin.PROJECT}>
                         To be able to add more projects you need to upgrade to
                         Pro or Enterprise plan
-                    </ProFeatureTooltip>
+                    </PremiumFeature>
                 ),
                 sx: { maxWidth: '320px' },
                 variant: 'custom',

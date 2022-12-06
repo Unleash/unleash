@@ -16,7 +16,7 @@ Our goal is developer effeciency, but we also recognize that we have users and c
 
 ## Change request configuration
 
-The change request configuration can be set up per project, per environment. This means that you can have different change request configurations for different environments. This is useful if you have different requirements for different environments, for example production and development. The implication of this is that you can't change toggles across projects in the same change request.
+The change request configuration can be set up per project, per environment. This means that you can have different change request configurations for different environments, such as production and development. This is useful because different environments may have different requirements, so you can customize the change request configuration to fit those requirements. However, this also means that you cannot change toggles across projects in the same change request.
 
 Currently there are two configuration options for change requests:
 * **Enable change requests** - This is a boolean value that enables or disables change requests for the project and environment.

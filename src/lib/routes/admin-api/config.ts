@@ -1,29 +1,17 @@
 import { Response } from 'express';
-import { AuthedRequest } from '../../types/core';
-import { IUnleashServices } from '../../types/services';
-import { IAuthType, IUnleashConfig } from '../../types/option';
-import version from '../../util/version';
+import { ADMIN, IUnleashConfig, IUnleashServices } from '../../types';
 import Controller from '../controller';
 import VersionService from '../../services/version-service';
 import SettingService from '../../services/setting-service';
+import { EmailService, OpenApiService } from '../../services';
 import {
-    simpleAuthSettingsKey,
-    SimpleAuthSettings,
-} from '../../types/settings/simple-auth-settings';
-import { ADMIN, NONE } from '../../types/permissions';
-import { createResponseSchema } from '../../openapi/util/create-response-schema';
-import {
-    uiConfigSchema,
-    UiConfigSchema,
-} from '../../openapi/spec/ui-config-schema';
-import { OpenApiService } from '../../services/openapi-service';
-import { EmailService } from '../../services/email-service';
-import { emptyResponse } from '../../openapi/util/standard-responses';
+    createRequestSchema,
+    emptyResponse,
+    SetUiConfigSchema,
+} from '../../openapi';
 import { IAuthRequest } from '../unleash-types';
-import { extractUsername } from '../../util/extract-user';
+import { extractUsername } from '../../util';
 import NotFoundError from '../../error/notfound-error';
-import { SetUiConfigSchema } from '../../openapi/spec/set-ui-config-schema';
-import { createRequestSchema } from '../../openapi/util/create-request-schema';
 
 class ConfigController extends Controller {
     private versionService: VersionService;
@@ -56,22 +44,6 @@ class ConfigController extends Controller {
         this.openApiService = openApiService;
 
         this.route({
-            method: 'get',
-            path: '',
-            handler: this.getUiConfig,
-            permission: NONE,
-            middleware: [
-                openApiService.validPath({
-                    tags: ['Admin UI'],
-                    operationId: 'getUiConfig',
-                    responses: {
-                        200: createResponseSchema('uiConfigSchema'),
-                    },
-                }),
-            ],
-        });
-
-        this.route({
             method: 'post',
             path: '',
             handler: this.setUiConfig,
@@ -85,47 +57,6 @@ class ConfigController extends Controller {
                 }),
             ],
         });
-    }
-
-    async getUiConfig(
-        req: AuthedRequest,
-        res: Response<UiConfigSchema>,
-    ): Promise<void> {
-        const [frontendSettings, simpleAuthSettings] = await Promise.all([
-            this.settingService.getFrontendSettings(),
-            this.settingService.get<SimpleAuthSettings>(simpleAuthSettingsKey),
-        ]);
-
-        const disablePasswordAuth =
-            simpleAuthSettings?.disabled ||
-            this.config.authentication.type == IAuthType.NONE;
-
-        const expFlags = this.config.flagResolver.getAll({
-            email: req.user.email,
-        });
-        const flags = { ...this.config.ui.flags, ...expFlags };
-
-        const response: UiConfigSchema = {
-            ...this.config.ui,
-            flags,
-            version,
-            emailEnabled: this.emailService.isEnabled(),
-            unleashUrl: this.config.server.unleashUrl,
-            baseUriPath: this.config.server.baseUriPath,
-            authenticationType: this.config.authentication?.type,
-            segmentValuesLimit: this.config.segmentValuesLimit,
-            strategySegmentsLimit: this.config.strategySegmentsLimit,
-            frontendApiOrigins: frontendSettings.frontendApiOrigins,
-            versionInfo: this.versionService.getVersionInfo(),
-            disablePasswordAuth,
-        };
-
-        this.openApiService.respondWithValidation(
-            200,
-            res,
-            uiConfigSchema.$id,
-            response,
-        );
     }
 
     async setUiConfig(

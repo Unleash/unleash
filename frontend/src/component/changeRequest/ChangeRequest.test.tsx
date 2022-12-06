@@ -252,7 +252,7 @@ const setupHttpRoutes = ({
 };
 
 const verifyBannerForPendingChangeRequest = async () => {
-    return screen.findByText('Change request mode');
+    return screen.findByText('Change request mode', {}, { timeout: 5000 });
 };
 
 const changeToggle = async (environment: string) => {

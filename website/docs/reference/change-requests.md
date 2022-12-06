@@ -55,6 +55,7 @@ Once a change request is sent to review by the user who created it. It becomes a
 ![Change request banner](/img/change-request-overview.png)
 
 From here, if you have the correct permissions, you can approve and apply the change request. Once applied the changes will be live in production.
+
 ## Change request permissions
 
 As a result of adding change requests, we have added three new environment specific permissions: 

@@ -337,6 +337,7 @@ module.exports = {
                         'reference/technical-debt',
                         'reference/unleash-context',
                         'reference/unleash-proxy',
+                        'reference/change-requests',
                     ],
                 },
             ],

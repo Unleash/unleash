@@ -29,6 +29,9 @@ const StyledAsideBox = styled(Box)(({ theme }) => ({
     width: '30%',
     display: 'flex',
     flexDirection: 'column',
+    [theme.breakpoints.down('sm')]: {
+        width: '100%',
+    },
 }));
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
@@ -37,6 +40,10 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
     width: '70%',
     padding: theme.spacing(1, 2),
     borderRadius: theme.shape.borderRadiusLarge,
+    [theme.breakpoints.down('sm')]: {
+        marginLeft: 0,
+        width: '100%',
+    },
 }));
 
 const StyledButtonBox = styled(Box)(({ theme }) => ({
@@ -47,6 +54,13 @@ const StyledButtonBox = styled(Box)(({ theme }) => ({
 
 const StyledInnerContainer = styled(Box)(({ theme }) => ({
     padding: theme.spacing(2),
+}));
+
+const ChangeRequestBody = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    [theme.breakpoints.down('sm')]: {
+        flexDirection: 'column',
+    },
 }));
 
 export const ChangeRequestOverview: FC = () => {
@@ -139,7 +153,7 @@ export const ChangeRequestOverview: FC = () => {
     return (
         <>
             <ChangeRequestHeader changeRequest={changeRequest} />
-            <Box sx={{ display: 'flex' }}>
+            <ChangeRequestBody>
                 <StyledAsideBox>
                     <ChangeRequestTimeline state={changeRequest.state} />
                     <ConditionallyRender
@@ -272,7 +286,7 @@ export const ChangeRequestOverview: FC = () => {
                         can't be reopened.
                     </Typography>
                 </Dialogue>
-            </Box>
+            </ChangeRequestBody>
         </>
     );
 };

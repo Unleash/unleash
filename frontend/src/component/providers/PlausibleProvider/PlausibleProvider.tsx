@@ -11,10 +11,22 @@ export const PlausibleProvider: FC = ({ children }) => {
     const [context, setContext] = useState<ReturnType<typeof Plausible> | null>(
         null
     );
-    const uiFlagsStr =
-        (document.querySelector('meta[name="uiFlags"]') as HTMLMetaElement)
-            ?.content || '';
-    const uiFlags = JSON.parse(uiFlagsStr);
+
+    const getUIFlags = () => {
+        try {
+            const uiFlagsStr =
+                (
+                    document.querySelector(
+                        'meta[name="uiFlags"]'
+                    ) as HTMLMetaElement
+                )?.content || '{}';
+            return JSON.parse(uiFlagsStr);
+        } catch (e) {
+            return {};
+        }
+    };
+
+    const uiFlags = getUIFlags();
 
     const { uiConfig } = useUiConfig();
     const isEnabled = Boolean(uiConfig?.flags?.T || uiFlags.T || LOCAL_TESTING);

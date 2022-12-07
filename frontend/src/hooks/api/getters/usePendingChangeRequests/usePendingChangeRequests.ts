@@ -11,9 +11,9 @@ const fetcher = (path: string) => {
 
 export const usePendingChangeRequests = (project: string) => {
     const { data, error, mutate } = useEnterpriseSWR<IChangeRequest[]>(
+        [],
         formatApiPath(`api/admin/projects/${project}/change-requests/pending`),
-        fetcher,
-        []
+        fetcher
     );
 
     return {

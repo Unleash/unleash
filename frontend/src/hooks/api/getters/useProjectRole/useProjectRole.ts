@@ -15,9 +15,9 @@ const useProjectRole = (id: string, options: SWRConfiguration = {}) => {
     };
 
     const { data, error } = useEnterpriseSWR(
+        {},
         `api/admin/roles/${id}`,
         fetcher,
-        {},
         options
     );
     const [loading, setLoading] = useState(!error && !data);

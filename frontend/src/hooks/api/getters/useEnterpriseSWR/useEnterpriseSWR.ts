@@ -3,18 +3,18 @@ import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
 import useUiConfig from '../useUiConfig/useUiConfig';
 
 export const useEnterpriseSWR = <Data = any, Error = any>(
+    fallback: Data,
     key: Key,
     fetcher: BareFetcher<Data>,
-    fallback: Data,
     options: SWRConfiguration = {}
 ) => {
     const { isEnterprise } = useUiConfig();
 
     const result = useConditionalSWR(
-        key,
-        (path: string) =>
-            isEnterprise() ? fetcher(path) : Promise.resolve(fallback),
         isEnterprise(),
+        fallback,
+        key,
+        fetcher,
         options
     );
 

@@ -14,11 +14,11 @@ export const usePendingChangeRequestsForFeature = (
     featureName: string
 ) => {
     const { data, error, mutate } = useEnterpriseSWR<IChangeRequest[]>(
+        [],
         formatApiPath(
             `api/admin/projects/${project}/change-requests/pending/${featureName}`
         ),
-        fetcher,
-        []
+        fetcher
     );
 
     return {

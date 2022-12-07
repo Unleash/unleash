@@ -147,6 +147,7 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
             >
                 {data?.map(environmentChangeRequest => (
                     <EnvironmentChangeRequest
+                        key={environmentChangeRequest.id}
                         environmentChangeRequest={environmentChangeRequest}
                         onClose={onClose}
                         onReview={onReview}

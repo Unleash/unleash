@@ -24,6 +24,7 @@ import { AddCommentField } from './ChangeRequestComments/AddCommentField';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { useChangeRequestsEnabled } from '../../../hooks/useChangeRequestsEnabled';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
+import { changesCount } from '../changesCount';
 
 const StyledAsideBox = styled(Box)(({ theme }) => ({
     width: '30%',
@@ -164,7 +165,7 @@ export const ChangeRequestOverview: FC = () => {
                                     <ChangeRequestReviewer
                                         name={
                                             approver.createdBy.username ||
-                                            'Test account'
+                                            'Unknown user'
                                         }
                                         imageUrl={approver.createdBy.imageUrl}
                                     />
@@ -175,7 +176,7 @@ export const ChangeRequestOverview: FC = () => {
                 </StyledAsideBox>
                 <StyledPaper elevation={0}>
                     <StyledInnerContainer>
-                        Changes
+                        Requested Changes ({changesCount(changeRequest)})
                         <ChangeRequest
                             changeRequest={changeRequest}
                             onRefetch={refetchChangeRequest}

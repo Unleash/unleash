@@ -2,7 +2,6 @@ import { makeStyles } from 'tss-react/mui';
 
 export const useStyles = makeStyles()(theme => ({
     containerStyles: {
-        marginTop: '1.5rem',
         display: 'flex',
         [theme.breakpoints.down('md')]: {
             flexDirection: 'column',

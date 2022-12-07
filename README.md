@@ -53,7 +53,7 @@ Find your preferred SDK in [our list of official SDKs](#unleash-sdks) and import
 If you use the docker compose file from the previous step, here's the configuration details you'll need to get going:
 
 - For front-end SDKs, use:
-  - URL: `http://localhost:3000`
+  - URL: `http://localhost:3000/proxy`
   - `clientKey`: `proxy-client-key`
 - For server-side SDKs, use:
   - Unleash API URL: `http://localhost:4242/api/`

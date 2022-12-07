@@ -11,8 +11,13 @@ export const PlausibleProvider: FC = ({ children }) => {
     const [context, setContext] = useState<ReturnType<typeof Plausible> | null>(
         null
     );
+    const uiFlagsStr =
+        (document.querySelector('meta[name="uiFlags"]') as HTMLMetaElement)
+            ?.content || '';
+    const uiFlags = JSON.parse(uiFlagsStr);
+
     const { uiConfig } = useUiConfig();
-    const isEnabled = Boolean(uiConfig?.flags?.T || LOCAL_TESTING);
+    const isEnabled = Boolean(uiConfig?.flags?.T || uiFlags.T || LOCAL_TESTING);
 
     useEffect(() => {
         if (isEnabled) {

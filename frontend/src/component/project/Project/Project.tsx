@@ -31,6 +31,7 @@ import { ProjectSettings } from './ProjectSettings/ProjectSettings';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { FavoriteIconButton } from '../../common/FavoriteIconButton/FavoriteIconButton';
 import { useFavoriteProjectsApi } from '../../../hooks/api/actions/useFavoriteProjectsApi/useFavoriteProjectsApi';
+import { CenteredNavLink } from '../../admin/menu/CenteredNavLink';
 
 const StyledDiv = styled('div')(() => ({
     display: 'flex',
@@ -241,6 +242,7 @@ const Project = () => {
                         indicatorColor="primary"
                         textColor="primary"
                         variant="scrollable"
+                        allowScrollButtonsMobile
                     >
                         {tabs.map(tab => (
                             <Tab

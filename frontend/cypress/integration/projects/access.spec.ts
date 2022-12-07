@@ -10,7 +10,6 @@ import {
     PA_USERS_GROUPS_TITLE_ID,
 } from '../../../src/utils/testIds';
 
-export {};
 const baseUrl = Cypress.config().baseUrl;
 const randomId = String(Math.random()).split('.')[1];
 const groupAndProjectName = `group-e2e-${randomId}`;

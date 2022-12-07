@@ -1,6 +1,5 @@
 /// <reference types="cypress" />
 
-export {};
 const baseUrl = Cypress.config().baseUrl;
 const randomId = String(Math.random()).split('.')[1];
 const groupName = `unleash-e2e-${randomId}`;

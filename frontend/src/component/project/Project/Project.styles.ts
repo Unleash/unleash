@@ -31,8 +31,13 @@ export const useStyles = makeStyles()(theme => ({
     },
     tabButton: {
         textTransform: 'none',
-        width: 'auto',
         fontSize: '1rem',
+        flexGrow: 1,
+        flexBasis: 0,
+        [theme.breakpoints.down('md')]: {
+            paddingLeft: theme.spacing(1),
+            paddingRight: theme.spacing(1),
+        },
         [theme.breakpoints.up('md')]: {
             minWidth: 160,
         },

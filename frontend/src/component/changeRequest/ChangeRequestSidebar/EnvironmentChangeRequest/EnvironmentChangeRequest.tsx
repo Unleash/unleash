@@ -12,6 +12,7 @@ import {
     StyledSuccessIcon,
     UpdateCount,
 } from '../ChangeRequestSidebar';
+import { CloudCircle } from '@mui/icons-material';
 
 const SubmitChangeRequestButton: FC<{ onClick: () => void; count: number }> = ({
     onClick,
@@ -35,8 +36,7 @@ export const EnvironmentChangeRequest: FC<{
         <Box
             key={environmentChangeRequest.id}
             sx={{
-                padding: 2,
-                mt: 2,
+                padding: 3,
                 border: '2px solid',
                 borderColor: theme => theme.palette.neutral.light,
                 borderRadius: theme => `${theme.shape.borderRadiusLarge}px`,
@@ -49,7 +49,12 @@ export const EnvironmentChangeRequest: FC<{
                         alignItems: 'center',
                     }}
                 >
-                    <EnvironmentIcon enabled={true} />
+                    <CloudCircle
+                        sx={theme => ({
+                            color: theme.palette.primary.light,
+                            mr: 0.5,
+                        })}
+                    />
                     <Typography component="span" variant="h2">
                         {environmentChangeRequest.environment}
                     </Typography>

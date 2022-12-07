@@ -14,7 +14,7 @@ interface IDraftBannerProps {
 const DraftBannerContentWrapper = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
-    padding: theme.spacing(1, 1.5),
+    padding: theme.spacing(1, 0),
     color: theme.palette.warning.main,
 }));
 

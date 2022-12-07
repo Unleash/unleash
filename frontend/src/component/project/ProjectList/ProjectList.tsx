@@ -20,10 +20,7 @@ import { TablePlaceholder } from 'component/common/Table';
 import { useMediaQuery } from '@mui/material';
 import theme from 'themes/theme';
 import { Search } from 'component/common/Search/Search';
-import {
-    PlausibleOrigin,
-    PremiumFeature,
-} from 'component/common/PremiumFeature/PremiumFeature';
+import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
 import { ITooltipResolverProps } from 'component/common/TooltipResolver/TooltipResolver';
 import { ReactComponent as ProPlanIcon } from 'assets/icons/pro-enterprise-feature-badge.svg';
 
@@ -48,10 +45,7 @@ function resolveCreateButtonData(
             disabled: true,
             tooltip: {
                 titleComponent: (
-                    <PremiumFeature origin={PlausibleOrigin.PROJECT}>
-                        To be able to add more projects you need to upgrade to
-                        Pro or Enterprise plan
-                    </PremiumFeature>
+                    <PremiumFeature feature="Adding new projects" tooltip />
                 ),
                 sx: { maxWidth: '320px' },
                 variant: 'custom',

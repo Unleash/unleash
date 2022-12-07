@@ -28,7 +28,7 @@ export const useStyles = makeStyles()(theme => ({
     },
     accordionRoot: {
         transition: 'all 0.1s ease',
-        '&::before': {
+        '&:before': {
             opacity: '0 !important',
         },
     },

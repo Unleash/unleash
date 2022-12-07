@@ -112,7 +112,6 @@ export const ChangeRequestsTabs = ({
                 accessor: 'environment',
                 maxWidth: 100,
                 Cell: TextCell,
-                sortType: 'text',
             },
             {
                 Header: 'Status',
@@ -120,7 +119,6 @@ export const ChangeRequestsTabs = ({
                 minWidth: 150,
                 width: 150,
                 Cell: ChangeRequestStatusCell,
-                sortType: 'text',
             },
             {
                 Header: '',

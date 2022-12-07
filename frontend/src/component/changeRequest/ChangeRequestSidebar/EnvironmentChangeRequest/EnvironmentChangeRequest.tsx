@@ -2,7 +2,6 @@ import { FC } from 'react';
 import { Box, Button, Divider, Typography, useTheme } from '@mui/material';
 import { IChangeRequest } from '../../changeRequest.types';
 import { useNavigate } from 'react-router-dom';
-import EnvironmentIcon from '../../../common/EnvironmentIcon/EnvironmentIcon';
 import { ChangeRequestStatusBadge } from '../../ChangeRequestStatusBadge/ChangeRequestStatusBadge';
 import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender';
 import { changesCount } from '../../changesCount';

@@ -1,14 +1,16 @@
-import Input from 'component/common/Input/Input';
+import { RadioGroup, FormControl, Typography, Switch } from '@mui/material';
 import {
-    FormControlLabel,
-    Button,
-    RadioGroup,
-    FormControl,
-    Typography,
-    Radio,
-    Switch,
-} from '@mui/material';
-import { useStyles } from './UserForm.styles';
+    ButtonContainer,
+    CancelButton,
+    Container,
+    FlexRow,
+    Form,
+    InputDescription,
+    RoleBox,
+    RoleRadio,
+    RoleSubTitle,
+    StyledInput,
+} from './UserForm.styles';
 import React from 'react';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -47,7 +49,6 @@ const UserForm: React.FC<IUserForm> = ({
     clearErrors,
     mode,
 }) => {
-    const { classes: styles } = useStyles();
     const { roles } = useUsers();
     const { uiConfig } = useUiConfig();
 
@@ -62,13 +63,12 @@ const UserForm: React.FC<IUserForm> = ({
     };
 
     return (
-        <form onSubmit={handleSubmit} className={styles.form}>
-            <div className={styles.container}>
-                <p className={styles.inputDescription}>
+        <Form onSubmit={handleSubmit}>
+            <Container>
+                <InputDescription>
                     Who is the new Unleash user?
-                </p>
-                <Input
-                    className={styles.input}
+                </InputDescription>
+                <StyledInput
                     label="Full name"
                     value={name}
                     onChange={e => setName(e.target.value)}
@@ -77,8 +77,7 @@ const UserForm: React.FC<IUserForm> = ({
                     onFocus={() => clearErrors()}
                     autoFocus
                 />
-                <Input
-                    className={styles.input}
+                <StyledInput
                     label="Email"
                     type="email"
                     value={email}
@@ -88,13 +87,9 @@ const UserForm: React.FC<IUserForm> = ({
                     onFocus={() => clearErrors()}
                 />
                 <FormControl>
-                    <Typography
-                        variant="subtitle1"
-                        className={styles.roleSubtitle}
-                        data-loading
-                    >
+                    <RoleSubTitle variant="subtitle1" data-loading>
                         What is your team member allowed to do?
-                    </Typography>
+                    </RoleSubTitle>
                     <RadioGroup
                         name="rootRole"
                         value={rootRole || ''}
@@ -103,10 +98,9 @@ const UserForm: React.FC<IUserForm> = ({
                     >
                         {/* @ts-expect-error */}
                         {roles.sort(sortRoles).map(role => (
-                            <FormControlLabel
+                            <RoleBox
                                 key={`role-${role.id}`}
                                 labelPlacement="end"
-                                className={styles.roleBox}
                                 label={
                                     <div>
                                         <strong>{role.name}</strong>
@@ -116,10 +110,7 @@ const UserForm: React.FC<IUserForm> = ({
                                     </div>
                                 }
                                 control={
-                                    <Radio
-                                        checked={role.id === rootRole}
-                                        className={styles.roleRadio}
-                                    />
+                                    <RoleRadio checked={role.id === rootRole} />
                                 }
                                 value={role.id}
                             />
@@ -130,14 +121,10 @@ const UserForm: React.FC<IUserForm> = ({
                     condition={mode !== EDIT && Boolean(uiConfig?.emailEnabled)}
                     show={
                         <FormControl>
-                            <Typography
-                                variant="subtitle1"
-                                className={styles.roleSubtitle}
-                                data-loading
-                            >
+                            <RoleSubTitle variant="subtitle1" data-loading>
                                 Should we send an email to your new team member
-                            </Typography>
-                            <div className={styles.flexRow}>
+                            </RoleSubTitle>
+                            <FlexRow>
                                 <Switch
                                     name="sendEmail"
                                     onChange={() => setSendEmail(!sendEmail)}
@@ -146,18 +133,16 @@ const UserForm: React.FC<IUserForm> = ({
                                 <Typography>
                                     {sendEmail ? 'Yes' : 'No'}
                                 </Typography>
-                            </div>
+                            </FlexRow>
                         </FormControl>
                     }
                 />
-            </div>
-            <div className={styles.buttonContainer}>
+            </Container>
+            <ButtonContainer>
                 {children}
-                <Button onClick={handleCancel} className={styles.cancelButton}>
-                    Cancel
-                </Button>
-            </div>
-        </form>
+                <CancelButton onClick={handleCancel}>Cancel</CancelButton>
+            </ButtonContainer>
+        </Form>
     );
 };
 

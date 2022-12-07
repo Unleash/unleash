@@ -24,7 +24,7 @@ export const useStyles = makeStyles()(theme => ({
         margin: 0,
     },
     accordionRoot: {
-        '&::before': {
+        '&:before': {
             opacity: '0 !important',
         },
     },

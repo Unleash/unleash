@@ -1,86 +1,151 @@
 import { ReactComponent as ProPlanIcon } from 'assets/icons/pro-enterprise-feature-badge.svg';
-import { Box, Link, styled, Typography } from '@mui/material';
+import { Box, Button, Link, styled, Typography } from '@mui/material';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
 
-const PremiumFeatureWrapper = styled(Box)(({ theme }) => ({
+const PremiumFeatureWrapper = styled(Box, {
+    shouldForwardProp: prop => prop !== 'tooltip',
+})<{ tooltip?: boolean }>(({ theme, tooltip }) => ({
     display: 'flex',
     flexDirection: 'column',
-    padding: theme.spacing(1, 0.5),
+    alignItems: tooltip ? 'start' : 'center',
+    textAlign: tooltip ? 'left' : 'center',
+    backgroundColor: tooltip ? 'transparent' : theme.palette.secondaryContainer,
+    borderRadius: tooltip ? 0 : theme.shape.borderRadiusLarge,
+    padding: tooltip ? theme.spacing(1, 0.5) : theme.spacing(7.5, 1),
 }));
 
 const StyledTitle = styled(Typography)(({ theme }) => ({
     display: 'inline-flex',
     alignItems: 'center',
     fontWeight: theme.fontWeight.bold,
-    fontSize: theme.fontSizes.smallBody,
     gap: theme.spacing(1),
 }));
 
-const StyledBody = styled(Typography)(({ theme }) => ({
+const StyledBody = styled('div', {
+    shouldForwardProp: prop => prop !== 'tooltip',
+})<{ tooltip?: boolean }>(({ theme, tooltip }) => ({
+    margin: tooltip ? theme.spacing(1, 0) : theme.spacing(3, 0, 5, 0),
+}));
+
+const StyledTypography = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
-    margin: theme.spacing(1, 0),
+}));
+
+const StyledButtonContainer = styled('div')(() => ({
+    display: 'flex',
 }));
 
 const StyledLink = styled(Link)(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
-    width: 'fit-content',
 }));
 
-enum FeatureLevelTitle {
-    PRO = 'Pro & Enterprise feature',
-    ENTERPRISE = 'Enterprise feature',
+enum FeaturePlan {
+    PRO = 'Pro & Enterprise',
+    ENTERPRISE = 'Enterprise',
 }
 
-export enum PlausibleOrigin {
-    PROJECT = 'Projects',
-    ACCESS = 'Access',
-    CHANGE_REQUEST = 'Change Request',
-}
+const PremiumFeatures = {
+    ['Adding new projects']: {
+        plan: FeaturePlan.PRO,
+        url: '',
+    },
+    ['Access']: {
+        plan: FeaturePlan.PRO,
+        url: 'https://docs.getunleash.io/reference/rbac',
+    },
+    ['Change Requests']: {
+        plan: FeaturePlan.ENTERPRISE,
+        url: 'https://docs.getunleash.io/reference/change-requests',
+    },
+};
+
+type PremiumFeature = keyof typeof PremiumFeatures;
+
+const UPGRADE_URL = 'https://www.getunleash.io/plans';
 
 export interface PremiumFeatureProps {
-    children: React.ReactNode;
-    origin?: PlausibleOrigin;
-    center?: boolean;
-    enterpriseOnly?: boolean;
+    feature: PremiumFeature;
+    tooltip?: boolean;
 }
 
-export const PremiumFeature = ({
-    children,
-    origin,
-    center,
-    enterpriseOnly = false,
-}: PremiumFeatureProps) => {
+export const PremiumFeature = ({ feature, tooltip }: PremiumFeatureProps) => {
+    const { url, plan } = PremiumFeatures[feature];
+
     const tracker = usePlausibleTracker();
 
     const handleClick = () => {
-        if (origin) {
-            tracker.trackEvent('upgrade_plan_clicked', {
-                props: { origin },
-            });
-        }
+        tracker.trackEvent('upgrade_plan_clicked', {
+            props: { feature },
+        });
     };
 
+    const featureLabel = Boolean(url) ? (
+        <StyledLink href={url} target="_blank">
+            {feature}
+        </StyledLink>
+    ) : (
+        feature
+    );
+
+    const featureMessage = (
+        <>
+            {featureLabel} is a feature available for <strong>{plan}</strong>{' '}
+            {plan === FeaturePlan.PRO ? 'plans' : 'plan'}
+        </>
+    );
+
     return (
-        <PremiumFeatureWrapper
-            sx={{
-                alignItems: center ? 'center' : 'start',
-                textAlign: center ? 'center' : 'left',
-            }}
-        >
+        <PremiumFeatureWrapper tooltip={tooltip}>
             <StyledTitle>
                 <ProPlanIcon />
-                {enterpriseOnly
-                    ? FeatureLevelTitle.ENTERPRISE
-                    : FeatureLevelTitle.PRO}
+                {`${plan} feature`}
             </StyledTitle>
-            <StyledBody>{children}</StyledBody>
-            <StyledLink
-                href={'https://www.getunleash.io/plans'}
-                target="_blank"
-                onClick={handleClick}
-            >
-                Upgrade now
-            </StyledLink>
+            <ConditionallyRender
+                condition={Boolean(tooltip)}
+                show={
+                    <>
+                        <StyledBody tooltip>
+                            <StyledTypography>
+                                {featureMessage}. You need to upgrade your plan
+                                if you want to use it
+                            </StyledTypography>
+                        </StyledBody>
+                        <StyledButtonContainer>
+                            <StyledLink
+                                href={UPGRADE_URL}
+                                target="_blank"
+                                onClick={handleClick}
+                            >
+                                Upgrade now
+                            </StyledLink>
+                        </StyledButtonContainer>
+                    </>
+                }
+                elseShow={
+                    <>
+                        <StyledBody>
+                            <StyledTypography>
+                                {featureMessage}
+                            </StyledTypography>
+                            <StyledTypography>
+                                You need to upgrade your plan if you want to use
+                                it
+                            </StyledTypography>
+                        </StyledBody>
+                        <StyledButtonContainer>
+                            <Button
+                                variant="outlined"
+                                href={UPGRADE_URL}
+                                target="_blank"
+                                onClick={handleClick}
+                            >
+                                Upgrade now
+                            </Button>
+                        </StyledButtonContainer>
+                    </>
+                }
+            />
         </PremiumFeatureWrapper>
     );
 };

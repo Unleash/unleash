@@ -392,7 +392,12 @@ export const ProjectAccessAssign = ({
                         </StyledAutocompleteWrapper>
                         <ConditionallyRender
                             condition={Boolean(role?.id)}
-                            show={<ProjectRoleDescription roleId={role?.id!} />}
+                            show={
+                                <ProjectRoleDescription
+                                    roleId={role?.id!}
+                                    projectId={projectId}
+                                />
+                            }
                         />
                     </div>
 

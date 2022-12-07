@@ -7,9 +7,9 @@ export const useChangeRequestConfig = (projectId: string) => {
     const { data, error, mutate } = useEnterpriseSWR<
         IChangeRequestEnvironmentConfig[]
     >(
+        [],
         formatApiPath(`api/admin/projects/${projectId}/change-requests/config`),
-        fetcher,
-        []
+        fetcher
     );
 
     return {

@@ -37,7 +37,7 @@ export const EnvironmentChangeRequest: FC<{
             sx={{
                 padding: 3,
                 border: '2px solid',
-                borderColor: theme => theme.palette.neutral.light,
+                borderColor: theme => theme.palette.secondaryContainer,
                 borderRadius: theme => `${theme.shape.borderRadiusLarge}px`,
             }}
         >

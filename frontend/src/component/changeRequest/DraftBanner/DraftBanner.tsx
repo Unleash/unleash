@@ -75,16 +75,16 @@ const StickyBanner = styled(Box)(({ theme }) => ({
 
 export const DraftBanner: VFC<IDraftBannerProps> = ({ project }) => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-    const { draft, loading } = usePendingChangeRequests(project);
+    const { data, loading } = usePendingChangeRequests(project);
 
-    if ((!loading && !draft) || draft?.length === 0) {
+    if ((!loading && !data) || data?.length === 0) {
         return null;
     }
 
     return (
         <StickyBanner>
-            {draft &&
-                draft
+            {data &&
+                data
                     .filter(changeRequest =>
                         ['Draft', 'In review', 'Approved'].includes(
                             changeRequest.state

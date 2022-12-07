@@ -67,9 +67,9 @@ export const FeatureStrategyForm = ({
     const { hasAccess } = useContext(AccessContext);
     const { strategyDefinition } = useStrategy(strategy?.name);
 
-    const { draft } = usePendingChangeRequests(feature.project);
+    const { data } = usePendingChangeRequests(feature.project);
     const { changeRequestInReviewOrApproved, alert } =
-        useChangeRequestInReviewWarning(draft);
+        useChangeRequestInReviewWarning(data);
 
     const hasChangeRequestInReviewForEnvironment =
         changeRequestInReviewOrApproved(environmentId || '');

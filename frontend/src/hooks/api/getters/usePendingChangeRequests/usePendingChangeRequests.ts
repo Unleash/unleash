@@ -17,7 +17,7 @@ export const usePendingChangeRequests = (project: string) => {
     );
 
     return {
-        draft: data,
+        data,
         loading: !error && !data,
         refetch: mutate,
         error,

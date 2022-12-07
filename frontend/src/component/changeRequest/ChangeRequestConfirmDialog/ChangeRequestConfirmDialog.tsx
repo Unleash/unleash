@@ -24,9 +24,9 @@ export const ChangeRequestDialogue: FC<IChangeRequestDialogueProps> = ({
     messageComponent,
 }) => {
     const projectId = useRequiredPathParam('projectId');
-    const { draft } = usePendingChangeRequests(projectId);
+    const { data } = usePendingChangeRequests(projectId);
     const { changeRequestInReviewOrApproved, alert } =
-        useChangeRequestInReviewWarning(draft);
+        useChangeRequestInReviewWarning(data);
 
     const hasChangeRequestInReviewForEnvironment =
         changeRequestInReviewOrApproved(environment || '');

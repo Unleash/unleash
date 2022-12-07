@@ -41,7 +41,7 @@ export const EnvironmentChangeRequest: FC<{
                 borderRadius: theme => `${theme.shape.borderRadiusLarge}px`,
             }}
         >
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box sx={{ display: 'flex', alignItems: 'end' }}>
                 <Box
                     sx={{
                         display: 'flex',

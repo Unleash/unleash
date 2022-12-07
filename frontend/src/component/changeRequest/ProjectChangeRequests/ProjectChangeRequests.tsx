@@ -28,10 +28,7 @@ export const ProjectChangeRequests = () => {
 
     if (isOss() || isPro()) {
         return (
-            <PageContent
-                header={<PageHeader title="Change requests" />}
-                sx={{ justifyContent: 'center' }}
-            >
+            <PageContent sx={{ justifyContent: 'center' }}>
                 <PremiumFeature feature="Change Requests" />
             </PageContent>
         );

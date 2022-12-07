@@ -157,22 +157,17 @@ export const ChangeRequestOverview: FC = () => {
             <ChangeRequestBody>
                 <StyledAsideBox>
                     <ChangeRequestTimeline state={changeRequest.state} />
-                    <ConditionallyRender
-                        condition={changeRequest.approvals?.length > 0}
-                        show={
-                            <ChangeRequestReviewers>
-                                {changeRequest.approvals?.map(approver => (
-                                    <ChangeRequestReviewer
-                                        name={
-                                            approver.createdBy.username ||
-                                            'Unknown user'
-                                        }
-                                        imageUrl={approver.createdBy.imageUrl}
-                                    />
-                                ))}
-                            </ChangeRequestReviewers>
-                        }
-                    />
+                    <ChangeRequestReviewers>
+                        {changeRequest.approvals?.map(approver => (
+                            <ChangeRequestReviewer
+                                name={
+                                    approver.createdBy.username ||
+                                    'Unknown user'
+                                }
+                                imageUrl={approver.createdBy.imageUrl}
+                            />
+                        ))}
+                    </ChangeRequestReviewers>{' '}
                 </StyledAsideBox>
                 <StyledPaper elevation={0}>
                     <StyledInnerContainer>

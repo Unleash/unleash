@@ -15,6 +15,9 @@ const DraftBannerContentWrapper = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     padding: theme.spacing(1, 0),
+    [theme.breakpoints.down('lg')]: {
+        padding: theme.spacing(1, 2),
+    },
     color: theme.palette.warning.main,
 }));
 
@@ -27,7 +30,7 @@ const DraftBannerContent: FC<{
     return (
         <Box className={classes.content}>
             <DraftBannerContentWrapper>
-                <Typography variant="body2">
+                <Typography variant="body2" sx={{ mr: 4 }}>
                     <strong>Change request mode</strong> – You have changes{' '}
                     <ConditionallyRender
                         condition={Boolean(changeRequest.environment)}

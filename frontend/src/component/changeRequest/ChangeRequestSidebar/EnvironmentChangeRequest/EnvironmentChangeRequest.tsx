@@ -37,6 +37,7 @@ export const EnvironmentChangeRequest: FC<{
             sx={{
                 padding: 3,
                 border: '2px solid',
+                mb: 5,
                 borderColor: theme => theme.palette.secondaryContainer,
                 borderRadius: theme => `${theme.shape.borderRadiusLarge}px`,
             }}
@@ -69,7 +70,7 @@ export const EnvironmentChangeRequest: FC<{
                 </Box>
             </Box>
             <Divider sx={{ my: 3 }} />
-            <Typography variant="body1" color="text.secondary">
+            <Typography variant="body2" color="text.secondary">
                 You request changes for these feature toggles:
             </Typography>
             {children}

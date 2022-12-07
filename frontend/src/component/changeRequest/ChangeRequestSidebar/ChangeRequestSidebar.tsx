@@ -7,7 +7,6 @@ import { CheckCircle } from '@mui/icons-material';
 import { ChangeRequest } from '../ChangeRequest/ChangeRequest';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
-import { useNavigate } from 'react-router-dom';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { EnvironmentChangeRequest } from './EnvironmentChangeRequest/EnvironmentChangeRequest';

@@ -58,8 +58,8 @@ export const Separator = () => (
     <Typography
         component="span"
         sx={{
-            marginLeft: 2,
-            marginRight: 2,
+            marginLeft: 1.5,
+            marginRight: 1.5,
             color: 'dividerAlternative',
         }}
     >

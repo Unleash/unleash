@@ -36,6 +36,7 @@ export const FavoriteIconHeader: VFC<IFavoriteIconHeaderProps> = ({
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
+                    padding: 1.25,
                 }}
                 onClick={onToggle}
                 size="small"

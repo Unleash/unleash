@@ -280,7 +280,7 @@ export const ChangeRequestsTabs = ({
                         }
                         elseShow={
                             <TablePlaceholder>
-                                None of the changes where submitted yet.
+                                None of the changes were submitted yet.
                             </TablePlaceholder>
                         }
                     />

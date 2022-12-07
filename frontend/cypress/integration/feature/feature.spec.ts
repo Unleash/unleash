@@ -1,7 +1,5 @@
 /// <reference types="cypress" />
 
-export {};
-
 const ENTERPRISE = Boolean(Cypress.env('ENTERPRISE'));
 const randomId = String(Math.random()).split('.')[1];
 const featureToggleName = `unleash-e2e-${randomId}`;

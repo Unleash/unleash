@@ -3,6 +3,8 @@ import { ForwardedRef, forwardRef, useMemo, VFC } from 'react';
 import useProjectRole from 'hooks/api/getters/useProjectRole/useProjectRole';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useProjectAccess from 'hooks/api/getters/useProjectAccess/useProjectAccess';
+import { ProjectRoleDescriptionProjectPermissions } from './ProjectRoleDescriptionProjectPermissions/ProjectRoleDescriptionProjectPermissions';
+import { ProjectRoleDescriptionEnvironmentPermissions } from './ProjectRoleDescriptionEnvironmentPermissions/ProjectRoleDescriptionEnvironmentPermissions';
 
 const StyledDescription = styled('div', {
     shouldForwardProp: prop =>
@@ -103,21 +105,11 @@ export const ProjectRoleDescription: VFC<IProjectRoleDescriptionProps> =
                                                 Project permissions
                                             </StyledDescriptionHeader>
                                             <StyledDescriptionBlock>
-                                                {role.permissions
-                                                    ?.filter(
-                                                        (permission: any) =>
-                                                            !permission.environment
-                                                    )
-                                                    .map(
-                                                        (permission: any) =>
-                                                            permission.displayName
-                                                    )
-                                                    .sort()
-                                                    .map((permission: any) => (
-                                                        <p key={permission}>
-                                                            {permission}
-                                                        </p>
-                                                    ))}
+                                                <ProjectRoleDescriptionProjectPermissions
+                                                    permissions={
+                                                        role.permissions
+                                                    }
+                                                />
                                             </StyledDescriptionBlock>
                                         </>
                                     }
@@ -129,47 +121,23 @@ export const ProjectRoleDescription: VFC<IProjectRoleDescriptionProps> =
                                             <StyledDescriptionHeader>
                                                 Environment permissions
                                             </StyledDescriptionHeader>
-                                            {environments.map(
-                                                (environment: any) => (
-                                                    <div key={environment}>
-                                                        <StyledDescriptionSubHeader>
-                                                            {environment}
-                                                        </StyledDescriptionSubHeader>
-                                                        <StyledDescriptionBlock>
-                                                            {role.permissions
-                                                                .filter(
-                                                                    (
-                                                                        permission: any
-                                                                    ) =>
-                                                                        permission.environment ===
-                                                                        environment
-                                                                )
-                                                                .map(
-                                                                    (
-                                                                        permission: any
-                                                                    ) =>
-                                                                        permission.displayName
-                                                                )
-                                                                .sort()
-                                                                .map(
-                                                                    (
-                                                                        permission: any
-                                                                    ) => (
-                                                                        <p
-                                                                            key={
-                                                                                permission
-                                                                            }
-                                                                        >
-                                                                            {
-                                                                                permission
-                                                                            }
-                                                                        </p>
-                                                                    )
-                                                                )}
-                                                        </StyledDescriptionBlock>
-                                                    </div>
-                                                )
-                                            )}
+                                            {environments.map(environment => (
+                                                <div key={environment}>
+                                                    <StyledDescriptionSubHeader>
+                                                        {environment}
+                                                    </StyledDescriptionSubHeader>
+                                                    <StyledDescriptionBlock>
+                                                        <ProjectRoleDescriptionEnvironmentPermissions
+                                                            environment={
+                                                                environment
+                                                            }
+                                                            permissions={
+                                                                role.permissions
+                                                            }
+                                                        />
+                                                    </StyledDescriptionBlock>
+                                                </div>
+                                            ))}
                                         </>
                                     }
                                 />

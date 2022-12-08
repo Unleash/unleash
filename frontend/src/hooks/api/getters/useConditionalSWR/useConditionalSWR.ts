@@ -1,5 +1,4 @@
 import useSWR, { BareFetcher, Key, SWRConfiguration, SWRResponse } from 'swr';
-import { useEffect } from 'react';
 
 export const useConditionalSWR = <Data = any, Error = any, T = boolean>(
     condition: T,
@@ -8,16 +7,11 @@ export const useConditionalSWR = <Data = any, Error = any, T = boolean>(
     fetcher: BareFetcher<Data>,
     options: SWRConfiguration = {}
 ): SWRResponse<Data, Error> => {
-    const result = useSWR(
-        key,
-        (path: string) =>
-            condition ? fetcher(path) : Promise.resolve(fallback),
-        options
-    );
+    const result = useSWR(condition ? key : null, fetcher, options);
 
-    useEffect(() => {
-        result.mutate();
-    }, [condition]);
-
-    return result;
+    return {
+        ...result,
+        error: condition ? result.error : undefined,
+        data: condition ? result.data : fallback,
+    };
 };

@@ -90,7 +90,7 @@ export const PremiumFeature = ({ feature, tooltip }: PremiumFeatureProps) => {
 
     const featureMessage = (
         <>
-            {featureLabel} is a feature available for <strong>{plan}</strong>{' '}
+            {featureLabel} is a feature available for the <strong>{plan}</strong>{' '}
             {plan === FeaturePlan.PRO ? 'plans' : 'plan'}
         </>
     );

@@ -13,7 +13,7 @@ const CommentPaper = styled(Paper)(({ theme }) => ({
     width: '100%',
     padding: theme.spacing(1.5, 3, 2.5, 3),
     backgroundColor: theme.palette.neutral.light,
-    borderRadius: '12px',
+    borderRadius: theme.shape.borderRadiusLarge,
     borderColor: theme.palette.divider,
 }));
 

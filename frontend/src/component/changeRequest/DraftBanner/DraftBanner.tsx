@@ -86,22 +86,23 @@ export const DraftBanner: VFC<IDraftBannerProps> = ({ project }) => {
 
     return (
         <StickyBanner>
-            {data &&
-                data
-                    .filter(changeRequest =>
-                        ['Draft', 'In review', 'Approved'].includes(
-                            changeRequest.state
-                        )
-                    )
-                    .map(changeRequest => (
-                        <DraftBannerContent
-                            key={changeRequest.id}
-                            changeRequest={changeRequest}
-                            onClick={() => {
-                                setIsSidebarOpen(true);
-                            }}
-                        />
-                    ))}
+            {data?.length
+                ? data
+                      .filter(changeRequest =>
+                          ['Draft', 'In review', 'Approved'].includes(
+                              changeRequest.state
+                          )
+                      )
+                      .map(changeRequest => (
+                          <DraftBannerContent
+                              key={changeRequest.id}
+                              changeRequest={changeRequest}
+                              onClick={() => {
+                                  setIsSidebarOpen(true);
+                              }}
+                          />
+                      ))
+                : null}
 
             <ChangeRequestSidebar
                 project={project}

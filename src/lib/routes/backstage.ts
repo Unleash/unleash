@@ -19,7 +19,7 @@ class BackstageController extends Controller {
         }
 
         if (config.server.enableHeapSnapshotEnpoint) {
-            this.get('/heapSnapshot', async (req, res) => {
+            this.get('/heap-snapshot', async (req, res) => {
                 writeHeapSnapshot();
                 res.status(200);
                 res.end('Snapshot written');

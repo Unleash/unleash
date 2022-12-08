@@ -23,7 +23,7 @@ export const ChangeRequestFeatureToggleChange: FC<
         <Box
             sx={theme => ({
                 backgroundColor: Boolean(conflict)
-                    ? theme.palette.warning.light
+                    ? theme.palette.neutral.light
                     : theme.palette.tableHeaderBackground,
                 borderRadius: theme =>
                     `${theme.shape.borderRadiusLarge}px ${theme.shape.borderRadiusLarge}px 0 0`,
@@ -31,7 +31,7 @@ export const ChangeRequestFeatureToggleChange: FC<
                 borderColor: theme =>
                     conflict
                         ? theme.palette.warning.border
-                        : theme.palette.dividerAlternative,
+                        : theme.palette.divider,
                 borderBottom: 'none',
                 overflow: 'hidden',
             })}

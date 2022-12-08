@@ -1,5 +1,6 @@
 import { Box, Paper, styled, Typography } from '@mui/material';
-import { FC } from 'react';
+import React, { FC } from 'react';
+import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     marginBottom: theme.spacing(2),
@@ -17,7 +18,11 @@ export const ChangeRequestReviewers: FC = ({ children }) => {
         >
             <StyledBox>Reviewers</StyledBox>
             <Typography variant="body1" color="text.secondary">
-                Approved by
+                <ConditionallyRender
+                    condition={React.Children.count(children) > 0}
+                    show={'Approved by'}
+                    elseShow={'No approvals yet'}
+                />
             </Typography>
             {children}
         </Paper>

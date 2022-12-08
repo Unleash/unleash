@@ -24,6 +24,7 @@ import { AddCommentField } from './ChangeRequestComments/AddCommentField';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { useChangeRequestsEnabled } from '../../../hooks/useChangeRequestsEnabled';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
+import { changesCount } from '../changesCount';
 
 const StyledAsideBox = styled(Box)(({ theme }) => ({
     width: '30%',
@@ -156,26 +157,21 @@ export const ChangeRequestOverview: FC = () => {
             <ChangeRequestBody>
                 <StyledAsideBox>
                     <ChangeRequestTimeline state={changeRequest.state} />
-                    <ConditionallyRender
-                        condition={changeRequest.approvals?.length > 0}
-                        show={
-                            <ChangeRequestReviewers>
-                                {changeRequest.approvals?.map(approver => (
-                                    <ChangeRequestReviewer
-                                        name={
-                                            approver.createdBy.username ||
-                                            'Test account'
-                                        }
-                                        imageUrl={approver.createdBy.imageUrl}
-                                    />
-                                ))}
-                            </ChangeRequestReviewers>
-                        }
-                    />
+                    <ChangeRequestReviewers>
+                        {changeRequest.approvals?.map(approver => (
+                            <ChangeRequestReviewer
+                                name={
+                                    approver.createdBy.username ||
+                                    'Unknown user'
+                                }
+                                imageUrl={approver.createdBy.imageUrl}
+                            />
+                        ))}
+                    </ChangeRequestReviewers>{' '}
                 </StyledAsideBox>
                 <StyledPaper elevation={0}>
                     <StyledInnerContainer>
-                        Changes
+                        Requested Changes ({changesCount(changeRequest)})
                         <ChangeRequest
                             changeRequest={changeRequest}
                             onRefetch={refetchChangeRequest}

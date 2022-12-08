@@ -165,6 +165,10 @@ const defaultServerOption: IServerOption = {
     cdnPrefix: process.env.CDN_PREFIX,
     unleashUrl: process.env.UNLEASH_URL || 'http://localhost:4242',
     serverMetrics: true,
+    enableHeapSnapshotEnpoint: parseEnvVarBoolean(
+        process.env.ENABLE_HEAP_SNAPSHOT_ENPOINT,
+        false,
+    ),
     keepAliveTimeout: minutesToMilliseconds(1),
     headersTimeout: secondsToMilliseconds(61),
     enableRequestLogger: false,

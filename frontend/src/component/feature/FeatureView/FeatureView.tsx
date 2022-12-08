@@ -1,19 +1,12 @@
-import { IconButton, Tab, Tabs, useMediaQuery } from '@mui/material';
-import React, { useCallback, useState } from 'react';
-import {
-    Archive,
-    FileCopy,
-    Label,
-    WatchLater,
-    Star as StarIcon,
-    StarBorder as StarBorderIcon,
-} from '@mui/icons-material';
+import { Tab, Tabs, useMediaQuery } from '@mui/material';
+import React, { useState } from 'react';
+import { Archive, FileCopy, Label, WatchLater } from '@mui/icons-material';
 import {
     Link,
     Route,
-    useNavigate,
     Routes,
     useLocation,
+    useNavigate,
 } from 'react-router-dom';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import useProject from 'hooks/api/getters/useProject/useProject';
@@ -130,6 +123,7 @@ export const FeatureView = () => {
                                             <FavoriteIconButton
                                                 onClick={onFavorite}
                                                 isFavorite={feature?.favorite}
+                                                sx={{ pr: 0.25 }}
                                             />
                                         )}
                                     />

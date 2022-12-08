@@ -1,10 +1,11 @@
 import React, { VFC } from 'react';
-import { IconButton, SxProps, Theme, Tooltip } from '@mui/material';
+import { IconButton, SxProps, Theme } from '@mui/material';
 import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
 import {
     Star as StarIcon,
     StarBorder as StarBorderIcon,
 } from '@mui/icons-material';
+import { TooltipResolver } from '../TooltipResolver/TooltipResolver';
 
 interface IFavoriteIconButtonProps {
     onClick: (event?: any) => void;
@@ -29,7 +30,7 @@ export const FavoriteIconButton: VFC<IFavoriteIconButtonProps> = ({
             <ConditionallyRender
                 condition={isFavorite}
                 show={
-                    <Tooltip title={'Remove from favorites'}>
+                    <TooltipResolver title={'Remove from favorites'}>
                         <StarIcon
                             color="primary"
                             sx={{
@@ -39,10 +40,10 @@ export const FavoriteIconButton: VFC<IFavoriteIconButtonProps> = ({
                                         : theme.spacing(3),
                             }}
                         />
-                    </Tooltip>
+                    </TooltipResolver>
                 }
                 elseShow={
-                    <Tooltip title={'Add to favorites'}>
+                    <TooltipResolver title={'Add to favorites'}>
                         <StarBorderIcon
                             sx={{
                                 fontSize: theme =>
@@ -51,7 +52,7 @@ export const FavoriteIconButton: VFC<IFavoriteIconButtonProps> = ({
                                         : theme.spacing(3),
                             }}
                         />
-                    </Tooltip>
+                    </TooltipResolver>
                 }
             />
         </IconButton>

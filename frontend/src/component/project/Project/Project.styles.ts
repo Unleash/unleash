@@ -19,7 +19,8 @@ export const useStyles = makeStyles()(theme => ({
     innerContainer: {
         padding: '1.25rem 2rem',
         display: 'flex',
-        alignItems: 'center',
+        flexDirection: 'column',
+        alignItems: 'start',
     },
     separator: {
         width: '100%',

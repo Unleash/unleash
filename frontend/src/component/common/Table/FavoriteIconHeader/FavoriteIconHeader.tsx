@@ -1,10 +1,11 @@
 import { useState, VFC } from 'react';
-import { IconButton, Tooltip } from '@mui/material';
+import { IconButton } from '@mui/material';
 import {
     Star as StarIcon,
     StarBorder as StarBorderIcon,
 } from '@mui/icons-material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { TooltipResolver } from '../../TooltipResolver/TooltipResolver';
 
 interface IFavoriteIconHeaderProps {
     isActive: boolean;
@@ -22,13 +23,12 @@ export const FavoriteIconHeader: VFC<IFavoriteIconHeaderProps> = ({
     };
 
     return (
-        <Tooltip
+        <TooltipResolver
             title={
                 internalState
                     ? 'Unpin favorite features from the top'
                     : 'Pin favorite features to the top'
             }
-            placement="bottom-start"
         >
             <IconButton
                 sx={{
@@ -47,6 +47,6 @@ export const FavoriteIconHeader: VFC<IFavoriteIconHeaderProps> = ({
                     elseShow={<StarBorderIcon fontSize="small" />}
                 />
             </IconButton>
-        </Tooltip>
+        </TooltipResolver>
     );
 };

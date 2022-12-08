@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { IChangeRequest } from '../../changeRequest.types';
+import { IChangeRequest } from '../../../changeRequest.types';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';

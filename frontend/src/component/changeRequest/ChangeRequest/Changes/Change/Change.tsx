@@ -15,7 +15,11 @@ import {
 } from '../../CodeSnippetPopover/CodeSnippetPopover';
 import { StrategyExecution } from '../../../../feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyExecution/StrategyExecution';
 import { ToggleStatusChange } from './ToggleStatusChange';
-import { StrategyAddedChange, StrategyDeletedChange } from './StrategyChange';
+import {
+    StrategyAddedChange,
+    StrategyDeletedChange,
+    StrategyEditedChange,
+} from './StrategyChange';
 
 const StyledSingleChangeBox = styled(Box, {
     shouldForwardProp: (prop: string) => !prop.startsWith('$'),

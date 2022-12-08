@@ -2,7 +2,7 @@ import { applicationSchema } from './schema';
 import { APPLICATION_CREATED, CLIENT_REGISTER } from '../../types/events';
 import { IApplication } from './models';
 import { IUnleashStores } from '../../types/stores';
-import { IUnleashConfig } from '../../types/option';
+import { IServerOption, IUnleashConfig } from '../../types/option';
 import { IEventStore } from '../../types/stores/event-store';
 import {
     IClientApplication,
@@ -46,6 +46,8 @@ export default class ClientInstanceService {
 
     private announcementInterval: number;
 
+    private serverOption: IServerOption;
+
     readonly prometheusApi;
 
     constructor(
@@ -68,7 +70,8 @@ export default class ClientInstanceService {
         {
             getLogger,
             prometheusApi,
-        }: Pick<IUnleashConfig, 'getLogger' | 'prometheusApi'>,
+            server,
+        }: Pick<IUnleashConfig, 'getLogger' | 'prometheusApi' | 'server'>,
         bulkInterval = secondsToMilliseconds(5),
         announcementInterval = minutesToMilliseconds(5),
     ) {
@@ -79,7 +82,7 @@ export default class ClientInstanceService {
         this.clientInstanceStore = clientInstanceStore;
         this.eventStore = eventStore;
         this.prometheusApi = prometheusApi;
-
+        this.serverOption = server;
         this.logger = getLogger(
             '/services/client-metrics/client-instance-service.ts',
         );
@@ -223,8 +226,10 @@ export default class ClientInstanceService {
 
     async getRPSForPath(path: string, hoursToQuery: number): Promise<any> {
         const timeoutSeconds = 5;
+        const basePath = this.serverOption.baseUriPath;
+        const compositePath = `${basePath}/${path}`.replaceAll('//', '/');
         const step = '5m'; // validate: I'm using the step both for step in query_range and for irate
-        const query = `sum by(appName) (irate (http_request_duration_milliseconds_count{path=~"${path}"} [${step}]))`;
+        const query = `sum by(appName) (irate (http_request_duration_milliseconds_count{path=~"${compositePath}"} [${step}]))`;
         const end = new Date();
         const start = new Date();
         start.setHours(end.getHours() - hoursToQuery);

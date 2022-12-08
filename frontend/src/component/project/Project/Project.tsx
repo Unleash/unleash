@@ -20,7 +20,7 @@ import {
 } from 'component/providers/AccessProvider/permissions';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import { DeleteProjectDialogue } from './DeleteProject/DeleteProjectDialogue';
 import { ProjectLog } from './ProjectLog/ProjectLog';
 import { ChangeRequestOverview } from 'component/changeRequest/ChangeRequestOverview/ChangeRequestOverview';
@@ -31,17 +31,28 @@ import { ProjectSettings } from './ProjectSettings/ProjectSettings';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { FavoriteIconButton } from '../../common/FavoriteIconButton/FavoriteIconButton';
 import { useFavoriteProjectsApi } from '../../../hooks/api/actions/useFavoriteProjectsApi/useFavoriteProjectsApi';
-import { CenteredNavLink } from '../../admin/menu/CenteredNavLink';
 
 const StyledDiv = styled('div')(() => ({
     display: 'flex',
+}));
+
+const Row = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    paddingBottom: theme.spacing(0.25),
+}));
+
+const Column = styled('div')(() => ({
+    display: 'flex',
+    flexDirection: 'column',
 }));
 
 const StyledName = styled('div')(({ theme }) => ({
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
-    paddingBottom: theme.spacing(2),
+    paddingTop: theme.spacing(1),
 }));
 
 const StyledTitle = styled('span')(({ theme }) => ({
@@ -168,71 +179,82 @@ const Project = () => {
         >
             <div className={styles.header}>
                 <div className={styles.innerContainer}>
-                    <ConditionallyRender
-                        condition={Boolean(uiConfig?.flags?.favorites)}
-                        show={() => (
-                            <FavoriteIconButton
-                                onClick={onFavorite}
-                                isFavorite={project?.favorite}
-                            />
-                        )}
-                    />
-                    <h2 className={styles.title}>
-                        <div>
+                    <Row>
+                        <ConditionallyRender
+                            condition={Boolean(uiConfig?.flags?.favorites)}
+                            show={() => (
+                                <FavoriteIconButton
+                                    onClick={onFavorite}
+                                    isFavorite={project?.favorite}
+                                    sx={{ pl: 0, pr: 0.25 }}
+                                />
+                            )}
+                        />
+                        <h2 className={styles.title}>
                             <StyledName data-loading>{projectName}</StyledName>
-                            <ConditionallyRender
-                                condition={Boolean(project.description)}
-                                show={
-                                    <StyledDiv>
-                                        <StyledTitle data-loading>
-                                            Description:&nbsp;
-                                        </StyledTitle>
-                                        <StyledText data-loading>
-                                            {project.description}
-                                        </StyledText>
-                                    </StyledDiv>
-                                }
-                            />
+                        </h2>
+                    </Row>
+                    <Column>
+                        <h2 className={styles.title}>
+                            <div>
+                                <ConditionallyRender
+                                    condition={Boolean(project.description)}
+                                    show={
+                                        <StyledDiv>
+                                            <StyledTitle data-loading>
+                                                Description:&nbsp;
+                                            </StyledTitle>
+                                            <StyledText data-loading>
+                                                {project.description}
+                                            </StyledText>
+                                        </StyledDiv>
+                                    }
+                                />
+                                <StyledDiv>
+                                    <StyledTitle data-loading>
+                                        projectId:&nbsp;
+                                    </StyledTitle>
+                                    <StyledText data-loading>
+                                        {projectId}
+                                    </StyledText>
+                                </StyledDiv>
+                            </div>
                             <StyledDiv>
-                                <StyledTitle data-loading>
-                                    projectId:&nbsp;
-                                </StyledTitle>
-                                <StyledText data-loading>
-                                    {projectId}
-                                </StyledText>
+                                <PermissionIconButton
+                                    permission={UPDATE_PROJECT}
+                                    projectId={projectId}
+                                    sx={{
+                                        visibility: isOss()
+                                            ? 'hidden'
+                                            : 'visible',
+                                    }}
+                                    onClick={() =>
+                                        navigate(`/projects/${projectId}/edit`)
+                                    }
+                                    tooltipProps={{ title: 'Edit project' }}
+                                    data-loading
+                                >
+                                    <Edit />
+                                </PermissionIconButton>
+                                <PermissionIconButton
+                                    permission={DELETE_PROJECT}
+                                    projectId={projectId}
+                                    sx={{
+                                        visibility: isOss()
+                                            ? 'hidden'
+                                            : 'visible',
+                                    }}
+                                    onClick={() => {
+                                        setShowDelDialog(true);
+                                    }}
+                                    tooltipProps={{ title: 'Delete project' }}
+                                    data-loading
+                                >
+                                    <Delete />
+                                </PermissionIconButton>
                             </StyledDiv>
-                        </div>
-                        <StyledDiv>
-                            <PermissionIconButton
-                                permission={UPDATE_PROJECT}
-                                projectId={projectId}
-                                sx={{
-                                    visibility: isOss() ? 'hidden' : 'visible',
-                                }}
-                                onClick={() =>
-                                    navigate(`/projects/${projectId}/edit`)
-                                }
-                                tooltipProps={{ title: 'Edit project' }}
-                                data-loading
-                            >
-                                <Edit />
-                            </PermissionIconButton>
-                            <PermissionIconButton
-                                permission={DELETE_PROJECT}
-                                projectId={projectId}
-                                sx={{
-                                    visibility: isOss() ? 'hidden' : 'visible',
-                                }}
-                                onClick={() => {
-                                    setShowDelDialog(true);
-                                }}
-                                tooltipProps={{ title: 'Delete project' }}
-                                data-loading
-                            >
-                                <Delete />
-                            </PermissionIconButton>
-                        </StyledDiv>
-                    </h2>
+                        </h2>
+                    </Column>
                 </div>
 
                 <div className={styles.separator} />

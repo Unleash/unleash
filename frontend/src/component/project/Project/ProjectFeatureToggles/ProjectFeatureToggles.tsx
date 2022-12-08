@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useMediaQuery, useTheme } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useFlexLayout, useSortBy, useTable, SortingRule } from 'react-table';
+import { SortingRule, useFlexLayout, useSortBy, useTable } from 'react-table';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { PageContent } from 'component/common/PageContent/PageContent';
@@ -33,7 +33,6 @@ import { ChangeRequestDialogue } from 'component/changeRequest/ChangeRequestConf
 import { UpdateEnabledMessage } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestMessages/UpdateEnabledMessage';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { IFeatureToggleListItem } from 'interfaces/featureToggle';
-import { FeatureTagCell } from 'component/common/Table/cells/FeatureTagCell/FeatureTagCell';
 import { FavoriteIconHeader } from 'component/common/Table/FavoriteIconHeader/FavoriteIconHeader';
 import { FavoriteIconCell } from 'component/common/Table/cells/FavoriteIconCell/FavoriteIconCell';
 import { useEnvironmentsRef } from './hooks/useEnvironmentsRef';
@@ -63,7 +62,7 @@ type ListItemType = Pick<
     };
 };
 
-const staticColumns = ['Actions', 'name'];
+const staticColumns = ['Actions', 'name', 'favorite'];
 
 const defaultSort: SortingRule<string> & {
     columns?: string[];

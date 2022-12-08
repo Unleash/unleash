@@ -5,6 +5,7 @@ import {
     StarBorder as StarBorderIcon,
 } from '@mui/icons-material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { TooltipResolver } from '../../../TooltipResolver/TooltipResolver';
 
 interface IFavoriteIconCellProps {
     value?: boolean;
@@ -26,14 +27,27 @@ export const FavoriteIconCell: VFC<IFavoriteIconCellProps> = ({
         <ConditionallyRender
             condition={value}
             show={
-                <IconButton onClick={onClick} color="primary" size="small">
-                    <StarIcon fontSize="small" />
-                </IconButton>
+                <TooltipResolver title={'Remove from favorites'}>
+                    <IconButton
+                        onClick={onClick}
+                        color="primary"
+                        size="small"
+                        sx={{ padding: 1.25 }}
+                    >
+                        <StarIcon fontSize="small" />
+                    </IconButton>
+                </TooltipResolver>
             }
             elseShow={
-                <InactiveIconButton onClick={onClick} size="small">
-                    <StarBorderIcon fontSize="small" />
-                </InactiveIconButton>
+                <TooltipResolver title={'Add to favorites'}>
+                    <InactiveIconButton
+                        onClick={onClick}
+                        size="small"
+                        sx={{ padding: 1.25 }}
+                    >
+                        <StarBorderIcon fontSize="small" />
+                    </InactiveIconButton>
+                </TooltipResolver>
             }
         />
     </Box>

@@ -37,7 +37,7 @@ const StyledLink = styled(Link)(() => ({
     },
 }));
 
-export const Discard: FC<{ onDiscard: () => void }> = ({ onDiscard }) => (
+const Discard: FC<{ onDiscard: () => void }> = ({ onDiscard }) => (
     <Box>
         <StyledLink onClick={onDiscard}>Discard</StyledLink>
     </Box>

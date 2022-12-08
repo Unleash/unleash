@@ -4,21 +4,18 @@ import {
     IChange,
     IChangeRequest,
     IChangeRequestFeature,
-} from '../../changeRequest.types';
+} from '../../../changeRequest.types';
 import { objectId } from 'utils/objectId';
-import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Alert, Box, styled } from '@mui/material';
-import { ToggleStatusChange } from '../../ChangeRequestOverview/ChangeRequestFeatureToggleChange/ToggleStatusChange';
-import {
-    StrategyAddedChange,
-    StrategyDeletedChange,
-    StrategyEditedChange,
-} from '../../ChangeRequestOverview/ChangeRequestFeatureToggleChange/StrategyChange';
+
 import {
     CodeSnippetPopover,
     PopoverDiff,
-} from '../CodeSnippetPopover/CodeSnippetPopover';
-import { StrategyExecution } from '../../../feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyExecution/StrategyExecution';
+} from '../../CodeSnippetPopover/CodeSnippetPopover';
+import { StrategyExecution } from '../../../../feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyExecution/StrategyExecution';
+import { ToggleStatusChange } from './ToggleStatusChange';
+import { StrategyAddedChange, StrategyDeletedChange } from './StrategyChange';
 
 const StyledSingleChangeBox = styled(Box, {
     shouldForwardProp: (prop: string) => !prop.startsWith('$'),

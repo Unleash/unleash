@@ -1,12 +1,12 @@
 import React, { FC } from 'react';
 import { IChangeRequest } from '../../changeRequest.types';
-import { useChangeRequestApi } from '../../../../hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
-import useToast from '../../../../hooks/useToast';
-import { formatUnknownError } from '../../../../utils/formatUnknownError';
-import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender';
-import { useChangeRequestsEnabled } from '../../../../hooks/useChangeRequestsEnabled';
-import { useAuthUser } from '../../../../hooks/api/getters/useAuth/useAuthUser';
-import { changesCount } from '../../changesCount';
+import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
+import useToast from 'hooks/useToast';
+import { formatUnknownError } from 'utils/formatUnknownError';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
+import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
+import { changesCount } from '../../../changesCount';
 import { Box, Link, styled } from '@mui/material';
 
 const useShowDiscard = (changeRequest: IChangeRequest) => {

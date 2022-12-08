@@ -10,9 +10,13 @@ interface IChangeRequestToggleChange {
     onNavigate?: () => void;
 }
 
-export const ChangeRequestFeatureToggleChange: FC<
-    IChangeRequestToggleChange
-> = ({ featureName, projectId, conflict, onNavigate, children }) => (
+export const FeatureToggleChanges: FC<IChangeRequestToggleChange> = ({
+    featureName,
+    projectId,
+    conflict,
+    onNavigate,
+    children,
+}) => (
     <Card
         elevation={0}
         sx={theme => ({

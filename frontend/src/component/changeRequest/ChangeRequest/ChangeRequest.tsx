@@ -1,9 +1,9 @@
 import React, { VFC } from 'react';
 import { Box } from '@mui/material';
-import { ChangeRequestFeatureToggleChange } from '../ChangeRequestOverview/ChangeRequestFeatureToggleChange/ChangeRequestFeatureToggleChange';
 import type { IChangeRequest } from '../changeRequest.types';
-import { Change } from './Change/Change';
-import { DiscardContainer } from './Change/Discard';
+import { FeatureToggleChanges } from './Changes/FeatureToggleChanges';
+import { Change } from './Changes/Change/Change';
+import { DiscardContainer } from './Changes/Change/Discard';
 
 interface IChangeRequestProps {
     changeRequest: IChangeRequest;
@@ -19,7 +19,7 @@ export const ChangeRequest: VFC<IChangeRequestProps> = ({
     return (
         <Box>
             {changeRequest.features?.map(feature => (
-                <ChangeRequestFeatureToggleChange
+                <FeatureToggleChanges
                     key={feature.name}
                     featureName={feature.name}
                     projectId={changeRequest.project}
@@ -42,7 +42,7 @@ export const ChangeRequest: VFC<IChangeRequestProps> = ({
                             feature={feature}
                         />
                     ))}
-                </ChangeRequestFeatureToggleChange>
+                </FeatureToggleChanges>
             ))}
         </Box>
     );

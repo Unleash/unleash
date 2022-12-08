@@ -11,6 +11,6 @@ export const useConditionalSWR = <Data = any, Error = any, T = boolean>(
 
     return {
         ...result,
-        data: !result.error && !result.data ? fallback : result.data,
+        data: condition ? result.data : fallback,
     };
 };

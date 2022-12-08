@@ -1,10 +1,6 @@
 import { Box, Link, styled, Typography } from '@mui/material';
 import { FC, ReactNode } from 'react';
 
-interface IStrategyChangeProps {
-    onDiscard: () => void;
-}
-
 export const ChangeItemWrapper = styled(Box)(({ theme }) => ({
     display: 'flex',
     justifyContent: 'space-between',
@@ -15,19 +11,6 @@ const ChangeItemInfo: FC = styled(Box)(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(1),
 }));
-
-const StyledLink = styled(Link)(() => ({
-    textDecoration: 'none',
-    '&:hover, &:focus': {
-        textDecoration: 'underline',
-    },
-}));
-
-export const Discard: FC<IStrategyChangeProps> = ({ onDiscard }) => (
-    <Box>
-        <StyledLink onClick={onDiscard}>Discard</StyledLink>
-    </Box>
-);
 
 export const StrategyAddedChange: FC<{ discard?: ReactNode }> = ({
     children,

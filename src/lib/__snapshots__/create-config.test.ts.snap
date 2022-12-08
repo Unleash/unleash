@@ -126,6 +126,7 @@ exports[`should create default config 1`] = `
   "server": {
     "baseUriPath": "",
     "cdnPrefix": undefined,
+    "enableHeapSnapshotEnpoint": false,
     "enableRequestLogger": false,
     "gracefulShutdownEnable": true,
     "gracefulShutdownTimeout": 1000,

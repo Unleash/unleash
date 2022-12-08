@@ -2,7 +2,7 @@ import { styled } from '@mui/material';
 import { Avatar, Box, Card, Paper, Typography } from '@mui/material';
 
 export const StyledPaper = styled(Paper)(({ theme }) => ({
-    padding: theme.spacing(2, 4),
+    padding: theme.spacing(3, 4),
     borderRadius: `${theme.shape.borderRadiusLarge}px`,
 }));
 
@@ -32,6 +32,6 @@ export const StyledCard = styled(Card)(({ theme }) => ({
 export const StyledAvatar = styled(Avatar)(({ theme }) => ({
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
-    height: '30px',
-    width: '30px',
+    height: '24px',
+    width: '24px',
 }));

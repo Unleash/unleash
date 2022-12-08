@@ -12,6 +12,7 @@ import {
     StyledAvatar,
     StyledCard,
 } from './ChangeRequestHeader.styles';
+import { Separator } from '../../ChangeRequestSidebar/ChangeRequestSidebar';
 
 export const ChangeRequestHeader: FC<{ changeRequest: IChangeRequest }> = ({
     changeRequest,
@@ -19,7 +20,7 @@ export const ChangeRequestHeader: FC<{ changeRequest: IChangeRequest }> = ({
     return (
         <StyledPaper elevation={0}>
             <StyledContainer>
-                <StyledHeader variant="h1">
+                <StyledHeader variant="h1" sx={{ mr: 1.5 }}>
                     Change request #{changeRequest.id}
                 </StyledHeader>
                 <ChangeRequestStatusBadge state={changeRequest.state} />
@@ -32,7 +33,7 @@ export const ChangeRequestHeader: FC<{ changeRequest: IChangeRequest }> = ({
                 <Tooltip title={changeRequest?.createdBy?.username}>
                     <StyledAvatar src={changeRequest?.createdBy?.imageUrl} />
                 </Tooltip>
-                <Box>
+                <Box sx={{ ml: 1.5 }}>
                     <StyledCard variant="outlined">
                         <Typography variant="body2">
                             Environment:{' '}
@@ -44,7 +45,7 @@ export const ChangeRequestHeader: FC<{ changeRequest: IChangeRequest }> = ({
                             >
                                 {changeRequest?.environment}
                             </Typography>{' '}
-                            | Updates:{' '}
+                            <Separator /> Updates:{' '}
                             <Typography
                                 variant="body2"
                                 display="inline"

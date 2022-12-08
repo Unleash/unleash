@@ -16,9 +16,16 @@ const ChangeItemInfo: FC = styled(Box)(({ theme }) => ({
     gap: theme.spacing(1),
 }));
 
+const StyledLink = styled(Link)(() => ({
+    textDecoration: 'none',
+    '&:hover, &:focus': {
+        textDecoration: 'underline',
+    },
+}));
+
 export const Discard: FC<IStrategyChangeProps> = ({ onDiscard }) => (
     <Box>
-        <Link onClick={onDiscard}>Discard</Link>
+        <StyledLink onClick={onDiscard}>Discard</StyledLink>
     </Box>
 );
 

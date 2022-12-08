@@ -20,7 +20,6 @@ import { useSearchParams } from 'react-router-dom';
 import { TimeAgoCell } from '../../../common/Table/cells/TimeAgoCell/TimeAgoCell';
 import { TextCell } from '../../../common/Table/cells/TextCell/TextCell';
 import { ChangeRequestStatusCell } from './ChangeRequestStatusCell/ChangeRequestStatusCell';
-import { ChangeRequestActionCell } from './ChangeRequestActionCell/ChangeRequestActionCell';
 import { AvatarCell } from './AvatarCell/AvatarCell';
 import { ChangeRequestTitleCell } from './ChangeRequestTitleCell/ChangeRequestTitleCell';
 import { TableBody, TableRow } from '../../../common/Table';
@@ -119,14 +118,6 @@ export const ChangeRequestsTabs = ({
                 minWidth: 150,
                 width: 150,
                 Cell: ChangeRequestStatusCell,
-            },
-            {
-                Header: '',
-                id: 'Actions',
-                minWidth: 50,
-                width: 50,
-                canSort: false,
-                Cell: ChangeRequestActionCell,
             },
         ],
         //eslint-disable-next-line

@@ -139,7 +139,6 @@ export const ChangeRequestTable: VFC = () => {
             },
             {
                 Header: 'Required approvals',
-                align: 'center',
                 Cell: ({ row: { original } }: any) => {
                     const { hasAccess } = useContext(AccessContext);
 
@@ -149,6 +148,7 @@ export const ChangeRequestTable: VFC = () => {
                             show={
                                 <StyledBox data-loading>
                                     <GeneralSelect
+                                        sx={{ width: '140px', marginLeft: 1 }}
                                         options={approvalOptions}
                                         value={original.requiredApprovals || 1}
                                         onChange={approvals => {

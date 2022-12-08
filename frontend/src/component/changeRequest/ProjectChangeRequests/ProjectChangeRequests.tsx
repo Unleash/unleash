@@ -5,12 +5,17 @@ import { useProjectNameOrId } from 'hooks/api/getters/useProject/useProject';
 import { ChangeRequestsTabs } from './ChangeRequestsTabs/ChangeRequestsTabs';
 import { SortingRule } from 'react-table';
 import { useProjectChangeRequests } from 'hooks/api/getters/useProjectChangeRequests/useProjectChangeRequests';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { PageContent } from 'component/common/PageContent/PageContent';
+import { PageHeader } from 'component/common/PageHeader/PageHeader';
+import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
 
 const defaultSort: SortingRule<string> = { id: 'updatedAt', desc: true };
 
 export const ProjectChangeRequests = () => {
     const projectId = useRequiredPathParam('projectId');
     const projectName = useProjectNameOrId(projectId);
+    const { isOss, isPro } = useUiConfig();
 
     usePageTitle(`Change requests – ${projectName}`);
 
@@ -20,6 +25,14 @@ export const ProjectChangeRequests = () => {
         `${projectId}:ProjectChangeRequest`,
         defaultSort
     );
+
+    if (isOss() || isPro()) {
+        return (
+            <PageContent sx={{ justifyContent: 'center' }}>
+                <PremiumFeature feature="Change Requests" />
+            </PageContent>
+        );
+    }
 
     return (
         <ChangeRequestsTabs

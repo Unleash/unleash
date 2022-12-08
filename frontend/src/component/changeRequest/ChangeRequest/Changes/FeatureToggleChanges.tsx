@@ -3,14 +3,14 @@ import { Link } from 'react-router-dom';
 import { Alert, Box, Card, Typography } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
-interface IChangeRequestToggleChange {
+interface IFeatureToggleChanges {
     featureName: string;
     projectId: string;
     conflict?: string;
     onNavigate?: () => void;
 }
 
-export const FeatureToggleChanges: FC<IChangeRequestToggleChange> = ({
+export const FeatureToggleChanges: FC<IFeatureToggleChanges> = ({
     featureName,
     projectId,
     conflict,

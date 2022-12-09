@@ -2,10 +2,6 @@
 title: Front-end API access
 ---
 
-:::info Availability
-
-The Unleash front-end API is an experimental feature and is currently in development.
-
 <!-- TODO: link blog post with release notes -->
 
 :::

@@ -128,7 +128,9 @@ export const FeatureStrategyCreate = () => {
         }
     };
 
-    if (!data) return null;
+    const emptyFeature = !data || !data.project;
+
+    if (emptyFeature) return null;
 
     return (
         <FormTemplate

@@ -1,6 +1,5 @@
 name: Run npm version and push tags
 
-
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -33,9 +32,10 @@ jobs:
         options: >-
           --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
+
     steps:
       - uses: actions/checkout@v2
-        with: 
+        with:
           token: ${{ secrets.GH_PUSH_TOKEN }}
       - name: setup git config
         run: |
@@ -49,7 +49,7 @@ jobs:
       - run: yarn install --frozen-lockfile --ignore-scripts
       - name: npm version
         run: |
-          npm version ${{ github.event.inputs.version }}
+          npm version ${{ github.event.inputs.version }} --ignore-scripts
           git push origin main
           git push --tags
         env:
@@ -58,4 +58,3 @@ jobs:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
           NODE_ENV: test
           PORT: 4243
-

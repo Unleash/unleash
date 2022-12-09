@@ -109,12 +109,14 @@ export const ChangeRequestsTabs = ({
             {
                 Header: 'Environment',
                 accessor: 'environment',
+                searchable: true,
                 maxWidth: 100,
                 Cell: TextCell,
             },
             {
                 Header: 'Status',
                 accessor: 'state',
+                searchable: true,
                 minWidth: 150,
                 width: 150,
                 Cell: ChangeRequestStatusCell,
@@ -195,7 +197,7 @@ export const ChangeRequestsTabs = ({
             replace: true,
         });
         setStoredParams({ id: sortBy[0].id, desc: sortBy[0].desc || false });
-    }, [loading, sortBy, searchValue]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [loading, sortBy, searchValue, setSearchParams, setStoredParams]);
 
     return (
         <PageContent

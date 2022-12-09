@@ -24,24 +24,21 @@ import { AvatarCell } from './AvatarCell/AvatarCell';
 import { ChangeRequestTitleCell } from './ChangeRequestTitleCell/ChangeRequestTitleCell';
 import { TableBody, TableRow } from '../../../common/Table';
 import { useStyles } from './ChangeRequestsTabs.styles';
+import { createLocalStorage } from '../../../../utils/createLocalStorage';
 
 export interface IChangeRequestTableProps {
     changeRequests: any[];
     loading: boolean;
-    storedParams: SortingRule<string>;
-    setStoredParams: (
-        newValue:
-            | SortingRule<string>
-            | ((prev: SortingRule<string>) => SortingRule<string>)
-    ) => SortingRule<string>;
     projectId: string;
 }
+
+const defaultSort: SortingRule<string> & {
+    columns?: string[];
+} = { id: 'createdAt' };
 
 export const ChangeRequestsTabs = ({
     changeRequests = [],
     loading,
-    storedParams,
-    setStoredParams,
     projectId,
 }: IChangeRequestTableProps) => {
     const { classes } = useStyles();
@@ -51,6 +48,9 @@ export const ChangeRequestsTabs = ({
     const [searchValue, setSearchValue] = useState(
         searchParams.get('search') || ''
     );
+
+    const { value: storedParams, setValue: setStoredParams } =
+        createLocalStorage(`${projectId}:ProjectChangeRequest`, defaultSort);
 
     const [openChangeRequests, closedChangeRequests] = useMemo(() => {
         const open = changeRequests.filter(
@@ -196,8 +196,13 @@ export const ChangeRequestsTabs = ({
         setSearchParams(tableState, {
             replace: true,
         });
-        setStoredParams({ id: sortBy[0].id, desc: sortBy[0].desc || false });
-    }, [loading, sortBy, searchValue, setSearchParams, setStoredParams]);
+        setStoredParams(params => ({
+            ...params,
+            id: sortBy[0].id,
+            desc: sortBy[0].desc || false,
+        }));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [loading, sortBy, searchValue, setSearchParams]);
 
     return (
         <PageContent

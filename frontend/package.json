@@ -95,7 +95,7 @@
     "vite-plugin-env-compatible": "1.1.1",
     "vite-plugin-svgr": "2.3.0",
     "vite-tsconfig-paths": "3.6.0",
-    "vitest": "0.25.6",
+    "vitest": "0.25.7",
     "whatwg-fetch": "3.6.2"
   },
   "resolutions": {

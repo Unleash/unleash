@@ -6123,10 +6123,10 @@ react-error-boundary@3.1.4, react-error-boundary@^3.1.0:
   dependencies:
     "@babel/runtime" "^7.12.5"
 
-react-hooks-global-state@2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/react-hooks-global-state/-/react-hooks-global-state-2.0.0.tgz#353d69c44ff91b4f0da9b45cca9786755ecba551"
-  integrity sha512-liJt9F1MvnhRCR/ESbSXSVGwq1RxOHx5SzBfopP0P8uZqFlJ2ll+kZoLZlZ4Lo70mxUYn2a4ctnkWOAA2EbXQQ==
+react-hooks-global-state@2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/react-hooks-global-state/-/react-hooks-global-state-2.1.0.tgz#91d1d85c6c920f2e8681579d71d552207c5fe4ac"
+  integrity sha512-tLSRhB5pD3QiNsGOo893m8lVZXDuIkdin8PKKmGqnJniAaD/tzl3BdAkba1vOv1/q1bpuN+9zrqqAHkRJhXzJw==
   dependencies:
     zustand "4.0.0"
 

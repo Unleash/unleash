@@ -440,7 +440,7 @@ module.exports = {
                     {
                         from: [
                             '/user_guide/quickstart',
-                            'docs/getting_started',
+                            '/docs/getting_started',
                         ],
                         to: '/tutorials/quickstart',
                     },

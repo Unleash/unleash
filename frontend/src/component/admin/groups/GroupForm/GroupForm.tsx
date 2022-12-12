@@ -7,7 +7,6 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { GroupFormUsersSelect } from './GroupFormUsersSelect/GroupFormUsersSelect';
 import { GroupFormUsersTable } from './GroupFormUsersTable/GroupFormUsersTable';
 import { ItemList } from 'component/common/ItemList/ItemList';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useAuthSettings from 'hooks/api/getters/useAuthSettings/useAuthSettings';
 import { Link } from 'react-router-dom';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
@@ -57,6 +56,7 @@ const StyledDescriptionBlock = styled('div')(({ theme }) => ({
     color: theme.palette.grey[900],
     fontSize: theme.fontSizes.smallBody,
     borderRadius: theme.shape.borderRadiusMedium,
+    marginBottom: theme.spacing(2),
 }));
 
 interface IGroupForm {
@@ -89,8 +89,6 @@ export const GroupForm: FC<IGroupForm> = ({
     mode,
     children,
 }) => {
-    const { uiConfig, isOss } = useUiConfig();
-
     const { config: oidcSettings } = useAuthSettings('oidc');
     const { config: samlSettings } = useAuthSettings('saml');
 

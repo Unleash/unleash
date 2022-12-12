@@ -26,7 +26,6 @@ import {
     INewPersonalAPIToken,
     IPersonalAPIToken,
 } from 'interfaces/personalAPIToken';
-import { IUser } from 'interfaces/user';
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useTable, SortingRule, useSortBy, useFlexLayout } from 'react-table';
@@ -36,7 +35,6 @@ import { CreatePersonalAPIToken } from './CreatePersonalAPIToken/CreatePersonalA
 import { DeletePersonalAPIToken } from './DeletePersonalAPIToken/DeletePersonalAPIToken';
 import { PersonalAPITokenDialog } from './PersonalAPITokenDialog/PersonalAPITokenDialog';
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(3),
@@ -77,12 +75,7 @@ const { value: storedParams, setValue: setStoredParams } = createLocalStorage(
     defaultSort
 );
 
-interface IPersonalAPITokensTabProps {
-    user: IUser;
-}
-
-export const PersonalAPITokensTab = ({ user }: IPersonalAPITokensTabProps) => {
-    const { uiConfig } = useUiConfig();
+export const PersonalAPITokensTab = () => {
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const isExtraSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));

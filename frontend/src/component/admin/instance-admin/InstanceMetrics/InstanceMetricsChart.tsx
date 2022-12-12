@@ -26,7 +26,9 @@ import { formatDateHM } from '../../../../utils/formatDate';
 import { RequestsPerSecondSchema } from '@server/openapi';
 import 'chartjs-adapter-date-fns';
 import { PaletteColor } from '@mui/material';
-
+import { PageContent } from '../../../common/PageContent/PageContent';
+import { PageHeader } from '../../../common/PageHeader/PageHeader';
+import { Box } from '@mui/system';
 interface IPoint {
     x: string;
     y: number;
@@ -174,13 +176,17 @@ export const InstanceMetricsChart: VFC = () => {
     }, [metrics, locationSettings]);
 
     return (
-        <div style={{ height: 400 }}>
-            <Line
-                data={data}
-                options={options}
-                aria-label="An instance metrics line chart with two lines: requests per second for admin API and requests per second for client API"
-            />
-        </div>
+        <PageContent header={<PageHeader title="Requests per second" />}>
+            <Box sx={{ display: 'grid', gap: 4 }}>
+                <div style={{ height: 400 }}>
+                    <Line
+                        data={data}
+                        options={options}
+                        aria-label="An instance metrics line chart with two lines: requests per second for admin API and requests per second for client API"
+                    />
+                </div>
+            </Box>
+        </PageContent>
     );
 };
 // Register dependencies that we need to draw the chart.

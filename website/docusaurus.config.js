@@ -238,7 +238,10 @@ module.exports = {
                         to: '/reference/deploy/getting-started',
                     },
                     {
-                        from: '/deploy/configuring_unleash',
+                        from: [
+                            '/docs/deploy/configuring_unleash',
+                            '/deploy/configuring_unleash',
+                        ],
                         to: '/reference/deploy/configuring-unleash',
                     },
                     {

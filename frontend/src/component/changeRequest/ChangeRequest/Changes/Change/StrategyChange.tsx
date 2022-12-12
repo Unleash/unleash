@@ -4,15 +4,19 @@ import { FC, ReactNode } from 'react';
 export const ChangeItemWrapper = styled(Box)({
     display: 'flex',
     justifyContent: 'space-between',
+    alignItems: 'center',
 });
 
-export const ChangeItemCreateEditWrapper = styled(Box)({
+export const ChangeItemCreateEditWrapper = styled(Box)(({ theme }) => ({
     display: 'flex',
     justifyContent: 'space-between',
-});
+    alignItems: 'center',
+    marginBottom: theme.spacing(2),
+}));
 
 const ChangeItemInfo: FC = styled(Box)(({ theme }) => ({
     display: 'flex',
+    alignItems: 'center',
     gap: theme.spacing(1),
 }));
 
@@ -26,7 +30,6 @@ export const StrategyAddedChange: FC<{ discard?: ReactNode }> = ({
                 <Typography
                     sx={theme => ({
                         color: theme.palette.success.dark,
-                        marginBottom: theme.spacing(2),
                     })}
                 >
                     + Adding strategy:
@@ -45,13 +48,7 @@ export const StrategyEditedChange: FC<{ discard?: ReactNode }> = ({
     return (
         <ChangeItemCreateEditWrapper>
             <ChangeItemInfo>
-                <Typography
-                    sx={theme => ({
-                        marginBottom: theme.spacing(2),
-                    })}
-                >
-                    Editing strategy:
-                </Typography>
+                <Typography>Editing strategy:</Typography>
                 {children}
             </ChangeItemInfo>
             {discard}

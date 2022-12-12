@@ -28,7 +28,6 @@ import PasswordMismatch from '../error/password-mismatch';
 import BadDataError from '../error/bad-data-error';
 import { isDefined } from '../util/isDefined';
 import { TokenUserSchema } from '../openapi/spec/token-user-schema';
-import { IFlagResolver } from 'lib/types/experimental';
 import { minutesToMilliseconds } from 'date-fns';
 
 const systemUser = new User({ id: -1, username: 'system' });
@@ -84,18 +83,12 @@ class UserService {
 
     private lastSeenSecrets: Set<string> = new Set<string>();
 
-    private flagResolver: IFlagResolver;
-
     constructor(
         stores: Pick<IUnleashStores, 'userStore' | 'eventStore'>,
         {
             getLogger,
             authentication,
-            flagResolver,
-        }: Pick<
-            IUnleashConfig,
-            'getLogger' | 'authentication' | 'flagResolver'
-        >,
+        }: Pick<IUnleashConfig, 'getLogger' | 'authentication'>,
         services: {
             accessService: AccessService;
             resetTokenService: ResetTokenService;
@@ -104,7 +97,6 @@ class UserService {
             settingService: SettingService;
         },
     ) {
-        this.flagResolver = flagResolver;
         this.logger = getLogger('service/user-service.js');
         this.store = stores.userStore;
         this.eventStore = stores.eventStore;
@@ -116,9 +108,7 @@ class UserService {
         if (authentication && authentication.createAdminUser) {
             process.nextTick(() => this.initAdminUser());
         }
-        if (this.flagResolver.isEnabled('tokensLastSeen')) {
-            this.updateLastSeen();
-        }
+        this.updateLastSeen();
     }
 
     validatePassword(password: string): boolean {
@@ -457,9 +447,7 @@ class UserService {
     }
 
     addPATSeen(secret: string): void {
-        if (this.flagResolver.isEnabled('tokensLastSeen')) {
-            this.lastSeenSecrets.add(secret);
-        }
+        this.lastSeenSecrets.add(secret);
     }
 
     destroy(): void {

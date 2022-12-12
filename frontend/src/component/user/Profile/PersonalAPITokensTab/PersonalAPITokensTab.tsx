@@ -208,9 +208,6 @@ export const PersonalAPITokensTab = ({ user }: IPersonalAPITokensTabProps) => {
 
     useEffect(() => {
         const hiddenColumns = [];
-        if (!uiConfig.flags.tokensLastSeen) {
-            hiddenColumns.push('seenAt');
-        }
         if (isSmallScreen) {
             hiddenColumns.push('createdAt');
         }
@@ -218,12 +215,7 @@ export const PersonalAPITokensTab = ({ user }: IPersonalAPITokensTabProps) => {
             hiddenColumns.push('expiresAt');
         }
         setHiddenColumns(hiddenColumns);
-    }, [
-        setHiddenColumns,
-        isSmallScreen,
-        isExtraSmallScreen,
-        uiConfig.flags.tokensLastSeen,
-    ]);
+    }, [setHiddenColumns, isSmallScreen, isExtraSmallScreen]);
 
     useEffect(() => {
         const tableState: PageQueryType = {};

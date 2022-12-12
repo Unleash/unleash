@@ -1,8 +1,7 @@
-import { Box, IconButton, styled, Tooltip } from '@mui/material';
+import { Box, styled, Tooltip } from '@mui/material';
 import { HelpOutline } from '@mui/icons-material';
 import { FC } from 'react';
 import { PageHeader } from '../../../common/PageHeader/PageHeader';
-import CloseIcon from '@mui/icons-material/Close';
 
 const StyledHelpOutline = styled(HelpOutline)(({ theme }) => ({
     fontSize: theme.fontSizes.mainHeader,
@@ -15,15 +14,9 @@ const StyledHeaderHint = styled('div')(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
 }));
 
-export const ReviewChangesHeader: FC<{ onClose: () => void }> = ({
-    onClose,
-}) => (
+export const ReviewChangesHeader: FC = () => (
     <PageHeader
-        actions={
-            <IconButton onClick={onClose}>
-                <CloseIcon />
-            </IconButton>
-        }
+        actions={''}
         titleElement={
             <>
                 <Box
@@ -34,7 +27,7 @@ export const ReviewChangesHeader: FC<{ onClose: () => void }> = ({
                 >
                     Review your changes
                     <Tooltip
-                        title="Here you can see all the changes that you are suggesting and you can send them for review. You can still discard the changes after you sent them for review or even cancel the entire review if you need it."
+                        title="Here you can see all the changes that you are suggesting and you can send them for review. You can still discard the changes after you sent them for review or even cancel the entire review if you need it"
                         arrow
                     >
                         <StyledHelpOutline />

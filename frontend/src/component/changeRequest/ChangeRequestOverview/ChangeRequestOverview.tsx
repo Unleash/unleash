@@ -48,7 +48,7 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
 }));
 
 const StyledButtonBox = styled(Box)(({ theme }) => ({
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing(3),
     display: 'flex',
     justifyContent: 'flex-end',
 }));

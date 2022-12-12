@@ -1,6 +1,6 @@
 import { FC } from 'react';
-import { Link } from 'react-router-dom';
-import { Alert, Box, Card, Typography } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
+import { Alert, Box, Card, Typography, Link } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface IFeatureToggleChanges {
@@ -28,14 +28,14 @@ export const FeatureToggleChanges: FC<IFeatureToggleChanges> = ({
             sx={theme => ({
                 backgroundColor: Boolean(conflict)
                     ? theme.palette.neutral.light
-                    : theme.palette.tableHeaderBackground,
+                    : theme.palette.neutral.light,
                 borderRadius: theme =>
                     `${theme.shape.borderRadiusLarge}px ${theme.shape.borderRadiusLarge}px 0 0`,
                 border: '1px solid',
                 borderColor: theme =>
                     conflict
                         ? theme.palette.warning.border
-                        : theme.palette.divider,
+                        : theme.palette.tertiary.main,
                 borderBottom: 'none',
                 overflow: 'hidden',
             })}
@@ -65,15 +65,22 @@ export const FeatureToggleChanges: FC<IFeatureToggleChanges> = ({
                 }}
             >
                 <Typography>Feature toggle name: </Typography>
-                <Typography
-                    component={Link}
+
+                <Link
+                    component={RouterLink}
                     to={`/projects/${projectId}/features/${featureName}`}
                     color="primary"
-                    sx={{ textDecoration: 'none', marginLeft: 1 }}
+                    underline="hover"
+                    sx={{
+                        marginLeft: 1,
+                        '& :hover': {
+                            textDecoration: 'underline',
+                        },
+                    }}
                     onClick={onNavigate}
                 >
                     <strong>{featureName}</strong>
-                </Typography>
+                </Link>
             </Box>
         </Box>
         <Box>{children}</Box>

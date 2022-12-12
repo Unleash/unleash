@@ -18,9 +18,6 @@ const StyledBox = styled(Box)(({ theme }) => ({
 
 export const StyledSuccessIcon = styled(CheckCircle)(({ theme }) => ({
     color: theme.palette.success.main,
-    height: '25px',
-    width: '25px',
-    marginRight: theme.spacing(1),
     marginLeft: 'auto',
 }));
 
@@ -31,7 +28,16 @@ export const ChangeRequestReviewer: FC<IChangeRequestReviewerProps> = ({
     return (
         <StyledBox>
             <StyledAvatar src={imageUrl} />
-            <Typography variant="body1" color="text.secondary">
+            <Typography
+                variant="body1"
+                color="text.primary"
+                sx={{
+                    maxWidth: '170px',
+                    textOverflow: 'ellipsis',
+                    overflow: 'hidden',
+                    whiteSpace: 'nowrap',
+                }}
+            >
                 {name}
             </Typography>
             <StyledSuccessIcon />

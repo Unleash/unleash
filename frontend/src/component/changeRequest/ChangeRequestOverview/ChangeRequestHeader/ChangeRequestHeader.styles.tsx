@@ -30,8 +30,6 @@ export const StyledCard = styled(Card)(({ theme }) => ({
 }));
 
 export const StyledAvatar = styled(Avatar)(({ theme }) => ({
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
     height: '24px',
     width: '24px',
 }));

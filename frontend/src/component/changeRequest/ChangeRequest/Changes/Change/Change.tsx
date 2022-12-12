@@ -87,7 +87,7 @@ export const Change: FC<{
                     </StyledAlert>
                 }
             />
-            <Box sx={{ p: 2 }}>
+            <Box sx={theme => ({ padding: theme.spacing(3) })}>
                 {change.action === 'updateEnabled' && (
                     <ToggleStatusChange
                         enabled={change.payload.enabled}

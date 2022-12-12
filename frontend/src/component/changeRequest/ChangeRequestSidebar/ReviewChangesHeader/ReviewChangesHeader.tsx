@@ -11,7 +11,6 @@ const StyledHelpOutline = styled(HelpOutline)(({ theme }) => ({
 }));
 
 const StyledHeaderHint = styled('div')(({ theme }) => ({
-    marginTop: theme.spacing(0.5),
     color: theme.palette.text.secondary,
     fontSize: theme.fontSizes.smallBody,
 }));

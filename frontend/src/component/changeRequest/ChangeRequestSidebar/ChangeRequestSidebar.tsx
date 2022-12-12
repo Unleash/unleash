@@ -22,7 +22,7 @@ const StyledPageContent = styled(PageContent)(({ theme }) => ({
     height: '100vh',
     overflow: 'auto',
     minWidth: '50vw',
-    padding: theme.spacing(4, 6),
+    padding: theme.spacing(6),
     [theme.breakpoints.down('md')]: {
         padding: theme.spacing(4, 2),
     },
@@ -42,8 +42,8 @@ const BackButton = styled(Button)(({ theme }) => ({
 
 export const StyledSuccessIcon = styled(CheckCircle)(({ theme }) => ({
     color: theme.palette.success.main,
-    height: '25px',
-    width: '25px',
+    height: '32px',
+    width: '32px',
     marginRight: theme.spacing(1),
 }));
 

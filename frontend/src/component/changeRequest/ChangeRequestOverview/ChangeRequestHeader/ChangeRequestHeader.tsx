@@ -30,9 +30,17 @@ export const ChangeRequestHeader: FC<{ changeRequest: IChangeRequest }> = ({
                     Created <TimeAgo date={new Date(changeRequest.createdAt)} />{' '}
                     by
                 </Typography>
-                <Tooltip title={changeRequest?.createdBy?.username}>
-                    <StyledAvatar src={changeRequest?.createdBy?.imageUrl} />
-                </Tooltip>
+                <Box
+                    sx={theme => ({
+                        marginLeft: theme.spacing(1),
+                    })}
+                >
+                    <Tooltip title={changeRequest?.createdBy?.username}>
+                        <StyledAvatar
+                            src={changeRequest?.createdBy?.imageUrl}
+                        />
+                    </Tooltip>
+                </Box>
                 <Box sx={{ ml: 1.5 }}>
                     <StyledCard variant="outlined">
                         <Typography variant="body2">

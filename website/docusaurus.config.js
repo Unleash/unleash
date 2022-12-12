@@ -365,7 +365,7 @@ module.exports = {
                         to: '/reference/sdks/javascript-browser',
                     },
                     {
-                        from: '/sdks/react',
+                        from: ['/sdks/proxy-react', '/sdks/react'],
                         to: '/reference/sdks/react',
                     },
                     {

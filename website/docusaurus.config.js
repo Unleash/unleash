@@ -172,7 +172,10 @@ module.exports = {
                         to: '/reference/archived-toggles',
                     },
                     {
-                        from: '/advanced/custom-activation-strategy',
+                        from: [
+                            '/advanced/custom-activation-strategy',
+                            '/advanced/custom_activation_strategy',
+                        ],
                         to: '/reference/custom-activation-strategies',
                     },
                     {

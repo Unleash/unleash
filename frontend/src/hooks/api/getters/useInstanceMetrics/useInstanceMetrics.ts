@@ -1,12 +1,12 @@
-import useSWR from "swr";
-import { useMemo } from "react";
-import { formatApiPath } from "utils/formatPath";
-import handleErrorResponses from "../httpErrorResponseHandler";
-import { RequestsPerSecondSchema } from "@server/openapi";
+import useSWR from 'swr';
+import { useMemo } from 'react';
+import { formatApiPath } from 'utils/formatPath';
+import handleErrorResponses from '../httpErrorResponseHandler';
+import { RequestsPerSecondSchema } from '@server/openapi';
 
 export interface InstanceMetrics {
-    clientMetrics: RequestsPerSecondSchema
-    adminMetrics: RequestsPerSecondSchema
+    clientMetrics: RequestsPerSecondSchema;
+    adminMetrics: RequestsPerSecondSchema;
 }
 
 export interface IInstanceMetricsResponse {
@@ -30,7 +30,7 @@ export const useInstanceMetrics = (): IInstanceMetricsResponse => {
             metrics: data,
             loading: !error && !data,
             refetch: () => mutate(),
-            error
+            error,
         }),
         [data, error, mutate]
     );
@@ -38,6 +38,6 @@ export const useInstanceMetrics = (): IInstanceMetricsResponse => {
 
 const fetcher = (path: string) => {
     return fetch(path)
-        .then(handleErrorResponses("Instance Metrics"))
+        .then(handleErrorResponses('Instance Metrics'))
         .then(res => res.json());
 };

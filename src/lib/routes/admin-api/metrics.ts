@@ -201,7 +201,8 @@ class MetricsController extends Controller {
                 clientMetrics,
                 adminMetrics,
             });
-        } catch (e) {
+        } catch (err) {
+            this.logger.error('Failed to fetch RPS metrics', err);
             res.status(500).send('Error fetching RPS metrics');
         }
     }

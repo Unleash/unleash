@@ -1,6 +1,6 @@
 import AdminMenu from '../menu/AdminMenu';
 import { InstanceStats } from './InstanceStats/InstanceStats';
-import InstanceMetricsChart from "./InstanceMetrics/InstanceMetricsChart";
+import InstanceMetricsChart from './InstanceMetrics/InstanceMetricsChart';
 
 export const InstanceAdmin = () => {
     return (

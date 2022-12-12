@@ -30,7 +30,7 @@ export const ChangeRequestReviewer: FC<IChangeRequestReviewerProps> = ({
             <StyledAvatar src={imageUrl} />
             <Typography
                 variant="body1"
-                color="text.secondary"
+                color="text.primary"
                 sx={{
                     maxWidth: '170px',
                     textOverflow: 'ellipsis',

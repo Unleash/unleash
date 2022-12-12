@@ -28,14 +28,14 @@ export const FeatureToggleChanges: FC<IFeatureToggleChanges> = ({
             sx={theme => ({
                 backgroundColor: Boolean(conflict)
                     ? theme.palette.neutral.light
-                    : theme.palette.tableHeaderBackground,
+                    : theme.palette.neutral.light,
                 borderRadius: theme =>
                     `${theme.shape.borderRadiusLarge}px ${theme.shape.borderRadiusLarge}px 0 0`,
                 border: '1px solid',
                 borderColor: theme =>
                     conflict
                         ? theme.palette.warning.border
-                        : theme.palette.divider,
+                        : theme.palette.tertiary.main,
                 borderBottom: 'none',
                 overflow: 'hidden',
             })}

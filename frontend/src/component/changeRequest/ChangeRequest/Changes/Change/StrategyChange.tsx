@@ -1,11 +1,15 @@
-import { Box, Link, styled, Typography } from '@mui/material';
+import { Box, styled, Typography } from '@mui/material';
 import { FC, ReactNode } from 'react';
 
-export const ChangeItemWrapper = styled(Box)(({ theme }) => ({
+export const ChangeItemWrapper = styled(Box)({
     display: 'flex',
     justifyContent: 'space-between',
-    padding: theme.spacing(1),
-}));
+});
+
+export const ChangeItemCreateEditWrapper = styled(Box)({
+    display: 'flex',
+    justifyContent: 'space-between',
+});
 
 const ChangeItemInfo: FC = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -17,17 +21,20 @@ export const StrategyAddedChange: FC<{ discard?: ReactNode }> = ({
     discard,
 }) => {
     return (
-        <ChangeItemWrapper>
+        <ChangeItemCreateEditWrapper>
             <ChangeItemInfo>
                 <Typography
-                    sx={theme => ({ color: theme.palette.success.dark })}
+                    sx={theme => ({
+                        color: theme.palette.success.dark,
+                        marginBottom: theme.spacing(2),
+                    })}
                 >
                     + Adding strategy:
                 </Typography>
                 {children}
             </ChangeItemInfo>
             {discard}
-        </ChangeItemWrapper>
+        </ChangeItemCreateEditWrapper>
     );
 };
 
@@ -36,13 +43,19 @@ export const StrategyEditedChange: FC<{ discard?: ReactNode }> = ({
     discard,
 }) => {
     return (
-        <ChangeItemWrapper>
+        <ChangeItemCreateEditWrapper>
             <ChangeItemInfo>
-                <Typography>Editing strategy:</Typography>
+                <Typography
+                    sx={theme => ({
+                        marginBottom: theme.spacing(2),
+                    })}
+                >
+                    Editing strategy:
+                </Typography>
                 {children}
             </ChangeItemInfo>
             {discard}
-        </ChangeItemWrapper>
+        </ChangeItemCreateEditWrapper>
     );
 };
 

@@ -42,8 +42,8 @@ const BackButton = styled(Button)(({ theme }) => ({
 
 export const StyledSuccessIcon = styled(CheckCircle)(({ theme }) => ({
     color: theme.palette.success.main,
-    height: '25px',
-    width: '25px',
+    height: '32px',
+    width: '32px',
     marginRight: theme.spacing(1),
 }));
 

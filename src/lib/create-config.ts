@@ -282,6 +282,10 @@ const loadInitApiTokens = () => {
             process.env.INIT_CLIENT_API_TOKENS,
             ApiTokenType.CLIENT,
         ),
+        ...loadTokensFromString(
+            process.env.INIT_FRONTEND_API_TOKENS,
+            ApiTokenType.FRONTEND,
+        ),
     ];
 };
 

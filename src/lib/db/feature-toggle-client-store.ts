@@ -135,18 +135,16 @@ export default class FeatureToggleClientStore
             .leftJoin('segments', `segments.id`, `fss.segment_id`);
 
         if (isAdmin) {
-            if (this.flagResolver.isEnabled('toggleTagFiltering')) {
-                query = query.leftJoin(
-                    'feature_tag as ft',
-                    'ft.feature_name',
-                    'features.name',
-                );
-                selectColumns = [
-                    ...selectColumns,
-                    'ft.tag_value as tag_value',
-                    'ft.tag_type as tag_type',
-                ];
-            }
+            query = query.leftJoin(
+                'feature_tag as ft',
+                'ft.feature_name',
+                'features.name',
+            );
+            selectColumns = [
+                ...selectColumns,
+                'ft.tag_value as tag_value',
+                'ft.tag_type as tag_type',
+            ];
 
             if (userId && this.flagResolver.isEnabled('favorites')) {
                 query = query.leftJoin(`favorite_features`, function () {

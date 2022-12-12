@@ -427,7 +427,8 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 'environments',
                 'feature_environments.environment',
                 'environments.name',
-            );
+            )
+            .leftJoin('feature_tag as ft', 'ft.feature_name', 'features.name');
 
         let selectColumns = [
             'features.name as feature_name',
@@ -439,20 +440,10 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             'feature_environments.environment as environment',
             'environments.type as environment_type',
             'environments.sort_order as environment_sort_order',
+            'ft.tag_value as tag_value',
+            'ft.tag_type as tag_type',
         ] as (string | Raw<any>)[];
 
-        if (this.flagResolver.isEnabled('toggleTagFiltering')) {
-            query = query.leftJoin(
-                'feature_tag as ft',
-                'ft.feature_name',
-                'features.name',
-            );
-            selectColumns = [
-                ...selectColumns,
-                'ft.tag_value as tag_value',
-                'ft.tag_type as tag_type',
-            ];
-        }
         if (userId && this.flagResolver.isEnabled('favorites')) {
             query = query.leftJoin(`favorite_features`, function () {
                 this.on('favorite_features.feature', 'features.name').andOnVal(

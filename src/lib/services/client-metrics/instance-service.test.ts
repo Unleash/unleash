@@ -1,8 +1,8 @@
 import ClientInstanceService from './instance-service';
-import getLogger from '../../../test/fixtures/no-logger';
 import { IClientApp } from '../../types/model';
 import { secondsToMilliseconds } from 'date-fns';
 import FakeEventStore from '../../../test/fixtures/fake-event-store';
+import { createTestConfig } from '../../../test/config/test-config';
 
 /**
  * A utility to wait for any pending promises in the test subject code.
@@ -37,7 +37,10 @@ import FakeEventStore from '../../../test/fixtures/fake-event-store';
 function flushPromises() {
     return Promise.resolve(setImmediate);
 }
-
+let config;
+beforeAll(() => {
+    config = createTestConfig({});
+});
 test('Multiple registrations of same appname and instanceid within same time period should only cause one registration', async () => {
     jest.useFakeTimers();
     const appStoreSpy = jest.fn();
@@ -57,7 +60,7 @@ test('Multiple registrations of same appname and instanceid within same time per
             clientInstanceStore,
             eventStore: new FakeEventStore(),
         },
-        { getLogger },
+        config,
     );
     const client1: IClientApp = {
         appName: 'test_app',
@@ -107,7 +110,7 @@ test('Multiple unique clients causes multiple registrations', async () => {
             clientInstanceStore,
             eventStore: new FakeEventStore(),
         },
-        { getLogger },
+        config,
     );
     const client1 = {
         appName: 'test_app',
@@ -160,7 +163,7 @@ test('Same client registered outside of dedup interval will be registered twice'
             clientInstanceStore,
             eventStore: new FakeEventStore(),
         },
-        { getLogger },
+        config,
         bulkInterval,
     );
     const client1 = {
@@ -213,7 +216,7 @@ test('No registrations during a time period will not call stores', async () => {
             clientInstanceStore,
             eventStore: new FakeEventStore(),
         },
-        { getLogger },
+        config,
     );
     jest.advanceTimersByTime(6000);
     expect(appStoreSpy).toHaveBeenCalledTimes(0);

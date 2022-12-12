@@ -119,6 +119,7 @@ export interface IUnleashOptions {
     clientFeatureCaching?: Partial<IClientCachingOption>;
     flagResolver?: IFlagResolver;
     accessControlMaxAge?: number;
+    prometheusApi?: string;
 }
 
 export interface IEmailOption {
@@ -205,4 +206,5 @@ export interface IUnleashConfig {
     strategySegmentsLimit: number;
     clientFeatureCaching: IClientCachingOption;
     accessControlMaxAge: number;
+    prometheusApi?: string;
 }

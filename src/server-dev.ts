@@ -43,6 +43,7 @@ process.nextTick(async () => {
                         toggleTagFiltering: true,
                         favorites: true,
                         variantsPerEnvironment: true,
+                        networkView: true,
                     },
                 },
                 authentication: {

@@ -53,7 +53,7 @@ export const Profile = () => {
             />
             <ConditionallyRender
                 condition={tab === 'pat'}
-                show={<PersonalAPITokensTab user={user!} />}
+                show={<PersonalAPITokensTab />}
             />
         </VerticalTabs>
     );

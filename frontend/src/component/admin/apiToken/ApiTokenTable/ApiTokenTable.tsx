@@ -30,7 +30,6 @@ import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCel
 
 const hiddenColumnsSmall = ['Icon', 'createdAt'];
 const hiddenColumnsFlagE = ['projects', 'environment'];
-const hiddenColumnsFlagTokensLastSeen = ['seenAt'];
 
 export const ApiTokenTable = () => {
     const { tokens, loading } = useApiTokens();
@@ -61,11 +60,6 @@ export const ApiTokenTable = () => {
 
     useHiddenColumns(setHiddenColumns, hiddenColumnsSmall, isSmallScreen);
     useHiddenColumns(setHiddenColumns, hiddenColumnsFlagE, !uiConfig.flags.E);
-    useHiddenColumns(
-        setHiddenColumns,
-        hiddenColumnsFlagTokensLastSeen,
-        !uiConfig.flags.tokensLastSeen
-    );
 
     return (
         <PageContent

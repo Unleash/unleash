@@ -26,7 +26,6 @@ import {
     ApiTokenUpdatedEvent,
 } from '../types';
 import { omitKeys } from '../util';
-import { IFlagResolver } from 'lib/types/experimental';
 
 const resolveTokenPermissions = (tokenType: string) => {
     if (tokenType === ApiTokenType.ADMIN) {
@@ -61,8 +60,6 @@ export class ApiTokenService {
 
     private lastSeenSecrets: Set<string> = new Set<string>();
 
-    private flagResolver: IFlagResolver;
-
     constructor(
         {
             apiTokenStore,
@@ -72,12 +69,8 @@ export class ApiTokenService {
             IUnleashStores,
             'apiTokenStore' | 'environmentStore' | 'eventStore'
         >,
-        config: Pick<
-            IUnleashConfig,
-            'getLogger' | 'authentication' | 'flagResolver'
-        >,
+        config: Pick<IUnleashConfig, 'getLogger' | 'authentication'>,
     ) {
-        this.flagResolver = config.flagResolver;
         this.store = apiTokenStore;
         this.eventStore = eventStore;
         this.environmentStore = environmentStore;
@@ -87,9 +80,7 @@ export class ApiTokenService {
             () => this.fetchActiveTokens(),
             minutesToMilliseconds(1),
         ).unref();
-        if (this.flagResolver.isEnabled('tokensLastSeen')) {
-            this.updateLastSeen();
-        }
+        this.updateLastSeen();
         if (config.authentication.initApiTokens.length > 0) {
             process.nextTick(async () =>
                 this.initApiTokens(config.authentication.initApiTokens),
@@ -164,9 +155,7 @@ export class ApiTokenService {
         }
 
         if (token) {
-            if (this.flagResolver.isEnabled('tokensLastSeen')) {
-                this.lastSeenSecrets.add(token.secret);
-            }
+            this.lastSeenSecrets.add(token.secret);
 
             return new ApiUser({
                 username: token.username,

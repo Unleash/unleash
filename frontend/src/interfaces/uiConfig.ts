@@ -42,7 +42,6 @@ export interface IFlags {
     embedProxyFrontend?: boolean;
     changeRequests?: boolean;
     variantsPerEnvironment?: boolean;
-    tokensLastSeen?: boolean;
     favorites?: boolean;
     networkView?: boolean;
 }

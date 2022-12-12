@@ -34,10 +34,6 @@ export const defaultExperimentalOptions = {
             process.env.UNLEASH_EXPERIMENTAL_VARIANTS_PER_ENVIRONMENT,
             false,
         ),
-        tokensLastSeen: parseEnvVarBoolean(
-            process.env.UNLEASH_EXPERIMENTAL_TOKENS_LAST_SEEN,
-            false,
-        ),
         favorites: parseEnvVarBoolean(
             process.env.UNLEASH_EXPERIMENTAL_FAVORITES,
             false,
@@ -61,7 +57,6 @@ export interface IExperimentalOptions {
         changeRequests?: boolean;
         proxyReturnAllToggles?: boolean;
         variantsPerEnvironment?: boolean;
-        tokensLastSeen?: boolean;
         favorites?: boolean;
         networkView?: boolean;
     };

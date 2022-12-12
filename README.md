@@ -34,8 +34,8 @@ With [`git`](https://git-scm.com/) and [`docker`](https://www.docker.com/) insta
 Run this script:
 
 ```bash
-git clone git@github.com:Unleash/unleash-docker.git
-cd unleash-docker
+git clone git@github.com:Unleash/unleash.git
+cd unleash
 docker compose up -d
 ```
 
@@ -53,8 +53,8 @@ Find your preferred SDK in [our list of official SDKs](#unleash-sdks) and import
 If you use the docker compose file from the previous step, here's the configuration details you'll need to get going:
 
 - For front-end SDKs, use:
-  - URL: `http://localhost:3000`
-  - `clientKey`: `proxy-client-key`
+  - URL: `http://localhost:4242/api/frontend/`
+  - `clientKey`: `default:development.unleash-insecure-frontend-api-token`
 - For server-side SDKs, use:
   - Unleash API URL: `http://localhost:4242/api/`
   - API token: `default:development.unleash-insecure-api-token`

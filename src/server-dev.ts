@@ -40,7 +40,6 @@ process.nextTick(async () => {
                         anonymiseEventLog: false,
                         responseTimeWithAppName: true,
                         changeRequests: true,
-                        toggleTagFiltering: true,
                         favorites: true,
                         variantsPerEnvironment: true,
                     },

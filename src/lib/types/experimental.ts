@@ -26,10 +26,6 @@ export const defaultExperimentalOptions = {
             process.env.UNLEASH_EXPERIMENTAL_RESPONSE_TIME_WITH_APP_NAME,
             false,
         ),
-        toggleTagFiltering: parseEnvVarBoolean(
-            process.env.UNLEASH_EXPERIMENTAL_TOGGLE_TAG_FILTERING,
-            false,
-        ),
         proxyReturnAllToggles: parseEnvVarBoolean(
             process.env.UNLEASH_EXPERIMENTAL_PROXY_RETURN_ALL_TOGGLES,
             false,

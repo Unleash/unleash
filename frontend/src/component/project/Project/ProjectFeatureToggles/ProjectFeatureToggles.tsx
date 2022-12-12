@@ -43,6 +43,7 @@ import { ColumnsMenu } from './ColumnsMenu/ColumnsMenu';
 import { useStyles } from './ProjectFeatureToggles.styles';
 import { usePinnedFavorites } from 'hooks/usePinnedFavorites';
 import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';
+import { FeatureTagCell } from 'component/common/Table/cells/FeatureTagCell/FeatureTagCell';
 
 interface IProjectFeatureTogglesProps {
     features: IProject['features'];
@@ -239,20 +240,18 @@ export const ProjectFeatureToggles = ({
                 sortType: 'alphanumeric',
                 searchable: true,
             },
-            // FIXME: no tags on project feature toggles from backend
-            // {
-            //     id: 'tags',
-            //     Header: 'Tags',
-            //     accessor: (row: IFeatureToggleListItem) =>
-            //         row.tags
-            //             ?.map(({ type, value }) => `${type}:${value}`)
-            //             .join('\n') || '',
-            //     Cell: FeatureTagCell,
-            //     width: 80,
-            //     hideInMenu: true,
-            //     searchable: true,
-            //     isVisible: false,
-            // },
+            {
+                id: 'tags',
+                Header: 'Tags',
+                accessor: (row: IFeatureToggleListItem) =>
+                    row.tags
+                        ?.map(({ type, value }) => `${type}:${value}`)
+                        .join('\n') || '',
+                Cell: FeatureTagCell,
+                width: 80,
+                hideInMenu: true,
+                searchable: true,
+            },
             {
                 Header: 'Created',
                 accessor: 'createdAt',
@@ -429,16 +428,15 @@ export const ProjectFeatureToggles = ({
         useSortBy
     );
 
-    // TODO: update after tags are added, move to other useEffect
-    // useEffect(() => {
-    //     if (!features.some(({ tags }) => tags?.length)) {
-    //         setHiddenColumns(hiddenColumns => [...hiddenColumns, 'tags']);
-    //     } else {
-    //         setHiddenColumns(hiddenColumns =>
-    //             hiddenColumns.filter(column => column !== 'tags')
-    //         );
-    //     }
-    // }, [setHiddenColumns, features]);
+    useEffect(() => {
+        if (!features.some(({ tags }) => tags?.length)) {
+            setHiddenColumns(hiddenColumns => [...hiddenColumns, 'tags']);
+        } else {
+            setHiddenColumns(hiddenColumns =>
+                hiddenColumns.filter(column => column !== 'tags')
+            );
+        }
+    }, [setHiddenColumns, features]);
 
     useEffect(() => {
         if (loading) {

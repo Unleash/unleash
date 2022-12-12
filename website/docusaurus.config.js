@@ -172,7 +172,10 @@ module.exports = {
                         to: '/reference/archived-toggles',
                     },
                     {
-                        from: '/advanced/custom-activation-strategy',
+                        from: [
+                            '/advanced/custom-activation-strategy',
+                            '/advanced/custom_activation_strategy',
+                        ],
                         to: '/reference/custom-activation-strategies',
                     },
                     {
@@ -235,7 +238,10 @@ module.exports = {
                         to: '/reference/deploy/getting-started',
                     },
                     {
-                        from: '/deploy/configuring_unleash',
+                        from: [
+                            '/docs/deploy/configuring_unleash',
+                            '/deploy/configuring_unleash',
+                        ],
                         to: '/reference/deploy/configuring-unleash',
                     },
                     {
@@ -319,6 +325,7 @@ module.exports = {
                             '/sdks',
                             '/user_guide/client-sdk',
                             '/client-sdk',
+                            '/docs/user_guide/connect_sdk',
                             '/user_guide/connect_sdk',
                             '/sdks/community',
                         ],
@@ -361,11 +368,14 @@ module.exports = {
                         to: '/reference/sdks/ios-proxy',
                     },
                     {
-                        from: '/sdks/javascript-browser',
+                        from: [
+                            '/sdks/proxy-javascript',
+                            '/sdks/javascript-browser',
+                        ],
                         to: '/reference/sdks/javascript-browser',
                     },
                     {
-                        from: '/sdks/react',
+                        from: ['/sdks/proxy-react', '/sdks/react'],
                         to: '/reference/sdks/react',
                     },
                     {
@@ -428,7 +438,10 @@ module.exports = {
                         to: '/tutorials/important-concepts',
                     },
                     {
-                        from: '/user_guide/quickstart',
+                        from: [
+                            '/user_guide/quickstart',
+                            '/docs/getting_started',
+                        ],
                         to: '/tutorials/quickstart',
                     },
                     {

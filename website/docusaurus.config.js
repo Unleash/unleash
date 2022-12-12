@@ -438,7 +438,10 @@ module.exports = {
                         to: '/tutorials/important-concepts',
                     },
                     {
-                        from: '/user_guide/quickstart',
+                        from: [
+                            '/user_guide/quickstart',
+                            'docs/getting_started',
+                        ],
                         to: '/tutorials/quickstart',
                     },
                     {

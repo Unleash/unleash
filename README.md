@@ -54,10 +54,10 @@ If you use the docker compose file from the previous step, here's the configurat
 
 - For front-end SDKs, use:
   - URL: `http://localhost:4242/api/frontend/`
-  - `clientKey`: `<frontend key you create>`
+  - `clientKey`: `default:development.unleash-insecure-frontend-api-token`
 - For server-side SDKs, use:
   - Unleash API URL: `http://localhost:4242/api/`
-  - API token: `<client key you create>`
+  - API token: `default:development.unleash-insecure-api-token`
 
 If you use a different setup, your configuration details will most likely also be different.
 

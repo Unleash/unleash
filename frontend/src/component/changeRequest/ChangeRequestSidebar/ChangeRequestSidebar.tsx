@@ -22,7 +22,7 @@ const StyledPageContent = styled(PageContent)(({ theme }) => ({
     height: '100vh',
     overflow: 'auto',
     minWidth: '50vw',
-    padding: theme.spacing(4, 6),
+    padding: theme.spacing(6),
     [theme.breakpoints.down('md')]: {
         padding: theme.spacing(4, 2),
     },

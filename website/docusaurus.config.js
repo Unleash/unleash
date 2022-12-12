@@ -325,6 +325,7 @@ module.exports = {
                             '/sdks',
                             '/user_guide/client-sdk',
                             '/client-sdk',
+                            '/docs/user_guide/connect_sdk',
                             '/user_guide/connect_sdk',
                             '/sdks/community',
                         ],

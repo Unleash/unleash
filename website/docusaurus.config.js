@@ -368,7 +368,10 @@ module.exports = {
                         to: '/reference/sdks/ios-proxy',
                     },
                     {
-                        from: '/sdks/javascript-browser',
+                        from: [
+                            '/sdks/proxy-javascript',
+                            '/sdks/javascript-browser',
+                        ],
                         to: '/reference/sdks/javascript-browser',
                     },
                     {

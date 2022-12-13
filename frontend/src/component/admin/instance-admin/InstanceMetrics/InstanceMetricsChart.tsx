@@ -23,28 +23,23 @@ import {
 } from '../../../../hooks/useLocationSettings';
 import theme from '../../../../themes/theme';
 import { formatDateHM } from '../../../../utils/formatDate';
-import {
-    RequestsPerSecondSchema,
-    RequestsPerSecondSchemaDataResultInnerValuesInnerInner,
-} from 'openapi';
+import { RequestsPerSecondSchema } from 'openapi';
 import 'chartjs-adapter-date-fns';
 import { PaletteColor } from '@mui/material';
 import { PageContent } from '../../../common/PageContent/PageContent';
 import { PageHeader } from '../../../common/PageHeader/PageHeader';
 import { Box } from '@mui/system';
 interface IPoint {
-    x: string;
+    x: number;
     y: number;
 }
 
 const createChartPoints = (
-    values: Array<
-        Array<RequestsPerSecondSchemaDataResultInnerValuesInnerInner>
-    >,
+    values: Array<Array<number | string>>,
     y: (m: string) => number
 ): IPoint[] => {
     return values.map(row => ({
-        x: row[0].toString(),
+        x: row[0] as number,
         y: y(row[1] as string),
     }));
 };

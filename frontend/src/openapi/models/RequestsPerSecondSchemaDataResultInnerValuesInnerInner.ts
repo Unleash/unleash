@@ -18,8 +18,7 @@ import { exists, mapValues } from '../runtime';
  * @export
  * @interface RequestsPerSecondSchemaDataResultInnerValuesInnerInner
  */
-export interface RequestsPerSecondSchemaDataResultInnerValuesInnerInner {
-}
+export type RequestsPerSecondSchemaDataResultInnerValuesInnerInner = number | string;
 
 /**
  * Check if a given object implements the RequestsPerSecondSchemaDataResultInnerValuesInnerInner interface.

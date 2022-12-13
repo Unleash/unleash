@@ -17,7 +17,7 @@ const SubmitChangeRequestButton: FC<{ onClick: () => void; count: number }> = ({
     onClick,
     count,
 }) => (
-    <Button sx={{ mt: 2, ml: 'auto' }} variant="contained" onClick={onClick}>
+    <Button sx={{ ml: 'auto' }} variant="contained" onClick={onClick}>
         Submit change request ({count})
     </Button>
 );
@@ -74,7 +74,7 @@ export const EnvironmentChangeRequest: FC<{
                 You request changes for these feature toggles:
             </Typography>
             {children}
-            <Box sx={{ display: 'flex' }}>
+            <Box sx={{ display: 'flex', mt: 3 }}>
                 <ConditionallyRender
                     condition={environmentChangeRequest?.state === 'Draft'}
                     show={
@@ -87,7 +87,7 @@ export const EnvironmentChangeRequest: FC<{
                             />
 
                             <Button
-                                sx={{ mt: 2, ml: 2 }}
+                                sx={{ ml: 2 }}
                                 variant="outlined"
                                 onClick={() =>
                                     onDiscard(environmentChangeRequest.id)

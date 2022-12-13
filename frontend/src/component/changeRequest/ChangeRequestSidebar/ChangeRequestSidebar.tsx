@@ -47,8 +47,7 @@ export const StyledSuccessIcon = styled(CheckCircle)(({ theme }) => ({
     marginRight: theme.spacing(1),
 }));
 
-export const StyledFlexAlignCenterBox = styled(Box)(({ theme }) => ({
-    paddingTop: theme.spacing(3),
+export const StyledFlexAlignCenterBox = styled(Box)(() => ({
     marginLeft: 'auto',
     display: 'flex',
     alignItems: 'center',
@@ -143,7 +142,7 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
         >
             <StyledPageContent
                 disableBorder={true}
-                header={<ReviewChangesHeader onClose={onClose} />}
+                header={<ReviewChangesHeader />}
             >
                 {data?.map(environmentChangeRequest => (
                     <EnvironmentChangeRequest

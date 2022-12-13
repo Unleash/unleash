@@ -1,5 +1,6 @@
 import { FC } from 'react';
-import { Modal, Backdrop, styled } from '@mui/material';
+import { Modal, Backdrop, styled, IconButton, Tooltip } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import Fade from '@mui/material/Fade';
 import { SIDEBAR_MODAL_ID } from 'utils/testIds';
 import * as React from 'react';
@@ -64,7 +65,21 @@ export const SidebarModal: FC<ISidebarModalProps> = props => {
 export const DynamicSidebarModal: FC<ISidebarModalProps> = props => {
     return (
         <BaseModal {...props}>
-            <ModalContentWrapper>{props.children}</ModalContentWrapper>
+            <ModalContentWrapper>
+                <Tooltip title="Close" arrow describeChild>
+                    <IconButton
+                        sx={theme => ({
+                            position: 'absolute',
+                            top: theme.spacing(3),
+                            right: theme.spacing(3),
+                        })}
+                        onClick={props.onClose}
+                    >
+                        <CloseIcon />
+                    </IconButton>
+                </Tooltip>
+                {props.children}
+            </ModalContentWrapper>
         </BaseModal>
     );
 };

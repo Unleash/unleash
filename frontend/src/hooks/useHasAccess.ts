@@ -2,11 +2,10 @@ import { useContext } from 'react';
 import AccessContext from '../contexts/AccessContext';
 import { useChangeRequestsEnabled } from './useChangeRequestsEnabled';
 
-export const useHasProjectAccess = (projectId: string) => {
+const useCheckProjectPermissions = (projectId?: string) => {
     const { hasAccess } = useContext(AccessContext);
-    const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
 
-    const handlePermissionAccess = (
+    const checkPermission = (
         permission: string,
         projectId?: string,
         environmentId?: string
@@ -20,33 +19,53 @@ export const useHasProjectAccess = (projectId: string) => {
         }
     };
 
-    const handleAccess = (
-        permission: string | string[],
+    const checkPermissions = (
+        permissions: string | string[],
         projectId?: string,
         environmentId?: string
     ) => {
-        if (Array.isArray(permission)) {
-            return permission.some(permission =>
-                handlePermissionAccess(permission, projectId, environmentId)
+        if (Array.isArray(permissions)) {
+            return permissions.some(permission =>
+                checkPermission(permission, projectId, environmentId)
             );
         } else {
-            return handlePermissionAccess(permission, projectId, environmentId);
+            return checkPermission(permissions, projectId, environmentId);
         }
     };
 
-    return (permission: string | string[], environmentId: string) => {
+    return (permissions: string | string[], environmentId?: string) => {
+        return checkPermissions(permissions, projectId, environmentId);
+    };
+};
+
+export const useCheckProjectAccess = (projectId: string) => {
+    const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
+    const checkAccess = useCheckProjectPermissions(projectId);
+
+    return (permission: string, environment: string) => {
         return (
-            handleAccess(permission, projectId, environmentId) ||
-            isChangeRequestConfigured(environmentId)
+            isChangeRequestConfigured(environment) ||
+            checkAccess(permission, environment)
         );
     };
 };
 
-export const useHasAccess = (
+export const useHasProjectEnvironmentAccess = (
     permission: string | string[],
+    environmentId: string,
+    projectId: string
+) => {
+    const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
+    const checkAccess = useCheckProjectPermissions(projectId);
+    const changeRequestMode = isChangeRequestConfigured(environmentId);
+
+    return changeRequestMode || checkAccess(permission, environmentId);
+};
+
+export const useHasRootAccess = (
+    permissions: string | string[],
     environmentId?: string,
     projectId?: string
 ) => {
-    const checkAccess = useHasProjectAccess(projectId!);
-    return checkAccess(permission, environmentId!);
+    return useCheckProjectPermissions(projectId)(permissions, environmentId);
 };

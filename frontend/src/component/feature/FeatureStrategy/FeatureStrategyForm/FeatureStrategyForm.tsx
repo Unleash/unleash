@@ -15,7 +15,6 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { STRATEGY_FORM_SUBMIT_ID } from 'utils/testIds';
 import { useConstraintsValidation } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
-import AccessContext from 'contexts/AccessContext';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { FeatureStrategySegment } from 'component/feature/FeatureStrategy/FeatureStrategySegment/FeatureStrategySegment';
 import { ISegment } from 'interfaces/segment';
@@ -30,8 +29,7 @@ import {
 import { formatFeaturePath } from '../FeatureStrategyEdit/FeatureStrategyEdit';
 import { useChangeRequestInReviewWarning } from 'hooks/useChangeRequestInReviewWarning';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
-import { useChangeRequestsEnabled } from '../../../../hooks/useChangeRequestsEnabled';
-import { useHasAccess } from '../../../../hooks/useHasAccess';
+import { useHasProjectEnvironmentAccess } from 'hooks/useHasAccess';
 
 interface IFeatureStrategyFormProps {
     feature: IFeatureToggle;
@@ -68,7 +66,11 @@ export const FeatureStrategyForm = ({
     const [showProdGuard, setShowProdGuard] = useState(false);
     const hasValidConstraints = useConstraintsValidation(strategy.constraints);
     const enableProdGuard = useFeatureStrategyProdGuard(feature, environmentId);
-    const access = useHasAccess(permission, environmentId, projectId);
+    const access = useHasProjectEnvironmentAccess(
+        permission,
+        environmentId,
+        projectId
+    );
     const { strategyDefinition } = useStrategy(strategy?.name);
 
     const { data } = usePendingChangeRequests(feature.project);

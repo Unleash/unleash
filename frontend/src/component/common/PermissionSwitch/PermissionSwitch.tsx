@@ -2,7 +2,10 @@ import { Switch, SwitchProps } from '@mui/material';
 import React from 'react';
 import { formatAccessText } from 'utils/formatAccessText';
 import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
-import { useHasAccess } from '../../../hooks/useHasAccess';
+import {
+    useHasProjectEnvironmentAccess,
+    useHasRootAccess,
+} from 'hooks/useHasAccess';
 
 interface IPermissionSwitchProps extends SwitchProps {
     permission: string;
@@ -14,11 +17,42 @@ interface IPermissionSwitchProps extends SwitchProps {
     checked: boolean;
 }
 
-const PermissionSwitch = React.forwardRef<
+interface IBasePermissionSwitchProps extends IPermissionSwitchProps {
+    access: boolean;
+}
+
+const ProjectenvironmentPermissionSwitch = React.forwardRef<
+    HTMLButtonElement,
+    IPermissionSwitchProps & { projectId: string; environmentId: string }
+>((props, ref) => {
+    const access = useHasProjectEnvironmentAccess(
+        props.permission,
+        props.environmentId,
+        props.projectId
+    );
+
+    return <BasePermissionSwitch {...props} access={access} ref={ref} />;
+});
+
+const RootPermissionSwitch = React.forwardRef<
     HTMLButtonElement,
     IPermissionSwitchProps
 >((props, ref) => {
+    const access = useHasRootAccess(
+        props.permission,
+        props.environmentId,
+        props.projectId
+    );
+
+    return <BasePermissionSwitch {...props} access={access} ref={ref} />;
+});
+
+const BasePermissionSwitch = React.forwardRef<
+    HTMLButtonElement,
+    IBasePermissionSwitchProps
+>((props, ref) => {
     const {
+        access,
         permission,
         tooltip,
         disabled,
@@ -28,8 +62,6 @@ const PermissionSwitch = React.forwardRef<
         onChange,
         ...rest
     } = props;
-
-    const access = useHasAccess(permission, environmentId, projectId);
 
     return (
         <TooltipResolver title={formatAccessText(access, tooltip)} arrow>
@@ -45,6 +77,26 @@ const PermissionSwitch = React.forwardRef<
             </span>
         </TooltipResolver>
     );
+});
+
+const PermissionSwitch = React.forwardRef<
+    HTMLButtonElement,
+    IPermissionSwitchProps
+>((props, ref) => {
+    if (
+        typeof props.projectId !== 'undefined' &&
+        typeof props.environmentId !== 'undefined'
+    ) {
+        return (
+            <ProjectenvironmentPermissionSwitch
+                {...props}
+                projectId={props.projectId}
+                environmentId={props.environmentId}
+                ref={ref}
+            />
+        );
+    }
+    return <RootPermissionSwitch {...props} ref={ref} />;
 });
 
 export default PermissionSwitch;

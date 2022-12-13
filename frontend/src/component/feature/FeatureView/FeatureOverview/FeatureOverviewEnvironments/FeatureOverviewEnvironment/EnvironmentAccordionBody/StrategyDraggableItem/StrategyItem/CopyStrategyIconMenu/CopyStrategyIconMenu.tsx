@@ -11,7 +11,6 @@ import { AddToPhotos as CopyIcon, Lock } from '@mui/icons-material';
 import { IFeatureStrategyPayload } from 'interfaces/strategy';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { IFeatureEnvironment } from 'interfaces/featureToggle';
-import AccessContext from 'contexts/AccessContext';
 import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
@@ -20,13 +19,10 @@ import useToast from 'hooks/useToast';
 import { useFeatureImmutable } from 'hooks/api/getters/useFeature/useFeatureImmutable';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useChangeRequestAddStrategy } from 'hooks/useChangeRequestAddStrategy';
-import { ChangeRequestDialogue } from '../../../../../../../../../changeRequest/ChangeRequestConfirmDialog/ChangeRequestConfirmDialog';
-import { CopyStrategyMessage } from '../../../../../../../../../changeRequest/ChangeRequestConfirmDialog/ChangeRequestMessages/CopyStrategyMessage';
+import { ChangeRequestDialogue } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestConfirmDialog';
+import { CopyStrategyMessage } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestMessages/CopyStrategyMessage';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
-import {
-    useHasAccess,
-    useHasProjectAccess,
-} from '../../../../../../../../../../hooks/useHasAccess';
+import { useCheckProjectAccess } from 'hooks/useHasAccess';
 
 interface ICopyStrategyIconMenuProps {
     environmentId: string;
@@ -54,7 +50,7 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
     const onClose = () => {
         setAnchorEl(null);
     };
-    const checkAccess = useHasProjectAccess(projectId);
+    const checkAccess = useCheckProjectAccess(projectId);
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
 
     const {

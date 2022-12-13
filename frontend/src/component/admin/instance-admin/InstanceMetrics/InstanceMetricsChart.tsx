@@ -23,7 +23,7 @@ import {
 } from '../../../../hooks/useLocationSettings';
 import theme from '../../../../themes/theme';
 import { formatDateHM } from '../../../../utils/formatDate';
-import { RequestsPerSecondSchema } from '@server/openapi';
+import { RequestsPerSecondSchema, RequestsPerSecondSchemaDataResultInnerValuesInnerInner } from "openapi";
 import 'chartjs-adapter-date-fns';
 import { PaletteColor } from '@mui/material';
 import { PageContent } from '../../../common/PageContent/PageContent';
@@ -35,11 +35,10 @@ interface IPoint {
 }
 
 const createChartPoints = (
-    values: (string | number)[][],
+    values: Array<Array<RequestsPerSecondSchemaDataResultInnerValuesInnerInner>>,
     y: (m: string) => number
 ): IPoint[] => {
-    // @ts-expect-error
-    return values.map(row => ({ x: row[0], y: y(row[1] as string) }));
+    return values.map(row => ({ x: row[0].toString(), y: y(row[1] as string) }));
 };
 const createInstanceChartOptions = (
     metrics: InstanceMetrics,

@@ -17,3 +17,5 @@ export * from './UpdateFeatureSchema';
 export * from './UpdateStrategySchema';
 export * from './VariantSchema';
 export * from './VariantSchemaPayload';
+export * from './RequestsPerSecondSchema';
+export * from './RequestsPerSecondSchemaDataResultInnerValuesInnerInner';

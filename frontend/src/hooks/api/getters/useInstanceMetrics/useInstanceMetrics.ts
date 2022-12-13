@@ -2,7 +2,7 @@ import useSWR from 'swr';
 import { useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import { RequestsPerSecondSchema } from '@server/openapi';
+import { RequestsPerSecondSchema } from 'openapi';
 
 export interface InstanceMetrics {
     clientMetrics: RequestsPerSecondSchema;

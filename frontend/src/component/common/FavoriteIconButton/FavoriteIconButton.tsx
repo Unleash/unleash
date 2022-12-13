@@ -1,5 +1,5 @@
-import React, { VFC } from 'react';
-import { IconButton, SxProps, Theme } from '@mui/material';
+import { VFC } from 'react';
+import { IconButton, IconButtonProps } from '@mui/material';
 import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
 import {
     Star as StarIcon,
@@ -7,30 +7,24 @@ import {
 } from '@mui/icons-material';
 import { TooltipResolver } from '../TooltipResolver/TooltipResolver';
 
-interface IFavoriteIconButtonProps {
-    onClick: (event?: any) => void;
+interface IFavoriteIconButtonProps extends IconButtonProps {
     isFavorite: boolean;
     size?: 'medium' | 'large';
-    sx?: SxProps<Theme>;
 }
 
 export const FavoriteIconButton: VFC<IFavoriteIconButtonProps> = ({
-    onClick,
     isFavorite,
     size = 'large',
-    sx,
+    ...props
 }) => {
     return (
-        <IconButton
-            size={size}
-            data-loading
-            sx={{ mr: 1, ...sx }}
-            onClick={onClick}
+        <TooltipResolver
+            title={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
         >
-            <ConditionallyRender
-                condition={isFavorite}
-                show={
-                    <TooltipResolver title={'Remove from favorites'}>
+            <IconButton size={size} data-loading {...props}>
+                <ConditionallyRender
+                    condition={isFavorite}
+                    show={
                         <StarIcon
                             color="primary"
                             sx={{
@@ -40,10 +34,8 @@ export const FavoriteIconButton: VFC<IFavoriteIconButtonProps> = ({
                                         : theme.spacing(3),
                             }}
                         />
-                    </TooltipResolver>
-                }
-                elseShow={
-                    <TooltipResolver title={'Add to favorites'}>
+                    }
+                    elseShow={
                         <StarBorderIcon
                             sx={{
                                 fontSize: theme =>
@@ -52,9 +44,9 @@ export const FavoriteIconButton: VFC<IFavoriteIconButtonProps> = ({
                                         : theme.spacing(3),
                             }}
                         />
-                    </TooltipResolver>
-                }
-            />
-        </IconButton>
+                    }
+                />
+            </IconButton>
+        </TooltipResolver>
     );
 };

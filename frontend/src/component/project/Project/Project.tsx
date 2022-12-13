@@ -7,7 +7,7 @@ import { styled, Tab, Tabs } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
 import useToast from 'hooks/useToast';
 import useQueryParams from 'hooks/useQueryParams';
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import ProjectEnvironment from '../ProjectEnvironment/ProjectEnvironment';
 import { ProjectFeaturesArchive } from './ProjectFeaturesArchive/ProjectFeaturesArchive';
 import ProjectOverview from './ProjectOverview';
@@ -28,18 +28,18 @@ import { MainLayout } from 'component/layout/MainLayout/MainLayout';
 import { ProjectChangeRequests } from '../../changeRequest/ProjectChangeRequests/ProjectChangeRequests';
 import { ProjectSettings } from './ProjectSettings/ProjectSettings';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
-import { FavoriteIconButton } from '../../common/FavoriteIconButton/FavoriteIconButton';
-import { useFavoriteProjectsApi } from '../../../hooks/api/actions/useFavoriteProjectsApi/useFavoriteProjectsApi';
+import { FavoriteIconButton } from 'component/common/FavoriteIconButton/FavoriteIconButton';
+import { useFavoriteProjectsApi } from 'hooks/api/actions/useFavoriteProjectsApi/useFavoriteProjectsApi';
 
 const StyledDiv = styled('div')(() => ({
     display: 'flex',
 }));
 
-const Row = styled('div')(({ theme }) => ({
+const StyledTopRow = styled('div')(() => ({
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'center',
-    paddingBottom: theme.spacing(0.25),
+    justifyContent: 'space-between',
+    width: '100%',
 }));
 
 const Column = styled('div')(() => ({
@@ -47,11 +47,10 @@ const Column = styled('div')(() => ({
     flexDirection: 'column',
 }));
 
-const StyledName = styled('div')(({ theme }) => ({
+const StyledName = styled('div')(() => ({
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
-    paddingTop: theme.spacing(1),
 }));
 
 const StyledTitle = styled('span')(({ theme }) => ({
@@ -60,6 +59,10 @@ const StyledTitle = styled('span')(({ theme }) => ({
 }));
 const StyledText = styled(StyledTitle)(({ theme }) => ({
     color: theme.palette.grey[800],
+}));
+
+const StyledFavoriteIconButton = styled(FavoriteIconButton)(({ theme }) => ({
+    marginLeft: theme.spacing(-1.5),
 }));
 
 const Project = () => {
@@ -158,21 +161,54 @@ const Project = () => {
         >
             <div className={styles.header}>
                 <div className={styles.innerContainer}>
-                    <Row>
-                        <ConditionallyRender
-                            condition={Boolean(uiConfig?.flags?.favorites)}
-                            show={() => (
-                                <FavoriteIconButton
-                                    onClick={onFavorite}
-                                    isFavorite={project?.favorite}
-                                    sx={{ pl: 0, pr: 0.25 }}
-                                />
-                            )}
-                        />
-                        <h2 className={styles.title}>
-                            <StyledName data-loading>{projectName}</StyledName>
-                        </h2>
-                    </Row>
+                    <StyledTopRow>
+                        <StyledDiv>
+                            <ConditionallyRender
+                                condition={Boolean(uiConfig?.flags?.favorites)}
+                                show={() => (
+                                    <StyledFavoriteIconButton
+                                        onClick={onFavorite}
+                                        isFavorite={project?.favorite}
+                                    />
+                                )}
+                            />
+                            <h2 className={styles.title}>
+                                <StyledName data-loading>
+                                    {projectName}
+                                </StyledName>
+                            </h2>
+                        </StyledDiv>
+                        <StyledDiv>
+                            <PermissionIconButton
+                                permission={UPDATE_PROJECT}
+                                projectId={projectId}
+                                sx={{
+                                    visibility: isOss() ? 'hidden' : 'visible',
+                                }}
+                                onClick={() =>
+                                    navigate(`/projects/${projectId}/edit`)
+                                }
+                                tooltipProps={{ title: 'Edit project' }}
+                                data-loading
+                            >
+                                <Edit />
+                            </PermissionIconButton>
+                            <PermissionIconButton
+                                permission={DELETE_PROJECT}
+                                projectId={projectId}
+                                sx={{
+                                    visibility: isOss() ? 'hidden' : 'visible',
+                                }}
+                                onClick={() => {
+                                    setShowDelDialog(true);
+                                }}
+                                tooltipProps={{ title: 'Delete project' }}
+                                data-loading
+                            >
+                                <Delete />
+                            </PermissionIconButton>
+                        </StyledDiv>
+                    </StyledTopRow>
                     <Column>
                         <h2 className={styles.title}>
                             <div>
@@ -198,40 +234,6 @@ const Project = () => {
                                     </StyledText>
                                 </StyledDiv>
                             </div>
-                            <StyledDiv>
-                                <PermissionIconButton
-                                    permission={UPDATE_PROJECT}
-                                    projectId={projectId}
-                                    sx={{
-                                        visibility: isOss()
-                                            ? 'hidden'
-                                            : 'visible',
-                                    }}
-                                    onClick={() =>
-                                        navigate(`/projects/${projectId}/edit`)
-                                    }
-                                    tooltipProps={{ title: 'Edit project' }}
-                                    data-loading
-                                >
-                                    <Edit />
-                                </PermissionIconButton>
-                                <PermissionIconButton
-                                    permission={DELETE_PROJECT}
-                                    projectId={projectId}
-                                    sx={{
-                                        visibility: isOss()
-                                            ? 'hidden'
-                                            : 'visible',
-                                    }}
-                                    onClick={() => {
-                                        setShowDelDialog(true);
-                                    }}
-                                    tooltipProps={{ title: 'Delete project' }}
-                                    data-loading
-                                >
-                                    <Delete />
-                                </PermissionIconButton>
-                            </StyledDiv>
                         </h2>
                     </Column>
                 </div>

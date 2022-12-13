@@ -48,7 +48,6 @@ export const useStyles = makeStyles()(theme => ({
         width: '100%',
         fontSize: theme.fontSizes.mainHeader,
         fontWeight: 'bold',
-        marginBottom: '0.5rem',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',

@@ -1,11 +1,5 @@
 import { useEffect, useMemo, useState, VFC } from 'react';
-import {
-    IconButton,
-    styled,
-    Tooltip,
-    useMediaQuery,
-    useTheme,
-} from '@mui/material';
+import { IconButton, Tooltip, useMediaQuery, useTheme } from '@mui/material';
 import { useSearchParams, Link } from 'react-router-dom';
 import { SortingRule, useFlexLayout, useSortBy, useTable } from 'react-table';
 import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
@@ -40,14 +34,6 @@ import {
     UG_EDIT_USERS_BTN_ID,
     UG_REMOVE_USER_BTN_ID,
 } from 'utils/testIds';
-
-const StyledEdit = styled(Edit)(({ theme }) => ({
-    fontSize: theme.fontSizes.mainHeader,
-}));
-
-const StyledDelete = styled(Delete)(({ theme }) => ({
-    fontSize: theme.fontSizes.mainHeader,
-}));
 
 export const groupUsersPlaceholder: IGroupUser[] = Array(15).fill({
     name: 'Name of the user',
@@ -248,7 +234,7 @@ export const Group: VFC = () => {
                                         title: 'Edit group',
                                     }}
                                 >
-                                    <StyledEdit />
+                                    <Edit />
                                 </PermissionIconButton>
                                 <PermissionIconButton
                                     data-testid={UG_DELETE_BTN_ID}
@@ -259,7 +245,7 @@ export const Group: VFC = () => {
                                         title: 'Delete group',
                                     }}
                                 >
-                                    <StyledDelete />
+                                    <Delete />
                                 </PermissionIconButton>
                             </>
                         }

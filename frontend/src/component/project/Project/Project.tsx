@@ -93,20 +93,6 @@ const Project = () => {
                 path: `${basePath}/health`,
                 name: 'health',
             },
-            ...(!isChangeRequestFlagEnabled
-                ? [
-                      {
-                          title: 'Access',
-                          path: `${basePath}/access`,
-                          name: 'access',
-                      },
-                      {
-                          title: 'Environments',
-                          path: `${basePath}/environments`,
-                          name: 'environments',
-                      },
-                  ]
-                : []),
             {
                 title: 'Archive',
                 path: `${basePath}/archive`,
@@ -115,28 +101,23 @@ const Project = () => {
             ...(isChangeRequestFlagEnabled
                 ? [
                       {
-                          title: 'Project settings',
-                          path: `${basePath}/settings`,
-                          name: 'settings',
+                          title: 'Change requests',
+                          path: `${basePath}/change-requests`,
+                          name: 'change-request',
                       },
                   ]
                 : []),
+            {
+                title: 'Project settings',
+                path: `${basePath}/settings`,
+                name: 'settings',
+            },
             {
                 title: 'Event log',
                 path: `${basePath}/logs`,
                 name: 'logs',
             },
         ];
-
-        const changeRequestTab = {
-            title: 'Change requests',
-            path: `${basePath}/change-requests`,
-            name: 'change-request',
-        };
-
-        if (isChangeRequestFlagEnabled) {
-            tabArray.splice(tabArray.length - 2, 0, changeRequestTab);
-        }
         return tabArray;
     }, [isChangeRequestFlagEnabled]);
 
@@ -155,7 +136,6 @@ const Project = () => {
                 title: text,
             });
         }
-
         /* eslint-disable-next-line */
     }, []);
 
@@ -290,7 +270,6 @@ const Project = () => {
             />
             <Routes>
                 <Route path="health" element={<ProjectHealth />} />
-                <Route path="access/*" element={<ProjectAccess />} />
                 <Route path="environments" element={<ProjectEnvironment />} />
                 <Route path="archive" element={<ProjectFeaturesArchive />} />
                 <Route path="logs" element={<ProjectLog />} />

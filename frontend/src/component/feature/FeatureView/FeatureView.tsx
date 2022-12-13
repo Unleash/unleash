@@ -43,7 +43,7 @@ export const FeatureView = () => {
     const { refetch: projectRefetch } = useProject(projectId);
     const { favorite, unfavorite } = useFavoriteFeaturesApi();
     const { refetchFeature } = useFeature(projectId, featureId);
-    const { isChangeRequestConfiguredInAnyEnv } =
+    const { isChangeRequestConfiguredInAnyEnv, isChangeRequestFlagEnabled } =
         useChangeRequestsEnabled(projectId);
     const { uiConfig } = useUiConfig();
 
@@ -103,6 +103,7 @@ export const FeatureView = () => {
         <MainLayout
             ref={ref}
             subheader={
+                isChangeRequestFlagEnabled &&
                 isChangeRequestConfiguredInAnyEnv() ? (
                     <DraftBanner project={projectId} />
                 ) : null

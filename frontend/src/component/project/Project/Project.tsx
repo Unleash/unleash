@@ -172,6 +172,7 @@ const Project = () => {
         <MainLayout
             ref={ref}
             subheader={
+                isChangeRequestFlagEnabled &&
                 isChangeRequestConfiguredInAnyEnv() ? (
                     <DraftBanner project={projectId} />
                 ) : null

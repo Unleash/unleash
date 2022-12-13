@@ -4,7 +4,10 @@ import { Box } from '@mui/material';
 import { useChangeRequest } from 'hooks/api/getters/useChangeRequest/useChangeRequest';
 import { ChangeRequestHeader } from './ChangeRequestHeader/ChangeRequestHeader';
 import { ChangeRequestTimeline } from './ChangeRequestTimeline/ChangeRequestTimeline';
-import { ChangeRequestReviewers } from './ChangeRequestReviewers/ChangeRequestReviewers';
+import {
+    ChangeRequestReviewers,
+    ChangeRequestReviewersHeader,
+} from './ChangeRequestReviewers/ChangeRequestReviewers';
 import { ChangeRequest } from '../ChangeRequest/ChangeRequest';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
@@ -157,7 +160,14 @@ export const ChangeRequestOverview: FC = () => {
             <ChangeRequestBody>
                 <StyledAsideBox>
                     <ChangeRequestTimeline state={changeRequest.state} />
-                    <ChangeRequestReviewers>
+                    <ChangeRequestReviewers
+                        header={
+                            <ChangeRequestReviewersHeader
+                                actualApprovals={changeRequest.approvals.length}
+                                minApprovals={changeRequest.minApprovals}
+                            />
+                        }
+                    >
                         {changeRequest.approvals?.map(approver => (
                             <ChangeRequestReviewer
                                 name={
@@ -167,7 +177,7 @@ export const ChangeRequestOverview: FC = () => {
                                 imageUrl={approver.createdBy.imageUrl}
                             />
                         ))}
-                    </ChangeRequestReviewers>{' '}
+                    </ChangeRequestReviewers>
                 </StyledAsideBox>
                 <StyledPaper elevation={0}>
                     <StyledInnerContainer>

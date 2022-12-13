@@ -465,7 +465,7 @@ module.exports = {
                         to: '/reference/api/legacy/unleash/admin/context',
                     },
                     {
-                        from: [ '/api/admin/events', '/docs/api/admin/events' ],
+                        from: ['/api/admin/events', '/docs/api/admin/events'],
                         to: '/reference/api/legacy/unleash/admin/events',
                     },
                     {

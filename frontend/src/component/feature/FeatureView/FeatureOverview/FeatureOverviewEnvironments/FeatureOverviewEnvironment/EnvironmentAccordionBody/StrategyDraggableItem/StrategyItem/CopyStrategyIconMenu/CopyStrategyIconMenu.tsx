@@ -23,6 +23,10 @@ import { useChangeRequestAddStrategy } from 'hooks/useChangeRequestAddStrategy';
 import { ChangeRequestDialogue } from '../../../../../../../../../changeRequest/ChangeRequestConfirmDialog/ChangeRequestConfirmDialog';
 import { CopyStrategyMessage } from '../../../../../../../../../changeRequest/ChangeRequestConfirmDialog/ChangeRequestMessages/CopyStrategyMessage';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
+import {
+    useHasAccess,
+    useHasProjectAccess,
+} from '../../../../../../../../../../hooks/useHasAccess';
 
 interface ICopyStrategyIconMenuProps {
     environmentId: string;
@@ -50,7 +54,7 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
     const onClose = () => {
         setAnchorEl(null);
     };
-    const { hasAccess } = useContext(AccessContext);
+    const checkAccess = useHasProjectAccess(projectId);
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
 
     const {
@@ -97,10 +101,8 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
         onClose();
     };
 
-    const enabled = environments.some(
-        environment =>
-            hasAccess(CREATE_FEATURE_STRATEGY, projectId, environment) ||
-            isChangeRequestConfigured(environment)
+    const enabled = environments.some(environment =>
+        checkAccess(CREATE_FEATURE_STRATEGY, environment)
     );
 
     return (
@@ -150,12 +152,10 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
                 }}
             >
                 {environments.map(environment => {
-                    const access =
-                        hasAccess(
-                            CREATE_FEATURE_STRATEGY,
-                            projectId,
-                            environment
-                        ) || isChangeRequestConfigured(environment);
+                    const access = checkAccess(
+                        CREATE_FEATURE_STRATEGY,
+                        environment
+                    );
 
                     return (
                         <Tooltip

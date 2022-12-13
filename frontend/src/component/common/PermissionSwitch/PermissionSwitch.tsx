@@ -1,9 +1,8 @@
 import { Switch, SwitchProps } from '@mui/material';
-import AccessContext from 'contexts/AccessContext';
-import React, { useContext } from 'react';
+import React from 'react';
 import { formatAccessText } from 'utils/formatAccessText';
 import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
-import { useChangeRequestsEnabled } from '../../../hooks/useChangeRequestsEnabled';
+import { useHasAccess } from '../../../hooks/useHasAccess';
 
 interface IPermissionSwitchProps extends SwitchProps {
     permission: string;
@@ -30,18 +29,7 @@ const PermissionSwitch = React.forwardRef<
         ...rest
     } = props;
 
-    const { hasAccess } = useContext(AccessContext);
-    const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId!);
-
-    let access;
-    if (projectId && environmentId) {
-        access = hasAccess(permission, projectId, environmentId);
-    } else if (projectId) {
-        access = hasAccess(permission, projectId);
-    } else {
-        access = hasAccess(permission);
-    }
-    access = isChangeRequestConfigured(environmentId!) || access;
+    const access = useHasAccess(permission, environmentId, projectId);
 
     return (
         <TooltipResolver title={formatAccessText(access, tooltip)} arrow>

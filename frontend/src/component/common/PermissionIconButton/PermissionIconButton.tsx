@@ -8,7 +8,7 @@ import {
 } from 'component/common/TooltipResolver/TooltipResolver';
 import { formatAccessText } from 'utils/formatAccessText';
 import { useId } from 'hooks/useId';
-import { useChangeRequestsEnabled } from '../../../hooks/useChangeRequestsEnabled';
+import { useHasAccess } from '../../../hooks/useHasAccess';
 
 interface IPermissionIconButtonProps {
     permission: string;
@@ -43,20 +43,8 @@ const PermissionIconButton = ({
     disabled,
     ...rest
 }: IButtonProps | ILinkProps) => {
-    const { hasAccess } = useContext(AccessContext);
-    const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId!);
+    const access = useHasAccess(permission, environmentId, projectId);
     const id = useId();
-    let access;
-
-    if (projectId && environmentId) {
-        access = hasAccess(permission, projectId, environmentId);
-    } else if (projectId) {
-        access = hasAccess(permission, projectId);
-    } else {
-        access = hasAccess(permission);
-    }
-
-    access = access || isChangeRequestConfigured(environmentId!);
 
     return (
         <TooltipResolver

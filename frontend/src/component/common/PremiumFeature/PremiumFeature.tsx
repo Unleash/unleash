@@ -79,7 +79,7 @@ export const PremiumFeature = ({ feature, tooltip }: PremiumFeatureProps) => {
 
     const handleClick = () => {
         tracker.trackEvent('upgrade_plan_clicked', {
-            props: { label },
+            props: { feature: label },
         });
     };
 

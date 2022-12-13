@@ -8,7 +8,6 @@ import { Delete, Edit } from '@mui/icons-material';
 import useToast from 'hooks/useToast';
 import useQueryParams from 'hooks/useQueryParams';
 import React, { useEffect, useMemo, useState } from 'react';
-import { ProjectAccess } from '../ProjectAccess/ProjectAccess';
 import ProjectEnvironment from '../ProjectEnvironment/ProjectEnvironment';
 import { ProjectFeaturesArchive } from './ProjectFeaturesArchive/ProjectFeaturesArchive';
 import ProjectOverview from './ProjectOverview';
@@ -20,7 +19,13 @@ import {
 } from 'component/providers/AccessProvider/permissions';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { Route, Routes, useLocation } from 'react-router-dom';
+import {
+    Navigate,
+    redirect,
+    Route,
+    Routes,
+    useLocation,
+} from 'react-router-dom';
 import { DeleteProjectDialogue } from './DeleteProject/DeleteProjectDialogue';
 import { ProjectLog } from './ProjectLog/ProjectLog';
 import { ChangeRequestOverview } from 'component/changeRequest/ChangeRequestOverview/ChangeRequestOverview';
@@ -270,6 +275,15 @@ const Project = () => {
             />
             <Routes>
                 <Route path="health" element={<ProjectHealth />} />
+                <Route
+                    path="access/*"
+                    element={
+                        <Navigate
+                            replace
+                            to={`/projects/${projectId}/settings/access`}
+                        />
+                    }
+                />
                 <Route path="environments" element={<ProjectEnvironment />} />
                 <Route path="archive" element={<ProjectFeaturesArchive />} />
                 <Route path="logs" element={<ProjectLog />} />

@@ -467,6 +467,7 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
+    "flag": "networkView",
     "menu": {
       "adminSettings": true,
     },

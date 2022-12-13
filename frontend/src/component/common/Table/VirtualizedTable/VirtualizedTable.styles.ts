@@ -6,7 +6,7 @@ export const useStyles = makeStyles()(() => ({
         width: '100%',
         '&:hover': {
             '.show-row-hover': {
-                display: 'inherit',
+                opacity: 1,
             },
         },
     },

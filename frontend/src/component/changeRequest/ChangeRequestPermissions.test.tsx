@@ -45,22 +45,8 @@ const uiConfigForEnterprise = () =>
         flags: {
             changeRequests: true,
         },
-        slogan: 'getunleash.io - All rights reserved',
-        name: 'Unleash enterprise',
-        links: [],
-        version: '4.18.0-beta.5',
-        emailEnabled: false,
-        unleashUrl: 'http://localhost:4242',
-        baseUriPath: '',
-        authenticationType: 'enterprise',
-        segmentValuesLimit: 100,
-        strategySegmentsLimit: 5,
-        frontendApiOrigins: ['*'],
         versionInfo: {
             current: { oss: '4.18.0-beta.5', enterprise: '4.17.0-beta.1' },
-            latest: {},
-            isLatest: true,
-            instanceId: 'c7566052-15d7-4e09-9625-9c988e1f2be7',
         },
         disablePasswordAuth: false,
     });
@@ -71,38 +57,7 @@ const setupOtherRoutes = (feature: string) => {
         'api/admin/projects/default/change-requests/pending',
         []
     );
-    testServerRoute(server, '/api/admin/projects/default', {
-        name: 'Default',
-        description: 'Default project',
-        health: 100,
-        updatedAt: '2022-11-14T10:15:59.228Z',
-        environments: ['development', 'production'],
-        features: [
-            {
-                type: 'release',
-                name: feature,
-                createdAt: '2022-11-14T08:16:33.338Z',
-                lastSeenAt: null,
-                stale: false,
-                environments: [
-                    {
-                        name: 'development',
-                        enabled: false,
-                        type: 'development',
-                        sortOrder: 100,
-                    },
-                    {
-                        name: 'production',
-                        enabled: false,
-                        type: 'production',
-                        sortOrder: 200,
-                    },
-                ],
-            },
-        ],
-        members: 0,
-        version: 1,
-    });
+    testServerRoute(server, '/api/admin/projects/default', {});
     testServerRoute(server, `api/admin/client-metrics/features/${feature}`, {
         version: 1,
         maturity: 'stable',

@@ -97,8 +97,10 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
         onClose();
     };
 
-    const enabled = environments.some(environment =>
-        hasAccess(CREATE_FEATURE_STRATEGY, projectId, environment)
+    const enabled = environments.some(
+        environment =>
+            hasAccess(CREATE_FEATURE_STRATEGY, projectId, environment) ||
+            isChangeRequestConfigured(environment)
     );
 
     return (
@@ -148,11 +150,12 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
                 }}
             >
                 {environments.map(environment => {
-                    const access = hasAccess(
-                        CREATE_FEATURE_STRATEGY,
-                        projectId,
-                        environment
-                    );
+                    const access =
+                        hasAccess(
+                            CREATE_FEATURE_STRATEGY,
+                            projectId,
+                            environment
+                        ) || isChangeRequestConfigured(environment);
 
                     return (
                         <Tooltip

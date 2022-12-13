@@ -30,9 +30,11 @@ import {
 import { formatFeaturePath } from '../FeatureStrategyEdit/FeatureStrategyEdit';
 import { useChangeRequestInReviewWarning } from 'hooks/useChangeRequestInReviewWarning';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
+import { useChangeRequestsEnabled } from '../../../../hooks/useChangeRequestsEnabled';
 
 interface IFeatureStrategyFormProps {
     feature: IFeatureToggle;
+    projectId: string;
     environmentId: string;
     permission: string;
     onSubmit: () => void;
@@ -48,6 +50,7 @@ interface IFeatureStrategyFormProps {
 }
 
 export const FeatureStrategyForm = ({
+    projectId,
     feature,
     environmentId,
     permission,
@@ -65,6 +68,7 @@ export const FeatureStrategyForm = ({
     const hasValidConstraints = useConstraintsValidation(strategy.constraints);
     const enableProdGuard = useFeatureStrategyProdGuard(feature, environmentId);
     const { hasAccess } = useContext(AccessContext);
+    const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const { strategyDefinition } = useStrategy(strategy?.name);
 
     const { data } = usePendingChangeRequests(feature.project);
@@ -205,11 +209,10 @@ export const FeatureStrategyForm = ({
                 setStrategy={setStrategy}
                 validateParameter={validateParameter}
                 errors={errors}
-                hasAccess={hasAccess(
-                    permission,
-                    feature.project,
-                    environmentId
-                )}
+                hasAccess={
+                    hasAccess(permission, feature.project, environmentId) ||
+                    isChangeRequestConfigured(environmentId)
+                }
             />
             <hr className={styles.hr} />
             <div className={styles.buttons}>

@@ -3,6 +3,7 @@ import AccessContext from 'contexts/AccessContext';
 import React, { useContext } from 'react';
 import { formatAccessText } from 'utils/formatAccessText';
 import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
+import { useChangeRequestsEnabled } from '../../../hooks/useChangeRequestsEnabled';
 
 interface IPermissionSwitchProps extends SwitchProps {
     permission: string;
@@ -30,6 +31,7 @@ const PermissionSwitch = React.forwardRef<
     } = props;
 
     const { hasAccess } = useContext(AccessContext);
+    const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId!);
 
     let access;
     if (projectId && environmentId) {
@@ -39,6 +41,7 @@ const PermissionSwitch = React.forwardRef<
     } else {
         access = hasAccess(permission);
     }
+    access = isChangeRequestConfigured(environmentId!) || access;
 
     return (
         <TooltipResolver title={formatAccessText(access, tooltip)} arrow>

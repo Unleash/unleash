@@ -9,6 +9,7 @@ import {
 } from 'component/common/TooltipResolver/TooltipResolver';
 import { formatAccessText } from 'utils/formatAccessText';
 import { useId } from 'hooks/useId';
+import { useChangeRequestsEnabled } from '../../../hooks/useChangeRequestsEnabled';
 
 export interface IPermissionButtonProps extends Omit<ButtonProps, 'title'> {
     permission: string | string[];
@@ -36,6 +37,9 @@ const PermissionButton: React.FC<IPermissionButtonProps> = React.forwardRef(
         ref
     ) => {
         const { hasAccess } = useContext(AccessContext);
+        const { isChangeRequestConfigured } = useChangeRequestsEnabled(
+            projectId!
+        );
         const id = useId();
         let access;
 
@@ -64,7 +68,7 @@ const PermissionButton: React.FC<IPermissionButtonProps> = React.forwardRef(
             return access;
         };
 
-        access = handleAccess();
+        access = handleAccess() || isChangeRequestConfigured(environmentId!);
 
         return (
             <TooltipResolver

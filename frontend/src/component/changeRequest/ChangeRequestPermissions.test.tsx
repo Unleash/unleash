@@ -47,20 +47,7 @@ const uiConfigForEnterprise = () =>
         },
         slogan: 'getunleash.io - All rights reserved',
         name: 'Unleash enterprise',
-        links: [
-            {
-                value: 'Documentation',
-                icon: 'library_books',
-                href: 'https://docs.getunleash.io/docs',
-                title: 'User documentation',
-            },
-            {
-                value: 'GitHub',
-                icon: 'c_github',
-                href: 'https://github.com/Unleash/unleash',
-                title: 'Source code on GitHub',
-            },
-        ],
+        links: [],
         version: '4.18.0-beta.5',
         emailEnabled: false,
         unleashUrl: 'http://localhost:4242',
@@ -140,36 +127,6 @@ const setupOtherRoutes = (feature: string) => {
                 deprecated: false,
             },
             {
-                displayName: 'Gradual rollout',
-                name: 'flexibleRollout',
-                editable: false,
-                description:
-                    'Roll out to a percentage of your userbase, and ensure that the experience is the same for the user on each visit.',
-                parameters: [
-                    {
-                        name: 'rollout',
-                        type: 'percentage',
-                        description: '',
-                        required: false,
-                    },
-                    {
-                        name: 'stickiness',
-                        type: 'string',
-                        description:
-                            'Used define stickiness. Possible values: default, userId, sessionId, random',
-                        required: true,
-                    },
-                    {
-                        name: 'groupId',
-                        type: 'string',
-                        description:
-                            'Used to define a activation groups, which allows you to correlate across feature toggles.',
-                        required: true,
-                    },
-                ],
-                deprecated: false,
-            },
-            {
                 displayName: 'UserIDs',
                 name: 'userWithId',
                 editable: false,
@@ -184,102 +141,6 @@ const setupOtherRoutes = (feature: string) => {
                     },
                 ],
                 deprecated: false,
-            },
-            {
-                displayName: 'IPs',
-                name: 'remoteAddress',
-                editable: false,
-                description:
-                    'Enable the feature for a specific set of IP addresses.',
-                parameters: [
-                    {
-                        name: 'IPs',
-                        type: 'list',
-                        description:
-                            'List of IPs to enable the feature toggle for.',
-                        required: true,
-                    },
-                ],
-                deprecated: false,
-            },
-            {
-                displayName: 'Hosts',
-                name: 'applicationHostname',
-                editable: false,
-                description:
-                    'Enable the feature for a specific set of hostnames.',
-                parameters: [
-                    {
-                        name: 'hostNames',
-                        type: 'list',
-                        description:
-                            'List of hostnames to enable the feature toggle for.',
-                        required: false,
-                    },
-                ],
-                deprecated: false,
-            },
-            {
-                displayName: null,
-                name: 'gradualRolloutRandom',
-                editable: true,
-                description:
-                    'Randomly activate the feature toggle. No stickiness.',
-                parameters: [
-                    {
-                        name: 'percentage',
-                        type: 'percentage',
-                        description: '',
-                        required: false,
-                    },
-                ],
-                deprecated: true,
-            },
-            {
-                displayName: null,
-                name: 'gradualRolloutSessionId',
-                editable: true,
-                description:
-                    'Gradually activate feature toggle. Stickiness based on session id.',
-                parameters: [
-                    {
-                        name: 'percentage',
-                        type: 'percentage',
-                        description: '',
-                        required: false,
-                    },
-                    {
-                        name: 'groupId',
-                        type: 'string',
-                        description:
-                            'Used to define a activation groups, which allows you to correlate across feature toggles.',
-                        required: true,
-                    },
-                ],
-                deprecated: true,
-            },
-            {
-                displayName: null,
-                name: 'gradualRolloutUserId',
-                editable: true,
-                description:
-                    'Gradually activate feature toggle for logged in users. Stickiness based on user id.',
-                parameters: [
-                    {
-                        name: 'percentage',
-                        type: 'percentage',
-                        description: '',
-                        required: false,
-                    },
-                    {
-                        name: 'groupId',
-                        type: 'string',
-                        description:
-                            'Used to define a activation groups, which allows you to correlate across feature toggles.',
-                        required: true,
-                    },
-                ],
-                deprecated: true,
             },
         ],
     });

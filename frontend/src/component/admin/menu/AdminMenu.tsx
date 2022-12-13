@@ -87,14 +87,16 @@ function AdminMenu() {
                         </CenteredNavLink>
                     }
                 />
-                <Tab
-                    value="/admin/traffic"
-                    label={
-                        <CenteredNavLink to="/admin/traffic">
-                            Traffic
-                        </CenteredNavLink>
-                    }
-                />
+                {flags.networkView && (
+                    <Tab
+                        value="/admin/traffic"
+                        label={
+                            <CenteredNavLink to="/admin/traffic">
+                                Traffic
+                            </CenteredNavLink>
+                        }
+                    />
+                )}
                 {isBilling && (
                     <Tab
                         value="/admin/billing"

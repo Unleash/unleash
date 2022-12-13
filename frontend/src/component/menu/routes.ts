@@ -517,6 +517,7 @@ export const routes: IRoute[] = [
         component: Traffic,
         type: 'protected',
         menu: { adminSettings: true },
+        flag: 'networkView',
     },
     {
         path: '/admin/cors',

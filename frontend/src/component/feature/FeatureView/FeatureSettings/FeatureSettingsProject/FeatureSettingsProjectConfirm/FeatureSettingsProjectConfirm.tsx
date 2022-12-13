@@ -5,10 +5,18 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { useStyles } from './FeatureSettingsProjectConfirm.styles';
 import { arraysHaveSameItems } from 'utils/arraysHaveSameItems';
-import { Alert, List, ListItem } from '@mui/material';
+import { Alert, List, ListItem, styled } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { IChangeRequest } from 'component/changeRequest/changeRequest.types';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+
+const StyledAlert = styled(Alert)(({ theme }) => ({
+    marginBottom: theme.spacing(1),
+}));
+
+const StyledList = styled(List)({
+    padding: 0,
+});
 
 interface IFeatureSettingsProjectConfirm {
     projectId: string;
@@ -55,28 +63,28 @@ const FeatureSettingsProjectConfirm = ({
                     secondaryButtonText="Cancel"
                 >
                     <div className={styles.container}>
-                        <Alert severity="success">
+                        <StyledAlert severity="success">
                             This feature toggle is compatible with the new
                             project.
-                        </Alert>
+                        </StyledAlert>
+                        <p>
+                            Are you sure you want to change the project for this
+                            toggle?
+                        </p>
                     </div>
-                    <p>
-                        Are you sure you want to change the project for this
-                        toggle?
-                    </p>
                 </Dialogue>
             }
             elseShow={
                 <Dialogue
                     open={open}
-                    onClose={onClose}
+                    onClick={onClose}
                     title="Confirm change project"
-                    secondaryButtonText="OK"
+                    primaryButtonText="OK"
                 >
                     <div className={styles.container}>
-                        <Alert severity="warning">
+                        <StyledAlert severity="warning">
                             Incompatible project environments
-                        </Alert>
+                        </StyledAlert>
                         <p>
                             In order to move a feature toggle between two
                             projects, both projects must have the exact same
@@ -92,7 +100,7 @@ const FeatureSettingsProjectConfirm = ({
                                         feature toggle is currently referenced
                                         in the following change requests:
                                     </p>
-                                    <List>
+                                    <StyledList>
                                         {changeRequests?.map(changeRequest => {
                                             return (
                                                 <ListItem
@@ -107,7 +115,7 @@ const FeatureSettingsProjectConfirm = ({
                                                 </ListItem>
                                             );
                                         })}
-                                    </List>
+                                    </StyledList>
                                 </>
                             }
                         />

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { useStyles } from '../SegmentDeleteConfirm/SegmentDeleteConfirm.styles';
 import { ISegment } from 'interfaces/segment';
@@ -6,6 +5,11 @@ import { IFeatureStrategy } from 'interfaces/strategy';
 import { Link } from 'react-router-dom';
 import { formatEditStrategyPath } from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
 import { formatStrategyName } from 'utils/strategyNames';
+import { styled } from '@mui/material';
+
+const StyledUl = styled('ul')({
+    marginBottom: 0,
+});
 
 interface ISegmentDeleteUsedSegmentProps {
     segment: ISegment;
@@ -33,7 +37,7 @@ export const SegmentDeleteUsedSegment = ({
                 The following feature toggles are using the{' '}
                 <strong>{segment.name}</strong> segment for their strategies:
             </p>
-            <ul>
+            <StyledUl>
                 {strategies?.map(strategy => (
                     <li key={strategy.id}>
                         <Link
@@ -52,7 +56,7 @@ export const SegmentDeleteUsedSegment = ({
                         </Link>
                     </li>
                 ))}
-            </ul>
+            </StyledUl>
         </Dialogue>
     );
 };

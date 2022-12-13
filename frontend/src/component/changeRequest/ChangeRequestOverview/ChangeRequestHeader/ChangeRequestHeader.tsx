@@ -41,9 +41,9 @@ export const ChangeRequestHeader: FC<{ changeRequest: IChangeRequest }> = ({
                         />
                     </Tooltip>
                 </Box>
-                <Box sx={{ ml: 1.5 }}>
+                <Box sx={theme => ({ marginLeft: theme.spacing(1.5) })}>
                     <StyledCard variant="outlined">
-                        <Typography variant="body2">
+                        <Typography variant="body2" sx={{ lineHeight: 1 }}>
                             Environment:{' '}
                             <Typography
                                 display="inline"

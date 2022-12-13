@@ -44,6 +44,7 @@ import { useStyles } from './ProjectFeatureToggles.styles';
 import { usePinnedFavorites } from 'hooks/usePinnedFavorites';
 import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';
 import { FeatureTagCell } from 'component/common/Table/cells/FeatureTagCell/FeatureTagCell';
+import { useGlobalLocalStorage } from 'hooks/useGlobalLocalStorage';
 
 interface IProjectFeatureTogglesProps {
     features: IProject['features'];
@@ -67,7 +68,6 @@ const staticColumns = ['Actions', 'name', 'favorite'];
 
 const defaultSort: SortingRule<string> & {
     columns?: string[];
-    favorites?: boolean;
 } = { id: 'createdAt' };
 
 export const ProjectFeatureToggles = ({
@@ -97,6 +97,8 @@ export const ProjectFeatureToggles = ({
             `${projectId}:FeatureToggleListTable:v1`,
             defaultSort
         );
+    const { value: globalStore, setValue: setGlobalStore } =
+        useGlobalLocalStorage();
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
     const { uiConfig } = useUiConfig();
@@ -110,7 +112,7 @@ export const ProjectFeatureToggles = ({
         usePinnedFavorites(
             searchParams.has('favorites')
                 ? searchParams.get('favorites') === 'true'
-                : storedParams.favorites
+                : globalStore.favorites
         );
     const { toggleFeatureEnvironmentOn, toggleFeatureEnvironmentOff } =
         useFeatureApi();
@@ -469,7 +471,10 @@ export const ProjectFeatureToggles = ({
             id: sortBy[0].id,
             desc: sortBy[0].desc || false,
             columns: tableState.columns.split(','),
-            favorites: isFavoritesPinned || false,
+        }));
+        setGlobalStore(params => ({
+            ...params,
+            favorites: Boolean(isFavoritesPinned),
         }));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [

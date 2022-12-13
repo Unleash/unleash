@@ -5,7 +5,7 @@ import {
     StarBorder as StarBorderIcon,
 } from '@mui/icons-material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { TooltipResolver } from '../../../TooltipResolver/TooltipResolver';
+import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
 
 interface IFavoriteIconCellProps {
     value?: boolean;
@@ -13,17 +13,15 @@ interface IFavoriteIconCellProps {
 }
 
 const InactiveIconButton = styled(IconButton)(({ theme }) => ({
-    color: 'transparent',
-    '&:hover, &:focus': {
-        color: theme.palette.primary.main,
-    },
+    color: theme.palette.primary.main,
+    display: 'none',
 }));
 
 export const FavoriteIconCell: VFC<IFavoriteIconCellProps> = ({
     value = false,
     onClick,
 }) => (
-    <Box sx={{ pl: 1.25 }}>
+    <Box sx={{ pl: 1.25, display: 'inline-flex' }}>
         <ConditionallyRender
             condition={value}
             show={
@@ -41,6 +39,7 @@ export const FavoriteIconCell: VFC<IFavoriteIconCellProps> = ({
             elseShow={
                 <TooltipResolver title={'Add to favorites'}>
                     <InactiveIconButton
+                        className="show-row-hover"
                         onClick={onClick}
                         size="small"
                         sx={{ padding: 1.25 }}

@@ -31,7 +31,7 @@ export const ChangeRequestConfiguration = () => {
                 }
                 sx={{ justifyContent: 'center' }}
             >
-                <PremiumFeature feature="Change Requests" />
+                <PremiumFeature feature="change-requests" />
             </PageContent>
         );
     }

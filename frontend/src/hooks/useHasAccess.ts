@@ -6,29 +6,31 @@ export const useHasProjectAccess = (projectId: string) => {
     const { hasAccess } = useContext(AccessContext);
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
 
+    const handlePermissionAccess = (
+        permission: string,
+        projectId?: string,
+        environmentId?: string
+    ) => {
+        if (projectId && environmentId) {
+            return hasAccess(permission, projectId, environmentId);
+        } else if (projectId) {
+            return hasAccess(permission, projectId);
+        } else {
+            return hasAccess(permission);
+        }
+    };
+
     const handleAccess = (
         permission: string | string[],
         projectId?: string,
         environmentId?: string
     ) => {
         if (Array.isArray(permission)) {
-            return permission.some(permission => {
-                if (projectId && environmentId) {
-                    return hasAccess(permission, projectId, environmentId);
-                } else if (projectId) {
-                    return hasAccess(permission, projectId);
-                } else {
-                    return hasAccess(permission);
-                }
-            });
+            return permission.some(permission =>
+                handlePermissionAccess(permission, projectId, environmentId)
+            );
         } else {
-            if (projectId && environmentId) {
-                return hasAccess(permission, projectId, environmentId);
-            } else if (projectId) {
-                return hasAccess(permission, projectId);
-            } else {
-                return hasAccess(permission);
-            }
+            return handlePermissionAccess(permission, projectId, environmentId);
         }
     };
 

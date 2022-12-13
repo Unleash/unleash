@@ -8,7 +8,6 @@ import { Delete, Edit } from '@mui/icons-material';
 import useToast from 'hooks/useToast';
 import useQueryParams from 'hooks/useQueryParams';
 import React, { useEffect, useMemo, useState } from 'react';
-import { ProjectAccess } from '../ProjectAccess/ProjectAccess';
 import ProjectEnvironment from '../ProjectEnvironment/ProjectEnvironment';
 import { ProjectFeaturesArchive } from './ProjectFeaturesArchive/ProjectFeaturesArchive';
 import ProjectOverview from './ProjectOverview';
@@ -20,7 +19,7 @@ import {
 } from 'component/providers/AccessProvider/permissions';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { Route, Routes, useLocation } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { DeleteProjectDialogue } from './DeleteProject/DeleteProjectDialogue';
 import { ProjectLog } from './ProjectLog/ProjectLog';
 import { ChangeRequestOverview } from 'component/changeRequest/ChangeRequestOverview/ChangeRequestOverview';
@@ -93,20 +92,6 @@ const Project = () => {
                 path: `${basePath}/health`,
                 name: 'health',
             },
-            ...(!isChangeRequestFlagEnabled
-                ? [
-                      {
-                          title: 'Access',
-                          path: `${basePath}/access`,
-                          name: 'access',
-                      },
-                      {
-                          title: 'Environments',
-                          path: `${basePath}/environments`,
-                          name: 'environments',
-                      },
-                  ]
-                : []),
             {
                 title: 'Archive',
                 path: `${basePath}/archive`,
@@ -115,28 +100,23 @@ const Project = () => {
             ...(isChangeRequestFlagEnabled
                 ? [
                       {
-                          title: 'Project settings',
-                          path: `${basePath}/settings`,
-                          name: 'settings',
+                          title: 'Change requests',
+                          path: `${basePath}/change-requests`,
+                          name: 'change-request',
                       },
                   ]
                 : []),
+            {
+                title: 'Project settings',
+                path: `${basePath}/settings`,
+                name: 'settings',
+            },
             {
                 title: 'Event log',
                 path: `${basePath}/logs`,
                 name: 'logs',
             },
         ];
-
-        const changeRequestTab = {
-            title: 'Change requests',
-            path: `${basePath}/change-requests`,
-            name: 'change-request',
-        };
-
-        if (isChangeRequestFlagEnabled) {
-            tabArray.splice(tabArray.length - 2, 0, changeRequestTab);
-        }
         return tabArray;
     }, [isChangeRequestFlagEnabled]);
 
@@ -155,7 +135,6 @@ const Project = () => {
                 title: text,
             });
         }
-
         /* eslint-disable-next-line */
     }, []);
 
@@ -290,7 +269,15 @@ const Project = () => {
             />
             <Routes>
                 <Route path="health" element={<ProjectHealth />} />
-                <Route path="access/*" element={<ProjectAccess />} />
+                <Route
+                    path="access/*"
+                    element={
+                        <Navigate
+                            replace
+                            to={`/projects/${projectId}/settings/access`}
+                        />
+                    }
+                />
                 <Route path="environments" element={<ProjectEnvironment />} />
                 <Route path="archive" element={<ProjectFeaturesArchive />} />
                 <Route path="logs" element={<ProjectLog />} />

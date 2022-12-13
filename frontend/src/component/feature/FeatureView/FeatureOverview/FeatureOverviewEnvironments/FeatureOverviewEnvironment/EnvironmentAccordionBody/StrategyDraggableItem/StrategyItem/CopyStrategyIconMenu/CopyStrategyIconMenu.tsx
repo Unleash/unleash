@@ -23,6 +23,7 @@ import { ChangeRequestDialogue } from 'component/changeRequest/ChangeRequestConf
 import { CopyStrategyMessage } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestMessages/CopyStrategyMessage';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useCheckProjectAccess } from 'hooks/useHasAccess';
+import { STRATEGY_FORM_COPY_ID } from 'utils/testIds';
 
 interface ICopyStrategyIconMenuProps {
     environmentId: string;
@@ -132,6 +133,7 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
                         onClick={(event: MouseEvent<HTMLButtonElement>) => {
                             setAnchorEl(event.currentTarget);
                         }}
+                        data-testid={STRATEGY_FORM_COPY_ID}
                         disabled={!enabled}
                     >
                         <CopyIcon />

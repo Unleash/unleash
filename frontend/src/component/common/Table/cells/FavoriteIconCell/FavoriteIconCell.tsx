@@ -14,7 +14,7 @@ interface IFavoriteIconCellProps {
 
 const InactiveIconButton = styled(IconButton)(({ theme }) => ({
     color: theme.palette.primary.main,
-    display: 'none',
+    opacity: 0,
 }));
 
 export const FavoriteIconCell: VFC<IFavoriteIconCellProps> = ({

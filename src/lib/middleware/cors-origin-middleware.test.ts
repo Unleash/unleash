@@ -1,4 +1,4 @@
-import { allowRequestOrigin } from './cors-origin-middleware';
+import { resolveOrigin } from './cors-origin-middleware';
 import FakeSettingStore from '../../test/fixtures/fake-setting-store';
 import { createTestConfig } from '../../test/config/test-config';
 import FakeEventStore from '../../test/fixtures/fake-event-store';
@@ -31,21 +31,15 @@ const createSettingService = (
     };
 };
 
-test('allowRequestOrigin', () => {
+test('resolveOrigin', () => {
     const dotCom = 'https://example.com';
     const dotOrg = 'https://example.org';
 
-    expect(allowRequestOrigin('', [])).toEqual(false);
-    expect(allowRequestOrigin(dotCom, [])).toEqual(false);
-    expect(allowRequestOrigin(dotCom, [dotOrg])).toEqual(false);
-
-    expect(allowRequestOrigin(dotCom, [dotCom, dotOrg])).toEqual(true);
-    expect(allowRequestOrigin(dotCom, [dotOrg, dotCom])).toEqual(true);
-    expect(allowRequestOrigin(dotCom, [dotCom, dotCom])).toEqual(true);
-
-    expect(allowRequestOrigin(dotCom, ['*'])).toEqual(true);
-    expect(allowRequestOrigin(dotCom, [dotOrg, '*'])).toEqual(true);
-    expect(allowRequestOrigin(dotCom, [dotCom, dotOrg, '*'])).toEqual(true);
+    expect(resolveOrigin([])).toEqual('*');
+    expect(resolveOrigin(['*'])).toEqual('*');
+    expect(resolveOrigin([dotOrg])).toEqual([dotOrg]);
+    expect(resolveOrigin([dotCom, dotOrg])).toEqual([dotCom, dotOrg]);
+    expect(resolveOrigin([dotOrg, '*'])).toEqual('*');
 });
 
 test('corsOriginMiddleware origin validation', async () => {

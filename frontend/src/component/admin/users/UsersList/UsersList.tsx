@@ -224,12 +224,12 @@ const UsersList = () => {
                 columns: ['type'],
             },
             {
-                condition: isSmallScreen,
-                columns: ['createdAt', 'last-login'],
-            },
-            {
                 condition: isExtraSmallScreen,
                 columns: ['imageUrl', 'role'],
+            },
+            {
+                condition: isSmallScreen,
+                columns: ['createdAt', 'last-login'],
             },
         ],
         setHiddenColumns,

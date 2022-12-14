@@ -1,4 +1,4 @@
-import { useMemo, useEffect } from 'react';
+import { useMemo } from 'react';
 import { IFeatureToggleListItem } from 'interfaces/featureToggle';
 import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
 import { PageContent } from 'component/common/PageContent/PageContent';
@@ -23,6 +23,7 @@ import { ReportExpiredCell } from './ReportExpiredCell/ReportExpiredCell';
 import { ReportStatusCell } from './ReportStatusCell/ReportStatusCell';
 import { formatStatus, ReportingStatus } from './ReportStatusCell/formatStatus';
 import { formatExpiredAt } from './ReportExpiredCell/formatExpiredAt';
+import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 
 interface IReportTableProps {
     projectId: string;
@@ -91,19 +92,24 @@ export const ReportTable = ({ projectId, features }: IReportTableProps) => {
         useSortBy
     );
 
-    useEffect(() => {
-        const hiddenColumns = [];
-        if (isMediumScreen) {
-            hiddenColumns.push('createdAt');
-        }
-        if (isSmallScreen) {
-            hiddenColumns.push('expiredAt', 'lastSeenAt');
-        }
-        if (isExtraSmallScreen) {
-            hiddenColumns.push('stale');
-        }
-        setHiddenColumns(hiddenColumns);
-    }, [setHiddenColumns, isSmallScreen, isMediumScreen, isExtraSmallScreen]);
+    useConditionallyHiddenColumns(
+        [
+            {
+                condition: isExtraSmallScreen,
+                columns: ['stale'],
+            },
+            {
+                condition: isSmallScreen,
+                columns: ['expiredAt', 'lastSeenAt'],
+            },
+            {
+                condition: isMediumScreen,
+                columns: ['createdAt'],
+            },
+        ],
+        setHiddenColumns,
+        COLUMNS
+    );
 
     const title =
         rows.length < data.length

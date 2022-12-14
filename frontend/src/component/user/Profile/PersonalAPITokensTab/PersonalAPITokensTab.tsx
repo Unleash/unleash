@@ -35,6 +35,7 @@ import { CreatePersonalAPIToken } from './CreatePersonalAPIToken/CreatePersonalA
 import { DeletePersonalAPIToken } from './DeletePersonalAPIToken/DeletePersonalAPIToken';
 import { PersonalAPITokenDialog } from './PersonalAPITokenDialog/PersonalAPITokenDialog';
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
+import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(3),
@@ -199,16 +200,20 @@ export const PersonalAPITokensTab = () => {
         useFlexLayout
     );
 
-    useEffect(() => {
-        const hiddenColumns = [];
-        if (isSmallScreen) {
-            hiddenColumns.push('createdAt');
-        }
-        if (isExtraSmallScreen) {
-            hiddenColumns.push('expiresAt');
-        }
-        setHiddenColumns(hiddenColumns);
-    }, [setHiddenColumns, isSmallScreen, isExtraSmallScreen]);
+    useConditionallyHiddenColumns(
+        [
+            {
+                condition: isExtraSmallScreen,
+                columns: ['expiresAt'],
+            },
+            {
+                condition: isSmallScreen,
+                columns: ['createdAt'],
+            },
+        ],
+        setHiddenColumns,
+        columns
+    );
 
     useEffect(() => {
         const tableState: PageQueryType = {};

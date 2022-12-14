@@ -45,6 +45,7 @@ import { usePinnedFavorites } from 'hooks/usePinnedFavorites';
 import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';
 import { FeatureTagCell } from 'component/common/Table/cells/FeatureTagCell/FeatureTagCell';
 import { useGlobalLocalStorage } from 'hooks/useGlobalLocalStorage';
+import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 
 interface IProjectFeatureTogglesProps {
     features: IProject['features'];
@@ -430,15 +431,16 @@ export const ProjectFeatureToggles = ({
         useSortBy
     );
 
-    useEffect(() => {
-        if (!features.some(({ tags }) => tags?.length)) {
-            setHiddenColumns(hiddenColumns => [...hiddenColumns, 'tags']);
-        } else {
-            setHiddenColumns(hiddenColumns =>
-                hiddenColumns.filter(column => column !== 'tags')
-            );
-        }
-    }, [setHiddenColumns, features]);
+    useConditionallyHiddenColumns(
+        [
+            {
+                condition: !features.some(({ tags }) => tags?.length),
+                columns: ['tags'],
+            },
+        ],
+        setHiddenColumns,
+        columns
+    );
 
     useEffect(() => {
         if (loading) {

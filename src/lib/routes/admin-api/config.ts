@@ -98,7 +98,7 @@ class ConfigController extends Controller {
         res: Response<UiConfigSchema>,
     ): Promise<void> {
         const [frontendSettings, simpleAuthSettings] = await Promise.all([
-            this.proxyService.getFrontendSettings(),
+            this.proxyService.getFrontendSettings(false),
             this.settingService.get<SimpleAuthSettings>(simpleAuthSettingsKey),
         ]);
 

@@ -7,6 +7,7 @@ import FakeProjectStore from '../../test/fixtures/fake-project-store';
 import { ProxyService, SettingService } from '../../lib/services';
 import { ISettingStore } from '../../lib/types';
 import { frontendSettingsKey } from '../../lib/types/settings/frontend-settings';
+import { minutesToMilliseconds } from 'date-fns';
 
 const createSettingService = (
     frontendApiOrigins: string[],
@@ -56,56 +57,102 @@ test('corsOriginMiddleware origin validation', async () => {
             userName,
         ),
     ).rejects.toThrow('Invalid origin: a');
+    proxyService.destroy();
 });
 
 test('corsOriginMiddleware without config', async () => {
     const { proxyService, settingStore } = createSettingService([]);
     const userName = randomId();
-    expect(await proxyService.getFrontendSettings()).toEqual({
+    expect(await proxyService.getFrontendSettings(false)).toEqual({
         frontendApiOrigins: [],
     });
     await proxyService.setFrontendSettings(
         { frontendApiOrigins: [] },
         userName,
     );
-    expect(await proxyService.getFrontendSettings()).toEqual({
+    expect(await proxyService.getFrontendSettings(false)).toEqual({
         frontendApiOrigins: [],
     });
     await proxyService.setFrontendSettings(
         { frontendApiOrigins: ['*'] },
         userName,
     );
-    expect(await proxyService.getFrontendSettings()).toEqual({
+    expect(await proxyService.getFrontendSettings(false)).toEqual({
         frontendApiOrigins: ['*'],
     });
     await settingStore.delete(frontendSettingsKey);
-    expect(await proxyService.getFrontendSettings()).toEqual({
+    expect(await proxyService.getFrontendSettings(false)).toEqual({
         frontendApiOrigins: [],
     });
+    proxyService.destroy();
 });
 
 test('corsOriginMiddleware with config', async () => {
     const { proxyService, settingStore } = createSettingService(['*']);
     const userName = randomId();
-    expect(await proxyService.getFrontendSettings()).toEqual({
+    expect(await proxyService.getFrontendSettings(false)).toEqual({
         frontendApiOrigins: ['*'],
     });
     await proxyService.setFrontendSettings(
         { frontendApiOrigins: [] },
         userName,
     );
-    expect(await proxyService.getFrontendSettings()).toEqual({
+    expect(await proxyService.getFrontendSettings(false)).toEqual({
         frontendApiOrigins: [],
     });
     await proxyService.setFrontendSettings(
         { frontendApiOrigins: ['https://example.com', 'https://example.org'] },
         userName,
     );
-    expect(await proxyService.getFrontendSettings()).toEqual({
+    expect(await proxyService.getFrontendSettings(false)).toEqual({
         frontendApiOrigins: ['https://example.com', 'https://example.org'],
     });
     await settingStore.delete(frontendSettingsKey);
-    expect(await proxyService.getFrontendSettings()).toEqual({
+    expect(await proxyService.getFrontendSettings(false)).toEqual({
         frontendApiOrigins: ['*'],
     });
+    proxyService.destroy();
+});
+
+test('corsOriginMiddleware with caching enabled', async () => {
+    jest.useFakeTimers();
+
+    const { proxyService } = createSettingService([]);
+
+    const userName = randomId();
+    expect(await proxyService.getFrontendSettings()).toEqual({
+        frontendApiOrigins: [],
+    });
+
+    //setting
+    await proxyService.setFrontendSettings(
+        { frontendApiOrigins: ['*'] },
+        userName,
+    );
+
+    //still get cached value
+    expect(await proxyService.getFrontendSettings()).toEqual({
+        frontendApiOrigins: [],
+    });
+
+    jest.advanceTimersByTime(minutesToMilliseconds(2));
+
+    jest.useRealTimers();
+
+    /*
+    This is needed because it is not enough to fake time to test the
+    updated cache, we also need to make sure that all promises are 
+    executed and completed, in the right order. 
+    */
+    await new Promise<void>((resolve) =>
+        process.nextTick(async () => {
+            const settings = await proxyService.getFrontendSettings();
+
+            expect(settings).toEqual({
+                frontendApiOrigins: ['*'],
+            });
+            resolve();
+        }),
+    );
+    proxyService.destroy();
 });

@@ -18,6 +18,7 @@ import {
 import { validateOrigins } from '../util';
 import { BadDataError } from '../error';
 import assert from 'assert';
+import { minutesToMilliseconds } from 'date-fns';
 
 type Config = Pick<
     IUnleashConfig,
@@ -45,11 +46,20 @@ export class ProxyService {
 
     private readonly clients: Map<ApiUser['secret'], Unleash> = new Map();
 
+    private cachedFrontendSettings?: FrontendSettings;
+
+    private timer: NodeJS.Timeout;
+
     constructor(config: Config, stores: Stores, services: Services) {
         this.config = config;
         this.logger = config.getLogger('services/proxy-service.ts');
         this.stores = stores;
         this.services = services;
+
+        this.timer = setInterval(
+            () => this.fetchFrontendSettings(),
+            minutesToMilliseconds(2),
+        ).unref();
     }
 
     async getProxyFeatures(
@@ -166,10 +176,27 @@ export class ProxyService {
         );
     }
 
-    // Todo add cache
-    async getFrontendSettings(): Promise<FrontendSettings> {
-        return this.services.settingService.get(frontendSettingsKey, {
-            frontendApiOrigins: this.config.frontendApiOrigins,
-        });
+    private async fetchFrontendSettings(): Promise<FrontendSettings> {
+        this.cachedFrontendSettings = await this.services.settingService.get(
+            frontendSettingsKey,
+            {
+                frontendApiOrigins: this.config.frontendApiOrigins,
+            },
+        );
+        return this.cachedFrontendSettings;
+    }
+
+    async getFrontendSettings(
+        useCache: boolean = true,
+    ): Promise<FrontendSettings> {
+        if (useCache && this.cachedFrontendSettings) {
+            return this.cachedFrontendSettings;
+        }
+        return this.fetchFrontendSettings();
+    }
+
+    destroy(): void {
+        clearInterval(this.timer);
+        this.timer = null;
     }
 }

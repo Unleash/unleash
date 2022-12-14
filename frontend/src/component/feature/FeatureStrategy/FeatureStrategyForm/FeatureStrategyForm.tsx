@@ -68,8 +68,8 @@ export const FeatureStrategyForm = ({
     const enableProdGuard = useFeatureStrategyProdGuard(feature, environmentId);
     const access = useHasProjectEnvironmentAccess(
         permission,
-        environmentId,
-        projectId
+        projectId,
+        environmentId
     );
     const { strategyDefinition } = useStrategy(strategy?.name);
 

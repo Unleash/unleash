@@ -69,8 +69,8 @@ const intersect = (array1: string[], array2: string[]) => {
 
 export const useHasProjectEnvironmentAccess = (
     permission: string | string[],
-    environmentId: string,
-    projectId: string
+    projectId: string,
+    environmentId: string
 ) => {
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const checkAccess = useCheckProjectPermissions(projectId);
@@ -89,8 +89,8 @@ export const useHasProjectEnvironmentAccess = (
 
 export const useHasRootAccess = (
     permissions: string | string[],
-    environmentId?: string,
-    projectId?: string
+    projectId?: string,
+    environmentId?: string
 ) => {
     return useCheckProjectPermissions(projectId)(permissions, environmentId);
 };

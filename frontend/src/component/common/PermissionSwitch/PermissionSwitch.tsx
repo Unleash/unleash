@@ -27,8 +27,8 @@ const ProjectenvironmentPermissionSwitch = React.forwardRef<
 >((props, ref) => {
     const access = useHasProjectEnvironmentAccess(
         props.permission,
-        props.environmentId,
-        props.projectId
+        props.projectId,
+        props.environmentId
     );
 
     return <BasePermissionSwitch {...props} access={access} ref={ref} />;
@@ -40,8 +40,8 @@ const RootPermissionSwitch = React.forwardRef<
 >((props, ref) => {
     const access = useHasRootAccess(
         props.permission,
-        props.environmentId,
-        props.projectId
+        props.projectId,
+        props.environmentId
     );
 
     return <BasePermissionSwitch {...props} access={access} ref={ref} />;

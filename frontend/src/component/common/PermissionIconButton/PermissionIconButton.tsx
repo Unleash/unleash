@@ -39,8 +39,8 @@ interface ILinkProps extends IPermissionIconButtonProps {
 const RootPermissionIconButton = (props: IButtonProps | ILinkProps) => {
     const access = useHasRootAccess(
         props.permission,
-        props.environmentId,
-        props.projectId
+        props.projectId,
+        props.environmentId
     );
 
     return <BasePermissionIconButton {...props} access={access} />;
@@ -54,8 +54,8 @@ const ProjectEnvironmentPermissionIconButton = (
 ) => {
     const access = useHasProjectEnvironmentAccess(
         props.permission,
-        props.environmentId,
-        props.projectId
+        props.projectId,
+        props.environmentId
     );
 
     return <BasePermissionIconButton {...props} access={access} />;

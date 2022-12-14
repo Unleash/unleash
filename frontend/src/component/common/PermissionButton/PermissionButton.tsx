@@ -35,8 +35,8 @@ const ProjectEnvironmentPermissionButton: React.FC<IProjectPermissionButtonProps
     React.forwardRef((props, ref) => {
         const access = useHasProjectEnvironmentAccess(
             props.permission,
-            props.environmentId,
-            props.projectId
+            props.projectId,
+            props.environmentId
         );
 
         return <BasePermissionButton {...props} access={access} ref={ref} />;
@@ -46,8 +46,8 @@ const RootPermissionButton: React.FC<IPermissionButtonProps> = React.forwardRef(
     (props, ref) => {
         const access = useHasRootAccess(
             props.permission,
-            props.environmentId,
-            props.projectId
+            props.projectId,
+            props.environmentId
         );
 
         return <BasePermissionButton {...props} access={access} ref={ref} />;

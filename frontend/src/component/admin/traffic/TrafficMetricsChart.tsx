@@ -1,7 +1,7 @@
 import {
     InstanceMetrics,
     useInstanceMetrics,
-} from '../../../../hooks/api/getters/useInstanceMetrics/useInstanceMetrics';
+} from '../../../hooks/api/getters/useInstanceMetrics/useInstanceMetrics';
 import { useMemo, VFC } from 'react';
 import { Line } from 'react-chartjs-2';
 import {
@@ -20,14 +20,14 @@ import {
 import {
     ILocationSettings,
     useLocationSettings,
-} from '../../../../hooks/useLocationSettings';
-import theme from '../../../../themes/theme';
-import { formatDateHM } from '../../../../utils/formatDate';
+} from '../../../hooks/useLocationSettings';
+import theme from '../../../themes/theme';
+import { formatDateHM } from '../../../utils/formatDate';
 import { RequestsPerSecondSchema } from 'openapi';
 import 'chartjs-adapter-date-fns';
 import { PaletteColor } from '@mui/material';
-import { PageContent } from '../../../common/PageContent/PageContent';
-import { PageHeader } from '../../../common/PageHeader/PageHeader';
+import { PageContent } from '../../common/PageContent/PageContent';
+import { PageHeader } from '../../common/PageHeader/PageHeader';
 import { Box } from '@mui/system';
 interface IPoint {
     x: number;

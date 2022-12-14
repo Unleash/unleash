@@ -109,6 +109,7 @@ export const createServices = (
         featureToggleServiceV2,
         clientMetricsServiceV2,
         segmentService,
+        settingService,
     });
 
     const edgeService = new EdgeService(stores, config);

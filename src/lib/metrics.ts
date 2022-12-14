@@ -120,7 +120,8 @@ export default class MetricsMonitor {
 
         const clientAppsTotal = new client.Gauge({
             name: 'client_apps_total',
-            help: 'Number of registered client apps',
+            help: 'Number of registered client apps aggregated by range by last seen',
+            labelNames: ['range'],
         });
 
         const samlEnabled = new client.Gauge({
@@ -177,7 +178,11 @@ export default class MetricsMonitor {
                 oidcEnabled.set(stats.OIDCenabled ? 1 : 0);
 
                 clientAppsTotal.reset();
-                clientAppsTotal.set(stats.clientApps);
+                stats.clientApps.forEach((clientStat) =>
+                    clientAppsTotal
+                        .labels({ range: clientStat.range })
+                        .set(clientStat.count),
+                );
             } catch (e) {}
         }
 

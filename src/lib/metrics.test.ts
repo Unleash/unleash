@@ -127,7 +127,7 @@ test('should collect metrics for feature toggle size', async () => {
         setTimeout(done, 10);
     });
     const metrics = await prometheusRegister.metrics();
-    expect(metrics).toMatch(/client_apps_total 0/);
+    expect(metrics).toMatch(/client_apps_total{range="(.*)"} 0/);
 });
 
 test('Should collect metrics for database', async () => {

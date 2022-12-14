@@ -14,7 +14,8 @@ import { IRoleStore } from '../types/stores/role-store';
 import VersionService from './version-service';
 import { ISettingStore } from '../types/stores/settings-store';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+type TimeRange = 'allTime' | '30d' | '7d';
+
 export interface InstanceStats {
     instanceId: string;
     timestamp: Date;
@@ -31,7 +32,7 @@ export interface InstanceStats {
     strategies: number;
     SAMLenabled: boolean;
     OIDCenabled: boolean;
-    clientApps: number;
+    clientApps: { range: TimeRange; count: number }[];
 }
 
 interface InstanceStatsSigned extends InstanceStats {
@@ -160,7 +161,7 @@ export class InstanceStatsService {
             this.strategyStore.count(),
             this.hasSAML(),
             this.hasOIDC(),
-            this.clientInstanceStore.getDistinctApplicationsCount(),
+            this.getLabeledAppCounts(),
         ]);
 
         return {
@@ -181,6 +182,29 @@ export class InstanceStatsService {
             OIDCenabled,
             clientApps,
         };
+    }
+
+    async getLabeledAppCounts(): Promise<
+        { range: TimeRange; count: number }[]
+    > {
+        return [
+            {
+                range: 'allTime',
+                count: await this.clientInstanceStore.getDistinctApplicationsCount(),
+            },
+            {
+                range: '30d',
+                count: await this.clientInstanceStore.getDistinctApplicationsCount(
+                    30,
+                ),
+            },
+            {
+                range: '7d',
+                count: await this.clientInstanceStore.getDistinctApplicationsCount(
+                    7,
+                ),
+            },
+        ];
     }
 
     async getSignedStats(): Promise<InstanceStatsSigned> {

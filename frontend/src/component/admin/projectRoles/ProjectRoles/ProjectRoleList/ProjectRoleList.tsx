@@ -179,7 +179,7 @@ const ProjectRoleList = () => {
         [
             {
                 condition: isExtraSmallScreen,
-                columns: ['icon'],
+                columns: ['Icon'],
             },
         ],
         setHiddenColumns,

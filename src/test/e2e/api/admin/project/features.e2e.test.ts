@@ -2710,3 +2710,63 @@ test('should add multiple segments to a strategy', async () => {
             ]);
         });
 });
+
+test('Can filter based on tags', async () => {
+    const tag = { type: 'simple', value: 'hello-tags' };
+    await db.stores.tagStore.createTag(tag);
+    await db.stores.featureToggleStore.create('default', {
+        name: 'to-be-tagged',
+    });
+    await db.stores.featureToggleStore.create('default', {
+        name: 'not-tagged',
+    });
+    await db.stores.featureTagStore.tagFeature('to-be-tagged', tag);
+    await app.request
+        .get('/api/admin/projects/default/features?tag=simple:hello-tags')
+        .expect((res) => {
+            expect(res.body.features).toHaveLength(1);
+        });
+});
+
+test('Can query for features with namePrefix', async () => {
+    await db.stores.featureToggleStore.create('default', {
+        name: 'nameprefix-to-be-hit',
+    });
+    await db.stores.featureToggleStore.create('default', {
+        name: 'nameprefix-not-be-hit',
+    });
+    await app.request
+        .get('/api/admin/projects/default/features?namePrefix=nameprefix-to')
+        .expect((res) => {
+            expect(res.body.features).toHaveLength(1);
+        });
+});
+
+test('Can query for features with namePrefix and tags', async () => {
+    const tag = { type: 'simple', value: 'hello-nameprefix-tags' };
+    await db.stores.tagStore.createTag(tag);
+    await db.stores.featureToggleStore.create('default', {
+        name: 'to-be-tagged-nameprefix-and-tags',
+    });
+    await db.stores.featureToggleStore.create('default', {
+        name: 'not-tagged-nameprefix-and-tags',
+    });
+    await db.stores.featureToggleStore.create('default', {
+        name: 'tagged-but-not-hit-nameprefix-and-tags',
+    });
+    await db.stores.featureTagStore.tagFeature(
+        'to-be-tagged-nameprefix-and-tags',
+        tag,
+    );
+    await db.stores.featureTagStore.tagFeature(
+        'tagged-but-not-hit-nameprefix-and-tags',
+        tag,
+    );
+    await app.request
+        .get(
+            '/api/admin/projects/default/features?namePrefix=to&tag=simple:hello-nameprefix-tags',
+        )
+        .expect((res) => {
+            expect(res.body.features).toHaveLength(1);
+        });
+});

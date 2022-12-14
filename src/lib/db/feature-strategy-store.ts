@@ -414,9 +414,25 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         projectId,
         archived,
         userId,
+        tag,
+        namePrefix,
     }: IFeatureProjectUserParams): Promise<IFeatureOverview[]> {
-        let query = this.db('features')
-            .where({ project: projectId })
+        let query = this.db('features').where({ project: projectId });
+        if (tag) {
+            const tagQuery = this.db
+                .from('feature_tag')
+                .select('feature_name')
+                .whereIn(['tag_type', 'tag_value'], tag);
+            query = query.whereIn('features.name', tagQuery);
+        }
+        if (namePrefix && namePrefix.trim()) {
+            let namePrefixQuery = namePrefix;
+            if (!namePrefix.endsWith('%')) {
+                namePrefixQuery = namePrefixQuery + '%';
+            }
+            query = query.whereILike('features.name', namePrefixQuery);
+        }
+        query = query
             .modify(FeatureToggleStore.filterByArchived, archived)
             .leftJoin(
                 'feature_environments',
@@ -461,7 +477,6 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         }
 
         query = query.select(selectColumns);
-
         const rows = await query;
 
         if (rows.length > 0) {

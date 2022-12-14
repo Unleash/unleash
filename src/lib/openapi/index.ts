@@ -1,5 +1,6 @@
 import { OpenAPIV3 } from 'openapi-types';
 import {
+    adminFeaturesQuerySchema,
     addonParameterSchema,
     addonSchema,
     addonsSchema,
@@ -131,6 +132,7 @@ import apiVersion from '../util/version';
 
 // All schemas in `openapi/spec` should be listed here.
 export const schemas = {
+    adminFeaturesQuerySchema,
     addonParameterSchema,
     addonSchema,
     addonsSchema,

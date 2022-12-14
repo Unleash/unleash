@@ -189,6 +189,24 @@ exports[`should serve the OpenAPI spec 1`] = `
         ],
         "type": "object",
       },
+      "adminFeaturesQuerySchema": {
+        "additionalProperties": true,
+        "properties": {
+          "namePrefix": {
+            "type": "string",
+          },
+          "tag": {
+            "items": {
+              "items": {
+                "type": "string",
+              },
+              "type": "array",
+            },
+            "type": "array",
+          },
+        },
+        "type": "object",
+      },
       "apiTokenSchema": {
         "additionalProperties": false,
         "properties": {

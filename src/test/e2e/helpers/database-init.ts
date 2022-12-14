@@ -86,7 +86,7 @@ export default async function init(
     const config = createTestConfig({
         db: {
             ...getDbConfig(),
-            pool: { min: 1, max: 5 },
+            pool: { min: 1, max: 3 },
             schema: databaseSchema,
             ssl: false,
         },

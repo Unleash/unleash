@@ -27,6 +27,7 @@ export const corsOriginMiddleware = (
                 origin: resolveOrigin(frontendApiOrigins),
                 maxAge: config.accessControlMaxAge,
                 exposedHeaders: 'ETag',
+                credentials: true,
             });
         } catch (error) {
             callback(error);

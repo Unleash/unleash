@@ -24,11 +24,14 @@ import { extractUsername } from '../../util/extract-user';
 import NotFoundError from '../../error/notfound-error';
 import { SetUiConfigSchema } from '../../openapi/spec/set-ui-config-schema';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
+import { ProxyService } from 'lib/services';
 
 class ConfigController extends Controller {
     private versionService: VersionService;
 
     private settingService: SettingService;
+
+    private proxyService: ProxyService;
 
     private emailService: EmailService;
 
@@ -41,12 +44,14 @@ class ConfigController extends Controller {
             settingService,
             emailService,
             openApiService,
+            proxyService,
         }: Pick<
             IUnleashServices,
             | 'versionService'
             | 'settingService'
             | 'emailService'
             | 'openApiService'
+            | 'proxyService'
         >,
     ) {
         super(config);
@@ -54,6 +59,7 @@ class ConfigController extends Controller {
         this.settingService = settingService;
         this.emailService = emailService;
         this.openApiService = openApiService;
+        this.proxyService = proxyService;
 
         this.route({
             method: 'get',
@@ -92,7 +98,7 @@ class ConfigController extends Controller {
         res: Response<UiConfigSchema>,
     ): Promise<void> {
         const [frontendSettings, simpleAuthSettings] = await Promise.all([
-            this.settingService.getFrontendSettings(),
+            this.proxyService.getFrontendSettings(),
             this.settingService.get<SimpleAuthSettings>(simpleAuthSettingsKey),
         ]);
 
@@ -133,7 +139,7 @@ class ConfigController extends Controller {
         res: Response<string>,
     ): Promise<void> {
         if (req.body.frontendSettings) {
-            await this.settingService.setFrontendSettings(
+            await this.proxyService.setFrontendSettings(
                 req.body.frontendSettings,
                 extractUsername(req),
             );

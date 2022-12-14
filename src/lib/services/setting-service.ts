@@ -8,12 +8,6 @@ import {
     SettingDeletedEvent,
     SettingUpdatedEvent,
 } from '../types/events';
-import { validateOrigins } from '../util/validateOrigin';
-import {
-    FrontendSettings,
-    frontendSettingsKey,
-} from '../types/settings/frontend-settings';
-import BadDataError from '../error/bad-data-error';
 
 export default class SettingService {
     private config: IUnleashConfig;
@@ -77,22 +71,5 @@ export default class SettingService {
 
     async deleteAll(): Promise<void> {
         await this.settingStore.deleteAll();
-    }
-
-    async setFrontendSettings(
-        value: FrontendSettings,
-        createdBy: string,
-    ): Promise<void> {
-        const error = validateOrigins(value.frontendApiOrigins);
-        if (error) {
-            throw new BadDataError(error);
-        }
-        await this.insert(frontendSettingsKey, value, createdBy);
-    }
-
-    async getFrontendSettings(): Promise<FrontendSettings> {
-        return this.get(frontendSettingsKey, {
-            frontendApiOrigins: this.config.frontendApiOrigins,
-        });
     }
 }

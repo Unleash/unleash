@@ -1,20 +1,33 @@
 import { allowRequestOrigin } from './cors-origin-middleware';
 import FakeSettingStore from '../../test/fixtures/fake-setting-store';
-import SettingService from '../services/setting-service';
 import { createTestConfig } from '../../test/config/test-config';
 import FakeEventStore from '../../test/fixtures/fake-event-store';
 import { randomId } from '../util/random-id';
-import { frontendSettingsKey } from '../types/settings/frontend-settings';
+import FakeProjectStore from '../../test/fixtures/fake-project-store';
+import { ProxyService, SettingService } from '../../lib/services';
+import { ISettingStore } from '../../lib/types';
+import { frontendSettingsKey } from '../../lib/types/settings/frontend-settings';
 
-const createSettingService = (frontendApiOrigins: string[]): SettingService => {
+const createSettingService = (
+    frontendApiOrigins: string[],
+): { proxyService: ProxyService; settingStore: ISettingStore } => {
     const config = createTestConfig({ frontendApiOrigins });
 
     const stores = {
         settingStore: new FakeSettingStore(),
         eventStore: new FakeEventStore(),
+        projectStore: new FakeProjectStore(),
     };
 
-    return new SettingService(stores, config);
+    const services = {
+        settingService: new SettingService(stores, config),
+    };
+
+    return {
+        //@ts-ignore
+        proxyService: new ProxyService(config, stores, services),
+        settingStore: stores.settingStore,
+    };
 };
 
 test('allowRequestOrigin', () => {
@@ -35,52 +48,64 @@ test('allowRequestOrigin', () => {
 });
 
 test('corsOriginMiddleware origin validation', async () => {
-    const service = createSettingService([]);
+    const { proxyService } = createSettingService([]);
     const userName = randomId();
     await expect(() =>
-        service.setFrontendSettings({ frontendApiOrigins: ['a'] }, userName),
+        proxyService.setFrontendSettings(
+            { frontendApiOrigins: ['a'] },
+            userName,
+        ),
     ).rejects.toThrow('Invalid origin: a');
 });
 
 test('corsOriginMiddleware without config', async () => {
-    const service = createSettingService([]);
+    const { proxyService, settingStore } = createSettingService([]);
     const userName = randomId();
-    expect(await service.getFrontendSettings()).toEqual({
+    expect(await proxyService.getFrontendSettings()).toEqual({
         frontendApiOrigins: [],
     });
-    await service.setFrontendSettings({ frontendApiOrigins: [] }, userName);
-    expect(await service.getFrontendSettings()).toEqual({
+    await proxyService.setFrontendSettings(
+        { frontendApiOrigins: [] },
+        userName,
+    );
+    expect(await proxyService.getFrontendSettings()).toEqual({
         frontendApiOrigins: [],
     });
-    await service.setFrontendSettings({ frontendApiOrigins: ['*'] }, userName);
-    expect(await service.getFrontendSettings()).toEqual({
+    await proxyService.setFrontendSettings(
+        { frontendApiOrigins: ['*'] },
+        userName,
+    );
+    expect(await proxyService.getFrontendSettings()).toEqual({
         frontendApiOrigins: ['*'],
     });
-    await service.delete(frontendSettingsKey, userName);
-    expect(await service.getFrontendSettings()).toEqual({
+    await settingStore.delete(frontendSettingsKey);
+    expect(await proxyService.getFrontendSettings()).toEqual({
         frontendApiOrigins: [],
     });
 });
 
 test('corsOriginMiddleware with config', async () => {
-    const service = createSettingService(['*']);
+    const { proxyService, settingStore } = createSettingService(['*']);
     const userName = randomId();
-    expect(await service.getFrontendSettings()).toEqual({
+    expect(await proxyService.getFrontendSettings()).toEqual({
         frontendApiOrigins: ['*'],
     });
-    await service.setFrontendSettings({ frontendApiOrigins: [] }, userName);
-    expect(await service.getFrontendSettings()).toEqual({
+    await proxyService.setFrontendSettings(
+        { frontendApiOrigins: [] },
+        userName,
+    );
+    expect(await proxyService.getFrontendSettings()).toEqual({
         frontendApiOrigins: [],
     });
-    await service.setFrontendSettings(
+    await proxyService.setFrontendSettings(
         { frontendApiOrigins: ['https://example.com', 'https://example.org'] },
         userName,
     );
-    expect(await service.getFrontendSettings()).toEqual({
+    expect(await proxyService.getFrontendSettings()).toEqual({
         frontendApiOrigins: ['https://example.com', 'https://example.org'],
     });
-    await service.delete(frontendSettingsKey, userName);
-    expect(await service.getFrontendSettings()).toEqual({
+    await settingStore.delete(frontendSettingsKey);
+    expect(await proxyService.getFrontendSettings()).toEqual({
         frontendApiOrigins: ['*'],
     });
 });

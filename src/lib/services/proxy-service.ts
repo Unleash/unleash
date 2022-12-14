@@ -10,16 +10,28 @@ import {
     UnleashEvents,
 } from 'unleash-client';
 import { ProxyRepository } from '../proxy';
-import assert from 'assert';
 import { ApiTokenType } from '../types/models/api-token';
+import {
+    FrontendSettings,
+    frontendSettingsKey,
+} from '../types/settings/frontend-settings';
+import { validateOrigins } from '../util';
+import { BadDataError } from '../error';
+import assert from 'assert';
 
-type Config = Pick<IUnleashConfig, 'getLogger' | 'frontendApi'>;
+type Config = Pick<
+    IUnleashConfig,
+    'getLogger' | 'frontendApi' | 'frontendApiOrigins'
+>;
 
 type Stores = Pick<IUnleashStores, 'projectStore' | 'eventStore'>;
 
 type Services = Pick<
     IUnleashServices,
-    'featureToggleServiceV2' | 'segmentService' | 'clientMetricsServiceV2'
+    | 'featureToggleServiceV2'
+    | 'segmentService'
+    | 'clientMetricsServiceV2'
+    | 'settingService'
 >;
 
 export class ProxyService {
@@ -137,5 +149,27 @@ export class ProxyService {
 
     private static assertExpectedTokenType({ type }: ApiUser) {
         assert(type === ApiTokenType.FRONTEND || type === ApiTokenType.ADMIN);
+    }
+
+    async setFrontendSettings(
+        value: FrontendSettings,
+        createdBy: string,
+    ): Promise<void> {
+        const error = validateOrigins(value.frontendApiOrigins);
+        if (error) {
+            throw new BadDataError(error);
+        }
+        await this.services.settingService.insert(
+            frontendSettingsKey,
+            value,
+            createdBy,
+        );
+    }
+
+    // Todo add cache
+    async getFrontendSettings(): Promise<FrontendSettings> {
+        return this.services.settingService.get(frontendSettingsKey, {
+            frontendApiOrigins: this.config.frontendApiOrigins,
+        });
     }
 }

@@ -8,6 +8,7 @@ import {
     CategoryScale,
     Chart as ChartJS,
     ChartData,
+    ChartDataset,
     ChartOptions,
     Legend,
     LinearScale,
@@ -29,10 +30,15 @@ import { PaletteColor } from '@mui/material';
 import { PageContent } from '../../common/PageContent/PageContent';
 import { PageHeader } from '../../common/PageHeader/PageHeader';
 import { Box } from '@mui/system';
+import { current } from 'immer';
+import { CyclicIterator } from 'utils/cyclicIterator';
 interface IPoint {
     x: number;
     y: number;
 }
+
+type ChartDatasetType = ChartDataset<'line', IPoint[]>;
+type ChartDataType = ChartData<'line', IPoint[], string>;
 
 const createChartPoints = (
     values: Array<Array<number | string>>,
@@ -122,9 +128,9 @@ const toChartData = (
     rps: RequestsPerSecondSchema,
     color: PaletteColor,
     label: (name: string) => string
-): any => {
+): ChartDatasetType[] => {
     if (rps.data?.result) {
-        return rps.data?.result.map(dataset => ({
+        return rps.data.result.map(dataset => ({
             label: label(dataset.metric?.appName || 'unknown'),
             borderColor: color.main,
             backgroundColor: color.main,
@@ -143,29 +149,28 @@ const toChartData = (
     return [];
 };
 
-const createInstanceChartData = (
-    metrics?: InstanceMetrics
-): ChartData<'line', IPoint[], string> => {
+const createInstanceChartData = (metrics?: InstanceMetrics): ChartDataType => {
     if (metrics) {
-        let datasets = []
-            .concat(
+        const colors = new CyclicIterator<PaletteColor>([
+            theme.palette.success,
+            theme.palette.error,
+            theme.palette.primary,
+        ]);
+        let datasets: ChartDatasetType[] = [];
+        for (let key in metrics) {
+            datasets = datasets.concat(
                 toChartData(
-                    metrics?.clientMetrics,
-                    theme.palette.primary,
-                    metricName => `${metricName}:/api/client/*`
-                )
-            )
-            .concat(
-                toChartData(
-                    metrics?.adminMetrics,
-                    theme.palette.info,
-                    metricName => `${metricName}:/api/admin/*`
+                    metrics[key],
+                    colors.next(),
+                    metricName => `${metricName}: ${key}`
                 )
             );
+        }
         return { datasets };
     }
     return { datasets: [] };
 };
+
 export const InstanceMetricsChart: VFC = () => {
     const { locationSettings } = useLocationSettings();
     const { metrics } = useInstanceMetrics();

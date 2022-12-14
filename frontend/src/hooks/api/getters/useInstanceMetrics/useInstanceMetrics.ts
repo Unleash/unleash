@@ -5,8 +5,7 @@ import handleErrorResponses from '../httpErrorResponseHandler';
 import { RequestsPerSecondSchema } from 'openapi';
 
 export interface InstanceMetrics {
-    clientMetrics: RequestsPerSecondSchema;
-    adminMetrics: RequestsPerSecondSchema;
+    [key: string]: RequestsPerSecondSchema;
 }
 
 export interface IInstanceMetricsResponse {

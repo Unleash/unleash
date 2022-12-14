@@ -35,6 +35,7 @@ async function resetDatabase(knex) {
         knex.table('addons').del(),
         knex.table('users').del(),
         knex.table('reset_tokens').del(),
+        // knex.table('settings').del(),
     ]);
 }
 
@@ -85,7 +86,7 @@ export default async function init(
     const config = createTestConfig({
         db: {
             ...getDbConfig(),
-            pool: { min: 1, max: 4 },
+            pool: { min: 1, max: 5 },
             schema: databaseSchema,
             ssl: false,
         },

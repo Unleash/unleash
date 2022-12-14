@@ -1,6 +1,12 @@
 import { useContext } from 'react';
 import AccessContext from '../contexts/AccessContext';
 import { useChangeRequestsEnabled } from './useChangeRequestsEnabled';
+import {
+    CREATE_FEATURE_STRATEGY,
+    UPDATE_FEATURE_STRATEGY,
+    DELETE_FEATURE_STRATEGY,
+    UPDATE_FEATURE_ENVIRONMENT,
+} from '../component/providers/AccessProvider/permissions';
 
 const useCheckProjectPermissions = (projectId?: string) => {
     const { hasAccess } = useContext(AccessContext);
@@ -50,6 +56,17 @@ export const useCheckProjectAccess = (projectId: string) => {
     };
 };
 
+const ALLOWED_CHANGE_REQUEST_PERMISSIONS = [
+    CREATE_FEATURE_STRATEGY,
+    UPDATE_FEATURE_STRATEGY,
+    DELETE_FEATURE_STRATEGY,
+    UPDATE_FEATURE_ENVIRONMENT,
+];
+
+const intersect = (array1: string[], array2: string[]) => {
+    return array1.filter(value => array2.includes(value)).length > 0;
+};
+
 export const useHasProjectEnvironmentAccess = (
     permission: string | string[],
     environmentId: string,
@@ -58,8 +75,16 @@ export const useHasProjectEnvironmentAccess = (
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const checkAccess = useCheckProjectPermissions(projectId);
     const changeRequestMode = isChangeRequestConfigured(environmentId);
+    const emptyArray: string[] = [];
 
-    return changeRequestMode || checkAccess(permission, environmentId);
+    return (
+        (changeRequestMode &&
+            intersect(
+                ALLOWED_CHANGE_REQUEST_PERMISSIONS,
+                emptyArray.concat(permission)
+            )) ||
+        checkAccess(permission, environmentId)
+    );
 };
 
 export const useHasRootAccess = (

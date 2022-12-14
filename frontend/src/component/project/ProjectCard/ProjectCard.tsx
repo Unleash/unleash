@@ -56,7 +56,7 @@ export const ProjectCard = ({
     const canDeleteProject =
         hasAccess(DELETE_PROJECT, id) && id !== DEFAULT_PROJECT_ID;
 
-    const onFavorite = async (e: Event) => {
+    const onFavorite = async (e: React.SyntheticEvent) => {
         e.preventDefault();
         if (isFavorite) {
             await unfavorite(id);

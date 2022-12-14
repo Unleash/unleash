@@ -24,7 +24,7 @@ export const ProjectAccess = () => {
                 header={<PageHeader title="Access" />}
                 sx={{ justifyContent: 'center' }}
             >
-                <PremiumFeature feature="Access" />
+                <PremiumFeature feature="access" />
             </PageContent>
         );
     }

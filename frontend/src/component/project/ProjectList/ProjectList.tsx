@@ -45,7 +45,7 @@ function resolveCreateButtonData(
             disabled: true,
             tooltip: {
                 titleComponent: (
-                    <PremiumFeature feature="Adding new projects" tooltip />
+                    <PremiumFeature feature="adding-new-projects" tooltip />
                 ),
                 sx: { maxWidth: '320px' },
                 variant: 'custom',

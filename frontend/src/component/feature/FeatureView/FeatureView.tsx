@@ -1,5 +1,5 @@
 import { Tab, Tabs, useMediaQuery } from '@mui/material';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Archive, FileCopy, Label, WatchLater } from '@mui/icons-material';
 import {
     Link,
@@ -123,7 +123,6 @@ export const FeatureView = () => {
                                             <FavoriteIconButton
                                                 onClick={onFavorite}
                                                 isFavorite={feature?.favorite}
-                                                sx={{ pr: 0.25 }}
                                             />
                                         )}
                                     />

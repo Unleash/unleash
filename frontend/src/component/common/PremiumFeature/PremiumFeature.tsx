@@ -46,17 +46,20 @@ enum FeaturePlan {
 }
 
 const PremiumFeatures = {
-    ['Adding new projects']: {
+    'adding-new-projects': {
         plan: FeaturePlan.PRO,
         url: '',
+        label: 'Adding new projects',
     },
-    ['Access']: {
+    access: {
         plan: FeaturePlan.PRO,
         url: 'https://docs.getunleash.io/reference/rbac',
+        label: 'Access',
     },
-    ['Change Requests']: {
+    'change-requests': {
         plan: FeaturePlan.ENTERPRISE,
         url: 'https://docs.getunleash.io/reference/change-requests',
+        label: 'Change Requests',
     },
 };
 
@@ -70,22 +73,22 @@ export interface PremiumFeatureProps {
 }
 
 export const PremiumFeature = ({ feature, tooltip }: PremiumFeatureProps) => {
-    const { url, plan } = PremiumFeatures[feature];
+    const { url, plan, label } = PremiumFeatures[feature];
 
     const tracker = usePlausibleTracker();
 
     const handleClick = () => {
         tracker.trackEvent('upgrade_plan_clicked', {
-            props: { feature },
+            props: { feature: label },
         });
     };
 
     const featureLabel = Boolean(url) ? (
         <StyledLink href={url} target="_blank">
-            {feature}
+            {label}
         </StyledLink>
     ) : (
-        feature
+        label
     );
 
     const featureMessage = (
@@ -95,6 +98,8 @@ export const PremiumFeature = ({ feature, tooltip }: PremiumFeatureProps) => {
             {plan === FeaturePlan.PRO ? 'plans' : 'plan'}
         </>
     );
+
+    const upgradeUrl = `${UPGRADE_URL}?feature=${feature}`;
 
     return (
         <PremiumFeatureWrapper tooltip={tooltip}>
@@ -114,7 +119,7 @@ export const PremiumFeature = ({ feature, tooltip }: PremiumFeatureProps) => {
                         </StyledBody>
                         <StyledButtonContainer>
                             <StyledLink
-                                href={UPGRADE_URL}
+                                href={upgradeUrl}
                                 target="_blank"
                                 onClick={handleClick}
                             >
@@ -137,7 +142,7 @@ export const PremiumFeature = ({ feature, tooltip }: PremiumFeatureProps) => {
                         <StyledButtonContainer>
                             <Button
                                 variant="outlined"
-                                href={UPGRADE_URL}
+                                href={upgradeUrl}
                                 target="_blank"
                                 onClick={handleClick}
                             >

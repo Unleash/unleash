@@ -19,7 +19,7 @@ export const ProjectChangeRequests = () => {
     if (isOss() || isPro()) {
         return (
             <PageContent sx={{ justifyContent: 'center' }}>
-                <PremiumFeature feature="Change Requests" />
+                <PremiumFeature feature="change-requests" />
             </PageContent>
         );
     }

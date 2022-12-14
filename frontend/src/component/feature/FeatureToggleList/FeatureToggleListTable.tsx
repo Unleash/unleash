@@ -25,7 +25,7 @@ import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi
 import { FavoriteIconCell } from 'component/common/Table/cells/FavoriteIconCell/FavoriteIconCell';
 import { FavoriteIconHeader } from 'component/common/Table/FavoriteIconHeader/FavoriteIconHeader';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { usePlausibleTracker } from '../../../hooks/usePlausibleTracker';
+import { useGlobalLocalStorage } from 'hooks/useGlobalLocalStorage';
 
 export const featuresPlaceholder: FeatureSchema[] = Array(15).fill({
     name: 'Name of the feature',
@@ -43,7 +43,7 @@ const defaultSort: SortingRule<string> = { id: 'createdAt' };
 
 const { value: storedParams, setValue: setStoredParams } = createLocalStorage(
     'FeatureToggleListTable:v1',
-    { ...defaultSort, favorites: false }
+    defaultSort
 );
 
 export const FeatureToggleListTable: VFC = () => {
@@ -64,11 +64,13 @@ export const FeatureToggleListTable: VFC = () => {
         hiddenColumns: ['description'],
         globalFilter: searchParams.get('search') || '',
     }));
+    const { value: globalStore, setValue: setGlobalStore } =
+        useGlobalLocalStorage();
     const { isFavoritesPinned, sortTypes, onChangeIsFavoritePinned } =
         usePinnedFavorites(
             searchParams.has('favorites')
                 ? searchParams.get('favorites') === 'true'
-                : storedParams.favorites
+                : globalStore.favorites
         );
     const [searchValue, setSearchValue] = useState(initialState.globalFilter);
     const { favorite, unfavorite } = useFavoriteFeaturesApi();
@@ -244,8 +246,11 @@ export const FeatureToggleListTable: VFC = () => {
         setStoredParams({
             id: sortBy[0].id,
             desc: sortBy[0].desc || false,
-            favorites: isFavoritesPinned || false,
         });
+        setGlobalStore(params => ({
+            ...params,
+            favorites: Boolean(isFavoritesPinned),
+        }));
     }, [sortBy, searchValue, setSearchParams, isFavoritesPinned]);
 
     return (

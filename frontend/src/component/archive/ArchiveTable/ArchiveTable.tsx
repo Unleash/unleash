@@ -227,10 +227,6 @@ export const ArchiveTable = ({
     useConditionallyHiddenColumns(
         [
             {
-                condition: true,
-                columns: ['description'],
-            },
-            {
                 condition: isSmallScreen,
                 columns: ['type', 'createdAt'],
             },

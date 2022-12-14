@@ -219,10 +219,6 @@ export const FeatureToggleListTable: VFC = () => {
     useConditionallyHiddenColumns(
         [
             {
-                condition: true,
-                columns: ['description'],
-            },
-            {
                 condition: !features.some(({ tags }) => tags?.length),
                 columns: ['tags'],
             },

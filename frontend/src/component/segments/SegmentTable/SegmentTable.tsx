@@ -75,10 +75,6 @@ export const SegmentTable = () => {
     useConditionallyHiddenColumns(
         [
             {
-                condition: true,
-                columns: ['description'],
-            },
-            {
                 condition: isSmallScreen,
                 columns: ['createdAt', 'createdBy'],
             },

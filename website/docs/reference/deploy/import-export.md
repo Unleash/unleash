@@ -84,7 +84,7 @@ If you want the database to be cleaned before import (**all strategies and featu
 
 :::caution
 
-You should be cautious about using the `drop` query parameter this in production environments.
+You should be cautious about using the `drop` query parameter in production environments.
 
 :::
 

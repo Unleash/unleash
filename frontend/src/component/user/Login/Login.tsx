@@ -52,7 +52,7 @@ const Login = () => {
                         </h2>
                     }
                 />
-                <Authentication redirect={redirect} />
+                <Authentication redirect={redirect} invited={invited} />
             </div>
         </StandaloneLayout>
     );

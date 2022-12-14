@@ -15,7 +15,7 @@ import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useSearch } from 'hooks/useSearch';
-import useConditionallyHiddenColumns from 'hooks/useConditionallyHiddenColumns';
+import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import {
     Link,
     Route,

@@ -19,7 +19,7 @@ import { IGroup, IGroupUser } from 'interfaces/group';
 import { VFC, useState } from 'react';
 import { SortingRule, useFlexLayout, useSortBy, useTable } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
-import useConditionallyHiddenColumns from 'hooks/useConditionallyHiddenColumns';
+import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 
 const StyledPageContent = styled(PageContent)(({ theme }) => ({
     height: '100vh',

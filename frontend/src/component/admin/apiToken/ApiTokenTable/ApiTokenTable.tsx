@@ -25,7 +25,7 @@ import { ProjectsList } from 'component/admin/apiToken/ProjectsList/ProjectsList
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { Search } from 'component/common/Search/Search';
-import useConditionallyHiddenColumns from 'hooks/useConditionallyHiddenColumns';
+import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
 
 const hiddenColumnsSmall = ['Icon', 'createdAt'];

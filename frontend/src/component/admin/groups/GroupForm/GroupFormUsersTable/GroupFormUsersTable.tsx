@@ -11,7 +11,7 @@ import { useFlexLayout, useSortBy, useTable } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import theme from 'themes/theme';
-import useConditionallyHiddenColumns from 'hooks/useConditionallyHiddenColumns';
+import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 
 const hiddenColumnsSmall = ['imageUrl', 'name'];
 

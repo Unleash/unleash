@@ -5,17 +5,19 @@ interface IConditionallyHiddenColumns {
     columns: string[];
 }
 
-const useConditionallyHiddenColumns = (
+export const useConditionallyHiddenColumns = (
     conditionallyHiddenColumns: IConditionallyHiddenColumns[],
     setHiddenColumns: (param: string[]) => void,
     columnsDefinition: unknown[]
 ) => {
     useEffect(() => {
-        const hiddenColumnsSet = new Set<string>(
-            ...conditionallyHiddenColumns
-                .filter(({ condition }) => condition)
-                .map(({ columns }) => columns)
-        );
+        const hiddenColumnsSet = new Set<string>();
+
+        conditionallyHiddenColumns
+            .filter(({ condition }) => condition)
+            .forEach(({ columns }) =>
+                columns.forEach(column => hiddenColumnsSet.add(column))
+            );
 
         setHiddenColumns([...hiddenColumnsSet]);
     }, [
@@ -24,5 +26,3 @@ const useConditionallyHiddenColumns = (
         columnsDefinition,
     ]);
 };
-
-export default useConditionallyHiddenColumns;

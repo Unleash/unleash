@@ -174,6 +174,8 @@ export const FeatureToggleListTable: VFC = () => {
             // Always hidden -- for search
             {
                 accessor: 'description',
+                Header: 'Description',
+                searchable: true,
             },
         ],
         [isFavoritesPinned, uiConfig?.flags?.favorites]

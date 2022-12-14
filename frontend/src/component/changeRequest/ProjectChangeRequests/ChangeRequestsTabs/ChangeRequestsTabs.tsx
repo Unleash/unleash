@@ -25,6 +25,7 @@ import { ChangeRequestTitleCell } from './ChangeRequestTitleCell/ChangeRequestTi
 import { TableBody, TableRow } from '../../../common/Table';
 import { useStyles } from './ChangeRequestsTabs.styles';
 import { createLocalStorage } from '../../../../utils/createLocalStorage';
+import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 
 export interface IChangeRequestTableProps {
     changeRequests: any[];
@@ -172,13 +173,16 @@ export const ChangeRequestsTabs = ({
         useSortBy
     );
 
-    useEffect(() => {
-        const hiddenColumns = [''];
-        if (isSmallScreen) {
-            hiddenColumns.push('createdBy', 'updatedAt');
-        }
-        setHiddenColumns(hiddenColumns);
-    }, [setHiddenColumns, isSmallScreen]);
+    useConditionallyHiddenColumns(
+        [
+            {
+                condition: isSmallScreen,
+                columns: ['createdBy'],
+            },
+        ],
+        setHiddenColumns,
+        columns
+    );
 
     useEffect(() => {
         if (loading) {

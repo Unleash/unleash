@@ -5,50 +5,46 @@ import {
     StarBorder as StarBorderIcon,
 } from '@mui/icons-material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { TooltipResolver } from '../../../TooltipResolver/TooltipResolver';
+
+const StyledCell = styled(Box)(({ theme }) => ({
+    paddingLeft: theme.spacing(1.25),
+}));
+
+const StyledIconButton = styled(IconButton)(({ theme }) => ({
+    color: theme.palette.primary.main,
+    padding: theme.spacing(1.25),
+}));
+
+const StyledIconButtonInactive = styled(StyledIconButton)({
+    opacity: 0,
+});
 
 interface IFavoriteIconCellProps {
     value?: boolean;
     onClick?: () => void;
 }
 
-const InactiveIconButton = styled(IconButton)(({ theme }) => ({
-    color: 'transparent',
-    '&:hover, &:focus': {
-        color: theme.palette.primary.main,
-    },
-}));
-
 export const FavoriteIconCell: VFC<IFavoriteIconCellProps> = ({
-    value = false,
+    value,
     onClick,
 }) => (
-    <Box sx={{ pl: 1.25 }}>
+    <StyledCell>
         <ConditionallyRender
-            condition={value}
+            condition={Boolean(value)}
             show={
-                <TooltipResolver title={'Remove from favorites'}>
-                    <IconButton
-                        onClick={onClick}
-                        color="primary"
-                        size="small"
-                        sx={{ padding: 1.25 }}
-                    >
-                        <StarIcon fontSize="small" />
-                    </IconButton>
-                </TooltipResolver>
+                <StyledIconButton onClick={onClick} size="small">
+                    <StarIcon fontSize="small" />
+                </StyledIconButton>
             }
             elseShow={
-                <TooltipResolver title={'Add to favorites'}>
-                    <InactiveIconButton
-                        onClick={onClick}
-                        size="small"
-                        sx={{ padding: 1.25 }}
-                    >
-                        <StarBorderIcon fontSize="small" />
-                    </InactiveIconButton>
-                </TooltipResolver>
+                <StyledIconButtonInactive
+                    className="show-row-hover"
+                    onClick={onClick}
+                    size="small"
+                >
+                    <StarBorderIcon fontSize="small" />
+                </StyledIconButtonInactive>
             }
         />
-    </Box>
+    </StyledCell>
 );

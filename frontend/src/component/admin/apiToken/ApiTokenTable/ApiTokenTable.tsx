@@ -25,7 +25,7 @@ import { ProjectsList } from 'component/admin/apiToken/ProjectsList/ProjectsList
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { Search } from 'component/common/Search/Search';
-import useHiddenColumns from 'hooks/useHiddenColumns';
+import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
 
 const hiddenColumnsSmall = ['Icon', 'createdAt'];
@@ -58,8 +58,20 @@ export const ApiTokenTable = () => {
         useSortBy
     );
 
-    useHiddenColumns(setHiddenColumns, hiddenColumnsSmall, isSmallScreen);
-    useHiddenColumns(setHiddenColumns, hiddenColumnsFlagE, !uiConfig.flags.E);
+    useConditionallyHiddenColumns(
+        [
+            {
+                condition: isSmallScreen,
+                columns: hiddenColumnsSmall,
+            },
+            {
+                condition: !uiConfig.flags.E,
+                columns: hiddenColumnsFlagE,
+            },
+        ],
+        setHiddenColumns,
+        COLUMNS
+    );
 
     return (
         <PageContent

@@ -28,12 +28,10 @@ export const ConfirmToken = ({
             primaryButtonText="Close"
             title="New token created"
         >
-            <div className={themeStyles.contentSpacingYLarge}>
-                <Typography variant="body1">
-                    Your new token has been created successfully.
-                </Typography>
-                <UserToken token={token} />
-            </div>
+            <Typography variant="body1">
+                Your new token has been created successfully.
+            </Typography>
+            <UserToken token={token} />
             <ConditionallyRender
                 condition={type === TokenType.FRONTEND}
                 show={

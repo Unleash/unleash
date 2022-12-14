@@ -15,7 +15,7 @@ import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useSearch } from 'hooks/useSearch';
-import useHiddenColumns from 'hooks/useHiddenColumns';
+import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import {
     Link,
     Route,
@@ -308,8 +308,20 @@ export const ProjectAccessTable: VFC = () => {
         useFlexLayout
     );
 
-    useHiddenColumns(setHiddenColumns, hiddenColumnsSmall, isSmallScreen);
-    useHiddenColumns(setHiddenColumns, hiddenColumnsMedium, isMediumScreen);
+    useConditionallyHiddenColumns(
+        [
+            {
+                condition: isSmallScreen,
+                columns: hiddenColumnsSmall,
+            },
+            {
+                condition: isMediumScreen,
+                columns: hiddenColumnsMedium,
+            },
+        ],
+        setHiddenColumns,
+        columns
+    );
 
     useEffect(() => {
         const tableState: PageQueryType = {};

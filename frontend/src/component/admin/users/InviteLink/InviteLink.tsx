@@ -232,18 +232,17 @@ export const InviteLink: VFC<ICreateInviteLinkProps> = () => {
                 primaryButtonText="Close"
                 title="Invite link created"
             >
-                <Box sx={{ pt: 2 }}>
+                <Box>
+                    <Typography variant="body1" sx={{ mb: 2 }}>
+                        Using this link, new team members can now sign-up to
+                        Unleash.
+                    </Typography>
                     <Typography variant="body1">
-                        New team members now sign-up to Unleash. Please provide
-                        them with the following link to get started:
+                        Please provide them with the following link to get
+                        started. This will allow them to set up their password
+                        and get started with their Unleash account.
                     </Typography>
                     <LinkField inviteLink={inviteLink} />
-
-                    <Typography variant="body1">
-                        Copy the link and send it to the user. This will allow
-                        them to set up their password and get started with their
-                        Unleash account.
-                    </Typography>
                 </Box>
             </Dialogue>
             <Dialogue

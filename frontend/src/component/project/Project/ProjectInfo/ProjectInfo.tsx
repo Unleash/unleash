@@ -18,12 +18,7 @@ interface IProjectInfoProps {
     description?: string;
 }
 
-const ProjectInfo = ({
-    id,
-    memberCount,
-    health,
-    description,
-}: IProjectInfoProps) => {
+const ProjectInfo = ({ id, memberCount, health }: IProjectInfoProps) => {
     const { classes: themeStyles } = useThemeStyles();
     const { classes: styles } = useStyles();
     const { uiConfig } = useUiConfig();
@@ -31,7 +26,7 @@ const ProjectInfo = ({
     let link = `/admin/users`;
 
     if (uiConfig?.versionInfo?.current?.enterprise) {
-        link = `/projects/${id}/access`;
+        link = `/projects/${id}/settings/access`;
     }
 
     return (

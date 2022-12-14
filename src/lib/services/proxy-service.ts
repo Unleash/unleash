@@ -177,12 +177,14 @@ export class ProxyService {
     }
 
     private async fetchFrontendSettings(): Promise<FrontendSettings> {
-        this.cachedFrontendSettings = await this.services.settingService.get(
-            frontendSettingsKey,
-            {
-                frontendApiOrigins: this.config.frontendApiOrigins,
-            },
-        );
+        try {
+            this.cachedFrontendSettings =
+                await this.services.settingService.get(frontendSettingsKey, {
+                    frontendApiOrigins: this.config.frontendApiOrigins,
+                });
+        } catch (error) {
+            this.logger.debug('Unable to fetch frontend settings');
+        }
         return this.cachedFrontendSettings;
     }
 

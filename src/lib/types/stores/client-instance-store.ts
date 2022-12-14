@@ -22,5 +22,6 @@ export interface IClientInstanceStore
     insert(details: INewClientInstance): Promise<void>;
     getByAppName(appName: string): Promise<IClientInstance[]>;
     getDistinctApplications(): Promise<string[]>;
+    getDistinctApplicationsCount(): Promise<number>;
     deleteForApplication(appName: string): Promise<void>;
 }

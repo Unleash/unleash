@@ -182,6 +182,16 @@ export default class ClientInstanceStore implements IClientInstanceStore {
         return rows.map((r) => r.app_name);
     }
 
+    async getDistinctApplicationsCount(): Promise<number> {
+        return this.db
+            .from(TABLE)
+            .countDistinct('app_name')
+            .then((res) => {
+                console.log(res);
+                return Number(res[0].count);
+            });
+    }
+
     async deleteForApplication(appName: string): Promise<void> {
         return this.db(TABLE).where('app_name', appName).del();
     }

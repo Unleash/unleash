@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { Box, TextField, Typography } from '@mui/material';
 import { CREATED, OK } from 'constants/statusCodes';
 import useToast from 'hooks/useToast';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import useResetPassword from 'hooks/api/getters/useResetPassword/useResetPassword';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useUserInvite } from 'hooks/api/getters/useUserInvite/useUserInvite';
@@ -40,17 +39,11 @@ export const NewUser = () => {
     const { resetPassword, loading: isPasswordSubmitting } =
         useAuthResetPasswordApi();
     const passwordDisabled = authDetails?.defaultHidden === true;
-    const { trackEvent } = usePlausibleTracker();
 
     const onSubmitInvitedUser = async (password: string) => {
         try {
             const res = await addUser(secret, { name, email, password });
             if (res.status === CREATED) {
-                trackEvent('invite', {
-                    props: {
-                        eventType: 'user created',
-                    },
-                });
                 navigate('/login?invited=true');
             } else {
                 setToastApiError(

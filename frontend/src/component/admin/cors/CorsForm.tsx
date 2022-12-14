@@ -36,14 +36,18 @@ export const CorsForm = ({ frontendApiOrigins }: ICorsFormProps) => {
             <Box sx={{ display: 'grid', gap: 1 }}>
                 <label htmlFor={inputFieldId}>
                     Which origins should be allowed to call the Frontend API?
-                    Add only one origin per line. The CORS specification does not support wildcard for subdomains, it needs to be a fully qualified domain, including the protocol.
-                    <br /><br />
-                    If you specify "*" it will be the chosen origin. 
-                    <br /><br />
+                    Add only one origin per line. The CORS specification does
+                    not support wildcard for subdomains, it needs to be a fully
+                    qualified domain, including the protocol.
+                    <br />
+                    <br />
+                    If you specify "*" it will be the chosen origin.
+                    <br />
+                    <br />
                     Example:
                 </label>
 
-                <code style={{fontSize: "0.7em"}}>
+                <code style={{ fontSize: '0.7em' }}>
                     https://www.example.com
                     <br />
                     https://www.example2.com

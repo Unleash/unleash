@@ -191,16 +191,16 @@ exports[`should serve the OpenAPI spec 1`] = `
       },
       "adminFeaturesQuerySchema": {
         "additionalProperties": true,
+        "description": "Used to filter feature toggles from the admin-api",
         "properties": {
           "namePrefix": {
+            "description": "A case-insensitive prefix filter for the names of feature toggles",
             "type": "string",
           },
           "tag": {
+            "description": "Used to filter by tags. For each entry, a TAGTYPE:TAGVALUE is expected",
             "items": {
-              "items": {
-                "type": "string",
-              },
-              "type": "array",
+              "type": "string",
             },
             "type": "array",
           },

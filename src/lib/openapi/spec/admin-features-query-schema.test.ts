@@ -11,7 +11,7 @@ test('adminFeaturesQuerySchema empty', () => {
 
 test('adminFeatureQuerySchema all fields', () => {
     const data: AdminFeaturesQuerySchema = {
-        tag: [['some-tag', 'some-other-tag']],
+        tag: ['some-tag', 'some-other-tag'],
         namePrefix: 'some-prefix',
     };
 

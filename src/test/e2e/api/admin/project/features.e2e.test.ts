@@ -2770,3 +2770,42 @@ test('Can query for features with namePrefix and tags', async () => {
             expect(res.body.features).toHaveLength(1);
         });
 });
+
+test('Can query for two tags at the same time. Tags are ORed together', async () => {
+    const tag = { type: 'simple', value: 'twotags-first-tag' };
+    const secondTag = { type: 'simple', value: 'twotags-second-tag' };
+    await db.stores.tagStore.createTag(tag);
+    await db.stores.tagStore.createTag(secondTag);
+    const taggedWithFirst = await db.stores.featureToggleStore.create(
+        'default',
+        {
+            name: 'tagged-with-first-tag',
+        },
+    );
+    const taggedWithSecond = await db.stores.featureToggleStore.create(
+        'default',
+        {
+            name: 'tagged-with-second-tag',
+        },
+    );
+    const taggedWithBoth = await db.stores.featureToggleStore.create(
+        'default',
+        {
+            name: 'tagged-with-both-tags',
+        },
+    );
+    await db.stores.featureTagStore.tagFeature(taggedWithFirst.name, tag);
+    await db.stores.featureTagStore.tagFeature(
+        taggedWithSecond.name,
+        secondTag,
+    );
+    await db.stores.featureTagStore.tagFeature(taggedWithBoth.name, tag);
+    await db.stores.featureTagStore.tagFeature(taggedWithBoth.name, secondTag);
+    await app.request
+        .get(
+            `/api/admin/projects/default/features?tag=${tag.type}:${tag.value}&tag=${secondTag.type}:${secondTag.value}`,
+        )
+        .expect((res) => {
+            expect(res.body.features).toHaveLength(3);
+        });
+});

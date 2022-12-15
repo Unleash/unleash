@@ -60,7 +60,7 @@ import { CorsAdmin } from 'component/admin/cors';
 import { InviteLink } from 'component/admin/users/InviteLink/InviteLink';
 import { Profile } from 'component/user/Profile/Profile';
 import { InstanceAdmin } from '../admin/instance-admin/InstanceAdmin';
-import { Traffic } from 'component/admin/traffic/Traffic';
+import { Network } from 'component/admin/network/Network';
 
 export const routes: IRoute[] = [
     // Splash
@@ -511,10 +511,10 @@ export const routes: IRoute[] = [
         menu: { adminSettings: true },
     },
     {
-        path: '/admin/traffic',
+        path: '/admin/network/*',
         parent: '/admin',
-        title: 'Traffic',
-        component: Traffic,
+        title: 'Network',
+        component: Network,
         type: 'protected',
         menu: { adminSettings: true },
         flag: 'networkView',

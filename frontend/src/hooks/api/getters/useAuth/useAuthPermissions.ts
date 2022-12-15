@@ -1,7 +1,7 @@
 import { IPermission } from 'interfaces/user';
 import { IUseAuthEndpointOutput, useAuthEndpoint } from './useAuthEndpoint';
-import useUiConfig from '../useUiConfig/useUiConfig';
-import { IUiConfig } from '../../../../interfaces/uiConfig';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { IUiConfig } from 'interfaces/uiConfig';
 
 interface IUseAuthPermissionsOutput {
     permissions?: IPermission[];

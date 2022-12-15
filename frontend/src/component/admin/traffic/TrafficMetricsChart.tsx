@@ -26,12 +26,13 @@ import theme from '../../../themes/theme';
 import { formatDateHM } from '../../../utils/formatDate';
 import { RequestsPerSecondSchema } from 'openapi';
 import 'chartjs-adapter-date-fns';
-import { PaletteColor } from '@mui/material';
+import { Alert, PaletteColor } from '@mui/material';
 import { PageContent } from '../../common/PageContent/PageContent';
 import { PageHeader } from '../../common/PageHeader/PageHeader';
 import { Box } from '@mui/system';
 import { current } from 'immer';
 import { CyclicIterator } from 'utils/cyclicIterator';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 interface IPoint {
     x: number;
     y: number;
@@ -184,15 +185,21 @@ export const InstanceMetricsChart: VFC = () => {
 
     return (
         <PageContent header={<PageHeader title="Requests per second" />}>
-            <Box sx={{ display: 'grid', gap: 4 }}>
-                <div style={{ height: 400 }}>
-                    <Line
-                        data={data}
-                        options={options}
-                        aria-label="An instance metrics line chart with two lines: requests per second for admin API and requests per second for client API"
-                    />
-                </div>
-            </Box>
+            <ConditionallyRender
+                condition={data.datasets.length === 0}
+                show={<Alert severity="warning">No data available.</Alert>}
+                elseShow={
+                    <Box sx={{ display: 'grid', gap: 4 }}>
+                        <div style={{ height: 400 }}>
+                            <Line
+                                data={data}
+                                options={options}
+                                aria-label="An instance metrics line chart with two lines: requests per second for admin API and requests per second for client API"
+                            />
+                        </div>
+                    </Box>
+                }
+            />
         </PageContent>
     );
 };

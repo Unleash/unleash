@@ -7,7 +7,7 @@ import { styled, Tab, Tabs } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
 import useToast from 'hooks/useToast';
 import useQueryParams from 'hooks/useQueryParams';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import ProjectEnvironment from '../ProjectEnvironment/ProjectEnvironment';
 import { ProjectFeaturesArchive } from './ProjectFeaturesArchive/ProjectFeaturesArchive';
 import ProjectOverview from './ProjectOverview';
@@ -77,51 +77,44 @@ const Project = () => {
     const { isOss, uiConfig } = useUiConfig();
     const basePath = `/projects/${projectId}`;
     const projectName = project?.name || projectId;
-    const { isChangeRequestConfiguredInAnyEnv, isChangeRequestFlagEnabled } =
+    const { isChangeRequestConfiguredInAnyEnv } =
         useChangeRequestsEnabled(projectId);
     const { favorite, unfavorite } = useFavoriteProjectsApi();
 
     const [showDelDialog, setShowDelDialog] = useState(false);
 
-    const tabs = useMemo(() => {
-        const tabArray = [
-            {
-                title: 'Overview',
-                path: basePath,
-                name: 'overview',
-            },
-            {
-                title: 'Health',
-                path: `${basePath}/health`,
-                name: 'health',
-            },
-            {
-                title: 'Archive',
-                path: `${basePath}/archive`,
-                name: 'archive',
-            },
-            ...(isChangeRequestFlagEnabled
-                ? [
-                      {
-                          title: 'Change requests',
-                          path: `${basePath}/change-requests`,
-                          name: 'change-request',
-                      },
-                  ]
-                : []),
-            {
-                title: 'Project settings',
-                path: `${basePath}/settings`,
-                name: 'settings',
-            },
-            {
-                title: 'Event log',
-                path: `${basePath}/logs`,
-                name: 'logs',
-            },
-        ];
-        return tabArray;
-    }, [isChangeRequestFlagEnabled]);
+    const tabs = [
+        {
+            title: 'Overview',
+            path: basePath,
+            name: 'overview',
+        },
+        {
+            title: 'Health',
+            path: `${basePath}/health`,
+            name: 'health',
+        },
+        {
+            title: 'Archive',
+            path: `${basePath}/archive`,
+            name: 'archive',
+        },
+        {
+            title: 'Change requests',
+            path: `${basePath}/change-requests`,
+            name: 'change-request',
+        },
+        {
+            title: 'Project settings',
+            path: `${basePath}/settings`,
+            name: 'settings',
+        },
+        {
+            title: 'Event log',
+            path: `${basePath}/logs`,
+            name: 'logs',
+        },
+    ];
 
     const activeTab = [...tabs]
         .reverse()
@@ -285,21 +278,11 @@ const Project = () => {
                 <Route path="logs" element={<ProjectLog />} />
                 <Route
                     path="change-requests"
-                    element={
-                        <ConditionallyRender
-                            condition={isChangeRequestFlagEnabled}
-                            show={<ProjectChangeRequests />}
-                        />
-                    }
+                    element={<ProjectChangeRequests />}
                 />
                 <Route
                     path="change-requests/:id"
-                    element={
-                        <ConditionallyRender
-                            condition={isChangeRequestFlagEnabled}
-                            show={<ChangeRequestOverview />}
-                        />
-                    }
+                    element={<ChangeRequestOverview />}
                 />
                 <Route path="settings/*" element={<ProjectSettings />} />
                 <Route path="*" element={<ProjectOverview />} />

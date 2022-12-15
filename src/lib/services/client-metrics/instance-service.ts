@@ -225,6 +225,10 @@ export default class ClientInstanceService {
     }
 
     async getRPSForPath(path: string, hoursToQuery: number): Promise<any> {
+        if (!this.prometheusApi) {
+            this.logger.warn('Prometheus not configured');
+            return;
+        }
         const timeoutSeconds = 5;
         const basePath = this.serverOption.baseUriPath;
         const compositePath = `${basePath}/${path}`.replaceAll('//', '/');

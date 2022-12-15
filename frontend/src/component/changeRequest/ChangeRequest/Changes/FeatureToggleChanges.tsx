@@ -46,7 +46,8 @@ export const FeatureToggleChanges: FC<IFeatureToggleChanges> = ({
                     <Alert
                         severity="warning"
                         sx={{
-                            mx: 1,
+                            px: 3,
+                            mb: 2,
                             '&.MuiAlert-standardWarning': {
                                 borderStyle: 'none',
                             },

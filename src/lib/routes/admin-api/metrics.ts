@@ -21,6 +21,8 @@ class MetricsController extends Controller {
 
     private clientInstanceService: ClientInstanceService;
 
+    readonly baseUriPath: string;
+
     constructor(
         config: IUnleashConfig,
         {
@@ -31,6 +33,7 @@ class MetricsController extends Controller {
         super(config);
         this.logger = config.getLogger('/admin-api/metrics.ts');
         this.flagResolver = config.flagResolver;
+        this.baseUriPath = config.server.baseUriPath || '';
 
         this.clientInstanceService = clientInstanceService;
 
@@ -189,11 +192,11 @@ class MetricsController extends Controller {
             const hoursToQuery = 6;
             const [clientMetrics, adminMetrics] = await Promise.all([
                 this.clientInstanceService.getRPSForPath(
-                    '/api/client/.*',
+                    `${this.baseUriPath}/api/client/.*`,
                     hoursToQuery,
                 ),
                 this.clientInstanceService.getRPSForPath(
-                    '/api/admin/.*',
+                    `${this.baseUriPath}/api/admin/.*`,
                     hoursToQuery,
                 ),
             ]);

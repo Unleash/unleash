@@ -42,6 +42,7 @@ process.nextTick(async () => {
                         changeRequests: true,
                         favorites: true,
                         variantsPerEnvironment: true,
+                        maintenance: false,
                     },
                 },
                 authentication: {

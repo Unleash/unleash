@@ -38,6 +38,10 @@ export const defaultExperimentalOptions = {
             process.env.UNLEASH_EXPERIMENTAL_FAVORITES,
             false,
         ),
+        maintenance: parseEnvVarBoolean(
+            process.env.UNLEASH_EXPERIMENTAL_MAINTENANCE,
+            false,
+        ),
         networkView: parseEnvVarBoolean(
             process.env.UNLEASH_EXPERIMENTAL_NETWORK_VIEW,
             false,
@@ -59,6 +63,7 @@ export interface IExperimentalOptions {
         variantsPerEnvironment?: boolean;
         favorites?: boolean;
         networkView?: boolean;
+        maintenance?: boolean;
     };
     externalResolver: IExternalFlagResolver;
 }

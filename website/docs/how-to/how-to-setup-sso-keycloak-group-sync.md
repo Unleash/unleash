@@ -4,7 +4,7 @@ title: 'How to set up Keycloak and Unleash to sync user groups'
 
 :::info availability
 
-User group syncing is an upcoming Unleash feature that will be available for enterprise customers.
+User group syncing was released in Unleash 4.18 and is available to enterprise customers.
 
 :::
 

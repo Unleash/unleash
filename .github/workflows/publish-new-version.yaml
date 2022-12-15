@@ -35,7 +35,7 @@ jobs:
       - name: npm version
         run: |
           npm version ${{ github.event.inputs.version }} --ignore-scripts
-          git push origin main
+          git push origin ${{ github.ref_name }}
           git push --tags
         env:
           CI: true

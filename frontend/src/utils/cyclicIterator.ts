@@ -5,8 +5,8 @@ export class CyclicIterator<T> {
         this.all = defaultList;
     }
     next(): T {
-        const color = this.all[this.current];
+        const item = this.all[this.current];
         this.current = (this.current + 1) % this.all.length;
-        return color;
+        return item;
     }
 }

@@ -30,6 +30,7 @@ import { Alert, PaletteColor } from '@mui/material';
 import { Box } from '@mui/system';
 import { CyclicIterator } from 'utils/cyclicIterator';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { usePageTitle } from 'hooks/usePageTitle';
 
 interface IPoint {
     x: number;
@@ -176,6 +177,8 @@ export const NetworkTraffic: VFC = () => {
     const options = useMemo(() => {
         return createInstanceChartOptions(metrics, locationSettings);
     }, [metrics, locationSettings]);
+
+    usePageTitle('Network - Traffic');
 
     const data = useMemo(() => {
         return createInstanceChartData(metrics);

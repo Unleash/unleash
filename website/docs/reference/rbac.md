@@ -118,7 +118,7 @@ A user group consists of the following:
 
 - a **name** (required)
 - a **description** (optional)
-- a list of users (optional)
+- a **list of users** (required)
 - a list of SSO groups to sync from (optional)
 
 Groups do nothing on their own. They must be given a role on a project to assign permissions. You can assign both standard roles and custom project roles to groups.

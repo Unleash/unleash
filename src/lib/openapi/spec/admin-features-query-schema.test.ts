@@ -11,11 +11,21 @@ test('adminFeaturesQuerySchema empty', () => {
 
 test('adminFeatureQuerySchema all fields', () => {
     const data: AdminFeaturesQuerySchema = {
-        tag: ['some-tag', 'some-other-tag'],
+        tag: ['simple:some-tag', 'simple:some-other-tag'],
         namePrefix: 'some-prefix',
     };
 
     expect(
         validateSchema('#/components/schemas/adminFeaturesQuerySchema', data),
     ).toBeUndefined();
+});
+
+test('pattern validation should deny invalid tags', () => {
+    const data: AdminFeaturesQuerySchema = {
+        tag: ['something', 'somethingelse'],
+    };
+
+    expect(
+        validateSchema('#/components/schemas/adminFeaturesQuerySchema', data),
+    ).toBeDefined();
 });

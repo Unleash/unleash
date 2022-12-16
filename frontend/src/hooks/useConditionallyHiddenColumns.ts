@@ -7,19 +7,27 @@ interface IConditionallyHiddenColumns {
 
 export const useConditionallyHiddenColumns = (
     conditionallyHiddenColumns: IConditionallyHiddenColumns[],
-    setHiddenColumns: (param: string[]) => void,
+    setHiddenColumns: (
+        columns: string[] | ((columns: string[]) => string[])
+    ) => void,
     columnsDefinition: unknown[]
 ) => {
     useEffect(() => {
-        const hiddenColumnsSet = new Set<string>();
-
-        conditionallyHiddenColumns
+        const columnsToHide = conditionallyHiddenColumns
             .filter(({ condition }) => condition)
-            .forEach(({ columns }) =>
-                columns.forEach(column => hiddenColumnsSet.add(column))
-            );
+            .flatMap(({ columns }) => columns);
 
-        setHiddenColumns([...hiddenColumnsSet]);
+        const columnsToShow = conditionallyHiddenColumns
+            .flatMap(({ columns }) => columns)
+            .filter(column => !columnsToHide.includes(column));
+
+        setHiddenColumns(columns => [
+            ...new Set(
+                [...columns, ...columnsToHide].filter(
+                    column => !columnsToShow.includes(column)
+                )
+            ),
+        ]);
     }, [
         ...conditionallyHiddenColumns.map(({ condition }) => condition),
         setHiddenColumns,

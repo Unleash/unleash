@@ -76,7 +76,11 @@ const Header: VFC = () => {
         mobileRoutes: routes.mobileRoutes.filter(filterByConfig(uiConfig)),
         adminRoutes: routes.adminRoutes
             .filter(filterByConfig(uiConfig))
-            .filter(filterByEnterprise),
+            .filter(filterByEnterprise)
+            .map(route => ({
+                ...route,
+                path: route.path.replace('/*', ''),
+            })),
     };
 
     if (smallScreen) {

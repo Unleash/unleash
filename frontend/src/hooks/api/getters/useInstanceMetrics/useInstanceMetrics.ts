@@ -1,4 +1,4 @@
-import useSWR from 'swr';
+import useSWR, { SWRConfiguration } from 'swr';
 import { useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
@@ -18,10 +18,13 @@ export interface IInstanceMetricsResponse {
     error?: Error;
 }
 
-export const useInstanceMetrics = (): IInstanceMetricsResponse => {
+export const useInstanceMetrics = (
+    options: SWRConfiguration = {}
+): IInstanceMetricsResponse => {
     const { data, error, mutate } = useSWR(
         formatApiPath(`api/admin/metrics/rps`),
-        fetcher
+        fetcher,
+        options
     );
 
     return useMemo(

@@ -1,4 +1,3 @@
-import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { Paper, Tab, Tabs } from '@mui/material';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -11,6 +10,8 @@ function AdminMenu() {
     const { isBilling } = useInstanceStatus();
     const { flags } = uiConfig;
 
+    const activeTab = pathname.split('/')[2];
+
     return (
         <Paper
             style={{
@@ -20,13 +21,13 @@ function AdminMenu() {
             }}
         >
             <Tabs
-                value={pathname}
+                value={activeTab}
                 variant="scrollable"
                 scrollButtons="auto"
                 allowScrollButtonsMobile
             >
                 <Tab
-                    value="/admin/users"
+                    value="users"
                     label={
                         <CenteredNavLink to="/admin/users">
                             <span>Users</span>
@@ -35,7 +36,7 @@ function AdminMenu() {
                 />
                 {flags.UG && (
                     <Tab
-                        value="/admin/groups"
+                        value="groups"
                         label={
                             <CenteredNavLink to="/admin/groups">
                                 <span>Groups</span>
@@ -45,7 +46,7 @@ function AdminMenu() {
                 )}
                 {flags.RE && (
                     <Tab
-                        value="/admin/roles"
+                        value="roles"
                         label={
                             <CenteredNavLink to="/admin/roles">
                                 <span>Project roles</span>
@@ -54,7 +55,7 @@ function AdminMenu() {
                     />
                 )}
                 <Tab
-                    value="/admin/api"
+                    value="api"
                     label={
                         <CenteredNavLink to="/admin/api">
                             API access
@@ -63,7 +64,7 @@ function AdminMenu() {
                 />
                 {uiConfig.flags.embedProxyFrontend && (
                     <Tab
-                        value="/admin/cors"
+                        value="cors"
                         label={
                             <CenteredNavLink to="/admin/cors">
                                 CORS origins
@@ -72,7 +73,7 @@ function AdminMenu() {
                     />
                 )}
                 <Tab
-                    value="/admin/auth"
+                    value="auth"
                     label={
                         <CenteredNavLink to="/admin/auth">
                             Single sign-on
@@ -80,7 +81,7 @@ function AdminMenu() {
                     }
                 />
                 <Tab
-                    value="/admin/instance"
+                    value="instance"
                     label={
                         <CenteredNavLink to="/admin/instance">
                             Instance stats
@@ -89,17 +90,17 @@ function AdminMenu() {
                 />
                 {flags.networkView && (
                     <Tab
-                        value="/admin/traffic"
+                        value="network"
                         label={
-                            <CenteredNavLink to="/admin/traffic">
-                                Traffic
+                            <CenteredNavLink to="/admin/network">
+                                Network
                             </CenteredNavLink>
                         }
                     />
                 )}
                 {isBilling && (
                     <Tab
-                        value="/admin/billing"
+                        value="billing"
                         label={
                             <CenteredNavLink to="/admin/billing">
                                 Billing

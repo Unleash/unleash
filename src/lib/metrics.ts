@@ -118,6 +118,12 @@ export default class MetricsMonitor {
             help: 'Number of strategies',
         });
 
+        const clientAppsTotal = new client.Gauge({
+            name: 'client_apps_total',
+            help: 'Number of registered client apps aggregated by range by last seen',
+            labelNames: ['range'],
+        });
+
         const samlEnabled = new client.Gauge({
             name: 'saml_enabled',
             help: 'Whether SAML is enabled',
@@ -170,6 +176,13 @@ export default class MetricsMonitor {
 
                 oidcEnabled.reset();
                 oidcEnabled.set(stats.OIDCenabled ? 1 : 0);
+
+                clientAppsTotal.reset();
+                stats.clientApps.forEach((clientStat) =>
+                    clientAppsTotal
+                        .labels({ range: clientStat.range })
+                        .set(clientStat.count),
+                );
             } catch (e) {}
         }
 

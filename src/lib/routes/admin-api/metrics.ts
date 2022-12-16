@@ -187,12 +187,8 @@ class MetricsController extends Controller {
         }
         try {
             const hoursToQuery = 6;
-            const allMetrics = await this.clientInstanceService.getRPS(
-                hoursToQuery,
-            );
-            res.json({
-                allMetrics,
-            });
+            const rps = await this.clientInstanceService.getRPS(hoursToQuery);
+            res.json(rps || {});
         } catch (err) {
             this.logger.error('Failed to fetch RPS metrics', err);
             res.status(500).send('Error fetching RPS metrics');

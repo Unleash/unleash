@@ -23,23 +23,20 @@ export const NetworkOverview = () => {
 
     const apps: INetworkApp[] = [];
     if (Boolean(metrics)) {
-        Object.keys(metrics).forEach(metric => {
-            apps.push(
-                ...(
-                    metrics[metric].data?.result
-                        ?.map(result => ({
-                            label: result.metric?.appName,
-                            reqs: parseFloat(
-                                result.values?.[
-                                    result.values?.length - 1
-                                ][1].toString() || '0'
-                            ).toFixed(2),
-                            type: metric.split('Metrics')[0],
-                        }))
-                        .filter(app => app.label !== 'undefined') || []
-                ).filter(app => app.reqs !== '0.00')
-            );
-        });
+        apps.push(
+            ...(
+                metrics.data?.result
+                    ?.map(result => ({
+                        label: result.metric?.appName,
+                        reqs: parseFloat(
+                            result.values?.[
+                                result.values?.length - 1
+                            ][1].toString() || '0'
+                        ).toFixed(2),
+                        type: result.metric?.appName!,
+                    })) || []
+            ).filter(app => app.reqs !== '0.00')
+        );
     }
 
     const graph = `

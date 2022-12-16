@@ -4,12 +4,8 @@ import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { RequestsPerSecondSchema } from 'openapi';
 
-export interface InstanceMetrics {
-    [key: string]: RequestsPerSecondSchema;
-}
-
 export interface IInstanceMetricsResponse {
-    metrics: InstanceMetrics;
+    metrics: RequestsPerSecondSchema;
 
     refetch: () => void;
 

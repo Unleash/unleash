@@ -13,7 +13,7 @@ async function getSetup() {
     });
     const services = createServices(stores, config);
     jest.spyOn(services.clientInstanceService, 'getRPS').mockImplementation(
-        async () => jest.fn(),
+        async () => {},
     );
     const app = await getApp(config, stores, services);
 

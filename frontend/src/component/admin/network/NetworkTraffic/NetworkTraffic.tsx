@@ -1,5 +1,4 @@
 import {
-    InstanceMetrics,
     useInstanceMetrics,
 } from 'hooks/api/getters/useInstanceMetrics/useInstanceMetrics';
 import { useMemo, VFC } from 'react';
@@ -168,7 +167,7 @@ const toChartData = (
     return [];
 };
 
-const createInstanceChartData = (metrics?: InstanceMetrics): ChartDataType => {
+const createInstanceChartData = (metrics?: RequestsPerSecondSchema): ChartDataType => {
     if (metrics) {
         const colorPicker = new ItemPicker([
             theme.palette.success,
@@ -176,10 +175,7 @@ const createInstanceChartData = (metrics?: InstanceMetrics): ChartDataType => {
             theme.palette.primary,
             theme.palette.warning,
         ]);
-        let datasets: ChartDatasetType[] = [];
-        for (let key in metrics) {
-            datasets = datasets.concat(toChartData(metrics[key], colorPicker));
-        }
+        const datasets = toChartData(metrics, colorPicker);
         return { datasets };
     }
     return { datasets: [] };

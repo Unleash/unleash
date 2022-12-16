@@ -1,12 +1,9 @@
-import {
-    useInstanceMetrics,
-} from 'hooks/api/getters/useInstanceMetrics/useInstanceMetrics';
+import { useInstanceMetrics } from 'hooks/api/getters/useInstanceMetrics/useInstanceMetrics';
 import { useMemo, VFC } from 'react';
 import { Line } from 'react-chartjs-2';
 import {
     CategoryScale,
     Chart as ChartJS,
-    ChartData,
     ChartDataset,
     ChartOptions,
     Legend,
@@ -25,7 +22,7 @@ import theme from 'themes/theme';
 import { formatDateHM } from 'utils/formatDate';
 import { RequestsPerSecondSchema } from 'openapi';
 import 'chartjs-adapter-date-fns';
-import { Alert, PaletteColor } from '@mui/material';
+import { Alert } from '@mui/material';
 import { Box } from '@mui/system';
 import { CyclicIterator } from 'utils/cyclicIterator';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -37,7 +34,6 @@ interface IPoint {
 }
 
 type ChartDatasetType = ChartDataset<'line', IPoint[]>;
-type ChartDataType = ChartData<'line', IPoint[], string>;
 
 const createChartPoints = (
     values: Array<Array<number | string>>,
@@ -124,8 +120,8 @@ const createInstanceChartOptions = (
 class ItemPicker<T> {
     private items: CyclicIterator<T>;
     private picked: Map<string, T> = new Map();
-    constructor(colors: T[]) {
-        this.items = new CyclicIterator<T>(colors);
+    constructor(items: T[]) {
+        this.items = new CyclicIterator<T>(items);
     }
 
     public pick(key: string): T {
@@ -136,11 +132,14 @@ class ItemPicker<T> {
     }
 }
 
-const toChartData = (
-    rps: RequestsPerSecondSchema,
-    colorPicker: ItemPicker<PaletteColor>
-): ChartDatasetType[] => {
-    if (rps.data?.result) {
+const toChartData = (rps?: RequestsPerSecondSchema): ChartDatasetType[] => {
+    if (rps?.data?.result) {
+        const colorPicker = new ItemPicker([
+            theme.palette.success,
+            theme.palette.error,
+            theme.palette.primary,
+            theme.palette.warning,
+        ]);
         return rps.data.result.map(dataset => {
             const endpoint = dataset.metric?.endpoint || 'unknown';
             const appName = dataset.metric?.appName || 'unknown';
@@ -167,20 +166,6 @@ const toChartData = (
     return [];
 };
 
-const createInstanceChartData = (metrics?: RequestsPerSecondSchema): ChartDataType => {
-    if (metrics) {
-        const colorPicker = new ItemPicker([
-            theme.palette.success,
-            theme.palette.error,
-            theme.palette.primary,
-            theme.palette.warning,
-        ]);
-        const datasets = toChartData(metrics, colorPicker);
-        return { datasets };
-    }
-    return { datasets: [] };
-};
-
 export const NetworkTraffic: VFC = () => {
     const { locationSettings } = useLocationSettings();
     const { metrics } = useInstanceMetrics();
@@ -191,7 +176,7 @@ export const NetworkTraffic: VFC = () => {
     usePageTitle('Network - Traffic');
 
     const data = useMemo(() => {
-        return createInstanceChartData(metrics);
+        return { datasets: toChartData(metrics) };
     }, [metrics, locationSettings]);
 
     return (

@@ -25,16 +25,15 @@ export const NetworkOverview = () => {
     if (Boolean(metrics)) {
         apps.push(
             ...(
-                metrics.data?.result
-                    ?.map(result => ({
-                        label: result.metric?.appName,
-                        reqs: parseFloat(
-                            result.values?.[
-                                result.values?.length - 1
-                            ][1].toString() || '0'
-                        ).toFixed(2),
-                        type: result.metric?.appName!,
-                    })) || []
+                metrics.data?.result?.map(result => ({
+                    label: result.metric?.appName,
+                    reqs: parseFloat(
+                        result.values?.[
+                            result.values?.length - 1
+                        ][1].toString() || '0'
+                    ).toFixed(2),
+                    type: result.metric?.appName!,
+                })) || []
             ).filter(app => app.reqs !== '0.00')
         );
     }

@@ -5,23 +5,9 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { Alert, styled } from '@mui/material';
 
 const StyledMermaid = styled(Mermaid)(({ theme }) => ({
-    '#mermaid .node[id*=flowchart-Unleash]': {
-        '& rect': {
-            fill: theme.palette.secondary.light,
-            stroke: theme.palette.secondary.border,
-        },
-        // '& .nodeLabel': {
-        //     color: theme.palette.secondary.dark,
-        // },
-    },
-    '#mermaid .node[id*=flowchart-app]': {
-        '& rect': {
-            fill: theme.palette.secondary.light,
-            stroke: theme.palette.secondary.border,
-        },
-        // '& .nodeLabel': {
-        //     color: theme.palette.secondary.dark,
-        // },
+    '#mermaid .node rect': {
+        fill: theme.palette.secondary.light,
+        stroke: theme.palette.secondary.border,
     },
 }));
 
@@ -42,10 +28,7 @@ export const NetworkOverview = () => {
                 ...(
                     metrics[metric].data?.result
                         ?.map(result => ({
-                            label:
-                                result.metric?.appName !== 'undefined'
-                                    ? result.metric?.appName
-                                    : undefined,
+                            label: result.metric?.appName,
                             reqs: parseFloat(
                                 result.values?.[
                                     result.values?.length - 1
@@ -53,7 +36,7 @@ export const NetworkOverview = () => {
                             ).toFixed(2),
                             type: metric.split('Metrics')[0],
                         }))
-                        .filter(app => Boolean(app.label)) || []
+                        .filter(app => app.label !== 'undefined') || []
                 ).filter(app => app.reqs !== '0.00')
             );
         });

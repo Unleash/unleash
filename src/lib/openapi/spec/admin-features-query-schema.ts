@@ -4,7 +4,6 @@ export const adminFeaturesQuerySchema = {
     $id: '#/components/schemas/adminFeaturesQuerySchema',
     type: 'object',
     additionalProperties: false,
-    description: 'Used to filter feature toggles from the admin-api',
     properties: {
         tag: {
             type: 'array',

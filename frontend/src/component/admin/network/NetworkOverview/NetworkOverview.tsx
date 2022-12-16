@@ -22,10 +22,10 @@ export const NetworkOverview = () => {
     const { metrics } = useInstanceMetrics();
 
     const apps: INetworkApp[] = [];
-    if (Boolean(metrics)) {
+    if (metrics.data?.result) {
         apps.push(
             ...(
-                metrics.data?.result?.map(result => ({
+                metrics.data.result.map(result => ({
                     label: result.metric?.appName,
                     reqs: parseFloat(
                         result.values?.[

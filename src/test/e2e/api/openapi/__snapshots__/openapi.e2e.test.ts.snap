@@ -189,6 +189,28 @@ exports[`should serve the OpenAPI spec 1`] = `
         ],
         "type": "object",
       },
+      "adminFeaturesQuerySchema": {
+        "additionalProperties": false,
+        "properties": {
+          "namePrefix": {
+            "description": "A case-insensitive prefix filter for the names of feature toggles",
+            "example": "demo.part1",
+            "type": "string",
+          },
+          "tag": {
+            "description": "Used to filter by tags. For each entry, a TAGTYPE:TAGVALUE is expected",
+            "example": [
+              "simple:mytag",
+            ],
+            "items": {
+              "pattern": "\\w+:\\w+",
+              "type": "string",
+            },
+            "type": "array",
+          },
+        },
+        "type": "object",
+      },
       "apiTokenSchema": {
         "additionalProperties": false,
         "properties": {

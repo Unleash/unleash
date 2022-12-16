@@ -111,6 +111,7 @@ export * from './public-signup-tokens-schema';
 export * from './upsert-context-field-schema';
 export * from './validate-edge-tokens-schema';
 export * from './client-features-query-schema';
+export * from './admin-features-query-schema';
 export * from './playground-constraint-schema';
 export * from './create-feature-strategy-schema';
 export * from './set-strategy-sort-order-schema';

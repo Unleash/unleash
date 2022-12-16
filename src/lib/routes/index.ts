@@ -13,7 +13,6 @@ import ProxyController from './proxy-api';
 import { conditionalMiddleware } from '../middleware';
 import EdgeController from './edge-api';
 import { PublicInviteController } from './public-invite';
-import maintenanceMiddleware from '../middleware/maintenance-middleware';
 
 class IndexRouter extends Controller {
     constructor(config: IUnleashConfig, services: IUnleashServices) {
@@ -42,7 +41,6 @@ class IndexRouter extends Controller {
         );
 
         this.use('/api/admin', new AdminApi(config, services).router);
-        this.use('/api/admin', maintenanceMiddleware(config));
         this.use('/api/client', new ClientApi(config, services).router);
 
         this.use(

@@ -191,7 +191,6 @@ exports[`should serve the OpenAPI spec 1`] = `
       },
       "adminFeaturesQuerySchema": {
         "additionalProperties": false,
-        "description": "Used to filter feature toggles from the admin-api",
         "properties": {
           "namePrefix": {
             "description": "A case-insensitive prefix filter for the names of feature toggles",

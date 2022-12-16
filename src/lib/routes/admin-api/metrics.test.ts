@@ -12,10 +12,9 @@ async function getSetup() {
         preRouterHook: perms.hook,
     });
     const services = createServices(stores, config);
-    jest.spyOn(
-        services.clientInstanceService,
-        'getRPSForPath',
-    ).mockImplementation(async () => jest.fn());
+    jest.spyOn(services.clientInstanceService, 'getRPS').mockImplementation(
+        async () => jest.fn(),
+    );
     const app = await getApp(config, stores, services);
 
     return {

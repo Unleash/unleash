@@ -30,7 +30,6 @@ import { Alert, PaletteColor } from '@mui/material';
 import { PageContent } from '../../common/PageContent/PageContent';
 import { PageHeader } from '../../common/PageHeader/PageHeader';
 import { Box } from '@mui/system';
-import { current } from 'immer';
 import { CyclicIterator } from 'utils/cyclicIterator';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 interface IPoint {
@@ -51,7 +50,6 @@ const createChartPoints = (
     }));
 };
 const createInstanceChartOptions = (
-    metrics: InstanceMetrics,
     locationSettings: ILocationSettings
 ): ChartOptions<'line'> => {
     return {
@@ -124,48 +122,63 @@ const createInstanceChartOptions = (
         },
     };
 };
+class ItemPicker<T> {
+    private items: CyclicIterator<T>;
+    private picked: Map<string, T> = new Map();
+    constructor(colors: T[]) {
+        this.items = new CyclicIterator<T>(colors);
+    }
+
+    public pick(key: string): T {
+        if (!this.picked.has(key)) {
+            this.picked.set(key, this.items.next());
+        }
+        return this.picked.get(key)!;
+    }
+}
 
 const toChartData = (
     rps: RequestsPerSecondSchema,
-    color: PaletteColor,
-    label: (name: string) => string
+    colorPicker: ItemPicker<PaletteColor>
 ): ChartDatasetType[] => {
     if (rps.data?.result) {
-        return rps.data.result.map(dataset => ({
-            label: label(dataset.metric?.appName || 'unknown'),
-            borderColor: color.main,
-            backgroundColor: color.main,
-            data: createChartPoints(dataset.values || [], y => parseFloat(y)),
-            elements: {
-                point: {
-                    radius: 4,
-                    pointStyle: 'circle',
+        return rps.data.result.map(dataset => {
+            const endpoint = dataset.metric?.endpoint || 'unknown';
+            const appName = dataset.metric?.appName || 'unknown';
+            const color = colorPicker.pick(endpoint);
+            return {
+                label: `${endpoint}: ${appName}`,
+                borderColor: color.main,
+                backgroundColor: color.main,
+                data: createChartPoints(dataset.values || [], y =>
+                    parseFloat(y)
+                ),
+                elements: {
+                    point: {
+                        radius: 4,
+                        pointStyle: 'circle',
+                    },
+                    line: {
+                        borderDash: [8, 4],
+                    },
                 },
-                line: {
-                    borderDash: [8, 4],
-                },
-            },
-        }));
+            };
+        });
     }
     return [];
 };
 
 const createInstanceChartData = (metrics?: InstanceMetrics): ChartDataType => {
     if (metrics) {
-        const colors = new CyclicIterator<PaletteColor>([
+        const colorPicker = new ItemPicker([
             theme.palette.success,
             theme.palette.error,
             theme.palette.primary,
+            theme.palette.warning,
         ]);
         let datasets: ChartDatasetType[] = [];
         for (let key in metrics) {
-            datasets = datasets.concat(
-                toChartData(
-                    metrics[key],
-                    colors.next(),
-                    metricName => `${metricName}: ${key}`
-                )
-            );
+            datasets = datasets.concat(toChartData(metrics[key], colorPicker));
         }
         return { datasets };
     }
@@ -176,8 +189,8 @@ export const InstanceMetricsChart: VFC = () => {
     const { locationSettings } = useLocationSettings();
     const { metrics } = useInstanceMetrics();
     const options = useMemo(() => {
-        return createInstanceChartOptions(metrics, locationSettings);
-    }, [metrics, locationSettings]);
+        return createInstanceChartOptions(locationSettings);
+    }, [locationSettings]);
 
     const data = useMemo(() => {
         return createInstanceChartData(metrics);

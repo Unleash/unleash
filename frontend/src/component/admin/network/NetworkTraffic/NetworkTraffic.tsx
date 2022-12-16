@@ -1,7 +1,7 @@
 import {
     InstanceMetrics,
     useInstanceMetrics,
-} from '../../../hooks/api/getters/useInstanceMetrics/useInstanceMetrics';
+} from 'hooks/api/getters/useInstanceMetrics/useInstanceMetrics';
 import { useMemo, VFC } from 'react';
 import { Line } from 'react-chartjs-2';
 import {
@@ -21,18 +21,17 @@ import {
 import {
     ILocationSettings,
     useLocationSettings,
-} from '../../../hooks/useLocationSettings';
-import theme from '../../../themes/theme';
-import { formatDateHM } from '../../../utils/formatDate';
+} from 'hooks/useLocationSettings';
+import theme from 'themes/theme';
+import { formatDateHM } from 'utils/formatDate';
 import { RequestsPerSecondSchema } from 'openapi';
 import 'chartjs-adapter-date-fns';
 import { Alert, PaletteColor } from '@mui/material';
-import { PageContent } from '../../common/PageContent/PageContent';
-import { PageHeader } from '../../common/PageHeader/PageHeader';
 import { Box } from '@mui/system';
-import { current } from 'immer';
 import { CyclicIterator } from 'utils/cyclicIterator';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { usePageTitle } from 'hooks/usePageTitle';
+
 interface IPoint {
     x: number;
     y: number;
@@ -172,37 +171,38 @@ const createInstanceChartData = (metrics?: InstanceMetrics): ChartDataType => {
     return { datasets: [] };
 };
 
-export const InstanceMetricsChart: VFC = () => {
+export const NetworkTraffic: VFC = () => {
     const { locationSettings } = useLocationSettings();
     const { metrics } = useInstanceMetrics();
     const options = useMemo(() => {
         return createInstanceChartOptions(metrics, locationSettings);
     }, [metrics, locationSettings]);
 
+    usePageTitle('Network - Traffic');
+
     const data = useMemo(() => {
         return createInstanceChartData(metrics);
     }, [metrics, locationSettings]);
 
     return (
-        <PageContent header={<PageHeader title="Requests per second" />}>
-            <ConditionallyRender
-                condition={data.datasets.length === 0}
-                show={<Alert severity="warning">No data available.</Alert>}
-                elseShow={
-                    <Box sx={{ display: 'grid', gap: 4 }}>
-                        <div style={{ height: 400 }}>
-                            <Line
-                                data={data}
-                                options={options}
-                                aria-label="An instance metrics line chart with two lines: requests per second for admin API and requests per second for client API"
-                            />
-                        </div>
-                    </Box>
-                }
-            />
-        </PageContent>
+        <ConditionallyRender
+            condition={data.datasets.length === 0}
+            show={<Alert severity="warning">No data available.</Alert>}
+            elseShow={
+                <Box sx={{ display: 'grid', gap: 4 }}>
+                    <div style={{ height: 400 }}>
+                        <Line
+                            data={data}
+                            options={options}
+                            aria-label="An instance metrics line chart with two lines: requests per second for admin API and requests per second for client API"
+                        />
+                    </div>
+                </Box>
+            }
+        />
     );
 };
+
 // Register dependencies that we need to draw the chart.
 ChartJS.register(
     CategoryScale,
@@ -216,4 +216,4 @@ ChartJS.register(
 );
 
 // Use a default export to lazy-load the charting library.
-export default InstanceMetricsChart;
+export default NetworkTraffic;

@@ -187,18 +187,24 @@ class MetricsController extends Controller {
         }
         try {
             const hoursToQuery = 6;
-            const [clientMetrics, adminMetrics] = await Promise.all([
-                this.clientInstanceService.getRPSForPath(
-                    '/api/client/.*',
-                    hoursToQuery,
-                ),
-                this.clientInstanceService.getRPSForPath(
-                    '/api/admin/.*',
-                    hoursToQuery,
-                ),
-            ]);
+            const [clientMetrics, frontendMetrics, adminMetrics] =
+                await Promise.all([
+                    this.clientInstanceService.getRPSForPath(
+                        '/api/client/.*',
+                        hoursToQuery,
+                    ),
+                    this.clientInstanceService.getRPSForPath(
+                        '/api/frontend.*',
+                        hoursToQuery,
+                    ),
+                    this.clientInstanceService.getRPSForPath(
+                        '/api/admin/.*',
+                        hoursToQuery,
+                    ),
+                ]);
             res.json({
                 clientMetrics,
+                frontendMetrics,
                 adminMetrics,
             });
         } catch (err) {

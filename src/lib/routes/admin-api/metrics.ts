@@ -187,19 +187,11 @@ class MetricsController extends Controller {
         }
         try {
             const hoursToQuery = 6;
-            const [clientMetrics, adminMetrics] = await Promise.all([
-                this.clientInstanceService.getRPSForPath(
-                    '/api/client/.*',
-                    hoursToQuery,
-                ),
-                this.clientInstanceService.getRPSForPath(
-                    '/api/admin/.*',
-                    hoursToQuery,
-                ),
-            ]);
+            const allMetrics = await this.clientInstanceService.getRPS(
+                hoursToQuery,
+            );
             res.json({
-                clientMetrics,
-                adminMetrics,
+                allMetrics,
             });
         } catch (err) {
             this.logger.error('Failed to fetch RPS metrics', err);

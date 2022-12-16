@@ -224,16 +224,17 @@ export default class ClientInstanceService {
         return (d.getTime() - d.getMilliseconds()) / 1000;
     }
 
-    async getRPSForPath(path: string, hoursToQuery: number): Promise<any> {
+    async getRps(hoursToQuery: number): Promise<any> {
         if (!this.prometheusApi) {
             this.logger.warn('Prometheus not configured');
             return;
         }
         const timeoutSeconds = 5;
         const basePath = this.serverOption.baseUriPath;
-        const compositePath = `${basePath}/${path}`.replaceAll('//', '/');
-        const step = '5m'; // validate: I'm using the step both for step in query_range and for irate
-        const query = `sum by(appName) (irate (http_request_duration_milliseconds_count{path=~"${compositePath}"} [${step}]))`;
+        const pathQuery = `${basePath}/api/.*`.replaceAll('//', '/');
+        const step = '5m';
+        const rpsQuery = `irate (http_request_duration_milliseconds_count{path=~"${pathQuery}"} [${step}])`;
+        const query = `sum by(appName, endpoint) (label_replace(${rpsQuery}, "endpoint", "$1", "path", ".*(/api/(?:client/)?[^/]+).*"))`;
         const end = new Date();
         const start = new Date();
         start.setHours(end.getHours() - hoursToQuery);

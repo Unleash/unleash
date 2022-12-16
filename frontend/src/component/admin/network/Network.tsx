@@ -1,10 +1,12 @@
-import { NetworkOverview } from './NetworkOverview/NetworkOverview';
-import { NetworkTraffic } from './NetworkTraffic/NetworkTraffic';
+import { lazy } from 'react';
 import AdminMenu from '../menu/AdminMenu';
 import { styled, Tab, Tabs } from '@mui/material';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import { CenteredNavLink } from '../menu/CenteredNavLink';
 import { PageContent } from 'component/common/PageContent/PageContent';
+
+const NetworkOverview = lazy(() => import('./NetworkOverview/NetworkOverview'));
+const NetworkTraffic = lazy(() => import('./NetworkTraffic/NetworkTraffic'));
 
 const StyledPageContent = styled(PageContent)(() => ({
     '.page-header': {

@@ -9,15 +9,12 @@ const maintenanceMiddleware = ({
     logger.debug('Enabling Maintenance middleware');
 
     return async (req: Request, res, next) => {
-        try {
-            const writeMethod = ['POST', 'PUT', 'DELETE'].includes(req.method);
-            if (writeMethod && flagResolver.isEnabled('maintenance')) {
-                res.status(503).send({});
-            }
-        } catch (error) {
-            logger.error(error);
+        const writeMethod = ['POST', 'PUT', 'DELETE'].includes(req.method);
+        if (writeMethod && flagResolver.isEnabled('maintenance')) {
+            res.status(503).send({});
+        } else {
+            next();
         }
-        next();
     };
 };
 

@@ -25,8 +25,9 @@ const Maintenance = () => {
             <StyledErrorRoundedIcon />
             <b>Maintenance Mode! </b>
             <p>
-                Any changes you make during maintenance mode will not be saved.
-                We apologize for any inconvenience this may cause.
+                During maintenance mode, any changes made will not be saved and
+                you may receive an error. We apologize for any inconvenience
+                this may cause.
             </p>
         </StyledDiv>
     );

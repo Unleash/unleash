@@ -14,11 +14,6 @@ describe('Public Signup API', () => {
             preRouterHook: perms.hook,
         });
 
-        config.flagResolver = {
-            isEnabled: jest.fn().mockResolvedValue(true),
-            getAll: jest.fn(),
-        };
-
         stores.accessStore = {
             ...stores.accessStore,
             addUserToRole: jest.fn(),

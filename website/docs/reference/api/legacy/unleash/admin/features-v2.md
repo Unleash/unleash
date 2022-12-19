@@ -608,7 +608,11 @@ Transfer-Encoding: chunked
 5. Because this change adds more data, it won't be possible to down migrate without data loss (i.e. if variants are different per environment, there's no way of representing that in the model where variants were linked to features and applying to all environments)
 
 ### Put variants for Feature Toggle {#update-variants}
-**Warning** this affects all environments at once. It's recommended to use [#update-variants-per-environment](#update-variants-per-environment)
+:::caution 
+
+This endpoint affects all environments at once. If you only want to update a single environment, use [#update-variants-per-environment](#update-variants-per-environment) instead.
+
+:::
 
 <ApiRequest verb="put" url="api/admin/projects/:projectId/features/:featureName/variants" title="Create (overwrite) variants for a feature toggle in all environments (example data)" payload={[
 	{
@@ -695,7 +699,9 @@ Content-Type: application/json; charset=utf-8
 ```
 
 ### PATCH variants for a feature toggle
-**Warning** this affects all environments at once. It's recommended to use [#update-variants-per-environment](#update-variants-per-environment)
+:::caution
+
+ This endpoint affects all environments at once. If you only want to update a single environment, use [#update-variants-per-environment](#update-variants-per-environment) instead.
 
 <ApiRequest verb="patch" url="api/admin/projects/:projectId/features/:featureName/variants" title="Patch variants for a feature toggle (example data)" payload={[{"op": "add", "path": "/1", "value": {
   "name": "new-variant",
@@ -770,7 +776,7 @@ The backend will validate the input for the following invariants
 * If there are variants, there needs to be at least one variant with `weightType: variable`
 * The sum of the weights of variants with `weightType: fix` must be below 1000 (< 1000)
 
-The backend will also distribute remaining weight up to 1000 after adding the variants with `weightType: fix` together amongst the variants of `weightType: variable`
+The back end will also distribute remaining weight up to 1000 after adding the variants with `weightType: fix` together amongst the variants of `weightType: variable`
 
 **Example Query**
 ```bash

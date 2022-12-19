@@ -27,6 +27,7 @@ import { Box } from '@mui/system';
 import { CyclicIterator } from 'utils/cyclicIterator';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { usePageTitle } from 'hooks/usePageTitle';
+import { unknownify } from 'utils/unknownify';
 
 interface IPoint {
     x: number;
@@ -35,88 +36,90 @@ interface IPoint {
 
 type ChartDatasetType = ChartDataset<'line', IPoint[]>;
 
+type ResultValue = [number, string];
+
 const createChartPoints = (
-    values: Array<Array<number | string>>,
+    values: ResultValue[],
     y: (m: string) => number
 ): IPoint[] => {
     return values.map(row => ({
-        x: row[0] as number,
-        y: y(row[1] as string),
+        x: row[0],
+        y: y(row[1]),
     }));
 };
+
 const createInstanceChartOptions = (
     locationSettings: ILocationSettings
-): ChartOptions<'line'> => {
-    return {
-        locale: locationSettings.locale,
-        responsive: true,
-        maintainAspectRatio: false,
-        interaction: {
-            mode: 'index',
-            intersect: false,
+): ChartOptions<'line'> => ({
+    locale: locationSettings.locale,
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: {
+        mode: 'index',
+        intersect: false,
+    },
+    plugins: {
+        tooltip: {
+            backgroundColor: theme.palette.background.paper,
+            bodyColor: theme.palette.text.primary,
+            titleColor: theme.palette.grey[700],
+            borderColor: theme.palette.primary.main,
+            borderWidth: 1,
+            padding: 10,
+            boxPadding: 5,
+            usePointStyle: true,
+            callbacks: {
+                title: items =>
+                    formatDateHM(
+                        1000 * items[0].parsed.x,
+                        locationSettings.locale
+                    ),
+            },
+            itemSort: (a, b) => b.parsed.y - a.parsed.y,
         },
-        plugins: {
-            tooltip: {
-                backgroundColor: 'white',
-                bodyColor: theme.palette.text.primary,
-                titleColor: theme.palette.grey[700],
-                borderColor: theme.palette.primary.main,
-                borderWidth: 1,
-                padding: 10,
-                boxPadding: 5,
+        legend: {
+            position: 'top',
+            align: 'end',
+            labels: {
+                boxWidth: 10,
+                boxHeight: 10,
                 usePointStyle: true,
-                callbacks: {
-                    title: items =>
-                        formatDateHM(
-                            1000 * items[0].parsed.x,
-                            locationSettings.locale
-                        ),
-                },
-                itemSort: (a, b) => b.parsed.y - a.parsed.y,
             },
-            legend: {
-                position: 'top',
-                align: 'end',
-                labels: {
-                    boxWidth: 10,
-                    boxHeight: 10,
-                    usePointStyle: true,
-                },
+        },
+        title: {
+            text: 'Requests per second in the last 6 hours',
+            position: 'top',
+            align: 'start',
+            display: true,
+            font: {
+                size: 16,
+                weight: '400',
             },
+        },
+    },
+    scales: {
+        y: {
+            type: 'linear',
             title: {
-                text: 'Requests per second in the last 6 hours',
-                position: 'top',
-                align: 'start',
                 display: true,
-                font: {
-                    size: 16,
-                    weight: '400',
-                },
+                text: 'Requests per second',
+            },
+            // min: 0,
+            suggestedMin: 0,
+            ticks: { precision: 0 },
+        },
+        x: {
+            type: 'time',
+            time: { unit: 'minute' },
+            grid: { display: false },
+            ticks: {
+                callback: (_, i, data) =>
+                    formatDateHM(data[i].value, locationSettings.locale),
             },
         },
-        scales: {
-            y: {
-                type: 'linear',
-                title: {
-                    display: true,
-                    text: 'Requests per second',
-                },
-                // min: 0,
-                suggestedMin: 0,
-                ticks: { precision: 0 },
-            },
-            x: {
-                type: 'time',
-                time: { unit: 'minute' },
-                grid: { display: false },
-                ticks: {
-                    callback: (_, i, data) =>
-                        formatDateHM(data[i].value, locationSettings.locale),
-                },
-            },
-        },
-    };
-};
+    },
+});
+
 class ItemPicker<T> {
     private items: CyclicIterator<T>;
     private picked: Map<string, T> = new Map();
@@ -141,22 +144,15 @@ const toChartData = (rps?: RequestsPerSecondSchema): ChartDatasetType[] => {
             theme.palette.warning,
         ]);
         return rps.data.result.map(dataset => {
-            const endpoint = (dataset.metric?.endpoint || 'unknown').replace(
-                /^undefined$/,
-                'unknown'
-            );
-            const appName = (dataset.metric?.appName || 'unknown').replace(
-                /^undefined$/,
-                'unknown'
-            );
+            const endpoint = unknownify(dataset.metric?.endpoint);
+            const appName = unknownify(dataset.metric?.appName);
             const color = colorPicker.pick(endpoint);
+            const values = (dataset.values || []) as ResultValue[];
             return {
                 label: `${endpoint}: ${appName}`,
                 borderColor: color.main,
                 backgroundColor: color.main,
-                data: createChartPoints(dataset.values || [], y =>
-                    parseFloat(y)
-                ),
+                data: createChartPoints(values, y => parseFloat(y)),
                 elements: {
                     point: {
                         radius: 4,

@@ -3,6 +3,7 @@ import { Mermaid } from 'component/common/Mermaid/Mermaid';
 import { useInstanceMetrics } from 'hooks/api/getters/useInstanceMetrics/useInstanceMetrics';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Alert, styled } from '@mui/material';
+import { unknownify } from 'utils/unknownify';
 
 const StyledMermaid = styled(Mermaid)(({ theme }) => ({
     '#mermaid .node rect': {
@@ -10,6 +11,13 @@ const StyledMermaid = styled(Mermaid)(({ theme }) => ({
         stroke: theme.palette.secondary.border,
     },
 }));
+
+const isRecent = (value: ResultValue) => {
+    const threshold = 60000; // ten minutes
+    return value[0] * 1000 > new Date().getTime() - threshold;
+};
+
+type ResultValue = [number, string];
 
 interface INetworkApp {
     label?: string;
@@ -20,33 +28,31 @@ interface INetworkApp {
 export const NetworkOverview = () => {
     usePageTitle('Network - Overview');
     const { metrics } = useInstanceMetrics();
+    const results = metrics?.data?.result;
 
     const apps: INetworkApp[] = [];
-    const isRecent = (v: (number | string)[]) => {
-        const threshold = 60000; // ten minutes
-        return (v[0] as number) * 1000 > new Date().getTime() - threshold;
-    };
-    if (Boolean(metrics?.data?.result)) {
+
+    if (results) {
         apps.push(
             ...(
-                metrics?.data?.result
+                results
                     ?.map(result => {
-                        const data = result.values?.filter(v => isRecent(v));
+                        const values = (result.values || []) as ResultValue[];
+                        const data =
+                            values.filter(value => isRecent(value)) || [];
                         let reqs = 0;
-                        if (data) {
-                            reqs = parseFloat(
-                                data[data.length - 1][1].toString()
-                            );
+                        if (data.length) {
+                            reqs = parseFloat(data[data.length - 1][1]);
                         }
                         return {
-                            label: result.metric?.appName,
+                            label: unknownify(result.metric?.appName),
                             reqs: reqs.toFixed(2),
-                            type:
-                                result.metric?.endpoint?.split('/')[2] ||
-                                'unknown',
+                            type: unknownify(
+                                result.metric?.endpoint?.split('/')[2]
+                            ),
                         };
                     })
-                    .filter(app => app.label !== 'undefined') || []
+                    .filter(app => app.label !== 'unknown') || []
             ).filter(app => app.reqs !== '0.00')
         );
     }

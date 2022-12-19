@@ -234,7 +234,7 @@ export default class ClientInstanceService {
         const pathQuery = `${basePath}/api/.*`;
         const step = '5m';
         const rpsQuery = `irate (http_request_duration_milliseconds_count{path=~"${pathQuery}"} [${step}])`;
-        const query = `sum by(appName, endpoint) (label_replace(${rpsQuery}, "endpoint", "$1", "path", "${basePath}(/api/(?:client/)?[^/]*).*"))`;
+        const query = `sum by(appName, endpoint) (label_replace(${rpsQuery}, "endpoint", "$1", "path", "${basePath}(/api/(?:client/)?[^/\*]*).*"))`;
         const end = new Date();
         const start = new Date();
         start.setHours(end.getHours() - hoursToQuery);

@@ -87,7 +87,11 @@ export const FeatureView = () => {
     const activeTab = tabData.find(tab => tab.path === pathname) ?? tabData[0];
 
     if (status === 404) {
-        return <FeatureNotFound />;
+        return (
+            <MainLayout>
+                <FeatureNotFound />
+            </MainLayout>
+        );
     }
 
     const onFavorite = async () => {

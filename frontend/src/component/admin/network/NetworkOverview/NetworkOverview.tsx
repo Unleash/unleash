@@ -22,18 +22,25 @@ export const NetworkOverview = () => {
     const { metrics } = useInstanceMetrics();
 
     const apps: INetworkApp[] = [];
+    const isRecent = (v: (number|string)[]) => {
+        const threshold = 60000; // ten minutes
+        return (v[0] as number) * 1000 > new Date().getTime() - threshold;
+    }
     if (Boolean(metrics?.data?.result)) {
         apps.push(
             ...(
-                metrics?.data?.result?.map(result => ({
-                    label: result.metric?.appName,
-                    reqs: parseFloat(
-                        result.values?.[
-                            result.values?.length - 1
-                        ][1].toString() || '0'
-                    ).toFixed(2),
-                    type: result.metric?.appName!,
-                })) || []
+                metrics?.data?.result?.map(result => {
+                    const data = result.values?.filter(v => isRecent(v))
+                    let reqs = 0;
+                    if (data) {
+                        reqs = parseFloat(data[data.length - 1][1].toString())
+                    }
+                    return ({
+                        label: result.metric?.appName,
+                        reqs: reqs.toFixed(2),
+                        type: result.metric?.endpoint?.split('/')[2] || 'unknown',
+                    })
+            }).filter(app => app.label !== 'undefined') || []
             ).filter(app => app.reqs !== '0.00')
         );
     }

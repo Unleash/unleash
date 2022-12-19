@@ -141,8 +141,8 @@ const toChartData = (rps?: RequestsPerSecondSchema): ChartDatasetType[] => {
             theme.palette.warning,
         ]);
         return rps.data.result.map(dataset => {
-            const endpoint = dataset.metric?.endpoint || 'unknown';
-            const appName = dataset.metric?.appName || 'unknown';
+            const endpoint = (dataset.metric?.endpoint!).replace(/^undefined$/, 'unknown');
+            const appName = (dataset.metric?.appName!).replace(/^undefined$/, 'unknown');
             const color = colorPicker.pick(endpoint);
             return {
                 label: `${endpoint}: ${appName}`,

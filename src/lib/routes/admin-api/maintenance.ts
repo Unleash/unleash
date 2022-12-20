@@ -15,7 +15,7 @@ import { extractUsername } from '../../util';
 import {
     MaintenanceSchema,
     maintenanceSchema,
-} from '../../openapi/spec/maintenance-schema';
+} from 'lib/openapi/spec/maintenance-schema';
 import MaintenanceService from 'lib/services/maintenance-service';
 
 export default class MaintenanceController extends Controller {

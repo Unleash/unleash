@@ -7,6 +7,7 @@ import FeatureController from './feature';
 import { createTestConfig } from '../../../test/config/test-config';
 import { secondsToMilliseconds } from 'date-fns';
 import { ClientSpecService } from '../../services/client-spec-service';
+import etag from 'etag';
 
 async function getSetup() {
     const base = `/random${Math.round(Math.random() * 1000)}`;
@@ -99,6 +100,74 @@ test('if caching is enabled should memoize', async () => {
     await callGetAll(controller);
     await callGetAll(controller);
     expect(getClientFeatures).toHaveBeenCalledTimes(1);
+});
+
+test('if caching and etags are enabled should add etag for query to list', async () => {
+    const getClientFeatures = jest.fn().mockReturnValue([]);
+    const getActive = jest.fn().mockReturnValue([]);
+    const respondWithValidation = jest.fn().mockReturnValue({});
+    const validPath = jest.fn().mockReturnValue(jest.fn());
+    const responseStatus = jest.fn();
+    const responseEnd = jest.fn();
+    const responseJson = jest.fn();
+    const clientSpecService = new ClientSpecService({ getLogger });
+    const openApiService = { respondWithValidation, validPath };
+    const featureToggleServiceV2 = { getClientFeatures };
+    const segmentService = { getActive };
+    const controller = new FeatureController(
+        {
+            clientSpecService,
+            // @ts-expect-error
+            openApiService,
+            // @ts-expect-error
+            featureToggleServiceV2,
+            // @ts-expect-error
+            segmentService,
+        },
+        {
+            getLogger,
+            clientFeatureCaching: {
+                enabled: true,
+                maxAge: secondsToMilliseconds(10),
+            },
+            flagResolver: {
+                isEnabled: () => true,
+            },
+        },
+    );
+    const response = {
+        json: responseJson,
+        status: responseStatus,
+        end: responseEnd,
+    };
+    await controller.getAllCached(
+        // @ts-expect-error
+        { query: {}, header: () => undefined },
+        response,
+    );
+    await controller.getAllCached(
+        // @ts-expect-error
+        {
+            query: {},
+            header: (name: string) => {
+                if ('If-None-Match' === name) {
+                    return etag(
+                        JSON.stringify({
+                            version: 2,
+                            features: [],
+                            query: { inlineSegmentConstraints: true },
+                            segments: [],
+                        }),
+                    );
+                } else {
+                    return undefined;
+                }
+            },
+        },
+        response,
+    );
+    expect(responseStatus).toHaveBeenCalledWith(304);
+    expect(responseEnd).toHaveBeenCalledTimes(1);
 });
 
 test('if caching is not enabled all calls goes to service', async () => {

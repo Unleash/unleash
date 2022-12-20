@@ -120,7 +120,10 @@ export default class FeatureController extends Controller {
                 },
             );
             this.logger.info('Cached features was enabled');
-            if (flagResolver.isEnabled(FEATURE_TOGGLE_MEMOIZED_ETAGS)) {
+            if (
+                flagResolver &&
+                flagResolver.isEnabled(FEATURE_TOGGLE_MEMOIZED_ETAGS)
+            ) {
                 this.logger.info('Memoized etags was enabled');
                 this.route({
                     method: 'get',
@@ -151,18 +154,20 @@ export default class FeatureController extends Controller {
             this.featureToggleServiceV2.getClientFeatures(query),
             this.segmentService.getActive(),
         ]).then((data) => {
-            if (flagResolver?.isEnabled(FEATURE_TOGGLE_MEMOIZED_ETAGS)) {
-                this.seenEtags.set(
-                    JSON.stringify(query),
-                    etag(
-                        JSON.stringify({
-                            version,
-                            features: data[0],
-                            query: { ...query },
-                            segments: data[1],
-                        }),
-                    ),
-                );
+            if (
+                flagResolver &&
+                flagResolver.isEnabled(FEATURE_TOGGLE_MEMOIZED_ETAGS)
+            ) {
+                const key = JSON.stringify(query);
+                const value = {
+                    version,
+                    features: data[0],
+                    query: { ...query },
+                    segments: data[1],
+                };
+                const stringValue = JSON.stringify(value);
+                const hash = etag(stringValue);
+                this.seenEtags.set(key, hash);
             }
             return data;
         });
@@ -241,15 +246,17 @@ export default class FeatureController extends Controller {
     ): Promise<void> {
         const query = await this.resolveQuery(req);
         const [features, segments] = await this.cachedFeatures(query);
-        const modifiedSince = req.header('If-None-Match').substring(2);
-        this.logger.debug(`ETag header from Client: ${modifiedSince}`);
-        const cached = this.seenEtags.get(JSON.stringify(query));
-        this.logger.debug(`ETag header from memoizee ${cached}`);
-        if (modifiedSince !== undefined && modifiedSince === cached) {
-            // We have a match. Return 304
-            res.status(304);
-            res.end();
-            return;
+        const modifiedSince = req.header('If-None-Match');
+        if (modifiedSince && modifiedSince.length > 0) {
+            this.logger.debug(`ETag header from Client: ${modifiedSince}`);
+            const cached = this.seenEtags.get(JSON.stringify(query));
+            this.logger.debug(`ETag header from memoizee ${cached}`);
+            if (modifiedSince.replace('W/', '') === cached) {
+                // We have a match. Return 304
+                res.status(304);
+                res.end();
+                return;
+            }
         }
         if (this.clientSpecService.requestSupportsSpec(req, 'segments')) {
             this.openApiService.respondWithValidation(

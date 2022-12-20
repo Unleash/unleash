@@ -1,19 +1,18 @@
 import dbInit, { ITestDb } from '../../helpers/database-init';
-import {
-    IUnleashTest,
-    setupAppWithCustomConfig,
-} from '../../helpers/test-helper';
+import { setupAppWithCustomConfig } from '../../helpers/test-helper';
 import getLogger from '../../../fixtures/no-logger';
 
-let app: IUnleashTest;
 let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('maintenance_api_serial', getLogger);
 });
 
+afterEach(async () => {
+    await db.stores.featureToggleStore.deleteAll();
+});
+
 afterAll(async () => {
-    await app.destroy();
     await db.destroy();
 });
 

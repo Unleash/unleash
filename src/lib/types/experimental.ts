@@ -47,6 +47,10 @@ const flags = {
         process.env.UNLEASH_EXPERIMENTAL_MAINTENANCE,
         false,
     ),
+    clientFeaturesMemoizedEtags: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_CLIENT_FEATURES_MEMOIZED_ETAGS,
+        false,
+    ),
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

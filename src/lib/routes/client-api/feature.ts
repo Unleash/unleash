@@ -1,7 +1,7 @@
 import memoizee from 'memoizee';
 import { Response } from 'express';
 import Controller from '../controller';
-import { IUnleashConfig, IUnleashServices } from '../../types';
+import { IFlagResolver, IUnleashConfig, IUnleashServices } from '../../types';
 import FeatureToggleService from '../../services/feature-toggle-service';
 import { Logger } from '../../logger';
 import { querySchema } from '../../schema/feature-schema';
@@ -25,14 +25,14 @@ import {
     clientFeaturesSchema,
     ClientFeaturesSchema,
 } from '../../openapi/spec/client-features-schema';
-
+import etag from 'etag';
 const version = 2;
 
 interface QueryOverride {
     project?: string[];
     environment?: string;
 }
-
+const FEATURE_TOGGLE_MEMOIZED_ETAGS = 'clientFeaturesMemoizedEtags';
 export default class FeatureController extends Controller {
     private readonly logger: Logger;
 
@@ -47,6 +47,8 @@ export default class FeatureController extends Controller {
     private readonly cache: boolean;
 
     private cachedFeatures: any;
+
+    private seenEtags: Map<string, string>;
 
     constructor(
         {
@@ -64,12 +66,13 @@ export default class FeatureController extends Controller {
         config: IUnleashConfig,
     ) {
         super(config);
-        const { clientFeatureCaching } = config;
+        const { clientFeatureCaching, flagResolver } = config;
         this.featureToggleServiceV2 = featureToggleServiceV2;
         this.segmentService = segmentService;
         this.clientSpecService = clientSpecService;
         this.openApiService = openApiService;
         this.logger = config.getLogger('client-api/feature.js');
+        this.seenEtags = new Map<string, string>();
 
         this.route({
             method: 'get',
@@ -106,7 +109,7 @@ export default class FeatureController extends Controller {
         if (clientFeatureCaching?.enabled) {
             this.cache = true;
             this.cachedFeatures = memoizee(
-                (query) => this.resolveFeaturesAndSegments(query),
+                (query) => this.resolveFeaturesAndSegments(query, flagResolver),
                 {
                     promise: true,
                     maxAge: clientFeatureCaching.maxAge,
@@ -116,16 +119,53 @@ export default class FeatureController extends Controller {
                     },
                 },
             );
+            this.logger.info('Cached features was enabled');
+            if (flagResolver.isEnabled(FEATURE_TOGGLE_MEMOIZED_ETAGS)) {
+                this.logger.info('Memoized etags was enabled');
+                this.route({
+                    method: 'get',
+                    path: '',
+                    handler: this.getAllCached,
+                    permission: NONE,
+                    middleware: [
+                        openApiService.validPath({
+                            operationId: 'getAllClientFeatures',
+                            tags: ['Client'],
+                            responses: {
+                                200: createResponseSchema(
+                                    'clientFeaturesSchema',
+                                ),
+                            },
+                        }),
+                    ],
+                });
+            }
         }
     }
 
     private async resolveFeaturesAndSegments(
         query?: IFeatureToggleQuery,
+        flagResolver?: IFlagResolver,
     ): Promise<[FeatureConfigurationClient[], ISegment[]]> {
         return Promise.all([
             this.featureToggleServiceV2.getClientFeatures(query),
             this.segmentService.getActive(),
-        ]);
+        ]).then((data) => {
+            if (flagResolver?.isEnabled(FEATURE_TOGGLE_MEMOIZED_ETAGS)) {
+                this.seenEtags.set(
+                    JSON.stringify(query),
+                    etag(
+                        JSON.stringify({
+                            version,
+                            features: data[0],
+                            query: { ...query },
+                            segments: data[1],
+                        }),
+                    ),
+                );
+            }
+            return data;
+        });
     }
 
     private async resolveQuery(
@@ -138,7 +178,7 @@ export default class FeatureController extends Controller {
             if (!isAllProjects(user.projects)) {
                 override.project = user.projects;
             }
-            if (user.environment !== ALL) {
+            if (user.environment != ALL) {
                 override.environment = user.environment;
             }
         }
@@ -195,12 +235,44 @@ export default class FeatureController extends Controller {
         return query;
     }
 
+    async getAllCached(
+        req: IAuthRequest,
+        res: Response<ClientFeaturesSchema>,
+    ): Promise<void> {
+        const query = await this.resolveQuery(req);
+        const [features, segments] = await this.cachedFeatures(query);
+        const modifiedSince = req.header('If-None-Match').substring(2);
+        this.logger.debug(`ETag header from Client: ${modifiedSince}`);
+        const cached = this.seenEtags.get(JSON.stringify(query));
+        this.logger.debug(`ETag header from memoizee ${cached}`);
+        if (modifiedSince !== undefined && modifiedSince === cached) {
+            // We have a match. Return 304
+            res.status(304);
+            res.end();
+            return;
+        }
+        if (this.clientSpecService.requestSupportsSpec(req, 'segments')) {
+            this.openApiService.respondWithValidation(
+                200,
+                res,
+                clientFeaturesSchema.$id,
+                { version, features, query: { ...query }, segments },
+            );
+        } else {
+            this.openApiService.respondWithValidation(
+                200,
+                res,
+                clientFeaturesSchema.$id,
+                { version, features, query },
+            );
+        }
+    }
+
     async getAll(
         req: IAuthRequest,
         res: Response<ClientFeaturesSchema>,
     ): Promise<void> {
         const query = await this.resolveQuery(req);
-
         const [features, segments] = this.cache
             ? await this.cachedFeatures(query)
             : await this.resolveFeaturesAndSegments(query);

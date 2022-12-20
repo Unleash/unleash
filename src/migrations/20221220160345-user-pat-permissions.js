@@ -10,8 +10,8 @@ exports.up = function (db, cb) {
             r.id AS role_id,
             p.id AS permission_id
         FROM roles r
-        JOIN permissions p ON p.permission = 'READ_USER_PAT' OR p.permission = 'CREATE_USER_PAT' OR p.permission = 'DELETE_USER_PAT'
-        WHERE r.name IN ('Admin');
+        JOIN permissions p ON p.permission IN ('READ_USER_PAT', 'CREATE_USER_PAT', 'DELETE_USER_PAT')
+        WHERE r.name = 'Admin';
         `,
         cb,
     );
@@ -21,7 +21,7 @@ exports.down = function (db, cb) {
     db.runSql(
         `
         DELETE FROM role_permission WHERE permission_id IN (
-            SELECT id FROM permissions WHERE permission = 'READ_USER_PAT' OR permission = 'CREATE_USER_PAT' OR permission = 'DELETE_USER_PAT'
+            SELECT id FROM permissions WHERE permission IN ('READ_USER_PAT', 'CREATE_USER_PAT', 'DELETE_USER_PAT')
         );
 
         DELETE FROM permissions WHERE permission = 'READ_USER_PAT';

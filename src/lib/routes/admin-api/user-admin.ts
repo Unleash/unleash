@@ -46,6 +46,7 @@ import { IGroup } from '../../types/group';
 import { IFlagResolver } from '../../types/experimental';
 import { PatSchema, patSchema, patsSchema } from '../../openapi';
 import { PatService } from '../../services';
+import NotFoundError from '../../error/notfound-error';
 
 export default class UserAdminController extends Controller {
     private flagResolver: IFlagResolver;
@@ -535,8 +536,11 @@ export default class UserAdminController extends Controller {
 
     async getUserPats(
         req: IAuthRequest<{ id: number }>,
-        res: Response<PatSchema>,
+        res: Response<PatSchema | NotFoundError>,
     ): Promise<void> {
+        if (!this.flagResolver.isEnabled('serviceAccounts')) {
+            throw new NotFoundError('Not enabled');
+        }
         const { id } = req.params;
         const pats = await this.patService.getAll(id);
         this.openApiService.respondWithValidation(200, res, patsSchema.$id, {
@@ -548,6 +552,9 @@ export default class UserAdminController extends Controller {
         req: IAuthRequest<{ id: number }>,
         res: Response,
     ): Promise<void> {
+        if (!this.flagResolver.isEnabled('serviceAccounts')) {
+            throw new NotFoundError('Not enabled');
+        }
         const { id } = req.params;
         const pat = req.body;
         const createdPat = await this.patService.createPat(pat, id, req.user);
@@ -563,6 +570,9 @@ export default class UserAdminController extends Controller {
         req: IAuthRequest<{ id: number; patId: number }>,
         res: Response,
     ): Promise<void> {
+        if (!this.flagResolver.isEnabled('serviceAccounts')) {
+            throw new NotFoundError('Not enabled');
+        }
         const { id, patId } = req.params;
         await this.patService.deletePat(patId, id);
         res.status(200).end();

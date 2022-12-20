@@ -4,28 +4,28 @@ import { IUnleashServices } from '../../types/services';
 import { IAuthType, IUnleashConfig } from '../../types/option';
 import version from '../../util/version';
 import Controller from '../controller';
-import VersionService from '../../services/version-service';
-import SettingService from '../../services/setting-service';
+import VersionService from 'lib/services/version-service';
+import SettingService from 'lib/services/setting-service';
 import {
     simpleAuthSettingsKey,
     SimpleAuthSettings,
 } from '../../types/settings/simple-auth-settings';
 import { ADMIN, NONE } from '../../types/permissions';
-import { createResponseSchema } from '../../openapi/util/create-response-schema';
+import { createResponseSchema } from 'lib/openapi/util/create-response-schema';
 import {
     uiConfigSchema,
     UiConfigSchema,
-} from '../../openapi/spec/ui-config-schema';
+} from 'lib/openapi/spec/ui-config-schema';
 import { OpenApiService } from '../../services/openapi-service';
 import { EmailService } from '../../services/email-service';
-import { emptyResponse } from '../../openapi/util/standard-responses';
+import { emptyResponse } from 'lib/openapi/util/standard-responses';
 import { IAuthRequest } from '../unleash-types';
 import { extractUsername } from '../../util/extract-user';
 import NotFoundError from '../../error/notfound-error';
-import { SetUiConfigSchema } from '../../openapi/spec/set-ui-config-schema';
-import { createRequestSchema } from '../../openapi/util/create-request-schema';
+import { SetUiConfigSchema } from 'lib/openapi/spec/set-ui-config-schema';
+import { createRequestSchema } from 'lib/openapi/util/create-request-schema';
 import { ProxyService } from 'lib/services';
-import MaintenanceService from '../../services/maintenance-service';
+import MaintenanceService from 'lib/services/maintenance-service';
 
 class ConfigController extends Controller {
     private versionService: VersionService;

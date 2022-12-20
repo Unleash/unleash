@@ -8,8 +8,8 @@ import {
     Switch,
     Typography,
 } from '@mui/material';
-import { useMaintenance } from '../../../hooks/api/getters/useMaintenance/useMaintenance';
-import { useMaintenanceApi } from '../../../hooks/api/actions/useMaintenanceApi/useMaintenanceApi';
+import { useMaintenance } from 'hooks/api/getters/useMaintenance/useMaintenance';
+import { useMaintenanceApi } from 'hooks/api/actions/useMaintenanceApi/useMaintenanceApi';
 
 const StyledCard = styled(Card)(({ theme }) => ({
     display: 'flex',

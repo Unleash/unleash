@@ -16,7 +16,7 @@ import {
     MaintenanceSchema,
     maintenanceSchema,
 } from '../../openapi/spec/maintenance-schema';
-import MaintenanceService from '../../services/maintenance-service';
+import MaintenanceService from 'lib/services/maintenance-service';
 
 export default class MaintenanceController extends Controller {
     private maintenanceService: MaintenanceService;

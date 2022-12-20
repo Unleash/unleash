@@ -19,7 +19,7 @@ const StyledDiv = styled('div')(({ theme }) => ({
     whiteSpace: 'pre-wrap',
 }));
 
-const Maintenance = () => {
+const MaintenanceBanner = () => {
     return (
         <StyledDiv>
             <StyledErrorRoundedIcon />
@@ -33,4 +33,4 @@ const Maintenance = () => {
     );
 };
 
-export default Maintenance;
+export default MaintenanceBanner;

@@ -42,6 +42,10 @@ export const defaultExperimentalOptions = {
             process.env.UNLEASH_EXPERIMENTAL_MAINTENANCE,
             false,
         ),
+        maintenanceMode: parseEnvVarBoolean(
+            process.env.UNLEASH_EXPERIMENTAL_MAINTENANCE_MODE,
+            false,
+        ),
         networkView: parseEnvVarBoolean(
             process.env.UNLEASH_EXPERIMENTAL_NETWORK_VIEW,
             false,

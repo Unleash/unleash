@@ -743,7 +743,7 @@ export default class StateService {
             );
             v4.features = v4.features.map((f) => {
                 const variants = featureEnvs.find(
-                    (fe) => fe.enabled !== false && fe.featureName === f.name,
+                    (fe) => fe.featureName === f.name,
                 )?.variants;
                 return { ...f, variants };
             });

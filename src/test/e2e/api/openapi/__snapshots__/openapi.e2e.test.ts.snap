@@ -1763,6 +1763,18 @@ exports[`should serve the OpenAPI spec 1`] = `
         ],
         "type": "object",
       },
+      "maintenanceSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+          },
+        },
+        "required": [
+          "enabled",
+        ],
+        "type": "object",
+      },
       "meSchema": {
         "additionalProperties": false,
         "properties": {
@@ -3317,6 +3329,9 @@ exports[`should serve the OpenAPI spec 1`] = `
               "type": "object",
             },
             "type": "array",
+          },
+          "maintenanceMode": {
+            "type": "boolean",
           },
           "name": {
             "type": "string",
@@ -8004,6 +8019,10 @@ If the provided project does not exist, the list of events will be empty.",
     {
       "description": "Instance admin endpoints used to manage the Unleash instance itself.",
       "name": "Instance Admin",
+    },
+    {
+      "description": "Enable/disable the maintenance mode of Unleash.",
+      "name": "Maintenance",
     },
     {
       "description": "Register, read, or delete metrics recorded by Unleash.",

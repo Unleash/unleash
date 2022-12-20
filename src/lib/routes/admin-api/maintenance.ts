@@ -1,6 +1,4 @@
-import { ADMIN } from '../../types/permissions';
-import { IUnleashConfig } from '../../types/option';
-import { IUnleashServices } from '../../types/services';
+import { ADMIN, IUnleashConfig, IUnleashServices } from '../../types';
 import { Request, Response } from 'express';
 import Controller from '../controller';
 import { Logger } from '../../logger';
@@ -15,7 +13,7 @@ import { extractUsername } from '../../util';
 import {
     MaintenanceSchema,
     maintenanceSchema,
-} from 'lib/openapi/spec/maintenance-schema';
+} from '../../openapi/spec/maintenance-schema';
 import MaintenanceService from 'lib/services/maintenance-service';
 
 export default class MaintenanceController extends Controller {

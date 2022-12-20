@@ -11,19 +11,19 @@ import {
     SimpleAuthSettings,
 } from '../../types/settings/simple-auth-settings';
 import { ADMIN, NONE } from '../../types/permissions';
-import { createResponseSchema } from 'lib/openapi/util/create-response-schema';
+import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import {
     uiConfigSchema,
     UiConfigSchema,
-} from 'lib/openapi/spec/ui-config-schema';
+} from '../../openapi/spec/ui-config-schema';
 import { OpenApiService } from '../../services/openapi-service';
 import { EmailService } from '../../services/email-service';
-import { emptyResponse } from 'lib/openapi/util/standard-responses';
+import { emptyResponse } from '../../openapi/util/standard-responses';
 import { IAuthRequest } from '../unleash-types';
 import { extractUsername } from '../../util/extract-user';
 import NotFoundError from '../../error/notfound-error';
-import { SetUiConfigSchema } from 'lib/openapi/spec/set-ui-config-schema';
-import { createRequestSchema } from 'lib/openapi/util/create-request-schema';
+import { SetUiConfigSchema } from '../../openapi/spec/set-ui-config-schema';
+import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import { ProxyService } from 'lib/services';
 import MaintenanceService from 'lib/services/maintenance-service';
 

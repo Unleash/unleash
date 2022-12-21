@@ -5333,6 +5333,50 @@ If the provided project does not exist, the list of events will be empty.",
         ],
       },
     },
+    "/api/admin/projects/{projectId}/favorites": {
+      "delete": {
+        "operationId": "removeFavoriteProject",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": {
+          "200": {
+            "description": "This response has no body.",
+          },
+        },
+        "tags": [
+          "Features",
+        ],
+      },
+      "post": {
+        "operationId": "addFavoriteProject",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": {
+          "200": {
+            "description": "This response has no body.",
+          },
+        },
+        "tags": [
+          "Features",
+        ],
+      },
+    },
     "/api/admin/projects/{projectId}/features": {
       "get": {
         "operationId": "getFeatures",
@@ -6297,6 +6341,66 @@ If the provided project does not exist, the list of events will be empty.",
               },
             },
             "description": "featureVariantsSchema",
+          },
+        },
+        "tags": [
+          "Features",
+        ],
+      },
+    },
+    "/api/admin/projects/{projectId}/features/{featureName}/favorites": {
+      "delete": {
+        "operationId": "removeFavoriteFeature",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+          {
+            "in": "path",
+            "name": "featureName",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": {
+          "200": {
+            "description": "This response has no body.",
+          },
+        },
+        "tags": [
+          "Features",
+        ],
+      },
+      "post": {
+        "operationId": "addFavoriteFeature",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+          {
+            "in": "path",
+            "name": "featureName",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": {
+          "200": {
+            "description": "This response has no body.",
           },
         },
         "tags": [

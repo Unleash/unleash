@@ -193,28 +193,24 @@ export const ProjectFeatureToggles = ({
 
     const columns = useMemo(
         () => [
-            ...(uiConfig?.flags?.favorites
-                ? [
-                      {
-                          id: 'favorite',
-                          Header: (
-                              <FavoriteIconHeader
-                                  isActive={isFavoritesPinned}
-                                  onClick={onChangeIsFavoritePinned}
-                              />
-                          ),
-                          accessor: 'favorite',
-                          Cell: ({ row: { original: feature } }: any) => (
-                              <FavoriteIconCell
-                                  value={feature?.favorite}
-                                  onClick={() => onFavorite(feature)}
-                              />
-                          ),
-                          maxWidth: 50,
-                          disableSortBy: true,
-                      },
-                  ]
-                : []),
+            {
+                id: 'favorite',
+                Header: (
+                    <FavoriteIconHeader
+                        isActive={isFavoritesPinned}
+                        onClick={onChangeIsFavoritePinned}
+                    />
+                ),
+                accessor: 'favorite',
+                Cell: ({ row: { original: feature } }: any) => (
+                    <FavoriteIconCell
+                        value={feature?.favorite}
+                        onClick={() => onFavorite(feature)}
+                    />
+                ),
+                maxWidth: 50,
+                disableSortBy: true,
+            },
             {
                 Header: 'Seen',
                 accessor: 'lastSeenAt',
@@ -303,7 +299,7 @@ export const ProjectFeatureToggles = ({
                 disableSortBy: true,
             },
         ],
-        [projectId, environments, loading, onToggle, uiConfig?.flags?.favorites]
+        [projectId, environments, loading, onToggle]
     );
 
     const [searchValue, setSearchValue] = useState(

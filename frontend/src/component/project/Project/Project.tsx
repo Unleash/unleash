@@ -156,14 +156,9 @@ const Project = () => {
                 <div className={styles.innerContainer}>
                     <StyledTopRow>
                         <StyledDiv>
-                            <ConditionallyRender
-                                condition={Boolean(uiConfig?.flags?.favorites)}
-                                show={() => (
-                                    <StyledFavoriteIconButton
-                                        onClick={onFavorite}
-                                        isFavorite={project?.favorite}
-                                    />
-                                )}
+                            <StyledFavoriteIconButton
+                                onClick={onFavorite}
+                                isFavorite={project?.favorite}
                             />
                             <h2 className={styles.title}>
                                 <StyledName data-loading>

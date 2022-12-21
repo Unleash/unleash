@@ -478,6 +478,17 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
+    "flag": "maintenance",
+    "menu": {
+      "adminSettings": true,
+    },
+    "parent": "/admin",
+    "path": "/admin/maintenance",
+    "title": "Maintenance",
+    "type": "protected",
+  },
+  {
+    "component": [Function],
     "flag": "embedProxyFrontend",
     "menu": {
       "adminSettings": true,

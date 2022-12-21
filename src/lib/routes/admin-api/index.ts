@@ -28,6 +28,7 @@ import { PublicSignupController } from './public-signup';
 import InstanceAdminController from './instance-admin';
 import FavoritesController from './favorites';
 import { conditionalMiddleware } from '../../middleware';
+import MaintenanceController from './maintenance';
 
 class AdminApi extends Controller {
     constructor(config: IUnleashConfig, services: IUnleashServices) {
@@ -123,6 +124,11 @@ class AdminApi extends Controller {
                 () => config.flagResolver.isEnabled('favorites'),
                 new FavoritesController(config, services).router,
             ),
+        );
+
+        this.app.use(
+            '/maintenance',
+            new MaintenanceController(config, services).router,
         );
     }
 }

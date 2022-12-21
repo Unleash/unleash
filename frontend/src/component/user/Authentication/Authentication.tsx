@@ -20,10 +20,13 @@ import { usePlausibleTracker } from '../../../hooks/usePlausibleTracker';
 
 interface IAuthenticationProps {
     redirect: string;
-    invited: boolean;
+    invited?: boolean;
 }
 
-const Authentication = ({ redirect, invited }: IAuthenticationProps) => {
+const Authentication = ({
+    redirect,
+    invited = false,
+}: IAuthenticationProps) => {
     const { authDetails } = useAuthDetails();
     const params = useQueryParams();
     const error = params.get('errorMsg');

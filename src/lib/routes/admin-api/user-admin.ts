@@ -1,12 +1,6 @@
 import { Request, Response } from 'express';
 import Controller from '../controller';
-import {
-    ADMIN,
-    NONE,
-    READ_USER_PAT,
-    CREATE_USER_PAT,
-    DELETE_USER_PAT,
-} from '../../types/permissions';
+import { ADMIN, NONE } from '../../types/permissions';
 import UserService from '../../services/user-service';
 import { AccessService } from '../../services/access-service';
 import { Logger } from '../../logger';
@@ -44,9 +38,6 @@ import {
 } from '../../openapi/spec/users-groups-base-schema';
 import { IGroup } from '../../types/group';
 import { IFlagResolver } from '../../types/experimental';
-import { PatSchema, patSchema, patsSchema } from '../../openapi';
-import { PatService } from '../../services';
-import NotFoundError from '../../error/notfound-error';
 
 export default class UserAdminController extends Controller {
     private flagResolver: IFlagResolver;
@@ -67,8 +58,6 @@ export default class UserAdminController extends Controller {
 
     private groupService: GroupService;
 
-    private patService: PatService;
-
     readonly unleashUrl: string;
 
     constructor(
@@ -81,7 +70,6 @@ export default class UserAdminController extends Controller {
             settingService,
             openApiService,
             groupService,
-            patService,
         }: Pick<
             IUnleashServices,
             | 'userService'
@@ -91,7 +79,6 @@ export default class UserAdminController extends Controller {
             | 'settingService'
             | 'openApiService'
             | 'groupService'
-            | 'patService'
         >,
     ) {
         super(config);
@@ -102,7 +89,6 @@ export default class UserAdminController extends Controller {
         this.settingService = settingService;
         this.openApiService = openApiService;
         this.groupService = groupService;
-        this.patService = patService;
         this.logger = config.getLogger('routes/user-controller.ts');
         this.unleashUrl = config.server.unleashUrl;
         this.flagResolver = config.flagResolver;
@@ -132,50 +118,6 @@ export default class UserAdminController extends Controller {
                     tags: ['Users'],
                     operationId: 'changeUserPassword',
                     requestBody: createRequestSchema('passwordSchema'),
-                    responses: { 200: emptyResponse },
-                }),
-            ],
-        });
-
-        this.route({
-            method: 'get',
-            path: '/:id/pat',
-            handler: this.getUserPats,
-            permission: READ_USER_PAT,
-            middleware: [
-                openApiService.validPath({
-                    tags: ['Users'],
-                    operationId: 'getUserPats',
-                    responses: { 200: createResponseSchema('patsSchema') },
-                }),
-            ],
-        });
-
-        this.route({
-            method: 'post',
-            path: '/:id/pat',
-            handler: this.createUserPat,
-            permission: CREATE_USER_PAT,
-            middleware: [
-                openApiService.validPath({
-                    tags: ['Users'],
-                    operationId: 'createUserPat',
-                    requestBody: createRequestSchema('patSchema'),
-                    responses: { 200: createResponseSchema('patSchema') },
-                }),
-            ],
-        });
-
-        this.route({
-            method: 'delete',
-            path: '/:id/pat/:patId',
-            acceptAnyContentType: true,
-            handler: this.deleteUserPat,
-            permission: DELETE_USER_PAT,
-            middleware: [
-                openApiService.validPath({
-                    tags: ['Users'],
-                    operationId: 'deleteUserPat',
                     responses: { 200: emptyResponse },
                 }),
             ],
@@ -532,49 +474,5 @@ export default class UserAdminController extends Controller {
 
         await this.userService.changePassword(+id, password);
         res.status(200).send();
-    }
-
-    async getUserPats(
-        req: IAuthRequest<{ id: number }>,
-        res: Response<PatSchema | NotFoundError>,
-    ): Promise<void> {
-        if (!this.flagResolver.isEnabled('serviceAccounts')) {
-            throw new NotFoundError('Not enabled');
-        }
-        const { id } = req.params;
-        const pats = await this.patService.getAll(id);
-        this.openApiService.respondWithValidation(200, res, patsSchema.$id, {
-            pats: serializeDates(pats),
-        });
-    }
-
-    async createUserPat(
-        req: IAuthRequest<{ id: number }>,
-        res: Response,
-    ): Promise<void> {
-        if (!this.flagResolver.isEnabled('serviceAccounts')) {
-            throw new NotFoundError('Not enabled');
-        }
-        const { id } = req.params;
-        const pat = req.body;
-        const createdPat = await this.patService.createPat(pat, id, req.user);
-        this.openApiService.respondWithValidation(
-            201,
-            res,
-            patSchema.$id,
-            serializeDates(createdPat),
-        );
-    }
-
-    async deleteUserPat(
-        req: IAuthRequest<{ id: number; patId: number }>,
-        res: Response,
-    ): Promise<void> {
-        if (!this.flagResolver.isEnabled('serviceAccounts')) {
-            throw new NotFoundError('Not enabled');
-        }
-        const { id, patId } = req.params;
-        await this.patService.deletePat(patId, id);
-        res.status(200).end();
     }
 }

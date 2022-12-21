@@ -22,7 +22,7 @@ export const useMaintenance = (): IUseMaintenance => {
         () => ({
             enabled: Boolean(data?.enabled),
             loading: !error && !data,
-            refetchMaintenance: () => mutate(),
+            refetchMaintenance: mutate,
             error,
         }),
         [data, error, mutate]

@@ -5014,6 +5014,48 @@ If the provided project does not exist, the list of events will be empty.",
         ],
       },
     },
+    "/api/admin/maintenance": {
+      "get": {
+        "operationId": "getMaintenance",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/maintenanceSchema",
+                },
+              },
+            },
+            "description": "maintenanceSchema",
+          },
+        },
+        "tags": [
+          "Maintenance",
+        ],
+      },
+      "post": {
+        "operationId": "toggleMaintenance",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/maintenanceSchema",
+              },
+            },
+          },
+          "description": "maintenanceSchema",
+          "required": true,
+        },
+        "responses": {
+          "204": {
+            "description": "This response has no body.",
+          },
+        },
+        "tags": [
+          "Maintenance",
+        ],
+      },
+    },
     "/api/admin/metrics/applications": {
       "get": {
         "operationId": "getApplications",

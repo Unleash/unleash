@@ -109,7 +109,7 @@ class ConfigController extends Controller {
                 this.settingService.get<SimpleAuthSettings>(
                     simpleAuthSettingsKey,
                 ),
-                this.maintenanceService.getMaintenanceMode(),
+                this.maintenanceService.isMaintenanceMode(),
             ]);
 
         const disablePasswordAuth =

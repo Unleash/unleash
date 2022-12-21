@@ -128,10 +128,7 @@ class AdminApi extends Controller {
 
         this.app.use(
             '/maintenance',
-            conditionalMiddleware(
-                () => config.flagResolver.isEnabled('maintenance'),
-                new MaintenanceController(config, services).router,
-            ),
+            new MaintenanceController(config, services).router,
         );
     }
 }

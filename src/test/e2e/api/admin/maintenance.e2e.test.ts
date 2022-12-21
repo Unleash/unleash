@@ -16,20 +16,7 @@ afterAll(async () => {
     await db.destroy();
 });
 
-test('should have access to the get all features endpoint even if api is disabled', async () => {
-    const appWithDisabledLegacyFeatures = await setupAppWithCustomConfig(
-        db.stores,
-        {
-            disableLegacyFeaturesApi: true,
-        },
-    );
-
-    await appWithDisabledLegacyFeatures.request
-        .get('/api/admin/features')
-        .expect(200);
-});
-
-test('should not allow creation of feature toggle in maintenance mode', async () => {
+test('should not allow to create feature toggles in maintenance mode', async () => {
     const appWithMaintenanceMode = await setupAppWithCustomConfig(db.stores, {
         experimental: {
             flags: {
@@ -48,7 +35,7 @@ test('should not allow creation of feature toggle in maintenance mode', async ()
         .expect(503);
 });
 
-test('should not go into maintenance, when feature is fully turned off', async () => {
+test('should not go into maintenance, when maintenance feature is off', async () => {
     const appWithMaintenanceMode = await setupAppWithCustomConfig(db.stores, {
         experimental: {
             flags: {
@@ -67,12 +54,11 @@ test('should not go into maintenance, when feature is fully turned off', async (
         .expect(201);
 });
 
-test('should not go into maintenance, when user has not set it', async () => {
+test('maintenance mode is off by default', async () => {
     const appWithMaintenanceMode = await setupAppWithCustomConfig(db.stores, {
         experimental: {
             flags: {
                 maintenance: true,
-                maintenanceMode: false,
             },
         },
     });
@@ -86,12 +72,11 @@ test('should not go into maintenance, when user has not set it', async () => {
         .expect(201);
 });
 
-test('should go into maintenance, when user has set it', async () => {
+test('should go into maintenance mode, when user has set it', async () => {
     const appWithMaintenanceMode = await setupAppWithCustomConfig(db.stores, {
         experimental: {
             flags: {
                 maintenance: true,
-                maintenanceMode: false,
             },
         },
     });
@@ -102,7 +87,7 @@ test('should go into maintenance, when user has set it', async () => {
             enabled: true,
         })
         .set('Content-Type', 'application/json')
-        .expect(200);
+        .expect(204);
 
     return appWithMaintenanceMode.request
         .post('/api/admin/features')
@@ -128,10 +113,10 @@ test('should 404 on maintenance endpoint, when disabled', async () => {
             enabled: true,
         })
         .set('Content-Type', 'application/json')
-        .expect(404);
+        .expect(403);
 });
 
-test('feature flag should take precedence over setting', async () => {
+test('maintenance mode flag should take precedence over maintenance mode setting', async () => {
     const appWithMaintenanceMode = await setupAppWithCustomConfig(db.stores, {
         experimental: {
             flags: {
@@ -147,7 +132,7 @@ test('feature flag should take precedence over setting', async () => {
             enabled: false,
         })
         .set('Content-Type', 'application/json')
-        .expect(200);
+        .expect(204);
 
     return appWithMaintenanceMode.request
         .post('/api/admin/features')

@@ -1,4 +1,4 @@
-import { ADMIN, IUnleashConfig } from '../types';
+import { IUnleashConfig } from '../types';
 import MaintenanceService from '../services/maintenance-service';
 import { IAuthRequest } from '../routes/unleash-types';
 
@@ -10,15 +10,12 @@ const maintenanceMiddleware = (
     logger.debug('Enabling Maintenance middleware');
 
     return async (req: IAuthRequest, res, next) => {
-        const maintenanceAdmin =
-            req.path.includes('/maintenance') &&
-            req.user.isAPI &&
-            req.user.permissions.includes(ADMIN);
+        const isProtectedPath = !req.path.includes('/maintenance');
         const writeMethod = ['POST', 'PUT', 'DELETE'].includes(req.method);
         if (
-            !maintenanceAdmin &&
+            isProtectedPath &&
             writeMethod &&
-            (await maintenanceService.getMaintenanceMode())
+            (await maintenanceService.isMaintenanceMode())
         ) {
             res.status(503).send({});
         } else {

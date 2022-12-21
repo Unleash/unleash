@@ -32,7 +32,7 @@ export default class MaintenanceService {
         this.settingService = settingService;
     }
 
-    async getMaintenanceMode(): Promise<boolean> {
+    async isMaintenanceMode(): Promise<boolean> {
         return (
             this.config.flagResolver.isEnabled('maintenanceMode') ||
             (await this.getMaintenanceSetting()).enabled
@@ -47,7 +47,7 @@ export default class MaintenanceService {
         );
     }
 
-    async toggleMaintenanceSetting(
+    async toggleMaintenanceMode(
         setting: MaintenanceSchema,
         user: string,
     ): Promise<void> {

@@ -1,8 +1,7 @@
 import { ITag } from 'interfaces/tags';
 import useAPI from '../useApi/useApi';
 import { Operation } from 'fast-json-patch';
-import { CreateFeatureSchema } from 'openapi';
-import { openApiAdmin } from 'utils/openapiClient';
+import { createFeature } from 'openapi';
 import { IConstraint } from 'interfaces/strategy';
 import { useCallback } from 'react';
 
@@ -38,15 +37,7 @@ const useFeatureApi = () => {
         await makeRequest(req.caller, req.id);
     };
 
-    const createFeatureToggle = async (
-        projectId: string,
-        createFeatureSchema: CreateFeatureSchema
-    ) => {
-        return openApiAdmin.createFeature({
-            projectId,
-            createFeatureSchema,
-        });
-    };
+    const createFeatureToggle = createFeature;
 
     const toggleFeatureEnvironmentOn = useCallback(
         async (projectId: string, featureId: string, environmentId: string) => {

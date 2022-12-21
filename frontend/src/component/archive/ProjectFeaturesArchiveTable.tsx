@@ -1,7 +1,8 @@
-import { ArchiveTable } from './ArchiveTable/ArchiveTable';
+import { VFC } from 'react';
 import { SortingRule } from 'react-table';
-import { useProjectFeaturesArchive } from 'hooks/api/getters/useProjectFeaturesArchive/useProjectFeaturesArchive';
 import { createLocalStorage } from 'utils/createLocalStorage';
+import { useGetArchivedFeaturesByProjectId } from 'openapi';
+import { ArchiveTable } from './ArchiveTable/ArchiveTable';
 
 const defaultSort: SortingRule<string> = { id: 'archivedAt' };
 
@@ -9,14 +10,11 @@ interface IProjectFeaturesTable {
     projectId: string;
 }
 
-export const ProjectFeaturesArchiveTable = ({
+export const ProjectFeaturesArchiveTable: VFC<IProjectFeaturesTable> = ({
     projectId,
-}: IProjectFeaturesTable) => {
-    const {
-        archivedFeatures = [],
-        refetchArchived,
-        loading,
-    } = useProjectFeaturesArchive(projectId);
+}) => {
+    const { data, isLoading, mutate } =
+        useGetArchivedFeaturesByProjectId(projectId);
 
     const { value, setValue } = createLocalStorage(
         `${projectId}:ProjectFeaturesArchiveTable`,
@@ -26,11 +24,11 @@ export const ProjectFeaturesArchiveTable = ({
     return (
         <ArchiveTable
             title="Project archive"
-            archivedFeatures={archivedFeatures}
-            loading={loading}
+            archivedFeatures={data?.features || []}
+            loading={isLoading}
             storedParams={value}
             setStoredParams={setValue}
-            refetch={refetchArchived}
+            refetch={mutate}
             projectId={projectId}
         />
     );

@@ -1,6 +1,4 @@
-import { openApiAdmin } from 'utils/openapiClient';
-import { FeatureSchema } from 'openapi';
-import { useApiGetter } from 'hooks/api/getters/useApiGetter/useApiGetter';
+import { FeatureSchema, useGetArchivedFeatures } from 'openapi';
 
 export interface IUseFeaturesArchiveOutput {
     archivedFeatures?: FeatureSchema[];
@@ -10,15 +8,17 @@ export interface IUseFeaturesArchiveOutput {
 }
 
 export const useFeaturesArchive = (): IUseFeaturesArchiveOutput => {
-    const { data, refetch, loading, error } = useApiGetter(
-        'apiAdminArchiveFeaturesGet',
-        () => openApiAdmin.apiAdminArchiveFeaturesGet()
-    );
+    const {
+        data,
+        mutate: refetch,
+        error,
+        isLoading: loading,
+    } = useGetArchivedFeatures();
 
     return {
         archivedFeatures: data?.features,
         refetchArchived: refetch,
         loading,
-        error,
+        error: error as Error | undefined,
     };
 };

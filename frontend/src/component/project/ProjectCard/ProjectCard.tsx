@@ -69,16 +69,11 @@ export const ProjectCard = ({
     return (
         <Card className={classes.projectCard} onMouseEnter={onHover}>
             <div className={classes.header} data-loading>
-                <ConditionallyRender
-                    condition={Boolean(uiConfig?.flags?.favorites)}
-                    show={() => (
-                        <FavoriteIconButton
-                            onClick={onFavorite}
-                            isFavorite={isFavorite}
-                            size="medium"
-                            sx={{ ml: -1 }}
-                        />
-                    )}
+                <FavoriteIconButton
+                    onClick={onFavorite}
+                    isFavorite={isFavorite}
+                    size="medium"
+                    sx={{ ml: -1 }}
                 />
                 <h2 className={classes.title}>{name}</h2>
 

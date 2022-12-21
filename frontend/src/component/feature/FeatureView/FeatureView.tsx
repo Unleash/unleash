@@ -115,16 +115,9 @@ export const FeatureView = () => {
                         <div className={styles.header}>
                             <div className={styles.innerContainer}>
                                 <div className={styles.toggleInfoContainer}>
-                                    <ConditionallyRender
-                                        condition={Boolean(
-                                            uiConfig?.flags?.favorites
-                                        )}
-                                        show={() => (
-                                            <FavoriteIconButton
-                                                onClick={onFavorite}
-                                                isFavorite={feature?.favorite}
-                                            />
-                                        )}
+                                    <FavoriteIconButton
+                                        onClick={onFavorite}
+                                        isFavorite={feature?.favorite}
                                     />
                                     <h1
                                         className={styles.featureViewHeader}

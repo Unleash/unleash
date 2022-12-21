@@ -35,10 +35,6 @@ const flags = {
         process.env.UNLEASH_EXPERIMENTAL_VARIANTS_PER_ENVIRONMENT,
         false,
     ),
-    favorites: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_FAVORITES,
-        false,
-    ),
     networkView: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_NETWORK_VIEW,
         false,

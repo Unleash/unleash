@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import { useMaintenance } from 'hooks/api/getters/useMaintenance/useMaintenance';
 import { useMaintenanceApi } from 'hooks/api/actions/useMaintenanceApi/useMaintenanceApi';
-import { usePlausibleTracker } from '../../../hooks/usePlausibleTracker';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const StyledCard = styled(Card)(({ theme }) => ({
     display: 'flex',

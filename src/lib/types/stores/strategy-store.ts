@@ -23,6 +23,16 @@ export interface IMinimalStrategy {
     parameters?: any[];
 }
 
+export interface IStrategyImport {
+    name: string;
+    description?: string;
+    deprecated?: boolean;
+    parameters?: object[];
+    builtIn?: boolean;
+    sortOrder?: number;
+    displayName?: string;
+}
+
 export interface IMinimalStrategyRow {
     name: string;
     description?: string;
@@ -36,7 +46,7 @@ export interface IStrategyStore extends Store<IStrategy, string> {
     updateStrategy(update: IMinimalStrategy): Promise<void>;
     deprecateStrategy({ name }: Pick<IStrategy, 'name'>): Promise<void>;
     reactivateStrategy({ name }: Pick<IStrategy, 'name'>): Promise<void>;
-    importStrategy(data: IMinimalStrategy): Promise<void>;
+    importStrategy(data: IStrategyImport): Promise<void>;
     dropCustomStrategies(): Promise<void>;
     count(): Promise<number>;
 }

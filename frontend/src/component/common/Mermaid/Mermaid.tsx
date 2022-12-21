@@ -1,6 +1,6 @@
 import { styled } from '@mui/material';
 import mermaid from 'mermaid';
-import { useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 
 const StyledMermaid = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -11,6 +11,7 @@ const StyledMermaid = styled('div')(({ theme }) => ({
 }));
 
 mermaid.initialize({
+    startOnLoad: false,
     theme: 'default',
     themeCSS: `
     .clusters #_ rect {
@@ -21,23 +22,19 @@ mermaid.initialize({
 });
 
 interface IMermaidProps {
-    className?: string;
     children: string;
 }
 
-export const Mermaid = ({ className = '', children }: IMermaidProps) => {
+export const Mermaid = ({ children, ...props }: IMermaidProps) => {
+    const mermaidRef = useRef<HTMLDivElement>(null);
+
     useEffect(() => {
-        mermaid.render('mermaid', children, (svgCode: string) => {
-            const mermaidDiv = document.querySelector('.mermaid');
-            if (mermaidDiv) {
-                mermaidDiv.innerHTML = svgCode;
+        mermaid.render('mermaid', children, svgCode => {
+            if (mermaidRef.current) {
+                mermaidRef.current.innerHTML = svgCode;
             }
         });
     }, [children]);
 
-    return (
-        <StyledMermaid className={`mermaid ${className}`}>
-            {children}
-        </StyledMermaid>
-    );
+    return <StyledMermaid ref={mermaidRef} {...props} />;
 };

@@ -33,7 +33,7 @@ export const FeatureMetricsHours = ({
 const parseFeatureMetricsHour = (value: unknown) => {
     switch (value) {
         case '1':
-            return 2;
+            return 1;
         case '24':
             return 24;
         default:

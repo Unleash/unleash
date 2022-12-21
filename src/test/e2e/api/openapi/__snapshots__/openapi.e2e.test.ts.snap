@@ -2751,6 +2751,9 @@ exports[`should serve the OpenAPI spec 1`] = `
                         "appName": {
                           "type": "string",
                         },
+                        "endpoint": {
+                          "type": "string",
+                        },
                       },
                       "type": "object",
                     },

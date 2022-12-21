@@ -157,7 +157,6 @@ export default class StrategyStore implements IStrategyStore {
         await this.db(TABLE).where({ name }).del();
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async importStrategy(data: IStrategyImport): Promise<void> {
         const rowData = {
             name: data.name,

@@ -43,6 +43,10 @@ const flags = {
         process.env.UNLEASH_EXPERIMENTAL_MAINTENANCE,
         false,
     ),
+    maintenanceMode: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_MAINTENANCE_MODE,
+        false,
+    ),
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

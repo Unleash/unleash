@@ -1,16 +1,22 @@
 import { IUnleashConfig } from '../types';
-import { Request } from 'express';
+import MaintenanceService from '../services/maintenance-service';
+import { IAuthRequest } from '../routes/unleash-types';
 
-const maintenanceMiddleware = ({
-    getLogger,
-    flagResolver,
-}: Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>): any => {
+const maintenanceMiddleware = (
+    { getLogger }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>,
+    maintenanceService: MaintenanceService,
+): any => {
     const logger = getLogger('/middleware/maintenance-middleware.ts');
     logger.debug('Enabling Maintenance middleware');
 
-    return async (req: Request, res, next) => {
+    return async (req: IAuthRequest, res, next) => {
+        const isProtectedPath = !req.path.includes('/maintenance');
         const writeMethod = ['POST', 'PUT', 'DELETE'].includes(req.method);
-        if (writeMethod && flagResolver.isEnabled('maintenance')) {
+        if (
+            isProtectedPath &&
+            writeMethod &&
+            (await maintenanceService.isMaintenanceMode())
+        ) {
             res.status(503).send({});
         } else {
             next();

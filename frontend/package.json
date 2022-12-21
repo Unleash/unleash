@@ -18,6 +18,7 @@
     "start:enterprise": "UNLEASH_API=https://unleash4.herokuapp.com yarn run start",
     "start:demo": "UNLEASH_BASE_PATH=/demo/ yarn start",
     "test": "tsc && vitest run",
+    "test:snapshot": "yarn test -u",
     "test:watch": "vitest watch",
     "fmt": "prettier src --write --loglevel warn",
     "fmt:check": "prettier src --check",

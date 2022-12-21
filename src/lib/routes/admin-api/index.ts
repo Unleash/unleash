@@ -27,6 +27,7 @@ import PatController from './user/pat';
 import { PublicSignupController } from './public-signup';
 import InstanceAdminController from './instance-admin';
 import FavoritesController from './favorites';
+import MaintenanceController from './maintenance';
 
 class AdminApi extends Controller {
     constructor(config: IUnleashConfig, services: IUnleashServices) {
@@ -119,6 +120,11 @@ class AdminApi extends Controller {
         this.app.use(
             `/projects`,
             new FavoritesController(config, services).router,
+        );
+
+        this.app.use(
+            '/maintenance',
+            new MaintenanceController(config, services).router,
         );
     }
 }

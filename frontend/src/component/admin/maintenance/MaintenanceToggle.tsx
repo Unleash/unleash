@@ -10,6 +10,7 @@ import {
 } from '@mui/material';
 import { useMaintenance } from 'hooks/api/getters/useMaintenance/useMaintenance';
 import { useMaintenanceApi } from 'hooks/api/actions/useMaintenanceApi/useMaintenanceApi';
+import { usePlausibleTracker } from '../../../hooks/usePlausibleTracker';
 
 const StyledCard = styled(Card)(({ theme }) => ({
     display: 'flex',
@@ -38,7 +39,13 @@ const SwitchLabel = styled(Typography)(({ theme }) => ({
 export const MaintenanceToggle = () => {
     const { enabled, refetchMaintenance } = useMaintenance();
     const { toggleMaintenance } = useMaintenanceApi();
+    const { trackEvent } = usePlausibleTracker();
     const updateEnabled = async () => {
+        trackEvent('maintenance', {
+            props: {
+                eventType: `maintenance ${enabled ? 'de' : ''}activated`,
+            },
+        });
         await toggleMaintenance({ enabled: !enabled });
         refetchMaintenance();
     };

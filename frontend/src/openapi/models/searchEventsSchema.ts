@@ -12,19 +12,19 @@
     
  */
 export interface SearchEventsSchema {
-  /** Find events by event type (case-sensitive). */
-  type?: string;
-  /** Find events by project ID (case-sensitive). */
-  project?: string;
-  /** Find events by feature toggle name (case-sensitive). */
-  feature?: string;
-  /** 
+    /** Find events by event type (case-sensitive). */
+    type?: string;
+    /** Find events by project ID (case-sensitive). */
+    project?: string;
+    /** Find events by feature toggle name (case-sensitive). */
+    feature?: string;
+    /** 
                 Find events by a free-text search query.
                 The query will be matched against the event type,
                 the username or email that created the event (if any),
                 and the event data payload (if any).
              */
-  query?: string;
-  limit?: number;
-  offset?: number;
+    query?: string;
+    limit?: number;
+    offset?: number;
 }

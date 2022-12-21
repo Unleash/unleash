@@ -5,4 +5,6 @@
  * OpenAPI spec version: 4.19.1
  */
 
-export interface ParametersSchema {[key: string]: string}
+export interface ParametersSchema {
+    [key: string]: string;
+}

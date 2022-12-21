@@ -7,6 +7,6 @@
 import type { FeatureSchema } from './featureSchema';
 
 export interface FeaturesSchema {
-  version: number;
-  features: FeatureSchema[];
+    version: number;
+    features: FeatureSchema[];
 }

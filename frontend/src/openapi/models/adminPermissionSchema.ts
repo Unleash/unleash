@@ -6,9 +6,9 @@
  */
 
 export interface AdminPermissionSchema {
-  id: number;
-  name: string;
-  displayName: string;
-  type: string;
-  environment?: string;
+    id: number;
+    name: string;
+    displayName: string;
+    type: string;
+    environment?: string;
 }

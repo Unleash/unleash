@@ -8,6 +8,6 @@ import type { UserSchema } from './userSchema';
 import type { RoleSchema } from './roleSchema';
 
 export interface UsersSchema {
-  users: UserSchema[];
-  rootRoles?: RoleSchema[];
+    users: UserSchema[];
+    rootRoles?: RoleSchema[];
 }

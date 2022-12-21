@@ -7,6 +7,6 @@
 import type { ProjectSchema } from './projectSchema';
 
 export interface ProjectsSchema {
-  version: number;
-  projects: ProjectSchema[];
+    version: number;
+    projects: ProjectSchema[];
 }

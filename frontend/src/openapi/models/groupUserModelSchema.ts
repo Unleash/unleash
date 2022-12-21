@@ -7,7 +7,7 @@
 import type { UserSchema } from './userSchema';
 
 export interface GroupUserModelSchema {
-  joinedAt?: string;
-  createdBy?: string | null;
-  user: UserSchema;
+    joinedAt?: string;
+    createdBy?: string | null;
+    user: UserSchema;
 }

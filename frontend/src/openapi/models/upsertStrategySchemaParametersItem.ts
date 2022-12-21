@@ -6,8 +6,8 @@
  */
 
 export type UpsertStrategySchemaParametersItem = {
-  name?: string;
-  type?: string;
-  description?: string;
-  required?: boolean;
+    name?: string;
+    type?: string;
+    description?: string;
+    required?: boolean;
 };

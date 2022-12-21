@@ -7,6 +7,6 @@
 import type { ProxyFeatureSchemaVariantPayloadType } from './proxyFeatureSchemaVariantPayloadType';
 
 export type ProxyFeatureSchemaVariantPayload = {
-  type: ProxyFeatureSchemaVariantPayloadType;
-  value: string;
+    type: ProxyFeatureSchemaVariantPayloadType;
+    value: string;
 };

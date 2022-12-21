@@ -6,8 +6,8 @@
  */
 
 export interface UpdateFeatureStrategySegmentsSchema {
-  projectId: string;
-  strategyId: string;
-  environmentId: string;
-  segmentIds: number[];
+    projectId: string;
+    strategyId: string;
+    environmentId: string;
+    segmentIds: number[];
 }

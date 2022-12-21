@@ -8,6 +8,6 @@ import type { AddonSchema } from './addonSchema';
 import type { AddonTypeSchema } from './addonTypeSchema';
 
 export interface AddonsSchema {
-  addons: AddonSchema[];
-  providers: AddonTypeSchema[];
+    addons: AddonSchema[];
+    providers: AddonTypeSchema[];
 }

@@ -5,4 +5,4 @@
  * OpenAPI spec version: 4.19.1
  */
 
-export type ProxyMetricsSchemaBucketTogglesVariants = {[key: string]: number};
+export type ProxyMetricsSchemaBucketTogglesVariants = { [key: string]: number };

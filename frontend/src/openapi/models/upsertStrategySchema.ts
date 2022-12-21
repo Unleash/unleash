@@ -7,8 +7,8 @@
 import type { UpsertStrategySchemaParametersItem } from './upsertStrategySchemaParametersItem';
 
 export interface UpsertStrategySchema {
-  name: string;
-  description?: string;
-  editable?: boolean;
-  parameters?: UpsertStrategySchemaParametersItem[];
+    name: string;
+    description?: string;
+    editable?: boolean;
+    parameters?: UpsertStrategySchemaParametersItem[];
 }

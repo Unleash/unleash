@@ -6,6 +6,6 @@
  */
 
 export interface CloneFeatureSchema {
-  name: string;
-  replaceGroupId?: boolean;
+    name: string;
+    replaceGroupId?: boolean;
 }

@@ -6,5 +6,5 @@
  */
 
 export interface EmailSchema {
-  email: string;
+    email: string;
 }

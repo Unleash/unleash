@@ -7,9 +7,9 @@
 import type { FeatureEnvironmentMetricsSchema } from './featureEnvironmentMetricsSchema';
 
 export interface FeatureUsageSchema {
-  version: number;
-  maturity: string;
-  featureName: string;
-  lastHourUsage: FeatureEnvironmentMetricsSchema[];
-  seenApplications: string[];
+    version: number;
+    maturity: string;
+    featureName: string;
+    lastHourUsage: FeatureEnvironmentMetricsSchema[];
+    seenApplications: string[];
 }

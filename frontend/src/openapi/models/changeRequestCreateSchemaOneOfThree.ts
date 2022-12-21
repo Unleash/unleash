@@ -7,6 +7,6 @@
 import type { CreateFeatureStrategySchema } from './createFeatureStrategySchema';
 
 export type ChangeRequestCreateSchemaOneOfThree = {
-  action: unknown;
-  payload: CreateFeatureStrategySchema;
+    action: unknown;
+    payload: CreateFeatureStrategySchema;
 };

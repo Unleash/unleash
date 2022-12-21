@@ -9,12 +9,16 @@ import type { ChangeRequestCreateSchemaOneOfThree } from './changeRequestCreateS
 import type { ChangeRequestCreateSchemaOneOfFour } from './changeRequestCreateSchemaOneOfFour';
 import type { ChangeRequestCreateSchemaOneOfFive } from './changeRequestCreateSchemaOneOfFive';
 
-export type ChangeRequestCreateSchema = (ChangeRequestCreateSchemaOneOf & {
-  feature: string;
-}) | (ChangeRequestCreateSchemaOneOfThree & {
-  feature: string;
-}) | (ChangeRequestCreateSchemaOneOfFour & {
-  feature: string;
-}) | (ChangeRequestCreateSchemaOneOfFive & {
-  feature: string;
-});
+export type ChangeRequestCreateSchema =
+    | (ChangeRequestCreateSchemaOneOf & {
+          feature: string;
+      })
+    | (ChangeRequestCreateSchemaOneOfThree & {
+          feature: string;
+      })
+    | (ChangeRequestCreateSchemaOneOfFour & {
+          feature: string;
+      })
+    | (ChangeRequestCreateSchemaOneOfFive & {
+          feature: string;
+      });

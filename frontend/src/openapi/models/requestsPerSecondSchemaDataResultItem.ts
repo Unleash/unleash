@@ -8,8 +8,8 @@ import type { RequestsPerSecondSchemaDataResultItemMetric } from './requestsPerS
 import type { RequestsPerSecondSchemaDataResultItemValuesItemItem } from './requestsPerSecondSchemaDataResultItemValuesItemItem';
 
 export type RequestsPerSecondSchemaDataResultItem = {
-  /** A key value set representing the metric */
-  metric?: RequestsPerSecondSchemaDataResultItemMetric;
-  /** An array of arrays. Each element of the array is an array of size 2 consisting of the 2 axis for the graph: in position zero the x axis represented as a number and position one the y axis represented as string */
-  values?: RequestsPerSecondSchemaDataResultItemValuesItemItem[][];
+    /** A key value set representing the metric */
+    metric?: RequestsPerSecondSchemaDataResultItemMetric;
+    /** An array of arrays. Each element of the array is an array of size 2 consisting of the 2 axis for the graph: in position zero the x axis represented as a number and position one the y axis represented as string */
+    values?: RequestsPerSecondSchemaDataResultItemValuesItemItem[][];
 };

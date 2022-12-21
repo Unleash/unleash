@@ -5,4 +5,4 @@
  * OpenAPI spec version: 4.19.1
  */
 
-export type UiConfigSchemaFlags = {[key: string]: boolean};
+export type UiConfigSchemaFlags = { [key: string]: boolean };

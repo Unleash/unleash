@@ -4,149 +4,140 @@
  * Unleash API
  * OpenAPI spec version: 4.19.1
  */
-import useSwr from 'swr'
+import useSwr from 'swr';
+import type { SWRConfiguration, Key } from 'swr';
 import type {
-  SWRConfiguration,
-  Key
-} from 'swr'
-import type {
-  PatsSchema,
-  PatSchema,
-  ApiTokensSchema,
-  ApiTokenSchema,
-  CreateApiTokenSchema,
-  UpdateApiTokenSchema
-} from '../models'
-import { fetcher } from '../fetcher'
-import type { ErrorType, BodyType } from '../fetcher'
+    PatsSchema,
+    PatSchema,
+    ApiTokensSchema,
+    ApiTokenSchema,
+    CreateApiTokenSchema,
+    UpdateApiTokenSchema,
+} from '../models';
+import { fetcher } from '../fetcher';
+import type { ErrorType, BodyType } from '../fetcher';
 
-
-
-  
-  export const getPats = (
-    
- ) => {
-      return fetcher<PatsSchema>(
-      {url: `/api/admin/user/tokens`, method: 'get'
-    },
-      );
-    }
-  
+export const getPats = () => {
+    return fetcher<PatsSchema>({
+        url: `/api/admin/user/tokens`,
+        method: 'get',
+    });
+};
 
 export const getGetPatsKey = () => [`/api/admin/user/tokens`];
 
-    
-export type GetPatsQueryResult = NonNullable<Awaited<ReturnType<typeof getPats>>>
-export type GetPatsQueryError = ErrorType<unknown>
+export type GetPatsQueryResult = NonNullable<
+    Awaited<ReturnType<typeof getPats>>
+>;
+export type GetPatsQueryError = ErrorType<unknown>;
 
-export const useGetPats = <TError = ErrorType<unknown>>(
-  options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getPats>>, TError> & { swrKey?: Key, enabled?: boolean },  }
+export const useGetPats = <TError = ErrorType<unknown>>(options?: {
+    swr?: SWRConfiguration<Awaited<ReturnType<typeof getPats>>, TError> & {
+        swrKey?: Key;
+        enabled?: boolean;
+    };
+}) => {
+    const { swr: swrOptions } = options ?? {};
 
-  ) => {
+    const isEnabled = swrOptions?.enabled !== false;
+    const swrKey =
+        swrOptions?.swrKey ?? (() => (isEnabled ? getGetPatsKey() : null));
+    const swrFn = () => getPats();
 
-  const {swr: swrOptions} = options ?? {}
+    const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+        swrKey,
+        swrFn,
+        swrOptions
+    );
 
-  const isEnabled = swrOptions?.enabled !== false
-    const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetPatsKey() : null);
-  const swrFn = () => getPats();
+    return {
+        swrKey,
+        ...query,
+    };
+};
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
+export const createPat = (patSchema: BodyType<PatSchema>) => {
+    return fetcher<PatSchema>({
+        url: `/api/admin/user/tokens`,
+        method: 'post',
+        headers: { 'Content-Type': 'application/json' },
+        data: patSchema,
+    });
+};
 
-  return {
-    swrKey,
-    ...query
-  }
-}
+export const deletePat = (id: string) => {
+    return fetcher<void>({
+        url: `/api/admin/user/tokens/${id}`,
+        method: 'delete',
+    });
+};
 
-export const createPat = (
-    patSchema: BodyType<PatSchema>,
- ) => {
-      return fetcher<PatSchema>(
-      {url: `/api/admin/user/tokens`, method: 'post',
-      headers: {'Content-Type': 'application/json', },
-      data: patSchema
-    },
-      );
-    }
-  
-
-export const deletePat = (
-    id: string,
- ) => {
-      return fetcher<void>(
-      {url: `/api/admin/user/tokens/${id}`, method: 'delete'
-    },
-      );
-    }
-  
-
-export const getAllApiTokens = (
-    
- ) => {
-      return fetcher<ApiTokensSchema>(
-      {url: `/api/admin/api-tokens`, method: 'get'
-    },
-      );
-    }
-  
+export const getAllApiTokens = () => {
+    return fetcher<ApiTokensSchema>({
+        url: `/api/admin/api-tokens`,
+        method: 'get',
+    });
+};
 
 export const getGetAllApiTokensKey = () => [`/api/admin/api-tokens`];
 
-    
-export type GetAllApiTokensQueryResult = NonNullable<Awaited<ReturnType<typeof getAllApiTokens>>>
-export type GetAllApiTokensQueryError = ErrorType<unknown>
+export type GetAllApiTokensQueryResult = NonNullable<
+    Awaited<ReturnType<typeof getAllApiTokens>>
+>;
+export type GetAllApiTokensQueryError = ErrorType<unknown>;
 
-export const useGetAllApiTokens = <TError = ErrorType<unknown>>(
-  options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getAllApiTokens>>, TError> & { swrKey?: Key, enabled?: boolean },  }
+export const useGetAllApiTokens = <TError = ErrorType<unknown>>(options?: {
+    swr?: SWRConfiguration<
+        Awaited<ReturnType<typeof getAllApiTokens>>,
+        TError
+    > & { swrKey?: Key; enabled?: boolean };
+}) => {
+    const { swr: swrOptions } = options ?? {};
 
-  ) => {
+    const isEnabled = swrOptions?.enabled !== false;
+    const swrKey =
+        swrOptions?.swrKey ??
+        (() => (isEnabled ? getGetAllApiTokensKey() : null));
+    const swrFn = () => getAllApiTokens();
 
-  const {swr: swrOptions} = options ?? {}
+    const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+        swrKey,
+        swrFn,
+        swrOptions
+    );
 
-  const isEnabled = swrOptions?.enabled !== false
-    const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetAllApiTokensKey() : null);
-  const swrFn = () => getAllApiTokens();
-
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
-
-  return {
-    swrKey,
-    ...query
-  }
-}
+    return {
+        swrKey,
+        ...query,
+    };
+};
 
 export const createApiToken = (
-    createApiTokenSchema: BodyType<CreateApiTokenSchema>,
- ) => {
-      return fetcher<ApiTokenSchema>(
-      {url: `/api/admin/api-tokens`, method: 'post',
-      headers: {'Content-Type': 'application/json', },
-      data: createApiTokenSchema
-    },
-      );
-    }
-  
+    createApiTokenSchema: BodyType<CreateApiTokenSchema>
+) => {
+    return fetcher<ApiTokenSchema>({
+        url: `/api/admin/api-tokens`,
+        method: 'post',
+        headers: { 'Content-Type': 'application/json' },
+        data: createApiTokenSchema,
+    });
+};
 
 export const updateApiToken = (
     token: string,
-    updateApiTokenSchema: BodyType<UpdateApiTokenSchema>,
- ) => {
-      return fetcher<void>(
-      {url: `/api/admin/api-tokens/${token}`, method: 'put',
-      headers: {'Content-Type': 'application/json', },
-      data: updateApiTokenSchema
-    },
-      );
-    }
-  
+    updateApiTokenSchema: BodyType<UpdateApiTokenSchema>
+) => {
+    return fetcher<void>({
+        url: `/api/admin/api-tokens/${token}`,
+        method: 'put',
+        headers: { 'Content-Type': 'application/json' },
+        data: updateApiTokenSchema,
+    });
+};
 
-export const deleteApiToken = (
-    token: string,
- ) => {
-      return fetcher<void>(
-      {url: `/api/admin/api-tokens/${token}`, method: 'delete'
-    },
-      );
-    }
-  
-
+export const deleteApiToken = (token: string) => {
+    return fetcher<void>({
+        url: `/api/admin/api-tokens/${token}`,
+        method: 'delete',
+    });
+};

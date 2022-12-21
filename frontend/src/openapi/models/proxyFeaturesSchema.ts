@@ -7,5 +7,5 @@
 import type { ProxyFeatureSchema } from './proxyFeatureSchema';
 
 export interface ProxyFeaturesSchema {
-  toggles: ProxyFeatureSchema[];
+    toggles: ProxyFeatureSchema[];
 }

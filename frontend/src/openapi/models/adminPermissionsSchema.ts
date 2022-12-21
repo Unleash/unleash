@@ -7,6 +7,6 @@
 import type { AdminPermissionsSchemaPermissions } from './adminPermissionsSchemaPermissions';
 
 export interface AdminPermissionsSchema {
-  permissions: AdminPermissionsSchemaPermissions;
-  version: number;
+    permissions: AdminPermissionsSchemaPermissions;
+    version: number;
 }

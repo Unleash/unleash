@@ -5,11 +5,11 @@
  * OpenAPI spec version: 4.19.1
  */
 
-export type HealthCheckSchemaHealth = typeof HealthCheckSchemaHealth[keyof typeof HealthCheckSchemaHealth];
-
+export type HealthCheckSchemaHealth =
+    typeof HealthCheckSchemaHealth[keyof typeof HealthCheckSchemaHealth];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const HealthCheckSchemaHealth = {
-  GOOD: 'GOOD',
-  BAD: 'BAD',
+    GOOD: 'GOOD',
+    BAD: 'BAD',
 } as const;

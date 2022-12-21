@@ -6,8 +6,8 @@
  */
 
 export interface UpdateUserSchema {
-  email?: string;
-  name?: string;
-  rootRole?: number;
-  [key: string]: any;
- }
+    email?: string;
+    name?: string;
+    rootRole?: number;
+    [key: string]: any;
+}

@@ -6,4 +6,12 @@
  */
 import type { ExportFormat } from './exportFormat';
 
-export type ExportParams = { format?: ExportFormat; download?: boolean | string | number; strategies?: boolean | string | number; featureToggles?: boolean | string | number; projects?: boolean | string | number; tags?: boolean | string | number; environments?: boolean | string | number };
+export type ExportParams = {
+    format?: ExportFormat;
+    download?: boolean | string | number;
+    strategies?: boolean | string | number;
+    featureToggles?: boolean | string | number;
+    projects?: boolean | string | number;
+    tags?: boolean | string | number;
+    environments?: boolean | string | number;
+};

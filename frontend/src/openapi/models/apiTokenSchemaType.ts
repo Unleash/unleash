@@ -5,12 +5,12 @@
  * OpenAPI spec version: 4.19.1
  */
 
-export type ApiTokenSchemaType = typeof ApiTokenSchemaType[keyof typeof ApiTokenSchemaType];
-
+export type ApiTokenSchemaType =
+    typeof ApiTokenSchemaType[keyof typeof ApiTokenSchemaType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ApiTokenSchemaType = {
-  client: 'client',
-  admin: 'admin',
-  frontend: 'frontend',
+    client: 'client',
+    admin: 'admin',
+    frontend: 'frontend',
 } as const;

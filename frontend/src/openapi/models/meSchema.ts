@@ -10,8 +10,8 @@ import type { FeedbackSchema } from './feedbackSchema';
 import type { MeSchemaSplash } from './meSchemaSplash';
 
 export interface MeSchema {
-  user: UserSchema;
-  permissions: PermissionSchema[];
-  feedback: FeedbackSchema[];
-  splash: MeSchemaSplash;
+    user: UserSchema;
+    permissions: PermissionSchema[];
+    feedback: FeedbackSchema[];
+    splash: MeSchemaSplash;
 }

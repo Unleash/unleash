@@ -5,28 +5,23 @@
  * OpenAPI spec version: 4.19.1
  */
 import type {
-  PlaygroundResponseSchema,
-  PlaygroundRequestSchema
-} from '../models'
-import { fetcher } from '../fetcher'
-import type { BodyType } from '../fetcher'
+    PlaygroundResponseSchema,
+    PlaygroundRequestSchema,
+} from '../models';
+import { fetcher } from '../fetcher';
+import type { BodyType } from '../fetcher';
 
-
-
-  
-  /**
+/**
  * Use the provided `context`, `environment`, and `projects` to evaluate toggles on this Unleash instance. Returns a list of all toggles that match the parameters and what they evaluate to. The response also contains the input parameters that were provided.
  * @summary Evaluate an Unleash context against a set of environments and projects.
  */
 export const getPlayground = (
-    playgroundRequestSchema: BodyType<PlaygroundRequestSchema>,
- ) => {
-      return fetcher<PlaygroundResponseSchema>(
-      {url: `/api/admin/playground`, method: 'post',
-      headers: {'Content-Type': 'application/json', },
-      data: playgroundRequestSchema
-    },
-      );
-    }
-  
-
+    playgroundRequestSchema: BodyType<PlaygroundRequestSchema>
+) => {
+    return fetcher<PlaygroundResponseSchema>({
+        url: `/api/admin/playground`,
+        method: 'post',
+        headers: { 'Content-Type': 'application/json' },
+        data: playgroundRequestSchema,
+    });
+};

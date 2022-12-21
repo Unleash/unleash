@@ -9,14 +9,14 @@ import type { EventSchemaPreData } from './eventSchemaPreData';
 import type { TagSchema } from './tagSchema';
 
 export interface EventSchema {
-  id: number;
-  createdAt: string;
-  type: string;
-  createdBy: string;
-  environment?: string | null;
-  project?: string | null;
-  featureName?: string | null;
-  data?: EventSchemaData;
-  preData?: EventSchemaPreData;
-  tags?: TagSchema[] | null;
+    id: number;
+    createdAt: string;
+    type: string;
+    createdBy: string;
+    environment?: string | null;
+    project?: string | null;
+    featureName?: string | null;
+    data?: EventSchemaData;
+    preData?: EventSchemaPreData;
+    tags?: TagSchema[] | null;
 }

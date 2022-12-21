@@ -6,8 +6,10 @@
  */
 import type { ProxyMetricsSchemaBucketTogglesVariants } from './proxyMetricsSchemaBucketTogglesVariants';
 
-export type ProxyMetricsSchemaBucketToggles = {[key: string]: {
-  yes?: number;
-  no?: number;
-  variants?: ProxyMetricsSchemaBucketTogglesVariants;
-}};
+export type ProxyMetricsSchemaBucketToggles = {
+    [key: string]: {
+        yes?: number;
+        no?: number;
+        variants?: ProxyMetricsSchemaBucketTogglesVariants;
+    };
+};

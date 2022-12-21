@@ -4,24 +4,17 @@
  * Unleash API
  * OpenAPI spec version: 4.19.1
  */
-import type {
-  ValidateEdgeTokensSchema
-} from '../models'
-import { fetcher } from '../fetcher'
-import type { BodyType } from '../fetcher'
+import type { ValidateEdgeTokensSchema } from '../models';
+import { fetcher } from '../fetcher';
+import type { BodyType } from '../fetcher';
 
-
-
-  
-  export const getValidTokens = (
-    validateEdgeTokensSchema: BodyType<ValidateEdgeTokensSchema>,
- ) => {
-      return fetcher<ValidateEdgeTokensSchema>(
-      {url: `/edge/validate`, method: 'post',
-      headers: {'Content-Type': 'application/json', },
-      data: validateEdgeTokensSchema
-    },
-      );
-    }
-  
-
+export const getValidTokens = (
+    validateEdgeTokensSchema: BodyType<ValidateEdgeTokensSchema>
+) => {
+    return fetcher<ValidateEdgeTokensSchema>({
+        url: `/edge/validate`,
+        method: 'post',
+        headers: { 'Content-Type': 'application/json' },
+        data: validateEdgeTokensSchema,
+    });
+};

@@ -4,27 +4,21 @@
  * Unleash API
  * OpenAPI spec version: 4.19.1
  */
-import useSwr from 'swr'
+import useSwr from 'swr';
+import type { SWRConfiguration, Key } from 'swr';
 import type {
-  SWRConfiguration,
-  Key
-} from 'swr'
-import type {
-  ChangeRequestSchema,
-  ChangeRequestCreateSchema,
-  ChangeRequestsSchema,
-  ChangeRequestConfigSchema,
-  UpdateChangeRequestEnvironmentConfigSchema,
-  ChangeRequestStateSchema,
-  ChangeRequestAddCommentSchema
-} from '../models'
-import { fetcher } from '../fetcher'
-import type { ErrorType, BodyType } from '../fetcher'
+    ChangeRequestSchema,
+    ChangeRequestCreateSchema,
+    ChangeRequestsSchema,
+    ChangeRequestConfigSchema,
+    UpdateChangeRequestEnvironmentConfigSchema,
+    ChangeRequestStateSchema,
+    ChangeRequestAddCommentSchema,
+} from '../models';
+import { fetcher } from '../fetcher';
+import type { ErrorType, BodyType } from '../fetcher';
 
-
-
-  
-  /**
+/**
  * Given a change request exists, this endpoint will attempt to add a change to
                          an existing change request for the user. If a change request does not exist.
                          It will attempt to create it.
@@ -33,16 +27,15 @@ import type { ErrorType, BodyType } from '../fetcher'
 export const changeRequest = (
     projectId: string,
     environment: string,
-    changeRequestCreateSchema: BodyType<ChangeRequestCreateSchema>,
- ) => {
-      return fetcher<ChangeRequestSchema>(
-      {url: `/api/admin/projects/${projectId}/environments/${environment}/change-requests`, method: 'post',
-      headers: {'Content-Type': 'application/json', },
-      data: changeRequestCreateSchema
-    },
-      );
-    }
-  
+    changeRequestCreateSchema: BodyType<ChangeRequestCreateSchema>
+) => {
+    return fetcher<ChangeRequestSchema>({
+        url: `/api/admin/projects/${projectId}/environments/${environment}/change-requests`,
+        method: 'post',
+        headers: { 'Content-Type': 'application/json' },
+        data: changeRequestCreateSchema,
+    });
+};
 
 /**
  * This endpoint will retrieve all change requests in a given environment for a given project.
@@ -50,80 +43,109 @@ export const changeRequest = (
  */
 export const getChangeRequestsForEnvironment = (
     projectId: string,
-    environment: string,
- ) => {
-      return fetcher<ChangeRequestsSchema>(
-      {url: `/api/admin/projects/${projectId}/environments/${environment}/change-requests`, method: 'get'
-    },
-      );
-    }
-  
+    environment: string
+) => {
+    return fetcher<ChangeRequestsSchema>({
+        url: `/api/admin/projects/${projectId}/environments/${environment}/change-requests`,
+        method: 'get',
+    });
+};
 
-export const getGetChangeRequestsForEnvironmentKey = (projectId: string,
-    environment: string,) => [`/api/admin/projects/${projectId}/environments/${environment}/change-requests`];
+export const getGetChangeRequestsForEnvironmentKey = (
+    projectId: string,
+    environment: string
+) => [
+    `/api/admin/projects/${projectId}/environments/${environment}/change-requests`,
+];
 
-    
-export type GetChangeRequestsForEnvironmentQueryResult = NonNullable<Awaited<ReturnType<typeof getChangeRequestsForEnvironment>>>
-export type GetChangeRequestsForEnvironmentQueryError = ErrorType<unknown>
+export type GetChangeRequestsForEnvironmentQueryResult = NonNullable<
+    Awaited<ReturnType<typeof getChangeRequestsForEnvironment>>
+>;
+export type GetChangeRequestsForEnvironmentQueryError = ErrorType<unknown>;
 
 export const useGetChangeRequestsForEnvironment = <TError = ErrorType<unknown>>(
- projectId: string,
-    environment: string, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getChangeRequestsForEnvironment>>, TError> & { swrKey?: Key, enabled?: boolean },  }
+    projectId: string,
+    environment: string,
+    options?: {
+        swr?: SWRConfiguration<
+            Awaited<ReturnType<typeof getChangeRequestsForEnvironment>>,
+            TError
+        > & { swrKey?: Key; enabled?: boolean };
+    }
+) => {
+    const { swr: swrOptions } = options ?? {};
 
-  ) => {
+    const isEnabled =
+        swrOptions?.enabled !== false && !!(projectId && environment);
+    const swrKey =
+        swrOptions?.swrKey ??
+        (() =>
+            isEnabled
+                ? getGetChangeRequestsForEnvironmentKey(projectId, environment)
+                : null);
+    const swrFn = () => getChangeRequestsForEnvironment(projectId, environment);
 
-  const {swr: swrOptions} = options ?? {}
+    const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+        swrKey,
+        swrFn,
+        swrOptions
+    );
 
-  const isEnabled = swrOptions?.enabled !== false && !!(projectId && environment)
-    const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetChangeRequestsForEnvironmentKey(projectId,environment) : null);
-  const swrFn = () => getChangeRequestsForEnvironment(projectId,environment, );
-
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
-
-  return {
-    swrKey,
-    ...query
-  }
-}
+    return {
+        swrKey,
+        ...query,
+    };
+};
 
 /**
  * Given a projectId, this endpoint will retrieve change request configuration for the project
  * @summary Retrieves change request configuration for a project
  */
-export const getProjectChangeRequestConfig = (
-    projectId: string,
- ) => {
-      return fetcher<ChangeRequestConfigSchema>(
-      {url: `/api/admin/projects/${projectId}/change-requests/config`, method: 'get'
-    },
-      );
-    }
-  
+export const getProjectChangeRequestConfig = (projectId: string) => {
+    return fetcher<ChangeRequestConfigSchema>({
+        url: `/api/admin/projects/${projectId}/change-requests/config`,
+        method: 'get',
+    });
+};
 
-export const getGetProjectChangeRequestConfigKey = (projectId: string,) => [`/api/admin/projects/${projectId}/change-requests/config`];
+export const getGetProjectChangeRequestConfigKey = (projectId: string) => [
+    `/api/admin/projects/${projectId}/change-requests/config`,
+];
 
-    
-export type GetProjectChangeRequestConfigQueryResult = NonNullable<Awaited<ReturnType<typeof getProjectChangeRequestConfig>>>
-export type GetProjectChangeRequestConfigQueryError = ErrorType<unknown>
+export type GetProjectChangeRequestConfigQueryResult = NonNullable<
+    Awaited<ReturnType<typeof getProjectChangeRequestConfig>>
+>;
+export type GetProjectChangeRequestConfigQueryError = ErrorType<unknown>;
 
 export const useGetProjectChangeRequestConfig = <TError = ErrorType<unknown>>(
- projectId: string, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getProjectChangeRequestConfig>>, TError> & { swrKey?: Key, enabled?: boolean },  }
+    projectId: string,
+    options?: {
+        swr?: SWRConfiguration<
+            Awaited<ReturnType<typeof getProjectChangeRequestConfig>>,
+            TError
+        > & { swrKey?: Key; enabled?: boolean };
+    }
+) => {
+    const { swr: swrOptions } = options ?? {};
 
-  ) => {
+    const isEnabled = swrOptions?.enabled !== false && !!projectId;
+    const swrKey =
+        swrOptions?.swrKey ??
+        (() =>
+            isEnabled ? getGetProjectChangeRequestConfigKey(projectId) : null);
+    const swrFn = () => getProjectChangeRequestConfig(projectId);
 
-  const {swr: swrOptions} = options ?? {}
+    const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+        swrKey,
+        swrFn,
+        swrOptions
+    );
 
-  const isEnabled = swrOptions?.enabled !== false && !!(projectId)
-    const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetProjectChangeRequestConfigKey(projectId) : null);
-  const swrFn = () => getProjectChangeRequestConfig(projectId, );
-
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
-
-  return {
-    swrKey,
-    ...query
-  }
-}
+    return {
+        swrKey,
+        ...query,
+    };
+};
 
 /**
  * This endpoint will change the change request             configuration for a given environment, set it to either on/off and optionally configure the number of approvals needed.
@@ -132,133 +154,167 @@ export const useGetProjectChangeRequestConfig = <TError = ErrorType<unknown>>(
 export const updateProjectChangeRequestConfig = (
     projectId: string,
     environment: string,
-    updateChangeRequestEnvironmentConfigSchema: BodyType<UpdateChangeRequestEnvironmentConfigSchema>,
- ) => {
-      return fetcher<void>(
-      {url: `/api/admin/projects/${projectId}/environments/${environment}/change-requests/config`, method: 'put',
-      headers: {'Content-Type': 'application/json', },
-      data: updateChangeRequestEnvironmentConfigSchema
-    },
-      );
-    }
-  
+    updateChangeRequestEnvironmentConfigSchema: BodyType<UpdateChangeRequestEnvironmentConfigSchema>
+) => {
+    return fetcher<void>({
+        url: `/api/admin/projects/${projectId}/environments/${environment}/change-requests/config`,
+        method: 'put',
+        headers: { 'Content-Type': 'application/json' },
+        data: updateChangeRequestEnvironmentConfigSchema,
+    });
+};
 
 /**
  * This endpoint will retrieve the pending change requests in the configured environments for the project, for the current user performing the request.
  * @summary Retrieves pending change requests in configured environments
  */
-export const getOpenChangeRequestsForUser = (
-    projectId: string,
- ) => {
-      return fetcher<ChangeRequestsSchema>(
-      {url: `/api/admin/projects/${projectId}/change-requests/open`, method: 'get'
-    },
-      );
-    }
-  
+export const getOpenChangeRequestsForUser = (projectId: string) => {
+    return fetcher<ChangeRequestsSchema>({
+        url: `/api/admin/projects/${projectId}/change-requests/open`,
+        method: 'get',
+    });
+};
 
-export const getGetOpenChangeRequestsForUserKey = (projectId: string,) => [`/api/admin/projects/${projectId}/change-requests/open`];
+export const getGetOpenChangeRequestsForUserKey = (projectId: string) => [
+    `/api/admin/projects/${projectId}/change-requests/open`,
+];
 
-    
-export type GetOpenChangeRequestsForUserQueryResult = NonNullable<Awaited<ReturnType<typeof getOpenChangeRequestsForUser>>>
-export type GetOpenChangeRequestsForUserQueryError = ErrorType<unknown>
+export type GetOpenChangeRequestsForUserQueryResult = NonNullable<
+    Awaited<ReturnType<typeof getOpenChangeRequestsForUser>>
+>;
+export type GetOpenChangeRequestsForUserQueryError = ErrorType<unknown>;
 
 export const useGetOpenChangeRequestsForUser = <TError = ErrorType<unknown>>(
- projectId: string, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getOpenChangeRequestsForUser>>, TError> & { swrKey?: Key, enabled?: boolean },  }
+    projectId: string,
+    options?: {
+        swr?: SWRConfiguration<
+            Awaited<ReturnType<typeof getOpenChangeRequestsForUser>>,
+            TError
+        > & { swrKey?: Key; enabled?: boolean };
+    }
+) => {
+    const { swr: swrOptions } = options ?? {};
 
-  ) => {
+    const isEnabled = swrOptions?.enabled !== false && !!projectId;
+    const swrKey =
+        swrOptions?.swrKey ??
+        (() =>
+            isEnabled ? getGetOpenChangeRequestsForUserKey(projectId) : null);
+    const swrFn = () => getOpenChangeRequestsForUser(projectId);
 
-  const {swr: swrOptions} = options ?? {}
+    const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+        swrKey,
+        swrFn,
+        swrOptions
+    );
 
-  const isEnabled = swrOptions?.enabled !== false && !!(projectId)
-    const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetOpenChangeRequestsForUserKey(projectId) : null);
-  const swrFn = () => getOpenChangeRequestsForUser(projectId, );
-
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
-
-  return {
-    swrKey,
-    ...query
-  }
-}
+    return {
+        swrKey,
+        ...query,
+    };
+};
 
 /**
  * This endpoint will retrieve the pending change requests in the configured environments for the project, for the current user performing the request.
  * @summary Retrieves pending change requests in configured environments
  */
-export const getPendingChangeRequestsForUser = (
-    projectId: string,
- ) => {
-      return fetcher<ChangeRequestsSchema>(
-      {url: `/api/admin/projects/${projectId}/change-requests/pending`, method: 'get'
-    },
-      );
-    }
-  
+export const getPendingChangeRequestsForUser = (projectId: string) => {
+    return fetcher<ChangeRequestsSchema>({
+        url: `/api/admin/projects/${projectId}/change-requests/pending`,
+        method: 'get',
+    });
+};
 
-export const getGetPendingChangeRequestsForUserKey = (projectId: string,) => [`/api/admin/projects/${projectId}/change-requests/pending`];
+export const getGetPendingChangeRequestsForUserKey = (projectId: string) => [
+    `/api/admin/projects/${projectId}/change-requests/pending`,
+];
 
-    
-export type GetPendingChangeRequestsForUserQueryResult = NonNullable<Awaited<ReturnType<typeof getPendingChangeRequestsForUser>>>
-export type GetPendingChangeRequestsForUserQueryError = ErrorType<unknown>
+export type GetPendingChangeRequestsForUserQueryResult = NonNullable<
+    Awaited<ReturnType<typeof getPendingChangeRequestsForUser>>
+>;
+export type GetPendingChangeRequestsForUserQueryError = ErrorType<unknown>;
 
 export const useGetPendingChangeRequestsForUser = <TError = ErrorType<unknown>>(
- projectId: string, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getPendingChangeRequestsForUser>>, TError> & { swrKey?: Key, enabled?: boolean },  }
+    projectId: string,
+    options?: {
+        swr?: SWRConfiguration<
+            Awaited<ReturnType<typeof getPendingChangeRequestsForUser>>,
+            TError
+        > & { swrKey?: Key; enabled?: boolean };
+    }
+) => {
+    const { swr: swrOptions } = options ?? {};
 
-  ) => {
+    const isEnabled = swrOptions?.enabled !== false && !!projectId;
+    const swrKey =
+        swrOptions?.swrKey ??
+        (() =>
+            isEnabled
+                ? getGetPendingChangeRequestsForUserKey(projectId)
+                : null);
+    const swrFn = () => getPendingChangeRequestsForUser(projectId);
 
-  const {swr: swrOptions} = options ?? {}
+    const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+        swrKey,
+        swrFn,
+        swrOptions
+    );
 
-  const isEnabled = swrOptions?.enabled !== false && !!(projectId)
-    const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetPendingChangeRequestsForUserKey(projectId) : null);
-  const swrFn = () => getPendingChangeRequestsForUser(projectId, );
-
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
-
-  return {
-    swrKey,
-    ...query
-  }
-}
+    return {
+        swrKey,
+        ...query,
+    };
+};
 
 /**
  * This endpoint will retrieve all change requests regardless of status for a given project.
  * @summary Retrieves all change requests for a project
  */
-export const getChangeRequestsForProject = (
-    projectId: string,
- ) => {
-      return fetcher<ChangeRequestsSchema>(
-      {url: `/api/admin/projects/${projectId}/change-requests`, method: 'get'
-    },
-      );
-    }
-  
+export const getChangeRequestsForProject = (projectId: string) => {
+    return fetcher<ChangeRequestsSchema>({
+        url: `/api/admin/projects/${projectId}/change-requests`,
+        method: 'get',
+    });
+};
 
-export const getGetChangeRequestsForProjectKey = (projectId: string,) => [`/api/admin/projects/${projectId}/change-requests`];
+export const getGetChangeRequestsForProjectKey = (projectId: string) => [
+    `/api/admin/projects/${projectId}/change-requests`,
+];
 
-    
-export type GetChangeRequestsForProjectQueryResult = NonNullable<Awaited<ReturnType<typeof getChangeRequestsForProject>>>
-export type GetChangeRequestsForProjectQueryError = ErrorType<unknown>
+export type GetChangeRequestsForProjectQueryResult = NonNullable<
+    Awaited<ReturnType<typeof getChangeRequestsForProject>>
+>;
+export type GetChangeRequestsForProjectQueryError = ErrorType<unknown>;
 
 export const useGetChangeRequestsForProject = <TError = ErrorType<unknown>>(
- projectId: string, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getChangeRequestsForProject>>, TError> & { swrKey?: Key, enabled?: boolean },  }
+    projectId: string,
+    options?: {
+        swr?: SWRConfiguration<
+            Awaited<ReturnType<typeof getChangeRequestsForProject>>,
+            TError
+        > & { swrKey?: Key; enabled?: boolean };
+    }
+) => {
+    const { swr: swrOptions } = options ?? {};
 
-  ) => {
+    const isEnabled = swrOptions?.enabled !== false && !!projectId;
+    const swrKey =
+        swrOptions?.swrKey ??
+        (() =>
+            isEnabled ? getGetChangeRequestsForProjectKey(projectId) : null);
+    const swrFn = () => getChangeRequestsForProject(projectId);
 
-  const {swr: swrOptions} = options ?? {}
+    const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+        swrKey,
+        swrFn,
+        swrOptions
+    );
 
-  const isEnabled = swrOptions?.enabled !== false && !!(projectId)
-    const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetChangeRequestsForProjectKey(projectId) : null);
-  const swrFn = () => getChangeRequestsForProject(projectId, );
-
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
-
-  return {
-    swrKey,
-    ...query
-  }
-}
+    return {
+        swrKey,
+        ...query,
+    };
+};
 
 /**
  * This endpoint will retrieve all pending change requests (change requests with a status of Draft | In review | Approved) referencing the given feature toggle name.
@@ -266,98 +322,126 @@ export const useGetChangeRequestsForProject = <TError = ErrorType<unknown>>(
  */
 export const getPendingChangeRequestsForFeature = (
     projectId: string,
+    featureName: string
+) => {
+    return fetcher<ChangeRequestsSchema>({
+        url: `/api/admin/projects/${projectId}/change-requests/pending/${featureName}`,
+        method: 'get',
+    });
+};
+
+export const getGetPendingChangeRequestsForFeatureKey = (
+    projectId: string,
+    featureName: string
+) => [
+    `/api/admin/projects/${projectId}/change-requests/pending/${featureName}`,
+];
+
+export type GetPendingChangeRequestsForFeatureQueryResult = NonNullable<
+    Awaited<ReturnType<typeof getPendingChangeRequestsForFeature>>
+>;
+export type GetPendingChangeRequestsForFeatureQueryError = ErrorType<unknown>;
+
+export const useGetPendingChangeRequestsForFeature = <
+    TError = ErrorType<unknown>
+>(
+    projectId: string,
     featureName: string,
- ) => {
-      return fetcher<ChangeRequestsSchema>(
-      {url: `/api/admin/projects/${projectId}/change-requests/pending/${featureName}`, method: 'get'
-    },
-      );
+    options?: {
+        swr?: SWRConfiguration<
+            Awaited<ReturnType<typeof getPendingChangeRequestsForFeature>>,
+            TError
+        > & { swrKey?: Key; enabled?: boolean };
     }
-  
+) => {
+    const { swr: swrOptions } = options ?? {};
 
-export const getGetPendingChangeRequestsForFeatureKey = (projectId: string,
-    featureName: string,) => [`/api/admin/projects/${projectId}/change-requests/pending/${featureName}`];
+    const isEnabled =
+        swrOptions?.enabled !== false && !!(projectId && featureName);
+    const swrKey =
+        swrOptions?.swrKey ??
+        (() =>
+            isEnabled
+                ? getGetPendingChangeRequestsForFeatureKey(
+                      projectId,
+                      featureName
+                  )
+                : null);
+    const swrFn = () =>
+        getPendingChangeRequestsForFeature(projectId, featureName);
 
-    
-export type GetPendingChangeRequestsForFeatureQueryResult = NonNullable<Awaited<ReturnType<typeof getPendingChangeRequestsForFeature>>>
-export type GetPendingChangeRequestsForFeatureQueryError = ErrorType<unknown>
+    const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+        swrKey,
+        swrFn,
+        swrOptions
+    );
 
-export const useGetPendingChangeRequestsForFeature = <TError = ErrorType<unknown>>(
- projectId: string,
-    featureName: string, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getPendingChangeRequestsForFeature>>, TError> & { swrKey?: Key, enabled?: boolean },  }
-
-  ) => {
-
-  const {swr: swrOptions} = options ?? {}
-
-  const isEnabled = swrOptions?.enabled !== false && !!(projectId && featureName)
-    const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetPendingChangeRequestsForFeatureKey(projectId,featureName) : null);
-  const swrFn = () => getPendingChangeRequestsForFeature(projectId,featureName, );
-
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
-
-  return {
-    swrKey,
-    ...query
-  }
-}
+    return {
+        swrKey,
+        ...query,
+    };
+};
 
 /**
  * This endpoint will retrieve one change request if it matches the provided id.
  * @summary Retrieves one change request by id
  */
-export const getChangeRequest = (
-    projectId: string,
-    id: string,
- ) => {
-      return fetcher<ChangeRequestSchema>(
-      {url: `/api/admin/projects/${projectId}/change-requests/${id}`, method: 'get'
-    },
-      );
-    }
-  
+export const getChangeRequest = (projectId: string, id: string) => {
+    return fetcher<ChangeRequestSchema>({
+        url: `/api/admin/projects/${projectId}/change-requests/${id}`,
+        method: 'get',
+    });
+};
 
-export const getGetChangeRequestKey = (projectId: string,
-    id: string,) => [`/api/admin/projects/${projectId}/change-requests/${id}`];
+export const getGetChangeRequestKey = (projectId: string, id: string) => [
+    `/api/admin/projects/${projectId}/change-requests/${id}`,
+];
 
-    
-export type GetChangeRequestQueryResult = NonNullable<Awaited<ReturnType<typeof getChangeRequest>>>
-export type GetChangeRequestQueryError = ErrorType<void>
+export type GetChangeRequestQueryResult = NonNullable<
+    Awaited<ReturnType<typeof getChangeRequest>>
+>;
+export type GetChangeRequestQueryError = ErrorType<void>;
 
 export const useGetChangeRequest = <TError = ErrorType<void>>(
- projectId: string,
-    id: string, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getChangeRequest>>, TError> & { swrKey?: Key, enabled?: boolean },  }
+    projectId: string,
+    id: string,
+    options?: {
+        swr?: SWRConfiguration<
+            Awaited<ReturnType<typeof getChangeRequest>>,
+            TError
+        > & { swrKey?: Key; enabled?: boolean };
+    }
+) => {
+    const { swr: swrOptions } = options ?? {};
 
-  ) => {
+    const isEnabled = swrOptions?.enabled !== false && !!(projectId && id);
+    const swrKey =
+        swrOptions?.swrKey ??
+        (() => (isEnabled ? getGetChangeRequestKey(projectId, id) : null));
+    const swrFn = () => getChangeRequest(projectId, id);
 
-  const {swr: swrOptions} = options ?? {}
+    const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+        swrKey,
+        swrFn,
+        swrOptions
+    );
 
-  const isEnabled = swrOptions?.enabled !== false && !!(projectId && id)
-    const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetChangeRequestKey(projectId,id) : null);
-  const swrFn = () => getChangeRequest(projectId,id, );
-
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
-
-  return {
-    swrKey,
-    ...query
-  }
-}
+    return {
+        swrKey,
+        ...query,
+    };
+};
 
 /**
  * This endpoint will delete one change request if it matches the provided id.
  * @summary Deletes a change request by id
  */
-export const deleteChangeRequest = (
-    projectId: string,
-    id: string,
- ) => {
-      return fetcher<void>(
-      {url: `/api/admin/projects/${projectId}/change-requests/${id}`, method: 'delete'
-    },
-      );
-    }
-  
+export const deleteChangeRequest = (projectId: string, id: string) => {
+    return fetcher<void>({
+        url: `/api/admin/projects/${projectId}/change-requests/${id}`,
+        method: 'delete',
+    });
+};
 
 /**
  * This endpoint will discard one change from a change request if it matches the provided id.
@@ -366,14 +450,13 @@ export const deleteChangeRequest = (
 export const deleteChange = (
     projectId: string,
     changeRequestId: string,
-    eventId: string,
- ) => {
-      return fetcher<void>(
-      {url: `/api/admin/projects/${projectId}/change-requests/${changeRequestId}/changes/${eventId}`, method: 'delete'
-    },
-      );
-    }
-  
+    eventId: string
+) => {
+    return fetcher<void>({
+        url: `/api/admin/projects/${projectId}/change-requests/${changeRequestId}/changes/${eventId}`,
+        method: 'delete',
+    });
+};
 
 /**
  * This endpoint will update the state of a change request if the business rules allow it. The state can be one of the following: Draft, In review, Approved, Cancelled, Applied. In order to be approved, the change request must have at least one change and the number of approvals must be greater than or equal to the number of approvals required for the environment.
@@ -381,16 +464,12 @@ export const deleteChange = (
                     Once a change request has been approved, it can be applied. Once a change request has been applied, it cannot be changed. Once a change request has been cancelled, it cannot be changed. Any change to a change request in the state of Approved will result in the state being set to In Review and the number of approvals will be reset.
  * @summary This endpoint will update the state of a change request
  */
-export const updateChangeRequestState = (
-    projectId: string,
-    id: string,
- ) => {
-      return fetcher<ChangeRequestStateSchema>(
-      {url: `/api/admin/projects/${projectId}/change-requests/${id}/state`, method: 'put'
-    },
-      );
-    }
-  
+export const updateChangeRequestState = (projectId: string, id: string) => {
+    return fetcher<ChangeRequestStateSchema>({
+        url: `/api/admin/projects/${projectId}/change-requests/${id}/state`,
+        method: 'put',
+    });
+};
 
 /**
  * This endpoint will add a comment to a change request for the user making the request.
@@ -399,14 +478,12 @@ export const updateChangeRequestState = (
 export const addChangeRequestComment = (
     projectId: string,
     id: string,
-    changeRequestAddCommentSchema: BodyType<ChangeRequestAddCommentSchema>,
- ) => {
-      return fetcher<void>(
-      {url: `/api/admin/projects/${projectId}/change-requests/${id}/comments`, method: 'post',
-      headers: {'Content-Type': 'application/json', },
-      data: changeRequestAddCommentSchema
-    },
-      );
-    }
-  
-
+    changeRequestAddCommentSchema: BodyType<ChangeRequestAddCommentSchema>
+) => {
+    return fetcher<void>({
+        url: `/api/admin/projects/${projectId}/change-requests/${id}/comments`,
+        method: 'post',
+        headers: { 'Content-Type': 'application/json' },
+        data: changeRequestAddCommentSchema,
+    });
+};

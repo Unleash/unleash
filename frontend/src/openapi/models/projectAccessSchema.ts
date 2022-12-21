@@ -9,7 +9,7 @@ import type { UserWithProjectRoleSchema } from './userWithProjectRoleSchema';
 import type { RoleSchema } from './roleSchema';
 
 export interface ProjectAccessSchema {
-  groups: GroupSchema[];
-  users: UserWithProjectRoleSchema[];
-  roles: RoleSchema[];
+    groups: GroupSchema[];
+    users: UserWithProjectRoleSchema[];
+    roles: RoleSchema[];
 }

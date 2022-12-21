@@ -10,19 +10,19 @@ import type { UiConfigSchemaAuthenticationType } from './uiConfigSchemaAuthentic
 import type { VersionSchema } from './versionSchema';
 
 export interface UiConfigSchema {
-  slogan?: string;
-  name?: string;
-  version: string;
-  environment?: string;
-  unleashUrl: string;
-  baseUriPath: string;
-  disablePasswordAuth?: boolean;
-  emailEnabled?: boolean;
-  segmentValuesLimit?: number;
-  strategySegmentsLimit?: number;
-  frontendApiOrigins?: string[];
-  flags?: UiConfigSchemaFlags;
-  links?: UiConfigSchemaLinksItem[];
-  authenticationType?: UiConfigSchemaAuthenticationType;
-  versionInfo: VersionSchema;
+    slogan?: string;
+    name?: string;
+    version: string;
+    environment?: string;
+    unleashUrl: string;
+    baseUriPath: string;
+    disablePasswordAuth?: boolean;
+    emailEnabled?: boolean;
+    segmentValuesLimit?: number;
+    strategySegmentsLimit?: number;
+    frontendApiOrigins?: string[];
+    flags?: UiConfigSchemaFlags;
+    links?: UiConfigSchemaLinksItem[];
+    authenticationType?: UiConfigSchemaAuthenticationType;
+    versionInfo: VersionSchema;
 }

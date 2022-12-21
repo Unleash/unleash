@@ -7,5 +7,5 @@
 import type { SetUiConfigSchemaFrontendSettings } from './setUiConfigSchemaFrontendSettings';
 
 export interface SetUiConfigSchema {
-  frontendSettings?: SetUiConfigSchemaFrontendSettings;
+    frontendSettings?: SetUiConfigSchemaFrontendSettings;
 }

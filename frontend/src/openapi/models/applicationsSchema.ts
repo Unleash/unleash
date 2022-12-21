@@ -7,5 +7,5 @@
 import type { ApplicationSchema } from './applicationSchema';
 
 export interface ApplicationsSchema {
-  applications?: ApplicationSchema[];
+    applications?: ApplicationSchema[];
 }

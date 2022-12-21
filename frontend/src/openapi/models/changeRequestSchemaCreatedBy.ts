@@ -6,6 +6,6 @@
  */
 
 export type ChangeRequestSchemaCreatedBy = {
-  username?: string | null;
-  imageUrl?: string | null;
+    username?: string | null;
+    imageUrl?: string | null;
 };

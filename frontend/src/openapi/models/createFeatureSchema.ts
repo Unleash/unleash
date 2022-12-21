@@ -6,8 +6,8 @@
  */
 
 export interface CreateFeatureSchema {
-  name: string;
-  type?: string;
-  description?: string;
-  impressionData?: boolean;
+    name: string;
+    type?: string;
+    description?: string;
+    impressionData?: boolean;
 }

@@ -5,4 +5,4 @@
  * OpenAPI spec version: 4.19.1
  */
 
-export type SdkContextSchemaProperties = {[key: string]: string};
+export type SdkContextSchemaProperties = { [key: string]: string };

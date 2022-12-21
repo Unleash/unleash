@@ -7,8 +7,8 @@
 import type { ProxyMetricsSchemaBucket } from './proxyMetricsSchemaBucket';
 
 export interface ProxyMetricsSchema {
-  appName: string;
-  instanceId: string;
-  environment?: string;
-  bucket: ProxyMetricsSchemaBucket;
+    appName: string;
+    instanceId: string;
+    environment?: string;
+    bucket: ProxyMetricsSchemaBucket;
 }

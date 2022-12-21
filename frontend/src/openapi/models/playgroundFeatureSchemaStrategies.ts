@@ -8,12 +8,12 @@ import type { PlaygroundFeatureSchemaStrategiesResult } from './playgroundFeatur
 import type { PlaygroundStrategySchema } from './playgroundStrategySchema';
 
 export type PlaygroundFeatureSchemaStrategies = {
-  /** The cumulative results of all the feature's strategies. Can be `true`,
+    /** The cumulative results of all the feature's strategies. Can be `true`,
                                   `false`, or `unknown`.
                                   This property will only be `unknown`
                                   if one or more of the strategies can't be fully evaluated and the rest of the strategies
                                   all resolve to `false`. */
-  result: PlaygroundFeatureSchemaStrategiesResult;
-  /** The strategies that apply to this feature. */
-  data: PlaygroundStrategySchema[];
+    result: PlaygroundFeatureSchemaStrategiesResult;
+    /** The strategies that apply to this feature. */
+    data: PlaygroundStrategySchema[];
 };

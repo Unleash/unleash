@@ -6,8 +6,8 @@
  */
 
 export interface FeatureTypeSchema {
-  id: string;
-  name: string;
-  description: string;
-  lifetimeDays: number | null;
+    id: string;
+    name: string;
+    description: string;
+    lifetimeDays: number | null;
 }

@@ -7,5 +7,5 @@
 import type { PatSchema } from './patSchema';
 
 export interface PatsSchema {
-  pats?: PatSchema[];
+    pats?: PatSchema[];
 }

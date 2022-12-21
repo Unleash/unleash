@@ -9,5 +9,5 @@
  * A key value set representing the metric
  */
 export type RequestsPerSecondSchemaDataResultItemMetric = {
-  appName?: string;
+    appName?: string;
 };

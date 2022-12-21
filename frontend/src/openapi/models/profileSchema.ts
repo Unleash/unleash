@@ -8,7 +8,7 @@ import type { RoleSchema } from './roleSchema';
 import type { FeatureSchema } from './featureSchema';
 
 export interface ProfileSchema {
-  rootRole: RoleSchema;
-  projects: string[];
-  features: FeatureSchema[];
+    rootRole: RoleSchema;
+    projects: string[];
+    features: FeatureSchema[];
 }

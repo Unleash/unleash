@@ -7,13 +7,13 @@
 import type { GroupUserModelSchema } from './groupUserModelSchema';
 
 export interface GroupSchema {
-  id?: number;
-  name: string;
-  description?: string;
-  mappingsSSO?: string[];
-  createdBy?: string | null;
-  createdAt?: string | null;
-  users?: GroupUserModelSchema[];
-  projects?: string[];
-  [key: string]: any;
- }
+    id?: number;
+    name: string;
+    description?: string;
+    mappingsSSO?: string[];
+    createdBy?: string | null;
+    createdAt?: string | null;
+    users?: GroupUserModelSchema[];
+    projects?: string[];
+    [key: string]: any;
+}

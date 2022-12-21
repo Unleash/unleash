@@ -8,8 +8,8 @@ import type { VersionSchemaCurrent } from './versionSchemaCurrent';
 import type { VersionSchemaLatest } from './versionSchemaLatest';
 
 export interface VersionSchema {
-  current: VersionSchemaCurrent;
-  latest: VersionSchemaLatest;
-  isLatest: boolean;
-  instanceId: string;
+    current: VersionSchemaCurrent;
+    latest: VersionSchemaLatest;
+    isLatest: boolean;
+    instanceId: string;
 }

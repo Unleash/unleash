@@ -8,6 +8,6 @@ import type { UserWithProjectRoleSchema } from './userWithProjectRoleSchema';
 import type { RoleSchema } from './roleSchema';
 
 export interface ProjectUsers {
-  users: UserWithProjectRoleSchema[];
-  roles: RoleSchema[];
+    users: UserWithProjectRoleSchema[];
+    roles: RoleSchema[];
 }

@@ -6,6 +6,6 @@
  */
 
 export interface FeatureStrategySegmentSchema {
-  segmentId: number;
-  featureStrategyId: string;
+    segmentId: number;
+    featureStrategyId: string;
 }

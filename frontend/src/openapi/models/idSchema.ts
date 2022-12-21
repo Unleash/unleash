@@ -6,5 +6,5 @@
  */
 
 export interface IdSchema {
-  id: string;
+    id: string;
 }

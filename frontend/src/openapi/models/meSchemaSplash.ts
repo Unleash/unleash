@@ -5,4 +5,4 @@
  * OpenAPI spec version: 4.19.1
  */
 
-export type MeSchemaSplash = {[key: string]: boolean};
+export type MeSchemaSplash = { [key: string]: boolean };

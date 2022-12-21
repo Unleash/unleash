@@ -6,6 +6,6 @@
  */
 
 export interface UpdateChangeRequestEnvironmentConfigSchema {
-  changeRequestsEnabled: boolean;
-  requiredApprovals?: number;
+    changeRequestsEnabled: boolean;
+    requiredApprovals?: number;
 }

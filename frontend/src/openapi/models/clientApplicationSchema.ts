@@ -7,11 +7,11 @@
 import type { ClientApplicationSchemaStarted } from './clientApplicationSchemaStarted';
 
 export interface ClientApplicationSchema {
-  appName: string;
-  instanceId?: string;
-  sdkVersion?: string;
-  environment?: string;
-  interval: number;
-  started: ClientApplicationSchemaStarted;
-  strategies: string[];
+    appName: string;
+    instanceId?: string;
+    sdkVersion?: string;
+    environment?: string;
+    interval: number;
+    started: ClientApplicationSchemaStarted;
+    strategies: string[];
 }

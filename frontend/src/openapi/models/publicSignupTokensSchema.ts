@@ -7,5 +7,5 @@
 import type { PublicSignupTokenSchema } from './publicSignupTokenSchema';
 
 export interface PublicSignupTokensSchema {
-  tokens: PublicSignupTokenSchema[];
+    tokens: PublicSignupTokenSchema[];
 }

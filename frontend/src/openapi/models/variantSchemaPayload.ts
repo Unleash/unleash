@@ -6,6 +6,6 @@
  */
 
 export type VariantSchemaPayload = {
-  type: string;
-  value: string;
+    type: string;
+    value: string;
 };

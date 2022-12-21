@@ -7,6 +7,6 @@
 import type { ChangeRequestCreateSchemaOneOfPayload } from './changeRequestCreateSchemaOneOfPayload';
 
 export type ChangeRequestCreateSchemaOneOf = {
-  action: unknown;
-  payload: ChangeRequestCreateSchemaOneOfPayload;
+    action: unknown;
+    payload: ChangeRequestCreateSchemaOneOfPayload;
 };

@@ -7,6 +7,6 @@
 import type { VariantSchema } from './variantSchema';
 
 export interface FeatureVariantsSchema {
-  version: number;
-  variants: VariantSchema[];
+    version: number;
+    variants: VariantSchema[];
 }

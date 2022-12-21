@@ -5,12 +5,12 @@
  * OpenAPI spec version: 4.19.1
  */
 
-export type OidcSettingsSchemaDefaultRootRole = typeof OidcSettingsSchemaDefaultRootRole[keyof typeof OidcSettingsSchemaDefaultRootRole];
-
+export type OidcSettingsSchemaDefaultRootRole =
+    typeof OidcSettingsSchemaDefaultRootRole[keyof typeof OidcSettingsSchemaDefaultRootRole];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const OidcSettingsSchemaDefaultRootRole = {
-  Viewer: 'Viewer',
-  Editor: 'Editor',
-  Admin: 'Admin',
+    Viewer: 'Viewer',
+    Editor: 'Editor',
+    Admin: 'Admin',
 } as const;

@@ -6,8 +6,8 @@
  */
 
 export interface RoleSchema {
-  id: number;
-  type: string;
-  name: string;
-  description?: string;
+    id: number;
+    type: string;
+    name: string;
+    description?: string;
 }

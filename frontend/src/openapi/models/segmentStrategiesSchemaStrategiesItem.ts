@@ -6,9 +6,9 @@
  */
 
 export type SegmentStrategiesSchemaStrategiesItem = {
-  id: string;
-  featureName: string;
-  projectId: string;
-  environment: string;
-  strategyName: string;
+    id: string;
+    featureName: string;
+    projectId: string;
+    environment: string;
+    strategyName: string;
 };

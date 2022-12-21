@@ -6,9 +6,9 @@
  */
 
 export interface FeatureTagSchema {
-  featureName: string;
-  tagType?: string;
-  tagValue: string;
-  type?: string;
-  value?: string;
+    featureName: string;
+    tagType?: string;
+    tagValue: string;
+    type?: string;
+    value?: string;
 }

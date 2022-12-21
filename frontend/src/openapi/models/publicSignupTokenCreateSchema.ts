@@ -6,8 +6,8 @@
  */
 
 export interface PublicSignupTokenCreateSchema {
-  /** The token's name. */
-  name: string;
-  /** The token's expiration date. */
-  expiresAt: string;
+    /** The token's name. */
+    name: string;
+    /** The token's expiration date. */
+    expiresAt: string;
 }

@@ -7,12 +7,12 @@
 import type { ConstraintSchema } from './constraintSchema';
 
 export interface UpdateFeatureSchema {
-  name: string;
-  description?: string;
-  type?: string;
-  stale?: boolean;
-  archived?: boolean;
-  createdAt?: string;
-  impressionData?: boolean;
-  constraints?: ConstraintSchema[];
+    name: string;
+    description?: string;
+    type?: string;
+    stale?: boolean;
+    archived?: boolean;
+    createdAt?: string;
+    impressionData?: boolean;
+    constraints?: ConstraintSchema[];
 }

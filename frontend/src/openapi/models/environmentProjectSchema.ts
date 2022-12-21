@@ -6,11 +6,11 @@
  */
 
 export interface EnvironmentProjectSchema {
-  name: string;
-  type: string;
-  enabled: boolean;
-  protected?: boolean;
-  sortOrder?: number;
-  projectApiTokenCount?: number | null;
-  projectEnabledToggleCount?: number | null;
+    name: string;
+    type: string;
+    enabled: boolean;
+    protected?: boolean;
+    sortOrder?: number;
+    projectApiTokenCount?: number | null;
+    projectEnabledToggleCount?: number | null;
 }

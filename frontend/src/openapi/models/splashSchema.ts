@@ -6,7 +6,7 @@
  */
 
 export interface SplashSchema {
-  userId: number;
-  splashId: string;
-  seen: boolean;
+    userId: number;
+    splashId: string;
+    seen: boolean;
 }

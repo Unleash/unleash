@@ -7,10 +7,10 @@
 import type { StrategySchemaParametersItem } from './strategySchemaParametersItem';
 
 export interface StrategySchema {
-  name: string;
-  displayName: string | null;
-  description: string;
-  editable: boolean;
-  deprecated: boolean;
-  parameters: StrategySchemaParametersItem[];
+    name: string;
+    displayName: string | null;
+    description: string;
+    editable: boolean;
+    deprecated: boolean;
+    parameters: StrategySchemaParametersItem[];
 }

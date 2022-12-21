@@ -7,7 +7,7 @@
 import type { ProjectSchema } from './projectSchema';
 
 export interface ProjectOverviewSchema {
-  featureCount: number;
-  memberCount: number;
-  projects: ProjectSchema[];
+    featureCount: number;
+    memberCount: number;
+    projects: ProjectSchema[];
 }

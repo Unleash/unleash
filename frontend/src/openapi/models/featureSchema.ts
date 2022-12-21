@@ -10,20 +10,20 @@ import type { VariantSchema } from './variantSchema';
 import type { TagSchema } from './tagSchema';
 
 export interface FeatureSchema {
-  name: string;
-  type?: string;
-  description?: string;
-  archived?: boolean;
-  project?: string;
-  enabled?: boolean;
-  stale?: boolean;
-  favorite?: boolean;
-  impressionData?: boolean;
-  createdAt?: string | null;
-  archivedAt?: string | null;
-  lastSeenAt?: string | null;
-  environments?: EnvironmentSchema[];
-  strategies?: FeatureStrategySchema[];
-  variants?: VariantSchema[];
-  tags?: TagSchema[] | null;
+    name: string;
+    type?: string;
+    description?: string;
+    archived?: boolean;
+    project?: string;
+    enabled?: boolean;
+    stale?: boolean;
+    favorite?: boolean;
+    impressionData?: boolean;
+    createdAt?: string | null;
+    archivedAt?: string | null;
+    lastSeenAt?: string | null;
+    environments?: EnvironmentSchema[];
+    strategies?: FeatureStrategySchema[];
+    variants?: VariantSchema[];
+    tags?: TagSchema[] | null;
 }

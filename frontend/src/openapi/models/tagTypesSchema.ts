@@ -7,6 +7,6 @@
 import type { TagTypeSchema } from './tagTypeSchema';
 
 export interface TagTypesSchema {
-  version: number;
-  tagTypes: TagTypeSchema[];
+    version: number;
+    tagTypes: TagTypeSchema[];
 }

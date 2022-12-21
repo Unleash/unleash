@@ -6,8 +6,8 @@
  */
 
 export interface FeedbackSchema {
-  userId?: number;
-  feedbackId?: string;
-  neverShow?: boolean;
-  given?: string | null;
+    userId?: number;
+    feedbackId?: string;
+    neverShow?: boolean;
+    given?: string | null;
 }

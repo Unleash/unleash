@@ -7,16 +7,16 @@
 import type { FeatureSchema } from './featureSchema';
 
 export interface HealthReportSchema {
-  version: number;
-  name: string;
-  description?: string;
-  members?: number;
-  health?: number;
-  environments?: string[];
-  features?: FeatureSchema[];
-  updatedAt?: string | null;
-  favorite?: boolean;
-  potentiallyStaleCount: number;
-  activeCount: number;
-  staleCount: number;
+    version: number;
+    name: string;
+    description?: string;
+    members?: number;
+    health?: number;
+    environments?: string[];
+    features?: FeatureSchema[];
+    updatedAt?: string | null;
+    favorite?: boolean;
+    potentiallyStaleCount: number;
+    activeCount: number;
+    staleCount: number;
 }

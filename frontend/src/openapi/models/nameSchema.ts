@@ -6,5 +6,5 @@
  */
 
 export interface NameSchema {
-  name: string;
+    name: string;
 }

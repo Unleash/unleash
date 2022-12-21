@@ -6,7 +6,7 @@
  */
 
 export type ChangeRequestApprovalSchemaCreatedBy = {
-  id?: number;
-  username?: string | null;
-  imageUrl?: string | null;
+    id?: number;
+    username?: string | null;
+    imageUrl?: string | null;
 };

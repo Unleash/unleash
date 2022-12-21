@@ -7,7 +7,7 @@
 import type { EventSchema } from './eventSchema';
 
 export interface FeatureEventsSchema {
-  version?: number;
-  toggleName?: string;
-  events: EventSchema[];
+    version?: number;
+    toggleName?: string;
+    events: EventSchema[];
 }

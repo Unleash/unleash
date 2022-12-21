@@ -6,5 +6,5 @@
  */
 
 export type ChangeRequestCreateSchemaOneOfPayload = {
-  enabled: boolean;
+    enabled: boolean;
 };

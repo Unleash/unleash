@@ -7,5 +7,5 @@
 import type { ValidateEdgeTokensSchemaTokensItem } from './validateEdgeTokensSchemaTokensItem';
 
 export interface ValidateEdgeTokensSchema {
-  tokens: ValidateEdgeTokensSchemaTokensItem[];
+    tokens: ValidateEdgeTokensSchemaTokensItem[];
 }

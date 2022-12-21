@@ -6,6 +6,6 @@
  */
 
 export interface OverrideSchema {
-  contextName: string;
-  values: string[];
+    contextName: string;
+    values: string[];
 }

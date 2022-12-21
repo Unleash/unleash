@@ -7,6 +7,6 @@
 import type { RoleSchema } from './roleSchema';
 
 export interface RolesWithVersionSchema {
-  version: number;
-  roles: RoleSchema[];
+    version: number;
+    roles: RoleSchema[];
 }

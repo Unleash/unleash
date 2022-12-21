@@ -8,6 +8,6 @@ import type { AdminPermissionSchema } from './adminPermissionSchema';
 import type { AdminPermissionsSchemaPermissionsEnvironmentsItem } from './adminPermissionsSchemaPermissionsEnvironmentsItem';
 
 export type AdminPermissionsSchemaPermissions = {
-  project: AdminPermissionSchema[];
-  environments: AdminPermissionsSchemaPermissionsEnvironmentsItem[];
+    project: AdminPermissionSchema[];
+    environments: AdminPermissionsSchemaPermissionsEnvironmentsItem[];
 };

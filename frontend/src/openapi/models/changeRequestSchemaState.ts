@@ -5,14 +5,14 @@
  * OpenAPI spec version: 4.19.1
  */
 
-export type ChangeRequestSchemaState = typeof ChangeRequestSchemaState[keyof typeof ChangeRequestSchemaState];
-
+export type ChangeRequestSchemaState =
+    typeof ChangeRequestSchemaState[keyof typeof ChangeRequestSchemaState];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ChangeRequestSchemaState = {
-  Draft: 'Draft',
-  In_review: 'In review',
-  Approved: 'Approved',
-  Applied: 'Applied',
-  Cancelled: 'Cancelled',
+    Draft: 'Draft',
+    In_review: 'In review',
+    Approved: 'Approved',
+    Applied: 'Applied',
+    Cancelled: 'Cancelled',
 } as const;

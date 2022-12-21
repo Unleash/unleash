@@ -7,6 +7,6 @@
 import type { EnvironmentProjectSchema } from './environmentProjectSchema';
 
 export interface EnvironmentsProjectSchema {
-  version: number;
-  environments: EnvironmentProjectSchema[];
+    version: number;
+    environments: EnvironmentProjectSchema[];
 }

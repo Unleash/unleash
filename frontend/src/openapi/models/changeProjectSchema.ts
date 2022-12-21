@@ -6,5 +6,5 @@
  */
 
 export interface ChangeProjectSchema {
-  newProjectId: string;
+    newProjectId: string;
 }

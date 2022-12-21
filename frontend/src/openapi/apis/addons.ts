@@ -4,123 +4,108 @@
  * Unleash API
  * OpenAPI spec version: 4.19.1
  */
-import useSwr from 'swr'
-import type {
-  SWRConfiguration,
-  Key
-} from 'swr'
-import type {
-  AddonsSchema,
-  AddonSchema
-} from '../models'
-import { fetcher } from '../fetcher'
-import type { ErrorType, BodyType } from '../fetcher'
+import useSwr from 'swr';
+import type { SWRConfiguration, Key } from 'swr';
+import type { AddonsSchema, AddonSchema } from '../models';
+import { fetcher } from '../fetcher';
+import type { ErrorType, BodyType } from '../fetcher';
 
-
-
-  
-  export const getAddons = (
-    
- ) => {
-      return fetcher<AddonsSchema>(
-      {url: `/api/admin/addons`, method: 'get'
-    },
-      );
-    }
-  
+export const getAddons = () => {
+    return fetcher<AddonsSchema>({ url: `/api/admin/addons`, method: 'get' });
+};
 
 export const getGetAddonsKey = () => [`/api/admin/addons`];
 
-    
-export type GetAddonsQueryResult = NonNullable<Awaited<ReturnType<typeof getAddons>>>
-export type GetAddonsQueryError = ErrorType<unknown>
+export type GetAddonsQueryResult = NonNullable<
+    Awaited<ReturnType<typeof getAddons>>
+>;
+export type GetAddonsQueryError = ErrorType<unknown>;
 
-export const useGetAddons = <TError = ErrorType<unknown>>(
-  options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getAddons>>, TError> & { swrKey?: Key, enabled?: boolean },  }
+export const useGetAddons = <TError = ErrorType<unknown>>(options?: {
+    swr?: SWRConfiguration<Awaited<ReturnType<typeof getAddons>>, TError> & {
+        swrKey?: Key;
+        enabled?: boolean;
+    };
+}) => {
+    const { swr: swrOptions } = options ?? {};
 
-  ) => {
+    const isEnabled = swrOptions?.enabled !== false;
+    const swrKey =
+        swrOptions?.swrKey ?? (() => (isEnabled ? getGetAddonsKey() : null));
+    const swrFn = () => getAddons();
 
-  const {swr: swrOptions} = options ?? {}
+    const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+        swrKey,
+        swrFn,
+        swrOptions
+    );
 
-  const isEnabled = swrOptions?.enabled !== false
-    const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetAddonsKey() : null);
-  const swrFn = () => getAddons();
+    return {
+        swrKey,
+        ...query,
+    };
+};
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
+export const createAddon = (addonSchema: BodyType<AddonSchema>) => {
+    return fetcher<AddonSchema>({
+        url: `/api/admin/addons`,
+        method: 'post',
+        headers: { 'Content-Type': 'application/json' },
+        data: addonSchema,
+    });
+};
 
-  return {
-    swrKey,
-    ...query
-  }
-}
+export const getAddon = (id: string) => {
+    return fetcher<AddonSchema>({
+        url: `/api/admin/addons/${id}`,
+        method: 'get',
+    });
+};
 
-export const createAddon = (
-    addonSchema: BodyType<AddonSchema>,
- ) => {
-      return fetcher<AddonSchema>(
-      {url: `/api/admin/addons`, method: 'post',
-      headers: {'Content-Type': 'application/json', },
-      data: addonSchema
-    },
-      );
-    }
-  
+export const getGetAddonKey = (id: string) => [`/api/admin/addons/${id}`];
 
-export const getAddon = (
-    id: string,
- ) => {
-      return fetcher<AddonSchema>(
-      {url: `/api/admin/addons/${id}`, method: 'get'
-    },
-      );
-    }
-  
-
-export const getGetAddonKey = (id: string,) => [`/api/admin/addons/${id}`];
-
-    
-export type GetAddonQueryResult = NonNullable<Awaited<ReturnType<typeof getAddon>>>
-export type GetAddonQueryError = ErrorType<unknown>
+export type GetAddonQueryResult = NonNullable<
+    Awaited<ReturnType<typeof getAddon>>
+>;
+export type GetAddonQueryError = ErrorType<unknown>;
 
 export const useGetAddon = <TError = ErrorType<unknown>>(
- id: string, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getAddon>>, TError> & { swrKey?: Key, enabled?: boolean },  }
-
-  ) => {
-
-  const {swr: swrOptions} = options ?? {}
-
-  const isEnabled = swrOptions?.enabled !== false && !!(id)
-    const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetAddonKey(id) : null);
-  const swrFn = () => getAddon(id, );
-
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
-
-  return {
-    swrKey,
-    ...query
-  }
-}
-
-export const updateAddon = (
     id: string,
-    addonSchema: BodyType<AddonSchema>,
- ) => {
-      return fetcher<AddonSchema>(
-      {url: `/api/admin/addons/${id}`, method: 'put',
-      headers: {'Content-Type': 'application/json', },
-      data: addonSchema
-    },
-      );
+    options?: {
+        swr?: SWRConfiguration<Awaited<ReturnType<typeof getAddon>>, TError> & {
+            swrKey?: Key;
+            enabled?: boolean;
+        };
     }
-  
+) => {
+    const { swr: swrOptions } = options ?? {};
 
-export const deleteAddon = (
-    id: string,
- ) => {
-      return fetcher<void>(
-      {url: `/api/admin/addons/${id}`, method: 'delete'
-    },
-      );
-    }
-  
+    const isEnabled = swrOptions?.enabled !== false && !!id;
+    const swrKey =
+        swrOptions?.swrKey ?? (() => (isEnabled ? getGetAddonKey(id) : null));
+    const swrFn = () => getAddon(id);
 
+    const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+        swrKey,
+        swrFn,
+        swrOptions
+    );
+
+    return {
+        swrKey,
+        ...query,
+    };
+};
+
+export const updateAddon = (id: string, addonSchema: BodyType<AddonSchema>) => {
+    return fetcher<AddonSchema>({
+        url: `/api/admin/addons/${id}`,
+        method: 'put',
+        headers: { 'Content-Type': 'application/json' },
+        data: addonSchema,
+    });
+};
+
+export const deleteAddon = (id: string) => {
+    return fetcher<void>({ url: `/api/admin/addons/${id}`, method: 'delete' });
+};

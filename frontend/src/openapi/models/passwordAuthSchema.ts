@@ -6,5 +6,5 @@
  */
 
 export interface PasswordAuthSchema {
-  enabled?: boolean;
+    enabled?: boolean;
 }

@@ -7,10 +7,10 @@
 import type { RoleSchema } from './roleSchema';
 
 export interface TokenUserSchema {
-  id: number;
-  name: string;
-  email: string;
-  token: string;
-  createdBy: string | null;
-  role: RoleSchema;
+    id: number;
+    name: string;
+    email: string;
+    token: string;
+    createdBy: string | null;
+    role: RoleSchema;
 }

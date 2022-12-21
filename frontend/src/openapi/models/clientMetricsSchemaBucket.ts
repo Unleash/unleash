@@ -8,7 +8,7 @@ import type { DateSchema } from './dateSchema';
 import type { ClientMetricsSchemaBucketToggles } from './clientMetricsSchemaBucketToggles';
 
 export type ClientMetricsSchemaBucket = {
-  start: DateSchema;
-  stop: DateSchema;
-  toggles: ClientMetricsSchemaBucketToggles;
+    start: DateSchema;
+    stop: DateSchema;
+    toggles: ClientMetricsSchemaBucketToggles;
 };

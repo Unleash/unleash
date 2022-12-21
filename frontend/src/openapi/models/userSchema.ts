@@ -6,16 +6,16 @@
  */
 
 export interface UserSchema {
-  id: number;
-  isAPI?: boolean;
-  name?: string;
-  email?: string;
-  username?: string;
-  imageUrl?: string;
-  inviteLink?: string;
-  loginAttempts?: number;
-  emailSent?: boolean;
-  rootRole?: number;
-  seenAt?: string | null;
-  createdAt?: string;
+    id: number;
+    isAPI?: boolean;
+    name?: string;
+    email?: string;
+    username?: string;
+    imageUrl?: string;
+    inviteLink?: string;
+    loginAttempts?: number;
+    emailSent?: boolean;
+    rootRole?: number;
+    seenAt?: string | null;
+    createdAt?: string;
 }

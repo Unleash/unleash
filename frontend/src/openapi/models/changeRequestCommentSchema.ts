@@ -7,7 +7,7 @@
 import type { ChangeRequestCommentSchemaCreatedBy } from './changeRequestCommentSchemaCreatedBy';
 
 export interface ChangeRequestCommentSchema {
-  text: string;
-  createdBy: ChangeRequestCommentSchemaCreatedBy;
-  createdAt: string;
+    text: string;
+    createdBy: ChangeRequestCommentSchemaCreatedBy;
+    createdAt: string;
 }

@@ -7,9 +7,9 @@
 import type { LegalValueSchema } from './legalValueSchema';
 
 export interface UpsertContextFieldSchema {
-  name: string;
-  description?: string;
-  stickiness?: boolean;
-  sortOrder?: number;
-  legalValues?: LegalValueSchema[];
+    name: string;
+    description?: string;
+    stickiness?: boolean;
+    sortOrder?: number;
+    legalValues?: LegalValueSchema[];
 }

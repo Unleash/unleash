@@ -7,14 +7,14 @@
 import type { ApiTokenSchemaType } from './apiTokenSchemaType';
 
 export interface ApiTokenSchema {
-  secret?: string;
-  username: string;
-  type: ApiTokenSchemaType;
-  environment?: string;
-  project?: string;
-  projects?: string[];
-  expiresAt?: string | null;
-  createdAt?: string | null;
-  seenAt?: string | null;
-  alias?: string | null;
+    secret?: string;
+    username: string;
+    type: ApiTokenSchemaType;
+    environment?: string;
+    project?: string;
+    projects?: string[];
+    expiresAt?: string | null;
+    createdAt?: string | null;
+    seenAt?: string | null;
+    alias?: string | null;
 }

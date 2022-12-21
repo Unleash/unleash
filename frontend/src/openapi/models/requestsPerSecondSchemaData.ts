@@ -7,7 +7,7 @@
 import type { RequestsPerSecondSchemaDataResultItem } from './requestsPerSecondSchemaDataResultItem';
 
 export type RequestsPerSecondSchemaData = {
-  resultType?: string;
-  /** An array of values per metric. Each one represents a line in the graph labeled by its metric name */
-  result?: RequestsPerSecondSchemaDataResultItem[];
+    resultType?: string;
+    /** An array of values per metric. Each one represents a line in the graph labeled by its metric name */
+    result?: RequestsPerSecondSchemaDataResultItem[];
 };

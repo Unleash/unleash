@@ -6,6 +6,6 @@
  */
 
 export type ChangeRequestEventSchemaCreatedBy = {
-  username?: string | null;
-  imageUrl?: string | null;
+    username?: string | null;
+    imageUrl?: string | null;
 };

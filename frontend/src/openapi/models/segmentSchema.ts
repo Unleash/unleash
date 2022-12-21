@@ -7,8 +7,8 @@
 import type { ConstraintSchema } from './constraintSchema';
 
 export interface SegmentSchema {
-  id: number;
-  name?: string;
-  description?: string | null;
-  constraints: ConstraintSchema[];
+    id: number;
+    name?: string;
+    description?: string | null;
+    constraints: ConstraintSchema[];
 }

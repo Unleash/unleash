@@ -7,6 +7,6 @@
 import type { RequestsPerSecondSchemaData } from './requestsPerSecondSchemaData';
 
 export interface RequestsPerSecondSchema {
-  status?: string;
-  data?: RequestsPerSecondSchemaData;
+    status?: string;
+    data?: RequestsPerSecondSchemaData;
 }

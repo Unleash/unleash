@@ -8,11 +8,11 @@ import type { TagTypeSchema } from './tagTypeSchema';
 import type { AddonParameterSchema } from './addonParameterSchema';
 
 export interface AddonTypeSchema {
-  name: string;
-  displayName: string;
-  documentationUrl: string;
-  description: string;
-  tagTypes?: TagTypeSchema[];
-  parameters?: AddonParameterSchema[];
-  events?: string[];
+    name: string;
+    displayName: string;
+    documentationUrl: string;
+    description: string;
+    tagTypes?: TagTypeSchema[];
+    parameters?: AddonParameterSchema[];
+    events?: string[];
 }

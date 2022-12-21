@@ -6,8 +6,8 @@
  */
 
 export interface ChangeRequestEnvironmentConfigSchema {
-  environment: string;
-  type: string;
-  changeRequestEnabled: boolean;
-  requiredApprovals: number;
+    environment: string;
+    type: string;
+    changeRequestEnabled: boolean;
+    requiredApprovals: number;
 }

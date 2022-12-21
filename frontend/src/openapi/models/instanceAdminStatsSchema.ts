@@ -6,20 +6,20 @@
  */
 
 export interface InstanceAdminStatsSchema {
-  instanceId: string;
-  timestamp?: string | null;
-  versionOSS?: string;
-  versionEnterprise?: string;
-  users?: number;
-  featureToggles?: number;
-  projects?: number;
-  contextFields?: number;
-  roles?: number;
-  groups?: number;
-  environments?: number;
-  segments?: number;
-  strategies?: number;
-  SAMLenabled?: number;
-  OIDCenabled?: number;
-  sum?: string;
+    instanceId: string;
+    timestamp?: string | null;
+    versionOSS?: string;
+    versionEnterprise?: string;
+    users?: number;
+    featureToggles?: number;
+    projects?: number;
+    contextFields?: number;
+    roles?: number;
+    groups?: number;
+    environments?: number;
+    segments?: number;
+    strategies?: number;
+    SAMLenabled?: number;
+    OIDCenabled?: number;
+    sum?: string;
 }

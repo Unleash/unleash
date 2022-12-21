@@ -7,5 +7,5 @@
 import type { GroupSchema } from './groupSchema';
 
 export interface GroupsSchema {
-  groups?: GroupSchema[];
+    groups?: GroupSchema[];
 }

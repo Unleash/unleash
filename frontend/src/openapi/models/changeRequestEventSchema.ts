@@ -8,11 +8,11 @@ import type { ChangeRequestEventSchemaPayload } from './changeRequestEventSchema
 import type { ChangeRequestEventSchemaCreatedBy } from './changeRequestEventSchemaCreatedBy';
 
 export interface ChangeRequestEventSchema {
-  id: number;
-  action: string;
-  conflict?: string;
-  payload: ChangeRequestEventSchemaPayload;
-  updatedBy?: string;
-  createdBy?: ChangeRequestEventSchemaCreatedBy;
-  createdAt?: string;
+    id: number;
+    action: string;
+    conflict?: string;
+    payload: ChangeRequestEventSchemaPayload;
+    updatedBy?: string;
+    createdBy?: ChangeRequestEventSchemaCreatedBy;
+    createdAt?: string;
 }

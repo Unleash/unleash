@@ -7,7 +7,7 @@
 import type { EdgeTokenSchemaType } from './edgeTokenSchemaType';
 
 export interface EdgeTokenSchema {
-  projects: string[];
-  type: EdgeTokenSchemaType;
-  token: string;
+    projects: string[];
+    type: EdgeTokenSchemaType;
+    token: string;
 }

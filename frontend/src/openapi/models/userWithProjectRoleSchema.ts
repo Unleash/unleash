@@ -6,11 +6,11 @@
  */
 
 export interface UserWithProjectRoleSchema {
-  isAPI: boolean;
-  name?: string;
-  email?: string | null;
-  id: number;
-  imageUrl?: string | null;
-  addedAt?: string;
-  roleId?: number;
+    isAPI: boolean;
+    name?: string;
+    email?: string | null;
+    id: number;
+    imageUrl?: string | null;
+    addedAt?: string;
+    roleId?: number;
 }

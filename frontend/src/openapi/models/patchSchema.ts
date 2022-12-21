@@ -7,8 +7,8 @@
 import type { PatchSchemaOp } from './patchSchemaOp';
 
 export interface PatchSchema {
-  path: string;
-  op: PatchSchemaOp;
-  from?: string;
-  value?: unknown;
+    path: string;
+    op: PatchSchemaOp;
+    from?: string;
+    value?: unknown;
 }

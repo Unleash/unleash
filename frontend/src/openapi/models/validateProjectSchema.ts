@@ -6,5 +6,5 @@
  */
 
 export interface ValidateProjectSchema {
-  id: string;
+    id: string;
 }

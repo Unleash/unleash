@@ -7,8 +7,8 @@
 import type { ClientMetricsSchemaBucket } from './clientMetricsSchemaBucket';
 
 export interface ClientMetricsSchema {
-  appName: string;
-  instanceId?: string;
-  environment?: string;
-  bucket: ClientMetricsSchemaBucket;
+    appName: string;
+    instanceId?: string;
+    environment?: string;
+    bucket: ClientMetricsSchemaBucket;
 }

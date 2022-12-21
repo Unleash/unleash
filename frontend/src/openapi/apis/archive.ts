@@ -4,113 +4,114 @@
  * Unleash API
  * OpenAPI spec version: 4.19.1
  */
-import useSwr from 'swr'
-import type {
-  SWRConfiguration,
-  Key
-} from 'swr'
-import type {
-  FeaturesSchema
-} from '../models'
-import { fetcher } from '../fetcher'
-import type { ErrorType } from '../fetcher'
-
-
-
-  
-  /**
- * @deprecated
- */
-export const getArchivedFeatures = (
-    
- ) => {
-      return fetcher<FeaturesSchema>(
-      {url: `/api/admin/archive/features`, method: 'get'
-    },
-      );
-    }
-  
-
-export const getGetArchivedFeaturesKey = () => [`/api/admin/archive/features`];
-
-    
-export type GetArchivedFeaturesQueryResult = NonNullable<Awaited<ReturnType<typeof getArchivedFeatures>>>
-export type GetArchivedFeaturesQueryError = ErrorType<unknown>
-
-export const useGetArchivedFeatures = <TError = ErrorType<unknown>>(
-  options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getArchivedFeatures>>, TError> & { swrKey?: Key, enabled?: boolean },  }
-
-  ) => {
-
-  const {swr: swrOptions} = options ?? {}
-
-  const isEnabled = swrOptions?.enabled !== false
-    const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetArchivedFeaturesKey() : null);
-  const swrFn = () => getArchivedFeatures();
-
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
-
-  return {
-    swrKey,
-    ...query
-  }
-}
+import useSwr from 'swr';
+import type { SWRConfiguration, Key } from 'swr';
+import type { FeaturesSchema } from '../models';
+import { fetcher } from '../fetcher';
+import type { ErrorType } from '../fetcher';
 
 /**
  * @deprecated
  */
-export const getArchivedFeaturesByProjectId = (
-    projectId: string,
- ) => {
-      return fetcher<FeaturesSchema>(
-      {url: `/api/admin/archive/features/${projectId}`, method: 'get'
-    },
-      );
-    }
-  
+export const getArchivedFeatures = () => {
+    return fetcher<FeaturesSchema>({
+        url: `/api/admin/archive/features`,
+        method: 'get',
+    });
+};
 
-export const getGetArchivedFeaturesByProjectIdKey = (projectId: string,) => [`/api/admin/archive/features/${projectId}`];
+export const getGetArchivedFeaturesKey = () => [`/api/admin/archive/features`];
 
-    
-export type GetArchivedFeaturesByProjectIdQueryResult = NonNullable<Awaited<ReturnType<typeof getArchivedFeaturesByProjectId>>>
-export type GetArchivedFeaturesByProjectIdQueryError = ErrorType<unknown>
+export type GetArchivedFeaturesQueryResult = NonNullable<
+    Awaited<ReturnType<typeof getArchivedFeatures>>
+>;
+export type GetArchivedFeaturesQueryError = ErrorType<unknown>;
+
+export const useGetArchivedFeatures = <TError = ErrorType<unknown>>(options?: {
+    swr?: SWRConfiguration<
+        Awaited<ReturnType<typeof getArchivedFeatures>>,
+        TError
+    > & { swrKey?: Key; enabled?: boolean };
+}) => {
+    const { swr: swrOptions } = options ?? {};
+
+    const isEnabled = swrOptions?.enabled !== false;
+    const swrKey =
+        swrOptions?.swrKey ??
+        (() => (isEnabled ? getGetArchivedFeaturesKey() : null));
+    const swrFn = () => getArchivedFeatures();
+
+    const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+        swrKey,
+        swrFn,
+        swrOptions
+    );
+
+    return {
+        swrKey,
+        ...query,
+    };
+};
+
+/**
+ * @deprecated
+ */
+export const getArchivedFeaturesByProjectId = (projectId: string) => {
+    return fetcher<FeaturesSchema>({
+        url: `/api/admin/archive/features/${projectId}`,
+        method: 'get',
+    });
+};
+
+export const getGetArchivedFeaturesByProjectIdKey = (projectId: string) => [
+    `/api/admin/archive/features/${projectId}`,
+];
+
+export type GetArchivedFeaturesByProjectIdQueryResult = NonNullable<
+    Awaited<ReturnType<typeof getArchivedFeaturesByProjectId>>
+>;
+export type GetArchivedFeaturesByProjectIdQueryError = ErrorType<unknown>;
 
 export const useGetArchivedFeaturesByProjectId = <TError = ErrorType<unknown>>(
- projectId: string, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getArchivedFeaturesByProjectId>>, TError> & { swrKey?: Key, enabled?: boolean },  }
-
-  ) => {
-
-  const {swr: swrOptions} = options ?? {}
-
-  const isEnabled = swrOptions?.enabled !== false && !!(projectId)
-    const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetArchivedFeaturesByProjectIdKey(projectId) : null);
-  const swrFn = () => getArchivedFeaturesByProjectId(projectId, );
-
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
-
-  return {
-    swrKey,
-    ...query
-  }
-}
-
-export const deleteFeature = (
-    featureName: string,
- ) => {
-      return fetcher<void>(
-      {url: `/api/admin/archive/${featureName}`, method: 'delete'
-    },
-      );
+    projectId: string,
+    options?: {
+        swr?: SWRConfiguration<
+            Awaited<ReturnType<typeof getArchivedFeaturesByProjectId>>,
+            TError
+        > & { swrKey?: Key; enabled?: boolean };
     }
-  
+) => {
+    const { swr: swrOptions } = options ?? {};
 
-export const reviveFeature = (
-    featureName: string,
- ) => {
-      return fetcher<void>(
-      {url: `/api/admin/archive/revive/${featureName}`, method: 'post'
-    },
-      );
-    }
-  
+    const isEnabled = swrOptions?.enabled !== false && !!projectId;
+    const swrKey =
+        swrOptions?.swrKey ??
+        (() =>
+            isEnabled ? getGetArchivedFeaturesByProjectIdKey(projectId) : null);
+    const swrFn = () => getArchivedFeaturesByProjectId(projectId);
 
+    const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+        swrKey,
+        swrFn,
+        swrOptions
+    );
+
+    return {
+        swrKey,
+        ...query,
+    };
+};
+
+export const deleteFeature = (featureName: string) => {
+    return fetcher<void>({
+        url: `/api/admin/archive/${featureName}`,
+        method: 'delete',
+    });
+};
+
+export const reviveFeature = (featureName: string) => {
+    return fetcher<void>({
+        url: `/api/admin/archive/revive/${featureName}`,
+        method: 'post',
+    });
+};

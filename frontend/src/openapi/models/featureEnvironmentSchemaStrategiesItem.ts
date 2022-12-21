@@ -8,13 +8,13 @@ import type { ConstraintSchema } from './constraintSchema';
 import type { ParametersSchema } from './parametersSchema';
 
 export type FeatureEnvironmentSchemaStrategiesItem = {
-  id: string;
-  featureName: string;
-  projectId: string;
-  environment: string;
-  strategyName: string;
-  sortOrder?: number;
-  createdAt?: string;
-  constraints: ConstraintSchema[];
-  parameters: ParametersSchema;
+    id: string;
+    featureName: string;
+    projectId: string;
+    environment: string;
+    strategyName: string;
+    sortOrder?: number;
+    createdAt?: string;
+    constraints: ConstraintSchema[];
+    parameters: ParametersSchema;
 };

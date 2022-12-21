@@ -11,14 +11,14 @@ import type { ChangeRequestCommentSchema } from './changeRequestCommentSchema';
 import type { ChangeRequestSchemaCreatedBy } from './changeRequestSchemaCreatedBy';
 
 export interface ChangeRequestSchema {
-  id: number;
-  environment: string;
-  state: ChangeRequestSchemaState;
-  minApprovals: number;
-  project: string;
-  features: ChangeRequestFeatureSchema[];
-  approvals?: ChangeRequestApprovalSchema[];
-  comments?: ChangeRequestCommentSchema[];
-  createdBy: ChangeRequestSchemaCreatedBy;
-  createdAt: string;
+    id: number;
+    environment: string;
+    state: ChangeRequestSchemaState;
+    minApprovals: number;
+    project: string;
+    features: ChangeRequestFeatureSchema[];
+    approvals?: ChangeRequestApprovalSchema[];
+    comments?: ChangeRequestCommentSchema[];
+    createdBy: ChangeRequestSchemaCreatedBy;
+    createdAt: string;
 }

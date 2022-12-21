@@ -7,7 +7,7 @@
 import type { ChangeRequestEventSchema } from './changeRequestEventSchema';
 
 export interface ChangeRequestFeatureSchema {
-  name: string;
-  conflict?: string;
-  changes: ChangeRequestEventSchema[];
+    name: string;
+    conflict?: string;
+    changes: ChangeRequestEventSchema[];
 }

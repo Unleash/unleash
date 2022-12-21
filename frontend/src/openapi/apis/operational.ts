@@ -4,52 +4,44 @@
  * Unleash API
  * OpenAPI spec version: 4.19.1
  */
-import useSwr from 'swr'
-import type {
-  SWRConfiguration,
-  Key
-} from 'swr'
-import type {
-  HealthCheckSchema
-} from '../models'
-import { fetcher } from '../fetcher'
-import type { ErrorType } from '../fetcher'
+import useSwr from 'swr';
+import type { SWRConfiguration, Key } from 'swr';
+import type { HealthCheckSchema } from '../models';
+import { fetcher } from '../fetcher';
+import type { ErrorType } from '../fetcher';
 
-
-
-  
-  export const getHealth = (
-    
- ) => {
-      return fetcher<HealthCheckSchema>(
-      {url: `/health`, method: 'get'
-    },
-      );
-    }
-  
+export const getHealth = () => {
+    return fetcher<HealthCheckSchema>({ url: `/health`, method: 'get' });
+};
 
 export const getGetHealthKey = () => [`/health`];
 
-    
-export type GetHealthQueryResult = NonNullable<Awaited<ReturnType<typeof getHealth>>>
-export type GetHealthQueryError = ErrorType<unknown>
+export type GetHealthQueryResult = NonNullable<
+    Awaited<ReturnType<typeof getHealth>>
+>;
+export type GetHealthQueryError = ErrorType<unknown>;
 
-export const useGetHealth = <TError = ErrorType<unknown>>(
-  options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getHealth>>, TError> & { swrKey?: Key, enabled?: boolean },  }
+export const useGetHealth = <TError = ErrorType<unknown>>(options?: {
+    swr?: SWRConfiguration<Awaited<ReturnType<typeof getHealth>>, TError> & {
+        swrKey?: Key;
+        enabled?: boolean;
+    };
+}) => {
+    const { swr: swrOptions } = options ?? {};
 
-  ) => {
+    const isEnabled = swrOptions?.enabled !== false;
+    const swrKey =
+        swrOptions?.swrKey ?? (() => (isEnabled ? getGetHealthKey() : null));
+    const swrFn = () => getHealth();
 
-  const {swr: swrOptions} = options ?? {}
+    const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+        swrKey,
+        swrFn,
+        swrOptions
+    );
 
-  const isEnabled = swrOptions?.enabled !== false
-    const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetHealthKey() : null);
-  const swrFn = () => getHealth();
-
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
-
-  return {
-    swrKey,
-    ...query
-  }
-}
-
+    return {
+        swrKey,
+        ...query,
+    };
+};

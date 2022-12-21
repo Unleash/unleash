@@ -8,10 +8,10 @@ import type { VariantSchemaPayload } from './variantSchemaPayload';
 import type { OverrideSchema } from './overrideSchema';
 
 export interface VariantSchema {
-  name: string;
-  weight: number;
-  weightType?: string;
-  stickiness?: string;
-  payload?: VariantSchemaPayload;
-  overrides?: OverrideSchema[];
+    name: string;
+    weight: number;
+    weightType?: string;
+    stickiness?: string;
+    payload?: VariantSchemaPayload;
+    overrides?: OverrideSchema[];
 }

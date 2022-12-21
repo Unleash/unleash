@@ -7,5 +7,5 @@
 import type { AdminSegmentSchema } from './adminSegmentSchema';
 
 export interface SegmentsSchema {
-  segments?: AdminSegmentSchema[];
+    segments?: AdminSegmentSchema[];
 }

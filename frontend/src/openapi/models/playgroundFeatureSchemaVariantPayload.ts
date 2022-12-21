@@ -10,8 +10,8 @@ import type { PlaygroundFeatureSchemaVariantPayloadType } from './playgroundFeat
  * An optional payload attached to the variant.
  */
 export type PlaygroundFeatureSchemaVariantPayload = {
-  /** The format of the payload. */
-  type: PlaygroundFeatureSchemaVariantPayloadType;
-  /** The payload value stringified. */
-  value: string;
+    /** The format of the payload. */
+    type: PlaygroundFeatureSchemaVariantPayloadType;
+    /** The payload value stringified. */
+    value: string;
 };

@@ -6,10 +6,10 @@
  */
 
 export type InvoicesSchemaItem = {
-  amountFormatted: string;
-  paid: boolean;
-  status: string;
-  dueDate?: string;
-  invoiceURL: string;
-  invoicePDF: string;
+    amountFormatted: string;
+    paid: boolean;
+    status: string;
+    dueDate?: string;
+    invoiceURL: string;
+    invoicePDF: string;
 };

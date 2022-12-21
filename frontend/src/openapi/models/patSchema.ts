@@ -6,9 +6,9 @@
  */
 
 export interface PatSchema {
-  id?: number;
-  secret?: string;
-  expiresAt?: string | null;
-  createdAt?: string | null;
-  seenAt?: string | null;
+    id?: number;
+    secret?: string;
+    expiresAt?: string | null;
+    createdAt?: string | null;
+    seenAt?: string | null;
 }

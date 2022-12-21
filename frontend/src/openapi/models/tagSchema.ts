@@ -6,6 +6,6 @@
  */
 
 export interface TagSchema {
-  value: string;
-  type: string;
+    value: string;
+    type: string;
 }

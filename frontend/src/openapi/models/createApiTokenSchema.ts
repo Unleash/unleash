@@ -6,12 +6,12 @@
  */
 
 export interface CreateApiTokenSchema {
-  secret?: string;
-  username: string;
-  /** One of client, admin, frontend */
-  type: string;
-  environment?: string;
-  project?: string;
-  projects?: string[];
-  expiresAt?: string | null;
+    secret?: string;
+    username: string;
+    /** One of client, admin, frontend */
+    type: string;
+    environment?: string;
+    project?: string;
+    projects?: string[];
+    expiresAt?: string | null;
 }

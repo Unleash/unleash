@@ -7,9 +7,9 @@
 import type { FeatureEnvironmentSchemaStrategiesItem } from './featureEnvironmentSchemaStrategiesItem';
 
 export interface FeatureEnvironmentSchema {
-  name: string;
-  environment?: string;
-  type?: string;
-  enabled: boolean;
-  strategies?: FeatureEnvironmentSchemaStrategiesItem[];
+    name: string;
+    environment?: string;
+    type?: string;
+    enabled: boolean;
+    strategies?: FeatureEnvironmentSchemaStrategiesItem[];
 }

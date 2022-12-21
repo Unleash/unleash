@@ -17,17 +17,17 @@ import type { SegmentSchema } from './segmentSchema';
 import type { FeatureStrategySegmentSchema } from './featureStrategySegmentSchema';
 
 export interface StateSchema {
-  version: number;
-  features?: FeatureSchema[];
-  strategies?: StrategySchema[];
-  tags?: TagSchema[];
-  tagTypes?: TagTypeSchema[];
-  featureTags?: FeatureTagSchema[];
-  projects?: ProjectSchema[];
-  featureStrategies?: FeatureStrategySchema[];
-  featureEnvironments?: FeatureEnvironmentSchema[];
-  environments?: EnvironmentSchema[];
-  segments?: SegmentSchema[];
-  featureStrategySegments?: FeatureStrategySegmentSchema[];
-  [key: string]: any;
- }
+    version: number;
+    features?: FeatureSchema[];
+    strategies?: StrategySchema[];
+    tags?: TagSchema[];
+    tagTypes?: TagTypeSchema[];
+    featureTags?: FeatureTagSchema[];
+    projects?: ProjectSchema[];
+    featureStrategies?: FeatureStrategySchema[];
+    featureEnvironments?: FeatureEnvironmentSchema[];
+    environments?: EnvironmentSchema[];
+    segments?: SegmentSchema[];
+    featureStrategySegments?: FeatureStrategySegmentSchema[];
+    [key: string]: any;
+}

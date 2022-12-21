@@ -6,6 +6,6 @@
  */
 
 export type VersionSchemaCurrent = {
-  oss?: string;
-  enterprise?: string;
+    oss?: string;
+    enterprise?: string;
 };

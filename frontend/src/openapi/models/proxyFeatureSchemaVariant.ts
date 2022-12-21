@@ -7,7 +7,7 @@
 import type { ProxyFeatureSchemaVariantPayload } from './proxyFeatureSchemaVariantPayload';
 
 export type ProxyFeatureSchemaVariant = {
-  name: string;
-  enabled: boolean;
-  payload?: ProxyFeatureSchemaVariantPayload;
+    name: string;
+    enabled: boolean;
+    payload?: ProxyFeatureSchemaVariantPayload;
 };

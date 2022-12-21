@@ -6,10 +6,10 @@
  */
 
 export interface FeatureEnvironmentMetricsSchema {
-  featureName?: string;
-  appName?: string;
-  environment: string;
-  timestamp: string;
-  yes: number;
-  no: number;
+    featureName?: string;
+    appName?: string;
+    environment: string;
+    timestamp: string;
+    yes: number;
+    no: number;
 }

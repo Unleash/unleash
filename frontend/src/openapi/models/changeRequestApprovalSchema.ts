@@ -7,6 +7,6 @@
 import type { ChangeRequestApprovalSchemaCreatedBy } from './changeRequestApprovalSchemaCreatedBy';
 
 export interface ChangeRequestApprovalSchema {
-  createdBy: ChangeRequestApprovalSchemaCreatedBy;
-  createdAt: string;
+    createdBy: ChangeRequestApprovalSchemaCreatedBy;
+    createdAt: string;
 }

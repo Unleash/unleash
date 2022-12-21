@@ -7,7 +7,7 @@
 import type { ProxyMetricsSchemaBucketToggles } from './proxyMetricsSchemaBucketToggles';
 
 export type ProxyMetricsSchemaBucket = {
-  start: string;
-  stop: string;
-  toggles: ProxyMetricsSchemaBucketToggles;
+    start: string;
+    stop: string;
+    toggles: ProxyMetricsSchemaBucketToggles;
 };

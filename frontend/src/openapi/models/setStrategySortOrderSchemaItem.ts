@@ -6,6 +6,6 @@
  */
 
 export type SetStrategySortOrderSchemaItem = {
-  id: string;
-  sortOrder: number;
+    id: string;
+    sortOrder: number;
 };

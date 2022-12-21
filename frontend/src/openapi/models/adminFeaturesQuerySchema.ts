@@ -6,8 +6,8 @@
  */
 
 export interface AdminFeaturesQuerySchema {
-  /** Used to filter by tags. For each entry, a TAGTYPE:TAGVALUE is expected */
-  tag?: string[];
-  /** A case-insensitive prefix filter for the names of feature toggles */
-  namePrefix?: string;
+    /** Used to filter by tags. For each entry, a TAGTYPE:TAGVALUE is expected */
+    tag?: string[];
+    /** A case-insensitive prefix filter for the names of feature toggles */
+    namePrefix?: string;
 }

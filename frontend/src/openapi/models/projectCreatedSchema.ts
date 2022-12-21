@@ -9,10 +9,10 @@
  * Details about the newly created project.
  */
 export interface ProjectCreatedSchema {
-  /** The project's identifier. */
-  id: string;
-  /** The project's name. */
-  name: string;
-  /** The project's description. */
-  description?: string | null;
+    /** The project's identifier. */
+    id: string;
+    /** The project's name. */
+    name: string;
+    /** The project's description. */
+    description?: string | null;
 }

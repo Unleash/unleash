@@ -6,7 +6,7 @@
  */
 
 export interface TagTypeSchema {
-  name: string;
-  description?: string;
-  icon?: string | null;
+    name: string;
+    description?: string;
+    icon?: string | null;
 }

@@ -6,5 +6,5 @@
  */
 
 export interface ValidatePasswordSchema {
-  password: string;
+    password: string;
 }

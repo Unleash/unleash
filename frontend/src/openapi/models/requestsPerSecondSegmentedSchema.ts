@@ -7,6 +7,6 @@
 import type { RequestsPerSecondSchema } from './requestsPerSecondSchema';
 
 export interface RequestsPerSecondSegmentedSchema {
-  clientMetrics?: RequestsPerSecondSchema;
-  adminMetrics?: RequestsPerSecondSchema;
+    clientMetrics?: RequestsPerSecondSchema;
+    adminMetrics?: RequestsPerSecondSchema;
 }

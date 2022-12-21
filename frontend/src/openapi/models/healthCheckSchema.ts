@@ -7,5 +7,5 @@
 import type { HealthCheckSchemaHealth } from './healthCheckSchemaHealth';
 
 export interface HealthCheckSchema {
-  health: HealthCheckSchemaHealth;
+    health: HealthCheckSchemaHealth;
 }

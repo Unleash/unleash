@@ -6,11 +6,11 @@
  */
 
 export interface AddonParameterSchema {
-  name: string;
-  displayName: string;
-  type: string;
-  description?: string;
-  placeholder?: string;
-  required: boolean;
-  sensitive: boolean;
+    name: string;
+    displayName: string;
+    type: string;
+    description?: string;
+    placeholder?: string;
+    required: boolean;
+    sensitive: boolean;
 }

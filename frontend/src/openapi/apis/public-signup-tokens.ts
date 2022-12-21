@@ -4,62 +4,63 @@
  * Unleash API
  * OpenAPI spec version: 4.19.1
  */
-import useSwr from 'swr'
+import useSwr from 'swr';
+import type { SWRConfiguration, Key } from 'swr';
 import type {
-  SWRConfiguration,
-  Key
-} from 'swr'
-import type {
-  UserSchema,
-  CreateInvitedUserSchema,
-  PublicSignupTokensSchema,
-  PublicSignupTokenSchema,
-  PublicSignupTokenCreateSchema,
-  PublicSignupTokenUpdateSchema
-} from '../models'
-import { fetcher } from '../fetcher'
-import type { ErrorType, BodyType } from '../fetcher'
+    UserSchema,
+    CreateInvitedUserSchema,
+    PublicSignupTokensSchema,
+    PublicSignupTokenSchema,
+    PublicSignupTokenCreateSchema,
+    PublicSignupTokenUpdateSchema,
+} from '../models';
+import { fetcher } from '../fetcher';
+import type { ErrorType, BodyType } from '../fetcher';
 
-
-
-  
-  /**
+/**
  * @summary Check whether a public sign-up token exists, has not expired and is enabled
  */
-export const validatePublicSignupToken = (
-    token: string,
- ) => {
-      return fetcher<void>(
-      {url: `/invite/${token}/validate`, method: 'get'
-    },
-      );
-    }
-  
+export const validatePublicSignupToken = (token: string) => {
+    return fetcher<void>({ url: `/invite/${token}/validate`, method: 'get' });
+};
 
-export const getValidatePublicSignupTokenKey = (token: string,) => [`/invite/${token}/validate`];
+export const getValidatePublicSignupTokenKey = (token: string) => [
+    `/invite/${token}/validate`,
+];
 
-    
-export type ValidatePublicSignupTokenQueryResult = NonNullable<Awaited<ReturnType<typeof validatePublicSignupToken>>>
-export type ValidatePublicSignupTokenQueryError = ErrorType<unknown>
+export type ValidatePublicSignupTokenQueryResult = NonNullable<
+    Awaited<ReturnType<typeof validatePublicSignupToken>>
+>;
+export type ValidatePublicSignupTokenQueryError = ErrorType<unknown>;
 
 export const useValidatePublicSignupToken = <TError = ErrorType<unknown>>(
- token: string, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof validatePublicSignupToken>>, TError> & { swrKey?: Key, enabled?: boolean },  }
+    token: string,
+    options?: {
+        swr?: SWRConfiguration<
+            Awaited<ReturnType<typeof validatePublicSignupToken>>,
+            TError
+        > & { swrKey?: Key; enabled?: boolean };
+    }
+) => {
+    const { swr: swrOptions } = options ?? {};
 
-  ) => {
+    const isEnabled = swrOptions?.enabled !== false && !!token;
+    const swrKey =
+        swrOptions?.swrKey ??
+        (() => (isEnabled ? getValidatePublicSignupTokenKey(token) : null));
+    const swrFn = () => validatePublicSignupToken(token);
 
-  const {swr: swrOptions} = options ?? {}
+    const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+        swrKey,
+        swrFn,
+        swrOptions
+    );
 
-  const isEnabled = swrOptions?.enabled !== false && !!(token)
-    const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getValidatePublicSignupTokenKey(token) : null);
-  const swrFn = () => validatePublicSignupToken(token, );
-
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
-
-  return {
-    swrKey,
-    ...query
-  }
-}
+    return {
+        swrKey,
+        ...query,
+    };
+};
 
 /**
  * Create a user with the viewer root role and link them to the provided signup token
@@ -67,122 +68,137 @@ export const useValidatePublicSignupToken = <TError = ErrorType<unknown>>(
  */
 export const addPublicSignupTokenUser = (
     token: string,
-    createInvitedUserSchema: BodyType<CreateInvitedUserSchema>,
- ) => {
-      return fetcher<UserSchema>(
-      {url: `/invite/${token}/signup`, method: 'post',
-      headers: {'Content-Type': 'application/json', },
-      data: createInvitedUserSchema
-    },
-      );
-    }
-  
+    createInvitedUserSchema: BodyType<CreateInvitedUserSchema>
+) => {
+    return fetcher<UserSchema>({
+        url: `/invite/${token}/signup`,
+        method: 'post',
+        headers: { 'Content-Type': 'application/json' },
+        data: createInvitedUserSchema,
+    });
+};
 
 /**
  * @summary Retrieve all existing public signup tokens
  */
-export const getAllPublicSignupTokens = (
-    
- ) => {
-      return fetcher<PublicSignupTokensSchema>(
-      {url: `/api/admin/invite-link/tokens`, method: 'get'
-    },
-      );
-    }
-  
+export const getAllPublicSignupTokens = () => {
+    return fetcher<PublicSignupTokensSchema>({
+        url: `/api/admin/invite-link/tokens`,
+        method: 'get',
+    });
+};
 
-export const getGetAllPublicSignupTokensKey = () => [`/api/admin/invite-link/tokens`];
+export const getGetAllPublicSignupTokensKey = () => [
+    `/api/admin/invite-link/tokens`,
+];
 
-    
-export type GetAllPublicSignupTokensQueryResult = NonNullable<Awaited<ReturnType<typeof getAllPublicSignupTokens>>>
-export type GetAllPublicSignupTokensQueryError = ErrorType<unknown>
+export type GetAllPublicSignupTokensQueryResult = NonNullable<
+    Awaited<ReturnType<typeof getAllPublicSignupTokens>>
+>;
+export type GetAllPublicSignupTokensQueryError = ErrorType<unknown>;
 
-export const useGetAllPublicSignupTokens = <TError = ErrorType<unknown>>(
-  options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getAllPublicSignupTokens>>, TError> & { swrKey?: Key, enabled?: boolean },  }
+export const useGetAllPublicSignupTokens = <
+    TError = ErrorType<unknown>
+>(options?: {
+    swr?: SWRConfiguration<
+        Awaited<ReturnType<typeof getAllPublicSignupTokens>>,
+        TError
+    > & { swrKey?: Key; enabled?: boolean };
+}) => {
+    const { swr: swrOptions } = options ?? {};
 
-  ) => {
+    const isEnabled = swrOptions?.enabled !== false;
+    const swrKey =
+        swrOptions?.swrKey ??
+        (() => (isEnabled ? getGetAllPublicSignupTokensKey() : null));
+    const swrFn = () => getAllPublicSignupTokens();
 
-  const {swr: swrOptions} = options ?? {}
+    const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+        swrKey,
+        swrFn,
+        swrOptions
+    );
 
-  const isEnabled = swrOptions?.enabled !== false
-    const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetAllPublicSignupTokensKey() : null);
-  const swrFn = () => getAllPublicSignupTokens();
-
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
-
-  return {
-    swrKey,
-    ...query
-  }
-}
+    return {
+        swrKey,
+        ...query,
+    };
+};
 
 /**
  * @summary Create a public signup token
  */
 export const createPublicSignupToken = (
-    publicSignupTokenCreateSchema: BodyType<PublicSignupTokenCreateSchema>,
- ) => {
-      return fetcher<PublicSignupTokenSchema>(
-      {url: `/api/admin/invite-link/tokens`, method: 'post',
-      headers: {'Content-Type': 'application/json', },
-      data: publicSignupTokenCreateSchema
-    },
-      );
-    }
-  
+    publicSignupTokenCreateSchema: BodyType<PublicSignupTokenCreateSchema>
+) => {
+    return fetcher<PublicSignupTokenSchema>({
+        url: `/api/admin/invite-link/tokens`,
+        method: 'post',
+        headers: { 'Content-Type': 'application/json' },
+        data: publicSignupTokenCreateSchema,
+    });
+};
 
 /**
  * Get information about a specific token. The `:token` part of the URL should be the token's secret.
  * @summary Retrieve a token
  */
-export const getPublicSignupToken = (
-    token: string,
- ) => {
-      return fetcher<PublicSignupTokenSchema>(
-      {url: `/api/admin/invite-link/tokens/${token}`, method: 'get'
-    },
-      );
-    }
-  
+export const getPublicSignupToken = (token: string) => {
+    return fetcher<PublicSignupTokenSchema>({
+        url: `/api/admin/invite-link/tokens/${token}`,
+        method: 'get',
+    });
+};
 
-export const getGetPublicSignupTokenKey = (token: string,) => [`/api/admin/invite-link/tokens/${token}`];
+export const getGetPublicSignupTokenKey = (token: string) => [
+    `/api/admin/invite-link/tokens/${token}`,
+];
 
-    
-export type GetPublicSignupTokenQueryResult = NonNullable<Awaited<ReturnType<typeof getPublicSignupToken>>>
-export type GetPublicSignupTokenQueryError = ErrorType<unknown>
+export type GetPublicSignupTokenQueryResult = NonNullable<
+    Awaited<ReturnType<typeof getPublicSignupToken>>
+>;
+export type GetPublicSignupTokenQueryError = ErrorType<unknown>;
 
 export const useGetPublicSignupToken = <TError = ErrorType<unknown>>(
- token: string, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getPublicSignupToken>>, TError> & { swrKey?: Key, enabled?: boolean },  }
+    token: string,
+    options?: {
+        swr?: SWRConfiguration<
+            Awaited<ReturnType<typeof getPublicSignupToken>>,
+            TError
+        > & { swrKey?: Key; enabled?: boolean };
+    }
+) => {
+    const { swr: swrOptions } = options ?? {};
 
-  ) => {
+    const isEnabled = swrOptions?.enabled !== false && !!token;
+    const swrKey =
+        swrOptions?.swrKey ??
+        (() => (isEnabled ? getGetPublicSignupTokenKey(token) : null));
+    const swrFn = () => getPublicSignupToken(token);
 
-  const {swr: swrOptions} = options ?? {}
+    const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+        swrKey,
+        swrFn,
+        swrOptions
+    );
 
-  const isEnabled = swrOptions?.enabled !== false && !!(token)
-    const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetPublicSignupTokenKey(token) : null);
-  const swrFn = () => getPublicSignupToken(token, );
-
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
-
-  return {
-    swrKey,
-    ...query
-  }
-}
+    return {
+        swrKey,
+        ...query,
+    };
+};
 
 /**
  * @summary Update a public signup token
  */
 export const updatePublicSignupToken = (
     token: string,
-    publicSignupTokenUpdateSchema: BodyType<PublicSignupTokenUpdateSchema>,
- ) => {
-      return fetcher<PublicSignupTokenSchema>(
-      {url: `/api/admin/invite-link/tokens/${token}`, method: 'put',
-      headers: {'Content-Type': 'application/json', },
-      data: publicSignupTokenUpdateSchema
-    },
-      );
-    }
-  
-
+    publicSignupTokenUpdateSchema: BodyType<PublicSignupTokenUpdateSchema>
+) => {
+    return fetcher<PublicSignupTokenSchema>({
+        url: `/api/admin/invite-link/tokens/${token}`,
+        method: 'put',
+        headers: { 'Content-Type': 'application/json' },
+        data: publicSignupTokenUpdateSchema,
+    });
+};

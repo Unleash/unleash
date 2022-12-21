@@ -7,7 +7,7 @@
 import type { CreateRoleWithPermissionsSchemaPermissionsItem } from './createRoleWithPermissionsSchemaPermissionsItem';
 
 export interface CreateRoleWithPermissionsSchema {
-  name: string;
-  description?: string;
-  permissions?: CreateRoleWithPermissionsSchemaPermissionsItem[];
+    name: string;
+    description?: string;
+    permissions?: CreateRoleWithPermissionsSchemaPermissionsItem[];
 }

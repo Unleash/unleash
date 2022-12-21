@@ -8,6 +8,6 @@ import type { GroupSchema } from './groupSchema';
 import type { UserSchema } from './userSchema';
 
 export interface UsersGroupsBaseSchema {
-  groups?: GroupSchema[];
-  users?: UserSchema[];
+    groups?: GroupSchema[];
+    users?: UserSchema[];
 }

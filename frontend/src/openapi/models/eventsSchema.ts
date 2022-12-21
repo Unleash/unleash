@@ -7,7 +7,7 @@
 import type { EventSchema } from './eventSchema';
 
 export interface EventsSchema {
-  version: number;
-  events: EventSchema[];
-  totalEvents?: number;
+    version: number;
+    events: EventSchema[];
+    totalEvents?: number;
 }

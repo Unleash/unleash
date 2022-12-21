@@ -6,8 +6,10 @@
  */
 import type { ClientMetricsSchemaBucketTogglesVariants } from './clientMetricsSchemaBucketTogglesVariants';
 
-export type ClientMetricsSchemaBucketToggles = {[key: string]: {
-  yes?: number;
-  no?: number;
-  variants?: ClientMetricsSchemaBucketTogglesVariants;
-}};
+export type ClientMetricsSchemaBucketToggles = {
+    [key: string]: {
+        yes?: number;
+        no?: number;
+        variants?: ClientMetricsSchemaBucketTogglesVariants;
+    };
+};

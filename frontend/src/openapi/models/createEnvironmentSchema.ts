@@ -6,12 +6,12 @@
  */
 
 export interface CreateEnvironmentSchema {
-  /** The name of the environment. Must be a URL-friendly string according to [RFC 3968, section 2.3](https://www.rfc-editor.org/rfc/rfc3986#section-2.3) */
-  name: string;
-  /** The type of environment you would like to create (i.e. development or production). */
-  type: string;
-  /** Newly created environments are enabled by default. Set this property to `false` to create the environment in a disabled state. */
-  enabled?: boolean;
-  /** Defines where in the list of environments to place this environment. The list uses an ascending sort, so lower numbers are shown first. You can change this value later. */
-  sortOrder?: number;
+    /** The name of the environment. Must be a URL-friendly string according to [RFC 3968, section 2.3](https://www.rfc-editor.org/rfc/rfc3986#section-2.3) */
+    name: string;
+    /** The type of environment you would like to create (i.e. development or production). */
+    type: string;
+    /** Newly created environments are enabled by default. Set this property to `false` to create the environment in a disabled state. */
+    enabled?: boolean;
+    /** Defines where in the list of environments to place this environment. The list uses an ascending sort, so lower numbers are shown first. You can change this value later. */
+    sortOrder?: number;
 }

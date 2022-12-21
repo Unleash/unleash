@@ -5,4 +5,6 @@
  * OpenAPI spec version: 4.19.1
  */
 
-export type ClientMetricsSchemaBucketTogglesVariants = {[key: string]: number};
+export type ClientMetricsSchemaBucketTogglesVariants = {
+    [key: string]: number;
+};

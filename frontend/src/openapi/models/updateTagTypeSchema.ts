@@ -6,6 +6,6 @@
  */
 
 export interface UpdateTagTypeSchema {
-  description?: string;
-  icon?: string;
+    description?: string;
+    icon?: string;
 }

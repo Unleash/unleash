@@ -6,9 +6,9 @@
  */
 
 export interface ClientFeaturesQuerySchema {
-  tag?: string[][];
-  project?: string[];
-  namePrefix?: string;
-  environment?: string;
-  inlineSegmentConstraints?: boolean;
+    tag?: string[][];
+    project?: string[];
+    namePrefix?: string;
+    environment?: string;
+    inlineSegmentConstraints?: boolean;
 }

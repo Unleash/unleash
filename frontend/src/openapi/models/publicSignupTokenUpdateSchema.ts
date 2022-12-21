@@ -6,7 +6,7 @@
  */
 
 export interface PublicSignupTokenUpdateSchema {
-  /** The token's expiration date. */
-  expiresAt?: string;
-  enabled?: boolean;
+    /** The token's expiration date. */
+    expiresAt?: string;
+    enabled?: boolean;
 }

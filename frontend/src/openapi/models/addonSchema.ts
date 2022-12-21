@@ -7,13 +7,13 @@
 import type { AddonSchemaParameters } from './addonSchemaParameters';
 
 export interface AddonSchema {
-  id?: number;
-  createdAt?: string | null;
-  provider: string;
-  description?: string;
-  enabled: boolean;
-  parameters: AddonSchemaParameters;
-  events: string[];
-  projects?: string[];
-  environments?: string[];
+    id?: number;
+    createdAt?: string | null;
+    provider: string;
+    description?: string;
+    enabled: boolean;
+    parameters: AddonSchemaParameters;
+    events: string[];
+    projects?: string[];
+    environments?: string[];
 }

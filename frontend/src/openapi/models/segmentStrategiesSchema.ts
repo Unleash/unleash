@@ -7,5 +7,5 @@
 import type { SegmentStrategiesSchemaStrategiesItem } from './segmentStrategiesSchemaStrategiesItem';
 
 export interface SegmentStrategiesSchema {
-  strategies: SegmentStrategiesSchemaStrategiesItem[];
+    strategies: SegmentStrategiesSchemaStrategiesItem[];
 }

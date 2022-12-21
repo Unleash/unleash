@@ -6,14 +6,14 @@
  */
 
 export interface ProjectSchema {
-  id: string;
-  name: string;
-  description?: string;
-  health?: number;
-  featureCount?: number;
-  memberCount?: number;
-  createdAt?: string;
-  updatedAt?: string | null;
-  changeRequestsEnabled?: boolean;
-  favorite?: boolean;
+    id: string;
+    name: string;
+    description?: string;
+    health?: number;
+    featureCount?: number;
+    memberCount?: number;
+    createdAt?: string;
+    updatedAt?: string | null;
+    changeRequestsEnabled?: boolean;
+    favorite?: boolean;
 }

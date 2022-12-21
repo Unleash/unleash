@@ -6,5 +6,5 @@
  */
 
 export interface UpdateApiTokenSchema {
-  expiresAt: string;
+    expiresAt: string;
 }

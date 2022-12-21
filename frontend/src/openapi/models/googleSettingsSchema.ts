@@ -6,10 +6,10 @@
  */
 
 export interface GoogleSettingsSchema {
-  enabled?: boolean;
-  clientId: string;
-  clientSecret: string;
-  unleashHostname: string;
-  autoCreate?: boolean;
-  emailDomains?: string;
+    enabled?: boolean;
+    clientId: string;
+    clientSecret: string;
+    unleashHostname: string;
+    autoCreate?: boolean;
+    emailDomains?: string;
 }

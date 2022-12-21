@@ -7,13 +7,13 @@
 import type { OidcSettingsSchemaDefaultRootRole } from './oidcSettingsSchemaDefaultRootRole';
 
 export interface OidcSettingsSchema {
-  enabled?: boolean;
-  discoverUrl?: string;
-  clientId: string;
-  secret: string;
-  autoCreate?: boolean;
-  enableSingleSignOut?: boolean;
-  defaultRootRole?: OidcSettingsSchemaDefaultRootRole;
-  emailDomains?: string;
-  acrValues?: string;
+    enabled?: boolean;
+    discoverUrl?: string;
+    clientId: string;
+    secret: string;
+    autoCreate?: boolean;
+    enableSingleSignOut?: boolean;
+    defaultRootRole?: OidcSettingsSchemaDefaultRootRole;
+    emailDomains?: string;
+    acrValues?: string;
 }

@@ -7,13 +7,13 @@
 import type { FeatureSchema } from './featureSchema';
 
 export interface HealthOverviewSchema {
-  version: number;
-  name: string;
-  description?: string;
-  members?: number;
-  health?: number;
-  environments?: string[];
-  features?: FeatureSchema[];
-  updatedAt?: string | null;
-  favorite?: boolean;
+    version: number;
+    name: string;
+    description?: string;
+    members?: number;
+    health?: number;
+    environments?: string[];
+    features?: FeatureSchema[];
+    updatedAt?: string | null;
+    favorite?: boolean;
 }

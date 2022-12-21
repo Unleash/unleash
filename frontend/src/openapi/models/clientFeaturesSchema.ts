@@ -9,8 +9,8 @@ import type { SegmentSchema } from './segmentSchema';
 import type { ClientFeaturesQuerySchema } from './clientFeaturesQuerySchema';
 
 export interface ClientFeaturesSchema {
-  version: number;
-  features: ClientFeatureSchema[];
-  segments?: SegmentSchema[];
-  query?: ClientFeaturesQuerySchema;
+    version: number;
+    features: ClientFeatureSchema[];
+    segments?: SegmentSchema[];
+    query?: ClientFeaturesQuerySchema;
 }

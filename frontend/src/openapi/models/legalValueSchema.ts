@@ -6,6 +6,6 @@
  */
 
 export interface LegalValueSchema {
-  value: string;
-  description?: string;
+    value: string;
+    description?: string;
 }

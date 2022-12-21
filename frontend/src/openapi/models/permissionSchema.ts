@@ -6,7 +6,7 @@
  */
 
 export interface PermissionSchema {
-  permission: string;
-  project?: string;
-  environment?: string;
+    permission: string;
+    project?: string;
+    environment?: string;
 }

@@ -6,4 +6,8 @@
  */
 import type { ChangeRequestEventSchemaPayloadOneOf } from './changeRequestEventSchemaPayloadOneOf';
 
-export type ChangeRequestEventSchemaPayload = string | boolean | ChangeRequestEventSchemaPayloadOneOf | number;
+export type ChangeRequestEventSchemaPayload =
+    | string
+    | boolean
+    | ChangeRequestEventSchemaPayloadOneOf
+    | number;

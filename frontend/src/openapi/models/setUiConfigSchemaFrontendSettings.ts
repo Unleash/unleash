@@ -6,5 +6,5 @@
  */
 
 export type SetUiConfigSchemaFrontendSettings = {
-  frontendApiOrigins: string[];
+    frontendApiOrigins: string[];
 };

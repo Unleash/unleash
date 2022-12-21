@@ -7,10 +7,10 @@
 import type { LegalValueSchema } from './legalValueSchema';
 
 export interface ContextFieldSchema {
-  name: string;
-  description?: string;
-  stickiness?: boolean;
-  sortOrder?: number;
-  createdAt?: string | null;
-  legalValues?: LegalValueSchema[];
+    name: string;
+    description?: string;
+    stickiness?: boolean;
+    sortOrder?: number;
+    createdAt?: string | null;
+    legalValues?: LegalValueSchema[];
 }

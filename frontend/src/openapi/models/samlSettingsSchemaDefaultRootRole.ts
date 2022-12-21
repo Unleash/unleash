@@ -5,12 +5,12 @@
  * OpenAPI spec version: 4.19.1
  */
 
-export type SamlSettingsSchemaDefaultRootRole = typeof SamlSettingsSchemaDefaultRootRole[keyof typeof SamlSettingsSchemaDefaultRootRole];
-
+export type SamlSettingsSchemaDefaultRootRole =
+    typeof SamlSettingsSchemaDefaultRootRole[keyof typeof SamlSettingsSchemaDefaultRootRole];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const SamlSettingsSchemaDefaultRootRole = {
-  Viewer: 'Viewer',
-  Editor: 'Editor',
-  Admin: 'Admin',
+    Viewer: 'Viewer',
+    Editor: 'Editor',
+    Admin: 'Admin',
 } as const;

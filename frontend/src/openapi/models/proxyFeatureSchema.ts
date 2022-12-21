@@ -7,8 +7,8 @@
 import type { ProxyFeatureSchemaVariant } from './proxyFeatureSchemaVariant';
 
 export interface ProxyFeatureSchema {
-  name: string;
-  enabled: boolean;
-  impressionData: boolean;
-  variant?: ProxyFeatureSchemaVariant;
+    name: string;
+    enabled: boolean;
+    impressionData: boolean;
+    variant?: ProxyFeatureSchemaVariant;
 }

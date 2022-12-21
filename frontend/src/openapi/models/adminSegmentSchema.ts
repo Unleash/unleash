@@ -7,10 +7,10 @@
 import type { ConstraintSchema } from './constraintSchema';
 
 export interface AdminSegmentSchema {
-  id: number;
-  name: string;
-  description?: string | null;
-  constraints: ConstraintSchema[];
-  createdBy?: string;
-  createdAt: string;
+    id: number;
+    name: string;
+    description?: string | null;
+    constraints: ConstraintSchema[];
+    createdBy?: string;
+    createdAt: string;
 }

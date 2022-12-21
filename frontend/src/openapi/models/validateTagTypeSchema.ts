@@ -7,6 +7,6 @@
 import type { TagTypeSchema } from './tagTypeSchema';
 
 export interface ValidateTagTypeSchema {
-  valid: boolean;
-  tagType: TagTypeSchema;
+    valid: boolean;
+    tagType: TagTypeSchema;
 }

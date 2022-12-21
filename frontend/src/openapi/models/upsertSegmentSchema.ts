@@ -7,7 +7,7 @@
 import type { ConstraintSchema } from './constraintSchema';
 
 export interface UpsertSegmentSchema {
-  name: string;
-  description?: string | null;
-  constraints: ConstraintSchema[];
+    name: string;
+    description?: string | null;
+    constraints: ConstraintSchema[];
 }

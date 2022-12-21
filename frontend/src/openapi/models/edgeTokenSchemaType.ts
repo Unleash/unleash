@@ -5,12 +5,12 @@
  * OpenAPI spec version: 4.19.1
  */
 
-export type EdgeTokenSchemaType = typeof EdgeTokenSchemaType[keyof typeof EdgeTokenSchemaType];
-
+export type EdgeTokenSchemaType =
+    typeof EdgeTokenSchemaType[keyof typeof EdgeTokenSchemaType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const EdgeTokenSchemaType = {
-  client: 'client',
-  admin: 'admin',
-  frontend: 'frontend',
+    client: 'client',
+    admin: 'admin',
+    frontend: 'frontend',
 } as const;

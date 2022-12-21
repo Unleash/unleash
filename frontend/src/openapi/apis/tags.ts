@@ -4,271 +4,278 @@
  * Unleash API
  * OpenAPI spec version: 4.19.1
  */
-import useSwr from 'swr'
+import useSwr from 'swr';
+import type { SWRConfiguration, Key } from 'swr';
 import type {
-  SWRConfiguration,
-  Key
-} from 'swr'
-import type {
-  TagsSchema,
-  TagWithVersionSchema,
-  TagSchema,
-  TagTypesSchema,
-  TagTypeSchema,
-  ValidateTagTypeSchema,
-  UpdateTagTypeSchema
-} from '../models'
-import { fetcher } from '../fetcher'
-import type { ErrorType, BodyType } from '../fetcher'
+    TagsSchema,
+    TagWithVersionSchema,
+    TagSchema,
+    TagTypesSchema,
+    TagTypeSchema,
+    ValidateTagTypeSchema,
+    UpdateTagTypeSchema,
+} from '../models';
+import { fetcher } from '../fetcher';
+import type { ErrorType, BodyType } from '../fetcher';
 
-
-
-  
-  export const getTags = (
-    
- ) => {
-      return fetcher<TagsSchema>(
-      {url: `/api/admin/tags`, method: 'get'
-    },
-      );
-    }
-  
+export const getTags = () => {
+    return fetcher<TagsSchema>({ url: `/api/admin/tags`, method: 'get' });
+};
 
 export const getGetTagsKey = () => [`/api/admin/tags`];
 
-    
-export type GetTagsQueryResult = NonNullable<Awaited<ReturnType<typeof getTags>>>
-export type GetTagsQueryError = ErrorType<unknown>
+export type GetTagsQueryResult = NonNullable<
+    Awaited<ReturnType<typeof getTags>>
+>;
+export type GetTagsQueryError = ErrorType<unknown>;
 
-export const useGetTags = <TError = ErrorType<unknown>>(
-  options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getTags>>, TError> & { swrKey?: Key, enabled?: boolean },  }
+export const useGetTags = <TError = ErrorType<unknown>>(options?: {
+    swr?: SWRConfiguration<Awaited<ReturnType<typeof getTags>>, TError> & {
+        swrKey?: Key;
+        enabled?: boolean;
+    };
+}) => {
+    const { swr: swrOptions } = options ?? {};
 
-  ) => {
+    const isEnabled = swrOptions?.enabled !== false;
+    const swrKey =
+        swrOptions?.swrKey ?? (() => (isEnabled ? getGetTagsKey() : null));
+    const swrFn = () => getTags();
 
-  const {swr: swrOptions} = options ?? {}
+    const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+        swrKey,
+        swrFn,
+        swrOptions
+    );
 
-  const isEnabled = swrOptions?.enabled !== false
-    const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetTagsKey() : null);
-  const swrFn = () => getTags();
+    return {
+        swrKey,
+        ...query,
+    };
+};
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
+export const createTag = (tagSchema: BodyType<TagSchema>) => {
+    return fetcher<TagWithVersionSchema>({
+        url: `/api/admin/tags`,
+        method: 'post',
+        headers: { 'Content-Type': 'application/json' },
+        data: tagSchema,
+    });
+};
 
-  return {
-    swrKey,
-    ...query
-  }
-}
+export const getTagsByType = (type: string) => {
+    return fetcher<TagsSchema>({
+        url: `/api/admin/tags/${type}`,
+        method: 'get',
+    });
+};
 
-export const createTag = (
-    tagSchema: BodyType<TagSchema>,
- ) => {
-      return fetcher<TagWithVersionSchema>(
-      {url: `/api/admin/tags`, method: 'post',
-      headers: {'Content-Type': 'application/json', },
-      data: tagSchema
-    },
-      );
-    }
-  
+export const getGetTagsByTypeKey = (type: string) => [
+    `/api/admin/tags/${type}`,
+];
 
-export const getTagsByType = (
-    type: string,
- ) => {
-      return fetcher<TagsSchema>(
-      {url: `/api/admin/tags/${type}`, method: 'get'
-    },
-      );
-    }
-  
-
-export const getGetTagsByTypeKey = (type: string,) => [`/api/admin/tags/${type}`];
-
-    
-export type GetTagsByTypeQueryResult = NonNullable<Awaited<ReturnType<typeof getTagsByType>>>
-export type GetTagsByTypeQueryError = ErrorType<unknown>
+export type GetTagsByTypeQueryResult = NonNullable<
+    Awaited<ReturnType<typeof getTagsByType>>
+>;
+export type GetTagsByTypeQueryError = ErrorType<unknown>;
 
 export const useGetTagsByType = <TError = ErrorType<unknown>>(
- type: string, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getTagsByType>>, TError> & { swrKey?: Key, enabled?: boolean },  }
-
-  ) => {
-
-  const {swr: swrOptions} = options ?? {}
-
-  const isEnabled = swrOptions?.enabled !== false && !!(type)
-    const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetTagsByTypeKey(type) : null);
-  const swrFn = () => getTagsByType(type, );
-
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
-
-  return {
-    swrKey,
-    ...query
-  }
-}
-
-export const getTag = (
     type: string,
-    value: string,
- ) => {
-      return fetcher<TagWithVersionSchema>(
-      {url: `/api/admin/tags/${type}/${value}`, method: 'get'
-    },
-      );
+    options?: {
+        swr?: SWRConfiguration<
+            Awaited<ReturnType<typeof getTagsByType>>,
+            TError
+        > & { swrKey?: Key; enabled?: boolean };
     }
-  
+) => {
+    const { swr: swrOptions } = options ?? {};
 
-export const getGetTagKey = (type: string,
-    value: string,) => [`/api/admin/tags/${type}/${value}`];
+    const isEnabled = swrOptions?.enabled !== false && !!type;
+    const swrKey =
+        swrOptions?.swrKey ??
+        (() => (isEnabled ? getGetTagsByTypeKey(type) : null));
+    const swrFn = () => getTagsByType(type);
 
-    
-export type GetTagQueryResult = NonNullable<Awaited<ReturnType<typeof getTag>>>
-export type GetTagQueryError = ErrorType<unknown>
+    const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+        swrKey,
+        swrFn,
+        swrOptions
+    );
+
+    return {
+        swrKey,
+        ...query,
+    };
+};
+
+export const getTag = (type: string, value: string) => {
+    return fetcher<TagWithVersionSchema>({
+        url: `/api/admin/tags/${type}/${value}`,
+        method: 'get',
+    });
+};
+
+export const getGetTagKey = (type: string, value: string) => [
+    `/api/admin/tags/${type}/${value}`,
+];
+
+export type GetTagQueryResult = NonNullable<Awaited<ReturnType<typeof getTag>>>;
+export type GetTagQueryError = ErrorType<unknown>;
 
 export const useGetTag = <TError = ErrorType<unknown>>(
- type: string,
-    value: string, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getTag>>, TError> & { swrKey?: Key, enabled?: boolean },  }
-
-  ) => {
-
-  const {swr: swrOptions} = options ?? {}
-
-  const isEnabled = swrOptions?.enabled !== false && !!(type && value)
-    const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetTagKey(type,value) : null);
-  const swrFn = () => getTag(type,value, );
-
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
-
-  return {
-    swrKey,
-    ...query
-  }
-}
-
-export const deleteTag = (
     type: string,
     value: string,
- ) => {
-      return fetcher<void>(
-      {url: `/api/admin/tags/${type}/${value}`, method: 'delete'
-    },
-      );
+    options?: {
+        swr?: SWRConfiguration<Awaited<ReturnType<typeof getTag>>, TError> & {
+            swrKey?: Key;
+            enabled?: boolean;
+        };
     }
-  
+) => {
+    const { swr: swrOptions } = options ?? {};
 
-export const getTagTypes = (
-    
- ) => {
-      return fetcher<TagTypesSchema>(
-      {url: `/api/admin/tag-types`, method: 'get'
-    },
-      );
-    }
-  
+    const isEnabled = swrOptions?.enabled !== false && !!(type && value);
+    const swrKey =
+        swrOptions?.swrKey ??
+        (() => (isEnabled ? getGetTagKey(type, value) : null));
+    const swrFn = () => getTag(type, value);
+
+    const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+        swrKey,
+        swrFn,
+        swrOptions
+    );
+
+    return {
+        swrKey,
+        ...query,
+    };
+};
+
+export const deleteTag = (type: string, value: string) => {
+    return fetcher<void>({
+        url: `/api/admin/tags/${type}/${value}`,
+        method: 'delete',
+    });
+};
+
+export const getTagTypes = () => {
+    return fetcher<TagTypesSchema>({
+        url: `/api/admin/tag-types`,
+        method: 'get',
+    });
+};
 
 export const getGetTagTypesKey = () => [`/api/admin/tag-types`];
 
-    
-export type GetTagTypesQueryResult = NonNullable<Awaited<ReturnType<typeof getTagTypes>>>
-export type GetTagTypesQueryError = ErrorType<unknown>
+export type GetTagTypesQueryResult = NonNullable<
+    Awaited<ReturnType<typeof getTagTypes>>
+>;
+export type GetTagTypesQueryError = ErrorType<unknown>;
 
-export const useGetTagTypes = <TError = ErrorType<unknown>>(
-  options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getTagTypes>>, TError> & { swrKey?: Key, enabled?: boolean },  }
+export const useGetTagTypes = <TError = ErrorType<unknown>>(options?: {
+    swr?: SWRConfiguration<Awaited<ReturnType<typeof getTagTypes>>, TError> & {
+        swrKey?: Key;
+        enabled?: boolean;
+    };
+}) => {
+    const { swr: swrOptions } = options ?? {};
 
-  ) => {
+    const isEnabled = swrOptions?.enabled !== false;
+    const swrKey =
+        swrOptions?.swrKey ?? (() => (isEnabled ? getGetTagTypesKey() : null));
+    const swrFn = () => getTagTypes();
 
-  const {swr: swrOptions} = options ?? {}
+    const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+        swrKey,
+        swrFn,
+        swrOptions
+    );
 
-  const isEnabled = swrOptions?.enabled !== false
-    const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetTagTypesKey() : null);
-  const swrFn = () => getTagTypes();
+    return {
+        swrKey,
+        ...query,
+    };
+};
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
+export const createTagType = (tagTypeSchema: BodyType<TagTypeSchema>) => {
+    return fetcher<TagTypeSchema>({
+        url: `/api/admin/tag-types`,
+        method: 'post',
+        headers: { 'Content-Type': 'application/json' },
+        data: tagTypeSchema,
+    });
+};
 
-  return {
-    swrKey,
-    ...query
-  }
-}
+export const validateTagType = (tagTypeSchema: BodyType<TagTypeSchema>) => {
+    return fetcher<ValidateTagTypeSchema>({
+        url: `/api/admin/tag-types/validate`,
+        method: 'post',
+        headers: { 'Content-Type': 'application/json' },
+        data: tagTypeSchema,
+    });
+};
 
-export const createTagType = (
-    tagTypeSchema: BodyType<TagTypeSchema>,
- ) => {
-      return fetcher<TagTypeSchema>(
-      {url: `/api/admin/tag-types`, method: 'post',
-      headers: {'Content-Type': 'application/json', },
-      data: tagTypeSchema
-    },
-      );
-    }
-  
+export const getTagType = (name: string) => {
+    return fetcher<TagTypeSchema>({
+        url: `/api/admin/tag-types/${name}`,
+        method: 'get',
+    });
+};
 
-export const validateTagType = (
-    tagTypeSchema: BodyType<TagTypeSchema>,
- ) => {
-      return fetcher<ValidateTagTypeSchema>(
-      {url: `/api/admin/tag-types/validate`, method: 'post',
-      headers: {'Content-Type': 'application/json', },
-      data: tagTypeSchema
-    },
-      );
-    }
-  
+export const getGetTagTypeKey = (name: string) => [
+    `/api/admin/tag-types/${name}`,
+];
 
-export const getTagType = (
-    name: string,
- ) => {
-      return fetcher<TagTypeSchema>(
-      {url: `/api/admin/tag-types/${name}`, method: 'get'
-    },
-      );
-    }
-  
-
-export const getGetTagTypeKey = (name: string,) => [`/api/admin/tag-types/${name}`];
-
-    
-export type GetTagTypeQueryResult = NonNullable<Awaited<ReturnType<typeof getTagType>>>
-export type GetTagTypeQueryError = ErrorType<unknown>
+export type GetTagTypeQueryResult = NonNullable<
+    Awaited<ReturnType<typeof getTagType>>
+>;
+export type GetTagTypeQueryError = ErrorType<unknown>;
 
 export const useGetTagType = <TError = ErrorType<unknown>>(
- name: string, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getTagType>>, TError> & { swrKey?: Key, enabled?: boolean },  }
+    name: string,
+    options?: {
+        swr?: SWRConfiguration<
+            Awaited<ReturnType<typeof getTagType>>,
+            TError
+        > & { swrKey?: Key; enabled?: boolean };
+    }
+) => {
+    const { swr: swrOptions } = options ?? {};
 
-  ) => {
+    const isEnabled = swrOptions?.enabled !== false && !!name;
+    const swrKey =
+        swrOptions?.swrKey ??
+        (() => (isEnabled ? getGetTagTypeKey(name) : null));
+    const swrFn = () => getTagType(name);
 
-  const {swr: swrOptions} = options ?? {}
+    const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+        swrKey,
+        swrFn,
+        swrOptions
+    );
 
-  const isEnabled = swrOptions?.enabled !== false && !!(name)
-    const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetTagTypeKey(name) : null);
-  const swrFn = () => getTagType(name, );
-
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
-
-  return {
-    swrKey,
-    ...query
-  }
-}
+    return {
+        swrKey,
+        ...query,
+    };
+};
 
 export const updateTagType = (
     name: string,
-    updateTagTypeSchema: BodyType<UpdateTagTypeSchema>,
- ) => {
-      return fetcher<void>(
-      {url: `/api/admin/tag-types/${name}`, method: 'put',
-      headers: {'Content-Type': 'application/json', },
-      data: updateTagTypeSchema
-    },
-      );
-    }
-  
+    updateTagTypeSchema: BodyType<UpdateTagTypeSchema>
+) => {
+    return fetcher<void>({
+        url: `/api/admin/tag-types/${name}`,
+        method: 'put',
+        headers: { 'Content-Type': 'application/json' },
+        data: updateTagTypeSchema,
+    });
+};
 
-export const deleteTagType = (
-    name: string,
- ) => {
-      return fetcher<void>(
-      {url: `/api/admin/tag-types/${name}`, method: 'delete'
-    },
-      );
-    }
-  
-
+export const deleteTagType = (name: string) => {
+    return fetcher<void>({
+        url: `/api/admin/tag-types/${name}`,
+        method: 'delete',
+    });
+};

@@ -6,6 +6,6 @@
  */
 
 export interface ProjectEnvironmentSchema {
-  environment: string;
-  changeRequestsEnabled?: boolean;
+    environment: string;
+    changeRequestsEnabled?: boolean;
 }

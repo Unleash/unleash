@@ -6,5 +6,5 @@
  */
 
 export interface ChangeRequestAddCommentSchema {
-  text: string;
+    text: string;
 }

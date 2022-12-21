@@ -6,12 +6,12 @@
  */
 
 export interface ApplicationSchema {
-  appName: string;
-  sdkVersion?: string;
-  strategies?: string[];
-  description?: string;
-  url?: string;
-  color?: string;
-  icon?: string;
-  announced?: boolean;
+    appName: string;
+    sdkVersion?: string;
+    strategies?: string[];
+    description?: string;
+    url?: string;
+    color?: string;
+    icon?: string;
+    announced?: boolean;
 }

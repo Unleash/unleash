@@ -5,15 +5,15 @@
  * OpenAPI spec version: 4.19.1
  */
 
-export type UiConfigSchemaAuthenticationType = typeof UiConfigSchemaAuthenticationType[keyof typeof UiConfigSchemaAuthenticationType];
-
+export type UiConfigSchemaAuthenticationType =
+    typeof UiConfigSchemaAuthenticationType[keyof typeof UiConfigSchemaAuthenticationType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const UiConfigSchemaAuthenticationType = {
-  'open-source': 'open-source',
-  demo: 'demo',
-  enterprise: 'enterprise',
-  hosted: 'hosted',
-  custom: 'custom',
-  none: 'none',
+    'open-source': 'open-source',
+    demo: 'demo',
+    enterprise: 'enterprise',
+    hosted: 'hosted',
+    custom: 'custom',
+    none: 'none',
 } as const;

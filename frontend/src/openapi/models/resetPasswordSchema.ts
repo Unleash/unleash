@@ -6,5 +6,5 @@
  */
 
 export interface ResetPasswordSchema {
-  resetPasswordUrl: string;
+    resetPasswordUrl: string;
 }

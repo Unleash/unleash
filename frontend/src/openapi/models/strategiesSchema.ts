@@ -7,6 +7,6 @@
 import type { StrategySchema } from './strategySchema';
 
 export interface StrategiesSchema {
-  version: number;
-  strategies: StrategySchema[];
+    version: number;
+    strategies: StrategySchema[];
 }

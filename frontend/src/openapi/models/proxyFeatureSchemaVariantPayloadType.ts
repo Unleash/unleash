@@ -5,10 +5,10 @@
  * OpenAPI spec version: 4.19.1
  */
 
-export type ProxyFeatureSchemaVariantPayloadType = typeof ProxyFeatureSchemaVariantPayloadType[keyof typeof ProxyFeatureSchemaVariantPayloadType];
-
+export type ProxyFeatureSchemaVariantPayloadType =
+    typeof ProxyFeatureSchemaVariantPayloadType[keyof typeof ProxyFeatureSchemaVariantPayloadType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ProxyFeatureSchemaVariantPayloadType = {
-  string: 'string',
+    string: 'string',
 } as const;

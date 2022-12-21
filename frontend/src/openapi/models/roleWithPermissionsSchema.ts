@@ -7,9 +7,9 @@
 import type { AdminPermissionSchema } from './adminPermissionSchema';
 
 export interface RoleWithPermissionsSchema {
-  id: number;
-  type: string;
-  name: string;
-  description?: string;
-  permissions: AdminPermissionSchema[];
+    id: number;
+    type: string;
+    name: string;
+    description?: string;
+    permissions: AdminPermissionSchema[];
 }

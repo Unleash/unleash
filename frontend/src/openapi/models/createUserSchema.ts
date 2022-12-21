@@ -6,10 +6,10 @@
  */
 
 export interface CreateUserSchema {
-  username?: string;
-  email?: string;
-  name?: string;
-  password?: string;
-  rootRole: number;
-  sendEmail?: boolean;
+    username?: string;
+    email?: string;
+    name?: string;
+    password?: string;
+    rootRole: number;
+    sendEmail?: boolean;
 }

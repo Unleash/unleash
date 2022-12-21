@@ -7,5 +7,5 @@
 import type { ApiTokenSchema } from './apiTokenSchema';
 
 export interface ApiTokensSchema {
-  tokens: ApiTokenSchema[];
+    tokens: ApiTokenSchema[];
 }

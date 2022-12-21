@@ -7,13 +7,13 @@
 import type { SamlSettingsSchemaDefaultRootRole } from './samlSettingsSchemaDefaultRootRole';
 
 export interface SamlSettingsSchema {
-  enabled?: boolean;
-  entityId: string;
-  signOnUrl: string;
-  certificate: string;
-  signOutUrl?: string;
-  spCertificate?: string;
-  autoCreate?: boolean;
-  defaultRootRole?: SamlSettingsSchemaDefaultRootRole;
-  emailDomains?: string;
+    enabled?: boolean;
+    entityId: string;
+    signOnUrl: string;
+    certificate: string;
+    signOutUrl?: string;
+    spCertificate?: string;
+    autoCreate?: boolean;
+    defaultRootRole?: SamlSettingsSchemaDefaultRootRole;
+    emailDomains?: string;
 }

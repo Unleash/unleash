@@ -6,6 +6,6 @@
  */
 
 export interface ChangePasswordSchema {
-  token: string;
-  password: string;
+    token: string;
+    password: string;
 }

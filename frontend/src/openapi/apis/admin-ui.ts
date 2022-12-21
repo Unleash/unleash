@@ -4,102 +4,89 @@
  * Unleash API
  * OpenAPI spec version: 4.19.1
  */
-import useSwr from 'swr'
+import useSwr from 'swr';
+import type { SWRConfiguration, Key } from 'swr';
 import type {
-  SWRConfiguration,
-  Key
-} from 'swr'
-import type {
-  UiConfigSchema,
-  SetUiConfigSchema,
-  FeedbackSchema,
-  SplashSchema
-} from '../models'
-import { fetcher } from '../fetcher'
-import type { ErrorType, BodyType } from '../fetcher'
+    UiConfigSchema,
+    SetUiConfigSchema,
+    FeedbackSchema,
+    SplashSchema,
+} from '../models';
+import { fetcher } from '../fetcher';
+import type { ErrorType, BodyType } from '../fetcher';
 
-
-
-  
-  export const getUiConfig = (
-    
- ) => {
-      return fetcher<UiConfigSchema>(
-      {url: `/api/admin/ui-config`, method: 'get'
-    },
-      );
-    }
-  
+export const getUiConfig = () => {
+    return fetcher<UiConfigSchema>({
+        url: `/api/admin/ui-config`,
+        method: 'get',
+    });
+};
 
 export const getGetUiConfigKey = () => [`/api/admin/ui-config`];
 
-    
-export type GetUiConfigQueryResult = NonNullable<Awaited<ReturnType<typeof getUiConfig>>>
-export type GetUiConfigQueryError = ErrorType<unknown>
+export type GetUiConfigQueryResult = NonNullable<
+    Awaited<ReturnType<typeof getUiConfig>>
+>;
+export type GetUiConfigQueryError = ErrorType<unknown>;
 
-export const useGetUiConfig = <TError = ErrorType<unknown>>(
-  options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getUiConfig>>, TError> & { swrKey?: Key, enabled?: boolean },  }
+export const useGetUiConfig = <TError = ErrorType<unknown>>(options?: {
+    swr?: SWRConfiguration<Awaited<ReturnType<typeof getUiConfig>>, TError> & {
+        swrKey?: Key;
+        enabled?: boolean;
+    };
+}) => {
+    const { swr: swrOptions } = options ?? {};
 
-  ) => {
+    const isEnabled = swrOptions?.enabled !== false;
+    const swrKey =
+        swrOptions?.swrKey ?? (() => (isEnabled ? getGetUiConfigKey() : null));
+    const swrFn = () => getUiConfig();
 
-  const {swr: swrOptions} = options ?? {}
+    const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+        swrKey,
+        swrFn,
+        swrOptions
+    );
 
-  const isEnabled = swrOptions?.enabled !== false
-    const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetUiConfigKey() : null);
-  const swrFn = () => getUiConfig();
+    return {
+        swrKey,
+        ...query,
+    };
+};
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
+export const setUiConfig = (setUiConfigSchema: BodyType<SetUiConfigSchema>) => {
+    return fetcher<void>({
+        url: `/api/admin/ui-config`,
+        method: 'post',
+        headers: { 'Content-Type': 'application/json' },
+        data: setUiConfigSchema,
+    });
+};
 
-  return {
-    swrKey,
-    ...query
-  }
-}
-
-export const setUiConfig = (
-    setUiConfigSchema: BodyType<SetUiConfigSchema>,
- ) => {
-      return fetcher<void>(
-      {url: `/api/admin/ui-config`, method: 'post',
-      headers: {'Content-Type': 'application/json', },
-      data: setUiConfigSchema
-    },
-      );
-    }
-  
-
-export const createFeedback = (
-    feedbackSchema: BodyType<FeedbackSchema>,
- ) => {
-      return fetcher<FeedbackSchema>(
-      {url: `/api/admin/feedback`, method: 'post',
-      headers: {'Content-Type': 'application/json', },
-      data: feedbackSchema
-    },
-      );
-    }
-  
+export const createFeedback = (feedbackSchema: BodyType<FeedbackSchema>) => {
+    return fetcher<FeedbackSchema>({
+        url: `/api/admin/feedback`,
+        method: 'post',
+        headers: { 'Content-Type': 'application/json' },
+        data: feedbackSchema,
+    });
+};
 
 export const updateFeedback = (
     id: string,
-    feedbackSchema: BodyType<FeedbackSchema>,
- ) => {
-      return fetcher<FeedbackSchema>(
-      {url: `/api/admin/feedback/${id}`, method: 'put',
-      headers: {'Content-Type': 'application/json', },
-      data: feedbackSchema
-    },
-      );
-    }
-  
+    feedbackSchema: BodyType<FeedbackSchema>
+) => {
+    return fetcher<FeedbackSchema>({
+        url: `/api/admin/feedback/${id}`,
+        method: 'put',
+        headers: { 'Content-Type': 'application/json' },
+        data: feedbackSchema,
+    });
+};
 
-export const updateSplashSettings = (
-    id: string,
- ) => {
-      return fetcher<SplashSchema>(
-      {url: `/api/admin/splash/${id}`, method: 'post'
-    },
-      );
-    }
-  
-
+export const updateSplashSettings = (id: string) => {
+    return fetcher<SplashSchema>({
+        url: `/api/admin/splash/${id}`,
+        method: 'post',
+    });
+};

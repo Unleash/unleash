@@ -8,10 +8,10 @@ import type { ConstraintSchema } from './constraintSchema';
 import type { ParametersSchema } from './parametersSchema';
 
 export interface FeatureStrategySchema {
-  id?: string;
-  name: string;
-  sortOrder?: number;
-  segments?: number[];
-  constraints?: ConstraintSchema[];
-  parameters?: ParametersSchema;
+    id?: string;
+    name: string;
+    sortOrder?: number;
+    segments?: number[];
+    constraints?: ConstraintSchema[];
+    parameters?: ParametersSchema;
 }

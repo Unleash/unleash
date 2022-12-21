@@ -5,4 +5,6 @@
  * OpenAPI spec version: 4.19.1
  */
 
-export interface SortOrderSchema {[key: string]: number}
+export interface SortOrderSchema {
+    [key: string]: number;
+}

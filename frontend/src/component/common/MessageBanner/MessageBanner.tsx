@@ -21,6 +21,7 @@ const StyledBar = styled('aside', {
     borderColor: theme.palette[variant].border,
     background: theme.palette[variant].light,
     color: theme.palette[variant].dark,
+    fontSize: theme.fontSizes.smallBody,
 }));
 
 const StyledIcon = styled('div', {
@@ -29,14 +30,6 @@ const StyledIcon = styled('div', {
     display: 'flex',
     alignItems: 'center',
     color: theme.palette[variant].main,
-}));
-
-const StyledMessage = styled('div')(({ theme }) => ({
-    fontSize: theme.fontSizes.smallBody,
-}));
-
-const StyledLink = styled(Link)(({ theme }) => ({
-    fontSize: theme.fontSizes.smallBody,
 }));
 
 type BannerVariant =
@@ -78,8 +71,7 @@ const mockFlag2: IMessageFlag = {
     link: 'dialog',
     linkText: "What's new?",
     plausibleEvent: 'change_log_v5',
-    dialog: `
-![Unleash v5](https://www.getunleash.io/logos/unleash_pos.svg)
+    dialog: `![Unleash v5](https://www.getunleash.io/logos/unleash_pos.svg)
 ## Unleash v5 🎉
 **Unleash v5 is finally here!**
 
@@ -91,8 +83,7 @@ Check out what changed in the newest major release:
 - And the best is...
 - **Unleash v5 is finally here!**
 
-You can read more about it on our newest [blog post](https://www.getunleash.io/blog).
-    `,
+You can read more about it on our newest [blog post](https://www.getunleash.io/blog).`,
 };
 
 export const MessageBanner = () => {
@@ -105,7 +96,7 @@ export const MessageBanner = () => {
         variant = 'neutral',
         icon,
         link,
-        linkText,
+        linkText = 'More info',
         plausibleEvent,
         dialogTitle,
         dialog,
@@ -118,15 +109,14 @@ export const MessageBanner = () => {
             <StyledIcon variant={variant}>
                 <BannerIcon icon={icon} variant={variant} />
             </StyledIcon>
-            <StyledMessage>
-                <ReactMarkdown>{message}</ReactMarkdown>
-            </StyledMessage>
+            <ReactMarkdown>{message}</ReactMarkdown>
             <BannerButton
                 link={link}
-                linkText={linkText}
                 plausibleEvent={plausibleEvent}
                 openDialog={() => setOpen(true)}
-            />
+            >
+                {linkText}
+            </BannerButton>
             <MessageBannerDialog
                 open={open}
                 setOpen={setOpen}
@@ -155,28 +145,29 @@ interface IBannerIconProps {
 const BannerIcon = ({ icon, variant }: IBannerIconProps) => {
     if (icon === 'none') return null;
     if (icon) return <Icon>{icon}</Icon>;
-    return VariantIcons[variant];
+    return VariantIcons[variant] ?? <InfoOutlined />;
 };
 
 interface IBannerButtonProps {
     link?: string;
-    linkText?: string;
     plausibleEvent?: string;
     openDialog: () => void;
+    children: React.ReactNode;
 }
 
 const BannerButton = ({
     link,
-    linkText = 'More info',
     plausibleEvent,
     openDialog,
+    children,
 }: IBannerButtonProps) => {
     if (!link) return null;
 
     const navigate = useNavigate();
     const tracker = usePlausibleTracker();
+
     const dialog = link === 'dialog';
-    const external = link.startsWith('http');
+    const internal = !link.startsWith('http');
 
     const trackEvent = () => {
         if (!plausibleEvent) return;
@@ -187,31 +178,31 @@ const BannerButton = ({
 
     if (dialog)
         return (
-            <StyledLink
+            <Link
                 onClick={() => {
                     trackEvent();
                     openDialog();
                 }}
             >
-                {linkText}
-            </StyledLink>
+                {children}
+            </Link>
         );
 
-    if (external)
+    if (internal)
         return (
-            <StyledLink href={link} target="_blank" onClick={trackEvent}>
-                {linkText}
-            </StyledLink>
-        );
-    else
-        return (
-            <StyledLink
+            <Link
                 onClick={() => {
                     trackEvent();
                     navigate(link);
                 }}
             >
-                {linkText}
-            </StyledLink>
+                {children}
+            </Link>
         );
+
+    return (
+        <Link href={link} target="_blank" onClick={trackEvent}>
+            {children}
+        </Link>
+    );
 };

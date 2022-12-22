@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { MessageBannerDialog } from './MessageBannerDialog/MessageBannerDialog';
 import { useState } from 'react';
+import ReactMarkdown from 'react-markdown';
 
 const StyledBar = styled('aside', {
     shouldForwardProp: prop => prop !== 'variant',
@@ -56,7 +57,7 @@ interface IMessageFlag {
 const mockFlag: IMessageFlag = {
     enabled: true,
     message:
-        '<strong>Heads up!</strong> It seems like one of your client instances might be misbehaving.',
+        '**Heads up!** It seems like one of your client instances might be misbehaving.',
     variant: 'warning',
     link: '/admin/network',
     linkText: 'View Network',
@@ -66,7 +67,7 @@ const mockFlag: IMessageFlag = {
 const mockFlag2: IMessageFlag = {
     enabled: true,
     message:
-        '<strong>Unleash v5 is finally here!</strong> Check out what changed in the newest major release.',
+        '**Unleash v5 is finally here!** Check out what changed in the newest major release.',
     variant: 'info',
     link: 'dialog',
     linkText: "What's new?",
@@ -111,7 +112,9 @@ export const MessageBanner = () => {
             <StyledIcon variant={variant}>
                 <BannerIcon icon={icon} variant={variant} />
             </StyledIcon>
-            <StyledMessage dangerouslySetInnerHTML={{ __html: message }} />
+            <StyledMessage>
+                <ReactMarkdown>{message}</ReactMarkdown>
+            </StyledMessage>
             <BannerButton
                 link={link}
                 linkText={linkText}

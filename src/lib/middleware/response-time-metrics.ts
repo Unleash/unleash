@@ -8,14 +8,16 @@ import memoizee from 'memoizee';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const _responseTime = responseTime.default;
 
-const countAppNames = async (instanceStatsService: InstanceStatsService) => {
+const countAppNames = async (
+    instanceStatsService: Pick<InstanceStatsService, 'getLabeledAppCounts'>,
+) => {
     const response = await instanceStatsService.getLabeledAppCounts();
     return response.find((c) => c.range === '7d').count;
 };
 export function responseTimeMetrics(
     eventBus: EventEmitter,
     flagResolver: IFlagResolver,
-    instanceStatsService: InstanceStatsService,
+    instanceStatsService: Pick<InstanceStatsService, 'getLabeledAppCounts'>,
 ): any {
     const appNameReportingThreshold = 100;
     let appNameCount = memoizee(() => countAppNames(instanceStatsService), {
@@ -24,7 +26,6 @@ export function responseTimeMetrics(
     });
     return _responseTime(async (req, res, time) => {
         const { statusCode } = res;
-
         const pathname = req.route ? req.baseUrl + req.route.path : '(hidden)';
 
         let appName;

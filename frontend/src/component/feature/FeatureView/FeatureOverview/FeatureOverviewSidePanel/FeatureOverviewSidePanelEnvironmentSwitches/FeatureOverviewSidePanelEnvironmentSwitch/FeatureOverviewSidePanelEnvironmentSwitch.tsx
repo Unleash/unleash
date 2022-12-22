@@ -13,18 +13,27 @@ import { UpdateEnabledMessage } from 'component/changeRequest/ChangeRequestConfi
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { styled } from '@mui/material';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
+import { RemoveRedEye, Star } from '@mui/icons-material';
+import { FeatureOverviewSidePanelEnvironmentHider } from './FeatureOverviewSidePanelEnvironmentHider';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     marginLeft: theme.spacing(-1.5),
     '&:not(:last-of-type)': {
         marginBottom: theme.spacing(2),
     },
+    display: 'flex',
 }));
 
 const StyledLabel = styled('label')(() => ({
     display: 'inline-flex',
     alignItems: 'center',
     cursor: 'pointer',
+}));
+
+const HideButton = styled(RemoveRedEye)(({ theme }) => ({
+    cursor: 'pointer',
+    marginLeft: 'auto',
+    color: theme.palette.grey[700],
 }));
 
 interface IFeatureOverviewSidePanelEnvironmentSwitchProps {
@@ -136,6 +145,9 @@ export const FeatureOverviewSidePanelEnvironmentSwitch = ({
                 />
                 {children ?? defaultContent}
             </StyledLabel>
+            <FeatureOverviewSidePanelEnvironmentHider
+                environment={environment}
+            />
             <ChangeRequestDialogue
                 isOpen={changeRequestDialogDetails.isOpen}
                 onClose={onChangeRequestToggleClose}

@@ -5,6 +5,7 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { FeatureOverviewSidePanelDetails } from './FeatureOverviewSidePanelDetails/FeatureOverviewSidePanelDetails';
 import { FeatureOverviewSidePanelEnvironmentSwitches } from './FeatureOverviewSidePanelEnvironmentSwitches/FeatureOverviewSidePanelEnvironmentSwitches';
 import { FeatureOverviewSidePanelTags } from './FeatureOverviewSidePanelTags/FeatureOverviewSidePanelTags';
+import { IFeatureToggle } from '../../../../../interfaces/featureToggle';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     position: 'sticky',
@@ -40,7 +41,12 @@ const StyledHeader = styled('h3')(({ theme }) => ({
     },
 }));
 
-export const FeatureOverviewSidePanel = () => {
+interface IFeatureOverviewSidePanelProps {
+    feature: IFeatureToggle;
+    header: React.ReactNode;
+}
+
+export const FeatureOverviewSidePanel = (hiddenEnvironments: Set<String>) => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const { feature } = useFeature(projectId, featureId);

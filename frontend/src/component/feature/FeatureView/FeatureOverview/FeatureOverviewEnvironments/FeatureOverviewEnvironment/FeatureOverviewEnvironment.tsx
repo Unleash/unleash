@@ -23,6 +23,7 @@ import { FeatureStrategyMenu } from 'component/feature/FeatureStrategy/FeatureSt
 import { FEATURE_ENVIRONMENT_ACCORDION } from 'utils/testIds';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { FeatureStrategyIcons } from 'component/feature/FeatureStrategy/FeatureStrategyIcons/FeatureStrategyIcons';
+import { useGlobalLocalStorage } from '../../../../../../hooks/useGlobalLocalStorage';
 // import { Badge } from 'component/common/Badge/Badge';
 
 interface IFeatureOverviewEnvironmentProps {
@@ -38,6 +39,8 @@ const FeatureOverviewEnvironment = ({
     const featureId = useRequiredPathParam('featureId');
     const { metrics } = useFeatureMetrics(projectId, featureId);
     const { feature } = useFeature(projectId, featureId);
+    const { value: globalStore, setValue: setGlobalStore } =
+        useGlobalLocalStorage();
 
     const featureMetrics = getFeatureMetrics(feature?.environments, metrics);
     const environmentMetric = featureMetrics.find(
@@ -46,119 +49,131 @@ const FeatureOverviewEnvironment = ({
     const featureEnvironment = feature?.environments.find(
         featureEnvironment => featureEnvironment.name === env.name
     );
-
+    console.log(globalStore);
     return (
-        <div
-            className={styles.featureOverviewEnvironment}
-            style={{
-                background: !env.enabled
-                    ? theme.palette.neutral.light
-                    : theme.palette.background.paper,
-            }}
-        >
-            <Accordion
-                className={styles.accordion}
-                data-testid={`${FEATURE_ENVIRONMENT_ACCORDION}_${env.name}`}
-            >
-                <AccordionSummary
-                    className={styles.accordionHeader}
-                    expandIcon={<ExpandMore titleAccess="Toggle" />}
+        <ConditionallyRender
+            condition={
+                !Boolean(new Set(globalStore.hiddenEnvironments).has(env.name))
+            }
+            show={
+                <div
+                    className={styles.featureOverviewEnvironment}
+                    style={{
+                        background: !env.enabled
+                            ? theme.palette.neutral.light
+                            : theme.palette.background.paper,
+                    }}
                 >
-                    <div
-                        className={styles.header}
-                        data-loading
-                        style={{
-                            color: !env.enabled
-                                ? theme.palette.text.secondary
-                                : theme.palette.text.primary,
-                        }}
+                    <Accordion
+                        className={styles.accordion}
+                        data-testid={`${FEATURE_ENVIRONMENT_ACCORDION}_${env.name}`}
                     >
-                        <div className={styles.headerTitle}>
-                            <EnvironmentIcon
-                                enabled={env.enabled}
-                                className={styles.headerIcon}
-                            />
-                            <div>
-                                <StringTruncator
-                                    text={env.name}
-                                    className={styles.truncator}
-                                    maxWidth="100"
-                                    maxLength={15}
-                                />
-                            </div>
-                            <ConditionallyRender
-                                condition={!env.enabled}
-                                show={
-                                    <Chip
-                                        size="small"
-                                        variant="outlined"
-                                        label="Disabled"
-                                        sx={{ ml: 1 }}
+                        <AccordionSummary
+                            className={styles.accordionHeader}
+                            expandIcon={<ExpandMore titleAccess="Toggle" />}
+                        >
+                            <div
+                                className={styles.header}
+                                data-loading
+                                style={{
+                                    color: !env.enabled
+                                        ? theme.palette.text.secondary
+                                        : theme.palette.text.primary,
+                                }}
+                            >
+                                <div className={styles.headerTitle}>
+                                    <EnvironmentIcon
+                                        enabled={env.enabled}
+                                        className={styles.headerIcon}
                                     />
-                                }
-                            />
-                        </div>
-                        <div className={styles.container}>
-                            <FeatureStrategyMenu
-                                label="Add strategy"
-                                projectId={projectId}
-                                featureId={featureId}
-                                environmentId={env.name}
-                                variant="text"
-                            />
-                            <FeatureStrategyIcons
-                                strategies={featureEnvironment?.strategies}
-                            />
-                        </div>
-                    </div>
-
-                    <FeatureOverviewEnvironmentMetrics
-                        environmentMetric={environmentMetric}
-                        disabled={!env.enabled}
-                    />
-                </AccordionSummary>
-
-                <AccordionDetails
-                    className={classNames(styles.accordionDetails, {
-                        [styles.accordionDetailsDisabled]: !env.enabled,
-                    })}
-                >
-                    <EnvironmentAccordionBody
-                        featureEnvironment={featureEnvironment}
-                        isDisabled={!env.enabled}
-                        otherEnvironments={feature?.environments
-                            .map(({ name }) => name)
-                            .filter(name => name !== env.name)}
-                    />
-                    <ConditionallyRender
-                        condition={
-                            (featureEnvironment?.strategies?.length || 0) > 0
-                        }
-                        show={
-                            <>
-                                <Box
-                                    sx={{
-                                        display: 'flex',
-                                        justifyContent: 'center',
-                                        py: 1,
-                                    }}
-                                >
+                                    <div>
+                                        <StringTruncator
+                                            text={env.name}
+                                            className={styles.truncator}
+                                            maxWidth="100"
+                                            maxLength={15}
+                                        />
+                                    </div>
+                                    <ConditionallyRender
+                                        condition={!env.enabled}
+                                        show={
+                                            <Chip
+                                                size="small"
+                                                variant="outlined"
+                                                label="Disabled"
+                                                sx={{ ml: 1 }}
+                                            />
+                                        }
+                                    />
+                                </div>
+                                <div className={styles.container}>
                                     <FeatureStrategyMenu
                                         label="Add strategy"
                                         projectId={projectId}
                                         featureId={featureId}
                                         environmentId={env.name}
+                                        variant="text"
                                     />
-                                </Box>
-                                <EnvironmentFooter
-                                    environmentMetric={environmentMetric}
-                                />
-                            </>
-                        }
-                    />
-                </AccordionDetails>
-            </Accordion>
-        </div>
+                                    <FeatureStrategyIcons
+                                        strategies={
+                                            featureEnvironment?.strategies
+                                        }
+                                    />
+                                </div>
+                            </div>
+
+                            <FeatureOverviewEnvironmentMetrics
+                                environmentMetric={environmentMetric}
+                                disabled={!env.enabled}
+                            />
+                        </AccordionSummary>
+
+                        <AccordionDetails
+                            className={classNames(styles.accordionDetails, {
+                                [styles.accordionDetailsDisabled]: !env.enabled,
+                            })}
+                        >
+                            <EnvironmentAccordionBody
+                                featureEnvironment={featureEnvironment}
+                                isDisabled={!env.enabled}
+                                otherEnvironments={feature?.environments
+                                    .map(({ name }) => name)
+                                    .filter(name => name !== env.name)}
+                            />
+                            <ConditionallyRender
+                                condition={
+                                    (featureEnvironment?.strategies?.length ||
+                                        0) > 0
+                                }
+                                show={
+                                    <>
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                justifyContent: 'center',
+                                                py: 1,
+                                            }}
+                                        >
+                                            <FeatureStrategyMenu
+                                                label="Add strategy"
+                                                projectId={projectId}
+                                                featureId={featureId}
+                                                environmentId={env.name}
+                                            />
+                                        </Box>
+                                        <EnvironmentFooter
+                                            environmentMetric={
+                                                environmentMetric
+                                            }
+                                        />
+                                    </>
+                                }
+                            />
+                        </AccordionDetails>
+                    </Accordion>
+                </div>
+            }
+        />
     );
 };
 

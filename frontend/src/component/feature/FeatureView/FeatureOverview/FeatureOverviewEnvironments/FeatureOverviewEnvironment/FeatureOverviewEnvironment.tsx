@@ -39,8 +39,7 @@ const FeatureOverviewEnvironment = ({
     const featureId = useRequiredPathParam('featureId');
     const { metrics } = useFeatureMetrics(projectId, featureId);
     const { feature } = useFeature(projectId, featureId);
-    const { value: globalStore, setValue: setGlobalStore } =
-        useGlobalLocalStorage();
+    const { value: globalStore } = useGlobalLocalStorage();
 
     const featureMetrics = getFeatureMetrics(feature?.environments, metrics);
     const environmentMetric = featureMetrics.find(
@@ -49,7 +48,6 @@ const FeatureOverviewEnvironment = ({
     const featureEnvironment = feature?.environments.find(
         featureEnvironment => featureEnvironment.name === env.name
     );
-    console.log(globalStore);
     return (
         <ConditionallyRender
             condition={

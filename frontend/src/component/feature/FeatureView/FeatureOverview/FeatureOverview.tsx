@@ -14,8 +14,7 @@ import { usePageTitle } from 'hooks/usePageTitle';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { FeatureOverviewSidePanel } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewSidePanel/FeatureOverviewSidePanel';
-import { useGlobalLocalStorage } from '../../../../hooks/useGlobalLocalStorage';
-import { useHiddenEnvironments } from '../../../../hooks/useHiddenEnvironments';
+import { useHiddenEnvironments } from 'hooks/useHiddenEnvironments';
 
 const FeatureOverview = () => {
     const { uiConfig } = useUiConfig();

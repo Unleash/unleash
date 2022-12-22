@@ -42,11 +42,14 @@ const StyledHeader = styled('h3')(({ theme }) => ({
 }));
 
 interface IFeatureOverviewSidePanelProps {
-    feature: IFeatureToggle;
-    header: React.ReactNode;
+    hiddenEnvironments: Set<String>;
+    setHiddenEnvironments: (environment: string) => void;
 }
 
-export const FeatureOverviewSidePanel = (hiddenEnvironments: Set<String>) => {
+export const FeatureOverviewSidePanel = ({
+    hiddenEnvironments,
+    setHiddenEnvironments,
+}: IFeatureOverviewSidePanelProps) => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const { feature } = useFeature(projectId, featureId);
@@ -70,6 +73,8 @@ export const FeatureOverviewSidePanel = (hiddenEnvironments: Set<String>) => {
                     </StyledHeader>
                 }
                 feature={feature}
+                hiddenEnvironments={hiddenEnvironments}
+                setHiddenEnvironments={setHiddenEnvironments}
             />
             <Divider />
             <FeatureOverviewSidePanelDetails

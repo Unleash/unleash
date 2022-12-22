@@ -1,9 +1,19 @@
 import { IFeatureEnvironment } from 'interfaces/featureToggle';
 import { styled } from '@mui/material';
-import { RemoveRedEye } from '@mui/icons-material';
-import { useGlobalLocalStorage } from 'hooks/useGlobalLocalStorage';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
-const HideButton = styled(RemoveRedEye)(({ theme }) => ({
+const Visible = styled(Visibility)(({ theme }) => ({
+    cursor: 'pointer',
+    marginLeft: 'auto',
+    color: theme.palette.grey[700],
+    '&:hover': {
+        opacity: 1,
+    },
+    opacity: 0,
+}));
+
+const VisibleOff = styled(VisibilityOff)(({ theme }) => ({
     cursor: 'pointer',
     marginLeft: 'auto',
     color: theme.palette.grey[700],
@@ -11,28 +21,24 @@ const HideButton = styled(RemoveRedEye)(({ theme }) => ({
 
 interface IFeatureOverviewSidePanelEnvironmentHiderProps {
     environment: IFeatureEnvironment;
+    hiddenEnvironments: Set<String>;
+    setHiddenEnvironments: (environment: string) => void;
 }
 
 export const FeatureOverviewSidePanelEnvironmentHider = ({
     environment,
+    hiddenEnvironments,
+    setHiddenEnvironments,
 }: IFeatureOverviewSidePanelEnvironmentHiderProps) => {
-    const { value: globalStore, setValue: setGlobalStore } =
-        useGlobalLocalStorage();
-
     const toggleHiddenEnvironments = () => {
-        setGlobalStore(params => {
-            const hiddenEnvironments = new Set(params.hiddenEnvironments);
-            if (hiddenEnvironments.has(environment.name)) {
-                hiddenEnvironments.delete(environment.name);
-            } else {
-                hiddenEnvironments.add(environment.name);
-            }
-            return {
-                ...globalStore,
-                hiddenEnvironments: hiddenEnvironments,
-            };
-        });
+        setHiddenEnvironments(environment.name);
     };
 
-    return <HideButton onClick={toggleHiddenEnvironments} />;
+    return (
+        <ConditionallyRender
+            condition={hiddenEnvironments.has(environment.name)}
+            show={<VisibleOff onClick={toggleHiddenEnvironments} />}
+            elseShow={<Visible onClick={toggleHiddenEnvironments} />}
+        />
+    );
 };

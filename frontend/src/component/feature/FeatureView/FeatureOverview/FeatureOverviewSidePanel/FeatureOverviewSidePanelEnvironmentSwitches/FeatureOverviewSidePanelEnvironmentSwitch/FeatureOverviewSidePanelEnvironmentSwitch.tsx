@@ -41,6 +41,8 @@ interface IFeatureOverviewSidePanelEnvironmentSwitchProps {
     callback?: () => void;
     showInfoBox: () => void;
     children?: React.ReactNode;
+    hiddenEnvironments: Set<String>;
+    setHiddenEnvironments: (environment: string) => void;
 }
 
 export const FeatureOverviewSidePanelEnvironmentSwitch = ({
@@ -48,6 +50,8 @@ export const FeatureOverviewSidePanelEnvironmentSwitch = ({
     callback,
     showInfoBox,
     children,
+    hiddenEnvironments,
+    setHiddenEnvironments,
 }: IFeatureOverviewSidePanelEnvironmentSwitchProps) => {
     const { name, enabled } = environment;
 
@@ -147,6 +151,8 @@ export const FeatureOverviewSidePanelEnvironmentSwitch = ({
             </StyledLabel>
             <FeatureOverviewSidePanelEnvironmentHider
                 environment={environment}
+                hiddenEnvironments={hiddenEnvironments}
+                setHiddenEnvironments={setHiddenEnvironments}
             />
             <ChangeRequestDialogue
                 isOpen={changeRequestDialogDetails.isOpen}

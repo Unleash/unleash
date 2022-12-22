@@ -46,6 +46,7 @@ export interface IFlags {
     variantsPerEnvironment?: boolean;
     networkView?: boolean;
     maintenance?: boolean;
+    messageBanner?: boolean;
 }
 
 export interface IVersionInfo {

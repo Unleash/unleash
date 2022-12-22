@@ -2,6 +2,7 @@ import { WarningAmber } from '@mui/icons-material';
 import { styled, Icon, Link } from '@mui/material';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useNavigate } from 'react-router-dom';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const StyledBar = styled('aside', {
     shouldForwardProp: prop => prop !== 'variant',
@@ -59,8 +60,10 @@ const mockFlag: IMessageFlag = {
 };
 
 export const MessageBanner = () => {
+    const { uiConfig } = useUiConfig();
+
     const { enabled, message, variant, icon, link, linkText, plausibleEvent } =
-        mockFlag;
+        { ...mockFlag, enabled: uiConfig.flags.messageBanner };
 
     if (!enabled) return null;
 

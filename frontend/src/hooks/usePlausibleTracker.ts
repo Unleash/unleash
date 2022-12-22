@@ -13,7 +13,8 @@ type CustomEvents =
     | 'upgrade_plan_clicked'
     | 'change_request'
     | 'favorite'
-    | 'maintenance';
+    | 'maintenance'
+    | 'message_banner';
 
 export const usePlausibleTracker = () => {
     const plausible = useContext(PlausibleContext);

@@ -47,6 +47,10 @@ const flags = {
         process.env.UNLEASH_EXPERIMENTAL_MAINTENANCE_MODE,
         false,
     ),
+    messageBanner: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_MESSAGE_BANNER,
+        false,
+    ),
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

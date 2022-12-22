@@ -4,7 +4,7 @@ exports[`featureSchema constraints 1`] = `
 {
   "errors": [
     {
-      "instancePath": "/strategies/0/constraints/0",
+      "instancePath": "/environments/0/strategies/0/constraints/0",
       "keyword": "required",
       "message": "must have required property 'operator'",
       "params": {

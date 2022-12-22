@@ -3,9 +3,9 @@ import { variantSchema } from './variant-schema';
 import { constraintSchema } from './constraint-schema';
 import { overrideSchema } from './override-schema';
 import { parametersSchema } from './parameters-schema';
-import { environmentSchema } from './environment-schema';
 import { featureStrategySchema } from './feature-strategy-schema';
 import { tagSchema } from './tag-schema';
+import { featureEnvironmentSchema } from './feature-environment-schema';
 
 export const featureSchema = {
     $id: '#/components/schemas/featureSchema',
@@ -58,13 +58,7 @@ export const featureSchema = {
         environments: {
             type: 'array',
             items: {
-                $ref: '#/components/schemas/environmentSchema',
-            },
-        },
-        strategies: {
-            type: 'array',
-            items: {
-                $ref: '#/components/schemas/featureStrategySchema',
+                $ref: '#/components/schemas/featureEnvironmentSchema',
             },
         },
         variants: {
@@ -84,10 +78,10 @@ export const featureSchema = {
     components: {
         schemas: {
             constraintSchema,
-            environmentSchema,
+            featureEnvironmentSchema,
+            featureStrategySchema,
             overrideSchema,
             parametersSchema,
-            featureStrategySchema,
             variantSchema,
             tagSchema,
         },

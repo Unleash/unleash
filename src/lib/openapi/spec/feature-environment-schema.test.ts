@@ -8,10 +8,7 @@ test('featureEnvironmentSchema', () => {
         strategies: [
             {
                 id: '',
-                featureName: '',
-                projectId: '',
-                environment: '',
-                strategyName: '',
+                name: '',
                 constraints: [{ contextName: '', operator: 'IN' }],
                 parameters: { a: '' },
             },

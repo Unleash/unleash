@@ -130,7 +130,7 @@ const BannerButton = ({
             <StyledLink
                 onClick={() => {
                     trackEvent();
-                    navigate('/admin/network');
+                    navigate(link);
                 }}
             >
                 {linkText}

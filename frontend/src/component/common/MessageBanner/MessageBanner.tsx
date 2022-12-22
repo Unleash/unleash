@@ -1,4 +1,4 @@
-import { WarningAmber } from '@mui/icons-material';
+import { Check, Close, InfoOutlined, WarningAmber } from '@mui/icons-material';
 import { styled, Icon, Link } from '@mui/material';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useNavigate } from 'react-router-dom';
@@ -9,7 +9,7 @@ import ReactMarkdown from 'react-markdown';
 
 const StyledBar = styled('aside', {
     shouldForwardProp: prop => prop !== 'variant',
-})<{ variant?: BannerVariant }>(({ theme, variant = 'neutral' }) => ({
+})<{ variant: BannerVariant }>(({ theme, variant }) => ({
     position: 'relative',
     zIndex: 1,
     display: 'flex',
@@ -25,7 +25,7 @@ const StyledBar = styled('aside', {
 
 const StyledIcon = styled('div', {
     shouldForwardProp: prop => prop !== 'variant',
-})<{ variant?: BannerVariant }>(({ theme, variant = 'neutral' }) => ({
+})<{ variant: BannerVariant }>(({ theme, variant }) => ({
     display: 'flex',
     alignItems: 'center',
     color: theme.palette[variant].main,
@@ -39,7 +39,13 @@ const StyledLink = styled(Link)(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
 }));
 
-type BannerVariant = 'warning' | 'info' | 'error' | 'success' | 'neutral';
+type BannerVariant =
+    | 'warning'
+    | 'info'
+    | 'error'
+    | 'success'
+    | 'neutral'
+    | 'secondary';
 
 interface IMessageFlag {
     enabled: boolean;
@@ -68,7 +74,7 @@ const mockFlag2: IMessageFlag = {
     enabled: true,
     message:
         '**Unleash v5 is finally here!** Check out what changed in the newest major release.',
-    variant: 'info',
+    variant: 'secondary',
     link: 'dialog',
     linkText: "What's new?",
     plausibleEvent: 'change_log_v5',
@@ -96,7 +102,7 @@ export const MessageBanner = () => {
     const {
         enabled,
         message,
-        variant,
+        variant = 'neutral',
         icon,
         link,
         linkText,
@@ -132,17 +138,24 @@ export const MessageBanner = () => {
     );
 };
 
+const VariantIcons = {
+    warning: <WarningAmber />,
+    info: <InfoOutlined />,
+    error: <Close />,
+    success: <Check />,
+    neutral: <InfoOutlined />,
+    secondary: <InfoOutlined />,
+};
+
 interface IBannerIconProps {
+    variant: BannerVariant;
     icon?: string;
-    variant?: BannerVariant;
 }
 
 const BannerIcon = ({ icon, variant }: IBannerIconProps) => {
     if (icon === 'none') return null;
     if (icon) return <Icon>{icon}</Icon>;
-    if (variant) return <WarningAmber />;
-    // TODO: Add defaults for other variants?
-    return null;
+    return VariantIcons[variant];
 };
 
 interface IBannerButtonProps {

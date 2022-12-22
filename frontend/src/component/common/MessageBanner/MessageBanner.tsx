@@ -3,6 +3,8 @@ import { styled, Icon, Link } from '@mui/material';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useNavigate } from 'react-router-dom';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { MessageBannerDialog } from './MessageBannerDialog/MessageBannerDialog';
+import { useState } from 'react';
 
 const StyledBar = styled('aside', {
     shouldForwardProp: prop => prop !== 'variant',
@@ -46,6 +48,8 @@ interface IMessageFlag {
     link?: string;
     linkText?: string;
     plausibleEvent?: string;
+    dialogTitle?: string;
+    dialog?: string;
 }
 
 // TODO: Grab a real feature flag instead
@@ -59,11 +63,46 @@ const mockFlag: IMessageFlag = {
     plausibleEvent: 'network_warning',
 };
 
+const mockFlag2: IMessageFlag = {
+    enabled: true,
+    message:
+        '<strong>Unleash v5 is finally here!</strong> Check out what changed in the newest major release.',
+    variant: 'info',
+    link: 'dialog',
+    linkText: "What's new?",
+    plausibleEvent: 'change_log_v5',
+    dialog: `
+![Unleash v5](https://www.getunleash.io/logos/unleash_pos.svg)
+## Unleash v5 🎉
+**Unleash v5 is finally here!**
+
+Check out what changed in the newest major release:
+
+- An Amazing Feature
+- Another Amazing Feature
+- We'll save the best for last
+- And the best is...
+- **Unleash v5 is finally here!**
+
+You can read more about it on our newest [blog post](https://www.getunleash.io/blog).
+    `,
+};
+
 export const MessageBanner = () => {
     const { uiConfig } = useUiConfig();
+    const [open, setOpen] = useState(false);
 
-    const { enabled, message, variant, icon, link, linkText, plausibleEvent } =
-        { ...mockFlag, enabled: uiConfig.flags.messageBanner };
+    const {
+        enabled,
+        message,
+        variant,
+        icon,
+        link,
+        linkText,
+        plausibleEvent,
+        dialogTitle,
+        dialog,
+    } = { ...mockFlag2, enabled: uiConfig.flags.messageBanner };
 
     if (!enabled) return null;
 
@@ -77,7 +116,15 @@ export const MessageBanner = () => {
                 link={link}
                 linkText={linkText}
                 plausibleEvent={plausibleEvent}
+                openDialog={() => setOpen(true)}
             />
+            <MessageBannerDialog
+                open={open}
+                setOpen={setOpen}
+                title={dialogTitle || linkText}
+            >
+                {dialog!}
+            </MessageBannerDialog>
         </StyledBar>
     );
 };
@@ -99,17 +146,20 @@ interface IBannerButtonProps {
     link?: string;
     linkText?: string;
     plausibleEvent?: string;
+    openDialog: () => void;
 }
 
 const BannerButton = ({
     link,
     linkText = 'More info',
     plausibleEvent,
+    openDialog,
 }: IBannerButtonProps) => {
     if (!link) return null;
 
     const navigate = useNavigate();
     const tracker = usePlausibleTracker();
+    const dialog = link === 'dialog';
     const external = link.startsWith('http');
 
     const trackEvent = () => {
@@ -118,6 +168,18 @@ const BannerButton = ({
             props: { event: plausibleEvent },
         });
     };
+
+    if (dialog)
+        return (
+            <StyledLink
+                onClick={() => {
+                    trackEvent();
+                    openDialog();
+                }}
+            >
+                {linkText}
+            </StyledLink>
+        );
 
     if (external)
         return (

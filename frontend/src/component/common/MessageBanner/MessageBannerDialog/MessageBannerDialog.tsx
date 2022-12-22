@@ -1,0 +1,37 @@
+import { styled } from '@mui/material';
+import { Dialogue } from 'component/common/Dialogue/Dialogue';
+import ReactMarkdown from 'react-markdown';
+
+const StyledReactMarkdown = styled(ReactMarkdown)(({ theme }) => ({
+    lineHeight: 1.5,
+    'h1, h2, h3': {
+        margin: theme.spacing(2, 0),
+    },
+}));
+
+interface IMessageBannerDialogProps {
+    open: boolean;
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    title?: string;
+    children: string;
+}
+
+export const MessageBannerDialog = ({
+    open,
+    setOpen,
+    title = 'More info',
+    children,
+}: IMessageBannerDialogProps) => {
+    return (
+        <Dialogue
+            title={title}
+            open={open}
+            secondaryButtonText="Close"
+            onClose={() => {
+                setOpen(false);
+            }}
+        >
+            <StyledReactMarkdown>{children}</StyledReactMarkdown>
+        </Dialogue>
+    );
+};

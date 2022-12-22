@@ -3,7 +3,6 @@ import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import ReactMarkdown from 'react-markdown';
 
 const StyledReactMarkdown = styled(ReactMarkdown)(({ theme }) => ({
-    lineHeight: 1.5,
     'h1, h2, h3': {
         margin: theme.spacing(2, 0),
     },

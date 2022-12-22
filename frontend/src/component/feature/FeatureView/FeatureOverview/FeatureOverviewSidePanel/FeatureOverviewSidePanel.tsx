@@ -5,7 +5,6 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { FeatureOverviewSidePanelDetails } from './FeatureOverviewSidePanelDetails/FeatureOverviewSidePanelDetails';
 import { FeatureOverviewSidePanelEnvironmentSwitches } from './FeatureOverviewSidePanelEnvironmentSwitches/FeatureOverviewSidePanelEnvironmentSwitches';
 import { FeatureOverviewSidePanelTags } from './FeatureOverviewSidePanelTags/FeatureOverviewSidePanelTags';
-import { IFeatureToggle } from '../../../../../interfaces/featureToggle';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     position: 'sticky',

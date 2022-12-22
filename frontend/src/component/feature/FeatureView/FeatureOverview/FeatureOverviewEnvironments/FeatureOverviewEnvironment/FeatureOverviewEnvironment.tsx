@@ -23,8 +23,7 @@ import { FeatureStrategyMenu } from 'component/feature/FeatureStrategy/FeatureSt
 import { FEATURE_ENVIRONMENT_ACCORDION } from 'utils/testIds';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { FeatureStrategyIcons } from 'component/feature/FeatureStrategy/FeatureStrategyIcons/FeatureStrategyIcons';
-import { useGlobalLocalStorage } from '../../../../../../hooks/useGlobalLocalStorage';
-// import { Badge } from 'component/common/Badge/Badge';
+import { useGlobalLocalStorage } from 'hooks/useGlobalLocalStorage';
 
 interface IFeatureOverviewEnvironmentProps {
     env: IFeatureEnvironment;

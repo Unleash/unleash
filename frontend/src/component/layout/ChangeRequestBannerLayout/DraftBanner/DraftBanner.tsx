@@ -2,10 +2,10 @@ import { FC, useState, VFC } from 'react';
 import { Box, Button, styled, Typography } from '@mui/material';
 import { useStyles as useAppStyles } from 'component/App.styles';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { ChangeRequestSidebar } from '../ChangeRequestSidebar/ChangeRequestSidebar';
+import { ChangeRequestSidebar } from 'component/changeRequest/ChangeRequestSidebar/ChangeRequestSidebar';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
-import { IChangeRequest } from '../changeRequest.types';
-import { changesCount } from '../changesCount';
+import { IChangeRequest } from 'component/changeRequest/changeRequest.types';
+import { changesCount } from 'component/changeRequest/changesCount';
 
 interface IDraftBannerProps {
     project: string;

@@ -125,7 +125,15 @@ export class InstanceStatsService {
     }
 
     async refreshStatsSnapshot(): Promise<void> {
-        this.snapshot = this.getStats();
+        // check if stores are present (required for some tests)
+        if (
+            this.featureToggleStore === undefined ||
+            this.userStore === undefined ||
+            this.clientInstanceStore === undefined
+        ) {
+            return;
+        }
+        this.snapshot = this.getStats().catch(() => undefined);
     }
 
     destroy(): void {

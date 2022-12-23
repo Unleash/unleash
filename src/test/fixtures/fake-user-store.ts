@@ -147,6 +147,19 @@ class UserStoreMock implements IUserStore {
     async markSeenAt(secrets: string[]): Promise<void> {
         throw new Error('Not implemented');
     }
+
+    async getAllUsers(): Promise<IUser[]> {
+        throw new Error('Not implemented');
+    }
+
+    async getAllServiceAccounts(): Promise<IUser[]> {
+        throw new Error('Not implemented');
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async insertServiceAccount(user: User): Promise<User> {
+        throw new Error('Not implemented');
+    }
 }
 
 module.exports = UserStoreMock;

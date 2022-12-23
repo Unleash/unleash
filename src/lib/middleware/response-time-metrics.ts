@@ -20,7 +20,7 @@ export function responseTimeMetrics(
         const { statusCode } = res;
         const pathname = req.route ? req.baseUrl + req.route.path : '(hidden)';
 
-        // async get of appCount
+        // async get of appCount (only if promise is settled)
         instanceStatsService
             .getStatsSnapshot()
             .then((stats) => {

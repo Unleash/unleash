@@ -70,7 +70,7 @@ export class InstanceStatsService {
 
     private snapshotRefresher?: Timer;
 
-    public snapshot?: Promise<InstanceStats>;
+    private snapshot?: Promise<InstanceStats>;
 
     constructor(
         {

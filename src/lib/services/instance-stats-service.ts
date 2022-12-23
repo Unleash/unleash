@@ -13,6 +13,8 @@ import { ISegmentStore } from '../types/stores/segment-store';
 import { IRoleStore } from '../types/stores/role-store';
 import VersionService from './version-service';
 import { ISettingStore } from '../types/stores/settings-store';
+import Timer = NodeJS.Timer;
+import { minutesToMilliseconds } from 'date-fns';
 
 type TimeRange = 'allTime' | '30d' | '7d';
 
@@ -66,6 +68,10 @@ export class InstanceStatsService {
 
     private clientInstanceStore: IClientInstanceStore;
 
+    private snapshotRefresher?: Timer;
+
+    public snapshot?: Promise<InstanceStats>;
+
     constructor(
         {
             featureToggleStore,
@@ -109,6 +115,21 @@ export class InstanceStatsService {
         this.settingStore = settingStore;
         this.clientInstanceStore = clientInstanceStore;
         this.logger = getLogger('services/stats-service.js');
+        process.nextTick(() => {
+            this.refreshStatsSnapshot();
+            this.snapshotRefresher = setInterval(
+                () => this.refreshStatsSnapshot(),
+                minutesToMilliseconds(5),
+            ).unref();
+        });
+    }
+
+    async refreshStatsSnapshot(): Promise<void> {
+        this.snapshot = this.getStats();
+    }
+
+    destroy(): void {
+        clearInterval(this.snapshotRefresher);
     }
 
     async getToggleCount(): Promise<number> {
@@ -133,6 +154,9 @@ export class InstanceStatsService {
         return settings?.enabled || false;
     }
 
+    /**
+     * use getStatsSnapshot for low latency, sacrificing data-freshness
+     */
     async getStats(): Promise<InstanceStats> {
         const versionInfo = this.versionService.getVersionInfo();
 
@@ -182,6 +206,10 @@ export class InstanceStatsService {
             OIDCenabled,
             clientApps,
         };
+    }
+
+    async getStatsSnapshot(): Promise<InstanceStats | undefined> {
+        return this.snapshot;
     }
 
     async getLabeledAppCounts(): Promise<

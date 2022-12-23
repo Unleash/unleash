@@ -14,23 +14,31 @@ export function responseTimeMetrics(
     flagResolver: IFlagResolver,
     instanceStatsService: Pick<InstanceStatsService, 'getStatsSnapshot'>,
 ): any {
-    function getCurrentAppNameCount() {
-        return (
-            instanceStatsService
-                .getStatsSnapshot()
-                ?.clientApps?.find((t) => t.range === '7d')?.count ||
-            appNameReportingThreshold
-        );
-    }
+    let appCount = appNameReportingThreshold;
 
     return _responseTime(async (req, res, time) => {
         const { statusCode } = res;
         const pathname = req.route ? req.baseUrl + req.route.path : '(hidden)';
 
+        // async get of appCount
+        instanceStatsService
+            .getStatsSnapshot()
+            .then((stats) => {
+                const currentCount = stats?.clientApps?.find(
+                    (t) => t.range === '7d',
+                )?.count;
+                // update app count
+                appCount =
+                    currentCount === undefined
+                        ? appNameReportingThreshold
+                        : currentCount;
+            })
+            .catch(() => {});
+
         let appName;
         if (
             flagResolver.isEnabled('responseTimeWithAppName') &&
-            getCurrentAppNameCount() < appNameReportingThreshold
+            appCount < appNameReportingThreshold
         ) {
             appName = req.headers['unleash-appname'] ?? req.query.appName;
         }

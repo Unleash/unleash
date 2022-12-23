@@ -6622,19 +6622,8 @@ If the provided project does not exist, the list of events will be empty.",
             "in": "query",
             "name": "download",
             "schema": {
-              "anyOf": [
-                {
-                  "type": "boolean",
-                },
-                {
-                  "minLength": 1,
-                  "type": "string",
-                },
-                {
-                  "type": "number",
-                },
-              ],
               "default": false,
+              "type": "boolean",
             },
           },
           {
@@ -6642,19 +6631,8 @@ If the provided project does not exist, the list of events will be empty.",
             "in": "query",
             "name": "strategies",
             "schema": {
-              "anyOf": [
-                {
-                  "type": "boolean",
-                },
-                {
-                  "minLength": 1,
-                  "type": "string",
-                },
-                {
-                  "type": "number",
-                },
-              ],
               "default": true,
+              "type": "boolean",
             },
           },
           {
@@ -6662,19 +6640,8 @@ If the provided project does not exist, the list of events will be empty.",
             "in": "query",
             "name": "featureToggles",
             "schema": {
-              "anyOf": [
-                {
-                  "type": "boolean",
-                },
-                {
-                  "minLength": 1,
-                  "type": "string",
-                },
-                {
-                  "type": "number",
-                },
-              ],
               "default": true,
+              "type": "boolean",
             },
           },
           {
@@ -6682,19 +6649,8 @@ If the provided project does not exist, the list of events will be empty.",
             "in": "query",
             "name": "projects",
             "schema": {
-              "anyOf": [
-                {
-                  "type": "boolean",
-                },
-                {
-                  "minLength": 1,
-                  "type": "string",
-                },
-                {
-                  "type": "number",
-                },
-              ],
               "default": true,
+              "type": "boolean",
             },
           },
           {
@@ -6702,19 +6658,8 @@ If the provided project does not exist, the list of events will be empty.",
             "in": "query",
             "name": "tags",
             "schema": {
-              "anyOf": [
-                {
-                  "type": "boolean",
-                },
-                {
-                  "minLength": 1,
-                  "type": "string",
-                },
-                {
-                  "type": "number",
-                },
-              ],
               "default": true,
+              "type": "boolean",
             },
           },
           {
@@ -6722,19 +6667,8 @@ If the provided project does not exist, the list of events will be empty.",
             "in": "query",
             "name": "environments",
             "schema": {
-              "anyOf": [
-                {
-                  "type": "boolean",
-                },
-                {
-                  "minLength": 1,
-                  "type": "string",
-                },
-                {
-                  "type": "number",
-                },
-              ],
               "default": true,
+              "type": "boolean",
             },
           },
         ],

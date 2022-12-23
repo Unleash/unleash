@@ -15,18 +15,7 @@ export const exportQueryParameters = [
         name: 'download',
         schema: {
             default: false,
-            anyOf: [
-                {
-                    type: 'boolean',
-                },
-                {
-                    type: 'string',
-                    minLength: 1,
-                },
-                {
-                    type: 'number',
-                },
-            ],
+            type: 'boolean',
         },
         description: 'Whether exported data should be downloaded as a file.',
         in: 'query',
@@ -35,18 +24,7 @@ export const exportQueryParameters = [
         name: 'strategies',
         schema: {
             default: true,
-            anyOf: [
-                {
-                    type: 'boolean',
-                },
-                {
-                    type: 'string',
-                    minLength: 1,
-                },
-                {
-                    type: 'number',
-                },
-            ],
+            type: 'boolean',
         },
         description:
             'Whether strategies should be included in the exported data.',
@@ -55,18 +33,7 @@ export const exportQueryParameters = [
     {
         name: 'featureToggles',
         schema: {
-            anyOf: [
-                {
-                    type: 'boolean',
-                },
-                {
-                    type: 'string',
-                    minLength: 1,
-                },
-                {
-                    type: 'number',
-                },
-            ],
+            type: 'boolean',
             default: true,
         },
         description:
@@ -76,18 +43,7 @@ export const exportQueryParameters = [
     {
         name: 'projects',
         schema: {
-            anyOf: [
-                {
-                    type: 'boolean',
-                },
-                {
-                    type: 'string',
-                    minLength: 1,
-                },
-                {
-                    type: 'number',
-                },
-            ],
+            type: 'boolean',
             default: true,
         },
         description:
@@ -97,18 +53,7 @@ export const exportQueryParameters = [
     {
         name: 'tags',
         schema: {
-            anyOf: [
-                {
-                    type: 'boolean',
-                },
-                {
-                    type: 'string',
-                    minLength: 1,
-                },
-                {
-                    type: 'number',
-                },
-            ],
+            type: 'boolean',
             default: true,
         },
         description:
@@ -118,18 +63,7 @@ export const exportQueryParameters = [
     {
         name: 'environments',
         schema: {
-            anyOf: [
-                {
-                    type: 'boolean',
-                },
-                {
-                    type: 'string',
-                    minLength: 1,
-                },
-                {
-                    type: 'number',
-                },
-            ],
+            type: 'boolean',
             default: true,
         },
         description:

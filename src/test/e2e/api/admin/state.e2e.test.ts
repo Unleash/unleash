@@ -44,14 +44,14 @@ test('exports strategies and features as yaml', async () => {
 
 test('exports only features as yaml', async () => {
     return app.request
-        .get('/api/admin/state/export?format=yaml&featureToggles=1')
+        .get('/api/admin/state/export?format=yaml&featureToggles=true')
         .expect('Content-Type', /yaml/)
         .expect(200);
 });
 
 test('exports strategies and features as attachment', async () => {
     return app.request
-        .get('/api/admin/state/export?download=1')
+        .get('/api/admin/state/export?download=true')
         .expect('Content-Type', /json/)
         .expect('Content-Disposition', /attachment/)
         .expect(200);

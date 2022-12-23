@@ -197,6 +197,7 @@ The front-end SDKs connects via the [Unleash Proxy](https://docs.getunleash.io/r
 - [React Proxy SDK](https://docs.getunleash.io/reference/sdks/react)
 - [Svelte Proxy SDK](https://docs.getunleash.io/reference/sdks/svelte)
 - [Vue Proxy SDK](https://docs.getunleash.io/reference/sdks/vue)
+- [Flutter Proxy SDK](https://docs.getunleash.io/reference/sdks/flutter-proxy)
 
 **Community SDKs:**
 

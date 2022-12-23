@@ -383,6 +383,10 @@ module.exports = {
                         to: '/reference/sdks/vue',
                     },
                     {
+                        from: '/sdks/proxy-flutter',
+                        to: '/reference/sdks/flutter-proxy',
+                    },
+                    {
                         from: '/sdks/proxy-svelte',
                         to: '/reference/sdks/svelte',
                     },

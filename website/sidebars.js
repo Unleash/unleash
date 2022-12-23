@@ -255,6 +255,7 @@ module.exports = {
                                 'reference/sdks/react',
                                 'reference/sdks/svelte',
                                 'reference/sdks/vue',
+                                'reference/sdks/flutter-proxy',
                             ],
                         },
                         {

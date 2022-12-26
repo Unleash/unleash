@@ -143,6 +143,11 @@ export default class VariantsController extends Controller {
         });
     }
 
+    /**
+     * @deprecated - Variants should be fetched from featureService.getVariantsForEnv (since variants are now; since 4.18, connected to environments)
+     * @param req
+     * @param res
+     */
     async getVariants(
         req: Request<FeatureParams, any, any, any>,
         res: Response<FeatureVariantsSchema>,
@@ -158,7 +163,6 @@ export default class VariantsController extends Controller {
     ): Promise<void> {
         const { projectId, featureName } = req.params;
         const userName = extractUsername(req);
-
         const updatedFeature = await this.featureService.updateVariants(
             featureName,
             projectId,

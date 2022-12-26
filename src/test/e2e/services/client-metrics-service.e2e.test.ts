@@ -1,6 +1,8 @@
 import ClientInstanceService from '../../../lib/services/client-metrics/instance-service';
 import { IClientApp } from '../../../lib/types/model';
 import { secondsToMilliseconds } from 'date-fns';
+import { createTestConfig } from '../../config/test-config';
+import { IUnleashConfig } from '../../../lib/types';
 
 const faker = require('faker');
 const dbInit = require('../helpers/database-init');
@@ -10,17 +12,17 @@ const { APPLICATION_CREATED } = require('../../../lib/types/events');
 let stores;
 let db;
 let clientInstanceService;
-
+let config: IUnleashConfig;
 beforeAll(async () => {
     db = await dbInit('client_metrics_service_serial', getLogger);
     stores = db.stores;
-
+    config = createTestConfig({});
     const bulkInterval = secondsToMilliseconds(0.5);
     const announcementInterval = secondsToMilliseconds(2);
 
     clientInstanceService = new ClientInstanceService(
         stores,
-        { getLogger },
+        config,
         bulkInterval,
         announcementInterval,
     );

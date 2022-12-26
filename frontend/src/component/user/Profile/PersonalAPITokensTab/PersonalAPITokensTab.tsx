@@ -26,7 +26,6 @@ import {
     INewPersonalAPIToken,
     IPersonalAPIToken,
 } from 'interfaces/personalAPIToken';
-import { IUser } from 'interfaces/user';
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useTable, SortingRule, useSortBy, useFlexLayout } from 'react-table';
@@ -35,6 +34,8 @@ import { sortTypes } from 'utils/sortTypes';
 import { CreatePersonalAPIToken } from './CreatePersonalAPIToken/CreatePersonalAPIToken';
 import { DeletePersonalAPIToken } from './DeletePersonalAPIToken/DeletePersonalAPIToken';
 import { PersonalAPITokenDialog } from './PersonalAPITokenDialog/PersonalAPITokenDialog';
+import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
+import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(3),
@@ -75,11 +76,7 @@ const { value: storedParams, setValue: setStoredParams } = createLocalStorage(
     defaultSort
 );
 
-interface IPersonalAPITokensTabProps {
-    user: IUser;
-}
-
-export const PersonalAPITokensTab = ({ user }: IPersonalAPITokensTabProps) => {
+export const PersonalAPITokensTab = () => {
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const isExtraSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -132,6 +129,13 @@ export const PersonalAPITokensTab = ({ user }: IPersonalAPITokensTabProps) => {
                 Header: 'Created',
                 accessor: 'createdAt',
                 Cell: DateCell,
+                sortType: 'date',
+                maxWidth: 150,
+            },
+            {
+                Header: 'Last seen',
+                accessor: 'seenAt',
+                Cell: TimeAgoCell,
                 sortType: 'date',
                 maxWidth: 150,
             },
@@ -196,16 +200,20 @@ export const PersonalAPITokensTab = ({ user }: IPersonalAPITokensTabProps) => {
         useFlexLayout
     );
 
-    useEffect(() => {
-        const hiddenColumns = [];
-        if (isSmallScreen) {
-            hiddenColumns.push('createdAt');
-        }
-        if (isExtraSmallScreen) {
-            hiddenColumns.push('expiresAt');
-        }
-        setHiddenColumns(hiddenColumns);
-    }, [setHiddenColumns, isSmallScreen, isExtraSmallScreen]);
+    useConditionallyHiddenColumns(
+        [
+            {
+                condition: isExtraSmallScreen,
+                columns: ['expiresAt'],
+            },
+            {
+                condition: isSmallScreen,
+                columns: ['createdAt'],
+            },
+        ],
+        setHiddenColumns,
+        columns
+    );
 
     useEffect(() => {
         const tableState: PageQueryType = {};

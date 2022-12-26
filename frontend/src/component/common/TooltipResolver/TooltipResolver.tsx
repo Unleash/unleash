@@ -1,11 +1,11 @@
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { Tooltip, TooltipProps } from '@mui/material';
 import { HtmlTooltip } from '../HtmlTooltip/HtmlTooltip';
 
 export interface ITooltipResolverProps extends Omit<TooltipProps, 'title'> {
-    title?: string | undefined;
-    titleComponent?: ReactNode | undefined;
-    variant?: 'default' | 'white';
+    title?: string;
+    titleComponent?: ReactNode;
+    variant?: 'default' | 'custom';
 }
 
 export const TooltipResolver = ({
@@ -19,7 +19,7 @@ export const TooltipResolver = ({
         return children;
     }
 
-    if (variant === 'white') {
+    if (variant === 'custom') {
         return (
             <HtmlTooltip {...rest} title={title || titleComponent} arrow>
                 {children}

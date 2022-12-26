@@ -11,5 +11,6 @@ export const emptyFeature: IFeatureToggle = {
     project: '',
     variants: [],
     description: '',
+    favorite: false,
     impressionData: false,
 };

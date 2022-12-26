@@ -2,7 +2,6 @@ import { makeStyles } from 'tss-react/mui';
 
 export const useStyles = makeStyles()(theme => ({
     containerStyles: {
-        marginTop: '1.5rem',
         display: 'flex',
         [theme.breakpoints.down('md')]: {
             flexDirection: 'column',
@@ -20,7 +19,8 @@ export const useStyles = makeStyles()(theme => ({
     innerContainer: {
         padding: '1.25rem 2rem',
         display: 'flex',
-        alignItems: 'center',
+        flexDirection: 'column',
+        alignItems: 'start',
     },
     separator: {
         width: '100%',
@@ -32,8 +32,13 @@ export const useStyles = makeStyles()(theme => ({
     },
     tabButton: {
         textTransform: 'none',
-        width: 'auto',
         fontSize: '1rem',
+        flexGrow: 1,
+        flexBasis: 0,
+        [theme.breakpoints.down('md')]: {
+            paddingLeft: theme.spacing(1),
+            paddingRight: theme.spacing(1),
+        },
         [theme.breakpoints.up('md')]: {
             minWidth: 160,
         },
@@ -43,7 +48,6 @@ export const useStyles = makeStyles()(theme => ({
         width: '100%',
         fontSize: theme.fontSizes.mainHeader,
         fontWeight: 'bold',
-        marginBottom: '0.5rem',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',

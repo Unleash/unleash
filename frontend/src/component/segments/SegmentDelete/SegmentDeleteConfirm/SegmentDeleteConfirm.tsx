@@ -43,7 +43,7 @@ export const SegmentDeleteConfirm = ({
             onClose={handleCancel}
             formId={formId}
         >
-            <p className={styles.deleteParagraph}>
+            <p>
                 In order to delete this segment, please enter the name of the
                 segment in the field below: <strong>{segment?.name}</strong>
             </p>

@@ -7,6 +7,7 @@ import {
     ISelectProjectInputProps,
     SelectProjectInput,
 } from './SelectProjectInput';
+import { testServerRoute, testServerSetup } from 'utils/testServer';
 
 const onChange = vi.fn();
 const onFocus = vi.fn();
@@ -22,10 +23,13 @@ const mockProps: ISelectProjectInputProps = {
     onFocus,
 };
 
+const server = testServerSetup();
+
 describe('SelectProjectInput', () => {
     beforeEach(() => {
         onChange.mockClear();
         onFocus.mockClear();
+        testServerRoute(server, '/api/admin/ui-config', {});
     });
 
     it('renders with default state', () => {

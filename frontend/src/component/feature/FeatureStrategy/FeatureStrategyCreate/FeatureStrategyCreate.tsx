@@ -18,7 +18,6 @@ import {
 } from '../FeatureStrategyEdit/FeatureStrategyEdit';
 import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { ISegment } from 'interfaces/segment';
-import { useSegmentsApi } from 'hooks/api/actions/useSegmentsApi/useSegmentsApi';
 import { formatStrategyName } from 'utils/strategyNames';
 import { useFormErrors } from 'hooks/useFormErrors';
 import { createFeatureStrategy } from 'utils/createFeatureStrategy';
@@ -42,8 +41,7 @@ export const FeatureStrategyCreate = () => {
     const errors = useFormErrors();
 
     const { addStrategyToFeature, loading } = useFeatureStrategyApi();
-    const { addChangeRequest } = useChangeRequestApi();
-    const { setStrategySegments } = useSegmentsApi();
+    const { addChange } = useChangeRequestApi();
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
     const { unleashUrl } = uiConfig;
@@ -85,7 +83,7 @@ export const FeatureStrategyCreate = () => {
     }, [featureId, strategyDefinition]);
 
     const onAddStrategy = async (payload: IFeatureStrategyPayload) => {
-        const created = await addStrategyToFeature(
+        await addStrategyToFeature(
             projectId,
             featureId,
             environmentId,
@@ -100,7 +98,7 @@ export const FeatureStrategyCreate = () => {
     };
 
     const onStrategyRequestAdd = async (payload: IFeatureStrategyPayload) => {
-        await addChangeRequest(projectId, environmentId, {
+        await addChange(projectId, environmentId, {
             action: 'addStrategy',
             feature: featureId,
             payload,
@@ -130,7 +128,9 @@ export const FeatureStrategyCreate = () => {
         }
     };
 
-    if (!data) return null;
+    const emptyFeature = !data || !data.project;
+
+    if (emptyFeature) return null;
 
     return (
         <FormTemplate
@@ -150,6 +150,7 @@ export const FeatureStrategyCreate = () => {
             }
         >
             <FeatureStrategyForm
+                projectId={projectId}
                 feature={data}
                 strategy={strategy}
                 setStrategy={setStrategy}

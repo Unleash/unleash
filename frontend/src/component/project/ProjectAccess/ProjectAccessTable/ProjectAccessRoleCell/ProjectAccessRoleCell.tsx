@@ -17,12 +17,14 @@ const StyledPopover = styled(Popover)(() => ({
 
 interface IProjectAccessRoleCellProps {
     roleId: number;
+    projectId: string;
     value?: string;
     emptyText?: string;
 }
 
 export const ProjectAccessRoleCell: VFC<IProjectAccessRoleCellProps> = ({
     roleId,
+    projectId,
     value,
     emptyText,
 }) => {
@@ -63,7 +65,11 @@ export const ProjectAccessRoleCell: VFC<IProjectAccessRoleCellProps> = ({
                     horizontal: 'left',
                 }}
             >
-                <ProjectRoleDescription roleId={roleId} popover />
+                <ProjectRoleDescription
+                    roleId={roleId}
+                    projectId={projectId}
+                    popover
+                />
             </StyledPopover>
         </>
     );

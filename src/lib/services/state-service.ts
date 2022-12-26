@@ -50,6 +50,7 @@ import { DEFAULT_ENV } from '../util/constants';
 import { GLOBAL_ENV } from '../types/environment';
 import { ISegmentStore } from '../types/stores/segment-store';
 import { PartialSome } from '../types/partial';
+import { IFlagResolver } from 'lib/types';
 
 export interface IBackupOption {
     includeFeatureToggles: boolean;
@@ -92,9 +93,14 @@ export default class StateService {
 
     private segmentStore: ISegmentStore;
 
+    private flagResolver: IFlagResolver;
+
     constructor(
         stores: IUnleashStores,
-        { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
+        {
+            getLogger,
+            flagResolver,
+        }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>,
     ) {
         this.eventStore = stores.eventStore;
         this.toggleStore = stores.featureToggleStore;
@@ -107,6 +113,7 @@ export default class StateService {
         this.featureTagStore = stores.featureTagStore;
         this.environmentStore = stores.environmentStore;
         this.segmentStore = stores.segmentStore;
+        this.flagResolver = flagResolver;
         this.logger = getLogger('services/state-service.js');
     }
 
@@ -684,7 +691,63 @@ export default class StateService {
         );
     }
 
-    async export({
+    async export(opts: IExportIncludeOptions): Promise<{
+        features: FeatureToggle[];
+        strategies: IStrategy[];
+        version: number;
+        projects: IProject[];
+        tagTypes: ITagType[];
+        tags: ITag[];
+        featureTags: IFeatureTag[];
+        featureStrategies: IFeatureStrategy[];
+        environments: IEnvironment[];
+        featureEnvironments: IFeatureEnvironment[];
+    }> {
+        if (this.flagResolver.isEnabled('variantsPerEnvironment')) {
+            return this.exportV4(opts);
+        }
+        // adapt v4 to v3. We need includeEnvironments set to true to filter the
+        // best environment from where we'll pick variants (cause now they are stored
+        // per environment despite being displayed as if they belong to the feature)
+        const v4 = await this.exportV4({ ...opts, includeEnvironments: true });
+        // undefined defaults to true
+        if (opts.includeFeatureToggles !== false) {
+            const keepEnv = v4.environments
+                .filter((env) => env.enabled !== false)
+                .sort((e1, e2) => {
+                    if (e1.type !== 'production' || e2.type !== 'production') {
+                        if (e1.type === 'production') {
+                            return -1;
+                        } else if (e2.type === 'production') {
+                            return 1;
+                        }
+                    }
+                    return e1.sortOrder - e2.sortOrder;
+                })[0];
+
+            const featureEnvs = v4.featureEnvironments.filter(
+                (fE) => fE.environment === keepEnv.name,
+            );
+            v4.features = v4.features.map((f) => {
+                const variants = featureEnvs.find(
+                    (fe) => fe.enabled !== false && fe.featureName === f.name,
+                )?.variants;
+                return { ...f, variants };
+            });
+            v4.featureEnvironments = v4.featureEnvironments.map((fe) => {
+                delete fe.variants;
+                return fe;
+            });
+        }
+        // only if explicitly set to false (i.e. undefined defaults to true)
+        if (opts.includeEnvironments === false) {
+            delete v4.environments;
+        }
+        v4.version = 3;
+        return v4;
+    }
+
+    async exportV4({
         includeFeatureToggles = true,
         includeStrategies = true,
         includeProjects = true,

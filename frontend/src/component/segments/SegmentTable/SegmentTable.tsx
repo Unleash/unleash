@@ -14,7 +14,7 @@ import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightC
 import { useMediaQuery } from '@mui/material';
 import { sortTypes } from 'utils/sortTypes';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
-import { useMemo, useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { SegmentEmpty } from 'component/segments/SegmentEmpty/SegmentEmpty';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
 import { DonutLarge } from '@mui/icons-material';
@@ -24,6 +24,7 @@ import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import theme from 'themes/theme';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Search } from 'component/common/Search/Search';
+import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 
 export const SegmentTable = () => {
     const { segments, loading } = useSegments();
@@ -71,13 +72,16 @@ export const SegmentTable = () => {
         useSortBy
     );
 
-    useEffect(() => {
-        const hiddenColumns = ['description'];
-        if (isSmallScreen) {
-            hiddenColumns.push('createdAt', 'createdBy');
-        }
-        setHiddenColumns(hiddenColumns);
-    }, [setHiddenColumns, isSmallScreen]);
+    useConditionallyHiddenColumns(
+        [
+            {
+                condition: isSmallScreen,
+                columns: ['createdAt', 'createdBy'],
+            },
+        ],
+        setHiddenColumns,
+        COLUMNS
+    );
 
     return (
         <PageContent

@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
 import { FC } from 'react';
-import { Typography } from '@mui/material';
+import { Typography, Tooltip } from '@mui/material';
 import TimeAgo from 'react-timeago';
 import { IChangeRequest } from 'component/changeRequest/changeRequest.types';
 import { ChangeRequestStatusBadge } from 'component/changeRequest/ChangeRequestStatusBadge/ChangeRequestStatusBadge';
@@ -12,6 +12,7 @@ import {
     StyledAvatar,
     StyledCard,
 } from './ChangeRequestHeader.styles';
+import { Separator } from '../../ChangeRequestSidebar/ChangeRequestSidebar';
 
 export const ChangeRequestHeader: FC<{ changeRequest: IChangeRequest }> = ({
     changeRequest,
@@ -19,20 +20,34 @@ export const ChangeRequestHeader: FC<{ changeRequest: IChangeRequest }> = ({
     return (
         <StyledPaper elevation={0}>
             <StyledContainer>
-                <StyledHeader variant="h1">
+                <StyledHeader variant="h1" sx={{ mr: 1.5 }}>
                     Change request #{changeRequest.id}
                 </StyledHeader>
                 <ChangeRequestStatusBadge state={changeRequest.state} />
             </StyledContainer>
             <StyledInnerContainer>
                 <Typography variant="body2" sx={{ margin: 'auto 0' }}>
-                    Created <TimeAgo date={new Date(changeRequest.createdAt)} />{' '}
+                    Created{' '}
+                    <TimeAgo
+                        minPeriod={60}
+                        date={new Date(changeRequest.createdAt)}
+                    />{' '}
                     by
                 </Typography>
-                <StyledAvatar src={changeRequest?.createdBy?.imageUrl} />
-                <Box>
+                <Box
+                    sx={theme => ({
+                        marginLeft: theme.spacing(1),
+                    })}
+                >
+                    <Tooltip title={changeRequest?.createdBy?.username}>
+                        <StyledAvatar
+                            src={changeRequest?.createdBy?.imageUrl}
+                        />
+                    </Tooltip>
+                </Box>
+                <Box sx={theme => ({ marginLeft: theme.spacing(1.5) })}>
                     <StyledCard variant="outlined">
-                        <Typography variant="body2">
+                        <Typography variant="body2" sx={{ lineHeight: 1 }}>
                             Environment:{' '}
                             <Typography
                                 display="inline"
@@ -42,7 +57,7 @@ export const ChangeRequestHeader: FC<{ changeRequest: IChangeRequest }> = ({
                             >
                                 {changeRequest?.environment}
                             </Typography>{' '}
-                            | Updates:{' '}
+                            <Separator /> Updates:{' '}
                             <Typography
                                 variant="body2"
                                 display="inline"

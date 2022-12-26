@@ -1,9 +1,9 @@
 import {
+    Navigate,
     Route,
     Routes,
     useLocation,
     useNavigate,
-    Navigate,
 } from 'react-router-dom';
 import { ITab, VerticalTabs } from 'component/common/VerticalTabs/VerticalTabs';
 import { ProjectAccess } from 'component/project/ProjectAccess/ProjectAccess';
@@ -14,10 +14,19 @@ export const ProjectSettings = () => {
     const location = useLocation();
     const navigate = useNavigate();
 
-    const tabs = [
-        { id: 'access', label: 'Access' },
-        { id: 'environments', label: 'Environments' },
-        { id: 'change-requests', label: 'Change request configuration' },
+    const tabs: ITab[] = [
+        {
+            id: 'environments',
+            label: 'Environments',
+        },
+        {
+            id: 'access',
+            label: 'Access',
+        },
+        {
+            id: 'change-requests',
+            label: 'Change request configuration',
+        },
     ];
 
     const onChange = (tab: ITab) => {
@@ -35,13 +44,13 @@ export const ProjectSettings = () => {
             onChange={onChange}
         >
             <Routes>
-                <Route path={`${tabs[0].id}/*`} element={<ProjectAccess />} />
                 <Route
-                    path={`${tabs[1].id}/*`}
+                    path="environments/*"
                     element={<ProjectEnvironmentList />}
                 />
+                <Route path="access/*" element={<ProjectAccess />} />
                 <Route
-                    path={`${tabs[2].id}/*`}
+                    path="change-requests/*"
                     element={<ChangeRequestConfiguration />}
                 />
                 <Route

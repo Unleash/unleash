@@ -1,18 +1,17 @@
-import { FeatureSchema } from 'openapi';
-import { openApiAdmin } from 'utils/openapiClient';
-import { useApiGetter } from 'hooks/api/getters/useApiGetter/useApiGetter';
+import { FeaturesSchema } from 'openapi';
+import useSWR from 'swr';
+import handleErrorResponses from '../httpErrorResponseHandler';
 
-export interface IUseFeaturesOutput {
-    features?: FeatureSchema[];
-    refetchFeatures: () => void;
-    loading: boolean;
-    error?: Error;
-}
+const fetcher = (path: string) => {
+    return fetch(path)
+        .then(handleErrorResponses('Feature toggle'))
+        .then(res => res.json());
+};
 
-export const useFeatures = (): IUseFeaturesOutput => {
-    const { data, refetch, loading, error } = useApiGetter(
-        'apiAdminFeaturesGet',
-        () => openApiAdmin.getAllToggles(),
+export const useFeatures = () => {
+    const { data, error, mutate } = useSWR<FeaturesSchema>(
+        'api/admin/features',
+        fetcher,
         {
             refreshInterval: 15 * 1000, // ms
         }
@@ -20,8 +19,8 @@ export const useFeatures = (): IUseFeaturesOutput => {
 
     return {
         features: data?.features,
-        refetchFeatures: refetch,
-        loading,
+        loading: !error && !data,
+        refetchFeatures: mutate,
         error,
     };
 };

@@ -47,6 +47,7 @@ async function createApp(
         services.clientInstanceService.destroy();
         services.clientMetricsServiceV2.destroy();
         services.apiTokenService.destroy();
+        services.proxyService.destroy();
     };
 
     // TODO: use create from server-impl instead?

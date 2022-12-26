@@ -25,6 +25,7 @@ import { findPublicFolder } from './util/findPublicFolder';
 import { conditionalMiddleware } from './middleware/conditional-middleware';
 import patMiddleware from './middleware/pat-middleware';
 import { Knex } from 'knex';
+import maintenanceMiddleware from './middleware/maintenance-middleware';
 
 export default async function getApp(
     config: IUnleashConfig,
@@ -136,6 +137,14 @@ export default async function getApp(
     app.use(
         baseUriPath,
         rbacMiddleware(config, stores, services.accessService),
+    );
+
+    app.use(
+        `${baseUriPath}/api/admin`,
+        conditionalMiddleware(
+            () => config.flagResolver.isEnabled('maintenance'),
+            maintenanceMiddleware(config, services.maintenanceService),
+        ),
     );
 
     if (typeof config.preRouterHook === 'function') {

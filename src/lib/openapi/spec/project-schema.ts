@@ -36,6 +36,9 @@ export const projectSchema = {
         changeRequestsEnabled: {
             type: 'boolean',
         },
+        favorite: {
+            type: 'boolean',
+        },
     },
     components: {},
 } as const;

@@ -9,7 +9,7 @@
 <br/>
 <br/>
 
-[![Build and Tests](https://img.shields.io/github/workflow/status/unleash/unleash/Build%20%26%20Tests)](https://github.com/Unleash/unleash/actions/workflows/build.yaml) [![Coverage Status](https://coveralls.io/repos/github/Unleash/unleash/badge.svg?branch=main)](https://coveralls.io/github/Unleash/unleash?branch=main) [![Docker Pulls](https://img.shields.io/docker/pulls/unleashorg/unleash-server)](https://hub.docker.com/r/unleashorg/unleash-server) [![Apache-2.0 license](https://img.shields.io/github/license/unleash/unleash)](https://github.com/Unleash/unleash/blob/main/LICENSE) [![Join Unleash on Slack](https://img.shields.io/badge/slack-join-635dc5?logo=slack)](https://slack.unleash.run)
+[![Build and Tests](https://img.shields.io/github/actions/workflow/status/Unleash/unleash/build.yaml?branch=main)](https://github.com/Unleash/unleash/actions/workflows/build.yaml) [![Coverage Status](https://coveralls.io/repos/github/Unleash/unleash/badge.svg?branch=main)](https://coveralls.io/github/Unleash/unleash?branch=main) [![Docker Pulls](https://img.shields.io/docker/pulls/unleashorg/unleash-server)](https://hub.docker.com/r/unleashorg/unleash-server) [![Apache-2.0 license](https://img.shields.io/github/license/unleash/unleash)](https://github.com/Unleash/unleash/blob/main/LICENSE) [![Join Unleash on Slack](https://img.shields.io/badge/slack-join-635dc5?logo=slack)](https://slack.unleash.run)
 
 [Open Live Demo →](https://www.getunleash.io/interactive-demo)
 
@@ -34,8 +34,8 @@ With [`git`](https://git-scm.com/) and [`docker`](https://www.docker.com/) insta
 Run this script:
 
 ```bash
-git clone git@github.com:Unleash/unleash-docker.git
-cd unleash-docker
+git clone git@github.com:Unleash/unleash.git
+cd unleash
 docker compose up -d
 ```
 
@@ -53,8 +53,8 @@ Find your preferred SDK in [our list of official SDKs](#unleash-sdks) and import
 If you use the docker compose file from the previous step, here's the configuration details you'll need to get going:
 
 - For front-end SDKs, use:
-  - URL: `http://localhost:3000`
-  - `clientKey`: `proxy-client-key`
+  - URL: `http://localhost:4242/api/frontend/`
+  - `clientKey`: `default:development.unleash-insecure-frontend-api-token`
 - For server-side SDKs, use:
   - Unleash API URL: `http://localhost:4242/api/`
   - API token: `default:development.unleash-insecure-api-token`

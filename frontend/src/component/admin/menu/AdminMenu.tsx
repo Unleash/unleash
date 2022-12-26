@@ -1,41 +1,16 @@
-import React from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
-import { Paper, Tab, Tabs, Theme } from '@mui/material';
+import { useLocation } from 'react-router-dom';
+import { Paper, Tab, Tabs } from '@mui/material';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
-import { useTheme } from '@mui/material/styles';
-
-const createNavLinkStyle = (props: {
-    isActive: boolean;
-    theme: Theme;
-}): React.CSSProperties => {
-    const navLinkStyle = {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: '100%',
-        textDecoration: 'none',
-        color: 'inherit',
-        padding: props.theme.spacing(1.5, 3),
-    };
-
-    const activeNavLinkStyle: React.CSSProperties = {
-        fontWeight: 'bold',
-        borderRadius: '3px',
-        padding: props.theme.spacing(1.5, 3),
-    };
-
-    return props.isActive
-        ? { ...navLinkStyle, ...activeNavLinkStyle }
-        : navLinkStyle;
-};
+import { CenteredNavLink } from './CenteredNavLink';
 
 function AdminMenu() {
     const { uiConfig } = useUiConfig();
-    const theme = useTheme();
     const { pathname } = useLocation();
     const { isBilling } = useInstanceStatus();
     const { flags } = uiConfig;
+
+    const activeTab = pathname.split('/')[2];
 
     return (
         <Paper
@@ -46,120 +21,101 @@ function AdminMenu() {
             }}
         >
             <Tabs
-                value={pathname}
+                value={activeTab}
                 variant="scrollable"
                 scrollButtons="auto"
                 allowScrollButtonsMobile
             >
                 <Tab
-                    value="/admin/users"
+                    value="users"
                     label={
-                        <NavLink
-                            to="/admin/users"
-                            style={({ isActive }) =>
-                                createNavLinkStyle({ isActive, theme })
-                            }
-                        >
+                        <CenteredNavLink to="/admin/users">
                             <span>Users</span>
-                        </NavLink>
+                        </CenteredNavLink>
                     }
                 />
                 {flags.UG && (
                     <Tab
-                        value="/admin/groups"
+                        value="groups"
                         label={
-                            <NavLink
-                                to="/admin/groups"
-                                style={({ isActive }) =>
-                                    createNavLinkStyle({ isActive, theme })
-                                }
-                            >
+                            <CenteredNavLink to="/admin/groups">
                                 <span>Groups</span>
-                            </NavLink>
+                            </CenteredNavLink>
                         }
                     />
                 )}
                 {flags.RE && (
                     <Tab
-                        value="/admin/roles"
+                        value="roles"
                         label={
-                            <NavLink
-                                to="/admin/roles"
-                                style={({ isActive }) =>
-                                    createNavLinkStyle({ isActive, theme })
-                                }
-                            >
+                            <CenteredNavLink to="/admin/roles">
                                 <span>Project roles</span>
-                            </NavLink>
+                            </CenteredNavLink>
                         }
                     />
                 )}
                 <Tab
-                    value="/admin/api"
+                    value="api"
                     label={
-                        <NavLink
-                            to="/admin/api"
-                            style={({ isActive }) =>
-                                createNavLinkStyle({ isActive, theme })
-                            }
-                        >
+                        <CenteredNavLink to="/admin/api">
                             API access
-                        </NavLink>
+                        </CenteredNavLink>
                     }
                 />
                 {uiConfig.flags.embedProxyFrontend && (
                     <Tab
-                        value="/admin/cors"
+                        value="cors"
                         label={
-                            <NavLink
-                                to="/admin/cors"
-                                style={({ isActive }) =>
-                                    createNavLinkStyle({ isActive, theme })
-                                }
-                            >
+                            <CenteredNavLink to="/admin/cors">
                                 CORS origins
-                            </NavLink>
+                            </CenteredNavLink>
                         }
                     />
                 )}
                 <Tab
-                    value="/admin/auth"
+                    value="auth"
                     label={
-                        <NavLink
-                            to="/admin/auth"
-                            style={({ isActive }) =>
-                                createNavLinkStyle({ isActive, theme })
-                            }
-                        >
+                        <CenteredNavLink to="/admin/auth">
                             Single sign-on
-                        </NavLink>
+                        </CenteredNavLink>
                     }
                 />
                 <Tab
-                    value="/admin/instance"
+                    value="instance"
                     label={
-                        <NavLink
-                            to="/admin/instance"
-                            style={({ isActive }) =>
-                                createNavLinkStyle({ isActive, theme })
-                            }
-                        >
+                        <CenteredNavLink to="/admin/instance">
                             Instance stats
-                        </NavLink>
+                        </CenteredNavLink>
                     }
                 />
+                {flags.networkView && (
+                    <Tab
+                        value="network"
+                        label={
+                            <CenteredNavLink to="/admin/network">
+                                Network
+                            </CenteredNavLink>
+                        }
+                    />
+                )}
+                {flags.maintenance && (
+                    <Tab
+                        value="maintenance"
+                        label={
+                            <CenteredNavLink to="/admin/maintenance">
+                                Maintenance
+                            </CenteredNavLink>
+                        }
+                    />
+                )}
+
                 {isBilling && (
                     <Tab
-                        value="/admin/billing"
+                        value="billing"
                         label={
-                            <NavLink
-                                to="/admin/billing"
-                                style={({ isActive }) =>
-                                    createNavLinkStyle({ isActive, theme })
-                                }
-                            >
+                            <CenteredNavLink to="/admin/billing">
                                 Billing
-                            </NavLink>
+                            </CenteredNavLink>
                         }
                     />
                 )}

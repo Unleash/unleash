@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState, VFC } from 'react';
+import { useEffect, useMemo, useState, VFC } from 'react';
 import { SortingRule, useFlexLayout, useSortBy, useTable } from 'react-table';
 import { VirtualizedTable, TablePlaceholder } from 'component/common/Table';
 import { styled, useMediaQuery, useTheme } from '@mui/material';
@@ -15,7 +15,7 @@ import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useSearch } from 'hooks/useSearch';
-import useHiddenColumns from 'hooks/useHiddenColumns';
+import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import {
     Link,
     Route,
@@ -170,6 +170,7 @@ export const ProjectAccessTable: VFC = () => {
                 Cell: ({ value, row: { original: row } }: any) => (
                     <ProjectAccessRoleCell
                         roleId={row.entity.roleId}
+                        projectId={projectId}
                         value={value}
                     />
                 ),
@@ -187,7 +188,7 @@ export const ProjectAccessTable: VFC = () => {
                     <TimeAgoCell value={value} emptyText="Never" />
                 ),
                 sortType: 'date',
-                maxWidth: 100,
+                maxWidth: 130,
             },
             {
                 id: 'lastLogin',
@@ -207,7 +208,7 @@ export const ProjectAccessTable: VFC = () => {
                     <TimeAgoCell value={value} emptyText="Never" />
                 ),
                 sortType: 'date',
-                maxWidth: 100,
+                maxWidth: 130,
             },
             {
                 id: 'actions',
@@ -307,8 +308,20 @@ export const ProjectAccessTable: VFC = () => {
         useFlexLayout
     );
 
-    useHiddenColumns(setHiddenColumns, hiddenColumnsSmall, isSmallScreen);
-    useHiddenColumns(setHiddenColumns, hiddenColumnsMedium, isMediumScreen);
+    useConditionallyHiddenColumns(
+        [
+            {
+                condition: isSmallScreen,
+                columns: hiddenColumnsSmall,
+            },
+            {
+                condition: isMediumScreen,
+                columns: hiddenColumnsMedium,
+            },
+        ],
+        setHiddenColumns,
+        columns
+    );
 
     useEffect(() => {
         const tableState: PageQueryType = {};

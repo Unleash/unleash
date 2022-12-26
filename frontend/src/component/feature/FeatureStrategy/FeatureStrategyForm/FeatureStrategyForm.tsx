@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Alert, Button } from '@mui/material';
 import {
@@ -15,7 +15,6 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { STRATEGY_FORM_SUBMIT_ID } from 'utils/testIds';
 import { useConstraintsValidation } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
-import AccessContext from 'contexts/AccessContext';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { FeatureStrategySegment } from 'component/feature/FeatureStrategy/FeatureStrategySegment/FeatureStrategySegment';
 import { ISegment } from 'interfaces/segment';
@@ -28,9 +27,13 @@ import {
     useFeatureStrategyProdGuard,
 } from '../FeatureStrategyProdGuard/FeatureStrategyProdGuard';
 import { formatFeaturePath } from '../FeatureStrategyEdit/FeatureStrategyEdit';
+import { useChangeRequestInReviewWarning } from 'hooks/useChangeRequestInReviewWarning';
+import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
+import { useHasProjectEnvironmentAccess } from 'hooks/useHasAccess';
 
 interface IFeatureStrategyFormProps {
     feature: IFeatureToggle;
+    projectId: string;
     environmentId: string;
     permission: string;
     onSubmit: () => void;
@@ -46,6 +49,7 @@ interface IFeatureStrategyFormProps {
 }
 
 export const FeatureStrategyForm = ({
+    projectId,
     feature,
     environmentId,
     permission,
@@ -62,8 +66,24 @@ export const FeatureStrategyForm = ({
     const [showProdGuard, setShowProdGuard] = useState(false);
     const hasValidConstraints = useConstraintsValidation(strategy.constraints);
     const enableProdGuard = useFeatureStrategyProdGuard(feature, environmentId);
-    const { hasAccess } = useContext(AccessContext);
+    const access = useHasProjectEnvironmentAccess(
+        permission,
+        projectId,
+        environmentId
+    );
     const { strategyDefinition } = useStrategy(strategy?.name);
+
+    const { data } = usePendingChangeRequests(feature.project);
+    const { changeRequestInReviewOrApproved, alert } =
+        useChangeRequestInReviewWarning(data);
+
+    const hasChangeRequestInReviewForEnvironment =
+        changeRequestInReviewOrApproved(environmentId || '');
+
+    const changeRequestButtonText = hasChangeRequestInReviewForEnvironment
+        ? 'Add to existing change request'
+        : 'Add change to draft';
+
     const navigate = useNavigate();
 
     const {
@@ -130,10 +150,16 @@ export const FeatureStrategyForm = ({
     return (
         <form className={styles.form} onSubmit={onSubmitWithValidation}>
             <ConditionallyRender
-                condition={Boolean(isChangeRequest)}
-                show={
-                    <FeatureStrategyChangeRequestAlert
-                        environment={environmentId}
+                condition={hasChangeRequestInReviewForEnvironment}
+                show={alert}
+                elseShow={
+                    <ConditionallyRender
+                        condition={Boolean(isChangeRequest)}
+                        show={
+                            <FeatureStrategyChangeRequestAlert
+                                environment={environmentId}
+                            />
+                        }
                     />
                 }
             />
@@ -185,11 +211,7 @@ export const FeatureStrategyForm = ({
                 setStrategy={setStrategy}
                 validateParameter={validateParameter}
                 errors={errors}
-                hasAccess={hasAccess(
-                    permission,
-                    feature.project,
-                    environmentId
-                )}
+                hasAccess={access}
             />
             <hr className={styles.hr} />
             <div className={styles.buttons}>
@@ -207,7 +229,9 @@ export const FeatureStrategyForm = ({
                     }
                     data-testid={STRATEGY_FORM_SUBMIT_ID}
                 >
-                    {isChangeRequest ? 'Add change to draft' : 'Save strategy'}
+                    {isChangeRequest
+                        ? changeRequestButtonText
+                        : 'Save strategy'}
                 </PermissionButton>
                 <Button
                     type="button"

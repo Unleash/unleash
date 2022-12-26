@@ -2,9 +2,9 @@
 title: Impression data
 ---
 
-:::info
+:::info Availability
 
-Availability The impression data feature was introduced in **Unleash 4.7**. It is available in the JavaScript-based proxy clients and in some server-side SDKs. Please refer to the [SDK compatibility table](../reference/sdks/index.md#server-side-sdk-compatibility-table) for an overview of server-side SDKs that support it.
+The impression data feature was introduced in **Unleash 4.7**. It is available in the JavaScript-based proxy clients and in some server-side SDKs. Please refer to the [SDK compatibility table](../reference/sdks/index.md#server-side-sdk-compatibility-table) for an overview of server-side SDKs that support it.
 
 :::
 

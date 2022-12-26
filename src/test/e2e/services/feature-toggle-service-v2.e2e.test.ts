@@ -167,8 +167,10 @@ test('should ignore name in the body when updating feature toggle', async () => 
     };
 
     await service.updateFeatureToggle(projectId, update, userName, featureName);
-    const featureOne = await service.getFeature(featureName);
-    const featureTwo = await service.getFeature(secondFeatureName);
+    const featureOne = await service.getFeature({ featureName });
+    const featureTwo = await service.getFeature({
+        featureName: secondFeatureName,
+    });
 
     expect(featureOne.description).toBe(`I'm changed`);
     expect(featureTwo.description).toBe('Second toggle');
@@ -250,7 +252,11 @@ test('adding and removing an environment preserves variants when variants per en
     await environmentService.removeEnvironmentFromProject(prodEnv, 'default');
     await environmentService.addEnvironmentToProject(prodEnv, 'default');
 
-    const toggle = await service.getFeature(featureName, false, null, false);
+    const toggle = await service.getFeature({
+        featureName,
+        projectId: null,
+        environmentVariants: false,
+    });
     expect(toggle.variants).toHaveLength(1);
 });
 
@@ -355,7 +361,7 @@ test('Cloning a feature toggle also clones segments correctly', async () => {
         'test-user',
     );
 
-    let feature = await service.getFeature(clonedFeatureName);
+    let feature = await service.getFeature({ featureName: clonedFeatureName });
     expect(
         feature.environments.find((x) => x.name === 'default').strategies[0]
             .segments,

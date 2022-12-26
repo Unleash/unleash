@@ -27,7 +27,12 @@ export const TimeAgoCell: VFC<ITimeAgoCellProps> = ({
     return (
         <TextCell>
             <Tooltip title={title?.(date) ?? date} arrow>
-                <Typography noWrap variant="body2" data-loading>
+                <Typography
+                    noWrap
+                    component="span"
+                    variant="body2"
+                    data-loading
+                >
                     <TimeAgo date={new Date(value)} live={live} title={''} />
                 </Typography>
             </Tooltip>

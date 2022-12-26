@@ -28,6 +28,7 @@ import PasswordMismatch from '../error/password-mismatch';
 import BadDataError from '../error/bad-data-error';
 import { isDefined } from '../util/isDefined';
 import { TokenUserSchema } from '../openapi/spec/token-user-schema';
+import { minutesToMilliseconds } from 'date-fns';
 
 const systemUser = new User({ id: -1, username: 'system' });
 
@@ -78,6 +79,10 @@ class UserService {
 
     private passwordResetTimeouts: { [key: string]: NodeJS.Timeout } = {};
 
+    private seenTimer: NodeJS.Timeout;
+
+    private lastSeenSecrets: Set<string> = new Set<string>();
+
     constructor(
         stores: Pick<IUnleashStores, 'userStore' | 'eventStore'>,
         {
@@ -103,6 +108,7 @@ class UserService {
         if (authentication && authentication.createAdminUser) {
             process.nextTick(() => this.initAdminUser());
         }
+        this.updateLastSeen();
     }
 
     validatePassword(password: string): boolean {
@@ -425,6 +431,28 @@ class UserService {
 
     async getUserByPersonalAccessToken(secret: string): Promise<IUser> {
         return this.store.getUserByPersonalAccessToken(secret);
+    }
+
+    async updateLastSeen(): Promise<void> {
+        if (this.lastSeenSecrets.size > 0) {
+            const toStore = [...this.lastSeenSecrets];
+            this.lastSeenSecrets = new Set<string>();
+            await this.store.markSeenAt(toStore);
+        }
+
+        this.seenTimer = setTimeout(
+            async () => this.updateLastSeen(),
+            minutesToMilliseconds(3),
+        ).unref();
+    }
+
+    addPATSeen(secret: string): void {
+        this.lastSeenSecrets.add(secret);
+    }
+
+    destroy(): void {
+        clearTimeout(this.seenTimer);
+        this.seenTimer = null;
     }
 }
 

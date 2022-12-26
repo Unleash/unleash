@@ -25,22 +25,20 @@ const ProjectOverview = () => {
     }, [projectId, setLastViewed]);
 
     return (
-        <div>
-            <div className={styles.containerStyles}>
-                <ProjectInfo
-                    id={projectId}
-                    description={description}
-                    memberCount={members}
-                    health={health}
-                    featureCount={features?.length}
+        <div className={styles.containerStyles}>
+            <ProjectInfo
+                id={projectId}
+                description={description}
+                memberCount={members}
+                health={health}
+                featureCount={features?.length}
+            />
+            <div className={styles.projectToggles}>
+                <ProjectFeatureToggles
+                    features={features}
+                    environments={environments}
+                    loading={loading}
                 />
-                <div className={styles.projectToggles}>
-                    <ProjectFeatureToggles
-                        features={features}
-                        environments={environments}
-                        loading={loading}
-                    />
-                </div>
             </div>
         </div>
     );

@@ -1,10 +1,13 @@
-import { Alert, Button, styled, TextField, Typography } from '@mui/material';
+import { Alert, Button, styled, Typography } from '@mui/material';
 import { FC, useContext, useState } from 'react';
 import { Box } from '@mui/material';
 import { useChangeRequest } from 'hooks/api/getters/useChangeRequest/useChangeRequest';
 import { ChangeRequestHeader } from './ChangeRequestHeader/ChangeRequestHeader';
 import { ChangeRequestTimeline } from './ChangeRequestTimeline/ChangeRequestTimeline';
-import { ChangeRequestReviewers } from './ChangeRequestReviewers/ChangeRequestReviewers';
+import {
+    ChangeRequestReviewers,
+    ChangeRequestReviewersHeader,
+} from './ChangeRequestReviewers/ChangeRequestReviewers';
 import { ChangeRequest } from '../ChangeRequest/ChangeRequest';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
@@ -23,11 +26,16 @@ import { ChangeRequestComment } from './ChangeRequestComments/ChangeRequestComme
 import { AddCommentField } from './ChangeRequestComments/AddCommentField';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { useChangeRequestsEnabled } from '../../../hooks/useChangeRequestsEnabled';
+import { Dialogue } from 'component/common/Dialogue/Dialogue';
+import { changesCount } from '../changesCount';
 
 const StyledAsideBox = styled(Box)(({ theme }) => ({
     width: '30%',
     display: 'flex',
     flexDirection: 'column',
+    [theme.breakpoints.down('sm')]: {
+        width: '100%',
+    },
 }));
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
@@ -36,10 +44,14 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
     width: '70%',
     padding: theme.spacing(1, 2),
     borderRadius: theme.shape.borderRadiusLarge,
+    [theme.breakpoints.down('sm')]: {
+        marginLeft: 0,
+        width: '100%',
+    },
 }));
 
 const StyledButtonBox = styled(Box)(({ theme }) => ({
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing(3),
     display: 'flex',
     justifyContent: 'flex-end',
 }));
@@ -48,8 +60,16 @@ const StyledInnerContainer = styled(Box)(({ theme }) => ({
     padding: theme.spacing(2),
 }));
 
+const ChangeRequestBody = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    [theme.breakpoints.down('sm')]: {
+        flexDirection: 'column',
+    },
+}));
+
 export const ChangeRequestOverview: FC = () => {
     const projectId = useRequiredPathParam('projectId');
+    const [showCancelDialog, setShowCancelDialog] = useState(false);
     const { user } = useAuthUser();
     const { isAdmin } = useContext(AccessContext);
     const [commentText, setCommentText] = useState('');
@@ -110,6 +130,7 @@ export const ChangeRequestOverview: FC = () => {
             await changeState(projectId, Number(id), {
                 state: 'Cancelled',
             });
+            setShowCancelDialog(false);
             refetchChangeRequest();
             refetchChangeRequestOpen();
             setToastData({
@@ -122,6 +143,9 @@ export const ChangeRequestOverview: FC = () => {
         }
     };
 
+    const onCancel = () => setShowCancelDialog(true);
+    const onCancelAbort = () => setShowCancelDialog(false);
+
     const isSelfReview =
         changeRequest?.createdBy.id === user?.id &&
         changeRequest.state === 'In review' &&
@@ -133,29 +157,32 @@ export const ChangeRequestOverview: FC = () => {
     return (
         <>
             <ChangeRequestHeader changeRequest={changeRequest} />
-            <Box sx={{ display: 'flex' }}>
+            <ChangeRequestBody>
                 <StyledAsideBox>
                     <ChangeRequestTimeline state={changeRequest.state} />
-                    <ConditionallyRender
-                        condition={changeRequest.approvals?.length > 0}
-                        show={
-                            <ChangeRequestReviewers>
-                                {changeRequest.approvals?.map(approver => (
-                                    <ChangeRequestReviewer
-                                        name={
-                                            approver.createdBy.username ||
-                                            'Test account'
-                                        }
-                                        imageUrl={approver.createdBy.imageUrl}
-                                    />
-                                ))}
-                            </ChangeRequestReviewers>
+                    <ChangeRequestReviewers
+                        header={
+                            <ChangeRequestReviewersHeader
+                                actualApprovals={changeRequest.approvals.length}
+                                minApprovals={changeRequest.minApprovals}
+                            />
                         }
-                    />
+                    >
+                        {changeRequest.approvals?.map(approver => (
+                            <ChangeRequestReviewer
+                                key={approver.createdBy.username}
+                                name={
+                                    approver.createdBy.username ||
+                                    'Unknown user'
+                                }
+                                imageUrl={approver.createdBy.imageUrl}
+                            />
+                        ))}
+                    </ChangeRequestReviewers>
                 </StyledAsideBox>
                 <StyledPaper elevation={0}>
                     <StyledInnerContainer>
-                        Changes
+                        Requested Changes ({changesCount(changeRequest)})
                         <ChangeRequest
                             changeRequest={changeRequest}
                             onRefetch={refetchChangeRequest}
@@ -167,7 +194,7 @@ export const ChangeRequestOverview: FC = () => {
                             />
                         ))}
                         <AddCommentField
-                            imageUrl={user?.imageUrl || ''}
+                            user={user}
                             commentText={commentText}
                             onTypeComment={setCommentText}
                         >
@@ -197,8 +224,7 @@ export const ChangeRequestOverview: FC = () => {
                             }
                         />
                         <ChangeRequestReviewStatus
-                            state={changeRequest.state}
-                            environment={changeRequest.environment}
+                            changeRequest={changeRequest}
                         />
                         <StyledButtonBox>
                             <ConditionallyRender
@@ -240,7 +266,7 @@ export const ChangeRequestOverview: FC = () => {
                                     <Button
                                         sx={{ ml: 2 }}
                                         variant="outlined"
-                                        onClick={onCancelChanges}
+                                        onClick={onCancel}
                                     >
                                         Cancel changes
                                     </Button>
@@ -249,7 +275,25 @@ export const ChangeRequestOverview: FC = () => {
                         </StyledButtonBox>
                     </StyledInnerContainer>
                 </StyledPaper>
-            </Box>
+                <Dialogue
+                    open={showCancelDialog}
+                    onClick={onCancelChanges}
+                    onClose={onCancelAbort}
+                    title="Cancel change request"
+                >
+                    <Typography sx={{ marginBottom: 2 }}>
+                        You are about to cancel this change request
+                    </Typography>
+                    <Typography
+                        variant="body2"
+                        sx={theme => ({ color: theme.palette.neutral.dark })}
+                    >
+                        The change request will be moved to closed, and it can't
+                        be applied anymore. Once cancelled, the change request
+                        can't be reopened.
+                    </Typography>
+                </Dialogue>
+            </ChangeRequestBody>
         </>
     );
 };

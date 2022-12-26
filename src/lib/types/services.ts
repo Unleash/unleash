@@ -35,6 +35,8 @@ import PatService from '../services/pat-service';
 import { PublicSignupTokenService } from '../services/public-signup-token-service';
 import { LastSeenService } from '../services/client-metrics/last-seen-service';
 import { InstanceStatsService } from '../services/instance-stats-service';
+import { FavoritesService } from '../services';
+import MaintenanceService from '../services/maintenance-service';
 
 export interface IUnleashServices {
     accessService: AccessService;
@@ -75,4 +77,6 @@ export interface IUnleashServices {
     patService: PatService;
     lastSeenService: LastSeenService;
     instanceStatsService: InstanceStatsService;
+    favoritesService: FavoritesService;
+    maintenanceService: MaintenanceService;
 }

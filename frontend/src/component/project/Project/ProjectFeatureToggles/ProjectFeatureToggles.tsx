@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useTheme } from '@mui/system';
+import { useMediaQuery, useTheme } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useFlexLayout, useSortBy, useTable, SortingRule } from 'react-table';
+import { SortingRule, useFlexLayout, useSortBy, useTable } from 'react-table';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { PageContent } from 'component/common/PageContent/PageContent';
@@ -15,7 +15,6 @@ import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { FeatureSeenCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureSeenCell';
 import { FeatureTypeCell } from 'component/common/Table/cells/FeatureTypeCell/FeatureTypeCell';
-import { sortTypes } from 'utils/sortTypes';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { IProject } from 'interfaces/project';
 import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
@@ -25,24 +24,28 @@ import { createLocalStorage } from 'utils/createLocalStorage';
 import useToast from 'hooks/useToast';
 import { ENVIRONMENT_STRATEGY_ERROR } from 'constants/apiErrors';
 import EnvironmentStrategyDialog from 'component/common/EnvironmentStrategiesDialog/EnvironmentStrategyDialog';
+import { FeatureStaleDialog } from 'component/common/FeatureStaleDialog/FeatureStaleDialog';
+import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
+import { useSearch } from 'hooks/useSearch';
+import { Search } from 'component/common/Search/Search';
+import { useChangeRequestToggle } from 'hooks/useChangeRequestToggle';
+import { ChangeRequestDialogue } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestConfirmDialog';
+import { UpdateEnabledMessage } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestMessages/UpdateEnabledMessage';
+import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
+import { IFeatureToggleListItem } from 'interfaces/featureToggle';
+import { FavoriteIconHeader } from 'component/common/Table/FavoriteIconHeader/FavoriteIconHeader';
+import { FavoriteIconCell } from 'component/common/Table/cells/FavoriteIconCell/FavoriteIconCell';
 import { useEnvironmentsRef } from './hooks/useEnvironmentsRef';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import { FeatureToggleSwitch } from './FeatureToggleSwitch/FeatureToggleSwitch';
 import { ActionsCell } from './ActionsCell/ActionsCell';
 import { ColumnsMenu } from './ColumnsMenu/ColumnsMenu';
 import { useStyles } from './ProjectFeatureToggles.styles';
-import { FeatureStaleDialog } from 'component/common/FeatureStaleDialog/FeatureStaleDialog';
-import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
-import { useSearch } from 'hooks/useSearch';
-import { useMediaQuery } from '@mui/material';
-import { Search } from 'component/common/Search/Search';
-import { useChangeRequestToggle } from 'hooks/useChangeRequestToggle';
-import { ChangeRequestDialogue } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestConfirmDialog';
-import { CopyStrategyMessage } from '../../../changeRequest/ChangeRequestConfirmDialog/ChangeRequestMessages/CopyStrategyMessage';
-import { UpdateEnabledMessage } from '../../../changeRequest/ChangeRequestConfirmDialog/ChangeRequestMessages/UpdateEnabledMessage';
-import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
-import { IFeatureToggleListItem } from 'interfaces/featureToggle';
+import { usePinnedFavorites } from 'hooks/usePinnedFavorites';
+import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';
 import { FeatureTagCell } from 'component/common/Table/cells/FeatureTagCell/FeatureTagCell';
+import { useGlobalLocalStorage } from 'hooks/useGlobalLocalStorage';
+import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 
 interface IProjectFeatureTogglesProps {
     features: IProject['features'];
@@ -52,7 +55,7 @@ interface IProjectFeatureTogglesProps {
 
 type ListItemType = Pick<
     IProject['features'][number],
-    'name' | 'lastSeenAt' | 'createdAt' | 'type' | 'stale'
+    'name' | 'lastSeenAt' | 'createdAt' | 'type' | 'stale' | 'favorite'
 > & {
     environments: {
         [key in string]: {
@@ -62,7 +65,7 @@ type ListItemType = Pick<
     };
 };
 
-const staticColumns = ['Actions', 'name'];
+const staticColumns = ['Actions', 'name', 'favorite'];
 
 const defaultSort: SortingRule<string> & {
     columns?: string[];
@@ -95,6 +98,8 @@ export const ProjectFeatureToggles = ({
             `${projectId}:FeatureToggleListTable:v1`,
             defaultSort
         );
+    const { value: globalStore, setValue: setGlobalStore } =
+        useGlobalLocalStorage();
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
     const { uiConfig } = useUiConfig();
@@ -104,9 +109,15 @@ export const ProjectFeatureToggles = ({
     );
     const { refetch } = useProject(projectId);
     const { setToastData, setToastApiError } = useToast();
-
+    const { isFavoritesPinned, sortTypes, onChangeIsFavoritePinned } =
+        usePinnedFavorites(
+            searchParams.has('favorites')
+                ? searchParams.get('favorites') === 'true'
+                : globalStore.favorites
+        );
     const { toggleFeatureEnvironmentOn, toggleFeatureEnvironmentOff } =
         useFeatureApi();
+    const { favorite, unfavorite } = useFavoriteFeaturesApi();
     const {
         onChangeRequestToggle,
         onChangeRequestToggleClose,
@@ -168,8 +179,38 @@ export const ProjectFeatureToggles = ({
         ]
     );
 
+    const onFavorite = useCallback(
+        async (feature: IFeatureToggleListItem) => {
+            if (feature?.favorite) {
+                await unfavorite(projectId, feature.name);
+            } else {
+                await favorite(projectId, feature.name);
+            }
+            refetch();
+        },
+        [projectId, refetch]
+    );
+
     const columns = useMemo(
         () => [
+            {
+                id: 'favorite',
+                Header: (
+                    <FavoriteIconHeader
+                        isActive={isFavoritesPinned}
+                        onClick={onChangeIsFavoritePinned}
+                    />
+                ),
+                accessor: 'favorite',
+                Cell: ({ row: { original: feature } }: any) => (
+                    <FavoriteIconCell
+                        value={feature?.favorite}
+                        onClick={() => onFavorite(feature)}
+                    />
+                ),
+                maxWidth: 50,
+                disableSortBy: true,
+            },
             {
                 Header: 'Seen',
                 accessor: 'lastSeenAt',
@@ -220,28 +261,25 @@ export const ProjectFeatureToggles = ({
             ...environments.map(name => ({
                 Header: loading ? () => '' : name,
                 maxWidth: 90,
-                accessor: `environments.${name}`,
+                id: `environments.${name}`,
+                accessor: `environments.${name}.enabled`,
                 align: 'center',
                 Cell: ({
                     value,
                     row: { original: feature },
                 }: {
-                    value: { name: string; enabled: boolean };
+                    value: boolean;
                     row: { original: ListItemType };
                 }) => (
                     <FeatureToggleSwitch
-                        value={value?.enabled || false}
+                        value={value}
                         projectId={projectId}
                         featureName={feature?.name}
-                        environmentName={value?.name}
+                        environmentName={name}
                         onToggle={onToggle}
                     />
                 ),
-                sortType: (v1: any, v2: any, id: string) => {
-                    const a = v1?.values?.[id]?.enabled;
-                    const b = v2?.values?.[id]?.enabled;
-                    return a === b ? 0 : a ? -1 : 1;
-                },
+                sortType: 'boolean',
                 filterName: name,
                 filterParsing: (value: any) =>
                     value.enabled ? 'enabled' : 'disabled',
@@ -278,6 +316,7 @@ export const ProjectFeatureToggles = ({
                     type,
                     stale,
                     tags,
+                    favorite,
                     environments: featureEnvironments,
                 }) => ({
                     name,
@@ -286,6 +325,7 @@ export const ProjectFeatureToggles = ({
                     type,
                     stale,
                     tags,
+                    favorite,
                     environments: Object.fromEntries(
                         environments.map(env => [
                             env,
@@ -325,7 +365,6 @@ export const ProjectFeatureToggles = ({
 
     const initialState = useMemo(
         () => {
-            const searchParams = new URLSearchParams();
             const allColumnIds = columns.map(
                 (column: any) => column?.accessor || column?.id
             );
@@ -365,9 +404,7 @@ export const ProjectFeatureToggles = ({
         [environments] // eslint-disable-line react-hooks/exhaustive-deps
     );
 
-    const getRowId = useCallback((row: any) => {
-        return row.name;
-    }, []);
+    const getRowId = useCallback((row: any) => row.name, []);
 
     const {
         allColumns,
@@ -390,15 +427,16 @@ export const ProjectFeatureToggles = ({
         useSortBy
     );
 
-    useEffect(() => {
-        if (!features.some(({ tags }) => tags?.length)) {
-            setHiddenColumns(hiddenColumns => [...hiddenColumns, 'tags']);
-        } else {
-            setHiddenColumns(hiddenColumns =>
-                hiddenColumns.filter(column => column !== 'tags')
-            );
-        }
-    }, [setHiddenColumns, features]);
+    useConditionallyHiddenColumns(
+        [
+            {
+                condition: !features.some(({ tags }) => tags?.length),
+                columns: ['tags'],
+            },
+        ],
+        setHiddenColumns,
+        columns
+    );
 
     useEffect(() => {
         if (loading) {
@@ -411,6 +449,9 @@ export const ProjectFeatureToggles = ({
         }
         if (searchValue) {
             tableState.search = searchValue;
+        }
+        if (isFavoritesPinned) {
+            tableState.favorites = 'true';
         }
         tableState.columns = allColumns
             .map(({ id }) => id)
@@ -429,8 +470,19 @@ export const ProjectFeatureToggles = ({
             desc: sortBy[0].desc || false,
             columns: tableState.columns.split(','),
         }));
+        setGlobalStore(params => ({
+            ...params,
+            favorites: Boolean(isFavoritesPinned),
+        }));
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [loading, sortBy, hiddenColumns, searchValue, setSearchParams]);
+    }, [
+        loading,
+        sortBy,
+        hiddenColumns,
+        searchValue,
+        setSearchParams,
+        isFavoritesPinned,
+    ]);
 
     return (
         <PageContent

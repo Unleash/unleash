@@ -2,20 +2,23 @@ import { Card, Menu, MenuItem } from '@mui/material';
 import { useStyles } from './ProjectCard.styles';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { ReactComponent as ProjectIcon } from 'assets/icons/projectIcon.svg';
-import React, { useState, SyntheticEvent, useContext } from 'react';
+import React, { SyntheticEvent, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Delete, Edit } from '@mui/icons-material';
 import { getProjectEditPath } from 'utils/routePathHelpers';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import {
-    UPDATE_PROJECT,
     DELETE_PROJECT,
+    UPDATE_PROJECT,
 } from 'component/providers/AccessProvider/permissions';
 import AccessContext from 'contexts/AccessContext';
 import { DEFAULT_PROJECT_ID } from 'hooks/api/getters/useDefaultProject/useDefaultProjectId';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import useProjects from 'hooks/api/getters/useProjects/useProjects';
+import { useFavoriteProjectsApi } from 'hooks/api/actions/useFavoriteProjectsApi/useFavoriteProjectsApi';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { FavoriteIconButton } from 'component/common/FavoriteIconButton/FavoriteIconButton';
 import { DeleteProjectDialogue } from '../Project/DeleteProject/DeleteProjectDialogue';
-import { ConditionallyRender } from '../../common/ConditionallyRender/ConditionallyRender';
 
 interface IProjectCardProps {
     name: string;
@@ -24,6 +27,7 @@ interface IProjectCardProps {
     memberCount: number;
     id: string;
     onHover: () => void;
+    isFavorite?: boolean;
 }
 
 export const ProjectCard = ({
@@ -33,13 +37,16 @@ export const ProjectCard = ({
     memberCount,
     onHover,
     id,
+    isFavorite = false,
 }: IProjectCardProps) => {
     const { classes } = useStyles();
     const { hasAccess } = useContext(AccessContext);
-    const { isOss } = useUiConfig();
+    const { isOss, uiConfig } = useUiConfig();
     const [anchorEl, setAnchorEl] = useState<Element | null>(null);
     const [showDelDialog, setShowDelDialog] = useState(false);
     const navigate = useNavigate();
+    const { favorite, unfavorite } = useFavoriteProjectsApi();
+    const { refetch } = useProjects();
 
     const handleClick = (event: React.SyntheticEvent) => {
         event.preventDefault();
@@ -49,9 +56,25 @@ export const ProjectCard = ({
     const canDeleteProject =
         hasAccess(DELETE_PROJECT, id) && id !== DEFAULT_PROJECT_ID;
 
+    const onFavorite = async (e: React.SyntheticEvent) => {
+        e.preventDefault();
+        if (isFavorite) {
+            await unfavorite(id);
+        } else {
+            await favorite(id);
+        }
+        refetch();
+    };
+
     return (
         <Card className={classes.projectCard} onMouseEnter={onHover}>
             <div className={classes.header} data-loading>
+                <FavoriteIconButton
+                    onClick={onFavorite}
+                    isFavorite={isFavorite}
+                    size="medium"
+                    sx={{ ml: -1 }}
+                />
                 <h2 className={classes.title}>{name}</h2>
 
                 <PermissionIconButton

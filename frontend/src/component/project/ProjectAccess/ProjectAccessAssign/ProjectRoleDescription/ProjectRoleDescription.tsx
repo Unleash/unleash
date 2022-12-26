@@ -2,6 +2,9 @@ import { styled, SxProps, Theme } from '@mui/material';
 import { ForwardedRef, forwardRef, useMemo, VFC } from 'react';
 import useProjectRole from 'hooks/api/getters/useProjectRole/useProjectRole';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import useProjectAccess from 'hooks/api/getters/useProjectAccess/useProjectAccess';
+import { ProjectRoleDescriptionProjectPermissions } from './ProjectRoleDescriptionProjectPermissions/ProjectRoleDescriptionProjectPermissions';
+import { ProjectRoleDescriptionEnvironmentPermissions } from './ProjectRoleDescriptionEnvironmentPermissions/ProjectRoleDescriptionEnvironmentPermissions';
 
 const StyledDescription = styled('div', {
     shouldForwardProp: prop =>
@@ -46,15 +49,24 @@ interface IProjectRoleDescriptionStyleProps {
 interface IProjectRoleDescriptionProps
     extends IProjectRoleDescriptionStyleProps {
     roleId: number;
+    projectId: string;
 }
 
 export const ProjectRoleDescription: VFC<IProjectRoleDescriptionProps> =
     forwardRef(
         (
-            { roleId, className, sx, ...props }: IProjectRoleDescriptionProps,
+            {
+                roleId,
+                projectId,
+                className,
+                sx,
+                ...props
+            }: IProjectRoleDescriptionProps,
             ref: ForwardedRef<HTMLDivElement>
         ) => {
             const { role } = useProjectRole(roleId.toString());
+            const { access } = useProjectAccess(projectId);
+            const accessRole = access?.roles.find(role => role.id === roleId);
 
             const environments = useMemo(() => {
                 const environments = new Set<string>();
@@ -80,62 +92,65 @@ export const ProjectRoleDescription: VFC<IProjectRoleDescriptionProps> =
                     ref={ref}
                 >
                     <ConditionallyRender
-                        condition={Boolean(projectPermissions?.length)}
+                        condition={role.permissions?.length > 0}
                         show={
                             <>
-                                <StyledDescriptionHeader>
-                                    Project permissions
-                                </StyledDescriptionHeader>
-                                <StyledDescriptionBlock>
-                                    {role.permissions
-                                        ?.filter(
-                                            (permission: any) =>
-                                                !permission.environment
-                                        )
-                                        .map(
-                                            (permission: any) =>
-                                                permission.displayName
-                                        )
-                                        .sort()
-                                        .map((permission: any) => (
-                                            <p key={permission}>{permission}</p>
-                                        ))}
-                                </StyledDescriptionBlock>
+                                <ConditionallyRender
+                                    condition={Boolean(
+                                        projectPermissions?.length
+                                    )}
+                                    show={
+                                        <>
+                                            <StyledDescriptionHeader>
+                                                Project permissions
+                                            </StyledDescriptionHeader>
+                                            <StyledDescriptionBlock>
+                                                <ProjectRoleDescriptionProjectPermissions
+                                                    permissions={
+                                                        role.permissions
+                                                    }
+                                                />
+                                            </StyledDescriptionBlock>
+                                        </>
+                                    }
+                                />
+                                <ConditionallyRender
+                                    condition={Boolean(environments.length)}
+                                    show={
+                                        <>
+                                            <StyledDescriptionHeader>
+                                                Environment permissions
+                                            </StyledDescriptionHeader>
+                                            {environments.map(environment => (
+                                                <div key={environment}>
+                                                    <StyledDescriptionSubHeader>
+                                                        {environment}
+                                                    </StyledDescriptionSubHeader>
+                                                    <StyledDescriptionBlock>
+                                                        <ProjectRoleDescriptionEnvironmentPermissions
+                                                            environment={
+                                                                environment
+                                                            }
+                                                            permissions={
+                                                                role.permissions
+                                                            }
+                                                        />
+                                                    </StyledDescriptionBlock>
+                                                </div>
+                                            ))}
+                                        </>
+                                    }
+                                />
                             </>
                         }
-                    />
-                    <ConditionallyRender
-                        condition={Boolean(environments.length)}
-                        show={
+                        elseShow={
                             <>
-                                <StyledDescriptionHeader>
-                                    Environment permissions
-                                </StyledDescriptionHeader>
-                                {environments.map((environment: any) => (
-                                    <div key={environment}>
-                                        <StyledDescriptionSubHeader>
-                                            {environment}
-                                        </StyledDescriptionSubHeader>
-                                        <StyledDescriptionBlock>
-                                            {role.permissions
-                                                .filter(
-                                                    (permission: any) =>
-                                                        permission.environment ===
-                                                        environment
-                                                )
-                                                .map(
-                                                    (permission: any) =>
-                                                        permission.displayName
-                                                )
-                                                .sort()
-                                                .map((permission: any) => (
-                                                    <p key={permission}>
-                                                        {permission}
-                                                    </p>
-                                                ))}
-                                        </StyledDescriptionBlock>
-                                    </div>
-                                ))}
+                                <StyledDescriptionSubHeader>
+                                    {accessRole?.name}
+                                </StyledDescriptionSubHeader>
+                                <StyledDescriptionBlock>
+                                    {accessRole?.description}
+                                </StyledDescriptionBlock>
                             </>
                         }
                     />

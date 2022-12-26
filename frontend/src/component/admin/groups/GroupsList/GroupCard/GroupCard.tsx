@@ -126,7 +126,7 @@ export const GroupCard = ({ group }: IGroupCardProps) => {
                                             onClick={e => {
                                                 e.preventDefault();
                                                 navigate(
-                                                    `/projects/${project}/access`
+                                                    `/projects/${project}/settings/access`
                                                 );
                                             }}
                                             color="secondary"

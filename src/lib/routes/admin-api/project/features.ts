@@ -43,6 +43,8 @@ import {
     getStandardResponses,
 } from '../../../openapi/util/standard-responses';
 import { SegmentService } from '../../../services/segment-service';
+import { querySchema } from '../../../schema/feature-schema';
+import { AdminFeaturesQuerySchema } from '../../../openapi';
 
 interface FeatureStrategyParams {
     projectId: string;
@@ -61,6 +63,14 @@ interface ProjectParam {
 
 interface StrategyIdParams extends FeatureStrategyParams {
     strategyId: string;
+}
+
+export interface IFeatureProjectUserParams extends ProjectParam {
+    archived?: boolean;
+    userId?: number;
+
+    tag?: string[][];
+    namePrefix?: string;
 }
 
 const PATH = '/:projectId/features';
@@ -394,19 +404,45 @@ export default class ProjectFeaturesController extends Controller {
     }
 
     async getFeatures(
-        req: Request<ProjectParam, any, any, any>,
+        req: IAuthRequest<ProjectParam, any, any, AdminFeaturesQuerySchema>,
         res: Response<FeaturesSchema>,
     ): Promise<void> {
         const { projectId } = req.params;
-        const features = await this.featureService.getFeatureOverview(
-            projectId,
-        );
+        const query = await this.prepQuery(req.query, projectId);
+        const features = await this.featureService.getFeatureOverview(query);
         this.openApiService.respondWithValidation(
             200,
             res,
             featuresSchema.$id,
             { version: 2, features: serializeDates(features) },
         );
+    }
+
+    async prepQuery(
+        // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+        { tag, namePrefix }: AdminFeaturesQuerySchema,
+        projectId: string,
+    ): Promise<IFeatureProjectUserParams> {
+        if (!tag && !namePrefix) {
+            return { projectId };
+        }
+        const tagQuery = this.paramToArray(tag);
+        const query = await querySchema.validateAsync({
+            tag: tagQuery,
+            namePrefix,
+        });
+        if (query.tag) {
+            query.tag = query.tag.map((q) => q.split(':'));
+        }
+        return { projectId, ...query };
+    }
+
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    paramToArray(param: any): Array<any> {
+        if (!param) {
+            return param;
+        }
+        return Array.isArray(param) ? param : [param];
     }
 
     async cloneFeature(
@@ -458,17 +494,19 @@ export default class ProjectFeaturesController extends Controller {
     }
 
     async getFeature(
-        req: Request<FeatureParams, any, any, any>,
+        req: IAuthRequest<FeatureParams, any, any, any>,
         res: Response,
     ): Promise<void> {
         const { featureName, projectId } = req.params;
         const { variantEnvironments } = req.query;
-        const feature = await this.featureService.getFeature(
+        const { user } = req;
+        const feature = await this.featureService.getFeature({
             featureName,
-            false,
+            archived: false,
             projectId,
-            variantEnvironments === 'true',
-        );
+            environmentVariants: variantEnvironments === 'true',
+            userId: user.id,
+        });
         res.status(200).json(feature);
     }
 
@@ -611,6 +649,7 @@ export default class ProjectFeaturesController extends Controller {
             strategyConfig,
             { environment, projectId, featureName },
             userName,
+            req.user,
         );
 
         const updatedStrategy = await this.featureService.getStrategy(
@@ -667,6 +706,7 @@ export default class ProjectFeaturesController extends Controller {
             req.body,
             { environment, projectId, featureName },
             userName,
+            req.user,
         );
         res.status(200).json(updatedStrategy);
     }
@@ -685,6 +725,7 @@ export default class ProjectFeaturesController extends Controller {
             newDocument,
             { environment, projectId, featureName },
             userName,
+            req.user,
         );
         res.status(200).json(updatedStrategy);
     }
@@ -713,6 +754,7 @@ export default class ProjectFeaturesController extends Controller {
             strategyId,
             { environment, projectId, featureName },
             userName,
+            req.user,
         );
         res.status(200).json(strategy);
     }

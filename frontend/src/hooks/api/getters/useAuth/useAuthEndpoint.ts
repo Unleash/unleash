@@ -42,7 +42,7 @@ export interface IAuthSplash {
     [key: string]: boolean;
 }
 
-interface IUseAuthEndpointOutput {
+export interface IUseAuthEndpointOutput {
     data?: AuthEndpointResponse;
     refetchAuth: () => void;
     loading: boolean;

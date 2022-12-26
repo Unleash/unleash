@@ -9,6 +9,9 @@ export const useStyles = makeStyles<{ lineClamp?: number }>()(
             WebkitLineClamp: lineClamp ? lineClamp : 'none',
             WebkitBoxOrient: 'vertical',
             wordBreak: 'break-all',
+            [theme.breakpoints.down('sm')]: {
+                wordBreak: 'normal',
+            },
         },
     })
 );

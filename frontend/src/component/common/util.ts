@@ -45,6 +45,15 @@ export const parseValidDate = (value: string): Date | undefined => {
 };
 
 export const calculateVariantWeight = (weight: number) => {
+    if (!Number.isInteger(weight)) {
+        const parts = String(weight).split('.');
+        return parseFloat(
+            `${parts[0].slice(0, -1)}.${parts[0][parts[0].length - 1]}${
+                parts[1]
+            }`
+        );
+    }
+
     return weight / 10.0;
 };
 

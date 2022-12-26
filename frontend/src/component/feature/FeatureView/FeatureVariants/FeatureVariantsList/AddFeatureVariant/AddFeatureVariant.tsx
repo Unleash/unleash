@@ -11,7 +11,11 @@ import { OverrideConfig } from './OverrideConfig/OverrideConfig';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useThemeStyles } from 'themes/themeStyles';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import { modalStyles, trim } from 'component/common/util';
+import {
+    calculateVariantWeight,
+    modalStyles,
+    trim,
+} from 'component/common/util';
 import PermissionSwitch from 'component/common/PermissionSwitch/PermissionSwitch';
 import { UPDATE_FEATURE_VARIANTS } from 'component/providers/AccessProvider/permissions';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
@@ -83,7 +87,7 @@ export const AddVariant = ({
         if (editVariant) {
             setData({
                 name: editVariant.name,
-                weight: String(editVariant.weight / 10),
+                weight: String(calculateVariantWeight(editVariant.weight)),
                 weightType: editVariant.weightType || weightTypes.VARIABLE,
                 stickiness: editVariant.stickiness,
             });

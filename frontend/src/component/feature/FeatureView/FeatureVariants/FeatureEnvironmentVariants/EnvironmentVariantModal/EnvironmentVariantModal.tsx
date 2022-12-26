@@ -27,6 +27,7 @@ import cloneDeep from 'lodash.clonedeep';
 import { CloudCircle } from '@mui/icons-material';
 import PermissionSwitch from 'component/common/PermissionSwitch/PermissionSwitch';
 import { UPDATE_FEATURE_VARIANTS } from 'component/providers/AccessProvider/permissions';
+import { calculateVariantWeight } from 'component/common/util';
 
 const StyledFormSubtitle = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -193,7 +194,7 @@ export const EnvironmentVariantModal = ({
         if (variant) {
             setName(variant.name);
             setCustomPercentage(variant.weightType === WeightType.FIX);
-            setPercentage(String(variant.weight / 10));
+            setPercentage(String(calculateVariantWeight(variant.weight)));
             setPayload(variant.payload || EMPTY_PAYLOAD);
             overridesDispatch(
                 variant.overrides

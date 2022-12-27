@@ -135,7 +135,7 @@
     "type-is": "^1.6.18",
     "unleash-client": "3.16.0",
     "use-deep-compare-effect": "^1.8.1",
-    "uuid": "^8.3.2"
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@apidevtools/swagger-parser": "10.1.0",
@@ -159,7 +159,7 @@
     "@types/stoppable": "1.1.1",
     "@types/supertest": "2.0.12",
     "@types/type-is": "1.6.3",
-    "@types/uuid": "8.3.4",
+    "@types/uuid": "9.0.0",
     "@typescript-eslint/eslint-plugin": "5.47.1",
     "@typescript-eslint/parser": "5.47.1",
     "copyfiles": "2.4.1",

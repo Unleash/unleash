@@ -5251,10 +5251,10 @@ make-error@^1.1.1:
   resolved "https://registry.npmjs.org/make-error/-/make-error-1.3.6.tgz"
   integrity sha512-s8UhlNe7vPKomQhC1qFelMokr/Sc3AgNbso3n74mVPA5LTZwkB9NlXf4XPamLxJE8h0gh73rM94xvwRT2CVInw==
 
-make-fetch-happen@^10.0.0:
-  version "10.1.8"
-  resolved "https://registry.yarnpkg.com/make-fetch-happen/-/make-fetch-happen-10.1.8.tgz#3b6e93dd8d8fdb76c0d7bf32e617f37c3108435a"
-  integrity sha512-0ASJbG12Au6+N5I84W+8FhGS6iM8MyzvZady+zaQAu+6IOaESFzCLLD0AR1sAFF3Jufi8bxm586ABN6hWd3k7g==
+make-fetch-happen@^10.2.1:
+  version "10.2.1"
+  resolved "https://registry.yarnpkg.com/make-fetch-happen/-/make-fetch-happen-10.2.1.tgz#f5e3835c5e9817b617f2770870d9492d28678164"
+  integrity sha512-NgOPbRiaQM10DYXvN3/hhGVI2M5MtITFryzBGxHM5p4wnFxsVCbxkrBrDsk+EZ5OB4jEOT7AjDxtdF+KVEFT7w==
   dependencies:
     agentkeepalive "^4.2.1"
     cacache "^16.1.0"
@@ -7490,13 +7490,13 @@ universalify@^2.0.0:
   resolved "https://registry.npmjs.org/universalify/-/universalify-2.0.0.tgz"
   integrity sha512-hAZsKq7Yy11Zu1DE0OzWjw7nnLZmJZYTDZZyEFHZdUhV8FkH5MCfoU1XMaxXovpyW5nq5scPqq0ZDP9Zyl04oQ==
 
-unleash-client@3.16.0:
-  version "3.16.0"
-  resolved "https://registry.yarnpkg.com/unleash-client/-/unleash-client-3.16.0.tgz#f4d8100d10d86f4a3e51ad660b364d50e1aadfca"
-  integrity sha512-oqnAKIt7WLSw1t9L1dJLZGpXb7rRh8FPo40R8x7lTW5Hyd1dMAUS3AKvwfMLXm+Mszl8wWs+VXdr/00Mva2tBw==
+unleash-client@3.16.1:
+  version "3.16.1"
+  resolved "https://registry.yarnpkg.com/unleash-client/-/unleash-client-3.16.1.tgz#81eede77202789eb20eda126d9c7747567bb0628"
+  integrity sha512-N8c0b2B8LFjfDErCJYMZfAPRZiRRGYFZ0aBLRMnpA1K5iFm/I/TH91UgAGsylOsWngnUKXTST7kYeDgK1Aydug==
   dependencies:
     ip "^1.1.5"
-    make-fetch-happen "^10.0.0"
+    make-fetch-happen "^10.2.1"
     murmurhash3js "^3.0.1"
     semver "^7.3.5"
 

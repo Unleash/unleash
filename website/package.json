@@ -67,7 +67,7 @@
     ]
   },
   "devDependencies": {
-    "@babel/core": "7.20.5",
+    "@babel/core": "7.20.7",
     "@docusaurus/module-type-aliases": "2.2.0",
     "@storybook/addon-actions": "6.5.14",
     "@storybook/addon-essentials": "6.5.14",

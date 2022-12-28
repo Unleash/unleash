@@ -1,13 +1,12 @@
 import { VFC } from 'react';
 import { useStyles } from './Highlighter.styles';
+import { safeRegExp } from '@server/util/escape-regex';
 
 interface IHighlighterProps {
     search?: string;
     children?: string;
     caseSensitive?: boolean;
 }
-
-const escapeRegex = (str: string) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 export const Highlighter: VFC<IHighlighterProps> = ({
     search,
@@ -23,7 +22,7 @@ export const Highlighter: VFC<IHighlighterProps> = ({
         return <>{children}</>;
     }
 
-    const regex = new RegExp(escapeRegex(search), caseSensitive ? 'g' : 'gi');
+    const regex = safeRegExp(search, caseSensitive ? 'g' : 'gi');
 
     return (
         <span

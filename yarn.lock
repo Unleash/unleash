@@ -6974,11 +6974,6 @@ streamsearch@^1.1.0:
   resolved "https://registry.yarnpkg.com/streamsearch/-/streamsearch-1.1.0.tgz#404dd1e2247ca94af554e841a8ef0eaa238da764"
   integrity sha512-Mcc5wHehp9aXz1ax6bZUyY5afg9u2rv5cqQI3mRrYkGC8rW2hM02jWuwjtL++LS5qinSyhj2QfLyNsuc+VsExg==
 
-string-argv@^0.1.1:
-  version "0.1.2"
-  resolved "https://registry.npmjs.org/string-argv/-/string-argv-0.1.2.tgz"
-  integrity sha512-mBqPGEOMNJKXRo7z0keX0wlAhbBAjilUdPW13nN0PecVryZxdHIeM7TqbsSUA7VYuS00HGC6mojP7DlQzfa9ZA==
-
 string-argv@^0.3.1:
   version "0.3.1"
   resolved "https://registry.npmjs.org/string-argv/-/string-argv-0.3.1.tgz"
@@ -7316,16 +7311,15 @@ ts-toolbelt@^9.6.0:
   resolved "https://registry.yarnpkg.com/ts-toolbelt/-/ts-toolbelt-9.6.0.tgz#50a25426cfed500d4a09bd1b3afb6f28879edfd5"
   integrity sha512-nsZd8ZeNUzukXPlJmTBwUAuABDe/9qtVDelJeT/qW0ow3ZS3BsQJtNkan1802aM9Uf68/Y8ljw86Hu0h5IUW3w==
 
-tsc-watch@5.0.3:
-  version "5.0.3"
-  resolved "https://registry.npmjs.org/tsc-watch/-/tsc-watch-5.0.3.tgz"
-  integrity sha512-Hz2UawwELMSLOf0xHvAFc7anLeMw62cMVXr1flYmhRuOhOyOljwmb1l/O60ZwRyy1k7N1iC1mrn1QYM2zITfuw==
+tsc-watch@6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/tsc-watch/-/tsc-watch-6.0.0.tgz#474b661b8d6a226c0921a3b6048d7a91f61d888a"
+  integrity sha512-zgpju+/z5z29/kK5V28Nz16CMkX2voFOUxkTlCim/R25hxzbyUqu2NfTnmJBQfESBSPbEQUGqDdB9A8opAcB4A==
   dependencies:
     cross-spawn "^7.0.3"
     node-cleanup "^2.1.2"
     ps-tree "^1.2.0"
-    string-argv "^0.1.1"
-    strip-ansi "^6.0.0"
+    string-argv "^0.3.1"
 
 tsconfig-paths@^3.14.1:
   version "3.14.1"

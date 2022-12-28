@@ -2629,10 +2629,10 @@
     "@types/history" "^4.7.11"
     "@types/react" "*"
 
-"@types/react-table@7.7.12":
-  version "7.7.12"
-  resolved "https://registry.yarnpkg.com/@types/react-table/-/react-table-7.7.12.tgz#628011d3cb695b07c678704a61f2f1d5b8e567fd"
-  integrity sha512-bRUent+NR/WwtDGwI/BqhZ8XnHghwHw0HUKeohzB5xN3K2qKWYE5w19e7GCuOkL1CXD9Gi1HFy7TIm2AvgWUHg==
+"@types/react-table@7.7.13":
+  version "7.7.13"
+  resolved "https://registry.yarnpkg.com/@types/react-table/-/react-table-7.7.13.tgz#c049e4161d55c140d3abcd9bf2a1783d69004e22"
+  integrity sha512-mQk4FgGeniU0mFqjkO2TNCyoHPkUo3nPlNlnLBbPQGbycqRdxhWwGMKwLQN5lWoIPYvFOMZxvP6IBJbkJhd63g==
   dependencies:
     "@types/react" "*"
 

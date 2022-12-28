@@ -2241,10 +2241,10 @@
     redux-thunk "^2.4.2"
     reselect "^4.1.7"
 
-"@remix-run/router@1.0.5":
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/@remix-run/router/-/router-1.0.5.tgz#d5c65626add4c3c185a89aa5bd38b1e42daec075"
-  integrity sha512-my0Mycd+jruq/1lQuO5LBB6WTlL/e8DTCYWp44DfMTDcXz8DcTlgF0ISaLsGewt+ctHN+yA8xMq3q/N7uWJPug==
+"@remix-run/router@1.2.1":
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@remix-run/router/-/router-1.2.1.tgz#812edd4104a15a493dda1ccac0b352270d7a188c"
+  integrity sha512-XiY0IsyHR+DXYS5vBxpoBe/8veTeoRpMHP+vDosLZxL5bnpetzI0igkxkLZS235ldLzyfkxF+2divEwWHP3vMQ==
 
 "@sideway/address@^4.1.3":
   version "4.1.4"
@@ -11931,12 +11931,12 @@ react-router@5.3.4, react-router@^5.3.3:
     tiny-invariant "^1.0.2"
     tiny-warning "^1.0.0"
 
-react-router@6.4.5:
-  version "6.4.5"
-  resolved "https://registry.yarnpkg.com/react-router/-/react-router-6.4.5.tgz#73f382af2c8b9a86d74e761a7c5fc3ce7cb0024d"
-  integrity sha512-1RQJ8bM70YEumHIlNUYc6mFfUDoWa5EgPDenK/fq0bxD8DYpQUi/S6Zoft+9DBrh2xmtg92N5HMAJgGWDhKJ5Q==
+react-router@6.6.1:
+  version "6.6.1"
+  resolved "https://registry.yarnpkg.com/react-router/-/react-router-6.6.1.tgz#17de6cf285f2d1c9721a3afca999c984e5558854"
+  integrity sha512-YkvlYRusnI/IN0kDtosUCgxqHeulN5je+ew8W+iA1VvFhf86kA+JEI/X/8NqYcr11hCDDp906S+SGMpBheNeYQ==
   dependencies:
-    "@remix-run/router" "1.0.5"
+    "@remix-run/router" "1.2.1"
 
 react-textarea-autosize@^8.3.2:
   version "8.4.0"

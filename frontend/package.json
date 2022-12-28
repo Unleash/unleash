@@ -97,7 +97,7 @@
     "typescript": "4.8.4",
     "vite": "3.2.5",
     "vite-plugin-env-compatible": "1.1.1",
-    "vite-plugin-svgr": "2.3.0",
+    "vite-plugin-svgr": "2.4.0",
     "vite-tsconfig-paths": "3.6.0",
     "vitest": "0.26.2",
     "whatwg-fetch": "3.6.2"

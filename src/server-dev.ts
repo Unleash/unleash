@@ -39,7 +39,6 @@ process.nextTick(async () => {
                         batchMetrics: true,
                         anonymiseEventLog: false,
                         responseTimeWithAppName: true,
-                        changeRequests: true,
                         variantsPerEnvironment: true,
                     },
                 },

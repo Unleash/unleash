@@ -24,7 +24,7 @@ export const useCreateFeaturePath = (
     }
 
     return {
-        path: getCreateTogglePath(projectId, uiConfig.flags.E),
+        path: getCreateTogglePath(projectId),
         projectId,
     };
 };

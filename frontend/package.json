@@ -98,7 +98,7 @@
     "vite": "4.0.3",
     "vite-plugin-env-compatible": "1.1.1",
     "vite-plugin-svgr": "2.4.0",
-    "vite-tsconfig-paths": "3.6.0",
+    "vite-tsconfig-paths": "4.0.3",
     "vitest": "0.26.2",
     "whatwg-fetch": "3.6.2"
   },

@@ -23,7 +23,12 @@ export const parseBasePath = (value = basePathMetaTagContent()): string => {
 
 // Join paths with a leading separator and without a trailing separator.
 const joinPaths = (...paths: string[]): string => {
-    return ['', ...paths]
+    const filteredPaths = paths.filter(path => {
+        return !paths.some(i => i !== path && i.includes(path));
+    });
+    const uniquePaths = [...new Set(filteredPaths)];
+
+    return ['', ...uniquePaths]
         .join('/')
         .replace(/\/+$/g, '') // Remove trailing separators.
         .replace(/\/+/g, '/'); // Collapse repeated separators.

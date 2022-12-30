@@ -28,6 +28,9 @@ export const requestsPerSecondSchema = {
                                     appName: {
                                         type: 'string',
                                     },
+                                    endpoint: {
+                                        type: 'string',
+                                    },
                                 },
                             },
                             values: {

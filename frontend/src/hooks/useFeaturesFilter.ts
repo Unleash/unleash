@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { createGlobalStateHook } from 'hooks/useGlobalState';
 import { FeatureSchema } from 'openapi';
+import { safeRegExp } from '@server/util/escape-regex';
 
 export interface IFeaturesFilter {
     query?: string;
@@ -66,7 +67,7 @@ const filterFeaturesByQuery = (
     // Try to parse the search query as a RegExp.
     // Return all features if it can't be parsed.
     try {
-        const regExp = new RegExp(filter.query, 'i');
+        const regExp = safeRegExp(filter.query, 'i');
         return features.filter(f => filterFeatureByRegExp(f, filter, regExp));
     } catch (err) {
         if (err instanceof SyntaxError) {

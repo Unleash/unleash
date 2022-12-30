@@ -188,7 +188,7 @@ export const ProjectAccessTable: VFC = () => {
                     <TimeAgoCell value={value} emptyText="Never" />
                 ),
                 sortType: 'date',
-                maxWidth: 100,
+                maxWidth: 130,
             },
             {
                 id: 'lastLogin',
@@ -208,7 +208,7 @@ export const ProjectAccessTable: VFC = () => {
                     <TimeAgoCell value={value} emptyText="Never" />
                 ),
                 sortType: 'date',
-                maxWidth: 100,
+                maxWidth: 130,
             },
             {
                 id: 'actions',

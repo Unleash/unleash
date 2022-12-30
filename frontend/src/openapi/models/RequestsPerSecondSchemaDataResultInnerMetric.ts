@@ -25,6 +25,12 @@ export interface RequestsPerSecondSchemaDataResultInnerMetric {
      * @memberof RequestsPerSecondSchemaDataResultInnerMetric
      */
     appName?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof RequestsPerSecondSchemaDataResultInnerMetric
+     */
+    endpoint?: string;
 }
 
 /**

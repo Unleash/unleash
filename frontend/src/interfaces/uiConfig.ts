@@ -13,6 +13,8 @@ export interface IUiConfig {
     links: ILinks[];
     disablePasswordAuth?: boolean;
     emailEnabled?: boolean;
+
+    maintenanceMode?: boolean;
     toast?: IProclamationToast;
     segmentValuesLimit?: number;
     strategySegmentsLimit?: number;
@@ -42,9 +44,9 @@ export interface IFlags {
     embedProxyFrontend?: boolean;
     changeRequests?: boolean;
     variantsPerEnvironment?: boolean;
-    favorites?: boolean;
     networkView?: boolean;
     maintenance?: boolean;
+    messageBanner?: boolean;
 }
 
 export interface IVersionInfo {

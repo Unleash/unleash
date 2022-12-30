@@ -64,7 +64,7 @@ export class OpenApiService {
         });
     }
 
-    respondWithValidation<T, S extends SchemaId = SchemaId>(
+    respondWithValidation<T, S = SchemaId>(
         status: number,
         res: Response<T>,
         schema: S,

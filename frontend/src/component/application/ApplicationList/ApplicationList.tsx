@@ -8,6 +8,7 @@ import useApplications from 'hooks/api/getters/useApplications/useApplications';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useSearchParams } from 'react-router-dom';
 import { Search } from 'component/common/Search/Search';
+import { safeRegExp } from '@server/util/escape-regex';
 
 type PageQueryType = Partial<Record<'search', string>>;
 
@@ -30,7 +31,7 @@ export const ApplicationList = () => {
     }, [searchValue, setSearchParams]);
 
     const filteredApplications = useMemo(() => {
-        const regExp = new RegExp(searchValue, 'i');
+        const regExp = safeRegExp(searchValue, 'i');
         return searchValue
             ? applications?.filter(a => regExp.test(a.appName))
             : applications;

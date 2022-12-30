@@ -12,7 +12,7 @@ import {
     PROJECT_IMPORT,
 } from '../types/events';
 import { GLOBAL_ENV } from '../types/environment';
-
+import variantsExportV3 from '../../test/examples/variantsexport_v3.json';
 const oldExportExample = require('./state-service-export-v1.json');
 
 function getSetup() {
@@ -812,4 +812,56 @@ test('Import v1 and exporting v2 should work', async () => {
         ),
     ).toBeTruthy();
     expect(exported.featureStrategies).toHaveLength(strategiesCount);
+});
+
+test('Importing states with deprecated strategies should keep their deprecated state', async () => {
+    const { stateService, stores } = getSetup();
+    const deprecatedStrategyExample = {
+        version: 4,
+        features: [],
+        strategies: [
+            {
+                name: 'deprecatedstrat',
+                description: 'This should be deprecated when imported',
+                deprecated: true,
+                parameters: [],
+                builtIn: false,
+                sortOrder: 9999,
+                displayName: 'Deprecated strategy',
+            },
+        ],
+        featureStrategies: [],
+    };
+    await stateService.import({
+        data: deprecatedStrategyExample,
+        userName: 'strategy-importer',
+        dropBeforeImport: true,
+        keepExisting: false,
+    });
+    const deprecatedStrategy = await stores.strategyStore.get(
+        'deprecatedstrat',
+    );
+    expect(deprecatedStrategy.deprecated).toBe(true);
+});
+
+test('Exporting a deprecated strategy and then importing it should keep correct state', async () => {
+    const { stateService, stores } = getSetup();
+    await stateService.import({
+        data: variantsExportV3,
+        keepExisting: false,
+        dropBeforeImport: true,
+        userName: 'strategy importer',
+    });
+    const rolloutRandom = await stores.strategyStore.get(
+        'gradualRolloutRandom',
+    );
+    expect(rolloutRandom.deprecated).toBe(true);
+    const rolloutSessionId = await stores.strategyStore.get(
+        'gradualRolloutSessionId',
+    );
+    expect(rolloutSessionId.deprecated).toBe(true);
+    const rolloutUserId = await stores.strategyStore.get(
+        'gradualRolloutUserId',
+    );
+    expect(rolloutUserId.deprecated).toBe(true);
 });

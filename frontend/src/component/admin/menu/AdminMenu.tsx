@@ -98,6 +98,17 @@ function AdminMenu() {
                         }
                     />
                 )}
+                {flags.maintenance && (
+                    <Tab
+                        value="maintenance"
+                        label={
+                            <CenteredNavLink to="/admin/maintenance">
+                                Maintenance
+                            </CenteredNavLink>
+                        }
+                    />
+                )}
+
                 {isBilling && (
                     <Tab
                         value="billing"

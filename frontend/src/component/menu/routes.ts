@@ -122,7 +122,6 @@ export const routes: IRoute[] = [
         title: 'FeatureView',
         component: FeatureView,
         type: 'protected',
-        isStandalone: true,
         menu: {},
     },
     {
@@ -149,7 +148,6 @@ export const routes: IRoute[] = [
         flag: P,
         type: 'protected',
         menu: {},
-        isStandalone: true,
     },
     {
         path: '/projects',

@@ -30,11 +30,9 @@ import { FeatureStatusChip } from 'component/common/FeatureStatusChip/FeatureSta
 import { FeatureNotFound } from 'component/feature/FeatureView/FeatureNotFound/FeatureNotFound';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
-import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { FavoriteIconButton } from 'component/common/FavoriteIconButton/FavoriteIconButton';
-import { ChangeRequestBannerLayout } from 'component/layout/ChangeRequestBannerLayout/ChangeRequestBannerLayout';
 
 export const FeatureView = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -42,8 +40,6 @@ export const FeatureView = () => {
     const { refetch: projectRefetch } = useProject(projectId);
     const { favorite, unfavorite } = useFavoriteFeaturesApi();
     const { refetchFeature } = useFeature(projectId, featureId);
-    const { isChangeRequestConfiguredInAnyEnv } =
-        useChangeRequestsEnabled(projectId);
     const { uiConfig } = useUiConfig();
 
     const [openTagDialog, setOpenTagDialog] = useState(false);
@@ -95,19 +91,15 @@ export const FeatureView = () => {
     };
 
     if (status === 404) {
-        return (
-            <ChangeRequestBannerLayout ref={ref} projectId={projectId}>
-                <FeatureNotFound />
-            </ChangeRequestBannerLayout>
-        );
+        return <FeatureNotFound />;
     }
 
     if (error !== undefined) {
-        return <ChangeRequestBannerLayout ref={ref} projectId={projectId} />;
+        return <div ref={ref} />;
     }
 
     return (
-        <ChangeRequestBannerLayout ref={ref} projectId={projectId}>
+        <div ref={ref}>
             <div className={styles.header}>
                 <div className={styles.innerContainer}>
                     <div className={styles.toggleInfoContainer}>
@@ -222,6 +214,6 @@ export const FeatureView = () => {
                 projectId={projectId}
             />
             <AddTagDialog open={openTagDialog} setOpen={setOpenTagDialog} />
-        </ChangeRequestBannerLayout>
+        </div>
     );
 };

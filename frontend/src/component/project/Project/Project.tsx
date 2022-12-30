@@ -25,10 +25,8 @@ import { ProjectLog } from './ProjectLog/ProjectLog';
 import { ChangeRequestOverview } from 'component/changeRequest/ChangeRequestOverview/ChangeRequestOverview';
 import { ProjectChangeRequests } from '../../changeRequest/ProjectChangeRequests/ProjectChangeRequests';
 import { ProjectSettings } from './ProjectSettings/ProjectSettings';
-import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { FavoriteIconButton } from 'component/common/FavoriteIconButton/FavoriteIconButton';
 import { useFavoriteProjectsApi } from 'hooks/api/actions/useFavoriteProjectsApi/useFavoriteProjectsApi';
-import { ChangeRequestBannerLayout } from 'component/layout/ChangeRequestBannerLayout/ChangeRequestBannerLayout';
 
 const StyledDiv = styled('div')(() => ({
     display: 'flex',
@@ -76,8 +74,6 @@ const Project = () => {
     const { isOss, uiConfig } = useUiConfig();
     const basePath = `/projects/${projectId}`;
     const projectName = project?.name || projectId;
-    const { isChangeRequestConfiguredInAnyEnv } =
-        useChangeRequestsEnabled(projectId);
     const { favorite, unfavorite } = useFavoriteProjectsApi();
 
     const [showDelDialog, setShowDelDialog] = useState(false);
@@ -143,7 +139,7 @@ const Project = () => {
     };
 
     return (
-        <ChangeRequestBannerLayout ref={ref} projectId={projectId}>
+        <div ref={ref}>
             <div className={styles.header}>
                 <div className={styles.innerContainer}>
                     <StyledTopRow>
@@ -279,7 +275,7 @@ const Project = () => {
                 <Route path="settings/*" element={<ProjectSettings />} />
                 <Route path="*" element={<ProjectOverview />} />
             </Routes>
-        </ChangeRequestBannerLayout>
+        </div>
     );
 };
 

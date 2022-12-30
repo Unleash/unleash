@@ -2,7 +2,7 @@ import Ajv, { ErrorObject } from 'ajv';
 import { SchemaId, schemas } from './index';
 import { omitKeys } from '../util/omit-keys';
 
-interface ISchemaValidationErrors<S = SchemaId> {
+export interface ISchemaValidationErrors<S = SchemaId> {
     schema: S;
     errors: ErrorObject[];
 }

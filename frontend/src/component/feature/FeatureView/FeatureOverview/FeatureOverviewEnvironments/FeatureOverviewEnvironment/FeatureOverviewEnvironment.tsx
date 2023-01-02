@@ -4,9 +4,8 @@ import {
     AccordionSummary,
     Box,
     Chip,
-    useTheme,
+    styled,
 } from '@mui/material';
-import classNames from 'classnames';
 import { ExpandMore } from '@mui/icons-material';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import useFeatureMetrics from 'hooks/api/getters/useFeatureMetrics/useFeatureMetrics';
@@ -15,7 +14,6 @@ import { getFeatureMetrics } from 'utils/getFeatureMetrics';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import EnvironmentIcon from 'component/common/EnvironmentIcon/EnvironmentIcon';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
-import { useStyles } from './FeatureOverviewEnvironment.styles';
 import EnvironmentAccordionBody from './EnvironmentAccordionBody/EnvironmentAccordionBody';
 import { EnvironmentFooter } from './EnvironmentFooter/EnvironmentFooter';
 import FeatureOverviewEnvironmentMetrics from './FeatureOverviewEnvironmentMetrics/FeatureOverviewEnvironmentMetrics';
@@ -23,17 +21,104 @@ import { FeatureStrategyMenu } from 'component/feature/FeatureStrategy/FeatureSt
 import { FEATURE_ENVIRONMENT_ACCORDION } from 'utils/testIds';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { FeatureStrategyIcons } from 'component/feature/FeatureStrategy/FeatureStrategyIcons/FeatureStrategyIcons';
-// import { Badge } from 'component/common/Badge/Badge';
 
 interface IFeatureOverviewEnvironmentProps {
     env: IFeatureEnvironment;
 }
 
+const StyledFeatureOverviewEnvironment = styled('div', {
+    shouldForwardProp: prop => prop !== 'enabled',
+})<{ enabled: boolean }>(({ theme, enabled }) => ({
+    borderRadius: theme.shape.borderRadiusLarge,
+    marginBottom: theme.spacing(2),
+    backgroundColor: theme.palette.background.paper,
+    background: enabled
+        ? theme.palette.background.paper
+        : theme.palette.neutral.light,
+}));
+
+const StyledAccordion = styled(Accordion)({
+    boxShadow: 'none',
+    background: 'none',
+});
+
+const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
+    boxShadow: 'none',
+    padding: '1rem 2rem',
+    [theme.breakpoints.down(400)]: {
+        padding: '0.5rem 1rem',
+    },
+}));
+
+const StyledAccordionDetails = styled(AccordionDetails, {
+    shouldForwardProp: prop => prop !== 'enabled',
+})<{ enabled: boolean }>(({ theme, enabled }) => ({
+    padding: theme.spacing(3),
+    background: theme.palette.secondaryContainer,
+    borderBottomLeftRadius: theme.shape.borderRadiusLarge,
+    borderBottomRightRadius: theme.shape.borderRadiusLarge,
+    borderBottom: `4px solid ${
+        enabled ? theme.palette.primary.light : theme.palette.neutral.border
+    }`,
+
+    [theme.breakpoints.down('md')]: {
+        padding: theme.spacing(2, 1),
+    },
+}));
+
+const StyledEnvironmentAccordionBody = styled(EnvironmentAccordionBody)(
+    ({ theme }) => ({
+        width: '100%',
+        position: 'relative',
+        paddingBottom: theme.spacing(2),
+    })
+);
+
+const StyledHeader = styled('div', {
+    shouldForwardProp: prop => prop !== 'enabled',
+})<{ enabled: boolean }>(({ theme, enabled }) => ({
+    display: 'flex',
+    justifyContent: 'center',
+    flexDirection: 'column',
+    color: enabled ? theme.palette.text.primary : theme.palette.text.secondary,
+}));
+
+const StyledHeaderTitle = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    [theme.breakpoints.down(560)]: {
+        flexDirection: 'column',
+        textAlign: 'center',
+    },
+}));
+
+const StyledEnvironmentIcon = styled(EnvironmentIcon)(({ theme }) => ({
+    [theme.breakpoints.down(560)]: {
+        marginBottom: '0.5rem',
+    },
+}));
+
+const StyledStringTruncator = styled(StringTruncator)(({ theme }) => ({
+    fontSize: theme.fontSizes.bodySize,
+    fontWeight: theme.typography.fontWeightMedium,
+    [theme.breakpoints.down(560)]: {
+        textAlign: 'center',
+    },
+}));
+
+const StyledContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    marginLeft: '1.8rem',
+    [theme.breakpoints.down(560)]: {
+        flexDirection: 'column',
+        marginLeft: '0',
+    },
+}));
+
 const FeatureOverviewEnvironment = ({
     env,
 }: IFeatureOverviewEnvironmentProps) => {
-    const { classes: styles } = useStyles();
-    const theme = useTheme();
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const { metrics } = useFeatureMetrics(projectId, featureId);
@@ -48,40 +133,19 @@ const FeatureOverviewEnvironment = ({
     );
 
     return (
-        <div
-            className={styles.featureOverviewEnvironment}
-            style={{
-                background: !env.enabled
-                    ? theme.palette.neutral.light
-                    : theme.palette.background.paper,
-            }}
-        >
-            <Accordion
-                className={styles.accordion}
+        <StyledFeatureOverviewEnvironment enabled={env.enabled}>
+            <StyledAccordion
                 data-testid={`${FEATURE_ENVIRONMENT_ACCORDION}_${env.name}`}
             >
-                <AccordionSummary
-                    className={styles.accordionHeader}
+                <StyledAccordionSummary
                     expandIcon={<ExpandMore titleAccess="Toggle" />}
                 >
-                    <div
-                        className={styles.header}
-                        data-loading
-                        style={{
-                            color: !env.enabled
-                                ? theme.palette.text.secondary
-                                : theme.palette.text.primary,
-                        }}
-                    >
-                        <div className={styles.headerTitle}>
-                            <EnvironmentIcon
-                                enabled={env.enabled}
-                                className={styles.headerIcon}
-                            />
+                    <StyledHeader data-loading enabled={env.enabled}>
+                        <StyledHeaderTitle>
+                            <StyledEnvironmentIcon enabled={env.enabled} />
                             <div>
-                                <StringTruncator
+                                <StyledStringTruncator
                                     text={env.name}
-                                    className={styles.truncator}
                                     maxWidth="100"
                                     maxLength={15}
                                 />
@@ -97,8 +161,8 @@ const FeatureOverviewEnvironment = ({
                                     />
                                 }
                             />
-                        </div>
-                        <div className={styles.container}>
+                        </StyledHeaderTitle>
+                        <StyledContainer>
                             <FeatureStrategyMenu
                                 label="Add strategy"
                                 projectId={projectId}
@@ -109,21 +173,17 @@ const FeatureOverviewEnvironment = ({
                             <FeatureStrategyIcons
                                 strategies={featureEnvironment?.strategies}
                             />
-                        </div>
-                    </div>
+                        </StyledContainer>
+                    </StyledHeader>
 
                     <FeatureOverviewEnvironmentMetrics
                         environmentMetric={environmentMetric}
                         disabled={!env.enabled}
                     />
-                </AccordionSummary>
+                </StyledAccordionSummary>
 
-                <AccordionDetails
-                    className={classNames(styles.accordionDetails, {
-                        [styles.accordionDetailsDisabled]: !env.enabled,
-                    })}
-                >
-                    <EnvironmentAccordionBody
+                <StyledAccordionDetails enabled={env.enabled}>
+                    <StyledEnvironmentAccordionBody
                         featureEnvironment={featureEnvironment}
                         isDisabled={!env.enabled}
                         otherEnvironments={feature?.environments
@@ -156,9 +216,9 @@ const FeatureOverviewEnvironment = ({
                             </>
                         }
                     />
-                </AccordionDetails>
-            </Accordion>
-        </div>
+                </StyledAccordionDetails>
+            </StyledAccordion>
+        </StyledFeatureOverviewEnvironment>
     );
 };
 

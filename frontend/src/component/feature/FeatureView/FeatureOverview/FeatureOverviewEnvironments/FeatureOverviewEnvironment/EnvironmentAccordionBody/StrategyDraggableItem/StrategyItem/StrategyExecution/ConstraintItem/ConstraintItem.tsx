@@ -14,17 +14,17 @@ const StyledContainer = styled('div')(({ theme }) => ({
     border: `1px solid ${theme.palette.divider}`,
 }));
 
-const StyledParagraph = styled('p')({
+const StyledParagraph = styled('p')(({ theme }) => ({
     display: 'inline',
-    margin: '0.25rem 0',
+    margin: theme.spacing(0.5, 0),
     maxWidth: '95%',
     textAlign: 'center',
     wordBreak: 'break-word',
-});
+}));
 
-const StyledChip = styled(Chip)({
-    margin: '0.25rem',
-});
+const StyledChip = styled(Chip)(({ theme }) => ({
+    margin: theme.spacing(0.5),
+}));
 
 export const ConstraintItem = ({ value, text }: IConstraintItemProps) => {
     return (

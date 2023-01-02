@@ -109,6 +109,7 @@ export * from './invoicesSchema';
 export * from './invoicesSchemaItem';
 export * from './legalValueSchema';
 export * from './loginSchema';
+export * from './maintenanceSchema';
 export * from './meSchema';
 export * from './meSchemaSplash';
 export * from './nameSchema';

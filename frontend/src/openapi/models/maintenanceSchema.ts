@@ -4,8 +4,7 @@
  * Unleash API
  * OpenAPI spec version: 4.20.0-beta.1
  */
-import type { ApiTokenSchema } from './apiTokenSchema';
 
-export interface ApiTokensSchema {
-    tokens: ApiTokenSchema[];
+export interface MaintenanceSchema {
+    enabled: boolean;
 }

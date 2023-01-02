@@ -24,7 +24,9 @@ export const parseBasePath = (value = basePathMetaTagContent()): string => {
 // Join paths with a leading separator and without a trailing separator.
 const joinPaths = (...paths: string[]): string => {
     const filteredPaths = paths.filter(path => {
-        return !paths.some(i => i !== path && i.includes(path));
+        return !paths.some(
+            currentPath => currentPath !== path && currentPath.includes(path)
+        );
     });
     const uniquePaths = [...new Set(filteredPaths)];
 

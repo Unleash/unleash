@@ -1,9 +1,6 @@
 import { ListItem, Link } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { styled } from '@mui/system';
-
-import { useStyles } from './NavigationLink.styles';
-
 interface INavigationLinkProps {
     path: string;
     text: string;
@@ -27,7 +24,8 @@ const StyledLink = styled(RouterLink)(({ theme }) => ({
     width: '100%',
     '&&': {
         // Override MenuItem's built-in padding.
-        padding: '0.5rem 1rem',
+        color: 'black',
+        padding: theme.spacing(1, 2),
     },
 }));
 
@@ -41,8 +39,6 @@ const StyledSpan = styled('span')(({ theme }) => ({
 }));
 
 const NavigationLink = ({ path, text, handleClose }: INavigationLinkProps) => {
-    const { classes: styles } = useStyles();
-
     return (
         <StyledListItem
             onClick={() => {
@@ -52,7 +48,6 @@ const NavigationLink = ({ path, text, handleClose }: INavigationLinkProps) => {
             <Link
                 style={{ textDecoration: 'none' }}
                 component={StyledLink}
-                className={styles.navMenuLink}
                 to={path}
                 underline="hover"
             >

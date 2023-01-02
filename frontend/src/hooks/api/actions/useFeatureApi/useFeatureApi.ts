@@ -1,9 +1,9 @@
-import { ITag } from 'interfaces/tags';
-import useAPI from '../useApi/useApi';
-import { Operation } from 'fast-json-patch';
-import { createFeature } from 'openapi';
-import { IConstraint } from 'interfaces/strategy';
 import { useCallback } from 'react';
+import { ITag } from 'interfaces/tags';
+import { Operation } from 'fast-json-patch';
+import { IConstraint } from 'interfaces/strategy';
+import { CreateFeatureSchema } from 'openapi';
+import useAPI from '../useApi/useApi';
 
 const useFeatureApi = () => {
     const { makeRequest, createRequest, errors, loading } = useAPI({
@@ -37,7 +37,17 @@ const useFeatureApi = () => {
         await makeRequest(req.caller, req.id);
     };
 
-    const createFeatureToggle = createFeature;
+    const createFeatureToggle = async (
+        projectId: string,
+        createFeatureSchema: CreateFeatureSchema
+    ) => {
+        const path = `/api/admin/projects/${projectId}/features`;
+        const req = createRequest(path, {
+            method: 'POST',
+            body: JSON.stringify(createFeatureSchema),
+        });
+        await makeRequest(req.caller, req.id);
+    };
 
     const toggleFeatureEnvironmentOn = useCallback(
         async (projectId: string, featureId: string, environmentId: string) => {

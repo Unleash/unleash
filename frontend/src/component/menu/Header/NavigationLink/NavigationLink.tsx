@@ -1,6 +1,5 @@
-import { ListItem, Link } from '@mui/material';
+import { ListItem, Link, styled } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
-import { styled } from '@mui/system';
 interface INavigationLinkProps {
     path: string;
     text: string;

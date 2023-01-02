@@ -18,5 +18,5 @@ export interface SdkContextSchema {
     remoteAddress?: string;
     sessionId?: string;
     userId?: string;
-    [key: string]: string;
+    [key: string]: any;
 }

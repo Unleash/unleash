@@ -1,5 +1,4 @@
 import { useDefaultProjectId } from 'hooks/api/getters/useDefaultProject/useDefaultProjectId';
-import { IFeaturesFilter } from 'hooks/useFeaturesFilter';
 import { getCreateTogglePath } from 'utils/routePathHelpers';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
@@ -9,7 +8,10 @@ interface IUseCreateFeaturePathOutput {
 }
 
 export const useCreateFeaturePath = (
-    filter: IFeaturesFilter
+    filter: {
+        query?: string;
+        project: string;
+    }
 ): IUseCreateFeaturePathOutput | undefined => {
     const defaultProjectId = useDefaultProjectId();
     const { uiConfig } = useUiConfig();

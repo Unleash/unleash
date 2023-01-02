@@ -188,7 +188,8 @@ const deleteButtonsActiveInChangeRequestEnv = async () => {
         // production
         const productionStrategyDeleteButton = deleteButtons[0];
         expect(productionStrategyDeleteButton).not.toBeDisabled();
-
+    });
+    await waitFor(() => {
         // custom env
         const customEnvStrategyDeleteButton = deleteButtons[1];
         expect(customEnvStrategyDeleteButton).toBeDisabled();

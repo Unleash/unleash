@@ -161,10 +161,10 @@ const BannerButton = ({
     openDialog,
     children,
 }: IBannerButtonProps) => {
-    if (!link) return null;
-
     const navigate = useNavigate();
     const tracker = usePlausibleTracker();
+
+    if (!link) return null;
 
     const dialog = link === 'dialog';
     const internal = !link.startsWith('http');

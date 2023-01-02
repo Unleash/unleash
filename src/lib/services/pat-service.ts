@@ -33,10 +33,14 @@ export default class PatService {
         this.eventStore = eventStore;
     }
 
-    async createPat(pat: IPat, forUserId: number, creator: User): Promise<IPat> {
-        await this.validatePat(pat, userId);
+    async createPat(
+        pat: IPat,
+        forUserId: number,
+        creator: User,
+    ): Promise<IPat> {
+        await this.validatePat(pat, forUserId);
         pat.secret = this.generateSecretKey();
-        pat.userId = userId;
+        pat.userId = forUserId;
         const newPat = await this.patStore.create(pat);
 
         pat.secret = '***';

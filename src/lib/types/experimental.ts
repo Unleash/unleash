@@ -51,6 +51,10 @@ const flags = {
         process.env.UNLEASH_EXPERIMENTAL_MESSAGE_BANNER,
         false,
     ),
+    serviceAccounts: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SERVICE_ACCOUNTS,
+        false,
+    ),
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

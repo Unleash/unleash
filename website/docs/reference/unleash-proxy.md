@@ -143,9 +143,9 @@ The Unleash Proxy has a very simple API. It takes the [Unleash Context](../refer
 
 ### OpenAPI integration and API documentation {#openapi}
 
-:::info
+:::info Availability
 
-Availability The OpenAPI integration is available in versions 0.9 and later of the Unleash proxy.
+The OpenAPI integration is available in versions 0.9 and later of the Unleash proxy.
 
 :::
 

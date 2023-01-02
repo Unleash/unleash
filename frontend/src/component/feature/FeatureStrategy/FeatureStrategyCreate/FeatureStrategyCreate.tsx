@@ -128,7 +128,9 @@ export const FeatureStrategyCreate = () => {
         }
     };
 
-    if (!data) return null;
+    const emptyFeature = !data || !data.project;
+
+    if (emptyFeature) return null;
 
     return (
         <FormTemplate
@@ -148,6 +150,7 @@ export const FeatureStrategyCreate = () => {
             }
         >
             <FeatureStrategyForm
+                projectId={projectId}
                 feature={data}
                 strategy={strategy}
                 setStrategy={setStrategy}

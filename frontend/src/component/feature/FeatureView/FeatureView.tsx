@@ -1,19 +1,12 @@
-import { IconButton, Tab, Tabs, useMediaQuery } from '@mui/material';
-import React, { useCallback, useState } from 'react';
-import {
-    Archive,
-    FileCopy,
-    Label,
-    WatchLater,
-    Star as StarIcon,
-    StarBorder as StarBorderIcon,
-} from '@mui/icons-material';
+import { Tab, Tabs, useMediaQuery } from '@mui/material';
+import { useState } from 'react';
+import { Archive, FileCopy, Label, WatchLater } from '@mui/icons-material';
 import {
     Link,
     Route,
-    useNavigate,
     Routes,
     useLocation,
+    useNavigate,
 } from 'react-router-dom';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import useProject from 'hooks/api/getters/useProject/useProject';
@@ -122,16 +115,9 @@ export const FeatureView = () => {
                         <div className={styles.header}>
                             <div className={styles.innerContainer}>
                                 <div className={styles.toggleInfoContainer}>
-                                    <ConditionallyRender
-                                        condition={Boolean(
-                                            uiConfig?.flags?.favorites
-                                        )}
-                                        show={() => (
-                                            <FavoriteIconButton
-                                                onClick={onFavorite}
-                                                isFavorite={feature?.favorite}
-                                            />
-                                        )}
+                                    <FavoriteIconButton
+                                        onClick={onFavorite}
+                                        isFavorite={feature?.favorite}
                                     />
                                     <h1
                                         className={styles.featureViewHeader}

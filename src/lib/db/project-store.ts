@@ -100,7 +100,7 @@ class ProjectStore implements IProjectStore {
 
         let groupByColumns = ['projects.id'];
 
-        if (userId && this.flagResolver.isEnabled('favorites')) {
+        if (userId) {
             projects = projects.leftJoin(`favorite_projects`, function () {
                 this.on('favorite_projects.project', 'projects.id').andOnVal(
                     'favorite_projects.user_id',

@@ -1,18 +1,22 @@
 import { FC } from 'react';
-import { Link } from 'react-router-dom';
-import { Alert, Box, Card, Typography } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
+import { Alert, Box, Card, Typography, Link } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
-interface IChangeRequestToggleChange {
+interface IFeatureToggleChanges {
     featureName: string;
     projectId: string;
     conflict?: string;
     onNavigate?: () => void;
 }
 
-export const ChangeRequestFeatureToggleChange: FC<
-    IChangeRequestToggleChange
-> = ({ featureName, projectId, conflict, onNavigate, children }) => (
+export const FeatureToggleChanges: FC<IFeatureToggleChanges> = ({
+    featureName,
+    projectId,
+    conflict,
+    onNavigate,
+    children,
+}) => (
     <Card
         elevation={0}
         sx={theme => ({
@@ -23,15 +27,15 @@ export const ChangeRequestFeatureToggleChange: FC<
         <Box
             sx={theme => ({
                 backgroundColor: Boolean(conflict)
-                    ? theme.palette.warning.light
-                    : theme.palette.tableHeaderBackground,
+                    ? theme.palette.neutral.light
+                    : theme.palette.neutral.light,
                 borderRadius: theme =>
                     `${theme.shape.borderRadiusLarge}px ${theme.shape.borderRadiusLarge}px 0 0`,
                 border: '1px solid',
                 borderColor: theme =>
                     conflict
                         ? theme.palette.warning.border
-                        : theme.palette.dividerAlternative,
+                        : theme.palette.tertiary.main,
                 borderBottom: 'none',
                 overflow: 'hidden',
             })}
@@ -42,7 +46,8 @@ export const ChangeRequestFeatureToggleChange: FC<
                     <Alert
                         severity="warning"
                         sx={{
-                            mx: 1,
+                            px: 3,
+                            mb: 2,
                             '&.MuiAlert-standardWarning': {
                                 borderStyle: 'none',
                             },
@@ -61,15 +66,22 @@ export const ChangeRequestFeatureToggleChange: FC<
                 }}
             >
                 <Typography>Feature toggle name: </Typography>
-                <Typography
-                    component={Link}
+
+                <Link
+                    component={RouterLink}
                     to={`/projects/${projectId}/features/${featureName}`}
                     color="primary"
-                    sx={{ textDecoration: 'none', marginLeft: 1 }}
+                    underline="hover"
+                    sx={{
+                        marginLeft: 1,
+                        '& :hover': {
+                            textDecoration: 'underline',
+                        },
+                    }}
                     onClick={onNavigate}
                 >
                     <strong>{featureName}</strong>
-                </Typography>
+                </Link>
             </Box>
         </Box>
         <Box>{children}</Box>

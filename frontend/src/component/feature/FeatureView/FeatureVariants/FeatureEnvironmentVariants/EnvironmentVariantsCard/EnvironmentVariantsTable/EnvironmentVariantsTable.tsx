@@ -13,12 +13,13 @@ import {
     IOverride,
     IPayload,
 } from 'interfaces/featureToggle';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useFlexLayout, useSortBy, useTable } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
 import { PayloadCell } from './PayloadCell/PayloadCell';
 import { OverridesCell } from './OverridesCell/OverridesCell';
 import { VariantsActionCell } from './VariantsActionsCell/VariantsActionsCell';
+import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 
 const StyledTableContainer = styled('div')(({ theme }) => ({
     margin: theme.spacing(3, 0),
@@ -145,16 +146,20 @@ export const EnvironmentVariantsTable = ({
         useFlexLayout
     );
 
-    useEffect(() => {
-        const hiddenColumns = [];
-        if (isLargeScreen) {
-            hiddenColumns.push('weightType');
-        }
-        if (isMediumScreen) {
-            hiddenColumns.push('payload', 'overrides');
-        }
-        setHiddenColumns(hiddenColumns);
-    }, [setHiddenColumns, isMediumScreen, isLargeScreen]);
+    useConditionallyHiddenColumns(
+        [
+            {
+                condition: isMediumScreen,
+                columns: ['payload', 'overrides'],
+            },
+            {
+                condition: isLargeScreen,
+                columns: ['weightType'],
+            },
+        ],
+        setHiddenColumns,
+        columns
+    );
 
     return (
         <StyledTableContainer>

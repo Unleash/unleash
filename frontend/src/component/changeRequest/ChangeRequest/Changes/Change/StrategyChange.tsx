@@ -1,43 +1,43 @@
-import { Box, Link, styled, Typography } from '@mui/material';
+import { Box, styled, Typography } from '@mui/material';
 import { FC, ReactNode } from 'react';
 
-interface IStrategyChangeProps {
-    onDiscard: () => void;
-}
-
-export const ChangeItemWrapper = styled(Box)(({ theme }) => ({
+export const ChangeItemWrapper = styled(Box)({
     display: 'flex',
     justifyContent: 'space-between',
-    padding: theme.spacing(1),
+    alignItems: 'center',
+});
+
+export const ChangeItemCreateEditWrapper = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: theme.spacing(2),
 }));
 
 const ChangeItemInfo: FC = styled(Box)(({ theme }) => ({
     display: 'flex',
+    alignItems: 'center',
     gap: theme.spacing(1),
 }));
-
-export const Discard: FC<IStrategyChangeProps> = ({ onDiscard }) => (
-    <Box>
-        <Link onClick={onDiscard}>Discard</Link>
-    </Box>
-);
 
 export const StrategyAddedChange: FC<{ discard?: ReactNode }> = ({
     children,
     discard,
 }) => {
     return (
-        <ChangeItemWrapper>
+        <ChangeItemCreateEditWrapper>
             <ChangeItemInfo>
                 <Typography
-                    sx={theme => ({ color: theme.palette.success.dark })}
+                    sx={theme => ({
+                        color: theme.palette.success.dark,
+                    })}
                 >
                     + Adding strategy:
                 </Typography>
                 {children}
             </ChangeItemInfo>
             {discard}
-        </ChangeItemWrapper>
+        </ChangeItemCreateEditWrapper>
     );
 };
 
@@ -46,13 +46,13 @@ export const StrategyEditedChange: FC<{ discard?: ReactNode }> = ({
     discard,
 }) => {
     return (
-        <ChangeItemWrapper>
+        <ChangeItemCreateEditWrapper>
             <ChangeItemInfo>
                 <Typography>Editing strategy:</Typography>
                 {children}
             </ChangeItemInfo>
             {discard}
-        </ChangeItemWrapper>
+        </ChangeItemCreateEditWrapper>
     );
 };
 

@@ -34,6 +34,7 @@ import { PayloadOverridesCell } from './PayloadOverridesCell/PayloadOverridesCel
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import theme from 'themes/theme';
 import { VariantsActionCell } from './VariantsActionsCell/VariantsActionsCell';
+import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 
 export const FeatureVariantsList = () => {
     const { hasAccess } = useContext(AccessContext);
@@ -206,16 +207,20 @@ export const FeatureVariantsList = () => {
         useSortBy
     );
 
-    useEffect(() => {
-        const hiddenColumns = [];
-        if (isLargeScreen) {
-            hiddenColumns.push('weightType');
-        }
-        if (isMediumScreen) {
-            hiddenColumns.push('data');
-        }
-        setHiddenColumns(hiddenColumns);
-    }, [setHiddenColumns, isMediumScreen, isLargeScreen]);
+    useConditionallyHiddenColumns(
+        [
+            {
+                condition: isMediumScreen,
+                columns: ['data'],
+            },
+            {
+                condition: isLargeScreen,
+                columns: ['weightType'],
+            },
+        ],
+        setHiddenColumns,
+        columns
+    );
 
     // @ts-expect-error
     const setClonedVariants = clonedVariants =>

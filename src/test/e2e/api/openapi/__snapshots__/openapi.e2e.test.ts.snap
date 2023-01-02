@@ -189,6 +189,28 @@ exports[`should serve the OpenAPI spec 1`] = `
         ],
         "type": "object",
       },
+      "adminFeaturesQuerySchema": {
+        "additionalProperties": false,
+        "properties": {
+          "namePrefix": {
+            "description": "A case-insensitive prefix filter for the names of feature toggles",
+            "example": "demo.part1",
+            "type": "string",
+          },
+          "tag": {
+            "description": "Used to filter by tags. For each entry, a TAGTYPE:TAGVALUE is expected",
+            "example": [
+              "simple:mytag",
+            ],
+            "items": {
+              "pattern": "\\w+:\\w+",
+              "type": "string",
+            },
+            "type": "array",
+          },
+        },
+        "type": "object",
+      },
       "apiTokenSchema": {
         "additionalProperties": false,
         "properties": {
@@ -1741,6 +1763,18 @@ exports[`should serve the OpenAPI spec 1`] = `
         ],
         "type": "object",
       },
+      "maintenanceSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+          },
+        },
+        "required": [
+          "enabled",
+        ],
+        "type": "object",
+      },
       "meSchema": {
         "additionalProperties": false,
         "properties": {
@@ -2703,6 +2737,71 @@ exports[`should serve the OpenAPI spec 1`] = `
         ],
         "type": "object",
       },
+      "requestsPerSecondSchema": {
+        "properties": {
+          "data": {
+            "properties": {
+              "result": {
+                "description": "An array of values per metric. Each one represents a line in the graph labeled by its metric name",
+                "items": {
+                  "properties": {
+                    "metric": {
+                      "description": "A key value set representing the metric",
+                      "properties": {
+                        "appName": {
+                          "type": "string",
+                        },
+                        "endpoint": {
+                          "type": "string",
+                        },
+                      },
+                      "type": "object",
+                    },
+                    "values": {
+                      "description": "An array of arrays. Each element of the array is an array of size 2 consisting of the 2 axis for the graph: in position zero the x axis represented as a number and position one the y axis represented as string",
+                      "items": {
+                        "items": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                            },
+                            {
+                              "type": "number",
+                            },
+                          ],
+                        },
+                        "type": "array",
+                      },
+                      "type": "array",
+                    },
+                  },
+                  "type": "object",
+                },
+                "type": "array",
+              },
+              "resultType": {
+                "type": "string",
+              },
+            },
+            "type": "object",
+          },
+          "status": {
+            "type": "string",
+          },
+        },
+        "type": "object",
+      },
+      "requestsPerSecondSegmentedSchema": {
+        "properties": {
+          "adminMetrics": {
+            "$ref": "#/components/schemas/requestsPerSecondSchema",
+          },
+          "clientMetrics": {
+            "$ref": "#/components/schemas/requestsPerSecondSchema",
+          },
+        },
+        "type": "object",
+      },
       "resetPasswordSchema": {
         "additionalProperties": false,
         "properties": {
@@ -3233,6 +3332,9 @@ exports[`should serve the OpenAPI spec 1`] = `
               "type": "object",
             },
             "type": "array",
+          },
+          "maintenanceMode": {
+            "type": "boolean",
           },
           "name": {
             "type": "string",
@@ -4912,6 +5014,48 @@ If the provided project does not exist, the list of events will be empty.",
         ],
       },
     },
+    "/api/admin/maintenance": {
+      "get": {
+        "operationId": "getMaintenance",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/maintenanceSchema",
+                },
+              },
+            },
+            "description": "maintenanceSchema",
+          },
+        },
+        "tags": [
+          "Maintenance",
+        ],
+      },
+      "post": {
+        "operationId": "toggleMaintenance",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/maintenanceSchema",
+              },
+            },
+          },
+          "description": "maintenanceSchema",
+          "required": true,
+        },
+        "responses": {
+          "204": {
+            "description": "This response has no body.",
+          },
+        },
+        "tags": [
+          "Maintenance",
+        ],
+      },
+    },
     "/api/admin/metrics/applications": {
       "get": {
         "operationId": "getApplications",
@@ -5008,6 +5152,26 @@ If the provided project does not exist, the list of events will be empty.",
         "responses": {
           "202": {
             "description": "This response has no body.",
+          },
+        },
+        "tags": [
+          "Metrics",
+        ],
+      },
+    },
+    "/api/admin/metrics/rps": {
+      "get": {
+        "operationId": "getRequestsPerSecond",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/requestsPerSecondSegmentedSchema",
+                },
+              },
+            },
+            "description": "requestsPerSecondSegmentedSchema",
           },
         },
         "tags": [
@@ -5166,6 +5330,50 @@ If the provided project does not exist, the list of events will be empty.",
         },
         "tags": [
           "Projects",
+        ],
+      },
+    },
+    "/api/admin/projects/{projectId}/favorites": {
+      "delete": {
+        "operationId": "removeFavoriteProject",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": {
+          "200": {
+            "description": "This response has no body.",
+          },
+        },
+        "tags": [
+          "Features",
+        ],
+      },
+      "post": {
+        "operationId": "addFavoriteProject",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": {
+          "200": {
+            "description": "This response has no body.",
+          },
+        },
+        "tags": [
+          "Features",
         ],
       },
     },
@@ -6133,6 +6341,66 @@ If the provided project does not exist, the list of events will be empty.",
               },
             },
             "description": "featureVariantsSchema",
+          },
+        },
+        "tags": [
+          "Features",
+        ],
+      },
+    },
+    "/api/admin/projects/{projectId}/features/{featureName}/favorites": {
+      "delete": {
+        "operationId": "removeFavoriteFeature",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+          {
+            "in": "path",
+            "name": "featureName",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": {
+          "200": {
+            "description": "This response has no body.",
+          },
+        },
+        "tags": [
+          "Features",
+        ],
+      },
+      "post": {
+        "operationId": "addFavoriteFeature",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+          {
+            "in": "path",
+            "name": "featureName",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": {
+          "200": {
+            "description": "This response has no body.",
           },
         },
         "tags": [
@@ -7900,6 +8168,10 @@ If the provided project does not exist, the list of events will be empty.",
     {
       "description": "Instance admin endpoints used to manage the Unleash instance itself.",
       "name": "Instance Admin",
+    },
+    {
+      "description": "Enable/disable the maintenance mode of Unleash.",
+      "name": "Maintenance",
     },
     {
       "description": "Register, read, or delete metrics recorded by Unleash.",

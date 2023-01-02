@@ -1,52 +1,52 @@
-import React, { VFC } from 'react';
-import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
-import useToast from 'hooks/useToast';
-import { formatUnknownError } from 'utils/formatUnknownError';
-import { IconButton } from '@mui/material';
+import { VFC } from 'react';
+import { IconButton, IconButtonProps } from '@mui/material';
 import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
 import {
     Star as StarIcon,
     StarBorder as StarBorderIcon,
 } from '@mui/icons-material';
+import { TooltipResolver } from '../TooltipResolver/TooltipResolver';
 
-interface IFavoriteIconButtonProps {
-    onClick: (event?: any) => void;
+interface IFavoriteIconButtonProps extends IconButtonProps {
     isFavorite: boolean;
     size?: 'medium' | 'large';
 }
 
 export const FavoriteIconButton: VFC<IFavoriteIconButtonProps> = ({
-    onClick,
     isFavorite,
     size = 'large',
+    ...props
 }) => {
     return (
-        <IconButton size={size} data-loading sx={{ mr: 1 }} onClick={onClick}>
-            <ConditionallyRender
-                condition={isFavorite}
-                show={
-                    <StarIcon
-                        color="primary"
-                        sx={{
-                            fontSize: theme =>
-                                size === 'medium'
-                                    ? theme.spacing(2)
-                                    : theme.spacing(3),
-                        }}
-                    />
-                }
-                elseShow={
-                    <StarBorderIcon
-                        sx={{
-                            fontSize: theme =>
-                                size === 'medium'
-                                    ? theme.spacing(2)
-                                    : theme.spacing(3),
-                        }}
-                    />
-                }
-            />
-        </IconButton>
+        <TooltipResolver
+            title={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+        >
+            <IconButton size={size} data-loading {...props}>
+                <ConditionallyRender
+                    condition={isFavorite}
+                    show={
+                        <StarIcon
+                            color="primary"
+                            sx={{
+                                fontSize: theme =>
+                                    size === 'medium'
+                                        ? theme.spacing(2)
+                                        : theme.spacing(3),
+                            }}
+                        />
+                    }
+                    elseShow={
+                        <StarBorderIcon
+                            sx={{
+                                fontSize: theme =>
+                                    size === 'medium'
+                                        ? theme.spacing(2)
+                                        : theme.spacing(3),
+                            }}
+                        />
+                    }
+                />
+            </IconButton>
+        </TooltipResolver>
     );
 };

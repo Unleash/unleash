@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { Alert, Box, Link, styled } from '@mui/material';
+import { Alert } from '@mui/material';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import AccessContext from 'contexts/AccessContext';
 import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
@@ -9,15 +9,7 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { ProjectAccessTable } from 'component/project/ProjectAccess/ProjectAccessTable/ProjectAccessTable';
 import { useProjectNameOrId } from 'hooks/api/getters/useProject/useProject';
-import {
-    PlausibleOrigin,
-    PremiumFeature,
-} from 'component/common/PremiumFeature/PremiumFeature';
-
-const StyledLink = styled(Link)(({ theme }) => ({
-    fontSize: theme.fontSizes.smallBody,
-    width: 'fit-content',
-}));
+import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
 
 export const ProjectAccess = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -28,37 +20,18 @@ export const ProjectAccess = () => {
 
     if (isOss()) {
         return (
-            <PageContent header={<PageHeader title="Project access" />}>
-                <Box
-                    sx={{
-                        display: 'inline-flex',
-                        maxWidth: '50%',
-                        margin: '0 25%',
-                    }}
-                    alignSelf={'center'}
-                >
-                    <PremiumFeature origin={PlausibleOrigin.ACCESS} center>
-                        <>
-                            Controlling access to projects requires a paid
-                            version of Unleash. Check out{' '}
-                            <StyledLink
-                                href="https://www.getunleash.io"
-                                target="_blank"
-                                rel="noreferrer"
-                            >
-                                getunleash.io
-                            </StyledLink>{' '}
-                            to find out more.
-                        </>
-                    </PremiumFeature>
-                </Box>
+            <PageContent
+                header={<PageHeader title="Access" />}
+                sx={{ justifyContent: 'center' }}
+            >
+                <PremiumFeature feature="access" />
             </PageContent>
         );
     }
 
     if (!hasAccess(UPDATE_PROJECT, projectId)) {
         return (
-            <PageContent header={<PageHeader title="Project access" />}>
+            <PageContent header={<PageHeader title="Access" />}>
                 <Alert severity="error">
                     You need project owner permissions to access this section.
                 </Alert>

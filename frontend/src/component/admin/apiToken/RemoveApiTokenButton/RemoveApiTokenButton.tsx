@@ -1,7 +1,7 @@
 import { DELETE_API_TOKEN } from 'component/providers/AccessProvider/permissions';
 import { Delete } from '@mui/icons-material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { IconButton, Tooltip } from '@mui/material';
+import { IconButton, styled, Tooltip } from '@mui/material';
 import {
     IApiToken,
     useApiTokens,
@@ -11,6 +11,10 @@ import { useContext, useState } from 'react';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import useToast from 'hooks/useToast';
 import useApiTokensApi from 'hooks/api/actions/useApiTokensApi/useApiTokensApi';
+
+const StyledUl = styled('ul')({
+    marginBottom: 0,
+});
 
 interface IRemoveApiTokenButtonProps {
     token: IApiToken;
@@ -54,7 +58,7 @@ export const RemoveApiTokenButton = ({ token }: IRemoveApiTokenButtonProps) => {
                 <div>
                     Are you sure you want to delete the following API token?
                     <br />
-                    <ul>
+                    <StyledUl>
                         <li>
                             <strong>username</strong>:{' '}
                             <code>{token.username}</code>
@@ -62,7 +66,7 @@ export const RemoveApiTokenButton = ({ token }: IRemoveApiTokenButtonProps) => {
                         <li>
                             <strong>type</strong>: <code>{token.type}</code>
                         </li>
-                    </ul>
+                    </StyledUl>
                 </div>
             </Dialogue>
         </>

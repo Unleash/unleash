@@ -70,7 +70,7 @@ const FeatureOverviewEnvSwitches = () => {
     };
 
     return (
-        <StyledContainer>
+        <StyledContainer data-testid="feature-toggle-status">
             <StyledHeader data-loading>
                 Feature toggle status
                 <HelpIcon

@@ -14,7 +14,10 @@ interface IDraftBannerProps {
 const DraftBannerContentWrapper = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
-    padding: theme.spacing(1, 1.5),
+    padding: theme.spacing(1, 0),
+    [theme.breakpoints.down('lg')]: {
+        padding: theme.spacing(1, 2),
+    },
     color: theme.palette.warning.main,
 }));
 
@@ -27,7 +30,7 @@ const DraftBannerContent: FC<{
     return (
         <Box className={classes.content}>
             <DraftBannerContentWrapper>
-                <Typography variant="body2">
+                <Typography variant="body2" sx={{ mr: 4 }}>
                     <strong>Change request mode</strong> – You have changes{' '}
                     <ConditionallyRender
                         condition={Boolean(changeRequest.environment)}
@@ -75,30 +78,31 @@ const StickyBanner = styled(Box)(({ theme }) => ({
 
 export const DraftBanner: VFC<IDraftBannerProps> = ({ project }) => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-    const { draft, loading } = usePendingChangeRequests(project);
+    const { data, loading } = usePendingChangeRequests(project);
 
-    if ((!loading && !draft) || draft?.length === 0) {
+    if ((!loading && !data) || data?.length === 0) {
         return null;
     }
 
     return (
         <StickyBanner>
-            {draft &&
-                draft
-                    .filter(changeRequest =>
-                        ['Draft', 'In review', 'Approved'].includes(
-                            changeRequest.state
-                        )
-                    )
-                    .map(changeRequest => (
-                        <DraftBannerContent
-                            key={changeRequest.id}
-                            changeRequest={changeRequest}
-                            onClick={() => {
-                                setIsSidebarOpen(true);
-                            }}
-                        />
-                    ))}
+            {data?.length
+                ? data
+                      .filter(changeRequest =>
+                          ['Draft', 'In review', 'Approved'].includes(
+                              changeRequest.state
+                          )
+                      )
+                      .map(changeRequest => (
+                          <DraftBannerContent
+                              key={changeRequest.id}
+                              changeRequest={changeRequest}
+                              onClick={() => {
+                                  setIsSidebarOpen(true);
+                              }}
+                          />
+                      ))
+                : null}
 
             <ChangeRequestSidebar
                 project={project}

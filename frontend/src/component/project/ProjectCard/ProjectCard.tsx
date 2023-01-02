@@ -2,14 +2,14 @@ import { Card, Menu, MenuItem } from '@mui/material';
 import { useStyles } from './ProjectCard.styles';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { ReactComponent as ProjectIcon } from 'assets/icons/projectIcon.svg';
-import React, { useState, SyntheticEvent, useContext } from 'react';
+import React, { SyntheticEvent, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Delete, Edit } from '@mui/icons-material';
 import { getProjectEditPath } from 'utils/routePathHelpers';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import {
-    UPDATE_PROJECT,
     DELETE_PROJECT,
+    UPDATE_PROJECT,
 } from 'component/providers/AccessProvider/permissions';
 import AccessContext from 'contexts/AccessContext';
 import { DEFAULT_PROJECT_ID } from 'hooks/api/getters/useDefaultProject/useDefaultProjectId';
@@ -56,7 +56,7 @@ export const ProjectCard = ({
     const canDeleteProject =
         hasAccess(DELETE_PROJECT, id) && id !== DEFAULT_PROJECT_ID;
 
-    const onFavorite = async (e: Event) => {
+    const onFavorite = async (e: React.SyntheticEvent) => {
         e.preventDefault();
         if (isFavorite) {
             await unfavorite(id);
@@ -69,15 +69,11 @@ export const ProjectCard = ({
     return (
         <Card className={classes.projectCard} onMouseEnter={onHover}>
             <div className={classes.header} data-loading>
-                <ConditionallyRender
-                    condition={Boolean(uiConfig?.flags?.favorites)}
-                    show={() => (
-                        <FavoriteIconButton
-                            onClick={onFavorite}
-                            isFavorite={isFavorite}
-                            size="medium"
-                        />
-                    )}
+                <FavoriteIconButton
+                    onClick={onFavorite}
+                    isFavorite={isFavorite}
+                    size="medium"
+                    sx={{ ml: -1 }}
                 />
                 <h2 className={classes.title}>{name}</h2>
 

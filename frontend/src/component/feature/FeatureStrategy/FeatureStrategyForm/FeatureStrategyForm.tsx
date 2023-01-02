@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Alert, Button } from '@mui/material';
 import {
@@ -15,7 +15,6 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { STRATEGY_FORM_SUBMIT_ID } from 'utils/testIds';
 import { useConstraintsValidation } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
-import AccessContext from 'contexts/AccessContext';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { FeatureStrategySegment } from 'component/feature/FeatureStrategy/FeatureStrategySegment/FeatureStrategySegment';
 import { ISegment } from 'interfaces/segment';
@@ -30,9 +29,11 @@ import {
 import { formatFeaturePath } from '../FeatureStrategyEdit/FeatureStrategyEdit';
 import { useChangeRequestInReviewWarning } from 'hooks/useChangeRequestInReviewWarning';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
+import { useHasProjectEnvironmentAccess } from 'hooks/useHasAccess';
 
 interface IFeatureStrategyFormProps {
     feature: IFeatureToggle;
+    projectId: string;
     environmentId: string;
     permission: string;
     onSubmit: () => void;
@@ -48,6 +49,7 @@ interface IFeatureStrategyFormProps {
 }
 
 export const FeatureStrategyForm = ({
+    projectId,
     feature,
     environmentId,
     permission,
@@ -64,12 +66,16 @@ export const FeatureStrategyForm = ({
     const [showProdGuard, setShowProdGuard] = useState(false);
     const hasValidConstraints = useConstraintsValidation(strategy.constraints);
     const enableProdGuard = useFeatureStrategyProdGuard(feature, environmentId);
-    const { hasAccess } = useContext(AccessContext);
+    const access = useHasProjectEnvironmentAccess(
+        permission,
+        projectId,
+        environmentId
+    );
     const { strategyDefinition } = useStrategy(strategy?.name);
 
-    const { draft } = usePendingChangeRequests(feature.project);
+    const { data } = usePendingChangeRequests(feature.project);
     const { changeRequestInReviewOrApproved, alert } =
-        useChangeRequestInReviewWarning(draft);
+        useChangeRequestInReviewWarning(data);
 
     const hasChangeRequestInReviewForEnvironment =
         changeRequestInReviewOrApproved(environmentId || '');
@@ -205,11 +211,7 @@ export const FeatureStrategyForm = ({
                 setStrategy={setStrategy}
                 validateParameter={validateParameter}
                 errors={errors}
-                hasAccess={hasAccess(
-                    permission,
-                    feature.project,
-                    environmentId
-                )}
+                hasAccess={access}
             />
             <hr className={styles.hr} />
             <div className={styles.buttons}>

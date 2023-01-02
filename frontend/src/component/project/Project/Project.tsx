@@ -7,8 +7,7 @@ import { styled, Tab, Tabs } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
 import useToast from 'hooks/useToast';
 import useQueryParams from 'hooks/useQueryParams';
-import React, { useEffect, useMemo, useState } from 'react';
-import { ProjectAccess } from '../ProjectAccess/ProjectAccess';
+import { useEffect, useState } from 'react';
 import ProjectEnvironment from '../ProjectEnvironment/ProjectEnvironment';
 import { ProjectFeaturesArchive } from './ProjectFeaturesArchive/ProjectFeaturesArchive';
 import ProjectOverview from './ProjectOverview';
@@ -20,7 +19,7 @@ import {
 } from 'component/providers/AccessProvider/permissions';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { DeleteProjectDialogue } from './DeleteProject/DeleteProjectDialogue';
 import { ProjectLog } from './ProjectLog/ProjectLog';
 import { ChangeRequestOverview } from 'component/changeRequest/ChangeRequestOverview/ChangeRequestOverview';
@@ -29,18 +28,29 @@ import { MainLayout } from 'component/layout/MainLayout/MainLayout';
 import { ProjectChangeRequests } from '../../changeRequest/ProjectChangeRequests/ProjectChangeRequests';
 import { ProjectSettings } from './ProjectSettings/ProjectSettings';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
-import { FavoriteIconButton } from '../../common/FavoriteIconButton/FavoriteIconButton';
-import { useFavoriteProjectsApi } from '../../../hooks/api/actions/useFavoriteProjectsApi/useFavoriteProjectsApi';
+import { FavoriteIconButton } from 'component/common/FavoriteIconButton/FavoriteIconButton';
+import { useFavoriteProjectsApi } from 'hooks/api/actions/useFavoriteProjectsApi/useFavoriteProjectsApi';
 
 const StyledDiv = styled('div')(() => ({
     display: 'flex',
 }));
 
-const StyledName = styled('div')(({ theme }) => ({
+const StyledTopRow = styled('div')(() => ({
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+}));
+
+const Column = styled('div')(() => ({
+    display: 'flex',
+    flexDirection: 'column',
+}));
+
+const StyledName = styled('div')(() => ({
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
-    paddingBottom: theme.spacing(2),
 }));
 
 const StyledTitle = styled('span')(({ theme }) => ({
@@ -49,6 +59,10 @@ const StyledTitle = styled('span')(({ theme }) => ({
 }));
 const StyledText = styled(StyledTitle)(({ theme }) => ({
     color: theme.palette.grey[800],
+}));
+
+const StyledFavoriteIconButton = styled(FavoriteIconButton)(({ theme }) => ({
+    marginLeft: theme.spacing(-1.5),
 }));
 
 const Project = () => {
@@ -63,70 +77,44 @@ const Project = () => {
     const { isOss, uiConfig } = useUiConfig();
     const basePath = `/projects/${projectId}`;
     const projectName = project?.name || projectId;
-    const { isChangeRequestConfiguredInAnyEnv, isChangeRequestFlagEnabled } =
+    const { isChangeRequestConfiguredInAnyEnv } =
         useChangeRequestsEnabled(projectId);
     const { favorite, unfavorite } = useFavoriteProjectsApi();
 
     const [showDelDialog, setShowDelDialog] = useState(false);
 
-    const tabs = useMemo(() => {
-        const tabArray = [
-            {
-                title: 'Overview',
-                path: basePath,
-                name: 'overview',
-            },
-            {
-                title: 'Health',
-                path: `${basePath}/health`,
-                name: 'health',
-            },
-            ...(!isChangeRequestFlagEnabled
-                ? [
-                      {
-                          title: 'Access',
-                          path: `${basePath}/access`,
-                          name: 'access',
-                      },
-                      {
-                          title: 'Environments',
-                          path: `${basePath}/environments`,
-                          name: 'environments',
-                      },
-                  ]
-                : []),
-            {
-                title: 'Archive',
-                path: `${basePath}/archive`,
-                name: 'archive',
-            },
-            ...(isChangeRequestFlagEnabled
-                ? [
-                      {
-                          title: 'Project settings',
-                          path: `${basePath}/settings`,
-                          name: 'settings',
-                      },
-                  ]
-                : []),
-            {
-                title: 'Event log',
-                path: `${basePath}/logs`,
-                name: 'logs',
-            },
-        ];
-
-        const changeRequestTab = {
+    const tabs = [
+        {
+            title: 'Overview',
+            path: basePath,
+            name: 'overview',
+        },
+        {
+            title: 'Health',
+            path: `${basePath}/health`,
+            name: 'health',
+        },
+        {
+            title: 'Archive',
+            path: `${basePath}/archive`,
+            name: 'archive',
+        },
+        {
             title: 'Change requests',
             path: `${basePath}/change-requests`,
             name: 'change-request',
-        };
-
-        if (isChangeRequestFlagEnabled) {
-            tabArray.splice(tabArray.length - 2, 0, changeRequestTab);
-        }
-        return tabArray;
-    }, [isChangeRequestFlagEnabled]);
+        },
+        {
+            title: 'Project settings',
+            path: `${basePath}/settings`,
+            name: 'settings',
+        },
+        {
+            title: 'Event log',
+            path: `${basePath}/logs`,
+            name: 'logs',
+        },
+    ];
 
     const activeTab = [...tabs]
         .reverse()
@@ -143,7 +131,6 @@ const Project = () => {
                 title: text,
             });
         }
-
         /* eslint-disable-next-line */
     }, []);
 
@@ -167,40 +154,18 @@ const Project = () => {
         >
             <div className={styles.header}>
                 <div className={styles.innerContainer}>
-                    <ConditionallyRender
-                        condition={Boolean(uiConfig?.flags?.favorites)}
-                        show={() => (
-                            <FavoriteIconButton
+                    <StyledTopRow>
+                        <StyledDiv>
+                            <StyledFavoriteIconButton
                                 onClick={onFavorite}
                                 isFavorite={project?.favorite}
                             />
-                        )}
-                    />
-                    <h2 className={styles.title}>
-                        <div>
-                            <StyledName data-loading>{projectName}</StyledName>
-                            <ConditionallyRender
-                                condition={Boolean(project.description)}
-                                show={
-                                    <StyledDiv>
-                                        <StyledTitle data-loading>
-                                            Description:&nbsp;
-                                        </StyledTitle>
-                                        <StyledText data-loading>
-                                            {project.description}
-                                        </StyledText>
-                                    </StyledDiv>
-                                }
-                            />
-                            <StyledDiv>
-                                <StyledTitle data-loading>
-                                    projectId:&nbsp;
-                                </StyledTitle>
-                                <StyledText data-loading>
-                                    {projectId}
-                                </StyledText>
-                            </StyledDiv>
-                        </div>
+                            <h2 className={styles.title}>
+                                <StyledName data-loading>
+                                    {projectName}
+                                </StyledName>
+                            </h2>
+                        </StyledDiv>
                         <StyledDiv>
                             <PermissionIconButton
                                 permission={UPDATE_PROJECT}
@@ -231,7 +196,34 @@ const Project = () => {
                                 <Delete />
                             </PermissionIconButton>
                         </StyledDiv>
-                    </h2>
+                    </StyledTopRow>
+                    <Column>
+                        <h2 className={styles.title}>
+                            <div>
+                                <ConditionallyRender
+                                    condition={Boolean(project.description)}
+                                    show={
+                                        <StyledDiv>
+                                            <StyledTitle data-loading>
+                                                Description:&nbsp;
+                                            </StyledTitle>
+                                            <StyledText data-loading>
+                                                {project.description}
+                                            </StyledText>
+                                        </StyledDiv>
+                                    }
+                                />
+                                <StyledDiv>
+                                    <StyledTitle data-loading>
+                                        projectId:&nbsp;
+                                    </StyledTitle>
+                                    <StyledText data-loading>
+                                        {projectId}
+                                    </StyledText>
+                                </StyledDiv>
+                            </div>
+                        </h2>
+                    </Column>
                 </div>
 
                 <div className={styles.separator} />
@@ -240,6 +232,8 @@ const Project = () => {
                         value={activeTab?.path}
                         indicatorColor="primary"
                         textColor="primary"
+                        variant="scrollable"
+                        allowScrollButtonsMobile
                     >
                         {tabs.map(tab => (
                             <Tab
@@ -265,27 +259,25 @@ const Project = () => {
             />
             <Routes>
                 <Route path="health" element={<ProjectHealth />} />
-                <Route path="access/*" element={<ProjectAccess />} />
+                <Route
+                    path="access/*"
+                    element={
+                        <Navigate
+                            replace
+                            to={`/projects/${projectId}/settings/access`}
+                        />
+                    }
+                />
                 <Route path="environments" element={<ProjectEnvironment />} />
                 <Route path="archive" element={<ProjectFeaturesArchive />} />
                 <Route path="logs" element={<ProjectLog />} />
                 <Route
                     path="change-requests"
-                    element={
-                        <ConditionallyRender
-                            condition={isChangeRequestFlagEnabled}
-                            show={<ProjectChangeRequests />}
-                        />
-                    }
+                    element={<ProjectChangeRequests />}
                 />
                 <Route
                     path="change-requests/:id"
-                    element={
-                        <ConditionallyRender
-                            condition={isChangeRequestFlagEnabled}
-                            show={<ChangeRequestOverview />}
-                        />
-                    }
+                    element={<ChangeRequestOverview />}
                 />
                 <Route path="settings/*" element={<ProjectSettings />} />
                 <Route path="*" element={<ProjectOverview />} />

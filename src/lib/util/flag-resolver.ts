@@ -4,6 +4,7 @@ import {
     IFlagContext,
     IFlags,
     IFlagResolver,
+    IFlagKey,
 } from '../types/experimental';
 export default class FlagResolver implements IFlagResolver {
     private experiments: IFlags;
@@ -18,7 +19,7 @@ export default class FlagResolver implements IFlagResolver {
     getAll(context?: IFlagContext): IFlags {
         const flags: IFlags = { ...this.experiments };
 
-        Object.keys(flags).forEach((flagName) => {
+        Object.keys(flags).forEach((flagName: IFlagKey) => {
             if (!this.experiments[flagName])
                 flags[flagName] = this.externalResolver.isEnabled(
                     flagName,
@@ -29,7 +30,7 @@ export default class FlagResolver implements IFlagResolver {
         return flags;
     }
 
-    isEnabled(expName: string, context?: IFlagContext): boolean {
+    isEnabled(expName: IFlagKey, context?: IFlagContext): boolean {
         if (this.experiments[expName]) {
             return true;
         }

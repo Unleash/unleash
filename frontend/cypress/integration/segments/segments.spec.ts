@@ -1,6 +1,5 @@
 /// <reference types="cypress" />
 
-export {};
 const randomId = String(Math.random()).split('.')[1];
 const segmentName = `unleash-e2e-${randomId}`;
 

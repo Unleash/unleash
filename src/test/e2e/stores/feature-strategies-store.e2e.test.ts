@@ -70,3 +70,58 @@ test('Can successfully update project for all strategies belonging to feature', 
         );
     return expect(oldProjectStrats).toHaveLength(0);
 });
+
+test('Can query for features with tags', async () => {
+    const tag = { type: 'simple', value: 'hello-tags' };
+    await stores.tagStore.createTag(tag);
+    await featureToggleStore.create('default', { name: 'to-be-tagged' });
+    await featureToggleStore.create('default', { name: 'not-tagged' });
+    await stores.featureTagStore.tagFeature('to-be-tagged', tag);
+    const features = await featureStrategiesStore.getFeatureOverview({
+        projectId: 'default',
+        tag: [[tag.type, tag.value]],
+    });
+    expect(features).toHaveLength(1);
+});
+
+test('Can query for features with namePrefix', async () => {
+    await featureToggleStore.create('default', {
+        name: 'nameprefix-to-be-hit',
+    });
+    await featureToggleStore.create('default', {
+        name: 'nameprefix-not-be-hit',
+    });
+    const features = await featureStrategiesStore.getFeatureOverview({
+        projectId: 'default',
+        namePrefix: 'nameprefix-to',
+    });
+    expect(features).toHaveLength(1);
+});
+
+test('Can query for features with namePrefix and tags', async () => {
+    const tag = { type: 'simple', value: 'hello-nameprefix-and-tags' };
+    await stores.tagStore.createTag(tag);
+    await featureToggleStore.create('default', {
+        name: 'to-be-tagged-nameprefix-and-tags',
+    });
+    await featureToggleStore.create('default', {
+        name: 'not-tagged-nameprefix-and-tags',
+    });
+    await featureToggleStore.create('default', {
+        name: 'tagged-but-not-hit-nameprefix-and-tags',
+    });
+    await stores.featureTagStore.tagFeature(
+        'to-be-tagged-nameprefix-and-tags',
+        tag,
+    );
+    await stores.featureTagStore.tagFeature(
+        'tagged-but-not-hit-nameprefix-and-tags',
+        tag,
+    );
+    const features = await featureStrategiesStore.getFeatureOverview({
+        projectId: 'default',
+        tag: [[tag.type, tag.value]],
+        namePrefix: 'to',
+    });
+    expect(features).toHaveLength(1);
+});

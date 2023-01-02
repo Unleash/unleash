@@ -38,7 +38,7 @@ export const useStyles = makeStyles()(theme => ({
         marginBottom: '8px',
     },
     title: {
-        marginBottom: '1.5rem',
+        marginBottom: theme.fontSizes.mainHeader,
         fontWeight: 'normal',
     },
     subtitle: {

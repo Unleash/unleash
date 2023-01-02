@@ -29,7 +29,6 @@ export function createTestConfig(config?: IUnleashOptions): IUnleashConfig {
                 batchMetrics: true,
                 changeRequests: true,
                 variantsPerEnvironment: true,
-                favorites: true,
             },
         },
     };

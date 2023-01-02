@@ -29,13 +29,13 @@
     "@svgr/webpack": "6.5.1",
     "browserslist": "^4.16.5",
     "clsx": "1.2.1",
-    "docusaurus-plugin-openapi-docs": "1.4.5",
-    "docusaurus-theme-openapi-docs": "1.4.5",
+    "docusaurus-plugin-openapi-docs": "1.5.0",
+    "docusaurus-theme-openapi-docs": "1.5.0",
     "file-loader": "6.2.0",
     "immer": "^9.0.6",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "unleash-proxy-client": "2.3.0",
+    "unleash-proxy-client": "2.4.0",
     "url-loader": "4.1.1"
   },
   "resolutions": {
@@ -51,7 +51,8 @@
     "shelljs": "^0.8.5",
     "trim-newlines": "^4.0.0",
     "minimatch": "^5.0.0",
-    "decode-uri-component": "^0.2.1"
+    "decode-uri-component": "^0.4.0",
+    "qs": "^6.9.7"
   },
   "browserslist": {
     "production": [
@@ -66,18 +67,18 @@
     ]
   },
   "devDependencies": {
-    "@babel/core": "7.20.5",
+    "@babel/core": "7.20.7",
     "@docusaurus/module-type-aliases": "2.2.0",
-    "@storybook/addon-actions": "6.5.13",
-    "@storybook/addon-essentials": "6.5.13",
-    "@storybook/addon-interactions": "6.5.13",
-    "@storybook/addon-links": "6.5.13",
-    "@storybook/react": "6.5.13",
+    "@storybook/addon-actions": "6.5.15",
+    "@storybook/addon-essentials": "6.5.15",
+    "@storybook/addon-interactions": "6.5.15",
+    "@storybook/addon-links": "6.5.15",
+    "@storybook/react": "6.5.15",
     "@storybook/testing-library": "0.0.13",
     "@tsconfig/docusaurus": "1.0.6",
     "babel-loader": "9.1.0",
     "enhanced-resolve": "5.12.0",
-    "react-router": "6.4.3",
+    "react-router": "6.6.1",
     "replace-in-file": "6.3.5",
     "storybook-addon-root-attribute": "1.0.2",
     "typescript": "4.8.4"

@@ -107,8 +107,6 @@ test.skip('will not blow up if userId is an array', () => {
         properties: ['some'],
     });
 
-    // console.log(context);
-
     expect(context.userId).toBe('123');
     expect(context).not.toHaveProperty('tenantId');
     expect(context).not.toHaveProperty('region');

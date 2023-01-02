@@ -26,6 +26,7 @@ import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
 import useLoading from 'hooks/useLoading';
 import { VariantCell } from './VariantCell/VariantCell';
 import { FeatureResultInfoPopoverCell } from './FeatureResultInfoPopoverCell/FeatureResultInfoPopoverCell';
+import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 
 const defaultSort: SortingRule<string> = { id: 'name' };
 const { value, setValue } = createLocalStorage(
@@ -184,16 +185,20 @@ export const PlaygroundResultsTable = ({
         useSortBy
     );
 
-    useEffect(() => {
-        const hiddenColumns = [];
-        if (isSmallScreen) {
-            hiddenColumns.push('projectId');
-        }
-        if (isExtraSmallScreen) {
-            hiddenColumns.push('variant');
-        }
-        setHiddenColumns(hiddenColumns);
-    }, [setHiddenColumns, isExtraSmallScreen, isSmallScreen]);
+    useConditionallyHiddenColumns(
+        [
+            {
+                condition: isExtraSmallScreen,
+                columns: ['variant'],
+            },
+            {
+                condition: isSmallScreen,
+                columns: ['projectId'],
+            },
+        ],
+        setHiddenColumns,
+        COLUMNS
+    );
 
     useEffect(() => {
         if (loading) {

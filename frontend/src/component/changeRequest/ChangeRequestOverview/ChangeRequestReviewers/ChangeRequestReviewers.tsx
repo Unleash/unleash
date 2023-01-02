@@ -1,11 +1,29 @@
 import { Box, Paper, styled, Typography } from '@mui/material';
-import { FC } from 'react';
+import React, { FC, ReactNode } from 'react';
+import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     marginBottom: theme.spacing(2),
 }));
 
-export const ChangeRequestReviewers: FC = ({ children }) => {
+export const ChangeRequestReviewersHeader: FC<{
+    actualApprovals: number;
+    minApprovals: number;
+}> = ({ actualApprovals, minApprovals }) => {
+    return (
+        <>
+            Reviewers{' '}
+            <Typography component="span" color="text.secondary">
+                ({actualApprovals}/{minApprovals} required)
+            </Typography>
+        </>
+    );
+};
+
+export const ChangeRequestReviewers: FC<{ header: ReactNode }> = ({
+    header,
+    children,
+}) => {
     return (
         <Paper
             elevation={0}
@@ -15,9 +33,13 @@ export const ChangeRequestReviewers: FC = ({ children }) => {
                 borderRadius: theme => `${theme.shape.borderRadiusLarge}px`,
             })}
         >
-            <StyledBox>Reviewers</StyledBox>
+            <StyledBox>{header}</StyledBox>
             <Typography variant="body1" color="text.secondary">
-                Approved by
+                <ConditionallyRender
+                    condition={React.Children.count(children) > 0}
+                    show={'Approved by'}
+                    elseShow={'No approvals yet'}
+                />
             </Typography>
             {children}
         </Paper>

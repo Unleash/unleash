@@ -1,6 +1,5 @@
 name: Run npm version and push tags
 
-
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -19,23 +18,9 @@ jobs:
       matrix:
         node-version: [14.x]
 
-    services:
-      # Label used to access the service container
-      postgres:
-        # Docker Hub image
-        image: postgres
-        # Provide the password for postgres
-        env:
-          POSTGRES_PASSWORD: postgres
-        # Set health checks to wait until postgres has started
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
-
     steps:
       - uses: actions/checkout@v2
-        with: 
+        with:
           token: ${{ secrets.GH_PUSH_TOKEN }}
       - name: setup git config
         run: |
@@ -49,13 +34,8 @@ jobs:
       - run: yarn install --frozen-lockfile --ignore-scripts
       - name: npm version
         run: |
-          npm version ${{ github.event.inputs.version }}
-          git push origin main
+          npm version ${{ github.event.inputs.version }} --ignore-scripts
+          git push origin ${{ github.ref_name }}
           git push --tags
         env:
           CI: true
-          TEST_DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
-          DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
-          NODE_ENV: test
-          PORT: 4243
-

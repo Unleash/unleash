@@ -20,12 +20,10 @@ import { TablePlaceholder } from 'component/common/Table';
 import { useMediaQuery } from '@mui/material';
 import theme from 'themes/theme';
 import { Search } from 'component/common/Search/Search';
-import {
-    PlausibleOrigin,
-    PremiumFeature,
-} from 'component/common/PremiumFeature/PremiumFeature';
+import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
 import { ITooltipResolverProps } from 'component/common/TooltipResolver/TooltipResolver';
 import { ReactComponent as ProPlanIcon } from 'assets/icons/pro-enterprise-feature-badge.svg';
+import { safeRegExp } from '@server/util/escape-regex';
 
 type PageQueryType = Partial<Record<'search', string>>;
 
@@ -48,10 +46,7 @@ function resolveCreateButtonData(
             disabled: true,
             tooltip: {
                 titleComponent: (
-                    <PremiumFeature origin={PlausibleOrigin.PROJECT}>
-                        To be able to add more projects you need to upgrade to
-                        Pro or Enterprise plan
-                    </PremiumFeature>
+                    <PremiumFeature feature="adding-new-projects" tooltip />
                 ),
                 sx: { maxWidth: '320px' },
                 variant: 'custom',
@@ -99,7 +94,7 @@ export const ProjectListNew = () => {
     }, [searchValue, setSearchParams]);
 
     const filteredProjects = useMemo(() => {
-        const regExp = new RegExp(searchValue, 'i');
+        const regExp = safeRegExp(searchValue, 'i');
         return (
             searchValue
                 ? projects.filter(project => regExp.test(project.name))

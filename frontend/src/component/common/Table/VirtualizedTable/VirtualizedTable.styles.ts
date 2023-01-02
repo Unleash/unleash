@@ -4,6 +4,11 @@ export const useStyles = makeStyles()(() => ({
     row: {
         position: 'absolute',
         width: '100%',
+        '&:hover': {
+            '.show-row-hover': {
+                opacity: 1,
+            },
+        },
     },
     cell: {
         alignItems: 'center',

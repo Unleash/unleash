@@ -16,15 +16,15 @@ interface IEnvironmentAccordionBodyProps {
     otherEnvironments?: IFeatureEnvironment['name'][];
 }
 
-const StyledAccordionBody = styled('div')({
+const StyledAccordionBody = styled('div')(({ theme }) => ({
     width: '100%',
     position: 'relative',
-    paddingBottom: '1rem',
-});
+    paddingBottom: theme.spacing(2),
+}));
 
 const StyledAccordionBodyInnerContainer = styled('div')(({ theme }) => ({
     [theme.breakpoints.down(400)]: {
-        padding: '0.5rem',
+        padding: theme.spacing(1),
     },
 }));
 

@@ -44,9 +44,9 @@ const StyledAccordion = styled(Accordion)({
 
 const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
     boxShadow: 'none',
-    padding: '1rem 2rem',
+    padding: theme.spacing(2, 4),
     [theme.breakpoints.down(400)]: {
-        padding: '0.5rem 1rem',
+        padding: theme.spacing(1, 2),
     },
 }));
 

@@ -34,7 +34,7 @@ const StyledValueContainer = styled(Box)(({ theme }) => ({
 }));
 
 const StyledValueSeparator = styled('span')(({ theme }) => ({
-    color: theme.palette.grey[700],
+    color: theme.palette.neutral.main,
 }));
 
 export const StrategyExecution: VFC<IStrategyExecutionProps> = ({

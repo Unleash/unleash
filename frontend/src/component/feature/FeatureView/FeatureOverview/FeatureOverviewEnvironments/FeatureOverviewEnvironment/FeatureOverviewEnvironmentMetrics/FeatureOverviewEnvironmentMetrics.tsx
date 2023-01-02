@@ -17,11 +17,11 @@ const StyledContainer = styled('div')({
     alignItems: 'center',
 });
 
-const StyledInfo = styled('div')({
-    marginRight: '0.5rem',
+const StyledInfo = styled('div')(({ theme }) => ({
+    marginRight: theme.spacing(1),
     display: 'flex',
     flexDirection: 'column',
-});
+}));
 
 const StyledPercentage = styled('p')(({ theme }) => ({
     color: theme.palette.primary.main,
@@ -31,7 +31,7 @@ const StyledPercentage = styled('p')(({ theme }) => ({
 
 const StyledInfoParagraph = styled('p')(({ theme }) => ({
     maxWidth: '270px',
-    marginTop: '0.25rem',
+    marginTop: theme.spacing(0.5),
     fontSize: theme.fontSizes.smallBody,
     textAlign: 'right',
     [theme.breakpoints.down(700)]: {
@@ -40,7 +40,7 @@ const StyledInfoParagraph = styled('p')(({ theme }) => ({
 }));
 
 const StyledIcon = styled(FiberManualRecord)(({ theme }) => ({
-    fill: theme.palette.grey[300],
+    fill: theme.palette.standaloneBackground,
     height: '75px',
     width: '75px',
     [theme.breakpoints.down(500)]: {
@@ -49,7 +49,7 @@ const StyledIcon = styled(FiberManualRecord)(({ theme }) => ({
 }));
 
 const StyledPercentageCircle = styled('div')(({ theme }) => ({
-    margin: '0 1rem',
+    margin: theme.spacing(0, 2),
     [theme.breakpoints.down(500)]: {
         display: 'none',
     },

@@ -13,13 +13,13 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
-    color: '#fff',
+    color: theme.palette.text.tertiaryContrast,
     backgroundColor: theme.palette.featureMetaData,
     display: 'flex',
     flexDirection: 'column',
     maxWidth: '350px',
     minWidth: '350px',
-    marginRight: '1rem',
+    marginRight: theme.spacing(2),
     [theme.breakpoints.down(1000)]: {
         width: '100%',
         maxWidth: 'none',
@@ -33,7 +33,7 @@ const StyledPaddingContainerTop = styled('div')({
 
 const StyledPaddingContainerBottom = styled('div')(({ theme }) => ({
     padding: '0 1.5rem 1.5rem 1.5rem',
-    borderTop: `1px solid ${theme.palette.grey[300]}`,
+    borderTop: `1px solid ${theme.palette.divider}`,
 }));
 
 const StyledMetaDataHeader = styled('div')({
@@ -47,23 +47,23 @@ const StyledHeader = styled('h2')(({ theme }) => ({
     margin: 0,
 }));
 
-const StyledBody = styled('div')({
-    margin: '1rem 0',
+const StyledBody = styled('div')(({ theme }) => ({
+    margin: theme.spacing(2, 0),
     display: 'flex',
     flexDirection: 'column',
-});
+}));
 
 const StyledBodyItem = styled('span')(({ theme }) => ({
-    margin: '0.5rem 0',
+    margin: theme.spacing(1, 0),
     fontSize: theme.fontSizes.bodySize,
     wordBreak: 'break-all',
 }));
 
-const StyledDescriptionContainer = styled('div')({
+const StyledDescriptionContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
-    color: '#fff',
-});
+    color: theme.palette.text.tertiaryContrast,
+}));
 
 const FeatureOverviewMetaData = () => {
     const { uiConfig } = useUiConfig();
@@ -80,12 +80,12 @@ const FeatureOverviewMetaData = () => {
             <StyledPaddingContainerTop>
                 <StyledMetaDataHeader data-loading>
                     <IconComponent
-                        sx={{
-                            marginRight: '1rem',
+                        sx={theme => ({
+                            marginRight: theme.spacing(2),
                             height: '40px',
                             width: '40px',
-                            fill: '#fff',
-                        }}
+                            fill: theme.palette.text.tertiaryContrast,
+                        })}
                     />{' '}
                     <StyledHeader>{capitalize(type || '')} toggle</StyledHeader>
                 </StyledMetaDataHeader>
@@ -109,7 +109,12 @@ const FeatureOverviewMetaData = () => {
                                             title: 'Edit description',
                                         }}
                                     >
-                                        <Edit sx={{ color: '#fff' }} />
+                                        <Edit
+                                            sx={theme => ({
+                                                color: theme.palette.text
+                                                    .tertiaryContrast,
+                                            })}
+                                        />
                                     </PermissionIconButton>
                                 </StyledDescriptionContainer>
                             </StyledBodyItem>
@@ -127,7 +132,12 @@ const FeatureOverviewMetaData = () => {
                                             title: 'Edit description',
                                         }}
                                     >
-                                        <Edit sx={{ color: '#fff' }} />
+                                        <Edit
+                                            sx={theme => ({
+                                                color: theme.palette.text
+                                                    .tertiaryContrast,
+                                            })}
+                                        />
                                     </PermissionIconButton>
                                 </StyledDescriptionContainer>
                             </span>

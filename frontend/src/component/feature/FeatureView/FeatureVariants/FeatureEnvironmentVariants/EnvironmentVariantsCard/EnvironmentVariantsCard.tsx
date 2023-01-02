@@ -59,6 +59,7 @@ interface IEnvironmentVariantsCardProps {
     onEditVariant: (variant: IFeatureVariant) => void;
     onDeleteVariant: (variant: IFeatureVariant) => void;
     onUpdateStickiness: (variant: IFeatureVariant[]) => void;
+    global?: boolean;
     children?: React.ReactNode;
 }
 
@@ -68,6 +69,7 @@ export const EnvironmentVariantsCard = ({
     onEditVariant,
     onDeleteVariant,
     onUpdateStickiness,
+    global,
     children,
 }: IEnvironmentVariantsCardProps) => {
     const { context } = useUnleashContext();
@@ -104,10 +106,20 @@ export const EnvironmentVariantsCard = ({
         <StyledCard>
             <StyledHeader>
                 <div>
-                    <StyledCloudCircle deprecated={!environment.enabled} />
-                    <StyledName deprecated={!environment.enabled}>
-                        {environment.name}
-                    </StyledName>
+                    <ConditionallyRender
+                        condition={Boolean(global)}
+                        show={<StyledName>All environments</StyledName>}
+                        elseShow={
+                            <>
+                                <StyledCloudCircle
+                                    deprecated={!environment.enabled}
+                                />
+                                <StyledName deprecated={!environment.enabled}>
+                                    {environment.name}
+                                </StyledName>
+                            </>
+                        }
+                    />
                 </div>
                 {children}
             </StyledHeader>

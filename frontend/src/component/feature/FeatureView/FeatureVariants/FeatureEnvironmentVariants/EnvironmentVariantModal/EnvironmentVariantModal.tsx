@@ -152,6 +152,7 @@ interface IEnvironmentVariantModalProps {
         newVariants: IFeatureVariant[]
     ) => { patch: Operation[]; error?: string };
     onConfirm: (updatedVariants: IFeatureVariant[]) => void;
+    global?: boolean;
 }
 
 export const EnvironmentVariantModal = ({
@@ -161,6 +162,7 @@ export const EnvironmentVariantModal = ({
     setOpen,
     getApiPayload,
     onConfirm,
+    global,
 }: IEnvironmentVariantModalProps) => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
@@ -259,11 +261,19 @@ export const EnvironmentVariantModal = ({
         onConfirm(getUpdatedVariants());
     };
 
-    const formatApiCode = () => `curl --location --request PATCH '${
-        uiConfig.unleashUrl
-    }/api/admin/projects/${projectId}/features/${featureId}/environments/${
-        environment?.name
-    }/variants' \\
+    const formatApiCode = () =>
+        global
+            ? `curl --location --request PATCH '${
+                  uiConfig.unleashUrl
+              }/api/admin/projects/${projectId}/features/${featureId}/variants' \\
+    --header 'Authorization: INSERT_API_KEY' \\
+    --header 'Content-Type: application/json' \\
+    --data-raw '${JSON.stringify(apiPayload.patch, undefined, 2)}'`
+            : `curl --location --request PATCH '${
+                  uiConfig.unleashUrl
+              }/api/admin/projects/${projectId}/features/${featureId}/environments/${
+                  environment?.name
+              }/variants' \\
     --header 'Authorization: INSERT_API_KEY' \\
     --header 'Content-Type: application/json' \\
     --data-raw '${JSON.stringify(apiPayload.patch, undefined, 2)}'`;
@@ -300,7 +310,9 @@ export const EnvironmentVariantModal = ({
         if (!isNameUnique(name)) {
             setError(
                 ErrorField.NAME,
-                'A variant with that name already exists for this environment.'
+                global
+                    ? 'A variant with that name already exists.'
+                    : 'A variant with that name already exists for this environment.'
             );
         }
         setName(name);
@@ -345,10 +357,20 @@ export const EnvironmentVariantModal = ({
                 loading={!open}
             >
                 <StyledFormSubtitle>
-                    <StyledCloudCircle deprecated={!environment?.enabled} />
-                    <StyledName deprecated={!environment?.enabled}>
-                        {environment?.name}
-                    </StyledName>
+                    <ConditionallyRender
+                        condition={Boolean(global)}
+                        show={<span>All environments</span>}
+                        elseShow={
+                            <>
+                                <StyledCloudCircle
+                                    deprecated={!environment?.enabled}
+                                />
+                                <StyledName deprecated={!environment?.enabled}>
+                                    {environment?.name}
+                                </StyledName>
+                            </>
+                        }
+                    />
                 </StyledFormSubtitle>
                 <StyledForm onSubmit={handleSubmit}>
                     <div>

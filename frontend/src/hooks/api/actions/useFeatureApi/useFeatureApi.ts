@@ -205,10 +205,12 @@ const useFeatureApi = () => {
     const patchFeatureEnvironmentVariants = async (
         projectId: string,
         featureId: string,
-        environmentName: string,
-        patchPayload: Operation[]
+        patchPayload: Operation[],
+        environmentName?: string
     ) => {
-        const path = `api/admin/projects/${projectId}/features/${featureId}/environments/${environmentName}/variants`;
+        const path = environmentName
+            ? `api/admin/projects/${projectId}/features/${featureId}/environments/${environmentName}/variants`
+            : `api/admin/projects/${projectId}/features/${featureId}/variants`;
         const req = createRequest(path, {
             method: 'PATCH',
             body: JSON.stringify(patchPayload),

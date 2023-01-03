@@ -1,7 +1,7 @@
 import { useNavigate, Navigate } from 'react-router-dom';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useSplashApi from 'hooks/api/actions/useSplashApi/useSplashApi';
-import { SplashPageOperators } from 'component/splash/SplashPageOperators/SplashPageOperators';
+import { SplashPageOperators } from 'component/splash/SplashPageOperators';
 import { useEffect } from 'react';
 import { useAuthSplash } from 'hooks/api/getters/useAuth/useAuthSplash';
 import { splashIds, SplashId } from 'component/splash/splash';

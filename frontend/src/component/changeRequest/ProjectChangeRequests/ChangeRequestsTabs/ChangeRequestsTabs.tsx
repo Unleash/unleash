@@ -17,14 +17,14 @@ import { featuresPlaceholder } from 'component/feature/FeatureToggleList/Feature
 import theme from 'themes/theme';
 import { useSearch } from 'hooks/useSearch';
 import { useSearchParams } from 'react-router-dom';
-import { TimeAgoCell } from '../../../common/Table/cells/TimeAgoCell/TimeAgoCell';
-import { TextCell } from '../../../common/Table/cells/TextCell/TextCell';
+import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
+import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { ChangeRequestStatusCell } from './ChangeRequestStatusCell/ChangeRequestStatusCell';
 import { AvatarCell } from './AvatarCell/AvatarCell';
 import { ChangeRequestTitleCell } from './ChangeRequestTitleCell/ChangeRequestTitleCell';
-import { TableBody, TableRow } from '../../../common/Table';
+import { TableBody, TableRow } from 'component/common/Table';
 import { useStyles } from './ChangeRequestsTabs.styles';
-import { createLocalStorage } from '../../../../utils/createLocalStorage';
+import { createLocalStorage } from 'utils/createLocalStorage';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 
 export interface IChangeRequestTableProps {

@@ -1,9 +1,8 @@
-import { Button } from '@mui/material';
+import { Button, styled } from '@mui/material';
 import Input from 'component/common/Input/Input';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useStyles } from 'component/segments/SegmentFormStepOne/SegmentFormStepOne.styles';
-import { SegmentFormStep } from '../SegmentForm/SegmentForm';
+import { SegmentFormStep } from './SegmentForm';
 import {
     SEGMENT_NAME_ID,
     SEGMENT_DESC_ID,
@@ -20,6 +19,35 @@ interface ISegmentFormPartOneProps {
     setCurrentStep: React.Dispatch<React.SetStateAction<SegmentFormStep>>;
 }
 
+const StyledForm = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
+}));
+
+const StyledContainer = styled('div')(({ theme }) => ({
+    maxWidth: '400px',
+}));
+
+const StyledInputDescription = styled('p')(({ theme }) => ({
+    marginBottom: theme.spacing(1),
+}));
+
+const StyledInput = styled(Input)(({ theme }) => ({
+    width: '100%',
+    marginBottom: theme.spacing(2),
+}));
+
+const StyledButtonContainer = styled('div')(({ theme }) => ({
+    marginTop: 'auto',
+    display: 'flex',
+    justifyContent: 'flex-end',
+}));
+
+const StyledCancelButton = styled(Button)(({ theme }) => ({
+    marginLeft: theme.spacing(3),
+}));
+
 export const SegmentFormStepOne: React.FC<ISegmentFormPartOneProps> = ({
     children,
     name,
@@ -31,16 +59,14 @@ export const SegmentFormStepOne: React.FC<ISegmentFormPartOneProps> = ({
     setCurrentStep,
 }) => {
     const navigate = useNavigate();
-    const { classes: styles } = useStyles();
 
     return (
-        <div className={styles.form}>
-            <div className={styles.container}>
-                <p className={styles.inputDescription}>
+        <StyledForm>
+            <StyledContainer>
+                <StyledInputDescription>
                     What is the segment name?
-                </p>
-                <Input
-                    className={styles.input}
+                </StyledInputDescription>
+                <StyledInput
                     label="Segment name"
                     value={name}
                     onChange={e => setName(e.target.value)}
@@ -50,11 +76,10 @@ export const SegmentFormStepOne: React.FC<ISegmentFormPartOneProps> = ({
                     required
                     data-testid={SEGMENT_NAME_ID}
                 />
-                <p className={styles.inputDescription}>
+                <StyledInputDescription>
                     What is the segment description?
-                </p>
-                <Input
-                    className={styles.input}
+                </StyledInputDescription>
+                <StyledInput
                     label="Description (optional)"
                     value={description}
                     onChange={e => setDescription(e.target.value)}
@@ -62,8 +87,8 @@ export const SegmentFormStepOne: React.FC<ISegmentFormPartOneProps> = ({
                     errorText={errors.description}
                     data-testid={SEGMENT_DESC_ID}
                 />
-            </div>
-            <div className={styles.buttonContainer}>
+            </StyledContainer>
+            <StyledButtonContainer>
                 <Button
                     type="button"
                     variant="contained"
@@ -74,16 +99,15 @@ export const SegmentFormStepOne: React.FC<ISegmentFormPartOneProps> = ({
                 >
                     Next
                 </Button>
-                <Button
+                <StyledCancelButton
                     type="button"
-                    className={styles.cancelButton}
                     onClick={() => {
                         navigate('/segments');
                     }}
                 >
                     Cancel
-                </Button>
-            </div>
-        </div>
+                </StyledCancelButton>
+            </StyledButtonContainer>
+        </StyledForm>
     );
 };

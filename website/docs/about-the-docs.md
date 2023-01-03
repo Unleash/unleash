@@ -37,10 +37,10 @@ Our how-to guides show you how to perform a number of common tasks that you'll w
 
 The guides are organized into the following categories:
 
-- [API how-tos](/how-to/api)
-- [Feature toggles, strategies, context, and general how-tos](/how-to/misc)
-- [Users and permissions how-tos](/how-to/users-and-permissions)
-- [Single Sign-On (SSO) how-tos](/how-to/sso)
+- [API how-tos](./how-to/api)
+- [Feature toggles, strategies, context, and general how-tos](./how-to/misc)
+- [Users and permissions how-tos](./how-to/users-and-permissions)
+- [Single Sign-On (SSO) how-tos](./how-to/sso)
 
 ### Reference documentation
 
@@ -48,12 +48,12 @@ The reference docs contain technical reference for Unleash and the API. Go here 
 
 The reference docs are organized into the following topics:
 
-- [Addons](/reference/addons/addons.md)
-- [API documentation](/api)
-- [Unleash SDKs](/sdks)
-- [Deployment and management of Unleash](/deploy)
-- [Integrations with other systems](/integrations)
-- [Unleash concepts](/reference/concepts)
+- [Addons](./reference/addons/addons.md)
+- [API documentation](./reference/api/legacy/unleash/index.md)
+- [Unleash SDKs](./reference/sdks/index.md)
+- [Deployment and management of Unleash](./reference/deploy)
+- [Integrations with other systems](./reference/integrations/integrations.md)
+- [Unleash concepts](./reference/concepts)
 
 ### Topic guides
 

@@ -7,11 +7,11 @@
 // should be used to create the slug.
 const readmeRepos = {
     'unleash-client-rust': {
-        sidebarSdkName: 'Rust',
+        sidebarName: 'Rust',
     },
     // as an example of when you'd use both
     // 'unleash-android-proxy-sdk': {
-    //     sidebarSdkName: 'Android',
+    //     sidebarName: 'Android',
     //     slugName: 'android-proxy',
     // },
 };
@@ -19,7 +19,17 @@ const readmeRepos = {
 function getReadmeRepoData(filename) {
     const repoName = filename.split('/')[0];
 
-    return readmeRepos[repoName] ?? { sdkName: repoName };
+    const repoData = readmeRepos[repoName];
+
+    const repoUrl = `https://github.com/Unleash/${repoName}`;
+
+    if (repoData) {
+        return {
+            repoUrl,
+            ...repoData,
+            slugName: (repoData.slugName ?? repoData.sidebarName).toLowerCase(),
+        };
+    } else return { sidebarName: repoName, repoUrl };
 }
 
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
@@ -592,13 +602,11 @@ module.exports = {
                     (repo) => `${repo}/main/README.md`,
                 ), // the file names to download
                 modifyContent: (filename, content) => {
-                    const data = getReadmeRepoData(filename);
+                    const sdk = getReadmeRepoData(filename);
                     return {
-                        filename: `${(
-                            data.slugName ?? data.sidebarSdkName
-                        ).toLowerCase()}.md`,
+                        filename: `${sdk.slugName}.md`,
                         content: `---
-title: ${data.sidebarSdkName} SDK
+title: ${sdk.sidebarName} SDK
 ---
 
 ${content}

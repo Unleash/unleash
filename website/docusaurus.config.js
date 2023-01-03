@@ -609,6 +609,10 @@ module.exports = {
 title: ${sdk.sidebarName} SDK
 ---
 
+:::info Generated content
+This document was generated from the README in the [${sdk.sidebarName} SDK's GitHub repository](${sdk.repoUrl}).
+:::
+
 ${content}
 `,
                     };

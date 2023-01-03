@@ -14,14 +14,14 @@ const StyledForm = styled('form')(({ theme }) => ({
     flexDirection: 'column',
     position: 'relative',
     '& > *': {
-        marginTop: '0.5rem !important',
-        marginBottom: '0.5rem !important',
+        marginTop: `${theme.spacing(1)} !important`,
+        marginBottom: `${theme.spacing(1)} !important`,
     },
 }));
 
 const StyledButton = styled(Button)(({ theme }) => ({
     width: '150px',
-    margin: '1rem auto',
+    margin: theme.spacing(2, 'auto'),
     display: 'block',
 }));
 

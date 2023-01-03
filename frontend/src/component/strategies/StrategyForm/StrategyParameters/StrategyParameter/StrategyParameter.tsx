@@ -47,25 +47,25 @@ interface IStrategyParameterProps {
 
 const StyledParamsContainer = styled('div')(({ theme }) => ({
     maxWidth: '400px',
-    margin: '1rem 0',
+    margin: theme.spacing(2, 0),
 }));
 
 const StyledDivider = styled(Divider)(({ theme }) => ({
     borderStyle: 'dashed',
-    margin: '1rem 0 1.5rem 0',
-    borderColor: theme.palette.grey[500],
+    margin: theme.spacing(2, 0, 3, 0),
+    borderColor: theme.palette.neutral.border,
 }));
 
 const StyledParagraph = styled('p')(({ theme }) => ({
     minWidth: '365px',
     width: '100%',
-    marginBottom: '1rem',
+    marginBottom: theme.spacing(2),
 }));
 
 const StyledNameContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
-    marginBottom: '1rem',
+    marginBottom: theme.spacing(2),
 }));
 
 const StyledNameInput = styled(Input)(({ theme }) => ({
@@ -76,16 +76,16 @@ const StyledNameInput = styled(Input)(({ theme }) => ({
 const StyledGeneralSelect = styled(GeneralSelect)(({ theme }) => ({
     minWidth: '365px',
     width: '100%',
-    marginBottom: '1rem',
+    marginBottom: theme.spacing(2),
 }));
 
 const StyledDescriptionInput = styled(Input)(({ theme }) => ({
     minWidth: '365px',
-    marginBottom: '1rem',
+    marginBottom: theme.spacing(2),
 }));
 
 const StyledFormControlLabel = styled(FormControlLabel)(({ theme }) => ({
-    marginTop: '-0.5rem',
+    marginTop: theme.spacing(-1),
 }));
 
 export const StrategyParameter = ({

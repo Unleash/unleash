@@ -6,9 +6,9 @@ import { OperatorUpgradeAlert } from 'component/common/OperatorUpgradeAlert/Oper
 const StyledContainer = styled('section')(({ theme }) => ({
     backgroundColor: theme.palette.primary.light,
     minHeight: '100vh',
-    padding: '1rem',
+    padding: theme.spacing(2),
     display: 'grid',
-    gap: '1rem',
+    gap: theme.spacing(2),
     alignItems: 'center',
     alignContent: 'center',
     justifyContent: 'center',
@@ -18,12 +18,12 @@ const StyledContainer = styled('section')(({ theme }) => ({
 
 const StyledContent = styled('div')(({ theme }) => ({
     position: 'relative',
-    padding: '2rem',
-    borderRadius: '0.5rem',
+    padding: theme.spacing(4),
+    borderRadius: theme.spacing(1),
     backgroundColor: theme.palette.primary.main,
     color: 'white',
     [theme.breakpoints.up('md')]: {
-        padding: '4rem',
+        padding: theme.spacing(8),
     },
 }));
 
@@ -42,13 +42,13 @@ const StyledCloseButton = styled(IconButton)(({ theme }) => ({
     color: 'inherit',
 }));
 const StyledIngress = styled('p')(({ theme }) => ({
-    maxWidth: '32rem',
-    margin: '1.5rem auto 0 auto',
+    maxWidth: theme.spacing(64),
+    margin: theme.spacing(3, 'auto', 0, 'auto'),
 }));
 
 const StyledBody = styled('div')(({ theme }) => ({
-    margin: '2rem 0',
-    padding: '2rem 0',
+    margin: theme.spacing(4, 0),
+    padding: theme.spacing(4, 0),
     borderTop: '1px solid',
     borderBottom: '1px solid',
     borderTopColor: theme.palette.primary.light,
@@ -56,15 +56,15 @@ const StyledBody = styled('div')(({ theme }) => ({
 }));
 
 const StyledList = styled('ul')(({ theme }) => ({
-    padding: '1rem 0',
+    padding: theme.spacing(2, 0),
     [theme.breakpoints.up('md')]: {
-        padding: '1rem 2rem',
+        padding: theme.spacing(2, 4),
     },
     '& li + li': {
-        marginTop: '0.25rem',
+        marginTop: theme.spacing(0.5),
     },
     '& strong': {
-        padding: '0 .2rem',
+        padding: theme.spacing(0, 0.5),
         fontSize: theme.fontSizes.smallBody,
         fontWeight: 'inherit',
         backgroundColor: 'rgba(0, 0, 0, 0.2)',
@@ -73,7 +73,7 @@ const StyledList = styled('ul')(({ theme }) => ({
 
 const StyledFooter = styled('footer')(({ theme }) => ({
     display: 'grid',
-    gap: '2rem',
+    gap: theme.spacing(4),
     textAlign: 'center',
     justifyItems: 'center',
 }));

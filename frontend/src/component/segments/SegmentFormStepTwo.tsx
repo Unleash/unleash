@@ -65,29 +65,29 @@ const StyledNoConstraintText = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    marginTop: '6rem',
+    marginTop: theme.spacing(12),
 }));
 
 const StyledSubtitle = styled('p')(({ theme }) => ({
     fontSize: theme.fontSizes.bodySize,
-    color: theme.palette.grey[600],
+    color: theme.palette.tertiary.dark,
     maxWidth: 515,
-    marginBottom: 20,
+    marginBottom: theme.spacing(2.5),
     wordBreak: 'break-word',
     whiteSpace: 'normal',
     textAlign: 'center',
 }));
 
 const StyledConstraintContainer = styled('div')(({ theme }) => ({
-    marginBlock: '2rem',
+    marginBlock: theme.spacing(4),
 }));
 
 const StyledButtonContainer = styled('div')(({ theme }) => ({
     marginTop: 'auto',
     display: 'flex',
     justifyContent: 'flex-end',
-    borderTop: `1px solid ${theme.palette.grey[300]}`,
-    paddingTop: 15,
+    borderTop: `1px solid ${theme.palette.tertiary.contrast}`,
+    paddingTop: theme.spacing(2),
 }));
 
 const StyledBackButton = styled(Button)(({ theme }) => ({
@@ -95,7 +95,7 @@ const StyledBackButton = styled(Button)(({ theme }) => ({
 }));
 
 const StyledCancelButton = styled(Button)(({ theme }) => ({
-    marginLeft: '1.5rem',
+    marginLeft: theme.spacing(3),
 }));
 
 export const SegmentFormStepTwo: React.FC<ISegmentFormPartTwoProps> = ({

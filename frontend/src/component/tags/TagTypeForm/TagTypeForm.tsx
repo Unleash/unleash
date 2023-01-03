@@ -29,17 +29,17 @@ const StyledContainer = styled('div')(({ theme }) => ({
 }));
 
 const StyledInputDescription = styled('p')(({ theme }) => ({
-    marginBottom: '0.5rem',
+    marginBottom: theme.spacing(1),
 }));
 
 const StyledInput = styled(Input)(({ theme }) => ({
     width: '100%',
-    marginBottom: '1rem',
+    marginBottom: theme.spacing(2),
 }));
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
     width: '100%',
-    marginBottom: '1rem',
+    marginBottom: theme.spacing(2),
 }));
 
 const StyledButtonContainer = styled('div')(({ theme }) => ({
@@ -49,7 +49,7 @@ const StyledButtonContainer = styled('div')(({ theme }) => ({
 }));
 
 const StyledCancelButton = styled(Button)(({ theme }) => ({
-    marginLeft: '1.5rem',
+    marginLeft: theme.spacing(3),
 }));
 
 const TagTypeForm: React.FC<ITagTypeForm> = ({

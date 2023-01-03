@@ -25,7 +25,7 @@ const StyledSteps = styled('div')(({ theme }) => ({
     position: 'relative',
     borderRadius: 10,
     background: theme.palette.background.paper,
-    padding: '0.6rem 1.5rem',
+    padding: theme.spacing(1, 2.5),
     margin: 'auto',
     display: 'flex',
     alignItems: 'center',

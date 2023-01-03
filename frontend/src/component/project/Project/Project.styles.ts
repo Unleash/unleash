@@ -74,7 +74,7 @@ export const StyledTabContainer = styled('div')(({ theme }) => ({
 
 export const StyledTab = styled(Tab)(({ theme }) => ({
     textTransform: 'none',
-    fontSize: '1rem',
+    fontSize: theme.fontSizes.bodySize,
     flexGrow: 1,
     flexBasis: 0,
     [theme.breakpoints.down('md')]: {

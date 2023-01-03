@@ -22,16 +22,13 @@ import {
     DELETE_FEATURE,
     UPDATE_FEATURE,
 } from 'component/providers/AccessProvider/permissions';
+import { defaultBorderRadius } from 'themes/themeStyles';
 
 const StyledBoxCell = styled(Box)(({ theme }) => ({
     display: 'flex',
     justifyContent: 'center',
     paddingRight: theme.spacing(2),
 }));
-
-const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
-    borderRadius: theme.shape.borderRadius,
-})) as typeof MenuItem;
 
 interface IActionsCellProps {
     projectId: string;
@@ -101,7 +98,8 @@ export const ActionsCell: VFC<IActionsCellProps> = ({
                         permission={CREATE_FEATURE}
                     >
                         {({ hasAccess }) => (
-                            <StyledMenuItem
+                            <MenuItem
+                                sx={defaultBorderRadius}
                                 onClick={handleClose}
                                 disabled={!hasAccess}
                                 component={RouterLink}
@@ -115,7 +113,7 @@ export const ActionsCell: VFC<IActionsCellProps> = ({
                                         Copy
                                     </Typography>
                                 </ListItemText>
-                            </StyledMenuItem>
+                            </MenuItem>
                         )}
                     </PermissionHOC>
                     <PermissionHOC
@@ -123,7 +121,8 @@ export const ActionsCell: VFC<IActionsCellProps> = ({
                         permission={DELETE_FEATURE}
                     >
                         {({ hasAccess }) => (
-                            <StyledMenuItem
+                            <MenuItem
+                                sx={defaultBorderRadius}
                                 onClick={() => {
                                     onOpenArchiveDialog(featureId);
                                     handleClose();
@@ -138,7 +137,7 @@ export const ActionsCell: VFC<IActionsCellProps> = ({
                                         Archive
                                     </Typography>
                                 </ListItemText>
-                            </StyledMenuItem>
+                            </MenuItem>
                         )}
                     </PermissionHOC>
                     <PermissionHOC
@@ -146,7 +145,8 @@ export const ActionsCell: VFC<IActionsCellProps> = ({
                         permission={UPDATE_FEATURE}
                     >
                         {({ hasAccess }) => (
-                            <StyledMenuItem
+                            <MenuItem
+                                sx={defaultBorderRadius}
                                 onClick={() => {
                                     handleClose();
                                     onOpenStaleDialog({
@@ -164,7 +164,7 @@ export const ActionsCell: VFC<IActionsCellProps> = ({
                                         {stale ? 'Un-mark' : 'Mark'} as stale
                                     </Typography>
                                 </ListItemText>
-                            </StyledMenuItem>
+                            </MenuItem>
                         )}
                     </PermissionHOC>
                 </MenuList>

@@ -16,6 +16,10 @@ export const flexRow = {
     alignItems: 'center',
 } as const;
 
+export const defaultBorderRadius = (theme: Theme) => ({
+    borderRadius: `${theme.shape.borderRadius}px`,
+});
+
 /**
  * Please extract styles below into MUI fragments as shown above
  * @deprecated

@@ -15,7 +15,7 @@ import { useMediaQuery } from '@mui/material';
 import { sortTypes } from 'utils/sortTypes';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { useMemo, useState } from 'react';
-import { SegmentEmpty } from 'component/segments/SegmentEmpty/SegmentEmpty';
+import { SegmentEmpty } from 'component/segments/SegmentEmpty';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
 import { DonutLarge } from '@mui/icons-material';
 import { SegmentActionCell } from 'component/segments/SegmentActionCell/SegmentActionCell';

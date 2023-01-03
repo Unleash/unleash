@@ -3,8 +3,8 @@ import classnames from 'classnames';
 import React, { SyntheticEvent, useCallback, useEffect, useState } from 'react';
 import { useThemeStyles } from 'themes/themeStyles';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import PasswordChecker from './PasswordChecker/PasswordChecker';
-import PasswordMatcher from './PasswordMatcher/PasswordMatcher';
+import PasswordChecker from './PasswordChecker';
+import PasswordMatcher from './PasswordMatcher';
 import { useStyles } from './ResetPasswordForm.styles';
 import PasswordField from 'component/common/PasswordField/PasswordField';
 

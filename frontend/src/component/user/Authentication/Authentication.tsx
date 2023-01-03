@@ -9,7 +9,7 @@ import {
     PASSWORD_TYPE,
     HOSTED_TYPE,
 } from 'constants/authTypes';
-import SecondaryLoginActions from '../common/SecondaryLoginActions/SecondaryLoginActions';
+import SecondaryLoginActions from '../common/SecondaryLoginActions';
 import useQueryParams from 'hooks/useQueryParams';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Alert } from '@mui/material';

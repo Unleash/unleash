@@ -3,7 +3,7 @@ import { Alert, AlertTitle } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useStyles } from 'component/user/Login/Login.styles';
 import useQueryParams from 'hooks/useQueryParams';
-import StandaloneLayout from '../common/StandaloneLayout/StandaloneLayout';
+import StandaloneLayout from '../common/StandaloneLayout';
 import { DEMO_TYPE } from 'constants/authTypes';
 import Authentication from '../Authentication/Authentication';
 import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';

@@ -7,7 +7,7 @@ import { Typography } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import InvalidToken from '../common/InvalidToken/InvalidToken';
 import useResetPassword from 'hooks/api/getters/useResetPassword/useResetPassword';
-import StandaloneLayout from '../common/StandaloneLayout/StandaloneLayout';
+import StandaloneLayout from '../common/StandaloneLayout';
 import ResetPasswordForm from '../common/ResetPasswordForm/ResetPasswordForm';
 import ResetPasswordError from '../common/ResetPasswordError/ResetPasswordError';
 import { useAuthResetPasswordApi } from 'hooks/api/actions/useAuthResetPasswordApi/useAuthResetPasswordApi';

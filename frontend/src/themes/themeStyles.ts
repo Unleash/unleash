@@ -1,4 +1,20 @@
 import { makeStyles } from 'tss-react/mui';
+import { Theme } from '@mui/material';
+
+export const focusable = (theme: Theme) => ({
+    '&:focus-visible': {
+        outline: 0,
+        outlineStyle: 'solid',
+        outlineWidth: 2,
+        outlineOffset: 2,
+        outlineColor: theme.palette.primary.main,
+    },
+});
+
+export const flexRow = {
+    display: 'flex',
+    alignItems: 'center',
+};
 
 export const useThemeStyles = makeStyles()(theme => ({
     focusable: {

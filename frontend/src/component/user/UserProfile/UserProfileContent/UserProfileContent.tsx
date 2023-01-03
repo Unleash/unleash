@@ -128,7 +128,7 @@ export const UserProfileContent = ({
                     color="primary"
                     href={`${basePath}/logout`}
                 >
-                    Logout
+                    Log out
                 </StyledLogoutButton>
             </StyledPaper>
         }

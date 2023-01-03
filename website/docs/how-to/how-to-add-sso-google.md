@@ -42,7 +42,7 @@ You will then get a `Client ID` and a `Client Secret` that you will need in the 
 
 ### Step 4: Configure Unleash {#step-4}
 
-Login to Unleash and navigate to `Admin menu -> Single-Sign-on -> Google`.
+Log in to Unleash and navigate to `Admin menu -> Single-Sign-on -> Google`.
 
 First insert the Client Id and Client Secret from step 3.
 
@@ -56,6 +56,6 @@ Remember to click “Save” to store your settings.
 
 ### Step 5: Verify {#step-5}
 
-Logout of Unleash and sign back in again. You should now be presented with the “SSO Authentication Option”. Click the button and follow the sign-in flow. If all goes well you should be successfully signed in to Unleash. If something is not working you can still sign-in with username and password.
+Log out of Unleash and sign back in again. You should now be presented with the “SSO Authentication Option”. Click the button and follow the sign-in flow. If all goes well you should be successfully signed in to Unleash. If something is not working you can still sign-in with username and password.
 
 ![Verify SSO](/img/sign-in-google.png)

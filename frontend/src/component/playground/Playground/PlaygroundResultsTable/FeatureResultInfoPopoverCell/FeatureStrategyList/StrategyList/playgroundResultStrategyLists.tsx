@@ -3,7 +3,7 @@ import { Alert, Box, styled, Typography } from '@mui/material';
 import {
     PlaygroundStrategySchema,
     PlaygroundRequestSchema,
-    PlaygroundStrategyResultSchema,
+    PlaygroundFeatureSchemaStrategies,
 } from 'openapi';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { FeatureStrategyItem } from './StrategyItem/FeatureStrategyItem';
@@ -67,7 +67,7 @@ export const PlaygroundResultStrategyLists = ({
 );
 
 interface IWrappedPlaygroundResultStrategyListProps {
-    strategies: PlaygroundStrategyResultSchema;
+    strategies: PlaygroundFeatureSchemaStrategies;
     input?: PlaygroundRequestSchema;
 }
 

@@ -16,6 +16,10 @@ export const flexRow = {
     alignItems: 'center',
 };
 
+/**
+ * Please extract styles below into MUI fragments as shown above
+ * @deprecated
+ */
 export const useThemeStyles = makeStyles()(theme => ({
     focusable: {
         '&:focus-visible': {

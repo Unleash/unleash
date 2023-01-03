@@ -86,7 +86,7 @@ const StyledAdvancedNavButton = styled('button')(({ theme }) => ({
     background: 'transparent',
     height: '100%',
     display: 'flex',
-    fontSize: '1rem',
+    fontSize: theme.fontSizes.bodySize,
     fontFamily: theme.typography.fontFamily,
     alignItems: 'center',
     color: 'inherit',

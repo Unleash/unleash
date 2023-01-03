@@ -1,3 +1,27 @@
+// all SDK repos and what they map to for the sidebar.
+//
+// Each key should return an object that contains *at least* the
+// `sidebarSdkName` property. This is the name that is placed before "SDK" in
+// the sidebar. An object can also optionally define a `slugName`. This will be
+// used to construct the slug. If no "slugName" is defined, the `sidebarSdkName`
+// should be used to create the slug.
+const readmeRepos = {
+    'unleash-client-rust': {
+        sidebarSdkName: 'Rust',
+    },
+    // as an example of when you'd use both
+    // 'unleash-android-proxy-sdk': {
+    //     sidebarSdkName: 'Android',
+    //     slugName: 'android-proxy',
+    // },
+};
+
+function getReadmeRepoData(filename) {
+    const repoName = filename.split('/')[0];
+
+    return readmeRepos[repoName] ?? { sdkName: repoName };
+}
+
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 module.exports = {
     title: 'Unleash',
@@ -554,6 +578,32 @@ module.exports = {
                             categoryLinkSource: 'tag',
                         },
                     },
+                },
+            },
+        ],
+        [
+            'docusaurus-plugin-remote-content',
+            {
+                // more info at https://github.com/rdilweb/docusaurus-plugin-remote-content#options
+                name: 'content-sdks',
+                sourceBaseUrl: 'https://raw.githubusercontent.com/Unleash/', // gets prepended to all of the documents when fetching
+                outDir: 'docs/reference/sdks', // the base directory to output to.
+                documents: Object.keys(readmeRepos).map(
+                    (repo) => `${repo}/main/README.md`,
+                ), // the file names to download
+                modifyContent: (filename, content) => {
+                    const data = getReadmeRepoData(filename);
+                    return {
+                        filename: `${(
+                            data.slugName ?? data.sidebarSdkName
+                        ).toLowerCase()}.md`,
+                        content: `---
+title: ${data.sidebarSdkName} SDK
+---
+
+${content}
+`,
+                    };
                 },
             },
         ],

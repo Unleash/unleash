@@ -237,11 +237,7 @@ module.exports = {
                                 'reference/sdks/php',
                                 'reference/sdks/python',
                                 'reference/sdks/ruby',
-                                {
-                                    type: 'link',
-                                    href: 'https://github.com/unleash/unleash-client-rust',
-                                    label: 'Rust SDK',
-                                },
+                                'reference/sdks/rust',
                                 'reference/sdks/dotnet',
                             ],
                         },

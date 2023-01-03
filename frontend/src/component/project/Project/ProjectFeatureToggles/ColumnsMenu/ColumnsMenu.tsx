@@ -1,12 +1,8 @@
 import { useEffect, useState, VFC } from 'react';
 import {
-    Box,
-    Checkbox,
-    Divider,
     IconButton,
     ListItemIcon,
     ListItemText,
-    MenuItem,
     MenuList,
     Popover,
     Tooltip,
@@ -17,7 +13,14 @@ import {
 import ColumnIcon from '@mui/icons-material/ViewWeek';
 import CloseIcon from '@mui/icons-material/Close';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useStyles } from './ColumnsMenu.styles';
+import {
+    StyledBoxContainer,
+    StyledBoxMenuHeader,
+    StyledCheckbox,
+    StyledDivider,
+    StyledIconButton,
+    StyledMenuItem,
+} from './ColumnsMenu.styles';
 
 interface IColumnsMenuProps {
     allColumns: {
@@ -51,7 +54,6 @@ export const ColumnsMenu: VFC<IColumnsMenuProps> = ({
     setHiddenColumns,
 }) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const { classes } = useStyles();
     const theme = useTheme();
     const isTinyScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -104,9 +106,9 @@ export const ColumnsMenu: VFC<IColumnsMenuProps> = ({
     const menuId = `columns-menu-list-${id}`;
 
     return (
-        <Box className={classes.container}>
+        <StyledBoxContainer>
             <Tooltip title="Select columns" arrow describeChild>
-                <IconButton
+                <StyledIconButton
                     id={id}
                     aria-controls={isOpen ? menuId : undefined}
                     aria-haspopup="true"
@@ -114,11 +116,10 @@ export const ColumnsMenu: VFC<IColumnsMenuProps> = ({
                     onClick={handleClick}
                     type="button"
                     size="large"
-                    className={classes.button}
                     data-loading
                 >
                     <ColumnIcon />
-                </IconButton>
+                </StyledIconButton>
             </Tooltip>
 
             <Popover
@@ -136,34 +137,36 @@ export const ColumnsMenu: VFC<IColumnsMenuProps> = ({
                 }}
                 disableScrollLock={true}
                 PaperProps={{
-                    className: classes.menuContainer,
+                    sx: theme => ({
+                        borderRadius: theme.shape.borderRadius,
+                        paddingBottom: theme.spacing(2),
+                    }),
                 }}
             >
-                <Box className={classes.menuHeader}>
+                <StyledBoxMenuHeader>
                     <Typography variant="body2">
                         <strong>Columns</strong>
                     </Typography>
                     <IconButton onClick={handleClose}>
                         <CloseIcon />
                     </IconButton>
-                </Box>
+                </StyledBoxMenuHeader>
                 <MenuList>
                     {allColumns
                         .filter(({ hideInMenu }) => !hideInMenu)
                         .map(column => [
                             <ConditionallyRender
                                 condition={dividerBefore.includes(column.id)}
-                                show={<Divider className={classes.divider} />}
+                                show={<StyledDivider />}
                             />,
-                            <MenuItem
+                            <StyledMenuItem
                                 onClick={() =>
                                     column.toggleHidden(column.isVisible)
                                 }
                                 disabled={staticColumns.includes(column.id)}
-                                className={classes.menuItem}
                             >
                                 <ListItemIcon>
-                                    <Checkbox
+                                    <StyledCheckbox
                                         edge="start"
                                         checked={column.isVisible}
                                         disableRipple
@@ -171,7 +174,6 @@ export const ColumnsMenu: VFC<IColumnsMenuProps> = ({
                                             'aria-labelledby': column.id,
                                         }}
                                         size="medium"
-                                        className={classes.checkbox}
                                     />
                                 </ListItemIcon>
                                 <ListItemText
@@ -195,14 +197,14 @@ export const ColumnsMenu: VFC<IColumnsMenuProps> = ({
                                         </Typography>
                                     }
                                 />
-                            </MenuItem>,
+                            </StyledMenuItem>,
                             <ConditionallyRender
                                 condition={dividerAfter.includes(column.id)}
-                                show={<Divider className={classes.divider} />}
+                                show={<StyledDivider />}
                             />,
                         ])}
                 </MenuList>
             </Popover>
-        </Box>
+        </StyledBoxContainer>
     );
 };

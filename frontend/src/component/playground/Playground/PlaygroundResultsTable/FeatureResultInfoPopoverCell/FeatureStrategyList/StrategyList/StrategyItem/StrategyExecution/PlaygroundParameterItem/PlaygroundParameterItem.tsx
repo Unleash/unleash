@@ -1,9 +1,7 @@
-import { Chip, Typography, useTheme } from '@mui/material';
+import { Chip, Typography, useTheme, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useStyles } from './PlaygroundParametertem.styles';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { CancelOutlined } from '@mui/icons-material';
-import classnames from 'classnames';
 
 interface IConstraintItemProps {
     value: Array<string | number>;
@@ -12,29 +10,55 @@ interface IConstraintItemProps {
     showReason?: boolean;
 }
 
+const StyledDivContainer = styled('div', {
+    shouldForwardProp: prop => prop !== 'showReason',
+})<{ showReason?: boolean }>(({ theme, showReason }) => ({
+    width: '100%',
+    padding: theme.spacing(2, 3),
+    borderRadius: theme.shape.borderRadiusMedium,
+    border: `1px solid ${theme.palette.dividerAlternative}`,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: theme.spacing(2),
+    opacity: showReason ? 0.9 : 1,
+    backgroundColor: showReason ? theme.palette.background.paper : 'inherit',
+}));
+
+const StyledDivColumn = styled('div')(({ theme }) => ({
+    flexDirection: 'column',
+}));
+
+const StyledChip = styled(Chip)(({ theme }) => ({
+    margin: theme.spacing(0.5),
+}));
+
+const StyledParagraph = styled('p')(({ theme }) => ({
+    display: 'inline',
+    margin: theme.spacing(0.5, 0),
+    maxWidth: '95%',
+    textAlign: 'center',
+    wordBreak: 'break-word',
+}));
+
 export const PlaygroundParameterItem = ({
     value,
     text,
     input,
     showReason = false,
 }: IConstraintItemProps) => {
-    const { classes: styles } = useStyles();
     const theme = useTheme();
 
     const color = input === 'no value' ? 'error' : 'neutral';
     const reason = `value does not match any ${text}`;
 
     return (
-        <div
-            className={classnames(
-                styles.container,
-                showReason ? styles.disabled : ''
-            )}
-        >
+        <StyledDivContainer showReason={showReason}>
             <Typography variant="subtitle1" color={theme.palette[color].main}>
                 {`${input}`}
             </Typography>
-            <div className={styles.column}>
+            <StyledDivColumn>
                 <ConditionallyRender
                     condition={Boolean(showReason)}
                     show={
@@ -51,13 +75,13 @@ export const PlaygroundParameterItem = ({
                     show={<p>No {text}s added yet.</p>}
                     elseShow={
                         <div>
-                            <p className={styles.paragraph}>
+                            <StyledParagraph>
                                 {value.length}{' '}
                                 {value.length > 1 ? `${text}s` : text} will get
                                 access.
-                            </p>
+                            </StyledParagraph>
                             {value.map((v: string | number) => (
-                                <Chip
+                                <StyledChip
                                     key={v}
                                     label={
                                         <StringTruncator
@@ -66,18 +90,17 @@ export const PlaygroundParameterItem = ({
                                             maxLength={50}
                                         />
                                     }
-                                    className={styles.chip}
                                 />
                             ))}
                         </div>
                     }
                 />
-            </div>
+            </StyledDivColumn>
             <ConditionallyRender
                 condition={Boolean(showReason)}
                 show={<CancelOutlined color={'error'} />}
                 elseShow={<div />}
             />
-        </div>
+        </StyledDivContainer>
     );
 };

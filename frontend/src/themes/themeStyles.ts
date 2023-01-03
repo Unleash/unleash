@@ -11,7 +11,7 @@ export const focusable = (theme: Theme) => ({
     },
 });
 
-export const flexRow = {
+export const flexRow: { display: 'flex'; alignItems: 'center' } = {
     display: 'flex',
     alignItems: 'center',
 };

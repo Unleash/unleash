@@ -1,34 +1,26 @@
 import { useEffect, useState, VFC } from 'react';
 import {
-    Box,
-    Checkbox,
-    Divider,
     IconButton,
     ListItemIcon,
     ListItemText,
-    MenuItem,
     MenuList,
     Popover,
     Tooltip,
     Typography,
     useMediaQuery,
     useTheme,
-    styled,
 } from '@mui/material';
 import ColumnIcon from '@mui/icons-material/ViewWeek';
 import CloseIcon from '@mui/icons-material/Close';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useStyles } from './ColumnsMenu.styles';
-
-const StyledBoxContainer = styled(Box)(() => ({
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-}));
-
-const StyledIconButton = styled(IconButton)(({ theme }) => ({
-    margin: theme.spacing(-1, 0),
-}));
+import {
+    StyledBoxContainer,
+    StyledBoxMenuHeader,
+    StyledCheckbox,
+    StyledDivider,
+    StyledIconButton,
+    StyledMenuItem,
+} from './ColumnsMenu.styles';
 
 interface IColumnsMenuProps {
     allColumns: {
@@ -62,7 +54,6 @@ export const ColumnsMenu: VFC<IColumnsMenuProps> = ({
     setHiddenColumns,
 }) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const { classes } = useStyles();
     const theme = useTheme();
     const isTinyScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -125,7 +116,6 @@ export const ColumnsMenu: VFC<IColumnsMenuProps> = ({
                     onClick={handleClick}
                     type="button"
                     size="large"
-                    className={classes.button}
                     data-loading
                 >
                     <ColumnIcon />
@@ -153,31 +143,30 @@ export const ColumnsMenu: VFC<IColumnsMenuProps> = ({
                     }),
                 }}
             >
-                <Box className={classes.menuHeader}>
+                <StyledBoxMenuHeader>
                     <Typography variant="body2">
                         <strong>Columns</strong>
                     </Typography>
                     <IconButton onClick={handleClose}>
                         <CloseIcon />
                     </IconButton>
-                </Box>
+                </StyledBoxMenuHeader>
                 <MenuList>
                     {allColumns
                         .filter(({ hideInMenu }) => !hideInMenu)
                         .map(column => [
                             <ConditionallyRender
                                 condition={dividerBefore.includes(column.id)}
-                                show={<Divider className={classes.divider} />}
+                                show={<StyledDivider />}
                             />,
-                            <MenuItem
+                            <StyledMenuItem
                                 onClick={() =>
                                     column.toggleHidden(column.isVisible)
                                 }
                                 disabled={staticColumns.includes(column.id)}
-                                className={classes.menuItem}
                             >
                                 <ListItemIcon>
-                                    <Checkbox
+                                    <StyledCheckbox
                                         edge="start"
                                         checked={column.isVisible}
                                         disableRipple
@@ -185,7 +174,6 @@ export const ColumnsMenu: VFC<IColumnsMenuProps> = ({
                                             'aria-labelledby': column.id,
                                         }}
                                         size="medium"
-                                        className={classes.checkbox}
                                     />
                                 </ListItemIcon>
                                 <ListItemText
@@ -209,10 +197,10 @@ export const ColumnsMenu: VFC<IColumnsMenuProps> = ({
                                         </Typography>
                                     }
                                 />
-                            </MenuItem>,
+                            </StyledMenuItem>,
                             <ConditionallyRender
                                 condition={dividerAfter.includes(column.id)}
-                                show={<Divider className={classes.divider} />}
+                                show={<StyledDivider />}
                             />,
                         ])}
                 </MenuList>

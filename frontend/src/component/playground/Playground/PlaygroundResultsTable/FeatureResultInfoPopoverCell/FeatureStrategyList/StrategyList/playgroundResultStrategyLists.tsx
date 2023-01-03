@@ -4,7 +4,7 @@ import {
     PlaygroundStrategySchema,
     PlaygroundRequestSchema,
     PlaygroundStrategyResultSchema,
-} from 'component/playground/Playground/interfaces/playground.model';
+} from 'openapi';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { FeatureStrategyItem } from './StrategyItem/FeatureStrategyItem';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';

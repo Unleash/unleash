@@ -1,9 +1,6 @@
 import { styled, Typography } from '@mui/material';
 import { CancelOutlined } from '@mui/icons-material';
-import {
-    PlaygroundConstraintSchema,
-    PlaygroundRequestSchema,
-} from 'component/playground/Playground/interfaces/playground.model';
+import { PlaygroundConstraintSchema, PlaygroundRequestSchema } from 'openapi';
 
 const StyledConstraintErrorDiv = styled('div')(({ theme }) => ({
     display: 'flex',

@@ -3,10 +3,7 @@ import {
     WrappedPlaygroundResultStrategyList,
 } from './StrategyList/playgroundResultStrategyLists';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import {
-    PlaygroundFeatureSchema,
-    PlaygroundRequestSchema,
-} from 'component/playground/Playground/interfaces/playground.model';
+import { PlaygroundFeatureSchema, PlaygroundRequestSchema } from 'openapi';
 import { Alert } from '@mui/material';
 
 interface PlaygroundResultFeatureStrategyListProps {

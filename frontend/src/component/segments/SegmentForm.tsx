@@ -1,6 +1,6 @@
 import { IConstraint } from 'interfaces/strategy';
-import { SegmentFormStepOne } from './SegmentFormStepOne/SegmentFormStepOne';
-import { SegmentFormStepTwo } from './SegmentFormStepTwo/SegmentFormStepTwo';
+import { SegmentFormStepOne } from './SegmentFormStepOne';
+import { SegmentFormStepTwo } from './SegmentFormStepTwo';
 import React, { useState } from 'react';
 import { SegmentFormStepList } from 'component/segments/SegmentFormStepList';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';

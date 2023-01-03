@@ -190,6 +190,7 @@ To connect your application to Unleash you'll need to use a client SDK for your 
 The front-end SDKs connects via the [Unleash Proxy](https://docs.getunleash.io/reference/unleash-proxy) in order to ensure privacy, scalability and security.
 
 - [Android Proxy SDK](https://docs.getunleash.io/reference/sdks/android-proxy)
+- [Flutter Proxy SDK](https://docs.getunleash.io/reference/sdks/flutter)
 - [iOS Proxy SDK](https://docs.getunleash.io/reference/sdks/ios-proxy)
 - [JavaScript Proxy SDK](https://docs.getunleash.io/reference/sdks/javascript-browser)
 - [React Proxy SDK](https://docs.getunleash.io/reference/sdks/react)

@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import StandaloneBanner from 'component/user/StandaloneBanner/StandaloneBanner';
+import StandaloneBanner from 'component/user/StandaloneBanner';
 import { styled } from '@mui/material';
 
 interface IStandaloneLayout {

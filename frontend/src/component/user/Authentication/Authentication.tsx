@@ -1,7 +1,7 @@
 import SimpleAuth from '../SimpleAuth/SimpleAuth';
 import { AuthenticationCustomComponent } from 'component/user/AuthenticationCustomComponent';
-import PasswordAuth from '../PasswordAuth/PasswordAuth';
-import HostedAuth from '../HostedAuth/HostedAuth';
+import PasswordAuth from '../PasswordAuth';
+import HostedAuth from '../HostedAuth';
 import DemoAuth from '../DemoAuth/DemoAuth';
 import {
     SIMPLE_TYPE,

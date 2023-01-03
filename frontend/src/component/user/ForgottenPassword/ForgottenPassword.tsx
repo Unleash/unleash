@@ -1,17 +1,23 @@
 import { Button, styled, TextField, Typography } from '@mui/material';
 import { AlertTitle, Alert } from '@mui/material';
-import classnames from 'classnames';
 import { SyntheticEvent, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useThemeStyles } from 'themes/themeStyles';
 import useLoading from 'hooks/useLoading';
 import { FORGOTTEN_PASSWORD_FIELD } from 'utils/testIds';
 import { formatApiPath } from 'utils/formatPath';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import DividerText from 'component/common/DividerText/DividerText';
 import StandaloneLayout from '../common/StandaloneLayout';
+import {
+    contentSpacingY,
+    flexColumn,
+    textCenter,
+    title,
+} from 'themes/themeStyles';
 
 const StyledDiv = styled('div')(({ theme }) => ({
+    ...contentSpacingY,
+    ...flexColumn,
     width: '350px',
     [theme.breakpoints.down('sm')]: {
         width: '100%',
@@ -28,12 +34,25 @@ const StyledButton = styled(Button)(({ theme }) => ({
     margin: theme.spacing(2, 'auto'),
 }));
 
+const StyledTitle = styled('h2')(({ theme }) => ({
+    ...title(theme),
+    ...textCenter,
+}));
+
+const StyledForm = styled('form')(({ theme }) => ({
+    ...contentSpacingY(theme),
+    ...flexColumn,
+}));
+
+const StyledTypography = styled(Typography)(({ theme }) => ({
+    ...textCenter,
+}));
+
 const ForgottenPassword = () => {
     const [email, setEmail] = useState('');
     const [attempted, setAttempted] = useState(false);
     const [loading, setLoading] = useState(false);
     const [attemptedEmail, setAttemptedEmail] = useState('');
-    const { classes: themeStyles } = useThemeStyles();
     const ref = useLoading(loading);
 
     const onClick = async (e: SyntheticEvent) => {
@@ -56,22 +75,8 @@ const ForgottenPassword = () => {
 
     return (
         <StandaloneLayout>
-            <StyledDiv
-                className={classnames(
-                    themeStyles.contentSpacingY,
-                    themeStyles.flexColumn
-                )}
-                ref={ref}
-            >
-                <h2
-                    className={classnames(
-                        themeStyles.title,
-                        themeStyles.textCenter
-                    )}
-                    data-loading
-                >
-                    Forgotten password
-                </h2>
+            <StyledDiv ref={ref}>
+                <StyledTitle data-loading>Forgotten password</StyledTitle>
                 <ConditionallyRender
                     condition={attempted}
                     show={
@@ -86,21 +91,11 @@ const ForgottenPassword = () => {
                         </Alert>
                     }
                 />
-                <form
-                    onSubmit={onClick}
-                    className={classnames(
-                        themeStyles.contentSpacingY,
-                        themeStyles.flexColumn
-                    )}
-                >
-                    <Typography
-                        variant="body1"
-                        data-loading
-                        className={themeStyles.textCenter}
-                    >
+                <StyledForm onSubmit={onClick}>
+                    <StyledTypography variant="body1" data-loading>
                         Please provide your email address. If it exists in the
                         system we'll send a new reset link.
-                    </Typography>
+                    </StyledTypography>
                     <TextField
                         variant="outlined"
                         size="small"
@@ -141,7 +136,7 @@ const ForgottenPassword = () => {
                     >
                         Log in
                     </Button>
-                </form>
+                </StyledForm>
             </StyledDiv>
         </StandaloneLayout>
     );

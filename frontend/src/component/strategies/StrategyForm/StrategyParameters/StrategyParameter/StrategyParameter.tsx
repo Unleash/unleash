@@ -3,10 +3,10 @@ import {
     Divider,
     FormControlLabel,
     IconButton,
+    styled,
     Tooltip,
 } from '@mui/material';
 import { Delete } from '@mui/icons-material';
-import { useStyles } from './StrategyParameter.styles';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import Input from 'component/common/Input/Input';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -45,6 +45,49 @@ interface IStrategyParameterProps {
     errors: { [key: string]: string };
 }
 
+const StyledParamsContainer = styled('div')(({ theme }) => ({
+    maxWidth: '400px',
+    margin: '1rem 0',
+}));
+
+const StyledDivider = styled(Divider)(({ theme }) => ({
+    borderStyle: 'dashed',
+    margin: '1rem 0 1.5rem 0',
+    borderColor: theme.palette.grey[500],
+}));
+
+const StyledParagraph = styled('p')(({ theme }) => ({
+    minWidth: '365px',
+    width: '100%',
+    marginBottom: '1rem',
+}));
+
+const StyledNameContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    marginBottom: '1rem',
+}));
+
+const StyledNameInput = styled(Input)(({ theme }) => ({
+    minWidth: '365px',
+    width: '100%',
+}));
+
+const StyledGeneralSelect = styled(GeneralSelect)(({ theme }) => ({
+    minWidth: '365px',
+    width: '100%',
+    marginBottom: '1rem',
+}));
+
+const StyledDescriptionInput = styled(Input)(({ theme }) => ({
+    minWidth: '365px',
+    marginBottom: '1rem',
+}));
+
+const StyledFormControlLabel = styled(FormControlLabel)(({ theme }) => ({
+    marginTop: '-0.5rem',
+}));
+
 export const StrategyParameter = ({
     set,
     input,
@@ -53,19 +96,17 @@ export const StrategyParameter = ({
     setParams,
     errors,
 }: IStrategyParameterProps) => {
-    const { classes: styles } = useStyles();
-
     const onTypeChange = (type: string) => {
         set({ type });
     };
 
     return (
-        <div className={styles.paramsContainer}>
-            <Divider className={styles.divider} />
+        <StyledParamsContainer>
+            <StyledDivider />
             <ConditionallyRender
                 condition={index === 0}
                 show={
-                    <p className={styles.input}>
+                    <StyledParagraph>
                         Parameters let you provide arguments to your strategy
                         that it can access for evaluation. Read more in the{' '}
                         <a
@@ -76,16 +117,15 @@ export const StrategyParameter = ({
                             parameter types documentation
                         </a>
                         .
-                    </p>
+                    </StyledParagraph>
                 }
             />
-            <div className={styles.nameContainer}>
-                <Input
+            <StyledNameContainer>
+                <StyledNameInput
                     autoFocus
                     label={`Parameter name ${index + 1}*`}
                     onChange={e => set({ name: e.target.value })}
                     value={input.name}
-                    className={styles.name}
                     error={Boolean(errors?.[`paramName${index}`])}
                     errorText={errors?.[`paramName${index}`]}
                 />
@@ -99,25 +139,23 @@ export const StrategyParameter = ({
                         <Delete />
                     </IconButton>
                 </Tooltip>
-            </div>
-            <GeneralSelect
+            </StyledNameContainer>
+            <StyledGeneralSelect
                 label="Type*"
                 name="type"
                 options={paramTypesOptions}
                 value={input.type}
                 onChange={onTypeChange}
                 id={`prop-type-${index}-select`}
-                className={styles.input}
             />
-            <Input
+            <StyledDescriptionInput
                 rows={2}
                 multiline
                 label={`Parameter name ${index + 1} description`}
                 onChange={({ target }) => set({ description: target.value })}
                 value={input.description}
-                className={styles.description}
             />
-            <FormControlLabel
+            <StyledFormControlLabel
                 control={
                     <Checkbox
                         checked={Boolean(input.required)}
@@ -125,8 +163,7 @@ export const StrategyParameter = ({
                     />
                 }
                 label="Required"
-                className={styles.checkboxLabel}
             />
-        </div>
+        </StyledParamsContainer>
     );
 };

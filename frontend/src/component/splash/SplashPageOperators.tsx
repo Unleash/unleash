@@ -1,34 +1,110 @@
-import { useStyles } from 'component/splash/SplashPageOperators/SplashPageOperators.styles';
 import { Link, useNavigate } from 'react-router-dom';
-import { Button, IconButton } from '@mui/material';
+import { Button, IconButton, styled } from '@mui/material';
 import { CloseOutlined } from '@mui/icons-material';
 import { OperatorUpgradeAlert } from 'component/common/OperatorUpgradeAlert/OperatorUpgradeAlert';
 
+const StyledContainer = styled('section')(({ theme }) => ({
+    backgroundColor: theme.palette.primary.light,
+    minHeight: '100vh',
+    padding: '1rem',
+    display: 'grid',
+    gap: '1rem',
+    alignItems: 'center',
+    alignContent: 'center',
+    justifyContent: 'center',
+    gridTemplateColumns: 'minmax(0,auto)',
+    fontWeight: theme.fontWeight.thin,
+}));
+
+const StyledContent = styled('div')(({ theme }) => ({
+    position: 'relative',
+    padding: '2rem',
+    borderRadius: '0.5rem',
+    backgroundColor: theme.palette.primary.main,
+    color: 'white',
+    [theme.breakpoints.up('md')]: {
+        padding: '4rem',
+    },
+}));
+
+const StyledHeader = styled('header')(({ theme }) => ({
+    textAlign: 'center',
+}));
+
+const StyledTitle = styled('h1')(({ theme }) => ({
+    fontWeight: 'inherit',
+}));
+
+const StyledCloseButton = styled(IconButton)(({ theme }) => ({
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    color: 'inherit',
+}));
+const StyledIngress = styled('p')(({ theme }) => ({
+    maxWidth: '32rem',
+    margin: '1.5rem auto 0 auto',
+}));
+
+const StyledBody = styled('div')(({ theme }) => ({
+    margin: '2rem 0',
+    padding: '2rem 0',
+    borderTop: '1px solid',
+    borderBottom: '1px solid',
+    borderTopColor: theme.palette.primary.light,
+    borderBottomColor: theme.palette.primary.light,
+}));
+
+const StyledList = styled('ul')(({ theme }) => ({
+    padding: '1rem 0',
+    [theme.breakpoints.up('md')]: {
+        padding: '1rem 2rem',
+    },
+    '& li + li': {
+        marginTop: '0.25rem',
+    },
+    '& strong': {
+        padding: '0 .2rem',
+        fontSize: theme.fontSizes.smallBody,
+        fontWeight: 'inherit',
+        backgroundColor: 'rgba(0, 0, 0, 0.2)',
+    },
+}));
+
+const StyledFooter = styled('footer')(({ theme }) => ({
+    display: 'grid',
+    gap: '2rem',
+    textAlign: 'center',
+    justifyItems: 'center',
+}));
+
+const StyledLink = styled('a')(({ theme }) => ({
+    color: 'inherit',
+}));
+
 export const SplashPageOperators = () => {
     const navigate = useNavigate();
-    const { classes: styles } = useStyles();
 
     return (
-        <section className={styles.container}>
-            <div className={styles.content}>
-                <header className={styles.header}>
-                    <h1 className={styles.title}>New strategy operators</h1>
-                    <IconButton
-                        className={styles.close}
+        <StyledContainer>
+            <StyledContent>
+                <StyledHeader>
+                    <StyledTitle>New strategy operators</StyledTitle>
+                    <StyledCloseButton
                         onClick={() => navigate('/')}
                         size="large"
                     >
                         <CloseOutlined titleAccess="Close" />
-                    </IconButton>
-                    <p className={styles.ingress}>
+                    </StyledCloseButton>
+                    <StyledIngress>
                         We've added some new feature strategy constraint
                         operators. Fine-tune your feature targeting like never
                         before.
-                    </p>
-                </header>
-                <div className={styles.body}>
+                    </StyledIngress>
+                </StyledHeader>
+                <StyledBody>
                     <p>For example:</p>
-                    <ul className={styles.list}>
+                    <StyledList>
                         <li>
                             <span>Toggle features at dates: </span>
                             <span>
@@ -59,24 +135,26 @@ export const SplashPageOperators = () => {
                                 <strong>NUM_LT</strong> <strong>NUM_LTE</strong>
                             </span>
                         </li>
-                    </ul>
-                </div>
-                <footer className={styles.footer}>
+                    </StyledList>
+                </StyledBody>
+                <StyledFooter>
                     <p>
-                        <a
+                        <StyledLink
                             href="https://docs.getunleash.io/reference/strategy-constraints#numeric-operators"
                             target="_blank"
                             rel="noreferrer"
-                            className={styles.link}
                         >
                             Read all about operators in our in-depth{' '}
                             <strong>docs</strong>
-                        </a>
+                        </StyledLink>
                         .
                     </p>
                     <p>
                         <Button
-                            className={styles.button}
+                            sx={theme => ({
+                                background: 'white !important',
+                                color: theme.palette.primary.main,
+                            })}
                             variant="contained"
                             component={Link}
                             to="/"
@@ -84,9 +162,9 @@ export const SplashPageOperators = () => {
                             Fine, whatever, I have work to do!
                         </Button>
                     </p>
-                </footer>
-            </div>
+                </StyledFooter>
+            </StyledContent>
             <OperatorUpgradeAlert />
-        </section>
+        </StyledContainer>
     );
 };

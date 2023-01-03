@@ -69,7 +69,7 @@ The client is also an event emitter. This means that your code can subscribe to 
 
 ```dart
 unleash.on('update', (_) {
-    var myToggle = unleash.isEnabled('proxy.demo');
+    final myToggle = unleash.isEnabled('proxy.demo');
     //do something useful
 });
 ```

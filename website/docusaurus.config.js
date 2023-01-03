@@ -604,6 +604,9 @@ module.exports = {
                 ), // the file names to download
                 modifyContent: (filename, content) => {
                     const sdk = getReadmeRepoData(filename);
+
+                    const generationTime = new Date();
+
                     return {
                         filename: `${sdk.slugName}.md`,
                         content: `---
@@ -615,6 +618,13 @@ This document was generated from the README in the [${sdk.sidebarName} SDK's Git
 :::
 
 ${content}
+
+---
+
+This content was generated on <time datetime="${generationTime.toISOString()}">${generationTime.toLocaleString(
+                            'en-gb',
+                            { dateStyle: 'long', timeStyle: 'full' },
+                        )}</time>
 `,
                     };
                 },

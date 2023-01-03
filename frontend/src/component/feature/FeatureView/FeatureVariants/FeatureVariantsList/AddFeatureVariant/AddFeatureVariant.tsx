@@ -5,6 +5,7 @@ import {
     FormControlLabel,
     Grid,
     InputAdornment,
+    styled,
 } from '@mui/material';
 import { weightTypes } from './enums';
 import { OverrideConfig } from './OverrideConfig/OverrideConfig';
@@ -18,7 +19,6 @@ import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { IFeatureVariant } from 'interfaces/featureToggle';
 import cloneDeep from 'lodash.clonedeep';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
-import { useStyles } from './AddFeatureVariant.styles';
 import Input from 'component/common/Input/Input';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
@@ -33,6 +33,33 @@ const payloadOptions = [
 ];
 
 const EMPTY_PAYLOAD = { type: 'string', value: '' };
+
+const StyledError = styled('p')(({ theme }) => ({
+    color: theme.palette.error.main,
+    fontSize: theme.fontSizes.smallBody,
+    position: 'relative',
+}));
+
+const StyledInput = styled(Input)({
+    maxWidth: 350,
+    width: '100%',
+});
+
+const StyledGrid = styled(Grid)(({ theme }) => ({
+    marginBottom: theme.spacing(1),
+}));
+
+const StyledLabel = styled('p')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: '1ch',
+    marginBottom: theme.spacing(2),
+}));
+
+const StyledGeneralSelect = styled(GeneralSelect)({
+    minWidth: '100px',
+    width: '100%',
+});
 
 interface IAddVariantProps {
     showDialog: boolean;
@@ -55,7 +82,6 @@ export const AddVariant = ({
     title,
     editing,
 }: IAddVariantProps) => {
-    const { classes: styles } = useStyles();
     const [data, setData] = useState<Record<string, string>>({});
     const [payload, setPayload] = useState(EMPTY_PAYLOAD);
     const [overrides, overridesDispatch] = useOverrides([]);
@@ -232,13 +258,12 @@ export const AddVariant = ({
                 onSubmit={submit}
                 className={themeStyles.contentSpacingY}
             >
-                <p className={styles.error}>{error.general}</p>
-                <Input
+                <StyledError>{error.general}</StyledError>
+                <StyledInput
                     label="Variant name"
                     autoFocus
                     name="name"
                     id="variant-name"
-                    className={styles.input}
                     errorText={error.name}
                     value={data.name || ''}
                     error={Boolean(error.name)}
@@ -249,7 +274,7 @@ export const AddVariant = ({
                     data-testid={'VARIANT_NAME_INPUT'}
                 />
                 <br />
-                <Grid container>
+                <StyledGrid container>
                     {/* If we're editing, we need to have at least 2 existing variants, since we require at least 1 variable. If adding, we could be adding nr 2, and as such should be allowed to set weightType to variable */}
                     <ConditionallyRender
                         condition={
@@ -257,7 +282,7 @@ export const AddVariant = ({
                             (!editing && variants.length > 0)
                         }
                         show={
-                            <Grid item md={12} className={styles.grid}>
+                            <Grid item md={12}>
                                 <FormControl>
                                     <FormControlLabel
                                         control={
@@ -297,7 +322,7 @@ export const AddVariant = ({
                                             </InputAdornment>
                                         ),
                                     }}
-                                    className={styles.weightInput}
+                                    sx={{ marginRight: '0.8rem' }}
                                     value={data.weight}
                                     error={Boolean(error.weight)}
                                     errorText={error.weight}
@@ -312,18 +337,17 @@ export const AddVariant = ({
                             </Grid>
                         }
                     />
-                </Grid>
-                <p className={styles.label}>
+                </StyledGrid>
+                <StyledLabel>
                     <strong>Payload </strong>
                     <HelpIcon tooltip="Passed along with the the variant object." />
-                </p>
+                </StyledLabel>
                 <Grid container>
                     <Grid item md={2} sm={2} xs={4}>
-                        <GeneralSelect
+                        <StyledGeneralSelect
                             id="variant-payload-type"
                             name="type"
                             label="Type"
-                            className={styles.select}
                             value={payload.type}
                             options={payloadOptions}
                             onChange={onPayload('type')}
@@ -353,10 +377,10 @@ export const AddVariant = ({
                 <ConditionallyRender
                     condition={overrides.length > 0}
                     show={
-                        <p className={styles.label}>
+                        <StyledLabel>
                             <strong>Overrides </strong>
                             <HelpIcon tooltip="Here you can specify which users should get this variant." />
-                        </p>
+                        </StyledLabel>
                     }
                 />
                 <OverrideConfig

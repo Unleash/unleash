@@ -57,7 +57,7 @@ const unleash = await startUnleash({
   </TabItem>
 </Tabs>
 
-The example code above will initialize the client SDK, and try to the Unleash instance you point it to. You will need to use your own Unleash instance URL and a [server-side API token](../api-tokens-and-client-keys.mdx#client-tokens) to connect. For steps on how to create an API token, refer to the [_how to create API tokens_](../../how-to/how-to-create-api-tokens.mdx) guide.
+The example code above will initialize the client SDK, and try to connect to the Unleash instance you point it to. You will need to use your own Unleash instance URL and a [server-side API token](../api-tokens-and-client-keys.mdx#client-tokens) to connect. For steps on how to create an API token, refer to the [_how to create API tokens_](../../how-to/how-to-create-api-tokens.mdx) guide.
 
 ## Step 3: Use the feature toggle {#step-3-use-the-feature-toggle}
 

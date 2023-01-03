@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useMediaQuery, useTheme } from '@mui/material';
+import { styled, useMediaQuery, useTheme } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { SortingRule, useFlexLayout, useSortBy, useTable } from 'react-table';
@@ -9,7 +9,6 @@ import { PageContent } from 'component/common/PageContent/PageContent';
 import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
 import { getCreateTogglePath } from 'utils/routePathHelpers';
 import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
@@ -46,6 +45,10 @@ import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi
 import { FeatureTagCell } from 'component/common/Table/cells/FeatureTagCell/FeatureTagCell';
 import { useGlobalLocalStorage } from 'hooks/useGlobalLocalStorage';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
+
+const StyledResponsiveButton = styled(ResponsiveButton)(() => ({
+    whiteSpace: 'nowrap',
+}));
 
 interface IProjectFeatureTogglesProps {
     features: IProject['features'];
@@ -102,7 +105,6 @@ export const ProjectFeatureToggles = ({
         useGlobalLocalStorage();
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
-    const { uiConfig } = useUiConfig();
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const environments = useEnvironmentsRef(
         loading ? ['a', 'b', 'c'] : newEnvironments
@@ -488,10 +490,8 @@ export const ProjectFeatureToggles = ({
         <PageContent
             isLoading={loading}
             className={styles.container}
-            bodyClass={styles.bodyClass}
             header={
                 <PageHeader
-                    className={styles.title}
                     titleElement={`Feature toggles (${rows.length})`}
                     actions={
                         <>
@@ -515,7 +515,7 @@ export const ProjectFeatureToggles = ({
                                 setHiddenColumns={setHiddenColumns}
                             />
                             <PageHeader.Divider sx={{ marginLeft: 0 }} />
-                            <ResponsiveButton
+                            <StyledResponsiveButton
                                 onClick={() =>
                                     navigate(getCreateTogglePath(projectId))
                                 }
@@ -523,10 +523,9 @@ export const ProjectFeatureToggles = ({
                                 Icon={Add}
                                 projectId={projectId}
                                 permission={CREATE_FEATURE}
-                                className={styles.button}
                             >
                                 New feature toggle
-                            </ResponsiveButton>
+                            </StyledResponsiveButton>
                         </>
                     }
                 >

@@ -88,6 +88,7 @@ module.exports = {
                 'kotlin',
                 'php',
                 'ruby',
+                'rust',
                 'swift',
             ],
         },

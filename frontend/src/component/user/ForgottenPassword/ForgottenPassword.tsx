@@ -127,16 +127,20 @@ const ForgottenPassword = () => {
                         />
                     </StyledButton>
                     <DividerText text="Or log in" />
-                    <StyledButton
+                    <Button
                         type="submit"
                         data-loading
                         variant="outlined"
                         disabled={loading}
                         component={Link}
                         to="/login"
+                        sx={theme => ({
+                            width: '150px',
+                            margin: theme.spacing(2, 'auto'),
+                        })}
                     >
                         Log in
-                    </StyledButton>
+                    </Button>
                 </form>
             </StyledDiv>
         </StandaloneLayout>

@@ -1,35 +1,59 @@
-import { ListItem, Link } from '@mui/material';
+import { ListItem, Link, styled } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
-
-import { useStyles } from './NavigationLink.styles';
-
 interface INavigationLinkProps {
     path: string;
     text: string;
     handleClose: () => void;
 }
 
-const NavigationLink = ({ path, text, handleClose }: INavigationLinkProps) => {
-    const { classes: styles } = useStyles();
+const StyledListItem = styled(ListItem)({
+    minWidth: '150px',
+    height: '100%',
+    width: '100%',
+    margin: '0',
+    padding: '0',
+});
 
+const StyledLink = styled(RouterLink)(({ theme }) => ({
+    textDecoration: 'none',
+    alignItems: 'center',
+    display: 'flex',
+    color: 'inherit',
+    height: '100%',
+    width: '100%',
+    '&&': {
+        // Override MenuItem's built-in padding.
+        color: 'black',
+        padding: theme.spacing(1, 2),
+    },
+}));
+
+const StyledSpan = styled('span')(({ theme }) => ({
+    width: '12.5px',
+    height: '12.5px',
+    display: 'block',
+    backgroundColor: theme.palette.primary.main,
+    marginRight: '1rem',
+    borderRadius: '2px',
+}));
+
+const NavigationLink = ({ path, text, handleClose }: INavigationLinkProps) => {
     return (
-        <ListItem
-            className={styles.menuItem}
+        <StyledListItem
             onClick={() => {
                 handleClose();
             }}
         >
             <Link
                 style={{ textDecoration: 'none' }}
-                component={RouterLink}
-                className={styles.navMenuLink}
+                component={StyledLink}
                 to={path}
                 underline="hover"
             >
-                <span className={styles.menuItemBox} />
+                <StyledSpan />
                 {text}
             </Link>
-        </ListItem>
+        </StyledListItem>
     );
 };
 

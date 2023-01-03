@@ -5,8 +5,7 @@ import {
 import { Box, Chip } from '@mui/material';
 import PercentageCircle from 'component/common/PercentageCircle/PercentageCircle';
 import { PlaygroundParameterItem } from '../PlaygroundParameterItem/PlaygroundParameterItem';
-import React from 'react';
-import { useStyles } from '../StrategyExecution.styles';
+import { StyledBoxSummary } from '../StrategyExecution.styles';
 import {
     PlaygroundConstraintSchema,
     PlaygroundRequestSchema,
@@ -24,8 +23,6 @@ export const PlaygroundResultStrategyExecutionParameters = ({
     constraints,
     input,
 }: PlaygroundResultStrategyExecutionParametersProps) => {
-    const { classes: styles } = useStyles();
-
     return (
         <>
             {Object.keys(parameters).map(key => {
@@ -36,8 +33,7 @@ export const PlaygroundResultStrategyExecutionParameters = ({
                             parameters[key]
                         );
                         return (
-                            <Box
-                                className={styles.summary}
+                            <StyledBoxSummary
                                 key={key}
                                 sx={{ display: 'flex', alignItems: 'center' }}
                             >
@@ -60,7 +56,7 @@ export const PlaygroundResultStrategyExecutionParameters = ({
                                         : ''}{' '}
                                     is included.
                                 </div>
-                            </Box>
+                            </StyledBoxSummary>
                         );
                     case 'userIds':
                     case 'UserIds':

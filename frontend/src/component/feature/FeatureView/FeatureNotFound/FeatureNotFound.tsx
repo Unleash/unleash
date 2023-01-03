@@ -13,11 +13,9 @@ export const FeatureNotFound = () => {
     const { classes: styles } = useStyles();
     const { uiConfig } = useUiConfig();
 
-    const createFeatureTogglePath = getCreateTogglePath(
-        projectId,
-        uiConfig.flags.E,
-        { name: featureId }
-    );
+    const createFeatureTogglePath = getCreateTogglePath(projectId, {
+        name: featureId,
+    });
 
     if (!archivedFeatures) {
         return null;

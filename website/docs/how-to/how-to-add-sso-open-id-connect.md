@@ -69,7 +69,7 @@ You may also choose to “Auto-create users”. This will make Unleash automatic
 
 ### Step 4: Verify {#step-4}
 
-Logout of Unleash and sign back in again. You should now be presented with the "Sign in with OpenID Connect" option. Click the button and follow the sign-in flow. If all goes well you should be successfully signed in to Unleash.
+Log out of Unleash and sign back in again. You should now be presented with the "Sign in with OpenID Connect" option. Click the button and follow the sign-in flow. If all goes well you should be successfully signed in to Unleash.
 
 (If something is not working you can still sign-in with username and password).
 

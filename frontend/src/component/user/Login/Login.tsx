@@ -48,7 +48,7 @@ const Login = () => {
                     condition={authDetails?.type !== DEMO_TYPE}
                     show={
                         <h2 className={styles.title}>
-                            Login to continue the great work
+                            Log in to continue the great work
                         </h2>
                     }
                 />

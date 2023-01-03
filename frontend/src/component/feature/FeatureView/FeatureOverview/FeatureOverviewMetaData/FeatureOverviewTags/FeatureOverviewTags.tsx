@@ -1,8 +1,7 @@
 import React, { useContext, useState } from 'react';
-import { Chip } from '@mui/material';
+import { Chip, styled } from '@mui/material';
 import { Close, Label } from '@mui/icons-material';
 import useTags from 'hooks/api/getters/useTags/useTags';
-import { useStyles } from './FeatureOverviewTags.styles';
 import slackIcon from 'assets/icons/slack.svg';
 import jiraIcon from 'assets/icons/jira.svg';
 import webhookIcon from 'assets/icons/webhooks.svg';
@@ -18,9 +17,36 @@ import AccessContext from 'contexts/AccessContext';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
-interface IFeatureOverviewTagsProps extends React.HTMLProps<HTMLDivElement> {
+interface IFeatureOverviewTagsProps {
     projectId: string;
 }
+
+const StyledContainer = styled('div')(({ theme }) => ({
+    borderRadius: theme.shape.borderRadiusLarge,
+    backgroundColor: theme.palette.primary.main,
+    display: 'flex',
+    flexDirection: 'column',
+    marginRight: theme.spacing(2),
+    marginTop: theme.spacing(2),
+    [theme.breakpoints.down(800)]: {
+        width: '100%',
+        maxWidth: 'none',
+    },
+}));
+
+const StyledTagChip = styled(Chip)(({ theme }) => ({
+    marginRight: theme.spacing(0.5),
+    marginTop: theme.spacing(1),
+    backgroundColor: theme.palette.text.tertiaryContrast,
+    fontSize: theme.fontSizes.smallBody,
+}));
+
+const StyledCloseIcon = styled(Close)(({ theme }) => ({
+    color: theme.palette.primary.light,
+    '&:hover': {
+        color: theme.palette.primary.light,
+    },
+}));
 
 const FeatureOverviewTags: React.FC<IFeatureOverviewTagsProps> = ({
     projectId,
@@ -31,7 +57,6 @@ const FeatureOverviewTags: React.FC<IFeatureOverviewTagsProps> = ({
         value: '',
         type: '',
     });
-    const { classes: styles } = useStyles();
     const featureId = useRequiredPathParam('featureId');
     const { tags, refetch } = useTags(featureId);
     const { tagTypes } = useTagTypes();
@@ -98,15 +123,12 @@ const FeatureOverviewTags: React.FC<IFeatureOverviewTagsProps> = ({
     };
 
     const renderTag = (t: ITag) => (
-        <Chip
+        <StyledTagChip
             icon={tagIcon(t.type)}
-            className={styles.tagChip}
             data-loading
             label={t.value}
             key={`${t.type}:${t.value}`}
-            deleteIcon={
-                <Close className={styles.closeIcon} titleAccess="Remove" />
-            }
+            deleteIcon={<StyledCloseIcon titleAccess="Remove" />}
             onDelete={
                 canDeleteTag
                     ? () => {
@@ -119,7 +141,7 @@ const FeatureOverviewTags: React.FC<IFeatureOverviewTagsProps> = ({
     );
 
     return (
-        <div className={styles.container} {...rest}>
+        <StyledContainer {...rest}>
             <Dialogue
                 open={showDelDialog}
                 onClose={() => {
@@ -141,7 +163,7 @@ const FeatureOverviewTags: React.FC<IFeatureOverviewTagsProps> = ({
                     elseShow={<p data-loading>No tags to display</p>}
                 />
             </div>
-        </div>
+        </StyledContainer>
     );
 };
 

@@ -40,7 +40,15 @@ const StyledHeader = styled('h3')(({ theme }) => ({
     },
 }));
 
-export const FeatureOverviewSidePanel = () => {
+interface IFeatureOverviewSidePanelProps {
+    hiddenEnvironments: Set<String>;
+    setHiddenEnvironments: (environment: string) => void;
+}
+
+export const FeatureOverviewSidePanel = ({
+    hiddenEnvironments,
+    setHiddenEnvironments,
+}: IFeatureOverviewSidePanelProps) => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const { feature } = useFeature(projectId, featureId);
@@ -64,6 +72,8 @@ export const FeatureOverviewSidePanel = () => {
                     </StyledHeader>
                 }
                 feature={feature}
+                hiddenEnvironments={hiddenEnvironments}
+                setHiddenEnvironments={setHiddenEnvironments}
             />
             <Divider />
             <FeatureOverviewSidePanelDetails

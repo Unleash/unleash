@@ -1,6 +1,8 @@
 name: Check links
 
 on:
+  pull_request:
+    branches: [lychee-use-base-to-detect-broken-links] # this is just to test the PR (should not get merged)
   workflow_dispatch:
   schedule:
     - cron: '30 12 * * 1-5'
@@ -27,7 +29,7 @@ jobs:
         uses: lycheeverse/lychee-action@v1.5.4
         with:
           fail: true
-          args: '"./website/docs/**/*.md" "./website/docs/**/*.mdx" "./src/mailtemplates/*.mustache" --scheme http --scheme https --cache --max-cache-age 7d --exclude-mail --verbose' # other excludes are in .lycheeignore
+          args: '"./website/docs/**/*.md" "./website/docs/**/*.mdx" "./src/mailtemplates/*.mustache" --scheme http --scheme https --cache --max-cache-age 7d --exclude-mail --base https://docs.getunleash.io/ --verbose' # other excludes are in .lycheeignore
           output: ${{ env.issue-content }}
 
       # Permissions (issues: read)

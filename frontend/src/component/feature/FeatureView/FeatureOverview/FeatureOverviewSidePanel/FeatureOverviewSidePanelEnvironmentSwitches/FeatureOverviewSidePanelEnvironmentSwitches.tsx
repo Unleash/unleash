@@ -32,11 +32,15 @@ const StyledLink = styled(Link<typeof RouterLink | 'a'>)(() => ({
 interface IFeatureOverviewSidePanelEnvironmentSwitchesProps {
     feature: IFeatureToggle;
     header: React.ReactNode;
+    hiddenEnvironments: Set<String>;
+    setHiddenEnvironments: (environment: string) => void;
 }
 
 export const FeatureOverviewSidePanelEnvironmentSwitches = ({
     feature,
     header,
+    hiddenEnvironments,
+    setHiddenEnvironments,
 }: IFeatureOverviewSidePanelEnvironmentSwitchesProps) => {
     const [showInfoBox, setShowInfoBox] = useState(false);
     const [environmentName, setEnvironmentName] = useState('');
@@ -73,6 +77,8 @@ export const FeatureOverviewSidePanelEnvironmentSwitches = ({
                     <FeatureOverviewSidePanelEnvironmentSwitch
                         key={environment.name}
                         environment={environment}
+                        hiddenEnvironments={hiddenEnvironments}
+                        setHiddenEnvironments={setHiddenEnvironments}
                         showInfoBox={() => {
                             setEnvironmentName(environment.name);
                             setShowInfoBox(true);

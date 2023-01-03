@@ -13,11 +13,22 @@ import {
     Typography,
     useMediaQuery,
     useTheme,
+    styled,
 } from '@mui/material';
 import ColumnIcon from '@mui/icons-material/ViewWeek';
 import CloseIcon from '@mui/icons-material/Close';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useStyles } from './ColumnsMenu.styles';
+
+const StyledBoxContainer = styled(Box)(() => ({
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+}));
+
+const StyledIconButton = styled(IconButton)(({ theme }) => ({
+    margin: theme.spacing(-1, 0),
+}));
 
 interface IColumnsMenuProps {
     allColumns: {
@@ -104,9 +115,9 @@ export const ColumnsMenu: VFC<IColumnsMenuProps> = ({
     const menuId = `columns-menu-list-${id}`;
 
     return (
-        <Box className={classes.container}>
+        <StyledBoxContainer>
             <Tooltip title="Select columns" arrow describeChild>
-                <IconButton
+                <StyledIconButton
                     id={id}
                     aria-controls={isOpen ? menuId : undefined}
                     aria-haspopup="true"
@@ -118,7 +129,7 @@ export const ColumnsMenu: VFC<IColumnsMenuProps> = ({
                     data-loading
                 >
                     <ColumnIcon />
-                </IconButton>
+                </StyledIconButton>
             </Tooltip>
 
             <Popover
@@ -136,7 +147,10 @@ export const ColumnsMenu: VFC<IColumnsMenuProps> = ({
                 }}
                 disableScrollLock={true}
                 PaperProps={{
-                    className: classes.menuContainer,
+                    sx: theme => ({
+                        borderRadius: theme.shape.borderRadius,
+                        paddingBottom: theme.spacing(2),
+                    }),
                 }}
             >
                 <Box className={classes.menuHeader}>
@@ -203,6 +217,6 @@ export const ColumnsMenu: VFC<IColumnsMenuProps> = ({
                         ])}
                 </MenuList>
             </Popover>
-        </Box>
+        </StyledBoxContainer>
     );
 };

@@ -8,12 +8,12 @@ import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { UPDATE_FEATURE_ENVIRONMENT } from 'component/providers/AccessProvider/permissions';
 import React from 'react';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { useStyles } from './FeatureOverviewEnvSwitch.styles';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useChangeRequestToggle } from 'hooks/useChangeRequestToggle';
 import { ChangeRequestDialogue } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestConfirmDialog';
 import { UpdateEnabledMessage } from '../../../../../changeRequest/ChangeRequestConfirmDialog/ChangeRequestMessages/UpdateEnabledMessage';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
+import { styled } from '@mui/material';
 
 interface IFeatureOverviewEnvSwitchProps {
     env: IFeatureEnvironment;
@@ -21,6 +21,12 @@ interface IFeatureOverviewEnvSwitchProps {
     text?: string;
     showInfoBox: () => void;
 }
+
+const StyledLabel = styled('label')({
+    display: 'inline-flex',
+    alignItems: 'center',
+    cursor: 'pointer',
+});
 
 const FeatureOverviewEnvSwitch = ({
     env,
@@ -34,7 +40,6 @@ const FeatureOverviewEnvSwitch = ({
         useFeatureApi();
     const { refetchFeature } = useFeature(projectId, featureId);
     const { setToastData, setToastApiError } = useToast();
-    const { classes: styles } = useStyles();
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const {
         onChangeRequestToggle,
@@ -110,7 +115,7 @@ const FeatureOverviewEnvSwitch = ({
 
     return (
         <div>
-            <label className={styles.label}>
+            <StyledLabel>
                 <PermissionSwitch
                     permission={UPDATE_FEATURE_ENVIRONMENT}
                     projectId={projectId}
@@ -119,7 +124,7 @@ const FeatureOverviewEnvSwitch = ({
                     environmentId={env.name}
                 />
                 {content}
-            </label>
+            </StyledLabel>
             <ChangeRequestDialogue
                 isOpen={changeRequestDialogDetails.isOpen}
                 onClose={onChangeRequestToggleClose}

@@ -250,12 +250,12 @@ module.exports = {
                             label: 'Client-side SDKs',
                             items: [
                                 'reference/sdks/android-proxy',
+                                'reference/sdks/flutter-proxy',
                                 'reference/sdks/ios-proxy',
                                 'reference/sdks/javascript-browser',
                                 'reference/sdks/react',
                                 'reference/sdks/svelte',
                                 'reference/sdks/vue',
-                                'reference/sdks/flutter-proxy',
                             ],
                         },
                         {

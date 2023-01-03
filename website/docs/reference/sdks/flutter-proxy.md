@@ -2,7 +2,7 @@
 title: Flutter Proxy SDK
 ---
 
-This guide shows you how to use feature toggles in a Flutter app with the [Unleash Proxy](../unleash-proxy.md) and the [Unleash front-end API](../front-end-api). You can also check out the source code for the [Flutter Proxy SDK](https://github.com/unleash/unleash_proxy_client_flutter) on GitHub for more details around the SDK.
+This guide shows you how to use feature toggles in a Flutter app with the [Unleash Proxy](../unleash-proxy.md) and the [Unleash front-end API](../front-end-api.md). You can also check out the source code for the [Flutter Proxy SDK](https://github.com/unleash/unleash_proxy_client_flutter) on GitHub for more details around the SDK.
 
 ## Introduction {#introduction}
 
@@ -41,7 +41,7 @@ To connect to an Unleash proxy, you need to have an instance of the proxy runnin
 
 :::
 
-Add the proxy's URL and a [proxy client key](../api-tokens-and-client-keys.mdx#proxy-client-keys). The [_configuration_ section of the Unleash proxy docs](../unleash-proxy.md#configuration-variables) contain more info on how to configure client keys for your proxy.
+Add the proxy's URL and a [proxy client key](../api-tokens-and-client-keys.mdx#proxy-client-keys). The [_configuration_ section of the Unleash proxy docs](../unleash-proxy.md#configuration-variables) contains more info on how to configure client keys for your proxy.
 
 ### Option B: Connecting directly to Unleash
 

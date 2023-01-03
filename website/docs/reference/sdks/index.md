@@ -27,12 +27,12 @@ Client-side SDKs can connect to the [Unleash Proxy](../unleash-proxy.md) or to t
 
 
 - [Android SDK](android-proxy.md)
+- [Flutter Proxy SDK](flutter-proxy.md)
 - [iOS Proxy SDK](ios-proxy.md)
 - [Javascript SDK](javascript-browser.md)
 - [React Proxy SDK](react.md)
 - [Svelte Proxy SDK](svelte.md)
 - [Vue Proxy SDK](vue.md)
-- [Flutter Proxy SDK](flutter-proxy.md)
 
 ### Server-side SDK compatibility table
 

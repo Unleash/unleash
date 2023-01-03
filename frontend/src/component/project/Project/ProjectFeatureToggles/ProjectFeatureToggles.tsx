@@ -517,12 +517,7 @@ export const ProjectFeatureToggles = ({
                             <PageHeader.Divider sx={{ marginLeft: 0 }} />
                             <ResponsiveButton
                                 onClick={() =>
-                                    navigate(
-                                        getCreateTogglePath(
-                                            projectId,
-                                            uiConfig.flags.E
-                                        )
-                                    )
+                                    navigate(getCreateTogglePath(projectId))
                                 }
                                 maxWidth="960px"
                                 Icon={Add}

@@ -11,10 +11,6 @@ const flags = {
         process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY,
         true,
     ),
-    changeRequests: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_CHANGE_REQUESTS,
-        false,
-    ),
     embedProxyFrontend: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY_FRONTEND,
         true,
@@ -45,6 +41,14 @@ const flags = {
     ),
     maintenanceMode: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_MAINTENANCE_MODE,
+        false,
+    ),
+    messageBanner: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_MESSAGE_BANNER,
+        false,
+    ),
+    serviceAccounts: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SERVICE_ACCOUNTS,
         false,
     ),
 };

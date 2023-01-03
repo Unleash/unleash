@@ -1,7 +1,5 @@
 <div align="center">
 
-## 🚀 Unleash 4.16 brings powerful Constraints feature to OSS users. [Read more →](https://www.getunleash.io/blog/unleash-brings-powerful-constraints-feature-to-oss-users?utm_source=github&utm_medium=community&utm_campaign=constraints_04102026)
-
 <a href="https://getunleash.io" title="Unleash - Create with freedom. Release with confidence">
     <img src="./.github/github_header_opaque_landscape.svg" alt="The Unleash website">
 </a>

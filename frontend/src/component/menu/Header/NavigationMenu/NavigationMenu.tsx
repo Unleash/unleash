@@ -1,6 +1,5 @@
-import { Menu, MenuItem } from '@mui/material';
+import { Menu, MenuItem, styled } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { useStyles } from '../NavigationLink/NavigationLink.styles';
 
 interface INavigationMenuProps {
     options: any[];
@@ -10,6 +9,28 @@ interface INavigationMenuProps {
     style: Object;
 }
 
+const StyledLink = styled(Link)(({ theme }) => ({
+    textDecoration: 'none',
+    alignItems: 'center',
+    display: 'flex',
+    color: 'inherit',
+    height: '100%',
+    width: '100%',
+    '&&': {
+        // Override MenuItem's built-in padding.
+        padding: theme.spacing(1, 2),
+    },
+}));
+
+const StyledSpan = styled('span')(({ theme }) => ({
+    width: '12.5px',
+    height: '12.5px',
+    display: 'block',
+    backgroundColor: theme.palette.primary.main,
+    marginRight: theme.spacing(2),
+    borderRadius: '2px',
+}));
+
 export const NavigationMenu = ({
     options,
     id,
@@ -17,8 +38,6 @@ export const NavigationMenu = ({
     anchorEl,
     style,
 }: INavigationMenuProps) => {
-    const { classes: styles } = useStyles();
-
     return (
         <Menu
             id={id}
@@ -31,12 +50,11 @@ export const NavigationMenu = ({
                 return (
                     <MenuItem
                         key={option.path}
-                        component={Link}
+                        component={StyledLink}
                         to={option.path}
                         onClick={handleClose}
-                        classes={{ root: styles.navMenuLink }}
                     >
-                        <span className={styles.menuItemBox} />
+                        <StyledSpan />
                         {option.title}
                     </MenuItem>
                 );

@@ -1,10 +1,8 @@
-import { capitalize } from '@mui/material';
-import classnames from 'classnames';
+import { capitalize, styled } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useStyles } from './FeatureOverviewMetadata.styles';
 import { Edit } from '@mui/icons-material';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
@@ -13,9 +11,62 @@ import FeatureOverviewTags from './FeatureOverviewTags/FeatureOverviewTags';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
+const StyledContainer = styled('div')(({ theme }) => ({
+    borderRadius: theme.shape.borderRadiusLarge,
+    color: theme.palette.text.tertiaryContrast,
+    backgroundColor: theme.palette.featureMetaData,
+    display: 'flex',
+    flexDirection: 'column',
+    maxWidth: '350px',
+    minWidth: '350px',
+    marginRight: theme.spacing(2),
+    [theme.breakpoints.down(1000)]: {
+        width: '100%',
+        maxWidth: 'none',
+        minWidth: 'auto',
+    },
+}));
+
+const StyledPaddingContainerTop = styled('div')({
+    padding: '1.5rem 1.5rem 0 1.5rem',
+});
+
+const StyledPaddingContainerBottom = styled('div')(({ theme }) => ({
+    padding: '0 1.5rem 1.5rem 1.5rem',
+    borderTop: `1px solid ${theme.palette.divider}`,
+}));
+
+const StyledMetaDataHeader = styled('div')({
+    display: 'flex',
+    alignItems: 'center',
+});
+
+const StyledHeader = styled('h2')(({ theme }) => ({
+    fontSize: theme.fontSizes.bodySize,
+    fontWeight: 'normal',
+    margin: 0,
+}));
+
+const StyledBody = styled('div')(({ theme }) => ({
+    margin: theme.spacing(2, 0),
+    display: 'flex',
+    flexDirection: 'column',
+}));
+
+const StyledBodyItem = styled('span')(({ theme }) => ({
+    margin: theme.spacing(1, 0),
+    fontSize: theme.fontSizes.bodySize,
+    wordBreak: 'break-all',
+}));
+
+const StyledDescriptionContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    color: theme.palette.text.tertiaryContrast,
+}));
+
 const FeatureOverviewMetaData = () => {
     const { uiConfig } = useUiConfig();
-    const { classes: styles } = useStyles();
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const { tags } = useTags(featureId);
@@ -25,24 +76,29 @@ const FeatureOverviewMetaData = () => {
     const IconComponent = getFeatureTypeIcons(type);
 
     return (
-        <div className={classnames(styles.container)}>
-            <div className={styles.paddingContainerTop}>
-                <div className={styles.metaDataHeader} data-loading>
-                    <IconComponent className={styles.headerIcon} />{' '}
-                    <h2 className={styles.header}>
-                        {capitalize(type || '')} toggle
-                    </h2>
-                </div>
-                <div className={styles.body}>
-                    <span className={styles.bodyItem} data-loading>
+        <StyledContainer>
+            <StyledPaddingContainerTop>
+                <StyledMetaDataHeader data-loading>
+                    <IconComponent
+                        sx={theme => ({
+                            marginRight: theme.spacing(2),
+                            height: '40px',
+                            width: '40px',
+                            fill: theme.palette.text.tertiaryContrast,
+                        })}
+                    />{' '}
+                    <StyledHeader>{capitalize(type || '')} toggle</StyledHeader>
+                </StyledMetaDataHeader>
+                <StyledBody>
+                    <StyledBodyItem data-loading>
                         Project: {project}
-                    </span>
+                    </StyledBodyItem>
                     <ConditionallyRender
                         condition={Boolean(description)}
                         show={
-                            <span className={styles.bodyItem} data-loading>
+                            <StyledBodyItem data-loading>
                                 <div>Description:</div>
-                                <div className={styles.descriptionContainer}>
+                                <StyledDescriptionContainer>
                                     <p>{description}</p>
                                     <PermissionIconButton
                                         projectId={projectId}
@@ -53,14 +109,19 @@ const FeatureOverviewMetaData = () => {
                                             title: 'Edit description',
                                         }}
                                     >
-                                        <Edit className={styles.editIcon} />
+                                        <Edit
+                                            sx={theme => ({
+                                                color: theme.palette.text
+                                                    .tertiaryContrast,
+                                            })}
+                                        />
                                     </PermissionIconButton>
-                                </div>
-                            </span>
+                                </StyledDescriptionContainer>
+                            </StyledBodyItem>
                         }
                         elseShow={
                             <span data-loading>
-                                <div className={styles.descriptionContainer}>
+                                <StyledDescriptionContainer>
                                     No description.{' '}
                                     <PermissionIconButton
                                         projectId={projectId}
@@ -71,26 +132,31 @@ const FeatureOverviewMetaData = () => {
                                             title: 'Edit description',
                                         }}
                                     >
-                                        <Edit className={styles.editIcon} />
+                                        <Edit
+                                            sx={theme => ({
+                                                color: theme.palette.text
+                                                    .tertiaryContrast,
+                                            })}
+                                        />
                                     </PermissionIconButton>
-                                </div>
+                                </StyledDescriptionContainer>
                             </span>
                         }
                     />
-                </div>
-            </div>
+                </StyledBody>
+            </StyledPaddingContainerTop>
             <ConditionallyRender
                 condition={
                     tags.length > 0 &&
                     !Boolean(uiConfig.flags.variantsPerEnvironment)
                 }
                 show={
-                    <div className={styles.paddingContainerBottom}>
+                    <StyledPaddingContainerBottom>
                         <FeatureOverviewTags projectId={projectId} />
-                    </div>
+                    </StyledPaddingContainerBottom>
                 }
             />
-        </div>
+        </StyledContainer>
     );
 };
 

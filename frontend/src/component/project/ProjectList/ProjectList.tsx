@@ -23,6 +23,7 @@ import { Search } from 'component/common/Search/Search';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
 import { ITooltipResolverProps } from 'component/common/TooltipResolver/TooltipResolver';
 import { ReactComponent as ProPlanIcon } from 'assets/icons/pro-enterprise-feature-badge.svg';
+import { safeRegExp } from '@server/util/escape-regex';
 
 type PageQueryType = Partial<Record<'search', string>>;
 
@@ -93,7 +94,7 @@ export const ProjectListNew = () => {
     }, [searchValue, setSearchParams]);
 
     const filteredProjects = useMemo(() => {
-        const regExp = new RegExp(searchValue, 'i');
+        const regExp = safeRegExp(searchValue, 'i');
         return (
             searchValue
                 ? projects.filter(project => regExp.test(project.name))

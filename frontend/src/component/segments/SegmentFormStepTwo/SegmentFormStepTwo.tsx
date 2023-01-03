@@ -18,7 +18,7 @@ import {
     ConstraintAccordionList,
     IConstraintAccordionListRef,
 } from 'component/common/ConstraintAccordion/ConstraintAccordionList/ConstraintAccordionList';
-import { SegmentFormStep, SegmentFormMode } from '../SegmentForm/SegmentForm';
+import { SegmentFormStep, SegmentFormMode } from '../SegmentForm';
 import {
     AutocompleteBox,
     IAutocompleteBoxOption,
@@ -26,7 +26,7 @@ import {
 import {
     SegmentDocsValuesWarning,
     SegmentDocsValuesError,
-} from 'component/segments/SegmentDocs/SegmentDocs';
+} from 'component/segments/SegmentDocs';
 import { useSegmentValuesCount } from 'component/segments/hooks/useSegmentValuesCount';
 import AccessContext from 'contexts/AccessContext';
 import { useSegmentLimits } from 'hooks/api/getters/useSegmentLimits/useSegmentLimits';

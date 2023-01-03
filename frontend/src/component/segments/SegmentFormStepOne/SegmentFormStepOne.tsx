@@ -2,8 +2,7 @@ import { Button } from '@mui/material';
 import Input from 'component/common/Input/Input';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useStyles } from 'component/segments/SegmentFormStepOne/SegmentFormStepOne.styles';
-import { SegmentFormStep } from '../SegmentForm/SegmentForm';
+import { SegmentFormStep } from '../SegmentForm';
 import {
     SEGMENT_NAME_ID,
     SEGMENT_DESC_ID,
@@ -31,7 +30,6 @@ export const SegmentFormStepOne: React.FC<ISegmentFormPartOneProps> = ({
     setCurrentStep,
 }) => {
     const navigate = useNavigate();
-    const { classes: styles } = useStyles();
 
     return (
         <div className={styles.form}>

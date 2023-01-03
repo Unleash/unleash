@@ -1,13 +1,23 @@
 import { IConstraint } from 'interfaces/strategy';
-import { useStyles } from './SegmentForm.styles';
-import { SegmentFormStepOne } from '../SegmentFormStepOne/SegmentFormStepOne';
-import { SegmentFormStepTwo } from '../SegmentFormStepTwo/SegmentFormStepTwo';
+import { SegmentFormStepOne } from './SegmentFormStepOne/SegmentFormStepOne';
+import { SegmentFormStepTwo } from './SegmentFormStepTwo/SegmentFormStepTwo';
 import React, { useState } from 'react';
-import { SegmentFormStepList } from 'component/segments/SegmentFormStepList/SegmentFormStepList';
+import { SegmentFormStepList } from 'component/segments/SegmentFormStepList';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { styled } from '@mui/material';
 
 export type SegmentFormStep = 1 | 2;
 export type SegmentFormMode = 'create' | 'edit';
+
+const Styled = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: theme.spacing(6),
+    marginLeft: 'auto',
+    marginRight: 'auto',
+}));
 
 interface ISegmentProps {
     name: string;
@@ -22,6 +32,12 @@ interface ISegmentProps {
     mode: SegmentFormMode;
 }
 
+const StyledForm = styled('form')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
+}));
+
 export const SegmentForm: React.FC<ISegmentProps> = ({
     children,
     name,
@@ -35,14 +51,13 @@ export const SegmentForm: React.FC<ISegmentProps> = ({
     clearErrors,
     mode,
 }) => {
-    const { classes: styles } = useStyles();
     const totalSteps = 2;
     const [currentStep, setCurrentStep] = useState<SegmentFormStep>(1);
 
     return (
         <>
             <SegmentFormStepList total={totalSteps} current={currentStep} />
-            <form onSubmit={handleSubmit} className={styles.form}>
+            <StyledForm onSubmit={handleSubmit}>
                 <ConditionallyRender
                     condition={currentStep === 1}
                     show={
@@ -70,7 +85,7 @@ export const SegmentForm: React.FC<ISegmentProps> = ({
                         </SegmentFormStepTwo>
                     }
                 />
-            </form>
+            </StyledForm>
         </>
     );
 };

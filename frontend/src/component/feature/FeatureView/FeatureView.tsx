@@ -31,7 +31,6 @@ import { FeatureNotFound } from 'component/feature/FeatureView/FeatureNotFound/F
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { FavoriteIconButton } from 'component/common/FavoriteIconButton/FavoriteIconButton';
 
 export const FeatureView = () => {
@@ -40,7 +39,6 @@ export const FeatureView = () => {
     const { refetch: projectRefetch } = useProject(projectId);
     const { favorite, unfavorite } = useFavoriteFeaturesApi();
     const { refetchFeature } = useFeature(projectId, featureId);
-    const { uiConfig } = useUiConfig();
 
     const [openTagDialog, setOpenTagDialog] = useState(false);
     const [showDelDialog, setShowDelDialog] = useState(false);

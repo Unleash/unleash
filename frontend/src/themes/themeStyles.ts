@@ -14,7 +14,11 @@ export const focusable = (theme: Theme) => ({
 export const flexRow = {
     display: 'flex',
     alignItems: 'center',
-};
+} as const;
+
+export const defaultBorderRadius = (theme: Theme) => ({
+    borderRadius: `${theme.shape.borderRadius}px`,
+});
 
 /**
  * Please extract styles below into MUI fragments as shown above

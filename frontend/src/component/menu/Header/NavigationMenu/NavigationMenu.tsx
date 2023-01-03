@@ -18,7 +18,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
     width: '100%',
     '&&': {
         // Override MenuItem's built-in padding.
-        padding: '0.5rem 1rem',
+        padding: theme.spacing(1, 2),
     },
 }));
 
@@ -27,7 +27,7 @@ const StyledSpan = styled('span')(({ theme }) => ({
     height: '12.5px',
     display: 'block',
     backgroundColor: theme.palette.primary.main,
-    marginRight: '1rem',
+    marginRight: theme.spacing(2),
     borderRadius: '2px',
 }));
 

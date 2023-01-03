@@ -11,10 +11,10 @@ export const focusable = (theme: Theme) => ({
     },
 });
 
-export const flexRow: { display: 'flex'; alignItems: 'center' } = {
+export const flexRow = {
     display: 'flex',
     alignItems: 'center',
-};
+} as const;
 
 /**
  * Please extract styles below into MUI fragments as shown above

@@ -87,7 +87,7 @@ const createInstanceChartOptions = (
             },
         },
         title: {
-            text: 'Requests per second in the last 6 hours',
+            text: 'Top 10 requests per second in the last 6 hours',
             position: 'top',
             align: 'start',
             display: true,

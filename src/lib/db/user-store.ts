@@ -50,14 +50,6 @@ const mapUserToColumns = (user: ICreateUser) => ({
     image_url: user.imageUrl,
 });
 
-const mapServiceAccountToColumns = (user: ICreateUser) => ({
-    name: user.name,
-    username: user.username,
-    email: safeToLower(user.email),
-    image_url: user.imageUrl,
-    is_service: true,
-});
-
 const rowToUser = (row) => {
     if (!row) {
         throw new NotFoundError('No user found');
@@ -94,13 +86,6 @@ class UserStore implements IUserStore {
     async insert(user: ICreateUser): Promise<User> {
         const rows = await this.db(TABLE)
             .insert(mapUserToColumns(user))
-            .returning(USER_COLUMNS);
-        return rowToUser(rows[0]);
-    }
-
-    async insertServiceAccount(serviceAccount: ICreateUser): Promise<User> {
-        const rows = await this.db(TABLE)
-            .insert(mapServiceAccountToColumns(serviceAccount))
             .returning(USER_COLUMNS);
         return rowToUser(rows[0]);
     }
@@ -150,20 +135,6 @@ class UserStore implements IUserStore {
     async getAll(): Promise<User[]> {
         const users = await this.activeUsers().select(USER_COLUMNS);
         return users.map(rowToUser);
-    }
-
-    async getAllUsers(): Promise<User[]> {
-        const users = await this.activeUsers()
-            .where('is_service', false)
-            .select(USER_COLUMNS);
-        return users.map(rowToUser);
-    }
-
-    async getAllServiceAccounts(): Promise<User[]> {
-        const serviceAccounts = await this.activeUsers()
-            .where('is_service', true)
-            .select(USER_COLUMNS);
-        return serviceAccounts.map(rowToUser);
     }
 
     async search(query: string): Promise<User[]> {

@@ -14,7 +14,7 @@ interface IEnvironmentStrategyDialogProps {
 }
 
 const StyledParagraph = styled('p')(({ theme }) => ({
-    marginBottom: '10px',
+    marginBottom: theme.spacing(0.5),
     fontSize: theme.fontSizes.bodySize,
 }));
 const EnvironmentStrategyDialog = ({

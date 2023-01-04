@@ -46,7 +46,7 @@ const StyledDescription = styled('div')(({ theme }) => ({
 const StyledFormInput = styled(FormControl)(({ theme }) => ({
     [theme.breakpoints.between(1101, 1365)]: {
         width: '170px',
-        marginRight: '8px',
+        marginRight: theme.spacing(0.5),
     },
 }));
 

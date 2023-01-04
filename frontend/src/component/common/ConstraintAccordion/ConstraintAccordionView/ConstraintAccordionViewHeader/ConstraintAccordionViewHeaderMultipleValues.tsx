@@ -12,7 +12,7 @@ const StyledValuesSpan = styled('span')(({ theme }) => ({
     wordBreak: 'break-word',
     fontSize: theme.fontSizes.smallBody,
     margin: 'auto 0',
-    [theme.breakpoints.down(710)]: {
+    [theme.breakpoints.down('sm')]: {
         margin: theme.spacing(1, 0),
         textAlign: 'center',
     },
@@ -37,16 +37,16 @@ const StyledHeaderValuesContainer = styled('div')(({ theme }) => ({
     margin: 'auto 0',
     flexDirection: 'column',
     marginLeft: theme.spacing(1),
-    [theme.breakpoints.down(710)]: {
+    [theme.breakpoints.down('sm')]: {
         marginLeft: 0,
     },
 }));
 
 const StyledHeaderValuesExpand = styled('p')(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
-    marginTop: '4px',
+    marginTop: theme.spacing(0.5),
     color: theme.palette.primary.dark,
-    [theme.breakpoints.down(710)]: {
+    [theme.breakpoints.down('sm')]: {
         textAlign: 'center',
     },
 }));

@@ -7,7 +7,7 @@ import { useLocationSettings } from 'hooks/useLocationSettings';
 const StyledSingleValueChip = styled(Chip)(({ theme }) => ({
     margin: 'auto 0',
     marginLeft: theme.spacing(1),
-    [theme.breakpoints.down(710)]: {
+    [theme.breakpoints.down('sm')]: {
         margin: theme.spacing(1, 0),
     },
 }));

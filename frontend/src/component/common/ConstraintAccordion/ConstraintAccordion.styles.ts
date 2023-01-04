@@ -35,7 +35,7 @@ export const useStyles = makeStyles()(theme => ({
         display: 'flex',
         alignItems: 'center',
         width: '100%',
-        [theme.breakpoints.down(710)]: {
+        [theme.breakpoints.down('sm')]: {
             flexDirection: 'column',
             alignItems: 'center',
             position: 'relative',
@@ -94,7 +94,7 @@ export const useStyles = makeStyles()(theme => ({
     headerActions: {
         marginLeft: 'auto',
         whiteSpace: 'nowrap',
-        [theme.breakpoints.down(710)]: {
+        [theme.breakpoints.down('sm')]: {
             display: 'none',
         },
     },

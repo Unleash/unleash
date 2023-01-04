@@ -18,7 +18,7 @@ const StyledHeaderText = styled('span')(({ theme }) => ({
     marginBottom: 'auto',
     wordBreak: 'break-word',
     fontSize: theme.fontSizes.smallBody,
-    [theme.breakpoints.down(710)]: {
+    [theme.breakpoints.down(/)]: {
         textAlign: 'center',
         padding: theme.spacing(1, 0),
         marginRight: 'inherit',
@@ -37,7 +37,7 @@ const StyledHeaderMetaInfo = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'stretch',
     marginLeft: theme.spacing(1),
-    [theme.breakpoints.down(710)]: {
+    [theme.breakpoints.down('sm')]: {
         marginLeft: 0,
         flexDirection: 'column',
         alignItems: 'center',

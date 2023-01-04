@@ -21,7 +21,7 @@ const StyledHeaderValuesContainerWrapper = styled('div')(({ theme }) => ({
 const StyledHeaderConstraintContainer = styled('div')(({ theme }) => ({
     minWidth: '152px',
     position: 'relative',
-    [theme.breakpoints.down(710)]: {
+    [theme.breakpoints.down('sm')]: {
         paddingRight: 0,
     },
 }));

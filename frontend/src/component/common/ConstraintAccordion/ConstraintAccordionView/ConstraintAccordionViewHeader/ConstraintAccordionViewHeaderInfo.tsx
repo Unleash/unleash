@@ -18,7 +18,7 @@ const StyledHeaderText = styled('span')(({ theme }) => ({
     marginBottom: 'auto',
     wordBreak: 'break-word',
     fontSize: theme.fontSizes.smallBody,
-    [theme.breakpoints.down(/)]: {
+    [theme.breakpoints.down(710)]: {
         textAlign: 'center',
         padding: theme.spacing(1, 0),
         marginRight: 'inherit',

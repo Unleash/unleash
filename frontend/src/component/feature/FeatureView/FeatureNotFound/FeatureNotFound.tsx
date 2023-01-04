@@ -13,11 +13,9 @@ export const FeatureNotFound = () => {
     const { classes: styles } = useStyles();
     const { uiConfig } = useUiConfig();
 
-    const createFeatureTogglePath = getCreateTogglePath(
-        projectId,
-        uiConfig.flags.E,
-        { name: featureId }
-    );
+    const createFeatureTogglePath = getCreateTogglePath(projectId, {
+        name: featureId,
+    });
 
     if (!archivedFeatures) {
         return null;
@@ -33,7 +31,10 @@ export const FeatureNotFound = () => {
                 The feature{' '}
                 <strong className={styles.featureId}>{featureId}</strong> has
                 been archived. You can find it on the{' '}
-                <Link to={'/archive'}>archive page</Link>.
+                <Link to={`/projects/${projectId}/archive`}>
+                    project archive page
+                </Link>
+                .
             </p>
         );
     }

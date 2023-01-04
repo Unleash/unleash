@@ -19,6 +19,7 @@ import { useStyles } from './App.styles';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useProjects from '../hooks/api/getters/useProjects/useProjects';
 import { useLastViewedProject } from '../hooks/useLastViewedProject';
+import MaintenanceBanner from './maintenance/MaintenanceBanner';
 
 const InitialRedirect = () => {
     const { lastViewed } = useLastViewedProject();
@@ -57,7 +58,7 @@ export const App = () => {
     const hasFetchedAuth = Boolean(authDetails || user);
 
     const { classes: styles } = useStyles();
-    const { isOss } = useUiConfig();
+    const { isOss, uiConfig } = useUiConfig();
 
     const availableRoutes = isOss()
         ? routes.filter(route => !route.enterprise)
@@ -73,6 +74,15 @@ export const App = () => {
                             show={<Loader />}
                             elseShow={
                                 <>
+                                    <ConditionallyRender
+                                        condition={
+                                            Boolean(
+                                                uiConfig?.flags?.maintenance
+                                            ) &&
+                                            Boolean(uiConfig?.maintenanceMode)
+                                        }
+                                        show={<MaintenanceBanner />}
+                                    />
                                     <div className={styles.container}>
                                         <ToastRenderer />
                                         <Routes>

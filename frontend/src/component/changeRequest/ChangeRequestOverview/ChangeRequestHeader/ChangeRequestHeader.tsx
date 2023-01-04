@@ -27,7 +27,11 @@ export const ChangeRequestHeader: FC<{ changeRequest: IChangeRequest }> = ({
             </StyledContainer>
             <StyledInnerContainer>
                 <Typography variant="body2" sx={{ margin: 'auto 0' }}>
-                    Created <TimeAgo date={new Date(changeRequest.createdAt)} />{' '}
+                    Created{' '}
+                    <TimeAgo
+                        minPeriod={60}
+                        date={new Date(changeRequest.createdAt)}
+                    />{' '}
                     by
                 </Typography>
                 <Box

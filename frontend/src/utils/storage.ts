@@ -12,7 +12,12 @@ export function getLocalStorageItem<T>(key: string): T | undefined {
 // Does nothing if the browser denies access.
 export function setLocalStorageItem(key: string, value: unknown) {
     try {
-        window.localStorage.setItem(key, JSON.stringify(value));
+        window.localStorage.setItem(
+            key,
+            JSON.stringify(value, (_key, value) =>
+                value instanceof Set ? [...value] : value
+            )
+        );
     } catch (err: unknown) {
         console.warn(err);
     }

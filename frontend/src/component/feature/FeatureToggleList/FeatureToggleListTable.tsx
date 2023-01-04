@@ -26,6 +26,7 @@ import { FavoriteIconCell } from 'component/common/Table/cells/FavoriteIconCell/
 import { FavoriteIconHeader } from 'component/common/Table/FavoriteIconHeader/FavoriteIconHeader';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useGlobalLocalStorage } from 'hooks/useGlobalLocalStorage';
+import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 
 export const featuresPlaceholder: FeatureSchema[] = Array(15).fill({
     name: 'Name of the feature',
@@ -89,27 +90,23 @@ export const FeatureToggleListTable: VFC = () => {
 
     const columns = useMemo(
         () => [
-            ...(uiConfig?.flags?.favorites
-                ? [
-                      {
-                          Header: (
-                              <FavoriteIconHeader
-                                  isActive={isFavoritesPinned}
-                                  onClick={onChangeIsFavoritePinned}
-                              />
-                          ),
-                          accessor: 'favorite',
-                          Cell: ({ row: { original: feature } }: any) => (
-                              <FavoriteIconCell
-                                  value={feature?.favorite}
-                                  onClick={() => onFavorite(feature)}
-                              />
-                          ),
-                          maxWidth: 50,
-                          disableSortBy: true,
-                      },
-                  ]
-                : []),
+            {
+                Header: (
+                    <FavoriteIconHeader
+                        isActive={isFavoritesPinned}
+                        onClick={onChangeIsFavoritePinned}
+                    />
+                ),
+                accessor: 'favorite',
+                Cell: ({ row: { original: feature } }: any) => (
+                    <FavoriteIconCell
+                        value={feature?.favorite}
+                        onClick={() => onFavorite(feature)}
+                    />
+                ),
+                maxWidth: 50,
+                disableSortBy: true,
+            },
             {
                 Header: 'Seen',
                 accessor: 'lastSeenAt',
@@ -174,9 +171,11 @@ export const FeatureToggleListTable: VFC = () => {
             // Always hidden -- for search
             {
                 accessor: 'description',
+                Header: 'Description',
+                searchable: true,
             },
         ],
-        [isFavoritesPinned, uiConfig?.flags?.favorites]
+        [isFavoritesPinned]
     );
 
     const {
@@ -213,19 +212,24 @@ export const FeatureToggleListTable: VFC = () => {
         useFlexLayout
     );
 
-    useEffect(() => {
-        const hiddenColumns = ['description'];
-        if (!features.some(({ tags }) => tags?.length)) {
-            hiddenColumns.push('tags');
-        }
-        if (isMediumScreen) {
-            hiddenColumns.push('lastSeenAt', 'stale');
-        }
-        if (isSmallScreen) {
-            hiddenColumns.push('type', 'createdAt', 'tags');
-        }
-        setHiddenColumns(hiddenColumns);
-    }, [setHiddenColumns, isSmallScreen, isMediumScreen, features, columns]);
+    useConditionallyHiddenColumns(
+        [
+            {
+                condition: !features.some(({ tags }) => tags?.length),
+                columns: ['tags'],
+            },
+            {
+                condition: isSmallScreen,
+                columns: ['type', 'createdAt', 'tags'],
+            },
+            {
+                condition: isMediumScreen,
+                columns: ['lastSeenAt', 'stale'],
+            },
+        ],
+        setHiddenColumns,
+        columns
+    );
 
     useEffect(() => {
         const tableState: PageQueryType = {};

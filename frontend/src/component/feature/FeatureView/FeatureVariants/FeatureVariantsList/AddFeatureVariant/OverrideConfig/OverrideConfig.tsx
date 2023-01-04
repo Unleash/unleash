@@ -2,7 +2,6 @@ import { ChangeEvent, VFC } from 'react';
 import classnames from 'classnames';
 import { Grid, IconButton, TextField, Tooltip } from '@mui/material';
 import { Delete } from '@mui/icons-material';
-import { useStyles } from './OverrideConfig.styles';
 import { Autocomplete } from '@mui/material';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { useThemeStyles } from 'themes/themeStyles';
@@ -21,7 +20,6 @@ export const OverrideConfig: VFC<IOverrideConfigProps> = ({
     overrides,
     overridesDispatch,
 }) => {
-    const { classes: styles } = useStyles();
     const { classes: themeStyles } = useThemeStyles();
 
     const { context } = useUnleashContext();
@@ -69,7 +67,7 @@ export const OverrideConfig: VFC<IOverrideConfigProps> = ({
                             md={3}
                             sm={3}
                             xs={3}
-                            className={styles.contextFieldSelect}
+                            sx={theme => ({ marginRight: theme.spacing(1) })}
                         >
                             <GeneralSelect
                                 name="contextName"

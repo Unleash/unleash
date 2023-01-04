@@ -6,7 +6,7 @@ import {
     IClientInstanceStore,
     INewClientInstance,
 } from '../types/stores/client-instance-store';
-import { hoursToMilliseconds } from 'date-fns';
+import { hoursToMilliseconds, subDays } from 'date-fns';
 import Timeout = NodeJS.Timeout;
 
 const metricsHelper = require('../util/metrics-helper');
@@ -180,6 +180,20 @@ export default class ClientInstanceStore implements IClientInstanceStore {
             .orderBy('app_name', 'desc');
 
         return rows.map((r) => r.app_name);
+    }
+
+    async getDistinctApplicationsCount(daysBefore?: number): Promise<number> {
+        let query = this.db.from(TABLE);
+        if (daysBefore) {
+            query = query.where(
+                'last_seen',
+                '>',
+                subDays(new Date(), daysBefore),
+            );
+        }
+        return query
+            .countDistinct('app_name')
+            .then((res) => Number(res[0].count));
     }
 
     async deleteForApplication(appName: string): Promise<void> {

@@ -1,9 +1,15 @@
-import React from 'react';
 import { useLocation } from 'react-router-dom';
-import { Paper, Tab, Tabs } from '@mui/material';
+import { Paper, styled, Tab, Tabs } from '@mui/material';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
 import { CenteredNavLink } from './CenteredNavLink';
+
+const StyledPaper = styled(Paper)(({ theme }) => ({
+    marginBottom: '1rem',
+    borderRadius: '12.5px',
+    boxShadow: 'none',
+    padding: '0 2rem',
+}));
 
 function AdminMenu() {
     const { uiConfig } = useUiConfig();
@@ -11,22 +17,18 @@ function AdminMenu() {
     const { isBilling } = useInstanceStatus();
     const { flags } = uiConfig;
 
+    const activeTab = pathname.split('/')[2];
+
     return (
-        <Paper
-            style={{
-                marginBottom: '1rem',
-                borderRadius: '12.5px',
-                boxShadow: 'none',
-            }}
-        >
+        <StyledPaper>
             <Tabs
-                value={pathname}
+                value={activeTab}
                 variant="scrollable"
                 scrollButtons="auto"
                 allowScrollButtonsMobile
             >
                 <Tab
-                    value="/admin/users"
+                    value="users"
                     label={
                         <CenteredNavLink to="/admin/users">
                             <span>Users</span>
@@ -35,7 +37,7 @@ function AdminMenu() {
                 />
                 {flags.UG && (
                     <Tab
-                        value="/admin/groups"
+                        value="groups"
                         label={
                             <CenteredNavLink to="/admin/groups">
                                 <span>Groups</span>
@@ -45,7 +47,7 @@ function AdminMenu() {
                 )}
                 {flags.RE && (
                     <Tab
-                        value="/admin/roles"
+                        value="roles"
                         label={
                             <CenteredNavLink to="/admin/roles">
                                 <span>Project roles</span>
@@ -54,7 +56,7 @@ function AdminMenu() {
                     />
                 )}
                 <Tab
-                    value="/admin/api"
+                    value="api"
                     label={
                         <CenteredNavLink to="/admin/api">
                             API access
@@ -63,7 +65,7 @@ function AdminMenu() {
                 />
                 {uiConfig.flags.embedProxyFrontend && (
                     <Tab
-                        value="/admin/cors"
+                        value="cors"
                         label={
                             <CenteredNavLink to="/admin/cors">
                                 CORS origins
@@ -72,7 +74,7 @@ function AdminMenu() {
                     />
                 )}
                 <Tab
-                    value="/admin/auth"
+                    value="auth"
                     label={
                         <CenteredNavLink to="/admin/auth">
                             Single sign-on
@@ -80,16 +82,37 @@ function AdminMenu() {
                     }
                 />
                 <Tab
-                    value="/admin/instance"
+                    value="instance"
                     label={
                         <CenteredNavLink to="/admin/instance">
                             Instance stats
                         </CenteredNavLink>
                     }
                 />
+                {flags.networkView && (
+                    <Tab
+                        value="network"
+                        label={
+                            <CenteredNavLink to="/admin/network">
+                                Network
+                            </CenteredNavLink>
+                        }
+                    />
+                )}
+                {flags.maintenance && (
+                    <Tab
+                        value="maintenance"
+                        label={
+                            <CenteredNavLink to="/admin/maintenance">
+                                Maintenance
+                            </CenteredNavLink>
+                        }
+                    />
+                )}
+
                 {isBilling && (
                     <Tab
-                        value="/admin/billing"
+                        value="billing"
                         label={
                             <CenteredNavLink to="/admin/billing">
                                 Billing
@@ -98,7 +121,7 @@ function AdminMenu() {
                     />
                 )}
             </Tabs>
-        </Paper>
+        </StyledPaper>
     );
 }
 

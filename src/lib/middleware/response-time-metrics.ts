@@ -17,7 +17,7 @@ export function responseTimeMetrics(
 
         let appName;
         if (flagResolver.isEnabled('responseTimeWithAppName')) {
-            appName = req.headers['unleash-appname'];
+            appName = req.headers['unleash-appname'] ?? req.query.appName;
         }
 
         const timingInfo = {

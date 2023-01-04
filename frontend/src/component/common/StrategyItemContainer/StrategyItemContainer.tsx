@@ -1,6 +1,6 @@
 import { DragEventHandler, FC, ReactNode } from 'react';
 import { DragIndicator } from '@mui/icons-material';
-import { styled, IconButton, Box } from '@mui/material';
+import { styled, IconButton, Box, SxProps, Theme } from '@mui/material';
 import classNames from 'classnames';
 import { IFeatureStrategy } from 'interfaces/strategy';
 import {
@@ -19,6 +19,7 @@ interface IStrategyItemContainerProps {
     actions?: ReactNode;
     orderNumber?: number;
     className?: string;
+    style?: React.CSSProperties;
 }
 
 const DragIcon = styled(IconButton)(({ theme }) => ({
@@ -46,7 +47,7 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
     actions,
     children,
     orderNumber,
-    className,
+    style = {},
 }) => {
     const { classes: styles } = useStyles();
     const Icon = getFeatureStrategyIcon(strategy.name);
@@ -57,7 +58,7 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
                 condition={orderNumber !== undefined}
                 show={<StyledIndexLabel>{orderNumber}</StyledIndexLabel>}
             />
-            <Box className={classNames(styles.container, className)}>
+            <Box className={styles.container} style={{ ...style }}>
                 <div
                     className={classNames(styles.header, {
                         [styles.headerDraggable]: Boolean(onDragStart),

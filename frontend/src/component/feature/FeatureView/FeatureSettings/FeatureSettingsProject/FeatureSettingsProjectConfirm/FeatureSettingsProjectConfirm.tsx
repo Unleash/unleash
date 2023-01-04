@@ -3,12 +3,24 @@ import useProject from 'hooks/api/getters/useProject/useProject';
 import { IFeatureToggle } from 'interfaces/featureToggle';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import { useStyles } from './FeatureSettingsProjectConfirm.styles';
 import { arraysHaveSameItems } from 'utils/arraysHaveSameItems';
-import { Alert, List, ListItem } from '@mui/material';
+import { Alert, List, ListItem, styled } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { IChangeRequest } from 'component/changeRequest/changeRequest.types';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+
+const StyledContainer = styled('div')(({ theme }) => ({
+    display: 'grid',
+    gap: theme.spacing(2),
+}));
+
+const StyledAlert = styled(Alert)(({ theme }) => ({
+    marginBottom: theme.spacing(1),
+}));
+
+const StyledList = styled(List)({
+    padding: 0,
+});
 
 interface IFeatureSettingsProjectConfirm {
     projectId: string;
@@ -29,7 +41,6 @@ const FeatureSettingsProjectConfirm = ({
 }: IFeatureSettingsProjectConfirm) => {
     const currentProjectId = useRequiredPathParam('projectId');
     const { project } = useProject(projectId);
-    const { classes: styles } = useStyles();
 
     const hasSameEnvironments: boolean = useMemo(() => {
         return arraysHaveSameItems(
@@ -54,29 +65,29 @@ const FeatureSettingsProjectConfirm = ({
                     primaryButtonText="Change project"
                     secondaryButtonText="Cancel"
                 >
-                    <div className={styles.container}>
-                        <Alert severity="success">
+                    <StyledContainer>
+                        <StyledAlert severity="success">
                             This feature toggle is compatible with the new
                             project.
-                        </Alert>
-                    </div>
-                    <p>
-                        Are you sure you want to change the project for this
-                        toggle?
-                    </p>
+                        </StyledAlert>
+                        <p>
+                            Are you sure you want to change the project for this
+                            toggle?
+                        </p>
+                    </StyledContainer>
                 </Dialogue>
             }
             elseShow={
                 <Dialogue
                     open={open}
-                    onClose={onClose}
+                    onClick={onClose}
                     title="Confirm change project"
-                    secondaryButtonText="OK"
+                    primaryButtonText="OK"
                 >
-                    <div className={styles.container}>
-                        <Alert severity="warning">
+                    <StyledContainer>
+                        <StyledAlert severity="warning">
                             Incompatible project environments
-                        </Alert>
+                        </StyledAlert>
                         <p>
                             In order to move a feature toggle between two
                             projects, both projects must have the exact same
@@ -92,7 +103,7 @@ const FeatureSettingsProjectConfirm = ({
                                         feature toggle is currently referenced
                                         in the following change requests:
                                     </p>
-                                    <List>
+                                    <StyledList>
                                         {changeRequests?.map(changeRequest => {
                                             return (
                                                 <ListItem
@@ -107,11 +118,11 @@ const FeatureSettingsProjectConfirm = ({
                                                 </ListItem>
                                             );
                                         })}
-                                    </List>
+                                    </StyledList>
                                 </>
                             }
                         />
-                    </div>
+                    </StyledContainer>
                 </Dialogue>
             }
         />

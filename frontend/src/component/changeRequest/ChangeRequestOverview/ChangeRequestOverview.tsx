@@ -170,6 +170,7 @@ export const ChangeRequestOverview: FC = () => {
                     >
                         {changeRequest.approvals?.map(approver => (
                             <ChangeRequestReviewer
+                                key={approver.createdBy.username}
                                 name={
                                     approver.createdBy.username ||
                                     'Unknown user'

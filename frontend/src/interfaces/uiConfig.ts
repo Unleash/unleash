@@ -13,6 +13,8 @@ export interface IUiConfig {
     links: ILinks[];
     disablePasswordAuth?: boolean;
     emailEnabled?: boolean;
+
+    maintenanceMode?: boolean;
     toast?: IProclamationToast;
     segmentValuesLimit?: number;
     strategySegmentsLimit?: number;
@@ -27,23 +29,20 @@ export interface IProclamationToast {
 }
 
 export interface IFlags {
-    C: boolean;
     P: boolean;
     E: boolean;
     RE: boolean;
     EEA?: boolean;
-    OIDC?: boolean;
-    CO?: boolean;
     SE?: boolean;
     T?: boolean;
     UNLEASH_CLOUD?: boolean;
     UG?: boolean;
     ENABLE_DARK_MODE_SUPPORT?: boolean;
     embedProxyFrontend?: boolean;
-    changeRequests?: boolean;
     variantsPerEnvironment?: boolean;
-    favorites?: boolean;
     networkView?: boolean;
+    maintenance?: boolean;
+    messageBanner?: boolean;
 }
 
 export interface IVersionInfo {

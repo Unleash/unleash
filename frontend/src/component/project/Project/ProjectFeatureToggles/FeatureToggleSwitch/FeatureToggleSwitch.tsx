@@ -1,9 +1,14 @@
 import { VFC } from 'react';
-import { Box } from '@mui/material';
+import { Box, styled } from '@mui/material';
 import PermissionSwitch from 'component/common/PermissionSwitch/PermissionSwitch';
 import { UPDATE_FEATURE_ENVIRONMENT } from 'component/providers/AccessProvider/permissions';
 import { useOptimisticUpdate } from './hooks/useOptimisticUpdate';
-import { useStyles } from './FeatureToggleSwitch.styles';
+import { flexRow } from 'themes/themeStyles';
+
+const StyledBoxContainer = styled(Box)(() => ({
+    mx: 'auto',
+    ...flexRow,
+}));
 
 interface IFeatureToggleSwitchProps {
     featureName: string;
@@ -25,7 +30,6 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
     value,
     onToggle,
 }) => {
-    const { classes } = useStyles();
     const [isChecked, setIsChecked, rollbackIsChecked] =
         useOptimisticUpdate<boolean>(value);
 
@@ -37,8 +41,7 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
     };
 
     return (
-        <Box
-            className={classes.container}
+        <StyledBoxContainer
             key={`${featureName}-${environmentName}`} // Prevent animation when archiving rows
         >
             <PermissionSwitch
@@ -50,6 +53,6 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
                 onClick={onClick}
                 disabled={isChecked !== value}
             />
-        </Box>
+        </StyledBoxContainer>
     );
 };

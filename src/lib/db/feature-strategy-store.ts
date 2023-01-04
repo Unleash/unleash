@@ -259,7 +259,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             .modify(FeatureToggleStore.filterByArchived, archived);
 
         let selectColumns = ['features_view.*'] as (string | Raw<any>)[];
-        if (userId && this.flagResolver.isEnabled('favorites')) {
+        if (userId) {
             query = query.leftJoin(`favorite_features`, function () {
                 this.on(
                     'favorite_features.feature',
@@ -414,9 +414,25 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         projectId,
         archived,
         userId,
+        tag,
+        namePrefix,
     }: IFeatureProjectUserParams): Promise<IFeatureOverview[]> {
-        let query = this.db('features')
-            .where({ project: projectId })
+        let query = this.db('features').where({ project: projectId });
+        if (tag) {
+            const tagQuery = this.db
+                .from('feature_tag')
+                .select('feature_name')
+                .whereIn(['tag_type', 'tag_value'], tag);
+            query = query.whereIn('features.name', tagQuery);
+        }
+        if (namePrefix && namePrefix.trim()) {
+            let namePrefixQuery = namePrefix;
+            if (!namePrefix.endsWith('%')) {
+                namePrefixQuery = namePrefixQuery + '%';
+            }
+            query = query.whereILike('features.name', namePrefixQuery);
+        }
+        query = query
             .modify(FeatureToggleStore.filterByArchived, archived)
             .leftJoin(
                 'feature_environments',
@@ -444,7 +460,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             'ft.tag_type as tag_type',
         ] as (string | Raw<any>)[];
 
-        if (userId && this.flagResolver.isEnabled('favorites')) {
+        if (userId) {
             query = query.leftJoin(`favorite_features`, function () {
                 this.on('favorite_features.feature', 'features.name').andOnVal(
                     'favorite_features.user_id',
@@ -461,7 +477,6 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         }
 
         query = query.select(selectColumns);
-
         const rows = await query;
 
         if (rows.length > 0) {

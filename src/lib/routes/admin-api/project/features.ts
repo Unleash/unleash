@@ -43,6 +43,8 @@ import {
     getStandardResponses,
 } from '../../../openapi/util/standard-responses';
 import { SegmentService } from '../../../services/segment-service';
+import { querySchema } from '../../../schema/feature-schema';
+import { AdminFeaturesQuerySchema } from '../../../openapi';
 
 interface FeatureStrategyParams {
     projectId: string;
@@ -66,6 +68,9 @@ interface StrategyIdParams extends FeatureStrategyParams {
 export interface IFeatureProjectUserParams extends ProjectParam {
     archived?: boolean;
     userId?: number;
+
+    tag?: string[][];
+    namePrefix?: string;
 }
 
 const PATH = '/:projectId/features';
@@ -399,19 +404,45 @@ export default class ProjectFeaturesController extends Controller {
     }
 
     async getFeatures(
-        req: IAuthRequest<ProjectParam, any, any, any>,
+        req: IAuthRequest<ProjectParam, any, any, AdminFeaturesQuerySchema>,
         res: Response<FeaturesSchema>,
     ): Promise<void> {
         const { projectId } = req.params;
-        const features = await this.featureService.getFeatureOverview({
-            projectId,
-        });
+        const query = await this.prepQuery(req.query, projectId);
+        const features = await this.featureService.getFeatureOverview(query);
         this.openApiService.respondWithValidation(
             200,
             res,
             featuresSchema.$id,
             { version: 2, features: serializeDates(features) },
         );
+    }
+
+    async prepQuery(
+        // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+        { tag, namePrefix }: AdminFeaturesQuerySchema,
+        projectId: string,
+    ): Promise<IFeatureProjectUserParams> {
+        if (!tag && !namePrefix) {
+            return { projectId };
+        }
+        const tagQuery = this.paramToArray(tag);
+        const query = await querySchema.validateAsync({
+            tag: tagQuery,
+            namePrefix,
+        });
+        if (query.tag) {
+            query.tag = query.tag.map((q) => q.split(':'));
+        }
+        return { projectId, ...query };
+    }
+
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    paramToArray(param: any): Array<any> {
+        if (!param) {
+            return param;
+        }
+        return Array.isArray(param) ? param : [param];
     }
 
     async cloneFeature(

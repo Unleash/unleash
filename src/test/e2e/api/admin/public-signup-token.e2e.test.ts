@@ -7,15 +7,6 @@ import { PublicSignupTokenCreateSchema } from '../../../../lib/openapi/spec/publ
 let stores;
 let db;
 
-jest.mock('../../../../lib/util/flag-resolver', () => {
-    return jest.fn().mockImplementation(() => {
-        return {
-            getAll: jest.fn(),
-            isEnabled: jest.fn().mockResolvedValue(true),
-        };
-    });
-});
-
 beforeEach(async () => {
     db = await dbInit('test', getLogger);
     stores = db.stores;

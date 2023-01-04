@@ -1,7 +1,7 @@
 import { sha256 } from 'js-sha256';
 import { Logger } from '../logger';
 import { IUnleashConfig } from '../types/option';
-import { IUnleashStores } from '../types/stores';
+import { IClientInstanceStore, IUnleashStores } from '../types/stores';
 import { IContextFieldStore } from '../types/stores/context-field-store';
 import { IEnvironmentStore } from '../types/stores/environment-store';
 import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
@@ -14,7 +14,8 @@ import { IRoleStore } from '../types/stores/role-store';
 import VersionService from './version-service';
 import { ISettingStore } from '../types/stores/settings-store';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+type TimeRange = 'allTime' | '30d' | '7d';
+
 export interface InstanceStats {
     instanceId: string;
     timestamp: Date;
@@ -31,6 +32,7 @@ export interface InstanceStats {
     strategies: number;
     SAMLenabled: boolean;
     OIDCenabled: boolean;
+    clientApps: { range: TimeRange; count: number }[];
 }
 
 interface InstanceStatsSigned extends InstanceStats {
@@ -62,6 +64,8 @@ export class InstanceStatsService {
 
     private settingStore: ISettingStore;
 
+    private clientInstanceStore: IClientInstanceStore;
+
     constructor(
         {
             featureToggleStore,
@@ -74,6 +78,7 @@ export class InstanceStatsService {
             segmentStore,
             roleStore,
             settingStore,
+            clientInstanceStore,
         }: Pick<
             IUnleashStores,
             | 'featureToggleStore'
@@ -86,6 +91,7 @@ export class InstanceStatsService {
             | 'segmentStore'
             | 'roleStore'
             | 'settingStore'
+            | 'clientInstanceStore'
         >,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
         versionService: VersionService,
@@ -101,6 +107,7 @@ export class InstanceStatsService {
         this.roleStore = roleStore;
         this.versionService = versionService;
         this.settingStore = settingStore;
+        this.clientInstanceStore = clientInstanceStore;
         this.logger = getLogger('services/stats-service.js');
     }
 
@@ -141,6 +148,7 @@ export class InstanceStatsService {
             strategies,
             SAMLenabled,
             OIDCenabled,
+            clientApps,
         ] = await Promise.all([
             this.getToggleCount(),
             this.userStore.count(),
@@ -153,6 +161,7 @@ export class InstanceStatsService {
             this.strategyStore.count(),
             this.hasSAML(),
             this.hasOIDC(),
+            this.getLabeledAppCounts(),
         ]);
 
         return {
@@ -171,7 +180,31 @@ export class InstanceStatsService {
             strategies,
             SAMLenabled,
             OIDCenabled,
+            clientApps,
         };
+    }
+
+    async getLabeledAppCounts(): Promise<
+        { range: TimeRange; count: number }[]
+    > {
+        return [
+            {
+                range: 'allTime',
+                count: await this.clientInstanceStore.getDistinctApplicationsCount(),
+            },
+            {
+                range: '30d',
+                count: await this.clientInstanceStore.getDistinctApplicationsCount(
+                    30,
+                ),
+            },
+            {
+                range: '7d',
+                count: await this.clientInstanceStore.getDistinctApplicationsCount(
+                    7,
+                ),
+            },
+        ];
     }
 
     async getSignedStats(): Promise<InstanceStatsSigned> {

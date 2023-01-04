@@ -1,21 +1,28 @@
-import { Typography } from '@mui/material';
+import { styled, Typography } from '@mui/material';
 import { Edit } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
-import { useStyles } from './FeatureSettingsInformation.style';
 
 interface IFeatureSettingsInformationProps {
     projectId: string;
     featureId: string;
 }
 
+const StyledContainer = styled('div')({
+    display: 'flex',
+    alignItems: 'center',
+});
+
+const StyledTypography = styled(Typography)(({ theme }) => ({
+    fontSize: theme.fontSizes.mainHeader,
+}));
+
 export const FeatureSettingsInformation = ({
     projectId,
     featureId,
 }: IFeatureSettingsInformationProps) => {
-    const { classes: styles } = useStyles();
     const { feature } = useFeature(projectId, featureId);
     const navigate = useNavigate();
 
@@ -25,10 +32,8 @@ export const FeatureSettingsInformation = ({
 
     return (
         <>
-            <div className={styles.container}>
-                <Typography className={styles.header}>
-                    Feature information
-                </Typography>
+            <StyledContainer>
+                <StyledTypography>Feature information</StyledTypography>
                 <PermissionIconButton
                     permission={UPDATE_FEATURE}
                     projectId={projectId}
@@ -38,7 +43,7 @@ export const FeatureSettingsInformation = ({
                 >
                     <Edit />
                 </PermissionIconButton>
-            </div>
+            </StyledContainer>
             <Typography>
                 Name: <strong>{feature.name}</strong>
             </Typography>

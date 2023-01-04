@@ -1,8 +1,8 @@
 import { Button, styled } from '@mui/material';
 import React, { SyntheticEvent, useCallback, useEffect, useState } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import PasswordChecker from './PasswordChecker/PasswordChecker';
-import PasswordMatcher from './PasswordMatcher/PasswordMatcher';
+import PasswordChecker from './PasswordChecker';
+import PasswordMatcher from './PasswordMatcher';
 import PasswordField from 'component/common/PasswordField/PasswordField';
 
 interface IResetPasswordProps {

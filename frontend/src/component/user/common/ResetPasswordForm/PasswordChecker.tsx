@@ -1,8 +1,6 @@
-import { Typography } from '@mui/material';
-import classnames from 'classnames';
+import { styled, Typography } from '@mui/material';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { BAD_REQUEST, OK } from 'constants/statusCodes';
-import { useStyles } from './PasswordChecker.styles';
 import { useCallback } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import { Alert } from '@mui/material';
@@ -38,12 +36,64 @@ const REPEATING_CHARACTER_ERROR =
 export const PASSWORD_FORMAT_MESSAGE =
     'The password must be at least 10 characters long and must include an uppercase letter, a lowercase letter, a number, and a symbol.';
 
+const StyledTitle = styled(Typography)(({ theme }) => ({
+    marginBottom: '0',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '1ch',
+}));
+
+const StyledContainer = styled('div')(({ theme }) => ({
+    border: '1px solid #f1f1f1',
+    borderRadius: theme.shape.borderRadius,
+    position: 'relative',
+    maxWidth: '350px',
+    color: '#44606e',
+}));
+
+const StyledHeaderContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    padding: theme.spacing(1),
+}));
+
+const StyledCheckContainer = styled('div')(({ theme }) => ({
+    width: '95px',
+    margin: theme.spacing(0, 0.5),
+    display: 'flex',
+    justifyContent: 'center',
+}));
+
+const StyledDivider = styled('div')(({ theme }) => ({
+    backgroundColor: theme.palette.neutral.light,
+    height: '1px',
+    width: '100%',
+}));
+
+const StyledStatusBarContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    padding: theme.spacing(1),
+}));
+
+const StyledError = styled(Alert)(({ theme }) => ({
+    marginTop: theme.spacing(1),
+    bottom: '0',
+    position: 'absolute',
+}));
+
+const StyledStatusBar = styled('div', {
+    shouldForwardProp: prop => prop !== 'error',
+})<{ error: boolean }>(({ theme, error }) => ({
+    width: '50px',
+    borderRadius: theme.shape.borderRadius,
+    height: '6px',
+    backgroundColor: error ? 'red' : theme.palette.primary.main,
+}));
+
 const PasswordChecker = ({
     password,
     callback,
     style = {},
 }: IPasswordCheckerProps) => {
-    const { classes: styles } = useStyles();
     const [casingError, setCasingError] = useState(true);
     const [numberError, setNumberError] = useState(true);
     const [symbolError, setSymbolError] = useState(true);
@@ -141,83 +191,63 @@ const PasswordChecker = ({
         }
     };
 
-    const lengthStatusBarClasses = classnames(styles.statusBar, {
-        [styles.statusBarSuccess]: !lengthError,
-    });
-
-    const numberStatusBarClasses = classnames(styles.statusBar, {
-        [styles.statusBarSuccess]: !numberError,
-    });
-
-    const symbolStatusBarClasses = classnames(styles.statusBar, {
-        [styles.statusBarSuccess]: !symbolError,
-    });
-
-    const casingStatusBarClasses = classnames(styles.statusBar, {
-        [styles.statusBarSuccess]: !casingError,
-    });
-
     return (
         <>
-            <Typography variant="body2" className={styles.title} data-loading>
+            <StyledTitle variant="body2" data-loading>
                 Please set a strong password
                 <HelpIcon tooltip={PASSWORD_FORMAT_MESSAGE} />
-            </Typography>
-            <div
-                className={styles.container}
+            </StyledTitle>
+            <StyledContainer
                 style={{
                     ...style,
                 }}
             >
-                <div className={styles.headerContainer}>
-                    <div className={styles.checkContainer}>
+                <StyledHeaderContainer>
+                    <StyledCheckContainer>
                         <Typography variant="body2" data-loading>
                             Length
                         </Typography>
-                    </div>
-                    <div className={styles.checkContainer}>
+                    </StyledCheckContainer>
+                    <StyledCheckContainer>
                         <Typography variant="body2" data-loading>
                             Casing
                         </Typography>
-                    </div>
-                    <div className={styles.checkContainer}>
+                    </StyledCheckContainer>
+                    <StyledCheckContainer>
                         <Typography variant="body2" data-loading>
                             Number
                         </Typography>
-                    </div>
-                    <div className={styles.checkContainer}>
+                    </StyledCheckContainer>
+                    <StyledCheckContainer>
                         <Typography variant="body2" data-loading>
                             Symbol
                         </Typography>
-                    </div>
-                </div>
-                <div className={styles.divider} />
-                <div className={styles.statusBarContainer}>
-                    <div className={styles.checkContainer}>
-                        <div className={lengthStatusBarClasses} data-loading />
-                    </div>
-                    <div className={styles.checkContainer}>
-                        <div className={casingStatusBarClasses} data-loading />
-                    </div>{' '}
-                    <div className={styles.checkContainer}>
-                        <div className={numberStatusBarClasses} data-loading />
-                    </div>
-                    <div className={styles.checkContainer}>
-                        <div className={symbolStatusBarClasses} data-loading />
-                    </div>
-                </div>
+                    </StyledCheckContainer>
+                </StyledHeaderContainer>
+                <StyledDivider />
+                <StyledStatusBarContainer>
+                    <StyledCheckContainer>
+                        <StyledStatusBar error={lengthError} data-loading />
+                    </StyledCheckContainer>
+                    <StyledCheckContainer>
+                        <StyledStatusBar error={casingError} data-loading />
+                    </StyledCheckContainer>{' '}
+                    <StyledCheckContainer>
+                        <StyledStatusBar error={numberError} data-loading />
+                    </StyledCheckContainer>
+                    <StyledCheckContainer>
+                        <StyledStatusBar error={symbolError} data-loading />
+                    </StyledCheckContainer>
+                </StyledStatusBarContainer>
                 <ConditionallyRender
                     condition={repeatingCharError}
                     show={
-                        <Alert
-                            severity="error"
-                            className={styles.repeatingError}
-                        >
+                        <StyledError severity="error">
                             You may not repeat three characters in a row.
-                        </Alert>
+                        </StyledError>
                     }
                 />
-            </div>
+            </StyledContainer>
         </>
     );
 };

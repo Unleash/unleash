@@ -1,11 +1,8 @@
 import { FormEventHandler, useState, VFC } from 'react';
-import classnames from 'classnames';
-import { Button, Grid, TextField, Typography } from '@mui/material';
+import { Button, Grid, styled, TextField, Typography } from '@mui/material';
 import { useNavigate } from 'react-router';
-import { useThemeStyles } from 'themes/themeStyles';
-import { useStyles } from './HostedAuth.styles';
 import useQueryParams from 'hooks/useQueryParams';
-import AuthOptions from '../common/AuthOptions/AuthOptions';
+import AuthOptions from './common/AuthOptions/AuthOptions';
 import DividerText from 'component/common/DividerText/DividerText';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import PasswordField from 'component/common/PasswordField/PasswordField';
@@ -14,15 +11,31 @@ import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import { LOGIN_BUTTON, LOGIN_EMAIL_ID, LOGIN_PASSWORD_ID } from 'utils/testIds';
 import { IAuthEndpointDetailsResponse } from 'hooks/api/getters/useAuth/useAuthEndpoint';
 import { BadRequestError, NotFoundError } from 'utils/apiUtils';
+import { contentSpacingY } from 'themes/themeStyles';
 
 interface IHostedAuthProps {
     authDetails: IAuthEndpointDetailsResponse;
     redirect: string;
 }
 
+const StyledTypography = styled(Typography)(({ theme }) => ({
+    color: theme.palette.error.main,
+}));
+
+const StyledDiv = styled('div')(({ theme }) => ({
+    ...contentSpacingY(theme),
+    display: 'flex',
+    flexDirection: 'column',
+}));
+
+const StyledButton = styled(Button)(({ theme }) => ({
+    width: '150px',
+    margin: theme.spacing(2, 'auto', 0, 'auto'),
+    display: 'block',
+    textAlign: 'center',
+}));
+
 const HostedAuth: VFC<IHostedAuthProps> = ({ authDetails, redirect }) => {
-    const { classes: themeStyles } = useThemeStyles();
-    const { classes: styles } = useStyles();
     const { refetchUser } = useAuthUser();
     const navigate = useNavigate();
     const params = useQueryParams();
@@ -97,18 +110,10 @@ const HostedAuth: VFC<IHostedAuthProps> = ({ authDetails, redirect }) => {
                 condition={!authDetails.defaultHidden}
                 show={
                     <form onSubmit={handleSubmit}>
-                        <Typography
-                            variant="subtitle2"
-                            className={styles.apiError}
-                        >
+                        <StyledTypography variant="subtitle2">
                             {apiError}
-                        </Typography>
-                        <div
-                            className={classnames(
-                                styles.contentContainer,
-                                themeStyles.contentSpacingY
-                            )}
-                        >
+                        </StyledTypography>
+                        <StyledDiv>
                             <TextField
                                 label="Username or email"
                                 name="username"
@@ -134,17 +139,16 @@ const HostedAuth: VFC<IHostedAuthProps> = ({ authDetails, redirect }) => {
                                 data-testid={LOGIN_PASSWORD_ID}
                             />
                             <Grid container>
-                                <Button
+                                <StyledButton
                                     variant="contained"
                                     color="primary"
                                     type="submit"
-                                    className={styles.button}
                                     data-testid={LOGIN_BUTTON}
                                 >
                                     Sign in
-                                </Button>
+                                </StyledButton>
                             </Grid>
-                        </div>
+                        </StyledDiv>
                     </form>
                 }
             />

@@ -33,7 +33,7 @@ const StyledDescription = styled('div')(({ theme }) => ({
 const StyledButton = styled('button')(({ theme }) => ({
     all: 'unset',
     lineHeight: 0.1,
-    paddingTop: 1,
+    paddingTop: '1px',
     display: 'block',
     cursor: 'pointer',
     '& svg': {

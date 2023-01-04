@@ -34,7 +34,4 @@ export interface IUserStore extends Store<IUser, number> {
     count(): Promise<number>;
     getUserByPersonalAccessToken(secret: string): Promise<IUser>;
     markSeenAt(secrets: string[]): Promise<void>;
-    getAllUsers(): Promise<IUser[]>;
-    getAllServiceAccounts(): Promise<IUser[]>;
-    insertServiceAccount(user: ICreateUser): Promise<IUser>;
 }

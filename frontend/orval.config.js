@@ -6,9 +6,6 @@
  * 1. `yarn gen:api` to generate the client
  * 2. `rm -rf src/openapi/apis` to remove methods (! except if you want to use some of those)
  * 3. clean up `src/openapi/index.ts` imports
- * 4. change `src/openapi/models/sdkContextSchema.ts` line 21
- *    to `    [key: string]: any;`
- *    see: https://github.com/anymaniax/orval/issues/600
  */
 module.exports = {
     unleashApi: {

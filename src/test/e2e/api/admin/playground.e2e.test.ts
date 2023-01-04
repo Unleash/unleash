@@ -301,7 +301,10 @@ The following features are in the longer list, but not in the shorter: ${JSON.st
                     },
                 )
                 .afterEach(reset(db)),
-            testParams,
+            {
+                ...testParams,
+                seed: -404028249,
+            },
         );
     });
 

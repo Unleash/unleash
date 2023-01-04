@@ -3,15 +3,15 @@ import { makeStyles } from 'tss-react/mui';
 export const useStyles = makeStyles()(theme => ({
     title: {
         margin: 0,
-        marginBottom: '.5rem',
+        marginBottom: theme.spacing(1),
         fontSize: theme.fontSizes.smallBody,
         fontWeight: theme.fontWeight.thin,
-        color: theme.palette.grey[800],
+        color: theme.palette.text.secondary,
     },
     list: {
         display: 'flex',
         flexWrap: 'wrap',
-        gap: '.5rem',
+        gap: theme.spacing(1),
         listStyleType: 'none',
         padding: 0,
         minHeight: '100%',

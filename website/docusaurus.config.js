@@ -1,45 +1,4 @@
-// all SDK repos and what they map to for the sidebar.
-//
-// Each key should return an object that contains *at least* the
-// `sidebarSdkName` property. This is the name that is placed before "SDK" in
-// the sidebar. An object can also optionally define a `slugName`. This will be
-// used to construct the slug. If no "slugName" is defined, the `sidebarSdkName`
-// should be used to create the slug. Additionally, each repo may define a
-// `branch` property to indicate what their primary git branch is.
-const readmeRepos = {
-    'unleash-client-go': {
-        sidebarName: 'Go',
-        branch: 'v3',
-    },
-    'unleash-client-rust': {
-        sidebarName: 'Rust',
-    },
-    // as an example of when you'd use both
-    // 'unleash-android-proxy-sdk': {
-    //     sidebarName: 'Android',
-    //     slugName: 'android-proxy',
-    // },
-};
-
-function getReadmeRepoData(filename) {
-    const repoName = filename.split('/')[0];
-
-    const repoData = readmeRepos[repoName];
-
-    const repoUrl = `https://github.com/Unleash/${repoName}`;
-
-    if (repoData) {
-        return {
-            repoUrl,
-            ...repoData,
-            slugName: (repoData.slugName ?? repoData.sidebarName).toLowerCase(),
-        };
-    } else return { sidebarName: repoName, repoUrl };
-}
-
-const readmeRawLinks = Object.entries(readmeRepos).map(
-    ([repo, { branch }]) => `${repo}/${branch ?? 'main'}/README.md`,
-); // the file names to download
+const { readmes } = require('./readme-fns');
 
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 module.exports = {
@@ -608,35 +567,8 @@ module.exports = {
                 name: 'content-sdks',
                 sourceBaseUrl: 'https://raw.githubusercontent.com/Unleash/', // gets prepended to all of the documents when fetching
                 outDir: 'docs/reference/sdks', // the base directory to output to.
-                documents: readmeRawLinks, // the file names to download
-                modifyContent: (filename, content) => {
-                    const sdk = getReadmeRepoData(filename);
-
-                    const generationTime = new Date();
-
-                    return {
-                        filename: `${sdk.slugName}.md`,
-                        content: `---
-title: ${sdk.sidebarName} SDK
----
-
-:::info Generated content
-This document was generated from the README in the [${
-                            sdk.sidebarName
-                        } SDK's GitHub repository](${sdk.repoUrl}).
-:::
-
-${content}
-
----
-
-This content was generated on <time datetime="${generationTime.toISOString()}">${generationTime.toLocaleString(
-                            'en-gb',
-                            { dateStyle: 'long', timeStyle: 'full' },
-                        )}</time>
-`,
-                    };
-                },
+                documents: readmes.documentUrls, // the file names to download
+                modifyContent: readmes.modifyContent,
             },
         ],
     ],

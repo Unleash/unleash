@@ -16,12 +16,7 @@ import { IUnleashConfig } from '../types/option';
 import SessionService from './session-service';
 import { IUnleashStores } from '../types/stores';
 import PasswordUndefinedError from '../error/password-undefined';
-import {
-    USER_UPDATED,
-    USER_CREATED,
-    USER_DELETED,
-    SERVICE_ACCOUNT_CREATED,
-} from '../types/events';
+import { USER_UPDATED, USER_CREATED, USER_DELETED } from '../types/events';
 import { IEventStore } from '../types/stores/event-store';
 import { IUserStore } from '../types/stores/user-store';
 import { RoleName } from '../types/model';
@@ -166,34 +161,6 @@ class UserService {
         return usersWithRootRole;
     }
 
-    async getAllUsers(): Promise<IUserWithRole[]> {
-        const users = await this.store.getAllUsers();
-        const defaultRole = await this.accessService.getRootRole(
-            RoleName.VIEWER,
-        );
-        const userRoles = await this.accessService.getRootRoleForAllUsers();
-        const usersWithRootRole = users.map((u) => {
-            const rootRole = userRoles.find((r) => r.userId === u.id);
-            const roleId = rootRole ? rootRole.roleId : defaultRole.id;
-            return { ...u, rootRole: roleId };
-        });
-        return usersWithRootRole;
-    }
-
-    async getAllServiceAccounts(): Promise<IUserWithRole[]> {
-        const users = await this.store.getAllServiceAccounts();
-        const defaultRole = await this.accessService.getRootRole(
-            RoleName.VIEWER,
-        );
-        const userRoles = await this.accessService.getRootRoleForAllUsers();
-        const usersWithRootRole = users.map((u) => {
-            const rootRole = userRoles.find((r) => r.userId === u.id);
-            const roleId = rootRole ? rootRole.roleId : defaultRole.id;
-            return { ...u, rootRole: roleId };
-        });
-        return usersWithRootRole;
-    }
-
     async getUser(id: number): Promise<IUserWithRole> {
         const roles = await this.accessService.getUserRootRoles(id);
         const defaultRole = await this.accessService.getRootRole(
@@ -249,35 +216,6 @@ class UserService {
         });
 
         return user;
-    }
-
-    async createServiceAccount(
-        { username, name, rootRole }: ICreateUser,
-        updatedBy?: User,
-    ): Promise<IUser> {
-        if (!username) {
-            throw new BadDataError('You must specify username');
-        }
-
-        const exists = await this.store.hasUser({ username });
-        if (exists) {
-            throw new Error('Username already exists');
-        }
-
-        const serviceAccount = await this.store.insertServiceAccount({
-            username,
-            name,
-        });
-
-        await this.accessService.setUserRootRole(serviceAccount.id, rootRole);
-
-        await this.eventStore.store({
-            type: SERVICE_ACCOUNT_CREATED,
-            createdBy: this.getCreatedBy(updatedBy),
-            data: this.mapUserToData(serviceAccount),
-        });
-
-        return serviceAccount;
     }
 
     private getCreatedBy(updatedBy: User = systemUser) {

@@ -320,7 +320,7 @@ export default class UserAdminController extends Controller {
     }
 
     async getUsers(req: Request, res: Response<UsersSchema>): Promise<void> {
-        const users = await this.userService.getAllUsers();
+        const users = await this.userService.getAll();
         const rootRoles = await this.accessService.getRootRoles();
         const inviteLinks = await this.resetTokenService.getActiveInvitations();
 

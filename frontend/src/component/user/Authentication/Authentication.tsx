@@ -16,7 +16,7 @@ import { Alert } from '@mui/material';
 import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';
 import { AUTH_PAGE_ID } from 'utils/testIds';
 import { useEffect } from 'react';
-import { usePlausibleTracker } from '../../../hooks/usePlausibleTracker';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 interface IAuthenticationProps {
     redirect: string;

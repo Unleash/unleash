@@ -243,6 +243,19 @@ export class InstanceStatsService {
         ];
     }
 
+    async getAppCountSnapshot(range: string): Promise<number> {
+        return this.snapshot
+            ?.then((stats) => {
+                return (
+                    stats?.clientApps?.find((t) => t.range === range)?.count ||
+                    0
+                );
+            })
+            .catch(() => {
+                return 0;
+            });
+    }
+
     async getSignedStats(): Promise<InstanceStatsSigned> {
         const instanceStats = await this.getStats();
 

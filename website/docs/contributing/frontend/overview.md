@@ -10,6 +10,7 @@ The frontend is written in react/typescript. It's is a single page application t
 
 We have created a set of ADRs to help guide the development of the frontend:
 
+* [OpenAPI SDK generator](../ADRs/front-end/sdk-generator.md)
 * [Component naming](../ADRs/front-end/component-naming.md)
 * [Interface naming](../ADRs/front-end/interface-naming.md)
 * [Preferred component props usage](../ADRs/front-end/preferred-component-props-usage.md)

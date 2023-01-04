@@ -19,6 +19,7 @@ export const SegmentDelete = ({
 }: ISegmentDeleteProps) => {
     const { strategies } = useStrategiesBySegment(segment.id);
     const canDeleteSegment = strategies?.length === 0;
+
     return (
         <ConditionallyRender
             condition={canDeleteSegment}

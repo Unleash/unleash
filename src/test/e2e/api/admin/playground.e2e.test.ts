@@ -254,8 +254,35 @@ describe('Playground API E2E', () => {
                         const mappedToggles = createDict(body.features);
 
                         if (features.length !== body.features.length) {
+                            const [longer, shorter] =
+                                features.length > body.features.length
+                                    ? [features, body.features]
+                                    : [body.features, features];
+
+                            const extraFeatures = longer.filter(
+                                (longerFeature) =>
+                                    shorter.some(
+                                        (shorterFeature) =>
+                                            longerFeature.name ===
+                                            shorterFeature.name,
+                                    ),
+                            );
+
                             ctx.log(
-                                `I expected the number of mapped toggles (${body.features.length}) to be the same as the number of created toggles (${features.length}), but that was not the case.`,
+                                `I expected the number of mapped toggles (${
+                                    body.features.length
+                                }) to be the same as the number of generated toggles (${
+                                    features.length
+                                }), but that was not the case.
+
+The mapped toggles are ${JSON.stringify(body.features)}.
+
+The generated toggles are ${JSON.stringify(features)}.
+
+The following features are in the longer list, but not in the shorter: ${JSON.stringify(
+                                    extraFeatures,
+                                )}
+`,
                             );
                             return false;
                         }

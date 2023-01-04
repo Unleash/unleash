@@ -189,11 +189,13 @@ export const ServiceAccountModal = ({
                 const { id } = await addServiceAccount(
                     getServiceAccountPayload()
                 );
-                const token = await createUserPersonalAPIToken(id, {
-                    description: patDescription,
-                    expiresAt: patExpiresAt,
-                });
-                newToken(token);
+                if (tokenGeneration === TokenGeneration.NOW) {
+                    const token = await createUserPersonalAPIToken(id, {
+                        description: patDescription,
+                        expiresAt: patExpiresAt,
+                    });
+                    newToken(token);
+                }
             }
             setToastData({
                 title: `Service account ${

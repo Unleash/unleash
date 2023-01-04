@@ -1,6 +1,5 @@
 import { FC, useState, VFC } from 'react';
 import { Box, Button, styled, Typography } from '@mui/material';
-import { useStyles as useAppStyles } from 'component/App.styles';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ChangeRequestSidebar } from 'component/changeRequest/ChangeRequestSidebar/ChangeRequestSidebar';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
@@ -21,14 +20,29 @@ const DraftBannerContentWrapper = styled(Box)(({ theme }) => ({
     color: theme.palette.warning.main,
 }));
 
+const StyledBox = styled(Box)(({ theme }) => ({
+    width: '1250px',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    [theme.breakpoints.down('lg')]: {
+        width: '1024px',
+    },
+    [theme.breakpoints.down(1024)]: {
+        width: '100%',
+        marginLeft: 0,
+        marginRight: 0,
+    },
+    [theme.breakpoints.down('sm')]: {
+        minWidth: '100%',
+    },
+}));
+
 const DraftBannerContent: FC<{
     changeRequest: IChangeRequest;
     onClick: () => void;
 }> = ({ changeRequest, onClick }) => {
-    const { classes } = useAppStyles();
-
     return (
-        <Box className={classes.content}>
+        <StyledBox>
             <DraftBannerContentWrapper>
                 <Typography variant="body2" sx={{ mr: 4 }}>
                     <strong>Change request mode</strong> – You have changes{' '}
@@ -63,7 +77,7 @@ const DraftBannerContent: FC<{
                     View changes ({changesCount(changeRequest)})
                 </Button>
             </DraftBannerContentWrapper>
-        </Box>
+        </StyledBox>
     );
 };
 

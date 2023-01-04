@@ -4,8 +4,13 @@
 // `sidebarSdkName` property. This is the name that is placed before "SDK" in
 // the sidebar. An object can also optionally define a `slugName`. This will be
 // used to construct the slug. If no "slugName" is defined, the `sidebarSdkName`
-// should be used to create the slug.
+// should be used to create the slug. Additionally, each repo may define a
+// `branch` property to indicate what their primary git branch is.
 const readmeRepos = {
+    'unleash-client-go': {
+        sidebarName: 'Go',
+        branch: 'v3',
+    },
     'unleash-client-rust': {
         sidebarName: 'Rust',
     },
@@ -31,6 +36,10 @@ function getReadmeRepoData(filename) {
         };
     } else return { sidebarName: repoName, repoUrl };
 }
+
+const readmeRawLinks = Object.entries(readmeRepos).map(
+    ([repo, { branch }]) => `${repo}/${branch ?? 'main'}/README.md`,
+); // the file names to download
 
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 module.exports = {
@@ -599,9 +608,7 @@ module.exports = {
                 name: 'content-sdks',
                 sourceBaseUrl: 'https://raw.githubusercontent.com/Unleash/', // gets prepended to all of the documents when fetching
                 outDir: 'docs/reference/sdks', // the base directory to output to.
-                documents: Object.keys(readmeRepos).map(
-                    (repo) => `${repo}/main/README.md`,
-                ), // the file names to download
+                documents: readmeRawLinks, // the file names to download
                 modifyContent: (filename, content) => {
                     const sdk = getReadmeRepoData(filename);
 

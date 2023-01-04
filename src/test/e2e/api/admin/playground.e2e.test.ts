@@ -255,8 +255,8 @@ describe('Playground API E2E', () => {
 
                         if (features.length !== body.features.length) {
                             const [longer, shorter]: [
-                                ClientFeatureSchema[],
-                                ClientFeatureSchema[],
+                                { name: string }[],
+                                { name: string }[],
                             ] =
                                 features.length > body.features.length
                                     ? [features, body.features]

@@ -6,6 +6,7 @@ import { featureStrategySchema } from './feature-strategy-schema';
 import { featureSchema } from './feature-schema';
 import { constraintSchema } from './constraint-schema';
 import { environmentSchema } from './environment-schema';
+import { featureEnvironmentSchema } from './feature-environment-schema';
 
 export const healthOverviewSchema = {
     $id: '#/components/schemas/healthOverviewSchema',
@@ -54,6 +55,7 @@ export const healthOverviewSchema = {
             constraintSchema,
             environmentSchema,
             featureSchema,
+            featureEnvironmentSchema,
             overrideSchema,
             parametersSchema,
             featureStrategySchema,

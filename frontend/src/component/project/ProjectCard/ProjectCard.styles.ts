@@ -4,7 +4,6 @@ import { Delete, Edit } from '@mui/icons-material';
 import { ReactComponent as ProjectIcon } from 'assets/icons/projectIcon.svg';
 import { flexRow } from 'themes/themeStyles';
 
-
 export const StyledProjectCard = styled(Card)(({ theme }) => ({
     padding: theme.spacing(1, 2, 2, 2),
     width: '220px',
@@ -24,7 +23,7 @@ export const StyledProjectCard = styled(Card)(({ theme }) => ({
     },
 }));
 
-export const StyledDivHeader = styled('div')(({ theme }) => ({
+export const StyledDivHeader = styled('div')(() => ({
     ...flexRow,
     width: '100%',
 }));

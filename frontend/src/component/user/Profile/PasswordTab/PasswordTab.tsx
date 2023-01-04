@@ -3,8 +3,8 @@ import { PageContent } from 'component/common/PageContent/PageContent';
 import PasswordField from 'component/common/PasswordField/PasswordField';
 import PasswordChecker, {
     PASSWORD_FORMAT_MESSAGE,
-} from 'component/user/common/ResetPasswordForm/PasswordChecker/PasswordChecker';
-import PasswordMatcher from 'component/user/common/ResetPasswordForm/PasswordMatcher/PasswordMatcher';
+} from 'component/user/common/ResetPasswordForm/PasswordChecker';
+import PasswordMatcher from 'component/user/common/ResetPasswordForm/PasswordMatcher';
 import { usePasswordApi } from 'hooks/api/actions/usePasswordApi/usePasswordApi';
 import useToast from 'hooks/useToast';
 import { SyntheticEvent, useState } from 'react';

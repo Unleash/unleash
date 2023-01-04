@@ -33,7 +33,7 @@ export const FeatureStrategyItem = ({
             style={{
                 borderColor: result.enabled
                     ? theme.palette.success.main
-                    : 'inherit',
+                    : 'none',
             }}
             strategy={{ ...strategy, id: `${objectId(strategy)}` }}
             orderNumber={index + 1}

@@ -11,10 +11,40 @@ export const focusable = (theme: Theme) => ({
     },
 });
 
+export const contentSpacingY = (theme: Theme) => ({
+    '& > *': {
+        marginTop: `${theme.spacing(1)} !important`,
+        marginBottom: `${theme.spacing(1)} !important`,
+    },
+});
+
+export const title = (theme: Theme) => ({
+    fontSize: theme.fontSizes.mainHeader,
+    fontWeight: 'bold',
+    marginBottom: theme.spacing(1),
+});
+
+export const textCenter = {
+    textAlign: 'center',
+} as const;
+
 export const flexRow = {
     display: 'flex',
     alignItems: 'center',
-};
+} as const;
+
+export const flexColumn = {
+    display: 'flex',
+    flexDirection: 'column',
+} as const;
+
+export const itemsCenter = {
+    alignItems: 'center',
+} as const;
+
+export const defaultBorderRadius = (theme: Theme) => ({
+    borderRadius: `${theme.shape.borderRadius}px`,
+});
 
 /**
  * Please extract styles below into MUI fragments as shown above
@@ -34,18 +64,6 @@ export const useThemeStyles = makeStyles()(theme => ({
         '& > *': {
             marginTop: '0.5rem !important',
             marginBottom: '0.5rem !important',
-        },
-    },
-    contentSpacingYLarge: {
-        '& > *': {
-            marginTop: '1.5rem !important',
-            marginBottom: '1.5rem !important',
-        },
-    },
-    contentSpacingX: {
-        '& > *': {
-            marginRight: '0.8rem !important',
-            marginLeft: '0.8rem !important',
         },
     },
     relative: {
@@ -96,19 +114,6 @@ export const useThemeStyles = makeStyles()(theme => ({
         fontSize: theme.fontSizes.mainHeader,
         fontWeight: 'bold',
         marginBottom: '0.5rem',
-    },
-    fadeInBottomStartNoPosition: {
-        transform: 'translateY(400px)',
-        opacity: '0',
-        boxShadow: `rgb(129 129 129 / 40%) 4px 5px 11px 4px`,
-        zIndex: 500,
-        width: '100%',
-        backgroundColor: '#fff',
-        right: 0,
-        bottom: 0,
-        left: 0,
-        height: '300px',
-        position: 'fixed',
     },
     fadeInBottomStart: {
         opacity: '0',

@@ -1,12 +1,10 @@
 import { FormEventHandler, useState, VFC } from 'react';
 import classnames from 'classnames';
-import { Button, TextField } from '@mui/material';
+import { Button, styled, TextField } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useNavigate } from 'react-router';
-import { useThemeStyles } from 'themes/themeStyles';
-import { useStyles } from './PasswordAuth.styles';
 import useQueryParams from 'hooks/useQueryParams';
-import AuthOptions from '../common/AuthOptions/AuthOptions';
+import AuthOptions from './common/AuthOptions/AuthOptions';
 import DividerText from 'component/common/DividerText/DividerText';
 import { Alert } from '@mui/material';
 import { LOGIN_BUTTON, LOGIN_EMAIL_ID, LOGIN_PASSWORD_ID } from 'utils/testIds';
@@ -19,15 +17,25 @@ import {
     BadRequestError,
     NotFoundError,
 } from 'utils/apiUtils';
+import { contentSpacingY } from 'themes/themeStyles';
 
 interface IPasswordAuthProps {
     authDetails: IAuthEndpointDetailsResponse;
     redirect: string;
 }
 
+const StyledAlert = styled(Alert)(({ theme }) => ({
+    color: theme.palette.error.main,
+    marginBottom: theme.spacing(1),
+}));
+
+const StyledDiv = styled('div')(({ theme }) => ({
+    ...contentSpacingY(theme),
+    display: 'flex',
+    flexDirection: 'column',
+}));
+
 const PasswordAuth: VFC<IPasswordAuthProps> = ({ authDetails, redirect }) => {
-    const { classes: themeStyles } = useThemeStyles();
-    const { classes: styles } = useStyles();
     const navigate = useNavigate();
     const { refetchUser } = useAuthUser();
     const params = useQueryParams();
@@ -98,21 +106,13 @@ const PasswordAuth: VFC<IPasswordAuthProps> = ({ authDetails, redirect }) => {
                         <ConditionallyRender
                             condition={Boolean(apiError)}
                             show={
-                                <Alert
-                                    severity="error"
-                                    className={styles.apiError}
-                                >
+                                <StyledAlert severity="error">
                                     {apiError}
-                                </Alert>
+                                </StyledAlert>
                             }
                         />
 
-                        <div
-                            className={classnames(
-                                styles.contentContainer,
-                                themeStyles.contentSpacingY
-                            )}
-                        >
+                        <StyledDiv>
                             <TextField
                                 label="Username or email"
                                 name="username"
@@ -148,7 +148,7 @@ const PasswordAuth: VFC<IPasswordAuthProps> = ({ authDetails, redirect }) => {
                             >
                                 Sign in
                             </Button>
-                        </div>
+                        </StyledDiv>
                     </form>
                 }
             />

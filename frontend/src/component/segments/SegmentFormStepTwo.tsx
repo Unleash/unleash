@@ -1,5 +1,5 @@
 import React, { useRef, useState, useContext } from 'react';
-import { Button } from '@mui/material';
+import { Button, styled } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
@@ -13,12 +13,11 @@ import {
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import { IConstraint } from 'interfaces/strategy';
 import { useNavigate } from 'react-router-dom';
-import { useStyles } from 'component/segments/SegmentFormStepTwo/SegmentFormStepTwo.styles';
 import {
     ConstraintAccordionList,
     IConstraintAccordionListRef,
 } from 'component/common/ConstraintAccordion/ConstraintAccordionList/ConstraintAccordionList';
-import { SegmentFormStep, SegmentFormMode } from '../SegmentForm/SegmentForm';
+import { SegmentFormStep, SegmentFormMode } from './SegmentForm';
 import {
     AutocompleteBox,
     IAutocompleteBoxOption,
@@ -26,7 +25,7 @@ import {
 import {
     SegmentDocsValuesWarning,
     SegmentDocsValuesError,
-} from 'component/segments/SegmentDocs/SegmentDocs';
+} from 'component/segments/SegmentDocs';
 import { useSegmentValuesCount } from 'component/segments/hooks/useSegmentValuesCount';
 import AccessContext from 'contexts/AccessContext';
 import { useSegmentLimits } from 'hooks/api/getters/useSegmentLimits/useSegmentLimits';
@@ -38,6 +37,67 @@ interface ISegmentFormPartTwoProps {
     mode: SegmentFormMode;
 }
 
+const StyledForm = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
+}));
+
+const StyledWarning = styled('div')(({ theme }) => ({
+    marginBottom: '1.5rem',
+}));
+
+const StyledInputDescription = styled('p')(({ theme }) => ({
+    marginBottom: '1rem',
+}));
+
+const StyledAddContextContainer = styled('div')(({ theme }) => ({
+    marginTop: '1rem',
+    borderBottom: `1px solid ${theme.palette.grey[300]}`,
+    paddingBottom: '2rem',
+}));
+
+const StyledError = styled('div')(({ theme }) => ({
+    marginTop: '1.5rem',
+}));
+
+const StyledNoConstraintText = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    marginTop: theme.spacing(12),
+}));
+
+const StyledSubtitle = styled('p')(({ theme }) => ({
+    fontSize: theme.fontSizes.bodySize,
+    color: theme.palette.tertiary.dark,
+    maxWidth: 515,
+    marginBottom: theme.spacing(2.5),
+    wordBreak: 'break-word',
+    whiteSpace: 'normal',
+    textAlign: 'center',
+}));
+
+const StyledConstraintContainer = styled('div')(({ theme }) => ({
+    marginBlock: theme.spacing(4),
+}));
+
+const StyledButtonContainer = styled('div')(({ theme }) => ({
+    marginTop: 'auto',
+    display: 'flex',
+    justifyContent: 'flex-end',
+    borderTop: `1px solid ${theme.palette.tertiary.contrast}`,
+    paddingTop: theme.spacing(2),
+}));
+
+const StyledBackButton = styled(Button)(({ theme }) => ({
+    marginRight: 'auto',
+}));
+
+const StyledCancelButton = styled(Button)(({ theme }) => ({
+    marginLeft: theme.spacing(3),
+}));
+
 export const SegmentFormStepTwo: React.FC<ISegmentFormPartTwoProps> = ({
     children,
     constraints,
@@ -48,7 +108,6 @@ export const SegmentFormStepTwo: React.FC<ISegmentFormPartTwoProps> = ({
     const constraintsAccordionListRef = useRef<IConstraintAccordionListRef>();
     const navigate = useNavigate();
     const { hasAccess } = useContext(AccessContext);
-    const { classes: styles } = useStyles();
     const { context = [] } = useUnleashContext();
     const [open, setOpen] = useState(false);
     const segmentValuesCount = useSegmentValuesCount(constraints);
@@ -70,28 +129,28 @@ export const SegmentFormStepTwo: React.FC<ISegmentFormPartTwoProps> = ({
 
     return (
         <>
-            <div className={styles.form}>
-                <div className={styles.warning}>
+            <StyledForm>
+                <StyledWarning>
                     <SegmentDocsValuesWarning />
-                </div>
+                </StyledWarning>
                 <div>
-                    <p className={styles.inputDescription}>
+                    <StyledInputDescription>
                         Select the context fields you want to include in the
                         segment.
-                    </p>
-                    <p className={styles.inputDescription}>
+                    </StyledInputDescription>
+                    <StyledInputDescription>
                         Use a predefined context field:
-                    </p>
+                    </StyledInputDescription>
                     <AutocompleteBox
                         label="Select a context"
                         options={autocompleteOptions}
                         onChange={onChange}
                     />
                 </div>
-                <div className={styles.addContextContainer}>
-                    <p className={styles.inputDescription}>
+                <StyledAddContextContainer>
+                    <StyledInputDescription>
                         ...or add a new context field:
-                    </p>
+                    </StyledInputDescription>
                     <SidebarModal
                         label="Create new context"
                         onClose={() => setOpen(false)}
@@ -113,26 +172,26 @@ export const SegmentFormStepTwo: React.FC<ISegmentFormPartTwoProps> = ({
                         Add context field
                     </PermissionButton>
                     {overSegmentValuesLimit && (
-                        <div className={styles.error}>
+                        <StyledError>
                             <SegmentDocsValuesError
                                 values={segmentValuesCount}
                             />
-                        </div>
+                        </StyledError>
                     )}
-                </div>
+                </StyledAddContextContainer>
                 <ConditionallyRender
                     condition={constraints.length === 0}
                     show={
-                        <div className={styles.noConstraintText}>
-                            <p className={styles.subtitle}>
+                        <StyledNoConstraintText>
+                            <StyledSubtitle>
                                 Start adding context fields by selecting an
                                 option from above, or you can create a new
                                 context field and use it right away
-                            </p>
-                        </div>
+                            </StyledSubtitle>
+                        </StyledNoConstraintText>
                     }
                 />
-                <div className={styles.constraintContainer}>
+                <StyledConstraintContainer>
                     <ConstraintAccordionList
                         ref={constraintsAccordionListRef}
                         constraints={constraints}
@@ -142,27 +201,25 @@ export const SegmentFormStepTwo: React.FC<ISegmentFormPartTwoProps> = ({
                                 : undefined
                         }
                     />
-                </div>
-            </div>
-            <div className={styles.buttonContainer}>
-                <Button
+                </StyledConstraintContainer>
+            </StyledForm>
+            <StyledButtonContainer>
+                <StyledBackButton
                     type="button"
                     onClick={() => setCurrentStep(1)}
-                    className={styles.backButton}
                 >
                     Back
-                </Button>
+                </StyledBackButton>
                 {children}
-                <Button
+                <StyledCancelButton
                     type="button"
-                    className={styles.cancelButton}
                     onClick={() => {
                         navigate('/segments');
                     }}
                 >
                     Cancel
-                </Button>
-            </div>
+                </StyledCancelButton>
+            </StyledButtonContainer>
         </>
     );
 };

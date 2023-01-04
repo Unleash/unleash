@@ -254,7 +254,10 @@ describe('Playground API E2E', () => {
                         const mappedToggles = createDict(body.features);
 
                         if (features.length !== body.features.length) {
-                            const [longer, shorter] =
+                            const [longer, shorter]: [
+                                ClientFeatureSchema[],
+                                ClientFeatureSchema[],
+                            ] =
                                 features.length > body.features.length
                                     ? [features, body.features]
                                     : [body.features, features];

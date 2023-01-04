@@ -271,6 +271,9 @@ describe('Playground API E2E', () => {
                                     ),
                             );
 
+                            const pretty = (x: any) =>
+                                JSON.stringify(x, null, 2);
+
                             ctx.log(
                                 `I expected the number of mapped toggles (${
                                     body.features.length
@@ -278,11 +281,11 @@ describe('Playground API E2E', () => {
                                     features.length
                                 }), but that was not the case.
 
-The mapped toggles are ${JSON.stringify(body.features)}.
+The mapped toggles are ${pretty(body.features)}.
 
-The generated toggles are ${JSON.stringify(features)}.
+The generated toggles are ${pretty(features)}.
 
-The following features are in the longer list, but not in the shorter: ${JSON.stringify(
+The following features are in the longer list, but not in the shorter: ${pretty(
                                     extraFeatures,
                                 )}
 `,

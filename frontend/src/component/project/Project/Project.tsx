@@ -37,11 +37,8 @@ import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { DeleteProjectDialogue } from './DeleteProject/DeleteProjectDialogue';
 import { ProjectLog } from './ProjectLog/ProjectLog';
 import { ChangeRequestOverview } from 'component/changeRequest/ChangeRequestOverview/ChangeRequestOverview';
-import { DraftBanner } from 'component/changeRequest/DraftBanner/DraftBanner';
-import { MainLayout } from 'component/layout/MainLayout/MainLayout';
 import { ProjectChangeRequests } from '../../changeRequest/ProjectChangeRequests/ProjectChangeRequests';
 import { ProjectSettings } from './ProjectSettings/ProjectSettings';
-import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useFavoriteProjectsApi } from 'hooks/api/actions/useFavoriteProjectsApi/useFavoriteProjectsApi';
 
 const Project = () => {
@@ -55,8 +52,6 @@ const Project = () => {
     const { isOss } = useUiConfig();
     const basePath = `/projects/${projectId}`;
     const projectName = project?.name || projectId;
-    const { isChangeRequestConfiguredInAnyEnv } =
-        useChangeRequestsEnabled(projectId);
     const { favorite, unfavorite } = useFavoriteProjectsApi();
 
     const [showDelDialog, setShowDelDialog] = useState(false);
@@ -122,14 +117,7 @@ const Project = () => {
     };
 
     return (
-        <MainLayout
-            ref={ref}
-            subheader={
-                isChangeRequestConfiguredInAnyEnv() ? (
-                    <DraftBanner project={projectId} />
-                ) : null
-            }
-        >
+        <div ref={ref}>
             <StyledHeader>
                 <StyledInnerContainer>
                     <StyledTopRow>
@@ -259,7 +247,7 @@ const Project = () => {
                 <Route path="settings/*" element={<ProjectSettings />} />
                 <Route path="*" element={<ProjectOverview />} />
             </Routes>
-        </MainLayout>
+        </div>
     );
 };
 

@@ -3,7 +3,6 @@ import { styled } from '@mui/material';
 import React, { useEffect, useMemo, useState } from 'react';
 import classnames from 'classnames';
 import { IConstraint } from 'interfaces/strategy';
-import { useStyles } from '../../../ConstraintAccordion.styles';
 
 const StyledValuesSpan = styled('span')(({ theme }) => ({
     display: '-webkit-box',
@@ -13,7 +12,7 @@ const StyledValuesSpan = styled('span')(({ theme }) => ({
     wordBreak: 'break-word',
     fontSize: theme.fontSizes.smallBody,
     margin: 'auto 0',
-    [theme.breakpoints.down(710)]: {
+    [theme.breakpoints.down('sm')]: {
         margin: theme.spacing(1, 0),
         textAlign: 'center',
     },
@@ -26,14 +25,38 @@ interface ConstraintSingleValueProps {
     allowExpand: (shouldExpand: boolean) => void;
 }
 
+const StyledHeaderValuesContainerWrapper = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'stretch',
+    margin: 'auto 0',
+}));
+
+const StyledHeaderValuesContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'stretch',
+    margin: 'auto 0',
+    flexDirection: 'column',
+    marginLeft: theme.spacing(1),
+    [theme.breakpoints.down('sm')]: {
+        marginLeft: 0,
+    },
+}));
+
+const StyledHeaderValuesExpand = styled('p')(({ theme }) => ({
+    fontSize: theme.fontSizes.smallBody,
+    marginTop: theme.spacing(0.5),
+    color: theme.palette.primary.dark,
+    [theme.breakpoints.down('sm')]: {
+        textAlign: 'center',
+    },
+}));
+
 export const ConstraintAccordionViewHeaderMultipleValues = ({
     constraint,
     expanded,
     allowExpand,
     maxLength,
 }: ConstraintSingleValueProps) => {
-    const { classes: styles } = useStyles();
-
     const [expandable, setExpandable] = useState(false);
 
     const text = useMemo(() => {
@@ -48,25 +71,22 @@ export const ConstraintAccordionViewHeaderMultipleValues = ({
     }, [text, maxLength, allowExpand, setExpandable]);
 
     return (
-        <div className={styles.headerValuesContainerWrapper}>
-            <div className={styles.headerValuesContainer}>
+        <StyledHeaderValuesContainerWrapper>
+            <StyledHeaderValuesContainer>
                 <StyledValuesSpan>{text}</StyledValuesSpan>
                 <ConditionallyRender
                     condition={expandable}
                     show={
-                        <p
-                            className={classnames(
-                                styles.headerValuesExpand,
-                                'valuesExpandLabel'
-                            )}
+                        <StyledHeaderValuesExpand
+                            className={'valuesExpandLabel'}
                         >
                             {!expanded
                                 ? `View all (${constraint?.values?.length})`
                                 : 'View less'}
-                        </p>
+                        </StyledHeaderValuesExpand>
                     }
                 />
-            </div>
-        </div>
+            </StyledHeaderValuesContainer>
+        </StyledHeaderValuesContainerWrapper>
     );
 };

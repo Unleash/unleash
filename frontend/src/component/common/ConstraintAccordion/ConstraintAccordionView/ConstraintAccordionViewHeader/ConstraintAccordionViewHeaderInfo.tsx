@@ -1,11 +1,10 @@
-import { styled, Tooltip } from '@mui/material';
-import { ConstraintViewHeaderOperator } from '../ConstraintViewHeaderOperator/ConstraintViewHeaderOperator';
+import { Divider, styled, Tooltip } from '@mui/material';
+import { ConstraintViewHeaderOperator } from './ConstraintViewHeaderOperator';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { ConstraintAccordionViewHeaderSingleValue } from '../ContraintAccordionViewHeaderSingleValue/ConstraintAccordionViewHeaderSingleValue';
-import { ConstraintAccordionViewHeaderMultipleValues } from '../ContraintAccordionViewHeaderMultipleValues/ConstraintAccordionViewHeaderMultipleValues';
+import { ConstraintAccordionViewHeaderSingleValue } from './ConstraintAccordionViewHeaderSingleValue';
+import { ConstraintAccordionViewHeaderMultipleValues } from './ConstraintAccordionViewHeaderMultipleValues';
 import React from 'react';
 import { IConstraint } from 'interfaces/strategy';
-import { useStyles } from '../../../ConstraintAccordion.styles';
 
 const StyledHeaderText = styled('span')(({ theme }) => ({
     display: '-webkit-box',
@@ -34,6 +33,18 @@ const StyledHeaderWrapper = styled('div')(({ theme }) => ({
     borderRadius: theme.spacing(1),
 }));
 
+const StyledHeaderMetaInfo = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'stretch',
+    marginLeft: theme.spacing(1),
+    [theme.breakpoints.down('sm')]: {
+        marginLeft: 0,
+        flexDirection: 'column',
+        alignItems: 'center',
+        width: '100%',
+    },
+}));
+
 interface ConstraintAccordionViewHeaderMetaInfoProps {
     constraint: IConstraint;
     singleValue: boolean;
@@ -49,11 +60,9 @@ export const ConstraintAccordionViewHeaderInfo = ({
     expanded,
     maxLength = 112, //The max number of characters in the values text for NOT allowing expansion
 }: ConstraintAccordionViewHeaderMetaInfoProps) => {
-    const { classes: styles } = useStyles();
-
     return (
         <StyledHeaderWrapper>
-            <div className={styles.headerMetaInfo}>
+            <StyledHeaderMetaInfo>
                 <Tooltip title={constraint.contextName} arrow>
                     <StyledHeaderText>
                         {constraint.contextName}
@@ -77,7 +86,7 @@ export const ConstraintAccordionViewHeaderInfo = ({
                         />
                     }
                 />
-            </div>
+            </StyledHeaderMetaInfo>
         </StyledHeaderWrapper>
     );
 };

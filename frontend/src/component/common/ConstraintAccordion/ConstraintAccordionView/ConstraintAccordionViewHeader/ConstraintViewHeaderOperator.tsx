@@ -1,11 +1,10 @@
 import { IConstraint } from 'interfaces/strategy';
-import { ConditionallyRender } from '../../../../ConditionallyRender/ConditionallyRender';
-import { Tooltip, Box } from '@mui/material';
+import { ConditionallyRender } from '../../../ConditionallyRender/ConditionallyRender';
+import { Tooltip, Box, styled } from '@mui/material';
 import { stringOperators } from 'constants/operators';
 import { ReactComponent as NegatedIcon } from 'assets/icons/24_Negator.svg';
-import { ConstraintOperator } from '../../../ConstraintOperator/ConstraintOperator';
-import { useStyles } from '../../../ConstraintAccordion.styles';
-import { StyledIconWrapper } from '../StyledIconWrapper/StyledIconWrapper';
+import { ConstraintOperator } from '../../ConstraintOperator/ConstraintOperator';
+import { StyledIconWrapper } from './StyledIconWrapper';
 import { ReactComponent as CaseSensitive } from 'assets/icons/24_Text format.svg';
 import { oneOf } from 'utils/oneOf';
 
@@ -13,13 +12,25 @@ interface ConstraintViewHeaderOperatorProps {
     constraint: IConstraint;
 }
 
+const StyledHeaderValuesContainerWrapper = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'stretch',
+    margin: 'auto 0',
+}));
+
+const StyledHeaderConstraintContainer = styled('div')(({ theme }) => ({
+    minWidth: '152px',
+    position: 'relative',
+    [theme.breakpoints.down('sm')]: {
+        paddingRight: 0,
+    },
+}));
+
 export const ConstraintViewHeaderOperator = ({
     constraint,
 }: ConstraintViewHeaderOperatorProps) => {
-    const { classes: styles } = useStyles();
-
     return (
-        <div className={styles.headerValuesContainerWrapper}>
+        <StyledHeaderValuesContainerWrapper>
             <ConditionallyRender
                 condition={Boolean(constraint.inverted)}
                 show={
@@ -32,12 +43,12 @@ export const ConstraintViewHeaderOperator = ({
                     </Tooltip>
                 }
             />
-            <div className={styles.headerConstraintContainer}>
+            <StyledHeaderConstraintContainer>
                 <ConstraintOperator
                     constraint={constraint}
                     hasPrefix={Boolean(constraint.inverted)}
                 />
-            </div>
+            </StyledHeaderConstraintContainer>
             <ConditionallyRender
                 condition={
                     !Boolean(constraint.caseInsensitive) &&
@@ -51,6 +62,6 @@ export const ConstraintViewHeaderOperator = ({
                     </Tooltip>
                 }
             />
-        </div>
+        </StyledHeaderValuesContainerWrapper>
     );
 };

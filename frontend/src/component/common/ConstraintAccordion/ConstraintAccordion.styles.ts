@@ -31,17 +31,6 @@ export const useStyles = makeStyles()(theme => ({
     accordionEdit: {
         backgroundColor: theme.palette.constraintAccordion.editBackground,
     },
-    headerMetaInfo: {
-        display: 'flex',
-        alignItems: 'stretch',
-        marginLeft: theme.spacing(1),
-        [theme.breakpoints.down(710)]: {
-            marginLeft: 0,
-            flexDirection: 'column',
-            alignItems: 'center',
-            width: '100%',
-        },
-    },
     headerContainer: {
         display: 'flex',
         alignItems: 'center',
@@ -52,38 +41,8 @@ export const useStyles = makeStyles()(theme => ({
             position: 'relative',
         },
     },
-    headerValuesContainerWrapper: {
-        display: 'flex',
-        alignItems: 'stretch',
-        margin: 'auto 0',
-    },
-    headerValuesContainer: {
-        display: 'flex',
-        justifyContent: 'stretch',
-        margin: 'auto 0',
-        flexDirection: 'column',
-        marginLeft: theme.spacing(1),
-        [theme.breakpoints.down(710)]: {
-            marginLeft: 0,
-        },
-    },
     headerValues: {
         fontSize: theme.fontSizes.smallBody,
-    },
-    headerValuesExpand: {
-        fontSize: theme.fontSizes.smallBody,
-        marginTop: '4px',
-        color: theme.palette.primary.dark,
-        [theme.breakpoints.down(710)]: {
-            textAlign: 'center',
-        },
-    },
-    headerConstraintContainer: {
-        minWidth: '152px',
-        position: 'relative',
-        [theme.breakpoints.down(710)]: {
-            paddingRight: 0,
-        },
     },
     editingBadge: {
         borderRadius: theme.shape.borderRadiusExtraLarge,

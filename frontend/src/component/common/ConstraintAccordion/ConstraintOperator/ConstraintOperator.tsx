@@ -1,19 +1,23 @@
 import { IConstraint } from 'interfaces/strategy';
 import { formatOperatorDescription } from 'component/common/ConstraintAccordion/ConstraintOperator/formatOperatorDescription';
-import { useStyles } from 'component/common/ConstraintAccordion/ConstraintOperator/ConstraintOperator.styles';
 import React from 'react';
+import { styled } from '@mui/material';
 
 interface IConstraintOperatorProps {
     constraint: IConstraint;
     hasPrefix?: boolean;
 }
 
+const StyledContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'stretch',
+    margin: 'auto 0',
+}));
+
 export const ConstraintOperator = ({
     constraint,
     hasPrefix,
 }: IConstraintOperatorProps) => {
-    const { classes: styles } = useStyles();
-
     const operatorName = constraint.operator;
     const operatorText = formatOperatorDescription(constraint.operator);
 

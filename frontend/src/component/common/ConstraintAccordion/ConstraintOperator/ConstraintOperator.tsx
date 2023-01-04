@@ -9,9 +9,20 @@ interface IConstraintOperatorProps {
 }
 
 const StyledContainer = styled('div')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'stretch',
-    margin: 'auto 0',
+    padding: theme.spacing(0.5, 1.5),
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: theme.palette.constraintAccordion.operatorBackground,
+    lineHeight: 1.25,
+}));
+
+const StyledName = styled('div')(({ theme }) => ({
+    fontSize: theme.fontSizes.smallBody,
+    lineHeight: 17 / 14,
+}));
+
+const StyledText = styled('div')(({ theme }) => ({
+    fontSize: theme.fontSizes.smallerBody,
+    color: theme.palette.neutral.main,
 }));
 
 export const ConstraintOperator = ({
@@ -22,16 +33,15 @@ export const ConstraintOperator = ({
     const operatorText = formatOperatorDescription(constraint.operator);
 
     return (
-        <div
-            className={styles.container}
+        <StyledContainer
             style={{
                 borderTopLeftRadius: hasPrefix ? 0 : undefined,
                 borderBottomLeftRadius: hasPrefix ? 0 : undefined,
                 paddingLeft: hasPrefix ? 0 : undefined,
             }}
         >
-            <div className={styles.name}>{operatorName}</div>
-            <div className={styles.text}>{operatorText}</div>
-        </div>
+            <StyledName>{operatorName}</StyledName>
+            <StyledText>{operatorText}</StyledText>
+        </StyledContainer>
     );
 };

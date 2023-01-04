@@ -31,7 +31,10 @@ export const FeatureNotFound = () => {
                 The feature{' '}
                 <strong className={styles.featureId}>{featureId}</strong> has
                 been archived. You can find it on the{' '}
-                <Link to={'/archive'}>archive page</Link>.
+                <Link to={`/projects/${projectId}/archive`}>
+                    project archive page
+                </Link>
+                .
             </p>
         );
     }

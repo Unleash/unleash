@@ -14,6 +14,7 @@ import { usePageTitle } from 'hooks/usePageTitle';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { FeatureOverviewSidePanel } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewSidePanel/FeatureOverviewSidePanel';
+import { useHiddenEnvironments } from 'hooks/useHiddenEnvironments';
 
 const FeatureOverview = () => {
     const { uiConfig } = useUiConfig();
@@ -22,6 +23,8 @@ const FeatureOverview = () => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const featurePath = formatFeaturePath(projectId, featureId);
+    const { hiddenEnvironments, setHiddenEnvironments } =
+        useHiddenEnvironments();
     const onSidebarClose = () => navigate(featurePath);
     usePageTitle(featureId);
 
@@ -31,7 +34,12 @@ const FeatureOverview = () => {
                 <FeatureOverviewMetaData />
                 <ConditionallyRender
                     condition={Boolean(uiConfig.flags.variantsPerEnvironment)}
-                    show={<FeatureOverviewSidePanel />}
+                    show={
+                        <FeatureOverviewSidePanel
+                            hiddenEnvironments={hiddenEnvironments}
+                            setHiddenEnvironments={setHiddenEnvironments}
+                        />
+                    }
                     elseShow={<FeatureOverviewEnvSwitches />}
                 />
             </div>

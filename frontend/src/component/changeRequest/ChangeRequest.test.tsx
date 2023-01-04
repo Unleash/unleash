@@ -1,10 +1,5 @@
 import { FC } from 'react';
-import {
-    render,
-    screen,
-    within,
-    fireEvent,
-} from '@testing-library/react';
+import { render, screen, within, fireEvent } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from 'themes/ThemeProvider';
 import { MainLayout } from 'component/layout/MainLayout/MainLayout';
@@ -225,11 +220,12 @@ const UnleashUiSetup: FC<{ path: string; pathTemplate: string }> = ({
             <MemoryRouter initialEntries={[path]}>
                 <ThemeProvider>
                     <AnnouncerProvider>
-                        <MainLayout>
-                            <Routes>
-                                <Route path={pathTemplate} element={children} />
-                            </Routes>
-                        </MainLayout>
+                        <Routes>
+                            <Route
+                                path={pathTemplate}
+                                element={<MainLayout>{children}</MainLayout>}
+                            />
+                        </Routes>
                     </AnnouncerProvider>
                 </ThemeProvider>
             </MemoryRouter>

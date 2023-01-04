@@ -2,19 +2,31 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { OK } from 'constants/statusCodes';
 import useLoading from 'hooks/useLoading';
-import { useStyles } from './ResetPassword.styles';
-import { Typography } from '@mui/material';
+import { styled, Typography } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import InvalidToken from '../common/InvalidToken/InvalidToken';
 import useResetPassword from 'hooks/api/getters/useResetPassword/useResetPassword';
-import StandaloneLayout from '../common/StandaloneLayout/StandaloneLayout';
+import StandaloneLayout from '../common/StandaloneLayout';
 import ResetPasswordForm from '../common/ResetPasswordForm/ResetPasswordForm';
 import ResetPasswordError from '../common/ResetPasswordError/ResetPasswordError';
 import { useAuthResetPasswordApi } from 'hooks/api/actions/useAuthResetPasswordApi/useAuthResetPasswordApi';
 import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';
 
+const StyledDiv = styled('div')(({ theme }) => ({
+    width: '350px',
+    maxWidth: '350px',
+    [theme.breakpoints.down('sm')]: {
+        width: '100%',
+    },
+}));
+
+const StyledTypography = styled(Typography)(({ theme }) => ({
+    fontWeight: 'bold',
+    fontSize: theme.spacing(2.5),
+    marginBottom: theme.spacing(2),
+}));
+
 const ResetPassword = () => {
-    const { classes: styles } = useStyles();
     const { token, loading, isValidToken } = useResetPassword();
     const { resetPassword, loading: actionLoading } = useAuthResetPasswordApi();
     const { authDetails } = useAuthDetails();
@@ -40,19 +52,15 @@ const ResetPassword = () => {
     return (
         <div ref={ref}>
             <StandaloneLayout>
-                <div className={styles.resetPassword}>
+                <StyledDiv>
                     <ConditionallyRender
                         condition={!isValidToken || passwordDisabled}
                         show={<InvalidToken />}
                         elseShow={
                             <>
-                                <Typography
-                                    variant="h2"
-                                    className={styles.title}
-                                    data-loading
-                                >
+                                <StyledTypography variant="h2" data-loading>
                                     Reset password
-                                </Typography>
+                                </StyledTypography>
 
                                 <ConditionallyRender
                                     condition={hasApiError}
@@ -62,7 +70,7 @@ const ResetPassword = () => {
                             </>
                         }
                     />
-                </div>
+                </StyledDiv>
             </StandaloneLayout>
         </div>
     );

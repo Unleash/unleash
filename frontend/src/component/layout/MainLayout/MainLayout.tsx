@@ -12,6 +12,10 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { SkipNavLink } from 'component/common/SkipNav/SkipNavLink';
 import { SkipNavTarget } from 'component/common/SkipNav/SkipNavTarget';
 import { formatAssetPath } from 'utils/formatPath';
+import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
+import { DraftBanner } from './DraftBanner/DraftBanner';
 
 const useStyles = makeStyles()(theme => ({
     container: {
@@ -30,14 +34,17 @@ const useStyles = makeStyles()(theme => ({
 
 interface IMainLayoutProps {
     children: ReactNode;
-    subheader?: ReactNode;
 }
 
 export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
-    ({ children, subheader }, ref) => {
+    ({ children }, ref) => {
         const { classes } = useStyles();
         const { classes: styles } = useAppStyles();
         const { uiConfig } = useUiConfig();
+        const projectId = useOptionalPathParam('projectId');
+        const { isChangeRequestConfiguredInAnyEnv } = useChangeRequestsEnabled(
+            projectId || ''
+        );
 
         return (
             <>
@@ -46,7 +53,12 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                 <SkipNavTarget />
                 <Grid container className={classes.container}>
                     <main className={classnames(styles.contentWrapper)}>
-                        {subheader}
+                        <ConditionallyRender
+                            condition={Boolean(
+                                projectId && isChangeRequestConfiguredInAnyEnv()
+                            )}
+                            show={<DraftBanner project={projectId || ''} />}
+                        />
                         <Grid
                             item
                             className={styles.content}

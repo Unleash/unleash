@@ -9,19 +9,26 @@ import {
     Popover,
     Tooltip,
     Typography,
+    styled,
 } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
 import ArchiveIcon from '@mui/icons-material/Archive';
 import WatchLaterIcon from '@mui/icons-material/WatchLater';
-import { useStyles } from './ActionsCell.styles';
 import { PermissionHOC } from 'component/common/PermissionHOC/PermissionHOC';
 import {
     CREATE_FEATURE,
     DELETE_FEATURE,
     UPDATE_FEATURE,
 } from 'component/providers/AccessProvider/permissions';
+import { defaultBorderRadius } from 'themes/themeStyles';
+
+const StyledBoxCell = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'center',
+    paddingRight: theme.spacing(2),
+}));
 
 interface IActionsCellProps {
     projectId: string;
@@ -42,7 +49,6 @@ export const ActionsCell: VFC<IActionsCellProps> = ({
     onOpenStaleDialog,
 }) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const { classes } = useStyles();
     const {
         original: { name: featureId, stale },
     } = row;
@@ -58,7 +64,7 @@ export const ActionsCell: VFC<IActionsCellProps> = ({
     const menuId = `${id}-menu`;
 
     return (
-        <Box className={classes.cell}>
+        <StyledBoxCell>
             <Tooltip title="Feature toggle actions" arrow describeChild>
                 <IconButton
                     id={id}
@@ -80,7 +86,10 @@ export const ActionsCell: VFC<IActionsCellProps> = ({
                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                 disableScrollLock={true}
                 PaperProps={{
-                    className: classes.menuContainer,
+                    sx: theme => ({
+                        borderRadius: theme.shape.borderRadius,
+                        padding: theme.spacing(1, 1.5),
+                    }),
                 }}
             >
                 <MenuList aria-labelledby={id}>
@@ -90,7 +99,7 @@ export const ActionsCell: VFC<IActionsCellProps> = ({
                     >
                         {({ hasAccess }) => (
                             <MenuItem
-                                className={classes.item}
+                                sx={defaultBorderRadius}
                                 onClick={handleClose}
                                 disabled={!hasAccess}
                                 component={RouterLink}
@@ -113,7 +122,7 @@ export const ActionsCell: VFC<IActionsCellProps> = ({
                     >
                         {({ hasAccess }) => (
                             <MenuItem
-                                className={classes.item}
+                                sx={defaultBorderRadius}
                                 onClick={() => {
                                     onOpenArchiveDialog(featureId);
                                     handleClose();
@@ -137,7 +146,7 @@ export const ActionsCell: VFC<IActionsCellProps> = ({
                     >
                         {({ hasAccess }) => (
                             <MenuItem
-                                className={classes.item}
+                                sx={defaultBorderRadius}
                                 onClick={() => {
                                     handleClose();
                                     onOpenStaleDialog({
@@ -160,6 +169,6 @@ export const ActionsCell: VFC<IActionsCellProps> = ({
                     </PermissionHOC>
                 </MenuList>
             </Popover>
-        </Box>
+        </StyledBoxCell>
     );
 };

@@ -48,7 +48,7 @@ import { CreateSegment } from 'component/segments/CreateSegment/CreateSegment';
 import { EditSegment } from 'component/segments/EditSegment/EditSegment';
 import { IRoute } from 'interfaces/route';
 import { EnvironmentTable } from 'component/environments/EnvironmentTable/EnvironmentTable';
-import { SegmentTable } from 'component/segments/SegmentTable/SegmentTable';
+import { SegmentTable } from 'component/segments/SegmentTable';
 import FlaggedBillingRedirect from 'component/admin/billing/FlaggedBillingRedirect/FlaggedBillingRedirect';
 import { FeaturesArchiveTable } from '../archive/FeaturesArchiveTable';
 import { Billing } from 'component/admin/billing/Billing';
@@ -123,7 +123,6 @@ export const routes: IRoute[] = [
         title: 'FeatureView',
         component: FeatureView,
         type: 'protected',
-        isStandalone: true,
         menu: {},
     },
     {
@@ -150,7 +149,6 @@ export const routes: IRoute[] = [
         flag: P,
         type: 'protected',
         menu: {},
-        isStandalone: true,
     },
     {
         path: '/projects',

@@ -64,9 +64,9 @@ For example if you want to download just feature-toggles as yaml:
 
 ### API Import {#api-import}
 
-:::caution Importing environments in Unleash 4.20 and below
+:::caution Importing environments in Unleash 4.19 and below
 
-This is only relevant if you use **Unleash 4.20 or earlier**:
+This is only relevant if you use **Unleash 4.19 or earlier**:
 
 If you import an environment into an instance that already has that environment defined, Unleash will delete any API keys created specifically for that environment. This is to prevent unexpected access to the newly imported environments.
 

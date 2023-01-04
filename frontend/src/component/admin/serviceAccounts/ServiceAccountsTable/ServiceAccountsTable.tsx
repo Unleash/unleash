@@ -60,7 +60,6 @@ export const ServiceAccountsTable = () => {
     const isExtraSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
-    // TODO: Add columns like total PATs (popover?), last seen (based on max last seen PAT), etc
     const columns = useMemo(
         () => [
             {
@@ -160,7 +159,6 @@ export const ServiceAccountsTable = () => {
         useFlexLayout
     );
 
-    // TODO: Update this with the final columns
     useConditionallyHiddenColumns(
         [
             {

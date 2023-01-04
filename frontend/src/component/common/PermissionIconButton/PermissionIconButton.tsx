@@ -29,6 +29,7 @@ interface IPermissionIconButtonProps {
 
 interface IButtonProps extends IPermissionIconButtonProps {
     onClick: (event: React.SyntheticEvent) => void;
+    style?: React.CSSProperties;
 }
 
 interface ILinkProps extends IPermissionIconButtonProps {
@@ -107,6 +108,7 @@ const PermissionIconButton = (props: IButtonProps | ILinkProps) => {
             />
         );
     }
+
     return <RootPermissionIconButton {...props} />;
 };
 

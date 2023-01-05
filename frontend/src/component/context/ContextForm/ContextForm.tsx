@@ -59,9 +59,9 @@ const StyledTagContainer = styled('div')(({ theme }) => ({
     marginBottom: theme.spacing(2),
 }));
 
-const StyledInputHeader = styled('p')({
-    marginBottom: '0.3rem',
-});
+const StyledInputHeader = styled('p')(({ theme }) => ({
+    marginBottom: theme.spacing(0.5),
+}));
 
 const StyledSwitchContainer = styled('div')({
     display: 'flex',

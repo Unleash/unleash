@@ -14,7 +14,8 @@ type CustomEvents =
     | 'change_request'
     | 'favorite'
     | 'maintenance'
-    | 'message_banner';
+    | 'message_banner'
+    | 'hidden_environment';
 
 export const usePlausibleTracker = () => {
     const plausible = useContext(PlausibleContext);

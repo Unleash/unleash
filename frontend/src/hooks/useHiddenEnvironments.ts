@@ -1,13 +1,9 @@
-import { createLocalStorage } from 'utils/createLocalStorage';
 import { useGlobalLocalStorage } from './useGlobalLocalStorage';
 import { useState } from 'react';
-
-interface IGlobalStore {
-    favorites?: boolean;
-    hiddenEnvironments?: Set<string>;
-}
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 export const useHiddenEnvironments = () => {
+    const { trackEvent } = usePlausibleTracker();
     const { value: globalStore, setValue: setGlobalStore } =
         useGlobalLocalStorage();
     const [hiddenEnvironments, setStoredHiddenEnvironments] = useState<
@@ -19,8 +15,10 @@ export const useHiddenEnvironments = () => {
             const hiddenEnvironments = new Set(params.hiddenEnvironments);
             if (hiddenEnvironments.has(environment)) {
                 hiddenEnvironments.delete(environment);
+                trackHiddenEnvironment(false);
             } else {
                 hiddenEnvironments.add(environment);
+                trackHiddenEnvironment(true);
             }
             setStoredHiddenEnvironments(hiddenEnvironments);
             return {
@@ -33,5 +31,13 @@ export const useHiddenEnvironments = () => {
     return {
         hiddenEnvironments,
         setHiddenEnvironments,
+    };
+
+    const trackHiddenEnvironment = (hide: boolean) => {
+        trackEvent('hidden_environment', {
+            props: {
+                eventType: `environment ${!hide ? 'un' : ''}hidden`,
+            },
+        });
     };
 };

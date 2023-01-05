@@ -1,6 +1,12 @@
 import Input from 'component/common/Input/Input';
-import { TextField, Button, Switch, Typography } from '@mui/material';
-import { useStyles } from './ContextForm.styles';
+import {
+    TextField,
+    Button,
+    Switch,
+    Typography,
+    styled,
+    Theme,
+} from '@mui/material';
 import React, { useState, useEffect } from 'react';
 import { Add } from '@mui/icons-material';
 import { ILegalValue } from 'interfaces/context';
@@ -27,6 +33,52 @@ interface IContextForm {
 
 const ENTER = 'Enter';
 
+const StyledForm = styled('form')({
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
+});
+
+const StyledContainer = styled('div')({
+    maxWidth: '470px',
+});
+
+const StyledInputDescription = styled('p')(({ theme }) => ({
+    marginBottom: theme.spacing(1),
+}));
+
+const styledInput = (theme: Theme) => ({
+    width: '100%',
+    marginBottom: theme.spacing(2),
+});
+
+const StyledTagContainer = styled('div')(({ theme }) => ({
+    display: 'grid',
+    gridTemplateColumns: '1fr auto',
+    gap: theme.spacing(1),
+    marginBottom: theme.spacing(2),
+}));
+
+const StyledInputHeader = styled('p')(({ theme }) => ({
+    marginBottom: theme.spacing(0.5),
+}));
+
+const StyledSwitchContainer = styled('div')({
+    display: 'flex',
+    alignItems: 'center',
+    marginLeft: '-9px',
+});
+
+const StyledButtonContainer = styled('div')({
+    marginTop: 'auto',
+    display: 'flex',
+    justifyContent: 'flex-end',
+});
+
+const StyledCancelButton = styled(Button)(({ theme }) => ({
+    marginLeft: theme.spacing(3),
+}));
+
 export const ContextForm: React.FC<IContextForm> = ({
     children,
     handleSubmit,
@@ -45,7 +97,6 @@ export const ContextForm: React.FC<IContextForm> = ({
     setErrors,
     clearErrors,
 }) => {
-    const { classes: styles } = useStyles();
     const [value, setValue] = useState('');
     const [valueDesc, setValueDesc] = useState('');
     const [valueFocused, setValueFocused] = useState(false);
@@ -104,13 +155,13 @@ export const ContextForm: React.FC<IContextForm> = ({
     };
 
     return (
-        <form onSubmit={onSubmit} className={styles.form}>
-            <div className={styles.container}>
-                <p className={styles.inputDescription}>
+        <StyledForm onSubmit={onSubmit}>
+            <StyledContainer>
+                <StyledInputDescription>
                     What is your context name?
-                </p>
+                </StyledInputDescription>
                 <Input
-                    className={styles.input}
+                    sx={styledInput}
                     label="Context name"
                     value={contextName}
                     disabled={mode === 'Edit'}
@@ -121,11 +172,11 @@ export const ContextForm: React.FC<IContextForm> = ({
                     onBlur={validateContext}
                     autoFocus
                 />
-                <p className={styles.inputDescription}>
+                <StyledInputDescription>
                     What is this context for?
-                </p>
+                </StyledInputDescription>
                 <TextField
-                    className={styles.input}
+                    sx={styledInput}
                     label="Context description (optional)"
                     variant="outlined"
                     multiline
@@ -134,14 +185,14 @@ export const ContextForm: React.FC<IContextForm> = ({
                     size="small"
                     onChange={e => setContextDesc(e.target.value)}
                 />
-                <p className={styles.inputDescription}>
+                <StyledInputDescription>
                     Which values do you want to allow?
-                </p>
-                <div className={styles.tagContainer}>
+                </StyledInputDescription>
+                <StyledTagContainer>
                     <TextField
                         label="Legal value (optional)"
                         name="value"
-                        className={styles.tagInput}
+                        sx={{ gridColumn: 1 }}
                         value={value}
                         error={Boolean(errors.tag)}
                         helperText={errors.tag}
@@ -155,7 +206,7 @@ export const ContextForm: React.FC<IContextForm> = ({
                     />
                     <TextField
                         label="Value description (optional)"
-                        className={styles.tagInput}
+                        sx={{ gridColumn: 1 }}
                         value={valueDesc}
                         variant="outlined"
                         size="small"
@@ -166,7 +217,7 @@ export const ContextForm: React.FC<IContextForm> = ({
                         inputProps={{ maxLength: 100 }}
                     />
                     <Button
-                        className={styles.tagButton}
+                        sx={{ gridColumn: 2 }}
                         startIcon={<Add />}
                         onClick={addLegalValue}
                         variant="outlined"
@@ -175,7 +226,7 @@ export const ContextForm: React.FC<IContextForm> = ({
                     >
                         Add
                     </Button>
-                </div>
+                </StyledTagContainer>
                 <ContextFormChipList>
                     {legalValues.map(legalValue => {
                         return (
@@ -188,7 +239,7 @@ export const ContextForm: React.FC<IContextForm> = ({
                         );
                     })}
                 </ContextFormChipList>
-                <p className={styles.inputHeader}>Custom stickiness</p>
+                <StyledInputHeader>Custom stickiness</StyledInputHeader>
                 <p>
                     By enabling stickiness on this context field you can use it
                     together with the flexible-rollout strategy. This will
@@ -203,21 +254,21 @@ export const ContextForm: React.FC<IContextForm> = ({
                         Read more
                     </a>
                 </p>
-                <div className={styles.switchContainer}>
+                <StyledSwitchContainer>
                     <Switch
                         checked={stickiness}
                         value={stickiness}
                         onChange={() => setStickiness(!stickiness)}
                     />
                     <Typography>{stickiness ? 'On' : 'Off'}</Typography>
-                </div>
-            </div>
-            <div className={styles.buttonContainer}>
+                </StyledSwitchContainer>
+            </StyledContainer>
+            <StyledButtonContainer>
                 {children}
-                <Button onClick={onCancel} className={styles.cancelButton}>
+                <StyledCancelButton onClick={onCancel}>
                     Cancel
-                </Button>
-            </div>
-        </form>
+                </StyledCancelButton>
+            </StyledButtonContainer>
+        </StyledForm>
     );
 };

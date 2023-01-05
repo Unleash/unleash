@@ -1,5 +1,4 @@
-import { Button } from '@mui/material';
-import { useStyles } from './EnvironmentForm.styles';
+import { Button, styled } from '@mui/material';
 import React from 'react';
 import Input from 'component/common/Input/Input';
 import EnvironmentTypeSelector from './EnvironmentTypeSelector/EnvironmentTypeSelector';
@@ -18,6 +17,40 @@ interface IEnvironmentForm {
     clearErrors: () => void;
 }
 
+const StyledForm = styled('form')({
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
+});
+
+const StyledFormHeader = styled('h3')({
+    fontWeight: 'normal',
+    marginTop: '0',
+});
+
+const StyledContainer = styled('div')({
+    maxWidth: '440px',
+});
+
+const StyledInputDescription = styled('p')(({ theme }) => ({
+    marginBottom: theme.spacing(1),
+}));
+
+const StyledInput = styled(Input)(({ theme }) => ({
+    width: '100%',
+    marginBottom: theme.spacing(2),
+}));
+
+const StyledButtonContainer = styled('div')(({ theme }) => ({
+    marginTop: 'auto',
+    display: 'flex',
+    justifyContent: 'flex-end',
+}));
+
+const StyledCancelButton = styled(Button)(({ theme }) => ({
+    marginLeft: theme.spacing(3),
+}));
+
 const EnvironmentForm: React.FC<IEnvironmentForm> = ({
     children,
     handleSubmit,
@@ -31,18 +64,15 @@ const EnvironmentForm: React.FC<IEnvironmentForm> = ({
     mode,
     clearErrors,
 }) => {
-    const { classes: styles } = useStyles();
-
     return (
-        <form onSubmit={handleSubmit} className={styles.form}>
-            <h3 className={styles.formHeader}>Environment information</h3>
+        <StyledForm onSubmit={handleSubmit}>
+            <StyledFormHeader>Environment information</StyledFormHeader>
 
-            <div className={styles.container}>
-                <p className={styles.inputDescription}>
+            <StyledContainer>
+                <StyledInputDescription>
                     What is your environment name? (Can't be changed later)
-                </p>
-                <Input
-                    className={styles.input}
+                </StyledInputDescription>
+                <StyledInput
                     label="Environment name"
                     value={name}
                     onChange={e => setName(trim(e.target.value))}
@@ -54,21 +84,21 @@ const EnvironmentForm: React.FC<IEnvironmentForm> = ({
                     autoFocus
                 />
 
-                <p className={styles.inputDescription}>
+                <StyledInputDescription>
                     What type of environment do you want to create?
-                </p>
+                </StyledInputDescription>
                 <EnvironmentTypeSelector
                     onChange={e => setType(e.currentTarget.value)}
                     value={type}
                 />
-            </div>
-            <div className={styles.buttonContainer}>
+            </StyledContainer>
+            <StyledButtonContainer>
                 {children}
-                <Button onClick={handleCancel} className={styles.cancelButton}>
+                <StyledCancelButton onClick={handleCancel}>
                     Cancel
-                </Button>
-            </div>
-        </form>
+                </StyledCancelButton>
+            </StyledButtonContainer>
+        </StyledForm>
     );
 };
 

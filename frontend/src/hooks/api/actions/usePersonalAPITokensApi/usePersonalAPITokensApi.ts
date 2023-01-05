@@ -53,6 +53,17 @@ export const usePersonalAPITokensApi = () => {
         }
     };
 
+    const deleteUserPersonalAPIToken = async (userId: number, id: string) => {
+        const req = createRequest(`api/admin/user-admin/${userId}/pat/${id}`, {
+            method: 'DELETE',
+        });
+        try {
+            await makeRequest(req.caller, req.id);
+        } catch (e) {
+            throw e;
+        }
+    };
+
     return {
         createPersonalAPIToken,
         deletePersonalAPIToken,

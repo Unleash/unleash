@@ -10,9 +10,15 @@ export interface IUsePersonalAPITokensOutput {
     error?: Error;
 }
 
-export const usePersonalAPITokens = (): IUsePersonalAPITokensOutput => {
+export const usePersonalAPITokens = (
+    userId?: number
+): IUsePersonalAPITokensOutput => {
     const { data, error, mutate } = useSWR(
-        formatApiPath('api/admin/user/tokens'),
+        formatApiPath(
+            userId
+                ? `api/admin/user-admin/${userId}/pat`
+                : 'api/admin/user/tokens'
+        ),
         fetcher
     );
 

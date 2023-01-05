@@ -31,6 +31,7 @@ import {
 } from 'component/user/Profile/PersonalAPITokensTab/CreatePersonalAPIToken/PersonalAPITokenForm/PersonalAPITokenForm';
 import { usePersonalAPITokensApi } from 'hooks/api/actions/usePersonalAPITokensApi/usePersonalAPITokensApi';
 import { INewPersonalAPIToken } from 'interfaces/personalAPIToken';
+import { ServiceAccountTokens } from './ServiceAccountTokens/ServiceAccountTokens';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',
@@ -410,6 +411,16 @@ export const ServiceAccountModal = ({
                                         />
                                     </StyledInlineContainer>
                                 </StyledSecondaryContainer>
+                            }
+                            elseShow={
+                                <>
+                                    <StyledInputDescription>
+                                        Service account tokens
+                                    </StyledInputDescription>
+                                    <ServiceAccountTokens
+                                        serviceAccount={serviceAccount!}
+                                    />
+                                </>
                             }
                         />
                     </div>

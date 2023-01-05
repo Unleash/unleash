@@ -1,10 +1,27 @@
 const { readmes } = require('./readme-fns');
 
-// add `/docs` redirect prefixes to all `from` paths
+// for a given redirect object, modify it's `from` property such that for every
+// path that doesn't start with `/docs/`, a corresponding path that _does_ start
+// with `/docs/` is added.
+//
+// For instance, given the object
+//
+// {
+//   to: '/new/path',
+//   from: ['/old/path', '/docs/other/old/path'],
+// }
+//
+// it will produce
+//
+// {
+//   to: '/new/path',
+//   from: ['/old/path', '/docs/old/path', '/docs/other/old/path'],
+// }
+//
 const addDocsRoutePrefix = ({ from, ...rest }) => {
     const addDocs = (from) => {
         if (Array.isArray(from)) {
-            // if `from` is a list, then add a an extra entry for every route
+            // if `from` is a list, then check each entry
             return from.flatMap(addDocs);
         } else {
             if (from.startsWith('/docs/')) {

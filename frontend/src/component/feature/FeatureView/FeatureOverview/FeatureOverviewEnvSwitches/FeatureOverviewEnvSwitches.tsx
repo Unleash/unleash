@@ -6,6 +6,7 @@ import FeatureOverviewEnvSwitch from './FeatureOverviewEnvSwitch/FeatureOverview
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { styled } from '@mui/material';
+import { IFeatureToggle } from '../../../../../interfaces/featureToggle';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
@@ -41,7 +42,15 @@ const StyledHeader = styled('h3')(({ theme }) => ({
     },
 }));
 
-const FeatureOverviewEnvSwitches = () => {
+interface IFeatureOverviewEnvSwitchesProps {
+    hiddenEnvironments: Set<String>;
+    setHiddenEnvironments: (environment: string) => void;
+}
+
+const FeatureOverviewEnvSwitches = ({
+    hiddenEnvironments,
+    setHiddenEnvironments,
+}: IFeatureOverviewEnvSwitchesProps) => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const { feature } = useFeature(projectId, featureId);
@@ -60,6 +69,8 @@ const FeatureOverviewEnvSwitches = () => {
                 <FeatureOverviewEnvSwitch
                     key={env.name}
                     env={env}
+                    hiddenEnvironments={hiddenEnvironments}
+                    setHiddenEnvironments={setHiddenEnvironments}
                     showInfoBox={() => {
                         setEnvironmentName(env.name);
                         setShowInfoBox(true);

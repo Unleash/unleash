@@ -6,6 +6,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 const Visible = styled(Visibility)(({ theme }) => ({
     cursor: 'pointer',
     marginLeft: 'auto',
+    marginTop: theme.spacing(0.5),
     color: theme.palette.grey[700],
     '&:hover': {
         opacity: 1,

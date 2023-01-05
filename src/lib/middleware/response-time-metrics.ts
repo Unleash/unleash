@@ -14,7 +14,7 @@ export function responseTimeMetrics(
     flagResolver: IFlagResolver,
     instanceStatsService: Pick<InstanceStatsService, 'getAppCountSnapshot'>,
 ): any {
-    return _responseTime(async (req, res, time) => {
+    return _responseTime((req, res, time) => {
         const { statusCode } = res;
         const pathname = req.route ? req.baseUrl + req.route.path : '(hidden)';
 

@@ -545,6 +545,10 @@ module.exports = {
                         from: '/api/internal/health',
                         to: '/reference/api/legacy/unleash/internal/health',
                     },
+                    {
+                        from: '/help',
+                        to: '/#getting-help',
+                    },
                 ].map(addDocsRoutePrefix), // add /docs prefixes
                 createRedirects: function (toPath) {
                     if (

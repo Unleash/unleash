@@ -24,7 +24,7 @@ const MainLayoutContainer = styled(Grid)(() => ({
 }));
 
 const MainLayoutContentWrapper = styled('main')(({ theme }) => ({
-    margin: '0 auto',
+    margin: theme.spacing(0, 'auto'),
     flex: 1,
     width: '100%',
     backgroundColor: theme.palette.contentWrapper,
@@ -61,10 +61,10 @@ const StyledImg = styled('img')(() => ({
 
 const MainLayoutContentContainer = styled('div')(({ theme }) => ({
     height: '100%',
-    padding: '3.25rem 0',
+    padding: theme.spacing(6.5, 0),
     position: 'relative',
     [theme.breakpoints.down('md')]: {
-        padding: '3.25rem 0.75rem',
+        padding: theme.spacing(6.5, 1.5),
     },
     zIndex: 200,
 }));

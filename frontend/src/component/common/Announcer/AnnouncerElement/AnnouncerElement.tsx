@@ -6,7 +6,7 @@ interface IAnnouncerElementProps {
     announcement?: string;
 }
 
-const StyledContainer = styled('div')(() => ({
+const StyledContainer = styled('div')({
     clip: 'rect(0 0 0 0)',
     clipPath: 'inset(50%)',
     zIndex: -1,
@@ -15,7 +15,7 @@ const StyledContainer = styled('div')(() => ({
     margin: -1,
     padding: 0,
     overflow: 'hidden',
-}));
+});
 
 export const AnnouncerElement = ({
     announcement,

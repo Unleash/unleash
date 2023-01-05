@@ -261,7 +261,7 @@ const ProjectRoleList = () => {
             <ProjectRoleDeleteConfirm
                 role={currentRole!}
                 open={delDialog}
-                setDeldialogue={setDelDialog}
+                setDialogue={setDelDialog}
                 handleDeleteRole={deleteProjectRole}
                 confirmName={confirmName}
                 setConfirmName={setConfirmName}

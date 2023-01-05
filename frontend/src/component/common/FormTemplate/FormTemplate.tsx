@@ -43,9 +43,7 @@ const StyledContainer = styled('section', {
     },
 }));
 
-const StyledRelativeDiv = styled('div')(({ theme }) => ({
-    ...relative,
-}));
+const StyledRelativeDiv = styled('div')(({ theme }) => relative);
 
 const StyledFormContent = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.formBackground,
@@ -53,7 +51,7 @@ const StyledFormContent = styled('div')(({ theme }) => ({
     flexDirection: 'column',
     padding: theme.spacing(6),
     flexGrow: 1,
-    [theme.breakpoints.down(1200)]: {
+    [theme.breakpoints.down('lg')]: {
         padding: theme.spacing(4),
     },
     [theme.breakpoints.down(1100)]: {
@@ -109,7 +107,7 @@ const StyledMobileGuidanceButton = styled(IconButton)(({ theme }) => ({
 }));
 
 const StyledInfoIcon = styled(Info)(({ theme }) => ({
-    fill: '#fff',
+    fill: theme.palette.text.tertiaryContrast,
 }));
 
 const StyledSidebar = styled('aside')(({ theme }) => ({

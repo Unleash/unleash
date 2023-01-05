@@ -39,6 +39,8 @@ import { LastSeenService } from './client-metrics/last-seen-service';
 import { InstanceStatsService } from './instance-stats-service';
 import { FavoritesService } from './favorites-service';
 import MaintenanceService from './maintenance-service';
+import SchedulerService from './scheduler-service';
+import { minutesToMilliseconds } from 'date-fns';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -133,6 +135,16 @@ export const createServices = (
         stores,
         config,
         settingService,
+    );
+
+    const schedulerService = new SchedulerService();
+    schedulerService.schedule(
+        apiTokenService.fetchActiveTokens,
+        minutesToMilliseconds(1),
+    );
+    schedulerService.schedule(
+        apiTokenService.updateLastSeen,
+        minutesToMilliseconds(3),
     );
 
     return {

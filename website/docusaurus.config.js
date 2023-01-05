@@ -5,9 +5,13 @@ const addDocsRoutePrefix = ({ from, ...rest }) => {
     const addDocs = (from) => {
         if (Array.isArray(from)) {
             // if `from` is a list, then add a an extra entry for every route
-            from.flat(addDocs);
+            return from.flat(addDocs);
         } else {
-            return [from, `/docs${from}`];
+            if (from.startsWith('/docs/')) {
+                return [from];
+            } else {
+                return [from, `/docs${from}`];
+            }
         }
     };
 

@@ -71,19 +71,21 @@ const replaceLinks = ({ content, repo }) => {
     const markdownLink = /(?<=\[.*\]\(\s?)(\S+)(?=.*\))/g;
 
     const replacer = (url) => {
-        // case 2:
-        const docsUrl = 'https://docs.getunleash.io';
-        if (url.startsWith(docsUrl)) {
-            return url.substring(docsUrl.length);
-        }
-
-        // case 1
         try {
             // This constructor will throw if the URL is relative.
             // https://developer.mozilla.org/en-US/docs/Web/API/URL/URL
-            new URL(url);
+            const parsedUrl = new URL(url);
+
+            // case 2:
+            if (parsedUrl.hostname === 'docs.getunleash.io') {
+                return `${parsedUrl.pathname ?? '/'}${parsedUrl.query ?? ''}${
+                    parsedUrl.hash ?? ''
+                }`;
+            }
+
             return url;
         } catch {
+            // case 1
             if (url.startsWith('#')) {
                 // ignore links to other doc sections
                 return url;

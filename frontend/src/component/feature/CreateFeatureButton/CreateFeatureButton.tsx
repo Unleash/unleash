@@ -4,7 +4,6 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { Add } from '@mui/icons-material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { NAVIGATE_TO_CREATE_FEATURE } from 'utils/testIds';
-import { IFeaturesFilter } from 'hooks/useFeaturesFilter';
 import { useCreateFeaturePath } from 'component/feature/CreateFeatureButton/useCreateFeaturePath';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
@@ -12,7 +11,10 @@ import PermissionIconButton from 'component/common/PermissionIconButton/Permissi
 
 interface ICreateFeatureButtonProps {
     loading: boolean;
-    filter: IFeaturesFilter;
+    filter: {
+        query?: string;
+        project: string;
+    };
 }
 
 export const CreateFeatureButton = ({

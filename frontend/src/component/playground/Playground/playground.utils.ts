@@ -1,14 +1,22 @@
-import { PlaygroundResponseSchema } from 'component/playground/Playground/interfaces/playground.model';
+import { PlaygroundResponseSchema } from 'openapi';
 import { IEnvironment } from 'interfaces/environments';
 
 export const resolveProjects = (
     projects: string[] | string
-): string[] | string => {
-    return !projects ||
+): string[] | '*' => {
+    if (
+        !projects ||
         projects.length === 0 ||
         (projects.length === 1 && projects[0] === '*')
-        ? '*'
-        : projects;
+    ) {
+        return '*';
+    }
+
+    if (Array.isArray(projects)) {
+        return projects;
+    }
+
+    return [projects];
 };
 
 export const resolveDefaultEnvironment = (

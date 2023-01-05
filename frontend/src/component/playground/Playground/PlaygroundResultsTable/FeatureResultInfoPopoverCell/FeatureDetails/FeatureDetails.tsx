@@ -1,7 +1,4 @@
-import {
-    PlaygroundFeatureSchema,
-    PlaygroundRequestSchema,
-} from 'component/playground/Playground/interfaces/playground.model';
+import { PlaygroundFeatureSchema, PlaygroundRequestSchema } from 'openapi';
 import { Alert, IconButton, Typography, useTheme, styled } from '@mui/material';
 import { PlaygroundResultChip } from '../../PlaygroundResultChip/PlaygroundResultChip';
 import { CloseOutlined } from '@mui/icons-material';

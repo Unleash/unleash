@@ -15,7 +15,7 @@
 // type ReadmeData = Readme & { repoUrl: string };
 
 // all SDK repos and what they map to for the sidebar.
-const SDKS_base = {
+const sdksUnmapped = {
     'unleash-client-go': {
         sidebarName: 'Go',
         branch: 'v3',
@@ -34,7 +34,7 @@ const SDKS_base = {
 };
 
 const SDKS = Object.fromEntries(
-    Object.entries(SDKS_base).map(([repoName, repoData]) => {
+    Object.entries(sdksUnmapped).map(([repoName, repoData]) => {
         const repoUrl = `https://github.com/Unleash/${repoName}`;
         const slugName = (
             repoData.slugName ?? repoData.sidebarName

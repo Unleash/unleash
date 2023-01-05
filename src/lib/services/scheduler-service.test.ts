@@ -9,7 +9,7 @@ test('Can schedule a single regular job', async () => {
     const job = jest.fn();
 
     schedulerService.schedule(job, 10);
-    await ms(20);
+    await ms(15);
 
     expect(job).toBeCalledTimes(1);
     schedulerService.stop();
@@ -22,7 +22,7 @@ test('Can schedule multiple jobs at the same interval', async () => {
 
     schedulerService.schedule(job, 10);
     schedulerService.schedule(anotherJob, 10);
-    await ms(20);
+    await ms(15);
 
     expect(job).toBeCalledTimes(1);
     expect(anotherJob).toBeCalledTimes(1);

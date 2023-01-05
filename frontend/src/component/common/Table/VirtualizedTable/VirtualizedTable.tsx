@@ -1,15 +1,9 @@
 import { useMemo, VFC } from 'react';
 import { useTheme } from '@mui/material';
-import {
-    SortableTableHeader,
-    Table,
-    TableCell,
-    TableBody,
-    TableRow,
-} from 'component/common/Table';
+import { SortableTableHeader, Table, TableBody } from 'component/common/Table';
 import { useVirtualizedRange } from 'hooks/useVirtualizedRange';
-import { useStyles } from './VirtualizedTable.styles';
 import { HeaderGroup, Row } from 'react-table';
+import { StyledCell, StyledRow } from './VirtualizedTable.styles';
 
 interface IVirtualizedTableProps {
     rowHeight?: number;
@@ -34,7 +28,6 @@ export const VirtualizedTable: VFC<IVirtualizedTableProps> = ({
     rows,
     prepareRow,
 }) => {
-    const { classes } = useStyles();
     const theme = useTheme();
     const rowHeight = useMemo(
         () => rowHeightOverride || theme.shape.tableRowHeight,
@@ -71,15 +64,14 @@ export const VirtualizedTable: VFC<IVirtualizedTableProps> = ({
                     prepareRow(row);
 
                     return (
-                        <TableRow
+                        <StyledRow
                             hover
                             {...row.getRowProps()}
                             key={row.id}
-                            className={classes.row}
                             style={{ display: 'flex', top }}
                         >
                             {row.cells.map(cell => (
-                                <TableCell
+                                <StyledCell
                                     {...cell.getCellProps({
                                         style: {
                                             flex: cell.column.minWidth
@@ -87,12 +79,11 @@ export const VirtualizedTable: VFC<IVirtualizedTableProps> = ({
                                                 : undefined,
                                         },
                                     })}
-                                    className={classes.cell}
                                 >
                                     {cell.render('Cell')}
-                                </TableCell>
+                                </StyledCell>
                             ))}
-                        </TableRow>
+                        </StyledRow>
                     );
                 })}
             </TableBody>

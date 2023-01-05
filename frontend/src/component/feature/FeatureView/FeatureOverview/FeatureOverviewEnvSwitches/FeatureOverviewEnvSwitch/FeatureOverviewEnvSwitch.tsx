@@ -11,7 +11,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useChangeRequestToggle } from 'hooks/useChangeRequestToggle';
 import { ChangeRequestDialogue } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestConfirmDialog';
-import { UpdateEnabledMessage } from '../../../../../changeRequest/ChangeRequestConfirmDialog/ChangeRequestMessages/UpdateEnabledMessage';
+import { UpdateEnabledMessage } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestMessages/UpdateEnabledMessage';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { styled } from '@mui/material';
 import { FeatureOverviewSidePanelEnvironmentHider } from '../../FeatureOverviewSidePanel/FeatureOverviewSidePanelEnvironmentSwitches/FeatureOverviewSidePanelEnvironmentSwitch/FeatureOverviewSidePanelEnvironmentHider';

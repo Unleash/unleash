@@ -1,14 +1,44 @@
-import { Button, Typography } from '@mui/material';
+import { Button, styled, Typography } from '@mui/material';
 import { useNavigate } from 'react-router';
 
 import { ReactComponent as LogoIcon } from 'assets/icons/logoBg.svg';
-
-import { useStyles } from './NotFound.styles';
 import { GO_BACK } from 'constants/navigate';
+
+const StyledContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    minHeight: '100vh',
+    padding: theme.spacing(4),
+    position: 'fixed',
+    inset: 0,
+    backgroundColor: theme.palette.text.tertiaryContrast,
+    width: '100%',
+}));
+
+const StyledLogo = styled(LogoIcon)(({ theme }) => ({
+    height: '80px',
+}));
+
+const StyledContent = styled('div')(({ theme }) => ({
+    display: 'flex',
+    position: 'relative',
+}));
+
+const StyledButtonContainer = styled('div')(({ theme }) => ({
+    marginTop: theme.spacing(4),
+}));
+
+const StyledHomeButton = styled(Button)(({ theme }) => ({
+    height: '150px',
+    width: '150px',
+    position: 'absolute',
+    right: 100,
+    top: 45,
+}));
 
 const NotFound = () => {
     const navigate = useNavigate();
-    const { classes: styles } = useStyles();
 
     const onClickHome = () => {
         navigate('/');
@@ -19,15 +49,15 @@ const NotFound = () => {
     };
 
     return (
-        <div className={styles.container}>
+        <StyledContainer>
             <div>
-                <LogoIcon className={styles.logo} />
-                <div className={styles.content}>
+                <StyledLogo />
+                <StyledContent>
                     <Typography variant="h1" style={{ fontSize: '2rem' }}>
                         Ooops. That's a page we haven't toggled on yet.
                     </Typography>
-                </div>
-                <div className={styles.buttonContainer}>
+                </StyledContent>
+                <StyledButtonContainer>
                     <Button
                         variant="contained"
                         color="primary"
@@ -35,12 +65,12 @@ const NotFound = () => {
                     >
                         Go back
                     </Button>
-                    <Button onClick={onClickHome} className={styles.homeButton}>
+                    <StyledHomeButton onClick={onClickHome}>
                         Go home
-                    </Button>
-                </div>
+                    </StyledHomeButton>
+                </StyledButtonContainer>
             </div>
-        </div>
+        </StyledContainer>
     );
 };
 

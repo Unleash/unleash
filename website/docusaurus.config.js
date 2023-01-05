@@ -1,3 +1,5 @@
+const { readmes } = require('./readme-fns');
+
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 module.exports = {
     title: 'Unleash',
@@ -54,6 +56,7 @@ module.exports = {
                 'kotlin',
                 'php',
                 'ruby',
+                'rust',
                 'swift',
             ],
         },
@@ -555,6 +558,17 @@ module.exports = {
                         },
                     },
                 },
+            },
+        ],
+        [
+            'docusaurus-plugin-remote-content',
+            {
+                // more info at https://github.com/rdilweb/docusaurus-plugin-remote-content#options
+                name: 'content-sdks',
+                sourceBaseUrl: 'https://raw.githubusercontent.com/Unleash/', // gets prepended to all of the documents when fetching
+                outDir: 'docs/reference/sdks', // the base directory to output to.
+                documents: readmes.documentUrls, // the file names to download
+                modifyContent: readmes.modifyContent,
             },
         ],
     ],

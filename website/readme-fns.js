@@ -20,6 +20,9 @@ const SDKS = {
         sidebarName: 'Go',
         branch: 'v3',
     },
+    'unleash-client-java': {
+        sidebarName: 'Java',
+    },
     'unleash-client-rust': {
         sidebarName: 'Rust',
     },

@@ -1,39 +1,36 @@
-import { makeStyles } from 'tss-react/mui';
+import Input from 'component/common/Input/Input';
+import { TextField, Button, styled } from '@mui/material';
 
-export const useStyles = makeStyles()(theme => ({
-    form: {
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100%',
-    },
-    container: {
-        maxWidth: '400px',
-    },
-    input: { width: '100%', marginBottom: '1rem' },
-    label: {
-        minWidth: '300px',
-        [theme.breakpoints.down(600)]: {
-            minWidth: 'auto',
-        },
-    },
-    buttonContainer: {
-        marginTop: 'auto',
-        display: 'flex',
-        justifyContent: 'flex-end',
-    },
-    cancelButton: {
-        marginLeft: '1.5rem',
-    },
-    inputDescription: {
-        marginBottom: '0.5rem',
-    },
-    permissionErrorContainer: {
-        position: 'relative',
-    },
-    errorMessage: {
-        fontSize: theme.fontSizes.smallBody,
-        color: theme.palette.error.main,
-        position: 'absolute',
-        top: '-8px',
-    },
+export const StyledForm = styled('form')(() => ({
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
+}));
+
+export const StyledContainer = styled('div')(() => ({
+    maxWidth: '400px',
+}));
+
+export const StyledDescription = styled('p')(({ theme }) => ({
+    marginBottom: theme.spacing(1),
+}));
+
+export const StyledInput = styled(Input)(({ theme }) => ({
+    width: '100%',
+    marginBottom: theme.spacing(2),
+}));
+
+export const StyledTextField = styled(TextField)(({ theme }) => ({
+    width: '100%',
+    marginBottom: theme.spacing(2),
+}));
+
+export const StyledButtonContainer = styled('div')(() => ({
+    marginTop: 'auto',
+    display: 'flex',
+    justifyContent: 'flex-end',
+}));
+
+export const StyledButton = styled(Button)(({ theme }) => ({
+    marginLeft: theme.spacing(3),
 }));

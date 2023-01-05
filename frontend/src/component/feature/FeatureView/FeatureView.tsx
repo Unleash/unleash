@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Tab, Tabs, useMediaQuery } from '@mui/material';
+import { styled, Tab, Tabs, useMediaQuery } from '@mui/material';
 import { Archive, FileCopy, Label, WatchLater } from '@mui/icons-material';
 import {
     Link,
@@ -20,7 +20,6 @@ import FeatureLog from './FeatureLog/FeatureLog';
 import FeatureOverview from './FeatureOverview/FeatureOverview';
 import FeatureVariants from './FeatureVariants/FeatureVariants';
 import { FeatureMetrics } from './FeatureMetrics/FeatureMetrics';
-import { useStyles } from './FeatureView.styles';
 import { FeatureSettings } from './FeatureSettings/FeatureSettings';
 import useLoading from 'hooks/useLoading';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -32,6 +31,60 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';
 import { FavoriteIconButton } from 'component/common/FavoriteIconButton/FavoriteIconButton';
+
+const StyledHeader = styled('div')(({ theme }) => ({
+    backgroundColor: theme.palette.background.paper,
+    borderRadius: theme.shape.borderRadiusLarge,
+    marginBottom: theme.spacing(2),
+}));
+
+const StyledInnerContainer = styled('div')(({ theme }) => ({
+    padding: theme.spacing(2, 4, 2, 2),
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    [theme.breakpoints.down(500)]: {
+        flexDirection: 'column',
+    },
+}));
+
+const StyledToggleInfoContainer = styled('div')({
+    display: 'flex',
+    alignItems: 'center',
+});
+
+const StyledFeatureViewHeader = styled('h1')(({ theme }) => ({
+    fontSize: theme.fontSizes.mainHeader,
+    fontWeight: 'normal',
+    display: 'flex',
+    alignItems: 'center',
+    wordBreak: 'break-all',
+}));
+
+const StyledToolbarContainer = styled('div')({
+    flexShrink: 0,
+    display: 'flex',
+});
+
+const StyledSeparator = styled('div')(({ theme }) => ({
+    width: '100%',
+    backgroundColor: theme.palette.tertiary.light,
+    height: '1px',
+}));
+
+const StyledTabContainer = styled('div')(({ theme }) => ({
+    padding: theme.spacing(0, 4),
+}));
+
+const StyledTabButton = styled(Tab)(({ theme }) => ({
+    textTransform: 'none',
+    width: 'auto',
+    fontSize: theme.fontSizes.bodySize,
+    padding: '0 !important',
+    [theme.breakpoints.up('md')]: {
+        minWidth: 160,
+    },
+}));
 
 export const FeatureView = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -50,7 +103,6 @@ export const FeatureView = () => {
         featureId
     );
 
-    const { classes: styles } = useStyles();
     const navigate = useNavigate();
     const { pathname } = useLocation();
     const ref = useLoading(loading);
@@ -98,23 +150,23 @@ export const FeatureView = () => {
 
     return (
         <div ref={ref}>
-            <div className={styles.header}>
-                <div className={styles.innerContainer}>
-                    <div className={styles.toggleInfoContainer}>
+            <StyledHeader>
+                <StyledInnerContainer>
+                    <StyledToggleInfoContainer>
                         <FavoriteIconButton
                             onClick={onFavorite}
                             isFavorite={feature?.favorite}
                         />
-                        <h1 className={styles.featureViewHeader} data-loading>
+                        <StyledFeatureViewHeader data-loading>
                             {feature.name}{' '}
-                        </h1>
+                        </StyledFeatureViewHeader>
                         <ConditionallyRender
                             condition={!smallScreen}
                             show={<FeatureStatusChip stale={feature?.stale} />}
                         />
-                    </div>
+                    </StyledToggleInfoContainer>
 
-                    <div className={styles.toolbarContainer}>
+                    <StyledToolbarContainer>
                         <PermissionIconButton
                             permission={CREATE_FEATURE}
                             projectId={projectId}
@@ -158,27 +210,26 @@ export const FeatureView = () => {
                         >
                             <Label />
                         </PermissionIconButton>
-                    </div>
-                </div>
-                <div className={styles.separator} />
-                <div className={styles.tabContainer}>
+                    </StyledToolbarContainer>
+                </StyledInnerContainer>
+                <StyledSeparator />
+                <StyledTabContainer>
                     <Tabs
                         value={activeTab.path}
                         indicatorColor="primary"
                         textColor="primary"
                     >
                         {tabData.map(tab => (
-                            <Tab
+                            <StyledTabButton
                                 key={tab.title}
                                 label={tab.title}
                                 value={tab.path}
                                 onClick={() => navigate(tab.path)}
-                                className={styles.tabButton}
                             />
                         ))}
                     </Tabs>
-                </div>
-            </div>
+                </StyledTabContainer>
+            </StyledHeader>
             <Routes>
                 <Route path="metrics" element={<FeatureMetrics />} />
                 <Route path="logs" element={<FeatureLog />} />

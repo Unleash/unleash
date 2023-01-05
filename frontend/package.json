@@ -26,6 +26,8 @@
     "ts:check": "tsc",
     "e2e": "yarn run cypress open --config baseUrl='http://localhost:3000' --env AUTH_USER=admin,AUTH_PASSWORD=unleash4all",
     "e2e:heroku": "yarn run cypress open --config baseUrl='https://unleash.herokuapp.com' --env AUTH_USER=admin,AUTH_PASSWORD=unleash4all",
+    "gen:api": "orval --config orval.config.js",
+    "gen:api:demo": "UNLEASH_OPENAPI_URL=https://app.unleash-hosted.com/demo/docs/openapi.json yarn run gen:api",
     "prepare": "yarn run build"
   },
   "devDependencies": {
@@ -35,7 +37,6 @@
     "@mui/icons-material": "5.10.15",
     "@mui/lab": "5.0.0-alpha.109",
     "@mui/material": "5.10.15",
-    "@openapitools/openapi-generator-cli": "2.5.2",
     "@testing-library/dom": "8.19.1",
     "@testing-library/jest-dom": "5.16.5",
     "@testing-library/react": "12.1.5",
@@ -93,7 +94,7 @@
     "react-timeago": "7.1.0",
     "sass": "1.57.1",
     "semver": "7.3.8",
-    "swr": "1.3.0",
+    "swr": "2.0.0",
     "tss-react": "4.0.0",
     "typescript": "4.8.4",
     "vite": "4.0.4",
@@ -102,6 +103,9 @@
     "vite-tsconfig-paths": "4.0.3",
     "vitest": "0.26.3",
     "whatwg-fetch": "3.6.2"
+  },
+  "optionalDependencies": {
+    "orval": "^6.10.3"
   },
   "resolutions": {
     "@codemirror/state": "6.2.0",

@@ -1,6 +1,6 @@
 import { DragEventHandler, FC, ReactNode } from 'react';
 import { DragIndicator } from '@mui/icons-material';
-import { styled, IconButton, Box, SxProps, Theme } from '@mui/material';
+import { styled, IconButton, Box } from '@mui/material';
 import classNames from 'classnames';
 import { IFeatureStrategy } from 'interfaces/strategy';
 import {
@@ -10,7 +10,7 @@ import {
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useStyles } from './StrategyItemContainer.styles';
-import { PlaygroundStrategySchema } from 'component/playground/Playground/interfaces/playground.model';
+import { PlaygroundStrategySchema } from 'openapi';
 
 interface IStrategyItemContainerProps {
     strategy: IFeatureStrategy | PlaygroundStrategySchema;

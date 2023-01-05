@@ -75,7 +75,6 @@ export const FeatureToggleListTable: VFC = () => {
         );
     const [searchValue, setSearchValue] = useState(initialState.globalFilter);
     const { favorite, unfavorite } = useFavoriteFeaturesApi();
-    const { uiConfig } = useUiConfig();
     const onFavorite = useCallback(
         async (feature: any) => {
             if (feature?.favorite) {

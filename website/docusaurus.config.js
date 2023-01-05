@@ -1,5 +1,21 @@
 const { readmes } = require('./readme-fns');
 
+// add `/docs` redirect prefixes to all `from` paths
+const addDocsRoutePrefix = ({ from, ...rest }) => {
+    const addDocs = (from) => {
+        if (Array.isArray(from)) {
+            // if `from` is a list, then add a an extra entry for every route
+            from.flat(addDocsRoutePrefix);
+        } else {
+            return [from, `/docs${from}`];
+        }
+    };
+
+    return {
+        ...rest,
+        from: addDocs(from),
+    };
+};
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 module.exports = {
     title: 'Unleash',
@@ -529,7 +545,7 @@ module.exports = {
                         from: '/api/internal/health',
                         to: '/reference/api/legacy/unleash/internal/health',
                     },
-                ],
+                ].map(addDocsRoutePrefix), // add /docs prefixes
                 createRedirects: function (toPath) {
                     if (
                         toPath.indexOf('/docs/') === -1 &&

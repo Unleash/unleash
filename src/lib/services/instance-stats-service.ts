@@ -248,8 +248,8 @@ export class InstanceStatsService {
         ];
     }
 
-    getAppCountSnapshot(range: TimeRange): number {
-        return this.appCount?.[range] || 0;
+    getAppCountSnapshot(range: TimeRange): number | undefined {
+        return this.appCount?.[range];
     }
 
     async getSignedStats(): Promise<InstanceStatsSigned> {

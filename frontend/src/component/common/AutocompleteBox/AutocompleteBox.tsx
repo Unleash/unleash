@@ -26,22 +26,22 @@ const StyledContainer = styled('div')(({ theme }) => ({
     },
 }));
 
-const StyledIcon = styled('div')<{ disabled: boolean }>(
-    ({ theme, disabled }) => ({
-        background: disabled
-            ? theme.palette.primary.light
-            : theme.palette.featureSegmentSearchBackground,
-        height: '48px',
-        width: '48px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingLeft: 6,
-        borderTopLeftRadius: '40px',
-        borderBottomLeftRadius: '40px',
-        color: theme.palette.text.tertiaryContrast,
-    })
-);
+const StyledIcon = styled('div', {
+    shouldForwardProp: (prop: string) => !prop.startsWith('$'),
+})<{ $disabled: boolean }>(({ theme, disabled }) => ({
+    background: disabled
+        ? theme.palette.primary.light
+        : theme.palette.featureSegmentSearchBackground,
+    height: '48px',
+    width: '48px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingLeft: 6,
+    borderTopLeftRadius: '40px',
+    borderBottomLeftRadius: '40px',
+    color: theme.palette.text.tertiaryContrast,
+}));
 
 const StyledAutocomplete = styled(Autocomplete)({
     flex: 1,
@@ -62,7 +62,7 @@ export const AutocompleteBox = ({
 
     return (
         <StyledContainer>
-            <StyledIcon disabled={Boolean(disabled)} aria-hidden>
+            <StyledIcon $disabled={Boolean(disabled)} aria-hidden>
                 <Search />
             </StyledIcon>
             <StyledAutocomplete

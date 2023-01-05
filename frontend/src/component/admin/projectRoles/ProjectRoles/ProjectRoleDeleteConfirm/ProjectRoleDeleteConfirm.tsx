@@ -1,34 +1,39 @@
-import { Alert } from '@mui/material';
+import { Alert, styled } from '@mui/material';
 import React from 'react';
 import { IProjectRole } from 'interfaces/role';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import Input from 'component/common/Input/Input';
-import { useStyles } from './ProjectRoleDeleteConfirm.styles';
 
 interface IProjectRoleDeleteConfirmProps {
     role: IProjectRole;
     open: boolean;
-    setDeldialogue: React.Dispatch<React.SetStateAction<boolean>>;
+    setDialogue: React.Dispatch<React.SetStateAction<boolean>>;
     handleDeleteRole: (id: number) => Promise<void>;
     confirmName: string;
     setConfirmName: React.Dispatch<React.SetStateAction<string>>;
 }
 
+const DeleteParagraph = styled('p')(({ theme }) => ({
+    marginTop: theme.spacing(3),
+}));
+
+const RoleDeleteInput = styled(Input)(({ theme }) => ({
+    marginTop: theme.spacing(2),
+}));
+
 const ProjectRoleDeleteConfirm = ({
     role,
     open,
-    setDeldialogue,
+    setDialogue,
     handleDeleteRole,
     confirmName,
     setConfirmName,
 }: IProjectRoleDeleteConfirmProps) => {
-    const { classes: styles } = useStyles();
-
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
         setConfirmName(e.currentTarget.value);
 
     const handleCancel = () => {
-        setDeldialogue(false);
+        setDialogue(false);
         setConfirmName('');
     };
     const formId = 'delete-project-role-confirmation-form';
@@ -49,18 +54,17 @@ const ProjectRoleDeleteConfirm = ({
                 feature toggles.
             </Alert>
 
-            <p className={styles.deleteParagraph}>
+            <DeleteParagraph>
                 In order to delete this role, please enter the name of the role
                 in the textfield below: <strong>{role?.name}</strong>
-            </p>
+            </DeleteParagraph>
 
             <form id={formId}>
-                <Input
+                <RoleDeleteInput
                     autoFocus
                     onChange={handleChange}
                     value={confirmName}
                     label="Role name"
-                    className={styles.roleDeleteInput}
                 />
             </form>
         </Dialogue>

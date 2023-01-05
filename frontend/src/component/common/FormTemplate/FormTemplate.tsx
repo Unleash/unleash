@@ -83,24 +83,22 @@ const StyledSubtitle = styled('h2')(({ theme }) => ({
 }));
 
 const StyledIcon = styled(FileCopy)(({ theme }) => ({
-    fill: '#fff',
+    fill: theme.palette.text.tertiaryContrast,
 }));
 
-const StyledMobileGuidanceContainer = styled('div')(({ theme }) => ({
+const StyledMobileGuidanceContainer = styled('div')(() => ({
     zIndex: 1,
     position: 'absolute',
     right: -3,
     top: -3,
 }));
 
-const StyledMobileGuidanceBackground = styled(MobileGuidanceBG)(
-    ({ theme }) => ({
-        width: '75px',
-        height: '75px',
-    })
-);
+const StyledMobileGuidanceBackground = styled(MobileGuidanceBG)(() => ({
+    width: '75px',
+    height: '75px',
+}));
 
-const StyledMobileGuidanceButton = styled(IconButton)(({ theme }) => ({
+const StyledMobileGuidanceButton = styled(IconButton)(() => ({
     position: 'absolute',
     zIndex: 400,
     right: 0,
@@ -139,11 +137,11 @@ const StyledLinkContainer = styled('div')(({ theme }) => ({
 
 const StyledLinkIcon = styled(MenuBookIcon)(({ theme }) => ({
     marginRight: theme.spacing(1),
-    color: '#fff',
+    color: theme.palette.text.tertiaryContrast,
 }));
 
 const StyledDocumentationLink = styled('a')(({ theme }) => ({
-    color: '#fff',
+    color: theme.palette.text.tertiaryContrast,
     display: 'block',
     '&:hover': {
         textDecoration: 'none',

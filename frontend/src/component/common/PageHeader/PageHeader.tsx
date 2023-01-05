@@ -24,12 +24,12 @@ const StyledDivider = styled(Divider)(({ theme }) => ({
     verticalAlign: 'middle',
 }));
 
-const StyledHeaderContainer = styled('div')(({ theme }) => ({
+const StyledHeaderContainer = styled('div')(() => ({
     display: 'flex',
     flexDirection: 'column',
 }));
 
-const StyledTopContainer = styled('div')(({ theme }) => ({
+const StyledTopContainer = styled('div')(() => ({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',

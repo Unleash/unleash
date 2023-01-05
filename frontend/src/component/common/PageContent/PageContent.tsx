@@ -24,7 +24,7 @@ interface IPageContentProps extends PaperProps {
 
 const StyledHeader = styled('div')(({ theme }) => ({
     borderBottomStyle: 'solid',
-    borderBottomWidth: 1,
+    borderBottomWidth: '1px',
     borderBottomColor: theme.palette.divider,
     [theme.breakpoints.down('md')]: {
         padding: theme.spacing(3, 2),

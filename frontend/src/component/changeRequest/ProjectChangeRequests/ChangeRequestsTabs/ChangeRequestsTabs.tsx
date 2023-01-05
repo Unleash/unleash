@@ -37,15 +37,15 @@ const defaultSort: SortingRule<string> & {
     columns?: string[];
 } = { id: 'createdAt' };
 
-const StyledTabContainer = styled('div')(() => ({
+const StyledTabContainer = styled('div')({
     paddingLeft: 0,
     paddingBottom: 0,
-}));
+});
 
 const StyledTabButton = styled(Tab)(({ theme }) => ({
     textTransform: 'none',
     width: 'auto',
-    fontSize: '1rem',
+    fontSize: theme.fontSizes.bodySize,
     [theme.breakpoints.up('md')]: {
         minWidth: 160,
     },

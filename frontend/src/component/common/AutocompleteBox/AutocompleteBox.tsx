@@ -31,21 +31,21 @@ const StyledIcon = styled('div')<{ disabled: boolean }>(
         background: disabled
             ? theme.palette.primary.light
             : theme.palette.featureSegmentSearchBackground,
-        height: 48,
-        width: 48,
+        height: '48px',
+        width: '48px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         paddingLeft: 6,
-        borderTopLeftRadius: 40,
-        borderBottomLeftRadius: 40,
-        color: '#fff',
+        borderTopLeftRadius: '40px',
+        borderBottomLeftRadius: '40px',
+        color: theme.palette.text.tertiaryContrast,
     })
 );
 
-const StyledAutocomplete = styled(Autocomplete)(() => ({
+const StyledAutocomplete = styled(Autocomplete)({
     flex: 1,
-}));
+}) as typeof Autocomplete;
 
 export const AutocompleteBox = ({
     label,

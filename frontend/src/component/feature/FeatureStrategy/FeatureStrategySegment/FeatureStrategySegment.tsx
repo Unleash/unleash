@@ -6,22 +6,24 @@ import {
     IAutocompleteBoxOption,
 } from 'component/common/AutocompleteBox/AutocompleteBox';
 import { FeatureStrategySegmentList } from 'component/feature/FeatureStrategy/FeatureStrategySegment/FeatureStrategySegmentList';
-import { useStyles } from 'component/feature/FeatureStrategy/FeatureStrategySegment/FeatureStrategySegment.styles';
 import { SegmentDocsStrategyWarning } from 'component/segments/SegmentDocs';
 import { useSegmentLimits } from 'hooks/api/getters/useSegmentLimits/useSegmentLimits';
-import { Divider, Typography } from '@mui/material';
+import { Divider, styled, Typography } from '@mui/material';
 
 interface IFeatureStrategySegmentProps {
     segments: ISegment[];
     setSegments: React.Dispatch<React.SetStateAction<ISegment[]>>;
 }
 
+const StyledDivider = styled(Divider)(({ theme }) => ({
+    fontSize: theme.fontSizes.smallBody,
+}));
+
 export const FeatureStrategySegment = ({
     segments: selectedSegments,
     setSegments: setSelectedSegments,
 }: IFeatureStrategySegmentProps) => {
     const { segments: allSegments } = useSegments();
-    const { classes: styles } = useStyles();
     const { strategySegmentsLimit } = useSegmentLimits();
 
     const atStrategySegmentsLimit: boolean = Boolean(
@@ -68,7 +70,7 @@ export const FeatureStrategySegment = ({
                 segments={selectedSegments}
                 setSegments={setSelectedSegments}
             />
-            <Divider className={styles.divider} />
+            <StyledDivider />
         </>
     );
 };

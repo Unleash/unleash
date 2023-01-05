@@ -1,12 +1,17 @@
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
-import { useStyles } from './FeatureLog.styles';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { EventLog } from 'component/events/EventLog/EventLog';
+import { styled } from '@mui/material';
+
+const StyledContainer = styled('div')(({ theme }) => ({
+    borderRadius: theme.spacing(1.5),
+    backgroundColor: theme.palette.background.paper,
+    padding: theme.spacing(4),
+}));
 
 const FeatureLog = () => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
-    const { classes: styles } = useStyles();
     const { feature } = useFeature(projectId, featureId);
 
     if (!feature.name) {
@@ -14,14 +19,14 @@ const FeatureLog = () => {
     }
 
     return (
-        <div className={styles.container}>
+        <StyledContainer>
             <EventLog
                 title="Event log"
                 project={projectId}
                 feature={featureId}
                 displayInline
             />
-        </div>
+        </StyledContainer>
     );
 };
 

@@ -43,6 +43,7 @@ export interface IFlags {
     networkView?: boolean;
     maintenance?: boolean;
     messageBanner?: boolean;
+    serviceAccounts?: boolean;
 }
 
 export interface IVersionInfo {

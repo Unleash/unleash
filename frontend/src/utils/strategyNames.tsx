@@ -1,4 +1,4 @@
-import { FC, ElementType } from 'react';
+import { FC } from 'react';
 import { SvgIcon, useTheme } from '@mui/material';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import PeopleIcon from '@mui/icons-material/People';
@@ -19,7 +19,7 @@ const RolloutSvgIcon: FC = props => (
     />
 );
 
-export const getFeatureStrategyIcon = (strategyName: string): ElementType => {
+export const getFeatureStrategyIcon = (strategyName: string) => {
     switch (strategyName) {
         case 'default':
             return PowerSettingsNewIcon;

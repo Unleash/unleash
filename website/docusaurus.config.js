@@ -547,7 +547,7 @@ module.exports = {
                     },
                     {
                         from: '/help',
-                        to: '/#getting-help',
+                        to: '/',
                     },
                 ].map(addDocsRoutePrefix), // add /docs prefixes
                 createRedirects: function (toPath) {

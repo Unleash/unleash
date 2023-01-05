@@ -1,10 +1,9 @@
 import { Link } from 'react-router-dom';
-import { Box } from '@mui/material';
+import { Box, Button, styled } from '@mui/material';
 import { SectionSeparator } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/SectionSeparator/SectionSeparator';
 import useFeatureStrategyApi from 'hooks/api/actions/useFeatureStrategyApi/useFeatureStrategyApi';
 import useToast from 'hooks/useToast';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
-import { useStyles } from './FeatureStrategyEmpty.styles';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useFeatureImmutable } from 'hooks/api/getters/useFeature/useFeatureImmutable';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -23,12 +22,33 @@ interface IFeatureStrategyEmptyProps {
     environmentId: string;
 }
 
+const StyledContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: theme.spacing(2),
+}));
+
+const StyledTitle = styled('div')(({ theme }) => ({
+    fontSize: theme.fontSizes.bodySize,
+    textAlign: 'center',
+    color: theme.palette.text.primary,
+    marginBottom: theme.spacing(1),
+}));
+
+const StyledDescription = styled('p')(({ theme }) => ({
+    color: theme.palette.text.secondary,
+    fontSize: theme.fontSizes.smallBody,
+    textAlign: 'center',
+    marginBottom: theme.spacing(3),
+}));
+
 export const FeatureStrategyEmpty = ({
     projectId,
     featureId,
     environmentId,
 }: IFeatureStrategyEmptyProps) => {
-    const { classes: styles } = useStyles();
     const { addStrategyToFeature } = useFeatureStrategyApi();
     const { setToastData, setToastApiError } = useToast();
     const { refetchFeature } = useFeature(projectId, featureId);
@@ -122,16 +142,16 @@ export const FeatureStrategyEmpty = ({
                 }
             />
 
-            <div className={styles.container}>
-                <div className={styles.title}>
+            <StyledContainer>
+                <StyledTitle>
                     You have not defined any strategies yet.
-                </div>
-                <p className={styles.description}>
+                </StyledTitle>
+                <StyledDescription>
                     Strategies added in this environment will only be executed
                     if the SDK is using an{' '}
                     <Link to="/admin/api">API key configured</Link> for this
                     environment.
-                </p>
+                </StyledDescription>
                 <Box
                     sx={{
                         w: '100%',
@@ -211,7 +231,7 @@ export const FeatureStrategyEmpty = ({
                         Roll out to a percentage of your userbase.
                     </AddFromTemplateCard>
                 </Box>
-            </div>
+            </StyledContainer>
         </>
     );
 };

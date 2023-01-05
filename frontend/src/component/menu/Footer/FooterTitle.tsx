@@ -1,12 +1,9 @@
-import { ReactNode } from 'react';
-import { useStyles } from 'component/menu/Footer/FooterTitle.styles';
+import { styled } from '@mui/material';
 
-interface IFooterTitleProps {
-    children: ReactNode;
-}
-
-export const FooterTitle = ({ children }: IFooterTitleProps) => {
-    const { classes: styles } = useStyles();
-
-    return <h2 className={styles.title}>{children}</h2>;
-};
+export const FooterTitle = styled('h2')(({ theme }) => ({
+    all: 'unset',
+    display: 'block',
+    margin: theme.spacing(2, 0),
+    fontSize: theme.fontSizes.bodySize,
+    fontWeight: theme.fontWeight.bold,
+}));

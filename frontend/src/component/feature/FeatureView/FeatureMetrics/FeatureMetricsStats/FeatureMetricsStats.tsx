@@ -1,6 +1,5 @@
 import { calculatePercentage } from 'utils/calculatePercentage';
-import { useStyles } from './FeatureMetricsStats.styles';
-import { Grid } from '@mui/material';
+import { Grid, styled } from '@mui/material';
 import { PrettifyLargeNumber } from 'component/common/PrettifyLargeNumber/PrettifyLargeNumber';
 
 export interface IFeatureMetricsStatsProps {
@@ -11,6 +10,38 @@ export interface IFeatureMetricsStatsProps {
     tableSectionId?: string;
 }
 
+const StyledItem = styled('article')(({ theme }) => ({
+    padding: theme.spacing(2),
+    background: 'transparent',
+    borderRadius: theme.spacing(2),
+    textAlign: 'center',
+    [theme.breakpoints.up('md')]: {
+        padding: theme.spacing(4),
+    },
+}));
+
+const StyledTitle = styled('h3')(({ theme }) => ({
+    margin: 0,
+    fontSize: theme.fontSizes.bodySize,
+    fontWeight: theme.fontWeight.thin,
+}));
+
+const StyledValue = styled('p')(({ theme }) => ({
+    fontSize: '2.25rem',
+    fontWeight: theme.fontWeight.bold,
+    color: theme.palette.primary.main,
+}));
+
+const StyledText = styled('p')(({ theme }) => ({
+    margin: theme.spacing(1, 0, 0, 0),
+    padding: theme.spacing(2, 0, 0, 0),
+    borderTopWidth: '1px',
+    borderTopStyle: 'solid',
+    borderTopColor: theme.palette.dividerAlternative,
+    fontSize: theme.fontSizes.smallerBody,
+    color: theme.palette.text.secondary,
+}));
+
 export const FeatureMetricsStats = ({
     totalYes,
     totalNo,
@@ -18,8 +49,6 @@ export const FeatureMetricsStats = ({
     statsSectionId,
     tableSectionId,
 }: IFeatureMetricsStatsProps) => {
-    const { classes: styles } = useStyles();
-
     const hoursSuffix =
         hoursBack === 1 ? 'in the last hour' : `in the last ${hoursBack} hours`;
 
@@ -33,40 +62,40 @@ export const FeatureMetricsStats = ({
             component="section"
         >
             <Grid item xs={12} sm={4}>
-                <article className={styles.item}>
-                    <h3 className={styles.title}>Exposure</h3>
-                    <p className={styles.value}>
+                <StyledItem>
+                    <StyledTitle>Exposure</StyledTitle>
+                    <StyledValue>
                         <PrettifyLargeNumber value={totalYes} />
-                    </p>
-                    <p className={styles.text}>
+                    </StyledValue>
+                    <StyledText>
                         Total exposure of the feature in the environment{' '}
                         {hoursSuffix}.
-                    </p>
-                </article>
+                    </StyledText>
+                </StyledItem>
             </Grid>
             <Grid item xs={12} sm={4}>
-                <article className={styles.item}>
-                    <h3 className={styles.title}>Exposure %</h3>
-                    <p className={styles.value}>
+                <StyledItem>
+                    <StyledTitle>Exposure %</StyledTitle>
+                    <StyledValue>
                         {calculatePercentage(totalYes + totalNo, totalYes)}%
-                    </p>
-                    <p className={styles.text}>
+                    </StyledValue>
+                    <StyledText>
                         % total exposure of the feature in the environment{' '}
                         {hoursSuffix}.
-                    </p>
-                </article>
+                    </StyledText>
+                </StyledItem>
             </Grid>
             <Grid item xs={12} sm={4}>
-                <article className={styles.item}>
-                    <h3 className={styles.title}>Requests</h3>
-                    <p className={styles.value}>
+                <StyledItem>
+                    <StyledTitle>Requests</StyledTitle>
+                    <StyledValue>
                         <PrettifyLargeNumber value={totalYes + totalNo} />
-                    </p>
-                    <p className={styles.text}>
+                    </StyledValue>
+                    <StyledText>
                         Total requests for the feature in the environment{' '}
                         {hoursSuffix}.
-                    </p>
-                </article>
+                    </StyledText>
+                </StyledItem>
             </Grid>
         </Grid>
     );

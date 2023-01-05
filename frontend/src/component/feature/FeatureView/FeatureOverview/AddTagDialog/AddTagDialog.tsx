@@ -2,7 +2,6 @@ import { styled, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import Input from 'component/common/Input/Input';
-import { useStyles } from './AddTagDialog.styles';
 import { trim } from 'component/common/util';
 import TagSelect from 'component/common/TagSelect/TagSelect';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
@@ -28,9 +27,14 @@ interface IDefaultTag {
     [index: string]: string;
 }
 
+const StyledDialogFormContent = styled('section')(({ theme }) => ({
+    ['& > *']: {
+        margin: '0.5rem 0',
+    },
+}));
+
 const AddTagDialog = ({ open, setOpen }: IAddTagDialogProps) => {
     const DEFAULT_TAG: IDefaultTag = { type: 'simple', value: '' };
-    const { classes: styles } = useStyles();
     const featureId = useRequiredPathParam('featureId');
     const { addTagToFeature, loading } = useFeatureApi();
     const { tags, refetch } = useTags(featureId);
@@ -106,7 +110,7 @@ const AddTagDialog = ({ open, setOpen }: IAddTagDialogProps) => {
                         Tags allow you to group features together
                     </Typography>
                     <form id={formId} onSubmit={onSubmit}>
-                        <section className={styles.dialogFormContent}>
+                        <StyledDialogFormContent>
                             <TagSelect
                                 autoFocus
                                 name="type"
@@ -126,7 +130,7 @@ const AddTagDialog = ({ open, setOpen }: IAddTagDialogProps) => {
                                 }
                                 required
                             />
-                        </section>
+                        </StyledDialogFormContent>
                     </form>
                 </>
             </Dialogue>

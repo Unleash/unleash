@@ -48,7 +48,7 @@ import { CreateSegment } from 'component/segments/CreateSegment/CreateSegment';
 import { EditSegment } from 'component/segments/EditSegment/EditSegment';
 import { IRoute } from 'interfaces/route';
 import { EnvironmentTable } from 'component/environments/EnvironmentTable/EnvironmentTable';
-import { SegmentTable } from 'component/segments/SegmentTable/SegmentTable';
+import { SegmentTable } from 'component/segments/SegmentTable';
 import FlaggedBillingRedirect from 'component/admin/billing/FlaggedBillingRedirect/FlaggedBillingRedirect';
 import { FeaturesArchiveTable } from '../archive/FeaturesArchiveTable';
 import { Billing } from 'component/admin/billing/Billing';
@@ -62,6 +62,7 @@ import { Profile } from 'component/user/Profile/Profile';
 import { InstanceAdmin } from '../admin/instance-admin/InstanceAdmin';
 import { Network } from 'component/admin/network/Network';
 import { MaintenanceAdmin } from '../admin/maintenance';
+import { ServiceAccounts } from 'component/admin/serviceAccounts/ServiceAccounts';
 
 export const routes: IRoute[] = [
     // Splash
@@ -123,7 +124,6 @@ export const routes: IRoute[] = [
         title: 'FeatureView',
         component: FeatureView,
         type: 'protected',
-        isStandalone: true,
         menu: {},
     },
     {
@@ -150,7 +150,6 @@ export const routes: IRoute[] = [
         flag: P,
         type: 'protected',
         menu: {},
-        isStandalone: true,
     },
     {
         path: '/projects',
@@ -433,6 +432,15 @@ export const routes: IRoute[] = [
         component: AdminUsers,
         type: 'protected',
         menu: { adminSettings: true },
+    },
+    {
+        path: '/admin/service-accounts',
+        parent: '/admin',
+        title: 'Service accounts',
+        component: ServiceAccounts,
+        type: 'protected',
+        menu: { adminSettings: true },
+        flag: 'serviceAccounts',
     },
     {
         path: '/admin/create-user',

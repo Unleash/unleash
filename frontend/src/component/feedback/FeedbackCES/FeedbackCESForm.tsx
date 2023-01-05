@@ -1,5 +1,4 @@
-import { useStyles } from 'component/feedback/FeedbackCES/FeedbackCESForm.styles';
-import { Button, TextField } from '@mui/material';
+import { Box, Button, styled, TextField } from '@mui/material';
 import React, { useState } from 'react';
 import produce from 'immer';
 import useToast from 'hooks/useToast';
@@ -18,10 +17,40 @@ export interface IFeedbackCESForm {
     path: string;
 }
 
+const StyledContainer = styled('div')(({ theme }) => ({
+    fontWeight: theme.fontWeight.thin,
+}));
+
+const StyledTitle = styled('h1')(({ theme }) => ({
+    all: 'unset',
+    display: 'block',
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+}));
+
+const StyledForm = styled('form')(({ theme }) => ({
+    display: 'grid',
+    gap: theme.spacing(6),
+    gridTemplateColumns: 'minmax(auto, 40rem)',
+    justifyContent: 'center',
+}));
+
+const StyledSubtitle = styled('p')(({ theme }) => ({
+    all: 'unset',
+    display: 'block',
+    marginTop: theme.spacing(5),
+    fontSize: theme.spacing(3),
+    textAlign: 'center',
+}));
+
+const StyledTextLabel = styled('label')(({ theme }) => ({
+    display: 'block',
+    marginBottom: theme.spacing(1),
+}));
+
 export const FeedbackCESForm = ({ state, onClose }: IFeedbackCESFormProps) => {
     const [loading, setLoading] = useState(false);
     const { setToastData } = useToast();
-    const { classes: styles } = useStyles();
 
     const [form, setForm] = useState<Partial<IFeedbackCESForm>>({
         path: state.path,
@@ -57,19 +86,15 @@ export const FeedbackCESForm = ({ state, onClose }: IFeedbackCESFormProps) => {
     };
 
     return (
-        <div className={styles.container}>
-            <h1 className={styles.title}>Please help us improve</h1>
-            <form
-                className={styles.form}
-                onSubmit={onSubmit}
-                aria-live="polite"
-            >
-                <p className={styles.subtitle}>{state.title}</p>
+        <StyledContainer>
+            <StyledTitle>Please help us improve</StyledTitle>
+            <StyledForm onSubmit={onSubmit} aria-live="polite">
+                <StyledSubtitle>{state.title}</StyledSubtitle>
                 <FeedbackCESScore form={form} setForm={setForm} />
                 <div hidden={!form.score}>
-                    <label htmlFor="comment" className={styles.textLabel}>
+                    <StyledTextLabel htmlFor="comment">
                         {state.text}
-                    </label>
+                    </StyledTextLabel>
                     <TextField
                         value={form.comment ?? ''}
                         onChange={onCommentChange}
@@ -79,18 +104,18 @@ export const FeedbackCESForm = ({ state, onClose }: IFeedbackCESFormProps) => {
                         fullWidth
                     />
                 </div>
-                <div className={styles.buttons} hidden={!form.score}>
+                <Box hidden={!form.score} sx={{ textAlign: 'center' }}>
                     <Button
                         type="submit"
                         color="primary"
                         variant="contained"
-                        className={styles.button}
+                        sx={{ minWidth: '15rem' }}
                         disabled={!form.score || loading}
                     >
                         Send feedback
                     </Button>
-                </div>
-            </form>
-        </div>
+                </Box>
+            </StyledForm>
+        </StyledContainer>
     );
 };

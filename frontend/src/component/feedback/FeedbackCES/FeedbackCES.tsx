@@ -1,20 +1,53 @@
-import { IconButton, Modal } from '@mui/material';
+import { IconButton, Modal, styled } from '@mui/material';
 import React, { useContext } from 'react';
 import {
     feedbackCESContext,
     IFeedbackCESState,
 } from 'component/feedback/FeedbackCESContext/FeedbackCESContext';
 import { FeedbackCESForm } from 'component/feedback/FeedbackCES/FeedbackCESForm';
-import { useStyles } from 'component/feedback/FeedbackCES/FeedbackCES.styles';
 import { CloseOutlined } from '@mui/icons-material';
 
 export interface IFeedbackCESProps {
     state?: IFeedbackCESState;
 }
 
+const StyledOverlay = styled('div')(({ theme }) => ({
+    pointerEvents: 'none',
+    display: 'grid',
+    padding: theme.spacing(2),
+    overflowY: 'auto',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100vh',
+    width: '100vw',
+}));
+
+const StyledModal = styled('div')(({ theme }) => ({
+    pointerEvents: 'auto',
+    position: 'relative',
+    padding: theme.spacing(8),
+    background: theme.palette.background.paper,
+    boxShadow: '0 0 1rem rgba(0, 0, 0, 0.25)',
+    borderRadius: theme.spacing(2),
+    [theme.breakpoints.down('md')]: {
+        padding: theme.spacing(4),
+    },
+}));
+
+const StyledClose = styled('div')({
+    all: 'unset',
+    position: 'absolute',
+    top: 0,
+    right: 0,
+});
+
+const StyledCloseIcon = styled(CloseOutlined)(({ theme }) => ({
+    fontSize: '1.5rem',
+    color: theme.palette.inactiveIcon,
+}));
+
 export const FeedbackCES = ({ state }: IFeedbackCESProps) => {
     const { hideFeedbackCES } = useContext(feedbackCESContext);
-    const { classes: styles } = useStyles();
 
     const modalContent = state && (
         <FeedbackCESForm state={state} onClose={hideFeedbackCES} />
@@ -26,19 +59,16 @@ export const FeedbackCES = ({ state }: IFeedbackCESProps) => {
             onClose={hideFeedbackCES}
             aria-label={state?.title}
         >
-            <div className={styles.overlay}>
-                <div className={styles.modal}>
-                    <div className={styles.close}>
+            <StyledOverlay>
+                <StyledModal>
+                    <StyledClose>
                         <IconButton onClick={hideFeedbackCES} size="large">
-                            <CloseOutlined
-                                titleAccess="Close"
-                                className={styles.closeIcon}
-                            />
+                            <StyledCloseIcon titleAccess="Close" />
                         </IconButton>
-                    </div>
+                    </StyledClose>
                     {modalContent}
-                </div>
-            </div>
+                </StyledModal>
+            </StyledOverlay>
         </Modal>
     );
 };

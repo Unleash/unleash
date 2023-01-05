@@ -255,10 +255,7 @@ module.exports = {
                         to: '/reference/deploy/getting-started',
                     },
                     {
-                        from: [
-                            '/docs/deploy/configuring_unleash',
-                            '/deploy/configuring_unleash',
-                        ],
+                        from: '/deploy/configuring_unleash',
                         to: '/reference/deploy/configuring-unleash',
                     },
                     {
@@ -342,7 +339,6 @@ module.exports = {
                             '/sdks',
                             '/user_guide/client-sdk',
                             '/client-sdk',
-                            '/docs/user_guide/connect_sdk',
                             '/user_guide/connect_sdk',
                             '/sdks/community',
                         ],
@@ -482,7 +478,7 @@ module.exports = {
                         to: '/reference/api/legacy/unleash/admin/context',
                     },
                     {
-                        from: ['/api/admin/events', '/docs/api/admin/events'],
+                        from: '/api/admin/events',
                         to: '/reference/api/legacy/unleash/admin/events',
                     },
                     {

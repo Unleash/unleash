@@ -1,8 +1,7 @@
 import React, { FC, VFC } from 'react';
 import TimeAgo from 'react-timeago';
-import { Tooltip, useTheme } from '@mui/material';
+import { styled, Tooltip, useTheme } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useStyles } from './FeatureSeenCell.styles';
 
 function shortenUnitName(unit?: string): string {
     switch (unit) {
@@ -50,6 +49,24 @@ const useFeatureColor = () => {
     };
 };
 
+const StyledContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    padding: theme.spacing(1.5),
+}));
+
+const StyledBox = styled('div')(({ theme }) => ({
+    width: '38px',
+    height: '38px',
+    background: theme.palette.background.paper,
+    borderRadius: `${theme.shape.borderRadius}px`,
+    textAlign: 'center',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: theme.typography.body2.fontSize,
+    margin: '0 auto',
+}));
+
 interface IFeatureSeenCellProps {
     value?: string | Date | null;
 }
@@ -59,21 +76,16 @@ const Wrapper: FC<{ unit?: string; tooltip: string }> = ({
     tooltip,
     children,
 }) => {
-    const { classes: styles } = useStyles();
     const getColor = useFeatureColor();
 
     return (
-        <div className={styles.container}>
+        <StyledContainer>
             <Tooltip title={tooltip} arrow describeChild>
-                <div
-                    className={styles.box}
-                    style={{ background: getColor(unit) }}
-                    data-loading
-                >
+                <StyledBox style={{ background: getColor(unit) }} data-loading>
                     {children}
-                </div>
+                </StyledBox>
             </Tooltip>
-        </div>
+        </StyledContainer>
     );
 };
 

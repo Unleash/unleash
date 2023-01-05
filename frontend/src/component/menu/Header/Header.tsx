@@ -156,7 +156,7 @@ const Header: VFC = () => {
                 <StyledContainer>
                     <Tooltip title="Menu" arrow>
                         <IconButton
-                            sx={{ color: 'black' }}
+                            sx={{ color: theme => theme.palette.text.primary }}
                             onClick={toggleDrawer}
                             aria-controls="header-drawer"
                             aria-expanded={openDrawer}

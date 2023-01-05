@@ -68,7 +68,7 @@ const StyledFormControl = styled(FormControl)(({ theme }) => ({
 const styledSelectInput = (theme: Theme) => ({
     marginBottom: theme.spacing(2),
     minWidth: '400px',
-    [theme.breakpoints.down(600)]: {
+    [theme.breakpoints.down('sm')]: {
         minWidth: '379px',
     },
 });

@@ -142,6 +142,7 @@ export const createServices = (
         apiTokenService.fetchActiveTokens,
         minutesToMilliseconds(1),
     );
+
     schedulerService.schedule(
         apiTokenService.updateLastSeen,
         minutesToMilliseconds(3),

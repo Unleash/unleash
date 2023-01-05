@@ -79,22 +79,23 @@ export class ApiTokenService {
         }
     }
 
-    async fetchActiveTokens(): Promise<void> {
+    fetchActiveTokens = async (): Promise<void> => {
         try {
             this.activeTokens = await this.getAllActiveTokens();
         } finally {
             // eslint-disable-next-line no-unsafe-finally
             return;
         }
-    }
+    };
 
-    async updateLastSeen(): Promise<void> {
+    // arrow function to prevent this reference problems in the schedulerService
+    updateLastSeen = async (): Promise<void> => {
         if (this.lastSeenSecrets.size > 0) {
             const toStore = [...this.lastSeenSecrets];
             this.lastSeenSecrets = new Set<string>();
             await this.store.markSeenAt(toStore);
         }
-    }
+    };
 
     public async getAllTokens(): Promise<IApiToken[]> {
         return this.store.getAll();

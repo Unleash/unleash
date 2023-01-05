@@ -1,18 +1,16 @@
 import { FC, ForwardedRef, forwardRef } from 'react';
-import classnames from 'classnames';
-import { TableCell as MUITableCell, TableCellProps } from '@mui/material';
-import { useStyles } from './TableCell.styles';
+import {
+    styled,
+    TableCell as MUITableCell,
+    TableCellProps,
+} from '@mui/material';
+
+const StyledTableCell = styled(MUITableCell)(({ theme }) => ({
+    padding: 0,
+}));
 
 export const TableCell: FC<TableCellProps> = forwardRef(
-    ({ className, ...props }, ref: ForwardedRef<unknown>) => {
-        const { classes: styles } = useStyles();
-
-        return (
-            <MUITableCell
-                className={classnames(styles.tableCell, className)}
-                {...props}
-                ref={ref}
-            />
-        );
-    }
+    ({ className, ...props }, ref: ForwardedRef<unknown>) => (
+        <StyledTableCell {...props} ref={ref} />
+    )
 );

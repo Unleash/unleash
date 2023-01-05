@@ -4,7 +4,9 @@
     {
       "matchUpdateTypes": ["minor", "patch"],
       "matchPackagePatterns": ["*"],
-      "automerge": true
+      "automerge": true,
+      "stabilityDays": 7,
+      "internalChecksFilter": "strict"
     }
   ]
 }

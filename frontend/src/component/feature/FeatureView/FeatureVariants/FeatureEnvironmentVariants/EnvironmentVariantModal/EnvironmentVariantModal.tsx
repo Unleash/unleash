@@ -274,6 +274,7 @@ export const EnvironmentVariantModal = ({
     const isValidPercentage = (percentage: string) => {
         if (!customPercentage) return true;
         if (percentage === '') return false;
+        if (percentage.match(/\.[0-9]{2,}$/)) return false;
 
         const percentageNumber = Number(percentage);
         return percentageNumber >= 0 && percentageNumber <= 100;

@@ -50,7 +50,13 @@ export const variantValueSchema = joi
 
 export const variantsSchema = joi.object().keys({
     name: nameType,
-    weight: joi.number().min(0).max(1000).required(),
+    weight: joi
+        .number()
+        .integer()
+        .message('Weight only supports 1 decimal')
+        .min(0)
+        .max(1000)
+        .required(),
     weightType: joi.string().valid('variable', 'fix').default('variable'),
     payload: joi
         .object()

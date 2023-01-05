@@ -42,6 +42,11 @@ export const itemsCenter = {
     alignItems: 'center',
 } as const;
 
+export const relative = {
+    position: 'relative',
+} as const;
+
+export const formTemplateSidebarWidth = '27.5rem';
 export const defaultBorderRadius = (theme: Theme) => ({
     borderRadius: `${theme.shape.borderRadius}px`,
 });
@@ -65,9 +70,6 @@ export const useThemeStyles = makeStyles()(theme => ({
             marginTop: '0.5rem !important',
             marginBottom: '0.5rem !important',
         },
-    },
-    relative: {
-        position: 'relative',
     },
     divider: {
         margin: '1rem 0',

@@ -21,7 +21,7 @@ export function responseTimeMetrics(
         let appName;
         if (
             flagResolver.isEnabled('responseTimeWithAppName') &&
-            (await instanceStatsService.getAppCountSnapshot('7d')) <
+            instanceStatsService.getAppCountSnapshot('7d') <
                 appNameReportingThreshold
         ) {
             appName = req.headers['unleash-appname'] ?? req.query.appName;

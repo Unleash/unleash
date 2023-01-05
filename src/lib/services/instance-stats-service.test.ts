@@ -32,9 +32,13 @@ test('snapshot behaves properly over time', async () => {
     expect(instanceStatsService.refreshStatsSnapshot).toBeCalledTimes(1);
     expect(instanceStatsService.getStats).toBeCalledTimes(1);
 
+    // since advancing jest timer doesn't really execut the internal promise:
+    await instanceStatsService.refreshStatsSnapshot();
+    expect(instanceStatsService.getStats).toBeCalledTimes(2);
+
     // subsequent calls to getStatsSnapshot don't call getStats
     for (let i = 0; i < 3; i++) {
-        const stats = await instanceStatsService.getStatsSnapshot();
+        const stats = instanceStatsService.getStatsSnapshot();
         expect(stats.clientApps).toStrictEqual([
             { range: 'allTime', count: 0 },
             { range: '30d', count: 0 },
@@ -42,11 +46,16 @@ test('snapshot behaves properly over time', async () => {
         ]);
     }
     // after querying the stats snapshot no call to getStats should be issued
-    expect(instanceStatsService.getStats).toBeCalledTimes(1);
+    expect(instanceStatsService.getStats).toBeCalledTimes(2);
 
     jest.advanceTimersByTime(minutesToMilliseconds(5) + 1);
 
     // after 5 minutes snapshot should have been refreshed
-    expect(instanceStatsService.refreshStatsSnapshot).toBeCalledTimes(2);
-    expect(instanceStatsService.getStats).toBeCalledTimes(2);
+    expect(instanceStatsService.refreshStatsSnapshot).toBeCalledTimes(3);
+    expect(instanceStatsService.getStats).toBeCalledTimes(3);
+});
+
+test('before the snapshot is refreshed we can still get the appCount', async () => {
+    expect(instanceStatsService.refreshStatsSnapshot).toBeCalledTimes(0);
+    expect(instanceStatsService.getAppCountSnapshot('7d')).toBe(0);
 });

@@ -1,9 +1,14 @@
-import Input from 'component/common/Input/Input';
-import { TextField, Button } from '@mui/material';
-import { useStyles } from './ProjectForm.styles';
 import React from 'react';
 import { trim } from 'component/common/util';
-
+import {
+    StyledForm,
+    StyledContainer,
+    StyledDescription,
+    StyledInput,
+    StyledTextField,
+    StyledButtonContainer,
+    StyledButton,
+} from './ProjectForm.styles';
 interface IProjectForm {
     projectId: string;
     projectName: string;
@@ -34,16 +39,11 @@ const ProjectForm: React.FC<IProjectForm> = ({
     validateProjectId,
     clearErrors,
 }) => {
-    const { classes: styles } = useStyles();
-
     return (
-        <form onSubmit={handleSubmit} className={styles.form}>
-            <div className={styles.container}>
-                <p className={styles.inputDescription}>
-                    What is your project Id?
-                </p>
-                <Input
-                    className={styles.input}
+        <StyledForm onSubmit={handleSubmit}>
+            <StyledContainer>
+                <StyledDescription>What is your project Id?</StyledDescription>
+                <StyledInput
                     label="Project Id"
                     value={projectId}
                     onChange={e => setProjectId(trim(e.target.value))}
@@ -56,11 +56,10 @@ const ProjectForm: React.FC<IProjectForm> = ({
                     required
                 />
 
-                <p className={styles.inputDescription}>
+                <StyledDescription>
                     What is your project name?
-                </p>
-                <Input
-                    className={styles.input}
+                </StyledDescription>
+                <StyledInput
                     label="Project name"
                     value={projectName}
                     onChange={e => setProjectName(e.target.value)}
@@ -70,11 +69,10 @@ const ProjectForm: React.FC<IProjectForm> = ({
                     required
                 />
 
-                <p className={styles.inputDescription}>
+                <StyledDescription>
                     What is your project description?
-                </p>
-                <TextField
-                    className={styles.input}
+                </StyledDescription>
+                <StyledTextField
                     label="Project description"
                     variant="outlined"
                     multiline
@@ -82,15 +80,13 @@ const ProjectForm: React.FC<IProjectForm> = ({
                     value={projectDesc}
                     onChange={e => setProjectDesc(e.target.value)}
                 />
-            </div>
+            </StyledContainer>
 
-            <div className={styles.buttonContainer}>
+            <StyledButtonContainer>
                 {children}
-                <Button onClick={handleCancel} className={styles.cancelButton}>
-                    Cancel
-                </Button>
-            </div>
-        </form>
+                <StyledButton onClick={handleCancel}>Cancel</StyledButton>
+            </StyledButtonContainer>
+        </StyledForm>
     );
 };
 

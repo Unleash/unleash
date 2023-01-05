@@ -57,5 +57,5 @@ test('snapshot behaves properly over time', async () => {
 
 test('before the snapshot is refreshed we can still get the appCount', async () => {
     expect(instanceStatsService.refreshStatsSnapshot).toBeCalledTimes(0);
-    expect(instanceStatsService.getAppCountSnapshot('7d')).toBe(0);
+    expect(instanceStatsService.getAppCountSnapshot('7d')).toBeUndefined();
 });

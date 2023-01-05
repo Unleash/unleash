@@ -73,7 +73,7 @@ export const StyledLink = styled(Link)(({ theme }) => ({
     color: theme.palette.primary.main,
     [theme.breakpoints.down('md')]: {
         position: 'absolute',
-        bottom: '5px',
+        bottom: theme.spacing(1.5),
     },
 }));
 

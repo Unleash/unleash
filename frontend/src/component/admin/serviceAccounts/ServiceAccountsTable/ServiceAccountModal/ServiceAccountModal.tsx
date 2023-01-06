@@ -235,7 +235,7 @@ export const ServiceAccountModal = ({
 
     const suggestUsername = () => {
         if (isNotEmpty(name) && !isNotEmpty(username)) {
-            const normalizedFromName = `service:${name
+            const normalizedFromName = `service-${name
                 .toLowerCase()
                 .replace(/ /g, '-')
                 .replace(/[^\w_-]/g, '')}`;

@@ -1,7 +1,7 @@
 import { INewPersonalAPIToken } from 'interfaces/personalAPIToken';
 import useAPI from '../useApi/useApi';
 
-interface ICreatePersonalApiTokenPayload {
+export interface ICreatePersonalApiTokenPayload {
     description: string;
     expiresAt: Date;
 }
@@ -68,6 +68,7 @@ export const usePersonalAPITokensApi = () => {
         createPersonalAPIToken,
         deletePersonalAPIToken,
         createUserPersonalAPIToken,
+        deleteUserPersonalAPIToken,
         errors,
         loading,
     };

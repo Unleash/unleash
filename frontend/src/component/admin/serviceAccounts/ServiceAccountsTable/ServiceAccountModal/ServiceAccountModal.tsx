@@ -87,9 +87,7 @@ const StyledButtonContainer = styled('div')(({ theme }) => ({
     marginTop: 'auto',
     display: 'flex',
     justifyContent: 'flex-end',
-    [theme.breakpoints.down('sm')]: {
-        marginTop: theme.spacing(4),
-    },
+    paddingTop: theme.spacing(4),
 }));
 
 const StyledCancelButton = styled(Button)(({ theme }) => ({
@@ -226,12 +224,14 @@ export const ServiceAccountModal = ({
         !serviceAccounts?.some(
             (serviceAccount: IUser) => serviceAccount.username === value
         );
+    const isPATValid =
+        tokenGeneration === TokenGeneration.LATER ||
+        (isNotEmpty(patDescription) && patExpiresAt > new Date());
     const isValid =
         isNotEmpty(name) &&
         isNotEmpty(username) &&
         (editing || isUnique(username)) &&
-        (tokenGeneration === TokenGeneration.LATER ||
-            isNotEmpty(patDescription));
+        isPATValid;
 
     const suggestUsername = () => {
         if (isNotEmpty(name) && !isNotEmpty(username)) {

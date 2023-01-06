@@ -13,7 +13,6 @@ import { useFlexLayout, useSortBy, useTable } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
-import { useNavigate } from 'react-router-dom';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import theme from 'themes/theme';
 import { Search } from 'component/common/Search/Search';
@@ -29,7 +28,6 @@ import { INewPersonalAPIToken } from 'interfaces/personalAPIToken';
 import { ServiceAccountTokenDialog } from './ServiceAccountTokenDialog/ServiceAccountTokenDialog';
 
 export const ServiceAccountsTable = () => {
-    const navigate = useNavigate();
     const { setToastData, setToastApiError } = useToast();
 
     const { serviceAccounts, roles, refetch, loading } = useServiceAccounts();
@@ -128,7 +126,7 @@ export const ServiceAccountsTable = () => {
                 searchable: true,
             },
         ],
-        [roles, navigate]
+        [roles]
     );
 
     const [initialState] = useState({

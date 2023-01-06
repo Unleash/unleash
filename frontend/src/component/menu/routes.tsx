@@ -42,7 +42,7 @@ import { SplashPage } from 'component/splash/SplashPage/SplashPage';
 import { CreateUnleashContextPage } from 'component/context/CreateUnleashContext/CreateUnleashContextPage';
 import { CreateSegment } from 'component/segments/CreateSegment/CreateSegment';
 import { EditSegment } from 'component/segments/EditSegment/EditSegment';
-import { IRoute } from 'interfaces/route';
+import { ICondensedRoute, IRoute } from 'interfaces/route';
 import { EnvironmentTable } from 'component/environments/EnvironmentTable/EnvironmentTable';
 import { SegmentTable } from 'component/segments/SegmentTable';
 import FlaggedBillingRedirect from 'component/admin/billing/FlaggedBillingRedirect/FlaggedBillingRedirect';
@@ -63,6 +63,9 @@ import { LazyCreateProject } from 'component/project/Project/CreateProject/LazyC
 import { LazyFeatureView } from 'component/feature/FeatureView/LazyFeatureView';
 import { LazyAdmin } from 'component/admin/LazyAdmin';
 import { LazyProject } from 'component/project/Project/LazyProject';
+import { Navigate } from 'react-router-dom';
+
+const AdminRedirect = () => <Navigate to="/admin/users" replace />;
 
 export const routes: IRoute[] = [
     // Splash
@@ -385,185 +388,17 @@ export const routes: IRoute[] = [
     },
 
     // Admin
-    {
-        path: '/admin/api/create-token',
-        parent: '/admin',
-        title: 'API access',
-        component: CreateApiToken,
-        type: 'protected',
-        menu: {},
-    },
-    {
-        path: '/admin/create-project-role',
-        title: 'Create',
-        component: CreateProjectRole,
-        type: 'protected',
-        menu: {},
-        flag: RE,
-    },
-    {
-        path: '/admin/roles/:id/edit',
-        title: 'Edit',
-        component: EditProjectRole,
-        type: 'protected',
-        menu: {},
-        flag: RE,
-    },
-    {
-        path: '/admin/users/:id/edit',
-        title: 'Edit',
-        component: EditUser,
-        type: 'protected',
-        menu: {},
-        hidden: true,
-    },
-    {
-        path: '/admin/api',
-        parent: '/admin',
-        title: 'API access',
-        component: AdminApi,
-        type: 'protected',
-        menu: { mobile: true, advanced: true },
-    },
-    {
-        path: '/admin/users',
-        parent: '/admin',
-        title: 'Users',
-        component: AdminUsers,
-        type: 'protected',
-        menu: { adminSettings: true },
-    },
-    {
-        path: '/admin/service-accounts',
-        parent: '/admin',
-        title: 'Service accounts',
-        component: ServiceAccounts,
-        type: 'protected',
-        menu: { adminSettings: true },
-        flag: 'serviceAccounts',
-    },
-    {
-        path: '/admin/create-user',
-        parent: '/admin',
-        title: 'Users',
-        component: CreateUser,
-        type: 'protected',
-        menu: {},
-    },
-    {
-        path: '/admin/invite-link',
-        parent: '/admin',
-        title: 'Invite link',
-        component: InviteLink,
-        type: 'protected',
-        menu: {},
-    },
-    {
-        path: '/admin/groups',
-        parent: '/admin',
-        title: 'Groups',
-        component: GroupsAdmin,
-        type: 'protected',
-        menu: { adminSettings: true },
-        flag: UG,
-    },
-    {
-        path: '/admin/groups/:groupId',
-        parent: '/admin',
-        title: ':groupId',
-        component: Group,
-        type: 'protected',
-        menu: {},
-        flag: UG,
-    },
-    {
-        path: '/admin/groups/create-group',
-        parent: '/admin/groups',
-        title: 'Create group',
-        component: CreateGroup,
-        type: 'protected',
-        menu: {},
-        flag: UG,
-    },
-    {
-        path: '/admin/groups/:groupId/edit',
-        parent: '/admin/groups',
-        title: 'Edit group',
-        component: EditGroup,
-        type: 'protected',
-        menu: {},
-        flag: UG,
-    },
-    {
-        path: '/admin/roles',
-        parent: '/admin',
-        title: 'Project roles',
-        component: ProjectRoles,
-        type: 'protected',
-        flag: RE,
-        menu: { adminSettings: true },
-    },
-    {
-        path: '/admin/auth',
-        parent: '/admin',
-        title: 'Single sign-on',
-        component: AuthSettings,
-        type: 'protected',
-        menu: { adminSettings: true },
-    },
-    {
-        path: '/admin/instance',
-        parent: '/admin',
-        title: 'Instance stats',
-        component: InstanceAdmin,
-        type: 'protected',
-        menu: { adminSettings: true },
-    },
-    {
-        path: '/admin/network/*',
-        parent: '/admin',
-        title: 'Network',
-        component: Network,
-        type: 'protected',
-        menu: { adminSettings: true },
-        flag: 'networkView',
-    },
-    {
-        path: '/admin/maintenance',
-        parent: '/admin',
-        title: 'Maintenance',
-        component: MaintenanceAdmin,
-        type: 'protected',
-        menu: { adminSettings: true },
-        flag: 'maintenance',
-    },
-    {
-        path: '/admin/cors',
-        parent: '/admin',
-        title: 'CORS origins',
-        component: CorsAdmin,
-        type: 'protected',
-        flag: 'embedProxyFrontend',
-        menu: { adminSettings: true },
-    },
-    {
-        path: '/admin/billing',
-        parent: '/admin',
-        title: 'Billing',
-        component: Billing,
-        type: 'protected',
-        menu: {},
-    },
-    {
-        path: '/admin-invoices',
-        parent: '/admin',
-        title: 'Billing & invoices',
-        component: FlaggedBillingRedirect,
-        type: 'protected',
-        menu: { adminSettings: true, isEnterprise: true },
-    },
+
     {
         path: '/admin',
+        title: 'Admin',
+        component: AdminRedirect,
+        hidden: false,
+        type: 'protected',
+        menu: {},
+    },
+    {
+        path: '/admin/*',
         title: 'Admin',
         component: LazyAdmin,
         hidden: false,
@@ -620,6 +455,70 @@ export const routes: IRoute[] = [
     },
 ];
 
+export const adminMenuRoutes: ICondensedRoute[] = [
+    {
+        path: '/history',
+        title: 'Event log',
+        menu: { adminSettings: true },
+    },
+    {
+        path: '/admin/users',
+        title: 'Users',
+        menu: { adminSettings: true },
+    },
+    {
+        path: '/admin/groups',
+        title: 'Groups',
+        menu: { adminSettings: true },
+        flag: UG,
+    },
+    {
+        path: '/admin/roles',
+        title: 'Project roles',
+        flag: RE,
+        menu: { adminSettings: true },
+    },
+    {
+        path: '/admin/auth',
+        title: 'Single sign-on',
+        menu: { adminSettings: true },
+    },
+    {
+        path: '/admin/instance',
+        title: 'Instance stats',
+        menu: { adminSettings: true },
+    },
+    {
+        path: '/admin/service-accounts',
+        title: 'Service accounts',
+        menu: { adminSettings: true },
+        flag: 'serviceAccounts',
+    },
+    {
+        path: '/admin/network/*',
+        title: 'Network',
+        menu: { adminSettings: true },
+        flag: 'networkView',
+    },
+    {
+        path: '/admin/maintenance',
+        title: 'Maintenance',
+        menu: { adminSettings: true },
+        flag: 'maintenance',
+    },
+    {
+        path: '/admin/cors',
+        title: 'CORS origins',
+        flag: 'embedProxyFrontend',
+        menu: { adminSettings: true },
+    },
+    {
+        path: '/admin/admin-invoices',
+        title: 'Billing & invoices',
+        menu: { adminSettings: true, isEnterprise: true },
+    },
+];
+
 export const getRoute = (path: string) =>
     routes.find(route => route.path === path);
 
@@ -638,6 +537,19 @@ const computeRoutes = () => {
     return () => {
         return computedRoutes;
     };
+};
+
+export const getCondensedRoutes = (routes: IRoute[]): ICondensedRoute[] => {
+    return routes.map(route => {
+        const condensedRoute = {
+            path: route.path,
+            flag: route.flag,
+            title: route.title,
+            menu: route.menu,
+            configFlag: route.configFlag,
+        };
+        return condensedRoute;
+    });
 };
 
 export const getRoutes = computeRoutes();

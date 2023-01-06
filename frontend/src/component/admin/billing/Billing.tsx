@@ -1,4 +1,3 @@
-import AdminMenu from '../menu/AdminMenu';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { useContext, useEffect } from 'react';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
@@ -32,7 +31,6 @@ export const Billing = () => {
 
     return (
         <div>
-            <AdminMenu />
             <PageContent header="Billing" isLoading={loading}>
                 <ConditionallyRender
                     condition={isBilling}

@@ -16,6 +16,14 @@ export interface IRoute {
     isStandalone?: boolean;
 }
 
+export interface ICondensedRoute {
+    path: string;
+    title: string;
+    menu: IRouteMenu;
+    flag?: keyof IFlags;
+    configFlag?: keyof IUiConfig;
+}
+
 interface IRouteMenu {
     mobile?: boolean;
     advanced?: boolean;

@@ -1,10 +1,10 @@
 import { weightTypes } from '../feature/FeatureView/FeatureVariants/FeatureVariantsList/AddFeatureVariant/enums';
 import { IUiConfig } from 'interfaces/uiConfig';
-import { IRoute } from 'interfaces/route';
+import { ICondensedRoute } from 'interfaces/route';
 import { IFeatureVariant } from 'interfaces/featureToggle';
 import { format, isValid } from 'date-fns';
 
-export const filterByConfig = (config: IUiConfig) => (r: IRoute) => {
+export const filterByConfig = (config: IUiConfig) => (r: ICondensedRoute) => {
     if (r.flag) {
         // Check if the route's `flag` is enabled in IUiConfig.flags.
         const flags = config.flags as unknown as Record<string, boolean>;

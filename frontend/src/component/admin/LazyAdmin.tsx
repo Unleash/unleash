@@ -1,3 +1,3 @@
 import { lazy } from 'react';
 
-export const LazyAdmin = lazy(() => import('./Admin'));
+export const LazyAdmin = lazy(() => import('./LazyAdminExport'));

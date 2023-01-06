@@ -92,7 +92,6 @@
     "react-table": "7.8.0",
     "react-test-renderer": "17.0.2",
     "react-timeago": "7.1.0",
-    "rollup-plugin-analyzer": "^4.0.0",
     "sass": "1.57.1",
     "semver": "7.3.8",
     "swr": "2.0.0",

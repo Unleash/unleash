@@ -42,9 +42,7 @@ import { LazyCreateProject } from 'component/project/Project/CreateProject/LazyC
 import { LazyFeatureView } from 'component/feature/FeatureView/LazyFeatureView';
 import { LazyAdmin } from 'component/admin/LazyAdmin';
 import { LazyProject } from 'component/project/Project/LazyProject';
-import { Navigate } from 'react-router-dom';
-
-const AdminRedirect = () => <Navigate to="/admin/users" replace />;
+import { AdminRedirect } from 'component/admin/AdminRedirect';
 
 export const routes: IRoute[] = [
     // Splash

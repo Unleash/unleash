@@ -22,7 +22,7 @@ import EditUser from './users/EditUser/EditUser';
 import { InviteLink } from './users/InviteLink/InviteLink';
 import UsersAdmin from './users/UsersAdmin';
 
-const Admin = () => (
+export const Admin = () => (
     <>
         <AdminMenu />
         <Routes>
@@ -50,5 +50,3 @@ const Admin = () => (
         </Routes>
     </>
 );
-
-export default Admin;

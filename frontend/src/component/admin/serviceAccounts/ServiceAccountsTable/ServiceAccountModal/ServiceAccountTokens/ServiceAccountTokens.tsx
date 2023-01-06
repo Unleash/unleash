@@ -105,7 +105,7 @@ export const ServiceAccountTokens = ({
         usePersonalAPITokensApi();
 
     const [initialState] = useState(() => ({
-        sortBy: [defaultSort],
+        sortBy: readOnly ? [{ id: 'seenAt' }] : [defaultSort],
     }));
 
     const [searchValue, setSearchValue] = useState('');

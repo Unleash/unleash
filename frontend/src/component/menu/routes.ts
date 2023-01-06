@@ -3,7 +3,6 @@ import { StrategyView } from 'component/strategies/StrategyView/StrategyView';
 import { StrategiesList } from 'component/strategies/StrategiesList/StrategiesList';
 import { TagTypeList } from 'component/tags/TagTypeList/TagTypeList';
 import { AddonList } from 'component/addons/AddonList/AddonList';
-import Admin from 'component/admin';
 import AdminApi from 'component/admin/api';
 import AdminUsers from 'component/admin/users/UsersAdmin';
 import { GroupsAdmin } from 'component/admin/groups/GroupsAdmin';
@@ -14,9 +13,7 @@ import { NewUser } from 'component/user/NewUser/NewUser';
 import ResetPassword from 'component/user/ResetPassword/ResetPassword';
 import ForgottenPassword from 'component/user/ForgottenPassword/ForgottenPassword';
 import { ProjectListNew } from 'component/project/ProjectList/ProjectList';
-import Project from 'component/project/Project/Project';
 import RedirectArchive from 'component/archive/RedirectArchive';
-import { FeatureView } from 'component/feature/FeatureView/FeatureView';
 import ProjectRoles from 'component/admin/projectRoles/ProjectRoles/ProjectRoles';
 import CreateProjectRole from 'component/admin/projectRoles/CreateProjectRole/CreateProjectRole';
 import EditProjectRole from 'component/admin/projectRoles/EditProjectRole/EditProjectRole';
@@ -29,7 +26,6 @@ import { EditContext } from 'component/context/EditContext/EditContext';
 import EditTagType from 'component/tags/EditTagType/EditTagType';
 import CreateTagType from 'component/tags/CreateTagType/CreateTagType';
 import EditProject from 'component/project/Project/EditProject/EditProject';
-import CreateProject from 'component/project/Project/CreateProject/CreateProject';
 import CreateFeature from 'component/feature/CreateFeature/CreateFeature';
 import EditFeature from 'component/feature/EditFeature/EditFeature';
 import { ApplicationEdit } from 'component/application/ApplicationEdit/ApplicationEdit';
@@ -63,6 +59,10 @@ import { InstanceAdmin } from '../admin/instance-admin/InstanceAdmin';
 import { Network } from 'component/admin/network/Network';
 import { MaintenanceAdmin } from '../admin/maintenance';
 import { ServiceAccounts } from 'component/admin/serviceAccounts/ServiceAccounts';
+import { LazyCreateProject } from 'component/project/Project/CreateProject/LazyCreateProject';
+import { LazyFeatureView } from 'component/feature/FeatureView/LazyFeatureView';
+import { LazyAdmin } from 'component/admin/LazyAdmin';
+import { LazyProject } from 'component/project/Project/LazyProject';
 
 export const routes: IRoute[] = [
     // Splash
@@ -80,7 +80,7 @@ export const routes: IRoute[] = [
         path: '/projects/create',
         parent: '/projects',
         title: 'Create',
-        component: CreateProject,
+        component: LazyCreateProject,
         type: 'protected',
         enterprise: true,
         menu: {},
@@ -122,7 +122,7 @@ export const routes: IRoute[] = [
         path: '/projects/:projectId/features/:featureId/*',
         parent: '/projects',
         title: 'FeatureView',
-        component: FeatureView,
+        component: LazyFeatureView,
         type: 'protected',
         menu: {},
     },
@@ -146,7 +146,7 @@ export const routes: IRoute[] = [
         path: '/projects/:projectId/*',
         parent: '/projects',
         title: ':projectId',
-        component: Project,
+        component: LazyProject,
         flag: P,
         type: 'protected',
         menu: {},
@@ -565,7 +565,7 @@ export const routes: IRoute[] = [
     {
         path: '/admin',
         title: 'Admin',
-        component: Admin,
+        component: LazyAdmin,
         hidden: false,
         type: 'protected',
         menu: {},

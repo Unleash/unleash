@@ -59,14 +59,17 @@ const documentUrls = Object.entries(SDKS).map(
 
 // Replace links in the incoming readme content.
 //
-// There's two cases we want to handle:
+// There's one cases we want to handle:
 //
 // 1. Relative links that point to the repo. These must be prefixed with the
 // link to the github repo.
 //
-// 2. Absolute links to docs.getunleash.io. While absolute links will work, they
-// trigger full page refreshes. If we can make them relative links instead, then
-// we'll get a slightly smoother user experience.
+// Note: You might be tempted to handle absolute links to docs.getunleash.io and
+// make them relative. While absolute links will work, they trigger full page
+// refreshes. Relative links give a slightly smoother user experience.
+//
+// However, if the old link goes to a redirect, then the client-side redirect
+// will not kick in, so you'll end up with a "Page not found".
 const replaceLinks = ({ content, repo }) => {
     const markdownLink = /(?<=\[.*\]\(\s?)(\S+)(?=.*\))/g;
 
@@ -75,13 +78,6 @@ const replaceLinks = ({ content, repo }) => {
             // This constructor will throw if the URL is relative.
             // https://developer.mozilla.org/en-US/docs/Web/API/URL/URL
             const parsedUrl = new URL(url);
-
-            // case 2:
-            if (parsedUrl.hostname === 'docs.getunleash.io') {
-                return `${parsedUrl.pathname ?? '/'}${parsedUrl.query ?? ''}${
-                    parsedUrl.hash ?? ''
-                }`;
-            }
 
             return url;
         } catch {

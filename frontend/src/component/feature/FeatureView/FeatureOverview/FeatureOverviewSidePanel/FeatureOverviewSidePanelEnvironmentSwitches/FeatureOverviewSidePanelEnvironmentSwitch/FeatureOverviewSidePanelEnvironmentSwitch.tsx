@@ -30,12 +30,6 @@ const StyledLabel = styled('label')(() => ({
     cursor: 'pointer',
 }));
 
-const HideButton = styled(RemoveRedEye)(({ theme }) => ({
-    cursor: 'pointer',
-    marginLeft: 'auto',
-    color: theme.palette.grey[700],
-}));
-
 interface IFeatureOverviewSidePanelEnvironmentSwitchProps {
     environment: IFeatureEnvironment;
     callback?: () => void;

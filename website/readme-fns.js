@@ -117,9 +117,10 @@ const modifyContent = (filename, content) => {
     const generationTime = new Date();
 
     return {
-        filename: `${sdk.slugName}.md`,
+        filename: `server-side/${sdk.slugName}.md`,
         content: `---
 title: ${sdk.sidebarName} SDK
+slug: /reference/sdks/${sdk.slugName}
 ---
 
 :::info Generated content

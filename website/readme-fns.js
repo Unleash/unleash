@@ -15,7 +15,7 @@
 // type ReadmeData = Readme & { repoUrl: string };
 
 // all SDK repos and what they map to for the sidebar.
-const sdksUnmapped = {
+const serverSideSdks = {
     'unleash-client-go': {
         sidebarName: 'Go',
         branch: 'v3',
@@ -42,24 +42,62 @@ const sdksUnmapped = {
         sidebarName: '.NET',
         slugName: 'dotnet',
     },
-
-    // 'unleash-android-proxy-sdk': {
-    //     sidebarName: 'Android',
-    //     slugName: 'android-proxy',
-    // },
 };
 
-const SDKS = Object.fromEntries(
-    Object.entries(sdksUnmapped).map(([repoName, repoData]) => {
-        const repoUrl = `https://github.com/Unleash/${repoName}`;
-        const slugName = (
-            repoData.slugName ?? repoData.sidebarName
-        ).toLowerCase();
-        const branch = repoData.branch ?? 'main';
+const clientSideSdks = {
+    'unleash-android-proxy-sdk': {
+        sidebarName: 'Android',
+        slugName: 'android-proxy',
+    },
+    unleash_proxy_client_flutter: {
+        sidebarName: 'Flutter',
+    },
+    'unleash-proxy-client-swift': {
+        sidebarName: 'iOS',
+        slugName: 'ios-proxy',
+    },
+    'unleash-proxy-client-js': {
+        sidebarName: 'JavaScript browser',
+        slugName: 'javascript-browser',
+    },
+    'proxy-client-react': {
+        sidebarName: 'React',
+    },
+    'proxy-client-svelte': {
+        sidebarName: 'Svelte',
+    },
+    'proxy-client-vue': {
+        sidebarName: 'Vue',
+    },
+};
 
-        return [repoName, { ...repoData, repoUrl, slugName, branch }];
-    }),
-);
+const allSdks = () => {
+    const enrich =
+        (sdkType) =>
+        ([repoName, repoData]) => {
+            const repoUrl = `https://github.com/Unleash/${repoName}`;
+            const slugName = (
+                repoData.slugName ?? repoData.sidebarName
+            ).toLowerCase();
+            const branch = repoData.branch ?? 'main';
+
+            return [
+                repoName,
+                { ...repoData, repoUrl, slugName, branch, type: sdkType },
+            ];
+        };
+
+    const serverSide = Object.entries(serverSideSdks).map(
+        enrich('server-side'),
+    );
+    const clientSide = Object.entries(clientSideSdks).map(
+        enrich('client-side'),
+    );
+
+    return Object.fromEntries(serverSide.concat(clientSide));
+};
+
+const SDKS = allSdks();
 
 function getReadmeRepoData(filename) {
     const repoName = filename.split('/')[0];
@@ -117,7 +155,7 @@ const modifyContent = (filename, content) => {
     const generationTime = new Date();
 
     return {
-        filename: `server-side/${sdk.slugName}.md`,
+        filename: `${sdk.type}/${sdk.slugName}.md`,
         content: `---
 title: ${sdk.sidebarName} SDK
 slug: /reference/sdks/${sdk.slugName}

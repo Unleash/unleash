@@ -29,6 +29,10 @@ const sdksUnmapped = {
     'unleash-client-php': {
         sidebarName: 'PHP',
     },
+    'unleash-client-python': {
+        sidebarName: 'Python',
+        branch: 'docs/update-readme',
+    },
     'unleash-client-rust': {
         sidebarName: 'Rust',
     },

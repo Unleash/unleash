@@ -28,8 +28,8 @@ const StyledContainer = styled('div')(({ theme }) => ({
 
 const StyledIcon = styled('div', {
     shouldForwardProp: (prop: string) => !prop.startsWith('$'),
-})<{ $disabled: boolean }>(({ theme, disabled }) => ({
-    background: disabled
+})<{ $disabled: boolean }>(({ theme, $disabled }) => ({
+    background: $disabled
         ? theme.palette.primary.light
         : theme.palette.featureSegmentSearchBackground,
     height: '48px',

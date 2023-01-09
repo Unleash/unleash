@@ -15,10 +15,18 @@ export const useHiddenEnvironments = () => {
             const hiddenEnvironments = new Set(params.hiddenEnvironments);
             if (hiddenEnvironments.has(environment)) {
                 hiddenEnvironments.delete(environment);
-                trackHiddenEnvironment(false);
+                trackEvent('hidden_environment', {
+                    props: {
+                        eventType: `environment unhidden`,
+                    },
+                });
             } else {
                 hiddenEnvironments.add(environment);
-                trackHiddenEnvironment(true);
+                trackEvent('hidden_environment', {
+                    props: {
+                        eventType: `environment hidden`,
+                    },
+                });
             }
             setStoredHiddenEnvironments(hiddenEnvironments);
             return {
@@ -31,13 +39,5 @@ export const useHiddenEnvironments = () => {
     return {
         hiddenEnvironments,
         setHiddenEnvironments,
-    };
-
-    const trackHiddenEnvironment = (hide: boolean) => {
-        trackEvent('hidden_environment', {
-            props: {
-                eventType: `environment ${!hide ? 'un' : ''}hidden`,
-            },
-        });
     };
 };

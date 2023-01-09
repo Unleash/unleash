@@ -38,6 +38,10 @@ const sdksUnmapped = {
     'unleash-client-rust': {
         sidebarName: 'Rust',
     },
+    'unleash-client-dotnet': {
+        sidebarName: '.NET',
+        slugName: 'dotnet',
+    },
 
     // 'unleash-android-proxy-sdk': {
     //     sidebarName: 'Android',

@@ -26,6 +26,9 @@ const sdksUnmapped = {
     'unleash-client-node': {
         sidebarName: 'Node',
     },
+    'unleash-client-php': {
+        sidebarName: 'PHP',
+    },
     'unleash-client-rust': {
         sidebarName: 'Rust',
     },

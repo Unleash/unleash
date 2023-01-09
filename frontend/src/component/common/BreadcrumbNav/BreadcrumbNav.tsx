@@ -1,14 +1,33 @@
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import { Link, useLocation } from 'react-router-dom';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useStyles } from './BreadcrumbNav.styles';
 import AccessContext from 'contexts/AccessContext';
 import { useContext } from 'react';
 import StringTruncator from '../StringTruncator/StringTruncator';
+import { styled } from '@mui/material';
+
+const StyledBreadCrumbs = styled(Breadcrumbs)(({ theme }) => ({
+    position: 'absolute',
+    top: theme.spacing(0.25),
+}));
+
+const StyledParagraph = styled('p')({
+    color: 'inherit',
+    '& > *': {
+        verticalAlign: 'middle',
+    },
+});
+
+const StyledLink = styled(Link)(({ theme }) => ({
+    textDecoration: 'none',
+    '& > *': {
+        verticalAlign: 'middle',
+    },
+    color: theme.palette.primary.main,
+}));
 
 const BreadcrumbNav = () => {
     const { isAdmin } = useContext(AccessContext);
-    const { classes: styles } = useStyles();
     const location = useLocation();
 
     const paths = location.pathname
@@ -40,26 +59,18 @@ const BreadcrumbNav = () => {
                 <ConditionallyRender
                     condition={paths.length > 1}
                     show={
-                        <Breadcrumbs
-                            className={styles.breadcrumbNav}
-                            aria-label="Breadcrumbs"
-                        >
+                        <StyledBreadCrumbs aria-label="Breadcrumbs">
                             {paths.map((path, index) => {
                                 const lastItem = index === paths.length - 1;
                                 if (lastItem) {
                                     return (
-                                        <p
-                                            key={path}
-                                            className={
-                                                styles.breadcrumbNavParagraph
-                                            }
-                                        >
+                                        <StyledParagraph key={path}>
                                             <StringTruncator
                                                 text={path}
                                                 maxWidth="200"
                                                 maxLength={25}
                                             />
-                                        </p>
+                                        </StyledParagraph>
                                     );
                                 }
 
@@ -74,20 +85,16 @@ const BreadcrumbNav = () => {
                                 });
 
                                 return (
-                                    <Link
-                                        key={path}
-                                        className={styles.breadcrumbLink}
-                                        to={link}
-                                    >
+                                    <StyledLink key={path} to={link}>
                                         <StringTruncator
                                             maxLength={25}
                                             text={path}
                                             maxWidth="200"
                                         />
-                                    </Link>
+                                    </StyledLink>
                                 );
                             })}
-                        </Breadcrumbs>
+                        </StyledBreadCrumbs>
                     }
                 />
             }

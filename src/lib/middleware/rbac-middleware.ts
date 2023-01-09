@@ -1,4 +1,9 @@
-import { DELETE_FEATURE, ADMIN, UPDATE_FEATURE } from '../types/permissions';
+import {
+    CREATE_FEATURE,
+    DELETE_FEATURE,
+    ADMIN,
+    UPDATE_FEATURE,
+} from '../types/permissions';
 import { IUnleashConfig } from '../types/option';
 import { IUnleashStores } from '../types/stores';
 import User from '../types/user';
@@ -61,6 +66,12 @@ const rbacMiddleware = (
             if ([DELETE_FEATURE, UPDATE_FEATURE].includes(permission)) {
                 const { featureName } = params;
                 projectId = await featureToggleStore.getProjectId(featureName);
+            } else if (
+                projectId === undefined &&
+                (permission == CREATE_FEATURE ||
+                    permission.endsWith('FEATURE_STRATEGY'))
+            ) {
+                projectId = 'default';
             }
 
             return accessService.hasPermission(

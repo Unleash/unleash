@@ -117,13 +117,16 @@ export class InstanceStatsService {
         this.settingStore = settingStore;
         this.clientInstanceStore = clientInstanceStore;
         this.logger = getLogger('services/stats-service.js');
-        process.nextTick(() => {
+    }
+
+    async start(): Promise<void> {
+        if (!this.snapshotRefresher) {
             this.refreshStatsSnapshot();
             this.snapshotRefresher = setInterval(
                 () => this.refreshStatsSnapshot(),
                 minutesToMilliseconds(5),
             ).unref();
-        });
+        }
     }
 
     async refreshStatsSnapshot(): Promise<void> {
@@ -137,18 +140,13 @@ export class InstanceStatsService {
         } catch (error) {
             this.logger.warn(
                 'Unable to retrieve statistics. This will be retried',
+                error,
             );
         }
     }
 
     destroy(): void {
         clearInterval(this.snapshotRefresher);
-    }
-
-    async getToggleCount(): Promise<number> {
-        return this.featureToggleStore.count({
-            archived: false,
-        });
     }
 
     async hasOIDC(): Promise<boolean> {
@@ -187,7 +185,9 @@ export class InstanceStatsService {
             OIDCenabled,
             clientApps,
         ] = await Promise.all([
-            this.getToggleCount(),
+            this.featureToggleStore.count({
+                archived: false,
+            }),
             this.userStore.count(),
             this.projectStore.count(),
             this.contextFieldStore.count(),

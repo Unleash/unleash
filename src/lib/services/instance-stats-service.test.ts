@@ -26,8 +26,16 @@ beforeEach(() => {
     expect(instanceStatsService.getStats).toBeCalledTimes(0);
 });
 
+test('starting instanceStatsService twice only sets one interval', async () => {
+    jest.spyOn(global, 'setInterval');
+    await instanceStatsService.start();
+    await instanceStatsService.start();
+
+    expect(setInterval).toBeCalledTimes(1);
+});
+
 test('snapshot behaves properly over time', async () => {
-    jest.advanceTimersByTime(1); // one tick
+    await instanceStatsService.start();
 
     expect(instanceStatsService.refreshStatsSnapshot).toBeCalledTimes(1);
     expect(instanceStatsService.getStats).toBeCalledTimes(1);

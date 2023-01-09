@@ -128,6 +128,8 @@ export const createServices = (
         versionService,
     );
 
+    instanceStatsService.start();
+
     return {
         accessService,
         addonService,

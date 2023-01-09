@@ -1,5 +1,6 @@
 import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material';
+import { CSSProperties } from 'react';
 
 export const focusable = (theme: Theme) => ({
     '&:focus-visible': {
@@ -49,6 +50,54 @@ export const relative = {
 export const formTemplateSidebarWidth = '27.5rem';
 export const defaultBorderRadius = (theme: Theme) => ({
     borderRadius: `${theme.shape.borderRadius}px`,
+});
+
+export const fadeInBottomStart = (theme: Theme) => ({
+    opacity: '0',
+    position: 'fixed',
+    right: '40px',
+    bottom: '40px',
+    transform: 'translateY(400px)',
+});
+export const fadeInBottomStartWithoutFixed = (theme: Theme): CSSProperties => ({
+    opacity: '0',
+    right: '40px',
+    bottom: '40px',
+    transform: 'translateY(400px)',
+    zIndex: 1400,
+    position: 'fixed',
+});
+export const fadeInBottomEnter = (theme: Theme): CSSProperties => ({
+    transform: 'translateY(0)',
+    opacity: '1',
+    transition: 'transform 0.6s ease, opacity 1s ease',
+});
+export const fadeInBottomLeave = (theme: Theme): CSSProperties => ({
+    transform: 'translateY(400px)',
+    opacity: '0',
+    transition: 'transform 1.25s ease, opacity 1s ease',
+});
+export const fadeInTopStart = (theme: Theme): CSSProperties => ({
+    opacity: '0',
+    position: 'fixed',
+    right: '40px',
+    top: '40px',
+    transform: 'translateY(-400px)',
+    [theme.breakpoints.down('sm')]: {
+        right: 20,
+        left: 10,
+        top: 40,
+    },
+});
+export const fadeInTopEnter = (theme: Theme): CSSProperties => ({
+    transform: 'translateY(100px)',
+    opacity: '1',
+    transition: 'transform 0.6s ease, opacity 1s ease',
+});
+export const fadeInTopLeave = (theme: Theme): CSSProperties => ({
+    transform: 'translateY(-400px)',
+    opacity: '0',
+    transition: 'transform 1.25s ease, opacity 1s ease',
 });
 
 /**
@@ -116,53 +165,6 @@ export const useThemeStyles = makeStyles()(theme => ({
         fontSize: theme.fontSizes.mainHeader,
         fontWeight: 'bold',
         marginBottom: '0.5rem',
-    },
-    fadeInBottomStart: {
-        opacity: '0',
-        position: 'fixed',
-        right: '40px',
-        bottom: '40px',
-        transform: 'translateY(400px)',
-    },
-    fadeInBottomStartWithoutFixed: {
-        opacity: '0',
-        right: '40px',
-        bottom: '40px',
-        transform: 'translateY(400px)',
-        zIndex: 1400,
-        position: 'fixed',
-    },
-    fadeInBottomEnter: {
-        transform: 'translateY(0)',
-        opacity: '1',
-        transition: 'transform 0.6s ease, opacity 1s ease',
-    },
-    fadeInBottomLeave: {
-        transform: 'translateY(400px)',
-        opacity: '0',
-        transition: 'transform 1.25s ease, opacity 1s ease',
-    },
-    fadeInTopStart: {
-        opacity: '0',
-        position: 'fixed',
-        right: '40px',
-        top: '40px',
-        transform: 'translateY(-400px)',
-        [theme.breakpoints.down('sm')]: {
-            right: 20,
-            left: 10,
-            top: 40,
-        },
-    },
-    fadeInTopEnter: {
-        transform: 'translateY(100px)',
-        opacity: '1',
-        transition: 'transform 0.6s ease, opacity 1s ease',
-    },
-    fadeInTopLeave: {
-        transform: 'translateY(-400px)',
-        opacity: '0',
-        transition: 'transform 1.25s ease, opacity 1s ease',
     },
     error: {
         fontSize: theme.fontSizes.smallBody,

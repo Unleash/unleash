@@ -1,5 +1,5 @@
 import IRole from 'interfaces/role';
-import { IUser } from 'interfaces/user';
+import { IServiceAccount } from 'interfaces/service-account';
 import { useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
@@ -11,14 +11,14 @@ export const useServiceAccounts = () => {
 
     const { data, error, mutate } = useConditionalSWR(
         Boolean(uiConfig.flags.serviceAccounts) && isEnterprise(),
-        { users: [], rootRoles: [] },
+        { serviceAccounts: [], rootRoles: [] },
         formatApiPath(`api/admin/service-account`),
         fetcher
     );
 
     return useMemo(
         () => ({
-            serviceAccounts: (data?.users ?? []) as IUser[],
+            serviceAccounts: (data?.serviceAccounts ?? []) as IServiceAccount[],
             roles: (data?.rootRoles ?? []) as IRole[],
             loading: !error && !data,
             refetch: () => mutate(),

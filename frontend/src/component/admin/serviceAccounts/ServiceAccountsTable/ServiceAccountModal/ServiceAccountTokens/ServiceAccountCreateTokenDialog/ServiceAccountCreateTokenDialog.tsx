@@ -7,15 +7,14 @@ import {
     PersonalAPITokenForm,
 } from 'component/user/Profile/PersonalAPITokensTab/CreatePersonalAPIToken/PersonalAPITokenForm/PersonalAPITokenForm';
 import { ICreatePersonalApiTokenPayload } from 'hooks/api/actions/usePersonalAPITokensApi/usePersonalAPITokensApi';
-import { IUser } from 'interfaces/user';
-import { usePersonalAPITokens } from 'hooks/api/getters/usePersonalAPITokens/usePersonalAPITokens';
+import { IServiceAccount } from 'interfaces/service-account';
 
 const DEFAULT_EXPIRATION = ExpirationOption['30DAYS'];
 
 interface IServiceAccountCreateTokenDialogProps {
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    serviceAccount: IUser;
+    serviceAccount: IServiceAccount;
     onCreateClick: (newToken: ICreatePersonalApiTokenPayload) => void;
 }
 
@@ -25,8 +24,6 @@ export const ServiceAccountCreateTokenDialog = ({
     serviceAccount,
     onCreateClick,
 }: IServiceAccountCreateTokenDialogProps) => {
-    const { tokens = [] } = usePersonalAPITokens(serviceAccount.id);
-
     const [patDescription, setPatDescription] = useState('');
     const [patExpiration, setPatExpiration] =
         useState<ExpirationOption>(DEFAULT_EXPIRATION);
@@ -43,7 +40,9 @@ export const ServiceAccountCreateTokenDialog = ({
     }, [open]);
 
     const isDescriptionUnique = (description: string) =>
-        !tokens?.some(token => token.description === description);
+        !serviceAccount.tokens?.some(
+            token => token.description === description
+        );
 
     const isPATValid =
         patDescription.length &&

@@ -32,6 +32,7 @@ import {
 import { usePersonalAPITokensApi } from 'hooks/api/actions/usePersonalAPITokensApi/usePersonalAPITokensApi';
 import { INewPersonalAPIToken } from 'interfaces/personalAPIToken';
 import { ServiceAccountTokens } from './ServiceAccountTokens/ServiceAccountTokens';
+import { IServiceAccount } from 'interfaces/service-account';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',
@@ -110,7 +111,7 @@ interface IServiceAccountModalErrors {
 const DEFAULT_EXPIRATION = ExpirationOption['30DAYS'];
 
 interface IServiceAccountModalProps {
-    serviceAccount?: IUser;
+    serviceAccount?: IServiceAccount;
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     newToken: (token: INewPersonalAPIToken) => void;
@@ -222,7 +223,8 @@ export const ServiceAccountModal = ({
     const isUnique = (value: string) =>
         !users?.some((user: IUser) => user.username === value) &&
         !serviceAccounts?.some(
-            (serviceAccount: IUser) => serviceAccount.username === value
+            (serviceAccount: IServiceAccount) =>
+                serviceAccount.username === value
         );
     const isPATValid =
         tokenGeneration === TokenGeneration.LATER ||

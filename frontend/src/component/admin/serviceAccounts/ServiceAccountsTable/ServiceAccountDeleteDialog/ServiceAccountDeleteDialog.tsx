@@ -1,6 +1,7 @@
 import { Alert, styled } from '@mui/material';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import { IUser } from 'interfaces/user';
+import { IServiceAccount } from 'interfaces/service-account';
 import { ServiceAccountTokens } from '../ServiceAccountModal/ServiceAccountTokens/ServiceAccountTokens';
 
 const StyledTableContainer = styled('div')(({ theme }) => ({
@@ -12,10 +13,10 @@ const StyledLabel = styled('p')(({ theme }) => ({
 }));
 
 interface IServiceAccountDeleteDialogProps {
-    serviceAccount?: IUser;
+    serviceAccount?: IServiceAccount;
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    onConfirm: (serviceAccount: IUser) => void;
+    onConfirm: (serviceAccount: IServiceAccount) => void;
 }
 
 export const ServiceAccountDeleteDialog = ({
@@ -39,13 +40,20 @@ export const ServiceAccountDeleteDialog = ({
                 Deleting this service account may break any existing
                 implementations currently using it.
             </Alert>
-            <StyledLabel>Service account tokens</StyledLabel>
-            <StyledTableContainer>
-                <ServiceAccountTokens
-                    serviceAccount={serviceAccount!}
-                    readOnly
-                />
-            </StyledTableContainer>
+            <ConditionallyRender
+                condition={Boolean(serviceAccount?.tokens.length)}
+                show={
+                    <>
+                        <StyledLabel>Service account tokens</StyledLabel>
+                        <StyledTableContainer>
+                            <ServiceAccountTokens
+                                serviceAccount={serviceAccount!}
+                                readOnly
+                            />
+                        </StyledTableContainer>
+                    </>
+                }
+            />
             <StyledLabel>
                 You are about to delete service account:{' '}
                 <strong>{serviceAccount?.name}</strong>

@@ -80,7 +80,8 @@ export const SegmentItem: VFC<ISegmentItemProps> = ({
                             sx={{
                                 my: 0,
                                 ml: 'auto',
-                                fontSize: theme => theme.typography.body2.fontSize,
+                                fontSize: theme =>
+                                    theme.typography.body2.fontSize,
                             }}
                         >
                             {isOpen ? 'Close preview' : 'Preview'}

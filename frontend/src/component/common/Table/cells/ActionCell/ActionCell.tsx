@@ -15,10 +15,7 @@ const StyledDivider = styled(Divider)(({ theme }) => ({
 }));
 
 const ActionCellDivider: VFC = () => (
-    <StyledDivider
-        orientation="vertical"
-        variant="middle"
-    />
+    <StyledDivider orientation="vertical" variant="middle" />
 );
 
 const ActionCellComponent: FC & {

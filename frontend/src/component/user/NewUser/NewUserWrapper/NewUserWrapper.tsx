@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { Box, Typography } from '@mui/material';
-import StandaloneLayout from 'component/user/common/StandaloneLayout/StandaloneLayout';
-import StandaloneBanner from 'component/user/StandaloneBanner/StandaloneBanner';
+import StandaloneLayout from 'component/user/common/StandaloneLayout';
+import StandaloneBanner from 'component/user/StandaloneBanner';
 import useLoading from 'hooks/useLoading';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 

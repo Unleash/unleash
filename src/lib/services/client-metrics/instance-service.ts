@@ -224,7 +224,7 @@ export default class ClientInstanceService {
         return (d.getTime() - d.getMilliseconds()) / 1000;
     }
 
-    async getRPS(hoursToQuery: number): Promise<any> {
+    async getRPS(hoursToQuery: number, limit = 10): Promise<any> {
         if (!this.prometheusApi) {
             this.logger.warn('Prometheus not configured');
             return;
@@ -233,7 +233,7 @@ export default class ClientInstanceService {
         const basePath = this.serverOption.baseUriPath.replace(/\/$/, '');
         const pathQuery = `${basePath}/api/.*`;
         const step = '5m';
-        const rpsQuery = `irate (http_request_duration_milliseconds_count{path=~"${pathQuery}"} [${step}])`;
+        const rpsQuery = `topk(${limit}, irate (http_request_duration_milliseconds_count{path=~"${pathQuery}"} [${step}]))`;
         const query = `sum by(appName, endpoint) (label_replace(${rpsQuery}, "endpoint", "$1", "path", "${basePath}(/api/(?:client/)?[^/\*]*).*"))`;
         const end = new Date();
         const start = new Date();

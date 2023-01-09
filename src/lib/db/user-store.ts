@@ -100,7 +100,7 @@ class UserStore implements IUserStore {
     }
 
     buildSelectUser(q: IUserLookup): any {
-        const query = this.activeUsers();
+        const query = this.activeAll();
         if (q.id) {
             return query.where('id', q.id);
         }
@@ -113,8 +113,17 @@ class UserStore implements IUserStore {
         throw new Error('Can only find users with id, username or email.');
     }
 
+    activeAll(): any {
+        return this.db(TABLE).where({
+            deleted_at: null,
+        });
+    }
+
     activeUsers(): any {
-        return this.db(TABLE).where('deleted_at', null);
+        return this.db(TABLE).where({
+            deleted_at: null,
+            is_service: false,
+        });
     }
 
     async hasUser(idQuery: IUserLookup): Promise<number | undefined> {
@@ -216,7 +225,7 @@ class UserStore implements IUserStore {
     }
 
     async getUserByPersonalAccessToken(secret: string): Promise<User> {
-        const row = await this.activeUsers()
+        const row = await this.activeAll()
             .select(USER_COLUMNS.map((column) => `${TABLE}.${column}`))
             .leftJoin(
                 'personal_access_tokens',

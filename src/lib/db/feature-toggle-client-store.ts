@@ -146,7 +146,7 @@ export default class FeatureToggleClientStore
                 'ft.tag_type as tag_type',
             ];
 
-            if (userId && this.flagResolver.isEnabled('favorites')) {
+            if (userId) {
                 query = query.leftJoin(`favorite_features`, function () {
                     this.on(
                         'favorite_features.feature',

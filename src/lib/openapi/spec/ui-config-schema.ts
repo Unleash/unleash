@@ -31,6 +31,9 @@ export const uiConfigSchema = {
         emailEnabled: {
             type: 'boolean',
         },
+        maintenanceMode: {
+            type: 'boolean',
+        },
         segmentValuesLimit: {
             type: 'number',
         },

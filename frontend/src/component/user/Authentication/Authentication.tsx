@@ -1,7 +1,7 @@
 import SimpleAuth from '../SimpleAuth/SimpleAuth';
 import { AuthenticationCustomComponent } from 'component/user/AuthenticationCustomComponent';
-import PasswordAuth from '../PasswordAuth/PasswordAuth';
-import HostedAuth from '../HostedAuth/HostedAuth';
+import PasswordAuth from '../PasswordAuth';
+import HostedAuth from '../HostedAuth';
 import DemoAuth from '../DemoAuth/DemoAuth';
 import {
     SIMPLE_TYPE,
@@ -9,7 +9,7 @@ import {
     PASSWORD_TYPE,
     HOSTED_TYPE,
 } from 'constants/authTypes';
-import SecondaryLoginActions from '../common/SecondaryLoginActions/SecondaryLoginActions';
+import SecondaryLoginActions from '../common/SecondaryLoginActions';
 import useQueryParams from 'hooks/useQueryParams';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Alert } from '@mui/material';

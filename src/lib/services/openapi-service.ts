@@ -64,14 +64,14 @@ export class OpenApiService {
         });
     }
 
-    respondWithValidation<T>(
+    respondWithValidation<T, S = SchemaId>(
         status: number,
         res: Response<T>,
-        schema: SchemaId,
+        schema: S,
         data: T,
         headers: { [header: string]: string } = {},
     ): void {
-        const errors = validateSchema(schema, data);
+        const errors = validateSchema<S>(schema, data);
 
         if (errors) {
             this.logger.debug('Invalid response:', errors);

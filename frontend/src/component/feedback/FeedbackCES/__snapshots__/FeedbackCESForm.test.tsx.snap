@@ -4,32 +4,32 @@ exports[`FeedbackCESForm 1`] = `
 <body>
   <div>
     <div
-      class="css-fdcp7c-container"
+      class="css-kaq1dv"
     >
       <h1
-        class="css-iyd7t0-title"
+        class="css-tb1je1"
       >
         Please help us improve
       </h1>
       <form
         aria-live="polite"
-        class="css-1rgjoiw-form"
+        class="css-518ok6"
       >
         <p
-          class="css-mhztvj-subtitle"
+          class="css-114cem8"
         >
           a
         </p>
         <div
-          class="css-io6e1g-scoreInput"
+          class="css-1klv5bg"
         >
           <span
-            class="css-16omcck-scoreHelp"
+            class="css-9f5hh8"
           >
             Very difficult
           </span>
           <label
-            class="css-pq8zjr-scoreValue"
+            class="css-112g122"
           >
             <input
               name="score"
@@ -41,7 +41,7 @@ exports[`FeedbackCESForm 1`] = `
             </span>
           </label>
           <label
-            class="css-pq8zjr-scoreValue"
+            class="css-112g122"
           >
             <input
               name="score"
@@ -53,7 +53,7 @@ exports[`FeedbackCESForm 1`] = `
             </span>
           </label>
           <label
-            class="css-pq8zjr-scoreValue"
+            class="css-112g122"
           >
             <input
               name="score"
@@ -65,7 +65,7 @@ exports[`FeedbackCESForm 1`] = `
             </span>
           </label>
           <label
-            class="css-pq8zjr-scoreValue"
+            class="css-112g122"
           >
             <input
               name="score"
@@ -77,7 +77,7 @@ exports[`FeedbackCESForm 1`] = `
             </span>
           </label>
           <label
-            class="css-pq8zjr-scoreValue"
+            class="css-112g122"
           >
             <input
               name="score"
@@ -89,7 +89,7 @@ exports[`FeedbackCESForm 1`] = `
             </span>
           </label>
           <label
-            class="css-pq8zjr-scoreValue"
+            class="css-112g122"
           >
             <input
               name="score"
@@ -101,7 +101,7 @@ exports[`FeedbackCESForm 1`] = `
             </span>
           </label>
           <label
-            class="css-pq8zjr-scoreValue"
+            class="css-112g122"
           >
             <input
               name="score"
@@ -113,7 +113,7 @@ exports[`FeedbackCESForm 1`] = `
             </span>
           </label>
           <span
-            class="css-16omcck-scoreHelp"
+            class="css-9f5hh8"
           >
             Very easy
           </span>
@@ -122,7 +122,7 @@ exports[`FeedbackCESForm 1`] = `
           hidden=""
         >
           <label
-            class="css-13obo9p-textLabel"
+            class="css-1lg26qb"
             for="comment"
           >
             b
@@ -165,11 +165,11 @@ exports[`FeedbackCESForm 1`] = `
           </div>
         </div>
         <div
-          class="css-n2ggaa-buttons"
+          class="MuiBox-root css-xi606m"
           hidden=""
         >
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-9rpict-MuiButtonBase-root-MuiButton-root-button"
+            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-w5plom-MuiButtonBase-root-MuiButton-root"
             disabled=""
             tabindex="-1"
             type="submit"
@@ -182,7 +182,7 @@ exports[`FeedbackCESForm 1`] = `
     <div
       aria-atomic="true"
       aria-live="polite"
-      class="css-i8rqz1-container"
+      class="css-gqbqkz"
       data-testid="ANNOUNCER_ELEMENT_TEST_ID"
       role="status"
     />

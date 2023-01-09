@@ -2,8 +2,8 @@ import Ajv, { ErrorObject } from 'ajv';
 import { SchemaId, schemas } from './index';
 import { omitKeys } from '../util/omit-keys';
 
-interface ISchemaValidationErrors {
-    schema: SchemaId;
+export interface ISchemaValidationErrors<S = SchemaId> {
+    schema: S;
     errors: ErrorObject[];
 }
 
@@ -21,10 +21,17 @@ const ajv = new Ajv({
     },
 });
 
-export const validateSchema = (
-    schema: SchemaId,
+export const addAjvSchema = (schemaObjects: any[]): any => {
+    const newSchemas = schemaObjects.filter(
+        (schema) => !ajv.getSchema(schema.$id),
+    );
+    return ajv.addSchema(newSchemas);
+};
+
+export const validateSchema = <S = SchemaId>(
+    schema: S,
     data: unknown,
-): ISchemaValidationErrors | undefined => {
+): ISchemaValidationErrors<S> | undefined => {
     if (!ajv.validate(schema, data)) {
         return {
             schema,

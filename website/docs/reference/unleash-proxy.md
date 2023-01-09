@@ -103,7 +103,7 @@ Custom activation strategies can **not** be used with the Unleash-hosted proxy a
 
 :::
 
-The Unleash Proxy can load [custom activation strategies](../reference/custom-activation-strategies.md) for front-end client SDKs ([Android](./sdks/android-proxy.md), [JavaScript](./sdks/javascript-browser.md), [React](./sdks/react.md), [iOS](./sdks/ios-proxy.md)). For a step-by-step guide, refer to the [_how to use custom strategies_ guide](../how-to/how-to-use-custom-strategies.md#step-3-b).
+The Unleash Proxy can load [custom activation strategies](../reference/custom-activation-strategies.md) for front-end client SDKs ([Android](./sdks/android-proxy.md), [JavaScript](./sdks/javascript-browser.md), [React](./sdks/react.md), [iOS](./sdks/ios-proxy.md), [Flutter](./sdks/flutter.md)). For a step-by-step guide, refer to the [_how to use custom strategies_ guide](../how-to/how-to-use-custom-strategies.md#step-3-b).
 
 To load custom strategies, use either of these two options:
 

@@ -3,6 +3,7 @@ export interface IPersonalAPIToken {
     description: string;
     expiresAt: string;
     createdAt: string;
+    seenAt: string;
 }
 
 export interface INewPersonalAPIToken extends IPersonalAPIToken {

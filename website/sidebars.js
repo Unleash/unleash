@@ -237,11 +237,7 @@ module.exports = {
                                 'reference/sdks/php',
                                 'reference/sdks/python',
                                 'reference/sdks/ruby',
-                                {
-                                    type: 'link',
-                                    href: 'https://github.com/unleash/unleash-client-rust',
-                                    label: 'Rust SDK',
-                                },
+                                'reference/sdks/rust',
                                 'reference/sdks/dotnet',
                             ],
                         },
@@ -250,6 +246,7 @@ module.exports = {
                             label: 'Client-side SDKs',
                             items: [
                                 'reference/sdks/android-proxy',
+                                'reference/sdks/flutter',
                                 'reference/sdks/ios-proxy',
                                 'reference/sdks/javascript-browser',
                                 'reference/sdks/react',

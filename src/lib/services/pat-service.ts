@@ -33,24 +33,28 @@ export default class PatService {
         this.eventStore = eventStore;
     }
 
-    async createPat(pat: IPat, user: User): Promise<IPat> {
-        await this.validatePat(pat, user.id);
+    async createPat(
+        pat: IPat,
+        forUserId: number,
+        creator: User,
+    ): Promise<IPat> {
+        await this.validatePat(pat, forUserId);
         pat.secret = this.generateSecretKey();
-        pat.userId = user.id;
+        pat.userId = forUserId;
         const newPat = await this.patStore.create(pat);
 
         pat.secret = '***';
         await this.eventStore.store({
             type: PAT_CREATED,
-            createdBy: user.email || user.username,
+            createdBy: creator.email || creator.username,
             data: pat,
         });
 
         return newPat;
     }
 
-    async getAll(user: User): Promise<IPat[]> {
-        return this.patStore.getAllByUser(user.id);
+    async getAll(userId: number): Promise<IPat[]> {
+        return this.patStore.getAllByUser(userId);
     }
 
     async deletePat(id: number, userId: number): Promise<void> {

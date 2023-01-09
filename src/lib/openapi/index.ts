@@ -129,6 +129,7 @@ import { mapValues, omitKeys } from '../util';
 import { openApiTags } from './util';
 import { URL } from 'url';
 import apiVersion from '../util/version';
+import { maintenanceSchema } from './spec/maintenance-schema';
 
 // All schemas in `openapi/spec` should be listed here.
 export const schemas = {
@@ -189,6 +190,7 @@ export const schemas = {
     instanceAdminStatsSchema,
     legalValueSchema,
     loginSchema,
+    maintenanceSchema,
     meSchema,
     nameSchema,
     overrideSchema,

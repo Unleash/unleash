@@ -1,5 +1,4 @@
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import { useStyles } from '../SegmentDeleteConfirm/SegmentDeleteConfirm.styles';
 import { ISegment } from 'interfaces/segment';
 import { IFeatureStrategy } from 'interfaces/strategy';
 import { Link } from 'react-router-dom';
@@ -10,6 +9,12 @@ import { styled } from '@mui/material';
 const StyledUl = styled('ul')({
     marginBottom: 0,
 });
+
+const StyledLink = styled(Link)(({ theme }) => ({
+    textDecoration: 'none',
+    color: theme.palette.primary.main,
+    fontWeight: theme.fontWeight.bold,
+}));
 
 interface ISegmentDeleteUsedSegmentProps {
     segment: ISegment;
@@ -24,8 +29,6 @@ export const SegmentDeleteUsedSegment = ({
     onClose,
     strategies,
 }: ISegmentDeleteUsedSegmentProps) => {
-    const { classes: styles } = useStyles();
-
     return (
         <Dialogue
             title="You can't delete a segment that's currently in use"
@@ -40,7 +43,7 @@ export const SegmentDeleteUsedSegment = ({
             <StyledUl>
                 {strategies?.map(strategy => (
                     <li key={strategy.id}>
-                        <Link
+                        <StyledLink
                             to={formatEditStrategyPath(
                                 strategy.projectId!,
                                 strategy.featureName!,
@@ -49,11 +52,10 @@ export const SegmentDeleteUsedSegment = ({
                             )}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className={styles.link}
                         >
                             {strategy.featureName!}{' '}
                             {formatStrategyNameParens(strategy)}
-                        </Link>
+                        </StyledLink>
                     </li>
                 ))}
             </StyledUl>

@@ -145,7 +145,13 @@ export default async function getApp(
         rbacMiddleware(config, stores, services.accessService),
     );
 
-    app.use('/api/admin', maintenanceMiddleware(config));
+    app.use(
+        `${baseUriPath}/api/admin`,
+        conditionalMiddleware(
+            () => config.flagResolver.isEnabled('maintenance'),
+            maintenanceMiddleware(config, services.maintenanceService),
+        ),
+    );
 
     if (typeof config.preRouterHook === 'function') {
         config.preRouterHook(app, config, services, stores, db);

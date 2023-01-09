@@ -8,7 +8,7 @@ import {
 } from 'component/common/Table';
 import { SortingRule, useSortBy, useTable } from 'react-table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { Tab, Tabs, useMediaQuery } from '@mui/material';
+import { styled, Tab, Tabs, useMediaQuery } from '@mui/material';
 import { sortTypes } from 'utils/sortTypes';
 import { useEffect, useMemo, useState } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -17,15 +17,15 @@ import { featuresPlaceholder } from 'component/feature/FeatureToggleList/Feature
 import theme from 'themes/theme';
 import { useSearch } from 'hooks/useSearch';
 import { useSearchParams } from 'react-router-dom';
-import { TimeAgoCell } from '../../../common/Table/cells/TimeAgoCell/TimeAgoCell';
-import { TextCell } from '../../../common/Table/cells/TextCell/TextCell';
+import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
+import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { ChangeRequestStatusCell } from './ChangeRequestStatusCell/ChangeRequestStatusCell';
 import { AvatarCell } from './AvatarCell/AvatarCell';
 import { ChangeRequestTitleCell } from './ChangeRequestTitleCell/ChangeRequestTitleCell';
-import { TableBody, TableRow } from '../../../common/Table';
-import { useStyles } from './ChangeRequestsTabs.styles';
-import { createLocalStorage } from '../../../../utils/createLocalStorage';
+import { TableBody, TableRow } from 'component/common/Table';
+import { createLocalStorage } from 'utils/createLocalStorage';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
+import { useStyles } from './ChangeRequestsTabs.styles';
 
 export interface IChangeRequestTableProps {
     changeRequests: any[];
@@ -36,6 +36,20 @@ export interface IChangeRequestTableProps {
 const defaultSort: SortingRule<string> & {
     columns?: string[];
 } = { id: 'createdAt' };
+
+const StyledTabContainer = styled('div')({
+    paddingLeft: 0,
+    paddingBottom: 0,
+});
+
+const StyledTabButton = styled(Tab)(({ theme }) => ({
+    textTransform: 'none',
+    width: 'auto',
+    fontSize: theme.fontSizes.bodySize,
+    [theme.breakpoints.up('md')]: {
+        minWidth: 160,
+    },
+}));
 
 export const ChangeRequestsTabs = ({
     changeRequests = [],
@@ -216,7 +230,7 @@ export const ChangeRequestsTabs = ({
             header={
                 <PageHeader
                     titleElement={
-                        <div className={classes.tabContainer}>
+                        <StyledTabContainer>
                             <Tabs
                                 value={tabs[activeTab]?.title}
                                 indicatorColor="primary"
@@ -225,16 +239,15 @@ export const ChangeRequestsTabs = ({
                                 allowScrollButtonsMobile
                             >
                                 {tabs.map((tab, index) => (
-                                    <Tab
+                                    <StyledTabButton
                                         key={tab.title}
                                         label={`${tab.title} (${tab.data.length})`}
                                         value={tab.title}
                                         onClick={() => setActiveTab(index)}
-                                        className={classes.tabButton}
                                     />
                                 ))}
                             </Tabs>
-                        </div>
+                        </StyledTabContainer>
                     }
                     actions={
                         <Search

@@ -28,6 +28,7 @@ test('formatAssetPath', () => {
     expect(formatAssetPath('/a', '/x')).toEqual('/x/a');
     expect(formatAssetPath('/a/', '/x/')).toEqual('/x/a');
     expect(formatAssetPath('a/b/', 'x/y/')).toEqual('/x/y/a/b');
+    expect(formatAssetPath('x/y/', 'x/y/')).toEqual('/x/y');
     expect(formatAssetPath('//a//b//', '//x//y//')).toEqual('/x/y/a/b');
 });
 
@@ -42,6 +43,7 @@ test('formatApiPath', () => {
     expect(formatApiPath('/', '/')).toEqual('');
     expect(formatApiPath('a', 'x')).toEqual('/x/a');
     expect(formatApiPath('/a', '/x')).toEqual('/x/a');
+    expect(formatApiPath('/a', '/x/a')).toEqual('/x/a');
     expect(formatApiPath('/a/', '/x/')).toEqual('/x/a');
     expect(formatApiPath('a/b/', 'x/y/')).toEqual('/x/y/a/b');
     expect(formatApiPath('//a//b//', '//x//y//')).toEqual('/x/y/a/b');

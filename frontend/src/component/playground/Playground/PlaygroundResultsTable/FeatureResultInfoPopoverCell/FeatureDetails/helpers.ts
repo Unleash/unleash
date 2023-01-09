@@ -1,4 +1,4 @@
-import { PlaygroundFeatureSchema } from 'component/playground/Playground/interfaces/playground.model';
+import { PlaygroundFeatureSchema } from 'openapi';
 
 export const DEFAULT_STRATEGIES = [
     'default',

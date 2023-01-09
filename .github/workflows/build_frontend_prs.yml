@@ -23,4 +23,5 @@ jobs:
     - run: yarn --frozen-lockfile
     - run: yarn run test
     - run: yarn run fmt:check
+    - run: yarn run lint:check
     - run: yarn run ts:check # TODO: optimize

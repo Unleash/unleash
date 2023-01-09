@@ -1,24 +1,58 @@
-import { Button, TextField, Typography } from '@mui/material';
+import { Button, styled, TextField, Typography } from '@mui/material';
 import { AlertTitle, Alert } from '@mui/material';
-import classnames from 'classnames';
 import { SyntheticEvent, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useThemeStyles } from 'themes/themeStyles';
 import useLoading from 'hooks/useLoading';
 import { FORGOTTEN_PASSWORD_FIELD } from 'utils/testIds';
 import { formatApiPath } from 'utils/formatPath';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import DividerText from 'component/common/DividerText/DividerText';
-import StandaloneLayout from '../common/StandaloneLayout/StandaloneLayout';
-import { useStyles } from './ForgottenPassword.styles';
+import StandaloneLayout from '../common/StandaloneLayout';
+import {
+    contentSpacingY,
+    flexColumn,
+    textCenter,
+    title,
+} from 'themes/themeStyles';
+
+const StyledDiv = styled('div')(({ theme }) => ({
+    ...contentSpacingY,
+    ...flexColumn,
+    width: '350px',
+    [theme.breakpoints.down('sm')]: {
+        width: '100%',
+    },
+}));
+
+const StyledStrong = styled('strong')(({ theme }) => ({
+    display: 'block',
+    margin: theme.spacing(1, 0),
+}));
+
+const StyledButton = styled(Button)(({ theme }) => ({
+    width: '150px',
+    margin: theme.spacing(2, 'auto'),
+}));
+
+const StyledTitle = styled('h2')(({ theme }) => ({
+    ...title(theme),
+    ...textCenter,
+}));
+
+const StyledForm = styled('form')(({ theme }) => ({
+    ...contentSpacingY(theme),
+    ...flexColumn,
+}));
+
+const StyledTypography = styled(Typography)(({ theme }) => ({
+    ...textCenter,
+}));
 
 const ForgottenPassword = () => {
     const [email, setEmail] = useState('');
     const [attempted, setAttempted] = useState(false);
     const [loading, setLoading] = useState(false);
     const [attemptedEmail, setAttemptedEmail] = useState('');
-    const { classes: themeStyles } = useThemeStyles();
-    const { classes: styles } = useStyles();
     const ref = useLoading(loading);
 
     const onClick = async (e: SyntheticEvent) => {
@@ -41,32 +75,15 @@ const ForgottenPassword = () => {
 
     return (
         <StandaloneLayout>
-            <div
-                className={classnames(
-                    themeStyles.contentSpacingY,
-                    themeStyles.flexColumn,
-                    styles.forgottenPassword
-                )}
-                ref={ref}
-            >
-                <h2
-                    className={classnames(
-                        themeStyles.title,
-                        themeStyles.textCenter
-                    )}
-                    data-loading
-                >
-                    Forgotten password
-                </h2>
+            <StyledDiv ref={ref}>
+                <StyledTitle data-loading>Forgotten password</StyledTitle>
                 <ConditionallyRender
                     condition={attempted}
                     show={
                         <Alert severity="success" data-loading>
                             <AlertTitle>Attempted to send email</AlertTitle>
                             We've attempted to send a reset password email to:
-                            <strong className={styles.email}>
-                                {attemptedEmail}
-                            </strong>
+                            <StyledStrong>{attemptedEmail}</StyledStrong>
                             If you did not receive an email, please verify that
                             you typed in the correct email, and contact your
                             administrator to make sure that you are in the
@@ -74,21 +91,11 @@ const ForgottenPassword = () => {
                         </Alert>
                     }
                 />
-                <form
-                    onSubmit={onClick}
-                    className={classnames(
-                        themeStyles.contentSpacingY,
-                        themeStyles.flexColumn
-                    )}
-                >
-                    <Typography
-                        variant="body1"
-                        data-loading
-                        className={themeStyles.textCenter}
-                    >
+                <StyledForm onSubmit={onClick}>
+                    <StyledTypography variant="body1" data-loading>
                         Please provide your email address. If it exists in the
                         system we'll send a new reset link.
-                    </Typography>
+                    </StyledTypography>
                     <TextField
                         variant="outlined"
                         size="small"
@@ -101,12 +108,11 @@ const ForgottenPassword = () => {
                             setEmail(e.target.value);
                         }}
                     />
-                    <Button
+                    <StyledButton
                         variant="contained"
                         type="submit"
                         data-loading
                         color="primary"
-                        className={styles.button}
                         disabled={loading}
                     >
                         <ConditionallyRender
@@ -114,21 +120,24 @@ const ForgottenPassword = () => {
                             show={<span>Submit</span>}
                             elseShow={<span>Try again</span>}
                         />
-                    </Button>
+                    </StyledButton>
                     <DividerText text="Or log in" />
                     <Button
                         type="submit"
                         data-loading
                         variant="outlined"
-                        className={styles.button}
                         disabled={loading}
                         component={Link}
                         to="/login"
+                        sx={theme => ({
+                            width: '150px',
+                            margin: theme.spacing(2, 'auto'),
+                        })}
                     >
                         Log in
                     </Button>
-                </form>
-            </div>
+                </StyledForm>
+            </StyledDiv>
         </StandaloneLayout>
     );
 };

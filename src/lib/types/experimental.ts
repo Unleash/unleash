@@ -11,10 +11,6 @@ const flags = {
         process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY,
         true,
     ),
-    changeRequests: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_CHANGE_REQUESTS,
-        false,
-    ),
     embedProxyFrontend: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY_FRONTEND,
         true,
@@ -35,16 +31,24 @@ const flags = {
         process.env.UNLEASH_EXPERIMENTAL_VARIANTS_PER_ENVIRONMENT,
         false,
     ),
-    favorites: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_FAVORITES,
-        false,
-    ),
     networkView: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_NETWORK_VIEW,
         false,
     ),
     maintenance: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_MAINTENANCE,
+        false,
+    ),
+    maintenanceMode: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_MAINTENANCE_MODE,
+        false,
+    ),
+    messageBanner: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_MESSAGE_BANNER,
+        false,
+    ),
+    serviceAccounts: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SERVICE_ACCOUNTS,
         false,
     ),
 };

@@ -1,8 +1,15 @@
 import { useLocation } from 'react-router-dom';
-import { Paper, Tab, Tabs } from '@mui/material';
+import { Paper, styled, Tab, Tabs } from '@mui/material';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
 import { CenteredNavLink } from './CenteredNavLink';
+
+const StyledPaper = styled(Paper)(({ theme }) => ({
+    marginBottom: '1rem',
+    borderRadius: '12.5px',
+    boxShadow: 'none',
+    padding: '0 2rem',
+}));
 
 function AdminMenu() {
     const { uiConfig } = useUiConfig();
@@ -13,13 +20,7 @@ function AdminMenu() {
     const activeTab = pathname.split('/')[2];
 
     return (
-        <Paper
-            style={{
-                marginBottom: '1rem',
-                borderRadius: '12.5px',
-                boxShadow: 'none',
-            }}
-        >
+        <StyledPaper>
             <Tabs
                 value={activeTab}
                 variant="scrollable"
@@ -34,6 +35,16 @@ function AdminMenu() {
                         </CenteredNavLink>
                     }
                 />
+                {flags.serviceAccounts && (
+                    <Tab
+                        value="service-accounts"
+                        label={
+                            <CenteredNavLink to="/admin/service-accounts">
+                                <span>Service accounts</span>
+                            </CenteredNavLink>
+                        }
+                    />
+                )}
                 {flags.UG && (
                     <Tab
                         value="groups"
@@ -98,6 +109,17 @@ function AdminMenu() {
                         }
                     />
                 )}
+                {flags.maintenance && (
+                    <Tab
+                        value="maintenance"
+                        label={
+                            <CenteredNavLink to="/admin/maintenance">
+                                Maintenance
+                            </CenteredNavLink>
+                        }
+                    />
+                )}
+
                 {isBilling && (
                     <Tab
                         value="billing"
@@ -109,7 +131,7 @@ function AdminMenu() {
                     />
                 )}
             </Tabs>
-        </Paper>
+        </StyledPaper>
     );
 }
 

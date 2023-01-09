@@ -2,8 +2,22 @@ import { useNavigate } from 'react-router';
 import useProject from 'hooks/api/getters/useProject/useProject';
 import useLoading from 'hooks/useLoading';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useStyles } from './Project.styles';
-import { styled, Tab, Tabs } from '@mui/material';
+import {
+    StyledColumn,
+    StyledDiv,
+    StyledFavoriteIconButton,
+    StyledHeader,
+    StyledInnerContainer,
+    StyledName,
+    StyledProjectTitle,
+    StyledSeparator,
+    StyledTab,
+    StyledTabContainer,
+    StyledText,
+    StyledTitle,
+    StyledTopRow,
+} from './Project.styles';
+import { Tabs } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
 import useToast from 'hooks/useToast';
 import useQueryParams from 'hooks/useQueryParams';
@@ -23,47 +37,9 @@ import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { DeleteProjectDialogue } from './DeleteProject/DeleteProjectDialogue';
 import { ProjectLog } from './ProjectLog/ProjectLog';
 import { ChangeRequestOverview } from 'component/changeRequest/ChangeRequestOverview/ChangeRequestOverview';
-import { DraftBanner } from 'component/changeRequest/DraftBanner/DraftBanner';
-import { MainLayout } from 'component/layout/MainLayout/MainLayout';
 import { ProjectChangeRequests } from '../../changeRequest/ProjectChangeRequests/ProjectChangeRequests';
 import { ProjectSettings } from './ProjectSettings/ProjectSettings';
-import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
-import { FavoriteIconButton } from 'component/common/FavoriteIconButton/FavoriteIconButton';
 import { useFavoriteProjectsApi } from 'hooks/api/actions/useFavoriteProjectsApi/useFavoriteProjectsApi';
-
-const StyledDiv = styled('div')(() => ({
-    display: 'flex',
-}));
-
-const StyledTopRow = styled('div')(() => ({
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
-}));
-
-const Column = styled('div')(() => ({
-    display: 'flex',
-    flexDirection: 'column',
-}));
-
-const StyledName = styled('div')(() => ({
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-}));
-
-const StyledTitle = styled('span')(({ theme }) => ({
-    fontSize: theme.fontSizes.smallBody,
-    fontWeight: 'normal',
-}));
-const StyledText = styled(StyledTitle)(({ theme }) => ({
-    color: theme.palette.grey[800],
-}));
-
-const StyledFavoriteIconButton = styled(FavoriteIconButton)(({ theme }) => ({
-    marginLeft: theme.spacing(-1.5),
-}));
 
 const Project = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -71,14 +47,11 @@ const Project = () => {
     const { project, loading, refetch } = useProject(projectId);
     const ref = useLoading(loading);
     const { setToastData } = useToast();
-    const { classes: styles } = useStyles();
     const navigate = useNavigate();
     const { pathname } = useLocation();
-    const { isOss, uiConfig } = useUiConfig();
+    const { isOss } = useUiConfig();
     const basePath = `/projects/${projectId}`;
     const projectName = project?.name || projectId;
-    const { isChangeRequestConfiguredInAnyEnv } =
-        useChangeRequestsEnabled(projectId);
     const { favorite, unfavorite } = useFavoriteProjectsApi();
 
     const [showDelDialog, setShowDelDialog] = useState(false);
@@ -144,32 +117,20 @@ const Project = () => {
     };
 
     return (
-        <MainLayout
-            ref={ref}
-            subheader={
-                isChangeRequestConfiguredInAnyEnv() ? (
-                    <DraftBanner project={projectId} />
-                ) : null
-            }
-        >
-            <div className={styles.header}>
-                <div className={styles.innerContainer}>
+        <div ref={ref}>
+            <StyledHeader>
+                <StyledInnerContainer>
                     <StyledTopRow>
                         <StyledDiv>
-                            <ConditionallyRender
-                                condition={Boolean(uiConfig?.flags?.favorites)}
-                                show={() => (
-                                    <StyledFavoriteIconButton
-                                        onClick={onFavorite}
-                                        isFavorite={project?.favorite}
-                                    />
-                                )}
+                            <StyledFavoriteIconButton
+                                onClick={onFavorite}
+                                isFavorite={project?.favorite}
                             />
-                            <h2 className={styles.title}>
+                            <StyledProjectTitle>
                                 <StyledName data-loading>
                                     {projectName}
                                 </StyledName>
-                            </h2>
+                            </StyledProjectTitle>
                         </StyledDiv>
                         <StyledDiv>
                             <PermissionIconButton
@@ -202,8 +163,8 @@ const Project = () => {
                             </PermissionIconButton>
                         </StyledDiv>
                     </StyledTopRow>
-                    <Column>
-                        <h2 className={styles.title}>
+                    <StyledColumn>
+                        <StyledProjectTitle>
                             <div>
                                 <ConditionallyRender
                                     condition={Boolean(project.description)}
@@ -227,12 +188,12 @@ const Project = () => {
                                     </StyledText>
                                 </StyledDiv>
                             </div>
-                        </h2>
-                    </Column>
-                </div>
+                        </StyledProjectTitle>
+                    </StyledColumn>
+                </StyledInnerContainer>
 
-                <div className={styles.separator} />
-                <div className={styles.tabContainer}>
+                <StyledSeparator />
+                <StyledTabContainer>
                     <Tabs
                         value={activeTab?.path}
                         indicatorColor="primary"
@@ -241,17 +202,16 @@ const Project = () => {
                         allowScrollButtonsMobile
                     >
                         {tabs.map(tab => (
-                            <Tab
+                            <StyledTab
                                 key={tab.title}
                                 label={tab.title}
                                 value={tab.path}
                                 onClick={() => navigate(tab.path)}
-                                className={styles.tabButton}
                             />
                         ))}
                     </Tabs>
-                </div>
-            </div>
+                </StyledTabContainer>
+            </StyledHeader>
             <DeleteProjectDialogue
                 project={projectId}
                 open={showDelDialog}
@@ -287,7 +247,7 @@ const Project = () => {
                 <Route path="settings/*" element={<ProjectSettings />} />
                 <Route path="*" element={<ProjectOverview />} />
             </Routes>
-        </MainLayout>
+        </div>
     );
 };
 

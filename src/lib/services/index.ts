@@ -38,6 +38,7 @@ import { PublicSignupTokenService } from './public-signup-token-service';
 import { LastSeenService } from './client-metrics/last-seen-service';
 import { InstanceStatsService } from './instance-stats-service';
 import { FavoritesService } from './favorites-service';
+import MaintenanceService from './maintenance-service';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -128,6 +129,12 @@ export const createServices = (
         versionService,
     );
 
+    const maintenanceService = new MaintenanceService(
+        stores,
+        config,
+        settingService,
+    );
+
     instanceStatsService.start();
 
     return {
@@ -170,6 +177,7 @@ export const createServices = (
         lastSeenService,
         instanceStatsService,
         favoritesService,
+        maintenanceService,
     };
 };
 

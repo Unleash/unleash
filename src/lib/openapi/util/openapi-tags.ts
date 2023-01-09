@@ -96,6 +96,10 @@ const OPENAPI_TAGS = [
             'Experimental endpoints that may change or disappear at any time.',
     },
     { name: 'Edge', description: 'Endpoints related to Unleash on the Edge.' },
+    {
+        name: 'Maintenance',
+        description: 'Enable/disable the maintenance mode of Unleash.',
+    },
 ] as const;
 
 // make the export mutable, so it can be used in a schema

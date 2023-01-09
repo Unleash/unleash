@@ -1,11 +1,7 @@
 import { useTheme } from '@mui/material';
 import { PlaygroundResultChip } from '../../../../PlaygroundResultChip/PlaygroundResultChip';
-import {
-    PlaygroundStrategySchema,
-    PlaygroundRequestSchema,
-} from 'component/playground/Playground/interfaces/playground.model';
+import { PlaygroundStrategySchema, PlaygroundRequestSchema } from 'openapi';
 import { StrategyExecution } from './StrategyExecution/StrategyExecution';
-import { useStyles } from './FeatureStrategyItem.styles';
 import { StrategyItemContainer } from 'component/common/StrategyItemContainer/StrategyItemContainer';
 import { objectId } from 'utils/objectId';
 
@@ -21,7 +17,6 @@ export const FeatureStrategyItem = ({
     index,
 }: IFeatureStrategyItemProps) => {
     const { result } = strategy;
-    const { classes: styles } = useStyles();
     const theme = useTheme();
     const label =
         result.evaluationStatus === 'incomplete'
@@ -32,11 +27,11 @@ export const FeatureStrategyItem = ({
 
     return (
         <StrategyItemContainer
-            className={
-                result.enabled && result.evaluationStatus === 'complete'
-                    ? styles.successBorder
-                    : undefined
-            }
+            style={{
+                borderColor: result.enabled
+                    ? theme.palette.success.main
+                    : 'none',
+            }}
             strategy={{ ...strategy, id: `${objectId(strategy)}` }}
             orderNumber={index + 1}
             actions={

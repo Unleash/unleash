@@ -8,25 +8,40 @@ import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { UPDATE_FEATURE_ENVIRONMENT } from 'component/providers/AccessProvider/permissions';
 import React from 'react';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { useStyles } from './FeatureOverviewEnvSwitch.styles';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useChangeRequestToggle } from 'hooks/useChangeRequestToggle';
 import { ChangeRequestDialogue } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestConfirmDialog';
-import { UpdateEnabledMessage } from '../../../../../changeRequest/ChangeRequestConfirmDialog/ChangeRequestMessages/UpdateEnabledMessage';
+import { UpdateEnabledMessage } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestMessages/UpdateEnabledMessage';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
+import { styled } from '@mui/material';
+import { FeatureOverviewSidePanelEnvironmentHider } from '../../FeatureOverviewSidePanel/FeatureOverviewSidePanelEnvironmentSwitches/FeatureOverviewSidePanelEnvironmentSwitch/FeatureOverviewSidePanelEnvironmentHider';
 
 interface IFeatureOverviewEnvSwitchProps {
     env: IFeatureEnvironment;
     callback?: () => void;
     text?: string;
     showInfoBox: () => void;
+    hiddenEnvironments: Set<String>;
+    setHiddenEnvironments: (environment: string) => void;
 }
+
+const StyledContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+}));
+
+const StyledLabel = styled('label')({
+    display: 'inline-flex',
+    alignItems: 'center',
+    cursor: 'pointer',
+});
 
 const FeatureOverviewEnvSwitch = ({
     env,
     callback,
     text,
     showInfoBox,
+    hiddenEnvironments,
+    setHiddenEnvironments,
 }: IFeatureOverviewEnvSwitchProps) => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
@@ -34,7 +49,6 @@ const FeatureOverviewEnvSwitch = ({
         useFeatureApi();
     const { refetchFeature } = useFeature(projectId, featureId);
     const { setToastData, setToastApiError } = useToast();
-    const { classes: styles } = useStyles();
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const {
         onChangeRequestToggle,
@@ -109,8 +123,8 @@ const FeatureOverviewEnvSwitch = ({
     );
 
     return (
-        <div>
-            <label className={styles.label}>
+        <StyledContainer>
+            <StyledLabel>
                 <PermissionSwitch
                     permission={UPDATE_FEATURE_ENVIRONMENT}
                     projectId={projectId}
@@ -119,7 +133,12 @@ const FeatureOverviewEnvSwitch = ({
                     environmentId={env.name}
                 />
                 {content}
-            </label>
+            </StyledLabel>
+            <FeatureOverviewSidePanelEnvironmentHider
+                environment={env}
+                hiddenEnvironments={hiddenEnvironments}
+                setHiddenEnvironments={setHiddenEnvironments}
+            />
             <ChangeRequestDialogue
                 isOpen={changeRequestDialogDetails.isOpen}
                 onClose={onChangeRequestToggleClose}
@@ -133,7 +152,7 @@ const FeatureOverviewEnvSwitch = ({
                     />
                 }
             />
-        </div>
+        </StyledContainer>
     );
 };
 

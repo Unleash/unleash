@@ -1,10 +1,6 @@
-import {
-    PlaygroundFeatureSchema,
-    PlaygroundRequestSchema,
-} from 'component/playground/Playground/interfaces/playground.model';
-import { Alert, IconButton, Typography, useTheme } from '@mui/material';
+import { PlaygroundFeatureSchema, PlaygroundRequestSchema } from 'openapi';
+import { Alert, IconButton, Typography, useTheme, styled } from '@mui/material';
 import { PlaygroundResultChip } from '../../PlaygroundResultChip/PlaygroundResultChip';
-import { useStyles } from './FeatureDetails.styles';
 import { CloseOutlined } from '@mui/icons-material';
 import React from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -13,6 +9,36 @@ import {
     hasCustomStrategies,
     hasOnlyCustomStrategies,
 } from './helpers';
+
+const StyledDivWrapper = styled('div')({
+    display: 'flex',
+    justifyContent: 'space-between',
+    width: '100%',
+});
+
+const StyledDivTitleRow = styled('div')(({ theme }) => ({
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: theme.spacing(1.5),
+    marginTop: theme.spacing(1.5),
+}));
+
+const StyledDivAlertRow = styled('div')(({ theme }) => ({
+    margin: theme.spacing(1, 0),
+}));
+
+const StyledDivDescriptionRow = styled('div')(({ theme }) => ({
+    margin: theme.spacing(1, 0.5),
+}));
+
+const StyledTypographyName = styled(Typography)(({ theme }) => ({
+    fontWeight: 600,
+    padding: theme.spacing(0.5),
+}));
+
+const StyledIconButton = styled(IconButton)({
+    textAlign: 'right',
+});
 
 interface PlaygroundFeatureResultDetailsProps {
     feature: PlaygroundFeatureSchema;
@@ -24,7 +50,6 @@ export const FeatureDetails = ({
     input,
     onClose,
 }: PlaygroundFeatureResultDetailsProps) => {
-    const { classes: styles } = useStyles();
     const theme = useTheme();
 
     const [description, reason, color] = (() => {
@@ -80,11 +105,11 @@ export const FeatureDetails = ({
 
     return (
         <>
-            <div className={styles.titleRowWrapper}>
-                <div className={styles.titleRow}>
-                    <Typography variant={'subtitle1'} className={styles.name}>
+            <StyledDivWrapper>
+                <StyledDivTitleRow>
+                    <StyledTypographyName variant={'subtitle1'}>
                         {feature.name}
-                    </Typography>
+                    </StyledTypographyName>
                     <ConditionallyRender
                         condition={feature?.strategies?.result !== 'unknown'}
                         show={() => (
@@ -101,12 +126,12 @@ export const FeatureDetails = ({
                             />
                         )}
                     />
-                </div>
-                <IconButton onClick={onCloseClick} className={styles.icon}>
+                </StyledDivTitleRow>
+                <StyledIconButton onClick={onCloseClick}>
                     <CloseOutlined />
-                </IconButton>
-            </div>
-            <div className={styles.descriptionRow}>
+                </StyledIconButton>
+            </StyledDivWrapper>
+            <StyledDivDescriptionRow>
                 <Typography variant="body1" component="span">
                     {description}
                 </Typography>
@@ -116,23 +141,23 @@ export const FeatureDetails = ({
                 <Typography variant="body1" component="span">
                     .
                 </Typography>
-            </div>
+            </StyledDivDescriptionRow>
             <ConditionallyRender
                 condition={Boolean(noValueTxt)}
                 show={
-                    <div className={styles.alertRow}>
+                    <StyledDivAlertRow>
                         <Alert color={'info'}>{noValueTxt}</Alert>
-                    </div>
+                    </StyledDivAlertRow>
                 }
             />
             <ConditionallyRender
                 condition={Boolean(customStrategiesTxt)}
                 show={
-                    <div className={styles.alertRow}>
+                    <StyledDivAlertRow>
                         <Alert severity="warning" color="info">
                             {customStrategiesTxt}
                         </Alert>
-                    </div>
+                    </StyledDivAlertRow>
                 }
             />
         </>

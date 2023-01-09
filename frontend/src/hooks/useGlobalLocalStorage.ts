@@ -2,6 +2,7 @@ import { createLocalStorage } from 'utils/createLocalStorage';
 
 interface IGlobalStore {
     favorites?: boolean;
+    hiddenEnvironments?: Set<string>;
 }
 
 export const useGlobalLocalStorage = () => {

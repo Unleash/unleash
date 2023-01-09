@@ -90,27 +90,23 @@ export const FeatureToggleListTable: VFC = () => {
 
     const columns = useMemo(
         () => [
-            ...(uiConfig?.flags?.favorites
-                ? [
-                      {
-                          Header: (
-                              <FavoriteIconHeader
-                                  isActive={isFavoritesPinned}
-                                  onClick={onChangeIsFavoritePinned}
-                              />
-                          ),
-                          accessor: 'favorite',
-                          Cell: ({ row: { original: feature } }: any) => (
-                              <FavoriteIconCell
-                                  value={feature?.favorite}
-                                  onClick={() => onFavorite(feature)}
-                              />
-                          ),
-                          maxWidth: 50,
-                          disableSortBy: true,
-                      },
-                  ]
-                : []),
+            {
+                Header: (
+                    <FavoriteIconHeader
+                        isActive={isFavoritesPinned}
+                        onClick={onChangeIsFavoritePinned}
+                    />
+                ),
+                accessor: 'favorite',
+                Cell: ({ row: { original: feature } }: any) => (
+                    <FavoriteIconCell
+                        value={feature?.favorite}
+                        onClick={() => onFavorite(feature)}
+                    />
+                ),
+                maxWidth: 50,
+                disableSortBy: true,
+            },
             {
                 Header: 'Seen',
                 accessor: 'lastSeenAt',
@@ -179,7 +175,7 @@ export const FeatureToggleListTable: VFC = () => {
                 searchable: true,
             },
         ],
-        [isFavoritesPinned, uiConfig?.flags?.favorites]
+        [isFavoritesPinned]
     );
 
     const {

@@ -2,10 +2,9 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ISegment } from 'interfaces/segment';
 import { Clear, VisibilityOff, Visibility } from '@mui/icons-material';
-import { useStyles } from './FeatureStrategySegmentChip.styles';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { constraintAccordionListId } from 'component/common/ConstraintAccordion/ConstraintAccordionList/ConstraintAccordionList';
-import { Tooltip } from '@mui/material';
+import { styled, Theme, Tooltip } from '@mui/material';
 
 interface IFeatureStrategySegmentListProps {
     segment: ISegment;
@@ -14,14 +13,39 @@ interface IFeatureStrategySegmentListProps {
     setPreview: React.Dispatch<React.SetStateAction<ISegment | undefined>>;
 }
 
+const StyledChip = styled('span')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(0.5),
+    paddingInlineStart: theme.spacing(2),
+    paddingInlineEnd: theme.spacing(1),
+    paddingBlockStart: theme.spacing(0.5),
+    paddingBlockEnd: theme.spacing(0.5),
+    borderRadius: '100rem',
+    background: theme.palette.featureStrategySegmentChipBackground,
+    color: theme.palette.text.tertiaryContrast,
+}));
+
+const StyledButton = styled('button')(({ theme }) => ({
+    all: 'unset',
+    height: theme.spacing(2),
+    cursor: 'pointer',
+}));
+
+const StyledLink = styled(Link)(({ theme }) => ({
+    marginRight: theme.spacing(1),
+    color: 'inherit',
+    textDecoration: 'none',
+}));
+
+const styledIcon = (theme: Theme) => ({ fontSize: theme.fontSizes.bodySize });
+
 export const FeatureStrategySegmentChip = ({
     segment,
     setSegments,
     preview,
     setPreview,
 }: IFeatureStrategySegmentListProps) => {
-    const { classes: styles } = useStyles();
-
     const onRemove = () => {
         setSegments(prev => {
             return prev.filter(s => s.id !== segment.id);
@@ -40,8 +64,8 @@ export const FeatureStrategySegmentChip = ({
     const togglePreviewIcon = (
         <ConditionallyRender
             condition={segment === preview}
-            show={<VisibilityOff titleAccess="Hide" className={styles.icon} />}
-            elseShow={<Visibility titleAccess="Show" className={styles.icon} />}
+            show={<VisibilityOff titleAccess="Hide" sx={styledIcon} />}
+            elseShow={<Visibility titleAccess="Show" sx={styledIcon} />}
         />
     );
 
@@ -51,34 +75,25 @@ export const FeatureStrategySegmentChip = ({
             : 'Preview segment constraints';
 
     return (
-        <span className={styles.chip}>
-            <Link
-                to={`/segments/edit/${segment.id}`}
-                target="_blank"
-                className={styles.link}
-            >
+        <StyledChip>
+            <StyledLink to={`/segments/edit/${segment.id}`} target="_blank">
                 {segment.name}
-            </Link>
+            </StyledLink>
             <Tooltip title={previewIconTooltip} arrow>
-                <button
+                <StyledButton
                     type="button"
                     onClick={onTogglePreview}
-                    className={styles.button}
                     aria-expanded={segment === preview}
                     aria-controls={constraintAccordionListId}
                 >
                     {togglePreviewIcon}
-                </button>
+                </StyledButton>
             </Tooltip>
             <Tooltip title="Remove segment" arrow>
-                <button
-                    type="button"
-                    onClick={onRemove}
-                    className={styles.button}
-                >
-                    <Clear titleAccess="Remove" className={styles.icon} />
-                </button>
+                <StyledButton type="button" onClick={onRemove}>
+                    <Clear titleAccess="Remove" sx={styledIcon} />
+                </StyledButton>
             </Tooltip>
-        </span>
+        </StyledChip>
     );
 };

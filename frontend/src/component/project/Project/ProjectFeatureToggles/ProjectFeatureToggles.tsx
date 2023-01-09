@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useMediaQuery, useTheme } from '@mui/material';
+import { styled, useMediaQuery, useTheme } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { SortingRule, useFlexLayout, useSortBy, useTable } from 'react-table';
@@ -9,7 +9,6 @@ import { PageContent } from 'component/common/PageContent/PageContent';
 import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
 import { getCreateTogglePath } from 'utils/routePathHelpers';
 import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
@@ -46,6 +45,10 @@ import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi
 import { FeatureTagCell } from 'component/common/Table/cells/FeatureTagCell/FeatureTagCell';
 import { useGlobalLocalStorage } from 'hooks/useGlobalLocalStorage';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
+
+const StyledResponsiveButton = styled(ResponsiveButton)(() => ({
+    whiteSpace: 'nowrap',
+}));
 
 interface IProjectFeatureTogglesProps {
     features: IProject['features'];
@@ -102,7 +105,6 @@ export const ProjectFeatureToggles = ({
         useGlobalLocalStorage();
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
-    const { uiConfig } = useUiConfig();
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const environments = useEnvironmentsRef(
         loading ? ['a', 'b', 'c'] : newEnvironments
@@ -193,28 +195,24 @@ export const ProjectFeatureToggles = ({
 
     const columns = useMemo(
         () => [
-            ...(uiConfig?.flags?.favorites
-                ? [
-                      {
-                          id: 'favorite',
-                          Header: (
-                              <FavoriteIconHeader
-                                  isActive={isFavoritesPinned}
-                                  onClick={onChangeIsFavoritePinned}
-                              />
-                          ),
-                          accessor: 'favorite',
-                          Cell: ({ row: { original: feature } }: any) => (
-                              <FavoriteIconCell
-                                  value={feature?.favorite}
-                                  onClick={() => onFavorite(feature)}
-                              />
-                          ),
-                          maxWidth: 50,
-                          disableSortBy: true,
-                      },
-                  ]
-                : []),
+            {
+                id: 'favorite',
+                Header: (
+                    <FavoriteIconHeader
+                        isActive={isFavoritesPinned}
+                        onClick={onChangeIsFavoritePinned}
+                    />
+                ),
+                accessor: 'favorite',
+                Cell: ({ row: { original: feature } }: any) => (
+                    <FavoriteIconCell
+                        value={feature?.favorite}
+                        onClick={() => onFavorite(feature)}
+                    />
+                ),
+                maxWidth: 50,
+                disableSortBy: true,
+            },
             {
                 Header: 'Seen',
                 accessor: 'lastSeenAt',
@@ -303,7 +301,7 @@ export const ProjectFeatureToggles = ({
                 disableSortBy: true,
             },
         ],
-        [projectId, environments, loading, onToggle, uiConfig?.flags?.favorites]
+        [projectId, environments, loading, onToggle]
     );
 
     const [searchValue, setSearchValue] = useState(
@@ -492,10 +490,8 @@ export const ProjectFeatureToggles = ({
         <PageContent
             isLoading={loading}
             className={styles.container}
-            bodyClass={styles.bodyClass}
             header={
                 <PageHeader
-                    className={styles.title}
                     titleElement={`Feature toggles (${rows.length})`}
                     actions={
                         <>
@@ -519,23 +515,17 @@ export const ProjectFeatureToggles = ({
                                 setHiddenColumns={setHiddenColumns}
                             />
                             <PageHeader.Divider sx={{ marginLeft: 0 }} />
-                            <ResponsiveButton
+                            <StyledResponsiveButton
                                 onClick={() =>
-                                    navigate(
-                                        getCreateTogglePath(
-                                            projectId,
-                                            uiConfig.flags.E
-                                        )
-                                    )
+                                    navigate(getCreateTogglePath(projectId))
                                 }
                                 maxWidth="960px"
                                 Icon={Add}
                                 projectId={projectId}
                                 permission={CREATE_FEATURE}
-                                className={styles.button}
                             >
                                 New feature toggle
-                            </ResponsiveButton>
+                            </StyledResponsiveButton>
                         </>
                     }
                 >

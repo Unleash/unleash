@@ -54,7 +54,6 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
-    "isStandalone": true,
     "menu": {},
     "parent": "/projects",
     "path": "/projects/:projectId/features/:featureId/*",
@@ -80,7 +79,6 @@ exports[`returns all baseRoutes 1`] = `
   {
     "component": [Function],
     "flag": "P",
-    "isStandalone": true,
     "menu": {},
     "parent": "/projects",
     "path": "/projects/:projectId/*",
@@ -382,6 +380,17 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
+    "flag": "serviceAccounts",
+    "menu": {
+      "adminSettings": true,
+    },
+    "parent": "/admin",
+    "path": "/admin/service-accounts",
+    "title": "Service accounts",
+    "type": "protected",
+  },
+  {
+    "component": [Function],
     "menu": {},
     "parent": "/admin",
     "path": "/admin/create-user",
@@ -474,6 +483,17 @@ exports[`returns all baseRoutes 1`] = `
     "parent": "/admin",
     "path": "/admin/network/*",
     "title": "Network",
+    "type": "protected",
+  },
+  {
+    "component": [Function],
+    "flag": "maintenance",
+    "menu": {
+      "adminSettings": true,
+    },
+    "parent": "/admin",
+    "path": "/admin/maintenance",
+    "title": "Maintenance",
     "type": "protected",
   },
   {

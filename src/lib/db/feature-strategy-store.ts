@@ -259,7 +259,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             .modify(FeatureToggleStore.filterByArchived, archived);
 
         let selectColumns = ['features_view.*'] as (string | Raw<any>)[];
-        if (userId && this.flagResolver.isEnabled('favorites')) {
+        if (userId) {
             query = query.leftJoin(`favorite_features`, function () {
                 this.on(
                     'favorite_features.feature',
@@ -460,7 +460,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             'ft.tag_type as tag_type',
         ] as (string | Raw<any>)[];
 
-        if (userId && this.flagResolver.isEnabled('favorites')) {
+        if (userId) {
             query = query.leftJoin(`favorite_features`, function () {
                 this.on('favorite_features.feature', 'features.name').andOnVal(
                     'favorite_features.user_id',

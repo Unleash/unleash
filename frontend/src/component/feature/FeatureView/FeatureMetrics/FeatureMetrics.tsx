@@ -6,23 +6,27 @@ import {
     FeatureMetricsHours,
 } from './FeatureMetricsHours/FeatureMetricsHours';
 import { IFeatureMetricsRaw } from 'interfaces/featureToggle';
-import { Grid } from '@mui/material';
+import { Grid, styled } from '@mui/material';
 import { FeatureMetricsContent } from './FeatureMetricsContent/FeatureMetricsContent';
 import { useQueryStringNumberState } from 'hooks/useQueryStringNumberState';
 import { useQueryStringState } from 'hooks/useQueryStringState';
 import { FeatureMetricsChips } from './FeatureMetricsChips/FeatureMetricsChips';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useStyles } from './FeatureMetrics.styles';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+
+const StyledContainer = styled('div')(({ theme }) => ({
+    [theme.breakpoints.down('md')]: {
+        marginTop: theme.spacing(2),
+    },
+}));
 
 export const FeatureMetrics = () => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const environments = useFeatureMetricsEnvironments(projectId, featureId);
     const applications = useFeatureMetricsApplications(featureId);
-    const { classes: styles } = useStyles();
     usePageTitle('Metrics');
 
     const [hoursBack = FEATURE_METRIC_HOURS_BACK_MAX, setHoursBack] =
@@ -91,12 +95,12 @@ export const FeatureMetrics = () => {
                     />
                 </Grid>
                 <Grid item xs={12} md={2}>
-                    <div className={styles.mobileMarginTop}>
+                    <StyledContainer>
                         <FeatureMetricsHours
                             hoursBack={hoursBack}
                             setHoursBack={setHoursBack}
                         />
-                    </div>
+                    </StyledContainer>
                 </Grid>
             </Grid>
             <FeatureMetricsContent

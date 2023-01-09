@@ -1,8 +1,14 @@
-import { useStyles } from 'component/context/ContectFormChip/ContextFormChipList.styles';
 import React from 'react';
+import { styled } from '@mui/material';
 
-export const ContextFormChipList: React.FC = ({ children }) => {
-    const { classes: styles } = useStyles();
+const StyledContainer = styled('ul')(({ theme }) => ({
+    listStyleType: 'none',
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: theme.spacing(1),
+    padding: 0,
+    margin: 0,
+    marginBottom: '1rem !important',
+}));
 
-    return <ul className={styles.container}>{children}</ul>;
-};
+export const ContextFormChipList: React.FC = StyledContainer;

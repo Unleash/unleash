@@ -100,7 +100,7 @@ class ProjectStore implements IProjectStore {
 
         let groupByColumns = ['projects.id'];
 
-        if (userId && this.flagResolver.isEnabled('favorites')) {
+        if (userId) {
             projects = projects.leftJoin(`favorite_projects`, function () {
                 this.on('favorite_projects.project', 'projects.id').andOnVal(
                     'favorite_projects.user_id',
@@ -419,7 +419,7 @@ class ProjectStore implements IProjectStore {
             name: row.name,
             description: row.description,
             createdAt: row.created_at,
-            health: row.health || 100,
+            health: row.health ?? 100,
             updatedAt: row.updated_at || new Date(),
         };
     }

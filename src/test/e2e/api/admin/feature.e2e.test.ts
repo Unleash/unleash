@@ -837,21 +837,3 @@ test('should have access to the get all features endpoint even if api is disable
         .get('/api/admin/features')
         .expect(200);
 });
-
-test('should not allow creation of feature toggle in maintenance mode', async () => {
-    const appWithMaintenanceMode = await setupAppWithCustomConfig(db.stores, {
-        experimental: {
-            flags: {
-                maintenance: true,
-            },
-        },
-    });
-
-    return appWithMaintenanceMode.request
-        .post('/api/admin/features')
-        .send({
-            name: 'maintenance-feature',
-        })
-        .set('Content-Type', 'application/json')
-        .expect(503);
-});

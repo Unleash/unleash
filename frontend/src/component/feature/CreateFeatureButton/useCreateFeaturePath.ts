@@ -1,18 +1,16 @@
 import { useDefaultProjectId } from 'hooks/api/getters/useDefaultProject/useDefaultProjectId';
-import { IFeaturesFilter } from 'hooks/useFeaturesFilter';
 import { getCreateTogglePath } from 'utils/routePathHelpers';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IUseCreateFeaturePathOutput {
     path: string;
     projectId: string;
 }
 
-export const useCreateFeaturePath = (
-    filter: IFeaturesFilter
-): IUseCreateFeaturePathOutput | undefined => {
+export const useCreateFeaturePath = (filter: {
+    query?: string;
+    project: string;
+}): IUseCreateFeaturePathOutput | undefined => {
     const defaultProjectId = useDefaultProjectId();
-    const { uiConfig } = useUiConfig();
 
     const projectId =
         filter.project === '*' || !filter.project
@@ -24,7 +22,7 @@ export const useCreateFeaturePath = (
     }
 
     return {
-        path: getCreateTogglePath(projectId, uiConfig.flags.E),
+        path: getCreateTogglePath(projectId),
         projectId,
     };
 };

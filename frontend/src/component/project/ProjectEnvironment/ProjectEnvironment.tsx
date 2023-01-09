@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useStyles } from './ProjectEnvironment.styles';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
@@ -38,6 +37,19 @@ const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(4),
 }));
 
+const StyledDivContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexWrap: 'wrap',
+    [theme.breakpoints.down('sm')]: {
+        justifyContent: 'center',
+    },
+}));
+
+const StyledApiError = styled(ApiError)(({ theme }) => ({
+    maxWidth: '400px',
+    marginBottom: theme.spacing(2),
+}));
+
 const ProjectEnvironmentList = () => {
     const projectId = useRequiredPathParam('projectId');
     const projectName = useProjectNameOrId(projectId);
@@ -56,7 +68,6 @@ const ProjectEnvironmentList = () => {
     const [selectedEnvironment, setSelectedEnvironment] =
         useState<IProjectEnvironment>();
     const [hideDialog, setHideDialog] = useState(false);
-    const { classes: styles } = useStyles();
     const { isOss } = useUiConfig();
 
     const projectEnvironments = useMemo<IProjectEnvironment[]>(
@@ -77,9 +88,8 @@ const ProjectEnvironmentList = () => {
 
     const renderError = () => {
         return (
-            <ApiError
+            <StyledApiError
                 onClick={refetch}
-                className={styles.apiError}
                 text="Error fetching environments"
             />
         );
@@ -229,7 +239,7 @@ const ProjectEnvironmentList = () => {
             <ConditionallyRender
                 condition={uiConfig.flags.E}
                 show={
-                    <div className={styles.container}>
+                    <StyledDivContainer>
                         <ConditionallyRender
                             condition={Boolean(error)}
                             show={renderError()}
@@ -305,7 +315,7 @@ const ProjectEnvironmentList = () => {
                             setOpen={setHideDialog}
                             onConfirm={onHideConfirm}
                         />
-                    </div>
+                    </StyledDivContainer>
                 }
                 elseShow={
                     <Alert security="success">

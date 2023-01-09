@@ -1,13 +1,26 @@
 import { useState, useEffect } from 'react';
-import { Alert } from '@mui/material';
+import { Alert, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Typography } from '@mui/material';
-import { useStyles } from './Proclamation.styles';
 import { IProclamationToast } from 'interfaces/uiConfig';
 
 interface IProclamationProps {
     toast?: IProclamationToast;
 }
+
+const StyledProclamation = styled(Alert)(({ theme }) => ({
+    marginBottom: theme.spacing(2),
+}));
+
+const StyledContent = styled(Typography)(({ theme }) => ({
+    maxWidth: '800px',
+}));
+
+const StyledLink = styled('a')(({ theme }) => ({
+    display: 'block',
+    marginTop: theme.spacing(1),
+    width: '100px',
+}));
 
 const renderProclamation = (id: string) => {
     if (!id) return false;
@@ -22,7 +35,6 @@ const renderProclamation = (id: string) => {
 
 const Proclamation = ({ toast }: IProclamationProps) => {
     const [show, setShow] = useState(false);
-    const { classes: styles } = useStyles();
 
     useEffect(() => {
         setShow(renderProclamation(toast?.id || ''));
@@ -41,23 +53,18 @@ const Proclamation = ({ toast }: IProclamationProps) => {
         <ConditionallyRender
             condition={show}
             show={
-                <Alert
-                    className={styles.proclamation}
-                    severity={toast.severity}
-                    onClose={onClose}
-                >
-                    <Typography className={styles.content} variant="body2">
+                <StyledProclamation severity={toast.severity} onClose={onClose}>
+                    <StyledContent variant="body2">
                         {toast.message}
-                    </Typography>
-                    <a
+                    </StyledContent>
+                    <StyledLink
                         href={toast.link}
-                        className={styles.link}
                         target="_blank"
                         rel="noopener noreferrer"
                     >
                         View more
-                    </a>
-                </Alert>
+                    </StyledLink>
+                </StyledProclamation>
             }
         />
     );

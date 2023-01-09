@@ -1,5 +1,60 @@
 import { makeStyles } from 'tss-react/mui';
+import { Theme } from '@mui/material';
 
+export const focusable = (theme: Theme) => ({
+    '&:focus-visible': {
+        outline: 0,
+        outlineStyle: 'solid',
+        outlineWidth: 2,
+        outlineOffset: 2,
+        outlineColor: theme.palette.primary.main,
+    },
+});
+
+export const contentSpacingY = (theme: Theme) => ({
+    '& > *': {
+        marginTop: `${theme.spacing(1)} !important`,
+        marginBottom: `${theme.spacing(1)} !important`,
+    },
+});
+
+export const title = (theme: Theme) => ({
+    fontSize: theme.fontSizes.mainHeader,
+    fontWeight: 'bold',
+    marginBottom: theme.spacing(1),
+});
+
+export const textCenter = {
+    textAlign: 'center',
+} as const;
+
+export const flexRow = {
+    display: 'flex',
+    alignItems: 'center',
+} as const;
+
+export const flexColumn = {
+    display: 'flex',
+    flexDirection: 'column',
+} as const;
+
+export const itemsCenter = {
+    alignItems: 'center',
+} as const;
+
+export const relative = {
+    position: 'relative',
+} as const;
+
+export const formTemplateSidebarWidth = '27.5rem';
+export const defaultBorderRadius = (theme: Theme) => ({
+    borderRadius: `${theme.shape.borderRadius}px`,
+});
+
+/**
+ * Please extract styles below into MUI fragments as shown above
+ * @deprecated
+ */
 export const useThemeStyles = makeStyles()(theme => ({
     focusable: {
         '&:focus-visible': {
@@ -15,21 +70,6 @@ export const useThemeStyles = makeStyles()(theme => ({
             marginTop: '0.5rem !important',
             marginBottom: '0.5rem !important',
         },
-    },
-    contentSpacingYLarge: {
-        '& > *': {
-            marginTop: '1.5rem !important',
-            marginBottom: '1.5rem !important',
-        },
-    },
-    contentSpacingX: {
-        '& > *': {
-            marginRight: '0.8rem !important',
-            marginLeft: '0.8rem !important',
-        },
-    },
-    relative: {
-        position: 'relative',
     },
     divider: {
         margin: '1rem 0',
@@ -76,19 +116,6 @@ export const useThemeStyles = makeStyles()(theme => ({
         fontSize: theme.fontSizes.mainHeader,
         fontWeight: 'bold',
         marginBottom: '0.5rem',
-    },
-    fadeInBottomStartNoPosition: {
-        transform: 'translateY(400px)',
-        opacity: '0',
-        boxShadow: `rgb(129 129 129 / 40%) 4px 5px 11px 4px`,
-        zIndex: 500,
-        width: '100%',
-        backgroundColor: '#fff',
-        right: 0,
-        bottom: 0,
-        left: 0,
-        height: '300px',
-        position: 'fixed',
     },
     fadeInBottomStart: {
         opacity: '0',

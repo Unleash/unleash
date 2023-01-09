@@ -7,11 +7,9 @@ export const defaultValue: IUiConfig = {
     slogan: 'The enterprise ready feature toggle service.',
     flags: {
         P: false,
-        C: false,
         E: false,
         RE: false,
         EEA: false,
-        CO: false,
         SE: false,
         T: false,
         UNLEASH_CLOUD: false,

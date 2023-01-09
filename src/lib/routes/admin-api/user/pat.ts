@@ -78,7 +78,11 @@ export default class PatController extends Controller {
 
     async createPat(req: IAuthRequest, res: Response): Promise<void> {
         const pat = req.body;
-        const createdPat = await this.patService.createPat(pat, req.user);
+        const createdPat = await this.patService.createPat(
+            pat,
+            req.user.id,
+            req.user,
+        );
         this.openApiService.respondWithValidation(
             201,
             res,
@@ -88,7 +92,7 @@ export default class PatController extends Controller {
     }
 
     async getPats(req: IAuthRequest, res: Response<PatSchema>): Promise<void> {
-        const pats = await this.patService.getAll(req.user);
+        const pats = await this.patService.getAll(req.user.id);
         this.openApiService.respondWithValidation(200, res, patsSchema.$id, {
             pats: serializeDates(pats),
         });

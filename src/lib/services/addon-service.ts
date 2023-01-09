@@ -277,7 +277,7 @@ export default class AddonService {
                 `Missing required parameters: ${requiredParamsMissing.join(
                     ',',
                 )} `,
-                '',
+                [],
                 undefined,
             );
         }

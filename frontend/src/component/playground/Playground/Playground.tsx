@@ -8,7 +8,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { PlaygroundResultsTable } from './PlaygroundResultsTable/PlaygroundResultsTable';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { usePlaygroundApi } from 'hooks/api/actions/usePlayground/usePlayground';
-import { PlaygroundResponseSchema } from 'component/playground/Playground/interfaces/playground.model';
+import { PlaygroundResponseSchema } from 'openapi';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import { PlaygroundForm } from './PlaygroundForm/PlaygroundForm';
 import {

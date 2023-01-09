@@ -5,7 +5,6 @@ import { getProjectFetcher } from 'hooks/api/getters/useProject/getProjectFetche
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ProjectCard } from '../ProjectCard/ProjectCard';
-import { useStyles } from './ProjectList.styles';
 import { IProjectCard } from 'interfaces/project';
 import loadingData from './loadingData';
 import { PageContent } from 'component/common/PageContent/PageContent';
@@ -17,12 +16,36 @@ import { Add } from '@mui/icons-material';
 import ApiError from 'component/common/ApiError/ApiError';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { TablePlaceholder } from 'component/common/Table';
-import { useMediaQuery } from '@mui/material';
+import { useMediaQuery, styled } from '@mui/material';
 import theme from 'themes/theme';
 import { Search } from 'component/common/Search/Search';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
 import { ITooltipResolverProps } from 'component/common/TooltipResolver/TooltipResolver';
 import { ReactComponent as ProPlanIcon } from 'assets/icons/pro-enterprise-feature-badge.svg';
+import { safeRegExp } from '@server/util/escape-regex';
+
+const StyledDivContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexWrap: 'wrap',
+    [theme.breakpoints.down('sm')]: {
+        justifyContent: 'center',
+    },
+}));
+
+const StyledApiError = styled(ApiError)(({ theme }) => ({
+    maxWidth: '400px',
+    marginBottom: theme.spacing(2),
+}));
+
+const StyledCardLink = styled(Link)(({ theme }) => ({
+    color: 'inherit',
+    textDecoration: 'none',
+    border: 'none',
+    padding: '0',
+    background: 'transparent',
+    fontFamily: theme.typography.fontFamily,
+    pointer: 'cursor',
+}));
 
 type PageQueryType = Partial<Record<'search', string>>;
 
@@ -70,7 +93,6 @@ function resolveCreateButtonData(
 export const ProjectListNew = () => {
     const { hasAccess } = useContext(AccessContext);
     const navigate = useNavigate();
-    const { classes: styles } = useStyles();
     const { projects, loading, error, refetch } = useProjects();
     const [fetchedProjects, setFetchedProjects] = useState<projectMap>({});
     const { isOss } = useUiConfig();
@@ -93,7 +115,7 @@ export const ProjectListNew = () => {
     }, [searchValue, setSearchParams]);
 
     const filteredProjects = useMemo(() => {
-        const regExp = new RegExp(searchValue, 'i');
+        const regExp = safeRegExp(searchValue, 'i');
         return (
             searchValue
                 ? projects.filter(project => regExp.test(project.name))
@@ -126,11 +148,7 @@ export const ProjectListNew = () => {
 
     const renderError = () => {
         return (
-            <ApiError
-                onClick={refetch}
-                className={styles.apiError}
-                text="Error fetching projects"
-            />
+            <StyledApiError onClick={refetch} text="Error fetching projects" />
         );
     };
 
@@ -186,7 +204,7 @@ export const ProjectListNew = () => {
             }
         >
             <ConditionallyRender condition={error} show={renderError()} />
-            <div className={styles.container}>
+            <StyledDivContainer>
                 <ConditionallyRender
                     condition={filteredProjects.length < 1 && !loading}
                     show={
@@ -226,10 +244,9 @@ export const ProjectListNew = () => {
                             elseShow={() =>
                                 filteredProjects.map(
                                     (project: IProjectCard) => (
-                                        <Link
+                                        <StyledCardLink
                                             key={project.id}
                                             to={`/projects/${project.id}`}
-                                            className={styles.cardLink}
                                         >
                                             <ProjectCard
                                                 onHover={() =>
@@ -246,14 +263,14 @@ export const ProjectListNew = () => {
                                                 }
                                                 isFavorite={project.favorite}
                                             />
-                                        </Link>
+                                        </StyledCardLink>
                                     )
                                 )
                             }
                         />
                     }
                 />
-            </div>
+            </StyledDivContainer>
         </PageContent>
     );
 };

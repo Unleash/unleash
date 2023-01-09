@@ -1,5 +1,4 @@
 import FeatureOverviewMetaData from './FeatureOverviewMetaData/FeatureOverviewMetaData';
-import { useStyles } from './FeatureOverview.styles';
 import FeatureOverviewEnvironments from './FeatureOverviewEnvironments/FeatureOverviewEnvironments';
 import FeatureOverviewEnvSwitches from './FeatureOverviewEnvSwitches/FeatureOverviewEnvSwitches';
 import { Routes, Route, useNavigate } from 'react-router-dom';
@@ -14,30 +13,60 @@ import { usePageTitle } from 'hooks/usePageTitle';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { FeatureOverviewSidePanel } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewSidePanel/FeatureOverviewSidePanel';
+import { useHiddenEnvironments } from 'hooks/useHiddenEnvironments';
+import { styled } from '@mui/material';
+
+const StyledContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    width: '100%',
+    [theme.breakpoints.down(1000)]: {
+        flexDirection: 'column',
+    },
+}));
+
+const StyledMainContent = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    width: `calc(100% - (350px + 1rem))`,
+    [theme.breakpoints.down(1000)]: {
+        width: '100%',
+    },
+}));
 
 const FeatureOverview = () => {
     const { uiConfig } = useUiConfig();
-    const { classes: styles } = useStyles();
     const navigate = useNavigate();
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const featurePath = formatFeaturePath(projectId, featureId);
+    const { hiddenEnvironments, setHiddenEnvironments } =
+        useHiddenEnvironments();
     const onSidebarClose = () => navigate(featurePath);
     usePageTitle(featureId);
 
     return (
-        <div className={styles.container}>
+        <StyledContainer>
             <div>
                 <FeatureOverviewMetaData />
                 <ConditionallyRender
                     condition={Boolean(uiConfig.flags.variantsPerEnvironment)}
-                    show={<FeatureOverviewSidePanel />}
-                    elseShow={<FeatureOverviewEnvSwitches />}
+                    show={
+                        <FeatureOverviewSidePanel
+                            hiddenEnvironments={hiddenEnvironments}
+                            setHiddenEnvironments={setHiddenEnvironments}
+                        />
+                    }
+                    elseShow={
+                        <FeatureOverviewEnvSwitches
+                            hiddenEnvironments={hiddenEnvironments}
+                            setHiddenEnvironments={setHiddenEnvironments}
+                        />
+                    }
                 />
             </div>
-            <div className={styles.mainContent}>
+            <StyledMainContent>
                 <FeatureOverviewEnvironments />
-            </div>
+            </StyledMainContent>
             <Routes>
                 <Route
                     path="strategies/create"
@@ -64,7 +93,7 @@ const FeatureOverview = () => {
                     }
                 />
             </Routes>
-        </div>
+        </StyledContainer>
     );
 };
 

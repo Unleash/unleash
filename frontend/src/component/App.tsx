@@ -19,7 +19,7 @@ import { useStyles } from './App.styles';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useProjects from '../hooks/api/getters/useProjects/useProjects';
 import { useLastViewedProject } from '../hooks/useLastViewedProject';
-import Maintenance from './maintenance/Maintenance';
+import MaintenanceBanner from './maintenance/MaintenanceBanner';
 
 const InitialRedirect = () => {
     const { lastViewed } = useLastViewedProject();
@@ -75,10 +75,13 @@ export const App = () => {
                             elseShow={
                                 <>
                                     <ConditionallyRender
-                                        condition={Boolean(
-                                            uiConfig?.flags?.maintenance
-                                        )}
-                                        show={<Maintenance />}
+                                        condition={
+                                            Boolean(
+                                                uiConfig?.flags?.maintenance
+                                            ) &&
+                                            Boolean(uiConfig?.maintenanceMode)
+                                        }
+                                        show={<MaintenanceBanner />}
                                     />
                                     <div className={styles.container}>
                                         <ToastRenderer />

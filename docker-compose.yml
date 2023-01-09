@@ -49,7 +49,7 @@ services:
   db:
     expose:
       - "5432"
-    image: postgres:14
+    image: postgres:15
     environment:
       # create a database called `db`
       POSTGRES_DB: "db"

@@ -1,6 +1,6 @@
 import { Fragment, useMemo, VFC } from 'react';
-import { Box, Chip } from '@mui/material';
-import { IFeatureStrategy, IFeatureStrategyPayload } from 'interfaces/strategy';
+import { Box, Chip, styled } from '@mui/material';
+import { IFeatureStrategyPayload } from 'interfaces/strategy';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import PercentageCircle from 'component/common/PercentageCircle/PercentageCircle';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
@@ -10,7 +10,6 @@ import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { FeatureOverviewSegment } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewSegment/FeatureOverviewSegment';
 import { ConstraintAccordionList } from 'component/common/ConstraintAccordion/ConstraintAccordionList/ConstraintAccordionList';
-import { useStyles } from './StrategyExecution.styles';
 import {
     parseParameterNumber,
     parseParameterString,
@@ -28,11 +27,20 @@ const NoItems: VFC = () => (
     </Box>
 );
 
+const StyledValueContainer = styled(Box)(({ theme }) => ({
+    padding: theme.spacing(2, 3),
+    border: `1px solid ${theme.palette.dividerAlternative}`,
+    borderRadius: theme.shape.borderRadiusMedium,
+}));
+
+const StyledValueSeparator = styled('span')(({ theme }) => ({
+    color: theme.palette.neutral.main,
+}));
+
 export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
     strategy,
 }) => {
     const { parameters, constraints = [] } = strategy;
-    const { classes: styles } = useStyles();
     const { strategies } = useStrategies();
     const { uiConfig } = useUiConfig();
     const { segments } = useSegments();
@@ -54,8 +62,7 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
                     const percentage = parseParameterNumber(parameters[key]);
 
                     return (
-                        <Box
-                            className={styles.valueContainer}
+                        <StyledValueContainer
                             sx={{ display: 'flex', alignItems: 'center' }}
                         >
                             <Box sx={{ mr: 2 }}>
@@ -77,7 +84,7 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
                                     : ''}{' '}
                                 is included.
                             </div>
-                        </Box>
+                        </StyledValueContainer>
                     );
                 case 'userIds':
                 case 'UserIds':
@@ -101,12 +108,12 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
                     return null;
             }
         });
-    }, [parameters, definition, constraints, styles]);
+    }, [parameters, definition, constraints]);
 
     const customStrategyList = useMemo(() => {
         if (!parameters || !definition?.editable) return null;
         const isSetTo = (
-            <span className={styles.valueSeparator}>{' is set to '}</span>
+            <StyledValueSeparator>{' is set to '}</StyledValueSeparator>
         );
 
         return definition?.parameters.map(param => {
@@ -123,9 +130,9 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
                     const values = parseParameterStrings(parameters[name]);
 
                     return values.length > 0 ? (
-                        <div className={styles.valueContainer}>
+                        <StyledValueContainer>
                             {nameItem}{' '}
-                            <span className={styles.valueSeparator}>
+                            <StyledValueSeparator>
                                 has {values.length}{' '}
                                 {values.length > 1 ? `items` : 'item'}:{' '}
                                 {values.map((item: string) => (
@@ -141,15 +148,14 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
                                         sx={{ mr: 0.5 }}
                                     />
                                 ))}
-                            </span>
-                        </div>
+                            </StyledValueSeparator>
+                        </StyledValueContainer>
                     ) : null;
 
                 case 'percentage':
                     const percentage = parseParameterNumber(parameters[name]);
                     return parameters[name] !== '' ? (
-                        <Box
-                            className={styles.valueContainer}
+                        <StyledValueContainer
                             sx={{ display: 'flex', alignItems: 'center' }}
                         >
                             <Box sx={{ mr: 2 }}>
@@ -168,13 +174,13 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
                                     label={`${percentage}%`}
                                 />
                             </div>
-                        </Box>
+                        </StyledValueContainer>
                     ) : null;
 
                 case 'boolean':
                     return parameters[name] === 'true' ||
                         parameters[name] === 'false' ? (
-                        <div className={styles.valueContainer}>
+                        <StyledValueContainer>
                             <StringTruncator
                                 maxLength={15}
                                 maxWidth="150"
@@ -191,20 +197,20 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
                                 size="small"
                                 label={parameters[name]}
                             />
-                        </div>
+                        </StyledValueContainer>
                     ) : null;
 
                 case 'string':
                     const value = parseParameterString(parameters[name]);
                     return typeof parameters[name] !== 'undefined' ? (
-                        <div className={styles.valueContainer}>
+                        <StyledValueContainer>
                             {nameItem}
                             <ConditionallyRender
                                 condition={value === ''}
                                 show={
-                                    <span className={styles.valueSeparator}>
+                                    <StyledValueSeparator>
                                         {' is an empty string'}
-                                    </span>
+                                    </StyledValueSeparator>
                                 }
                                 elseShow={
                                     <>
@@ -217,13 +223,13 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
                                     </>
                                 }
                             />
-                        </div>
+                        </StyledValueContainer>
                     ) : null;
 
                 case 'number':
                     const number = parseParameterNumber(parameters[name]);
                     return parameters[name] !== '' && number !== undefined ? (
-                        <div className={styles.valueContainer}>
+                        <StyledValueContainer>
                             {nameItem}
                             {isSetTo}
                             <StringTruncator
@@ -231,7 +237,7 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
                                 text={String(number)}
                                 maxLength={50}
                             />
-                        </div>
+                        </StyledValueContainer>
                     ) : null;
                 case 'default':
                     return null;
@@ -239,7 +245,7 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
 
             return null;
         });
-    }, [parameters, definition, styles]);
+    }, [parameters, definition]);
 
     if (!parameters) {
         return <NoItems />;
@@ -259,7 +265,7 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
         ),
         strategy.name === 'default' && (
             <>
-                <Box sx={{ width: '100%' }} className={styles.valueContainer}>
+                <StyledValueContainer sx={{ width: '100%' }}>
                     The standard strategy is{' '}
                     <Chip
                         variant="outlined"
@@ -268,7 +274,7 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
                         label="ON"
                     />{' '}
                     for all users.
-                </Box>
+                </StyledValueContainer>
             </>
         ),
         ...(parametersList ?? []),

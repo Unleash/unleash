@@ -10,7 +10,7 @@ import {
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useStyles } from './StrategyItemContainer.styles';
-import { PlaygroundStrategySchema } from 'component/playground/Playground/interfaces/playground.model';
+import { PlaygroundStrategySchema } from 'openapi';
 
 interface IStrategyItemContainerProps {
     strategy: IFeatureStrategy | PlaygroundStrategySchema;
@@ -19,6 +19,7 @@ interface IStrategyItemContainerProps {
     actions?: ReactNode;
     orderNumber?: number;
     className?: string;
+    style?: React.CSSProperties;
 }
 
 const DragIcon = styled(IconButton)(({ theme }) => ({
@@ -46,7 +47,7 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
     actions,
     children,
     orderNumber,
-    className,
+    style = {},
 }) => {
     const { classes: styles } = useStyles();
     const Icon = getFeatureStrategyIcon(strategy.name);
@@ -57,7 +58,7 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
                 condition={orderNumber !== undefined}
                 show={<StyledIndexLabel>{orderNumber}</StyledIndexLabel>}
             />
-            <Box className={classNames(styles.container, className)}>
+            <Box className={styles.container} style={{ ...style }}>
                 <div
                     className={classNames(styles.header, {
                         [styles.headerDraggable]: Boolean(onDragStart),

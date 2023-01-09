@@ -1,19 +1,13 @@
-import {
-    render,
-    screen,
-    waitFor,
-    within,
-    getAllByRole,
-    fireEvent,
-} from '@testing-library/react';
+import { FC } from 'react';
+import { render, screen, within, fireEvent } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
-import { FeatureView } from '../feature/FeatureView/FeatureView';
 import { ThemeProvider } from 'themes/ThemeProvider';
+import { MainLayout } from 'component/layout/MainLayout/MainLayout';
+import { FeatureView } from '../feature/FeatureView/FeatureView';
 import { AccessProvider } from '../providers/AccessProvider/AccessProvider';
 import { AnnouncerProvider } from '../common/Announcer/AnnouncerProvider/AnnouncerProvider';
 import { testServerRoute, testServerSetup } from '../../utils/testServer';
 import { UIProviderContainer } from '../providers/UIProvider/UIProviderContainer';
-import { FC } from 'react';
 
 const server = testServerSetup();
 
@@ -227,7 +221,10 @@ const UnleashUiSetup: FC<{ path: string; pathTemplate: string }> = ({
                 <ThemeProvider>
                     <AnnouncerProvider>
                         <Routes>
-                            <Route path={pathTemplate} element={children} />
+                            <Route
+                                path={pathTemplate}
+                                element={<MainLayout>{children}</MainLayout>}
+                            />
                         </Routes>
                     </AnnouncerProvider>
                 </ThemeProvider>

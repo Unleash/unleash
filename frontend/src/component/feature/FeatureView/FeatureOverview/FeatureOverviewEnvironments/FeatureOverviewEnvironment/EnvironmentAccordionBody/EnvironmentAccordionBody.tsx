@@ -1,5 +1,5 @@
 import { DragEventHandler, RefObject, useEffect, useState } from 'react';
-import { Alert } from '@mui/material';
+import { Alert, styled } from '@mui/material';
 import useFeatureStrategyApi from 'hooks/api/actions/useFeatureStrategyApi/useFeatureStrategyApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
@@ -8,7 +8,6 @@ import { StrategyDraggableItem } from './StrategyDraggableItem/StrategyDraggable
 import { IFeatureEnvironment } from 'interfaces/featureToggle';
 import { FeatureStrategyEmpty } from 'component/feature/FeatureStrategy/FeatureStrategyEmpty/FeatureStrategyEmpty';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { useStyles } from './EnvironmentAccordionBody.styles';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 
 interface IEnvironmentAccordionBodyProps {
@@ -16,6 +15,18 @@ interface IEnvironmentAccordionBodyProps {
     featureEnvironment?: IFeatureEnvironment;
     otherEnvironments?: IFeatureEnvironment['name'][];
 }
+
+const StyledAccordionBody = styled('div')(({ theme }) => ({
+    width: '100%',
+    position: 'relative',
+    paddingBottom: theme.spacing(2),
+}));
+
+const StyledAccordionBodyInnerContainer = styled('div')(({ theme }) => ({
+    [theme.breakpoints.down(400)]: {
+        padding: theme.spacing(1),
+    },
+}));
 
 const EnvironmentAccordionBody = ({
     featureEnvironment,
@@ -35,7 +46,6 @@ const EnvironmentAccordionBody = ({
         index: number;
         height: number;
     } | null>(null);
-    const { classes: styles } = useStyles();
     useEffect(() => {
         // Use state to enable drag and drop, but switch to API output when it arrives
         setStrategies(featureEnvironment?.strategies || []);
@@ -128,8 +138,8 @@ const EnvironmentAccordionBody = ({
     };
 
     return (
-        <div className={styles.accordionBody}>
-            <div className={styles.accordionBodyInnerContainer}>
+        <StyledAccordionBody>
+            <StyledAccordionBodyInnerContainer>
                 <ConditionallyRender
                     condition={strategies.length > 0 && isDisabled}
                     show={() => (
@@ -166,8 +176,8 @@ const EnvironmentAccordionBody = ({
                         />
                     }
                 />
-            </div>
-        </div>
+            </StyledAccordionBodyInnerContainer>
+        </StyledAccordionBody>
     );
 };
 

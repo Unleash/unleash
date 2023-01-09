@@ -2,7 +2,7 @@ import { ConstraintIcon } from 'component/common/ConstraintAccordion/ConstraintI
 import { IConstraint } from 'interfaces/strategy';
 import { ConstraintAccordionViewHeaderInfo } from './ConstraintAccordionViewHeaderInfo';
 import { ConstraintAccordionHeaderActions } from '../../ConstraintAccordionHeaderActions/ConstraintAccordionHeaderActions';
-import { useStyles } from 'component/common/ConstraintAccordion/ConstraintAccordion.styles';
+import { styled } from '@mui/system';
 
 interface IConstraintAccordionViewHeaderProps {
     constraint: IConstraint;
@@ -14,6 +14,17 @@ interface IConstraintAccordionViewHeaderProps {
     compact?: boolean;
 }
 
+const StyledContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    width: '100%',
+    [theme.breakpoints.down('sm')]: {
+        flexDirection: 'column',
+        alignItems: 'center',
+        position: 'relative',
+    },
+}));
+
 export const ConstraintAccordionViewHeader = ({
     constraint,
     onEdit,
@@ -23,10 +34,8 @@ export const ConstraintAccordionViewHeader = ({
     expanded,
     compact,
 }: IConstraintAccordionViewHeaderProps) => {
-    const { classes: styles } = useStyles();
-
     return (
-        <div className={styles.headerContainer}>
+        <StyledContainer>
             <ConstraintIcon compact={compact} />
             <ConstraintAccordionViewHeaderInfo
                 constraint={constraint}
@@ -38,6 +47,6 @@ export const ConstraintAccordionViewHeader = ({
                 onEdit={onEdit}
                 onDelete={onDelete}
             />
-        </div>
+        </StyledContainer>
     );
 };

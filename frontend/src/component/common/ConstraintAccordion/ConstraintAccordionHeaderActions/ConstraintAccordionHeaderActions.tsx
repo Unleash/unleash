@@ -1,7 +1,6 @@
 import React from 'react';
-import { IconButton, Tooltip } from '@mui/material';
+import { IconButton, styled, Tooltip } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
-import { useStyles } from '../ConstraintAccordion.styles';
 import { ConditionallyRender } from '../../ConditionallyRender/ConditionallyRender';
 
 interface ConstraintAccordionHeaderActionsProps {
@@ -11,13 +10,20 @@ interface ConstraintAccordionHeaderActionsProps {
     disableDelete?: boolean;
 }
 
+const StyledHeaderActions = styled('div')(({ theme }) => ({
+    marginLeft: 'auto',
+    whiteSpace: 'nowrap',
+    [theme.breakpoints.down('sm')]: {
+        display: 'none',
+    },
+}));
+
 export const ConstraintAccordionHeaderActions = ({
     onEdit,
     onDelete,
     disableDelete = false,
     disableEdit = false,
 }: ConstraintAccordionHeaderActionsProps) => {
-    const { classes: styles } = useStyles();
     const onEditClick =
         onEdit &&
         ((event: React.SyntheticEvent) => {
@@ -33,7 +39,7 @@ export const ConstraintAccordionHeaderActions = ({
         });
 
     return (
-        <div className={styles.headerActions}>
+        <StyledHeaderActions>
             <ConditionallyRender
                 condition={Boolean(onEditClick) && !disableEdit}
                 show={
@@ -62,6 +68,6 @@ export const ConstraintAccordionHeaderActions = ({
                     </Tooltip>
                 }
             />
-        </div>
+        </StyledHeaderActions>
     );
 };

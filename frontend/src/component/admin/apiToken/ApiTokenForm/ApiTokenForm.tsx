@@ -56,7 +56,7 @@ const StyledInput = styled(Input)(({ theme }) => ({
 const StyledSelectInput = styled(GeneralSelect)(({ theme }) => ({
     marginBottom: theme.spacing(2),
     minWidth: '400px',
-    [theme.breakpoints.down(600)]: {
+    [theme.breakpoints.down('sm')]: {
         minWidth: '379px',
     },
 }));
@@ -73,11 +73,11 @@ const CancelButton = styled(Button)(({ theme }) => ({
     marginLeft: theme.spacing(3),
 }));
 
-const StyledBox = styled(Box)(() => ({
+const StyledBox = styled(Box)({
     marginTop: 'auto',
     display: 'flex',
     justifyContent: 'flex-end',
-}));
+});
 
 const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
     children,

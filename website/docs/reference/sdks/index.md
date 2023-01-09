@@ -12,14 +12,14 @@ Unleash provides official client SDKs for a number of programming language. Addi
 
 Server-side clients run on your server and communicate directly with your Unleash instance. We provide these official clients:
 
-- [Go SDK](go.md)
-- [Java SDK](java.md)
-- [Node.js SDK](node.md)
-- [PHP SDK](php.md)
-- [Python SDK](python.md)
-- [Ruby SDK](ruby.md)
-- [Rust SDK](https://github.com/unleash/unleash-client-rust)
-- [.NET SDK](dotnet.md)
+- [Go SDK](/docs/generated/sdks/server-side/go.md)
+- [Java SDK](/docs/generated/sdks/server-side/java.md)
+- [Node.js SDK](/docs/generated/sdks/server-side/node.md)
+- [PHP SDK](/docs/generated/sdks/server-side/php.md)
+- [Python SDK](/docs/generated/sdks/server-side/python.md)
+- [Ruby SDK](/docs/generated/sdks/server-side/ruby.md)
+- [Rust SDK](/docs/generated/sdks/server-side/rust.md)
+- [.NET SDK](/docs/generated/sdks/server-side/dotnet.md)
 
 ### Client-side SDKs
 
@@ -51,7 +51,7 @@ If you see an item marked with a ❌ that you would find useful, feel free to re
 
 :::
 
-| Capability | [Java](/reference/sdks/java.md) | [Node.js](/reference/sdks/node.md) | [Go](/reference/sdks/go.md) | [Python](/reference/sdks/python.md) | [Ruby](/reference/sdks/ruby.md) | [.NET](/reference/sdks/dotnet) | [PHP](/reference/sdks/php.md) | [Rust](https://github.com/unleash/unleash-client-rust) | [Unleash Proxy](/reference/unleash-proxy.md) |
+| Capability | [Java](/docs/generated/sdks/server-side/java.md) | [Node.js](/docs/generated/sdks/server-side/node.md) | [Go](/docs/generated/sdks/server-side/go.md) | [Python](/docs/generated/sdks/server-side/python.md) | [Ruby](/docs/generated/sdks/server-side/ruby.md) | [.NET](/docs/generated/sdks/server-side/dotnet.md) | [PHP](/docs/generated/sdks/server-side/php.md) | [Rust](/docs/generated/sdks/server-side/rust.md) | [Unleash Proxy](/reference/unleash-proxy.md) |
 | --- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
 | **Category: Initialization** |  |  |  |  |  |  |  |  |  |
 | Async initialization | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ | N/A |

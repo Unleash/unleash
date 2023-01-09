@@ -23,6 +23,9 @@ const sdksUnmapped = {
     'unleash-client-java': {
         sidebarName: 'Java',
     },
+    'unleash-client-node': {
+        sidebarName: 'Node',
+    },
     'unleash-client-rust': {
         sidebarName: 'Rust',
     },

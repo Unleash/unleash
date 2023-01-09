@@ -87,7 +87,7 @@ const documentUrls = Object.entries(SDKS).map(
 // However, if the old link goes to a redirect, then the client-side redirect
 // will not kick in, so you'll end up with a "Page not found".
 const replaceLinks = ({ content, repo }) => {
-    const markdownLink = /(?<=\[.*\]\(\s?)(\S+)(?=.*\))/g;
+    const markdownLink = /(?<=\[.*\]\(\s?)([^\s\)]+)(?=.*\))/g;
 
     const replacer = (url) => {
         try {

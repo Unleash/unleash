@@ -52,7 +52,9 @@ const rbacMiddleware = (
 
             let projectId =
                 findParam('projectId', req) || findParam('project', req);
-            let environment = findParam('environment', req);
+            let environment =
+                findParam('environment', req) ||
+                findParam('environmentId', req);
 
             // Temporary workaround to figure out projectId for feature toggle updates.
             // will be removed in Unleash v5.0

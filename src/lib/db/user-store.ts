@@ -225,7 +225,7 @@ class UserStore implements IUserStore {
     }
 
     async getUserByPersonalAccessToken(secret: string): Promise<User> {
-        const row = await this.activeUsers()
+        const row = await this.activeAll()
             .select(USER_COLUMNS.map((column) => `${TABLE}.${column}`))
             .leftJoin(
                 'personal_access_tokens',

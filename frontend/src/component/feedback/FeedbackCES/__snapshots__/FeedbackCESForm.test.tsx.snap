@@ -182,7 +182,7 @@ exports[`FeedbackCESForm 1`] = `
     <div
       aria-atomic="true"
       aria-live="polite"
-      class="css-i8rqz1-container"
+      class="css-gqbqkz"
       data-testid="ANNOUNCER_ELEMENT_TEST_ID"
       role="status"
     />

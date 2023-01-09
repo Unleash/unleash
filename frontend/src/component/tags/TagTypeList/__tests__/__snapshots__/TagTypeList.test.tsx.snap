@@ -1092,7 +1092,7 @@ exports[`renders an empty list correctly 1`] = `
   <div
     aria-atomic={true}
     aria-live="polite"
-    className="css-i8rqz1-container"
+    className="css-gqbqkz"
     data-testid="ANNOUNCER_ELEMENT_TEST_ID"
     role="status"
   >

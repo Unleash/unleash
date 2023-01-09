@@ -31,7 +31,6 @@ const sdksUnmapped = {
     },
     'unleash-client-python': {
         sidebarName: 'Python',
-        branch: 'docs/update-readme',
     },
     'unleash-client-rust': {
         sidebarName: 'Rust',

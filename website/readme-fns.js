@@ -59,7 +59,7 @@ const documentUrls = Object.entries(SDKS).map(
 
 // Replace links in the incoming readme content.
 //
-// There's one cases we want to handle:
+// There's one case we want to handle:
 //
 // 1. Relative links that point to the repo. These must be prefixed with the
 // link to the github repo.

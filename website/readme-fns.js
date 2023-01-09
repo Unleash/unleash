@@ -32,6 +32,9 @@ const sdksUnmapped = {
     'unleash-client-python': {
         sidebarName: 'Python',
     },
+    'unleash-client-ruby': {
+        sidebarName: 'Ruby',
+    },
     'unleash-client-rust': {
         sidebarName: 'Rust',
     },

@@ -260,11 +260,12 @@ export const ProjectFeatureToggles = ({
                 sortType: 'date',
                 minWidth: 120,
             },
-            ...environments.map(name => ({
+            ...environments.map((name: string) => ({
                 Header: loading ? () => '' : name,
                 maxWidth: 90,
                 id: `environments.${name}`,
-                accessor: `environments.${name}.enabled`,
+                accessor: (row: ListItemType) =>
+                    row.environments[name]?.enabled,
                 align: 'center',
                 Cell: ({
                     value,

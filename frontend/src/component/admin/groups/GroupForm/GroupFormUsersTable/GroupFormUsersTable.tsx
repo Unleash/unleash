@@ -92,6 +92,7 @@ export const GroupFormUsersTable: VFC<IGroupFormUsersTableProps> = ({
             columns: columns as any[],
             data: users as any[],
             sortTypes,
+            autoResetHiddenColumns: false,
             autoResetSortBy: false,
             disableSortRemove: true,
             disableMultiSort: true,

@@ -35,6 +35,7 @@ export const FeatureMetricsTable = ({
             initialState,
             columns: COLUMNS as any,
             data: metrics as any,
+            autoResetHiddenColumns: false,
             disableSortRemove: true,
             defaultColumn: { Cell: TextCell },
         },

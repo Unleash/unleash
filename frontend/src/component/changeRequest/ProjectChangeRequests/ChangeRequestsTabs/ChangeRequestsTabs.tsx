@@ -178,6 +178,7 @@ export const ChangeRequestsTabs = ({
             data,
             initialState,
             sortTypes,
+            autoResetHiddenColumns: false,
             disableSortRemove: true,
             autoResetSortBy: false,
             defaultColumn: {

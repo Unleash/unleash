@@ -8,16 +8,4 @@ export const useStyles = makeStyles()(theme => ({
         padding: theme.spacing(4),
         overflowX: 'auto',
     },
-    tabContainer: {
-        paddingLeft: 0,
-        paddingBottom: 0,
-    },
-    tabButton: {
-        textTransform: 'none',
-        width: 'auto',
-        fontSize: '1rem',
-        [theme.breakpoints.up('md')]: {
-            minWidth: 160,
-        },
-    },
 }));

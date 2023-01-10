@@ -84,6 +84,7 @@ export const ReportTable = ({ projectId, features }: IReportTableProps) => {
             initialState,
             sortTypes,
             autoResetGlobalFilter: false,
+            autoResetHiddenColumns: false,
             autoResetSortBy: false,
             disableSortRemove: true,
         },

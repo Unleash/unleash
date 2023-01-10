@@ -30,7 +30,6 @@ import { ServiceAccountTokenDialog } from 'component/admin/serviceAccounts/Servi
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { IUser } from 'interfaces/user';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import {
     ICreatePersonalApiTokenPayload,
@@ -38,6 +37,8 @@ import {
 } from 'hooks/api/actions/usePersonalAPITokensApi/usePersonalAPITokensApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { IServiceAccount } from 'interfaces/service-account';
+import { useServiceAccounts } from 'hooks/api/getters/useServiceAccounts/useServiceAccounts';
 
 const StyledHeader = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -70,13 +71,6 @@ const StyledPlaceholderSubtitle = styled(Typography)(({ theme }) => ({
     marginBottom: theme.spacing(1.5),
 }));
 
-export const tokensPlaceholder: IPersonalAPIToken[] = Array(15).fill({
-    description: 'Short description of the feature',
-    type: '-',
-    createdAt: new Date(2022, 1, 1),
-    project: 'projectID',
-});
-
 export type PageQueryType = Partial<
     Record<'sort' | 'order' | 'search', string>
 >;
@@ -84,7 +78,7 @@ export type PageQueryType = Partial<
 const defaultSort: SortingRule<string> = { id: 'createdAt' };
 
 interface IServiceAccountTokensProps {
-    serviceAccount: IUser;
+    serviceAccount: IServiceAccount;
     readOnly?: boolean;
 }
 
@@ -96,11 +90,10 @@ export const ServiceAccountTokens = ({
     const { setToastData, setToastApiError } = useToast();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const isExtraSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-    const {
-        tokens = [],
-        refetchTokens,
-        loading,
-    } = usePersonalAPITokens(serviceAccount.id);
+    const { tokens = [], refetchTokens } = usePersonalAPITokens(
+        serviceAccount.id
+    );
+    const { refetch } = useServiceAccounts();
     const { createUserPersonalAPIToken, deleteUserPersonalAPIToken } =
         usePersonalAPITokensApi();
 
@@ -121,6 +114,7 @@ export const ServiceAccountTokens = ({
                 serviceAccount.id,
                 newToken
             );
+            refetch();
             refetchTokens();
             setCreateOpen(false);
             setNewToken(token);
@@ -141,6 +135,7 @@ export const ServiceAccountTokens = ({
                     serviceAccount.id,
                     selectedToken?.id
                 );
+                refetch();
                 refetchTokens();
                 setDeleteOpen(false);
                 setToastData({
@@ -216,18 +211,10 @@ export const ServiceAccountTokens = ({
         [setSelectedToken, setDeleteOpen]
     );
 
-    const {
-        data: searchedData,
-        getSearchText,
-        getSearchContext,
-    } = useSearch(columns, searchValue, tokens);
-
-    const data = useMemo(
-        () =>
-            searchedData?.length === 0 && loading
-                ? tokensPlaceholder
-                : searchedData,
-        [searchedData, loading]
+    const { data, getSearchText, getSearchContext } = useSearch(
+        columns,
+        searchValue,
+        tokens
     );
 
     const {
@@ -242,6 +229,7 @@ export const ServiceAccountTokens = ({
             data,
             initialState,
             sortTypes,
+            autoResetHiddenColumns: false,
             autoResetSortBy: false,
             disableSortRemove: true,
             disableMultiSort: true,

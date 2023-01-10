@@ -146,6 +146,7 @@ export const ProjectGroupView: VFC<IProjectGroupViewProps> = ({
             data,
             initialState,
             sortTypes,
+            autoResetHiddenColumns: false,
             autoResetSortBy: false,
             disableSortRemove: true,
             disableMultiSort: true,

@@ -199,6 +199,7 @@ export const FeatureVariantsList = () => {
             data: data as any[],
             initialState,
             sortTypes,
+            autoResetHiddenColumns: false,
             autoResetGlobalFilter: false,
             autoResetSortBy: false,
             disableSortRemove: true,

@@ -172,7 +172,6 @@ export const ServiceAccountsTable = () => {
             autoResetSortBy: false,
             disableSortRemove: true,
             disableMultiSort: true,
-            autoResetHiddenColumns: false,
             defaultColumn: {
                 Cell: TextCell,
             },

@@ -271,7 +271,7 @@ export const FeatureToggleListTable: VFC = () => {
         }));
     }, [sortBy, searchValue, setSearchParams, isFavoritesPinned]);
 
-    if (!environments.length > 0) {
+    if (!(environments.length > 0)) {
         return null;
     }
 

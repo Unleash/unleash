@@ -14,7 +14,9 @@
 //
 // type ReadmeData = Readme & { repoUrl: string };
 
-// all SDK repos and what they map to for the sidebar.
+const CLIENT_SIDE_SDK = "client-side"
+const SERVER_SIDE_SDK = "server-side"
+
 const serverSideSdks = {
     'unleash-client-go': {
         sidebarName: 'Go',
@@ -88,10 +90,10 @@ const allSdks = () => {
         };
 
     const serverSide = Object.entries(serverSideSdks).map(
-        enrich('server-side'),
+        enrich(SERVER_SIDE_SDK),
     );
     const clientSide = Object.entries(clientSideSdks).map(
-        enrich('client-side'),
+        enrich(CLIENT_SIDE_SDK),
     );
 
     return Object.fromEntries(serverSide.concat(clientSide));
@@ -154,6 +156,19 @@ const modifyContent = (filename, content) => {
 
     const generationTime = new Date();
 
+    const getConnectionTip = (sdkType) => {
+        switch (sdkType) {
+        case CLIENT_SIDE_SDK: return `To connect this SDK to Unleash, you'll need to use either
+- the [Unleash front-end API](/reference/front-end-api) (released in Unleash 4.16) ([how do I create an API token?](/how-to/how-to-create-api-tokens.mdx))
+- the [Unleash proxy](/reference/unleash-proxy) ([how do I create client keys?](/reference/api-tokens-and-client-keys#proxy-client-keys))
+
+This SDK **cannot** connect to the regular (server-side) \`client\` API.`
+
+            case SERVER_SIDE_SDK:
+            default: return `To connect to Unleash, you'll need your Unleash API url (e.g. \`https://<your-unleash>/api\`) and a [server-side API token](/reference/api-tokens-and-client-keys.mdx#client-tokens) ([how do I create an API token?](/how-to/how-to-create-api-tokens.mdx)).`
+        }
+    }
+
     return {
         filename: `${sdk.type}/${sdk.slugName}.md`,
         content: `---
@@ -168,7 +183,7 @@ This document was generated from the README in the [${
 :::
 
 :::tip Connecting to Unleash
-To connect to Unleash, you'll need your Unleash API url (e.g. \`https://<your-unleash>/api\`) and a [server-side API token](/reference/api-tokens-and-client-keys.mdx#client-tokens) ([how do I create an API token?](/how-to/how-to-create-api-tokens.mdx)).
+${getConnectionTip(sdk.type)}
 :::
 
 ${replaceLinks({ content, repo: { url: sdk.repoUrl, branch: sdk.branch } })}

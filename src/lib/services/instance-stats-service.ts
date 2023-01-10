@@ -149,6 +149,12 @@ export class InstanceStatsService {
         clearInterval(this.snapshotRefresher);
     }
 
+    getToggleCount(): Promise<number> {
+        return this.featureToggleStore.count({
+            archived: false,
+        });
+    }
+
     async hasOIDC(): Promise<boolean> {
         const settings = await this.settingStore.get(
             'unleash.enterprise.auth.oidc',
@@ -170,7 +176,6 @@ export class InstanceStatsService {
      */
     async getStats(): Promise<InstanceStats> {
         const versionInfo = this.versionService.getVersionInfo();
-
         const [
             featureToggles,
             users,
@@ -185,9 +190,7 @@ export class InstanceStatsService {
             OIDCenabled,
             clientApps,
         ] = await Promise.all([
-            this.featureToggleStore.count({
-                archived: false,
-            }),
+            this.getToggleCount(),
             this.userStore.count(),
             this.projectStore.count(),
             this.contextFieldStore.count(),

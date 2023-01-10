@@ -31,12 +31,24 @@ export const ExportDialog = ({
             label: env.name,
         }));
 
+    const getPayload = () => {
+        return {
+            features: data.map(feature => feature.name),
+            environment: selected,
+        };
+    };
+
+    const onClick = () => {
+        // const payload = getPayload();
+        // make API call
+    };
+
     return (
         <Dialogue
             open={showExportDialog}
             title="Export feature toggle configuration"
             onClose={onClose}
-            onClick={() => console.log('Call API')}
+            onClick={onSubmit}
             primaryButtonText="Export selection"
             secondaryButtonText="Cancel"
         >

@@ -51,6 +51,10 @@ const flags = {
         process.env.UNLEASH_EXPERIMENTAL_SERVICE_ACCOUNTS,
         false,
     ),
+    featuresExportImport: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_FEATURES_EXPORT_IMPORT,
+        false,
+    ),
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

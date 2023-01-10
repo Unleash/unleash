@@ -8,6 +8,7 @@ import { OpenApiService } from '../../services/openapi-service';
 import ExportImportService, {
     IExportQuery,
 } from 'lib/services/export-import-service';
+import { InvalidOperationError } from '../../error';
 
 class ExportImportController extends Controller {
     private logger: Logger;
@@ -50,10 +51,19 @@ class ExportImportController extends Controller {
         req: Request<unknown, unknown, IExportQuery, unknown>,
         res: Response,
     ): Promise<void> {
+        this.verifyExportImportEnabled();
         const query = req.body;
         const data = await this.exportImportService.export(query);
 
         res.json(data);
+    }
+
+    private verifyExportImportEnabled() {
+        if (!this.config.flagResolver.isEnabled('featuresExportImport')) {
+            throw new InvalidOperationError(
+                'Feature export/import is not enabled',
+            );
+        }
     }
 }
 export default ExportImportController;

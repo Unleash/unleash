@@ -52,6 +52,7 @@ export const ApiTokenTable = () => {
             data: tokens as any,
             initialState,
             sortTypes,
+            autoResetHiddenColumns: false,
             disableSortRemove: true,
         },
         useGlobalFilter,

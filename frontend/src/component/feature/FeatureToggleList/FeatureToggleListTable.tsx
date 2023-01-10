@@ -204,6 +204,7 @@ export const FeatureToggleListTable: VFC = () => {
             data,
             initialState,
             sortTypes,
+            autoResetHiddenColumns: false,
             autoResetSortBy: false,
             disableSortRemove: true,
             disableMultiSort: true,

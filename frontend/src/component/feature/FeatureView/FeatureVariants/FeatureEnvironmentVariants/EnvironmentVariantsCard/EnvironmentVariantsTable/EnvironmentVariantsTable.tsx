@@ -138,6 +138,7 @@ export const EnvironmentVariantsTable = ({
             data,
             initialState,
             sortTypes,
+            autoResetHiddenColumns: false,
             autoResetSortBy: false,
             disableSortRemove: true,
             disableMultiSort: true,

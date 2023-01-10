@@ -3,7 +3,7 @@ import dbInit, { ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import { IEventStore } from 'lib/types/stores/event-store';
 import { FeatureToggleDTO, IStrategyConfig } from 'lib/types';
-import { DEFAULT_ENV } from 'lib/util';
+import { DEFAULT_ENV } from '../../../../lib/util';
 
 let app: IUnleashTest;
 let db: ITestDb;

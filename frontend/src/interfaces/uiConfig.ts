@@ -44,6 +44,7 @@ export interface IFlags {
     maintenance?: boolean;
     messageBanner?: boolean;
     serviceAccounts?: boolean;
+    featuresExportImport?: boolean;
 }
 
 export interface IVersionInfo {

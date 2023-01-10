@@ -37,6 +37,7 @@ import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import { ExportDialog } from './ExportDialog';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 export const featuresPlaceholder: FeatureSchema[] = Array(15).fill({
     name: 'Name of the feature',
@@ -65,6 +66,7 @@ export const FeatureToggleListTable: VFC = () => {
     const [showExportDialog, setShowExportDialog] = useState(false);
     const { features = [], loading, refetchFeatures } = useFeatures();
     const [searchParams, setSearchParams] = useSearchParams();
+    const { uiConfig } = useUiConfig();
     const [initialState] = useState(() => ({
         sortBy: [
             {
@@ -307,16 +309,29 @@ export const FeatureToggleListTable: VFC = () => {
                             >
                                 View archive
                             </Link>
-                            <Tooltip title="Export current selection" arrow>
-                                <IconButton
-                                    onClick={() => setShowExportDialog(true)}
-                                    sx={theme => ({
-                                        marginRight: theme.spacing(2),
-                                    })}
-                                >
-                                    <FileDownload />
-                                </IconButton>
-                            </Tooltip>
+                            <ConditionallyRender
+                                condition={Boolean(
+                                    uiConfig?.flags?.featuresExportImport
+                                )}
+                                show={
+                                    <Tooltip
+                                        title="Export current selection"
+                                        arrow
+                                    >
+                                        <IconButton
+                                            onClick={() =>
+                                                setShowExportDialog(true)
+                                            }
+                                            sx={theme => ({
+                                                marginRight: theme.spacing(2),
+                                            })}
+                                        >
+                                            <FileDownload />
+                                        </IconButton>
+                                    </Tooltip>
+                                }
+                            />
+
                             <CreateFeatureButton
                                 loading={false}
                                 filter={{ query: '', project: 'default' }}
@@ -366,11 +381,16 @@ export const FeatureToggleListTable: VFC = () => {
                     />
                 }
             />
-            <ExportDialog
-                showExportDialog={showExportDialog}
-                data={data}
-                onClose={() => setShowExportDialog(false)}
-                environments={environments}
+            <ConditionallyRender
+                condition={Boolean(uiConfig?.flags?.featuresExportImport)}
+                show={
+                    <ExportDialog
+                        showExportDialog={showExportDialog}
+                        data={data}
+                        onClose={() => setShowExportDialog(false)}
+                        environments={environments}
+                    />
+                }
             />
         </PageContent>
     );

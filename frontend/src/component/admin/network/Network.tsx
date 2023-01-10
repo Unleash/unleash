@@ -30,7 +30,6 @@ export const Network = () => {
 
     return (
         <div>
-
             <StyledPageContent
                 headerClass="page-header"
                 header={

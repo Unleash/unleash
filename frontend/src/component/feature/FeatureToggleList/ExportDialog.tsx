@@ -48,7 +48,7 @@ export const ExportDialog = ({
             open={showExportDialog}
             title="Export feature toggle configuration"
             onClose={onClose}
-            onClick={onSubmit}
+            onClick={onClick}
             primaryButtonText="Export selection"
             secondaryButtonText="Cancel"
         >

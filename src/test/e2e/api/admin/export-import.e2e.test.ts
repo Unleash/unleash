@@ -44,6 +44,10 @@ afterAll(async () => {
     await db.destroy();
 });
 
+afterEach(() => {
+    db.stores.featureToggleStore.deleteAll();
+});
+
 test('exports features', async () => {
     await createToggle({
         name: 'first_feature',

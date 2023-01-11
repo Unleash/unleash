@@ -67,7 +67,6 @@ exports[`should create default config 1`] = `
       "isEnabled": [Function],
     },
     "flags": {
-      "E": false,
       "ENABLE_DARK_MODE_SUPPORT": false,
       "anonymiseEventLog": false,
       "batchMetrics": false,
@@ -85,7 +84,6 @@ exports[`should create default config 1`] = `
   },
   "flagResolver": FlagResolver {
     "experiments": {
-      "E": false,
       "ENABLE_DARK_MODE_SUPPORT": false,
       "anonymiseEventLog": false,
       "batchMetrics": false,
@@ -152,7 +150,6 @@ exports[`should create default config 1`] = `
   "ui": {
     "environment": "Open Source",
     "flags": {
-      "E": true,
       "ENABLE_DARK_MODE_SUPPORT": false,
     },
   },

@@ -4,7 +4,6 @@ export type IFlags = Partial<typeof flags>;
 export type IFlagKey = keyof IFlags;
 
 const flags = {
-    E: false,
     ENABLE_DARK_MODE_SUPPORT: false,
     anonymiseEventLog: false,
     embedProxy: parseEnvVarBoolean(

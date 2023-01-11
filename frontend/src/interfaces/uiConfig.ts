@@ -30,7 +30,6 @@ export interface IProclamationToast {
 
 export interface IFlags {
     P: boolean;
-    E: boolean;
     RE: boolean;
     EEA?: boolean;
     SE?: boolean;

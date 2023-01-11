@@ -1,7 +1,6 @@
 import { useMemo, useState } from 'react';
 import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { IUser } from 'interfaces/user';
 import IRole from 'interfaces/role';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
@@ -13,7 +12,6 @@ import { useFlexLayout, useSortBy, useTable } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
-import { useNavigate } from 'react-router-dom';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import theme from 'themes/theme';
 import { Search } from 'component/common/Search/Search';
@@ -27,9 +25,11 @@ import { ServiceAccountDeleteDialog } from './ServiceAccountDeleteDialog/Service
 import { ServiceAccountsActionsCell } from './ServiceAccountsActionsCell/ServiceAccountsActionsCell';
 import { INewPersonalAPIToken } from 'interfaces/personalAPIToken';
 import { ServiceAccountTokenDialog } from './ServiceAccountTokenDialog/ServiceAccountTokenDialog';
+import { ServiceAccountTokensCell } from './ServiceAccountTokensCell/ServiceAccountTokensCell';
+import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
+import { IServiceAccount } from 'interfaces/service-account';
 
 export const ServiceAccountsTable = () => {
-    const navigate = useNavigate();
     const { setToastData, setToastApiError } = useToast();
 
     const { serviceAccounts, roles, refetch, loading } = useServiceAccounts();
@@ -41,9 +41,9 @@ export const ServiceAccountsTable = () => {
     const [newToken, setNewToken] = useState<INewPersonalAPIToken>();
     const [deleteOpen, setDeleteOpen] = useState(false);
     const [selectedServiceAccount, setSelectedServiceAccount] =
-        useState<IUser>();
+        useState<IServiceAccount>();
 
-    const onDeleteConfirm = async (serviceAccount: IUser) => {
+    const onDeleteConfirm = async (serviceAccount: IServiceAccount) => {
         try {
             await removeServiceAccount(serviceAccount.id);
             setToastData({
@@ -63,14 +63,6 @@ export const ServiceAccountsTable = () => {
     const columns = useMemo(
         () => [
             {
-                Header: 'Created',
-                accessor: 'createdAt',
-                Cell: DateCell,
-                sortType: 'date',
-                width: 120,
-                maxWidth: 120,
-            },
-            {
                 Header: 'Avatar',
                 accessor: 'imageUrl',
                 Cell: ({ row: { original: user } }: any) => (
@@ -87,10 +79,7 @@ export const ServiceAccountsTable = () => {
                 accessor: (row: any) => row.name || '',
                 minWidth: 200,
                 Cell: ({ row: { original: user } }: any) => (
-                    <HighlightCell
-                        value={user.name}
-                        subtitle={user.email || user.username}
-                    />
+                    <HighlightCell value={user.name} subtitle={user.username} />
                 ),
                 searchable: true,
             },
@@ -101,6 +90,37 @@ export const ServiceAccountsTable = () => {
                     roles.find((role: IRole) => role.id === row.rootRole)
                         ?.name || '',
                 maxWidth: 120,
+            },
+            {
+                id: 'tokens',
+                Header: 'Tokens',
+                accessor: (row: IServiceAccount) =>
+                    row.tokens
+                        ?.map(({ description }) => description)
+                        .join('\n') || '',
+                Cell: ServiceAccountTokensCell,
+                searchable: true,
+            },
+            {
+                Header: 'Created',
+                accessor: 'createdAt',
+                Cell: DateCell,
+                sortType: 'date',
+                width: 120,
+                maxWidth: 120,
+            },
+            {
+                id: 'seenAt',
+                Header: 'Last seen',
+                accessor: (row: IServiceAccount) =>
+                    row.tokens.sort((a, b) => {
+                        const aSeenAt = new Date(a.seenAt || 0);
+                        const bSeenAt = new Date(b.seenAt || 0);
+                        return bSeenAt?.getTime() - aSeenAt?.getTime();
+                    })[0]?.seenAt,
+                Cell: TimeAgoCell,
+                sortType: 'date',
+                maxWidth: 150,
             },
             {
                 Header: 'Actions',
@@ -128,7 +148,7 @@ export const ServiceAccountsTable = () => {
                 searchable: true,
             },
         ],
-        [roles, navigate]
+        [roles]
     );
 
     const [initialState] = useState({
@@ -148,6 +168,7 @@ export const ServiceAccountsTable = () => {
             data,
             initialState,
             sortTypes,
+            autoResetHiddenColumns: false,
             autoResetSortBy: false,
             disableSortRemove: true,
             disableMultiSort: true,
@@ -163,11 +184,11 @@ export const ServiceAccountsTable = () => {
         [
             {
                 condition: isExtraSmallScreen,
-                columns: ['imageUrl', 'role'],
+                columns: ['role', 'seenAt'],
             },
             {
                 condition: isSmallScreen,
-                columns: ['createdAt', 'last-login'],
+                columns: ['imageUrl', 'tokens', 'createdAt'],
             },
         ],
         setHiddenColumns,

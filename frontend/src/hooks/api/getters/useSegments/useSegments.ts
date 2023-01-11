@@ -4,7 +4,6 @@ import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { ISegment } from 'interfaces/segment';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { IFlags } from 'interfaces/uiConfig';
 
 export interface IUseSegmentsOutput {
     segments?: ISegment[];
@@ -16,9 +15,13 @@ export interface IUseSegmentsOutput {
 export const useSegments = (strategyId?: string): IUseSegmentsOutput => {
     const { uiConfig } = useUiConfig();
 
+    const url = strategyId
+        ? formatApiPath(`api/admin/segments/strategies/${strategyId}`)
+        : formatApiPath('api/admin/segments');
+
     const { data, error, mutate } = useSWR(
-        [strategyId, uiConfig.flags],
-        fetchSegments,
+        url,
+        () => (uiConfig.flags?.SE ? fetchSegments(url) : []),
         {
             refreshInterval: 15 * 1000,
         }
@@ -36,22 +39,9 @@ export const useSegments = (strategyId?: string): IUseSegmentsOutput => {
     };
 };
 
-export const fetchSegments = async (
-    strategyId?: string,
-    flags?: IFlags
-): Promise<ISegment[]> => {
-    if (!flags?.SE) {
-        return [];
-    }
-
-    return fetch(formatSegmentsPath(strategyId))
+export const fetchSegments = async (url: string): Promise<ISegment[]> => {
+    return fetch(url)
         .then(handleErrorResponses('Segments'))
         .then(res => res.json())
         .then(res => res.segments);
-};
-
-const formatSegmentsPath = (strategyId?: string): string => {
-    return strategyId
-        ? formatApiPath(`api/admin/segments/strategies/${strategyId}`)
-        : formatApiPath('api/admin/segments');
 };

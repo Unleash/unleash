@@ -6,10 +6,7 @@ import { Box, Chip } from '@mui/material';
 import PercentageCircle from 'component/common/PercentageCircle/PercentageCircle';
 import { PlaygroundParameterItem } from '../PlaygroundParameterItem/PlaygroundParameterItem';
 import { StyledBoxSummary } from '../StrategyExecution.styles';
-import {
-    PlaygroundConstraintSchema,
-    PlaygroundRequestSchema,
-} from 'component/playground/Playground/interfaces/playground.model';
+import { PlaygroundConstraintSchema, PlaygroundRequestSchema } from 'openapi';
 import { getMappedParam } from '../helpers';
 
 export interface PlaygroundResultStrategyExecutionParametersProps {

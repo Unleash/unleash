@@ -297,6 +297,7 @@ export const ProjectAccessTable: VFC = () => {
             data,
             initialState,
             sortTypes,
+            autoResetHiddenColumns: false,
             autoResetSortBy: false,
             disableSortRemove: true,
             disableMultiSort: true,

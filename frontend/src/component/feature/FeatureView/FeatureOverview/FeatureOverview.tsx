@@ -56,7 +56,12 @@ const FeatureOverview = () => {
                             setHiddenEnvironments={setHiddenEnvironments}
                         />
                     }
-                    elseShow={<FeatureOverviewEnvSwitches />}
+                    elseShow={
+                        <FeatureOverviewEnvSwitches
+                            hiddenEnvironments={hiddenEnvironments}
+                            setHiddenEnvironments={setHiddenEnvironments}
+                        />
+                    }
                 />
             </div>
             <StyledMainContent>

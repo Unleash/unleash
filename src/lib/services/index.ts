@@ -39,6 +39,7 @@ import { LastSeenService } from './client-metrics/last-seen-service';
 import { InstanceStatsService } from './instance-stats-service';
 import { FavoritesService } from './favorites-service';
 import MaintenanceService from './maintenance-service';
+import ExportImportService from './export-import-service';
 import SchedulerService from './scheduler-service';
 import { minutesToMilliseconds } from 'date-fns';
 
@@ -62,6 +63,7 @@ export const createServices = (
     const featureTypeService = new FeatureTypeService(stores, config);
     const resetTokenService = new ResetTokenService(stores, config);
     const stateService = new StateService(stores, config);
+    const exportImportService = new ExportImportService(stores, config);
     const strategyService = new StrategyService(stores, config);
     const tagService = new TagService(stores, config);
     const tagTypeService = new TagTypeService(stores, config);
@@ -189,6 +191,7 @@ export const createServices = (
         instanceStatsService,
         favoritesService,
         maintenanceService,
+        exportImportService,
     };
 };
 
@@ -231,4 +234,5 @@ export {
     LastSeenService,
     InstanceStatsService,
     FavoritesService,
+    ExportImportService,
 };

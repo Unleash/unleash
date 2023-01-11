@@ -1,17 +1,20 @@
-import { Chip } from '@mui/material';
-import { useStyles } from './FeatureStatusChip.styles';
+import { Chip, styled } from '@mui/material';
 
 interface IStatusChip {
     stale: boolean;
     showActive?: boolean;
 }
 
+const StyledChip = styled(Chip)(({ theme }) => ({
+    background: 'transparent',
+    border: `1px solid ${theme.palette.primary.main}`,
+    color: theme.palette.primary.main,
+}));
+
 export const FeatureStatusChip = ({
     stale,
     showActive = true,
 }: IStatusChip) => {
-    const { classes: styles } = useStyles();
-
     if (!stale && !showActive) {
         return null;
     }
@@ -23,10 +26,9 @@ export const FeatureStatusChip = ({
 
     return (
         <div data-loading style={{ marginLeft: '8px' }}>
-            <Chip
+            <StyledChip
                 color="primary"
                 variant="outlined"
-                className={styles.chip}
                 title={title}
                 label={value}
             />

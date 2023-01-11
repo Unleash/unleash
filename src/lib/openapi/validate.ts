@@ -21,6 +21,13 @@ const ajv = new Ajv({
     },
 });
 
+export const addAjvSchema = (schemaObjects: any[]): any => {
+    const newSchemas = schemaObjects.filter(
+        (schema) => !ajv.getSchema(schema.$id),
+    );
+    return ajv.addSchema(newSchemas);
+};
+
 export const validateSchema = <S = SchemaId>(
     schema: S,
     data: unknown,

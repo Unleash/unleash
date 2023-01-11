@@ -155,7 +155,7 @@ export const PersonalAPITokenForm = ({
         if (isDescriptionUnique && !isDescriptionUnique(description)) {
             setError(
                 ErrorField.DESCRIPTION,
-                'A personal API token with that description already exists.'
+                'A token with that description already exists.'
             );
         }
         setDescription(description);

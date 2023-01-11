@@ -2,10 +2,7 @@ import { Fragment, VFC } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
 import { Chip, styled } from '@mui/material';
-import {
-    PlaygroundRequestSchema,
-    PlaygroundStrategySchema,
-} from 'component/playground/Playground/interfaces/playground.model';
+import { PlaygroundRequestSchema, PlaygroundStrategySchema } from 'openapi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ConstraintExecution } from './ConstraintExecution/ConstraintExecution';
 import { SegmentExecution } from './SegmentExecution/SegmentExecution';

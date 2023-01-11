@@ -31,6 +31,8 @@ import {
 } from 'component/user/Profile/PersonalAPITokensTab/CreatePersonalAPIToken/PersonalAPITokenForm/PersonalAPITokenForm';
 import { usePersonalAPITokensApi } from 'hooks/api/actions/usePersonalAPITokensApi/usePersonalAPITokensApi';
 import { INewPersonalAPIToken } from 'interfaces/personalAPIToken';
+import { ServiceAccountTokens } from './ServiceAccountTokens/ServiceAccountTokens';
+import { IServiceAccount } from 'interfaces/service-account';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',
@@ -86,9 +88,7 @@ const StyledButtonContainer = styled('div')(({ theme }) => ({
     marginTop: 'auto',
     display: 'flex',
     justifyContent: 'flex-end',
-    [theme.breakpoints.down('sm')]: {
-        marginTop: theme.spacing(4),
-    },
+    paddingTop: theme.spacing(4),
 }));
 
 const StyledCancelButton = styled(Button)(({ theme }) => ({
@@ -111,7 +111,7 @@ interface IServiceAccountModalErrors {
 const DEFAULT_EXPIRATION = ExpirationOption['30DAYS'];
 
 interface IServiceAccountModalProps {
-    serviceAccount?: IUser;
+    serviceAccount?: IServiceAccount;
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     newToken: (token: INewPersonalAPIToken) => void;
@@ -223,18 +223,21 @@ export const ServiceAccountModal = ({
     const isUnique = (value: string) =>
         !users?.some((user: IUser) => user.username === value) &&
         !serviceAccounts?.some(
-            (serviceAccount: IUser) => serviceAccount.username === value
+            (serviceAccount: IServiceAccount) =>
+                serviceAccount.username === value
         );
+    const isPATValid =
+        tokenGeneration === TokenGeneration.LATER ||
+        (isNotEmpty(patDescription) && patExpiresAt > new Date());
     const isValid =
         isNotEmpty(name) &&
         isNotEmpty(username) &&
         (editing || isUnique(username)) &&
-        (tokenGeneration === TokenGeneration.LATER ||
-            isNotEmpty(patDescription));
+        isPATValid;
 
     const suggestUsername = () => {
         if (isNotEmpty(name) && !isNotEmpty(username)) {
-            const normalizedFromName = `service:${name
+            const normalizedFromName = `service-${name
                 .toLowerCase()
                 .replace(/ /g, '-')
                 .replace(/[^\w_-]/g, '')}`;
@@ -410,6 +413,16 @@ export const ServiceAccountModal = ({
                                         />
                                     </StyledInlineContainer>
                                 </StyledSecondaryContainer>
+                            }
+                            elseShow={
+                                <>
+                                    <StyledInputDescription>
+                                        Service account tokens
+                                    </StyledInputDescription>
+                                    <ServiceAccountTokens
+                                        serviceAccount={serviceAccount!}
+                                    />
+                                </>
                             }
                         />
                     </div>

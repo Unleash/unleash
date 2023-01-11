@@ -1,8 +1,6 @@
 import React from 'react';
 import {
     Box,
-    Card,
-    CardContent,
     FormControlLabel,
     styled,
     Switch,
@@ -12,24 +10,25 @@ import { useMaintenance } from 'hooks/api/getters/useMaintenance/useMaintenance'
 import { useMaintenanceApi } from 'hooks/api/actions/useMaintenanceApi/useMaintenanceApi';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
-const StyledCard = styled(Card)(({ theme }) => ({
+const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
-    padding: theme.spacing(2.5),
+    padding: theme.spacing(3),
     border: `1px solid ${theme.palette.dividerAlternative}`,
     borderRadius: theme.shape.borderRadiusLarge,
-    boxShadow: theme.boxShadows.card,
-    fontSize: theme.fontSizes.smallBody,
 }));
 
 const CardTitleRow = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
 }));
 
 const CardDescription = styled(Box)(({ theme }) => ({
     color: theme.palette.text.secondary,
+    fontSize: theme.fontSizes.smallBody,
+    marginTop: theme.spacing(2),
 }));
 
 const SwitchLabel = styled(Typography)(({ theme }) => ({
@@ -51,34 +50,32 @@ export const MaintenanceToggle = () => {
     };
 
     return (
-        <StyledCard>
-            <CardContent>
-                <CardTitleRow>
-                    <b>Maintenance Mode</b>
-                    <FormControlLabel
-                        sx={{ fontSize: '10px' }}
-                        control={
-                            <Switch
-                                onChange={updateEnabled}
-                                value={enabled}
-                                name="enabled"
-                                checked={enabled}
-                            />
-                        }
-                        label={
-                            <SwitchLabel>
-                                {enabled ? 'Enabled' : 'Disabled'}
-                            </SwitchLabel>
-                        }
-                    />
-                </CardTitleRow>
-                <CardDescription>
-                    Maintenance Mode is useful when you want to freeze your
-                    system so nobody can do any changes during this time. When
-                    enabled it will show a banner at the top of the applications
-                    and only an admin can enable it or disable it.
-                </CardDescription>
-            </CardContent>
-        </StyledCard>
+        <StyledContainer>
+            <CardTitleRow>
+                <b>Maintenance Mode</b>
+                <FormControlLabel
+                    sx={{ margin: 0 }}
+                    control={
+                        <Switch
+                            onChange={updateEnabled}
+                            value={enabled}
+                            name="enabled"
+                            checked={enabled}
+                        />
+                    }
+                    label={
+                        <SwitchLabel>
+                            {enabled ? 'Enabled' : 'Disabled'}
+                        </SwitchLabel>
+                    }
+                />
+            </CardTitleRow>
+            <CardDescription>
+                Maintenance Mode is useful when you want to freeze your system
+                so nobody can do any changes during this time. When enabled it
+                will show a banner at the top of the applications and only an
+                admin can enable it or disable it.
+            </CardDescription>
+        </StyledContainer>
     );
 };

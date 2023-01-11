@@ -106,15 +106,6 @@ const UsersList = () => {
                 sortType: 'boolean',
             },
             {
-                Header: 'Created',
-                accessor: 'createdAt',
-                Cell: DateCell,
-                disableGlobalFilter: true,
-                sortType: 'date',
-                width: 120,
-                maxWidth: 120,
-            },
-            {
                 Header: 'Avatar',
                 accessor: 'imageUrl',
                 Cell: ({ row: { original: user } }: any) => (
@@ -145,6 +136,15 @@ const UsersList = () => {
                     roles.find((role: IRole) => role.id === row.rootRole)
                         ?.name || '',
                 disableGlobalFilter: true,
+                maxWidth: 120,
+            },
+            {
+                Header: 'Created',
+                accessor: 'createdAt',
+                Cell: DateCell,
+                disableGlobalFilter: true,
+                sortType: 'date',
+                width: 120,
                 maxWidth: 120,
             },
             {
@@ -206,6 +206,7 @@ const UsersList = () => {
             initialState,
             sortTypes,
             autoResetGlobalFilter: false,
+            autoResetHiddenColumns: false,
             autoResetSortBy: false,
             disableSortRemove: true,
             defaultColumn: {

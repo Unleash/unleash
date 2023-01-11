@@ -1034,6 +1034,48 @@ exports[`should serve the OpenAPI spec 1`] = `
         ],
         "type": "object",
       },
+      "exportQuerySchema": {
+        "additionalProperties": false,
+        "properties": {
+          "environment": {
+            "type": "string",
+          },
+          "features": {
+            "items": {
+              "minLength": 1,
+              "type": "string",
+            },
+            "type": "array",
+          },
+        },
+        "required": [
+          "features",
+          "environment",
+        ],
+        "type": "object",
+      },
+      "exportResultSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "featureStrategies": {
+            "items": {
+              "$ref": "#/components/schemas/featureStrategySchema",
+            },
+            "type": "array",
+          },
+          "features": {
+            "items": {
+              "$ref": "#/components/schemas/featureSchema",
+            },
+            "type": "array",
+          },
+        },
+        "required": [
+          "features",
+          "featureStrategies",
+        ],
+        "type": "object",
+      },
       "featureEnvironmentMetricsSchema": {
         "additionalProperties": false,
         "properties": {
@@ -4604,6 +4646,37 @@ If the provided project does not exist, the list of events will be empty.",
         },
         "tags": [
           "Features",
+        ],
+      },
+    },
+    "/api/admin/features-batch/export": {
+      "post": {
+        "operationId": "exportFeatures",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/exportQuerySchema",
+              },
+            },
+          },
+          "description": "exportQuerySchema",
+          "required": true,
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/exportResultSchema",
+                },
+              },
+            },
+            "description": "exportResultSchema",
+          },
+        },
+        "tags": [
+          "Unstable",
         ],
       },
     },

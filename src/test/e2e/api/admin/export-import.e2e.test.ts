@@ -12,9 +12,15 @@ let app: IUnleashTest;
 let db: ITestDb;
 let eventStore: IEventStore;
 
+const defaultStrategy = {
+    name: 'default',
+    parameters: {},
+    constraints: [],
+};
+
 const createToggle = async (
     toggle: FeatureToggleDTO,
-    strategy?: Omit<IStrategyConfig, 'id'>,
+    strategy: Omit<IStrategyConfig, 'id'> = defaultStrategy,
     projectId: string = 'default',
     username: string = 'test',
 ) => {
@@ -53,15 +59,36 @@ afterAll(async () => {
     await db.destroy();
 });
 
-afterEach(() => {
-    db.stores.featureToggleStore.deleteAll();
+afterEach(async () => {
+    await db.stores.featureToggleStore.deleteAll();
 });
 
 test('exports features', async () => {
-    await createToggle({
-        name: 'first_feature',
-        description: 'the #1 feature',
-    });
+    const strategy = {
+        name: 'default',
+        parameters: { rollout: '100', stickiness: 'default' },
+        constraints: [
+            {
+                contextName: 'appName',
+                values: ['test'],
+                operator: 'IN' as const,
+            },
+        ],
+    };
+    await createToggle(
+        {
+            name: 'first_feature',
+            description: 'the #1 feature',
+        },
+        strategy,
+    );
+    await createToggle(
+        {
+            name: 'second_feature',
+            description: 'the #1 feature',
+        },
+        strategy,
+    );
     const { body } = await app.request
         .post('/api/admin/features-batch/export')
         .send({
@@ -71,13 +98,36 @@ test('exports features', async () => {
         .set('Content-Type', 'application/json')
         .expect(200);
 
+    const { name, ...resultStrategy } = strategy;
     expect(body).toMatchObject({
         features: [
             {
                 name: 'first_feature',
             },
         ],
+        featureStrategies: [resultStrategy],
     });
+});
+
+test('returns all features, when no feature was defined', async () => {
+    await createToggle({
+        name: 'first_feature',
+        description: 'the #1 feature',
+    });
+    await createToggle({
+        name: 'second_feature',
+        description: 'the #1 feature',
+    });
+    const { body } = await app.request
+        .post('/api/admin/features-batch/export')
+        .send({
+            features: [],
+            environment: 'default',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(200);
+
+    expect(body.features).toHaveLength(2);
 });
 
 test('import features', async () => {

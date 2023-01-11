@@ -1,5 +1,5 @@
 import { IUnleashConfig } from '../types/option';
-import { FeatureToggle, ITag } from '../types/model';
+import { FeatureToggle, IFeatureStrategy, ITag } from '../types/model';
 import { Logger } from '../logger';
 import { IFeatureTagStore } from '../types/stores/feature-tag-store';
 import { IProjectStore } from '../types/stores/project-store';
@@ -17,6 +17,7 @@ import { IFlagResolver, IUnleashServices } from 'lib/types';
 import { IContextFieldDto } from '../types/stores/context-field-store';
 import FeatureToggleService from './feature-toggle-service';
 import User from 'lib/types/user';
+import { ExportQuerySchema } from '../openapi/spec/export-query-schema';
 
 export interface IExportQuery {
     features: string[];
@@ -33,6 +34,7 @@ export interface IExportData {
     features: FeatureToggle[];
     tags?: ITag[];
     contextFields?: IContextFieldDto[];
+    featureStrategies: IFeatureStrategy[];
 }
 
 export default class ExportImportService {
@@ -90,11 +92,14 @@ export default class ExportImportService {
         this.logger = getLogger('services/state-service.js');
     }
 
-    async export(query: IExportQuery): Promise<IExportData> {
-        const features = (
-            await this.toggleStore.getAll({ archived: false })
-        ).filter((toggle) => query.features.includes(toggle.name));
-        return { features: features };
+    async export(query: ExportQuerySchema): Promise<IExportData> {
+        const features = await this.toggleStore.getAllByNames(query.features);
+        const featureStrategies =
+            await this.featureStrategiesStore.getAllByFeatures(
+                query.features,
+                query.environment,
+            );
+        return { features, featureStrategies };
     }
 
     async import(dto: IImportDTO, user: User): Promise<void> {

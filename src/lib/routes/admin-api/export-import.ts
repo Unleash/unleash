@@ -38,7 +38,7 @@ class ExportImportController extends Controller {
             middleware: [
                 this.openApiService.validPath({
                     tags: ['Unstable'],
-                    operationId: 'export',
+                    operationId: 'exportFeatures',
                     requestBody: createRequestSchema('exportQuerySchema'),
                     responses: {
                         200: createResponseSchema('exportResultSchema'),

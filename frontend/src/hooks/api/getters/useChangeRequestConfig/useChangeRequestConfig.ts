@@ -1,18 +1,17 @@
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { IChangeRequestEnvironmentConfig } from 'component/changeRequest/changeRequest.types';
-import { useEnterpriseSWR } from '../useEnterpriseSWR/useEnterpriseSWR';
+import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
+import useUiConfig from '../useUiConfig/useUiConfig';
 
 export const useChangeRequestConfig = (projectId: string) => {
-    const { data, error, mutate } = useEnterpriseSWR<
+    const { isEnterprise } = useUiConfig();
+    const { data, error, mutate } = useConditionalSWR<
         IChangeRequestEnvironmentConfig[]
     >(
+        Boolean(projectId) && isEnterprise(),
         [],
-        Boolean(projectId)
-            ? formatApiPath(
-                  `api/admin/projects/${projectId}/change-requests/config`
-              )
-            : null,
+        formatApiPath(`api/admin/projects/${projectId}/change-requests/config`),
         fetcher
     );
 

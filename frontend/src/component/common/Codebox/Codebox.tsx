@@ -6,7 +6,7 @@ interface ICodeboxProps {
 
 const StyledContainer = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.codebox,
-    padding: '1rem',
+    padding: theme.spacing(2),
     borderRadius: theme.shape.borderRadiusMedium,
     position: 'relative',
     maxHeight: '500px',
@@ -18,7 +18,7 @@ const StyledCode = styled('pre')(({ theme }) => ({
     wordBreak: 'break-all',
     whiteSpace: 'pre-wrap',
     color: theme.palette.formSidebarTextColor,
-    fontSize: 14,
+    fontSize: theme.fontSizes.smallBody,
 }));
 
 const Codebox = ({ text }: ICodeboxProps) => {

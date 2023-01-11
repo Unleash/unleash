@@ -20,16 +20,16 @@ const StyledBatch = styled('div')(({ theme }) => ({
     },
 }));
 
-const StyledClose = styled(Close)({
-    color: '#fff',
+const StyledClose = styled(Close)(({ theme }) => ({
+    color: theme.palette.tertiary.background,
     width: '35px',
     height: '35px',
-});
-const StyledCheck = styled(Check)({
-    color: '#fff',
+}));
+const StyledCheck = styled(Check)(({ theme }) => ({
+    color: theme.palette.tertiary.background,
     width: '35px',
     height: '35px',
-});
+}));
 
 const CheckMarkBadge = ({ type, className }: ICheckMarkBadgeProps) => {
     return (

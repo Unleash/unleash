@@ -40,6 +40,8 @@ import { InstanceStatsService } from './instance-stats-service';
 import { FavoritesService } from './favorites-service';
 import MaintenanceService from './maintenance-service';
 import ExportImportService from './export-import-service';
+import SchedulerService from './scheduler-service';
+import { minutesToMilliseconds } from 'date-fns';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -137,6 +139,17 @@ export const createServices = (
         stores,
         config,
         settingService,
+    );
+
+    const schedulerService = new SchedulerService(config.getLogger);
+    schedulerService.schedule(
+        apiTokenService.fetchActiveTokens.bind(apiTokenService),
+        minutesToMilliseconds(1),
+    );
+
+    schedulerService.schedule(
+        apiTokenService.updateLastSeen.bind(apiTokenService),
+        minutesToMilliseconds(3),
     );
 
     return {

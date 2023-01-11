@@ -17,7 +17,6 @@ import {
 import { IApiTokenStore } from '../types/stores/api-token-store';
 import { FOREIGN_KEY_VIOLATION } from '../error/db-error';
 import BadDataError from '../error/bad-data-error';
-import { minutesToMilliseconds } from 'date-fns';
 import { IEnvironmentStore } from 'lib/types/stores/environment-store';
 import { constantTimeCompare } from '../util/constantTimeCompare';
 import {
@@ -50,10 +49,6 @@ export class ApiTokenService {
 
     private logger: Logger;
 
-    private timer: NodeJS.Timeout;
-
-    private seenTimer: NodeJS.Timeout;
-
     private activeTokens: IApiToken[] = [];
 
     private eventStore: IEventStore;
@@ -76,10 +71,6 @@ export class ApiTokenService {
         this.environmentStore = environmentStore;
         this.logger = config.getLogger('/services/api-token-service.ts');
         this.fetchActiveTokens();
-        this.timer = setInterval(
-            () => this.fetchActiveTokens(),
-            minutesToMilliseconds(1),
-        ).unref();
         this.updateLastSeen();
         if (config.authentication.initApiTokens.length > 0) {
             process.nextTick(async () =>
@@ -103,11 +94,6 @@ export class ApiTokenService {
             this.lastSeenSecrets = new Set<string>();
             await this.store.markSeenAt(toStore);
         }
-
-        this.seenTimer = setTimeout(
-            async () => this.updateLastSeen(),
-            minutesToMilliseconds(3),
-        ).unref();
     }
 
     public async getAllTokens(): Promise<IApiToken[]> {
@@ -285,12 +271,5 @@ export class ApiTokenService {
         } else {
             return `${projects[0]}:${environment}.${randomStr}`;
         }
-    }
-
-    destroy(): void {
-        clearInterval(this.timer);
-        clearTimeout(this.seenTimer);
-        this.timer = null;
-        this.seenTimer = null;
     }
 }

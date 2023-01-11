@@ -25,7 +25,6 @@ async function getSetup() {
         destroy: () => {
             services.versionService.destroy();
             services.clientInstanceService.destroy();
-            services.apiTokenService.destroy();
         },
     };
 }

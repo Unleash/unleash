@@ -310,6 +310,19 @@ export default class FakeFeatureStrategiesStore
     ): Promise<IFeatureOverview[]> {
         return Promise.resolve([]);
     }
+
+    getAllByFeatures(
+        features: string[],
+        environment?: string,
+    ): Promise<IFeatureStrategy[]> {
+        return Promise.resolve(
+            this.featureStrategies.filter(
+                (strategy) =>
+                    features.includes(strategy.featureName) &&
+                    strategy.environment === environment,
+            ),
+        );
+    }
 }
 
 module.exports = FakeFeatureStrategiesStore;

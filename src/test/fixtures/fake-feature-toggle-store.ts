@@ -28,6 +28,10 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         return this.features.filter(this.getFilterQuery(query)).length;
     }
 
+    async getAllByNames(names: string[]): Promise<FeatureToggle[]> {
+        return this.features.filter((f) => names.includes(f.name));
+    }
+
     async getProjectId(name: string): Promise<string> {
         return this.get(name).then((f) => f.project);
     }

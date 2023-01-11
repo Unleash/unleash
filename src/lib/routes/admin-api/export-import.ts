@@ -5,10 +5,12 @@ import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types/services';
 import { Logger } from '../../logger';
 import { OpenApiService } from '../../services/openapi-service';
-import ExportImportService, {
-    IExportQuery,
-} from 'lib/services/export-import-service';
+import ExportImportService from 'lib/services/export-import-service';
 import { InvalidOperationError } from '../../error';
+import { createRequestSchema, createResponseSchema } from '../../openapi';
+import { exportResultSchema } from '../../openapi/spec/export-result-schema';
+import { ExportQuerySchema } from '../../openapi/spec/export-query-schema';
+import { serializeDates } from '../../types';
 
 class ExportImportController extends Controller {
     private logger: Logger;
@@ -33,29 +35,33 @@ class ExportImportController extends Controller {
             path: '/export',
             permission: NONE,
             handler: this.export,
-            // middleware: [
-            //     this.openApiService.validPath({
-            //         tags: ['Import/Export'],
-            //         operationId: 'export',
-            //         responses: {
-            //             200: createResponseSchema('stateSchema'),
-            //         },
-            //         parameters:
-            //             exportQueryParameters as unknown as OpenAPIV3.ParameterObject[],
-            //     }),
-            // ],
+            middleware: [
+                this.openApiService.validPath({
+                    tags: ['Unstable'],
+                    operationId: 'export',
+                    requestBody: createRequestSchema('exportQuerySchema'),
+                    responses: {
+                        200: createResponseSchema('exportResultSchema'),
+                    },
+                }),
+            ],
         });
     }
 
     async export(
-        req: Request<unknown, unknown, IExportQuery, unknown>,
+        req: Request<unknown, unknown, ExportQuerySchema, unknown>,
         res: Response,
     ): Promise<void> {
         this.verifyExportImportEnabled();
         const query = req.body;
         const data = await this.exportImportService.export(query);
 
-        res.json(data);
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            exportResultSchema.$id,
+            serializeDates(data),
+        );
     }
 
     private verifyExportImportEnabled() {

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import {
     CREATE_FEATURE,
     DELETE_FEATURE,
@@ -16,6 +15,18 @@ interface PermissionChecker {
         projectId?: string,
         environment?: string,
     ): Promise<boolean>;
+}
+
+function findParam(
+    name: string,
+    { params, body }: any,
+    defaultValue?: string,
+): string | undefined {
+    let found = params ? params[name] : undefined;
+    if (found === undefined) {
+        found = body ? body[name] : undefined;
+    }
+    return found || defaultValue;
 }
 
 const rbacMiddleware = (
@@ -44,16 +55,23 @@ const rbacMiddleware = (
                 return false;
             }
 
-            // For /api/admin/projects/:projectId we will find it as part of params
-            let { projectId, environment } = params;
+            let projectId =
+                findParam('projectId', req) || findParam('project', req);
+            let environment =
+                findParam('environment', req) ||
+                findParam('environmentId', req);
 
             // Temporary workaround to figure out projectId for feature toggle updates.
             // will be removed in Unleash v5.0
             if ([DELETE_FEATURE, UPDATE_FEATURE].includes(permission)) {
                 const { featureName } = params;
                 projectId = await featureToggleStore.getProjectId(featureName);
-            } else if (permission === CREATE_FEATURE) {
-                projectId = projectId || req.body.project || 'default';
+            } else if (
+                projectId === undefined &&
+                (permission == CREATE_FEATURE ||
+                    permission.endsWith('FEATURE_STRATEGY'))
+            ) {
+                projectId = 'default';
             }
 
             return accessService.hasPermission(

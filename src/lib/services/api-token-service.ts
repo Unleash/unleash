@@ -88,14 +88,13 @@ export class ApiTokenService {
         }
     };
 
-    // arrow function to prevent this reference problems in the schedulerService
-    updateLastSeen = async (): Promise<void> => {
+    async updateLastSeen(): Promise<void> {
         if (this.lastSeenSecrets.size > 0) {
             const toStore = [...this.lastSeenSecrets];
             this.lastSeenSecrets = new Set<string>();
             await this.store.markSeenAt(toStore);
         }
-    };
+    }
 
     public async getAllTokens(): Promise<IApiToken[]> {
         return this.store.getAll();
@@ -273,6 +272,4 @@ export class ApiTokenService {
             return `${projects[0]}:${environment}.${randomStr}`;
         }
     }
-
-    destroy(): void {}
 }

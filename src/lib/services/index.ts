@@ -139,14 +139,14 @@ export const createServices = (
         settingService,
     );
 
-    const schedulerService = new SchedulerService();
+    const schedulerService = new SchedulerService(config.getLogger);
     schedulerService.schedule(
-        apiTokenService.fetchActiveTokens,
+        apiTokenService.fetchActiveTokens.bind(apiTokenService),
         minutesToMilliseconds(1),
     );
 
     schedulerService.schedule(
-        apiTokenService.updateLastSeen,
+        apiTokenService.updateLastSeen.bind(apiTokenService),
         minutesToMilliseconds(3),
     );
 

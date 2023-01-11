@@ -265,7 +265,8 @@ export const ProjectFeatureToggles = ({
                 Header: loading ? () => '' : name,
                 maxWidth: 90,
                 id: `environments.${name}`,
-                accessor: `environments.${name}.enabled`,
+                accessor: (row: ListItemType) =>
+                    row?.environments[name]?.enabled,
                 align: 'center',
                 Cell: ({
                     value,

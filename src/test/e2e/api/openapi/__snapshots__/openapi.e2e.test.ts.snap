@@ -4651,7 +4651,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/features-batch/export": {
       "post": {
-        "operationId": "export",
+        "operationId": "exportFeatures",
         "requestBody": {
           "content": {
             "application/json": {

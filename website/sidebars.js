@@ -68,6 +68,7 @@ module.exports = {
                     items: [
                         'how-to/how-to-create-api-tokens',
                         'how-to/how-to-create-personal-access-tokens',
+                        'how-to/how-to-create-service-accounts',
                         'how-to/how-to-use-the-admin-api',
                         'how-to/how-to-enable-openapi',
                     ],
@@ -327,6 +328,7 @@ module.exports = {
                         'reference/projects',
                         'reference/rbac',
                         'reference/segments',
+                        'reference/service-accounts',
                         'reference/sso',
                         'reference/stickiness',
                         'reference/strategy-constraints',

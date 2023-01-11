@@ -35,7 +35,7 @@ import { KeyboardArrowDown } from '@mui/icons-material';
 import { filterByConfig } from 'component/common/util';
 import { useAuthPermissions } from 'hooks/api/getters/useAuth/useAuthPermissions';
 import { useId } from 'hooks/useId';
-import { ICondensedRoute, IRoute } from 'interfaces/route';
+import { INavigationMenuItem } from 'interfaces/route';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { useThemeMode } from 'hooks/useThemeMode';
 
@@ -138,7 +138,7 @@ const Header: VFC = () => {
 
     const routes = getRoutes();
 
-    const filterByEnterprise = (route: ICondensedRoute): boolean => {
+    const filterByEnterprise = (route: INavigationMenuItem): boolean => {
         return !route.menu.isEnterprise || !isOss();
     };
 

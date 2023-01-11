@@ -16,7 +16,7 @@ export interface IRoute {
     isStandalone?: boolean;
 }
 
-export interface ICondensedRoute {
+export interface INavigationMenuItem {
     path: string;
     title: string;
     menu: IRouteMenu;

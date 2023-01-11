@@ -9,7 +9,7 @@ import NavigationLink from '../NavigationLink/NavigationLink';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { basePath } from 'utils/formatPath';
 import { IFlags } from 'interfaces/uiConfig';
-import { ICondensedRoute } from 'interfaces/route';
+import { INavigationMenuItem } from 'interfaces/route';
 import styles from './DrawerMenu.module.scss'; // FIXME: useStyle - theme
 
 interface IDrawerMenuProps {
@@ -25,9 +25,9 @@ interface IDrawerMenuProps {
     }>;
     flags?: IFlags;
     routes: {
-        mainNavRoutes: ICondensedRoute[];
-        mobileRoutes: ICondensedRoute[];
-        adminRoutes: ICondensedRoute[];
+        mainNavRoutes: INavigationMenuItem[];
+        mobileRoutes: INavigationMenuItem[];
+        adminRoutes: INavigationMenuItem[];
     };
 }
 

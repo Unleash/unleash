@@ -32,7 +32,7 @@ import { SplashPage } from 'component/splash/SplashPage/SplashPage';
 import { CreateUnleashContextPage } from 'component/context/CreateUnleashContext/CreateUnleashContextPage';
 import { CreateSegment } from 'component/segments/CreateSegment/CreateSegment';
 import { EditSegment } from 'component/segments/EditSegment/EditSegment';
-import { ICondensedRoute, IRoute } from 'interfaces/route';
+import { INavigationMenuItem, IRoute } from 'interfaces/route';
 import { EnvironmentTable } from 'component/environments/EnvironmentTable/EnvironmentTable';
 import { SegmentTable } from 'component/segments/SegmentTable';
 import { FeaturesArchiveTable } from '../archive/FeaturesArchiveTable';
@@ -432,7 +432,7 @@ export const routes: IRoute[] = [
     },
 ];
 
-export const adminMenuRoutes: ICondensedRoute[] = [
+export const adminMenuRoutes: INavigationMenuItem[] = [
     {
         path: '/history',
         title: 'Event log',
@@ -516,7 +516,7 @@ const computeRoutes = () => {
     };
 };
 
-export const getCondensedRoutes = (routes: IRoute[]): ICondensedRoute[] => {
+export const getCondensedRoutes = (routes: IRoute[]): INavigationMenuItem[] => {
     return routes.map(route => {
         const condensedRoute = {
             path: route.path,

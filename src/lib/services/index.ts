@@ -61,7 +61,6 @@ export const createServices = (
     const featureTypeService = new FeatureTypeService(stores, config);
     const resetTokenService = new ResetTokenService(stores, config);
     const stateService = new StateService(stores, config);
-    const exportImportService = new ExportImportService(stores, config);
     const strategyService = new StrategyService(stores, config);
     const tagService = new TagService(stores, config);
     const tagTypeService = new TagTypeService(stores, config);
@@ -85,6 +84,9 @@ export const createServices = (
         segmentService,
         accessService,
     );
+    const exportImportService = new ExportImportService(stores, config, {
+        featureToggleService: featureToggleServiceV2,
+    });
     const environmentService = new EnvironmentService(stores, config);
     const featureTagService = new FeatureTagService(stores, config);
     const favoritesService = new FavoritesService(stores, config);

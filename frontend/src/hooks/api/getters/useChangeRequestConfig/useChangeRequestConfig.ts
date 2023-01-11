@@ -8,7 +8,11 @@ export const useChangeRequestConfig = (projectId: string) => {
         IChangeRequestEnvironmentConfig[]
     >(
         [],
-        formatApiPath(`api/admin/projects/${projectId}/change-requests/config`),
+        Boolean(projectId)
+            ? formatApiPath(
+                  `api/admin/projects/${projectId}/change-requests/config`
+              )
+            : null,
         fetcher
     );
 

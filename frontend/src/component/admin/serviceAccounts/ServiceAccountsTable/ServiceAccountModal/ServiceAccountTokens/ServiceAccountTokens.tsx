@@ -1,6 +1,5 @@
 import { Delete } from '@mui/icons-material';
 import {
-    Alert,
     Button,
     IconButton,
     styled,
@@ -9,9 +8,6 @@ import {
     useMediaQuery,
     useTheme,
 } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { PageContent } from 'component/common/PageContent/PageContent';
-import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { Search } from 'component/common/Search/Search';
 import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
 import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
@@ -26,44 +22,54 @@ import {
     INewPersonalAPIToken,
     IPersonalAPIToken,
 } from 'interfaces/personalAPIToken';
-import { useEffect, useMemo, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useMemo, useState } from 'react';
 import { useTable, SortingRule, useSortBy, useFlexLayout } from 'react-table';
-import { createLocalStorage } from 'utils/createLocalStorage';
 import { sortTypes } from 'utils/sortTypes';
-import { CreatePersonalAPIToken } from './CreatePersonalAPIToken/CreatePersonalAPIToken';
-import { DeletePersonalAPIToken } from './DeletePersonalAPIToken/DeletePersonalAPIToken';
-import { PersonalAPITokenDialog } from './PersonalAPITokenDialog/PersonalAPITokenDialog';
+import { ServiceAccountCreateTokenDialog } from './ServiceAccountCreateTokenDialog/ServiceAccountCreateTokenDialog';
+import { ServiceAccountTokenDialog } from 'component/admin/serviceAccounts/ServiceAccountsTable/ServiceAccountTokenDialog/ServiceAccountTokenDialog';
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { Dialogue } from 'component/common/Dialogue/Dialogue';
+import {
+    ICreatePersonalApiTokenPayload,
+    usePersonalAPITokensApi,
+} from 'hooks/api/actions/usePersonalAPITokensApi/usePersonalAPITokensApi';
+import useToast from 'hooks/useToast';
+import { formatUnknownError } from 'utils/formatUnknownError';
+import { IServiceAccount } from 'interfaces/service-account';
+import { useServiceAccounts } from 'hooks/api/getters/useServiceAccounts/useServiceAccounts';
 
-const StyledAlert = styled(Alert)(({ theme }) => ({
-    marginBottom: theme.spacing(3),
+const StyledHeader = styled('div')(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: theme.spacing(2),
+    gap: theme.spacing(2),
+    '& > div': {
+        [theme.breakpoints.down('md')]: {
+            marginTop: 0,
+        },
+    },
 }));
 
 const StyledTablePlaceholder = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    padding: theme.spacing(10, 2),
+    padding: theme.spacing(3),
 }));
 
 const StyledPlaceholderTitle = styled(Typography)(({ theme }) => ({
-    fontSize: theme.fontSizes.mainHeader,
-    marginBottom: theme.spacing(1.5),
+    fontSize: theme.fontSizes.bodySize,
+    marginBottom: theme.spacing(0.5),
 }));
 
 const StyledPlaceholderSubtitle = styled(Typography)(({ theme }) => ({
+    fontSize: theme.fontSizes.smallBody,
     color: theme.palette.text.secondary,
-    marginBottom: theme.spacing(4.5),
+    marginBottom: theme.spacing(1.5),
 }));
-
-export const tokensPlaceholder: IPersonalAPIToken[] = Array(15).fill({
-    description: 'Short description of the feature',
-    type: '-',
-    createdAt: new Date(2022, 1, 1),
-    project: 'projectID',
-});
 
 export type PageQueryType = Partial<
     Record<'sort' | 'order' | 'search', string>
@@ -71,37 +77,76 @@ export type PageQueryType = Partial<
 
 const defaultSort: SortingRule<string> = { id: 'createdAt' };
 
-const { value: storedParams, setValue: setStoredParams } = createLocalStorage(
-    'PersonalAPITokensTable:v1',
-    defaultSort
-);
+interface IServiceAccountTokensProps {
+    serviceAccount: IServiceAccount;
+    readOnly?: boolean;
+}
 
-export const PersonalAPITokensTab = () => {
+export const ServiceAccountTokens = ({
+    serviceAccount,
+    readOnly,
+}: IServiceAccountTokensProps) => {
     const theme = useTheme();
+    const { setToastData, setToastApiError } = useToast();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const isExtraSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-    const { tokens = [], loading } = usePersonalAPITokens();
-
-    const [searchParams, setSearchParams] = useSearchParams();
+    const { tokens = [], refetchTokens } = usePersonalAPITokens(
+        serviceAccount.id
+    );
+    const { refetch } = useServiceAccounts();
+    const { createUserPersonalAPIToken, deleteUserPersonalAPIToken } =
+        usePersonalAPITokensApi();
 
     const [initialState] = useState(() => ({
-        sortBy: [
-            {
-                id: searchParams.get('sort') || storedParams.id,
-                desc: searchParams.has('order')
-                    ? searchParams.get('order') === 'desc'
-                    : storedParams.desc,
-            },
-        ],
-        globalFilter: searchParams.get('search') || '',
+        sortBy: readOnly ? [{ id: 'seenAt' }] : [defaultSort],
     }));
 
-    const [searchValue, setSearchValue] = useState(initialState.globalFilter);
+    const [searchValue, setSearchValue] = useState('');
     const [createOpen, setCreateOpen] = useState(false);
-    const [dialogOpen, setDialogOpen] = useState(false);
+    const [tokenOpen, setTokenOpen] = useState(false);
     const [deleteOpen, setDeleteOpen] = useState(false);
     const [newToken, setNewToken] = useState<INewPersonalAPIToken>();
     const [selectedToken, setSelectedToken] = useState<IPersonalAPIToken>();
+
+    const onCreateClick = async (newToken: ICreatePersonalApiTokenPayload) => {
+        try {
+            const token = await createUserPersonalAPIToken(
+                serviceAccount.id,
+                newToken
+            );
+            refetch();
+            refetchTokens();
+            setCreateOpen(false);
+            setNewToken(token);
+            setTokenOpen(true);
+            setToastData({
+                title: 'Token created successfully',
+                type: 'success',
+            });
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
+    };
+
+    const onDeleteClick = async () => {
+        if (selectedToken) {
+            try {
+                await deleteUserPersonalAPIToken(
+                    serviceAccount.id,
+                    selectedToken?.id
+                );
+                refetch();
+                refetchTokens();
+                setDeleteOpen(false);
+                setToastData({
+                    title: 'Token deleted successfully',
+                    type: 'success',
+                });
+            } catch (error: unknown) {
+                setToastApiError(formatUnknownError(error));
+            }
+        }
+    };
 
     const columns = useMemo(
         () => [
@@ -166,18 +211,10 @@ export const PersonalAPITokensTab = () => {
         [setSelectedToken, setDeleteOpen]
     );
 
-    const {
-        data: searchedData,
-        getSearchText,
-        getSearchContext,
-    } = useSearch(columns, searchValue, tokens);
-
-    const data = useMemo(
-        () =>
-            searchedData?.length === 0 && loading
-                ? tokensPlaceholder
-                : searchedData,
-        [searchedData, loading]
+    const { data, getSearchText, getSearchContext } = useSearch(
+        columns,
+        searchValue,
+        tokens
     );
 
     const {
@@ -211,82 +248,37 @@ export const PersonalAPITokensTab = () => {
                 condition: isSmallScreen,
                 columns: ['createdAt'],
             },
+            {
+                condition: Boolean(readOnly),
+                columns: ['Actions', 'expiresAt', 'createdAt'],
+            },
         ],
         setHiddenColumns,
         columns
     );
 
-    useEffect(() => {
-        const tableState: PageQueryType = {};
-        tableState.sort = sortBy[0].id;
-        if (sortBy[0].desc) {
-            tableState.order = 'desc';
-        }
-        if (searchValue) {
-            tableState.search = searchValue;
-        }
-
-        setSearchParams(tableState, {
-            replace: true,
-        });
-        setStoredParams({ id: sortBy[0].id, desc: sortBy[0].desc || false });
-    }, [sortBy, searchValue, setSearchParams]);
-
     return (
-        <PageContent
-            isLoading={loading}
-            header={
-                <PageHeader
-                    title={`Personal API tokens (${
-                        rows.length < data.length
-                            ? `${rows.length} of ${data.length}`
-                            : data.length
-                    })`}
-                    actions={
-                        <>
-                            <ConditionallyRender
-                                condition={!isSmallScreen}
-                                show={
-                                    <>
-                                        <Search
-                                            initialValue={searchValue}
-                                            onChange={setSearchValue}
-                                            getSearchContext={getSearchContext}
-                                        />
-                                        <PageHeader.Divider />
-                                    </>
-                                }
-                            />
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                disabled={tokens.length >= PAT_LIMIT}
-                                onClick={() => setCreateOpen(true)}
-                            >
-                                New token
-                            </Button>
-                        </>
-                    }
-                >
-                    <ConditionallyRender
-                        condition={isSmallScreen}
-                        show={
-                            <Search
-                                initialValue={searchValue}
-                                onChange={setSearchValue}
-                                hasFilters
-                                getSearchContext={getSearchContext}
-                            />
-                        }
-                    />
-                </PageHeader>
-            }
-        >
-            <StyledAlert severity="info">
-                Use personal API tokens to authenticate to the Unleash API as
-                yourself. A personal API token has the same access privileges as
-                your user.
-            </StyledAlert>
+        <>
+            <ConditionallyRender
+                condition={!readOnly}
+                show={
+                    <StyledHeader>
+                        <Search
+                            initialValue={searchValue}
+                            onChange={setSearchValue}
+                            getSearchContext={getSearchContext}
+                        />
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            disabled={tokens.length >= PAT_LIMIT}
+                            onClick={() => setCreateOpen(true)}
+                        >
+                            New token
+                        </Button>
+                    </StyledHeader>
+                }
+            />
             <SearchHighlightProvider value={getSearchText(searchValue)}>
                 <VirtualizedTable
                     rows={rows}
@@ -309,42 +301,52 @@ export const PersonalAPITokensTab = () => {
                         elseShow={
                             <StyledTablePlaceholder>
                                 <StyledPlaceholderTitle>
-                                    You have no personal API tokens yet.
+                                    You have no tokens for this service account
+                                    yet.
                                 </StyledPlaceholderTitle>
-                                <StyledPlaceholderSubtitle variant="body2">
-                                    Need an API token for scripts or testing?
-                                    Create a personal API token for quick access
-                                    to the Unleash API.
+                                <StyledPlaceholderSubtitle>
+                                    Create a service account token for access to
+                                    the Unleash API.
                                 </StyledPlaceholderSubtitle>
                                 <Button
                                     variant="outlined"
                                     onClick={() => setCreateOpen(true)}
                                 >
-                                    Create your first token
+                                    Create new service account token
                                 </Button>
                             </StyledTablePlaceholder>
                         }
                     />
                 }
             />
-            <CreatePersonalAPIToken
+            <ServiceAccountCreateTokenDialog
                 open={createOpen}
                 setOpen={setCreateOpen}
-                newToken={(token: INewPersonalAPIToken) => {
-                    setNewToken(token);
-                    setDialogOpen(true);
-                }}
+                serviceAccount={serviceAccount}
+                onCreateClick={onCreateClick}
             />
-            <PersonalAPITokenDialog
-                open={dialogOpen}
-                setOpen={setDialogOpen}
+            <ServiceAccountTokenDialog
+                open={tokenOpen}
+                setOpen={setTokenOpen}
                 token={newToken}
             />
-            <DeletePersonalAPIToken
+            <Dialogue
                 open={deleteOpen}
-                setOpen={setDeleteOpen}
-                token={selectedToken}
-            />
-        </PageContent>
+                primaryButtonText="Delete token"
+                secondaryButtonText="Cancel"
+                onClick={onDeleteClick}
+                onClose={() => {
+                    setDeleteOpen(false);
+                }}
+                title="Delete token?"
+            >
+                <Typography>
+                    Any applications or scripts using this token "
+                    <strong>{selectedToken?.description}</strong>" will no
+                    longer be able to access the Unleash API. You cannot undo
+                    this action.
+                </Typography>
+            </Dialogue>
+        </>
     );
 };

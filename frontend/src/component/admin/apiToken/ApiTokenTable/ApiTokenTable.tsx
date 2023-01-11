@@ -29,7 +29,6 @@ import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColum
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
 
 const hiddenColumnsSmall = ['Icon', 'createdAt'];
-const hiddenColumnsFlagE = ['projects', 'environment'];
 
 export const ApiTokenTable = () => {
     const { tokens, loading } = useApiTokens();
@@ -52,6 +51,7 @@ export const ApiTokenTable = () => {
             data: tokens as any,
             initialState,
             sortTypes,
+            autoResetHiddenColumns: false,
             disableSortRemove: true,
         },
         useGlobalFilter,
@@ -63,10 +63,6 @@ export const ApiTokenTable = () => {
             {
                 condition: isSmallScreen,
                 columns: hiddenColumnsSmall,
-            },
-            {
-                condition: !uiConfig.flags.E,
-                columns: hiddenColumnsFlagE,
             },
         ],
         setHiddenColumns,

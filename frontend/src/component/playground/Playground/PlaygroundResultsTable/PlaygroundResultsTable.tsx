@@ -170,6 +170,7 @@ export const PlaygroundResultsTable = ({
             data: data as any,
             sortTypes,
             autoResetGlobalFilter: false,
+            autoResetHiddenColumns: false,
             autoResetSortBy: false,
             disableSortRemove: true,
             disableMultiSort: true,

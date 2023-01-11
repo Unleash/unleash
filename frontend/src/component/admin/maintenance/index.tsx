@@ -7,9 +7,7 @@ import AccessContext from 'contexts/AccessContext';
 import React, { useContext } from 'react';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
-import { Box, CardContent, styled } from '@mui/material';
-import { CorsHelpAlert } from 'component/admin/cors/CorsHelpAlert';
-import { CorsForm } from 'component/admin/cors/CorsForm';
+import { Box, styled } from '@mui/material';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { MaintenanceTooltip } from './MaintenanceTooltip';
 import { MaintenanceToggle } from './MaintenanceToggle';
@@ -36,10 +34,10 @@ export const MaintenanceAdmin = () => {
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'grid',
-    gap: theme.spacing(2),
+    gap: theme.spacing(4),
 }));
 const MaintenancePage = () => {
-    const { uiConfig, loading } = useUiConfig();
+    const { loading } = useUiConfig();
 
     if (loading) {
         return null;

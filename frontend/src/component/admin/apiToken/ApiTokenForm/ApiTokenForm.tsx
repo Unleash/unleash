@@ -1,13 +1,14 @@
 import {
+    Alert,
+    Box,
     Button,
     FormControl,
     FormControlLabel,
+    Link,
     Radio,
     RadioGroup,
+    styled,
     Typography,
-    Box,
-    Link,
-    Alert,
 } from '@mui/material';
 import { KeyboardArrowDownOutlined } from '@mui/icons-material';
 import React from 'react';
@@ -18,7 +19,6 @@ import Input from 'component/common/Input/Input';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { SelectProjectInput } from './SelectProjectInput/SelectProjectInput';
 import { ApiTokenFormErrorType } from './useApiTokenForm';
-import { useStyles } from './ApiTokenForm.styles';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { TokenType } from 'interfaces/token';
 
@@ -38,6 +38,47 @@ interface IApiTokenFormProps {
     clearErrors: (error?: ApiTokenFormErrorType) => void;
 }
 
+const StyledContainer = styled('div')(() => ({
+    maxWidth: '400px',
+}));
+
+const StyledForm = styled('form')(() => ({
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
+}));
+
+const StyledInput = styled(Input)(({ theme }) => ({
+    width: '100%',
+    marginBottom: theme.spacing(2),
+}));
+
+const StyledSelectInput = styled(GeneralSelect)(({ theme }) => ({
+    marginBottom: theme.spacing(2),
+    minWidth: '400px',
+    [theme.breakpoints.down('sm')]: {
+        minWidth: '379px',
+    },
+}));
+
+const StyledInputDescription = styled('p')(({ theme }) => ({
+    marginBottom: theme.spacing(1),
+}));
+
+const StyledInputLabel = styled('label')(({ theme }) => ({
+    marginBottom: theme.spacing(1),
+}));
+
+const CancelButton = styled(Button)(({ theme }) => ({
+    marginLeft: theme.spacing(3),
+}));
+
+const StyledBox = styled(Box)({
+    marginTop: 'auto',
+    display: 'flex',
+    justifyContent: 'flex-end',
+});
+
 const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
     children,
     username,
@@ -54,7 +95,6 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
     clearErrors,
 }) => {
     const { uiConfig } = useUiConfig();
-    const { classes: styles } = useStyles();
     const { environments } = useEnvironments();
     const { projects: availableProjects } = useProjects();
 
@@ -97,7 +137,7 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
     const isUnleashCloud = Boolean(uiConfig?.flags?.UNLEASH_CLOUD);
 
     return (
-        <form onSubmit={handleSubmit} className={styles.form}>
+        <StyledForm onSubmit={handleSubmit}>
             <ConditionallyRender
                 condition={isUnleashCloud}
                 show={
@@ -110,12 +150,11 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
                     </Alert>
                 }
             />
-            <div className={styles.container}>
-                <p className={styles.inputDescription}>
+            <StyledContainer>
+                <StyledInputDescription>
                     What would you like to call this token?
-                </p>
-                <Input
-                    className={styles.input}
+                </StyledInputDescription>
+                <StyledInput
                     value={username}
                     name="username"
                     onChange={e => setUsername(e.target.value)}
@@ -126,9 +165,9 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
                     autoFocus
                 />
                 <FormControl sx={{ mb: 2, width: '100%' }}>
-                    <label id="token-type" className={styles.inputDescription}>
+                    <StyledInputLabel id="token-type">
                         What do you want to connect?
-                    </label>
+                    </StyledInputLabel>
                     <RadioGroup
                         aria-labelledby="token-type"
                         defaultValue="CLIENT"
@@ -166,9 +205,9 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
                         ))}
                     </RadioGroup>
                 </FormControl>
-                <p className={styles.inputDescription}>
+                <StyledInputDescription>
                     Which project do you want to give access to?
-                </p>
+                </StyledInputDescription>
                 <SelectProjectInput
                     disabled={type === TokenType.ADMIN}
                     options={selectableProjects}
@@ -177,10 +216,10 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
                     error={errors?.projects}
                     onFocus={() => clearErrors('projects')}
                 />
-                <p className={styles.inputDescription}>
+                <StyledInputDescription>
                     Which environment should the token have access to?
-                </p>
-                <GeneralSelect
+                </StyledInputDescription>
+                <StyledSelectInput
                     disabled={type === TokenType.ADMIN}
                     options={selectableEnvs}
                     value={environment}
@@ -190,22 +229,13 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
                     name="environment"
                     IconComponent={KeyboardArrowDownOutlined}
                     fullWidth
-                    className={styles.selectInput}
                 />
-            </div>
-            <Box
-                sx={{
-                    marginTop: 'auto',
-                    display: 'flex',
-                    justifyContent: 'flex-end',
-                }}
-            >
+            </StyledContainer>
+            <StyledBox>
                 {children}
-                <Button onClick={handleCancel} className={styles.cancelButton}>
-                    Cancel
-                </Button>
-            </Box>
-        </form>
+                <CancelButton onClick={handleCancel}>Cancel</CancelButton>
+            </StyledBox>
+        </StyledForm>
     );
 };
 

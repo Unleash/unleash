@@ -11,16 +11,23 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useChangeRequestToggle } from 'hooks/useChangeRequestToggle';
 import { ChangeRequestDialogue } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestConfirmDialog';
-import { UpdateEnabledMessage } from '../../../../../changeRequest/ChangeRequestConfirmDialog/ChangeRequestMessages/UpdateEnabledMessage';
+import { UpdateEnabledMessage } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestMessages/UpdateEnabledMessage';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { styled } from '@mui/material';
+import { FeatureOverviewSidePanelEnvironmentHider } from '../../FeatureOverviewSidePanel/FeatureOverviewSidePanelEnvironmentSwitches/FeatureOverviewSidePanelEnvironmentSwitch/FeatureOverviewSidePanelEnvironmentHider';
 
 interface IFeatureOverviewEnvSwitchProps {
     env: IFeatureEnvironment;
     callback?: () => void;
     text?: string;
     showInfoBox: () => void;
+    hiddenEnvironments: Set<String>;
+    setHiddenEnvironments: (environment: string) => void;
 }
+
+const StyledContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+}));
 
 const StyledLabel = styled('label')({
     display: 'inline-flex',
@@ -33,6 +40,8 @@ const FeatureOverviewEnvSwitch = ({
     callback,
     text,
     showInfoBox,
+    hiddenEnvironments,
+    setHiddenEnvironments,
 }: IFeatureOverviewEnvSwitchProps) => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
@@ -114,7 +123,7 @@ const FeatureOverviewEnvSwitch = ({
     );
 
     return (
-        <div>
+        <StyledContainer>
             <StyledLabel>
                 <PermissionSwitch
                     permission={UPDATE_FEATURE_ENVIRONMENT}
@@ -125,6 +134,11 @@ const FeatureOverviewEnvSwitch = ({
                 />
                 {content}
             </StyledLabel>
+            <FeatureOverviewSidePanelEnvironmentHider
+                environment={env}
+                hiddenEnvironments={hiddenEnvironments}
+                setHiddenEnvironments={setHiddenEnvironments}
+            />
             <ChangeRequestDialogue
                 isOpen={changeRequestDialogDetails.isOpen}
                 onClose={onChangeRequestToggleClose}
@@ -138,7 +152,7 @@ const FeatureOverviewEnvSwitch = ({
                     />
                 }
             />
-        </div>
+        </StyledContainer>
     );
 };
 

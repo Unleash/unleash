@@ -5,6 +5,7 @@ import {
     TextField,
     Box,
     Paper,
+    styled,
 } from '@mui/material';
 import { Autocomplete } from '@mui/material';
 
@@ -17,7 +18,6 @@ import {
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { IAutocompleteBoxOption } from 'component/common/AutocompleteBox/AutocompleteBox';
-import { useStyles } from '../ApiTokenForm.styles';
 import { SelectAllButton } from './SelectAllButton/SelectAllButton';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
@@ -25,6 +25,10 @@ const ALL_PROJECTS = '*';
 
 // Fix for shadow under Autocomplete - match with Select input
 const CustomPaper = ({ ...props }) => <Paper elevation={8} {...props} />;
+
+const SelectOptionCheckbox = styled(Checkbox)(({ theme }) => ({
+    marginRight: theme.spacing(0.4),
+}));
 
 export interface ISelectProjectInputProps {
     disabled?: boolean;
@@ -43,7 +47,6 @@ export const SelectProjectInput: VFC<ISelectProjectInputProps> = ({
     error,
     onFocus,
 }) => {
-    const { classes: styles } = useStyles();
     const [projects, setProjects] = useState<string[]>(
         typeof defaultValue === 'string' ? [defaultValue] : defaultValue
     );
@@ -82,11 +85,10 @@ export const SelectProjectInput: VFC<ISelectProjectInputProps> = ({
         { selected }: AutocompleteRenderOptionState
     ) => (
         <li {...props}>
-            <Checkbox
+            <SelectOptionCheckbox
                 icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
                 checkedIcon={<CheckBoxIcon fontSize="small" />}
                 checked={selected}
-                className={styles.selectOptionCheckbox}
             />
             {option.label}
         </li>

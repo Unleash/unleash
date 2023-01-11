@@ -6,7 +6,8 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 const Visible = styled(Visibility)(({ theme }) => ({
     cursor: 'pointer',
     marginLeft: 'auto',
-    color: theme.palette.grey[700],
+    marginTop: theme.spacing(0.5),
+    color: theme.palette.neutral.main,
     '&:hover': {
         opacity: 1,
     },
@@ -16,7 +17,7 @@ const Visible = styled(Visibility)(({ theme }) => ({
 const VisibleOff = styled(VisibilityOff)(({ theme }) => ({
     cursor: 'pointer',
     marginLeft: 'auto',
-    color: theme.palette.grey[700],
+    color: theme.palette.neutral.main,
 }));
 
 interface IFeatureOverviewSidePanelEnvironmentHiderProps {

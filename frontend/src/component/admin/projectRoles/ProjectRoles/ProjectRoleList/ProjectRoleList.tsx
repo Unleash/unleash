@@ -165,6 +165,7 @@ const ProjectRoleList = () => {
             initialState,
             sortTypes,
             autoResetGlobalFilter: false,
+            autoResetHiddenColumns: false,
             autoResetSortBy: false,
             disableSortRemove: true,
             defaultColumn: {
@@ -261,7 +262,7 @@ const ProjectRoleList = () => {
             <ProjectRoleDeleteConfirm
                 role={currentRole!}
                 open={delDialog}
-                setDeldialogue={setDelDialog}
+                setDialogue={setDelDialog}
                 handleDeleteRole={deleteProjectRole}
                 confirmName={confirmName}
                 setConfirmName={setConfirmName}

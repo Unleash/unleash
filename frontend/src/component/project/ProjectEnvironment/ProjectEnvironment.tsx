@@ -236,93 +236,73 @@ const ProjectEnvironmentList = () => {
 
     return (
         <PageContent header={header} isLoading={loading}>
-            <ConditionallyRender
-                condition={uiConfig.flags.E}
-                show={
-                    <StyledDivContainer>
-                        <ConditionallyRender
-                            condition={Boolean(error)}
-                            show={renderError()}
+            <StyledDivContainer>
+                <ConditionallyRender
+                    condition={Boolean(error)}
+                    show={renderError()}
+                />
+                <StyledAlert severity="info">
+                    <strong>Important!</strong> In order for your application to
+                    retrieve configured activation strategies for a specific
+                    environment, the application must use an environment
+                    specific API token. You can look up the environment-specific{' '}
+                    <Link to="/admin/api">API tokens here</Link>.
+                    <br />
+                    <br />
+                    Your administrator can configure an environment-specific API
+                    token to be used in the SDK. If you are an administrator you
+                    can <Link to="/admin/api">create a new API token here</Link>
+                    .
+                </StyledAlert>
+                <SearchHighlightProvider value={globalFilter}>
+                    <Table {...getTableProps()} rowHeight="compact">
+                        <SortableTableHeader
+                            headerGroups={headerGroups as any}
                         />
-                        <StyledAlert severity="info">
-                            <strong>Important!</strong> In order for your
-                            application to retrieve configured activation
-                            strategies for a specific environment, the
-                            application must use an environment specific API
-                            token. You can look up the environment-specific{' '}
-                            <Link to="/admin/api">API tokens here</Link>.
-                            <br />
-                            <br />
-                            Your administrator can configure an
-                            environment-specific API token to be used in the
-                            SDK. If you are an administrator you can{' '}
-                            <Link to="/admin/api">
-                                create a new API token here
-                            </Link>
-                            .
-                        </StyledAlert>
-                        <SearchHighlightProvider value={globalFilter}>
-                            <Table {...getTableProps()} rowHeight="compact">
-                                <SortableTableHeader
-                                    headerGroups={headerGroups as any}
-                                />
-                                <TableBody {...getTableBodyProps()}>
-                                    {rows.map(row => {
-                                        prepareRow(row);
-                                        return (
-                                            <TableRow
-                                                hover
-                                                {...row.getRowProps()}
-                                            >
-                                                {row.cells.map(cell => (
-                                                    <TableCell
-                                                        {...cell.getCellProps()}
-                                                    >
-                                                        {cell.render('Cell')}
-                                                    </TableCell>
-                                                ))}
-                                            </TableRow>
-                                        );
-                                    })}
-                                </TableBody>
-                            </Table>
-                        </SearchHighlightProvider>
+                        <TableBody {...getTableBodyProps()}>
+                            {rows.map(row => {
+                                prepareRow(row);
+                                return (
+                                    <TableRow hover {...row.getRowProps()}>
+                                        {row.cells.map(cell => (
+                                            <TableCell {...cell.getCellProps()}>
+                                                {cell.render('Cell')}
+                                            </TableCell>
+                                        ))}
+                                    </TableRow>
+                                );
+                            })}
+                        </TableBody>
+                    </Table>
+                </SearchHighlightProvider>
+                <ConditionallyRender
+                    condition={rows.length === 0}
+                    show={
                         <ConditionallyRender
-                            condition={rows.length === 0}
+                            condition={globalFilter?.length > 0}
                             show={
-                                <ConditionallyRender
-                                    condition={globalFilter?.length > 0}
-                                    show={
-                                        <TablePlaceholder>
-                                            No environments found matching
-                                            &ldquo;
-                                            {globalFilter}
-                                            &rdquo;
-                                        </TablePlaceholder>
-                                    }
-                                    elseShow={
-                                        <TablePlaceholder>
-                                            No environments available. Get
-                                            started by adding one.
-                                        </TablePlaceholder>
-                                    }
-                                />
+                                <TablePlaceholder>
+                                    No environments found matching &ldquo;
+                                    {globalFilter}
+                                    &rdquo;
+                                </TablePlaceholder>
+                            }
+                            elseShow={
+                                <TablePlaceholder>
+                                    No environments available. Get started by
+                                    adding one.
+                                </TablePlaceholder>
                             }
                         />
-                        <EnvironmentHideDialog
-                            environment={selectedEnvironment}
-                            open={hideDialog}
-                            setOpen={setHideDialog}
-                            onConfirm={onHideConfirm}
-                        />
-                    </StyledDivContainer>
-                }
-                elseShow={
-                    <Alert security="success">
-                        This feature has not been Unleashed for you yet.
-                    </Alert>
-                }
-            />
+                    }
+                />
+                <EnvironmentHideDialog
+                    environment={selectedEnvironment}
+                    open={hideDialog}
+                    setOpen={setHideDialog}
+                    onConfirm={onHideConfirm}
+                />
+            </StyledDivContainer>
         </PageContent>
     );
 };

@@ -105,7 +105,6 @@ function loadUI(options: IUnleashOptions): IUIConfig {
     };
 
     ui.flags = {
-        E: true,
         ENABLE_DARK_MODE_SUPPORT: false,
     };
     return mergeAll([ui, uiO]);

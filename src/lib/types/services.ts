@@ -37,6 +37,7 @@ import { LastSeenService } from '../services/client-metrics/last-seen-service';
 import { InstanceStatsService } from '../services/instance-stats-service';
 import { FavoritesService } from '../services';
 import MaintenanceService from '../services/maintenance-service';
+import ExportImportService from 'lib/services/export-import-service';
 
 export interface IUnleashServices {
     accessService: AccessService;
@@ -79,4 +80,5 @@ export interface IUnleashServices {
     instanceStatsService: InstanceStatsService;
     favoritesService: FavoritesService;
     maintenanceService: MaintenanceService;
+    exportImportService: ExportImportService;
 }

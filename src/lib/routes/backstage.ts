@@ -1,4 +1,6 @@
 import { writeHeapSnapshot } from 'v8';
+import { tmpdir } from 'os';
+import { join } from 'path';
 import { register as prometheusRegister } from 'prom-client';
 import Controller from './controller';
 import { IUnleashConfig } from '../types/option';
@@ -20,7 +22,11 @@ class BackstageController extends Controller {
 
         if (config.server.enableHeapSnapshotEnpoint) {
             this.get('/heap-snapshot', async (req, res) => {
-                writeHeapSnapshot();
+                const fileName = join(
+                    tmpdir(),
+                    `unleash-${Date.now()}.heapsnapshot`,
+                );
+                writeHeapSnapshot(fileName);
                 res.status(200);
                 res.end('Snapshot written');
             });

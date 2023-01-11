@@ -27,7 +27,7 @@ export const StaleDataNotification = ({
 
     const style = useMemo(() => {
         const base = {
-            ...fadeInBottomStartWithoutFixed(theme),
+            ...fadeInBottomStartWithoutFixed,
             padding: `${theme.spacing(3)} ${theme.spacing(4)}`,
             boxShadow: theme.boxShadows.elevated,
             borderRadius: theme.shape.borderRadiusLarge,
@@ -47,10 +47,8 @@ export const StaleDataNotification = ({
         return base;
     }, [theme, isExtraSmallScreen]);
 
-    const enter = useMemo(() => fadeInBottomEnter(theme), [theme]);
-
     return (
-        <AnimateOnMount mounted={show} start={style} enter={enter}>
+        <AnimateOnMount mounted={show} start={style} enter={fadeInBottomEnter}>
             <Typography variant="h5" sx={{ my: 2, mb: 2 }}>
                 Your data is stale
             </Typography>

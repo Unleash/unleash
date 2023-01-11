@@ -52,31 +52,31 @@ export const defaultBorderRadius = (theme: Theme) => ({
     borderRadius: `${theme.shape.borderRadius}px`,
 });
 
-export const fadeInBottomStart = (theme: Theme) => ({
+export const fadeInBottomStart = () => ({
     opacity: '0',
     position: 'fixed',
     right: '40px',
     bottom: '40px',
     transform: 'translateY(400px)',
 });
-export const fadeInBottomStartWithoutFixed = (theme: Theme): CSSProperties => ({
+export const fadeInBottomStartWithoutFixed: CSSProperties = {
     opacity: '0',
     right: '40px',
     bottom: '40px',
     transform: 'translateY(400px)',
     zIndex: 1400,
     position: 'fixed',
-});
-export const fadeInBottomEnter = (theme: Theme): CSSProperties => ({
+};
+export const fadeInBottomEnter: CSSProperties = {
     transform: 'translateY(0)',
     opacity: '1',
     transition: 'transform 0.6s ease, opacity 1s ease',
-});
-export const fadeInBottomLeave = (theme: Theme): CSSProperties => ({
+};
+export const fadeInBottomLeave: CSSProperties = {
     transform: 'translateY(400px)',
     opacity: '0',
     transition: 'transform 1.25s ease, opacity 1s ease',
-});
+};
 export const fadeInTopStart = (theme: Theme): CSSProperties => ({
     opacity: '0',
     position: 'fixed',
@@ -89,16 +89,16 @@ export const fadeInTopStart = (theme: Theme): CSSProperties => ({
         top: 40,
     },
 });
-export const fadeInTopEnter = (theme: Theme): CSSProperties => ({
+export const fadeInTopEnter: CSSProperties = {
     transform: 'translateY(100px)',
     opacity: '1',
     transition: 'transform 0.6s ease, opacity 1s ease',
-});
-export const fadeInTopLeave = (theme: Theme): CSSProperties => ({
+};
+export const fadeInTopLeave: CSSProperties = {
     transform: 'translateY(-400px)',
     opacity: '0',
     transition: 'transform 1.25s ease, opacity 1s ease',
-});
+};
 
 /**
  * Please extract styles below into MUI fragments as shown above

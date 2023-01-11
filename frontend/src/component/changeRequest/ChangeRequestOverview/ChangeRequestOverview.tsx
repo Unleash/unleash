@@ -264,7 +264,10 @@ export const ChangeRequestOverview: FC = () => {
                                 }
                                 show={
                                     <Button
-                                        sx={{ ml: 2 }}
+                                        sx={{
+                                            marginLeft: theme =>
+                                                theme.spacing(2),
+                                        }}
                                         variant="outlined"
                                         onClick={onCancel}
                                     >

@@ -1,4 +1,4 @@
-import { Portal, useTheme } from '@mui/material';
+import { Portal } from '@mui/material';
 import { useContext, useEffect, useMemo } from 'react';
 import {
     fadeInBottomEnter,
@@ -12,7 +12,6 @@ import { IToast } from 'interfaces/toast';
 
 const ToastRenderer = () => {
     const { toastData, setToast } = useContext(UIContext);
-    const theme = useTheme();
 
     const hide = () => {
         setToast((prev: IToast) => ({ ...prev, show: false }));
@@ -33,16 +32,16 @@ const ToastRenderer = () => {
     const animations = useMemo(
         () => ({
             start: {
-                ...fadeInBottomStartWithoutFixed(theme),
+                ...fadeInBottomStartWithoutFixed,
                 right: 0,
                 left: 0,
                 margin: '0 auto',
                 maxWidth: '450px',
             },
-            enter: fadeInBottomEnter(theme),
-            leave: fadeInBottomLeave(theme),
+            enter: fadeInBottomEnter,
+            leave: fadeInBottomLeave,
         }),
-        [theme]
+        []
     );
 
     return (

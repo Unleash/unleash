@@ -30,13 +30,11 @@ export const FeedbackNPS = ({ openUrl }: IFeedbackNPSProps) => {
     const theme = useTheme();
     const feedbackId = PNPS_FEEDBACK_ID;
 
-    console.log({ theme });
-
     const animations = useMemo(
         () => ({
             start: { ...fadeInTopStart(theme), zIndex: theme.zIndex.tooltip },
-            enter: fadeInTopEnter(theme),
-            leave: fadeInTopLeave(theme),
+            enter: fadeInTopEnter,
+            leave: fadeInTopLeave,
         }),
         [theme]
     );
@@ -84,7 +82,7 @@ export const FeedbackNPS = ({ openUrl }: IFeedbackNPSProps) => {
                     backgroundColor: theme.palette.background.paper,
                     zIndex: 9999,
                     boxShadow: '2px 2px 4px 4px rgba(143,143,143, 0.25)',
-                    padding: '1.5rem',
+                    padding: theme.spacing(3),
                     maxWidth: '400px',
                 }}
             >
@@ -158,7 +156,10 @@ export const FeedbackNPS = ({ openUrl }: IFeedbackNPSProps) => {
                                         Yes, no problem
                                     </Button>
                                     <Button
-                                        sx={{ ml: 2 }}
+                                        sx={{
+                                            marginLeft: theme =>
+                                                theme.spacing(2),
+                                        }}
                                         onClick={() => setAnsweredNotNow(true)}
                                     >
                                         Not now

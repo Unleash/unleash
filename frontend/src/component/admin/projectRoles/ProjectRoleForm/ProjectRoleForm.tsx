@@ -137,7 +137,7 @@ const ProjectRoleForm: FC<IProjectRoleForm> = ({
                 }}
             >
                 {children}
-                <Button onClick={onCancel} sx={{ ml: 2 }}>
+                <Button onClick={onCancel} sx={{ marginLeft: 2 }}>
                     Cancel
                 </Button>
             </Box>

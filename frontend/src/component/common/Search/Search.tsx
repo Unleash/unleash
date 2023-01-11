@@ -36,7 +36,7 @@ const StyledSearch = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     backgroundColor: theme.palette.background.paper,
-    border: `1px solid ${theme.palette.grey[500]}`,
+    border: `1px solid ${theme.palette.neutral.border}`,
     borderRadius: theme.shape.borderRadiusExtraLarge,
     padding: '3px 5px 3px 12px',
     width: '100%',
@@ -49,6 +49,11 @@ const StyledSearch = styled('div')(({ theme }) => ({
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
     width: '100%',
+}));
+
+const StyledClose = styled(Close)(({ theme }) => ({
+    color: theme.palette.neutral.main,
+    fontSize: theme.typography.body1.fontSize,
 }));
 
 export const Search = ({
@@ -120,16 +125,9 @@ export const Search = ({
                                         onSearchChange('');
                                         ref.current?.focus();
                                     }}
-                                    sx={{ p: 1 }}
+                                    sx={{ padding: theme => theme.spacing(1) }}
                                 >
-                                    <Close
-                                        sx={{
-                                            color: theme =>
-                                                theme.palette.grey[700],
-                                            fontSize: theme =>
-                                                theme.typography.body1.fontSize,
-                                        }}
-                                    />
+                                    <StyledClose />
                                 </IconButton>
                             </Tooltip>
                         }

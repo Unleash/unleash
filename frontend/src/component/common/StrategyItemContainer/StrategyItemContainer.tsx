@@ -76,7 +76,7 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
                 condition={orderNumber !== undefined}
                 show={<StyledIndexLabel>{orderNumber}</StyledIndexLabel>}
             />
-            <StyledContainer style={{ ...style }}>
+            <StyledContainer style={style}>
                 <StyledHeader draggable={Boolean(onDragStart)}>
                     <ConditionallyRender
                         condition={Boolean(onDragStart)}

@@ -17,7 +17,7 @@ interface ISortArrowProps {
 const iconStyle = (theme: Theme) => ({
     marginLeft: theme.spacing(0.25),
     marginRight: theme.spacing(-0.5),
-    color: theme.palette.grey[700],
+    color: theme.palette.neutral.main,
     fontSize: theme.fontSizes.mainHeader,
     verticalAlign: 'middle',
 });

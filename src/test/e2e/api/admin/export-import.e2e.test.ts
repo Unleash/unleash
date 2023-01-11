@@ -87,8 +87,6 @@ test('import features', async () => {
         .get('/api/admin/features/first_feature')
         .expect(200);
 
-    console.log(body);
-
     expect(body).toMatchObject({
         name: 'first_feature',
         project: 'default',

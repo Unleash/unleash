@@ -55,26 +55,26 @@ const StyledSelectContainer = styled('div')(({ theme }) => ({
 }));
 const StyledBottomSelect = styled('div')(({ theme }) => ({
     [theme.breakpoints.down(770)]: {
-        marginTop: '1rem',
+        marginTop: theme.spacing(2),
     },
     display: 'inline-flex',
 }));
 
 const StyledHeaderSelect = styled('div')(({ theme }) => ({
-    marginRight: '1rem',
+    marginRight: theme.spacing(2),
     width: '200px',
     [theme.breakpoints.between(1101, 1365)]: {
         width: '170px',
-        marginRight: '8px',
+        marginRight: theme.spacing(1),
     },
 }));
 
 const StyledGeneralSelect = styled(GeneralSelect)(({ theme }) => ({
-    marginRight: '1rem',
+    marginRight: theme.spacing(2),
     width: '200px',
     [theme.breakpoints.between(1101, 1365)]: {
         width: '170px',
-        marginRight: '8px',
+        marginRight: theme.spacing(1),
     },
 }));
 

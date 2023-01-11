@@ -46,7 +46,7 @@ const StyledHelpWrapper = styled(Tooltip)(({ theme }) => ({
 }));
 
 const StyledHelp = styled(HelpOutline)(({ theme }) => ({
-    fill: theme.palette.grey[600],
+    fill: theme.palette.tertiary.dark,
     [theme.breakpoints.down(860)]: {
         display: 'none',
     },

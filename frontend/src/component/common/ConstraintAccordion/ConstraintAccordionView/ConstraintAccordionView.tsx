@@ -50,7 +50,7 @@ const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
     },
 }));
 const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
-    borderTop: `1px dashed ${theme.palette.grey[300]}`,
+    borderTop: `1px dashed ${theme.palette.divider}`,
     display: 'flex',
     flexDirection: 'column',
 }));

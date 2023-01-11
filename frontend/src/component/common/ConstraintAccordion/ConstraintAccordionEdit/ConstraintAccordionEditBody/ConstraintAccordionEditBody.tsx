@@ -26,7 +26,7 @@ const StyledButtonContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     marginTop: theme.spacing(2),
-    borderTop: `1px solid ${theme.palette.grey[300]}`,
+    borderTop: `1px solid ${theme.palette.divider}`,
     width: '100%',
     padding: theme.spacing(2),
 }));

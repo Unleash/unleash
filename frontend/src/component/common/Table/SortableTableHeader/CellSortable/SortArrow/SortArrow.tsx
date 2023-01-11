@@ -5,8 +5,8 @@ import {
     UnfoldMoreOutlined,
 } from '@mui/icons-material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useStyles } from './SortArrow.styles';
 import classnames from 'classnames';
+import { Theme } from '@mui/material';
 
 interface ISortArrowProps {
     isSorted?: boolean;
@@ -14,47 +14,54 @@ interface ISortArrowProps {
     className?: string;
 }
 
+const iconStyle = (theme: Theme) => ({
+    marginLeft: theme.spacing(0.25),
+    marginRight: theme.spacing(-0.5),
+    color: theme.palette.neutral.main,
+    fontSize: theme.fontSizes.mainHeader,
+    verticalAlign: 'middle',
+});
+
 export const SortArrow: VFC<ISortArrowProps> = ({
     isSorted: sorted,
     isDesc: desc = false,
     className,
-}) => {
-    const { classes: styles } = useStyles();
-
-    return (
-        <ConditionallyRender
-            condition={Boolean(sorted)}
-            show={
-                <ConditionallyRender
-                    condition={Boolean(desc)}
-                    show={
-                        <KeyboardArrowDown
-                            className={classnames(
-                                styles.icon,
-                                styles.sorted,
-                                className
-                            )}
-                            fontSize="inherit"
-                        />
-                    }
-                    elseShow={
-                        <KeyboardArrowUp
-                            className={classnames(
-                                styles.icon,
-                                styles.sorted,
-                                className
-                            )}
-                            fontSize="inherit"
-                        />
-                    }
-                />
-            }
-            elseShow={
-                <UnfoldMoreOutlined
-                    className={classnames(styles.icon, className, 'hover-only')}
-                    fontSize="inherit"
-                />
-            }
-        />
-    );
-};
+}) => (
+    <ConditionallyRender
+        condition={Boolean(sorted)}
+        show={
+            <ConditionallyRender
+                condition={Boolean(desc)}
+                show={
+                    <KeyboardArrowDown
+                        sx={theme => ({
+                            ...iconStyle(theme),
+                            color: theme.palette.tableHeaderColor,
+                        })}
+                        className={className}
+                        fontSize="inherit"
+                    />
+                }
+                elseShow={
+                    <KeyboardArrowUp
+                        sx={theme => ({
+                            ...iconStyle(theme),
+                            color: theme.palette.tableHeaderColor,
+                        })}
+                        className={className}
+                        fontSize="inherit"
+                    />
+                }
+            />
+        }
+        elseShow={
+            <UnfoldMoreOutlined
+                sx={theme => ({
+                    ...iconStyle(theme),
+                })}
+                className={classnames(className, 'hover-only')}
+                fontSize="inherit"
+            />
+        }
+    />
+);

@@ -1,12 +1,15 @@
-import { useContext, useState } from 'react';
-import { Button, IconButton, Tooltip } from '@mui/material';
-import classnames from 'classnames';
+import { useContext, useMemo, useState } from 'react';
+import { Box, Button, IconButton, Tooltip, useTheme } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { ReactComponent as Logo } from 'assets/icons/logoPlain.svg';
-import { useStyles } from 'component/feedback/FeedbackNPS/FeedbackNPS.styles';
 import AnimateOnMount from 'component/common/AnimateOnMount/AnimateOnMount';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useThemeStyles } from 'themes/themeStyles';
+import {
+    contentSpacingY,
+    fadeInTopEnter,
+    fadeInTopLeave,
+    fadeInTopStart,
+} from 'themes/themeStyles';
 import UIContext from 'contexts/UIContext';
 import {
     PNPS_FEEDBACK_ID,
@@ -24,9 +27,17 @@ export const FeedbackNPS = ({ openUrl }: IFeedbackNPSProps) => {
     const { createFeedback, updateFeedback } = useAuthFeedbackApi();
     const { feedback } = useAuthFeedback();
     const [answeredNotNow, setAnsweredNotNow] = useState(false);
-    const { classes: styles } = useStyles();
-    const { classes: themeStyles } = useThemeStyles();
+    const theme = useTheme();
     const feedbackId = PNPS_FEEDBACK_ID;
+
+    const animations = useMemo(
+        () => ({
+            start: { ...fadeInTopStart(theme), zIndex: theme.zIndex.tooltip },
+            enter: fadeInTopEnter,
+            leave: fadeInTopLeave,
+        }),
+        [theme]
+    );
 
     const onConfirm = async () => {
         try {
@@ -61,28 +72,53 @@ export const FeedbackNPS = ({ openUrl }: IFeedbackNPSProps) => {
     return (
         <AnimateOnMount
             mounted={showFeedback}
-            start={themeStyles.fadeInTopStart}
-            enter={themeStyles.fadeInTopEnter}
-            leave={themeStyles.fadeInTopLeave}
-            container={styles.animateContainer}
+            start={animations.start}
+            enter={animations.enter}
+            leave={animations.leave}
         >
-            <div className={styles.feedback}>
-                <div
-                    className={classnames(
-                        styles.container,
-                        themeStyles.contentSpacingY
-                    )}
+            <Box
+                sx={{
+                    borderRadius: '12.5px',
+                    backgroundColor: theme.palette.background.paper,
+                    zIndex: 9999,
+                    boxShadow: '2px 2px 4px 4px rgba(143,143,143, 0.25)',
+                    padding: theme.spacing(3),
+                    maxWidth: '400px',
+                }}
+            >
+                <Box
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        position: 'relative',
+                        ...contentSpacingY(theme),
+                    }}
                 >
                     <Tooltip title="Close" arrow>
                         <IconButton
-                            className={styles.close}
+                            sx={{
+                                position: 'absolute',
+                                right: '-38px',
+                                top: '-47px',
+                                backgroundColor: theme.palette.background.paper,
+                                boxShadow:
+                                    '2px 2px 4px 4px rgba(143,143,143, 0.25)',
+                                '&:hover': {
+                                    backgroundColor: '#fff',
+                                },
+                            }}
                             onClick={() => setShowFeedback(false)}
                             size="large"
                         >
                             <CloseIcon />
                         </IconButton>
                     </Tooltip>
-                    <Logo className={styles.logo} />
+                    <Logo
+                        style={{
+                            width: '25px',
+                            height: '25px',
+                        }}
+                    />
                     <ConditionallyRender
                         condition={answeredNotNow}
                         show={
@@ -99,7 +135,7 @@ export const FeedbackNPS = ({ openUrl }: IFeedbackNPSProps) => {
                         }
                     />
 
-                    <div>
+                    <Box>
                         <ConditionallyRender
                             condition={answeredNotNow}
                             show={
@@ -120,7 +156,10 @@ export const FeedbackNPS = ({ openUrl }: IFeedbackNPSProps) => {
                                         Yes, no problem
                                     </Button>
                                     <Button
-                                        className={styles.cancel}
+                                        sx={{
+                                            marginLeft: theme =>
+                                                theme.spacing(2),
+                                        }}
                                         onClick={() => setAnsweredNotNow(true)}
                                     >
                                         Not now
@@ -128,9 +167,9 @@ export const FeedbackNPS = ({ openUrl }: IFeedbackNPSProps) => {
                                 </>
                             }
                         />
-                    </div>
-                </div>
-            </div>
+                    </Box>
+                </Box>
+            </Box>
         </AnimateOnMount>
     );
 };

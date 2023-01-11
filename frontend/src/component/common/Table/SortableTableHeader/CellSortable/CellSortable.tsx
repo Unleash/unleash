@@ -7,11 +7,16 @@ import {
     useRef,
     useState,
 } from 'react';
-import { TableCell, Tooltip } from '@mui/material';
-import classnames from 'classnames';
+import { Tooltip } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useStyles } from './CellSortable.styles';
 import { AnnouncerContext } from 'component/common/Announcer/AnnouncerContext/AnnouncerContext';
+import {
+    StyledButton,
+    StyledHiddenMeasurementLayer,
+    StyledLabel,
+    StyledTableCell,
+    StyledVisibleAbsoluteLayer,
+} from './CellSortable.styles';
 import { SortArrow } from './SortArrow/SortArrow';
 
 interface ICellSortableProps {
@@ -45,7 +50,6 @@ export const CellSortable: FC<ICellSortableProps> = ({
     const { setAnnouncement } = useContext(AnnouncerContext);
     const [title, setTitle] = useState('');
     const ref = useRef<HTMLSpanElement>(null);
-    const { classes: styles } = useStyles();
 
     const ariaSort = isSorted
         ? isDescending
@@ -62,18 +66,27 @@ export const CellSortable: FC<ICellSortableProps> = ({
         );
     };
 
-    const alignClass = useMemo(() => {
+    const alignStyle = useMemo(() => {
         switch (align) {
             case 'left':
-                return styles.alignLeft;
+                return {
+                    justifyContent: 'flex-start',
+                    textAlign: 'left',
+                } as const;
             case 'center':
-                return styles.alignCenter;
+                return {
+                    justifyContent: 'center',
+                    textAlign: 'center',
+                } as const;
             case 'right':
-                return styles.alignRight;
+                return {
+                    justifyContent: 'flex-end',
+                    textAlign: 'right',
+                } as const;
             default:
                 return undefined;
         }
-    }, [align, styles]);
+    }, [align]);
 
     useEffect(() => {
         const updateTitle = () => {
@@ -93,55 +106,36 @@ export const CellSortable: FC<ICellSortableProps> = ({
     }, [setTitle, ariaTitle]); // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
-        <TableCell
+        <StyledTableCell
             component="th"
             aria-sort={ariaSort}
-            className={classnames(
-                styles.header,
-                isSortable && styles.sortable,
-                isFlex && styles.flex,
-                isFlexGrow && styles.flexGrow
-            )}
             style={{ width, minWidth, maxWidth }}
+            isFlex={isFlex}
+            isFlexGrow={isFlexGrow}
+            isSortable={isSortable}
         >
             <ConditionallyRender
                 condition={isSortable}
                 show={
                     <Tooltip title={title} arrow>
-                        <button
+                        <StyledButton
+                            isSorted={isSorted}
                             type="button"
-                            className={classnames(
-                                isSorted && styles.sortedButton,
-                                styles.sortButton,
-                                alignClass
-                            )}
                             onClick={onSortClick}
                         >
-                            <span
-                                className={classnames(
-                                    styles.hiddenMeasurementLayer,
-                                    alignClass
-                                )}
+                            <StyledHiddenMeasurementLayer
+                                style={alignStyle}
                                 aria-hidden
                             >
-                                <span
-                                    className={styles.label}
-                                    tabIndex={-1}
-                                    data-text={children}
-                                >
+                                <StyledLabel tabIndex={-1} data-text={children}>
                                     {children}
-                                </span>
+                                </StyledLabel>
                                 <SortArrow
                                     isSorted={isSorted}
                                     isDesc={isDescending}
                                 />
-                            </span>
-                            <span
-                                className={classnames(
-                                    styles.visibleAbsoluteLayer,
-                                    alignClass
-                                )}
-                            >
+                            </StyledHiddenMeasurementLayer>
+                            <StyledVisibleAbsoluteLayer style={alignStyle}>
                                 <span ref={ref} tabIndex={-1}>
                                     <span>{children}</span>
                                 </span>
@@ -150,12 +144,12 @@ export const CellSortable: FC<ICellSortableProps> = ({
                                     isDesc={isDescending}
                                     className="sort-arrow"
                                 />
-                            </span>
-                        </button>
+                            </StyledVisibleAbsoluteLayer>
+                        </StyledButton>
                     </Tooltip>
                 }
-                elseShow={<div className={alignClass}>{children}</div>}
+                elseShow={<div style={alignStyle}>{children}</div>}
             />
-        </TableCell>
+        </StyledTableCell>
     );
 };

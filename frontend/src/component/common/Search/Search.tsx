@@ -1,13 +1,11 @@
 import React, { useRef, useState } from 'react';
-import { IconButton, InputBase, Tooltip } from '@mui/material';
+import { useAsyncDebounce } from 'react-table';
+import { Box, IconButton, InputBase, styled, Tooltip } from '@mui/material';
 import { Search as SearchIcon, Close } from '@mui/icons-material';
-import classnames from 'classnames';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useStyles } from './Search.styles';
 import { SearchSuggestions } from './SearchSuggestions/SearchSuggestions';
 import { IGetSearchContextOutput } from 'hooks/useSearch';
 import { useKeyboardShortcut } from 'hooks/useKeyboardShortcut';
-import { useAsyncDebounce } from 'react-table';
 
 interface ISearchProps {
     initialValue?: string;
@@ -21,6 +19,43 @@ interface ISearchProps {
     debounceTime?: number;
 }
 
+const StyledContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexGrow: 1,
+    alignItems: 'center',
+    position: 'relative',
+    backgroundColor: theme.palette.background.paper,
+    maxWidth: '400px',
+    [theme.breakpoints.down('md')]: {
+        marginTop: theme.spacing(1),
+        maxWidth: '100%',
+    },
+}));
+
+const StyledSearch = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    backgroundColor: theme.palette.background.paper,
+    border: `1px solid ${theme.palette.neutral.border}`,
+    borderRadius: theme.shape.borderRadiusExtraLarge,
+    padding: '3px 5px 3px 12px',
+    width: '100%',
+    zIndex: 3,
+    '&:focus-within': {
+        borderColor: theme.palette.primary.light,
+        boxShadow: theme.boxShadows.main,
+    },
+}));
+
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
+    width: '100%',
+}));
+
+const StyledClose = styled(Close)(({ theme }) => ({
+    color: theme.palette.neutral.main,
+    fontSize: theme.typography.body1.fontSize,
+}));
+
 export const Search = ({
     initialValue = '',
     onChange,
@@ -33,7 +68,6 @@ export const Search = ({
     debounceTime = 200,
 }: ISearchProps) => {
     const ref = useRef<HTMLInputElement>();
-    const { classes: styles } = useStyles();
     const [showSuggestions, setShowSuggestions] = useState(false);
 
     const [value, setValue] = useState(initialValue);
@@ -62,23 +96,17 @@ export const Search = ({
     const placeholder = `${customPlaceholder ?? 'Search'} (${hotkey})`;
 
     return (
-        <div className={styles.container} style={containerStyles}>
-            <div
-                className={classnames(
-                    styles.search,
-                    className,
-                    'search-container'
-                )}
-            >
+        <StyledContainer style={containerStyles}>
+            <StyledSearch className={className}>
                 <SearchIcon
-                    className={classnames(styles.searchIcon, 'search-icon')}
+                    sx={{
+                        mr: 1,
+                        color: theme => theme.palette.inactiveIcon,
+                    }}
                 />
-                <InputBase
+                <StyledInputBase
                     inputRef={ref}
                     placeholder={placeholder}
-                    classes={{
-                        root: classnames(styles.inputRoot, 'input-container'),
-                    }}
                     inputProps={{ 'aria-label': placeholder }}
                     value={value}
                     onChange={e => onSearchChange(e.target.value)}
@@ -86,12 +114,7 @@ export const Search = ({
                     onBlur={() => setShowSuggestions(false)}
                     disabled={disabled}
                 />
-                <div
-                    className={classnames(
-                        styles.clearContainer,
-                        'clear-container'
-                    )}
-                >
+                <Box sx={{ width: theme => theme.spacing(4) }}>
                     <ConditionallyRender
                         condition={Boolean(value)}
                         show={
@@ -102,20 +125,21 @@ export const Search = ({
                                         onSearchChange('');
                                         ref.current?.focus();
                                     }}
+                                    sx={{ padding: theme => theme.spacing(1) }}
                                 >
-                                    <Close className={styles.clearIcon} />
+                                    <StyledClose />
                                 </IconButton>
                             </Tooltip>
                         }
                     />
-                </div>
-            </div>
+                </Box>
+            </StyledSearch>
             <ConditionallyRender
                 condition={Boolean(hasFilters) && showSuggestions}
                 show={
                     <SearchSuggestions getSearchContext={getSearchContext!} />
                 }
             />
-        </div>
+        </StyledContainer>
     );
 };

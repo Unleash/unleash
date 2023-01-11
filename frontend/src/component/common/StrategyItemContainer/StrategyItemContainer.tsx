@@ -1,7 +1,6 @@
 import { DragEventHandler, FC, ReactNode } from 'react';
 import { DragIndicator } from '@mui/icons-material';
 import { styled, IconButton, Box } from '@mui/material';
-import classNames from 'classnames';
 import { IFeatureStrategy } from 'interfaces/strategy';
 import {
     getFeatureStrategyIcon,
@@ -9,7 +8,6 @@ import {
 } from 'utils/strategyNames';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useStyles } from './StrategyItemContainer.styles';
 import { PlaygroundStrategySchema } from 'openapi';
 
 interface IStrategyItemContainerProps {
@@ -40,6 +38,27 @@ const StyledIndexLabel = styled('div')(({ theme }) => ({
     },
 }));
 
+const StyledContainer = styled(Box)(({ theme }) => ({
+    borderRadius: theme.shape.borderRadiusMedium,
+    border: `1px solid ${theme.palette.divider}`,
+    '& + &': {
+        marginTop: theme.spacing(2),
+    },
+    background: theme.palette.background.paper,
+}));
+
+const StyledHeader = styled('div', {
+    shouldForwardProp: prop => prop !== 'draggable',
+})(({ theme, draggable }) => ({
+    padding: theme.spacing(0.5, 2),
+    display: 'flex',
+    gap: theme.spacing(1),
+    alignItems: 'center',
+    borderBottom: `1px solid ${theme.palette.divider}`,
+    fontWeight: theme.typography.fontWeightMedium,
+    paddingLeft: draggable ? theme.spacing(1) : theme.spacing(2),
+}));
+
 export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
     strategy,
     onDragStart,
@@ -49,7 +68,6 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
     orderNumber,
     style = {},
 }) => {
-    const { classes: styles } = useStyles();
     const Icon = getFeatureStrategyIcon(strategy.name);
 
     return (
@@ -58,12 +76,8 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
                 condition={orderNumber !== undefined}
                 show={<StyledIndexLabel>{orderNumber}</StyledIndexLabel>}
             />
-            <Box className={styles.container} style={{ ...style }}>
-                <div
-                    className={classNames(styles.header, {
-                        [styles.headerDraggable]: Boolean(onDragStart),
-                    })}
-                >
+            <StyledContainer style={style}>
+                <StyledHeader draggable={Boolean(onDragStart)}>
                     <ConditionallyRender
                         condition={Boolean(onDragStart)}
                         show={() => (
@@ -83,16 +97,36 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
                             </DragIcon>
                         )}
                     />
-                    <Icon className={styles.icon} />
+                    <Icon
+                        sx={{
+                            fill: theme => theme.palette.inactiveIcon,
+                        }}
+                    />
                     <StringTruncator
                         maxWidth="150"
                         maxLength={15}
                         text={formatStrategyName(strategy.name)}
                     />
-                    <div className={styles.actions}>{actions}</div>
-                </div>
-                <div className={styles.body}>{children}</div>
-            </Box>
+                    <Box
+                        sx={{
+                            marginLeft: 'auto',
+                            display: 'flex',
+                            minHeight: theme => theme.spacing(6),
+                            alignItems: 'center',
+                        }}
+                    >
+                        {actions}
+                    </Box>
+                </StyledHeader>
+                <Box
+                    sx={{
+                        p: 2,
+                        justifyItems: 'center',
+                    }}
+                >
+                    {children}
+                </Box>
+            </StyledContainer>
         </Box>
     );
 };

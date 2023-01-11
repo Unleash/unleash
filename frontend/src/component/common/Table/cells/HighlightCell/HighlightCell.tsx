@@ -1,8 +1,7 @@
 import { VFC } from 'react';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { Box, Typography } from '@mui/material';
-import { useStyles } from './HighlightCell.styles';
+import { Box, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface IHighlightCellProps {
@@ -10,17 +9,43 @@ interface IHighlightCellProps {
     subtitle?: string;
 }
 
+const StyledContainer = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    wordBreak: 'break-word',
+    padding: theme.spacing(1, 2),
+}));
+
+const StyledTitle = styled('span')(({ theme }) => ({
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    display: '-webkit-box',
+    WebkitBoxOrient: 'vertical',
+    WebkitLineClamp: '1',
+    lineClamp: '1',
+}));
+
+const StyledSubtitle = styled('span')(({ theme }) => ({
+    color: theme.palette.text.secondary,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    fontSize: 'inherit',
+    WebkitLineClamp: '1',
+    lineClamp: '1',
+    display: '-webkit-box',
+    WebkitBoxOrient: 'vertical',
+}));
+
 export const HighlightCell: VFC<IHighlightCellProps> = ({
     value,
     subtitle,
 }) => {
     const { searchQuery } = useSearchHighlightContext();
-    const { classes } = useStyles();
 
     return (
-        <Box className={classes.container}>
-            <span
-                className={classes.title}
+        <StyledContainer>
+            <StyledTitle
                 style={{
                     WebkitLineClamp: Boolean(subtitle) ? 1 : 2,
                     lineClamp: Boolean(subtitle) ? 1 : 2,
@@ -28,21 +53,17 @@ export const HighlightCell: VFC<IHighlightCellProps> = ({
                 data-loading
             >
                 <Highlighter search={searchQuery}>{value}</Highlighter>
-            </span>
+            </StyledTitle>
             <ConditionallyRender
                 condition={Boolean(subtitle)}
                 show={() => (
-                    <Typography
-                        component="span"
-                        className={classes.subtitle}
-                        data-loading
-                    >
+                    <StyledSubtitle data-loading>
                         <Highlighter search={searchQuery}>
                             {subtitle}
                         </Highlighter>
-                    </Typography>
+                    </StyledSubtitle>
                 )}
             />
-        </Box>
+        </StyledContainer>
     );
 };

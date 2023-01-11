@@ -1,7 +1,5 @@
 import React, { useState, ReactNode } from 'react';
-import classnames from 'classnames';
 import { Tabs, Tab, Paper } from '@mui/material';
-import { useStyles } from 'component/common/TabNav/TabNav/TabNav.styles';
 import { TabPanel } from 'component/common/TabNav/TabPanel/TabPanel';
 
 interface ITabNavProps {
@@ -15,13 +13,13 @@ interface ITabData {
     label: string;
     component: ReactNode;
 }
+
 export const TabNav = ({
     tabData,
     className = '',
     navClass = '',
     startingTab = 0,
 }: ITabNavProps) => {
-    const { classes: styles } = useStyles();
     const [activeTab, setActiveTab] = useState(startingTab);
     const renderTabs = () =>
         tabData.map((tab, index) => (
@@ -30,7 +28,11 @@ export const TabNav = ({
                 label={tab.label}
                 id={`tab-${index}`}
                 aria-controls={`tabpanel-${index}`}
-                className={styles.tab}
+                sx={{
+                    minWidth: {
+                        lg: 160,
+                    },
+                }}
             />
         ));
 
@@ -44,8 +46,14 @@ export const TabNav = ({
     return (
         <>
             <Paper
-                className={classnames(styles.tabNav, navClass)}
+                className={navClass}
                 elevation={0}
+                sx={{
+                    backgroundColor: theme => theme.palette.background.paper,
+                    borderBottom: '1px solid',
+                    borderBottomColor: theme => theme.palette.grey[300],
+                    borderRadius: 0,
+                }}
             >
                 <Tabs
                     value={activeTab}

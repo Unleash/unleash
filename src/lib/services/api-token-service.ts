@@ -79,14 +79,14 @@ export class ApiTokenService {
         }
     }
 
-    fetchActiveTokens = async (): Promise<void> => {
+    async fetchActiveTokens(): Promise<void> {
         try {
             this.activeTokens = await this.getAllActiveTokens();
         } finally {
             // eslint-disable-next-line no-unsafe-finally
             return;
         }
-    };
+    }
 
     async updateLastSeen(): Promise<void> {
         if (this.lastSeenSecrets.size > 0) {

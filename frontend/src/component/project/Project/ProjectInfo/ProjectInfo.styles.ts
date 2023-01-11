@@ -1,85 +1,83 @@
-import { makeStyles } from 'tss-react/mui';
+import { Link } from 'react-router-dom';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { flexRow } from 'themes/themeStyles';
+import { styled } from '@mui/material';
 
-export const useStyles = makeStyles()(theme => ({
-    projectInfo: {
-        width: '225px',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        boxShadow: 'none',
-        [theme.breakpoints.down('md')]: {
-            flexDirection: 'row',
-            alignItems: 'stretch',
-            width: '100%',
-            marginBottom: '1rem',
-        },
-    },
-    percentageContainer: {
-        display: 'flex',
-        justifyContent: 'center',
-        margin: '1rem 0',
-    },
-    projectIcon: {
-        margin: '2rem 0',
-        [theme.breakpoints.down('md')]: {
-            margin: '0 0 0.25rem 0',
-            width: '53px',
-        },
-    },
-    subtitle: {
-        marginBottom: '1rem',
-    },
-    emphazisedText: {
-        fontSize: '1.5rem',
-        marginBottom: '1rem',
-        [theme.breakpoints.down('md')]: {
-            fontSize: '1rem',
-            marginBottom: '2rem',
-        },
-    },
-    infoSection: {
-        margin: '0',
-        textAlign: 'center',
-        marginBottom: '1rem',
-        backgroundColor: theme.palette.background.paper,
-        borderRadius: theme.shape.borderRadiusLarge,
+export const StyledDivContainer = styled('div')(({ theme }) => ({
+    ...flexRow,
+    width: '225px',
+    flexDirection: 'column',
+    boxShadow: 'none',
+    [theme.breakpoints.down('md')]: {
+        flexDirection: 'row',
+        alignItems: 'stretch',
         width: '100%',
-        padding: '1.5rem 1rem 1.5rem 1rem',
-        [theme.breakpoints.down('md')]: {
-            margin: '0 0.25rem',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '0.8rem',
-            position: 'relative',
-            padding: '0.8rem',
-            '&:first-of-type': {
-                marginLeft: '0',
-            },
-            '&:last-of-type': {
-                marginRight: '0',
-            },
+        marginBottom: theme.spacing(2),
+    },
+}));
+
+export const StyledDivPercentageContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'center',
+    margin: theme.spacing(2, 0),
+}));
+
+export const StyledDivInfoContainer = styled('div')(({ theme }) => ({
+    margin: '0',
+    textAlign: 'center',
+    marginBottom: theme.spacing(2),
+    backgroundColor: theme.palette.background.paper,
+    borderRadius: theme.shape.borderRadiusLarge,
+    width: '100%',
+    padding: theme.spacing(3, 2, 3, 2),
+    [theme.breakpoints.down('md')]: {
+        margin: theme.spacing(0, 0.5),
+        ...flexRow,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        fontSize: theme.fontSizes.smallBody,
+        position: 'relative',
+        padding: theme.spacing(1.5),
+        '&:first-of-type': {
+            marginLeft: '0',
+        },
+        '&:last-of-type': {
+            marginRight: '0',
         },
     },
-    arrowIcon: {
-        color: '#635dc5',
-        marginLeft: '0.5rem',
+}));
+
+export const StyledParagraphSubtitle = styled('p')(({ theme }) => ({
+    marginBottom: theme.spacing(2),
+}));
+
+export const StyledParagraphEmphasizedText = styled('p')(({ theme }) => ({
+    fontSize: '1.5rem',
+    marginBottom: theme.spacing(2),
+    [theme.breakpoints.down('md')]: {
+        fontSize: theme.fontSizes.bodySize,
+        marginBottom: theme.spacing(4),
     },
-    permissionButtonShortDesc: {
-        transform: `translateY(-10px)`,
+}));
+
+export const StyledSpanLinkText = styled('p')(({ theme }) => ({
+    [theme.breakpoints.down('md')]: {
+        display: 'none',
     },
-    infoLink: {
-        textDecoration: 'none',
-        color: '#635dc5',
-        [theme.breakpoints.down('md')]: {
-            position: 'absolute',
-            bottom: '5px',
-        },
+}));
+
+export const StyledLink = styled(Link)(({ theme }) => ({
+    textDecoration: 'none',
+    ...flexRow,
+    justifyContent: 'center',
+    color: theme.palette.primary.main,
+    [theme.breakpoints.down('md')]: {
+        position: 'absolute',
+        bottom: theme.spacing(1.5),
     },
-    linkText: {
-        [theme.breakpoints.down('md')]: {
-            display: 'none',
-        },
-    },
+}));
+
+export const StyledArrowIcon = styled(ArrowForwardIcon)(({ theme }) => ({
+    color: theme.palette.primary.main,
+    marginLeft: theme.spacing(1),
 }));

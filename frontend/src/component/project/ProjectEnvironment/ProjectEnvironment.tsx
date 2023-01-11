@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useStyles } from './ProjectEnvironment.styles';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
@@ -38,6 +37,19 @@ const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(4),
 }));
 
+const StyledDivContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexWrap: 'wrap',
+    [theme.breakpoints.down('sm')]: {
+        justifyContent: 'center',
+    },
+}));
+
+const StyledApiError = styled(ApiError)(({ theme }) => ({
+    maxWidth: '400px',
+    marginBottom: theme.spacing(2),
+}));
+
 const ProjectEnvironmentList = () => {
     const projectId = useRequiredPathParam('projectId');
     const projectName = useProjectNameOrId(projectId);
@@ -56,7 +68,6 @@ const ProjectEnvironmentList = () => {
     const [selectedEnvironment, setSelectedEnvironment] =
         useState<IProjectEnvironment>();
     const [hideDialog, setHideDialog] = useState(false);
-    const { classes: styles } = useStyles();
     const { isOss } = useUiConfig();
 
     const projectEnvironments = useMemo<IProjectEnvironment[]>(
@@ -77,9 +88,8 @@ const ProjectEnvironmentList = () => {
 
     const renderError = () => {
         return (
-            <ApiError
+            <StyledApiError
                 onClick={refetch}
-                className={styles.apiError}
                 text="Error fetching environments"
             />
         );
@@ -226,93 +236,73 @@ const ProjectEnvironmentList = () => {
 
     return (
         <PageContent header={header} isLoading={loading}>
-            <ConditionallyRender
-                condition={uiConfig.flags.E}
-                show={
-                    <div className={styles.container}>
-                        <ConditionallyRender
-                            condition={Boolean(error)}
-                            show={renderError()}
+            <StyledDivContainer>
+                <ConditionallyRender
+                    condition={Boolean(error)}
+                    show={renderError()}
+                />
+                <StyledAlert severity="info">
+                    <strong>Important!</strong> In order for your application to
+                    retrieve configured activation strategies for a specific
+                    environment, the application must use an environment
+                    specific API token. You can look up the environment-specific{' '}
+                    <Link to="/admin/api">API tokens here</Link>.
+                    <br />
+                    <br />
+                    Your administrator can configure an environment-specific API
+                    token to be used in the SDK. If you are an administrator you
+                    can <Link to="/admin/api">create a new API token here</Link>
+                    .
+                </StyledAlert>
+                <SearchHighlightProvider value={globalFilter}>
+                    <Table {...getTableProps()} rowHeight="compact">
+                        <SortableTableHeader
+                            headerGroups={headerGroups as any}
                         />
-                        <StyledAlert severity="info">
-                            <strong>Important!</strong> In order for your
-                            application to retrieve configured activation
-                            strategies for a specific environment, the
-                            application must use an environment specific API
-                            token. You can look up the environment-specific{' '}
-                            <Link to="/admin/api">API tokens here</Link>.
-                            <br />
-                            <br />
-                            Your administrator can configure an
-                            environment-specific API token to be used in the
-                            SDK. If you are an administrator you can{' '}
-                            <Link to="/admin/api">
-                                create a new API token here
-                            </Link>
-                            .
-                        </StyledAlert>
-                        <SearchHighlightProvider value={globalFilter}>
-                            <Table {...getTableProps()} rowHeight="compact">
-                                <SortableTableHeader
-                                    headerGroups={headerGroups as any}
-                                />
-                                <TableBody {...getTableBodyProps()}>
-                                    {rows.map(row => {
-                                        prepareRow(row);
-                                        return (
-                                            <TableRow
-                                                hover
-                                                {...row.getRowProps()}
-                                            >
-                                                {row.cells.map(cell => (
-                                                    <TableCell
-                                                        {...cell.getCellProps()}
-                                                    >
-                                                        {cell.render('Cell')}
-                                                    </TableCell>
-                                                ))}
-                                            </TableRow>
-                                        );
-                                    })}
-                                </TableBody>
-                            </Table>
-                        </SearchHighlightProvider>
+                        <TableBody {...getTableBodyProps()}>
+                            {rows.map(row => {
+                                prepareRow(row);
+                                return (
+                                    <TableRow hover {...row.getRowProps()}>
+                                        {row.cells.map(cell => (
+                                            <TableCell {...cell.getCellProps()}>
+                                                {cell.render('Cell')}
+                                            </TableCell>
+                                        ))}
+                                    </TableRow>
+                                );
+                            })}
+                        </TableBody>
+                    </Table>
+                </SearchHighlightProvider>
+                <ConditionallyRender
+                    condition={rows.length === 0}
+                    show={
                         <ConditionallyRender
-                            condition={rows.length === 0}
+                            condition={globalFilter?.length > 0}
                             show={
-                                <ConditionallyRender
-                                    condition={globalFilter?.length > 0}
-                                    show={
-                                        <TablePlaceholder>
-                                            No environments found matching
-                                            &ldquo;
-                                            {globalFilter}
-                                            &rdquo;
-                                        </TablePlaceholder>
-                                    }
-                                    elseShow={
-                                        <TablePlaceholder>
-                                            No environments available. Get
-                                            started by adding one.
-                                        </TablePlaceholder>
-                                    }
-                                />
+                                <TablePlaceholder>
+                                    No environments found matching &ldquo;
+                                    {globalFilter}
+                                    &rdquo;
+                                </TablePlaceholder>
+                            }
+                            elseShow={
+                                <TablePlaceholder>
+                                    No environments available. Get started by
+                                    adding one.
+                                </TablePlaceholder>
                             }
                         />
-                        <EnvironmentHideDialog
-                            environment={selectedEnvironment}
-                            open={hideDialog}
-                            setOpen={setHideDialog}
-                            onConfirm={onHideConfirm}
-                        />
-                    </div>
-                }
-                elseShow={
-                    <Alert security="success">
-                        This feature has not been Unleashed for you yet.
-                    </Alert>
-                }
-            />
+                    }
+                />
+                <EnvironmentHideDialog
+                    environment={selectedEnvironment}
+                    open={hideDialog}
+                    setOpen={setHideDialog}
+                    onConfirm={onHideConfirm}
+                />
+            </StyledDivContainer>
         </PageContent>
     );
 };

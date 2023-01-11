@@ -37,3 +37,4 @@ We have created a set of ADRs to help guide the development of the front end:
 * [Preferred data fetching method](./front-end/preferred-data-fetching-method.md)
 * [Preferred folder structure](./front-end/preferred-folder-structure.md)
 * [Preferred form architecture](./front-end/preferred-form-architecture.md)
+* [OpenAPI SDK generator](./front-end/sdk-generator.md)

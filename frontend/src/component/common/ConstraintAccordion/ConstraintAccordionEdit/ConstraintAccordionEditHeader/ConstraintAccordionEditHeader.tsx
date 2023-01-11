@@ -15,7 +15,7 @@ import { resolveText } from './helpers';
 import { oneOf } from 'utils/oneOf';
 import React, { useEffect, useState } from 'react';
 import { Operator } from 'constants/operators';
-import { ConstraintOperatorSelect } from 'component/common/ConstraintAccordion/ConstraintOperatorSelect/ConstraintOperatorSelect';
+import { ConstraintOperatorSelect } from 'component/common/ConstraintAccordion/ConstraintOperatorSelect';
 import {
     operatorsForContext,
     CURRENT_TIME_CONTEXT_FIELD,

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, styled } from '@mui/material';
 import { PlaygroundResultChip } from '../PlaygroundResultChip/PlaygroundResultChip';
-import { PlaygroundFeatureSchema } from '../../interfaces/playground.model';
+import { PlaygroundFeatureSchema } from 'openapi';
 
 interface IFeatureStatusCellProps {
     feature: PlaygroundFeatureSchema;

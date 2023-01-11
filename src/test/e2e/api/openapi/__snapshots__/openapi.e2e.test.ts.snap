@@ -2838,10 +2838,7 @@ exports[`should serve the OpenAPI spec 1`] = `
         "type": "object",
       },
       "sdkContextSchema": {
-        "additionalProperties": {
-          "example": "top-level custom context value",
-          "type": "string",
-        },
+        "additionalProperties": true,
         "description": "The Unleash context as modeled in client SDKs",
         "properties": {
           "appName": {

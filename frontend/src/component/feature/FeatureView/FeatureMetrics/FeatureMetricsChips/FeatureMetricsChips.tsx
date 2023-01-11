@@ -1,7 +1,6 @@
-import { Chip } from '@mui/material';
+import { Chip, styled } from '@mui/material';
 import { useMemo } from 'react';
-import { useStyles } from './FeatureMetricsChips.styles';
-import { useThemeStyles } from 'themes/themeStyles';
+import { focusable } from 'themes/themeStyles';
 
 interface IFeatureMetricsChipsProps {
     title: string;
@@ -10,15 +9,36 @@ interface IFeatureMetricsChipsProps {
     setValue: (value: string) => void;
 }
 
+const StyledTitle = styled('h2')(({ theme }) => ({
+    margin: 0,
+    marginBottom: theme.spacing(1),
+    fontSize: theme.fontSizes.smallBody,
+    fontWeight: theme.fontWeight.thin,
+    color: theme.palette.text.secondary,
+}));
+
+const StyledList = styled('ul')(({ theme }) => ({
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: theme.spacing(1),
+    listStyleType: 'none',
+    padding: 0,
+    minHeight: '100%',
+}));
+
+const StyledItem = styled('li')(({ theme }) => ({
+    '& > [aria-pressed=true]': {
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.primary.contrastText,
+    },
+}));
+
 export const FeatureMetricsChips = ({
     title,
     values,
     value,
     setValue,
 }: IFeatureMetricsChipsProps) => {
-    const { classes: themeStyles } = useThemeStyles();
-    const { classes: styles } = useStyles();
-
     const onClick = (value: string) => () => {
         if (values.has(value)) {
             setValue(value);
@@ -33,19 +53,19 @@ export const FeatureMetricsChips = ({
 
     return (
         <div>
-            <h2 className={styles.title}>{title}</h2>
-            <ul className={styles.list}>
+            <StyledTitle>{title}</StyledTitle>
+            <StyledList>
                 {sortedValues.map(val => (
-                    <li key={val} className={styles.item}>
+                    <StyledItem key={val}>
                         <Chip
                             label={val}
                             onClick={onClick(val)}
                             aria-pressed={val === value}
-                            className={themeStyles.focusable}
+                            sx={focusable}
                         />
-                    </li>
+                    </StyledItem>
                 ))}
-            </ul>
+            </StyledList>
         </div>
     );
 };

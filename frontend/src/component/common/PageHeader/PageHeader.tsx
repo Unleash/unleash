@@ -11,7 +11,6 @@ import {
 } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
-import { useStyles } from './PageHeader.styles';
 import { usePageTitle } from 'hooks/usePageTitle';
 
 const StyledDivider = styled(Divider)(({ theme }) => ({
@@ -21,8 +20,40 @@ const StyledDivider = styled(Divider)(({ theme }) => ({
     display: 'inline-block',
     marginLeft: theme.spacing(2),
     marginRight: theme.spacing(2),
-    padding: '10px 0',
+    padding: theme.spacing(0.5, 0),
     verticalAlign: 'middle',
+}));
+
+const StyledHeaderContainer = styled('div')(() => ({
+    display: 'flex',
+    flexDirection: 'column',
+}));
+
+const StyledTopContainer = styled('div')(() => ({
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    position: 'relative',
+}));
+
+const StyledHeader = styled('div')(({ theme }) => ({
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    marginRight: theme.spacing(2),
+}));
+
+const StyledHeaderTitle = styled(Typography)(({ theme }) => ({
+    fontSize: theme.fontSizes.mainHeader,
+    fontWeight: 'normal',
+}));
+
+const StyledHeaderActions = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexGrow: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    gap: theme.spacing(1),
 }));
 
 interface IPageHeaderProps {
@@ -49,33 +80,32 @@ const PageHeaderComponent: FC<IPageHeaderProps> & {
     secondary,
     children,
 }) => {
-    const { classes: styles } = useStyles();
     const headerClasses = classnames({ skeleton: loading });
 
     usePageTitle(secondary ? '' : title);
 
     return (
-        <div className={styles.headerContainer}>
-            <div className={styles.topContainer}>
-                <div
-                    className={classnames(styles.header, headerClasses)}
+        <StyledHeaderContainer>
+            <StyledTopContainer>
+                <StyledHeader
+                    className={classnames(headerClasses)}
                     data-loading
                 >
-                    <Typography
+                    <StyledHeaderTitle
                         variant={variant || secondary ? 'h2' : 'h1'}
-                        className={classnames(styles.headerTitle, className)}
+                        className={classnames(className)}
                     >
                         {titleElement || title}
-                    </Typography>
+                    </StyledHeaderTitle>
                     {subtitle && <small>{subtitle}</small>}
-                </div>
+                </StyledHeader>
                 <ConditionallyRender
                     condition={Boolean(actions)}
-                    show={<div className={styles.headerActions}>{actions}</div>}
+                    show={<StyledHeaderActions>{actions}</StyledHeaderActions>}
                 />
-            </div>
+            </StyledTopContainer>
             {children}
-        </div>
+        </StyledHeaderContainer>
     );
 };
 

@@ -2,10 +2,11 @@ import {
     Button,
     FormControl,
     FormControlLabel,
+    styled,
     Switch,
+    Theme,
     Typography,
 } from '@mui/material';
-import { useStyles } from './FeatureForm.styles';
 import FeatureTypeSelect from '../FeatureView/FeatureSettings/FeatureSettingsMetadata/FeatureTypeSelect/FeatureTypeSelect';
 import { CF_DESC_ID, CF_NAME_ID, CF_TYPE_ID } from 'utils/testIds';
 import useFeatureTypes from 'hooks/api/getters/useFeatureTypes/useFeatureTypes';
@@ -39,6 +40,66 @@ interface IFeatureToggleForm {
     clearErrors: () => void;
 }
 
+const StyledForm = styled('form')({
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
+});
+
+const StyledContainer = styled('div')({
+    maxWidth: '400px',
+});
+
+const StyledInputDescription = styled('p')(({ theme }) => ({
+    marginBottom: theme.spacing(1),
+    color: theme.palette.text.secondary,
+}));
+
+const StyledInput = styled(Input)(({ theme }) => ({
+    width: '100%',
+    marginBottom: theme.spacing(2),
+}));
+
+const StyledFormControl = styled(FormControl)(({ theme }) => ({
+    width: '100%',
+    marginBottom: theme.spacing(2),
+}));
+
+const styledSelectInput = (theme: Theme) => ({
+    marginBottom: theme.spacing(2),
+    minWidth: '400px',
+    [theme.breakpoints.down('sm')]: {
+        minWidth: '379px',
+    },
+});
+
+const StyledTypeDescription = styled('p')(({ theme }) => ({
+    fontSize: theme.fontSizes.smallBody,
+    color: theme.palette.text.secondary,
+    top: '-13px',
+    position: 'relative',
+}));
+
+const StyledButtonContainer = styled('div')({
+    marginTop: 'auto',
+    display: 'flex',
+    justifyContent: 'flex-end',
+});
+
+const StyledRow = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    marginTop: theme.spacing(1),
+}));
+
+const StyledCancelButton = styled(Button)(({ theme }) => ({
+    marginLeft: theme.spacing(3),
+}));
+
+const styledTypography = (theme: Theme) => ({
+    margin: theme.spacing(1, 0),
+});
+
 const FeatureForm: React.FC<IFeatureToggleForm> = ({
     children,
     type,
@@ -58,7 +119,6 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
     mode,
     clearErrors,
 }) => {
-    const { classes: styles } = useStyles();
     const { featureTypes } = useFeatureTypes();
     const navigate = useNavigate();
     const { permissions } = useAuthPermissions();
@@ -69,15 +129,14 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
     };
 
     return (
-        <form onSubmit={handleSubmit} className={styles.form}>
-            <div className={styles.container}>
-                <p className={styles.inputDescription}>
+        <StyledForm onSubmit={handleSubmit}>
+            <StyledContainer>
+                <StyledInputDescription>
                     What would you like to call your toggle?
-                </p>
-                <Input
+                </StyledInputDescription>
+                <StyledInput
                     autoFocus
                     disabled={mode === 'Edit'}
-                    className={styles.input}
                     label="Name"
                     id="feature-toggle-name"
                     error={Boolean(errors.name)}
@@ -88,10 +147,11 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
                     data-testid={CF_NAME_ID}
                     onBlur={validateToggleName}
                 />
-                <p className={styles.inputDescription}>
+                <StyledInputDescription>
                     What kind of feature toggle do you want?
-                </p>
+                </StyledInputDescription>
                 <FeatureTypeSelect
+                    sx={styledSelectInput}
                     value={type}
                     onChange={setType}
                     label={'Toggle type'}
@@ -99,17 +159,16 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
                     editable
                     data-testid={CF_TYPE_ID}
                     IconComponent={KeyboardArrowDownOutlined}
-                    className={styles.selectInput}
                 />
-                <p className={styles.typeDescription}>
+                <StyledTypeDescription>
                     {renderToggleDescription()}
-                </p>
+                </StyledTypeDescription>
                 <ConditionallyRender
                     condition={editable}
                     show={
-                        <p className={styles.inputDescription}>
+                        <StyledInputDescription>
                             In which project do you want to save the toggle?
-                        </p>
+                        </StyledInputDescription>
                     }
                 />
                 <FeatureProjectSelect
@@ -123,14 +182,13 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
                     enabled={editable}
                     filter={projectFilterGenerator(permissions, CREATE_FEATURE)}
                     IconComponent={KeyboardArrowDownOutlined}
-                    className={styles.selectInput}
+                    sx={styledSelectInput}
                 />
 
-                <p className={styles.inputDescription}>
+                <StyledInputDescription>
                     How would you describe your feature toggle?
-                </p>
-                <Input
-                    className={styles.input}
+                </StyledInputDescription>
+                <StyledInput
                     multiline
                     rows={4}
                     label="Description"
@@ -139,10 +197,10 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
                     data-testid={CF_DESC_ID}
                     onChange={e => setDescription(e.target.value)}
                 />
-                <FormControl className={styles.input}>
+                <StyledFormControl>
                     <Typography
                         variant="subtitle1"
-                        className={styles.roleSubtitle}
+                        sx={styledTypography}
                         data-loading
                         component="h2"
                     >
@@ -160,7 +218,7 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
                             the impression data documentation
                         </a>
                     </p>
-                    <div className={styles.flexRow}>
+                    <StyledRow>
                         <FormControlLabel
                             labelPlacement="start"
                             style={{ marginLeft: 0 }}
@@ -175,17 +233,17 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
                             }
                             label="Enable impression data"
                         />
-                    </div>
-                </FormControl>
-            </div>
+                    </StyledRow>
+                </StyledFormControl>
+            </StyledContainer>
 
-            <div className={styles.buttonContainer}>
+            <StyledButtonContainer>
                 {children}
-                <Button onClick={handleCancel} className={styles.cancelButton}>
+                <StyledCancelButton onClick={handleCancel}>
                     Cancel
-                </Button>
-            </div>
-        </form>
+                </StyledCancelButton>
+            </StyledButtonContainer>
+        </StyledForm>
     );
 };
 

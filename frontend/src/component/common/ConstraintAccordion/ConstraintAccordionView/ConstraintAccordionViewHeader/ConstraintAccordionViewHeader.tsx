@@ -1,6 +1,6 @@
 import { ConstraintIcon } from 'component/common/ConstraintAccordion/ConstraintIcon';
 import { IConstraint } from 'interfaces/strategy';
-import { ConstraintAccordionViewHeaderInfo } from './ConstraintAccordionViewHeaderInfo/ConstraintAccordionViewHeaderInfo';
+import { ConstraintAccordionViewHeaderInfo } from './ConstraintAccordionViewHeaderInfo';
 import { ConstraintAccordionHeaderActions } from '../../ConstraintAccordionHeaderActions/ConstraintAccordionHeaderActions';
 import { useStyles } from 'component/common/ConstraintAccordion/ConstraintAccordion.styles';
 

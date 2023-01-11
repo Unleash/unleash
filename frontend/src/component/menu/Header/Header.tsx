@@ -22,7 +22,7 @@ import { ReactComponent as UnleashLogoWhite } from 'assets/img/logoWithWhiteText
 
 import { DrawerMenu } from './DrawerMenu/DrawerMenu';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { flexRow, focusable, useThemeStyles } from 'themes/themeStyles';
+import { flexRow, focusable } from 'themes/themeStyles';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { IPermission } from 'interfaces/user';
 import { NavigationMenu } from './NavigationMenu/NavigationMenu';
@@ -97,9 +97,7 @@ const styledIconProps = (theme: Theme) => ({
     color: theme.palette.neutral.main,
 });
 
-const StyledLink = styled(Link)(({ theme }) => ({
-    ...focusable(theme),
-}));
+const StyledLink = styled(Link)(({ theme }) => focusable(theme));
 
 const StyledIconButton = styled(IconButton)(({ theme }) => ({
     ...focusable(theme),
@@ -158,9 +156,7 @@ const Header: VFC = () => {
                 <StyledContainer>
                     <Tooltip title="Menu" arrow>
                         <IconButton
-                            sx={theme => ({
-                                color: theme.palette.text.tertiaryContrast,
-                            })}
+                            sx={{ color: theme => theme.palette.text.primary }}
                             onClick={toggleDrawer}
                             aria-controls="header-drawer"
                             aria-expanded={openDrawer}

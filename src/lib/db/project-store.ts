@@ -419,7 +419,7 @@ class ProjectStore implements IProjectStore {
             name: row.name,
             description: row.description,
             createdAt: row.created_at,
-            health: row.health || 100,
+            health: row.health ?? 100,
             updatedAt: row.updated_at || new Date(),
         };
     }

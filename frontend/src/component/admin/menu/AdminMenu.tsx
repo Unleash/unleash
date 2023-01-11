@@ -35,6 +35,16 @@ function AdminMenu() {
                         </CenteredNavLink>
                     }
                 />
+                {flags.serviceAccounts && (
+                    <Tab
+                        value="service-accounts"
+                        label={
+                            <CenteredNavLink to="/admin/service-accounts">
+                                <span>Service accounts</span>
+                            </CenteredNavLink>
+                        }
+                    />
+                )}
                 {flags.UG && (
                     <Tab
                         value="groups"

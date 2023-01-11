@@ -1,6 +1,6 @@
 import { VFC } from 'react';
-import { useStyles } from './Highlighter.styles';
 import { safeRegExp } from '@server/util/escape-regex';
+import { styled } from '@mui/material';
 
 interface IHighlighterProps {
     search?: string;
@@ -8,12 +8,17 @@ interface IHighlighterProps {
     caseSensitive?: boolean;
 }
 
+export const StyledSpan = styled('span')(({ theme }) => ({
+    '&>mark': {
+        backgroundColor: theme.palette.highlight,
+    },
+}));
+
 export const Highlighter: VFC<IHighlighterProps> = ({
     search,
     children,
     caseSensitive,
 }) => {
-    const { classes } = useStyles();
     if (!children) {
         return null;
     }
@@ -25,8 +30,7 @@ export const Highlighter: VFC<IHighlighterProps> = ({
     const regex = safeRegExp(search, caseSensitive ? 'g' : 'gi');
 
     return (
-        <span
-            className={classes.highlighter}
+        <StyledSpan
             dangerouslySetInnerHTML={{
                 __html: children?.replaceAll(regex, '<mark>$&</mark>') || '',
             }}

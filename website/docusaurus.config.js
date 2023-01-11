@@ -1,3 +1,42 @@
+const { readmes } = require('./readme-fns');
+
+// for a given redirect object, modify it's `from` property such that for every
+// path that doesn't start with `/docs/`, a corresponding path that _does_ start
+// with `/docs/` is added.
+//
+// For instance, given the object
+//
+// {
+//   to: '/new/path',
+//   from: ['/old/path', '/docs/other/old/path'],
+// }
+//
+// it will produce
+//
+// {
+//   to: '/new/path',
+//   from: ['/old/path', '/docs/old/path', '/docs/other/old/path'],
+// }
+//
+const addDocsRoutePrefix = ({ from, ...rest }) => {
+    const addDocs = (from) => {
+        if (Array.isArray(from)) {
+            // if `from` is a list, then check each entry
+            return from.flatMap(addDocs);
+        } else {
+            if (from.startsWith('/docs/')) {
+                return [from];
+            } else {
+                return [from, `/docs${from}`];
+            }
+        }
+    };
+
+    return {
+        ...rest,
+        from: addDocs(from),
+    };
+};
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 module.exports = {
     title: 'Unleash',
@@ -54,6 +93,7 @@ module.exports = {
                 'kotlin',
                 'php',
                 'ruby',
+                'rust',
                 'swift',
             ],
         },
@@ -232,10 +272,7 @@ module.exports = {
                         to: '/reference/deploy/getting-started',
                     },
                     {
-                        from: [
-                            '/docs/deploy/configuring_unleash',
-                            '/deploy/configuring_unleash',
-                        ],
+                        from: '/deploy/configuring_unleash',
                         to: '/reference/deploy/configuring-unleash',
                     },
                     {
@@ -319,7 +356,6 @@ module.exports = {
                             '/sdks',
                             '/user_guide/client-sdk',
                             '/client-sdk',
-                            '/docs/user_guide/connect_sdk',
                             '/user_guide/connect_sdk',
                             '/sdks/community',
                         ],
@@ -459,7 +495,7 @@ module.exports = {
                         to: '/reference/api/legacy/unleash/admin/context',
                     },
                     {
-                        from: ['/api/admin/events', '/docs/api/admin/events'],
+                        from: '/api/admin/events',
                         to: '/reference/api/legacy/unleash/admin/events',
                     },
                     {
@@ -526,7 +562,11 @@ module.exports = {
                         from: '/api/internal/health',
                         to: '/reference/api/legacy/unleash/internal/health',
                     },
-                ],
+                    {
+                        from: '/help',
+                        to: '/',
+                    },
+                ].map(addDocsRoutePrefix), // add /docs prefixes
                 createRedirects: function (toPath) {
                     if (
                         toPath.indexOf('/docs/') === -1 &&
@@ -555,6 +595,17 @@ module.exports = {
                         },
                     },
                 },
+            },
+        ],
+        [
+            'docusaurus-plugin-remote-content',
+            {
+                // more info at https://github.com/rdilweb/docusaurus-plugin-remote-content#options
+                name: 'content-sdks',
+                sourceBaseUrl: 'https://raw.githubusercontent.com/Unleash/', // gets prepended to all of the documents when fetching
+                outDir: 'docs/reference/sdks', // the base directory to output to.
+                documents: readmes.documentUrls, // the file names to download
+                modifyContent: readmes.modifyContent,
             },
         ],
     ],

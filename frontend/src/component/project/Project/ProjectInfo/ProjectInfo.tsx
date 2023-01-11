@@ -1,14 +1,18 @@
-import { useStyles } from './ProjectInfo.styles';
-import { Link } from 'react-router-dom';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import classnames from 'classnames';
-
-import { useThemeStyles } from 'themes/themeStyles';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import PercentageCircle from 'component/common/PercentageCircle/PercentageCircle';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 import { DEFAULT_PROJECT_ID } from '../../../../hooks/api/getters/useDefaultProject/useDefaultProjectId';
+import {
+    StyledDivContainer,
+    StyledDivInfoContainer,
+    StyledDivPercentageContainer,
+    StyledParagraphSubtitle,
+    StyledParagraphEmphasizedText,
+    StyledLink,
+    StyledSpanLinkText,
+    StyledArrowIcon,
+} from './ProjectInfo.styles';
 
 interface IProjectInfoProps {
     id: string;
@@ -19,8 +23,6 @@ interface IProjectInfoProps {
 }
 
 const ProjectInfo = ({ id, memberCount, health }: IProjectInfoProps) => {
-    const { classes: themeStyles } = useThemeStyles();
-    const { classes: styles } = useStyles();
     const { uiConfig } = useUiConfig();
 
     let link = `/admin/users`;
@@ -31,69 +33,44 @@ const ProjectInfo = ({ id, memberCount, health }: IProjectInfoProps) => {
 
     return (
         <aside>
-            <div className={styles.projectInfo}>
-                <div className={styles.infoSection}>
-                    <div data-loading className={styles.percentageContainer}>
+            <StyledDivContainer>
+                <StyledDivInfoContainer>
+                    <StyledDivPercentageContainer>
                         <PercentageCircle percentage={health} />
-                    </div>
-                    <p className={styles.subtitle} data-loading>
+                    </StyledDivPercentageContainer>
+                    <StyledParagraphSubtitle data-loading>
                         Overall health rating
-                    </p>
-                    <p className={styles.emphazisedText} data-loading>
+                    </StyledParagraphSubtitle>
+                    <StyledParagraphEmphasizedText data-loading>
                         {health}%
-                    </p>
-                    <Link
-                        data-loading
-                        className={classnames(
-                            themeStyles.flexRow,
-                            themeStyles.justifyCenter,
-                            styles.infoLink
-                        )}
-                        to={`/projects/${id}/health`}
-                    >
-                        <span className={styles.linkText} data-loading>
+                    </StyledParagraphEmphasizedText>
+                    <StyledLink data-loading to={`/projects/${id}/health`}>
+                        <StyledSpanLinkText data-loading>
                             view more{' '}
-                        </span>
-                        <ArrowForwardIcon
-                            data-loading
-                            className={styles.arrowIcon}
-                        />
-                    </Link>
-                </div>
+                        </StyledSpanLinkText>
+                        <StyledArrowIcon data-loading />
+                    </StyledLink>
+                </StyledDivInfoContainer>
                 <ConditionallyRender
                     condition={id !== DEFAULT_PROJECT_ID}
                     show={
-                        <div
-                            className={styles.infoSection}
-                            style={{ marginBottom: '0' }}
-                        >
-                            <p className={styles.subtitle} data-loading>
+                        <StyledDivInfoContainer style={{ marginBottom: '0' }}>
+                            <StyledParagraphSubtitle data-loading>
                                 Project members
-                            </p>
-                            <p data-loading className={styles.emphazisedText}>
+                            </StyledParagraphSubtitle>
+                            <StyledParagraphEmphasizedText data-loading>
                                 {memberCount}
-                            </p>
-                            <Link
-                                data-loading
-                                className={classnames(
-                                    themeStyles.flexRow,
-                                    themeStyles.justifyCenter,
-                                    styles.infoLink
-                                )}
-                                to={link}
-                            >
-                                <span className={styles.linkText} data-loading>
+                            </StyledParagraphEmphasizedText>
+                            <StyledLink data-loading to={link}>
+                                <StyledSpanLinkText data-loading>
                                     view more{' '}
-                                </span>
-                                <ArrowForwardIcon
-                                    data-loading
-                                    className={styles.arrowIcon}
-                                />
-                            </Link>
-                        </div>
+                                </StyledSpanLinkText>
+                                <StyledArrowIcon data-loading />
+                            </StyledLink>
+                        </StyledDivInfoContainer>
                     }
                 />
-            </div>
+            </StyledDivContainer>
         </aside>
     );
 };

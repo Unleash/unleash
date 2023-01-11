@@ -62,6 +62,7 @@ import { Profile } from 'component/user/Profile/Profile';
 import { InstanceAdmin } from '../admin/instance-admin/InstanceAdmin';
 import { Network } from 'component/admin/network/Network';
 import { MaintenanceAdmin } from '../admin/maintenance';
+import { ServiceAccounts } from 'component/admin/serviceAccounts/ServiceAccounts';
 
 export const routes: IRoute[] = [
     // Splash
@@ -431,6 +432,15 @@ export const routes: IRoute[] = [
         component: AdminUsers,
         type: 'protected',
         menu: { adminSettings: true },
+    },
+    {
+        path: '/admin/service-accounts',
+        parent: '/admin',
+        title: 'Service accounts',
+        component: ServiceAccounts,
+        type: 'protected',
+        menu: { adminSettings: true },
+        flag: 'serviceAccounts',
     },
     {
         path: '/admin/create-user',

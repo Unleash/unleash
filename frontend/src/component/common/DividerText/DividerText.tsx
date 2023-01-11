@@ -1,21 +1,35 @@
-import { Typography } from '@mui/material';
-import { useStyles } from 'component/common/DividerText/DividerText.styles';
-
+import { FormControl, styled, Typography } from '@mui/material';
 interface IDividerTextProps {
     text: string;
 }
 
-const DividerText = ({ text, ...rest }: IDividerTextProps) => {
-    const { classes: styles } = useStyles();
+const StyledContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: theme.spacing(2, 'auto'),
+}));
 
+const StyledSpan = styled('span')(({ theme }) => ({
+    width: '80px',
+    height: '3px',
+    backgroundColor: theme.palette.divider,
+    borderRadius: theme.shape.borderRadius,
+}));
+
+const StyleTypography = styled(Typography)(({ theme }) => ({
+    textAlign: 'center',
+    display: 'block',
+    margin: theme.spacing(0, 2),
+}));
+
+const DividerText = ({ text, ...rest }: IDividerTextProps) => {
     return (
-        <div className={styles.container} {...rest}>
-            <span className={styles.wing} />
-            <Typography variant="body2" className={styles.text}>
-                {text}
-            </Typography>
-            <span className={styles.wing} />
-        </div>
+        <StyledContainer {...rest}>
+            <StyledSpan />
+            <StyleTypography variant="body2">{text}</StyleTypography>
+            <StyledSpan />
+        </StyledContainer>
     );
 };
 

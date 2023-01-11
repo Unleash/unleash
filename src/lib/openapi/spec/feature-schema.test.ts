@@ -4,19 +4,6 @@ import { FeatureSchema } from './feature-schema';
 test('featureSchema', () => {
     const data: FeatureSchema = {
         name: 'a',
-        strategies: [
-            {
-                id: 'a',
-                name: 'a',
-                constraints: [
-                    {
-                        contextName: 'a',
-                        operator: 'IN',
-                    },
-                ],
-                segments: [1],
-            },
-        ],
         variants: [
             {
                 name: 'a',
@@ -32,6 +19,19 @@ test('featureSchema', () => {
                 name: 'a',
                 type: 'b',
                 enabled: true,
+                strategies: [
+                    {
+                        id: 'a',
+                        name: 'a',
+                        constraints: [
+                            {
+                                contextName: 'a',
+                                operator: 'IN',
+                            },
+                        ],
+                        segments: [1],
+                    },
+                ],
             },
         ],
     };
@@ -44,7 +44,16 @@ test('featureSchema', () => {
 test('featureSchema constraints', () => {
     const data = {
         name: 'a',
-        strategies: [{ name: 'a', constraints: [{ contextName: 'a' }] }],
+        environments: [
+            {
+                name: 'a',
+                type: 'b',
+                enabled: true,
+                strategies: [
+                    { name: 'a', constraints: [{ contextName: 'a' }] },
+                ],
+            },
+        ],
     };
 
     expect(

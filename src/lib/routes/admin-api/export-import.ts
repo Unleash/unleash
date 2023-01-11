@@ -7,8 +7,10 @@ import { Logger } from '../../logger';
 import { OpenApiService } from '../../services/openapi-service';
 import ExportImportService, {
     IExportQuery,
+    IImportDTO,
 } from 'lib/services/export-import-service';
 import { InvalidOperationError } from '../../error';
+import { IAuthRequest } from '../unleash-types';
 
 class ExportImportController extends Controller {
     private logger: Logger;
@@ -45,6 +47,12 @@ class ExportImportController extends Controller {
             //     }),
             // ],
         });
+        this.route({
+            method: 'post',
+            path: '/import',
+            permission: NONE,
+            handler: this.importData,
+        });
     }
 
     async export(
@@ -64,6 +72,17 @@ class ExportImportController extends Controller {
                 'Feature export/import is not enabled',
             );
         }
+    }
+
+    async importData(
+        req: IAuthRequest<unknown, unknown, IImportDTO, unknown>,
+        res: Response,
+    ): Promise<void> {
+        const dto = req.body;
+        const user = req.user;
+        await this.exportImportService.import(dto, user);
+
+        res.status(201).end();
     }
 }
 export default ExportImportController;

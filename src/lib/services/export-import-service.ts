@@ -13,13 +13,21 @@ import { IEnvironmentStore } from '../types/stores/environment-store';
 import { IFeatureEnvironmentStore } from '../types/stores/feature-environment-store';
 import { IUnleashStores } from '../types/stores';
 import { ISegmentStore } from '../types/stores/segment-store';
-import { IFlagResolver } from 'lib/types';
+import { IFlagResolver, IUnleashServices } from 'lib/types';
 import { IContextFieldDto } from '../types/stores/context-field-store';
+import FeatureToggleService from './feature-toggle-service';
+import User from 'lib/types/user';
 import { ExportQuerySchema } from '../openapi/spec/export-query-schema';
 
 export interface IExportQuery {
     features: string[];
     environment: string;
+}
+
+export interface IImportDTO {
+    data: IExportData;
+    project?: string;
+    environment?: string;
 }
 
 export interface IExportData {
@@ -56,12 +64,17 @@ export default class ExportImportService {
 
     private flagResolver: IFlagResolver;
 
+    private featureToggleService: FeatureToggleService;
+
     constructor(
         stores: IUnleashStores,
         {
             getLogger,
             flagResolver,
         }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>,
+        {
+            featureToggleService,
+        }: Pick<IUnleashServices, 'featureToggleService'>,
     ) {
         this.eventStore = stores.eventStore;
         this.toggleStore = stores.featureToggleStore;
@@ -75,6 +88,7 @@ export default class ExportImportService {
         this.environmentStore = stores.environmentStore;
         this.segmentStore = stores.segmentStore;
         this.flagResolver = flagResolver;
+        this.featureToggleService = featureToggleService;
         this.logger = getLogger('services/state-service.js');
     }
 
@@ -86,6 +100,18 @@ export default class ExportImportService {
                 query.environment,
             );
         return { features, featureStrategies };
+    }
+
+    async import(dto: IImportDTO, user: User): Promise<void> {
+        await Promise.all(
+            dto.data.features.map((feature) =>
+                this.featureToggleService.createFeatureToggle(
+                    dto.project || feature.project,
+                    feature,
+                    user.name,
+                ),
+            ),
+        );
     }
 }
 

@@ -5,7 +5,7 @@ import {
 import dbInit, { ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import { IEventStore } from 'lib/types/stores/event-store';
-import { FeatureToggleDTO, IStrategyConfig } from 'lib/types';
+import { FeatureToggle, FeatureToggleDTO, IStrategyConfig } from 'lib/types';
 import { DEFAULT_ENV } from '../../../../lib/util';
 
 let app: IUnleashTest;
@@ -128,4 +128,26 @@ test('returns all features, when no feature was defined', async () => {
         .expect(200);
 
     expect(body.features).toHaveLength(2);
+});
+
+test('import features', async () => {
+    const feature: FeatureToggle = { project: 'ignore', name: 'first_feature' };
+    await app.request
+        .post('/api/admin/features-batch/import')
+        .send({
+            data: { features: [feature] },
+            project: 'default',
+            environment: 'custom_environment',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(201);
+
+    const { body } = await app.request
+        .get('/api/admin/features/first_feature')
+        .expect(200);
+
+    expect(body).toMatchObject({
+        name: 'first_feature',
+        project: 'default',
+    });
 });

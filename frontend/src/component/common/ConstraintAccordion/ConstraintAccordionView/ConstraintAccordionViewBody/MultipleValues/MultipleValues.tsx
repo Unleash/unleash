@@ -1,17 +1,23 @@
 import { useState } from 'react';
-import { Chip } from '@mui/material';
+import { Chip, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { ConstraintValueSearch } from '../../../ConstraintValueSearch/ConstraintValueSearch';
-import { useStyles } from '../ConstraintAccordionViewBody.style';
 
 interface IMultipleValuesProps {
     values: string[] | undefined;
 }
 
+const StyledTruncator = styled(StringTruncator)({
+    whiteSpace: 'pre',
+});
+
+const StyledChip = styled(Chip)(({ theme }) => ({
+    margin: theme.spacing(0, 1, 1, 0),
+}));
+
 export const MultipleValues = ({ values }: IMultipleValuesProps) => {
     const [filter, setFilter] = useState('');
-    const { classes: styles } = useStyles();
 
     if (!values || values.length === 0) return null;
 
@@ -29,17 +35,15 @@ export const MultipleValues = ({ values }: IMultipleValuesProps) => {
             {values
                 .filter(value => value.includes(filter))
                 .map((value, index) => (
-                    <Chip
+                    <StyledChip
                         key={`${value}-${index}`}
                         label={
-                            <StringTruncator
+                            <StyledTruncator
                                 maxWidth="400"
                                 text={value}
                                 maxLength={50}
-                                className={styles.chipValue}
                             />
                         }
-                        className={styles.chip}
                     />
                 ))}
         </>

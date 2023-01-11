@@ -1,4 +1,7 @@
-import { IUnleashTest, setupApp } from '../../helpers/test-helper';
+import {
+    IUnleashTest,
+    setupAppWithCustomConfig,
+} from '../../helpers/test-helper';
 import dbInit, { ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import { IEventStore } from 'lib/types/stores/event-store';
@@ -31,7 +34,13 @@ const createToggle = async (
 
 beforeAll(async () => {
     db = await dbInit('export_import_api_serial', getLogger);
-    app = await setupApp(db.stores);
+    app = await setupAppWithCustomConfig(db.stores, {
+        experimental: {
+            flags: {
+                featuresExportImport: true,
+            },
+        },
+    });
     eventStore = db.stores.eventStore;
 });
 

@@ -9,6 +9,7 @@ import ExportImportService, {
     IExportQuery,
     IImportDTO,
 } from 'lib/services/export-import-service';
+import { InvalidOperationError } from '../../error';
 import { IAuthRequest } from '../unleash-types';
 
 class ExportImportController extends Controller {
@@ -58,10 +59,19 @@ class ExportImportController extends Controller {
         req: Request<unknown, unknown, IExportQuery, unknown>,
         res: Response,
     ): Promise<void> {
+        this.verifyExportImportEnabled();
         const query = req.body;
         const data = await this.exportImportService.export(query);
 
         res.json(data);
+    }
+
+    private verifyExportImportEnabled() {
+        if (!this.config.flagResolver.isEnabled('featuresExportImport')) {
+            throw new InvalidOperationError(
+                'Feature export/import is not enabled',
+            );
+        }
     }
 
     async importData(

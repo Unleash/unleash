@@ -41,6 +41,7 @@ process.nextTick(async () => {
                         responseTimeWithAppName: true,
                         variantsPerEnvironment: true,
                         maintenance: false,
+                        featuresExportImport: true,
                     },
                 },
                 authentication: {

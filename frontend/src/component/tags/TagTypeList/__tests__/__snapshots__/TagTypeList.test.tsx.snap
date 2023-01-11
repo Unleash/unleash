@@ -109,7 +109,7 @@ exports[`renders an empty list correctly 1`] = `
         </div>
       </div>
       <div
-        className="body css-142eaq1-bodyContainer"
+        className="body css-ccg7sp-bodyContainer"
       >
         <table
           className="MuiTable-root css-1h6dscb-MuiTable-root-table"

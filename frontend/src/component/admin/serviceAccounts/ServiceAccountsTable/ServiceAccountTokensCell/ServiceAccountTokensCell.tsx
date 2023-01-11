@@ -5,6 +5,7 @@ import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { IServiceAccount } from 'interfaces/service-account';
+import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 
 const StyledItem = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,
@@ -17,27 +18,27 @@ const StyledLink = styled(Link, {
 }));
 
 interface IServiceAccountTokensCellProps {
-    row: {
-        original: IServiceAccount;
-    };
+    serviceAccount: IServiceAccount;
     value: string;
+    onCreateToken: () => void;
 }
 
 export const ServiceAccountTokensCell: VFC<IServiceAccountTokensCellProps> = ({
-    row,
+    serviceAccount,
     value,
+    onCreateToken,
 }) => {
     const { searchQuery } = useSearchHighlightContext();
 
-    if (!row.original.tokens || row.original.tokens.length === 0)
-        return <TextCell />;
+    if (!serviceAccount.tokens || serviceAccount.tokens.length === 0)
+        return <LinkCell title="Create token" onClick={onCreateToken} />;
 
     return (
         <TextCell>
             <HtmlTooltip
                 title={
                     <>
-                        {row.original.tokens?.map(({ id, description }) => (
+                        {serviceAccount.tokens?.map(({ id, description }) => (
                             <StyledItem key={id}>
                                 <Highlighter search={searchQuery}>
                                     {description}
@@ -54,9 +55,9 @@ export const ServiceAccountTokensCell: VFC<IServiceAccountTokensCellProps> = ({
                         value.toLowerCase().includes(searchQuery.toLowerCase())
                     }
                 >
-                    {row.original.tokens?.length === 1
+                    {serviceAccount.tokens?.length === 1
                         ? '1 token'
-                        : `${row.original.tokens?.length} tokens`}
+                        : `${serviceAccount.tokens?.length} tokens`}
                 </StyledLink>
             </HtmlTooltip>
         </TextCell>

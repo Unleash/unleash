@@ -1,11 +1,10 @@
 import { Request, Response } from 'express';
 import { applyPatch, Operation } from 'fast-json-patch';
 import Controller from '../../controller';
-import { IUnleashConfig } from '../../../types/option';
-import { IUnleashServices } from '../../../types';
-import FeatureToggleService from '../../../services/feature-toggle-service';
-import { Logger } from '../../../logger';
 import {
+    IUnleashConfig,
+    IUnleashServices,
+    serializeDates,
     CREATE_FEATURE,
     CREATE_FEATURE_STRATEGY,
     DELETE_FEATURE,
@@ -14,37 +13,35 @@ import {
     UPDATE_FEATURE,
     UPDATE_FEATURE_ENVIRONMENT,
     UPDATE_FEATURE_STRATEGY,
-} from '../../../types/permissions';
-import { extractUsername } from '../../../util/extract-user';
+} from '../../../types';
+import { Logger } from '../../../logger';
+import { extractUsername } from '../../../util';
 import { IAuthRequest } from '../../unleash-types';
-import { CreateFeatureSchema } from '../../../openapi/spec/create-feature-schema';
 import {
+    AdminFeaturesQuerySchema,
+    CreateFeatureSchema,
+    CreateFeatureStrategySchema,
+    createRequestSchema,
+    createResponseSchema,
+    emptyResponse,
+    FeatureEnvironmentSchema,
     featureSchema,
     FeatureSchema,
-} from '../../../openapi/spec/feature-schema';
-import { FeatureStrategySchema } from '../../../openapi/spec/feature-strategy-schema';
-import { ParametersSchema } from '../../../openapi/spec/parameters-schema';
-import {
     featuresSchema,
     FeaturesSchema,
-} from '../../../openapi/spec/features-schema';
-import { UpdateFeatureSchema } from '../../../openapi/spec/update-feature-schema';
-import { UpdateFeatureStrategySchema } from '../../../openapi/spec/update-feature-strategy-schema';
-import { CreateFeatureStrategySchema } from '../../../openapi/spec/create-feature-strategy-schema';
-import { serializeDates } from '../../../types/serialize-dates';
-import { OpenApiService } from '../../../services/openapi-service';
-import { createRequestSchema } from '../../../openapi/util/create-request-schema';
-import { createResponseSchema } from '../../../openapi/util/create-response-schema';
-import { FeatureEnvironmentSchema } from '../../../openapi/spec/feature-environment-schema';
-import { SetStrategySortOrderSchema } from '../../../openapi/spec/set-strategy-sort-order-schema';
-
-import {
-    emptyResponse,
+    FeatureStrategySchema,
     getStandardResponses,
-} from '../../../openapi/util/standard-responses';
-import { SegmentService } from '../../../services/segment-service';
+    ParametersSchema,
+    SetStrategySortOrderSchema,
+    UpdateFeatureSchema,
+    UpdateFeatureStrategySchema,
+} from '../../../openapi';
+import {
+    OpenApiService,
+    SegmentService,
+    FeatureToggleService,
+} from '../../../services';
 import { querySchema } from '../../../schema/feature-schema';
-import { AdminFeaturesQuerySchema } from '../../../openapi';
 
 interface FeatureStrategyParams {
     projectId: string;
@@ -589,11 +586,20 @@ export default class ProjectFeaturesController extends Controller {
             environment,
             featureName,
         );
+
+        const result = {
+            ...environmentInfo,
+            strategies: environmentInfo.strategies.map((strategy) => {
+                const { strategyName, ...rest } = strategy;
+                return { ...rest, name: strategyName };
+            }),
+        };
+
         this.openApiService.respondWithValidation(
             200,
             res,
             featureSchema.$id,
-            serializeDates(environmentInfo),
+            serializeDates(result),
         );
     }
 

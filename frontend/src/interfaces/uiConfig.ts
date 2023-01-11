@@ -42,6 +42,8 @@ export interface IFlags {
     variantsPerEnvironment?: boolean;
     networkView?: boolean;
     maintenance?: boolean;
+
+    maintenanceMode?: boolean;
     messageBanner?: boolean;
     serviceAccounts?: boolean;
 }

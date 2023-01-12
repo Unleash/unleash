@@ -1,5 +1,10 @@
 import { IUnleashConfig } from '../types/option';
-import { FeatureToggle, IFeatureStrategy, ITag } from '../types/model';
+import {
+    FeatureToggle,
+    IFeatureEnvironment,
+    IFeatureStrategy,
+    ITag,
+} from '../types/model';
 import { Logger } from '../logger';
 import { IFeatureTagStore } from '../types/stores/feature-tag-store';
 import { IProjectStore } from '../types/stores/project-store';
@@ -26,8 +31,8 @@ export interface IExportQuery {
 
 export interface IImportDTO {
     data: IExportData;
-    project?: string;
-    environment?: string;
+    project: string;
+    environment: string;
 }
 
 export interface IExportData {
@@ -35,6 +40,7 @@ export interface IExportData {
     tags?: ITag[];
     contextFields?: IContextFieldDto[];
     featureStrategies: IFeatureStrategy[];
+    featureEnvironments: IFeatureEnvironment[];
 }
 
 export default class ExportImportService {
@@ -93,21 +99,58 @@ export default class ExportImportService {
     }
 
     async export(query: ExportQuerySchema): Promise<IExportData> {
-        const features = await this.toggleStore.getAllByNames(query.features);
-        const featureStrategies =
-            await this.featureStrategiesStore.getAllByFeatures(
-                query.features,
-                query.environment,
-            );
-        return { features, featureStrategies };
+        const [features, featureEnvironments, featureStrategies] =
+            await Promise.all([
+                this.toggleStore.getAllByNames(query.features),
+                (
+                    await this.featureEnvironmentStore.getAll({
+                        environment: query.environment,
+                    })
+                ).filter((item) => query.features.includes(item.featureName)),
+                this.featureStrategiesStore.getAllByFeatures(
+                    query.features,
+                    query.environment,
+                ),
+            ]);
+        return { features, featureStrategies, featureEnvironments };
     }
 
     async import(dto: IImportDTO, user: User): Promise<void> {
         await Promise.all(
             dto.data.features.map((feature) =>
                 this.featureToggleService.createFeatureToggle(
-                    dto.project || feature.project,
+                    dto.project,
                     feature,
+                    user.name,
+                ),
+            ),
+        );
+        await Promise.all(
+            dto.data.featureStrategies.map((featureStrategy) =>
+                this.featureToggleService.unprotectedCreateStrategy(
+                    {
+                        name: featureStrategy.strategyName,
+                        constraints: featureStrategy.constraints,
+                        parameters: featureStrategy.parameters,
+                        segments: featureStrategy.segments,
+                        sortOrder: featureStrategy.sortOrder,
+                    },
+                    {
+                        featureName: featureStrategy.featureName,
+                        environment: dto.environment,
+                        projectId: dto.project,
+                    },
+                    user.name,
+                ),
+            ),
+        );
+        await Promise.all(
+            dto.data.featureEnvironments.map((featureEnvironment) =>
+                this.featureToggleService.unprotectedUpdateEnabled(
+                    dto.project,
+                    featureEnvironment.featureName,
+                    dto.environment,
+                    featureEnvironment.enabled,
                     user.name,
                 ),
             ),

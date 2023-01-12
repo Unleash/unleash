@@ -14,7 +14,6 @@ import { IRoleStore } from '../types/stores/role-store';
 import VersionService from './version-service';
 import { ISettingStore } from '../types/stores/settings-store';
 import Timer = NodeJS.Timer;
-import { minutesToMilliseconds } from 'date-fns';
 
 type TimeRange = 'allTime' | '30d' | '7d';
 
@@ -117,16 +116,6 @@ export class InstanceStatsService {
         this.settingStore = settingStore;
         this.clientInstanceStore = clientInstanceStore;
         this.logger = getLogger('services/stats-service.js');
-    }
-
-    async start(): Promise<void> {
-        if (!this.snapshotRefresher) {
-            this.refreshStatsSnapshot();
-            this.snapshotRefresher = setInterval(
-                () => this.refreshStatsSnapshot(),
-                minutesToMilliseconds(5),
-            ).unref();
-        }
     }
 
     async refreshStatsSnapshot(): Promise<void> {

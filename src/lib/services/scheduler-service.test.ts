@@ -23,6 +23,16 @@ const getLogger = () => {
     return logger;
 };
 
+test('Schedules job immediately', async () => {
+    const schedulerService = new SchedulerService(getLogger());
+    const job = jest.fn();
+
+    schedulerService.schedule(job, 10);
+
+    expect(job).toBeCalledTimes(1);
+    schedulerService.stop();
+});
+
 test('Can schedule a single regular job', async () => {
     const schedulerService = new SchedulerService(getLogger());
     const job = jest.fn();
@@ -30,7 +40,7 @@ test('Can schedule a single regular job', async () => {
     schedulerService.schedule(job, 10);
     await ms(15);
 
-    expect(job).toBeCalledTimes(1);
+    expect(job).toBeCalledTimes(2);
     schedulerService.stop();
 });
 
@@ -43,8 +53,8 @@ test('Can schedule multiple jobs at the same interval', async () => {
     schedulerService.schedule(anotherJob, 10);
     await ms(15);
 
-    expect(job).toBeCalledTimes(1);
-    expect(anotherJob).toBeCalledTimes(1);
+    expect(job).toBeCalledTimes(2);
+    expect(anotherJob).toBeCalledTimes(2);
     schedulerService.stop();
 });
 
@@ -57,8 +67,8 @@ test('Can schedule multiple jobs at the different intervals', async () => {
     schedulerService.schedule(anotherJob, 20);
     await ms(25);
 
-    expect(job).toBeCalledTimes(2);
-    expect(anotherJob).toBeCalledTimes(1);
+    expect(job).toBeCalledTimes(3);
+    expect(anotherJob).toBeCalledTimes(2);
     schedulerService.stop();
 });
 
@@ -75,6 +85,7 @@ test('Can handle crash of a async job', async () => {
     schedulerService.stop();
     expect(logger.getRecords()).toEqual([
         ['scheduled job failed', 'async reason'],
+        ['scheduled job failed', 'async reason'],
     ]);
 });
 
@@ -90,6 +101,7 @@ test('Can handle crash of a sync job', async () => {
 
     schedulerService.stop();
     expect(logger.getRecords()).toEqual([
+        ['scheduled job failed', new Error('sync reason')],
         ['scheduled job failed', new Error('sync reason')],
     ]);
 });

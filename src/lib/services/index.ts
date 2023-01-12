@@ -151,7 +151,11 @@ export const createServices = (
         apiTokenService.updateLastSeen.bind(apiTokenService),
         minutesToMilliseconds(3),
     );
-    instanceStatsService.start();
+
+    schedulerService.schedule(
+        instanceStatsService.refreshStatsSnapshot.bind(instanceStatsService),
+        minutesToMilliseconds(5),
+    );
 
     return {
         accessService,

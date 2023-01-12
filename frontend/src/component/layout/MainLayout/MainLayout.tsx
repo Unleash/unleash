@@ -25,7 +25,7 @@ const MainLayoutContainer = styled(Grid)(() => ({
 
 const MainLayoutContentWrapper = styled('main')(({ theme }) => ({
     margin: theme.spacing(0, 'auto'),
-    display: 'flex', // prevent margin collapsing
+    overflow: 'auto', // prevent margin collapsing
     flex: 1,
     width: '100%',
     backgroundColor: theme.palette.contentWrapper,

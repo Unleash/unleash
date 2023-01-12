@@ -1,5 +1,10 @@
 import { IUnleashConfig } from '../types/option';
-import { FeatureToggle, IFeatureStrategy, ITag } from '../types/model';
+import {
+    FeatureToggle,
+    IFeatureEnvironment,
+    IFeatureStrategy,
+    ITag,
+} from '../types/model';
 import { Logger } from '../logger';
 import { IFeatureTagStore } from '../types/stores/feature-tag-store';
 import { IProjectStore } from '../types/stores/project-store';
@@ -35,6 +40,7 @@ export interface IExportData {
     tags?: ITag[];
     contextFields?: IContextFieldDto[];
     featureStrategies: IFeatureStrategy[];
+    featureEnvironments: IFeatureEnvironment[];
 }
 
 export default class ExportImportService {
@@ -99,7 +105,7 @@ export default class ExportImportService {
                 query.features,
                 query.environment,
             );
-        return { features, featureStrategies };
+        return { features, featureStrategies, featureEnvironments: [] };
     }
 
     async import(dto: IImportDTO, user: User): Promise<void> {
@@ -127,6 +133,17 @@ export default class ExportImportService {
                         environment: dto.environment,
                         projectId: dto.project,
                     },
+                    user.name,
+                ),
+            ),
+        );
+        await Promise.all(
+            dto.data.featureEnvironments.map((featureEnvironment) =>
+                this.featureToggleService.unprotectedUpdateEnabled(
+                    dto.project,
+                    featureEnvironment.featureName,
+                    dto.environment,
+                    featureEnvironment.enabled,
                     user.name,
                 ),
             ),

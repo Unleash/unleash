@@ -165,6 +165,7 @@ test('returns all features, when no feature was defined', async () => {
 });
 
 test('import features to existing project and environment', async () => {
+    const feature = 'first_feature';
     const project = 'new_project';
     const environment = 'staging';
     const exportedFeature: FeatureToggle = {
@@ -173,7 +174,7 @@ test('import features to existing project and environment', async () => {
     };
     const exportedStrategy: IFeatureStrategy = {
         id: '798cb25a-2abd-47bd-8a95-40ec13472309',
-        featureName: 'first_feature',
+        featureName: feature,
         projectId: 'old_project',
         environment: 'old_environment',
         strategyName: 'default',
@@ -184,6 +185,13 @@ test('import features to existing project and environment', async () => {
         data: {
             features: [exportedFeature],
             featureStrategies: [exportedStrategy],
+            featureEnvironments: [
+                {
+                    enabled: true,
+                    featureName: 'first_feature',
+                    environment: 'irrelevant',
+                },
+            ],
         },
         project: project,
         environment: environment,
@@ -197,24 +205,33 @@ test('import features to existing project and environment', async () => {
         .expect(201);
 
     const { body: importedFeature } = await app.request
-        .get('/api/admin/features/first_feature')
+        .get(`/api/admin/features/${feature}`)
         .expect(200);
     expect(importedFeature).toMatchObject({
         name: 'first_feature',
         project: project,
     });
-    const { body: importedStrategies } = await app.request
+
+    const { body: importedFeatureEnvironment } = await app.request
         .get(
-            `/api/admin/projects/${project}/features/first_feature/environments/${environment}/strategies`,
+            `/api/admin/projects/${project}/features/${feature}/environments/${environment}`,
         )
         .expect(200);
 
-    expect(importedStrategies).toMatchObject([
-        {
-            name: 'default',
-            parameters: {},
-            segments: [],
-            sortOrder: 9999,
-        },
-    ]);
+    expect(importedFeatureEnvironment).toMatchObject({
+        name: feature,
+        environment,
+        enabled: true,
+        strategies: [
+            {
+                featureName: feature,
+                projectId: project,
+                environment: environment,
+                parameters: {},
+                constraints: [],
+                sortOrder: 9999,
+                name: 'default',
+            },
+        ],
+    });
 });

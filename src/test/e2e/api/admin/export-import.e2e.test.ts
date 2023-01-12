@@ -139,6 +139,14 @@ test('exports features', async () => {
             },
         ],
         featureStrategies: [resultStrategy],
+        featureEnvironments: [
+            {
+                enabled: false,
+                environment: 'default',
+                featureName: 'first_feature',
+                variants: [],
+            },
+        ],
     });
 });
 
@@ -222,6 +230,8 @@ test('import features to existing project and environment', async () => {
         environment: environment,
     };
     await createProject(project, environment);
+
+    console.log(JSON.stringify(importPayload));
 
     await app.request
         .post('/api/admin/features-batch/import')

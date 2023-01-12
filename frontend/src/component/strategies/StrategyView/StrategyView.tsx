@@ -11,6 +11,7 @@ import PermissionIconButton from 'component/common/PermissionIconButton/Permissi
 import { Edit } from '@mui/icons-material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import { FeatureSchema } from 'openapi/models';
 
 export const StrategyView = () => {
     const name = useRequiredPathParam('name');
@@ -19,8 +20,13 @@ export const StrategyView = () => {
     const { applications } = useApplications();
     const navigate = useNavigate();
 
-    const toggles = features.filter(toggle => {
-        return toggle?.strategies?.find(strategy => strategy.name === name);
+    // Has been broken since the migration to environments. We need to create an
+    // endpoint that returns all environments and strategies for all features to make this
+    // work properly OR alternatively create an endpoint that abstracts this logic into the backend
+    const toggles = features.filter((toggle: FeatureSchema) => {
+        return toggle?.environments
+            ?.flatMap(env => env.strategies)
+            .some(strategy => strategy && strategy.name === name);
     });
 
     const strategy = strategies.find(strategy => strategy.name === name);

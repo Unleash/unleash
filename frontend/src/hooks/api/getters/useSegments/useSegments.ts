@@ -4,6 +4,7 @@ import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { ISegment } from 'interfaces/segment';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
 
 export interface IUseSegmentsOutput {
     segments?: ISegment[];
@@ -19,9 +20,11 @@ export const useSegments = (strategyId?: string): IUseSegmentsOutput => {
         ? formatApiPath(`api/admin/segments/strategies/${strategyId}`)
         : formatApiPath('api/admin/segments');
 
-    const { data, error, mutate } = useSWR(
+    const { data, error, mutate } = useConditionalSWR(
+        Boolean(uiConfig.flags?.SE),
+        [],
         url,
-        () => (uiConfig.flags?.SE ? fetchSegments(url) : []),
+        () => fetchSegments(url),
         {
             refreshInterval: 15 * 1000,
         }
@@ -39,7 +42,7 @@ export const useSegments = (strategyId?: string): IUseSegmentsOutput => {
     };
 };
 
-export const fetchSegments = async (url: string): Promise<ISegment[]> => {
+export const fetchSegments = async (url: string) => {
     return fetch(url)
         .then(handleErrorResponses('Segments'))
         .then(res => res.json())

@@ -109,7 +109,8 @@
   },
   "resolutions": {
     "@codemirror/state": "6.2.0",
-    "@xmldom/xmldom": "^0.8.4"
+    "@xmldom/xmldom": "^0.8.4",
+    "json5": "^2.2.2"
   },
   "jest": {
     "moduleNameMapper": {

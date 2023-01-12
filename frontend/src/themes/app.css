@@ -11,10 +11,13 @@ html {
 body {
     height: 100%;
     font-family: 'Sen', sans-serif;
+    font-size: 16px;
+    font-variant-ligatures: none;
 }
 
 button {
     font-family: 'Sen', sans-serif;
+    font-variant-ligatures: none;
 }
 
 .MuiAccordion-root.Mui-expanded {
@@ -112,10 +115,6 @@ button {
 
     /* BORDERS */
     --default-border: 1px solid #f1f1f1;
-}
-
-body {
-    font-size: 16px;
 }
 
 h1,

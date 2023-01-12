@@ -34,8 +34,7 @@ const MainLayoutContentWrapper = styled('main')(({ theme }) => ({
 
 const MainLayoutContent = styled(Grid)(({ theme }) => ({
     width: '1250px',
-    marginLeft: 'auto',
-    marginRight: 'auto',
+    margin: '0 auto',
     [theme.breakpoints.down('lg')]: {
         width: '1024px',
     },
@@ -62,10 +61,10 @@ const StyledImg = styled('img')(() => ({
 
 const MainLayoutContentContainer = styled('div')(({ theme }) => ({
     height: '100%',
-    padding: theme.spacing(6.5, 0),
+    padding: theme.spacing(0, 0, 6.5, 0),
     position: 'relative',
     [theme.breakpoints.down('md')]: {
-        padding: theme.spacing(6.5, 1.5),
+        padding: theme.spacing(0, 1.5, 6.5, 1.5),
     },
     zIndex: 200,
 }));

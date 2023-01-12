@@ -95,8 +95,6 @@ afterAll(async () => {
     await db.destroy();
 });
 
-afterEach(async () => {});
-
 test('exports features', async () => {
     await createProject('default', 'default');
     const strategy = {

@@ -1,23 +1,24 @@
 import { weightTypes } from '../feature/FeatureView/FeatureVariants/FeatureVariantsList/AddFeatureVariant/enums';
 import { IUiConfig } from 'interfaces/uiConfig';
-import { IRoute } from 'interfaces/route';
+import { INavigationMenuItem } from 'interfaces/route';
 import { IFeatureVariant } from 'interfaces/featureToggle';
 import { format, isValid } from 'date-fns';
 
-export const filterByConfig = (config: IUiConfig) => (r: IRoute) => {
-    if (r.flag) {
-        // Check if the route's `flag` is enabled in IUiConfig.flags.
-        const flags = config.flags as unknown as Record<string, boolean>;
-        return Boolean(flags[r.flag]);
-    }
+export const filterByConfig =
+    (config: IUiConfig) => (r: INavigationMenuItem) => {
+        if (r.flag) {
+            // Check if the route's `flag` is enabled in IUiConfig.flags.
+            const flags = config.flags as unknown as Record<string, boolean>;
+            return Boolean(flags[r.flag]);
+        }
 
-    if (r.configFlag) {
-        // Check if the route's `configFlag` is enabled in IUiConfig.
-        return Boolean(config[r.configFlag]);
-    }
+        if (r.configFlag) {
+            // Check if the route's `configFlag` is enabled in IUiConfig.
+            return Boolean(config[r.configFlag]);
+        }
 
-    return true;
-};
+        return true;
+    };
 
 export const scrollToTop = () => {
     window.scrollTo(0, 0);

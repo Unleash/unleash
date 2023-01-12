@@ -3,33 +3,19 @@ import { StrategyView } from 'component/strategies/StrategyView/StrategyView';
 import { StrategiesList } from 'component/strategies/StrategiesList/StrategiesList';
 import { TagTypeList } from 'component/tags/TagTypeList/TagTypeList';
 import { AddonList } from 'component/addons/AddonList/AddonList';
-import Admin from 'component/admin';
-import AdminApi from 'component/admin/api';
-import AdminUsers from 'component/admin/users/UsersAdmin';
-import { GroupsAdmin } from 'component/admin/groups/GroupsAdmin';
-import { AuthSettings } from 'component/admin/auth/AuthSettings';
 import Login from 'component/user/Login/Login';
 import { EEA, P, RE, SE, UG } from 'component/common/flags';
 import { NewUser } from 'component/user/NewUser/NewUser';
 import ResetPassword from 'component/user/ResetPassword/ResetPassword';
 import ForgottenPassword from 'component/user/ForgottenPassword/ForgottenPassword';
 import { ProjectListNew } from 'component/project/ProjectList/ProjectList';
-import Project from 'component/project/Project/Project';
 import RedirectArchive from 'component/archive/RedirectArchive';
-import { FeatureView } from 'component/feature/FeatureView/FeatureView';
-import ProjectRoles from 'component/admin/projectRoles/ProjectRoles/ProjectRoles';
-import CreateProjectRole from 'component/admin/projectRoles/CreateProjectRole/CreateProjectRole';
-import EditProjectRole from 'component/admin/projectRoles/EditProjectRole/EditProjectRole';
-import CreateUser from 'component/admin/users/CreateUser/CreateUser';
-import EditUser from 'component/admin/users/EditUser/EditUser';
-import { CreateApiToken } from 'component/admin/apiToken/CreateApiToken/CreateApiToken';
 import CreateEnvironment from 'component/environments/CreateEnvironment/CreateEnvironment';
 import EditEnvironment from 'component/environments/EditEnvironment/EditEnvironment';
 import { EditContext } from 'component/context/EditContext/EditContext';
 import EditTagType from 'component/tags/EditTagType/EditTagType';
 import CreateTagType from 'component/tags/CreateTagType/CreateTagType';
 import EditProject from 'component/project/Project/EditProject/EditProject';
-import CreateProject from 'component/project/Project/CreateProject/CreateProject';
 import CreateFeature from 'component/feature/CreateFeature/CreateFeature';
 import EditFeature from 'component/feature/EditFeature/EditFeature';
 import { ApplicationEdit } from 'component/application/ApplicationEdit/ApplicationEdit';
@@ -46,23 +32,17 @@ import { SplashPage } from 'component/splash/SplashPage/SplashPage';
 import { CreateUnleashContextPage } from 'component/context/CreateUnleashContext/CreateUnleashContextPage';
 import { CreateSegment } from 'component/segments/CreateSegment/CreateSegment';
 import { EditSegment } from 'component/segments/EditSegment/EditSegment';
-import { IRoute } from 'interfaces/route';
+import { INavigationMenuItem, IRoute } from 'interfaces/route';
 import { EnvironmentTable } from 'component/environments/EnvironmentTable/EnvironmentTable';
 import { SegmentTable } from 'component/segments/SegmentTable';
-import FlaggedBillingRedirect from 'component/admin/billing/FlaggedBillingRedirect/FlaggedBillingRedirect';
 import { FeaturesArchiveTable } from '../archive/FeaturesArchiveTable';
-import { Billing } from 'component/admin/billing/Billing';
-import { Group } from 'component/admin/groups/Group/Group';
-import { CreateGroup } from 'component/admin/groups/CreateGroup/CreateGroup';
-import { EditGroup } from 'component/admin/groups/EditGroup/EditGroup';
 import { LazyPlayground } from 'component/playground/Playground/LazyPlayground';
-import { CorsAdmin } from 'component/admin/cors';
-import { InviteLink } from 'component/admin/users/InviteLink/InviteLink';
 import { Profile } from 'component/user/Profile/Profile';
-import { InstanceAdmin } from '../admin/instance-admin/InstanceAdmin';
-import { Network } from 'component/admin/network/Network';
-import { MaintenanceAdmin } from '../admin/maintenance';
-import { ServiceAccounts } from 'component/admin/serviceAccounts/ServiceAccounts';
+import { LazyCreateProject } from 'component/project/Project/CreateProject/LazyCreateProject';
+import { LazyFeatureView } from 'component/feature/FeatureView/LazyFeatureView';
+import { LazyAdmin } from 'component/admin/LazyAdmin';
+import { LazyProject } from 'component/project/Project/LazyProject';
+import { AdminRedirect } from 'component/admin/AdminRedirect';
 
 export const routes: IRoute[] = [
     // Splash
@@ -80,7 +60,7 @@ export const routes: IRoute[] = [
         path: '/projects/create',
         parent: '/projects',
         title: 'Create',
-        component: CreateProject,
+        component: LazyCreateProject,
         type: 'protected',
         enterprise: true,
         menu: {},
@@ -122,7 +102,7 @@ export const routes: IRoute[] = [
         path: '/projects/:projectId/features/:featureId/*',
         parent: '/projects',
         title: 'FeatureView',
-        component: FeatureView,
+        component: LazyFeatureView,
         type: 'protected',
         menu: {},
     },
@@ -146,7 +126,7 @@ export const routes: IRoute[] = [
         path: '/projects/:projectId/*',
         parent: '/projects',
         title: ':projectId',
-        component: Project,
+        component: LazyProject,
         flag: P,
         type: 'protected',
         menu: {},
@@ -385,187 +365,19 @@ export const routes: IRoute[] = [
     },
 
     // Admin
-    {
-        path: '/admin/api/create-token',
-        parent: '/admin',
-        title: 'API access',
-        component: CreateApiToken,
-        type: 'protected',
-        menu: {},
-    },
-    {
-        path: '/admin/create-project-role',
-        title: 'Create',
-        component: CreateProjectRole,
-        type: 'protected',
-        menu: {},
-        flag: RE,
-    },
-    {
-        path: '/admin/roles/:id/edit',
-        title: 'Edit',
-        component: EditProjectRole,
-        type: 'protected',
-        menu: {},
-        flag: RE,
-    },
-    {
-        path: '/admin/users/:id/edit',
-        title: 'Edit',
-        component: EditUser,
-        type: 'protected',
-        menu: {},
-        hidden: true,
-    },
-    {
-        path: '/admin/api',
-        parent: '/admin',
-        title: 'API access',
-        component: AdminApi,
-        type: 'protected',
-        menu: { mobile: true, advanced: true },
-    },
-    {
-        path: '/admin/users',
-        parent: '/admin',
-        title: 'Users',
-        component: AdminUsers,
-        type: 'protected',
-        menu: { adminSettings: true },
-    },
-    {
-        path: '/admin/service-accounts',
-        parent: '/admin',
-        title: 'Service accounts',
-        component: ServiceAccounts,
-        type: 'protected',
-        menu: { adminSettings: true },
-        flag: 'serviceAccounts',
-    },
-    {
-        path: '/admin/create-user',
-        parent: '/admin',
-        title: 'Users',
-        component: CreateUser,
-        type: 'protected',
-        menu: {},
-    },
-    {
-        path: '/admin/invite-link',
-        parent: '/admin',
-        title: 'Invite link',
-        component: InviteLink,
-        type: 'protected',
-        menu: {},
-    },
-    {
-        path: '/admin/groups',
-        parent: '/admin',
-        title: 'Groups',
-        component: GroupsAdmin,
-        type: 'protected',
-        menu: { adminSettings: true },
-        flag: UG,
-    },
-    {
-        path: '/admin/groups/:groupId',
-        parent: '/admin',
-        title: ':groupId',
-        component: Group,
-        type: 'protected',
-        menu: {},
-        flag: UG,
-    },
-    {
-        path: '/admin/groups/create-group',
-        parent: '/admin/groups',
-        title: 'Create group',
-        component: CreateGroup,
-        type: 'protected',
-        menu: {},
-        flag: UG,
-    },
-    {
-        path: '/admin/groups/:groupId/edit',
-        parent: '/admin/groups',
-        title: 'Edit group',
-        component: EditGroup,
-        type: 'protected',
-        menu: {},
-        flag: UG,
-    },
-    {
-        path: '/admin/roles',
-        parent: '/admin',
-        title: 'Project roles',
-        component: ProjectRoles,
-        type: 'protected',
-        flag: RE,
-        menu: { adminSettings: true },
-    },
-    {
-        path: '/admin/auth',
-        parent: '/admin',
-        title: 'Single sign-on',
-        component: AuthSettings,
-        type: 'protected',
-        menu: { adminSettings: true },
-    },
-    {
-        path: '/admin/instance',
-        parent: '/admin',
-        title: 'Instance stats',
-        component: InstanceAdmin,
-        type: 'protected',
-        menu: { adminSettings: true },
-    },
-    {
-        path: '/admin/network/*',
-        parent: '/admin',
-        title: 'Network',
-        component: Network,
-        type: 'protected',
-        menu: { adminSettings: true },
-        flag: 'networkView',
-    },
-    {
-        path: '/admin/maintenance',
-        parent: '/admin',
-        title: 'Maintenance',
-        component: MaintenanceAdmin,
-        type: 'protected',
-        menu: { adminSettings: true },
-        flag: 'maintenance',
-    },
-    {
-        path: '/admin/cors',
-        parent: '/admin',
-        title: 'CORS origins',
-        component: CorsAdmin,
-        type: 'protected',
-        flag: 'embedProxyFrontend',
-        menu: { adminSettings: true },
-    },
-    {
-        path: '/admin/billing',
-        parent: '/admin',
-        title: 'Billing',
-        component: Billing,
-        type: 'protected',
-        menu: {},
-    },
-    {
-        path: '/admin-invoices',
-        parent: '/admin',
-        title: 'Billing & invoices',
-        component: FlaggedBillingRedirect,
-        type: 'protected',
-        menu: { adminSettings: true, isEnterprise: true },
-    },
+
     {
         path: '/admin',
         title: 'Admin',
-        component: Admin,
+        component: AdminRedirect,
+        hidden: false,
+        type: 'protected',
+        menu: {},
+    },
+    {
+        path: '/admin/*',
+        title: 'Admin',
+        component: LazyAdmin,
         hidden: false,
         type: 'protected',
         menu: {},
@@ -620,6 +432,70 @@ export const routes: IRoute[] = [
     },
 ];
 
+export const adminMenuRoutes: INavigationMenuItem[] = [
+    {
+        path: '/history',
+        title: 'Event log',
+        menu: { adminSettings: true },
+    },
+    {
+        path: '/admin/users',
+        title: 'Users',
+        menu: { adminSettings: true },
+    },
+    {
+        path: '/admin/groups',
+        title: 'Groups',
+        menu: { adminSettings: true },
+        flag: UG,
+    },
+    {
+        path: '/admin/roles',
+        title: 'Project roles',
+        flag: RE,
+        menu: { adminSettings: true },
+    },
+    {
+        path: '/admin/auth',
+        title: 'Single sign-on',
+        menu: { adminSettings: true },
+    },
+    {
+        path: '/admin/instance',
+        title: 'Instance stats',
+        menu: { adminSettings: true },
+    },
+    {
+        path: '/admin/service-accounts',
+        title: 'Service accounts',
+        menu: { adminSettings: true },
+        flag: 'serviceAccounts',
+    },
+    {
+        path: '/admin/network/*',
+        title: 'Network',
+        menu: { adminSettings: true },
+        flag: 'networkView',
+    },
+    {
+        path: '/admin/maintenance',
+        title: 'Maintenance',
+        menu: { adminSettings: true },
+        flag: 'maintenance',
+    },
+    {
+        path: '/admin/cors',
+        title: 'CORS origins',
+        flag: 'embedProxyFrontend',
+        menu: { adminSettings: true },
+    },
+    {
+        path: '/admin/admin-invoices',
+        title: 'Billing & invoices',
+        menu: { adminSettings: true, isEnterprise: true },
+    },
+];
+
 export const getRoute = (path: string) =>
     routes.find(route => route.path === path);
 
@@ -638,6 +514,19 @@ const computeRoutes = () => {
     return () => {
         return computedRoutes;
     };
+};
+
+export const getCondensedRoutes = (routes: IRoute[]): INavigationMenuItem[] => {
+    return routes.map(route => {
+        const condensedRoute = {
+            path: route.path,
+            flag: route.flag,
+            title: route.title,
+            menu: route.menu,
+            configFlag: route.configFlag,
+        };
+        return condensedRoute;
+    });
 };
 
 export const getRoutes = computeRoutes();

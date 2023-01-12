@@ -41,7 +41,7 @@ import { ProjectChangeRequests } from '../../changeRequest/ProjectChangeRequests
 import { ProjectSettings } from './ProjectSettings/ProjectSettings';
 import { useFavoriteProjectsApi } from 'hooks/api/actions/useFavoriteProjectsApi/useFavoriteProjectsApi';
 
-const Project = () => {
+export const Project = () => {
     const projectId = useRequiredPathParam('projectId');
     const params = useQueryParams();
     const { project, loading, refetch } = useProject(projectId);
@@ -250,5 +250,3 @@ const Project = () => {
         </div>
     );
 };
-
-export default Project;

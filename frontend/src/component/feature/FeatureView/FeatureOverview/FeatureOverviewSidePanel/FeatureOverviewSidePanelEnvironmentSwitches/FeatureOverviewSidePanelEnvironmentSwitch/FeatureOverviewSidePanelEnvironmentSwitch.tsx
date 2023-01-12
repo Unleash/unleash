@@ -13,7 +13,6 @@ import { UpdateEnabledMessage } from 'component/changeRequest/ChangeRequestConfi
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { styled } from '@mui/material';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
-import { RemoveRedEye, Star } from '@mui/icons-material';
 import { FeatureOverviewSidePanelEnvironmentHider } from './FeatureOverviewSidePanelEnvironmentHider';
 
 const StyledContainer = styled('div')(({ theme }) => ({
@@ -22,6 +21,7 @@ const StyledContainer = styled('div')(({ theme }) => ({
         marginBottom: theme.spacing(2),
     },
     display: 'flex',
+    alignItems: 'center',
 }));
 
 const StyledLabel = styled('label')(() => ({

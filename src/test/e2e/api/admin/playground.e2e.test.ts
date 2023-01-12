@@ -45,6 +45,7 @@ const reset = (database: ITestDb) => async () => {
 const toArray = <T>(x: T): [T] => [x];
 
 const testParams = {
+    numRuns: 1, // Default is 100 which is not good for E2E tests
     interruptAfterTimeLimit: 4000, // Default timeout in Jest 5000ms
     markInterruptAsFailure: false, // When set to false, timeout during initial cases will not be considered as a failure
 };

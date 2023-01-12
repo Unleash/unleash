@@ -99,18 +99,19 @@ export default class ExportImportService {
     }
 
     async export(query: ExportQuerySchema): Promise<IExportData> {
-        const features = await this.toggleStore.getAllByNames(query.features);
-        // TODO: make it a DB query to avoid in-memory filtering
-        const featureEnvironments = (
-            await this.featureEnvironmentStore.getAll({
-                environment: query.environment,
-            })
-        ).filter((item) => query.features.includes(item.featureName));
-        const featureStrategies =
-            await this.featureStrategiesStore.getAllByFeatures(
-                query.features,
-                query.environment,
-            );
+        const [features, featureEnvironments, featureStrategies] =
+            await Promise.all([
+                this.toggleStore.getAllByNames(query.features),
+                (
+                    await this.featureEnvironmentStore.getAll({
+                        environment: query.environment,
+                    })
+                ).filter((item) => query.features.includes(item.featureName)),
+                this.featureStrategiesStore.getAllByFeatures(
+                    query.features,
+                    query.environment,
+                ),
+            ]);
         return { features, featureStrategies, featureEnvironments };
     }
 

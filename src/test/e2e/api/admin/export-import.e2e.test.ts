@@ -231,8 +231,6 @@ test('import features to existing project and environment', async () => {
     };
     await createProject(project, environment);
 
-    console.log(JSON.stringify(importPayload));
-
     await app.request
         .post('/api/admin/features-batch/import')
         .send(importPayload)

@@ -16,6 +16,8 @@ import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { Add } from '@mui/icons-material';
 import { NAVIGATE_TO_CREATE_GROUP } from 'utils/testIds';
+import { EditGroupUsers } from '../Group/EditGroupUsers/EditGroupUsers';
+import { RemoveGroup } from '../RemoveGroup/RemoveGroup';
 
 type PageQueryType = Partial<Record<'search', string>>;
 
@@ -37,6 +39,11 @@ const groupsSearch = (group: IGroup, searchValue: string) => {
 
 export const GroupsList: VFC = () => {
     const navigate = useNavigate();
+    const [editUsersOpen, setEditUsersOpen] = useState(false);
+    const [removeOpen, setRemoveOpen] = useState(false);
+    const [activeGroup, setActiveGroup] = useState<IGroup | undefined>(
+        undefined
+    );
     const { groups = [], loading } = useGroups();
     const [searchParams, setSearchParams] = useSearchParams();
     const [searchValue, setSearchValue] = useState(
@@ -64,6 +71,16 @@ export const GroupsList: VFC = () => {
             ? sortedGroups.filter(group => groupsSearch(group, searchValue))
             : sortedGroups;
     }, [groups, searchValue]);
+
+    const onEditUsers = (group: IGroup) => {
+        setActiveGroup(group);
+        setEditUsersOpen(true);
+    };
+
+    const onRemoveGroup = (group: IGroup) => {
+        setActiveGroup(group);
+        setRemoveOpen(true);
+    };
 
     return (
         <PageContent
@@ -115,7 +132,11 @@ export const GroupsList: VFC = () => {
                 <Grid container spacing={2}>
                     {data.map(group => (
                         <Grid key={group.id} item xs={12} md={6}>
-                            <GroupCard group={group} />
+                            <GroupCard
+                                group={group}
+                                onEditUsers={onEditUsers}
+                                onRemoveGroup={onRemoveGroup}
+                            />
                         </Grid>
                     ))}
                 </Grid>
@@ -133,6 +154,28 @@ export const GroupsList: VFC = () => {
                             </TablePlaceholder>
                         }
                         elseShow={<GroupEmpty />}
+                    />
+                }
+            />
+
+            <ConditionallyRender
+                condition={Boolean(activeGroup)}
+                show={
+                    <EditGroupUsers
+                        open={editUsersOpen}
+                        setOpen={setEditUsersOpen}
+                        group={activeGroup!}
+                    />
+                }
+            />
+
+            <ConditionallyRender
+                condition={Boolean(activeGroup)}
+                show={
+                    <RemoveGroup
+                        open={removeOpen}
+                        setOpen={setRemoveOpen}
+                        group={activeGroup!}
                     />
                 }
             />

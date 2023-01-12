@@ -1,4 +1,4 @@
-import { Button, styled } from '@mui/material';
+import { Button, styled, Box } from '@mui/material';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { useGroupApi } from 'hooks/api/actions/useGroupApi/useGroupApi';
@@ -33,6 +33,10 @@ const StyledButtonContainer = styled('div')(() => ({
 
 const StyledCancelButton = styled(Button)(({ theme }) => ({
     marginLeft: theme.spacing(3),
+}));
+
+const StyledBox = styled(Box)(({ theme }) => ({
+    marginTop: theme.spacing(2),
 }));
 
 interface IEditGroupUsersProps {
@@ -122,21 +126,23 @@ export const EditGroupUsers: FC<IEditGroupUsersProps> = ({
                     </div>
 
                     <StyledButtonContainer>
-                        <Button
-                            type="submit"
-                            variant="contained"
-                            color="primary"
-                            data-testid={UG_SAVE_BTN_ID}
-                        >
-                            Save
-                        </Button>
-                        <StyledCancelButton
-                            onClick={() => {
-                                setOpen(false);
-                            }}
-                        >
-                            Cancel
-                        </StyledCancelButton>
+                        <StyledBox>
+                            <Button
+                                type="submit"
+                                variant="contained"
+                                color="primary"
+                                data-testid={UG_SAVE_BTN_ID}
+                            >
+                                Save
+                            </Button>
+                            <StyledCancelButton
+                                onClick={() => {
+                                    setOpen(false);
+                                }}
+                            >
+                                Cancel
+                            </StyledCancelButton>
+                        </StyledBox>
                     </StyledButtonContainer>
                 </StyledForm>
             </FormTemplate>

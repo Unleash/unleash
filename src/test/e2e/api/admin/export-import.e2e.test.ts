@@ -168,9 +168,34 @@ test('import features to existing project and environment', async () => {
     const feature = 'first_feature';
     const project = 'new_project';
     const environment = 'staging';
+    const variants = [
+        {
+            name: 'variantA',
+            weight: 500,
+            payload: {
+                type: 'string',
+                value: 'payloadA',
+            },
+            overrides: [],
+            stickiness: 'default',
+            weightType: 'variable',
+        },
+        {
+            name: 'variantB',
+            weight: 500,
+            payload: {
+                type: 'string',
+                value: 'payloadB',
+            },
+            overrides: [],
+            stickiness: 'default',
+            weightType: 'variable',
+        },
+    ];
     const exportedFeature: FeatureToggle = {
         project: 'old_project',
         name: 'first_feature',
+        variants,
     };
     const exportedStrategy: IFeatureStrategy = {
         id: '798cb25a-2abd-47bd-8a95-40ec13472309',
@@ -210,6 +235,7 @@ test('import features to existing project and environment', async () => {
     expect(importedFeature).toMatchObject({
         name: 'first_feature',
         project: project,
+        variants,
     });
 
     const { body: importedFeatureEnvironment } = await app.request

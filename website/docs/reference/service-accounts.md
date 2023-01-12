@@ -10,17 +10,19 @@ Service accounts is an upcoming enterprise feature, and is scheduled to become a
 
 Service accounts enable Unleash admins to create accounts that act as users and respect the same set of permissions, however they don't represent real users. These accounts do not have a password and cannot log in to the Unleash UI. Instead, they are intended to be used to access the Unleash API programmatically, providing integrations an identity.
 
+![Service account table](/img/service-account-table.png)
+
 Use service accounts to:
 
 - Provide an user-like identity to an integration or automation and manage it within Unleash
 - Give access to the Unleash API without giving access to the Unleash UI
 - Provide more fine-grained permissions than an admin token provides
 
-In order to create a service account, you can follow the [how to create a service account](../how-to/how-to-create-a-service-account.md) guide.
+In order to create a service account, you can follow the [how to create service accounts](../how-to/how-to-create-service-accounts.mdx) guide.
 
 ## Service account tokens
 
-Service account tokens allow service accounts to use the Admin API as themselves with their own set of permissions, rather than using an admin token. See [_how to use the Admin API_](how-to-use-the-admin-api.md) for more information.
+Service account tokens allow service accounts to use the Admin API as themselves with their own set of permissions, rather than using an admin token. See [_how to use the Admin API_](../how-to/how-to-use-the-admin-api.md) for more information.
 
 These tokens act just like [personal access tokens](./api-tokens-and-client-keys.mdx#personal-access-tokens) for the service accounts, except they are managed by Unleash admins.
 

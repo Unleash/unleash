@@ -13,7 +13,6 @@ import { ISegmentStore } from '../types/stores/segment-store';
 import { IRoleStore } from '../types/stores/role-store';
 import VersionService from './version-service';
 import { ISettingStore } from '../types/stores/settings-store';
-import Timer = NodeJS.Timer;
 
 type TimeRange = 'allTime' | '30d' | '7d';
 
@@ -66,8 +65,6 @@ export class InstanceStatsService {
     private settingStore: ISettingStore;
 
     private clientInstanceStore: IClientInstanceStore;
-
-    private snapshotRefresher?: Timer;
 
     private snapshot?: InstanceStats;
 
@@ -132,10 +129,6 @@ export class InstanceStatsService {
                 error,
             );
         }
-    }
-
-    destroy(): void {
-        clearInterval(this.snapshotRefresher);
     }
 
     getToggleCount(): Promise<number> {

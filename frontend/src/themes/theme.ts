@@ -190,9 +190,9 @@ export default createTheme({
                     fontSize: '0.875rem',
                     '& a': {
                         color: colors.purple[900],
-                        textDecoration: 'underline',
+                        textDecoration: 'none',
                         '&:hover': {
-                            textDecoration: 'none',
+                            textDecoration: 'underline',
                         },
                     },
                 },

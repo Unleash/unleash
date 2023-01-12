@@ -70,6 +70,7 @@ export const ExportDialog = ({
             const res = await createExport(payload);
             const body = await res.json();
             downloadFile(body);
+            onClose();
         } catch (e: unknown) {
             setToastApiError(formatUnknownError(e));
         }

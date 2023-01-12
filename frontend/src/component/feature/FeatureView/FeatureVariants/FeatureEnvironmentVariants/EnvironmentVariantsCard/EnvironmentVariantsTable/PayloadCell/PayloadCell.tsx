@@ -1,19 +1,13 @@
-import { Link, styled, Typography } from '@mui/material';
+import { styled, Typography } from '@mui/material';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
-import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
+import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import { IPayload } from 'interfaces/featureToggle';
 
 const StyledItem = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,
     whiteSpace: 'pre-wrap',
-}));
-
-const StyledLink = styled(Link, {
-    shouldForwardProp: prop => prop !== 'highlighted',
-})<{ highlighted?: boolean }>(({ theme, highlighted }) => ({
-    backgroundColor: highlighted ? theme.palette.highlight : 'transparent',
 }));
 
 interface IPayloadCellProps {
@@ -35,8 +29,8 @@ export const PayloadCell = ({ value: payload }: IPayloadCellProps) => {
 
     return (
         <TextCell>
-            <HtmlTooltip
-                title={
+            <TooltipLink
+                tooltip={
                     <>
                         <StyledItem>
                             <Highlighter search={searchQuery}>
@@ -45,19 +39,15 @@ export const PayloadCell = ({ value: payload }: IPayloadCellProps) => {
                         </StyledItem>
                     </>
                 }
+                highlighted={
+                    searchQuery.length > 0 &&
+                    payload.value
+                        .toLowerCase()
+                        .includes(searchQuery.toLowerCase())
+                }
             >
-                <StyledLink
-                    underline="always"
-                    highlighted={
-                        searchQuery.length > 0 &&
-                        payload.value
-                            .toLowerCase()
-                            .includes(searchQuery.toLowerCase())
-                    }
-                >
-                    {payload.type}
-                </StyledLink>
-            </HtmlTooltip>
+                {payload.type}
+            </TooltipLink>
         </TextCell>
     );
 };

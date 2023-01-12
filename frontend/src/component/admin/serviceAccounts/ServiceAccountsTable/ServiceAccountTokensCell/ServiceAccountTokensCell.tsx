@@ -1,20 +1,14 @@
 import { VFC } from 'react';
-import { Link, styled, Typography } from '@mui/material';
+import { styled, Typography } from '@mui/material';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
-import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { IServiceAccount } from 'interfaces/service-account';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
+import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 
 const StyledItem = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,
-}));
-
-const StyledLink = styled(Link, {
-    shouldForwardProp: prop => prop !== 'highlighted',
-})<{ highlighted?: boolean }>(({ theme, highlighted }) => ({
-    backgroundColor: highlighted ? theme.palette.highlight : 'transparent',
 }));
 
 interface IServiceAccountTokensCellProps {
@@ -35,8 +29,8 @@ export const ServiceAccountTokensCell: VFC<IServiceAccountTokensCellProps> = ({
 
     return (
         <TextCell>
-            <HtmlTooltip
-                title={
+            <TooltipLink
+                tooltip={
                     <>
                         {serviceAccount.tokens?.map(({ id, description }) => (
                             <StyledItem key={id}>
@@ -47,19 +41,15 @@ export const ServiceAccountTokensCell: VFC<IServiceAccountTokensCellProps> = ({
                         ))}
                     </>
                 }
+                highlighted={
+                    searchQuery.length > 0 &&
+                    value.toLowerCase().includes(searchQuery.toLowerCase())
+                }
             >
-                <StyledLink
-                    underline="always"
-                    highlighted={
-                        searchQuery.length > 0 &&
-                        value.toLowerCase().includes(searchQuery.toLowerCase())
-                    }
-                >
-                    {serviceAccount.tokens?.length === 1
-                        ? '1 token'
-                        : `${serviceAccount.tokens?.length} tokens`}
-                </StyledLink>
-            </HtmlTooltip>
+                {serviceAccount.tokens?.length === 1
+                    ? '1 token'
+                    : `${serviceAccount.tokens?.length} tokens`}
+            </TooltipLink>
         </TextCell>
     );
 };

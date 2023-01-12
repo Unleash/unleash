@@ -15,15 +15,32 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { Alert } from '@mui/material';
 import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';
 import { AUTH_PAGE_ID } from 'utils/testIds';
+import { useEffect } from 'react';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 interface IAuthenticationProps {
     redirect: string;
+    invited?: boolean;
 }
 
-const Authentication = ({ redirect }: IAuthenticationProps) => {
+const Authentication = ({
+    redirect,
+    invited = false,
+}: IAuthenticationProps) => {
     const { authDetails } = useAuthDetails();
     const params = useQueryParams();
     const error = params.get('errorMsg');
+    const { trackEvent } = usePlausibleTracker();
+
+    useEffect(() => {
+        if (invited) {
+            trackEvent('invite', {
+                props: {
+                    eventType: 'user created',
+                },
+            });
+        }
+    }, [invited, trackEvent]);
 
     if (!authDetails) {
         return null;

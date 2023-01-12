@@ -122,3 +122,5 @@ export * from './public-signup-token-update-schema';
 export * from './feature-environment-metrics-schema';
 export * from './requests-per-second-schema';
 export * from './requests-per-second-segmented-schema';
+export * from './export-result-schema';
+export * from './export-query-schema';

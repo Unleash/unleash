@@ -21,5 +21,4 @@ test('should enable prometheus', async () => {
         .expect(200);
     services.versionService.destroy();
     services.clientInstanceService.destroy();
-    services.apiTokenService.destroy();
 });

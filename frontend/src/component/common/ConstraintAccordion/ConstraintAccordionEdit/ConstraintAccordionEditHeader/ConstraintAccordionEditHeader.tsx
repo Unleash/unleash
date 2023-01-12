@@ -1,6 +1,5 @@
 import { IConstraint } from 'interfaces/strategy';
 
-import { useStyles } from 'component/common/ConstraintAccordion/ConstraintAccordion.styles';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { ConstraintIcon } from 'component/common/ConstraintAccordion/ConstraintIcon';
@@ -23,6 +22,7 @@ import {
 import { InvertedOperatorButton } from '../StyledToggleButton/InvertedOperatorButton/InvertedOperatorButton';
 import { CaseSensitiveButton } from '../StyledToggleButton/CaseSensitiveButton/CaseSensitiveButton';
 import { ConstraintAccordionHeaderActions } from '../../ConstraintAccordionHeaderActions/ConstraintAccordionHeaderActions';
+import { styled } from '@mui/material';
 
 interface IConstraintAccordionViewHeader {
     localConstraint: IConstraint;
@@ -36,6 +36,56 @@ interface IConstraintAccordionViewHeader {
     setCaseInsensitive: () => void;
 }
 
+const StyledHeaderContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    width: '100%',
+    [theme.breakpoints.down('sm')]: {
+        flexDirection: 'column',
+        alignItems: 'center',
+        position: 'relative',
+    },
+}));
+const StyledSelectContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    [theme.breakpoints.down(770)]: {
+        flexDirection: 'column',
+    },
+}));
+const StyledBottomSelect = styled('div')(({ theme }) => ({
+    [theme.breakpoints.down(770)]: {
+        marginTop: theme.spacing(2),
+    },
+    display: 'inline-flex',
+}));
+
+const StyledHeaderSelect = styled('div')(({ theme }) => ({
+    marginRight: theme.spacing(2),
+    width: '200px',
+    [theme.breakpoints.between(1101, 1365)]: {
+        width: '170px',
+        marginRight: theme.spacing(1),
+    },
+}));
+
+const StyledGeneralSelect = styled(GeneralSelect)(({ theme }) => ({
+    marginRight: theme.spacing(2),
+    width: '200px',
+    [theme.breakpoints.between(1101, 1365)]: {
+        width: '170px',
+        marginRight: theme.spacing(1),
+    },
+}));
+
+const StyledHeaderText = styled('p')(({ theme }) => ({
+    maxWidth: '400px',
+    fontSize: theme.fontSizes.smallBody,
+    [theme.breakpoints.down('xl')]: {
+        display: 'none',
+    },
+}));
+
 export const ConstraintAccordionEditHeader = ({
     compact,
     localConstraint,
@@ -46,7 +96,6 @@ export const ConstraintAccordionEditHeader = ({
     setInvertedOperator,
     setCaseInsensitive,
 }: IConstraintAccordionViewHeader) => {
-    const { classes: styles } = useStyles();
     const { context } = useUnleashContext();
     const { contextName, operator } = localConstraint;
     const [showCaseSensitiveButton, setShowCaseSensitiveButton] =
@@ -108,11 +157,11 @@ export const ConstraintAccordionEditHeader = ({
     };
 
     return (
-        <div className={styles.headerContainer}>
+        <StyledHeaderContainer>
             <ConstraintIcon />
-            <div className={styles.selectContainer}>
+            <StyledSelectContainer>
                 <div>
-                    <GeneralSelect
+                    <StyledGeneralSelect
                         id="context-field-select"
                         name="contextName"
                         label="Context Field"
@@ -120,21 +169,20 @@ export const ConstraintAccordionEditHeader = ({
                         options={constraintNameOptions}
                         value={contextName || ''}
                         onChange={setContextName}
-                        className={styles.headerSelect}
                     />
                 </div>
-                <div className={styles.bottomSelect}>
+                <StyledBottomSelect>
                     <InvertedOperatorButton
                         localConstraint={localConstraint}
                         setInvertedOperator={setInvertedOperator}
                     />
-                    <div className={styles.headerSelect}>
+                    <StyledHeaderSelect>
                         <ConstraintOperatorSelect
                             options={operatorsForContext(contextName)}
                             value={operator}
                             onChange={onOperatorChange}
                         />
-                    </div>
+                    </StyledHeaderSelect>
                     <ConditionallyRender
                         condition={showCaseSensitiveButton}
                         show={
@@ -144,17 +192,17 @@ export const ConstraintAccordionEditHeader = ({
                             />
                         }
                     />
-                </div>
-            </div>
+                </StyledBottomSelect>
+            </StyledSelectContainer>
             <ConditionallyRender
                 condition={!compact}
                 show={
-                    <p className={styles.headerText}>
+                    <StyledHeaderText>
                         {resolveText(operator, contextName)}
-                    </p>
+                    </StyledHeaderText>
                 }
             />
             <ConstraintAccordionHeaderActions onDelete={onDelete} disableEdit />
-        </div>
+        </StyledHeaderContainer>
     );
 };

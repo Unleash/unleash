@@ -40,6 +40,8 @@ import { InstanceStatsService } from './instance-stats-service';
 import { FavoritesService } from './favorites-service';
 import MaintenanceService from './maintenance-service';
 import ExportImportService from './export-import-service';
+import SchedulerService from './scheduler-service';
+import { minutesToMilliseconds } from 'date-fns';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -61,7 +63,6 @@ export const createServices = (
     const featureTypeService = new FeatureTypeService(stores, config);
     const resetTokenService = new ResetTokenService(stores, config);
     const stateService = new StateService(stores, config);
-    const exportImportService = new ExportImportService(stores, config);
     const strategyService = new StrategyService(stores, config);
     const tagService = new TagService(stores, config);
     const tagTypeService = new TagTypeService(stores, config);
@@ -85,6 +86,9 @@ export const createServices = (
         segmentService,
         accessService,
     );
+    const exportImportService = new ExportImportService(stores, config, {
+        featureToggleService: featureToggleServiceV2,
+    });
     const environmentService = new EnvironmentService(stores, config);
     const featureTagService = new FeatureTagService(stores, config);
     const favoritesService = new FavoritesService(stores, config);
@@ -137,6 +141,16 @@ export const createServices = (
         settingService,
     );
 
+    const schedulerService = new SchedulerService(config.getLogger);
+    schedulerService.schedule(
+        apiTokenService.fetchActiveTokens.bind(apiTokenService),
+        minutesToMilliseconds(1),
+    );
+
+    schedulerService.schedule(
+        apiTokenService.updateLastSeen.bind(apiTokenService),
+        minutesToMilliseconds(3),
+    );
     instanceStatsService.start();
 
     return {

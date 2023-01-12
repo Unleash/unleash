@@ -65,9 +65,9 @@ export const ServiceAccountsTable = () => {
             {
                 Header: 'Avatar',
                 accessor: 'imageUrl',
-                Cell: ({ row: { original: user } }: any) => (
+                Cell: ({ row: { original: serviceAccount } }: any) => (
                     <TextCell>
-                        <UserAvatar user={user} />
+                        <UserAvatar user={serviceAccount} />
                     </TextCell>
                 ),
                 disableSortBy: true,
@@ -78,8 +78,11 @@ export const ServiceAccountsTable = () => {
                 Header: 'Name',
                 accessor: (row: any) => row.name || '',
                 minWidth: 200,
-                Cell: ({ row: { original: user } }: any) => (
-                    <HighlightCell value={user.name} subtitle={user.username} />
+                Cell: ({ row: { original: serviceAccount } }: any) => (
+                    <HighlightCell
+                        value={serviceAccount.name}
+                        subtitle={serviceAccount.username}
+                    />
                 ),
                 searchable: true,
             },
@@ -98,7 +101,22 @@ export const ServiceAccountsTable = () => {
                     row.tokens
                         ?.map(({ description }) => description)
                         .join('\n') || '',
-                Cell: ServiceAccountTokensCell,
+                Cell: ({
+                    row: { original: serviceAccount },
+                    value,
+                }: {
+                    row: { original: IServiceAccount };
+                    value: string;
+                }) => (
+                    <ServiceAccountTokensCell
+                        serviceAccount={serviceAccount}
+                        value={value}
+                        onCreateToken={() => {
+                            setSelectedServiceAccount(serviceAccount);
+                            setModalOpen(true);
+                        }}
+                    />
+                ),
                 searchable: true,
             },
             {
@@ -126,14 +144,14 @@ export const ServiceAccountsTable = () => {
                 Header: 'Actions',
                 id: 'Actions',
                 align: 'center',
-                Cell: ({ row: { original: user } }: any) => (
+                Cell: ({ row: { original: serviceAccount } }: any) => (
                     <ServiceAccountsActionsCell
                         onEdit={() => {
-                            setSelectedServiceAccount(user);
+                            setSelectedServiceAccount(serviceAccount);
                             setModalOpen(true);
                         }}
                         onDelete={() => {
-                            setSelectedServiceAccount(user);
+                            setSelectedServiceAccount(serviceAccount);
                             setDeleteOpen(true);
                         }}
                     />

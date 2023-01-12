@@ -25,6 +25,13 @@ export const ServiceAccountDeleteDialog = ({
     setOpen,
     onConfirm,
 }: IServiceAccountDeleteDialogProps) => {
+    const deleteMessage = (
+        <>
+            You are about to delete service account:{' '}
+            <strong>{serviceAccount?.name}</strong>
+        </>
+    );
+
     return (
         <Dialogue
             title="Delete service account?"
@@ -36,15 +43,16 @@ export const ServiceAccountDeleteDialog = ({
                 setOpen(false);
             }}
         >
-            <Alert severity="error">
-                Deleting this service account may break any existing
-                implementations currently using it.
-            </Alert>
             <ConditionallyRender
                 condition={Boolean(serviceAccount?.tokens.length)}
                 show={
                     <>
-                        <StyledLabel>Service account tokens</StyledLabel>
+                        <Alert severity="error">
+                            Deleting this service account may break any existing
+                            implementations currently using it.
+                        </Alert>
+                        <StyledLabel>{deleteMessage}</StyledLabel>
+                        <StyledLabel>Service account tokens:</StyledLabel>
                         <StyledTableContainer>
                             <ServiceAccountTokens
                                 serviceAccount={serviceAccount!}
@@ -53,11 +61,8 @@ export const ServiceAccountDeleteDialog = ({
                         </StyledTableContainer>
                     </>
                 }
+                elseShow={<p>{deleteMessage}</p>}
             />
-            <StyledLabel>
-                You are about to delete service account:{' '}
-                <strong>{serviceAccount?.name}</strong>
-            </StyledLabel>
         </Dialogue>
     );
 };

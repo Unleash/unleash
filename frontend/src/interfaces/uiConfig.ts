@@ -30,7 +30,6 @@ export interface IProclamationToast {
 
 export interface IFlags {
     P: boolean;
-    E: boolean;
     RE: boolean;
     EEA?: boolean;
     SE?: boolean;
@@ -42,8 +41,10 @@ export interface IFlags {
     variantsPerEnvironment?: boolean;
     networkView?: boolean;
     maintenance?: boolean;
+    maintenanceMode?: boolean;
     messageBanner?: boolean;
     serviceAccounts?: boolean;
+    featuresExportImport?: boolean;
 }
 
 export interface IVersionInfo {

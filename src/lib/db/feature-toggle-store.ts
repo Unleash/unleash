@@ -102,6 +102,15 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         return rows.map(this.rowToFeature);
     }
 
+    async getAllByNames(names: string[]): Promise<FeatureToggle[]> {
+        const query = this.db<FeaturesTable>(TABLE);
+        if (names.length > 0) {
+            query.whereIn('name', names);
+        }
+        const rows = await query;
+        return rows.map(this.rowToFeature);
+    }
+
     /**
      * Get projectId from feature filtered by name. Used by Rbac middleware
      * @deprecated

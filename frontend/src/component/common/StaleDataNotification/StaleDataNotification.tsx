@@ -1,7 +1,11 @@
 import { Typography, Button, useTheme, useMediaQuery } from '@mui/material';
 import EventDiff from 'component/events/EventDiff/EventDiff';
-import { useThemeStyles } from 'themes/themeStyles';
+import {
+    fadeInBottomEnter,
+    fadeInBottomStartWithoutFixed,
+} from 'themes/themeStyles';
 import AnimateOnMount from 'component/common/AnimateOnMount/AnimateOnMount';
+import { useMemo } from 'react';
 
 interface IStaleDataNotification {
     refresh: () => void;
@@ -18,12 +22,12 @@ export const StaleDataNotification = ({
     data,
     cache,
 }: IStaleDataNotification) => {
-    const { classes: themeStyles } = useThemeStyles();
     const theme = useTheme();
     const isExtraSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
-    const getStyles = () => {
+    const style = useMemo(() => {
         const base = {
+            ...fadeInBottomStartWithoutFixed,
             padding: `${theme.spacing(3)} ${theme.spacing(4)}`,
             boxShadow: theme.boxShadows.elevated,
             borderRadius: theme.shape.borderRadiusLarge,
@@ -41,15 +45,10 @@ export const StaleDataNotification = ({
             };
         }
         return base;
-    };
+    }, [theme, isExtraSmallScreen]);
 
     return (
-        <AnimateOnMount
-            mounted={show}
-            start={themeStyles.fadeInBottomStartWithoutFixed}
-            enter={themeStyles.fadeInBottomEnter}
-            style={getStyles()}
-        >
+        <AnimateOnMount mounted={show} start={style} enter={fadeInBottomEnter}>
             <Typography variant="h5" sx={{ my: 2, mb: 2 }}>
                 Your data is stale
             </Typography>

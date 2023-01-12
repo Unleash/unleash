@@ -1,5 +1,11 @@
 import { useCallback, useEffect, useMemo, useState, VFC } from 'react';
-import { Link, useMediaQuery, useTheme } from '@mui/material';
+import {
+    IconButton,
+    Link,
+    Tooltip,
+    useMediaQuery,
+    useTheme,
+} from '@mui/material';
 import { Link as RouterLink, useSearchParams } from 'react-router-dom';
 import { SortingRule, useFlexLayout, useSortBy, useTable } from 'react-table';
 import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
@@ -24,9 +30,14 @@ import { usePinnedFavorites } from 'hooks/usePinnedFavorites';
 import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';
 import { FavoriteIconCell } from 'component/common/Table/cells/FavoriteIconCell/FavoriteIconCell';
 import { FavoriteIconHeader } from 'component/common/Table/FavoriteIconHeader/FavoriteIconHeader';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useGlobalLocalStorage } from 'hooks/useGlobalLocalStorage';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
+import FileDownload from '@mui/icons-material/FileDownload';
+import { Dialogue } from 'component/common/Dialogue/Dialogue';
+import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
+import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
+import { ExportDialog } from './ExportDialog';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 export const featuresPlaceholder: FeatureSchema[] = Array(15).fill({
     name: 'Name of the feature',
@@ -49,10 +60,13 @@ const { value: storedParams, setValue: setStoredParams } = createLocalStorage(
 
 export const FeatureToggleListTable: VFC = () => {
     const theme = useTheme();
+    const { environments } = useEnvironments();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const isMediumScreen = useMediaQuery(theme.breakpoints.down('lg'));
+    const [showExportDialog, setShowExportDialog] = useState(false);
     const { features = [], loading, refetchFeatures } = useFeatures();
     const [searchParams, setSearchParams] = useSearchParams();
+    const { uiConfig } = useUiConfig();
     const [initialState] = useState(() => ({
         sortBy: [
             {
@@ -75,7 +89,6 @@ export const FeatureToggleListTable: VFC = () => {
         );
     const [searchValue, setSearchValue] = useState(initialState.globalFilter);
     const { favorite, unfavorite } = useFavoriteFeaturesApi();
-    const { uiConfig } = useUiConfig();
     const onFavorite = useCallback(
         async (feature: any) => {
             if (feature?.favorite) {
@@ -258,6 +271,10 @@ export const FeatureToggleListTable: VFC = () => {
         }));
     }, [sortBy, searchValue, setSearchParams, isFavoritesPinned]);
 
+    if (!(environments.length > 0)) {
+        return null;
+    }
+
     return (
         <PageContent
             isLoading={loading}
@@ -292,6 +309,29 @@ export const FeatureToggleListTable: VFC = () => {
                             >
                                 View archive
                             </Link>
+                            <ConditionallyRender
+                                condition={Boolean(
+                                    uiConfig?.flags?.featuresExportImport
+                                )}
+                                show={
+                                    <Tooltip
+                                        title="Export current selection"
+                                        arrow
+                                    >
+                                        <IconButton
+                                            onClick={() =>
+                                                setShowExportDialog(true)
+                                            }
+                                            sx={theme => ({
+                                                marginRight: theme.spacing(2),
+                                            })}
+                                        >
+                                            <FileDownload />
+                                        </IconButton>
+                                    </Tooltip>
+                                }
+                            />
+
                             <CreateFeatureButton
                                 loading={false}
                                 filter={{ query: '', project: 'default' }}
@@ -338,6 +378,17 @@ export const FeatureToggleListTable: VFC = () => {
                                 adding a new feature toggle.
                             </TablePlaceholder>
                         }
+                    />
+                }
+            />
+            <ConditionallyRender
+                condition={Boolean(uiConfig?.flags?.featuresExportImport)}
+                show={
+                    <ExportDialog
+                        showExportDialog={showExportDialog}
+                        data={data}
+                        onClose={() => setShowExportDialog(false)}
+                        environments={environments}
                     />
                 }
             />

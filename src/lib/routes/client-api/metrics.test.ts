@@ -20,7 +20,6 @@ async function getSetup(opts?: IUnleashOptions) {
         destroy: () => {
             services.versionService.destroy();
             services.clientInstanceService.destroy();
-            services.apiTokenService.destroy();
         },
     };
 }

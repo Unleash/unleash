@@ -3,12 +3,11 @@ import { useTheme } from '@mui/material';
 import {
     SortableTableHeader,
     Table,
-    TableCell,
     TableBody,
     TableRow,
+    TableCell,
 } from 'component/common/Table';
 import { useVirtualizedRange } from 'hooks/useVirtualizedRange';
-import { useStyles } from './VirtualizedTable.styles';
 import { HeaderGroup, Row } from 'react-table';
 
 interface IVirtualizedTableProps {
@@ -34,7 +33,6 @@ export const VirtualizedTable: VFC<IVirtualizedTableProps> = ({
     rows,
     prepareRow,
 }) => {
-    const { classes } = useStyles();
     const theme = useTheme();
     const rowHeight = useMemo(
         () => rowHeightOverride || theme.shape.tableRowHeight,
@@ -56,7 +54,28 @@ export const VirtualizedTable: VFC<IVirtualizedTableProps> = ({
             style={{ height: tableHeight }}
         >
             <SortableTableHeader headerGroups={headerGroups} flex />
-            <TableBody role="rowgroup">
+            <TableBody
+                role="rowgroup"
+                sx={{
+                    '& tr': {
+                        position: 'absolute',
+                        width: '100%',
+                        '&:hover': {
+                            '.show-row-hover': {
+                                opacity: 1,
+                            },
+                        },
+                    },
+                    '& tr td': {
+                        alignItems: 'center',
+                        display: 'flex',
+                        flexShrink: 0,
+                        '& > *': {
+                            flexGrow: 1,
+                        },
+                    },
+                }}
+            >
                 {rows.map((row, index) => {
                     const top =
                         index * rowHeight + theme.shape.tableRowHeightCompact;
@@ -73,10 +92,10 @@ export const VirtualizedTable: VFC<IVirtualizedTableProps> = ({
                     return (
                         <TableRow
                             hover
-                            {...row.getRowProps()}
+                            {...row.getRowProps({
+                                style: { display: 'flex', top },
+                            })}
                             key={row.id}
-                            className={classes.row}
-                            style={{ display: 'flex', top }}
                         >
                             {row.cells.map(cell => (
                                 <TableCell
@@ -87,7 +106,6 @@ export const VirtualizedTable: VFC<IVirtualizedTableProps> = ({
                                                 : undefined,
                                         },
                                     })}
-                                    className={classes.cell}
                                 >
                                     {cell.render('Cell')}
                                 </TableCell>

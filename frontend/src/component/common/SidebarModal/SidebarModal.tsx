@@ -29,6 +29,13 @@ const FixedWidthContentWrapper = styled(ModalContentWrapper)({
     width: 1300,
 });
 
+const StyledIconButton = styled(IconButton)(({ theme }) => ({
+    zIndex: 1,
+    position: 'absolute',
+    top: theme.spacing(3),
+    right: theme.spacing(3),
+}));
+
 export const BaseModal: FC<ISidebarModalProps> = ({
     open,
     onClose,
@@ -67,16 +74,9 @@ export const DynamicSidebarModal: FC<ISidebarModalProps> = props => {
         <BaseModal {...props}>
             <ModalContentWrapper>
                 <Tooltip title="Close" arrow describeChild>
-                    <IconButton
-                        sx={theme => ({
-                            position: 'absolute',
-                            top: theme.spacing(3),
-                            right: theme.spacing(3),
-                        })}
-                        onClick={props.onClose}
-                    >
+                    <StyledIconButton onClick={props.onClose}>
                         <CloseIcon />
-                    </IconButton>
+                    </StyledIconButton>
                 </Tooltip>
                 {props.children}
             </ModalContentWrapper>

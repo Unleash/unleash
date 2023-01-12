@@ -1,11 +1,16 @@
-import { makeStyles } from 'tss-react/mui';
+import { styled, TableCell } from '@mui/material';
 
-export const useStyles = makeStyles()(theme => ({
-    header: {
-        position: 'relative',
-        fontWeight: theme.fontWeight.medium,
-    },
-    flex: {
+export const StyledTableCell = styled(TableCell, {
+    shouldForwardProp: prop =>
+        prop !== 'isFlex' && prop !== 'isSortable' && prop !== 'isFlexGrow',
+})<{
+    isFlex?: boolean;
+    isSortable?: boolean;
+    isFlexGrow?: boolean;
+}>(({ theme, isFlex, isSortable, isFlexGrow }) => ({
+    position: 'relative',
+    fontWeight: theme.typography.fontWeightRegular,
+    ...(isFlex && {
         justifyContent: 'stretch',
         alignItems: 'center',
         display: 'flex',
@@ -13,11 +18,8 @@ export const useStyles = makeStyles()(theme => ({
         '& > *': {
             flexGrow: 1,
         },
-    },
-    flexGrow: {
-        flexGrow: 1,
-    },
-    sortable: {
+    }),
+    ...(isSortable && {
         padding: 0,
         '&:hover, &:focus': {
             backgroundColor: theme.palette.tableHeaderHover,
@@ -25,75 +27,72 @@ export const useStyles = makeStyles()(theme => ({
                 color: 'inherit',
             },
         },
-    },
-    sortButton: {
-        all: 'unset',
-        whiteSpace: 'nowrap',
-        width: '100%',
-        position: 'relative',
-        zIndex: 1,
-        ':hover, :focus, &:focus-visible, &:active': {
-            outline: 'revert',
-            '.hover-only': {
-                display: 'inline-block',
-            },
-        },
-        display: 'flex',
-        boxSizing: 'inherit',
-        cursor: 'pointer',
-    },
-    sortedButton: {
-        fontWeight: theme.fontWeight.bold,
-    },
-    label: {
-        display: 'flex',
-        flexDirection: 'column',
-        flexShrink: 1,
-        minWidth: 0,
-        '::after': {
-            fontWeight: 'bold',
-            display: 'inline-block',
-            height: 0,
-            content: 'attr(data-text)',
-            visibility: 'hidden',
-            overflow: 'hidden',
-        },
-    },
-    alignLeft: {
-        justifyContent: 'flex-start',
-        textAlign: 'left',
-    },
-    alignRight: {
-        justifyContent: 'flex-end',
-        textAlign: 'right',
-    },
-    alignCenter: {
-        justifyContent: 'center',
-        textAlign: 'center',
-    },
-    hiddenMeasurementLayer: {
-        padding: theme.spacing(2),
-        visibility: 'hidden',
-        display: 'flex',
-        alignItems: 'center',
-        width: '100%',
-    },
-    visibleAbsoluteLayer: {
-        padding: theme.spacing(2),
-        position: 'absolute',
-        display: 'flex',
-        alignItems: 'center',
-        width: '100%',
-        height: '100%',
+    }),
+    ...(isFlexGrow && {
+        flexGrow: 1,
+    }),
+}));
+
+export const StyledButton = styled('button', {
+    shouldForwardProp: prop => prop !== 'isSorted',
+})<{ isSorted?: boolean }>(({ theme, isSorted }) => ({
+    all: 'unset',
+    whiteSpace: 'nowrap',
+    width: '100%',
+    position: 'relative',
+    zIndex: 1,
+    ':hover, :focus, &:focus-visible, &:active': {
+        outline: 'revert',
         '.hover-only': {
-            display: 'none',
+            display: 'inline-block',
         },
-        '& > span': {
-            minWidth: 0,
-            whiteSpace: 'nowrap',
-            textOverflow: 'ellipsis',
-            overflowX: 'hidden',
-            overflowY: 'visible',
-        },
+    },
+    display: 'flex',
+    boxSizing: 'inherit',
+    cursor: 'pointer',
+    ...(isSorted && {
+        fontWeight: theme.typography.fontWeightBold,
+    }),
+}));
+
+export const StyledLabel = styled('span')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    flexShrink: 1,
+    minWidth: 0,
+    '::after': {
+        fontWeight: 'bold',
+        display: 'inline-block',
+        height: 0,
+        content: 'attr(data-text)',
+        visibility: 'hidden',
+        overflow: 'hidden',
+    },
+}));
+
+export const StyledHiddenMeasurementLayer = styled('span')(({ theme }) => ({
+    padding: theme.spacing(2),
+    visibility: 'hidden',
+    display: 'flex',
+    alignItems: 'center',
+    width: '100%',
+}));
+
+export const StyledVisibleAbsoluteLayer = styled('span')(({ theme }) => ({
+    padding: theme.spacing(2),
+    position: 'absolute',
+    display: 'flex',
+    alignItems: 'center',
+    width: '100%',
+    height: '100%',
+    '.hover-only': {
+        display: 'none',
+    },
+    '& > span': {
+        minWidth: 0,
+        whiteSpace: 'nowrap',
+        textOverflow: 'ellipsis',
+        overflowX: 'hidden',
+        overflowY: 'visible',
     },
 }));

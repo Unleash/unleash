@@ -1,13 +1,11 @@
-import React, { useEffect, useState, useRef, FC } from 'react';
+import React, { CSSProperties, useEffect, useState, useRef, FC } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface IAnimateOnMountProps {
     mounted: boolean;
-    enter: string;
-    start: string;
-    leave?: string;
-    container?: string;
-    style?: React.CSSProperties;
+    enter: CSSProperties;
+    start: CSSProperties;
+    leave?: CSSProperties;
     onStart?: () => void;
     onEnd?: () => void;
 }
@@ -17,14 +15,12 @@ const AnimateOnMount: FC<IAnimateOnMountProps> = ({
     enter,
     start,
     leave,
-    container,
     children,
-    style,
     onStart,
     onEnd,
 }) => {
     const [show, setShow] = useState(mounted);
-    const [styles, setStyles] = useState('');
+    const [styles, setStyles] = useState<CSSProperties>({});
     const mountedRef = useRef<null | boolean>(null);
 
     useEffect(() => {
@@ -39,7 +35,7 @@ const AnimateOnMount: FC<IAnimateOnMountProps> = ({
                 if (!leave) {
                     setShow(false);
                 }
-                setStyles(leave || '');
+                setStyles(leave || {});
             }
         }
     }, [mounted, enter, onStart, leave]);
@@ -56,11 +52,8 @@ const AnimateOnMount: FC<IAnimateOnMountProps> = ({
             condition={show}
             show={
                 <div
-                    className={`${start} ${styles} ${
-                        container ? container : ''
-                    }`}
                     onTransitionEnd={onTransitionEnd}
-                    style={{ ...style }}
+                    style={{ ...start, ...styles }}
                 >
                     {children}
                 </div>

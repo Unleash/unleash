@@ -15,11 +15,11 @@ import { routes } from 'component/menu/routes';
 import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import { SplashPageRedirect } from 'component/splash/SplashPageRedirect/SplashPageRedirect';
-import { useStyles } from './App.styles';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useProjects from '../hooks/api/getters/useProjects/useProjects';
 import { useLastViewedProject } from '../hooks/useLastViewedProject';
 import MaintenanceBanner from './maintenance/MaintenanceBanner';
+import { styled } from '@mui/material';
 
 const InitialRedirect = () => {
     const { lastViewed } = useLastViewedProject();
@@ -52,12 +52,17 @@ const InitialRedirect = () => {
     return <Navigate to={redirectTo} />;
 };
 
+const StyledContainer = styled('div')(() => ({
+    '& ul': {
+        margin: 0,
+    },
+}));
+
 export const App = () => {
     const { authDetails } = useAuthDetails();
     const { user } = useAuthUser();
     const hasFetchedAuth = Boolean(authDetails || user);
 
-    const { classes: styles } = useStyles();
     const { isOss, uiConfig } = useUiConfig();
 
     const availableRoutes = isOss()
@@ -83,7 +88,7 @@ export const App = () => {
                                         }
                                         show={<MaintenanceBanner />}
                                     />
-                                    <div className={styles.container}>
+                                    <StyledContainer>
                                         <ToastRenderer />
                                         <Routes>
                                             {availableRoutes.map(route => (
@@ -115,7 +120,7 @@ export const App = () => {
                                         </Routes>
                                         <FeedbackNPS openUrl="http://feedback.unleash.run" />
                                         <SplashPageRedirect />
-                                    </div>
+                                    </StyledContainer>
                                 </>
                             }
                         />

@@ -61,7 +61,7 @@ const Login = () => {
                         </StyledHeader>
                     }
                 />
-                <Authentication redirect={redirect} />
+                <Authentication redirect={redirect} invited={invited} />
             </StyledDiv>
         </StandaloneLayout>
     );

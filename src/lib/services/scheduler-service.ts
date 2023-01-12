@@ -9,7 +9,10 @@ export default class SchedulerService {
         this.logger = getLogger('/services/scheduler-service.ts');
     }
 
-    schedule(scheduledFunction: () => void, timeMs: number): void {
+    async schedule(
+        scheduledFunction: () => void,
+        timeMs: number,
+    ): Promise<void> {
         this.intervalIds.push(
             setInterval(async () => {
                 try {
@@ -19,6 +22,11 @@ export default class SchedulerService {
                 }
             }, timeMs).unref(),
         );
+        try {
+            await scheduledFunction();
+        } catch (e) {
+            this.logger.error('scheduled job failed', e);
+        }
     }
 
     stop(): void {

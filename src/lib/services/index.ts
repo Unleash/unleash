@@ -152,6 +152,11 @@ export const createServices = (
         minutesToMilliseconds(3),
     );
 
+    schedulerService.schedule(
+        instanceStatsService.refreshStatsSnapshot.bind(instanceStatsService),
+        minutesToMilliseconds(5),
+    );
+
     return {
         accessService,
         addonService,

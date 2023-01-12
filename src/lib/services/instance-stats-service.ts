@@ -66,6 +66,10 @@ export class InstanceStatsService {
 
     private clientInstanceStore: IClientInstanceStore;
 
+    private snapshot?: InstanceStats;
+
+    private appCount?: Partial<{ [key in TimeRange]: number }>;
+
     constructor(
         {
             featureToggleStore,
@@ -111,7 +115,23 @@ export class InstanceStatsService {
         this.logger = getLogger('services/stats-service.js');
     }
 
-    async getToggleCount(): Promise<number> {
+    async refreshStatsSnapshot(): Promise<void> {
+        try {
+            this.snapshot = await this.getStats();
+            const appCountReplacement = {};
+            this.snapshot.clientApps?.forEach((appCount) => {
+                appCountReplacement[appCount.range] = appCount.count;
+            });
+            this.appCount = appCountReplacement;
+        } catch (error) {
+            this.logger.warn(
+                'Unable to retrieve statistics. This will be retried',
+                error,
+            );
+        }
+    }
+
+    getToggleCount(): Promise<number> {
         return this.featureToggleStore.count({
             archived: false,
         });
@@ -133,9 +153,11 @@ export class InstanceStatsService {
         return settings?.enabled || false;
     }
 
+    /**
+     * use getStatsSnapshot for low latency, sacrificing data-freshness
+     */
     async getStats(): Promise<InstanceStats> {
         const versionInfo = this.versionService.getVersionInfo();
-
         const [
             featureToggles,
             users,
@@ -184,6 +206,10 @@ export class InstanceStatsService {
         };
     }
 
+    getStatsSnapshot(): InstanceStats | undefined {
+        return this.snapshot;
+    }
+
     async getLabeledAppCounts(): Promise<
         { range: TimeRange; count: number }[]
     > {
@@ -205,6 +231,10 @@ export class InstanceStatsService {
                 ),
             },
         ];
+    }
+
+    getAppCountSnapshot(range: TimeRange): number | undefined {
+        return this.appCount?.[range];
     }
 
     async getSignedStats(): Promise<InstanceStatsSigned> {

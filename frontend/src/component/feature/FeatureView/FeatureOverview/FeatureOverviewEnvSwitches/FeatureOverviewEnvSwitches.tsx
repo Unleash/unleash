@@ -6,7 +6,6 @@ import FeatureOverviewEnvSwitch from './FeatureOverviewEnvSwitch/FeatureOverview
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { styled } from '@mui/material';
-import { IFeatureToggle } from '../../../../../interfaces/featureToggle';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,

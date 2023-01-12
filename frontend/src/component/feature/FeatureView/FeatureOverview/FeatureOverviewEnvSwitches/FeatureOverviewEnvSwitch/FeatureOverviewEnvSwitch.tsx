@@ -25,9 +25,10 @@ interface IFeatureOverviewEnvSwitchProps {
     setHiddenEnvironments: (environment: string) => void;
 }
 
-const StyledContainer = styled('div')(({ theme }) => ({
+const StyledContainer = styled('div')({
     display: 'flex',
-}));
+    alignItems: 'center',
+});
 
 const StyledLabel = styled('label')({
     display: 'inline-flex',

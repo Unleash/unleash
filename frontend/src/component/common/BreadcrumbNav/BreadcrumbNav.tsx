@@ -6,9 +6,9 @@ import { useContext } from 'react';
 import StringTruncator from '../StringTruncator/StringTruncator';
 import { styled } from '@mui/material';
 
-const StyledBreadCrumbs = styled(Breadcrumbs)(({ theme }) => ({
-    position: 'absolute',
-    top: theme.spacing(0.25),
+const StyledBreadcrumbContainer = styled('div')(({ theme }) => ({
+    height: theme.spacing(2.5),
+    margin: theme.spacing(2, 0),
 }));
 
 const StyledParagraph = styled('p')({
@@ -50,55 +50,57 @@ const BreadcrumbNav = () => {
         );
 
     return (
-        <ConditionallyRender
-            condition={
-                (location.pathname.includes('admin') && isAdmin) ||
-                !location.pathname.includes('admin')
-            }
-            show={
-                <ConditionallyRender
-                    condition={paths.length > 1}
-                    show={
-                        <StyledBreadCrumbs aria-label="Breadcrumbs">
-                            {paths.map((path, index) => {
-                                const lastItem = index === paths.length - 1;
-                                if (lastItem) {
+        <StyledBreadcrumbContainer>
+            <ConditionallyRender
+                condition={
+                    (location.pathname.includes('admin') && isAdmin) ||
+                    !location.pathname.includes('admin')
+                }
+                show={
+                    <ConditionallyRender
+                        condition={paths.length > 1}
+                        show={
+                            <Breadcrumbs aria-label="Breadcrumbs">
+                                {paths.map((path, index) => {
+                                    const lastItem = index === paths.length - 1;
+                                    if (lastItem) {
+                                        return (
+                                            <StyledParagraph key={path}>
+                                                <StringTruncator
+                                                    text={path}
+                                                    maxWidth="200"
+                                                    maxLength={25}
+                                                />
+                                            </StyledParagraph>
+                                        );
+                                    }
+
+                                    let link = '/';
+
+                                    paths.forEach((path, i) => {
+                                        if (i !== index && i < index) {
+                                            link += path + '/';
+                                        } else if (i === index) {
+                                            link += path;
+                                        }
+                                    });
+
                                     return (
-                                        <StyledParagraph key={path}>
+                                        <StyledLink key={path} to={link}>
                                             <StringTruncator
+                                                maxLength={25}
                                                 text={path}
                                                 maxWidth="200"
-                                                maxLength={25}
                                             />
-                                        </StyledParagraph>
+                                        </StyledLink>
                                     );
-                                }
-
-                                let link = '/';
-
-                                paths.forEach((path, i) => {
-                                    if (i !== index && i < index) {
-                                        link += path + '/';
-                                    } else if (i === index) {
-                                        link += path;
-                                    }
-                                });
-
-                                return (
-                                    <StyledLink key={path} to={link}>
-                                        <StringTruncator
-                                            maxLength={25}
-                                            text={path}
-                                            maxWidth="200"
-                                        />
-                                    </StyledLink>
-                                );
-                            })}
-                        </StyledBreadCrumbs>
-                    }
-                />
-            }
-        />
+                                })}
+                            </Breadcrumbs>
+                        }
+                    />
+                }
+            />
+        </StyledBreadcrumbContainer>
     );
 };
 

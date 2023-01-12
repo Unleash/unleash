@@ -44,6 +44,7 @@ export const BaseModal: FC<ISidebarModalProps> = ({
             BackdropComponent={Backdrop}
             BackdropProps={{ timeout: TRANSITION_DURATION }}
             data-testid={SIDEBAR_MODAL_ID}
+            sx={{ minHeight: '100vh' }}
         >
             <Fade timeout={TRANSITION_DURATION} in={open}>
                 {children}

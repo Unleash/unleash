@@ -121,7 +121,7 @@ export class InstanceStatsService {
     async refreshStatsSnapshot(): Promise<void> {
         try {
             this.snapshot = await this.getStats();
-            let appCountReplacement = {};
+            const appCountReplacement = {};
             this.snapshot.clientApps?.forEach((appCount) => {
                 appCountReplacement[appCount.range] = appCount.count;
             });

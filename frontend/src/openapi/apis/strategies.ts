@@ -25,7 +25,7 @@ import type { ErrorType, BodyType } from '../fetcher';
  */
 export const validateSegment = (nameSchema: BodyType<NameSchema>) => {
     return fetcher<void>({
-        url: `/demo2/api/admin/segments/validate`,
+        url: `/api/admin/segments/validate`,
         method: 'post',
         headers: { 'Content-Type': 'application/json' },
         data: nameSchema,
@@ -34,13 +34,13 @@ export const validateSegment = (nameSchema: BodyType<NameSchema>) => {
 
 export const getSegmentsByStrategyId = (strategyId: string) => {
     return fetcher<SegmentsSchema>({
-        url: `/demo2/api/admin/segments/strategies/${strategyId}`,
+        url: `/api/admin/segments/strategies/${strategyId}`,
         method: 'get',
     });
 };
 
 export const getGetSegmentsByStrategyIdKey = (strategyId: string) => [
-    `/demo2/api/admin/segments/strategies/${strategyId}`,
+    `/api/admin/segments/strategies/${strategyId}`,
 ];
 
 export type GetSegmentsByStrategyIdQueryResult = NonNullable<
@@ -85,7 +85,7 @@ export const updateFeatureStrategySegments = (
     updateFeatureStrategySegmentsSchema: BodyType<UpdateFeatureStrategySegmentsSchema>
 ) => {
     return fetcher<UpdateFeatureStrategySegmentsSchema>({
-        url: `/demo2/api/admin/segments/strategies`,
+        url: `/api/admin/segments/strategies`,
         method: 'post',
         headers: { 'Content-Type': 'application/json' },
         data: updateFeatureStrategySegmentsSchema,
@@ -94,13 +94,13 @@ export const updateFeatureStrategySegments = (
 
 export const getStrategiesBySegmentId = (id: string) => {
     return fetcher<SegmentsSchema>({
-        url: `/demo2/api/admin/segments/${id}/strategies`,
+        url: `/api/admin/segments/${id}/strategies`,
         method: 'get',
     });
 };
 
 export const getGetStrategiesBySegmentIdKey = (id: string) => [
-    `/demo2/api/admin/segments/${id}/strategies`,
+    `/api/admin/segments/${id}/strategies`,
 ];
 
 export type GetStrategiesBySegmentIdQueryResult = NonNullable<
@@ -143,7 +143,7 @@ export const useGetStrategiesBySegmentId = <TError = ErrorType<unknown>>(
  */
 export const removeSegment = (id: string) => {
     return fetcher<void>({
-        url: `/demo2/api/admin/segments/${id}`,
+        url: `/api/admin/segments/${id}`,
         method: 'delete',
     });
 };
@@ -154,7 +154,7 @@ export const removeSegment = (id: string) => {
  */
 export const updateSegment = (id: string) => {
     return fetcher<void>({
-        url: `/demo2/api/admin/segments/${id}`,
+        url: `/api/admin/segments/${id}`,
         method: 'put',
     });
 };
@@ -164,14 +164,12 @@ export const updateSegment = (id: string) => {
  */
 export const getSegment = (id: string) => {
     return fetcher<AdminSegmentSchema>({
-        url: `/demo2/api/admin/segments/${id}`,
+        url: `/api/admin/segments/${id}`,
         method: 'get',
     });
 };
 
-export const getGetSegmentKey = (id: string) => [
-    `/demo2/api/admin/segments/${id}`,
-];
+export const getGetSegmentKey = (id: string) => [`/api/admin/segments/${id}`];
 
 export type GetSegmentQueryResult = NonNullable<
     Awaited<ReturnType<typeof getSegment>>
@@ -214,7 +212,7 @@ export const createSegment = (
     upsertSegmentSchema: BodyType<UpsertSegmentSchema>
 ) => {
     return fetcher<AdminSegmentSchema>({
-        url: `/demo2/api/admin/segments`,
+        url: `/api/admin/segments`,
         method: 'post',
         headers: { 'Content-Type': 'application/json' },
         data: upsertSegmentSchema,
@@ -226,12 +224,12 @@ export const createSegment = (
  */
 export const getSegments = () => {
     return fetcher<SegmentsSchema>({
-        url: `/demo2/api/admin/segments`,
+        url: `/api/admin/segments`,
         method: 'get',
     });
 };
 
-export const getGetSegmentsKey = () => [`/demo2/api/admin/segments`];
+export const getGetSegmentsKey = () => [`/api/admin/segments`];
 
 export type GetSegmentsQueryResult = NonNullable<
     Awaited<ReturnType<typeof getSegments>>
@@ -265,12 +263,12 @@ export const useGetSegments = <TError = ErrorType<unknown>>(options?: {
 
 export const getAllStrategies = () => {
     return fetcher<StrategiesSchema>({
-        url: `/demo2/api/admin/strategies`,
+        url: `/api/admin/strategies`,
         method: 'get',
     });
 };
 
-export const getGetAllStrategiesKey = () => [`/demo2/api/admin/strategies`];
+export const getGetAllStrategiesKey = () => [`/api/admin/strategies`];
 
 export type GetAllStrategiesQueryResult = NonNullable<
     Awaited<ReturnType<typeof getAllStrategies>>
@@ -307,7 +305,7 @@ export const createStrategy = (
     upsertStrategySchema: BodyType<UpsertStrategySchema>
 ) => {
     return fetcher<StrategySchema>({
-        url: `/demo2/api/admin/strategies`,
+        url: `/api/admin/strategies`,
         method: 'post',
         headers: { 'Content-Type': 'application/json' },
         data: upsertStrategySchema,
@@ -316,13 +314,13 @@ export const createStrategy = (
 
 export const getStrategy = (name: string) => {
     return fetcher<StrategySchema>({
-        url: `/demo2/api/admin/strategies/${name}`,
+        url: `/api/admin/strategies/${name}`,
         method: 'get',
     });
 };
 
 export const getGetStrategyKey = (name: string) => [
-    `/demo2/api/admin/strategies/${name}`,
+    `/api/admin/strategies/${name}`,
 ];
 
 export type GetStrategyQueryResult = NonNullable<
@@ -361,7 +359,7 @@ export const useGetStrategy = <TError = ErrorType<unknown>>(
 
 export const removeStrategy = (name: string) => {
     return fetcher<void>({
-        url: `/demo2/api/admin/strategies/${name}`,
+        url: `/api/admin/strategies/${name}`,
         method: 'delete',
     });
 };
@@ -371,7 +369,7 @@ export const updateStrategy = (
     upsertStrategySchema: BodyType<UpsertStrategySchema>
 ) => {
     return fetcher<void>({
-        url: `/demo2/api/admin/strategies/${strategyName}`,
+        url: `/api/admin/strategies/${strategyName}`,
         method: 'put',
         headers: { 'Content-Type': 'application/json' },
         data: upsertStrategySchema,
@@ -380,14 +378,14 @@ export const updateStrategy = (
 
 export const deprecateStrategy = (strategyName: string) => {
     return fetcher<void>({
-        url: `/demo2/api/admin/strategies/${strategyName}/deprecate`,
+        url: `/api/admin/strategies/${strategyName}/deprecate`,
         method: 'post',
     });
 };
 
 export const reactivateStrategy = (strategyName: string) => {
     return fetcher<void>({
-        url: `/demo2/api/admin/strategies/${strategyName}/reactivate`,
+        url: `/api/admin/strategies/${strategyName}/reactivate`,
         method: 'post',
     });
 };

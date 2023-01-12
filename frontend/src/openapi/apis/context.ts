@@ -17,12 +17,12 @@ import type { ErrorType, BodyType } from '../fetcher';
 
 export const getContextFields = () => {
     return fetcher<ContextFieldsSchema>({
-        url: `/demo2/api/admin/context`,
+        url: `/api/admin/context`,
         method: 'get',
     });
 };
 
-export const getGetContextFieldsKey = () => [`/demo2/api/admin/context`];
+export const getGetContextFieldsKey = () => [`/api/admin/context`];
 
 export type GetContextFieldsQueryResult = NonNullable<
     Awaited<ReturnType<typeof getContextFields>>
@@ -59,7 +59,7 @@ export const createContextField = (
     upsertContextFieldSchema: BodyType<UpsertContextFieldSchema>
 ) => {
     return fetcher<ContextFieldSchema>({
-        url: `/demo2/api/admin/context`,
+        url: `/api/admin/context`,
         method: 'post',
         headers: { 'Content-Type': 'application/json' },
         data: upsertContextFieldSchema,
@@ -68,13 +68,13 @@ export const createContextField = (
 
 export const getContextField = (contextField: string) => {
     return fetcher<ContextFieldSchema>({
-        url: `/demo2/api/admin/context/${contextField}`,
+        url: `/api/admin/context/${contextField}`,
         method: 'get',
     });
 };
 
 export const getGetContextFieldKey = (contextField: string) => [
-    `/demo2/api/admin/context/${contextField}`,
+    `/api/admin/context/${contextField}`,
 ];
 
 export type GetContextFieldQueryResult = NonNullable<
@@ -116,7 +116,7 @@ export const updateContextField = (
     upsertContextFieldSchema: BodyType<UpsertContextFieldSchema>
 ) => {
     return fetcher<void>({
-        url: `/demo2/api/admin/context/${contextField}`,
+        url: `/api/admin/context/${contextField}`,
         method: 'put',
         headers: { 'Content-Type': 'application/json' },
         data: upsertContextFieldSchema,
@@ -125,14 +125,14 @@ export const updateContextField = (
 
 export const deleteContextField = (contextField: string) => {
     return fetcher<void>({
-        url: `/demo2/api/admin/context/${contextField}`,
+        url: `/api/admin/context/${contextField}`,
         method: 'delete',
     });
 };
 
 export const validate = (nameSchema: BodyType<NameSchema>) => {
     return fetcher<void>({
-        url: `/demo2/api/admin/context/validate`,
+        url: `/api/admin/context/validate`,
         method: 'post',
         headers: { 'Content-Type': 'application/json' },
         data: nameSchema,

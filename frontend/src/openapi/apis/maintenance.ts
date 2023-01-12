@@ -14,7 +14,7 @@ export const toggleMaintenance = (
     maintenanceSchema: BodyType<MaintenanceSchema>
 ) => {
     return fetcher<void>({
-        url: `/demo2/api/admin/maintenance`,
+        url: `/api/admin/maintenance`,
         method: 'post',
         headers: { 'Content-Type': 'application/json' },
         data: maintenanceSchema,
@@ -23,12 +23,12 @@ export const toggleMaintenance = (
 
 export const getMaintenance = () => {
     return fetcher<MaintenanceSchema>({
-        url: `/demo2/api/admin/maintenance`,
+        url: `/api/admin/maintenance`,
         method: 'get',
     });
 };
 
-export const getGetMaintenanceKey = () => [`/demo2/api/admin/maintenance`];
+export const getGetMaintenanceKey = () => [`/api/admin/maintenance`];
 
 export type GetMaintenanceQueryResult = NonNullable<
     Awaited<ReturnType<typeof getMaintenance>>

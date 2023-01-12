@@ -12,12 +12,12 @@ import type { ErrorType, BodyType } from '../fetcher';
 
 export const getAddons = () => {
     return fetcher<AddonsSchema>({
-        url: `/demo2/api/admin/addons`,
+        url: `/api/admin/addons`,
         method: 'get',
     });
 };
 
-export const getGetAddonsKey = () => [`/demo2/api/admin/addons`];
+export const getGetAddonsKey = () => [`/api/admin/addons`];
 
 export type GetAddonsQueryResult = NonNullable<
     Awaited<ReturnType<typeof getAddons>>
@@ -51,7 +51,7 @@ export const useGetAddons = <TError = ErrorType<unknown>>(options?: {
 
 export const createAddon = (addonSchema: BodyType<AddonSchema>) => {
     return fetcher<AddonSchema>({
-        url: `/demo2/api/admin/addons`,
+        url: `/api/admin/addons`,
         method: 'post',
         headers: { 'Content-Type': 'application/json' },
         data: addonSchema,
@@ -60,12 +60,12 @@ export const createAddon = (addonSchema: BodyType<AddonSchema>) => {
 
 export const getAddon = (id: string) => {
     return fetcher<AddonSchema>({
-        url: `/demo2/api/admin/addons/${id}`,
+        url: `/api/admin/addons/${id}`,
         method: 'get',
     });
 };
 
-export const getGetAddonKey = (id: string) => [`/demo2/api/admin/addons/${id}`];
+export const getGetAddonKey = (id: string) => [`/api/admin/addons/${id}`];
 
 export type GetAddonQueryResult = NonNullable<
     Awaited<ReturnType<typeof getAddon>>
@@ -102,7 +102,7 @@ export const useGetAddon = <TError = ErrorType<unknown>>(
 
 export const updateAddon = (id: string, addonSchema: BodyType<AddonSchema>) => {
     return fetcher<AddonSchema>({
-        url: `/demo2/api/admin/addons/${id}`,
+        url: `/api/admin/addons/${id}`,
         method: 'put',
         headers: { 'Content-Type': 'application/json' },
         data: addonSchema,
@@ -111,7 +111,7 @@ export const updateAddon = (id: string, addonSchema: BodyType<AddonSchema>) => {
 
 export const deleteAddon = (id: string) => {
     return fetcher<void>({
-        url: `/demo2/api/admin/addons/${id}`,
+        url: `/api/admin/addons/${id}`,
         method: 'delete',
     });
 };

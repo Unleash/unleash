@@ -21,7 +21,7 @@ export const createApplication = (
     applicationSchema: BodyType<ApplicationSchema>
 ) => {
     return fetcher<void>({
-        url: `/demo2/api/admin/metrics/applications/${appName}`,
+        url: `/api/admin/metrics/applications/${appName}`,
         method: 'post',
         headers: { 'Content-Type': 'application/json' },
         data: applicationSchema,
@@ -30,20 +30,20 @@ export const createApplication = (
 
 export const deleteApplication = (appName: string) => {
     return fetcher<void>({
-        url: `/demo2/api/admin/metrics/applications/${appName}`,
+        url: `/api/admin/metrics/applications/${appName}`,
         method: 'delete',
     });
 };
 
 export const getApplication = (appName: string) => {
     return fetcher<ApplicationSchema>({
-        url: `/demo2/api/admin/metrics/applications/${appName}`,
+        url: `/api/admin/metrics/applications/${appName}`,
         method: 'get',
     });
 };
 
 export const getGetApplicationKey = (appName: string) => [
-    `/demo2/api/admin/metrics/applications/${appName}`,
+    `/api/admin/metrics/applications/${appName}`,
 ];
 
 export type GetApplicationQueryResult = NonNullable<
@@ -82,14 +82,12 @@ export const useGetApplication = <TError = ErrorType<unknown>>(
 
 export const getApplications = () => {
     return fetcher<ApplicationsSchema>({
-        url: `/demo2/api/admin/metrics/applications`,
+        url: `/api/admin/metrics/applications`,
         method: 'get',
     });
 };
 
-export const getGetApplicationsKey = () => [
-    `/demo2/api/admin/metrics/applications`,
-];
+export const getGetApplicationsKey = () => [`/api/admin/metrics/applications`];
 
 export type GetApplicationsQueryResult = NonNullable<
     Awaited<ReturnType<typeof getApplications>>
@@ -124,14 +122,12 @@ export const useGetApplications = <TError = ErrorType<unknown>>(options?: {
 
 export const getRequestsPerSecond = () => {
     return fetcher<RequestsPerSecondSegmentedSchema>({
-        url: `/demo2/api/admin/metrics/rps`,
+        url: `/api/admin/metrics/rps`,
         method: 'get',
     });
 };
 
-export const getGetRequestsPerSecondKey = () => [
-    `/demo2/api/admin/metrics/rps`,
-];
+export const getGetRequestsPerSecondKey = () => [`/api/admin/metrics/rps`];
 
 export type GetRequestsPerSecondQueryResult = NonNullable<
     Awaited<ReturnType<typeof getRequestsPerSecond>>
@@ -166,13 +162,13 @@ export const useGetRequestsPerSecond = <TError = ErrorType<unknown>>(options?: {
 
 export const getRawFeatureMetrics = (name: string) => {
     return fetcher<FeatureMetricsSchema>({
-        url: `/demo2/api/admin/client-metrics/features/${name}/raw`,
+        url: `/api/admin/client-metrics/features/${name}/raw`,
         method: 'get',
     });
 };
 
 export const getGetRawFeatureMetricsKey = (name: string) => [
-    `/demo2/api/admin/client-metrics/features/${name}/raw`,
+    `/api/admin/client-metrics/features/${name}/raw`,
 ];
 
 export type GetRawFeatureMetricsQueryResult = NonNullable<
@@ -211,13 +207,13 @@ export const useGetRawFeatureMetrics = <TError = ErrorType<unknown>>(
 
 export const getFeatureUsageSummary = (name: string) => {
     return fetcher<FeatureUsageSchema>({
-        url: `/demo2/api/admin/client-metrics/features/${name}`,
+        url: `/api/admin/client-metrics/features/${name}`,
         method: 'get',
     });
 };
 
 export const getGetFeatureUsageSummaryKey = (name: string) => [
-    `/demo2/api/admin/client-metrics/features/${name}`,
+    `/api/admin/client-metrics/features/${name}`,
 ];
 
 export type GetFeatureUsageSummaryQueryResult = NonNullable<

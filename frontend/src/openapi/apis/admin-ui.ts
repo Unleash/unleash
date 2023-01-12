@@ -17,12 +17,12 @@ import type { ErrorType, BodyType } from '../fetcher';
 
 export const getUiConfig = () => {
     return fetcher<UiConfigSchema>({
-        url: `/demo2/api/admin/ui-config`,
+        url: `/api/admin/ui-config`,
         method: 'get',
     });
 };
 
-export const getGetUiConfigKey = () => [`/demo2/api/admin/ui-config`];
+export const getGetUiConfigKey = () => [`/api/admin/ui-config`];
 
 export type GetUiConfigQueryResult = NonNullable<
     Awaited<ReturnType<typeof getUiConfig>>
@@ -56,7 +56,7 @@ export const useGetUiConfig = <TError = ErrorType<unknown>>(options?: {
 
 export const setUiConfig = (setUiConfigSchema: BodyType<SetUiConfigSchema>) => {
     return fetcher<void>({
-        url: `/demo2/api/admin/ui-config`,
+        url: `/api/admin/ui-config`,
         method: 'post',
         headers: { 'Content-Type': 'application/json' },
         data: setUiConfigSchema,
@@ -65,7 +65,7 @@ export const setUiConfig = (setUiConfigSchema: BodyType<SetUiConfigSchema>) => {
 
 export const createFeedback = (feedbackSchema: BodyType<FeedbackSchema>) => {
     return fetcher<FeedbackSchema>({
-        url: `/demo2/api/admin/feedback`,
+        url: `/api/admin/feedback`,
         method: 'post',
         headers: { 'Content-Type': 'application/json' },
         data: feedbackSchema,
@@ -77,7 +77,7 @@ export const updateFeedback = (
     feedbackSchema: BodyType<FeedbackSchema>
 ) => {
     return fetcher<FeedbackSchema>({
-        url: `/demo2/api/admin/feedback/${id}`,
+        url: `/api/admin/feedback/${id}`,
         method: 'put',
         headers: { 'Content-Type': 'application/json' },
         data: feedbackSchema,
@@ -86,7 +86,7 @@ export const updateFeedback = (
 
 export const updateSplashSettings = (id: string) => {
     return fetcher<SplashSchema>({
-        url: `/demo2/api/admin/splash/${id}`,
+        url: `/api/admin/splash/${id}`,
         method: 'post',
     });
 };

@@ -20,12 +20,12 @@ import type { ErrorType, BodyType } from '../fetcher';
 
 export const getPermissions = () => {
     return fetcher<AdminPermissionsSchema>({
-        url: `/demo2/api/admin/permissions`,
+        url: `/api/admin/permissions`,
         method: 'get',
     });
 };
 
-export const getGetPermissionsKey = () => [`/demo2/api/admin/permissions`];
+export const getGetPermissionsKey = () => [`/api/admin/permissions`];
 
 export type GetPermissionsQueryResult = NonNullable<
     Awaited<ReturnType<typeof getPermissions>>

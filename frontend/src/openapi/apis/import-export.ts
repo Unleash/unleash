@@ -12,7 +12,7 @@ import type { ErrorType, BodyType } from '../fetcher';
 
 export const _import = (stateSchema: BodyType<StateSchema>) => {
     return fetcher<void>({
-        url: `/demo2/api/admin/state/import`,
+        url: `/api/admin/state/import`,
         method: 'post',
         headers: { 'Content-Type': 'application/json' },
         data: stateSchema,
@@ -21,14 +21,14 @@ export const _import = (stateSchema: BodyType<StateSchema>) => {
 
 export const _export = (params?: ExportParams) => {
     return fetcher<StateSchema>({
-        url: `/demo2/api/admin/state/export`,
+        url: `/api/admin/state/export`,
         method: 'get',
         params,
     });
 };
 
 export const getExportKey = (params?: ExportParams) => [
-    `/demo2/api/admin/state/export`,
+    `/api/admin/state/export`,
     ...(params ? [params] : []),
 ];
 

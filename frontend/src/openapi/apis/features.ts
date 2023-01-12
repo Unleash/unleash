@@ -35,7 +35,7 @@ export const changeProject = (
     changeProjectSchema: BodyType<ChangeProjectSchema>
 ) => {
     return fetcher<void>({
-        url: `/demo2/api/admin/projects/${projectId}/features/${featureName}/changeProject`,
+        url: `/api/admin/projects/${projectId}/features/${featureName}/changeProject`,
         method: 'post',
         headers: { 'Content-Type': 'application/json' },
         data: changeProjectSchema,
@@ -47,12 +47,12 @@ export const changeProject = (
  */
 export const getAllToggles = () => {
     return fetcher<FeaturesSchema>({
-        url: `/demo2/api/admin/features`,
+        url: `/api/admin/features`,
         method: 'get',
     });
 };
 
-export const getGetAllTogglesKey = () => [`/demo2/api/admin/features`];
+export const getGetAllTogglesKey = () => [`/api/admin/features`];
 
 export type GetAllTogglesQueryResult = NonNullable<
     Awaited<ReturnType<typeof getAllToggles>>
@@ -87,20 +87,20 @@ export const useGetAllToggles = <TError = ErrorType<unknown>>(options?: {
 
 export const validateFeature = () => {
     return fetcher<void>({
-        url: `/demo2/api/admin/features/validate`,
+        url: `/api/admin/features/validate`,
         method: 'post',
     });
 };
 
 export const listTags = (featureName: string) => {
     return fetcher<TagsSchema>({
-        url: `/demo2/api/admin/features/${featureName}/tags`,
+        url: `/api/admin/features/${featureName}/tags`,
         method: 'get',
     });
 };
 
 export const getListTagsKey = (featureName: string) => [
-    `/demo2/api/admin/features/${featureName}/tags`,
+    `/api/admin/features/${featureName}/tags`,
 ];
 
 export type ListTagsQueryResult = NonNullable<
@@ -139,7 +139,7 @@ export const useListTags = <TError = ErrorType<unknown>>(
 
 export const addTag = (featureName: string, tagSchema: BodyType<TagSchema>) => {
     return fetcher<TagSchema>({
-        url: `/demo2/api/admin/features/${featureName}/tags`,
+        url: `/api/admin/features/${featureName}/tags`,
         method: 'post',
         headers: { 'Content-Type': 'application/json' },
         data: tagSchema,
@@ -148,21 +148,19 @@ export const addTag = (featureName: string, tagSchema: BodyType<TagSchema>) => {
 
 export const removeTag = (featureName: string, type: string, value: string) => {
     return fetcher<void>({
-        url: `/demo2/api/admin/features/${featureName}/tags/${type}/${value}`,
+        url: `/api/admin/features/${featureName}/tags/${type}/${value}`,
         method: 'delete',
     });
 };
 
 export const getAllFeatureTypes = () => {
     return fetcher<FeatureTypesSchema>({
-        url: `/demo2/api/admin/feature-types`,
+        url: `/api/admin/feature-types`,
         method: 'get',
     });
 };
 
-export const getGetAllFeatureTypesKey = () => [
-    `/demo2/api/admin/feature-types`,
-];
+export const getGetAllFeatureTypesKey = () => [`/api/admin/feature-types`];
 
 export type GetAllFeatureTypesQueryResult = NonNullable<
     Awaited<ReturnType<typeof getAllFeatureTypes>>
@@ -201,7 +199,7 @@ export const getFeatureEnvironment = (
     environment: string
 ) => {
     return fetcher<FeatureEnvironmentSchema>({
-        url: `/demo2/api/admin/projects/${projectId}/features/${featureName}/environments/${environment}`,
+        url: `/api/admin/projects/${projectId}/features/${featureName}/environments/${environment}`,
         method: 'get',
     });
 };
@@ -211,7 +209,7 @@ export const getGetFeatureEnvironmentKey = (
     featureName: string,
     environment: string
 ) => [
-    `/demo2/api/admin/projects/${projectId}/features/${featureName}/environments/${environment}`,
+    `/api/admin/projects/${projectId}/features/${featureName}/environments/${environment}`,
 ];
 
 export type GetFeatureEnvironmentQueryResult = NonNullable<
@@ -266,7 +264,7 @@ export const toggleFeatureEnvironmentOff = (
     environment: string
 ) => {
     return fetcher<FeatureSchema>({
-        url: `/demo2/api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/off`,
+        url: `/api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/off`,
         method: 'post',
     });
 };
@@ -277,7 +275,7 @@ export const toggleFeatureEnvironmentOn = (
     environment: string
 ) => {
     return fetcher<FeatureSchema>({
-        url: `/demo2/api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/on`,
+        url: `/api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/on`,
         method: 'post',
     });
 };
@@ -288,7 +286,7 @@ export const getFeatureStrategies = (
     environment: string
 ) => {
     return fetcher<FeatureStrategySchema>({
-        url: `/demo2/api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/strategies`,
+        url: `/api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/strategies`,
         method: 'get',
     });
 };
@@ -298,7 +296,7 @@ export const getGetFeatureStrategiesKey = (
     featureName: string,
     environment: string
 ) => [
-    `/demo2/api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/strategies`,
+    `/api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/strategies`,
 ];
 
 export type GetFeatureStrategiesQueryResult = NonNullable<
@@ -354,7 +352,7 @@ export const addFeatureStrategy = (
     createFeatureStrategySchema: BodyType<CreateFeatureStrategySchema>
 ) => {
     return fetcher<FeatureStrategySchema>({
-        url: `/demo2/api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/strategies`,
+        url: `/api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/strategies`,
         method: 'post',
         headers: { 'Content-Type': 'application/json' },
         data: createFeatureStrategySchema,
@@ -368,7 +366,7 @@ export const getFeatureStrategy = (
     strategyId: string
 ) => {
     return fetcher<FeatureStrategySchema>({
-        url: `/demo2/api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/strategies/${strategyId}`,
+        url: `/api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/strategies/${strategyId}`,
         method: 'get',
     });
 };
@@ -379,7 +377,7 @@ export const getGetFeatureStrategyKey = (
     environment: string,
     strategyId: string
 ) => [
-    `/demo2/api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/strategies/${strategyId}`,
+    `/api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/strategies/${strategyId}`,
 ];
 
 export type GetFeatureStrategyQueryResult = NonNullable<
@@ -438,7 +436,7 @@ export const updateFeatureStrategy = (
     updateFeatureStrategySchema: BodyType<UpdateFeatureStrategySchema>
 ) => {
     return fetcher<FeatureStrategySchema>({
-        url: `/demo2/api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/strategies/${strategyId}`,
+        url: `/api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/strategies/${strategyId}`,
         method: 'put',
         headers: { 'Content-Type': 'application/json' },
         data: updateFeatureStrategySchema,
@@ -453,7 +451,7 @@ export const patchFeatureStrategy = (
     patchesSchema: BodyType<PatchesSchema>
 ) => {
     return fetcher<FeatureStrategySchema>({
-        url: `/demo2/api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/strategies/${strategyId}`,
+        url: `/api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/strategies/${strategyId}`,
         method: 'patch',
         headers: { 'Content-Type': 'application/json' },
         data: patchesSchema,
@@ -467,7 +465,7 @@ export const deleteFeatureStrategy = (
     strategyId: string
 ) => {
     return fetcher<void>({
-        url: `/demo2/api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/strategies/${strategyId}`,
+        url: `/api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/strategies/${strategyId}`,
         method: 'delete',
     });
 };
@@ -479,7 +477,7 @@ export const setStrategySortOrder = (
     setStrategySortOrderSchema: BodyType<SetStrategySortOrderSchema>
 ) => {
     return fetcher<void>({
-        url: `/demo2/api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/strategies/set-sort-order`,
+        url: `/api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/strategies/set-sort-order`,
         method: 'post',
         headers: { 'Content-Type': 'application/json' },
         data: setStrategySortOrderSchema,
@@ -488,13 +486,13 @@ export const setStrategySortOrder = (
 
 export const getFeatures = (projectId: string) => {
     return fetcher<FeaturesSchema>({
-        url: `/demo2/api/admin/projects/${projectId}/features`,
+        url: `/api/admin/projects/${projectId}/features`,
         method: 'get',
     });
 };
 
 export const getGetFeaturesKey = (projectId: string) => [
-    `/demo2/api/admin/projects/${projectId}/features`,
+    `/api/admin/projects/${projectId}/features`,
 ];
 
 export type GetFeaturesQueryResult = NonNullable<
@@ -536,7 +534,7 @@ export const createFeature = (
     createFeatureSchema: BodyType<CreateFeatureSchema>
 ) => {
     return fetcher<FeatureSchema>({
-        url: `/demo2/api/admin/projects/${projectId}/features`,
+        url: `/api/admin/projects/${projectId}/features`,
         method: 'post',
         headers: { 'Content-Type': 'application/json' },
         data: createFeatureSchema,
@@ -549,7 +547,7 @@ export const cloneFeature = (
     cloneFeatureSchema: BodyType<CloneFeatureSchema>
 ) => {
     return fetcher<FeatureSchema>({
-        url: `/demo2/api/admin/projects/${projectId}/features/${featureName}/clone`,
+        url: `/api/admin/projects/${projectId}/features/${featureName}/clone`,
         method: 'post',
         headers: { 'Content-Type': 'application/json' },
         data: cloneFeatureSchema,
@@ -562,13 +560,13 @@ export const cloneFeature = (
  */
 export const getFeature = (projectId: string, featureName: string) => {
     return fetcher<FeatureSchema>({
-        url: `/demo2/api/admin/projects/${projectId}/features/${featureName}`,
+        url: `/api/admin/projects/${projectId}/features/${featureName}`,
         method: 'get',
     });
 };
 
 export const getGetFeatureKey = (projectId: string, featureName: string) => [
-    `/demo2/api/admin/projects/${projectId}/features/${featureName}`,
+    `/api/admin/projects/${projectId}/features/${featureName}`,
 ];
 
 export type GetFeatureQueryResult = NonNullable<
@@ -613,7 +611,7 @@ export const updateFeature = (
     updateFeatureSchema: BodyType<UpdateFeatureSchema>
 ) => {
     return fetcher<FeatureSchema>({
-        url: `/demo2/api/admin/projects/${projectId}/features/${featureName}`,
+        url: `/api/admin/projects/${projectId}/features/${featureName}`,
         method: 'put',
         headers: { 'Content-Type': 'application/json' },
         data: updateFeatureSchema,
@@ -626,7 +624,7 @@ export const patchFeature = (
     patchesSchema: BodyType<PatchesSchema>
 ) => {
     return fetcher<FeatureSchema>({
-        url: `/demo2/api/admin/projects/${projectId}/features/${featureName}`,
+        url: `/api/admin/projects/${projectId}/features/${featureName}`,
         method: 'patch',
         headers: { 'Content-Type': 'application/json' },
         data: patchesSchema,
@@ -639,14 +637,14 @@ export const patchFeature = (
  */
 export const archiveFeature = (projectId: string, featureName: string) => {
     return fetcher<void>({
-        url: `/demo2/api/admin/projects/${projectId}/features/${featureName}`,
+        url: `/api/admin/projects/${projectId}/features/${featureName}`,
         method: 'delete',
     });
 };
 
 export const getFeatureVariants = (projectId: string, featureName: string) => {
     return fetcher<FeatureVariantsSchema>({
-        url: `/demo2/api/admin/projects/${projectId}/features/${featureName}/variants`,
+        url: `/api/admin/projects/${projectId}/features/${featureName}/variants`,
         method: 'get',
     });
 };
@@ -654,9 +652,7 @@ export const getFeatureVariants = (projectId: string, featureName: string) => {
 export const getGetFeatureVariantsKey = (
     projectId: string,
     featureName: string
-) => [
-    `/demo2/api/admin/projects/${projectId}/features/${featureName}/variants`,
-];
+) => [`/api/admin/projects/${projectId}/features/${featureName}/variants`];
 
 export type GetFeatureVariantsQueryResult = NonNullable<
     Awaited<ReturnType<typeof getFeatureVariants>>
@@ -703,7 +699,7 @@ export const patchFeatureVariants = (
     patchesSchema: BodyType<PatchesSchema>
 ) => {
     return fetcher<FeatureVariantsSchema>({
-        url: `/demo2/api/admin/projects/${projectId}/features/${featureName}/variants`,
+        url: `/api/admin/projects/${projectId}/features/${featureName}/variants`,
         method: 'patch',
         headers: { 'Content-Type': 'application/json' },
         data: patchesSchema,
@@ -716,7 +712,7 @@ export const overwriteFeatureVariants = (
     variantsSchema: BodyType<VariantsSchema>
 ) => {
     return fetcher<FeatureVariantsSchema>({
-        url: `/demo2/api/admin/projects/${projectId}/features/${featureName}/variants`,
+        url: `/api/admin/projects/${projectId}/features/${featureName}/variants`,
         method: 'put',
         headers: { 'Content-Type': 'application/json' },
         data: variantsSchema,
@@ -729,7 +725,7 @@ export const getEnvironmentFeatureVariants = (
     environment: string
 ) => {
     return fetcher<FeatureVariantsSchema>({
-        url: `/demo2/api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/variants`,
+        url: `/api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/variants`,
         method: 'get',
     });
 };
@@ -739,7 +735,7 @@ export const getGetEnvironmentFeatureVariantsKey = (
     featureName: string,
     environment: string
 ) => [
-    `/demo2/api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/variants`,
+    `/api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/variants`,
 ];
 
 export type GetEnvironmentFeatureVariantsQueryResult = NonNullable<
@@ -795,7 +791,7 @@ export const patchEnvironmentsFeatureVariants = (
     patchesSchema: BodyType<PatchesSchema>
 ) => {
     return fetcher<FeatureVariantsSchema>({
-        url: `/demo2/api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/variants`,
+        url: `/api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/variants`,
         method: 'patch',
         headers: { 'Content-Type': 'application/json' },
         data: patchesSchema,
@@ -809,7 +805,7 @@ export const overwriteEnvironmentFeatureVariants = (
     variantsSchema: BodyType<VariantsSchema>
 ) => {
     return fetcher<FeatureVariantsSchema>({
-        url: `/demo2/api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/variants`,
+        url: `/api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/variants`,
         method: 'put',
         headers: { 'Content-Type': 'application/json' },
         data: variantsSchema,
@@ -820,7 +816,7 @@ export const validateConstraint = (
     constraintSchema: BodyType<ConstraintSchema>
 ) => {
     return fetcher<void>({
-        url: `/demo2/api/admin/constraints/validate`,
+        url: `/api/admin/constraints/validate`,
         method: 'post',
         headers: { 'Content-Type': 'application/json' },
         data: constraintSchema,
@@ -829,7 +825,7 @@ export const validateConstraint = (
 
 export const addFavoriteFeature = (projectId: string, featureName: string) => {
     return fetcher<void>({
-        url: `/demo2/api/admin/projects/${projectId}/features/${featureName}/favorites`,
+        url: `/api/admin/projects/${projectId}/features/${featureName}/favorites`,
         method: 'post',
     });
 };
@@ -839,21 +835,21 @@ export const removeFavoriteFeature = (
     featureName: string
 ) => {
     return fetcher<void>({
-        url: `/demo2/api/admin/projects/${projectId}/features/${featureName}/favorites`,
+        url: `/api/admin/projects/${projectId}/features/${featureName}/favorites`,
         method: 'delete',
     });
 };
 
 export const addFavoriteProject = (projectId: string) => {
     return fetcher<void>({
-        url: `/demo2/api/admin/projects/${projectId}/favorites`,
+        url: `/api/admin/projects/${projectId}/favorites`,
         method: 'post',
     });
 };
 
 export const removeFavoriteProject = (projectId: string) => {
     return fetcher<void>({
-        url: `/demo2/api/admin/projects/${projectId}/favorites`,
+        url: `/api/admin/projects/${projectId}/favorites`,
         method: 'delete',
     });
 };

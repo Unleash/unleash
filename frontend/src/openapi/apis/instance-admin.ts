@@ -15,13 +15,13 @@ import type { ErrorType } from '../fetcher';
  */
 export const getInstanceAdminStats = () => {
     return fetcher<InstanceAdminStatsSchema>({
-        url: `/demo2/api/admin/instance-admin/statistics`,
+        url: `/api/admin/instance-admin/statistics`,
         method: 'get',
     });
 };
 
 export const getGetInstanceAdminStatsKey = () => [
-    `/demo2/api/admin/instance-admin/statistics`,
+    `/api/admin/instance-admin/statistics`,
 ];
 
 export type GetInstanceAdminStatsQueryResult = NonNullable<

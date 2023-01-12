@@ -86,13 +86,13 @@ export const addPublicSignupTokenUser = (
  */
 export const getAllPublicSignupTokens = () => {
     return fetcher<PublicSignupTokensSchema>({
-        url: `/demo2/api/admin/invite-link/tokens`,
+        url: `/api/admin/invite-link/tokens`,
         method: 'get',
     });
 };
 
 export const getGetAllPublicSignupTokensKey = () => [
-    `/demo2/api/admin/invite-link/tokens`,
+    `/api/admin/invite-link/tokens`,
 ];
 
 export type GetAllPublicSignupTokensQueryResult = NonNullable<
@@ -135,7 +135,7 @@ export const createPublicSignupToken = (
     publicSignupTokenCreateSchema: BodyType<PublicSignupTokenCreateSchema>
 ) => {
     return fetcher<PublicSignupTokenSchema>({
-        url: `/demo2/api/admin/invite-link/tokens`,
+        url: `/api/admin/invite-link/tokens`,
         method: 'post',
         headers: { 'Content-Type': 'application/json' },
         data: publicSignupTokenCreateSchema,
@@ -148,13 +148,13 @@ export const createPublicSignupToken = (
  */
 export const getPublicSignupToken = (token: string) => {
     return fetcher<PublicSignupTokenSchema>({
-        url: `/demo2/api/admin/invite-link/tokens/${token}`,
+        url: `/api/admin/invite-link/tokens/${token}`,
         method: 'get',
     });
 };
 
 export const getGetPublicSignupTokenKey = (token: string) => [
-    `/demo2/api/admin/invite-link/tokens/${token}`,
+    `/api/admin/invite-link/tokens/${token}`,
 ];
 
 export type GetPublicSignupTokenQueryResult = NonNullable<
@@ -199,7 +199,7 @@ export const updatePublicSignupToken = (
     publicSignupTokenUpdateSchema: BodyType<PublicSignupTokenUpdateSchema>
 ) => {
     return fetcher<PublicSignupTokenSchema>({
-        url: `/demo2/api/admin/invite-link/tokens/${token}`,
+        url: `/api/admin/invite-link/tokens/${token}`,
         method: 'put',
         headers: { 'Content-Type': 'application/json' },
         data: publicSignupTokenUpdateSchema,

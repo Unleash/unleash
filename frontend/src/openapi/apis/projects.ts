@@ -23,12 +23,12 @@ import type { ErrorType, BodyType } from '../fetcher';
 
 export const getProjects = () => {
     return fetcher<ProjectsSchema>({
-        url: `/demo2/api/admin/projects`,
+        url: `/api/admin/projects`,
         method: 'get',
     });
 };
 
-export const getGetProjectsKey = () => [`/demo2/api/admin/projects`];
+export const getGetProjectsKey = () => [`/api/admin/projects`];
 
 export type GetProjectsQueryResult = NonNullable<
     Awaited<ReturnType<typeof getProjects>>
@@ -64,7 +64,7 @@ export const createProject = (
     createProjectSchema: BodyType<CreateProjectSchema>
 ) => {
     return fetcher<ProjectCreatedSchema>({
-        url: `/demo2/api/admin/projects`,
+        url: `/api/admin/projects`,
         method: 'post',
         headers: { 'Content-Type': 'application/json' },
         data: createProjectSchema,
@@ -75,7 +75,7 @@ export const validateProject = (
     validateProjectSchema: BodyType<ValidateProjectSchema>
 ) => {
     return fetcher<void>({
-        url: `/demo2/api/admin/projects/validate`,
+        url: `/api/admin/projects/validate`,
         method: 'post',
         headers: { 'Content-Type': 'application/json' },
         data: validateProjectSchema,
@@ -87,7 +87,7 @@ export const updateProject = (
     updateProjectSchema: BodyType<UpdateProjectSchema>
 ) => {
     return fetcher<void>({
-        url: `/demo2/api/admin/projects/${projectId}`,
+        url: `/api/admin/projects/${projectId}`,
         method: 'put',
         headers: { 'Content-Type': 'application/json' },
         data: updateProjectSchema,
@@ -96,20 +96,20 @@ export const updateProject = (
 
 export const deleteProject = (projectId: string) => {
     return fetcher<void>({
-        url: `/demo2/api/admin/projects/${projectId}`,
+        url: `/api/admin/projects/${projectId}`,
         method: 'delete',
     });
 };
 
 export const getProjectHealthOverview = (projectId: string) => {
     return fetcher<HealthOverviewSchema>({
-        url: `/demo2/api/admin/projects/${projectId}`,
+        url: `/api/admin/projects/${projectId}`,
         method: 'get',
     });
 };
 
 export const getGetProjectHealthOverviewKey = (projectId: string) => [
-    `/demo2/api/admin/projects/${projectId}`,
+    `/api/admin/projects/${projectId}`,
 ];
 
 export type GetProjectHealthOverviewQueryResult = NonNullable<
@@ -151,13 +151,13 @@ export const useGetProjectHealthOverview = <TError = ErrorType<unknown>>(
  */
 export const getProjectUsers = (projectId: string) => {
     return fetcher<ProjectUsers>({
-        url: `/demo2/api/admin/projects/${projectId}/users`,
+        url: `/api/admin/projects/${projectId}/users`,
         method: 'get',
     });
 };
 
 export const getGetProjectUsersKey = (projectId: string) => [
-    `/demo2/api/admin/projects/${projectId}/users`,
+    `/api/admin/projects/${projectId}/users`,
 ];
 
 export type GetProjectUsersQueryResult = NonNullable<
@@ -196,13 +196,13 @@ export const useGetProjectUsers = <TError = ErrorType<unknown>>(
 
 export const getProjectAccess = (projectId: string) => {
     return fetcher<ProjectAccessSchema>({
-        url: `/demo2/api/admin/projects/${projectId}/access`,
+        url: `/api/admin/projects/${projectId}/access`,
         method: 'get',
     });
 };
 
 export const getGetProjectAccessKey = (projectId: string) => [
-    `/demo2/api/admin/projects/${projectId}/access`,
+    `/api/admin/projects/${projectId}/access`,
 ];
 
 export type GetProjectAccessQueryResult = NonNullable<
@@ -245,7 +245,7 @@ export const addRoleToUser = (
     roleId: string
 ) => {
     return fetcher<void>({
-        url: `/demo2/api/admin/projects/${projectId}/users/${userId}/roles/${roleId}`,
+        url: `/api/admin/projects/${projectId}/users/${userId}/roles/${roleId}`,
         method: 'post',
     });
 };
@@ -256,7 +256,7 @@ export const removeRoleForUser = (
     roleId: string
 ) => {
     return fetcher<void>({
-        url: `/demo2/api/admin/projects/${projectId}/users/${userId}/roles/${roleId}`,
+        url: `/api/admin/projects/${projectId}/users/${userId}/roles/${roleId}`,
         method: 'delete',
     });
 };
@@ -267,7 +267,7 @@ export const changeRoleForUser = (
     roleId: string
 ) => {
     return fetcher<void>({
-        url: `/demo2/api/admin/projects/${projectId}/users/${userId}/roles/${roleId}`,
+        url: `/api/admin/projects/${projectId}/users/${userId}/roles/${roleId}`,
         method: 'put',
     });
 };
@@ -278,7 +278,7 @@ export const changeRoleForGroup = (
     roleId: string
 ) => {
     return fetcher<void>({
-        url: `/demo2/api/admin/projects/${projectId}/groups/${groupId}/roles/${roleId}`,
+        url: `/api/admin/projects/${projectId}/groups/${groupId}/roles/${roleId}`,
         method: 'put',
     });
 };
@@ -289,14 +289,14 @@ export const removeRoleFromGroup = (
     roleId: string
 ) => {
     return fetcher<void>({
-        url: `/demo2/api/admin/projects/${projectId}/groups/${groupId}/roles/${roleId}`,
+        url: `/api/admin/projects/${projectId}/groups/${groupId}/roles/${roleId}`,
         method: 'delete',
     });
 };
 
 export const addAccessToProject = (projectId: string, roleId: string) => {
     return fetcher<void>({
-        url: `/demo2/api/admin/projects/${projectId}/role/${roleId}/access`,
+        url: `/api/admin/projects/${projectId}/role/${roleId}/access`,
         method: 'post',
     });
 };
@@ -306,7 +306,7 @@ export const addEnvironmentToProject = (
     projectEnvironmentSchema: BodyType<ProjectEnvironmentSchema>
 ) => {
     return fetcher<void>({
-        url: `/demo2/api/admin/projects/${projectId}/environments`,
+        url: `/api/admin/projects/${projectId}/environments`,
         method: 'post',
         headers: { 'Content-Type': 'application/json' },
         data: projectEnvironmentSchema,
@@ -318,20 +318,20 @@ export const removeEnvironmentFromProject = (
     environment: string
 ) => {
     return fetcher<void>({
-        url: `/demo2/api/admin/projects/${projectId}/environments/${environment}`,
+        url: `/api/admin/projects/${projectId}/environments/${environment}`,
         method: 'delete',
     });
 };
 
 export const getProjectHealthReport = (projectId: string) => {
     return fetcher<HealthReportSchema>({
-        url: `/demo2/api/admin/projects/${projectId}/health-report`,
+        url: `/api/admin/projects/${projectId}/health-report`,
         method: 'get',
     });
 };
 
 export const getGetProjectHealthReportKey = (projectId: string) => [
-    `/demo2/api/admin/projects/${projectId}/health-report`,
+    `/api/admin/projects/${projectId}/health-report`,
 ];
 
 export type GetProjectHealthReportQueryResult = NonNullable<

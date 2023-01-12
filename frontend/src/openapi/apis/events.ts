@@ -23,14 +23,14 @@ If the provided project does not exist, the list of events will be empty.
  */
 export const getEvents = (params?: GetEventsParams) => {
     return fetcher<EventsSchema>({
-        url: `/demo2/api/admin/events`,
+        url: `/api/admin/events`,
         method: 'get',
         params,
     });
 };
 
 export const getGetEventsKey = (params?: GetEventsParams) => [
-    `/demo2/api/admin/events`,
+    `/api/admin/events`,
     ...(params ? [params] : []),
 ];
 
@@ -74,13 +74,13 @@ export const useGetEvents = <TError = ErrorType<void>>(
  */
 export const getEventsForToggle = (featureName: string) => {
     return fetcher<FeatureEventsSchema>({
-        url: `/demo2/api/admin/events/${featureName}`,
+        url: `/api/admin/events/${featureName}`,
         method: 'get',
     });
 };
 
 export const getGetEventsForToggleKey = (featureName: string) => [
-    `/demo2/api/admin/events/${featureName}`,
+    `/api/admin/events/${featureName}`,
 ];
 
 export type GetEventsForToggleQueryResult = NonNullable<
@@ -121,7 +121,7 @@ export const searchEvents = (
     searchEventsSchema: BodyType<SearchEventsSchema>
 ) => {
     return fetcher<EventsSchema>({
-        url: `/demo2/api/admin/events/search`,
+        url: `/api/admin/events/search`,
         method: 'post',
         headers: { 'Content-Type': 'application/json' },
         data: searchEventsSchema,

@@ -16,13 +16,13 @@ import type { ErrorType, BodyType } from '../fetcher';
 
 export const getClientFeature = (featureName: string) => {
     return fetcher<ClientFeaturesSchema>({
-        url: `/demo2/api/client/features/${featureName}`,
+        url: `/api/client/features/${featureName}`,
         method: 'get',
     });
 };
 
 export const getGetClientFeatureKey = (featureName: string) => [
-    `/demo2/api/client/features/${featureName}`,
+    `/api/client/features/${featureName}`,
 ];
 
 export type GetClientFeatureQueryResult = NonNullable<
@@ -61,12 +61,12 @@ export const useGetClientFeature = <TError = ErrorType<unknown>>(
 
 export const getAllClientFeatures = () => {
     return fetcher<ClientFeaturesSchema>({
-        url: `/demo2/api/client/features`,
+        url: `/api/client/features`,
         method: 'get',
     });
 };
 
-export const getGetAllClientFeaturesKey = () => [`/demo2/api/client/features`];
+export const getGetAllClientFeaturesKey = () => [`/api/client/features`];
 
 export type GetAllClientFeaturesQueryResult = NonNullable<
     Awaited<ReturnType<typeof getAllClientFeatures>>
@@ -103,7 +103,7 @@ export const registerClientMetrics = (
     clientMetricsSchema: BodyType<ClientMetricsSchema>
 ) => {
     return fetcher<void>({
-        url: `/demo2/api/client/metrics`,
+        url: `/api/client/metrics`,
         method: 'post',
         headers: { 'Content-Type': 'application/json' },
         data: clientMetricsSchema,
@@ -114,7 +114,7 @@ export const registerClientApplication = (
     clientApplicationSchema: BodyType<ClientApplicationSchema>
 ) => {
     return fetcher<void>({
-        url: `/demo2/api/client/register`,
+        url: `/api/client/register`,
         method: 'post',
         headers: { 'Content-Type': 'application/json' },
         data: clientApplicationSchema,

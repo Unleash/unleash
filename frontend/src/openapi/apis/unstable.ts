@@ -12,7 +12,7 @@ export const exportFeatures = (
     exportQuerySchema: BodyType<ExportQuerySchema>
 ) => {
     return fetcher<ExportResultSchema>({
-        url: `/demo2/api/admin/features-batch/export`,
+        url: `/api/admin/features-batch/export`,
         method: 'post',
         headers: { 'Content-Type': 'application/json' },
         data: exportQuerySchema,

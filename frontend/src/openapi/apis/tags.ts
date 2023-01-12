@@ -19,10 +19,10 @@ import { fetcher } from '../fetcher';
 import type { ErrorType, BodyType } from '../fetcher';
 
 export const getTags = () => {
-    return fetcher<TagsSchema>({ url: `/demo2/api/admin/tags`, method: 'get' });
+    return fetcher<TagsSchema>({ url: `/api/admin/tags`, method: 'get' });
 };
 
-export const getGetTagsKey = () => [`/demo2/api/admin/tags`];
+export const getGetTagsKey = () => [`/api/admin/tags`];
 
 export type GetTagsQueryResult = NonNullable<
     Awaited<ReturnType<typeof getTags>>
@@ -56,7 +56,7 @@ export const useGetTags = <TError = ErrorType<unknown>>(options?: {
 
 export const createTag = (tagSchema: BodyType<TagSchema>) => {
     return fetcher<TagWithVersionSchema>({
-        url: `/demo2/api/admin/tags`,
+        url: `/api/admin/tags`,
         method: 'post',
         headers: { 'Content-Type': 'application/json' },
         data: tagSchema,
@@ -65,13 +65,13 @@ export const createTag = (tagSchema: BodyType<TagSchema>) => {
 
 export const getTagsByType = (type: string) => {
     return fetcher<TagsSchema>({
-        url: `/demo2/api/admin/tags/${type}`,
+        url: `/api/admin/tags/${type}`,
         method: 'get',
     });
 };
 
 export const getGetTagsByTypeKey = (type: string) => [
-    `/demo2/api/admin/tags/${type}`,
+    `/api/admin/tags/${type}`,
 ];
 
 export type GetTagsByTypeQueryResult = NonNullable<
@@ -110,13 +110,13 @@ export const useGetTagsByType = <TError = ErrorType<unknown>>(
 
 export const getTag = (type: string, value: string) => {
     return fetcher<TagWithVersionSchema>({
-        url: `/demo2/api/admin/tags/${type}/${value}`,
+        url: `/api/admin/tags/${type}/${value}`,
         method: 'get',
     });
 };
 
 export const getGetTagKey = (type: string, value: string) => [
-    `/demo2/api/admin/tags/${type}/${value}`,
+    `/api/admin/tags/${type}/${value}`,
 ];
 
 export type GetTagQueryResult = NonNullable<Awaited<ReturnType<typeof getTag>>>;
@@ -154,19 +154,19 @@ export const useGetTag = <TError = ErrorType<unknown>>(
 
 export const deleteTag = (type: string, value: string) => {
     return fetcher<void>({
-        url: `/demo2/api/admin/tags/${type}/${value}`,
+        url: `/api/admin/tags/${type}/${value}`,
         method: 'delete',
     });
 };
 
 export const getTagTypes = () => {
     return fetcher<TagTypesSchema>({
-        url: `/demo2/api/admin/tag-types`,
+        url: `/api/admin/tag-types`,
         method: 'get',
     });
 };
 
-export const getGetTagTypesKey = () => [`/demo2/api/admin/tag-types`];
+export const getGetTagTypesKey = () => [`/api/admin/tag-types`];
 
 export type GetTagTypesQueryResult = NonNullable<
     Awaited<ReturnType<typeof getTagTypes>>
@@ -200,7 +200,7 @@ export const useGetTagTypes = <TError = ErrorType<unknown>>(options?: {
 
 export const createTagType = (tagTypeSchema: BodyType<TagTypeSchema>) => {
     return fetcher<TagTypeSchema>({
-        url: `/demo2/api/admin/tag-types`,
+        url: `/api/admin/tag-types`,
         method: 'post',
         headers: { 'Content-Type': 'application/json' },
         data: tagTypeSchema,
@@ -209,7 +209,7 @@ export const createTagType = (tagTypeSchema: BodyType<TagTypeSchema>) => {
 
 export const validateTagType = (tagTypeSchema: BodyType<TagTypeSchema>) => {
     return fetcher<ValidateTagTypeSchema>({
-        url: `/demo2/api/admin/tag-types/validate`,
+        url: `/api/admin/tag-types/validate`,
         method: 'post',
         headers: { 'Content-Type': 'application/json' },
         data: tagTypeSchema,
@@ -218,13 +218,13 @@ export const validateTagType = (tagTypeSchema: BodyType<TagTypeSchema>) => {
 
 export const getTagType = (name: string) => {
     return fetcher<TagTypeSchema>({
-        url: `/demo2/api/admin/tag-types/${name}`,
+        url: `/api/admin/tag-types/${name}`,
         method: 'get',
     });
 };
 
 export const getGetTagTypeKey = (name: string) => [
-    `/demo2/api/admin/tag-types/${name}`,
+    `/api/admin/tag-types/${name}`,
 ];
 
 export type GetTagTypeQueryResult = NonNullable<
@@ -266,7 +266,7 @@ export const updateTagType = (
     updateTagTypeSchema: BodyType<UpdateTagTypeSchema>
 ) => {
     return fetcher<void>({
-        url: `/demo2/api/admin/tag-types/${name}`,
+        url: `/api/admin/tag-types/${name}`,
         method: 'put',
         headers: { 'Content-Type': 'application/json' },
         data: updateTagTypeSchema,
@@ -275,7 +275,7 @@ export const updateTagType = (
 
 export const deleteTagType = (name: string) => {
     return fetcher<void>({
-        url: `/demo2/api/admin/tag-types/${name}`,
+        url: `/api/admin/tag-types/${name}`,
         method: 'delete',
     });
 };

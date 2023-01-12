@@ -16,12 +16,12 @@ import type { ErrorType, BodyType } from '../fetcher';
 
 export const getAllEnvironments = () => {
     return fetcher<void>({
-        url: `/demo2/api/admin/environments`,
+        url: `/api/admin/environments`,
         method: 'get',
     });
 };
 
-export const getGetAllEnvironmentsKey = () => [`/demo2/api/admin/environments`];
+export const getGetAllEnvironmentsKey = () => [`/api/admin/environments`];
 
 export type GetAllEnvironmentsQueryResult = NonNullable<
     Awaited<ReturnType<typeof getAllEnvironments>>
@@ -56,13 +56,13 @@ export const useGetAllEnvironments = <TError = ErrorType<unknown>>(options?: {
 
 export const getEnvironment = (name: string) => {
     return fetcher<EnvironmentSchema>({
-        url: `/demo2/api/admin/environments/${name}`,
+        url: `/api/admin/environments/${name}`,
         method: 'get',
     });
 };
 
 export const getGetEnvironmentKey = (name: string) => [
-    `/demo2/api/admin/environments/${name}`,
+    `/api/admin/environments/${name}`,
 ];
 
 export type GetEnvironmentQueryResult = NonNullable<
@@ -101,13 +101,13 @@ export const useGetEnvironment = <TError = ErrorType<unknown>>(
 
 export const getProjectEnvironments = (projectId: string) => {
     return fetcher<EnvironmentsProjectSchema>({
-        url: `/demo2/api/admin/environments/project/${projectId}`,
+        url: `/api/admin/environments/project/${projectId}`,
         method: 'get',
     });
 };
 
 export const getGetProjectEnvironmentsKey = (projectId: string) => [
-    `/demo2/api/admin/environments/project/${projectId}`,
+    `/api/admin/environments/project/${projectId}`,
 ];
 
 export type GetProjectEnvironmentsQueryResult = NonNullable<
@@ -146,7 +146,7 @@ export const useGetProjectEnvironments = <TError = ErrorType<unknown>>(
 
 export const updateSortOrder = (sortOrderSchema: BodyType<SortOrderSchema>) => {
     return fetcher<void>({
-        url: `/demo2/api/admin/environments/sort-order`,
+        url: `/api/admin/environments/sort-order`,
         method: 'put',
         headers: { 'Content-Type': 'application/json' },
         data: sortOrderSchema,
@@ -155,14 +155,14 @@ export const updateSortOrder = (sortOrderSchema: BodyType<SortOrderSchema>) => {
 
 export const toggleEnvironmentOn = (name: string) => {
     return fetcher<void>({
-        url: `/demo2/api/admin/environments/${name}/on`,
+        url: `/api/admin/environments/${name}/on`,
         method: 'post',
     });
 };
 
 export const toggleEnvironmentOff = (name: string) => {
     return fetcher<void>({
-        url: `/demo2/api/admin/environments/${name}/off`,
+        url: `/api/admin/environments/${name}/off`,
         method: 'post',
     });
 };

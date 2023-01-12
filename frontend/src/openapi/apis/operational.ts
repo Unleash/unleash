@@ -12,12 +12,12 @@ import type { ErrorType } from '../fetcher';
 
 export const getInvoices = () => {
     return fetcher<InvoicesSchema>({
-        url: `/demo2/api/admin/invoices`,
+        url: `/api/admin/invoices`,
         method: 'get',
     });
 };
 
-export const getGetInvoicesKey = () => [`/demo2/api/admin/invoices`];
+export const getGetInvoicesKey = () => [`/api/admin/invoices`];
 
 export type GetInvoicesQueryResult = NonNullable<
     Awaited<ReturnType<typeof getInvoices>>

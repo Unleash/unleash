@@ -22,10 +22,10 @@ import { fetcher } from '../fetcher';
 import type { ErrorType, BodyType } from '../fetcher';
 
 export const getMe = () => {
-    return fetcher<MeSchema>({ url: `/demo2/api/admin/user`, method: 'get' });
+    return fetcher<MeSchema>({ url: `/api/admin/user`, method: 'get' });
 };
 
-export const getGetMeKey = () => [`/demo2/api/admin/user`];
+export const getGetMeKey = () => [`/api/admin/user`];
 
 export type GetMeQueryResult = NonNullable<Awaited<ReturnType<typeof getMe>>>;
 export type GetMeQueryError = ErrorType<unknown>;
@@ -57,12 +57,12 @@ export const useGetMe = <TError = ErrorType<unknown>>(options?: {
 
 export const getProfile = () => {
     return fetcher<ProfileSchema>({
-        url: `/demo2/api/admin/user/profile`,
+        url: `/api/admin/user/profile`,
         method: 'get',
     });
 };
 
-export const getGetProfileKey = () => [`/demo2/api/admin/user/profile`];
+export const getGetProfileKey = () => [`/api/admin/user/profile`];
 
 export type GetProfileQueryResult = NonNullable<
     Awaited<ReturnType<typeof getProfile>>
@@ -96,7 +96,7 @@ export const useGetProfile = <TError = ErrorType<unknown>>(options?: {
 
 export const changeMyPassword = (passwordSchema: BodyType<PasswordSchema>) => {
     return fetcher<void>({
-        url: `/demo2/api/admin/user/change-password`,
+        url: `/api/admin/user/change-password`,
         method: 'post',
         headers: { 'Content-Type': 'application/json' },
         data: passwordSchema,
@@ -107,7 +107,7 @@ export const validateUserPassword = (
     passwordSchema: BodyType<PasswordSchema>
 ) => {
     return fetcher<void>({
-        url: `/demo2/api/admin/user-admin/validate-password`,
+        url: `/api/admin/user-admin/validate-password`,
         method: 'post',
         headers: { 'Content-Type': 'application/json' },
         data: passwordSchema,
@@ -119,7 +119,7 @@ export const changeUserPassword = (
     passwordSchema: BodyType<PasswordSchema>
 ) => {
     return fetcher<void>({
-        url: `/demo2/api/admin/user-admin/${id}/change-password`,
+        url: `/api/admin/user-admin/${id}/change-password`,
         method: 'post',
         headers: { 'Content-Type': 'application/json' },
         data: passwordSchema,
@@ -128,7 +128,7 @@ export const changeUserPassword = (
 
 export const resetUserPassword = (idSchema: BodyType<IdSchema>) => {
     return fetcher<ResetPasswordSchema>({
-        url: `/demo2/api/admin/user-admin/reset-password`,
+        url: `/api/admin/user-admin/reset-password`,
         method: 'post',
         headers: { 'Content-Type': 'application/json' },
         data: idSchema,
@@ -137,12 +137,12 @@ export const resetUserPassword = (idSchema: BodyType<IdSchema>) => {
 
 export const getUsers = () => {
     return fetcher<UsersSchema>({
-        url: `/demo2/api/admin/user-admin`,
+        url: `/api/admin/user-admin`,
         method: 'get',
     });
 };
 
-export const getGetUsersKey = () => [`/demo2/api/admin/user-admin`];
+export const getGetUsersKey = () => [`/api/admin/user-admin`];
 
 export type GetUsersQueryResult = NonNullable<
     Awaited<ReturnType<typeof getUsers>>
@@ -176,7 +176,7 @@ export const useGetUsers = <TError = ErrorType<unknown>>(options?: {
 
 export const createUser = (createUserSchema: BodyType<CreateUserSchema>) => {
     return fetcher<UserSchema>({
-        url: `/demo2/api/admin/user-admin`,
+        url: `/api/admin/user-admin`,
         method: 'post',
         headers: { 'Content-Type': 'application/json' },
         data: createUserSchema,
@@ -185,12 +185,12 @@ export const createUser = (createUserSchema: BodyType<CreateUserSchema>) => {
 
 export const searchUsers = () => {
     return fetcher<UsersSchema>({
-        url: `/demo2/api/admin/user-admin/search`,
+        url: `/api/admin/user-admin/search`,
         method: 'get',
     });
 };
 
-export const getSearchUsersKey = () => [`/demo2/api/admin/user-admin/search`];
+export const getSearchUsersKey = () => [`/api/admin/user-admin/search`];
 
 export type SearchUsersQueryResult = NonNullable<
     Awaited<ReturnType<typeof searchUsers>>
@@ -224,13 +224,13 @@ export const useSearchUsers = <TError = ErrorType<unknown>>(options?: {
 
 export const getBaseUsersAndGroups = () => {
     return fetcher<UsersGroupsBaseSchema>({
-        url: `/demo2/api/admin/user-admin/access`,
+        url: `/api/admin/user-admin/access`,
         method: 'get',
     });
 };
 
 export const getGetBaseUsersAndGroupsKey = () => [
-    `/demo2/api/admin/user-admin/access`,
+    `/api/admin/user-admin/access`,
 ];
 
 export type GetBaseUsersAndGroupsQueryResult = NonNullable<
@@ -268,14 +268,12 @@ export const useGetBaseUsersAndGroups = <
 
 export const getUser = (id: string) => {
     return fetcher<UserSchema>({
-        url: `/demo2/api/admin/user-admin/${id}`,
+        url: `/api/admin/user-admin/${id}`,
         method: 'get',
     });
 };
 
-export const getGetUserKey = (id: string) => [
-    `/demo2/api/admin/user-admin/${id}`,
-];
+export const getGetUserKey = (id: string) => [`/api/admin/user-admin/${id}`];
 
 export type GetUserQueryResult = NonNullable<
     Awaited<ReturnType<typeof getUser>>
@@ -315,7 +313,7 @@ export const updateUser = (
     updateUserSchema: BodyType<UpdateUserSchema>
 ) => {
     return fetcher<UserSchema>({
-        url: `/demo2/api/admin/user-admin/${id}`,
+        url: `/api/admin/user-admin/${id}`,
         method: 'put',
         headers: { 'Content-Type': 'application/json' },
         data: updateUserSchema,
@@ -324,7 +322,7 @@ export const updateUser = (
 
 export const deleteUser = (id: string) => {
     return fetcher<void>({
-        url: `/demo2/api/admin/user-admin/${id}`,
+        url: `/api/admin/user-admin/${id}`,
         method: 'delete',
     });
 };

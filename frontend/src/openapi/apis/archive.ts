@@ -15,14 +15,12 @@ import type { ErrorType } from '../fetcher';
  */
 export const getArchivedFeatures = () => {
     return fetcher<FeaturesSchema>({
-        url: `/demo2/api/admin/archive/features`,
+        url: `/api/admin/archive/features`,
         method: 'get',
     });
 };
 
-export const getGetArchivedFeaturesKey = () => [
-    `/demo2/api/admin/archive/features`,
-];
+export const getGetArchivedFeaturesKey = () => [`/api/admin/archive/features`];
 
 export type GetArchivedFeaturesQueryResult = NonNullable<
     Awaited<ReturnType<typeof getArchivedFeatures>>
@@ -60,13 +58,13 @@ export const useGetArchivedFeatures = <TError = ErrorType<unknown>>(options?: {
  */
 export const getArchivedFeaturesByProjectId = (projectId: string) => {
     return fetcher<FeaturesSchema>({
-        url: `/demo2/api/admin/archive/features/${projectId}`,
+        url: `/api/admin/archive/features/${projectId}`,
         method: 'get',
     });
 };
 
 export const getGetArchivedFeaturesByProjectIdKey = (projectId: string) => [
-    `/demo2/api/admin/archive/features/${projectId}`,
+    `/api/admin/archive/features/${projectId}`,
 ];
 
 export type GetArchivedFeaturesByProjectIdQueryResult = NonNullable<
@@ -106,14 +104,14 @@ export const useGetArchivedFeaturesByProjectId = <TError = ErrorType<unknown>>(
 
 export const deleteFeature = (featureName: string) => {
     return fetcher<void>({
-        url: `/demo2/api/admin/archive/${featureName}`,
+        url: `/api/admin/archive/${featureName}`,
         method: 'delete',
     });
 };
 
 export const reviveFeature = (featureName: string) => {
     return fetcher<void>({
-        url: `/demo2/api/admin/archive/revive/${featureName}`,
+        url: `/api/admin/archive/revive/${featureName}`,
         method: 'post',
     });
 };

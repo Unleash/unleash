@@ -19,7 +19,7 @@ export const getPlayground = (
     playgroundRequestSchema: BodyType<PlaygroundRequestSchema>
 ) => {
     return fetcher<PlaygroundResponseSchema>({
-        url: `/demo2/api/admin/playground`,
+        url: `/api/admin/playground`,
         method: 'post',
         headers: { 'Content-Type': 'application/json' },
         data: playgroundRequestSchema,

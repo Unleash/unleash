@@ -19,12 +19,12 @@ import type { ErrorType, BodyType } from '../fetcher';
 
 export const getPats = () => {
     return fetcher<PatsSchema>({
-        url: `/demo2/api/admin/user/tokens`,
+        url: `/api/admin/user/tokens`,
         method: 'get',
     });
 };
 
-export const getGetPatsKey = () => [`/demo2/api/admin/user/tokens`];
+export const getGetPatsKey = () => [`/api/admin/user/tokens`];
 
 export type GetPatsQueryResult = NonNullable<
     Awaited<ReturnType<typeof getPats>>
@@ -58,7 +58,7 @@ export const useGetPats = <TError = ErrorType<unknown>>(options?: {
 
 export const createPat = (patSchema: BodyType<PatSchema>) => {
     return fetcher<PatSchema>({
-        url: `/demo2/api/admin/user/tokens`,
+        url: `/api/admin/user/tokens`,
         method: 'post',
         headers: { 'Content-Type': 'application/json' },
         data: patSchema,
@@ -67,19 +67,19 @@ export const createPat = (patSchema: BodyType<PatSchema>) => {
 
 export const deletePat = (id: string) => {
     return fetcher<void>({
-        url: `/demo2/api/admin/user/tokens/${id}`,
+        url: `/api/admin/user/tokens/${id}`,
         method: 'delete',
     });
 };
 
 export const getAllApiTokens = () => {
     return fetcher<ApiTokensSchema>({
-        url: `/demo2/api/admin/api-tokens`,
+        url: `/api/admin/api-tokens`,
         method: 'get',
     });
 };
 
-export const getGetAllApiTokensKey = () => [`/demo2/api/admin/api-tokens`];
+export const getGetAllApiTokensKey = () => [`/api/admin/api-tokens`];
 
 export type GetAllApiTokensQueryResult = NonNullable<
     Awaited<ReturnType<typeof getAllApiTokens>>
@@ -116,7 +116,7 @@ export const createApiToken = (
     createApiTokenSchema: BodyType<CreateApiTokenSchema>
 ) => {
     return fetcher<ApiTokenSchema>({
-        url: `/demo2/api/admin/api-tokens`,
+        url: `/api/admin/api-tokens`,
         method: 'post',
         headers: { 'Content-Type': 'application/json' },
         data: createApiTokenSchema,
@@ -128,7 +128,7 @@ export const updateApiToken = (
     updateApiTokenSchema: BodyType<UpdateApiTokenSchema>
 ) => {
     return fetcher<void>({
-        url: `/demo2/api/admin/api-tokens/${token}`,
+        url: `/api/admin/api-tokens/${token}`,
         method: 'put',
         headers: { 'Content-Type': 'application/json' },
         data: updateApiTokenSchema,
@@ -137,7 +137,7 @@ export const updateApiToken = (
 
 export const deleteApiToken = (token: string) => {
     return fetcher<void>({
-        url: `/demo2/api/admin/api-tokens/${token}`,
+        url: `/api/admin/api-tokens/${token}`,
         method: 'delete',
     });
 };

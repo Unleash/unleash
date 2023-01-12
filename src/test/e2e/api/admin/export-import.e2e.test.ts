@@ -169,11 +169,11 @@ test('returns all features, when no feature was defined', async () => {
 test('import features to existing project and environment', async () => {
     const project = 'new_project';
     const environment = 'staging';
-    const feature: FeatureToggle = {
+    const exportedFeature: FeatureToggle = {
         project: 'old_project',
         name: 'first_feature',
     };
-    const strategy: IFeatureStrategy = {
+    const exportedStrategy: IFeatureStrategy = {
         id: '798cb25a-2abd-47bd-8a95-40ec13472309',
         featureName: 'first_feature',
         projectId: 'old_project',
@@ -182,8 +182,11 @@ test('import features to existing project and environment', async () => {
         parameters: {},
         constraints: [],
     };
-    const dto: IImportDTO = {
-        data: { features: [feature], featureStrategies: [strategy] },
+    const importPayload: IImportDTO = {
+        data: {
+            features: [exportedFeature],
+            featureStrategies: [exportedStrategy],
+        },
         project: project,
         environment: environment,
     };
@@ -191,19 +194,17 @@ test('import features to existing project and environment', async () => {
 
     await app.request
         .post('/api/admin/features-batch/import')
-        .send(dto)
+        .send(importPayload)
         .set('Content-Type', 'application/json')
         .expect(201);
 
     const { body: importedFeature } = await app.request
         .get('/api/admin/features/first_feature')
         .expect(200);
-
     expect(importedFeature).toMatchObject({
         name: 'first_feature',
         project: project,
     });
-
     const { body: importedStrategies } = await app.request
         .get(
             `/api/admin/projects/${project}/features/first_feature/environments/${environment}/strategies`,

@@ -150,11 +150,18 @@ export const GroupCard = ({ group }: IGroupCardProps) => {
                     </StyledBottomRow>
                 </StyledGroupCard>
             </StyledLink>
-            <EditGroupUsers
-                open={editUsersOpen}
-                setOpen={setEditUsersOpen}
-                group={group}
+
+            <ConditionallyRender
+                condition={editUsersOpen}
+                show={
+                    <EditGroupUsers
+                        open={editUsersOpen}
+                        setOpen={setEditUsersOpen}
+                        group={group}
+                    />
+                }
             />
+
             <RemoveGroup
                 open={removeOpen}
                 setOpen={setRemoveOpen}

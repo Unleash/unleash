@@ -5,14 +5,26 @@ import {
 import dbInit, { ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import { IEventStore } from 'lib/types/stores/event-store';
-import { FeatureToggle, FeatureToggleDTO, IStrategyConfig } from 'lib/types';
+import {
+    FeatureToggle,
+    FeatureToggleDTO,
+    IEnvironmentStore,
+    IFeatureStrategy,
+    IFeatureToggleStore,
+    IProjectStore,
+    IStrategyConfig,
+} from 'lib/types';
 import { DEFAULT_ENV } from '../../../../lib/util';
+import { IImportDTO } from '../../../../lib/services/export-import-service';
 
 let app: IUnleashTest;
 let db: ITestDb;
 let eventStore: IEventStore;
+let environmentStore: IEnvironmentStore;
+let projectStore: IProjectStore;
+let toggleStore: IFeatureToggleStore;
 
-const defaultStrategy = {
+const defaultStrategy: IStrategyConfig = {
     name: 'default',
     parameters: {},
     constraints: [],
@@ -38,6 +50,24 @@ const createToggle = async (
     }
 };
 
+const createProject = async (project: string, environment: string) => {
+    await db.stores.environmentStore.create({
+        name: environment,
+        type: 'production',
+    });
+    await db.stores.projectStore.create({
+        name: project,
+        description: '',
+        id: project,
+    });
+    await app.request
+        .post(`/api/admin/projects/${project}/environments`)
+        .send({
+            environment,
+        })
+        .expect(200);
+};
+
 beforeAll(async () => {
     db = await dbInit('export_import_api_serial', getLogger);
     app = await setupAppWithCustomConfig(db.stores, {
@@ -48,10 +78,16 @@ beforeAll(async () => {
         },
     });
     eventStore = db.stores.eventStore;
+    environmentStore = db.stores.environmentStore;
+    projectStore = db.stores.projectStore;
+    toggleStore = db.stores.featureToggleStore;
 });
 
 beforeEach(async () => {
     await eventStore.deleteAll();
+    await toggleStore.deleteAll();
+    await projectStore.deleteAll();
+    await environmentStore.deleteAll();
 });
 
 afterAll(async () => {
@@ -59,11 +95,10 @@ afterAll(async () => {
     await db.destroy();
 });
 
-afterEach(async () => {
-    await db.stores.featureToggleStore.deleteAll();
-});
+afterEach(async () => {});
 
 test('exports features', async () => {
+    await createProject('default', 'default');
     const strategy = {
         name: 'default',
         parameters: { rollout: '100', stickiness: 'default' },
@@ -110,6 +145,7 @@ test('exports features', async () => {
 });
 
 test('returns all features, when no feature was defined', async () => {
+    await createProject('default', 'default');
     await createToggle({
         name: 'first_feature',
         description: 'the #1 feature',
@@ -130,24 +166,56 @@ test('returns all features, when no feature was defined', async () => {
     expect(body.features).toHaveLength(2);
 });
 
-test('import features', async () => {
-    const feature: FeatureToggle = { project: 'ignore', name: 'first_feature' };
+test('import features to existing project and environment', async () => {
+    const project = 'new_project';
+    const environment = 'staging';
+    const feature: FeatureToggle = {
+        project: 'old_project',
+        name: 'first_feature',
+    };
+    const strategy: IFeatureStrategy = {
+        id: '798cb25a-2abd-47bd-8a95-40ec13472309',
+        featureName: 'first_feature',
+        projectId: 'old_project',
+        environment: 'old_environment',
+        strategyName: 'default',
+        parameters: {},
+        constraints: [],
+    };
+    const dto: IImportDTO = {
+        data: { features: [feature], featureStrategies: [strategy] },
+        project: project,
+        environment: environment,
+    };
+    await createProject(project, environment);
+
     await app.request
         .post('/api/admin/features-batch/import')
-        .send({
-            data: { features: [feature] },
-            project: 'default',
-            environment: 'custom_environment',
-        })
+        .send(dto)
         .set('Content-Type', 'application/json')
         .expect(201);
 
-    const { body } = await app.request
+    const { body: importedFeature } = await app.request
         .get('/api/admin/features/first_feature')
         .expect(200);
 
-    expect(body).toMatchObject({
+    expect(importedFeature).toMatchObject({
         name: 'first_feature',
-        project: 'default',
+        project: project,
     });
+
+    const { body: importedStrategies } = await app.request
+        .get(
+            `/api/admin/projects/${project}/features/first_feature/environments/${environment}/strategies`,
+        )
+        .expect(200);
+
+    expect(importedStrategies).toMatchObject([
+        {
+            name: 'default',
+            parameters: {},
+            segments: [],
+            sortOrder: 9999,
+        },
+    ]);
 });

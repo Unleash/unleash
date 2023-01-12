@@ -26,8 +26,8 @@ export interface IExportQuery {
 
 export interface IImportDTO {
     data: IExportData;
-    project?: string;
-    environment?: string;
+    project: string;
+    environment: string;
 }
 
 export interface IExportData {
@@ -106,8 +106,27 @@ export default class ExportImportService {
         await Promise.all(
             dto.data.features.map((feature) =>
                 this.featureToggleService.createFeatureToggle(
-                    dto.project || feature.project,
+                    dto.project,
                     feature,
+                    user.name,
+                ),
+            ),
+        );
+        await Promise.all(
+            dto.data.featureStrategies.map((featureStrategy) =>
+                this.featureToggleService.unprotectedCreateStrategy(
+                    {
+                        name: featureStrategy.strategyName,
+                        constraints: featureStrategy.constraints,
+                        parameters: featureStrategy.parameters,
+                        segments: featureStrategy.segments,
+                        sortOrder: featureStrategy.sortOrder,
+                    },
+                    {
+                        featureName: featureStrategy.featureName,
+                        environment: dto.environment,
+                        projectId: dto.project,
+                    },
                     user.name,
                 ),
             ),

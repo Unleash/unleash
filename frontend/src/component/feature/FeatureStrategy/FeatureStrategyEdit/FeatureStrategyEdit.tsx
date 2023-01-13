@@ -90,7 +90,7 @@ export const FeatureStrategyEdit = () => {
     useEffect(() => {
         // Fill in the selected segments once they've been fetched.
         savedStrategySegments && setSegments(savedStrategySegments);
-    }, [savedStrategySegments]);
+    }, [JSON.stringify(savedStrategySegments)]);
 
     const onStrategyEdit = async (payload: IFeatureStrategyPayload) => {
         await updateStrategyOnFeature(

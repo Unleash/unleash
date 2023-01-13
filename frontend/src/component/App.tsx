@@ -27,8 +27,6 @@ const InitialRedirect = () => {
     const navigate = useNavigate();
     const ref = useRef<{ redirected: boolean }>({ redirected: false });
 
-    const [redirectTo, setRedirectTo] = useState<string | undefined>();
-
     const getRedirect = useCallback(() => {
         if (projects && lastViewed) {
             return `/projects/${lastViewed}`;
@@ -41,12 +39,6 @@ const InitialRedirect = () => {
         return '/projects';
     }, [lastViewed, projects]);
 
-    useEffect(() => {
-        if (!loading) {
-            setRedirectTo(getRedirect());
-        }
-    }, [loading, getRedirect]);
-
     const redirect = () => {
         ref.current = { redirected: true };
         navigate(getRedirect(), { replace: true });
@@ -58,7 +50,7 @@ const InitialRedirect = () => {
         redirect();
     }, [getRedirect]);
 
-    if (loading || !redirectTo) {
+    if (loading) {
         return <Loader />;
     }
 
@@ -95,6 +87,7 @@ export const App = () => {
                             show={<Loader />}
                             elseShow={
                                 <>
+                                    <InitialRedirect />
                                     <ConditionallyRender
                                         condition={
                                             Boolean(
@@ -131,7 +124,7 @@ export const App = () => {
                                             />
                                         </Routes>
                                         <FeedbackNPS openUrl="http://feedback.unleash.run" />
-                                        <InitialRedirect />
+
                                         <SplashPageRedirect />
                                     </StyledContainer>
                                 </>

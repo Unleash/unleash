@@ -14,6 +14,7 @@
     "start": "vite",
     "start:prod": "vite build && vite preview",
     "start:sandbox": "UNLEASH_API=https://sandbox.getunleash.io/ospro yarn run start",
+    "start:demo2": "UNLEASH_API=https://sandbox.getunleash.io/ UNLEASH_BASE_PATH=/demo2/ yarn run start",
     "start:enterprise": "UNLEASH_API=https://unleash.herokuapp.com yarn run start",
     "start:demo": "UNLEASH_BASE_PATH=/demo/ yarn start",
     "test": "tsc && vitest run",

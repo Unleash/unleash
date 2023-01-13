@@ -1,5 +1,18 @@
-import { Suspense, useCallback, useEffect, useState } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import {
+    Suspense,
+    useCallback,
+    useEffect,
+    useState,
+    createRef,
+    useRef,
+} from 'react';
+import {
+    Navigate,
+    redirect,
+    Route,
+    Routes,
+    useNavigate,
+} from 'react-router-dom';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Error } from 'component/layout/Error/Error';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -24,6 +37,8 @@ import { styled } from '@mui/material';
 const InitialRedirect = () => {
     const { lastViewed } = useLastViewedProject();
     const { projects, loading } = useProjects();
+    const navigate = useNavigate();
+    const ref = useRef<{ redirected: boolean }>({ redirected: false });
 
     const [redirectTo, setRedirectTo] = useState<string | undefined>();
 
@@ -45,12 +60,26 @@ const InitialRedirect = () => {
         }
     }, [loading, getRedirect]);
 
+    const redirect = () => {
+        ref.current = { redirected: true };
+        navigate(getRedirect(), { replace: true });
+    };
+
+    useEffect(() => {
+        if (ref.current?.redirected === true) return;
+
+        redirect();
+    }, [getRedirect]);
+
     if (loading || !redirectTo) {
         return <Loader />;
     }
 
-    return <Navigate to={redirectTo} />;
+    return <></>;
 };
+
+// Mount the app
+// Get the redirect path
 
 const StyledContainer = styled('div')(() => ({
     '& ul': {
@@ -110,15 +139,12 @@ export const App = () => {
                                                 />
                                             ))}
                                             <Route
-                                                path="/"
-                                                element={<InitialRedirect />}
-                                            />
-                                            <Route
                                                 path="*"
                                                 element={<NotFound />}
                                             />
                                         </Routes>
                                         <FeedbackNPS openUrl="http://feedback.unleash.run" />
+                                        <InitialRedirect />
                                         <SplashPageRedirect />
                                     </StyledContainer>
                                 </>

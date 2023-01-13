@@ -4,7 +4,7 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledVisibilityToggle = styled(IconButton, {
-    shouldForwardProp: prop => prop !== 'highlighted',
+    shouldForwardProp: prop => prop !== 'visibilityOff',
 })<{ visibilityOff: boolean }>(({ theme, visibilityOff }) => ({
     marginLeft: 'auto',
     marginRight: theme.spacing(-1),

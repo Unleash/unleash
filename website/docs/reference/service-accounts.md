@@ -24,7 +24,7 @@ In order to create a service account, you can follow the [how to create service 
 
 Service account tokens allow service accounts to use the Admin API as themselves with their own set of permissions, rather than using an admin token. See [_how to use the Admin API_](../how-to/how-to-use-the-admin-api.md) for more information.
 
-These tokens act just like [personal access tokens](./api-tokens-and-client-keys.mdx#personal-access-tokens) for the service accounts, except they are managed by Unleash admins.
+These tokens act just like [personal access tokens](./api-tokens-and-client-keys.mdx#personal-access-tokens) for the service accounts, except that they are managed by Unleash admins.
 
 When using a service account token to modify resources, the event log will display the service account name for that operation.
 

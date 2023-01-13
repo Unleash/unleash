@@ -322,7 +322,7 @@ export const ServiceAccountTokens = ({
             <ServiceAccountCreateTokenDialog
                 open={createOpen}
                 setOpen={setCreateOpen}
-                serviceAccount={serviceAccount}
+                tokens={tokens}
                 onCreateClick={onCreateClick}
             />
             <ServiceAccountTokenDialog

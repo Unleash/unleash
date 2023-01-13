@@ -60,6 +60,7 @@ const StyledConstraintLabel = styled('p')(({ theme }) => ({
 const StyledAddCustomLabel = styled('div')(({ theme }) => ({
     marginBottom: theme.spacing(1),
     color: theme.palette.text.secondary,
+    display: 'flex',
 }));
 
 export const ConstraintAccordionList = forwardRef<

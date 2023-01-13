@@ -8,7 +8,7 @@ Service accounts is an upcoming enterprise feature, and is scheduled to become a
 
 :::
 
-Service accounts enable Unleash admins to create accounts that act as users and respect the same set of permissions, however they don't represent real users. These accounts do not have a password and cannot log in to the Unleash UI. Instead, they are intended to be used to access the Unleash API programmatically, providing integrations an identity.
+Service accounts are accounts that act as normal Unleash users and that respect the same set of permissions, but that don't represent real users. These accounts do not have a password and cannot log in to the Unleash UI. Instead, they are intended to be used to access the Unleash API programmatically, providing integrations an identity.
 
 ![Service account table](/img/service-account-table.png)
 

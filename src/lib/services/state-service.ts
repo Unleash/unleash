@@ -725,26 +725,35 @@ export default class StateService {
         const v4 = await this.exportV4({ ...opts, includeEnvironments: true });
         // undefined defaults to true
         if (opts.includeFeatureToggles !== false) {
-            const keepEnv = v4.environments
-                .filter((env) => env.enabled !== false)
-                .sort((e1, e2) => {
-                    if (e1.type !== 'production' || e2.type !== 'production') {
-                        if (e1.type === 'production') {
-                            return -1;
-                        } else if (e2.type === 'production') {
-                            return 1;
-                        }
-                    }
-                    return e1.sortOrder - e2.sortOrder;
-                })[0];
-
-            const featureEnvs = v4.featureEnvironments.filter(
-                (fE) => fE.environment === keepEnv.name,
+            const enabledEnvironments = v4.environments.filter(
+                (env) => env.enabled !== false,
             );
+
+            const featureAndEnvs = v4.featureEnvironments.map((fE) => {
+                const envDetails = enabledEnvironments.find(
+                    (env) => fE.environment === env.name,
+                );
+                return { ...fE, ...envDetails, active: fE.enabled };
+            });
             v4.features = v4.features.map((f) => {
-                const variants = featureEnvs.find(
-                    (fe) => fe.featureName === f.name,
-                )?.variants;
+                const variants = featureAndEnvs
+                    .sort((e1, e2) => {
+                        if (e1.active !== e2.active) {
+                            return e1.active ? -1 : 1;
+                        }
+                        if (
+                            e1.type !== 'production' ||
+                            e2.type !== 'production'
+                        ) {
+                            if (e1.type === 'production') {
+                                return -1;
+                            } else if (e2.type === 'production') {
+                                return 1;
+                            }
+                        }
+                        return e1.sortOrder - e2.sortOrder;
+                    })
+                    .find((fe) => fe.featureName === f.name)?.variants;
                 return { ...f, variants };
             });
             v4.featureEnvironments = v4.featureEnvironments.map((fe) => {
@@ -755,6 +764,10 @@ export default class StateService {
         // only if explicitly set to false (i.e. undefined defaults to true)
         if (opts.includeEnvironments === false) {
             delete v4.environments;
+        } else {
+            if (v4.environments.length === 0) {
+                throw Error('Unable to export without enabled environments');
+            }
         }
         v4.version = 3;
         return v4;

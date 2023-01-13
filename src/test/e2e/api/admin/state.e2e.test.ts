@@ -5,6 +5,7 @@ import { DEFAULT_ENV } from '../../../../lib/util/constants';
 import { collectIds } from '../../../../lib/util/collect-ids';
 import { ApiTokenType } from '../../../../lib/types/models/api-token';
 import variantsv3 from '../../../examples/variantsexport_v3.json';
+import v3WithDefaultDisabled from '../../../examples/exported3-with-default-disabled.json';
 import { StateService } from '../../../../lib/services';
 
 const importData = require('../../../examples/import.json');
@@ -491,6 +492,39 @@ test(`should handle v3 export with variants in features`, async () => {
         })
         .sort();
     let importedFeatures = variantsv3.features
+        .map((f) => {
+            delete f.createdAt;
+            return f;
+        })
+        .sort();
+    expect(exportedFeatures).toStrictEqual(importedFeatures);
+});
+
+test(`should handle v3 export with variants in features and only 1 env`, async () => {
+    app.services.stateService = new StateService(db.stores, {
+        getLogger,
+        flagResolver: {
+            isEnabled: () => false,
+            getAll: () => ({}),
+        },
+    });
+
+    await app.request
+        .post('/api/admin/state/import?drop=true')
+        .attach(
+            'file',
+            'src/test/examples/exported3-with-default-disabled.json',
+        )
+        .expect(202);
+
+    const exported = await app.services.stateService.export({});
+    let exportedFeatures = exported.features
+        .map((f) => {
+            delete f.createdAt;
+            return f;
+        })
+        .sort();
+    let importedFeatures = v3WithDefaultDisabled.features
         .map((f) => {
             delete f.createdAt;
             return f;

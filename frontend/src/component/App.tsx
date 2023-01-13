@@ -87,7 +87,6 @@ export const App = () => {
                             show={<Loader />}
                             elseShow={
                                 <>
-                                    <InitialRedirect />
                                     <ConditionallyRender
                                         condition={
                                             Boolean(
@@ -123,6 +122,7 @@ export const App = () => {
                                                 element={<NotFound />}
                                             />
                                         </Routes>
+                                        <InitialRedirect />
                                         <FeedbackNPS openUrl="http://feedback.unleash.run" />
 
                                         <SplashPageRedirect />

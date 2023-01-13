@@ -15,13 +15,32 @@
 // type ReadmeData = Readme & { repoUrl: string };
 
 // all SDK repos and what they map to for the sidebar.
-const SDKS = {
+const sdksUnmapped = {
     'unleash-client-go': {
         sidebarName: 'Go',
         branch: 'v3',
     },
+    'unleash-client-java': {
+        sidebarName: 'Java',
+    },
+    'unleash-client-node': {
+        sidebarName: 'Node',
+    },
+    'unleash-client-php': {
+        sidebarName: 'PHP',
+    },
+    'unleash-client-python': {
+        sidebarName: 'Python',
+    },
+    'unleash-client-ruby': {
+        sidebarName: 'Ruby',
+    },
     'unleash-client-rust': {
         sidebarName: 'Rust',
+    },
+    'unleash-client-dotnet': {
+        sidebarName: '.NET',
+        slugName: 'dotnet',
     },
 
     // 'unleash-android-proxy-sdk': {
@@ -30,25 +49,67 @@ const SDKS = {
     // },
 };
 
+const SDKS = Object.fromEntries(
+    Object.entries(sdksUnmapped).map(([repoName, repoData]) => {
+        const repoUrl = `https://github.com/Unleash/${repoName}`;
+        const slugName = (
+            repoData.slugName ?? repoData.sidebarName
+        ).toLowerCase();
+        const branch = repoData.branch ?? 'main';
+
+        return [repoName, { ...repoData, repoUrl, slugName, branch }];
+    }),
+);
+
 function getReadmeRepoData(filename) {
     const repoName = filename.split('/')[0];
 
     const repoData = SDKS[repoName];
 
-    const repoUrl = `https://github.com/Unleash/${repoName}`;
-
-    if (repoData) {
-        return {
-            repoUrl,
-            ...repoData,
-            slugName: (repoData.slugName ?? repoData.sidebarName).toLowerCase(),
-        };
-    } else return { sidebarName: repoName, repoUrl };
+    return repoData;
 }
 
 const documentUrls = Object.entries(SDKS).map(
-    ([repo, { branch = 'main' }]) => `${repo}/${branch ?? 'main'}/README.md`,
+    ([repo, { branch }]) => `${repo}/${branch}/README.md`,
 );
+
+// Replace links in the incoming readme content.
+//
+// There's one cases we want to handle:
+//
+// 1. Relative links that point to the repo. These must be prefixed with the
+// link to the github repo.
+//
+// Note: You might be tempted to handle absolute links to docs.getunleash.io and
+// make them relative. While absolute links will work, they trigger full page
+// refreshes. Relative links give a slightly smoother user experience.
+//
+// However, if the old link goes to a redirect, then the client-side redirect
+// will not kick in, so you'll end up with a "Page not found".
+const replaceLinks = ({ content, repo }) => {
+    const markdownLink = /(?<=\[.*\]\(\s?)([^\s\)]+)(?=.*\))/g;
+
+    const replacer = (url) => {
+        try {
+            // This constructor will throw if the URL is relative.
+            // https://developer.mozilla.org/en-US/docs/Web/API/URL/URL
+            const parsedUrl = new URL(url);
+
+            return url;
+        } catch {
+            // case 1
+            if (url.startsWith('#')) {
+                // ignore links to other doc sections
+                return url;
+            } else {
+                const separator = url.startsWith('/') ? '' : '/';
+                return `${repo.url}/blob/${repo.branch}${separator}${url}`;
+            }
+        }
+    };
+
+    return content.replaceAll(markdownLink, replacer);
+};
 
 const modifyContent = (filename, content) => {
     const sdk = getReadmeRepoData(filename);
@@ -56,9 +117,10 @@ const modifyContent = (filename, content) => {
     const generationTime = new Date();
 
     return {
-        filename: `${sdk.slugName}.md`,
+        filename: `server-side/${sdk.slugName}.md`,
         content: `---
 title: ${sdk.sidebarName} SDK
+slug: /reference/sdks/${sdk.slugName}
 ---
 
 :::info Generated content
@@ -71,7 +133,7 @@ This document was generated from the README in the [${
 To connect to Unleash, you'll need your Unleash API url (e.g. \`https://<your-unleash>/api\`) and a [server-side API token](/reference/api-tokens-and-client-keys.mdx#client-tokens) ([how do I create an API token?](/how-to/how-to-create-api-tokens.mdx)).
 :::
 
-${content}
+${replaceLinks({ content, repo: { url: sdk.repoUrl, branch: sdk.branch } })}
 
 ---
 

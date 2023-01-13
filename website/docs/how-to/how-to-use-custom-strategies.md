@@ -31,7 +31,7 @@ The steps to implement a custom strategy for your client depend on the kind of c
 
 ### Option A: Implement the strategy for a server-side client SDK {#step-3-a}
 
-1. **Implement the custom strategy** in your [client SDK](../reference/sdks/index.md). The exact way to do this will vary depending on the specific SDK you're using, so refer to the SDK's documentation. The example below shows an example of how you'd implement a custom strategy called "TimeStamp" for the [Node.js client SDK](../reference/sdks/node.md).
+1. **Implement the custom strategy** in your [client SDK](../reference/sdks/index.md). The exact way to do this will vary depending on the specific SDK you're using, so refer to the SDK's documentation. The example below shows an example of how you'd implement a custom strategy called "TimeStamp" for the [Node.js client SDK](/docs/generated/sdks/server-side/node.md).
 
    ```js
    const { Strategy } = require('unleash-client');

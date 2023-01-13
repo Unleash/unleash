@@ -603,7 +603,7 @@ module.exports = {
                 // more info at https://github.com/rdilweb/docusaurus-plugin-remote-content#options
                 name: 'content-sdks',
                 sourceBaseUrl: 'https://raw.githubusercontent.com/Unleash/', // gets prepended to all of the documents when fetching
-                outDir: 'docs/reference/sdks', // the base directory to output to.
+                outDir: 'docs/generated/sdks', // the base directory to output to.
                 documents: readmes.documentUrls, // the file names to download
                 modifyContent: readmes.modifyContent,
             },

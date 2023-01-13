@@ -14,7 +14,7 @@ Service accounts are accounts that act as normal Unleash users and that respect 
 
 Use service accounts to:
 
-- Provide an user-like identity to an integration or automation and manage it within Unleash
+- Provide a user-like identity to an integration or automation and manage it within Unleash
 - Give access to the Unleash API without giving access to the Unleash UI
 - Provide more fine-grained permissions than an admin token provides
 

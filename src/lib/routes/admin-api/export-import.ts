@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import Controller from '../controller';
 import { NONE } from '../../types/permissions';
 import { IUnleashConfig } from '../../types/option';
@@ -14,6 +14,8 @@ import { exportResultSchema } from '../../openapi/spec/export-result-schema';
 import { ExportQuerySchema } from '../../openapi/spec/export-query-schema';
 import { serializeDates } from '../../types';
 import { IAuthRequest } from '../unleash-types';
+import { format as formatDate } from 'date-fns';
+import { extractUsername } from '../../util';
 
 class ExportImportController extends Controller {
     private logger: Logger;
@@ -58,12 +60,13 @@ class ExportImportController extends Controller {
     }
 
     async export(
-        req: Request<unknown, unknown, ExportQuerySchema, unknown>,
+        req: IAuthRequest<unknown, unknown, ExportQuerySchema, unknown>,
         res: Response,
     ): Promise<void> {
         this.verifyExportImportEnabled();
         const query = req.body;
-        const data = await this.exportImportService.export(query);
+        const userName = extractUsername(req);
+        const data = await this.exportImportService.export(query, userName);
 
         this.openApiService.respondWithValidation(
             200,
@@ -71,6 +74,13 @@ class ExportImportController extends Controller {
             exportResultSchema.$id,
             serializeDates(data),
         );
+
+        const timestamp = formatDate(Date.now(), 'yyyy-MM-dd_HH-mm-ss');
+        if (query.downloadFile) {
+            res.attachment(`export-${timestamp}.json`);
+        }
+
+        res.json(data);
     }
 
     private verifyExportImportEnabled() {

@@ -12,10 +12,12 @@ import {
     IFeatureStrategy,
     IFeatureToggleStore,
     IProjectStore,
+    ISegment,
     IStrategyConfig,
 } from 'lib/types';
 import { DEFAULT_ENV } from '../../../../lib/util';
 import { IImportDTO } from '../../../../lib/services/export-import-service';
+import { ContextFieldSchema } from '../../../../lib/openapi';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -30,9 +32,19 @@ const defaultStrategy: IStrategyConfig = {
     constraints: [],
 };
 
+const defaultContext: ContextFieldSchema = {
+    name: 'region',
+    description: 'A region',
+    legalValues: [
+        { value: 'north' },
+        { value: 'south', description: 'south-desc' },
+    ],
+};
+
 const createToggle = async (
     toggle: FeatureToggleDTO,
     strategy: Omit<IStrategyConfig, 'id'> = defaultStrategy,
+    tags: string[] = [],
     projectId: string = 'default',
     username: string = 'test',
 ) => {
@@ -48,6 +60,24 @@ const createToggle = async (
             username,
         );
     }
+    tags.forEach((tag) => {
+        app.services.featureTagService.addTag(
+            toggle.name,
+            {
+                type: 'simple',
+                value: tag,
+            },
+            username,
+        );
+    });
+};
+
+const createContext = async (context: ContextFieldSchema = defaultContext) => {
+    await app.request
+        .post('/api/admin/context')
+        .send(context)
+        .set('Content-Type', 'application/json')
+        .expect(201);
 };
 
 const createProject = async (project: string, environment: string) => {
@@ -66,6 +96,13 @@ const createProject = async (project: string, environment: string) => {
             environment,
         })
         .expect(200);
+    // await db.stores.projectStore.addEnvironmentToProject(project, environment);
+};
+
+const createSegment = (postData: object): Promise<ISegment> => {
+    return app.services.segmentService.create(postData, {
+        email: 'test@example.com',
+    });
 };
 
 beforeAll(async () => {
@@ -97,6 +134,7 @@ afterAll(async () => {
 
 test('exports features', async () => {
     await createProject('default', 'default');
+    const segment = await createSegment({ name: 'S3', constraints: [] });
     const strategy = {
         name: 'default',
         parameters: { rollout: '100', stickiness: 'default' },
@@ -107,6 +145,7 @@ test('exports features', async () => {
                 operator: 'IN' as const,
             },
         ],
+        segments: [segment.id],
     };
     await createToggle(
         {
@@ -146,6 +185,109 @@ test('exports features', async () => {
                 featureName: 'first_feature',
                 variants: [],
             },
+        ],
+    });
+});
+
+test('should export custom context fields', async () => {
+    await createProject('default', 'default');
+    const context = {
+        name: 'test-export',
+        legalValues: [
+            { value: 'estonia' },
+            { value: 'norway' },
+            { value: 'poland' },
+        ],
+    };
+    await createContext(context);
+    const strategy = {
+        name: 'default',
+        parameters: { rollout: '100', stickiness: 'default' },
+        constraints: [
+            {
+                contextName: context.name,
+                values: ['estonia', 'norway'],
+                operator: 'IN' as const,
+            },
+        ],
+    };
+    await createToggle(
+        {
+            name: 'first_feature',
+            description: 'the #1 feature',
+        },
+        strategy,
+    );
+
+    const { body } = await app.request
+        .post('/api/admin/features-batch/export')
+        .send({
+            features: ['first_feature'],
+            environment: 'default',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(200);
+
+    const { name, ...resultStrategy } = strategy;
+    expect(body).toMatchObject({
+        features: [
+            {
+                name: 'first_feature',
+            },
+        ],
+        featureStrategies: [resultStrategy],
+        featureEnvironments: [
+            {
+                enabled: false,
+                environment: 'default',
+                featureName: 'first_feature',
+                variants: [],
+            },
+        ],
+        contextFields: [context],
+    });
+});
+
+test('should export tags', async () => {
+    const featureName = 'first_feature';
+    await createProject('default', 'default');
+    await createToggle(
+        {
+            name: featureName,
+            description: 'the #1 feature',
+        },
+        defaultStrategy,
+        ['tag1', 'tag2'],
+    );
+
+    const { body } = await app.request
+        .post('/api/admin/features-batch/export')
+        .send({
+            features: ['first_feature'],
+            environment: 'default',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(200);
+
+    const { name, ...resultStrategy } = defaultStrategy;
+    expect(body).toMatchObject({
+        features: [
+            {
+                name: 'first_feature',
+            },
+        ],
+        featureStrategies: [resultStrategy],
+        featureEnvironments: [
+            {
+                enabled: false,
+                environment: 'default',
+                featureName: 'first_feature',
+                variants: [],
+            },
+        ],
+        featureTags: [
+            { featureName, tagValue: 'tag1' },
+            { featureName, tagValue: 'tag2' },
         ],
     });
 });
@@ -225,6 +367,7 @@ test('import features to existing project and environment', async () => {
                     environment: 'irrelevant',
                 },
             ],
+            contextFields: [],
         },
         project: project,
         environment: environment,

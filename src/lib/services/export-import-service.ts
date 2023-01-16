@@ -3,6 +3,7 @@ import {
     FeatureToggle,
     IFeatureEnvironment,
     IFeatureStrategy,
+    IFeatureStrategySegment,
     ITag,
 } from '../types/model';
 import { Logger } from '../logger';
@@ -16,18 +17,13 @@ import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
 import { IFeatureStrategiesStore } from '../types/stores/feature-strategies-store';
 import { IEnvironmentStore } from '../types/stores/environment-store';
 import { IFeatureEnvironmentStore } from '../types/stores/feature-environment-store';
-import { IUnleashStores } from '../types/stores';
+import { IContextFieldStore, IUnleashStores } from '../types/stores';
 import { ISegmentStore } from '../types/stores/segment-store';
-import { IFlagResolver, IUnleashServices } from 'lib/types';
 import { IContextFieldDto } from '../types/stores/context-field-store';
 import FeatureToggleService from './feature-toggle-service';
 import User from 'lib/types/user';
 import { ExportQuerySchema } from '../openapi/spec/export-query-schema';
-
-export interface IExportQuery {
-    features: string[];
-    environment: string;
-}
+import { FEATURES_EXPORTED, IFlagResolver, IUnleashServices } from '../types';
 
 export interface IImportDTO {
     data: IExportData;
@@ -38,7 +34,7 @@ export interface IImportDTO {
 export interface IExportData {
     features: FeatureToggle[];
     tags?: ITag[];
-    contextFields?: IContextFieldDto[];
+    contextFields: IContextFieldDto[];
     featureStrategies: IFeatureStrategy[];
     featureEnvironments: IFeatureEnvironment[];
 }
@@ -72,6 +68,8 @@ export default class ExportImportService {
 
     private featureToggleService: FeatureToggleService;
 
+    private contextFieldStore: IContextFieldStore;
+
     constructor(
         stores: IUnleashStores,
         {
@@ -95,24 +93,72 @@ export default class ExportImportService {
         this.segmentStore = stores.segmentStore;
         this.flagResolver = flagResolver;
         this.featureToggleService = featureToggleService;
+        this.contextFieldStore = stores.contextFieldStore;
         this.logger = getLogger('services/state-service.js');
     }
 
-    async export(query: ExportQuerySchema): Promise<IExportData> {
-        const [features, featureEnvironments, featureStrategies] =
-            await Promise.all([
-                this.toggleStore.getAllByNames(query.features),
-                (
-                    await this.featureEnvironmentStore.getAll({
-                        environment: query.environment,
-                    })
-                ).filter((item) => query.features.includes(item.featureName)),
-                this.featureStrategiesStore.getAllByFeatures(
-                    query.features,
-                    query.environment,
+    async export(
+        query: ExportQuerySchema,
+        userName: string,
+    ): Promise<IExportData> {
+        const [
+            features,
+            featureEnvironments,
+            featureStrategies,
+            strategySegments,
+            contextFields,
+            featureTags,
+        ] = await Promise.all([
+            this.toggleStore.getAllByNames(query.features),
+            (
+                await this.featureEnvironmentStore.getAll({
+                    environment: query.environment,
+                })
+            ).filter((item) => query.features.includes(item.featureName)),
+            this.featureStrategiesStore.getAllByFeatures(
+                query.features,
+                query.environment,
+            ),
+            this.segmentStore.getAllFeatureStrategySegments(),
+            this.contextFieldStore.getAll(),
+            this.featureTagStore.getAll(),
+        ]);
+        this.addSegmentsToStrategies(featureStrategies, strategySegments);
+        const filteredContextFields = contextFields.filter((field) =>
+            featureStrategies.some((strategy) =>
+                strategy.constraints.some(
+                    (constraint) => constraint.contextName === field.name,
                 ),
-            ]);
-        return { features, featureStrategies, featureEnvironments };
+            ),
+        );
+        const result = {
+            features,
+            featureStrategies,
+            featureEnvironments,
+            contextFields: filteredContextFields,
+            featureTags,
+        };
+        await this.eventStore.store({
+            type: FEATURES_EXPORTED,
+            createdBy: userName,
+            data: result,
+        });
+
+        return result;
+    }
+
+    addSegmentsToStrategies(
+        featureStrategies: IFeatureStrategy[],
+        strategySegments: IFeatureStrategySegment[],
+    ): void {
+        featureStrategies.forEach((featureStrategy) => {
+            featureStrategy.segments = strategySegments
+                .filter(
+                    (segment) =>
+                        segment.featureStrategyId === featureStrategy.id,
+                )
+                .map((segment) => segment.segmentId);
+        });
     }
 
     async import(dto: IImportDTO, user: User): Promise<void> {

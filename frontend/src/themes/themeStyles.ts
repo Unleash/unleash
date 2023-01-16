@@ -29,6 +29,12 @@ export const textCenter = {
     textAlign: 'center',
 } as const;
 
+export const textTruncated = {
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+} as const;
+
 export const flexRow = {
     display: 'flex',
     alignItems: 'center',

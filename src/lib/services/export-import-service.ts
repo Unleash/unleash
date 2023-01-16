@@ -110,11 +110,9 @@ export default class ExportImportService {
             featureTags,
         ] = await Promise.all([
             this.toggleStore.getAllByNames(query.features),
-            (
-                await this.featureEnvironmentStore.getAll({
-                    environment: query.environment,
-                })
-            ).filter((item) => query.features.includes(item.featureName)),
+            await this.featureEnvironmentStore.getAll((builder) => {
+                builder.whereIn('feature_name', query.features);
+            }),
             this.featureStrategiesStore.getAllByFeatures(
                 query.features,
                 query.environment,

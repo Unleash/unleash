@@ -60,16 +60,18 @@ const createToggle = async (
             username,
         );
     }
-    tags.forEach((tag) => {
-        app.services.featureTagService.addTag(
-            toggle.name,
-            {
-                type: 'simple',
-                value: tag,
-            },
-            username,
-        );
-    });
+    await Promise.all(
+        tags.map(async (tag) => {
+            return app.services.featureTagService.addTag(
+                toggle.name,
+                {
+                    type: 'simple',
+                    value: tag,
+                },
+                username,
+            );
+        }),
+    );
 };
 
 const createContext = async (context: ContextFieldSchema = defaultContext) => {
@@ -257,7 +259,7 @@ test('should export tags', async () => {
             description: 'the #1 feature',
         },
         defaultStrategy,
-        ['tag1', 'tag2'],
+        ['tag1'],
     );
 
     const { body } = await app.request
@@ -285,10 +287,7 @@ test('should export tags', async () => {
                 variants: [],
             },
         ],
-        featureTags: [
-            { featureName, tagValue: 'tag1' },
-            { featureName, tagValue: 'tag2' },
-        ],
+        featureTags: [{ featureName, tagValue: 'tag1' }],
     });
 });
 

@@ -27,12 +27,6 @@ const InitialRedirect = () => {
     const navigate = useNavigate();
     const ref = useRef<{ redirected: boolean }>({ redirected: false });
 
-    // If we are running test, we don't want to redirect.
-    // Return null instead.
-    if (import.meta.env.VITE_TEST_REDIRECT === 'true') {
-        return null;
-    }
-
     const getRedirect = useCallback(() => {
         if (projects && lastViewed) {
             return `/projects/${lastViewed}`;
@@ -125,6 +119,17 @@ export const App = () => {
                                                 element={<NotFound />}
                                             />
                                         </Routes>
+                                        <ConditionallyRender
+                                            condition={
+                                                !(
+                                                    import.meta.env
+                                                        .VITE_TEST_REDIRECT ===
+                                                    'true'
+                                                )
+                                            }
+                                            show={<InitialRedirect />}
+                                        />
+
                                         <InitialRedirect />
                                         <FeedbackNPS openUrl="http://feedback.unleash.run" />
 

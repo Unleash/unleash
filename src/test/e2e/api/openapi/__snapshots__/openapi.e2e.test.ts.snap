@@ -6584,7 +6584,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/projects/{projectId}/features/{featureName}/variants-batch": {
       "put": {
-        "operationId": "overwriteEnvironmentFeatureVariants",
+        "operationId": "overwriteFeatureVariantsOnEnvironments",
         "parameters": [
           {
             "in": "path",

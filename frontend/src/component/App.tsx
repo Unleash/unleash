@@ -27,6 +27,10 @@ const InitialRedirect = () => {
     const navigate = useNavigate();
     const ref = useRef<{ redirected: boolean }>({ redirected: false });
 
+    if (process.env.TEST_SKIP_REDIRECT) {
+        return null;
+    }
+
     const getRedirect = useCallback(() => {
         if (projects && lastViewed) {
             return `/projects/${lastViewed}`;

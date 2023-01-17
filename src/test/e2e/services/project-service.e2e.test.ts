@@ -1021,3 +1021,30 @@ test('Should allow bulk update of only groups', async () => {
         'some-admin-user',
     );
 });
+
+test('should only count active feature toggles for project', async () => {
+    const project = {
+        id: 'only-active',
+        name: 'New project',
+        description: 'Blah',
+    };
+
+    await projectService.createProject(project, user);
+
+    await stores.featureToggleStore.create(project.id, {
+        name: 'only-active-t1',
+        project: project.id,
+        enabled: false,
+    });
+    await stores.featureToggleStore.create(project.id, {
+        name: 'only-active-t2',
+        project: project.id,
+        enabled: false,
+    });
+
+    await featureToggleService.archiveToggle('only-active-t2', 'me');
+
+    const projects = await projectService.getProjects();
+    const theProject = projects.find((p) => p.id === project.id);
+    expect(theProject?.featureCount).toBe(1);
+});

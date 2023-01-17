@@ -750,13 +750,12 @@ class FeatureToggleService {
                     await this.featureEnvironmentStore.getEnvironmentsForFeature(
                         featureName,
                     );
-                environments.forEach(async (featureEnv) => {
-                    await this.featureEnvironmentStore.addVariantsToFeatureEnvironment(
-                        featureName,
-                        featureEnv.environment,
-                        value.variants,
-                    );
-                });
+
+                await this.featureEnvironmentStore.setVariantsToFeatureEnvironments(
+                    featureName,
+                    environments.map((env) => env.environment),
+                    value.variants,
+                );
             }
 
             const tags = await this.tagStore.getAllTagsForFeature(featureName);
@@ -1350,9 +1349,51 @@ class FeatureToggleService {
                 newVariants: fixedVariants,
             }),
         );
-        await this.featureEnvironmentStore.addVariantsToFeatureEnvironment(
+        await this.featureEnvironmentStore.setVariantsToFeatureEnvironments(
             featureName,
-            environment,
+            [environment],
+            fixedVariants,
+        );
+        return fixedVariants;
+    }
+
+    async setVariantsOnEnvs(
+        projectId: string,
+        featureName: string,
+        environments: string[],
+        newVariants: IVariant[],
+        createdBy: string,
+    ): Promise<IVariant[]> {
+        await variantsArraySchema.validateAsync(newVariants);
+        const fixedVariants = this.fixVariantWeights(newVariants);
+        const oldVariants: { [env: string]: IVariant[] } = environments.reduce(
+            async (result, environment) => {
+                result[environment] = await this.featureEnvironmentStore.get({
+                    featureName,
+                    environment,
+                });
+                return result;
+            },
+            {},
+        );
+
+        await this.eventStore.batchStore(
+            environments.map(
+                (environment) =>
+                    new EnvironmentVariantEvent({
+                        featureName,
+                        environment,
+                        project: projectId,
+                        createdBy,
+                        oldVariants: oldVariants[environment],
+                        newVariants: fixedVariants,
+                    }),
+            ),
+        );
+
+        await this.featureEnvironmentStore.setVariantsToFeatureEnvironments(
+            featureName,
+            environments,
             fixedVariants,
         );
         return fixedVariants;

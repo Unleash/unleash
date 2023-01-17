@@ -42,6 +42,7 @@ import MaintenanceService from './maintenance-service';
 import ExportImportService from './export-import-service';
 import SchedulerService from './scheduler-service';
 import { minutesToMilliseconds } from 'date-fns';
+import { AccountService } from './account-service';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -75,6 +76,9 @@ export const createServices = (
         emailService,
         sessionService,
         settingService,
+    });
+    const accountService = new AccountService(stores, config, {
+        accessService,
     });
     const versionService = new VersionService(stores, config);
     const healthService = new HealthService(stores, config);
@@ -159,6 +163,7 @@ export const createServices = (
 
     return {
         accessService,
+        accountService,
         addonService,
         featureToggleService: featureToggleServiceV2,
         featureToggleServiceV2,

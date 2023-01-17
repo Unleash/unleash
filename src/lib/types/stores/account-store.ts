@@ -19,17 +19,15 @@ export interface IUserUpdateFields {
     email?: string;
 }
 
-export interface IUserStore extends Store<IUser, number> {
+export interface IAccountStore extends Store<IUser, number> {
     update(id: number, fields: IUserUpdateFields): Promise<IUser>;
     insert(user: ICreateUser): Promise<IUser>;
     upsert(user: ICreateUser): Promise<IUser>;
-    hasUser(idQuery: IUserLookup): Promise<number | undefined>;
+    hasAccount(idQuery: IUserLookup): Promise<number | undefined>;
     search(query: string): Promise<IUser[]>;
     getAllWithId(userIdList: number[]): Promise<IUser[]>;
     getByQuery(idQuery: IUserLookup): Promise<IUser>;
-    getPasswordHash(userId: number): Promise<string>;
-    setPasswordHash(userId: number, passwordHash: string): Promise<void>;
-    incLoginAttempts(user: IUser): Promise<void>;
-    successfullyLogin(user: IUser): Promise<void>;
     count(): Promise<number>;
+    getAccountByPersonalAccessToken(secret: string): Promise<IUser>;
+    markSeenAt(secrets: string[]): Promise<void>;
 }

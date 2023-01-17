@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import Controller from '../controller';
 import { ADMIN, NONE } from '../../types/permissions';
 import UserService from '../../services/user-service';
+import { AccountService } from '../../services/account-service';
 import { AccessService } from '../../services/access-service';
 import { Logger } from '../../logger';
 import { IUnleashConfig, IUnleashServices } from '../../types';
@@ -44,6 +45,8 @@ export default class UserAdminController extends Controller {
 
     private userService: UserService;
 
+    private accountService: AccountService;
+
     private accessService: AccessService;
 
     private readonly logger: Logger;
@@ -64,6 +67,7 @@ export default class UserAdminController extends Controller {
         config: IUnleashConfig,
         {
             userService,
+            accountService,
             accessService,
             emailService,
             resetTokenService,
@@ -73,6 +77,7 @@ export default class UserAdminController extends Controller {
         }: Pick<
             IUnleashServices,
             | 'userService'
+            | 'accountService'
             | 'accessService'
             | 'emailService'
             | 'resetTokenService'
@@ -83,6 +88,7 @@ export default class UserAdminController extends Controller {
     ) {
         super(config);
         this.userService = userService;
+        this.accountService = accountService;
         this.accessService = accessService;
         this.emailService = emailService;
         this.resetTokenService = resetTokenService;
@@ -262,7 +268,7 @@ export default class UserAdminController extends Controller {
     }
 
     async getUsers(req: Request, res: Response<UsersSchema>): Promise<void> {
-        const users = await this.userService.getAllUsers();
+        const users = await this.userService.getAll();
         const rootRoles = await this.accessService.getRootRoles();
         const inviteLinks = await this.resetTokenService.getActiveInvitations();
 
@@ -310,7 +316,7 @@ export default class UserAdminController extends Controller {
         req: Request,
         res: Response<UsersGroupsBaseSchema>,
     ): Promise<void> {
-        let allUsers = await this.userService.getAll();
+        let allUsers = await this.accountService.getAll();
         let users = allUsers.map((u) => {
             return {
                 id: u.id,

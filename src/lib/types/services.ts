@@ -38,9 +38,11 @@ import { InstanceStatsService } from '../services/instance-stats-service';
 import { FavoritesService } from '../services';
 import MaintenanceService from '../services/maintenance-service';
 import ExportImportService from 'lib/services/export-import-service';
+import { AccountService } from '../services/account-service';
 
 export interface IUnleashServices {
     accessService: AccessService;
+    accountService: AccountService;
     addonService: AddonService;
     apiTokenService: ApiTokenService;
     clientInstanceService: ClientInstanceService;

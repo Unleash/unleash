@@ -34,6 +34,7 @@ import PatStore from './pat-store';
 import { PublicSignupTokenStore } from './public-signup-token-store';
 import { FavoriteFeaturesStore } from './favorite-features-store';
 import { FavoriteProjectsStore } from './favorite-projects-store';
+import { AccountStore } from './account-store';
 
 export const createStores = (
     config: IUnleashConfig,
@@ -57,6 +58,7 @@ export const createStores = (
         contextFieldStore: new ContextFieldStore(db, getLogger),
         settingStore: new SettingStore(db, getLogger),
         userStore: new UserStore(db, getLogger),
+        accountStore: new AccountStore(db, getLogger),
         projectStore: new ProjectStore(
             db,
             eventBus,

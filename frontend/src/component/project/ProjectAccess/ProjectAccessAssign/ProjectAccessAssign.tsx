@@ -278,7 +278,11 @@ export const ProjectAccessAssign = ({
                             <span>
                                 {optionUser?.name || optionUser?.username}
                             </span>
-                            <span>{optionUser?.email}</span>
+                            <span>
+                                {optionUser?.name && optionUser?.username
+                                    ? optionUser?.username
+                                    : optionUser?.email}
+                            </span>
                         </StyledUserOption>
                     }
                 />

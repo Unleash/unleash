@@ -27,6 +27,7 @@ const InitialRedirect = () => {
     const navigate = useNavigate();
     const ref = useRef<{ redirected: boolean }>({ redirected: false });
 
+    // Redirect based on proejct and last viewed
     const getRedirect = useCallback(() => {
         if (projects && lastViewed) {
             return `/projects/${lastViewed}`;
@@ -119,6 +120,7 @@ export const App = () => {
                                                 element={<NotFound />}
                                             />
                                         </Routes>
+                                        {/* Only redirect if we are not in test mode */}
                                         <ConditionallyRender
                                             condition={
                                                 !(

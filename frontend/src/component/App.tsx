@@ -62,9 +62,6 @@ const InitialRedirect = () => {
     return <></>;
 };
 
-// Mount the app
-// Get the redirect path
-
 const StyledContainer = styled('div')(() => ({
     '& ul': {
         margin: 0,

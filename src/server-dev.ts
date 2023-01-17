@@ -42,6 +42,7 @@ process.nextTick(async () => {
                         variantsPerEnvironment: true,
                         maintenance: false,
                         featuresExportImport: true,
+                        newProjectOverview: true,
                     },
                 },
                 authentication: {

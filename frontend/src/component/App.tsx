@@ -27,7 +27,7 @@ const InitialRedirect = () => {
     const navigate = useNavigate();
     const ref = useRef<{ redirected: boolean }>({ redirected: false });
 
-    // Redirect based on proejct and last viewed
+    // Redirect based on project and last viewed
     const getRedirect = useCallback(() => {
         if (projects && lastViewed) {
             return `/projects/${lastViewed}`;
@@ -132,7 +132,6 @@ export const App = () => {
                                             show={<InitialRedirect />}
                                         />
 
-                                        <InitialRedirect />
                                         <FeedbackNPS openUrl="http://feedback.unleash.run" />
 
                                         <SplashPageRedirect />

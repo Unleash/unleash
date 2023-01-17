@@ -113,7 +113,7 @@ module.exports = {
                         },
                         {
                             label: 'Roadmap',
-                            href: 'https://github.com/orgs/Unleash/projects/5',
+                            href: 'https://github.com/orgs/Unleash/projects/10',
                         },
                     ],
                 },
@@ -121,12 +121,16 @@ module.exports = {
                     title: 'Community',
                     items: [
                         {
-                            label: 'Stack Overflow',
-                            href: 'https://stackoverflow.com/questions/tagged/unleash',
+                            label: 'GitHub discussions',
+                            href: 'https://github.com/unleash/unleash/discussions/',
                         },
                         {
                             label: 'Slack',
                             href: 'https://slack.unleash.run/',
+                        },
+                        {
+                            label: 'Stack Overflow',
+                            href: 'https://stackoverflow.com/questions/tagged/unleash',
                         },
                         {
                             label: 'Twitter',

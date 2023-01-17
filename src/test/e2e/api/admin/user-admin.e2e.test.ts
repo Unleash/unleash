@@ -121,7 +121,7 @@ test('creates admin-user with password', async () => {
     const passwordHash = userStore.getPasswordHash(body.id);
     expect(passwordHash).toBeTruthy();
 
-    const roles = await stores.accessStore.getRolesForUserId(body.id);
+    const roles = await stores.accessStore.getRolesForAccountId(body.id);
     expect(roles.length).toBe(1);
     expect(roles[0].name).toBe(RoleName.ADMIN);
 });

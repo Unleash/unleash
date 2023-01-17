@@ -33,7 +33,7 @@ const loginRegularUser = () =>
 const createUserEditorAccess = async (name, email) => {
     const { userStore } = stores;
     const user = await userStore.insert({ name, email });
-    await accessService.addUserToRole(user.id, editorRole.id, 'default');
+    await accessService.addAccountToRole(user.id, editorRole.id, 'default');
     return user;
 };
 

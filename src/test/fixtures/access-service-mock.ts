@@ -1,22 +1,18 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { AccessService } from '../../lib/services/access-service';
-import User from '../../lib/types/user';
 import noLoggerProvider from './no-logger';
 import { IRole } from '../../lib/types/stores/access-store';
-import {
-    IAvailablePermissions,
-    IRoleData,
-    IUserWithRole,
-} from '../../lib/types/model';
+import { IAvailablePermissions } from '../../lib/types/model';
 import { IGroupModelWithProjectRole } from '../../lib/types/group';
+import { IAccount, IAccountWithRole } from '../../lib/types';
 
 class AccessServiceMock extends AccessService {
     constructor() {
         super(
             {
                 accessStore: undefined,
-                userStore: undefined,
+                accountStore: undefined,
                 roleStore: undefined,
                 environmentStore: undefined,
             },
@@ -26,7 +22,7 @@ class AccessServiceMock extends AccessService {
     }
 
     hasPermission(
-        user: User,
+        account: IAccount,
         permission: string,
         projectId?: string,
     ): Promise<boolean> {
@@ -37,11 +33,11 @@ class AccessServiceMock extends AccessService {
         throw new Error('Method not implemented.');
     }
 
-    addUserToRole(userId: number, roleId: number): Promise<void> {
+    addAccountToRole(accountId: number, roleId: number): Promise<void> {
         throw new Error('Method not implemented.');
     }
 
-    setUserRootRole(userId: number, roleId: number): Promise<void> {
+    setAccountRootRole(accountId: number, roleId: number): Promise<void> {
         return Promise.resolve();
     }
 
@@ -69,25 +65,31 @@ class AccessServiceMock extends AccessService {
         throw new Error('Method not implemented.');
     }
 
-    getRolesForUser(userId: number): Promise<IRole[]> {
+    getRolesForAccount(accountId: number): Promise<IRole[]> {
         throw new Error('Method not implemented.');
     }
 
-    getUsersForRole(roleId: any): Promise<User[]> {
+    getAccountsForRole(roleId: any): Promise<IAccount[]> {
         throw new Error('Method not implemented.');
     }
 
     getProjectRoleAccess(
         projectId: string,
-    ): Promise<[IRole[], IUserWithRole[], IGroupModelWithProjectRole[]]> {
+    ): Promise<[IRole[], IAccountWithRole[], IGroupModelWithProjectRole[]]> {
         throw new Error('Method not implemented.');
     }
 
-    createDefaultProjectRoles(owner: User, projectId: string): Promise<void> {
+    createDefaultProjectRoles(
+        owner: IAccount,
+        projectId: string,
+    ): Promise<void> {
         throw new Error('Method not implemented.');
     }
 
-    removeDefaultProjectRoles(owner: User, projectId: string): Promise<void> {
+    removeDefaultProjectRoles(
+        owner: IAccount,
+        projectId: string,
+    ): Promise<void> {
         throw new Error('Method not implemented.');
     }
 }

@@ -14,6 +14,7 @@ import { IFeatureTagStore } from './stores/feature-tag-store';
 import { IUserStore } from './stores/user-store';
 import { IAddonStore } from './stores/addon-store';
 import { IAccessStore } from './stores/access-store';
+import { IAccountStore } from './stores/account-store';
 import { IApiTokenStore } from './stores/api-token-store';
 import { IResetTokenStore } from './stores/reset-token-store';
 import { IUserFeedbackStore } from './stores/user-feedback-store';
@@ -33,6 +34,7 @@ import { IFavoriteProjectsStore } from './stores/favorite-projects';
 
 export interface IUnleashStores {
     accessStore: IAccessStore;
+    accountStore: IAccountStore;
     addonStore: IAddonStore;
     apiTokenStore: IApiTokenStore;
     clientApplicationsStore: IClientApplicationsStore;
@@ -68,6 +70,7 @@ export interface IUnleashStores {
 
 export {
     IAccessStore,
+    IAccountStore,
     IAddonStore,
     IApiTokenStore,
     IClientApplicationsStore,

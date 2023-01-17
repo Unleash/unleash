@@ -17,7 +17,7 @@ import { GroupService } from '../../../lib/services/group-service';
 
 let db: ITestDb;
 let stores: IUnleashStores;
-let accessService;
+let accessService: AccessService;
 let groupService;
 let featureToggleService;
 let projectService;
@@ -30,14 +30,14 @@ let readRole;
 const createUserEditorAccess = async (name, email) => {
     const { userStore } = stores;
     const user = await userStore.insert({ name, email });
-    await accessService.addUserToRole(user.id, editorRole.id, 'default');
+    await accessService.addAccountToRole(user.id, editorRole.id, 'default');
     return user;
 };
 
 const createUserViewerAccess = async (name, email) => {
     const { userStore } = stores;
     const user = await userStore.insert({ name, email });
-    await accessService.addUserToRole(user.id, readRole.id, ALL_PROJECTS);
+    await accessService.addAccountToRole(user.id, readRole.id, ALL_PROJECTS);
     return user;
 };
 
@@ -195,7 +195,7 @@ const createSuperUser = async () => {
         name: 'Alice Admin',
         email: 'admin@getunleash.io',
     });
-    await accessService.addUserToRole(user.id, adminRole.id, ALL_PROJECTS);
+    await accessService.addAccountToRole(user.id, adminRole.id, ALL_PROJECTS);
     return user;
 };
 
@@ -381,6 +381,7 @@ test('should create default roles to project', async () => {
 
 test('should require name when create default roles to project', async () => {
     await expect(async () => {
+        // @ts-expect-error
         await accessService.createDefaultProjectRoles(editorUser);
     }).rejects.toThrow(new Error('ProjectId cannot be empty'));
 });
@@ -396,7 +397,7 @@ test('should grant user access to project', async () => {
     await accessService.createDefaultProjectRoles(user, project);
 
     const projectRole = await accessService.getRoleByName(RoleName.MEMBER);
-    await accessService.addUserToRole(sUser.id, projectRole.id, project);
+    await accessService.addAccountToRole(sUser.id, projectRole.id, project);
 
     // // Should be able to update feature toggles inside the project
     await hasCommonProjectAccess(sUser, project, true);
@@ -421,7 +422,7 @@ test('should not get access if not specifying project', async () => {
 
     const projectRole = await accessService.getRoleByName(RoleName.MEMBER);
 
-    await accessService.addUserToRole(sUser.id, projectRole.id, project);
+    await accessService.addAccountToRole(sUser.id, projectRole.id, project);
 
     // Should not be able to update feature toggles outside project
     await hasCommonProjectAccess(sUser, undefined, false);
@@ -434,15 +435,21 @@ test('should remove user from role', async () => {
         email: 'random123@getunleash.io',
     });
 
-    await accessService.addUserToRole(user.id, editorRole.id, 'default');
+    await accessService.addAccountToRole(user.id, editorRole.id, 'default');
 
     // check user has one role
-    const userRoles = await accessService.getRolesForUser(user.id);
+    const userRoles = await accessService.getRolesForAccount(user.id);
     expect(userRoles.length).toBe(1);
     expect(userRoles[0].name).toBe(RoleName.EDITOR);
 
-    await accessService.removeUserFromRole(user.id, editorRole.id, 'default');
-    const userRolesAfterRemove = await accessService.getRolesForUser(user.id);
+    await accessService.removeAccountFromRole(
+        user.id,
+        editorRole.id,
+        'default',
+    );
+    const userRolesAfterRemove = await accessService.getRolesForAccount(
+        user.id,
+    );
     expect(userRolesAfterRemove.length).toBe(0);
 });
 
@@ -453,14 +460,16 @@ test('should return role with users', async () => {
         email: 'random2223@getunleash.io',
     });
 
-    await accessService.addUserToRole(user.id, editorRole.id, 'default');
+    await accessService.addAccountToRole(user.id, editorRole.id, 'default');
 
-    const roleWithUsers = await accessService.getRoleData(editorRole.id);
-    expect(roleWithUsers.role.name).toBe(RoleName.EDITOR);
-    expect(roleWithUsers.users.length >= 2).toBe(true);
-    expect(roleWithUsers.users.find((u) => u.id === user.id)).toBeTruthy();
+    const roleWithAccounts = await accessService.getRoleData(editorRole.id);
+    expect(roleWithAccounts.role.name).toBe(RoleName.EDITOR);
+    expect(roleWithAccounts.accounts.length >= 2).toBe(true);
     expect(
-        roleWithUsers.users.find((u) => u.email === user.email),
+        roleWithAccounts.accounts.find((u) => u.id === user.id),
+    ).toBeTruthy();
+    expect(
+        roleWithAccounts.accounts.find((u) => u.email === user.email),
     ).toBeTruthy();
 });
 
@@ -471,7 +480,7 @@ test('should return role with permissions and users', async () => {
         email: 'random2244@getunleash.io',
     });
 
-    await accessService.addUserToRole(user.id, editorRole.id, 'default');
+    await accessService.addAccountToRole(user.id, editorRole.id, 'default');
 
     const roleWithPermission = await accessService.getRoleData(editorRole.id);
 
@@ -484,7 +493,7 @@ test('should return role with permissions and users', async () => {
     ).toBeTruthy();
     //This assert requires other tests to have run in this pack before length > 2 resolves to true
     // I've set this to be > 1, which allows us to run the test alone and should still satisfy the logic requirement
-    expect(roleWithPermission.users.length > 1).toBe(true);
+    expect(roleWithPermission.accounts.length > 1).toBe(true);
 });
 
 test('should set root role for user', async () => {
@@ -494,9 +503,9 @@ test('should set root role for user', async () => {
         email: 'random2255@getunleash.io',
     });
 
-    await accessService.setUserRootRole(user.id, editorRole.id);
+    await accessService.setAccountRootRole(user.id, editorRole.id);
 
-    const roles = await accessService.getRolesForUser(user.id);
+    const roles = await accessService.getRolesForAccount(user.id);
     //To have duplicated roles like this may not may not be a hack. Needs some thought
     expect(roles[0].name).toBe(RoleName.EDITOR);
 
@@ -510,10 +519,10 @@ test('should switch root role for user', async () => {
         email: 'random22Read@getunleash.io',
     });
 
-    await accessService.setUserRootRole(user.id, editorRole.id);
-    await accessService.setUserRootRole(user.id, readRole.id);
+    await accessService.setAccountRootRole(user.id, editorRole.id);
+    await accessService.setAccountRootRole(user.id, readRole.id);
 
-    const roles = await accessService.getRolesForUser(user.id);
+    const roles = await accessService.getRolesForAccount(user.id);
 
     expect(roles.length).toBe(1);
     expect(roles[0].name).toBe(RoleName.VIEWER);
@@ -539,10 +548,14 @@ test('should switch project roles on when multiple roles are present for same us
         description: 'This does nothing',
     });
 
-    await accessService.setUserRootRole(userOne.id, editorRole.id);
-    await accessStore.addUserToRole(userOne.id, customRole.id, DEFAULT_PROJECT);
+    await accessService.setAccountRootRole(userOne.id, editorRole.id);
+    await accessStore.addAccountToRole(
+        userOne.id,
+        customRole.id,
+        DEFAULT_PROJECT,
+    );
 
-    await accessService.updateUserProjectRole(
+    await accessService.updateAccountProjectRole(
         userOne.id,
         targetRole.id,
         DEFAULT_PROJECT,
@@ -557,7 +570,7 @@ test('should not crash if user does not have permission', async () => {
         email: 'random55Read@getunleash.io',
     });
 
-    await accessService.setUserRootRole(user.id, readRole.id);
+    await accessService.setAccountRootRole(user.id, readRole.id);
 
     const { UPDATE_CONTEXT_FIELD } = permissions;
     const hasAccess = await accessService.hasPermission(
@@ -576,7 +589,7 @@ test('should support permission with "ALL" environment requirement', async () =>
         email: 'randomEnv1@getunleash.io',
     });
 
-    await accessService.setUserRootRole(user.id, readRole.id);
+    await accessService.setAccountRootRole(user.id, readRole.id);
 
     const customRole = await roleStore.create({
         name: 'Power user',
@@ -590,7 +603,7 @@ test('should support permission with "ALL" environment requirement', async () =>
         [CREATE_FEATURE_STRATEGY],
         'production',
     );
-    await accessStore.addUserToRole(user.id, customRole.id, ALL_PROJECTS);
+    await accessStore.addAccountToRole(user.id, customRole.id, ALL_PROJECTS);
 
     const hasAccess = await accessService.hasPermission(
         user,
@@ -717,7 +730,7 @@ test('Should be denied access to delete a role that is in use', async () => {
         await accessService.deleteRole(customRole.id);
     } catch (e) {
         expect(e.toString()).toBe(
-            'RoleInUseError: Role is in use by more than one user. You cannot delete a role that is in use without first removing the role from the users.',
+            'RoleInUseError: Role is in use by more than one account. You cannot delete a role that is in use without first removing the role from the accounts.',
         );
     }
 });

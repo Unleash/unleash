@@ -20,9 +20,9 @@ export interface IUser {
     inviteLink?: string;
     seenAt?: Date;
     createdAt: Date;
-    permissions: string[];
-    loginAttempts: number;
-    isAPI: boolean;
+    permissions?: string[];
+    loginAttempts?: number;
+    isAPI?: boolean;
     imageUrl: string;
 }
 

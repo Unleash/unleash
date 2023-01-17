@@ -1,5 +1,8 @@
 import { OpenAPIV3 } from 'openapi-types';
 import {
+    accessSchema,
+    accountSchema,
+    accountsSchema,
     adminFeaturesQuerySchema,
     addonParameterSchema,
     addonSchema,
@@ -135,6 +138,9 @@ import { maintenanceSchema } from './spec/maintenance-schema';
 
 // All schemas in `openapi/spec` should be listed here.
 export const schemas = {
+    accessSchema,
+    accountSchema,
+    accountsSchema,
     adminFeaturesQuerySchema,
     addonParameterSchema,
     addonSchema,

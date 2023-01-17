@@ -29,6 +29,7 @@ import InstanceAdminController from './instance-admin';
 import FavoritesController from './favorites';
 import MaintenanceController from './maintenance';
 import ExportImportController from './export-import';
+import AccountController from './account';
 
 class AdminApi extends Controller {
     constructor(config: IUnleashConfig, services: IUnleashServices) {
@@ -130,6 +131,11 @@ class AdminApi extends Controller {
         this.app.use(
             '/maintenance',
             new MaintenanceController(config, services).router,
+        );
+
+        this.app.use(
+            '/account',
+            new AccountController(config, services).router,
         );
     }
 }

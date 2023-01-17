@@ -12,19 +12,19 @@ import {
     FEATURE_UNFAVORITED,
     PROJECT_FAVORITED,
     PROJECT_UNFAVORITED,
+    IUser,
 } from '../types';
-import User from '../types/user';
 import { extractUsernameFromUser } from '../util';
 import { IFavoriteProjectKey } from '../types/stores/favorite-projects';
 
 export interface IFavoriteFeatureProps {
     feature: string;
-    user: User;
+    user: IUser;
 }
 
 export interface IFavoriteProjectProps {
     project: string;
-    user: User;
+    user: IUser;
 }
 
 export class FavoritesService {

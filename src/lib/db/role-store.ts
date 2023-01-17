@@ -8,7 +8,7 @@ import {
     ICustomRoleUpdate,
     IRoleStore,
 } from 'lib/types/stores/role-store';
-import { IRole, IUserRole } from 'lib/types/stores/access-store';
+import { IRole, IAccountRole } from 'lib/types/stores/access-store';
 
 const T = {
     ROLE_USER: 'role_user',
@@ -171,7 +171,7 @@ export default class RoleStore implements IRoleStore {
             .delete();
     }
 
-    async getRootRoleForAllUsers(): Promise<IUserRole[]> {
+    async getRootRoleForAllAccounts(): Promise<IAccountRole[]> {
         const rows = await this.db
             .select('id', 'user_id')
             .distinctOn('user_id')
@@ -181,7 +181,7 @@ export default class RoleStore implements IRoleStore {
 
         return rows.map((row) => ({
             roleId: Number(row.id),
-            userId: Number(row.user_id),
+            accountId: Number(row.user_id),
         }));
     }
 

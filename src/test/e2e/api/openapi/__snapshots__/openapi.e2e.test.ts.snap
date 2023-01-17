@@ -44,6 +44,83 @@ exports[`should serve the OpenAPI spec 1`] = `
 {
   "components": {
     "schemas": {
+      "accessSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "accounts": {
+            "items": {
+              "$ref": "#/components/schemas/accountSchema",
+            },
+            "type": "array",
+          },
+          "groups": {
+            "items": {
+              "$ref": "#/components/schemas/groupSchema",
+            },
+            "type": "array",
+          },
+        },
+        "type": "object",
+      },
+      "accountSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+          },
+          "email": {
+            "type": "string",
+          },
+          "id": {
+            "type": "number",
+          },
+          "imageUrl": {
+            "type": "string",
+          },
+          "name": {
+            "type": "string",
+          },
+          "rootRole": {
+            "type": "number",
+          },
+          "type": {
+            "enum": [
+              "User",
+              "Service Account",
+            ],
+            "type": "string",
+          },
+          "username": {
+            "type": "string",
+          },
+        },
+        "required": [
+          "id",
+        ],
+        "type": "object",
+      },
+      "accountsSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "accounts": {
+            "items": {
+              "$ref": "#/components/schemas/accountSchema",
+            },
+            "type": "array",
+          },
+          "rootRoles": {
+            "items": {
+              "$ref": "#/components/schemas/roleSchema",
+            },
+            "type": "array",
+          },
+        },
+        "required": [
+          "accounts",
+        ],
+        "type": "object",
+      },
       "addonParameterSchema": {
         "properties": {
           "description": {
@@ -3760,6 +3837,46 @@ exports[`should serve the OpenAPI spec 1`] = `
   },
   "openapi": "3.0.3",
   "paths": {
+    "/api/admin/account": {
+      "get": {
+        "operationId": "getAccounts",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/accountsSchema",
+                },
+              },
+            },
+            "description": "accountsSchema",
+          },
+        },
+        "tags": [
+          "Unstable",
+        ],
+      },
+    },
+    "/api/admin/account/access": {
+      "get": {
+        "operationId": "getAccess",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/accessSchema",
+                },
+              },
+            },
+            "description": "accessSchema",
+          },
+        },
+        "tags": [
+          "Unstable",
+        ],
+      },
+    },
     "/api/admin/addons": {
       "get": {
         "operationId": "getAddons",

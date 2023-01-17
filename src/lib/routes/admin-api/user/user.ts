@@ -13,7 +13,7 @@ import { createRequestSchema } from '../../../openapi/util/create-request-schema
 import { createResponseSchema } from '../../../openapi/util/create-response-schema';
 import { meSchema, MeSchema } from '../../../openapi/spec/me-schema';
 import { serializeDates } from '../../../types/serialize-dates';
-import { IUserPermission } from '../../../types/stores/access-store';
+import { IAccountPermission } from '../../../types/stores/access-store';
 import { PasswordSchema } from '../../../openapi/spec/password-schema';
 import { emptyResponse } from '../../../openapi/util/standard-responses';
 import {
@@ -112,11 +112,13 @@ class UserController extends Controller {
     async getMe(req: IAuthRequest, res: Response<MeSchema>): Promise<void> {
         res.setHeader('cache-control', 'no-store');
         const { user } = req;
-        let permissions: IUserPermission[];
+        let permissions: IAccountPermission[];
         if (this.config.authentication.type === IAuthType.NONE) {
             permissions = [{ permission: ADMIN }];
         } else {
-            permissions = await this.accessService.getPermissionsForUser(user);
+            permissions = await this.accessService.getPermissionsForAccount(
+                user,
+            );
         }
         const feedback = await this.userFeedbackService.getAllUserFeedback(
             user,
@@ -146,7 +148,7 @@ class UserController extends Controller {
 
         const projects = await this.projectService.getProjectsByUser(user.id);
 
-        const roles = await this.accessService.getUserRootRoles(user.id);
+        const roles = await this.accessService.getAccountRootRoles(user.id);
         const { project, ...rootRole } = roles[0];
         const responseData: ProfileSchema = {
             projects,

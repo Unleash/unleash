@@ -166,7 +166,7 @@ export const ProjectAccessAssign = ({
     );
 
     const payload = {
-        users: selectedOptions
+        accounts: selectedOptions
             ?.filter(({ type }) => type === ENTITY_TYPE.USER)
             .map(({ id }) => ({ id })),
         groups: selectedOptions

@@ -5,8 +5,8 @@ import {
     IAccessStore,
     IRole,
     IRoleWithProject,
-    IUserPermission,
-    IUserRole,
+    IAccountRole,
+    IAccountPermission,
 } from '../../lib/types/stores/access-store';
 import { IPermission } from 'lib/types/model';
 
@@ -19,7 +19,7 @@ class AccessStoreMock implements IAccessStore {
     }
 
     addAccessToProject(
-        users: IAccessInfo[],
+        accounts: IAccessInfo[],
         groups: IAccessInfo[],
         projectId: string,
         roleId: number,
@@ -53,16 +53,16 @@ class AccessStoreMock implements IAccessStore {
         throw new Error('Method not implemented.');
     }
 
-    updateUserProjectRole(
-        userId: number,
+    updateAccountProjectRole(
+        accountId: number,
         roleId: number,
         projectId: string,
     ): Promise<void> {
         throw new Error('Method not implemented.');
     }
 
-    removeUserFromRole(
-        userId: number,
+    removeAccountFromRole(
+        accountId: number,
         roleId: number,
         projectId: string,
     ): Promise<void> {
@@ -73,7 +73,7 @@ class AccessStoreMock implements IAccessStore {
         throw new Error('Method not implemented.');
     }
 
-    unlinkUserRoles(userId: number): Promise<void> {
+    unlinkAccountRoles(accountId: number): Promise<void> {
         throw new Error('Method not implemented.');
     }
 
@@ -81,10 +81,10 @@ class AccessStoreMock implements IAccessStore {
         throw new Error('Method not implemented.');
     }
 
-    getProjectUsersForRole(
+    getProjectAccountsForRole(
         roleId: number,
         projectId?: string,
-    ): Promise<IUserRole[]> {
+    ): Promise<IAccountRole[]> {
         throw new Error('Method not implemented.');
     }
 
@@ -99,7 +99,7 @@ class AccessStoreMock implements IAccessStore {
         throw new Error('Method not implemented.');
     }
 
-    userPermissions: IUserPermission[] = [];
+    accountPermissions: IAccountPermission[] = [];
 
     roles: IRole[] = [];
 
@@ -107,7 +107,7 @@ class AccessStoreMock implements IAccessStore {
         throw new Error('Method not implemented.');
     }
 
-    getPermissionsForUser(userId: Number): Promise<IUserPermission[]> {
+    getPermissionsForAccount(accountId: Number): Promise<IAccountPermission[]> {
         return Promise.resolve([]);
     }
 
@@ -131,15 +131,15 @@ class AccessStoreMock implements IAccessStore {
         throw new Error('Method not implemented.');
     }
 
-    getRolesForUserId(userId: number): Promise<IRoleWithProject[]> {
+    getRolesForAccountId(accountId: number): Promise<IRoleWithProject[]> {
         return Promise.resolve([]);
     }
 
-    getUserIdsForRole(roleId: number, projectId: string): Promise<number[]> {
+    getAccountIdsForRole(roleId: number, projectId: string): Promise<number[]> {
         throw new Error('Method not implemented.');
     }
 
-    addUserToRole(userId: number, roleId: number): Promise<void> {
+    addAccountToRole(accountId: number, roleId: number): Promise<void> {
         throw new Error('Method not implemented.');
     }
 
@@ -159,7 +159,7 @@ class AccessStoreMock implements IAccessStore {
         throw new Error('Method not implemented.');
     }
 
-    getRootRoleForAllUsers(): Promise<IUserRole[]> {
+    getRootRoleForAllAccounts(): Promise<IAccountRole[]> {
         throw new Error('Method not implemented.');
     }
 
@@ -189,7 +189,10 @@ class AccessStoreMock implements IAccessStore {
         return Promise.resolve([]);
     }
 
-    removeRolesOfTypeForUser(userId: number, roleType: string): Promise<void> {
+    removeRolesOfTypeForAccount(
+        accountId: number,
+        roleType: string,
+    ): Promise<void> {
         return Promise.resolve(undefined);
     }
 
@@ -200,15 +203,15 @@ class AccessStoreMock implements IAccessStore {
         return Promise.resolve(undefined);
     }
 
-    clearUserPersonalAccessTokens(userId: number): Promise<void> {
+    clearAccountPersonalAccessTokens(accountId: number): Promise<void> {
         return Promise.resolve(undefined);
     }
 
-    unlinkUserGroups(userId: number): Promise<void> {
+    unlinkAccountGroups(accountId: number): Promise<void> {
         return Promise.resolve(undefined);
     }
 
-    clearPublicSignupUserTokens(userId: number): Promise<void> {
+    clearPublicSignupAccountTokens(accountId: number): Promise<void> {
         return Promise.resolve(undefined);
     }
 }

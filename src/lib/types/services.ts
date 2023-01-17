@@ -1,4 +1,5 @@
 import { AccessService } from '../services/access-service';
+import { AccountService } from '../services/account-service';
 import AddonService from '../services/addon-service';
 import ProjectService from '../services/project-service';
 import StateService from '../services/state-service';
@@ -41,6 +42,7 @@ import ExportImportService from 'lib/services/export-import-service';
 
 export interface IUnleashServices {
     accessService: AccessService;
+    accountService: AccountService;
     addonService: AddonService;
     apiTokenService: ApiTokenService;
     clientInstanceService: ClientInstanceService;

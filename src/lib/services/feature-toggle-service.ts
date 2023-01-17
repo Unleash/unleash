@@ -1,5 +1,5 @@
 import { IUnleashConfig } from '../types/option';
-import { IUnleashStores } from '../types';
+import { IUnleashStores, IUser } from '../types';
 import { Logger } from '../logger';
 import BadDataError from '../error/bad-data-error';
 import NameExistsError from '../error/name-exists-error';
@@ -75,7 +75,6 @@ import { SegmentService } from './segment-service';
 import { SetStrategySortOrderSchema } from 'lib/openapi/spec/set-strategy-sort-order-schema';
 import { getDefaultStrategy } from '../util/feature-evaluator/helpers';
 import { AccessService } from './access-service';
-import { User } from '../server-impl';
 import {
     CREATE_FEATURE_STRATEGY,
     SKIP_CHANGE_REQUEST,
@@ -324,7 +323,7 @@ class FeatureToggleService {
         strategyConfig: Unsaved<IStrategyConfig>,
         context: IFeatureStrategyContext,
         createdBy: string,
-        user?: User,
+        user?: IUser,
     ): Promise<Saved<IStrategyConfig>> {
         await this.stopWhenChangeRequestsEnabled(
             context.projectId,
@@ -418,7 +417,7 @@ class FeatureToggleService {
         updates: Partial<IFeatureStrategy>,
         context: IFeatureStrategyContext,
         userName: string,
-        user?: User,
+        user?: IUser,
     ): Promise<Saved<IStrategyConfig>> {
         await this.stopWhenChangeRequestsEnabled(
             context.projectId,
@@ -540,7 +539,7 @@ class FeatureToggleService {
         id: string,
         context: IFeatureStrategyContext,
         createdBy: string,
-        user?: User,
+        user?: IUser,
     ): Promise<void> {
         await this.stopWhenChangeRequestsEnabled(
             context.projectId,
@@ -1022,7 +1021,7 @@ class FeatureToggleService {
         environment: string,
         enabled: boolean,
         createdBy: string,
-        user?: User,
+        user?: IUser,
     ): Promise<FeatureToggle> {
         await this.stopWhenChangeRequestsEnabled(project, environment, user);
         if (enabled) {
@@ -1402,7 +1401,7 @@ class FeatureToggleService {
     private async stopWhenChangeRequestsEnabled(
         project: string,
         environment: string,
-        user?: User,
+        user?: IUser,
     ) {
         const [canSkipChangeRequest, changeRequestEnabled] = await Promise.all([
             user
@@ -1424,7 +1423,7 @@ class FeatureToggleService {
         project: string,
         environment: string,
         featureName: string,
-        user: User,
+        user: IUser,
     ) {
         const hasEnvironment =
             await this.featureEnvironmentStore.featureHasEnvironment(

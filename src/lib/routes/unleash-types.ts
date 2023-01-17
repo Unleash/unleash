@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import User from '../types/user';
+import { IAccount } from '../types';
 
 export interface IAuthRequest<
     PARAM = any,
@@ -7,7 +7,7 @@ export interface IAuthRequest<
     ReqBody = any,
     ReqQuery = any,
 > extends Request<PARAM, ResBody, ReqBody, ReqQuery> {
-    user: User;
+    user: IAccount;
     logout: (() => void) | ((callback: (err?: any) => void) => void);
     session: any;
 }

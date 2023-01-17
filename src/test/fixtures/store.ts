@@ -31,6 +31,7 @@ import FakePatStore from './fake-pat-store';
 import FakePublicSignupStore from './fake-public-signup-store';
 import FakeFavoriteFeaturesStore from './fake-favorite-features-store';
 import FakeFavoriteProjectsStore from './fake-favorite-projects-store';
+import { FakeAccountStore } from './fake-account-store';
 
 const createStores: () => IUnleashStores = () => {
     const db = {
@@ -41,6 +42,7 @@ const createStores: () => IUnleashStores = () => {
 
     return {
         db,
+        accountStore: new FakeAccountStore(),
         clientApplicationsStore: new FakeClientApplicationsStore(),
         clientMetricsStoreV2: new FakeClientMetricsStoreV2(),
         clientInstanceStore: new FakeClientInstanceStore(),

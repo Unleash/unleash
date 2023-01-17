@@ -1,7 +1,7 @@
 import { IPermission } from '../model';
 import { Store } from './store';
 
-export interface IUserPermission {
+export interface IAccountPermission {
     project?: string;
     environment?: string;
     permission: string;
@@ -30,7 +30,7 @@ export interface IRoleDescriptor {
 }
 
 export interface IProjectAccessModel {
-    users: IAccessInfo[];
+    accounts: IAccessInfo[];
     groups: IAccessInfo[];
 }
 
@@ -38,35 +38,35 @@ export interface IAccessInfo {
     id: number;
 }
 
-export interface IUserRole {
+export interface IAccountRole {
     roleId?: number;
-    userId: number;
+    accountId: number;
     addedAt?: Date;
 }
 
 export interface IAccessStore extends Store<IRole, number> {
     getAvailablePermissions(): Promise<IPermission[]>;
 
-    getPermissionsForUser(userId: number): Promise<IUserPermission[]>;
+    getPermissionsForAccount(accountId: number): Promise<IAccountPermission[]>;
 
     getPermissionsForRole(roleId: number): Promise<IPermission[]>;
 
-    unlinkUserRoles(userId: number): Promise<void>;
+    unlinkAccountRoles(accountId: number): Promise<void>;
 
-    unlinkUserGroups(userId: number): Promise<void>;
+    unlinkAccountGroups(accountId: number): Promise<void>;
 
-    clearUserPersonalAccessTokens(userId: number): Promise<void>;
+    clearAccountPersonalAccessTokens(accountId: number): Promise<void>;
 
-    clearPublicSignupUserTokens(userId: number): Promise<void>;
+    clearPublicSignupAccountTokens(accountId: number): Promise<void>;
 
-    getRolesForUserId(userId: number): Promise<IRoleWithProject[]>;
+    getRolesForAccountId(accountId: number): Promise<IRoleWithProject[]>;
 
-    getProjectUsersForRole(
+    getProjectAccountsForRole(
         roleId: number,
         projectId?: string,
-    ): Promise<IUserRole[]>;
+    ): Promise<IAccountRole[]>;
 
-    getUserIdsForRole(roleId: number, projectId?: string): Promise<number[]>;
+    getAccountIdsForRole(roleId: number, projectId?: string): Promise<number[]>;
 
     wipePermissionsFromRole(role_id: number): Promise<void>;
 
@@ -75,22 +75,22 @@ export interface IAccessStore extends Store<IRole, number> {
         permissions: IPermission[],
     ): Promise<void>;
 
-    addUserToRole(
-        userId: number,
+    addAccountToRole(
+        accountId: number,
         roleId: number,
         projectId?: string,
     ): Promise<void>;
 
     addAccessToProject(
-        users: IAccessInfo[],
+        accounts: IAccessInfo[],
         groups: IAccessInfo[],
         projectId: string,
         roleId: number,
         createdBy: string,
     ): Promise<void>;
 
-    removeUserFromRole(
-        userId: number,
+    removeAccountFromRole(
+        accountId: number,
         roleId: number,
         projectId?: string,
     ): Promise<void>;
@@ -108,19 +108,22 @@ export interface IAccessStore extends Store<IRole, number> {
         projectId?: string,
     ): Promise<void>;
 
-    updateUserProjectRole(
-        userId: number,
+    updateAccountProjectRole(
+        accountId: number,
         roleId: number,
         projectId: string,
     ): Promise<void>;
 
     updateGroupProjectRole(
-        userId: number,
+        accountId: number,
         roleId: number,
         projectId: string,
     ): Promise<void>;
 
-    removeRolesOfTypeForUser(userId: number, roleType: string): Promise<void>;
+    removeRolesOfTypeForAccount(
+        accountId: number,
+        roleType: string,
+    ): Promise<void>;
 
     addPermissionsToRole(
         role_id: number,

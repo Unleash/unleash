@@ -1,4 +1,4 @@
-import User, { IUser } from '../types/user';
+import { IUser } from '../types/user';
 import { AccessService } from './access-service';
 import NameExistsError from '../error/name-exists-error';
 import InvalidOperationError from '../error/invalid-operation-error';
@@ -16,13 +16,12 @@ import {
     ProjectGroupRemovedEvent,
     ProjectGroupUpdateRoleEvent,
 } from '../types/events';
-import { IUnleashStores, IUnleashConfig } from '../types';
+import { IUnleashStores, IUnleashConfig, IAccountWithRole } from '../types';
 import {
     FeatureToggle,
     IProject,
     IProjectOverview,
     IProjectWithCount,
-    IUserWithRole,
     RoleName,
 } from '../types/model';
 import { IEnvironmentStore } from '../types/stores/environment-store';
@@ -50,7 +49,7 @@ import { IGroupModelWithProjectRole, IGroupRole } from 'lib/types/group';
 const getCreatedBy = (user: IUser) => user.email || user.username;
 
 export interface AccessWithRoles {
-    users: IUserWithRole[];
+    accounts: IAccountWithRole[];
     roles: IRoleDescriptor[];
     groups: IGroupModelWithProjectRole[];
 }
@@ -166,7 +165,7 @@ export default class ProjectService {
         return data;
     }
 
-    async updateProject(updatedProject: IProject, user: User): Promise<void> {
+    async updateProject(updatedProject: IProject, user: IUser): Promise<void> {
         const preData = await this.store.get(updatedProject.id);
         const project = await projectSchema.validateAsync(updatedProject);
 
@@ -207,7 +206,7 @@ export default class ProjectService {
     async changeProject(
         newProjectId: string,
         featureName: string,
-        user: User,
+        user: IUser,
         currentProjectId: string,
     ): Promise<any> {
         const feature = await this.featureToggleStore.get(featureName);
@@ -249,7 +248,7 @@ export default class ProjectService {
         return updatedFeature;
     }
 
-    async deleteProject(id: string, user: User): Promise<void> {
+    async deleteProject(id: string, user: IUser): Promise<void> {
         if (id === DEFAULT_PROJECT) {
             throw new InvalidOperationError(
                 'You can not delete the default project!',
@@ -293,12 +292,12 @@ export default class ProjectService {
 
     // RBAC methods
     async getAccessToProject(projectId: string): Promise<AccessWithRoles> {
-        const [roles, users, groups] =
+        const [roles, accounts, groups] =
             await this.accessService.getProjectRoleAccess(projectId);
 
         return {
             roles,
-            users,
+            accounts,
             groups,
         };
     }
@@ -326,7 +325,7 @@ export default class ProjectService {
             throw new Error(`User already has access to project=${projectId}`);
         }
 
-        await this.accessService.addUserToRole(userId, role.id, projectId);
+        await this.accessService.addAccountToRole(userId, role.id, projectId);
 
         await this.eventStore.store(
             new ProjectUserAddedEvent({
@@ -352,7 +351,11 @@ export default class ProjectService {
 
         await this.validateAtLeastOneOwner(projectId, role);
 
-        await this.accessService.removeUserFromRole(userId, role.id, projectId);
+        await this.accessService.removeAccountFromRole(
+            userId,
+            role.id,
+            projectId,
+        );
 
         const user = await this.userStore.get(userId);
 
@@ -432,12 +435,12 @@ export default class ProjectService {
     async addAccess(
         projectId: string,
         roleId: number,
-        usersAndGroups: IProjectAccessModel,
+        accountsAndGroups: IProjectAccessModel,
         createdBy: string,
     ): Promise<void> {
         return this.accessService.addAccessToProject(
-            usersAndGroups.users,
-            usersAndGroups.groups,
+            accountsAndGroups.accounts,
+            accountsAndGroups.groups,
             projectId,
             roleId,
             createdBy,
@@ -477,7 +480,7 @@ export default class ProjectService {
         currentRole: IRoleDescriptor,
     ): Promise<void> {
         if (currentRole.name === RoleName.OWNER) {
-            const users = await this.accessService.getProjectUsersForRole(
+            const users = await this.accessService.getProjectAccountsForRole(
                 currentRole.id,
                 projectId,
             );
@@ -495,9 +498,9 @@ export default class ProjectService {
         userId: number,
         createdBy: string,
     ): Promise<void> {
-        const usersWithRoles = await this.getAccessToProject(projectId);
-        const user = usersWithRoles.users.find((u) => u.id === userId);
-        const currentRole = usersWithRoles.roles.find(
+        const accountsWithRoles = await this.getAccessToProject(projectId);
+        const user = accountsWithRoles.accounts.find((u) => u.id === userId);
+        const currentRole = accountsWithRoles.roles.find(
             (r) => r.id === user.roleId,
         );
 
@@ -508,7 +511,7 @@ export default class ProjectService {
 
         await this.validateAtLeastOneOwner(projectId, currentRole);
 
-        await this.accessService.updateUserProjectRole(
+        await this.accessService.updateAccountProjectRole(
             userId,
             roleId,
             projectId,

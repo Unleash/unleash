@@ -65,7 +65,7 @@ afterEach(async () => {
         });
     const users = await stores.userStore.getAll();
     const wipeUserPermissions = users.map(async (u) => {
-        await stores.accessStore.unlinkUserRoles(u.id);
+        await stores.accessStore.unlinkAccountRoles(u.id);
     });
     await Promise.allSettled(deleteEnvs);
     await Promise.allSettled(wipeUserPermissions);
@@ -224,15 +224,15 @@ test('should get list of users with access to project', async () => {
         description: 'Blah',
     };
     await projectService.createProject(project, user);
-    const { users } = await projectService.getAccessToProject(project.id);
+    const { accounts } = await projectService.getAccessToProject(project.id);
 
     const member = await stores.roleStore.getRoleByName(RoleName.MEMBER);
     const owner = await stores.roleStore.getRoleByName(RoleName.OWNER);
 
-    expect(users).toHaveLength(1);
-    expect(users[0].id).toBe(user.id);
-    expect(users[0].name).toBe(user.name);
-    expect(users[0].roleId).toBe(owner.id);
+    expect(accounts).toHaveLength(1);
+    expect(accounts[0].id).toBe(user.id);
+    expect(accounts[0].name).toBe(user.name);
+    expect(accounts[0].roleId).toBe(owner.id);
     expect(member).toBeTruthy();
 });
 
@@ -268,8 +268,8 @@ test('should add a member user to the project', async () => {
         'test',
     );
 
-    const { users } = await projectService.getAccessToProject(project.id);
-    const memberUsers = users.filter((u) => u.roleId === memberRole.id);
+    const { accounts } = await projectService.getAccessToProject(project.id);
+    const memberUsers = accounts.filter((u) => u.roleId === memberRole.id);
 
     expect(memberUsers).toHaveLength(2);
     expect(memberUsers[0].id).toBe(projectMember1.id);
@@ -310,9 +310,9 @@ test('should add admin users to the project', async () => {
         'test',
     );
 
-    const { users } = await projectService.getAccessToProject(project.id);
+    const { accounts } = await projectService.getAccessToProject(project.id);
 
-    const adminUsers = users.filter((u) => u.roleId === ownerRole.id);
+    const adminUsers = accounts.filter((u) => u.roleId === ownerRole.id);
 
     expect(adminUsers).toHaveLength(3);
     expect(adminUsers[1].id).toBe(projectAdmin1.id);
@@ -383,8 +383,8 @@ test('should remove user from the project', async () => {
         'test',
     );
 
-    const { users } = await projectService.getAccessToProject(project.id);
-    const memberUsers = users.filter((u) => u.roleId === memberRole.id);
+    const { accounts } = await projectService.getAccessToProject(project.id);
+    const memberUsers = accounts.filter((u) => u.roleId === memberRole.id);
 
     expect(memberUsers).toHaveLength(0);
 });
@@ -668,9 +668,9 @@ test('should add a user to the project with a custom role', async () => {
         'test',
     );
 
-    const { users } = await projectService.getAccessToProject(project.id);
+    const { accounts } = await projectService.getAccessToProject(project.id);
 
-    const customRoleMember = users.filter((u) => u.roleId === customRole.id);
+    const customRoleMember = accounts.filter((u) => u.roleId === customRole.id);
 
     expect(customRoleMember).toHaveLength(1);
     expect(customRoleMember[0].id).toBe(projectMember1.id);
@@ -720,11 +720,11 @@ test('should delete role entries when deleting project', async () => {
     await projectService.addUser(project.id, customRole.id, user1.id, 'test');
     await projectService.addUser(project.id, customRole.id, user2.id, 'test');
 
-    let usersForRole = await accessService.getUsersForRole(customRole.id);
+    let usersForRole = await accessService.getAccountsForRole(customRole.id);
     expect(usersForRole.length).toBe(2);
 
     await projectService.deleteProject(project.id, user);
-    usersForRole = await accessService.getUsersForRole(customRole.id);
+    usersForRole = await accessService.getAccountsForRole(customRole.id);
     expect(usersForRole.length).toBe(0);
 });
 
@@ -765,8 +765,8 @@ test('should change a users role in the project', async () => {
     const member = await stores.roleStore.getRoleByName(RoleName.MEMBER);
 
     await projectService.addUser(project.id, member.id, projectUser.id, 'test');
-    const { users } = await projectService.getAccessToProject(project.id);
-    let memberUser = users.filter((u) => u.roleId === member.id);
+    const { accounts } = await projectService.getAccessToProject(project.id);
+    let memberUser = accounts.filter((u) => u.roleId === member.id);
 
     expect(memberUser).toHaveLength(1);
     expect(memberUser[0].id).toBe(projectUser.id);
@@ -784,7 +784,7 @@ test('should change a users role in the project', async () => {
         'test',
     );
 
-    let { users: updatedUsers } = await projectService.getAccessToProject(
+    let { accounts: updatedUsers } = await projectService.getAccessToProject(
         project.id,
     );
     const customUser = updatedUsers.filter((u) => u.roleId === customRole.id);
@@ -823,9 +823,9 @@ test('should update role for user on project', async () => {
         'test',
     );
 
-    const { users } = await projectService.getAccessToProject(project.id);
-    const memberUsers = users.filter((u) => u.roleId === memberRole.id);
-    const ownerUsers = users.filter((u) => u.roleId === ownerRole.id);
+    const { accounts } = await projectService.getAccessToProject(project.id);
+    const memberUsers = accounts.filter((u) => u.roleId === memberRole.id);
+    const ownerUsers = accounts.filter((u) => u.roleId === ownerRole.id);
 
     expect(memberUsers).toHaveLength(0);
     expect(ownerUsers).toHaveLength(2);
@@ -865,9 +865,9 @@ test('should able to assign role without existing members', async () => {
         'test',
     );
 
-    const { users } = await projectService.getAccessToProject(project.id);
-    const memberUsers = users.filter((u) => u.roleId === memberRole.id);
-    const testUsers = users.filter((u) => u.roleId === testRole.id);
+    const { accounts } = await projectService.getAccessToProject(project.id);
+    const memberUsers = accounts.filter((u) => u.roleId === memberRole.id);
+    const testUsers = accounts.filter((u) => u.roleId === testRole.id);
 
     expect(memberUsers).toHaveLength(0);
     expect(testUsers).toHaveLength(1);
@@ -943,7 +943,7 @@ test('Should allow bulk update of group permissions', async () => {
         project.id,
         createFeatureRole.id,
         {
-            users: [{ id: user1.id }],
+            accounts: [{ id: user1.id }],
             groups: [{ id: group1.id }],
         },
         'some-admin-user',
@@ -976,7 +976,7 @@ test('Should bulk update of only users', async () => {
         project,
         createFeatureRole.id,
         {
-            users: [{ id: user1.id }],
+            accounts: [{ id: user1.id }],
             groups: [],
         },
         'some-admin-user',
@@ -1015,7 +1015,7 @@ test('Should allow bulk update of only groups', async () => {
         project.id,
         createFeatureRole.id,
         {
-            users: [],
+            accounts: [],
             groups: [{ id: group1.id }],
         },
         'some-admin-user',

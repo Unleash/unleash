@@ -7,7 +7,7 @@ interface ICreatePayload {
 }
 
 interface IAccessesPayload {
-    users: { id: number }[];
+    accounts: { id: number }[];
     groups: { id: number }[];
 }
 

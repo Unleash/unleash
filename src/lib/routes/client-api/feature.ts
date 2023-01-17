@@ -134,12 +134,13 @@ export default class FeatureController extends Controller {
         const { user, query } = req;
 
         const override: QueryOverride = {};
-        if (user instanceof ApiUser) {
-            if (!isAllProjects(user.projects)) {
-                override.project = user.projects;
+        if (user?.isAPI) {
+            const userApi = user as unknown as ApiUser;
+            if (!isAllProjects(userApi.projects)) {
+                override.project = userApi.projects;
             }
-            if (user.environment !== ALL) {
-                override.environment = user.environment;
+            if (userApi.environment !== ALL) {
+                override.environment = userApi.environment;
             }
         }
 

@@ -16,13 +16,11 @@ import { FormEvent, useEffect, useState } from 'react';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import Input from 'component/common/Input/Input';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { IUser } from 'interfaces/user';
 import {
     IServiceAccountPayload,
     useServiceAccountsApi,
 } from 'hooks/api/actions/useServiceAccountsApi/useServiceAccountsApi';
 import { useServiceAccounts } from 'hooks/api/getters/useServiceAccounts/useServiceAccounts';
-import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
 import {
     calculateExpirationDate,
     ExpirationOption,
@@ -33,6 +31,7 @@ import { usePersonalAPITokensApi } from 'hooks/api/actions/usePersonalAPITokensA
 import { INewPersonalAPIToken } from 'interfaces/personalAPIToken';
 import { ServiceAccountTokens } from './ServiceAccountTokens/ServiceAccountTokens';
 import { IServiceAccount } from 'interfaces/service-account';
+import { useAccounts } from 'hooks/api/getters/useAccounts/useAccounts';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',
@@ -123,8 +122,8 @@ export const ServiceAccountModal = ({
     setOpen,
     newToken,
 }: IServiceAccountModalProps) => {
-    const { users } = useUsers();
-    const { serviceAccounts, roles, refetch } = useServiceAccounts();
+    const { accounts } = useAccounts();
+    const { roles, refetch } = useServiceAccounts();
     const { addServiceAccount, updateServiceAccount, loading } =
         useServiceAccountsApi();
     const { createUserPersonalAPIToken } = usePersonalAPITokensApi();
@@ -221,11 +220,7 @@ export const ServiceAccountModal = ({
 
     const isNotEmpty = (value: string) => value.length;
     const isUnique = (value: string) =>
-        !users?.some((user: IUser) => user.username === value) &&
-        !serviceAccounts?.some(
-            (serviceAccount: IServiceAccount) =>
-                serviceAccount.username === value
-        );
+        !accounts?.some(({ username }) => username === value);
     const isPATValid =
         tokenGeneration === TokenGeneration.LATER ||
         (isNotEmpty(patDescription) && patExpiresAt > new Date());

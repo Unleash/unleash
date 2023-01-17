@@ -1,7 +1,7 @@
 import { Logger } from '../logger';
 import { IUnleashStores } from '../types/stores';
 import { IUnleashConfig } from '../types/option';
-import User from '../types/user';
+import { IUser } from '../types/user';
 import {
     IUserFeedback,
     IUserFeedbackStore,
@@ -20,7 +20,7 @@ export default class UserFeedbackService {
         this.logger = getLogger('services/user-feedback-service.js');
     }
 
-    async getAllUserFeedback(user: User): Promise<IUserFeedback[]> {
+    async getAllUserFeedback(user: IUser): Promise<IUserFeedback[]> {
         if (user.isAPI) {
             return [];
         }

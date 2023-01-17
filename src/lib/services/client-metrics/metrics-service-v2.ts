@@ -17,7 +17,7 @@ import { IFeatureToggleStore } from '../../types/stores/feature-toggle-store';
 import { CLIENT_METRICS } from '../../types/events';
 import ApiUser from '../../types/api-user';
 import { ALL } from '../../types/models/api-token';
-import User from '../../types/user';
+import { IUser } from '../../types/user';
 import { collapseHourlyMetrics } from '../../util/collapseHourlyMetrics';
 import { LastSeenService } from './last-seen-service';
 import { generateHourBuckets } from '../../util/time-utils';
@@ -203,7 +203,7 @@ export default class ClientMetricsServiceV2 {
         return result.sort((a, b) => compareAsc(a.timestamp, b.timestamp));
     }
 
-    resolveMetricsEnvironment(user: User | ApiUser, data: IClientApp): string {
+    resolveMetricsEnvironment(user: IUser | ApiUser, data: IClientApp): string {
         if (user instanceof ApiUser) {
             if (user.environment !== ALL) {
                 return user.environment;

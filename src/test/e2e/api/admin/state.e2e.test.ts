@@ -428,7 +428,9 @@ test(`should not show environment on feature toggle, when environment is disable
         .expect(200);
 
     // sort to have predictable test results
-    const result = body.environments.sort((e1, e2) => e1.name < e2.name);
+    const result = body.environments.sort((e1, e2) =>
+        e1.name.localeCompare(e2.name),
+    );
     expect(result).toHaveLength(2);
     expect(result[0].name).toBe('development');
     expect(result[0].enabled).toBeTruthy();

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { ICustomRole } from 'lib/types/model';
-import { IRole, IUserRole } from 'lib/types/stores/access-store';
+import { IRole, IAccountRole } from 'lib/types/stores/access-store';
 import {
     ICustomRoleInsert,
     ICustomRoleUpdate,
@@ -68,7 +68,7 @@ export default class FakeRoleStore implements IRoleStore {
         return this.roles;
     }
 
-    getRootRoleForAllUsers(): Promise<IUserRole[]> {
+    getRootRoleForAllAccounts(): Promise<IAccountRole[]> {
         throw new Error('Method not implemented.');
     }
 

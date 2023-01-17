@@ -21,7 +21,7 @@ import { ISegmentStore } from '../types/stores/segment-store';
 import { IFlagResolver, IUnleashServices } from 'lib/types';
 import { IContextFieldDto } from '../types/stores/context-field-store';
 import FeatureToggleService from './feature-toggle-service';
-import User from 'lib/types/user';
+import { IUser } from '../types/user';
 import { ExportQuerySchema } from '../openapi/spec/export-query-schema';
 
 export interface IExportQuery {
@@ -115,7 +115,7 @@ export default class ExportImportService {
         return { features, featureStrategies, featureEnvironments };
     }
 
-    async import(dto: IImportDTO, user: User): Promise<void> {
+    async import(dto: IImportDTO, user: IUser): Promise<void> {
         await Promise.all(
             dto.data.features.map((feature) =>
                 this.featureToggleService.createFeatureToggle(

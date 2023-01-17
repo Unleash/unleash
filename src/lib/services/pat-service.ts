@@ -5,7 +5,7 @@ import { IEventStore } from '../types/stores/event-store';
 import { PAT_CREATED } from '../types/events';
 import { IPat } from '../types/models/pat';
 import crypto from 'crypto';
-import User from '../types/user';
+import { IUser } from '../types/user';
 import BadDataError from '../error/bad-data-error';
 import NameExistsError from '../error/name-exists-error';
 import { OperationDeniedError } from '../error/operation-denied-error';
@@ -36,7 +36,7 @@ export default class PatService {
     async createPat(
         pat: IPat,
         forUserId: number,
-        creator: User,
+        creator: IUser,
     ): Promise<IPat> {
         await this.validatePat(pat, forUserId);
         pat.secret = this.generateSecretKey();

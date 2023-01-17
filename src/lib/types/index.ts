@@ -19,3 +19,4 @@ export * from './user';
 export * from './permissions';
 export * from './events';
 export * from './stores';
+export * from './account';

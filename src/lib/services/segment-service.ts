@@ -11,7 +11,7 @@ import {
     SEGMENT_DELETED,
     SEGMENT_UPDATED,
 } from '../types/events';
-import User from '../types/user';
+import { IUser } from '../types/user';
 import { IFeatureStrategiesStore } from '../types/stores/feature-strategies-store';
 import BadDataError from '../error/bad-data-error';
 
@@ -68,7 +68,7 @@ export class SegmentService {
 
     async create(
         data: unknown,
-        user: Partial<Pick<User, 'username' | 'email'>>,
+        user: Partial<Pick<IUser, 'username' | 'email'>>,
     ): Promise<ISegment> {
         const input = await segmentSchema.validateAsync(data);
         this.validateSegmentValuesLimit(input);
@@ -87,7 +87,7 @@ export class SegmentService {
     async update(
         id: number,
         data: unknown,
-        user: Partial<Pick<User, 'username' | 'email'>>,
+        user: Partial<Pick<IUser, 'username' | 'email'>>,
     ): Promise<void> {
         const input = await segmentSchema.validateAsync(data);
         this.validateSegmentValuesLimit(input);
@@ -107,7 +107,7 @@ export class SegmentService {
         });
     }
 
-    async delete(id: number, user: User): Promise<void> {
+    async delete(id: number, user: IUser): Promise<void> {
         const segment = await this.segmentStore.get(id);
         await this.segmentStore.delete(id);
         await this.eventStore.store({

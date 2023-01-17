@@ -137,7 +137,7 @@ class UserService {
                 });
                 const passwordHash = await bcrypt.hash(pwd, saltRounds);
                 await this.store.setPasswordHash(user.id, passwordHash);
-                await this.accessService.setUserRootRole(
+                await this.accessService.setAccountRootRole(
                     user.id,
                     RoleName.ADMIN,
                 );
@@ -152,9 +152,11 @@ class UserService {
         const defaultRole = await this.accessService.getRootRole(
             RoleName.VIEWER,
         );
-        const userRoles = await this.accessService.getRootRoleForAllUsers();
+        const userRoles = await this.accessService.getRootRoleForAllAccounts();
         const usersWithRootRole = users.map((u) => {
-            const rootRole = userRoles.find((r) => r.userId === u.id);
+            const rootRole = userRoles.find(
+                ({ accountId }) => accountId === u.id,
+            );
             const roleId = rootRole ? rootRole.roleId : defaultRole.id;
             return { ...u, rootRole: roleId };
         });
@@ -162,7 +164,7 @@ class UserService {
     }
 
     async getUser(id: number): Promise<IUserWithRole> {
-        const roles = await this.accessService.getUserRootRoles(id);
+        const roles = await this.accessService.getAccountRootRoles(id);
         const defaultRole = await this.accessService.getRootRole(
             RoleName.VIEWER,
         );
@@ -181,7 +183,7 @@ class UserService {
 
     async createUser(
         { username, email, name, password, rootRole }: ICreateUser,
-        updatedBy?: User,
+        updatedBy?: IUser,
     ): Promise<IUser> {
         if (!username && !email) {
             throw new BadDataError('You must specify username or email');
@@ -202,7 +204,7 @@ class UserService {
             name,
         });
 
-        await this.accessService.setUserRootRole(user.id, rootRole);
+        await this.accessService.setAccountRootRole(user.id, rootRole);
 
         if (password) {
             const passwordHash = await bcrypt.hash(password, saltRounds);
@@ -218,7 +220,7 @@ class UserService {
         return user;
     }
 
-    private getCreatedBy(updatedBy: User = systemUser) {
+    private getCreatedBy(updatedBy: IUser = systemUser) {
         return updatedBy.username || updatedBy.email;
     }
 
@@ -236,7 +238,7 @@ class UserService {
 
     async updateUser(
         { id, name, email, rootRole }: IUpdateUser,
-        updatedBy?: User,
+        updatedBy?: IUser,
     ): Promise<IUser> {
         const preUser = await this.store.get(id);
 
@@ -245,7 +247,7 @@ class UserService {
         }
 
         if (rootRole) {
-            await this.accessService.setUserRootRole(id, rootRole);
+            await this.accessService.setAccountRootRole(id, rootRole);
         }
 
         const payload: Partial<IUser> = {
@@ -268,9 +270,9 @@ class UserService {
         return user;
     }
 
-    async deleteUser(userId: number, updatedBy?: User): Promise<void> {
+    async deleteUser(userId: number, updatedBy?: IUser): Promise<void> {
         const user = await this.store.get(userId);
-        await this.accessService.wipeUserPermissions(userId);
+        await this.accessService.wipeAccountPermissions(userId);
         await this.sessionService.deleteSessionsForUser(userId);
 
         await this.store.delete(userId);
@@ -402,7 +404,7 @@ class UserService {
 
     async createResetPasswordEmail(
         receiverEmail: string,
-        user: User = systemUser,
+        user: IUser = systemUser,
     ): Promise<URL> {
         const receiver = await this.getByEmail(receiverEmail);
         if (!receiver) {

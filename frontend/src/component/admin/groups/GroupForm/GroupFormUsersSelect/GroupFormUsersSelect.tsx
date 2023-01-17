@@ -66,7 +66,7 @@ export const GroupFormUsersSelect: VFC<IGroupFormUsersSelectProps> = ({
     users,
     setUsers,
 }) => {
-    const { users: usersAll } = useUsers();
+    const { users: usersAll } = useUsers(); // TODO: useAccounts, split them below by type in the autocomplete category
 
     return (
         <StyledGroupFormUsersSelect>

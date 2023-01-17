@@ -1,8 +1,8 @@
 import { ITagType } from './stores/tag-type-store';
 import { LogProvider } from '../logger';
 import { IRole } from './stores/access-store';
-import { IUser } from './user';
 import { ALL_OPERATORS } from '../util/constants';
+import { IAccount } from './account';
 
 export type Operator = typeof ALL_OPERATORS[number];
 
@@ -246,7 +246,7 @@ export interface IUserWithRole {
 
 export interface IRoleData {
     role: IRole;
-    users: IUser[];
+    accounts: IAccount[];
     permissions: IPermission[];
 }
 

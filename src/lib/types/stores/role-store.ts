@@ -1,5 +1,5 @@
 import { ICustomRole } from '../model';
-import { IRole, IUserRole } from './access-store';
+import { IAccountRole, IRole } from './access-store';
 import { Store } from './store';
 
 export interface ICustomRoleInsert {
@@ -26,7 +26,7 @@ export interface IRoleStore extends Store<ICustomRole, number> {
     removeRolesForProject(projectId: string): Promise<void>;
     getProjectRoles(): Promise<IRole[]>;
     getRootRoles(): Promise<IRole[]>;
-    getRootRoleForAllUsers(): Promise<IUserRole[]>;
+    getRootRoleForAllAccounts(): Promise<IAccountRole[]>;
     nameInUse(name: string, existingId: number): Promise<boolean>;
     count(): Promise<number>;
 }

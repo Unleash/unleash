@@ -45,6 +45,13 @@ import { LazyProject } from 'component/project/Project/LazyProject';
 import { AdminRedirect } from 'component/admin/AdminRedirect';
 
 export const routes: IRoute[] = [
+    {
+        path: '/',
+        title: 'Unleash',
+        component: ProjectListNew,
+        type: 'protected',
+        menu: {},
+    },
     // Splash
     {
         path: '/splash/:splashId',

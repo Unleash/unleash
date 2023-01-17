@@ -1,5 +1,5 @@
-import { Suspense, useCallback, useEffect, useState } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Suspense, useCallback, useEffect, useState, useRef } from 'react';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Error } from 'component/layout/Error/Error';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -24,9 +24,10 @@ import { styled } from '@mui/material';
 const InitialRedirect = () => {
     const { lastViewed } = useLastViewedProject();
     const { projects, loading } = useProjects();
+    const navigate = useNavigate();
+    const ref = useRef<{ redirected: boolean }>({ redirected: false });
 
-    const [redirectTo, setRedirectTo] = useState<string | undefined>();
-
+    // Redirect based on project and last viewed
     const getRedirect = useCallback(() => {
         if (projects && lastViewed) {
             return `/projects/${lastViewed}`;
@@ -39,17 +40,22 @@ const InitialRedirect = () => {
         return '/projects';
     }, [lastViewed, projects]);
 
-    useEffect(() => {
-        if (!loading) {
-            setRedirectTo(getRedirect());
-        }
-    }, [loading, getRedirect]);
+    const redirect = () => {
+        ref.current = { redirected: true };
+        navigate(getRedirect(), { replace: true });
+    };
 
-    if (loading || !redirectTo) {
+    useEffect(() => {
+        if (ref.current?.redirected === true) return;
+
+        redirect();
+    }, [getRedirect]);
+
+    if (loading) {
         return <Loader />;
     }
 
-    return <Navigate to={redirectTo} />;
+    return <></>;
 };
 
 const StyledContainer = styled('div')(() => ({
@@ -110,15 +116,24 @@ export const App = () => {
                                                 />
                                             ))}
                                             <Route
-                                                path="/"
-                                                element={<InitialRedirect />}
-                                            />
-                                            <Route
                                                 path="*"
                                                 element={<NotFound />}
                                             />
                                         </Routes>
+                                        {/* Only redirect if we are not in test mode */}
+                                        <ConditionallyRender
+                                            condition={
+                                                !(
+                                                    import.meta.env
+                                                        .VITE_TEST_REDIRECT ===
+                                                    'true'
+                                                )
+                                            }
+                                            show={<InitialRedirect />}
+                                        />
+
                                         <FeedbackNPS openUrl="http://feedback.unleash.run" />
+
                                         <SplashPageRedirect />
                                     </StyledContainer>
                                 </>

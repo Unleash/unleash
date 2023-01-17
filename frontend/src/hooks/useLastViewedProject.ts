@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
 import { getLocalStorageItem, setLocalStorageItem } from '../utils/storage';
-import useUiConfig from './api/getters/useUiConfig/useUiConfig';
+import { basePath } from 'utils/formatPath';
 
 export const useLastViewedProject = () => {
-    const { uiConfig } = useUiConfig();
-    const key = `${uiConfig.baseUriPath}:unleash-lastViewedProject`;
+    const key = `${basePath}:unleash-lastViewedProject`;
 
     const [lastViewed, setLastViewed] = useState(() => {
         return getLocalStorageItem(key);

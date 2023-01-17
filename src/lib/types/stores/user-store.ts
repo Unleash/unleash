@@ -25,6 +25,7 @@ export interface IUserStore extends Store<IUser, number> {
     upsert(user: ICreateUser): Promise<IUser>;
     hasUser(idQuery: IUserLookup): Promise<number | undefined>;
     search(query: string): Promise<IUser[]>;
+    getAllUsers(): Promise<IUser[]>;
     getAllWithId(userIdList: number[]): Promise<IUser[]>;
     getByQuery(idQuery: IUserLookup): Promise<IUser>;
     getPasswordHash(userId: number): Promise<string>;

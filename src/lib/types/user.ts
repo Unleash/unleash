@@ -1,6 +1,9 @@
 import Joi from 'joi';
 import { generateImageUrl } from '../util/generateImageUrl';
 
+export const AccountTypes = ['User', 'Service Account'] as const;
+type AccountType = typeof AccountTypes[number];
+
 export interface UserData {
     id: number;
     name?: string;
@@ -10,6 +13,7 @@ export interface UserData {
     seenAt?: Date;
     loginAttempts?: number;
     createdAt?: Date;
+    isService?: boolean;
 }
 
 export interface IUser {
@@ -24,6 +28,7 @@ export interface IUser {
     loginAttempts: number;
     isAPI: boolean;
     imageUrl: string;
+    accountType?: AccountType;
 }
 
 export interface IProjectUser extends IUser {
@@ -51,6 +56,8 @@ export default class User implements IUser {
 
     createdAt: Date;
 
+    accountType?: AccountType = 'User';
+
     constructor({
         id,
         name,
@@ -60,6 +67,7 @@ export default class User implements IUser {
         seenAt,
         loginAttempts,
         createdAt,
+        isService,
     }: UserData) {
         if (!id) {
             throw new TypeError('Id is required');
@@ -76,6 +84,7 @@ export default class User implements IUser {
         this.seenAt = seenAt;
         this.loginAttempts = loginAttempts;
         this.createdAt = createdAt;
+        this.accountType = isService ? 'Service Account' : 'User';
     }
 
     generateImageUrl(): string {

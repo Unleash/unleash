@@ -151,7 +151,7 @@ export const ProjectAccessTable: VFC = () => {
                 id: 'username',
                 Header: 'Username',
                 accessor: (row: IProjectAccess) => {
-                    if (row.type === ENTITY_TYPE.USER) {
+                    if (row.type !== ENTITY_TYPE.GROUP) {
                         const userRow = row.entity as IUser;
                         return userRow.username || userRow.email;
                     }
@@ -194,7 +194,7 @@ export const ProjectAccessTable: VFC = () => {
                 id: 'lastLogin',
                 Header: 'Last login',
                 accessor: (row: IProjectAccess) => {
-                    if (row.type === ENTITY_TYPE.USER) {
+                    if (row.type !== ENTITY_TYPE.GROUP) {
                         const userRow = row.entity as IUser;
                         return userRow.seenAt || '';
                     }
@@ -228,7 +228,9 @@ export const ProjectAccessTable: VFC = () => {
                             permission={UPDATE_PROJECT}
                             projectId={projectId}
                             to={`edit/${
-                                row.type === ENTITY_TYPE.USER ? 'user' : 'group'
+                                row.type === ENTITY_TYPE.GROUP
+                                    ? 'group'
+                                    : 'user'
                             }/${row.entity.id}`}
                             disabled={access?.rows.length === 1}
                             tooltipProps={{
@@ -344,13 +346,13 @@ export const ProjectAccessTable: VFC = () => {
         if (!userOrGroup) return;
         const { id, roleId } = userOrGroup.entity;
         let name = userOrGroup.entity.name;
-        if (userOrGroup.type === ENTITY_TYPE.USER) {
+        if (userOrGroup.type !== ENTITY_TYPE.GROUP) {
             const user = userOrGroup.entity as IUser;
             name = name || user.email || user.username || '';
         }
 
         try {
-            if (userOrGroup.type === ENTITY_TYPE.USER) {
+            if (userOrGroup.type !== ENTITY_TYPE.GROUP) {
                 await removeUserFromRole(projectId, roleId, id);
             } else {
                 await removeGroupFromRole(projectId, roleId, id);

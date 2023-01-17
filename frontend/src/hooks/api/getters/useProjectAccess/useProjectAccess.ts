@@ -6,10 +6,12 @@ import { IProjectRole } from 'interfaces/role';
 import { IGroup } from 'interfaces/group';
 import { IUser } from 'interfaces/user';
 import { mapGroupUsers } from '../useGroup/useGroup';
+import { IServiceAccount } from 'interfaces/service-account';
 
 export enum ENTITY_TYPE {
     USER = 'USERS',
     GROUP = 'GROUPS',
+    SERVICE_ACCOUNT = 'SERVICE ACCOUNTS',
 }
 
 export interface IProjectAccess {
@@ -63,7 +65,12 @@ const useProjectAccess = (
         if (data) {
             return formatAccessData({
                 roles: data.roles,
-                users: data.users,
+                users: (data.users as IUser[]).filter(
+                    ({ accountType }) => accountType === 'User'
+                ),
+                serviceAccounts: (data.users as IUser[]).filter(
+                    ({ accountType }) => accountType === 'Service Account'
+                ),
                 groups:
                     data?.groups.map((group: any) => ({
                         ...group,
@@ -83,15 +90,20 @@ const useProjectAccess = (
 
 const formatAccessData = (access: any): IProjectAccessOutput => {
     const users = access.users || [];
+    const serviceAccounts = access.serviceAccounts || [];
     const groups = access.groups || [];
     return {
         ...access,
         rows: [
-            ...users.map((user: any) => ({
+            ...users.map((user: IUser) => ({
                 entity: user,
                 type: ENTITY_TYPE.USER,
             })),
-            ...groups.map((group: any) => ({
+            ...serviceAccounts.map((serviceAccount: IServiceAccount) => ({
+                entity: serviceAccount,
+                type: ENTITY_TYPE.SERVICE_ACCOUNT,
+            })),
+            ...groups.map((group: IGroup) => ({
                 entity: group,
                 type: ENTITY_TYPE.GROUP,
             })),

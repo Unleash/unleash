@@ -262,7 +262,7 @@ export default class UserAdminController extends Controller {
     }
 
     async getUsers(req: Request, res: Response<UsersSchema>): Promise<void> {
-        const users = await this.userService.getAll();
+        const users = await this.userService.getAllUsers();
         const rootRoles = await this.accessService.getRootRoles();
         const inviteLinks = await this.resetTokenService.getActiveInvitations();
 
@@ -317,6 +317,7 @@ export default class UserAdminController extends Controller {
                 name: u.name,
                 username: u.username,
                 email: u.email,
+                accountType: u.accountType,
             } as IUser;
         });
 

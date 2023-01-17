@@ -23,11 +23,23 @@ export default class FakeFeatureEnvironmentStore
         environment: string,
         variants: IVariant[],
     ): Promise<void> {
+        this.setVariantsToFeatureEnvironments(
+            featureName,
+            [environment],
+            variants,
+        );
+    }
+
+    async setVariantsToFeatureEnvironments(
+        featureName: string,
+        environments: string[],
+        variants: IVariant[],
+    ): Promise<void> {
         this.featureEnvironments
             .filter(
                 (fe) =>
                     fe.featureName === featureName &&
-                    fe.environment === environment,
+                    environments.indexOf(fe.environment) !== -1,
             )
             .map((fe) => (fe.variants = variants));
     }

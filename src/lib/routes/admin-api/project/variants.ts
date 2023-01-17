@@ -16,6 +16,9 @@ import { IAuthRequest } from '../../unleash-types';
 import { FeatureVariantsSchema } from '../../../openapi/spec/feature-variants-schema';
 import { createRequestSchema } from '../../../openapi/util/create-request-schema';
 import { createResponseSchema } from '../../../openapi/util/create-response-schema';
+import { AccessService } from '../../../services';
+import { BadDataError, NoAccessError } from '../../../../lib/error';
+import { User } from 'lib/server-impl';
 
 const PREFIX = '/:projectId/features/:featureName/variants';
 const ENV_PREFIX =
@@ -23,6 +26,10 @@ const ENV_PREFIX =
 
 interface FeatureEnvironmentParams extends FeatureParams {
     environment: string;
+}
+
+interface FeatureEnvironmentsParams extends FeatureParams {
+    environments: [string];
 }
 
 interface FeatureParams extends ProjectParam {
@@ -37,16 +44,23 @@ export default class VariantsController extends Controller {
 
     private featureService: FeatureToggleService;
 
+    private accessService: AccessService;
+
     constructor(
         config: IUnleashConfig,
         {
             featureToggleService,
             openApiService,
-        }: Pick<IUnleashServices, 'featureToggleService' | 'openApiService'>,
+            accessService,
+        }: Pick<
+            IUnleashServices,
+            'featureToggleService' | 'openApiService' | 'accessService'
+        >,
     ) {
         super(config);
         this.logger = config.getLogger('admin-api/project/variants.ts');
         this.featureService = featureToggleService;
+        this.accessService = accessService;
         this.route({
             method: 'get',
             path: PREFIX,
@@ -141,6 +155,22 @@ export default class VariantsController extends Controller {
                 }),
             ],
         });
+        this.route({
+            method: 'put',
+            path: `${PREFIX}-batch`,
+            permission: NONE,
+            handler: this.pushVariantsToEnvironments,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['Features'],
+                    operationId: 'overwriteEnvironmentFeatureVariants',
+                    requestBody: createRequestSchema('variantsSchema'),
+                    responses: {
+                        200: createResponseSchema('featureVariantsSchema'),
+                    },
+                }),
+            ],
+        });
     }
 
     /**
@@ -191,6 +221,62 @@ export default class VariantsController extends Controller {
             version: 1,
             variants: updatedFeature.variants,
         });
+    }
+
+    async pushVariantsToEnvironments(
+        req: IAuthRequest<FeatureEnvironmentsParams, any, IVariant[], any>,
+        res: Response<FeatureVariantsSchema>,
+    ): Promise<void> {
+        const { projectId, featureName } = req.params;
+        const environments = req.query.environments.split(','); // TODO can we use query-string parser?
+        const userName = extractUsername(req);
+
+        if (environments.length === 0) {
+            throw new BadDataError('No environments provided');
+        }
+
+        await this.checkAccess(
+            req.user,
+            projectId,
+            environments,
+            UPDATE_FEATURE_ENVIRONMENT_VARIANTS,
+        );
+
+        const variants: IVariant[] = req.body;
+        await this.featureService.setVariantsOnEnvs(
+            projectId,
+            featureName,
+            environments,
+            variants,
+            userName,
+        );
+        res.status(200).json({
+            version: 1,
+            variants: variants,
+        });
+    }
+
+    async checkAccess(
+        user: User,
+        projectId: string,
+        environments: string[],
+        permission: string,
+    ): Promise<void> {
+        for (const environment of environments) {
+            if (
+                !(await this.accessService.hasPermission(
+                    user,
+                    permission,
+                    projectId,
+                    environment,
+                ))
+            ) {
+                throw new NoAccessError(
+                    UPDATE_FEATURE_ENVIRONMENT_VARIANTS,
+                    environment,
+                );
+            }
+        }
     }
 
     async getVariantsOnEnv(

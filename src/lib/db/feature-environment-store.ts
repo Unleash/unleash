@@ -372,15 +372,29 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
         environment: string,
         variants: IVariant[],
     ): Promise<void> {
+        return this.setVariantsToFeatureEnvironments(
+            featureName,
+            [environment],
+            variants,
+        );
+    }
+
+    async setVariantsToFeatureEnvironments(
+        featureName: string,
+        environments: string[],
+        variants: IVariant[],
+    ): Promise<void> {
         let v = variants || [];
         v.sort((a, b) => a.name.localeCompare(b.name));
+        const variantsString = JSON.stringify(v);
+        const records = environments.map((env) => ({
+            variants: variantsString,
+            enabled: false, // default value for enabled in case it's not set
+            feature_name: featureName,
+            environment: env,
+        }));
         await this.db(T.featureEnvs)
-            .insert({
-                variants: JSON.stringify(v),
-                enabled: false,
-                feature_name: featureName,
-                environment: environment,
-            })
+            .insert(records)
             .onConflict(['feature_name', 'environment'])
             .merge(['variants']);
     }

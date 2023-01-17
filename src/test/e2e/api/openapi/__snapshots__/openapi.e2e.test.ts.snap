@@ -6582,6 +6582,55 @@ If the provided project does not exist, the list of events will be empty.",
         ],
       },
     },
+    "/api/admin/projects/{projectId}/features/{featureName}/variants-batch": {
+      "put": {
+        "operationId": "overwriteEnvironmentFeatureVariants",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+          {
+            "in": "path",
+            "name": "featureName",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/variantsSchema",
+              },
+            },
+          },
+          "description": "variantsSchema",
+          "required": true,
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/featureVariantsSchema",
+                },
+              },
+            },
+            "description": "featureVariantsSchema",
+          },
+        },
+        "tags": [
+          "Features",
+        ],
+      },
+    },
     "/api/admin/projects/{projectId}/health-report": {
       "get": {
         "operationId": "getProjectHealthReport",

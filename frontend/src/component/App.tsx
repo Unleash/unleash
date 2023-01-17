@@ -27,7 +27,8 @@ const InitialRedirect = () => {
     const navigate = useNavigate();
     const ref = useRef<{ redirected: boolean }>({ redirected: false });
 
-    if (process.env.TEST_SKIP_REDIRECT) {
+    // If we are running test, we don't want to redirect
+    if (import.meta.env.VITE_TEST_REDIRECT === 'true') {
         return null;
     }
 

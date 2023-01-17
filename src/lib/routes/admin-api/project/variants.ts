@@ -163,7 +163,7 @@ export default class VariantsController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Features'],
-                    operationId: 'overwriteEnvironmentFeatureVariants',
+                    operationId: 'overwriteFeatureVariantsOnEnvironments',
                     requestBody: createRequestSchema('variantsSchema'),
                     responses: {
                         200: createResponseSchema('featureVariantsSchema'),

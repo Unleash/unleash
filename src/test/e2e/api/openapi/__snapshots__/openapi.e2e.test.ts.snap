@@ -3537,6 +3537,9 @@ exports[`should serve the OpenAPI spec 1`] = `
       "userSchema": {
         "additionalProperties": false,
         "properties": {
+          "accountType": {
+            "type": "string",
+          },
           "createdAt": {
             "format": "date-time",
             "type": "string",

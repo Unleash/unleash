@@ -112,7 +112,9 @@
   "resolutions": {
     "@codemirror/state": "6.2.0",
     "@xmldom/xmldom": "^0.8.4",
-    "json5": "^2.2.2"
+    "json5": "^2.2.2",
+    "@types/react": "17.0.52",
+    "@types/react-dom": "17.0.18"
   },
   "jest": {
     "moduleNameMapper": {

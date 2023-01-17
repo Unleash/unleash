@@ -108,6 +108,22 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
         }));
     }
 
+    async getAllByFeatures(
+        features: string[],
+        environment?: string,
+    ): Promise<IFeatureEnvironment[]> {
+        let rows = this.db(T.featureEnvs).whereIn('feature_name', features);
+        if (environment) {
+            rows = rows.where({ environment });
+        }
+        return (await rows).map((r) => ({
+            enabled: r.enabled,
+            featureName: r.feature_name,
+            environment: r.environment,
+            variants: r.variants,
+        }));
+    }
+
     async disableEnvironmentIfNoStrategies(
         featureName: string,
         environment: string,

@@ -16,6 +16,9 @@ export const exportQuerySchema = {
         environment: {
             type: 'string',
         },
+        downloadFile: {
+            type: 'boolean',
+        },
     },
     components: {
         schemas: {},

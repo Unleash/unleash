@@ -98,7 +98,6 @@ const createProject = async (project: string, environment: string) => {
             environment,
         })
         .expect(200);
-    // await db.stores.projectStore.addEnvironmentToProject(project, environment);
 };
 
 const createSegment = (postData: object): Promise<ISegment> => {

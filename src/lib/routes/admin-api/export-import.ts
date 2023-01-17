@@ -75,12 +75,16 @@ class ExportImportController extends Controller {
             serializeDates(data),
         );
 
-        const timestamp = formatDate(Date.now(), 'yyyy-MM-dd_HH-mm-ss');
+        const timestamp = this.getFormattedDate(Date.now());
         if (query.downloadFile) {
             res.attachment(`export-${timestamp}.json`);
         }
 
         res.json(data);
+    }
+
+    private getFormattedDate(millis: number): string {
+        return formatDate(millis, 'yyyy-MM-dd_HH-mm-ss');
     }
 
     private verifyExportImportEnabled() {

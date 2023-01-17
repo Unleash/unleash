@@ -218,4 +218,13 @@ export default class FakeFeatureEnvironmentStore
     ): Promise<void> {
         throw new Error('Method not implemented.');
     }
+
+    getAllByFeatures(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        features: string[],
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        environment?: string,
+    ): Promise<IFeatureEnvironment[]> {
+        throw new Error('Method not implemented.');
+    }
 }

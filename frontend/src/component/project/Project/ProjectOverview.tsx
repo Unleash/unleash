@@ -8,9 +8,10 @@ import { usePageTitle } from 'hooks/usePageTitle';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useLastViewedProject } from '../../../hooks/useLastViewedProject';
 import { useEffect } from 'react';
-import { StatusBox } from './StatusBox/StatusBox';
+import { StatusBox } from './ProjectStatus/StatusBox';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { ProjectStatus } from './ProjectStatus/ProjectStatus';
 
 const refreshInterval = 15 * 1000;
 
@@ -24,6 +25,12 @@ const StyledContainer = styled('div')(({ theme }) => ({
 const StyledProjectToggles = styled('div')(() => ({
     width: '100%',
     minWidth: 0,
+}));
+
+const StyledContentContainer = styled(Box)(() => ({
+    display: 'flex',
+    flexDirection: 'column',
+    width: '100%',
 }));
 
 const ProjectOverview = () => {
@@ -48,11 +55,9 @@ const ProjectOverview = () => {
                 health={health}
                 featureCount={features?.length}
             />
-            <Box
-                sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}
-            >
+            <StyledContentContainer>
                 <ConditionallyRender
-                    condition={uiConfig?.flags.newProjectOverview}
+                    condition={Boolean(uiConfig?.flags.newProjectOverview)}
                     show={<ProjectStatus />}
                 />
                 <StyledProjectToggles>
@@ -62,30 +67,8 @@ const ProjectOverview = () => {
                         loading={loading}
                     />
                 </StyledProjectToggles>
-            </Box>
+            </StyledContentContainer>
         </StyledContainer>
-    );
-};
-
-const ProjectStatus = () => {
-    return (
-        <Box
-            sx={{
-                padding: '0 0 1rem 1rem',
-                display: 'flex',
-                justifyContent: 'space-between',
-                flexWrap: 'wrap',
-            }}
-        >
-            <StatusBox title="Total changes" boxText={'86'} change={-24} />
-            <StatusBox
-                title="Total changes"
-                boxText={'6 days'}
-                change={-12}
-            />{' '}
-            <StatusBox title="Total changes" boxText={'86'} change={-24} />
-            <StatusBox title="Total changes" boxText={'86'} change={-24} />
-        </Box>
     );
 };
 

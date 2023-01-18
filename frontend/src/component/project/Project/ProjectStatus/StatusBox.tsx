@@ -33,6 +33,11 @@ const StyledTypographySubtext = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
 }));
 
+const StyledTypographyChange = styled(Typography)(({ theme }) => ({
+    marginLeft: theme.spacing(1),
+    fontSize: theme.fontSizes.smallBody,
+}));
+
 interface IStatusBoxProps {
     title: string;
     boxText: string;
@@ -61,20 +66,14 @@ export const StatusBox = ({ title, boxText, change }: IStatusBoxProps) => {
     return (
         <StyledBox>
             <StyledTypographyHeader>{title}</StyledTypographyHeader>
-            <Box sx={{ display: 'flex' }}>
+            <Box sx={{ ...flexRow }}>
                 <StyledTypographyCount>{boxText}</StyledTypographyCount>
                 <StyledBoxChangeContainer>
                     <Box sx={{ ...flexRow }}>
                         {resolveIcon(change)}
-                        <Typography
-                            sx={theme => ({
-                                marginLeft: theme.spacing(1),
-                                fontSize: theme.fontSizes.smallBody,
-                            })}
-                            color={resolveColor(change)}
-                        >
+                        <StyledTypographyChange color={resolveColor(change)}>
                             {change}
-                        </Typography>
+                        </StyledTypographyChange>
                     </Box>
                     <StyledTypographySubtext>
                         this month

@@ -10,6 +10,10 @@ const flags = {
         process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY,
         true,
     ),
+    newProjectOverview: parseEnvVarBoolean(
+        process.env.NEW_PROJECT_OVERVIEW,
+        false,
+    ),
     embedProxyFrontend: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY_FRONTEND,
         true,

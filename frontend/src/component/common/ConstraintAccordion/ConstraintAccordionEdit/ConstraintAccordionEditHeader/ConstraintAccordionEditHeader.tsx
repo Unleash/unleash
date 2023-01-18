@@ -9,6 +9,7 @@ import {
     DATE_AFTER,
     IN,
     stringOperators,
+    inOperators,
 } from 'constants/operators';
 import { resolveText } from './helpers';
 import { oneOf } from 'utils/oneOf';
@@ -123,7 +124,7 @@ export const ConstraintAccordionEditHeader = ({
             setOperator(IN);
         }
 
-        if (oneOf(stringOperators, operator)) {
+        if (oneOf([...stringOperators, ...inOperators], operator)) {
             setShowCaseSensitiveButton(true);
         } else {
             setShowCaseSensitiveButton(false);

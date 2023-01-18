@@ -372,6 +372,7 @@ test('import features to existing project and environment', async () => {
                 },
             ],
             contextFields: [],
+            segments: [],
         },
         project: project,
         environment: environment,

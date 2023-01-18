@@ -14,17 +14,6 @@ import {
 
 const TABLE = 'users';
 
-const USER_COLUMNS = [
-    'id',
-    'name',
-    'username',
-    'email',
-    'image_url',
-    'login_attempts',
-    'seen_at',
-    'created_at',
-];
-
 const USER_COLUMNS_PUBLIC = [
     'id',
     'name',
@@ -32,7 +21,10 @@ const USER_COLUMNS_PUBLIC = [
     'email',
     'image_url',
     'seen_at',
+    'is_service',
 ];
+
+const USER_COLUMNS = [...USER_COLUMNS_PUBLIC, 'login_attempts', 'created_at'];
 
 const emptify = (value) => {
     if (!value) {
@@ -63,6 +55,7 @@ const rowToUser = (row) => {
         loginAttempts: row.login_attempts,
         seenAt: row.seen_at,
         createdAt: row.created_at,
+        isService: row.is_service,
     });
 };
 
@@ -133,6 +126,11 @@ class UserStore implements IUserStore {
     }
 
     async getAll(): Promise<User[]> {
+        const users = await this.activeAll().select(USER_COLUMNS);
+        return users.map(rowToUser);
+    }
+
+    async getAllUsers(): Promise<User[]> {
         const users = await this.activeUsers().select(USER_COLUMNS);
         return users.map(rowToUser);
     }
@@ -147,7 +145,7 @@ class UserStore implements IUserStore {
     }
 
     async getAllWithId(userIdList: number[]): Promise<User[]> {
-        const users = await this.activeUsers()
+        const users = await this.activeAll()
             .select(USER_COLUMNS_PUBLIC)
             .whereIn('id', userIdList);
         return users.map(rowToUser);

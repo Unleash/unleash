@@ -1,4 +1,5 @@
 import { FromSchema } from 'json-schema-to-ts';
+import { AccountTypes } from '../../types';
 
 export const userSchema = {
     $id: '#/components/schemas/userSchema',
@@ -44,6 +45,10 @@ export const userSchema = {
         createdAt: {
             type: 'string',
             format: 'date-time',
+        },
+        accountType: {
+            type: 'string',
+            enum: AccountTypes,
         },
     },
     components: {},

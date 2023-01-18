@@ -10,14 +10,15 @@ export const ProjectAccessEditUser = () => {
     const userId = useRequiredPathParam('userId');
 
     const { access } = useProjectAccess(projectId);
-    const { users, groups } = useAccess();
+    const { users, serviceAccounts, groups } = useAccess();
 
-    if (!access || !users || !groups) {
+    if (!access || !users || !serviceAccounts || !groups) {
         return null;
     }
 
     const user = access.rows.find(
-        row => row.entity.id === Number(userId) && row.type === ENTITY_TYPE.USER
+        row =>
+            row.entity.id === Number(userId) && row.type !== ENTITY_TYPE.GROUP
     );
 
     return (
@@ -25,6 +26,7 @@ export const ProjectAccessEditUser = () => {
             accesses={access.rows}
             selected={user}
             users={users}
+            serviceAccounts={serviceAccounts}
             groups={groups}
             roles={access.roles}
         />

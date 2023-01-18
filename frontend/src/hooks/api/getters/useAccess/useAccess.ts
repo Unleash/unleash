@@ -3,9 +3,11 @@ import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { IGroup } from 'interfaces/group';
 import { IUser } from 'interfaces/user';
+import { IServiceAccount } from 'interfaces/service-account';
 
 export interface IUseAccessOutput {
     users?: IUser[];
+    serviceAccounts?: IServiceAccount[];
     groups?: IGroup[];
     loading: boolean;
     refetch: () => void;
@@ -19,7 +21,12 @@ export const useAccess = (): IUseAccessOutput => {
     );
 
     return {
-        users: data?.users,
+        users: (data?.users as IUser[])?.filter(
+            ({ accountType }) => accountType === 'User'
+        ),
+        serviceAccounts: (data?.users as IServiceAccount[])?.filter(
+            ({ accountType }) => accountType === 'Service Account'
+        ),
         groups: data?.groups,
         loading: !error && !data,
         refetch: () => mutate(),

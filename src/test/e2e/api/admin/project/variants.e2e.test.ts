@@ -10,6 +10,14 @@ let db: ITestDb;
 beforeAll(async () => {
     db = await dbInit('project_feature_variants_api_serial', getLogger);
     app = await setupApp(db.stores);
+    await db.stores.environmentStore.create({
+        name: 'development',
+        type: 'development',
+    });
+    await db.stores.environmentStore.create({
+        name: 'production',
+        type: 'production',
+    });
 });
 
 afterAll(async () => {
@@ -132,14 +140,6 @@ test('Can patch variants for a feature patches all environments independently', 
         },
     ];
 
-    await db.stores.environmentStore.create({
-        name: 'development',
-        type: 'development',
-    });
-    await db.stores.environmentStore.create({
-        name: 'production',
-        type: 'production',
-    });
     await db.stores.featureToggleStore.create('default', {
         name: featureName,
     });
@@ -215,6 +215,81 @@ test('Can patch variants for a feature patches all environments independently', 
             expect(
                 productionVariants.find((x) => x.name === 'prod-variant'),
             ).toBeTruthy();
+        });
+});
+
+test('Can push variants to multiple environments', async () => {
+    const featureName = 'feature-to-override';
+    const variant = (name: string, weight: number) => ({
+        name,
+        stickiness: 'default',
+        weight,
+        weightType: WeightType.VARIABLE,
+    });
+    await db.stores.featureToggleStore.create('default', {
+        name: featureName,
+    });
+    await db.stores.featureEnvironmentStore.addEnvironmentToFeature(
+        featureName,
+        'development',
+        true,
+    );
+    await db.stores.featureEnvironmentStore.addEnvironmentToFeature(
+        featureName,
+        'production',
+        true,
+    );
+    await db.stores.featureEnvironmentStore.addVariantsToFeatureEnvironment(
+        featureName,
+        'development',
+        [
+            variant('dev-variant-1', 250),
+            variant('dev-variant-2', 250),
+            variant('dev-variant-3', 250),
+            variant('dev-variant-4', 250),
+        ],
+    );
+    await db.stores.featureEnvironmentStore.addVariantsToFeatureEnvironment(
+        featureName,
+        'production',
+        [variant('prod-variant', 1000)],
+    );
+
+    const overrideWith = [
+        variant('new-variant-1', 500),
+        variant('new-variant-2', 500),
+    ];
+
+    await app.request
+        .put(
+            `/api/admin/projects/default/features/${featureName}/variants-batch?environments=development,production`,
+        )
+        .send(overrideWith)
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.version).toBe(1);
+            expect(res.body.variants).toHaveLength(2);
+            expect(res.body.variants[0].name).toBe('new-variant-1');
+            expect(res.body.variants[1].name).toBe('new-variant-2');
+        });
+
+    await app.request
+        .get(
+            `/api/admin/projects/default/features/${featureName}?variantEnvironments=true`,
+        )
+        .expect((res) => {
+            const environments = res.body.environments;
+            expect(environments).toHaveLength(2);
+            const developmentVariants = environments.find(
+                (x) => x.name === 'development',
+            ).variants;
+            const productionVariants = environments.find(
+                (x) => x.name === 'production',
+            ).variants;
+            expect(developmentVariants).toHaveLength(2);
+            expect(productionVariants).toHaveLength(2);
+            expect(developmentVariants[0].name).toBe('new-variant-1');
+            expect(developmentVariants[1].name).toBe('new-variant-2');
         });
 });
 

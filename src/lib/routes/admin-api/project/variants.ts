@@ -228,10 +228,10 @@ export default class VariantsController extends Controller {
         res: Response<FeatureVariantsSchema>,
     ): Promise<void> {
         const { projectId, featureName } = req.params;
-        const environments = req.query.environments.split(','); // TODO can we use query-string parser?
+        const environments = req.query.environments?.split(','); // TODO can we use query-string parser?
         const userName = extractUsername(req);
 
-        if (environments.length === 0) {
+        if (environments === undefined || environments.length === 0) {
             throw new BadDataError('No environments provided');
         }
 

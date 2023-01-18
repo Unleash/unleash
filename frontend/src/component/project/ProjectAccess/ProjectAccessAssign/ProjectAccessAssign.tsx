@@ -150,6 +150,11 @@ export const ProjectAccessAssign = ({
                             user.id === id && type === ENTITY_TYPE.USER
                     )
             )
+            .sort((a: IUser, b: IUser) => {
+                const aName = a.name || a.username || '';
+                const bName = b.name || b.username || '';
+                return aName.localeCompare(bName);
+            })
             .map((user: IUser) => ({
                 id: user.id,
                 entity: user,
@@ -165,6 +170,11 @@ export const ProjectAccessAssign = ({
                             type === ENTITY_TYPE.SERVICE_ACCOUNT
                     )
             )
+            .sort((a: IServiceAccount, b: IServiceAccount) => {
+                const aName = a.name || a.username || '';
+                const bName = b.name || b.username || '';
+                return aName.localeCompare(bName);
+            })
             .map((serviceAccount: IServiceAccount) => ({
                 id: serviceAccount.id,
                 entity: serviceAccount,

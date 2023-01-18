@@ -2751,6 +2751,23 @@ exports[`should serve the OpenAPI spec 1`] = `
         ],
         "type": "object",
       },
+      "pushVariantsSchema": {
+        "properties": {
+          "environments": {
+            "items": {
+              "type": "string",
+            },
+            "type": "array",
+          },
+          "variants": {
+            "items": {
+              "$ref": "#/components/schemas/variantSchema",
+            },
+            "type": "array",
+          },
+        },
+        "type": "object",
+      },
       "requestsPerSecondSchema": {
         "properties": {
           "data": {
@@ -6607,11 +6624,11 @@ If the provided project does not exist, the list of events will be empty.",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/variantsSchema",
+                "$ref": "#/components/schemas/pushVariantsSchema",
               },
             },
           },
-          "description": "variantsSchema",
+          "description": "pushVariantsSchema",
           "required": true,
         },
         "responses": {

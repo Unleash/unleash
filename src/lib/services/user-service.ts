@@ -161,6 +161,20 @@ class UserService {
         return usersWithRootRole;
     }
 
+    async getAllUsers(): Promise<IUserWithRole[]> {
+        const users = await this.store.getAllUsers();
+        const defaultRole = await this.accessService.getRootRole(
+            RoleName.VIEWER,
+        );
+        const userRoles = await this.accessService.getRootRoleForAllUsers();
+        const usersWithRootRole = users.map((u) => {
+            const rootRole = userRoles.find((r) => r.userId === u.id);
+            const roleId = rootRole ? rootRole.roleId : defaultRole.id;
+            return { ...u, rootRole: roleId };
+        });
+        return usersWithRootRole;
+    }
+
     async getUser(id: number): Promise<IUserWithRole> {
         const roles = await this.accessService.getUserRootRoles(id);
         const defaultRole = await this.accessService.getRootRole(

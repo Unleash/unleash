@@ -1090,6 +1090,12 @@ exports[`should serve the OpenAPI spec 1`] = `
             },
             "type": "array",
           },
+          "segments": {
+            "items": {
+              "$ref": "#/components/schemas/segmentSchema",
+            },
+            "type": "array",
+          },
         },
         "required": [
           "features",
@@ -3537,6 +3543,9 @@ exports[`should serve the OpenAPI spec 1`] = `
       "userSchema": {
         "additionalProperties": false,
         "properties": {
+          "accountType": {
+            "type": "string",
+          },
           "createdAt": {
             "format": "date-time",
             "type": "string",

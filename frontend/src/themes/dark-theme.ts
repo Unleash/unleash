@@ -44,6 +44,7 @@ export default createTheme({
         },
     },
     fontSizes: {
+        largeHeader: '2.25rem',
         mainHeader: '1.25rem',
         bodySize: '1rem',
         smallBody: `${14 / 16}rem`,

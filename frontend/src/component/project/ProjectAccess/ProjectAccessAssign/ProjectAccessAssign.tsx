@@ -34,6 +34,7 @@ import {
     PA_USERS_GROUPS_TITLE_ID,
 } from 'utils/testIds';
 import { caseInsensitiveSearch } from 'utils/search';
+import { IServiceAccount } from 'interfaces/service-account';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',
@@ -99,6 +100,7 @@ interface IProjectAccessAssignProps {
     selected?: IProjectAccess;
     accesses: IProjectAccess[];
     users: IUser[];
+    serviceAccounts: IServiceAccount[];
     groups: IGroup[];
     roles: IProjectRole[];
 }
@@ -107,6 +109,7 @@ export const ProjectAccessAssign = ({
     selected,
     accesses,
     users,
+    serviceAccounts,
     groups,
     roles,
 }: IProjectAccessAssignProps) => {
@@ -152,6 +155,21 @@ export const ProjectAccessAssign = ({
                 entity: user,
                 type: ENTITY_TYPE.USER,
             })),
+        ...serviceAccounts
+            .filter(
+                (serviceAccount: IServiceAccount) =>
+                    edit ||
+                    !accesses.some(
+                        ({ entity: { id }, type }) =>
+                            serviceAccount.id === id &&
+                            type === ENTITY_TYPE.SERVICE_ACCOUNT
+                    )
+            )
+            .map((serviceAccount: IServiceAccount) => ({
+                id: serviceAccount.id,
+                entity: serviceAccount,
+                type: ENTITY_TYPE.SERVICE_ACCOUNT,
+            })),
     ];
 
     const [selectedOptions, setSelectedOptions] = useState<IAccessOption[]>(
@@ -167,7 +185,11 @@ export const ProjectAccessAssign = ({
 
     const payload = {
         users: selectedOptions
-            ?.filter(({ type }) => type === ENTITY_TYPE.USER)
+            ?.filter(
+                ({ type }) =>
+                    type === ENTITY_TYPE.USER ||
+                    type === ENTITY_TYPE.SERVICE_ACCOUNT
+            )
             .map(({ id }) => ({ id })),
         groups: selectedOptions
             ?.filter(({ type }) => type === ENTITY_TYPE.GROUP)
@@ -182,7 +204,10 @@ export const ProjectAccessAssign = ({
         try {
             if (!edit) {
                 await addAccessToProject(projectId, role.id, payload);
-            } else if (selected?.type === ENTITY_TYPE.USER) {
+            } else if (
+                selected?.type === ENTITY_TYPE.USER ||
+                selected?.type === ENTITY_TYPE.SERVICE_ACCOUNT
+            ) {
                 await changeUserRole(projectId, role.id, selected.entity.id);
             } else if (selected?.type === ENTITY_TYPE.GROUP) {
                 await changeGroupRole(projectId, role.id, selected.entity.id);
@@ -205,7 +230,10 @@ export const ProjectAccessAssign = ({
             return `curl --location --request ${edit ? 'PUT' : 'POST'} '${
                 uiConfig.unleashUrl
             }/api/admin/projects/${projectId}/${
-                selected?.type === ENTITY_TYPE.USER ? 'users' : 'groups'
+                selected?.type === ENTITY_TYPE.USER ||
+                selected?.type === ENTITY_TYPE.SERVICE_ACCOUNT
+                    ? 'users'
+                    : 'groups'
             }/${selected?.entity.id}/roles/${role?.id}' \\
             --header 'Authorization: INSERT_API_KEY'`;
         }
@@ -250,7 +278,11 @@ export const ProjectAccessAssign = ({
                             <span>
                                 {optionUser?.name || optionUser?.username}
                             </span>
-                            <span>{optionUser?.email}</span>
+                            <span>
+                                {optionUser?.name && optionUser?.username
+                                    ? optionUser?.username
+                                    : optionUser?.email}
+                            </span>
                         </StyledUserOption>
                     }
                 />
@@ -321,7 +353,11 @@ export const ProjectAccessAssign = ({
                                     renderOption(props, option, selected)
                                 }
                                 getOptionLabel={(option: IAccessOption) => {
-                                    if (option.type === ENTITY_TYPE.USER) {
+                                    if (
+                                        option.type === ENTITY_TYPE.USER ||
+                                        option.type ===
+                                            ENTITY_TYPE.SERVICE_ACCOUNT
+                                    ) {
                                         const optionUser =
                                             option.entity as IUser;
                                         return (
@@ -336,7 +372,11 @@ export const ProjectAccessAssign = ({
                                 }}
                                 filterOptions={(options, { inputValue }) =>
                                     options.filter((option: IAccessOption) => {
-                                        if (option.type === ENTITY_TYPE.USER) {
+                                        if (
+                                            option.type === ENTITY_TYPE.USER ||
+                                            option.type ===
+                                                ENTITY_TYPE.SERVICE_ACCOUNT
+                                        ) {
                                             const optionUser =
                                                 option.entity as IUser;
                                             return (

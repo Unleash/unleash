@@ -112,6 +112,10 @@ class UserStoreMock implements IUserStore {
         throw new Error('Not implemented');
     }
 
+    async getAllUsers(): Promise<IUser[]> {
+        throw new Error('Not implemented');
+    }
+
     async getAllWithId(): Promise<IUser[]> {
         throw new Error('Not implemented');
     }

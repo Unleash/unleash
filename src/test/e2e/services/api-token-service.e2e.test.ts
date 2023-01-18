@@ -10,11 +10,13 @@ import FeatureToggleService from '../../../lib/services/feature-toggle-service';
 import { AccessService } from '../../../lib/services/access-service';
 import { SegmentService } from '../../../lib/services/segment-service';
 import { GroupService } from '../../../lib/services/group-service';
+import { FavoritesService } from '../../../lib/services';
 
 let db;
 let stores;
 let apiTokenService: ApiTokenService;
 let projectService: ProjectService;
+let favoritesService: FavoritesService;
 
 beforeAll(async () => {
     const config = createTestConfig({
@@ -39,13 +41,14 @@ beforeAll(async () => {
         name: 'Some Name',
         email: 'test@getunleash.io',
     });
-
+    favoritesService = new FavoritesService(stores, config);
     projectService = new ProjectService(
         stores,
         config,
         accessService,
         featureToggleService,
         groupService,
+        favoritesService,
     );
 
     await projectService.createProject(project, user);

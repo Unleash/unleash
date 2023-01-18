@@ -4,20 +4,15 @@ import { IUnleashServices } from '../../../types/services';
 import { IUnleashConfig } from '../../../types/option';
 import ProjectHealthService from '../../../services/project-health-service';
 import { Logger } from '../../../logger';
-import { IArchivedQuery, IProjectParam } from '../../../types/model';
+import { IProjectParam } from '../../../types/model';
 import { NONE } from '../../../types/permissions';
 import { OpenApiService } from '../../../services/openapi-service';
 import { createResponseSchema } from '../../../openapi/util/create-response-schema';
-import {
-    healthOverviewSchema,
-    HealthOverviewSchema,
-} from '../../../openapi/spec/health-overview-schema';
 import { serializeDates } from '../../../types/serialize-dates';
 import {
     healthReportSchema,
     HealthReportSchema,
 } from '../../../openapi/spec/health-report-schema';
-import { IAuthRequest } from '../../unleash-types';
 
 export default class ProjectHealthReport extends Controller {
     private projectHealthService: ProjectHealthService;
@@ -40,22 +35,6 @@ export default class ProjectHealthReport extends Controller {
 
         this.route({
             method: 'get',
-            path: '/:projectId',
-            handler: this.getProjectHealthOverview,
-            permission: NONE,
-            middleware: [
-                openApiService.validPath({
-                    tags: ['Projects'],
-                    operationId: 'getProjectHealthOverview',
-                    responses: {
-                        200: createResponseSchema('healthOverviewSchema'),
-                    },
-                }),
-            ],
-        });
-
-        this.route({
-            method: 'get',
             path: '/:projectId/health-report',
             handler: this.getProjectHealthReport,
             permission: NONE,
@@ -69,26 +48,6 @@ export default class ProjectHealthReport extends Controller {
                 }),
             ],
         });
-    }
-
-    async getProjectHealthOverview(
-        req: IAuthRequest<IProjectParam, unknown, unknown, IArchivedQuery>,
-        res: Response<HealthOverviewSchema>,
-    ): Promise<void> {
-        const { projectId } = req.params;
-        const { archived } = req.query;
-        const { user } = req;
-        const overview = await this.projectHealthService.getProjectOverview(
-            projectId,
-            archived,
-            user.id,
-        );
-        this.openApiService.respondWithValidation(
-            200,
-            res,
-            healthOverviewSchema.$id,
-            serializeDates(overview),
-        );
     }
 
     async getProjectHealthReport(

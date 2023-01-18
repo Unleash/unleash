@@ -11,6 +11,7 @@ import EnvironmentService from '../../../lib/services/environment-service';
 import IncompatibleProjectError from '../../../lib/error/incompatible-project-error';
 import { SegmentService } from '../../../lib/services/segment-service';
 import { GroupService } from '../../../lib/services/group-service';
+import { FavoritesService } from '../../../lib/services';
 
 let stores;
 let db: ITestDb;
@@ -20,6 +21,7 @@ let groupService: GroupService;
 let accessService: AccessService;
 let environmentService: EnvironmentService;
 let featureToggleService: FeatureToggleService;
+let favoritesService: FavoritesService;
 let user;
 
 beforeAll(async () => {
@@ -42,6 +44,8 @@ beforeAll(async () => {
         new SegmentService(stores, config),
         accessService,
     );
+
+    favoritesService = new FavoritesService(stores, config);
     environmentService = new EnvironmentService(stores, config);
     projectService = new ProjectService(
         stores,
@@ -49,6 +53,7 @@ beforeAll(async () => {
         accessService,
         featureToggleService,
         groupService,
+        favoritesService,
     );
 });
 

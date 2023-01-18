@@ -46,6 +46,7 @@ import { IUserStore } from 'lib/types/stores/user-store';
 import { arraysHaveSameItems } from '../util/arraysHaveSameItems';
 import { GroupService } from './group-service';
 import { IGroupModelWithProjectRole, IGroupRole } from 'lib/types/group';
+import { FavoritesService } from './favorites-service';
 
 const getCreatedBy = (user: IUser) => user.email || user.username;
 
@@ -80,6 +81,8 @@ export default class ProjectService {
 
     private userStore: IUserStore;
 
+    private favoritesService: FavoritesService;
+
     constructor(
         {
             projectStore,
@@ -105,6 +108,7 @@ export default class ProjectService {
         accessService: AccessService,
         featureToggleService: FeatureToggleService,
         groupService: GroupService,
+        favoriteService: FavoritesService,
     ) {
         this.store = projectStore;
         this.environmentStore = environmentStore;
@@ -114,6 +118,7 @@ export default class ProjectService {
         this.featureToggleStore = featureToggleStore;
         this.featureTypeStore = featureTypeStore;
         this.featureToggleService = featureToggleService;
+        this.favoritesService = favoriteService;
         this.tagStore = featureTagStore;
         this.userStore = userStore;
         this.groupService = groupService;
@@ -590,6 +595,7 @@ export default class ProjectService {
     async getProjectOverview(
         projectId: string,
         archived: boolean = false,
+        userId?: number,
     ): Promise<IProjectOverview> {
         const project = await this.store.get(projectId);
         const environments = await this.store.getEnvironmentsForProject(
@@ -598,13 +604,21 @@ export default class ProjectService {
         const features = await this.featureToggleService.getFeatureOverview({
             projectId,
             archived,
+            userId,
         });
         const members = await this.store.getMembersCountByProject(projectId);
+
+        const favorite = await this.favoritesService.isFavoriteProject({
+            project: projectId,
+            userId,
+        });
         return {
             name: project.name,
-            environments,
             description: project.description,
             health: project.health,
+            favorite: favorite,
+            updatedAt: project.updatedAt,
+            environments,
             features,
             members,
             version: 1,

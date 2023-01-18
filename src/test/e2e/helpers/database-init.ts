@@ -10,7 +10,7 @@ import EnvironmentStore from '../../../lib/db/environment-store';
 import { IUnleashStores } from '../../../lib/types';
 import { IFeatureEnvironmentStore } from '../../../lib/types/stores/feature-environment-store';
 import { DEFAULT_ENV } from '../../../lib/util/constants';
-import { IUnleashOptions } from 'lib/server-impl';
+import { IUnleashOptions, Knex } from 'lib/server-impl';
 
 // require('db-migrate-shared').log.silence(false);
 
@@ -76,6 +76,7 @@ export interface ITestDb {
     stores: IUnleashStores;
     reset: () => Promise<void>;
     destroy: () => Promise<void>;
+    rawDatabase: Knex;
 }
 
 export default async function init(
@@ -108,6 +109,7 @@ export default async function init(
     await setupDatabase(stores);
 
     return {
+        rawDatabase: testDb,
         stores,
         reset: async () => {
             await resetDatabase(testDb);

@@ -183,6 +183,7 @@ export default class EnvironmentStore implements IEnvironmentStore {
 
     async getProjectEnvironments(
         projectId: string,
+        query?: Object,
     ): Promise<IProjectEnvironment[]> {
         let qB = this.db<IEnvironmentsWithProjectCountsTable>(TABLE)
             .select(
@@ -201,6 +202,11 @@ export default class EnvironmentStore implements IEnvironmentStore {
                 { column: 'created_at', order: 'asc' },
             ]);
         const rows = await qB;
+
+        if (query) {
+            qB = qB.where(query);
+        }
+
         return rows.map(mapRowWithProjectCounts);
     }
 

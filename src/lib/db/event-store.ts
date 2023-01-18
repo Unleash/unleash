@@ -2,7 +2,7 @@ import { Knex } from 'knex';
 import { IEvent, IBaseEvent } from '../types/events';
 import { LogProvider, Logger } from '../logger';
 import { IEventStore } from '../types/stores/event-store';
-import { ITag } from '../types/model';
+import { FeatureToggle, IProjectEnvironment, ITag } from '../types/model';
 import { SearchEventsSchema } from '../openapi/spec/search-events-schema';
 import { AnyEventEmitter } from '../util/anyEventEmitter';
 
@@ -118,6 +118,31 @@ class EventStore extends AnyEventEmitter implements IEventStore {
         );
         const { present } = result.rows[0];
         return present;
+    }
+
+    async getForFeatures(
+        features: FeatureToggle[],
+        environments: IProjectEnvironment[],
+        query: { type: string; projectId: string },
+    ): Promise<IEvent[]> {
+        try {
+            const rows = await this.db
+                .select(EVENT_COLUMNS)
+                .from(TABLE)
+                .where({ type: query.type, project: query.projectId })
+                .whereIn(
+                    'feature_name',
+                    features.map((feature) => feature.name),
+                )
+                .whereIn(
+                    'environment',
+                    environments.map((env) => env.name),
+                );
+
+            return rows.map(this.rowToEvent);
+        } catch (e) {
+            return [];
+        }
     }
 
     async get(key: number): Promise<IEvent> {

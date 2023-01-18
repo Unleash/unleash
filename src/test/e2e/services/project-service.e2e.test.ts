@@ -12,6 +12,8 @@ import IncompatibleProjectError from '../../../lib/error/incompatible-project-er
 import { SegmentService } from '../../../lib/services/segment-service';
 import { GroupService } from '../../../lib/services/group-service';
 import { FavoritesService } from '../../../lib/services';
+import { FeatureEnvironmentEvent } from '../../../lib/types/events';
+import { addDays } from 'date-fns';
 
 let stores;
 let db: ITestDb;
@@ -72,6 +74,7 @@ afterEach(async () => {
     const wipeUserPermissions = users.map(async (u) => {
         await stores.accessStore.unlinkUserRoles(u.id);
     });
+    await stores.eventStore.deleteAll();
     await Promise.allSettled(deleteEnvs);
     await Promise.allSettled(wipeUserPermissions);
 });
@@ -1052,4 +1055,63 @@ test('should only count active feature toggles for project', async () => {
     const projects = await projectService.getProjects();
     const theProject = projects.find((p) => p.id === project.id);
     expect(theProject?.featureCount).toBe(1);
+});
+
+const updateEventCreatedAt = async (days: number, featureName: string) => {
+    await db.rawDatabase
+        .table('events')
+        .update({ created_at: addDays(new Date(), days) })
+        .where({ feature_name: featureName });
+};
+
+test('should calculate average time to production', async () => {
+    const project = {
+        id: 'average-time-to-prod',
+        name: 'average-time-to-prod',
+    };
+
+    await projectService.createProject(project, user.id);
+
+    const toggles = [
+        { name: 'average-prod-time' },
+        { name: 'average-prod-time-2' },
+        { name: 'average-prod-time-3' },
+        { name: 'average-prod-time-4' },
+    ];
+
+    const featureToggles = await Promise.all(
+        toggles.map((toggle) => {
+            return featureToggleService.createFeatureToggle(
+                project.id,
+                toggle,
+                user,
+            );
+        }),
+    );
+
+    await Promise.all(
+        featureToggles.map((toggle) => {
+            return stores.eventStore.store(
+                new FeatureEnvironmentEvent({
+                    enabled: true,
+                    project: project.id,
+                    featureName: toggle.name,
+                    environment: 'default',
+                    createdBy: 'Fredrik',
+                    tags: [],
+                }),
+            );
+        }),
+    );
+
+    await updateEventCreatedAt(6, 'average-prod-time');
+    await updateEventCreatedAt(12, 'average-prod-time-2');
+    await updateEventCreatedAt(7, 'average-prod-time-3');
+    await updateEventCreatedAt(14, 'average-prod-time-4');
+
+    // const events = await stores.eventStore.getEvents();
+    // console.log(events);
+
+    const result = await projectService.calculateAverageTimeToProd(project.id);
+    expect(result).toBe(9.75);
 });

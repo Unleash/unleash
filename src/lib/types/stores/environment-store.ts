@@ -24,5 +24,8 @@ export interface IEnvironmentStore extends Store<IEnvironment, string> {
     enable(environments: IEnvironment[]): Promise<void>;
     count(): Promise<number>;
     getAllWithCounts(): Promise<IEnvironment[]>;
-    getProjectEnvironments(projectId: string): Promise<IProjectEnvironment[]>;
+    getProjectEnvironments(
+        projectId: string,
+        query?: Object,
+    ): Promise<IProjectEnvironment[]>;
 }

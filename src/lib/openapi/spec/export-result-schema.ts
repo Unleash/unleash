@@ -4,6 +4,7 @@ import { featureStrategySchema } from './feature-strategy-schema';
 import { featureEnvironmentSchema } from './feature-environment-schema';
 import { contextFieldSchema } from './context-field-schema';
 import { featureTagSchema } from './feature-tag-schema';
+import { segmentSchema } from './segment-schema';
 
 export const exportResultSchema = {
     $id: '#/components/schemas/exportResultSchema',
@@ -41,6 +42,12 @@ export const exportResultSchema = {
                 $ref: '#/components/schemas/featureTagSchema',
             },
         },
+        segments: {
+            type: 'array',
+            items: {
+                $ref: '#/components/schemas/segmentSchema',
+            },
+        },
     },
     components: {
         schemas: {
@@ -49,6 +56,7 @@ export const exportResultSchema = {
             featureEnvironmentSchema,
             contextFieldSchema,
             featureTagSchema,
+            segmentSchema,
         },
     },
 } as const;

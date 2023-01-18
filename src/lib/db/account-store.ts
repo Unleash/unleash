@@ -1,15 +1,9 @@
-/* eslint camelcase: "off" */
-
 import { Knex } from 'knex';
 import { Logger, LogProvider } from '../logger';
 import User from '../types/user';
 
 import NotFoundError from '../error/notfound-error';
-import {
-    ICreateUser,
-    IUserLookup,
-    IUserUpdateFields,
-} from '../types/stores/user-store';
+import { IUserLookup } from '../types/stores/user-store';
 import { IAccountStore } from '../types';
 
 const TABLE = 'users';
@@ -34,13 +28,6 @@ const emptify = (value) => {
 };
 
 const safeToLower = (s?: string) => (s ? s.toLowerCase() : s);
-
-const mapUserToColumns = (user: ICreateUser) => ({
-    name: user.name,
-    username: user.username,
-    email: safeToLower(user.email),
-    image_url: user.imageUrl,
-});
 
 const rowToUser = (row) => {
     if (!row) {
@@ -67,29 +54,6 @@ export class AccountStore implements IAccountStore {
     constructor(db: Knex, getLogger: LogProvider) {
         this.db = db;
         this.logger = getLogger('account-store.ts');
-    }
-
-    async update(id: number, fields: IUserUpdateFields): Promise<User> {
-        await this.activeAccounts()
-            .where('id', id)
-            .update(mapUserToColumns(fields));
-        return this.get(id);
-    }
-
-    async insert(user: ICreateUser): Promise<User> {
-        const rows = await this.db(TABLE)
-            .insert(mapUserToColumns(user))
-            .returning(USER_COLUMNS);
-        return rowToUser(rows[0]);
-    }
-
-    async upsert(user: ICreateUser): Promise<User> {
-        const id = await this.hasAccount(user);
-
-        if (id) {
-            return this.update(id, user);
-        }
-        return this.insert(user);
     }
 
     buildSelectAccount(q: IUserLookup): any {

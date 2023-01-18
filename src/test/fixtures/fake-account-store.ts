@@ -1,6 +1,6 @@
-import User, { IUser } from '../../lib/types/user';
+import { IUser } from '../../lib/types/user';
 import {
-    ICreateUser,
+    // ICreateUser,
     IUserLookup,
     IAccountStore,
 } from '../../lib/types/stores/account-store';
@@ -46,23 +46,6 @@ export class FakeAccountStore implements IAccountStore {
         return this.data.find((u) => u.id === key);
     }
 
-    async insert(user: User): Promise<User> {
-        // eslint-disable-next-line no-param-reassign
-        user.id = this.idSeq;
-        this.idSeq += 1;
-        this.data.push(user);
-        return Promise.resolve(user);
-    }
-
-    async update(id: number, user: User): Promise<User> {
-        // eslint-disable-next-line no-param-reassign
-        this.data = this.data.map((o) => {
-            if (o.id === id) return { ...o, name: user.name };
-            return o;
-        });
-        return Promise.resolve(user);
-    }
-
     async getByQuery({ id, username, email }: IUserLookup): Promise<IUser> {
         const user = this.data.find((i) => {
             if (i.id && i.id === id) return true;
@@ -98,20 +81,6 @@ export class FakeAccountStore implements IAccountStore {
     }
 
     deleteAll(): Promise<void> {
-        return Promise.resolve(undefined);
-    }
-
-    upsert(user: ICreateUser): Promise<IUser> {
-        this.data.splice(this.data.findIndex((u) => u.email === user.email));
-        this.data.push({
-            id: this.data.length + 1,
-            createdAt: new Date(),
-            isAPI: false,
-            permissions: [],
-            loginAttempts: 0,
-            imageUrl: '',
-            ...user,
-        });
         return Promise.resolve(undefined);
     }
 

@@ -10,7 +10,7 @@ import {
     UPDATE_FEATURE_ENVIRONMENT_VARIANTS,
     UPDATE_FEATURE_VARIANTS,
 } from '../../../types/permissions';
-import { IVariant } from '../../../types/model';
+import { IVariant, WeightType } from '../../../types/model';
 import { extractUsername } from '../../../util/extract-user';
 import { IAuthRequest } from '../../unleash-types';
 import { FeatureVariantsSchema } from '../../../openapi/spec/feature-variants-schema';
@@ -19,6 +19,7 @@ import { createResponseSchema } from '../../../openapi/util/create-response-sche
 import { AccessService } from '../../../services';
 import { BadDataError, NoAccessError } from '../../../../lib/error';
 import { User } from 'lib/server-impl';
+import { PushVariantsSchema } from 'lib/openapi/spec/push-variants-schema';
 
 const PREFIX = '/:projectId/features/:featureName/variants';
 const ENV_PREFIX =
@@ -26,10 +27,6 @@ const ENV_PREFIX =
 
 interface FeatureEnvironmentParams extends FeatureParams {
     environment: string;
-}
-
-interface FeatureEnvironmentsParams extends FeatureParams {
-    environments: [string];
 }
 
 interface FeatureParams extends ProjectParam {
@@ -164,7 +161,7 @@ export default class VariantsController extends Controller {
                 openApiService.validPath({
                     tags: ['Features'],
                     operationId: 'overwriteFeatureVariantsOnEnvironments',
-                    requestBody: createRequestSchema('variantsSchema'),
+                    requestBody: createRequestSchema('pushVariantsSchema'),
                     responses: {
                         200: createResponseSchema('featureVariantsSchema'),
                     },
@@ -224,11 +221,16 @@ export default class VariantsController extends Controller {
     }
 
     async pushVariantsToEnvironments(
-        req: IAuthRequest<FeatureEnvironmentsParams, any, IVariant[], any>,
+        req: IAuthRequest<
+            FeatureEnvironmentParams,
+            any,
+            PushVariantsSchema,
+            any
+        >,
         res: Response<FeatureVariantsSchema>,
     ): Promise<void> {
         const { projectId, featureName } = req.params;
-        const environments = req.query.environments?.split(','); // TODO can we use query-string parser?
+        const { environments, variants } = req.body;
         const userName = extractUsername(req);
 
         if (environments === undefined || environments.length === 0) {
@@ -242,17 +244,22 @@ export default class VariantsController extends Controller {
             UPDATE_FEATURE_ENVIRONMENT_VARIANTS,
         );
 
-        const variants: IVariant[] = req.body;
+        const variantsWithDefaults = variants.map((variant) => ({
+            weightType: WeightType.VARIABLE,
+            stickiness: 'default',
+            ...variant,
+        }));
+
         await this.featureService.setVariantsOnEnvs(
             projectId,
             featureName,
             environments,
-            variants,
+            variantsWithDefaults,
             userName,
         );
         res.status(200).json({
             version: 1,
-            variants: variants,
+            variants: variantsWithDefaults,
         });
     }
 

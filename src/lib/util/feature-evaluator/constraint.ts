@@ -39,10 +39,15 @@ const cleanValues = (values: string[]) =>
 
 const InOperator = (constraint: Constraint, context: Context) => {
     const field = constraint.contextName;
+    const caseInsensitive = Boolean(constraint.caseInsensitive);
     const values = cleanValues(constraint.values);
     const contextValue = resolveContextValue(context, field);
 
-    const isIn = values.some((val) => val === contextValue);
+    const isIn = values.some((val) =>
+        caseInsensitive
+            ? val.toLowerCase() === contextValue.toLowerCase()
+            : val === contextValue,
+    );
     return constraint.operator === Operator.IN ? isIn : !isIn;
 };
 

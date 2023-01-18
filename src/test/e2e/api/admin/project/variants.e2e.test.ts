@@ -255,14 +255,17 @@ test('Can push variants to multiple environments', async () => {
         [variant('prod-variant', 1000)],
     );
 
-    const overrideWith = [
-        variant('new-variant-1', 500),
-        variant('new-variant-2', 500),
-    ];
+    const overrideWith = {
+        variants: [
+            variant('new-variant-1', 500),
+            variant('new-variant-2', 500),
+        ],
+        environments: ['development', 'production'],
+    };
 
     await app.request
         .put(
-            `/api/admin/projects/default/features/${featureName}/variants-batch?environments=development,production`,
+            `/api/admin/projects/default/features/${featureName}/variants-batch`,
         )
         .send(overrideWith)
         .expect(200)

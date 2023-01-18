@@ -115,6 +115,10 @@ module.exports = {
                             label: 'Roadmap',
                             href: 'https://github.com/orgs/Unleash/projects/10',
                         },
+                        {
+                            label: 'Unleash help center',
+                            href: 'https://getunleash.zendesk.com/hc/en-gb',
+                        },
                     ],
                 },
                 {

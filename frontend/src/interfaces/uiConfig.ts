@@ -46,6 +46,7 @@ export interface IFlags {
     serviceAccounts?: boolean;
     featuresExportImport?: boolean;
     newProjectOverview?: boolean;
+    caseInsensitiveInOperators?: boolean;
 }
 
 export interface IVersionInfo {

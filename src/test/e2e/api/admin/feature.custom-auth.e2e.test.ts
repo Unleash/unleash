@@ -23,7 +23,7 @@ test('should require authenticated user', async () => {
     const preHook = (app) => {
         app.use('/api/admin/', (req, res) =>
             res
-                .status('401')
+                .status(401)
                 .json(
                     new AuthenticationRequired({
                         path: '/auth/demo/login',

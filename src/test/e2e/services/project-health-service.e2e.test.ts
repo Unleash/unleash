@@ -50,8 +50,7 @@ beforeAll(async () => {
     projectHealthService = new ProjectHealthService(
         stores,
         config,
-        featureToggleService,
-        favoritesService,
+        projectService,
     );
 });
 

@@ -92,12 +92,6 @@ export const createServices = (
     const environmentService = new EnvironmentService(stores, config);
     const featureTagService = new FeatureTagService(stores, config);
     const favoritesService = new FavoritesService(stores, config);
-    const projectHealthService = new ProjectHealthService(
-        stores,
-        config,
-        featureToggleServiceV2,
-        favoritesService,
-    );
     const projectService = new ProjectService(
         stores,
         config,
@@ -105,6 +99,11 @@ export const createServices = (
         featureToggleServiceV2,
         groupService,
         favoritesService,
+    );
+    const projectHealthService = new ProjectHealthService(
+        stores,
+        config,
+        projectService,
     );
     const userSplashService = new UserSplashService(stores, config);
     const openApiService = new OpenApiService(config);

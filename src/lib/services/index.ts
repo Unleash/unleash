@@ -104,6 +104,7 @@ export const createServices = (
         accessService,
         featureToggleServiceV2,
         groupService,
+        favoritesService,
     );
     const userSplashService = new UserSplashService(stores, config);
     const openApiService = new OpenApiService(config);

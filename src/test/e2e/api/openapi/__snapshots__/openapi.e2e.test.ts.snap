@@ -5288,7 +5288,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/projects/{projectId}": {
       "get": {
-        "operationId": "getProjectHealthOverview",
+        "operationId": "getProjectOverview",
         "parameters": [
           {
             "in": "path",

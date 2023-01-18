@@ -45,7 +45,7 @@ const InOperator = (constraint: Constraint, context: Context) => {
 
     const isIn = values.some((val) =>
         caseInsensitive
-            ? val.toLowerCase() === contextValue.toLowerCase()
+            ? val.toLowerCase() === contextValue?.toLowerCase()
             : val === contextValue,
     );
     return constraint.operator === Operator.IN ? isIn : !isIn;

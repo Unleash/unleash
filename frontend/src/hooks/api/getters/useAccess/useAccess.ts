@@ -22,7 +22,7 @@ export const useAccess = (): IUseAccessOutput => {
 
     return {
         users: (data?.users as IUser[])?.filter(
-            ({ accountType }) => accountType === 'User'
+            ({ accountType }) => !accountType || accountType === 'User'
         ),
         serviceAccounts: (data?.users as IServiceAccount[])?.filter(
             ({ accountType }) => accountType === 'Service Account'

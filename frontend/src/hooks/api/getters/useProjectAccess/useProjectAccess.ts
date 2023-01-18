@@ -66,7 +66,7 @@ const useProjectAccess = (
             return formatAccessData({
                 roles: data.roles,
                 users: (data.users as IUser[]).filter(
-                    ({ accountType }) => accountType === 'User'
+                    ({ accountType }) => !accountType || accountType === 'User'
                 ),
                 serviceAccounts: (data.users as IUser[]).filter(
                     ({ accountType }) => accountType === 'Service Account'

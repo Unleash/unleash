@@ -16,7 +16,7 @@ import {
     ProjectGroupRemovedEvent,
     ProjectGroupUpdateRoleEvent,
 } from '../types/events';
-import { IUnleashStores, IUnleashConfig } from '../types';
+import { IUnleashStores, IUnleashConfig, IAccountStore } from '../types';
 import {
     FeatureToggle,
     IProject,
@@ -42,7 +42,6 @@ import IncompatibleProjectError from '../error/incompatible-project-error';
 import { DEFAULT_PROJECT } from '../types/project';
 import { IFeatureTagStore } from 'lib/types/stores/feature-tag-store';
 import ProjectWithoutOwnerError from '../error/project-without-owner-error';
-import { IUserStore } from 'lib/types/stores/user-store';
 import { arraysHaveSameItems } from '../util/arraysHaveSameItems';
 import { GroupService } from './group-service';
 import { IGroupModelWithProjectRole, IGroupRole } from 'lib/types/group';
@@ -79,7 +78,7 @@ export default class ProjectService {
 
     private tagStore: IFeatureTagStore;
 
-    private userStore: IUserStore;
+    private accountStore: IAccountStore;
 
     private favoritesService: FavoritesService;
 
@@ -92,7 +91,7 @@ export default class ProjectService {
             environmentStore,
             featureEnvironmentStore,
             featureTagStore,
-            userStore,
+            accountStore,
         }: Pick<
             IUnleashStores,
             | 'projectStore'
@@ -102,7 +101,7 @@ export default class ProjectService {
             | 'environmentStore'
             | 'featureEnvironmentStore'
             | 'featureTagStore'
-            | 'userStore'
+            | 'accountStore'
         >,
         config: IUnleashConfig,
         accessService: AccessService,
@@ -120,7 +119,7 @@ export default class ProjectService {
         this.featureToggleService = featureToggleService;
         this.favoritesService = favoriteService;
         this.tagStore = featureTagStore;
-        this.userStore = userStore;
+        this.accountStore = accountStore;
         this.groupService = groupService;
         this.logger = config.getLogger('services/project-service.js');
     }
@@ -317,7 +316,7 @@ export default class ProjectService {
         const [roles, users] = await this.accessService.getProjectRoleAccess(
             projectId,
         );
-        const user = await this.userStore.get(userId);
+        const user = await this.accountStore.get(userId);
 
         const role = roles.find((r) => r.id === roleId);
         if (!role) {
@@ -359,7 +358,7 @@ export default class ProjectService {
 
         await this.accessService.removeUserFromRole(userId, role.id, projectId);
 
-        const user = await this.userStore.get(userId);
+        const user = await this.accountStore.get(userId);
 
         await this.eventStore.store(
             new ProjectUserRemovedEvent({

@@ -25,7 +25,6 @@ export interface IUserStore extends Store<IUser, number> {
     upsert(user: ICreateUser): Promise<IUser>;
     hasUser(idQuery: IUserLookup): Promise<number | undefined>;
     search(query: string): Promise<IUser[]>;
-    getAllUsers(): Promise<IUser[]>;
     getAllWithId(userIdList: number[]): Promise<IUser[]>;
     getByQuery(idQuery: IUserLookup): Promise<IUser>;
     getPasswordHash(userId: number): Promise<string>;
@@ -33,6 +32,4 @@ export interface IUserStore extends Store<IUser, number> {
     incLoginAttempts(user: IUser): Promise<void>;
     successfullyLogin(user: IUser): Promise<void>;
     count(): Promise<number>;
-    getUserByPersonalAccessToken(secret: string): Promise<IUser>;
-    markSeenAt(secrets: string[]): Promise<void>;
 }

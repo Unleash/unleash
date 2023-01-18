@@ -24,7 +24,7 @@ import { InvertedOperatorButton } from '../StyledToggleButton/InvertedOperatorBu
 import { CaseSensitiveButton } from '../StyledToggleButton/CaseSensitiveButton/CaseSensitiveButton';
 import { ConstraintAccordionHeaderActions } from '../../ConstraintAccordionHeaderActions/ConstraintAccordionHeaderActions';
 import { styled } from '@mui/material';
-import useUiConfig from '../../../../../hooks/api/getters/useUiConfig/useUiConfig';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IConstraintAccordionViewHeader {
     localConstraint: IConstraint;

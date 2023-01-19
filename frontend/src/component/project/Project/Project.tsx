@@ -40,9 +40,6 @@ import { ChangeRequestOverview } from 'component/changeRequest/ChangeRequestOver
 import { ProjectChangeRequests } from '../../changeRequest/ProjectChangeRequests/ProjectChangeRequests';
 import { ProjectSettings } from './ProjectSettings/ProjectSettings';
 import { useFavoriteProjectsApi } from 'hooks/api/actions/useFavoriteProjectsApi/useFavoriteProjectsApi';
-import { NONE } from '@server/types';
-import { ServiceAccountModal } from '../../admin/serviceAccounts/ServiceAccountsTable/ServiceAccountModal/ServiceAccountModal';
-import { INewPersonalAPIToken } from '../../../interfaces/personalAPIToken';
 import { ImportModal } from './Import/ImportModal';
 
 export const Project = () => {

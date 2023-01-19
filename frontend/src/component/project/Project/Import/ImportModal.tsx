@@ -1,10 +1,10 @@
-import { Button, IconButton, styled, TextField } from '@mui/material';
+import { Button, styled, TextField } from '@mui/material';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
-import GeneralSelect from '../../../common/GeneralSelect/GeneralSelect';
+import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { KeyboardArrowDownOutlined } from '@mui/icons-material';
 import React, { useEffect, useState } from 'react';
-import { useImportApi } from '../../../../hooks/api/actions/useImportApi/useImportApi';
-import { useProjectEnvironments } from '../../../../hooks/api/getters/useProjectEnvironments/useProjectEnvironments';
+import { useImportApi } from 'hooks/api/actions/useImportApi/useImportApi';
+import { useProjectEnvironments } from 'hooks/api/getters/useProjectEnvironments/useProjectEnvironments';
 
 const StyledDiv = styled('div')(({ theme }) => ({
     backgroundColor: '#efefef',

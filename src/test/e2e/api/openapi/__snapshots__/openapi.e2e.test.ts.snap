@@ -1285,6 +1285,9 @@ exports[`should serve the OpenAPI spec 1`] = `
             },
             "type": "array",
           },
+          "featureName": {
+            "type": "string",
+          },
           "id": {
             "type": "string",
           },

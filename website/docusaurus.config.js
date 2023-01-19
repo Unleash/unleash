@@ -88,6 +88,7 @@ module.exports = {
         prism: {
             additionalLanguages: [
                 'csharp',
+                'dart',
                 'http',
                 'java',
                 'kotlin',

@@ -201,11 +201,12 @@ export default class EnvironmentStore implements IEnvironmentStore {
                 { column: 'sort_order', order: 'asc' },
                 { column: 'created_at', order: 'asc' },
             ]);
-        const rows = await qB;
 
         if (query) {
             qB = qB.where(query);
         }
+
+        const rows = await qB;
 
         return rows.map(mapRowWithProjectCounts);
     }

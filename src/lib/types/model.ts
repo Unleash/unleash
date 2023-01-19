@@ -21,6 +21,7 @@ export enum WeightType {
 export interface IStrategyConfig {
     id?: string;
     name: string;
+    featureName?: string;
     constraints?: IConstraint[];
     segments?: number[];
     parameters?: { [key: string]: string };

@@ -1143,6 +1143,9 @@ exports[`should serve the OpenAPI spec 1`] = `
           "environment": {
             "type": "string",
           },
+          "featureName": {
+            "type": "string",
+          },
           "name": {
             "type": "string",
           },
@@ -1284,6 +1287,9 @@ exports[`should serve the OpenAPI spec 1`] = `
               "$ref": "#/components/schemas/constraintSchema",
             },
             "type": "array",
+          },
+          "featureName": {
+            "type": "string",
           },
           "id": {
             "type": "string",

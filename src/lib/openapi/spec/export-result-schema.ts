@@ -5,6 +5,12 @@ import { featureEnvironmentSchema } from './feature-environment-schema';
 import { contextFieldSchema } from './context-field-schema';
 import { featureTagSchema } from './feature-tag-schema';
 import { segmentSchema } from './segment-schema';
+import { parametersSchema } from './parameters-schema';
+import { legalValueSchema } from './legal-value-schema';
+import { variantSchema } from './variant-schema';
+import { overrideSchema } from './override-schema';
+import { variantsSchema } from './variants-schema';
+import { constraintSchema } from './constraint-schema';
 
 export const exportResultSchema = {
     $id: '#/components/schemas/exportResultSchema',
@@ -57,6 +63,12 @@ export const exportResultSchema = {
             contextFieldSchema,
             featureTagSchema,
             segmentSchema,
+            variantsSchema,
+            variantSchema,
+            overrideSchema,
+            constraintSchema,
+            parametersSchema,
+            legalValueSchema,
         },
     },
 } as const;

@@ -47,7 +47,7 @@ import { arraysHaveSameItems } from '../util/arraysHaveSameItems';
 import { GroupService } from './group-service';
 import { IGroupModelWithProjectRole, IGroupRole } from 'lib/types/group';
 import { FavoritesService } from './favorites-service';
-import { differenceInDays } from 'date-fns';
+import { ProjectStatus } from '../../lib/domain/project-status/project-status';
 
 const getCreatedBy = (user: IUser) => user.email || user.username;
 
@@ -593,6 +593,21 @@ export default class ProjectService {
         return this.store.getProjectsByUser(userId);
     }
 
+    // async statusJob() {
+    // const projects = await this.store.getAll();
+
+    // for all projects calculate average time to production
+    // await this.calculateAverageTimeToProd();
+
+    // for all projects calculate archived toggles
+
+    // for all projects calculate created toggles
+
+    // for all projects calculate total changes
+
+    // write status update to database for each project
+    // }
+
     async calculateAverageTimeToProd(projectId: string): Promise<number> {
         // Get all features for project with type release
         const features = await this.featureToggleStore.getAll({
@@ -600,11 +615,15 @@ export default class ProjectService {
             project: projectId,
         });
 
+        console.log(features);
+
         // Get all project environments with type of production
         const productionEnvironments =
             await this.environmentStore.getProjectEnvironments(projectId, {
                 type: 'production',
             });
+
+        console.log(productionEnvironments);
 
         // Get all events for features that correspond to feature toggle environment ON
         // Filter out events that are not a production evironment
@@ -617,44 +636,12 @@ export default class ProjectService {
             },
         );
 
-        // build an object of key: featureName containing a value: array of events
-        const featureEvents = events.reduce((acc, event) => {
-            if (acc[event.featureName]) {
-                acc[event.featureName].events.push(event);
-            } else {
-                const foundFeature = features.find(
-                    (feature) => feature.name === event.featureName,
-                );
-                acc[event.featureName] = { events: [event] };
-                acc[event.featureName].createdAt = foundFeature?.createdAt;
-            }
-
-            return acc;
-        }, {});
-
-        // TODO: sort events based on created_at
-        console.log(featureEvents);
-
-        const timeToProduction = Object.keys(featureEvents).map(
-            (featureName) => {
-                const feature = featureEvents[featureName];
-                const earliestEvent = feature.events[0];
-
-                const createdAtDate = new Date(feature.createdAt);
-                const eventDate = new Date(earliestEvent.createdAt);
-                const diff = differenceInDays(eventDate, createdAtDate);
-
-                return diff;
-            },
+        const projectStatus = new ProjectStatus(
+            features,
+            productionEnvironments,
+            events,
         );
-
-        const sum = timeToProduction.reduce((acc, curr) => acc + curr, 0);
-
-        console.log(sum, Object.keys(featureEvents).length);
-
-        // calculate difference between feature created_at and event created_at
-
-        return sum / Object.keys(featureEvents).length;
+        return projectStatus.calculateAverageTimeToProd();
 
         // Get the earliest event per feature toggle
         // Calculate the average time to production based on the feature toggles created_at date and the earliest event date

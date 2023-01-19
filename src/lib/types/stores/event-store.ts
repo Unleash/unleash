@@ -2,7 +2,6 @@ import { IBaseEvent, IEvent } from '../events';
 import { Store } from './store';
 import { SearchEventsSchema } from '../../openapi/spec/search-events-schema';
 import EventEmitter from 'events';
-import { FeatureToggle, IProjectEnvironment } from '../model';
 
 export interface IEventStore extends Store<IEvent, number>, EventEmitter {
     store(event: IBaseEvent): Promise<void>;
@@ -12,8 +11,8 @@ export interface IEventStore extends Store<IEvent, number>, EventEmitter {
     filteredCount(search: SearchEventsSchema): Promise<number>;
     searchEvents(search: SearchEventsSchema): Promise<IEvent[]>;
     getForFeatures(
-        features: FeatureToggle[],
-        environments: IProjectEnvironment[],
+        features: string[],
+        environments: string[],
         query: { type: string; projectId: string },
     ): Promise<IEvent[]>;
 }

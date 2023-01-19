@@ -47,7 +47,7 @@ import { arraysHaveSameItems } from '../util/arraysHaveSameItems';
 import { GroupService } from './group-service';
 import { IGroupModelWithProjectRole, IGroupRole } from 'lib/types/group';
 import { FavoritesService } from './favorites-service';
-import { ProjectStatus } from '../../lib/domain/project-status/project-status';
+import { ProjectStatus } from '../read-models/project-status/project-status';
 
 const getCreatedBy = (user: IUser) => user.email || user.username;
 
@@ -628,8 +628,8 @@ export default class ProjectService {
         // Get all events for features that correspond to feature toggle environment ON
         // Filter out events that are not a production evironment
         const events = await this.eventStore.getForFeatures(
-            features,
-            productionEnvironments,
+            features.map((feature) => feature.name),
+            productionEnvironments.map((env) => env.name),
             {
                 type: FEATURE_ENVIRONMENT_ENABLED,
                 projectId,

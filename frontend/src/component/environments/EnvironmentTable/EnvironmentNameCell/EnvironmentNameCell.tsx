@@ -46,7 +46,7 @@ export const EnvironmentNameCell = ({
                 condition={!environment.enabled}
                 show={
                     <HtmlTooltip
-                        sx={{ maxWidth: '270px' }}
+                        maxWidth="270px"
                         title={
                             <>
                                 <StyledTooltipTitle>
@@ -60,6 +60,7 @@ export const EnvironmentNameCell = ({
                             </>
                         }
                         describeChild
+                        arrow
                     >
                         <StyledBadge color="neutral">Deprecated</StyledBadge>
                     </HtmlTooltip>

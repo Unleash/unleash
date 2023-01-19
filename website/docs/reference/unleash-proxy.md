@@ -4,8 +4,6 @@ title: Unleash Proxy
 ---
 import Figure from '@site/src/components/Figure/Figure.tsx'
 
-> The unleash-proxy is compatible with all Unleash Enterprise versions and Unleash Open-Source v4. You should reach out to **support@getunleash.io** if you want the Unleash Team to host the Unleash Proxy for you.
-
 :::tip
 
 Looking for how to run the Unleash proxy? Check out the [_How to run the Unleash Proxy_ guide](../how-to/how-to-run-the-unleash-proxy.mdx)!

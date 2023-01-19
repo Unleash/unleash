@@ -1161,6 +1161,9 @@ exports[`should serve the OpenAPI spec 1`] = `
           "type": {
             "type": "string",
           },
+          "variantCount": {
+            "type": "number",
+          },
         },
         "required": [
           "name",

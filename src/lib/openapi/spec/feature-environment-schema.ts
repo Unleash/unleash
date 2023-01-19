@@ -12,9 +12,6 @@ export const featureEnvironmentSchema = {
         name: {
             type: 'string',
         },
-        featureName: {
-            type: 'string',
-        },
         environment: {
             type: 'string',
         },

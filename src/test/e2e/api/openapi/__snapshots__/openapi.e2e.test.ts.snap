@@ -1143,9 +1143,6 @@ exports[`should serve the OpenAPI spec 1`] = `
           "environment": {
             "type": "string",
           },
-          "featureName": {
-            "type": "string",
-          },
           "name": {
             "type": "string",
           },

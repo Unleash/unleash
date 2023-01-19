@@ -103,7 +103,7 @@
     "vite-plugin-env-compatible": "1.1.1",
     "vite-plugin-svgr": "2.4.0",
     "vite-tsconfig-paths": "4.0.3",
-    "vitest": "0.27.0",
+    "vitest": "0.27.1",
     "whatwg-fetch": "3.6.2"
   },
   "optionalDependencies": {

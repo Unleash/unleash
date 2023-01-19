@@ -11,7 +11,7 @@ const modifyEventCreatedAt = (events: IEvent[], days: number): IEvent[] => {
     });
 };
 
-const createEvent = (env: string, overrides: Partial<IEvent>[]) => {
+const createEvent = (env: string, overrides: Partial<IEvent>) => {
     return {
         id: Math.floor(Math.random() * 1000),
         type: 'feature-environment-enabled',

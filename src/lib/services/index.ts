@@ -161,6 +161,14 @@ export const createServices = (
         minutesToMilliseconds(5),
     );
 
+    if (config.flagResolver.isEnabled('projectStatusApi')) {
+        const ONE_DAY = 1440;
+        schedulerService.schedule(
+            projectService.statusJob.bind(projectHealthService),
+            minutesToMilliseconds(ONE_DAY),
+        );
+    }
+
     return {
         accessService,
         accountService,

@@ -593,20 +593,15 @@ export default class ProjectService {
         return this.store.getProjectsByUser(userId);
     }
 
-    // async statusJob() {
-    // const projects = await this.store.getAll();
+    async statusJob(): Promise<void> {
+        const projects = await this.store.getAll();
 
-    // for all projects calculate average time to production
-    // await this.calculateAverageTimeToProd();
-
-    // for all projects calculate archived toggles
-
-    // for all projects calculate created toggles
-
-    // for all projects calculate total changes
-
-    // write status update to database for each project
-    // }
+        await Promise.all(
+            projects.map((project) =>
+                this.calculateAverageTimeToProd(project.id),
+            ),
+        );
+    }
 
     async calculateAverageTimeToProd(projectId: string): Promise<number> {
         // Get all features for project with type release
@@ -615,15 +610,11 @@ export default class ProjectService {
             project: projectId,
         });
 
-        console.log(features);
-
         // Get all project environments with type of production
         const productionEnvironments =
             await this.environmentStore.getProjectEnvironments(projectId, {
                 type: 'production',
             });
-
-        console.log(productionEnvironments);
 
         // Get all events for features that correspond to feature toggle environment ON
         // Filter out events that are not a production evironment
@@ -642,10 +633,6 @@ export default class ProjectService {
             events,
         );
         return projectStatus.calculateAverageTimeToProd();
-
-        // Get the earliest event per feature toggle
-        // Calculate the average time to production based on the feature toggles created_at date and the earliest event date
-        // TODO: Monthly selection
     }
 
     async getProjectOverview(

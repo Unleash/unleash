@@ -1109,9 +1109,6 @@ test('should calculate average time to production', async () => {
     await updateEventCreatedAt(7, 'average-prod-time-3');
     await updateEventCreatedAt(14, 'average-prod-time-4');
 
-    // const events = await stores.eventStore.getEvents();
-    // console.log(events);
-
     const result = await projectService.calculateAverageTimeToProd(project.id);
     expect(result).toBe(9.75);
 });

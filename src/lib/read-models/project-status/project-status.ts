@@ -40,7 +40,7 @@ export class ProjectStatus {
     }
 
     getFeatureEvents(): IFeatureTimeToProdCalculationMap {
-        return this.filterEvents(this.events).reduce((acc, event) => {
+        return this.getProductionEvents(this.events).reduce((acc, event) => {
             if (acc[event.featureName]) {
                 acc[event.featureName].events.push(event);
             } else {
@@ -55,7 +55,7 @@ export class ProjectStatus {
         }, {});
     }
 
-    filterEvents(events: IEvent[]): IEvent[] {
+    getProductionEvents(events: IEvent[]): IEvent[] {
         return events.filter((event) => {
             const found = this.productionEnvironments.find(
                 (env) => env.name === event.environment,

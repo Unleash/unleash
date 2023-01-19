@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { styled, useMediaQuery, useTheme } from '@mui/material';
-import { Add } from '@mui/icons-material';
+import { Add, WarningAmber } from '@mui/icons-material';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { SortingRule, useFlexLayout, useSortBy, useTable } from 'react-table';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -45,9 +45,16 @@ import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi
 import { FeatureTagCell } from 'component/common/Table/cells/FeatureTagCell/FeatureTagCell';
 import { useGlobalLocalStorage } from 'hooks/useGlobalLocalStorage';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
+import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 
 const StyledResponsiveButton = styled(ResponsiveButton)(() => ({
     whiteSpace: 'nowrap',
+}));
+
+const StyledWarningAmber = styled(WarningAmber)(({ theme }) => ({
+    color: theme.palette.warning.main,
+    fontSize: theme.fontSizes.bodySize,
+    flexGrow: 0,
 }));
 
 interface IProjectFeatureTogglesProps {
@@ -64,6 +71,7 @@ type ListItemType = Pick<
         [key in string]: {
             name: string;
             enabled: boolean;
+            variantCount: number;
         };
     };
 };
@@ -126,6 +134,12 @@ export const ProjectFeatureToggles = ({
         onChangeRequestToggleConfirm,
         changeRequestDialogDetails,
     } = useChangeRequestToggle(projectId);
+
+    const hasOtherEnvsWithVariants = (featureName: string) => {
+        const featureEnvs = features.find((feature) => feature.name === featureName)?.environments || [];
+        const found = featureEnvs.find((env) => env.enabled && env.variantCount > 0);
+        return found !== undefined;
+    }
 
     const onToggle = useCallback(
         async (
@@ -274,6 +288,7 @@ export const ProjectFeatureToggles = ({
                     value: boolean;
                     row: { original: ListItemType };
                 }) => (
+                    <>
                     <FeatureToggleSwitch
                         value={value}
                         projectId={projectId}
@@ -281,6 +296,12 @@ export const ProjectFeatureToggles = ({
                         environmentName={name}
                         onToggle={onToggle}
                     />
+                    <ConditionallyRender condition={hasOtherEnvsWithVariants(feature?.name) && feature.environments[name]?.variantCount === 0 && feature.environments[name].enabled} show={
+                        <HtmlTooltip arrow title="If you are using variants in your application you need to define them for this environment as well, otherwise the feature will return FALSE">
+                            <StyledWarningAmber/>
+                        </HtmlTooltip>
+                    }/>
+                    </>
                 ),
                 sortType: 'boolean',
                 filterName: name,
@@ -334,10 +355,9 @@ export const ProjectFeatureToggles = ({
                             env,
                             {
                                 name: env,
-                                enabled:
-                                    featureEnvironments?.find(
-                                        feature => feature?.name === env
-                                    )?.enabled || false,
+                                enabled: featureEnvironments?.find(fe => fe?.name === env)?.enabled || false,
+                                variantCount: featureEnvironments?.find(fe => fe.name === env)?.variantCount || 0,
+                                // othersUseVariants: featureEnvironments?.find(fe => fe.variantCount > 0 && fe.enabled)?.enabled || false,
                             },
                         ])
                     ),

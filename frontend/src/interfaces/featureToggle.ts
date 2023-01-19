@@ -15,6 +15,7 @@ export interface IFeatureToggleListItem {
 export interface IEnvironments {
     name: string;
     enabled: boolean;
+    variantCount: number;
 }
 
 export interface IFeatureToggle {

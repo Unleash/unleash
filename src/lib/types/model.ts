@@ -91,7 +91,7 @@ export interface FeatureToggleLegacy extends FeatureToggle {
     enabled: boolean;
 }
 
-export interface IEnvironmentDetail extends IEnvironmentOverview {
+export interface IEnvironmentDetail extends IEnvironmentBase {
     strategies: IStrategyConfig[];
     variants: IVariant[];
 }
@@ -152,11 +152,15 @@ export interface IEnvironmentClone {
     clonePermissions?: boolean;
 }
 
-export interface IEnvironmentOverview {
+export interface IEnvironmentBase {
     name: string;
     enabled: boolean;
     type: string;
     sortOrder: number;
+}
+
+export interface IEnvironmentOverview extends IEnvironmentBase {
+    variantCount: number;
 }
 
 export interface IFeatureOverview {

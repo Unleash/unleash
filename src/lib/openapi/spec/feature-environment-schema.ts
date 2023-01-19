@@ -27,6 +27,9 @@ export const featureEnvironmentSchema = {
         sortOrder: {
             type: 'number',
         },
+        variantCount: {
+            type: 'number',
+        },
         strategies: {
             type: 'array',
             items: {

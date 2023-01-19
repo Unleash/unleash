@@ -60,7 +60,7 @@ export const FeatureOverviewSidePanelEnvironmentSwitches = ({
     );
     return (
         <StyledContainer>
-            {header}            
+            {header}
             {feature.environments.map(environment => {
                 const strategiesLabel =
                     environment.strategies.length === 1
@@ -102,11 +102,21 @@ export const FeatureOverviewSidePanelEnvironmentSwitches = ({
                             <StyledSubLabel>
                                 {strategiesLabel}
                                 {variantsLink}
-                                <ConditionallyRender condition={variants.length == 0 && environment.enabled && someEnabledEnvironmentHasVariants} show={
-                                    <HtmlTooltip arrow title="If you are using variants in your application you need to define them for this environment as well, otherwise the feature will return FALSE">
-                                        <StyledWarningAmber/>
-                                    </HtmlTooltip>
-                                }/>
+                                <ConditionallyRender
+                                    condition={
+                                        variants.length == 0 &&
+                                        environment.enabled &&
+                                        someEnabledEnvironmentHasVariants
+                                    }
+                                    show={
+                                        <HtmlTooltip
+                                            arrow
+                                            title="If you are using variants in your application you need to define them for this environment as well, otherwise the feature will return FALSE"
+                                        >
+                                            <StyledWarningAmber />
+                                        </HtmlTooltip>
+                                    }
+                                />
                             </StyledSubLabel>
                         </StyledSwitchLabel>
                     </FeatureOverviewSidePanelEnvironmentSwitch>

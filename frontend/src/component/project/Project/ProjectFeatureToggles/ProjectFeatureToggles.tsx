@@ -136,10 +136,14 @@ export const ProjectFeatureToggles = ({
     } = useChangeRequestToggle(projectId);
 
     const hasOtherEnvsWithVariants = (featureName: string) => {
-        const featureEnvs = features.find((feature) => feature.name === featureName)?.environments || [];
-        const found = featureEnvs.find((env) => env.enabled && env.variantCount > 0);
+        const featureEnvs =
+            features.find(feature => feature.name === featureName)
+                ?.environments || [];
+        const found = featureEnvs.find(
+            env => env.enabled && env.variantCount > 0
+        );
         return found !== undefined;
-    }
+    };
 
     const onToggle = useCallback(
         async (
@@ -289,18 +293,29 @@ export const ProjectFeatureToggles = ({
                     row: { original: ListItemType };
                 }) => (
                     <>
-                    <FeatureToggleSwitch
-                        value={value}
-                        projectId={projectId}
-                        featureName={feature?.name}
-                        environmentName={name}
-                        onToggle={onToggle}
-                    />
-                    <ConditionallyRender condition={hasOtherEnvsWithVariants(feature?.name) && feature.environments[name]?.variantCount === 0 && feature.environments[name].enabled} show={
-                        <HtmlTooltip arrow title="If you are using variants in your application you need to define them for this environment as well, otherwise the feature will return FALSE">
-                            <StyledWarningAmber/>
-                        </HtmlTooltip>
-                    }/>
+                        <FeatureToggleSwitch
+                            value={value}
+                            projectId={projectId}
+                            featureName={feature?.name}
+                            environmentName={name}
+                            onToggle={onToggle}
+                        />
+                        <ConditionallyRender
+                            condition={
+                                hasOtherEnvsWithVariants(feature?.name) &&
+                                feature.environments[name]?.variantCount ===
+                                    0 &&
+                                feature.environments[name].enabled
+                            }
+                            show={
+                                <HtmlTooltip
+                                    arrow
+                                    title="If you are using variants in your application you need to define them for this environment as well, otherwise the feature will return FALSE"
+                                >
+                                    <StyledWarningAmber />
+                                </HtmlTooltip>
+                            }
+                        />
                     </>
                 ),
                 sortType: 'boolean',
@@ -355,8 +370,14 @@ export const ProjectFeatureToggles = ({
                             env,
                             {
                                 name: env,
-                                enabled: featureEnvironments?.find(fe => fe?.name === env)?.enabled || false,
-                                variantCount: featureEnvironments?.find(fe => fe.name === env)?.variantCount || 0,
+                                enabled:
+                                    featureEnvironments?.find(
+                                        fe => fe?.name === env
+                                    )?.enabled || false,
+                                variantCount:
+                                    featureEnvironments?.find(
+                                        fe => fe.name === env
+                                    )?.variantCount || 0,
                                 // othersUseVariants: featureEnvironments?.find(fe => fe.variantCount > 0 && fe.enabled)?.enabled || false,
                             },
                         ])

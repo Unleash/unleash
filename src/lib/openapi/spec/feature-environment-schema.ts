@@ -24,6 +24,9 @@ export const featureEnvironmentSchema = {
         enabled: {
             type: 'boolean',
         },
+        sortOrder: {
+            type: 'number',
+        },
         strategies: {
             type: 'array',
             items: {

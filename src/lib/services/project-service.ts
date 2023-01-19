@@ -15,6 +15,7 @@ import {
     ProjectGroupAddedEvent,
     ProjectGroupRemovedEvent,
     ProjectGroupUpdateRoleEvent,
+    FEATURE_ENVIRONMENT_ENABLED,
 } from '../types/events';
 import { IUnleashStores, IUnleashConfig, IAccountStore } from '../types';
 import {
@@ -46,6 +47,7 @@ import { arraysHaveSameItems } from '../util/arraysHaveSameItems';
 import { GroupService } from './group-service';
 import { IGroupModelWithProjectRole, IGroupRole } from 'lib/types/group';
 import { FavoritesService } from './favorites-service';
+import { ProjectStatus } from '../read-models/project-status/project-status';
 
 const getCreatedBy = (user: IUser) => user.email || user.username;
 
@@ -589,6 +591,48 @@ export default class ProjectService {
 
     async getProjectsByUser(userId: number): Promise<string[]> {
         return this.store.getProjectsByUser(userId);
+    }
+
+    async statusJob(): Promise<void> {
+        const projects = await this.store.getAll();
+
+        await Promise.all(
+            projects.map((project) =>
+                this.calculateAverageTimeToProd(project.id),
+            ),
+        );
+    }
+
+    async calculateAverageTimeToProd(projectId: string): Promise<number> {
+        // Get all features for project with type release
+        const features = await this.featureToggleStore.getAll({
+            type: 'release',
+            project: projectId,
+        });
+
+        // Get all project environments with type of production
+        const productionEnvironments =
+            await this.environmentStore.getProjectEnvironments(projectId, {
+                type: 'production',
+            });
+
+        // Get all events for features that correspond to feature toggle environment ON
+        // Filter out events that are not a production evironment
+        const events = await this.eventStore.getForFeatures(
+            features.map((feature) => feature.name),
+            productionEnvironments.map((env) => env.name),
+            {
+                type: FEATURE_ENVIRONMENT_ENABLED,
+                projectId,
+            },
+        );
+
+        const projectStatus = new ProjectStatus(
+            features,
+            productionEnvironments,
+            events,
+        );
+        return projectStatus.calculateAverageTimeToProd();
     }
 
     async getProjectOverview(

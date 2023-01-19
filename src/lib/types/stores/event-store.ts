@@ -10,4 +10,9 @@ export interface IEventStore extends Store<IEvent, number>, EventEmitter {
     count(): Promise<number>;
     filteredCount(search: SearchEventsSchema): Promise<number>;
     searchEvents(search: SearchEventsSchema): Promise<IEvent[]>;
+    getForFeatures(
+        features: string[],
+        environments: string[],
+        query: { type: string; projectId: string },
+    ): Promise<IEvent[]>;
 }

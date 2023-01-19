@@ -10,6 +10,10 @@ const flags = {
         process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY,
         true,
     ),
+    projectStatusApi: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_PROJECT_STATUS_API,
+        false,
+    ),
     newProjectOverview: parseEnvVarBoolean(
         process.env.NEW_PROJECT_OVERVIEW,
         false,

@@ -4,6 +4,9 @@ import { useState } from 'react';
 import { FeatureOverviewSidePanelEnvironmentSwitch } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewSidePanel/FeatureOverviewSidePanelEnvironmentSwitches/FeatureOverviewSidePanelEnvironmentSwitch/FeatureOverviewSidePanelEnvironmentSwitch';
 import { Link, styled, Tooltip } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
+import { WarningAmber } from '@mui/icons-material';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(3),
@@ -14,6 +17,12 @@ const StyledSwitchLabel = styled('div')(() => ({
     flexDirection: 'column',
 }));
 
+const StyledWarningAmber = styled(WarningAmber)(({ theme }) => ({
+    color: theme.palette.warning.main,
+    fontSize: theme.fontSizes.bodySize,
+    marginLeft: theme.spacing(1),
+}));
+
 const StyledLabel = styled('p')(({ theme }) => ({
     fontSize: theme.fontSizes.bodySize,
 }));
@@ -21,6 +30,8 @@ const StyledLabel = styled('p')(({ theme }) => ({
 const StyledSubLabel = styled('p')(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
     color: theme.palette.text.secondary,
+    display: 'flex',
+    alignItems: 'center',
 }));
 
 const StyledLink = styled(Link<typeof RouterLink | 'a'>)(() => ({
@@ -44,10 +55,12 @@ export const FeatureOverviewSidePanelEnvironmentSwitches = ({
 }: IFeatureOverviewSidePanelEnvironmentSwitchesProps) => {
     const [showInfoBox, setShowInfoBox] = useState(false);
     const [environmentName, setEnvironmentName] = useState('');
-
+    const someEnabledEnvironmentHasVariants = feature.environments.some(
+        environment => environment.enabled && environment.variants?.length
+    );
     return (
         <StyledContainer>
-            {header}
+            {header}            
             {feature.environments.map(environment => {
                 const strategiesLabel =
                     environment.strategies.length === 1
@@ -89,6 +102,11 @@ export const FeatureOverviewSidePanelEnvironmentSwitches = ({
                             <StyledSubLabel>
                                 {strategiesLabel}
                                 {variantsLink}
+                                <ConditionallyRender condition={variants.length == 0 && environment.enabled && someEnabledEnvironmentHasVariants} show={
+                                    <HtmlTooltip arrow title="If you are using variants in your application you need to define them for this environment as well, otherwise the feature will return FALSE">
+                                        <StyledWarningAmber/>
+                                    </HtmlTooltip>
+                                }/>
                             </StyledSubLabel>
                         </StyledSwitchLabel>
                     </FeatureOverviewSidePanelEnvironmentSwitch>

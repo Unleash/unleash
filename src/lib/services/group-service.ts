@@ -13,7 +13,7 @@ import BadDataError from '../error/bad-data-error';
 import { GROUP_CREATED, GROUP_UPDATED } from '../types/events';
 import { IEventStore } from '../types/stores/event-store';
 import NameExistsError from '../error/name-exists-error';
-import { IUserStore } from '../types/stores/user-store';
+import { IAccountStore } from '../types/stores/account-store';
 import { IUser } from '../types/user';
 
 export class GroupService {
@@ -21,18 +21,21 @@ export class GroupService {
 
     private eventStore: IEventStore;
 
-    private userStore: IUserStore;
+    private accountStore: IAccountStore;
 
     private logger: Logger;
 
     constructor(
-        stores: Pick<IUnleashStores, 'groupStore' | 'eventStore' | 'userStore'>,
+        stores: Pick<
+            IUnleashStores,
+            'groupStore' | 'eventStore' | 'accountStore'
+        >,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
     ) {
         this.logger = getLogger('service/group-service.js');
         this.groupStore = stores.groupStore;
         this.eventStore = stores.eventStore;
-        this.userStore = stores.userStore;
+        this.accountStore = stores.accountStore;
     }
 
     async getAll(): Promise<IGroupModel[]> {
@@ -40,7 +43,7 @@ export class GroupService {
         const allGroupUsers = await this.groupStore.getAllUsersByGroups(
             groups.map((g) => g.id),
         );
-        const users = await this.userStore.getAllWithId(
+        const users = await this.accountStore.getAllWithId(
             allGroupUsers.map((u) => u.userId),
         );
         const groupProjects = await this.groupStore.getGroupProjects(
@@ -72,7 +75,7 @@ export class GroupService {
     async getGroup(id: number): Promise<IGroupModel> {
         const group = await this.groupStore.get(id);
         const groupUsers = await this.groupStore.getAllUsersByGroups([id]);
-        const users = await this.userStore.getAllWithId(
+        const users = await this.accountStore.getAllWithId(
             groupUsers.map((u) => u.userId),
         );
         return this.mapGroupWithUsers(group, groupUsers, users);
@@ -156,7 +159,7 @@ export class GroupService {
                 groups.map((g) => g.id),
             );
 
-            const users = await this.userStore.getAllWithId(
+            const users = await this.accountStore.getAllWithId(
                 groupUsers.map((u) => u.userId),
             );
             return groups.map((group) => {

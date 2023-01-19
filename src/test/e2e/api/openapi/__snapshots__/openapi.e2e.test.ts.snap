@@ -3543,6 +3543,9 @@ exports[`should serve the OpenAPI spec 1`] = `
       "userSchema": {
         "additionalProperties": false,
         "properties": {
+          "accountType": {
+            "type": "string",
+          },
           "createdAt": {
             "format": "date-time",
             "type": "string",
@@ -5288,7 +5291,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/projects/{projectId}": {
       "get": {
-        "operationId": "getProjectHealthOverview",
+        "operationId": "getProjectOverview",
         "parameters": [
           {
             "in": "path",

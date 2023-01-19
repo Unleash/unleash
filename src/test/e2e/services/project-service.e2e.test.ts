@@ -11,6 +11,7 @@ import EnvironmentService from '../../../lib/services/environment-service';
 import IncompatibleProjectError from '../../../lib/error/incompatible-project-error';
 import { SegmentService } from '../../../lib/services/segment-service';
 import { GroupService } from '../../../lib/services/group-service';
+import { FavoritesService } from '../../../lib/services';
 
 let stores;
 let db: ITestDb;
@@ -20,6 +21,7 @@ let groupService: GroupService;
 let accessService: AccessService;
 let environmentService: EnvironmentService;
 let featureToggleService: FeatureToggleService;
+let favoritesService: FavoritesService;
 let user;
 
 beforeAll(async () => {
@@ -42,6 +44,8 @@ beforeAll(async () => {
         new SegmentService(stores, config),
         accessService,
     );
+
+    favoritesService = new FavoritesService(stores, config);
     environmentService = new EnvironmentService(stores, config);
     projectService = new ProjectService(
         stores,
@@ -49,6 +53,7 @@ beforeAll(async () => {
         accessService,
         featureToggleService,
         groupService,
+        favoritesService,
     );
 });
 
@@ -1020,4 +1025,31 @@ test('Should allow bulk update of only groups', async () => {
         },
         'some-admin-user',
     );
+});
+
+test('should only count active feature toggles for project', async () => {
+    const project = {
+        id: 'only-active',
+        name: 'New project',
+        description: 'Blah',
+    };
+
+    await projectService.createProject(project, user);
+
+    await stores.featureToggleStore.create(project.id, {
+        name: 'only-active-t1',
+        project: project.id,
+        enabled: false,
+    });
+    await stores.featureToggleStore.create(project.id, {
+        name: 'only-active-t2',
+        project: project.id,
+        enabled: false,
+    });
+
+    await featureToggleService.archiveToggle('only-active-t2', 'me');
+
+    const projects = await projectService.getProjects();
+    const theProject = projects.find((p) => p.id === project.id);
+    expect(theProject?.featureCount).toBe(1);
 });

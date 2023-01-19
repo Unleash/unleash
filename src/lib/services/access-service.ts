@@ -9,9 +9,8 @@ import {
     IUserPermission,
     IUserRole,
 } from '../types/stores/access-store';
-import { IUserStore } from '../types/stores/user-store';
 import { Logger } from '../logger';
-import { IUnleashStores } from '../types/stores';
+import { IAccountStore, IUnleashStores } from '../types/stores';
 import {
     IAvailablePermissions,
     ICustomRole,
@@ -67,7 +66,7 @@ const isProjectPermission = (permission) => PROJECT_ADMIN.includes(permission);
 export class AccessService {
     private store: IAccessStore;
 
-    private userStore: IUserStore;
+    private accountStore: IAccountStore;
 
     private roleStore: IRoleStore;
 
@@ -80,18 +79,18 @@ export class AccessService {
     constructor(
         {
             accessStore,
-            userStore,
+            accountStore,
             roleStore,
             environmentStore,
         }: Pick<
             IUnleashStores,
-            'accessStore' | 'userStore' | 'roleStore' | 'environmentStore'
+            'accessStore' | 'accountStore' | 'roleStore' | 'environmentStore'
         >,
         { getLogger }: { getLogger: Function },
         groupService: GroupService,
     ) {
         this.store = accessStore;
-        this.userStore = userStore;
+        this.accountStore = accountStore;
         this.roleStore = roleStore;
         this.groupService = groupService;
         this.environmentStore = environmentStore;
@@ -363,7 +362,7 @@ export class AccessService {
     async getUsersForRole(roleId: number): Promise<IUser[]> {
         const userIdList = await this.store.getUserIdsForRole(roleId);
         if (userIdList.length > 0) {
-            return this.userStore.getAllWithId(userIdList);
+            return this.accountStore.getAllWithId(userIdList);
         }
         return [];
     }
@@ -378,7 +377,7 @@ export class AccessService {
         );
         if (userRoleList.length > 0) {
             const userIdList = userRoleList.map((u) => u.userId);
-            const users = await this.userStore.getAllWithId(userIdList);
+            const users = await this.accountStore.getAllWithId(userIdList);
             return users.map((user) => {
                 const role = userRoleList.find((r) => r.userId == user.id);
                 return {

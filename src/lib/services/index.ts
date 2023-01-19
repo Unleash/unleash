@@ -42,6 +42,7 @@ import MaintenanceService from './maintenance-service';
 import ExportImportService from './export-import-service';
 import SchedulerService from './scheduler-service';
 import { minutesToMilliseconds } from 'date-fns';
+import { AccountService } from './account-service';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -76,6 +77,9 @@ export const createServices = (
         sessionService,
         settingService,
     });
+    const accountService = new AccountService(stores, config, {
+        accessService,
+    });
     const versionService = new VersionService(stores, config);
     const healthService = new HealthService(stores, config);
     const userFeedbackService = new UserFeedbackService(stores, config);
@@ -92,18 +96,18 @@ export const createServices = (
     const environmentService = new EnvironmentService(stores, config);
     const featureTagService = new FeatureTagService(stores, config);
     const favoritesService = new FavoritesService(stores, config);
-    const projectHealthService = new ProjectHealthService(
-        stores,
-        config,
-        featureToggleServiceV2,
-        favoritesService,
-    );
     const projectService = new ProjectService(
         stores,
         config,
         accessService,
         featureToggleServiceV2,
         groupService,
+        favoritesService,
+    );
+    const projectHealthService = new ProjectHealthService(
+        stores,
+        config,
+        projectService,
     );
     const userSplashService = new UserSplashService(stores, config);
     const openApiService = new OpenApiService(config);
@@ -159,6 +163,7 @@ export const createServices = (
 
     return {
         accessService,
+        accountService,
         addonService,
         featureToggleService: featureToggleServiceV2,
         featureToggleServiceV2,

@@ -1,16 +1,10 @@
-/* eslint camelcase: "off" */
-
 import { Knex } from 'knex';
 import { Logger, LogProvider } from '../logger';
 import User from '../types/user';
 
 import NotFoundError from '../error/notfound-error';
-import {
-    ICreateUser,
-    IUserLookup,
-    IUserStore,
-    IUserUpdateFields,
-} from '../types/stores/user-store';
+import { IUserLookup } from '../types/stores/user-store';
+import { IAccountStore } from '../types';
 
 const TABLE = 'users';
 
@@ -35,13 +29,6 @@ const emptify = (value) => {
 
 const safeToLower = (s?: string) => (s ? s.toLowerCase() : s);
 
-const mapUserToColumns = (user: ICreateUser) => ({
-    name: user.name,
-    username: user.username,
-    email: safeToLower(user.email),
-    image_url: user.imageUrl,
-});
-
 const rowToUser = (row) => {
     if (!row) {
         throw new NotFoundError('No user found');
@@ -59,41 +46,18 @@ const rowToUser = (row) => {
     });
 };
 
-class UserStore implements IUserStore {
+export class AccountStore implements IAccountStore {
     private db: Knex;
 
     private logger: Logger;
 
     constructor(db: Knex, getLogger: LogProvider) {
         this.db = db;
-        this.logger = getLogger('user-store.ts');
+        this.logger = getLogger('account-store.ts');
     }
 
-    async update(id: number, fields: IUserUpdateFields): Promise<User> {
-        await this.activeUsers()
-            .where('id', id)
-            .update(mapUserToColumns(fields));
-        return this.get(id);
-    }
-
-    async insert(user: ICreateUser): Promise<User> {
-        const rows = await this.db(TABLE)
-            .insert(mapUserToColumns(user))
-            .returning(USER_COLUMNS);
-        return rowToUser(rows[0]);
-    }
-
-    async upsert(user: ICreateUser): Promise<User> {
-        const id = await this.hasUser(user);
-
-        if (id) {
-            return this.update(id, user);
-        }
-        return this.insert(user);
-    }
-
-    buildSelectUser(q: IUserLookup): any {
-        const query = this.activeAll();
+    buildSelectAccount(q: IUserLookup): any {
+        const query = this.activeAccounts();
         if (q.id) {
             return query.where('id', q.id);
         }
@@ -106,32 +70,25 @@ class UserStore implements IUserStore {
         throw new Error('Can only find users with id, username or email.');
     }
 
-    activeAll(): any {
+    activeAccounts(): any {
         return this.db(TABLE).where({
             deleted_at: null,
         });
     }
 
-    activeUsers(): any {
-        return this.db(TABLE).where({
-            deleted_at: null,
-            is_service: false,
-        });
-    }
-
-    async hasUser(idQuery: IUserLookup): Promise<number | undefined> {
-        const query = this.buildSelectUser(idQuery);
+    async hasAccount(idQuery: IUserLookup): Promise<number | undefined> {
+        const query = this.buildSelectAccount(idQuery);
         const item = await query.first('id');
         return item ? item.id : undefined;
     }
 
     async getAll(): Promise<User[]> {
-        const users = await this.activeUsers().select(USER_COLUMNS);
+        const users = await this.activeAccounts().select(USER_COLUMNS);
         return users.map(rowToUser);
     }
 
     async search(query: string): Promise<User[]> {
-        const users = await this.activeUsers()
+        const users = await this.activeAccounts()
             .select(USER_COLUMNS_PUBLIC)
             .where('name', 'ILIKE', `%${query}%`)
             .orWhere('username', 'ILIKE', `${query}%`)
@@ -140,19 +97,19 @@ class UserStore implements IUserStore {
     }
 
     async getAllWithId(userIdList: number[]): Promise<User[]> {
-        const users = await this.activeUsers()
+        const users = await this.activeAccounts()
             .select(USER_COLUMNS_PUBLIC)
             .whereIn('id', userIdList);
         return users.map(rowToUser);
     }
 
     async getByQuery(idQuery: IUserLookup): Promise<User> {
-        const row = await this.buildSelectUser(idQuery).first(USER_COLUMNS);
+        const row = await this.buildSelectAccount(idQuery).first(USER_COLUMNS);
         return rowToUser(row);
     }
 
     async delete(id: number): Promise<void> {
-        return this.activeUsers()
+        return this.activeAccounts()
             .where({ id })
             .update({
                 deleted_at: new Date(),
@@ -162,41 +119,12 @@ class UserStore implements IUserStore {
             });
     }
 
-    async getPasswordHash(userId: number): Promise<string> {
-        const item = await this.activeUsers()
-            .where('id', userId)
-            .first('password_hash');
-
-        if (!item) {
-            throw new NotFoundError('User not found');
-        }
-
-        return item.password_hash;
-    }
-
-    async setPasswordHash(userId: number, passwordHash: string): Promise<void> {
-        return this.activeUsers().where('id', userId).update({
-            password_hash: passwordHash,
-        });
-    }
-
-    async incLoginAttempts(user: User): Promise<void> {
-        return this.buildSelectUser(user).increment('login_attempts', 1);
-    }
-
-    async successfullyLogin(user: User): Promise<void> {
-        return this.buildSelectUser(user).update({
-            login_attempts: 0,
-            seen_at: new Date(),
-        });
-    }
-
     async deleteAll(): Promise<void> {
-        await this.activeUsers().del();
+        await this.activeAccounts().del();
     }
 
     async count(): Promise<number> {
-        return this.activeUsers()
+        return this.activeAccounts()
             .count('*')
             .then((res) => Number(res[0].count));
     }
@@ -213,10 +141,32 @@ class UserStore implements IUserStore {
     }
 
     async get(id: number): Promise<User> {
-        const row = await this.activeUsers().where({ id }).first();
+        const row = await this.activeAccounts().where({ id }).first();
         return rowToUser(row);
     }
-}
 
-module.exports = UserStore;
-export default UserStore;
+    async getAccountByPersonalAccessToken(secret: string): Promise<User> {
+        const row = await this.activeAccounts()
+            .select(USER_COLUMNS.map((column) => `${TABLE}.${column}`))
+            .leftJoin(
+                'personal_access_tokens',
+                'personal_access_tokens.user_id',
+                `${TABLE}.id`,
+            )
+            .where('secret', secret)
+            .andWhere('expires_at', '>', 'now()')
+            .first();
+        return rowToUser(row);
+    }
+
+    async markSeenAt(secrets: string[]): Promise<void> {
+        const now = new Date();
+        try {
+            await this.db('personal_access_tokens')
+                .whereIn('secret', secrets)
+                .update({ seen_at: now });
+        } catch (err) {
+            this.logger.error('Could not update lastSeen, error: ', err);
+        }
+    }
+}

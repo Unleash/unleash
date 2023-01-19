@@ -29,7 +29,7 @@
     "@svgr/webpack": "6.5.1",
     "browserslist": "^4.16.5",
     "clsx": "1.2.1",
-    "docusaurus-plugin-openapi-docs": "1.5.0",
+    "docusaurus-plugin-openapi-docs": "1.5.1",
     "docusaurus-plugin-remote-content": "^3.1.0",
     "docusaurus-theme-openapi-docs": "1.5.0",
     "file-loader": "6.2.0",

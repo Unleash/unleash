@@ -14,11 +14,11 @@ beforeEach(() => {
 });
 
 test('should not set user if unknown token', async () => {
-    const userService = {
-        getUserByPersonalAccessToken: jest.fn(),
+    const accountService = {
+        getAccountByPersonalAccessToken: jest.fn(),
     };
 
-    const func = patMiddleware(config, { userService });
+    const func = patMiddleware(config, { accountService });
 
     const cb = jest.fn();
 
@@ -35,11 +35,11 @@ test('should not set user if unknown token', async () => {
 });
 
 test('should not set user if token wrong format', async () => {
-    const userService = {
-        getUserByPersonalAccessToken: jest.fn(),
+    const accountService = {
+        getAccountByPersonalAccessToken: jest.fn(),
     };
 
-    const func = patMiddleware(config, { userService });
+    const func = patMiddleware(config, { accountService });
 
     const cb = jest.fn();
 
@@ -50,7 +50,9 @@ test('should not set user if token wrong format', async () => {
 
     await func(req, undefined, cb);
 
-    expect(userService.getUserByPersonalAccessToken).not.toHaveBeenCalled();
+    expect(
+        accountService.getAccountByPersonalAccessToken,
+    ).not.toHaveBeenCalled();
     expect(cb).toHaveBeenCalled();
     expect(req.header).toHaveBeenCalled();
     expect(req.user).toBeFalsy();
@@ -61,11 +63,11 @@ test('should add user if known token', async () => {
         id: 44,
         username: 'my-user',
     });
-    const userService = {
-        getUserByPersonalAccessToken: jest.fn().mockReturnValue(apiUser),
+    const accountService = {
+        getAccountByPersonalAccessToken: jest.fn().mockReturnValue(apiUser),
     };
 
-    const func = patMiddleware(config, { userService });
+    const func = patMiddleware(config, { accountService });
 
     const cb = jest.fn();
 
@@ -82,15 +84,15 @@ test('should add user if known token', async () => {
     expect(req.user).toBe(apiUser);
 });
 
-test('should call next if userService throws exception', async () => {
+test('should call next if accountService throws exception', async () => {
     getLogger.setMuteError(true);
-    const userService = {
-        getUserByPersonalAccessToken: () => {
+    const accountService = {
+        getAccountByPersonalAccessToken: () => {
             throw new Error('Error occurred');
         },
     };
 
-    const func = patMiddleware(config, { userService });
+    const func = patMiddleware(config, { accountService });
 
     const cb = jest.fn();
 

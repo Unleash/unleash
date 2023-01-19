@@ -18,7 +18,7 @@ import {
     StyledTopRow,
 } from './Project.styles';
 import { Tabs } from '@mui/material';
-import { Delete, Edit } from '@mui/icons-material';
+import { Delete, Edit, FileUpload } from '@mui/icons-material';
 import useToast from 'hooks/useToast';
 import useQueryParams from 'hooks/useQueryParams';
 import { useEffect, useState } from 'react';
@@ -40,6 +40,10 @@ import { ChangeRequestOverview } from 'component/changeRequest/ChangeRequestOver
 import { ProjectChangeRequests } from '../../changeRequest/ProjectChangeRequests/ProjectChangeRequests';
 import { ProjectSettings } from './ProjectSettings/ProjectSettings';
 import { useFavoriteProjectsApi } from 'hooks/api/actions/useFavoriteProjectsApi/useFavoriteProjectsApi';
+import { NONE } from '@server/types';
+import { ServiceAccountModal } from '../../admin/serviceAccounts/ServiceAccountsTable/ServiceAccountModal/ServiceAccountModal';
+import { INewPersonalAPIToken } from '../../../interfaces/personalAPIToken';
+import { ImportModal } from './Import/ImportModal';
 
 export const Project = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -47,9 +51,10 @@ export const Project = () => {
     const { project, loading, refetch } = useProject(projectId);
     const ref = useLoading(loading);
     const { setToastData } = useToast();
+    const [modalOpen, setModalOpen] = useState(false);
     const navigate = useNavigate();
     const { pathname } = useLocation();
-    const { isOss } = useUiConfig();
+    const { isOss, uiConfig } = useUiConfig();
     const basePath = `/projects/${projectId}`;
     const projectName = project?.name || projectId;
     const { favorite, unfavorite } = useFavoriteProjectsApi();
@@ -133,6 +138,27 @@ export const Project = () => {
                             </StyledProjectTitle>
                         </StyledDiv>
                         <StyledDiv>
+                            <ConditionallyRender
+                                condition={Boolean(
+                                    uiConfig?.flags?.featuresExportImport
+                                )}
+                                show={
+                                    <PermissionIconButton
+                                        permission={UPDATE_PROJECT}
+                                        projectId={projectId}
+                                        sx={{
+                                            visibility: isOss()
+                                                ? 'hidden'
+                                                : 'visible',
+                                        }}
+                                        onClick={() => setModalOpen(true)}
+                                        tooltipProps={{ title: 'Import' }}
+                                        data-loading
+                                    >
+                                        <FileUpload />
+                                    </PermissionIconButton>
+                                }
+                            />
                             <PermissionIconButton
                                 permission={UPDATE_PROJECT}
                                 projectId={projectId}
@@ -247,6 +273,11 @@ export const Project = () => {
                 <Route path="settings/*" element={<ProjectSettings />} />
                 <Route path="*" element={<ProjectOverview />} />
             </Routes>
+            <ImportModal
+                open={modalOpen}
+                setOpen={setModalOpen}
+                project={projectId}
+            />
         </div>
     );
 };

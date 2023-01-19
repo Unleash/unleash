@@ -58,6 +58,7 @@ const StyledConstraintLabel = styled('p')(({ theme }) => ({
 }));
 
 const StyledAddCustomLabel = styled('div')(({ theme }) => ({
+    marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
     color: theme.palette.text.secondary,
     display: 'flex',

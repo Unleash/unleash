@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from 'react';
+import React, { FC, useCallback, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Box } from '@mui/material';
 
@@ -7,10 +7,11 @@ const formatJSON = (json: string) => JSON.stringify(JSON.parse(json), null, 4);
 interface IFileDropZoneProps {
     onSuccess: (message: string) => void;
     onError: (error: string) => void;
+    onDragStatusChange: (dragOn: boolean) => void;
 }
 
 const onFileDropped =
-    ({ onSuccess, onError }: IFileDropZoneProps) =>
+    ({ onSuccess, onError }: Omit<IFileDropZoneProps, 'onDragStatusChange'>) =>
     (e: ProgressEvent<FileReader>) => {
         const contents = e?.target?.result;
         if (typeof contents === 'string') {
@@ -30,6 +31,7 @@ export const FileDropZone: FC<IFileDropZoneProps> = ({
     onSuccess,
     onError,
     children,
+    onDragStatusChange,
     ...props
 }) => {
     const onDrop = useCallback(([file]) => {
@@ -37,13 +39,16 @@ export const FileDropZone: FC<IFileDropZoneProps> = ({
         reader.onload = onFileDropped({ onSuccess, onError });
         reader.readAsText(file);
     }, []);
-    const { getRootProps, getInputProps } = useDropzone({
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop,
         accept: {
             'application/json': ['.json'],
         },
         maxFiles: 1,
     });
+    useEffect(() => {
+        onDragStatusChange(isDragActive);
+    }, [isDragActive]);
 
     return (
         <Box {...getRootProps()} {...props}>

@@ -6,7 +6,6 @@ import {
     TextField,
     Box,
     Typography,
-    Avatar,
 } from '@mui/material';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { ArrowUpward } from '@mui/icons-material';
@@ -16,6 +15,7 @@ import { StyledFileDropZone } from './StyledFileDropZone';
 import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender';
 import useToast from 'hooks/useToast';
 import { ImportOptions } from './ImportOptions';
+import { PulsingAvatar } from './PulsingAvatar';
 
 const LayoutContainer = styled('div')(({ theme }) => ({
     backgroundColor: '#fff',
@@ -70,6 +70,7 @@ export const ImportModal = ({ open, setOpen, project }: IImportModalProps) => {
     const [environment, setEnvironment] = useState('');
     const [importPayload, setImportPayload] = useState('');
     const [activeTab, setActiveTab] = useState<ImportMode>('file');
+    const [dropActive, setDropActive] = useState(false);
 
     const onSubmit = async () => {
         await createImport({
@@ -132,11 +133,16 @@ export const ImportModal = ({ open, setOpen, project }: IImportModalProps) => {
                                     title: error,
                                 });
                             }}
+                            onDragStatusChange={setDropActive}
                         >
-                            <Avatar sx={{ width: 80, height: 80 }}>
+                            <PulsingAvatar active={dropActive}>
                                 <ArrowUpward fontSize="large" />
-                            </Avatar>
-                            <DropMessage>Drop your file here</DropMessage>
+                            </PulsingAvatar>
+                            <DropMessage>
+                                {dropActive
+                                    ? 'Drop your file to upload'
+                                    : 'Drop your file here'}
+                            </DropMessage>
                             <SelectFileMessage>
                                 or select a file from your device
                             </SelectFileMessage>

@@ -7,7 +7,13 @@ const StyledHtmlTooltipBody = styled('div')(({ theme }) => ({
 }));
 
 const StyledHtmlTooltip = styled(
-    ({ className, maxWidth, maxHeight, ...props }: IHtmlTooltipProps) => (
+    ({
+        className,
+        maxWidth,
+        maxHeight,
+        fontSize,
+        ...props
+    }: IHtmlTooltipProps) => (
         <Tooltip
             {...props}
             title={<StyledHtmlTooltipBody>{props.title}</StyledHtmlTooltipBody>}
@@ -15,11 +21,21 @@ const StyledHtmlTooltip = styled(
         />
     ),
     {
-        shouldForwardProp: prop => prop !== 'maxWidth' && prop !== 'maxHeight',
+        shouldForwardProp: prop =>
+            prop !== 'maxWidth' && prop !== 'maxHeight' && prop !== 'fontSize',
     }
-)<{ maxWidth?: SpacingArgument; maxHeight?: SpacingArgument }>(
-    ({ theme, maxWidth, maxHeight }) => ({
-        maxWidth: maxWidth || theme.spacing(37.5),
+)<{
+    maxWidth?: SpacingArgument;
+    maxHeight?: SpacingArgument;
+    fontSize?: string;
+}>(
+    ({
+        theme,
+        maxWidth = theme.spacing(37.5),
+        maxHeight = theme.spacing(37.5),
+        fontSize = theme.fontSizes.smallerBody,
+    }) => ({
+        maxWidth,
         [`& .${tooltipClasses.tooltip}`]: {
             display: 'flex',
             flexDirection: 'column',
@@ -31,7 +47,8 @@ const StyledHtmlTooltip = styled(
             fontWeight: theme.fontWeight.medium,
             maxWidth: 'inherit',
             border: `1px solid ${theme.palette.lightBorder}`,
-            maxHeight: maxHeight || theme.spacing(37.5),
+            maxHeight,
+            fontSize,
         },
         [`& .${tooltipClasses.arrow}`]: {
             '&:before': {
@@ -45,6 +62,7 @@ const StyledHtmlTooltip = styled(
 export interface IHtmlTooltipProps extends TooltipProps {
     maxWidth?: SpacingArgument;
     maxHeight?: SpacingArgument;
+    fontSize?: string;
 }
 
 export const HtmlTooltip = (props: IHtmlTooltipProps) => (

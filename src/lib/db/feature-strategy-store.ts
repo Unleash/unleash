@@ -392,6 +392,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             enabled: r.enabled,
             type: r.environment_type,
             sortOrder: r.environment_sort_order,
+            variantCount: r.variants?.length || 0,
         };
     }
 
@@ -469,6 +470,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             'features.stale as stale',
             'feature_environments.enabled as enabled',
             'feature_environments.environment as environment',
+            'feature_environments.variants as variants',
             'environments.type as environment_type',
             'environments.sort_order as environment_sort_order',
             'ft.tag_value as tag_value',

@@ -39,7 +39,7 @@ export default class FakeFeatureEnvironmentStore
             .filter(
                 (fe) =>
                     fe.featureName === featureName &&
-                    environments.indexOf(fe.environment) !== -1,
+                    environments.includes(fe.environment),
             )
             .map((fe) => (fe.variants = variants));
     }

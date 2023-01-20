@@ -2766,6 +2766,23 @@ exports[`should serve the OpenAPI spec 1`] = `
         ],
         "type": "object",
       },
+      "pushVariantsSchema": {
+        "properties": {
+          "environments": {
+            "items": {
+              "type": "string",
+            },
+            "type": "array",
+          },
+          "variants": {
+            "items": {
+              "$ref": "#/components/schemas/variantSchema",
+            },
+            "type": "array",
+          },
+        },
+        "type": "object",
+      },
       "requestsPerSecondSchema": {
         "properties": {
           "data": {
@@ -6581,6 +6598,55 @@ If the provided project does not exist, the list of events will be empty.",
             },
           },
           "description": "variantsSchema",
+          "required": true,
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/featureVariantsSchema",
+                },
+              },
+            },
+            "description": "featureVariantsSchema",
+          },
+        },
+        "tags": [
+          "Features",
+        ],
+      },
+    },
+    "/api/admin/projects/{projectId}/features/{featureName}/variants-batch": {
+      "put": {
+        "operationId": "overwriteFeatureVariantsOnEnvironments",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+          {
+            "in": "path",
+            "name": "featureName",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/pushVariantsSchema",
+              },
+            },
+          },
+          "description": "pushVariantsSchema",
           "required": true,
         },
         "responses": {

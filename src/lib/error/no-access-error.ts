@@ -5,13 +5,20 @@ class NoAccessError extends Error {
 
     message: string;
 
-    constructor(permission: string) {
+    environment?: string;
+
+    constructor(permission: string, environment?: string) {
         super();
         Error.captureStackTrace(this, this.constructor);
 
         this.name = this.constructor.name;
         this.permission = permission;
-        this.message = `You need permission=${permission} to perform this action`;
+        this.environment = environment;
+        if (environment) {
+            this.message = `You need permission=${permission} to perform this action on environment=${environment}`;
+        } else {
+            this.message = `You need permission=${permission} to perform this action`;
+        }
     }
 
     toJSON(): any {

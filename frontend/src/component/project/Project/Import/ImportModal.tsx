@@ -165,6 +165,12 @@ export const ImportModal = ({ open, setOpen, project }: IImportModalProps) => {
                                     title: 'File uploaded',
                                 });
                             }}
+                            onError={error => {
+                                setToastData({
+                                    type: 'error',
+                                    title: error,
+                                });
+                            }}
                         >
                             <Avatar sx={{ width: 80, height: 80 }}>
                                 <ArrowUpward fontSize="large" />

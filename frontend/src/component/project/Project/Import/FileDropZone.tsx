@@ -2,19 +2,28 @@ import React, { FC, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Box } from '@mui/material';
 
-const formatJSON = (json: string) => {
-    try {
-        return JSON.stringify(JSON.parse(json), null, 4);
-    } catch (e) {
-        console.error(e);
-        return '';
-    }
-};
+const formatJSON = (json: string) => JSON.stringify(JSON.parse(json), null, 4);
 
 interface IFileDropZoneProps {
     onSuccess: (message: string) => void;
     onError: (error: string) => void;
 }
+
+const onFileDropped =
+    ({ onSuccess, onError }: IFileDropZoneProps) =>
+    (e: ProgressEvent<FileReader>) => {
+        const contents = e?.target?.result;
+        if (typeof contents === 'string') {
+            try {
+                const json = formatJSON(contents);
+                onSuccess(json);
+            } catch (e) {
+                onError('Cannot format as valid JSON');
+            }
+        } else {
+            onError('Unsupported format');
+        }
+    };
 
 // This component has no styling on purpose
 export const FileDropZone: FC<IFileDropZoneProps> = ({
@@ -25,14 +34,7 @@ export const FileDropZone: FC<IFileDropZoneProps> = ({
 }) => {
     const onDrop = useCallback(([file]) => {
         const reader = new FileReader();
-        reader.onload = function (e) {
-            const contents = e?.target?.result;
-            if (typeof contents === 'string') {
-                onSuccess(formatJSON(contents));
-            } else {
-                onError('Unsupported format');
-            }
-        };
+        reader.onload = onFileDropped({ onSuccess, onError });
         reader.readAsText(file);
     }, []);
     const { getRootProps, getInputProps } = useDropzone({

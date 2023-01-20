@@ -111,7 +111,20 @@ export const FeatureOverviewSidePanelEnvironmentSwitches = ({
                                     show={
                                         <HtmlTooltip
                                             arrow
-                                            title="If you are using variants in your application you need to define them for this environment as well, otherwise the feature will return FALSE"
+                                            title={
+                                                <>
+                                                    This environment has no
+                                                    variants enabled. If you
+                                                    check this feature's
+                                                    variants in this
+                                                    environment, you will get
+                                                    the{' '}
+                                                    <a href="https://docs.getunleash.io/reference/feature-toggle-variants#the-disabled-variant">
+                                                        disabled variant
+                                                    </a>
+                                                    .
+                                                </>
+                                            }
                                         >
                                             <StyledWarningAmber />
                                         </HtmlTooltip>

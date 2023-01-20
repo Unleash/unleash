@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { styled, useMediaQuery, useTheme } from '@mui/material';
-import { Add, WarningAmber, WarningAmberSharp } from '@mui/icons-material';
+import { Add, WarningAmber } from '@mui/icons-material';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { SortingRule, useFlexLayout, useSortBy, useTable } from 'react-table';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -57,9 +57,19 @@ const StyledWarningAmber = styled(WarningAmber)(({ theme }) => ({
     fontSize: theme.fontSizes.bodySize,
 }));
 
-const StyledSwitchContainer = styled('div')(({ theme }) => ({
+const StyledSwitchContainer = styled('div', {
+    shouldForwardProp: prop => prop !== 'hasWarning',
+})<{ hasWarning?: boolean }>(({ theme, hasWarning }) => ({
     flexGrow: 0,
     ...flexRow,
+    justifyContent: 'center',
+    ...(hasWarning && {
+        '::before': {
+            content: '""',
+            display: 'block',
+            width: theme.spacing(2),
+        },
+    }),
 }));
 
 interface IProjectFeatureTogglesProps {
@@ -287,43 +297,49 @@ export const ProjectFeatureToggles = ({
                 }: {
                     value: boolean;
                     row: { original: ListItemType };
-                }) => (
-                    <StyledSwitchContainer>
-                        <FeatureToggleSwitch
-                            value={value}
-                            projectId={projectId}
-                            featureName={feature?.name}
-                            environmentName={name}
-                            onToggle={onToggle}
-                        />
-                        <ConditionallyRender
-                            condition={
-                                feature.someEnabledEnvironmentHasVariants &&
-                                feature.environments[name].variantCount === 0 &&
-                                feature.environments[name].enabled
-                            }
-                            show={
-                                <HtmlTooltip
-                                    arrow
-                                    title={
-                                        <>
-                                            This environment has no variants
-                                            enabled. If you check this feature's
-                                            variants in this environment, you
-                                            will get the{' '}
-                                            <a href="https://docs.getunleash.io/reference/feature-toggle-variants#the-disabled-variant">
-                                                disabled variant
-                                            </a>
-                                            .
-                                        </>
-                                    }
-                                >
-                                    <StyledWarningAmber />
-                                </HtmlTooltip>
-                            }
-                        />
-                    </StyledSwitchContainer>
-                ),
+                }) => {
+                    const hasWarning =
+                        feature.someEnabledEnvironmentHasVariants &&
+                        feature.environments[name].variantCount === 0 &&
+                        feature.environments[name].enabled;
+
+                    return (
+                        <StyledSwitchContainer hasWarning={hasWarning}>
+                            <FeatureToggleSwitch
+                                value={value}
+                                projectId={projectId}
+                                featureName={feature?.name}
+                                environmentName={name}
+                                onToggle={onToggle}
+                            />
+                            <ConditionallyRender
+                                condition={hasWarning}
+                                show={
+                                    <HtmlTooltip
+                                        arrow
+                                        title={
+                                            <>
+                                                This environment has no variants
+                                                enabled. If you check this
+                                                feature's variants in this
+                                                environment, you will get the{' '}
+                                                <a
+                                                    href="https://docs.getunleash.io/reference/feature-toggle-variants#the-disabled-variant"
+                                                    target="_blank"
+                                                >
+                                                    disabled variant
+                                                </a>
+                                                .
+                                            </>
+                                        }
+                                    >
+                                        <StyledWarningAmber />
+                                    </HtmlTooltip>
+                                }
+                            />
+                        </StyledSwitchContainer>
+                    );
+                },
                 sortType: 'boolean',
                 filterName: name,
                 filterParsing: (value: any) =>
@@ -353,34 +369,31 @@ export const ProjectFeatureToggles = ({
 
     const featuresData = useMemo(
         () =>
-            features.map(feature => {
-                const someEnabledEnvironmentHasVariants =
+            features.map(feature => ({
+                ...feature,
+                environments: Object.fromEntries(
+                    environments.map(env => {
+                        const thisEnv = feature?.environments.find(
+                            featureEnvironment =>
+                                featureEnvironment?.name === env
+                        );
+                        return [
+                            env,
+                            {
+                                name: env,
+                                enabled: thisEnv?.enabled || false,
+                                variantCount: thisEnv?.variantCount || 0,
+                            },
+                        ];
+                    })
+                ),
+                someEnabledEnvironmentHasVariants:
                     feature.environments?.some(
                         featureEnvironment =>
                             featureEnvironment.variantCount > 0 &&
                             featureEnvironment.enabled
-                    ) || false;
-                return {
-                    ...feature,
-                    environments: Object.fromEntries(
-                        environments.map(env => {
-                            const thisEnv = feature?.environments.find(
-                                featureEnvironment =>
-                                    featureEnvironment?.name === env
-                            );
-                            return [
-                                env,
-                                {
-                                    name: env,
-                                    enabled: thisEnv?.enabled || false,
-                                    variantCount: thisEnv?.variantCount || 0,
-                                },
-                            ];
-                        })
-                    ),
-                    someEnabledEnvironmentHasVariants,
-                };
-            }),
+                    ) || false,
+            })),
         [features, environments]
     );
 

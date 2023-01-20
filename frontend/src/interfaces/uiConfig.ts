@@ -47,6 +47,7 @@ export interface IFlags {
     featuresExportImport?: boolean;
     newProjectOverview?: boolean;
     caseInsensitiveInOperators?: boolean;
+    selectableTimezone?: boolean;
 }
 
 export interface IVersionInfo {

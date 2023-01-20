@@ -2,8 +2,11 @@ import TimezoneCountries from 'countries-and-timezones';
 import { useEffect, useState } from 'react';
 import { ISelectOption } from '../component/common/GeneralSelect/GeneralSelect';
 
-export const useTimezones = (): ISelectOption[] => {
-    const [timezones, setTimezones] = useState<ISelectOption[]>([]);
+export interface ITimezoneSelect extends ISelectOption {
+    utcOffset: string;
+}
+export const useTimezones = (): ITimezoneSelect[] => {
+    const [timezones, setTimezones] = useState<ITimezoneSelect[]>([]);
 
     const getAllTimezones = () => {
         return Object.values(
@@ -11,6 +14,7 @@ export const useTimezones = (): ISelectOption[] => {
         ).map(list => ({
             key: list.name,
             label: `${list.name}`,
+            utcOffset: list.utcOffsetStr,
         }));
     };
 

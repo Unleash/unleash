@@ -16,10 +16,9 @@ interface IInputProps extends Omit<OutlinedTextFieldProps, 'variant'> {
     rows?: number;
 }
 
-const StyledDiv = styled('div')(({ theme }) => ({
-    width: '100%',
+const StyledDiv = styled('div')({
     position: 'relative',
-}));
+});
 
 const Input = ({
     label,

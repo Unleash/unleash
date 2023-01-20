@@ -1,13 +1,18 @@
 import { ConstraintFormHeader } from '../ConstraintFormHeader/ConstraintFormHeader';
 import Input from 'component/common/Input/Input';
 import { parseDateValue, parseValidDate } from 'component/common/util';
-import { useTimezones } from '../../../../../../hooks/useTimezones';
-import { zonedTimeToUtc, utcToZonedTime } from 'date-fns-tz';
-import { format, parseISO } from 'date-fns';
+import {
+    ITimezoneSelect,
+    useTimezones,
+} from '../../../../../../hooks/useTimezones';
+import { utcToZonedTime, zonedTimeToUtc } from 'date-fns-tz';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import GeneralSelect from '../../../../GeneralSelect/GeneralSelect';
 import { ConditionallyRender } from '../../../../ConditionallyRender/ConditionallyRender';
+import useUiConfig from '../../../../../../hooks/api/getters/useUiConfig/useUiConfig';
+import { styled } from '@mui/material';
+
 interface IDateSingleValueProps {
     setValue: (value: string) => void;
     value?: string;
@@ -15,17 +20,31 @@ interface IDateSingleValueProps {
     setError: React.Dispatch<React.SetStateAction<string>>;
 }
 
+const StyledWrapper = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'row',
+    marginBottom: 8,
+    alignItems: 'center',
+    gap: theme.spacing(1),
+}));
+
 export const DateSingleValue = ({
     setValue,
     value,
     error,
     setError,
 }: IDateSingleValueProps) => {
+    const { uiConfig } = useUiConfig();
+    const showSelectableTimezone = Boolean(uiConfig.flags.selectableTimezone);
     const timezones = useTimezones();
     const { timeZone: local } = Intl.DateTimeFormat().resolvedOptions();
     const [timezone, setTimezone] = useState(local);
     const [pickedDate, setPickedDate] = useState(value || '');
     const [localDate, setLocalDate] = useState(pickedDate || '');
+
+    const localTimezone = useMemo<ITimezoneSelect | undefined>(() => {
+        return timezones.find(t => t.key === local);
+    }, [timezones, local]);
 
     useEffect(() => {
         if (pickedDate && timezone) {
@@ -41,14 +60,7 @@ export const DateSingleValue = ({
     return (
         <>
             <ConstraintFormHeader>Select a date</ConstraintFormHeader>
-            <div
-                style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    marginRight: 40,
-                    marginBottom: 8,
-                }}
-            >
+            <StyledWrapper>
                 <Input
                     id="date"
                     label="Date"
@@ -68,21 +80,37 @@ export const DateSingleValue = ({
                     required
                 />
                 <ConditionallyRender
-                    condition={timezones.length > 0}
+                    condition={showSelectableTimezone}
                     show={
-                        <GeneralSelect
-                            options={timezones}
-                            label={'Timezone'}
-                            onChange={setTimezone}
-                            value={timezone}
-                            sx={{ minWidth: 180 }}
+                        <ConditionallyRender
+                            condition={timezones.length > 0}
+                            show={
+                                <GeneralSelect
+                                    options={timezones}
+                                    label={'Timezone'}
+                                    onChange={setTimezone}
+                                    value={timezone}
+                                    sx={{ minWidth: 180 }}
+                                />
+                            }
                         />
                     }
+                    elseShow={
+                        <p>
+                            {localTimezone?.key}{' '}
+                            {`(UTC ${localTimezone?.utcOffset})`}
+                        </p>
+                    }
                 />
-            </div>
+            </StyledWrapper>
             <ConditionallyRender
                 condition={local !== timezone}
-                show={<p>Local Time: {format(parseISO(localDate), 'PPPpp')}</p>}
+                show={
+                    <p>
+                        {parseValidDate(localDate)?.toISOString()} (Your local
+                        time)
+                    </p>
+                }
             />
         </>
     );

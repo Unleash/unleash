@@ -356,14 +356,17 @@ export const ProjectFeatureToggles = ({
             features.map(feature => {
                 const someEnabledEnvironmentHasVariants =
                     feature.environments?.some(
-                        fe => fe.variantCount > 0 && fe.enabled
+                        featureEnvironment =>
+                            featureEnvironment.variantCount > 0 &&
+                            featureEnvironment.enabled
                     ) || false;
                 return {
                     ...feature,
                     environments: Object.fromEntries(
                         environments.map(env => {
                             const thisEnv = feature?.environments.find(
-                                fe => fe?.name === env
+                                featureEnvironment =>
+                                    featureEnvironment?.name === env
                             );
                             return [
                                 env,

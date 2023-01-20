@@ -5,8 +5,7 @@ import { FeatureOverviewSidePanelEnvironmentSwitch } from 'component/feature/Fea
 import { Link, styled, Tooltip } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
-import { WarningAmber } from '@mui/icons-material';
+import VariantsWarningTooltip from 'component/feature/FeatureView/FeatureVariants/VariantsTooltipWarning';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(3),
@@ -15,12 +14,6 @@ const StyledContainer = styled('div')(({ theme }) => ({
 const StyledSwitchLabel = styled('div')(() => ({
     display: 'flex',
     flexDirection: 'column',
-}));
-
-const StyledWarningAmber = styled(WarningAmber)(({ theme }) => ({
-    color: theme.palette.warning.main,
-    fontSize: theme.fontSizes.bodySize,
-    marginLeft: theme.spacing(1),
 }));
 
 const StyledLabel = styled('p')(({ theme }) => ({
@@ -93,6 +86,10 @@ export const FeatureOverviewSidePanelEnvironmentSwitches = ({
                     </>
                 );
 
+                const hasWarning =
+                    environment.enabled &&
+                    variants.length == 0 &&
+                    someEnabledEnvironmentHasVariants;
                 return (
                     <FeatureOverviewSidePanelEnvironmentSwitch
                         key={environment.name}
@@ -110,34 +107,12 @@ export const FeatureOverviewSidePanelEnvironmentSwitches = ({
                                 {strategiesLabel}
                                 {variantsLink}
                                 <ConditionallyRender
-                                    condition={
-                                        variants.length == 0 &&
-                                        environment.enabled &&
-                                        someEnabledEnvironmentHasVariants
-                                    }
+                                    condition={hasWarning}
                                     show={
-                                        <HtmlTooltip
-                                            arrow
-                                            title={
-                                                <>
-                                                    This environment has no
-                                                    variants enabled. If you
-                                                    check this feature's
-                                                    variants in this
-                                                    environment, you will get
-                                                    the{' '}
-                                                    <a
-                                                        href="https://docs.getunleash.io/reference/feature-toggle-variants#the-disabled-variant"
-                                                        target="_blank"
-                                                    >
-                                                        disabled variant
-                                                    </a>
-                                                    .
-                                                </>
-                                            }
-                                        >
-                                            <StyledWarningAmber />
-                                        </HtmlTooltip>
+                                        <>
+                                            <StyledSeparator />
+                                            <VariantsWarningTooltip />
+                                        </>
                                     }
                                 />
                             </StyledSubLabel>

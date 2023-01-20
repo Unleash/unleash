@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { styled, useMediaQuery, useTheme } from '@mui/material';
-import { Add, WarningAmber } from '@mui/icons-material';
+import { Add } from '@mui/icons-material';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { SortingRule, useFlexLayout, useSortBy, useTable } from 'react-table';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -45,16 +45,11 @@ import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi
 import { FeatureTagCell } from 'component/common/Table/cells/FeatureTagCell/FeatureTagCell';
 import { useGlobalLocalStorage } from 'hooks/useGlobalLocalStorage';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
-import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import { flexRow } from 'themes/themeStyles';
+import VariantsWarningTooltip from 'component/feature/FeatureView/FeatureVariants/VariantsTooltipWarning';
 
 const StyledResponsiveButton = styled(ResponsiveButton)(() => ({
     whiteSpace: 'nowrap',
-}));
-
-const StyledWarningAmber = styled(WarningAmber)(({ theme }) => ({
-    color: theme.palette.warning.main,
-    fontSize: theme.fontSizes.bodySize,
 }));
 
 const StyledSwitchContainer = styled('div', {
@@ -314,28 +309,7 @@ export const ProjectFeatureToggles = ({
                             />
                             <ConditionallyRender
                                 condition={hasWarning}
-                                show={
-                                    <HtmlTooltip
-                                        arrow
-                                        title={
-                                            <>
-                                                This environment has no variants
-                                                enabled. If you check this
-                                                feature's variants in this
-                                                environment, you will get the{' '}
-                                                <a
-                                                    href="https://docs.getunleash.io/reference/feature-toggle-variants#the-disabled-variant"
-                                                    target="_blank"
-                                                >
-                                                    disabled variant
-                                                </a>
-                                                .
-                                            </>
-                                        }
-                                    >
-                                        <StyledWarningAmber />
-                                    </HtmlTooltip>
-                                }
+                                show={<VariantsWarningTooltip />}
                             />
                         </StyledSwitchContainer>
                     );

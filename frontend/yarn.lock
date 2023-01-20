@@ -2716,10 +2716,10 @@
     "@typescript-eslint/types" "5.48.1"
     eslint-visitor-keys "^3.3.0"
 
-"@uiw/codemirror-extensions-basic-setup@4.19.5":
-  version "4.19.5"
-  resolved "https://registry.yarnpkg.com/@uiw/codemirror-extensions-basic-setup/-/codemirror-extensions-basic-setup-4.19.5.tgz#2fcfa7b92236f316f0291378e9c5aaa1611146e9"
-  integrity sha512-1zt7ZPJ01xKkSW/KDy0FZNga0bngN1fC594wCVG7FBi60ehfcAucpooQ+JSPScKXopxcb+ugPKZvVLzr9/OfzA==
+"@uiw/codemirror-extensions-basic-setup@4.19.6":
+  version "4.19.6"
+  resolved "https://registry.yarnpkg.com/@uiw/codemirror-extensions-basic-setup/-/codemirror-extensions-basic-setup-4.19.6.tgz#247a71d55c11bd4e6ce198b56d909499e1cce711"
+  integrity sha512-VGBHdvBSu8K4t+XpbK+1DPMV0eCzfaccfueu7OnOpGs/zVdSf4MBbZ5/B+UvFyj2tUrPV0m/FGgDv5l1Y7oAvg==
   dependencies:
     "@codemirror/autocomplete" "^6.0.0"
     "@codemirror/commands" "^6.0.0"
@@ -2745,16 +2745,16 @@
     "@codemirror/state" "^6.0.0"
     "@codemirror/view" "^6.0.0"
 
-"@uiw/react-codemirror@4.19.5":
-  version "4.19.5"
-  resolved "https://registry.yarnpkg.com/@uiw/react-codemirror/-/react-codemirror-4.19.5.tgz#a3fac44a741a3cbefb0fd58be4fa621e201f247e"
-  integrity sha512-ZCHh8d7beXbF8/t7F1+yHht6A9Y6CdKeOkZq4A09lxJEnyTQrj1FMf2zvfaqc7K23KNjkTCtSlbqKKbVDgrWaw==
+"@uiw/react-codemirror@4.19.6":
+  version "4.19.6"
+  resolved "https://registry.yarnpkg.com/@uiw/react-codemirror/-/react-codemirror-4.19.6.tgz#01e167cc252d98e1fb8f04f595b586ee15762537"
+  integrity sha512-Y5c0Pu2apfpfzzfFMPYKVb1L7jxqVZlTgIeilT5dOF0J8JhdBZo3oV5WWCdPA1N5NG9uY9iPO2/0JuNNtq+Q0Q==
   dependencies:
     "@babel/runtime" "^7.18.6"
     "@codemirror/commands" "^6.1.0"
     "@codemirror/state" "^6.1.1"
     "@codemirror/theme-one-dark" "^6.0.0"
-    "@uiw/codemirror-extensions-basic-setup" "4.19.5"
+    "@uiw/codemirror-extensions-basic-setup" "4.19.6"
     codemirror "^6.0.0"
 
 "@vitejs/plugin-react@3.0.1":

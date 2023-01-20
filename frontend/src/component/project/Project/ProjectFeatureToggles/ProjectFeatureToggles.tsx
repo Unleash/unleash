@@ -46,6 +46,7 @@ import { FeatureTagCell } from 'component/common/Table/cells/FeatureTagCell/Feat
 import { useGlobalLocalStorage } from 'hooks/useGlobalLocalStorage';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
+import { flexRow } from 'themes/themeStyles';
 
 const StyledResponsiveButton = styled(ResponsiveButton)(() => ({
     whiteSpace: 'nowrap',
@@ -54,7 +55,11 @@ const StyledResponsiveButton = styled(ResponsiveButton)(() => ({
 const StyledWarningAmber = styled(WarningAmber)(({ theme }) => ({
     color: theme.palette.warning.main,
     fontSize: theme.fontSizes.bodySize,
+}));
+
+const StyledSwitchContainer = styled('div')(({ theme }) => ({
     flexGrow: 0,
+    ...flexRow,
 }));
 
 interface IProjectFeatureTogglesProps {
@@ -283,7 +288,7 @@ export const ProjectFeatureToggles = ({
                     value: boolean;
                     row: { original: ListItemType };
                 }) => (
-                    <>
+                    <StyledSwitchContainer>
                         <FeatureToggleSwitch
                             value={value}
                             projectId={projectId}
@@ -317,7 +322,7 @@ export const ProjectFeatureToggles = ({
                                 </HtmlTooltip>
                             }
                         />
-                    </>
+                    </StyledSwitchContainer>
                 ),
                 sortType: 'boolean',
                 filterName: name,

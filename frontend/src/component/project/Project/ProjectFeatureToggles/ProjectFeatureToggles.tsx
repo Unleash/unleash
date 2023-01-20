@@ -284,8 +284,8 @@ export const ProjectFeatureToggles = ({
                 ),
                 sortType: 'boolean',
                 filterName: name,
-                filterParsing: (value: any) =>
-                    value.enabled ? 'enabled' : 'disabled',
+                filterParsing: (value: boolean) =>
+                    value ? 'enabled' : 'disabled',
             })),
             {
                 id: 'Actions',

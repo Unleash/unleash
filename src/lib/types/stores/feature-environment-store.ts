@@ -75,6 +75,12 @@ export interface IFeatureEnvironmentStore
         variants: IVariant[],
     ): Promise<void>;
 
+    setVariantsToFeatureEnvironments(
+        featureName: string,
+        environments: string[],
+        variants: IVariant[],
+    ): Promise<void>;
+
     addFeatureEnvironment(
         featureEnvironment: IFeatureEnvironment,
     ): Promise<void>;

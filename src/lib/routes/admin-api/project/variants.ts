@@ -10,12 +10,16 @@ import {
     UPDATE_FEATURE_ENVIRONMENT_VARIANTS,
     UPDATE_FEATURE_VARIANTS,
 } from '../../../types/permissions';
-import { IVariant } from '../../../types/model';
+import { IVariant, WeightType } from '../../../types/model';
 import { extractUsername } from '../../../util/extract-user';
 import { IAuthRequest } from '../../unleash-types';
 import { FeatureVariantsSchema } from '../../../openapi/spec/feature-variants-schema';
 import { createRequestSchema } from '../../../openapi/util/create-request-schema';
 import { createResponseSchema } from '../../../openapi/util/create-response-schema';
+import { AccessService } from '../../../services';
+import { BadDataError, NoAccessError } from '../../../../lib/error';
+import { User } from 'lib/server-impl';
+import { PushVariantsSchema } from 'lib/openapi/spec/push-variants-schema';
 
 const PREFIX = '/:projectId/features/:featureName/variants';
 const ENV_PREFIX =
@@ -37,16 +41,23 @@ export default class VariantsController extends Controller {
 
     private featureService: FeatureToggleService;
 
+    private accessService: AccessService;
+
     constructor(
         config: IUnleashConfig,
         {
             featureToggleService,
             openApiService,
-        }: Pick<IUnleashServices, 'featureToggleService' | 'openApiService'>,
+            accessService,
+        }: Pick<
+            IUnleashServices,
+            'featureToggleService' | 'openApiService' | 'accessService'
+        >,
     ) {
         super(config);
         this.logger = config.getLogger('admin-api/project/variants.ts');
         this.featureService = featureToggleService;
+        this.accessService = accessService;
         this.route({
             method: 'get',
             path: PREFIX,
@@ -141,6 +152,22 @@ export default class VariantsController extends Controller {
                 }),
             ],
         });
+        this.route({
+            method: 'put',
+            path: `${PREFIX}-batch`,
+            permission: NONE,
+            handler: this.pushVariantsToEnvironments,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['Features'],
+                    operationId: 'overwriteFeatureVariantsOnEnvironments',
+                    requestBody: createRequestSchema('pushVariantsSchema'),
+                    responses: {
+                        200: createResponseSchema('featureVariantsSchema'),
+                    },
+                }),
+            ],
+        });
     }
 
     /**
@@ -191,6 +218,72 @@ export default class VariantsController extends Controller {
             version: 1,
             variants: updatedFeature.variants,
         });
+    }
+
+    async pushVariantsToEnvironments(
+        req: IAuthRequest<
+            FeatureEnvironmentParams,
+            any,
+            PushVariantsSchema,
+            any
+        >,
+        res: Response<FeatureVariantsSchema>,
+    ): Promise<void> {
+        const { projectId, featureName } = req.params;
+        const { environments, variants } = req.body;
+        const userName = extractUsername(req);
+
+        if (environments === undefined || environments.length === 0) {
+            throw new BadDataError('No environments provided');
+        }
+
+        await this.checkAccess(
+            req.user,
+            projectId,
+            environments,
+            UPDATE_FEATURE_ENVIRONMENT_VARIANTS,
+        );
+
+        const variantsWithDefaults = variants.map((variant) => ({
+            weightType: WeightType.VARIABLE,
+            stickiness: 'default',
+            ...variant,
+        }));
+
+        await this.featureService.setVariantsOnEnvs(
+            projectId,
+            featureName,
+            environments,
+            variantsWithDefaults,
+            userName,
+        );
+        res.status(200).json({
+            version: 1,
+            variants: variantsWithDefaults,
+        });
+    }
+
+    async checkAccess(
+        user: User,
+        projectId: string,
+        environments: string[],
+        permission: string,
+    ): Promise<void> {
+        for (const environment of environments) {
+            if (
+                !(await this.accessService.hasPermission(
+                    user,
+                    permission,
+                    projectId,
+                    environment,
+                ))
+            ) {
+                throw new NoAccessError(
+                    UPDATE_FEATURE_ENVIRONMENT_VARIANTS,
+                    environment,
+                );
+            }
+        }
     }
 
     async getVariantsOnEnv(

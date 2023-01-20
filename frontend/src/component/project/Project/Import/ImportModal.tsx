@@ -10,12 +10,12 @@ import {
 } from '@mui/material';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { ArrowUpward } from '@mui/icons-material';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useImportApi } from 'hooks/api/actions/useImportApi/useImportApi';
 import { StyledFileDropZone } from './StyledFileDropZone';
 import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender';
 import useToast from 'hooks/useToast';
-import { ImportOptions } from './ImportingOptions';
+import { ImportOptions } from './ImportOptions';
 
 const LayoutContainer = styled('div')(({ theme }) => ({
     backgroundColor: '#fff',

@@ -15,12 +15,13 @@ import { StyledFileDropZone } from './StyledFileDropZone';
 import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender';
 import useToast from 'hooks/useToast';
 import { ImportOptions } from './ImportOptions';
+import { ImportExplanation } from './ImportExplanation';
 import { PulsingAvatar } from './PulsingAvatar';
 
 const LayoutContainer = styled('div')(({ theme }) => ({
     backgroundColor: '#fff',
-    height: '100vh',
-    padding: theme.spacing(4, 8, 4, 8),
+    minHeight: '100vh',
+    padding: theme.spacing(3, 8, 3, 8),
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(3),
@@ -42,7 +43,7 @@ const SelectFileMessage = styled(Typography)(({ theme }) => ({
 }));
 
 const MaxSizeMessage = styled(Typography)(({ theme }) => ({
-    marginTop: theme.spacing(9),
+    marginTop: theme.spacing(4),
     color: theme.palette.text.secondary,
 }));
 
@@ -50,7 +51,7 @@ const ActionsContainer = styled(Box)(({ theme }) => ({
     width: '100%',
     borderTop: `1px solid ${theme.palette.dividerAlternative}`,
     marginTop: 'auto',
-    paddingTop: theme.spacing(4),
+    paddingTop: theme.spacing(3),
     display: 'flex',
     justifyContent: 'flex-end',
 }));
@@ -161,11 +162,12 @@ export const ImportModal = ({ open, setOpen, project }: IImportModalProps) => {
                             }
                             value={importPayload}
                             multiline
-                            minRows={17}
-                            maxRows={17}
+                            minRows={13}
+                            maxRows={13}
                         />
                     }
                 />
+                <ImportExplanation />
                 <ActionsContainer>
                     <Button
                         sx={{ position: 'static' }}

@@ -7,6 +7,8 @@ import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
 import { IGroupUser } from 'interfaces/group';
 import { UG_USERS_ID } from 'utils/testIds';
 import { caseInsensitiveSearch } from 'utils/search';
+import { useServiceAccounts } from 'hooks/api/getters/useServiceAccounts/useServiceAccounts';
+import { IServiceAccount } from 'interfaces/service-account';
 
 const StyledOption = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -44,7 +46,11 @@ const renderOption = (
         />
         <StyledOption>
             <span>{option.name || option.username}</span>
-            <span>{option.email}</span>
+            <span>
+                {option.name && option.username
+                    ? option.username
+                    : option.email}
+            </span>
         </StyledOption>
     </li>
 );
@@ -57,6 +63,10 @@ const renderTags = (value: IGroupUser[]) => (
     </StyledTags>
 );
 
+type UserOption = IUser & {
+    type: string;
+};
+
 interface IGroupFormUsersSelectProps {
     users: IGroupUser[];
     setUsers: React.Dispatch<React.SetStateAction<IGroupUser[]>>;
@@ -67,6 +77,27 @@ export const GroupFormUsersSelect: VFC<IGroupFormUsersSelectProps> = ({
     setUsers,
 }) => {
     const { users: usersAll } = useUsers();
+    const { serviceAccounts } = useServiceAccounts();
+
+    const options = [
+        ...usersAll
+            .map((user: IUser) => ({ ...user, type: 'USERS' }))
+            .sort((a: IUser, b: IUser) => {
+                const aName = a.name || a.username || '';
+                const bName = b.name || b.username || '';
+                return aName.localeCompare(bName);
+            }),
+        ...serviceAccounts
+            .map((serviceAccount: IServiceAccount) => ({
+                ...serviceAccount,
+                type: 'SERVICE ACCOUNTS',
+            }))
+            .sort((a, b) => {
+                const aName = a.name || a.username || '';
+                const bName = b.name || b.username || '';
+                return aName.localeCompare(bName);
+            }),
+    ];
 
     return (
         <StyledGroupFormUsersSelect>
@@ -77,7 +108,7 @@ export const GroupFormUsersSelect: VFC<IGroupFormUsersSelectProps> = ({
                 limitTags={1}
                 openOnFocus
                 disableCloseOnSelect
-                value={users}
+                value={users as UserOption[]}
                 onChange={(event, newValue, reason) => {
                     if (
                         event.type === 'keydown' &&
@@ -88,13 +119,10 @@ export const GroupFormUsersSelect: VFC<IGroupFormUsersSelectProps> = ({
                     }
                     setUsers(newValue);
                 }}
-                options={[...usersAll].sort((a, b) => {
-                    const aName = a.name || a.username || '';
-                    const bName = b.name || b.username || '';
-                    return aName.localeCompare(bName);
-                })}
+                groupBy={option => option.type}
+                options={options}
                 renderOption={(props, option, { selected }) =>
-                    renderOption(props, option as IUser, selected)
+                    renderOption(props, option as UserOption, selected)
                 }
                 filterOptions={(options, { inputValue }) =>
                     options.filter(
@@ -105,7 +133,7 @@ export const GroupFormUsersSelect: VFC<IGroupFormUsersSelectProps> = ({
                     )
                 }
                 isOptionEqualToValue={(option, value) => option.id === value.id}
-                getOptionLabel={(option: IUser) =>
+                getOptionLabel={(option: UserOption) =>
                     option.email || option.name || option.username || ''
                 }
                 renderInput={params => (

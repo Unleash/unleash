@@ -5,6 +5,7 @@ export interface IFeatureToggleQuery {
     archived: boolean;
     project: string;
     stale: boolean;
+    type?: string;
 }
 
 export interface IFeatureToggleStore extends Store<FeatureToggle, string> {

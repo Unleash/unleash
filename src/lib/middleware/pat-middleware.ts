@@ -4,7 +4,7 @@ import { IAuthRequest } from '../routes/unleash-types';
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 const patMiddleware = (
     { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
-    { userService }: any,
+    { accountService }: any,
 ): any => {
     const logger = getLogger('/middleware/pat-middleware.ts');
     logger.debug('Enabling PAT middleware');
@@ -13,11 +13,12 @@ const patMiddleware = (
         try {
             const apiToken = req.header('authorization');
             if (apiToken?.startsWith('user:')) {
-                const user = await userService.getUserByPersonalAccessToken(
-                    apiToken,
-                );
+                const user =
+                    await accountService.getAccountByPersonalAccessToken(
+                        apiToken,
+                    );
                 req.user = user;
-                userService.addPATSeen(apiToken);
+                accountService.addPATSeen(apiToken);
             }
         } catch (error) {
             logger.error(error);

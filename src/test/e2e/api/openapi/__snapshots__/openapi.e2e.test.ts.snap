@@ -1090,6 +1090,12 @@ exports[`should serve the OpenAPI spec 1`] = `
             },
             "type": "array",
           },
+          "segments": {
+            "items": {
+              "$ref": "#/components/schemas/segmentSchema",
+            },
+            "type": "array",
+          },
         },
         "required": [
           "features",
@@ -1137,8 +1143,14 @@ exports[`should serve the OpenAPI spec 1`] = `
           "environment": {
             "type": "string",
           },
+          "featureName": {
+            "type": "string",
+          },
           "name": {
             "type": "string",
+          },
+          "sortOrder": {
+            "type": "number",
           },
           "strategies": {
             "items": {
@@ -1278,6 +1290,9 @@ exports[`should serve the OpenAPI spec 1`] = `
               "$ref": "#/components/schemas/constraintSchema",
             },
             "type": "array",
+          },
+          "featureName": {
+            "type": "string",
           },
           "id": {
             "type": "string",
@@ -3537,6 +3552,9 @@ exports[`should serve the OpenAPI spec 1`] = `
       "userSchema": {
         "additionalProperties": false,
         "properties": {
+          "accountType": {
+            "type": "string",
+          },
           "createdAt": {
             "format": "date-time",
             "type": "string",
@@ -5282,7 +5300,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/projects/{projectId}": {
       "get": {
-        "operationId": "getProjectHealthOverview",
+        "operationId": "getProjectOverview",
         "parameters": [
           {
             "in": "path",

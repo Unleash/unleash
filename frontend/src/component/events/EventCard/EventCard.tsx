@@ -113,6 +113,17 @@ const EventCard = ({ entry }: IEventCardProps) => {
                         </>
                     }
                 />
+                <ConditionallyRender
+                    condition={Boolean(entry.environment)}
+                    show={
+                        <>
+                            <StyledDefinitionTerm>
+                                Environment:
+                            </StyledDefinitionTerm>
+                            <dd>{entry.environment}</dd>
+                        </>
+                    }
+                />
             </dl>
             <ConditionallyRender
                 condition={entry.data || entry.preData}

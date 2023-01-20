@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { Link, LinkProps, styled, TooltipProps } from '@mui/material';
+import { Link, LinkProps, styled } from '@mui/material';
 import { HtmlTooltip, IHtmlTooltipProps } from '../HtmlTooltip/HtmlTooltip';
 
 const StyledLink = styled(Link, {
@@ -26,7 +26,7 @@ export const TooltipLink = ({
     children,
     ...props
 }: ITooltipLinkProps) => (
-    <HtmlTooltip title={tooltip} {...tooltipProps}>
+    <HtmlTooltip title={tooltip} {...tooltipProps} arrow>
         <StyledLink highlighted={highlighted} {...props}>
             {children}
         </StyledLink>

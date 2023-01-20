@@ -14,17 +14,6 @@ import {
 
 const TABLE = 'users';
 
-const USER_COLUMNS = [
-    'id',
-    'name',
-    'username',
-    'email',
-    'image_url',
-    'login_attempts',
-    'seen_at',
-    'created_at',
-];
-
 const USER_COLUMNS_PUBLIC = [
     'id',
     'name',
@@ -32,7 +21,10 @@ const USER_COLUMNS_PUBLIC = [
     'email',
     'image_url',
     'seen_at',
+    'is_service',
 ];
+
+const USER_COLUMNS = [...USER_COLUMNS_PUBLIC, 'login_attempts', 'created_at'];
 
 const emptify = (value) => {
     if (!value) {
@@ -63,6 +55,7 @@ const rowToUser = (row) => {
         loginAttempts: row.login_attempts,
         seenAt: row.seen_at,
         createdAt: row.created_at,
+        isService: row.is_service,
     });
 };
 
@@ -222,31 +215,6 @@ class UserStore implements IUserStore {
     async get(id: number): Promise<User> {
         const row = await this.activeUsers().where({ id }).first();
         return rowToUser(row);
-    }
-
-    async getUserByPersonalAccessToken(secret: string): Promise<User> {
-        const row = await this.activeAll()
-            .select(USER_COLUMNS.map((column) => `${TABLE}.${column}`))
-            .leftJoin(
-                'personal_access_tokens',
-                'personal_access_tokens.user_id',
-                `${TABLE}.id`,
-            )
-            .where('secret', secret)
-            .andWhere('expires_at', '>', 'now()')
-            .first();
-        return rowToUser(row);
-    }
-
-    async markSeenAt(secrets: string[]): Promise<void> {
-        const now = new Date();
-        try {
-            await this.db('personal_access_tokens')
-                .whereIn('secret', secrets)
-                .update({ seen_at: now });
-        } catch (err) {
-            this.logger.error('Could not update lastSeen, error: ', err);
-        }
     }
 }
 

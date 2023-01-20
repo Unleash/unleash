@@ -6,15 +6,13 @@ import {
     IFeatureOverview,
     IProject,
     IProjectHealthReport,
-    IProjectOverview,
 } from '../types/model';
 import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
 import { IFeatureTypeStore } from '../types/stores/feature-type-store';
 import { IProjectStore } from '../types/stores/project-store';
-import FeatureToggleService from './feature-toggle-service';
 import { hoursToMilliseconds } from 'date-fns';
 import Timer = NodeJS.Timer;
-import { FavoritesService } from './favorites-service';
+import ProjectService from './project-service';
 
 export default class ProjectHealthService {
     private logger: Logger;
@@ -29,9 +27,7 @@ export default class ProjectHealthService {
 
     private healthRatingTimer: Timer;
 
-    private featureToggleService: FeatureToggleService;
-
-    private favoritesService: FavoritesService;
+    private projectService: ProjectService;
 
     constructor(
         {
@@ -43,8 +39,7 @@ export default class ProjectHealthService {
             'projectStore' | 'featureTypeStore' | 'featureToggleStore'
         >,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
-        featureToggleService: FeatureToggleService,
-        favoritesService: FavoritesService,
+        projectService: ProjectService,
     ) {
         this.logger = getLogger('services/project-health-service.ts');
         this.projectStore = projectStore;
@@ -55,50 +50,14 @@ export default class ProjectHealthService {
             () => this.setHealthRating(),
             hoursToMilliseconds(1),
         ).unref();
-        this.featureToggleService = featureToggleService;
-        this.favoritesService = favoritesService;
-    }
 
-    // TODO: duplicate from project-service.
-    async getProjectOverview(
-        projectId: string,
-        archived: boolean = false,
-        userId?: number,
-    ): Promise<IProjectOverview> {
-        const project = await this.projectStore.get(projectId);
-        const environments = await this.projectStore.getEnvironmentsForProject(
-            projectId,
-        );
-        const features = await this.featureToggleService.getFeatureOverview({
-            projectId,
-            archived,
-            userId,
-        });
-        const members = await this.projectStore.getMembersCountByProject(
-            projectId,
-        );
-
-        const favorite = await this.favoritesService.isFavoriteProject({
-            project: projectId,
-            userId,
-        });
-        return {
-            name: project.name,
-            description: project.description,
-            health: project.health,
-            favorite: favorite,
-            updatedAt: project.updatedAt,
-            environments,
-            features,
-            members,
-            version: 1,
-        };
+        this.projectService = projectService;
     }
 
     async getProjectHealthReport(
         projectId: string,
     ): Promise<IProjectHealthReport> {
-        const overview = await this.getProjectOverview(
+        const overview = await this.projectService.getProjectOverview(
             projectId,
             false,
             undefined,

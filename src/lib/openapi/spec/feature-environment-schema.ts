@@ -12,6 +12,9 @@ export const featureEnvironmentSchema = {
         name: {
             type: 'string',
         },
+        featureName: {
+            type: 'string',
+        },
         environment: {
             type: 'string',
         },
@@ -20,6 +23,9 @@ export const featureEnvironmentSchema = {
         },
         enabled: {
             type: 'boolean',
+        },
+        sortOrder: {
+            type: 'number',
         },
         strategies: {
             type: 'array',

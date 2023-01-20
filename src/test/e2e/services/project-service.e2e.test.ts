@@ -11,6 +11,9 @@ import EnvironmentService from '../../../lib/services/environment-service';
 import IncompatibleProjectError from '../../../lib/error/incompatible-project-error';
 import { SegmentService } from '../../../lib/services/segment-service';
 import { GroupService } from '../../../lib/services/group-service';
+import { FavoritesService } from '../../../lib/services';
+import { FeatureEnvironmentEvent } from '../../../lib/types/events';
+import { addDays } from 'date-fns';
 
 let stores;
 let db: ITestDb;
@@ -20,6 +23,7 @@ let groupService: GroupService;
 let accessService: AccessService;
 let environmentService: EnvironmentService;
 let featureToggleService: FeatureToggleService;
+let favoritesService: FavoritesService;
 let user;
 
 beforeAll(async () => {
@@ -42,6 +46,8 @@ beforeAll(async () => {
         new SegmentService(stores, config),
         accessService,
     );
+
+    favoritesService = new FavoritesService(stores, config);
     environmentService = new EnvironmentService(stores, config);
     projectService = new ProjectService(
         stores,
@@ -49,6 +55,7 @@ beforeAll(async () => {
         accessService,
         featureToggleService,
         groupService,
+        favoritesService,
     );
 });
 
@@ -67,6 +74,7 @@ afterEach(async () => {
     const wipeUserPermissions = users.map(async (u) => {
         await stores.accessStore.unlinkUserRoles(u.id);
     });
+    await stores.eventStore.deleteAll();
     await Promise.allSettled(deleteEnvs);
     await Promise.allSettled(wipeUserPermissions);
 });
@@ -1020,4 +1028,87 @@ test('Should allow bulk update of only groups', async () => {
         },
         'some-admin-user',
     );
+});
+
+test('should only count active feature toggles for project', async () => {
+    const project = {
+        id: 'only-active',
+        name: 'New project',
+        description: 'Blah',
+    };
+
+    await projectService.createProject(project, user);
+
+    await stores.featureToggleStore.create(project.id, {
+        name: 'only-active-t1',
+        project: project.id,
+        enabled: false,
+    });
+    await stores.featureToggleStore.create(project.id, {
+        name: 'only-active-t2',
+        project: project.id,
+        enabled: false,
+    });
+
+    await featureToggleService.archiveToggle('only-active-t2', 'me');
+
+    const projects = await projectService.getProjects();
+    const theProject = projects.find((p) => p.id === project.id);
+    expect(theProject?.featureCount).toBe(1);
+});
+
+const updateEventCreatedAt = async (days: number, featureName: string) => {
+    await db.rawDatabase
+        .table('events')
+        .update({ created_at: addDays(new Date(), days) })
+        .where({ feature_name: featureName });
+};
+
+test('should calculate average time to production', async () => {
+    const project = {
+        id: 'average-time-to-prod',
+        name: 'average-time-to-prod',
+    };
+
+    await projectService.createProject(project, user.id);
+
+    const toggles = [
+        { name: 'average-prod-time' },
+        { name: 'average-prod-time-2' },
+        { name: 'average-prod-time-3' },
+        { name: 'average-prod-time-4' },
+    ];
+
+    const featureToggles = await Promise.all(
+        toggles.map((toggle) => {
+            return featureToggleService.createFeatureToggle(
+                project.id,
+                toggle,
+                user,
+            );
+        }),
+    );
+
+    await Promise.all(
+        featureToggles.map((toggle) => {
+            return stores.eventStore.store(
+                new FeatureEnvironmentEvent({
+                    enabled: true,
+                    project: project.id,
+                    featureName: toggle.name,
+                    environment: 'default',
+                    createdBy: 'Fredrik',
+                    tags: [],
+                }),
+            );
+        }),
+    );
+
+    await updateEventCreatedAt(6, 'average-prod-time');
+    await updateEventCreatedAt(12, 'average-prod-time-2');
+    await updateEventCreatedAt(7, 'average-prod-time-3');
+    await updateEventCreatedAt(14, 'average-prod-time-4');
+
+    const result = await projectService.calculateAverageTimeToProd(project.id);
+    expect(result).toBe(9.75);
 });

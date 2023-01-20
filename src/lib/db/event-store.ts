@@ -120,6 +120,25 @@ class EventStore extends AnyEventEmitter implements IEventStore {
         return present;
     }
 
+    async getForFeatures(
+        features: string[],
+        environments: string[],
+        query: { type: string; projectId: string },
+    ): Promise<IEvent[]> {
+        try {
+            const rows = await this.db
+                .select(EVENT_COLUMNS)
+                .from(TABLE)
+                .where({ type: query.type, project: query.projectId })
+                .whereIn('feature_name', features)
+                .whereIn('environment', environments);
+
+            return rows.map(this.rowToEvent);
+        } catch (e) {
+            return [];
+        }
+    }
+
     async get(key: number): Promise<IEvent> {
         const row = await this.db(TABLE).where({ id: key }).first();
         return this.rowToEvent(row);

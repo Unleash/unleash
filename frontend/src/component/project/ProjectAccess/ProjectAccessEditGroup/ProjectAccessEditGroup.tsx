@@ -10,9 +10,9 @@ export const ProjectAccessEditGroup = () => {
     const groupId = useRequiredPathParam('groupId');
 
     const { access } = useProjectAccess(projectId);
-    const { users, groups } = useAccess();
+    const { users, serviceAccounts, groups } = useAccess();
 
-    if (!access || !users || !groups) {
+    if (!access || !users || !serviceAccounts || !groups) {
         return null;
     }
 
@@ -26,6 +26,7 @@ export const ProjectAccessEditGroup = () => {
             accesses={access.rows}
             selected={group}
             users={users}
+            serviceAccounts={serviceAccounts}
             groups={groups}
             roles={access.roles}
         />

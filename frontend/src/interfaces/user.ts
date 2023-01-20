@@ -1,3 +1,6 @@
+export const AccountTypes = ['User', 'Service Account'] as const;
+type AccountType = typeof AccountTypes[number];
+
 export interface IUser {
     id: number;
     email: string;
@@ -13,6 +16,7 @@ export interface IUser {
     isAPI: boolean;
     paid?: boolean;
     addedAt?: string;
+    accountType?: AccountType;
 }
 
 export interface IPermission {

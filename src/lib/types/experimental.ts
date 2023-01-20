@@ -10,6 +10,14 @@ const flags = {
         process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY,
         true,
     ),
+    projectStatusApi: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_PROJECT_STATUS_API,
+        false,
+    ),
+    newProjectOverview: parseEnvVarBoolean(
+        process.env.NEW_PROJECT_OVERVIEW,
+        false,
+    ),
     embedProxyFrontend: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY_FRONTEND,
         true,
@@ -52,6 +60,10 @@ const flags = {
     ),
     featuresExportImport: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FEATURES_EXPORT_IMPORT,
+        false,
+    ),
+    caseInsensitiveInOperators: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_CASE_INSENSITIVE_IN_OPERATORS,
         false,
     ),
 };

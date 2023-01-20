@@ -134,8 +134,9 @@ afterAll(async () => {
 });
 
 test('exports features', async () => {
+    const segmentName = 'my-segment';
     await createProject('default', 'default');
-    const segment = await createSegment({ name: 'S3', constraints: [] });
+    const segment = await createSegment({ name: segmentName, constraints: [] });
     const strategy = {
         name: 'default',
         parameters: { rollout: '100', stickiness: 'default' },
@@ -185,6 +186,11 @@ test('exports features', async () => {
                 environment: 'default',
                 featureName: 'first_feature',
                 variants: [],
+            },
+        ],
+        segments: [
+            {
+                name: segmentName,
             },
         ],
     });
@@ -366,6 +372,7 @@ test('import features to existing project and environment', async () => {
                 },
             ],
             contextFields: [],
+            segments: [],
         },
         project: project,
         environment: environment,

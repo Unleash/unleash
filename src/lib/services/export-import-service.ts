@@ -4,6 +4,7 @@ import {
     IFeatureEnvironment,
     IFeatureStrategy,
     IFeatureStrategySegment,
+    ISegment,
     ITag,
 } from '../types/model';
 import { Logger } from '../logger';
@@ -37,6 +38,7 @@ export interface IExportData {
     contextFields: IContextFieldDto[];
     featureStrategies: IFeatureStrategy[];
     featureEnvironments: IFeatureEnvironment[];
+    segments: ISegment[];
 }
 
 export default class ExportImportService {
@@ -108,6 +110,7 @@ export default class ExportImportService {
             strategySegments,
             contextFields,
             featureTags,
+            segments,
         ] = await Promise.all([
             this.toggleStore.getAllByNames(query.features),
             await this.featureEnvironmentStore.getAllByFeatures(
@@ -121,6 +124,7 @@ export default class ExportImportService {
             this.segmentStore.getAllFeatureStrategySegments(),
             this.contextFieldStore.getAll(),
             this.featureTagStore.getAll(),
+            this.segmentStore.getAll(),
         ]);
         this.addSegmentsToStrategies(featureStrategies, strategySegments);
         const filteredContextFields = contextFields.filter((field) =>
@@ -130,12 +134,18 @@ export default class ExportImportService {
                 ),
             ),
         );
+        const filteredSegments = segments.filter((segment) =>
+            featureStrategies.some((strategy) =>
+                strategy.segments.includes(segment.id),
+            ),
+        );
         const result = {
             features,
             featureStrategies,
             featureEnvironments,
             contextFields: filteredContextFields,
             featureTags,
+            segments: filteredSegments,
         };
         await this.eventStore.store({
             type: FEATURES_EXPORTED,

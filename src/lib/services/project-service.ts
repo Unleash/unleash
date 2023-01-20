@@ -15,8 +15,9 @@ import {
     ProjectGroupAddedEvent,
     ProjectGroupRemovedEvent,
     ProjectGroupUpdateRoleEvent,
+    FEATURE_ENVIRONMENT_ENABLED,
 } from '../types/events';
-import { IUnleashStores, IUnleashConfig } from '../types';
+import { IUnleashStores, IUnleashConfig, IAccountStore } from '../types';
 import {
     FeatureToggle,
     IProject,
@@ -42,10 +43,11 @@ import IncompatibleProjectError from '../error/incompatible-project-error';
 import { DEFAULT_PROJECT } from '../types/project';
 import { IFeatureTagStore } from 'lib/types/stores/feature-tag-store';
 import ProjectWithoutOwnerError from '../error/project-without-owner-error';
-import { IUserStore } from 'lib/types/stores/user-store';
 import { arraysHaveSameItems } from '../util/arraysHaveSameItems';
 import { GroupService } from './group-service';
 import { IGroupModelWithProjectRole, IGroupRole } from 'lib/types/group';
+import { FavoritesService } from './favorites-service';
+import { ProjectStatus } from '../read-models/project-status/project-status';
 
 const getCreatedBy = (user: IUser) => user.email || user.username;
 
@@ -78,7 +80,9 @@ export default class ProjectService {
 
     private tagStore: IFeatureTagStore;
 
-    private userStore: IUserStore;
+    private accountStore: IAccountStore;
+
+    private favoritesService: FavoritesService;
 
     constructor(
         {
@@ -89,7 +93,7 @@ export default class ProjectService {
             environmentStore,
             featureEnvironmentStore,
             featureTagStore,
-            userStore,
+            accountStore,
         }: Pick<
             IUnleashStores,
             | 'projectStore'
@@ -99,12 +103,13 @@ export default class ProjectService {
             | 'environmentStore'
             | 'featureEnvironmentStore'
             | 'featureTagStore'
-            | 'userStore'
+            | 'accountStore'
         >,
         config: IUnleashConfig,
         accessService: AccessService,
         featureToggleService: FeatureToggleService,
         groupService: GroupService,
+        favoriteService: FavoritesService,
     ) {
         this.store = projectStore;
         this.environmentStore = environmentStore;
@@ -114,8 +119,9 @@ export default class ProjectService {
         this.featureToggleStore = featureToggleStore;
         this.featureTypeStore = featureTypeStore;
         this.featureToggleService = featureToggleService;
+        this.favoritesService = favoriteService;
         this.tagStore = featureTagStore;
-        this.userStore = userStore;
+        this.accountStore = accountStore;
         this.groupService = groupService;
         this.logger = config.getLogger('services/project-service.js');
     }
@@ -312,7 +318,7 @@ export default class ProjectService {
         const [roles, users] = await this.accessService.getProjectRoleAccess(
             projectId,
         );
-        const user = await this.userStore.get(userId);
+        const user = await this.accountStore.get(userId);
 
         const role = roles.find((r) => r.id === roleId);
         if (!role) {
@@ -354,7 +360,7 @@ export default class ProjectService {
 
         await this.accessService.removeUserFromRole(userId, role.id, projectId);
 
-        const user = await this.userStore.get(userId);
+        const user = await this.accountStore.get(userId);
 
         await this.eventStore.store(
             new ProjectUserRemovedEvent({
@@ -587,9 +593,52 @@ export default class ProjectService {
         return this.store.getProjectsByUser(userId);
     }
 
+    async statusJob(): Promise<void> {
+        const projects = await this.store.getAll();
+
+        await Promise.all(
+            projects.map((project) =>
+                this.calculateAverageTimeToProd(project.id),
+            ),
+        );
+    }
+
+    async calculateAverageTimeToProd(projectId: string): Promise<number> {
+        // Get all features for project with type release
+        const features = await this.featureToggleStore.getAll({
+            type: 'release',
+            project: projectId,
+        });
+
+        // Get all project environments with type of production
+        const productionEnvironments =
+            await this.environmentStore.getProjectEnvironments(projectId, {
+                type: 'production',
+            });
+
+        // Get all events for features that correspond to feature toggle environment ON
+        // Filter out events that are not a production evironment
+        const events = await this.eventStore.getForFeatures(
+            features.map((feature) => feature.name),
+            productionEnvironments.map((env) => env.name),
+            {
+                type: FEATURE_ENVIRONMENT_ENABLED,
+                projectId,
+            },
+        );
+
+        const projectStatus = new ProjectStatus(
+            features,
+            productionEnvironments,
+            events,
+        );
+        return projectStatus.calculateAverageTimeToProd();
+    }
+
     async getProjectOverview(
         projectId: string,
         archived: boolean = false,
+        userId?: number,
     ): Promise<IProjectOverview> {
         const project = await this.store.get(projectId);
         const environments = await this.store.getEnvironmentsForProject(
@@ -598,13 +647,21 @@ export default class ProjectService {
         const features = await this.featureToggleService.getFeatureOverview({
             projectId,
             archived,
+            userId,
         });
         const members = await this.store.getMembersCountByProject(projectId);
+
+        const favorite = await this.favoritesService.isFavoriteProject({
+            project: projectId,
+            userId,
+        });
         return {
             name: project.name,
-            environments,
             description: project.description,
             health: project.health,
+            favorite: favorite,
+            updatedAt: project.updatedAt,
+            environments,
             features,
             members,
             version: 1,

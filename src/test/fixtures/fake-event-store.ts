@@ -65,6 +65,21 @@ class FakeEventStore extends AnyEventEmitter implements IEventStore {
     async searchEvents(): Promise<IEvent[]> {
         throw new Error('Method not implemented.');
     }
+
+    async getForFeatures(
+        features: string[],
+        environments: string[],
+        query: { type: string; projectId: string },
+    ): Promise<IEvent[]> {
+        return this.events.filter((event) => {
+            return (
+                event.type === query.type &&
+                event.project === query.projectId &&
+                features.includes(event.data.featureName) &&
+                environments.includes(event.data.environment)
+            );
+        });
+    }
 }
 
 module.exports = FakeEventStore;

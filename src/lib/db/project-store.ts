@@ -88,6 +88,7 @@ class ProjectStore implements IProjectStore {
         const projectTimer = this.timer('getProjectsWithCount');
         let projects = this.db(TABLE)
             .leftJoin('features', 'features.project', 'projects.id')
+            .where('features.archived_at', null)
             .orderBy('projects.name', 'asc');
         if (query) {
             projects = projects.where(query);

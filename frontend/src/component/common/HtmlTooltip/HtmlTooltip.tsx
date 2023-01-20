@@ -1,9 +1,18 @@
 import { styled, Tooltip, tooltipClasses, TooltipProps } from '@mui/material';
 import { SpacingArgument } from '@mui/system/createTheme/createSpacing';
 
+const StyledHtmlTooltipBody = styled('div')(({ theme }) => ({
+    overflow: 'auto',
+    padding: theme.spacing(1, 1.5),
+}));
+
 const StyledHtmlTooltip = styled(
     ({ className, maxWidth, maxHeight, ...props }: IHtmlTooltipProps) => (
-        <Tooltip {...props} classes={{ popper: className }} />
+        <Tooltip
+            {...props}
+            title={<StyledHtmlTooltipBody>{props.title}</StyledHtmlTooltipBody>}
+            classes={{ popper: className }}
+        />
     ),
     {
         shouldForwardProp: prop => prop !== 'maxWidth' && prop !== 'maxHeight',
@@ -15,7 +24,7 @@ const StyledHtmlTooltip = styled(
             display: 'flex',
             flexDirection: 'column',
             backgroundColor: theme.palette.background.paper,
-            padding: theme.spacing(1, 1.5),
+            padding: 0,
             borderRadius: theme.shape.borderRadiusMedium,
             boxShadow: theme.shadows[2],
             color: theme.palette.text.primary,
@@ -23,7 +32,6 @@ const StyledHtmlTooltip = styled(
             maxWidth: 'inherit',
             border: `1px solid ${theme.palette.lightBorder}`,
             maxHeight: maxHeight || theme.spacing(37.5),
-            overflow: 'auto',
         },
         [`& .${tooltipClasses.arrow}`]: {
             '&:before': {

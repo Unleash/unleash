@@ -9,14 +9,13 @@ import {
     Avatar,
 } from '@mui/material';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
-import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
-import { ArrowUpward, KeyboardArrowDownOutlined } from '@mui/icons-material';
+import { ArrowUpward } from '@mui/icons-material';
 import React, { useEffect, useState } from 'react';
 import { useImportApi } from 'hooks/api/actions/useImportApi/useImportApi';
-import { useProjectEnvironments } from 'hooks/api/getters/useProjectEnvironments/useProjectEnvironments';
-import { StyledFileDropZone } from './ImportTogglesDropZone';
+import { StyledFileDropZone } from './StyledFileDropZone';
 import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender';
 import useToast from 'hooks/useToast';
+import { ImportOptions } from './ImportingOptions';
 
 const LayoutContainer = styled('div')(({ theme }) => ({
     backgroundColor: '#fff',
@@ -29,21 +28,6 @@ const LayoutContainer = styled('div')(({ theme }) => ({
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
     width: '100%',
-}));
-
-const ImportingOptionsContainer = styled(Box)(({ theme }) => ({
-    backgroundColor: theme.palette.secondaryContainer,
-    borderRadius: theme.shape.borderRadiusLarge,
-    padding: theme.spacing(3),
-}));
-
-const ImportingOptions = styled(Typography)(({ theme }) => ({
-    marginBottom: theme.spacing(3),
-    fontWeight: theme.typography.fontWeightBold,
-}));
-
-const ImportingOptionsDescription = styled(Typography)(({ theme }) => ({
-    marginBottom: theme.spacing(1.5),
 }));
 
 const DropMessage = styled(Typography)(({ theme }) => ({
@@ -81,24 +65,11 @@ interface IImportModalProps {
 type ImportMode = 'file' | 'code';
 
 export const ImportModal = ({ open, setOpen, project }: IImportModalProps) => {
-    const { environments } = useProjectEnvironments(project);
     const { createImport } = useImportApi();
-
-    const environmentOptions = environments
-        .filter(environment => environment.enabled)
-        .map(environment => ({
-            key: environment.name,
-            label: environment.name,
-            title: environment.name,
-        }));
 
     const [environment, setEnvironment] = useState('');
     const [importPayload, setImportPayload] = useState('');
     const [activeTab, setActiveTab] = useState<ImportMode>('file');
-
-    useEffect(() => {
-        setEnvironment(environmentOptions[0]?.key);
-    }, [JSON.stringify(environmentOptions)]);
 
     const onSubmit = async () => {
         await createImport({
@@ -116,7 +87,7 @@ export const ImportModal = ({ open, setOpen, project }: IImportModalProps) => {
             onClose={() => {
                 setOpen(false);
             }}
-            label={'New service account'}
+            label="Import toggles"
         >
             <LayoutContainer>
                 <Box
@@ -138,21 +109,11 @@ export const ImportModal = ({ open, setOpen, project }: IImportModalProps) => {
                         />
                     </Tabs>
                 </Box>
-                <ImportingOptionsContainer>
-                    <ImportingOptions>Importing options</ImportingOptions>
-                    <ImportingOptionsDescription>
-                        Choose the environment to import the configuration for
-                    </ImportingOptionsDescription>
-                    <GeneralSelect
-                        sx={{ width: '180px' }}
-                        options={environmentOptions}
-                        onChange={setEnvironment}
-                        label={'Environment'}
-                        value={environment}
-                        IconComponent={KeyboardArrowDownOutlined}
-                        fullWidth
-                    />
-                </ImportingOptionsContainer>
+                <ImportOptions
+                    project={project}
+                    environment={environment}
+                    onChange={setEnvironment}
+                />
                 <ConditionallyRender
                     condition={activeTab === 'file'}
                     show={

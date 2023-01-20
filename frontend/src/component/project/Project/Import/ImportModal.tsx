@@ -5,6 +5,7 @@ import { KeyboardArrowDownOutlined } from '@mui/icons-material';
 import React, { useEffect, useState } from 'react';
 import { useImportApi } from 'hooks/api/actions/useImportApi/useImportApi';
 import { useProjectEnvironments } from 'hooks/api/getters/useProjectEnvironments/useProjectEnvironments';
+import { StyledFileDropZone } from './ImportTogglesDropZone';
 
 const StyledDiv = styled('div')(({ theme }) => ({
     backgroundColor: '#efefef',
@@ -69,6 +70,11 @@ export const ImportModal = ({ open, setOpen, project }: IImportModalProps) => {
                     IconComponent={KeyboardArrowDownOutlined}
                     fullWidth
                 />
+                <StyledFileDropZone onChange={setData}>
+                    <p>
+                        Drag 'n' drop some files here, or click to select files
+                    </p>
+                </StyledFileDropZone>
                 <StyledTextField
                     label="Exported toggles"
                     variant="outlined"
@@ -76,6 +82,7 @@ export const ImportModal = ({ open, setOpen, project }: IImportModalProps) => {
                     value={data}
                     multiline
                     minRows={20}
+                    maxRows={20}
                 />
                 <Button
                     variant="contained"

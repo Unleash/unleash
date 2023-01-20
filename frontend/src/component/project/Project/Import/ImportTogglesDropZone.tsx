@@ -3,7 +3,10 @@ import { FileDropZone } from './FileDropZone';
 import React from 'react';
 
 export const StyledFileDropZone = styled(FileDropZone)(({ theme }) => ({
-    padding: theme.spacing(4),
-    border: '1px solid black',
-    margin: theme.spacing(2, 0),
+    padding: theme.spacing(10, 2, 2, 2),
+    border: `1px dashed ${theme.palette.secondary.border}`,
+    borderRadius: theme.shape.borderRadiusLarge,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
 }));

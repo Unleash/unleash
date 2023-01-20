@@ -11,9 +11,15 @@ const formatJSON = (json: string) => {
     }
 };
 
+interface IFileDropZoneProps {
+    onSuccess: (message: string) => void;
+    onError: (error: string) => void;
+}
+
 // This component has no styling on purpose
-export const FileDropZone: FC<{ onChange: (content: string) => void }> = ({
-    onChange,
+export const FileDropZone: FC<IFileDropZoneProps> = ({
+    onSuccess,
+    onError,
     children,
     ...props
 }) => {
@@ -22,7 +28,9 @@ export const FileDropZone: FC<{ onChange: (content: string) => void }> = ({
         reader.onload = function (e) {
             const contents = e?.target?.result;
             if (typeof contents === 'string') {
-                onChange(formatJSON(contents));
+                onSuccess(formatJSON(contents));
+            } else {
+                onError('Unsupported format');
             }
         };
         reader.readAsText(file);

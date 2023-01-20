@@ -1149,6 +1149,9 @@ exports[`should serve the OpenAPI spec 1`] = `
           "name": {
             "type": "string",
           },
+          "sortOrder": {
+            "type": "number",
+          },
           "strategies": {
             "items": {
               "$ref": "#/components/schemas/featureStrategySchema",

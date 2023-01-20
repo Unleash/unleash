@@ -34,6 +34,13 @@ const StyledSubLabel = styled('p')(({ theme }) => ({
     alignItems: 'center',
 }));
 
+const StyledSeparator = styled('span')(({ theme }) => ({
+    padding: theme.spacing(0, 0.5),
+    '::after': {
+        content: '"-"',
+    },
+}));
+
 const StyledLink = styled(Link<typeof RouterLink | 'a'>)(() => ({
     '&:hover, &:focus': {
         textDecoration: 'underline',
@@ -71,7 +78,7 @@ export const FeatureOverviewSidePanelEnvironmentSwitches = ({
 
                 const variantsLink = variants.length > 0 && (
                     <>
-                        {' - '}
+                        <StyledSeparator />
                         <Tooltip title="View variants" arrow describeChild>
                             <StyledLink
                                 component={RouterLink}
@@ -119,7 +126,10 @@ export const FeatureOverviewSidePanelEnvironmentSwitches = ({
                                                     variants in this
                                                     environment, you will get
                                                     the{' '}
-                                                    <a href="https://docs.getunleash.io/reference/feature-toggle-variants#the-disabled-variant">
+                                                    <a
+                                                        href="https://docs.getunleash.io/reference/feature-toggle-variants#the-disabled-variant"
+                                                        target="_blank"
+                                                    >
                                                         disabled variant
                                                     </a>
                                                     .

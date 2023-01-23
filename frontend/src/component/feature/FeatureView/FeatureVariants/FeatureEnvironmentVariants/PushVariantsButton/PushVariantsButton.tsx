@@ -10,7 +10,7 @@ import {
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { IFeatureEnvironment } from 'interfaces/featureToggle';
 import { useState } from 'react';
-import { useHasProjectEnvironmentAccess } from 'hooks/useHasAccess';
+import { useCheckProjectAccess } from 'hooks/useHasAccess';
 
 const StyledMenu = styled(Menu)(({ theme }) => ({
     '&>div>ul': {
@@ -50,6 +50,13 @@ export const PushVariantsButton = ({
     const [selectedEnvironments, setSelectedEnvironments] = useState<string[]>(
         []
     );
+
+    const hasAccess = useCheckProjectAccess(projectId);
+    const hasAccessTo = environments.reduce((acc, env) => {
+        acc[env.name] = hasAccess(permission, env.name);
+        return acc;
+    }, {} as Record<string, boolean>);
+
     const addSelectedEnvironment = (name: string) => {
         setSelectedEnvironments(prevSelectedEnvironments => [
             ...prevSelectedEnvironments,
@@ -67,15 +74,6 @@ export const PushVariantsButton = ({
         setSelectedEnvironments([]);
         setPushToAnchorEl(null);
     };
-
-    const hasAccess = environments.reduce((ret, env) => {
-        ret[env.name] = useHasProjectEnvironmentAccess(
-            permission,
-            projectId,
-            env.name
-        );
-        return ret;
-    }, {} as { [env: string]: boolean });
 
     const variants =
         environments.find(environment => environment.name === current)
@@ -113,7 +111,9 @@ export const PushVariantsButton = ({
                                 <MenuItem key={otherEnvironment.name}>
                                     <FormControlLabel
                                         disabled={
-                                            !hasAccess[otherEnvironment.name]
+                                            !hasAccessTo[
+                                                otherEnvironment.name
+                                            ] ?? false
                                         }
                                         control={
                                             <Checkbox

@@ -45,7 +45,9 @@ export const VariantsActionCell = ({
                 environmentId={environmentId}
                 onClick={() => deleteVariant(variant)}
                 tooltipProps={{
-                    title: isLastVariableVariant ? 'You need to have at least one variable variant' : 'Delete variant',
+                    title: isLastVariableVariant
+                        ? 'You need to have at least one variable variant'
+                        : 'Delete variant',
                 }}
             >
                 <Delete />

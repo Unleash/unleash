@@ -112,9 +112,7 @@ export const EnvironmentVariantsTable = ({
                     <VariantsActionCell
                         variant={original}
                         projectId={projectId}
-                        isLastVariableVariant={isProtectedVariant(
-                            original
-                        )}
+                        isLastVariableVariant={isProtectedVariant(original)}
                         environmentId={environment.name}
                         editVariant={onEditVariant}
                         deleteVariant={onDeleteVariant}

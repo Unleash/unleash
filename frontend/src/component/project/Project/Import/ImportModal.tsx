@@ -1,7 +1,7 @@
 import { styled } from '@mui/material';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import React, { useState } from 'react';
-import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ImportTimeline } from './ImportTimeline';
 import { ImportStage } from './ImportStage';
 import { ConfigurationStage } from './configure/ConfigurationStage';

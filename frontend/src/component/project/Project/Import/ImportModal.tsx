@@ -71,7 +71,7 @@ export const ImportModal = ({ open, setOpen, project }: IImportModalProps) => {
     const [environment, setEnvironment] = useState('');
     const [importPayload, setImportPayload] = useState('');
     const [activeTab, setActiveTab] = useState<ImportMode>('file');
-    const [dropActive, setDropActive] = useState(false);
+    const [dragActive, setDragActive] = useState(false);
 
     const onSubmit = async () => {
         await createImport({
@@ -134,13 +134,13 @@ export const ImportModal = ({ open, setOpen, project }: IImportModalProps) => {
                                     title: error,
                                 });
                             }}
-                            onDragStatusChange={setDropActive}
+                            onDragStatusChange={setDragActive}
                         >
-                            <PulsingAvatar active={dropActive}>
+                            <PulsingAvatar active={dragActive}>
                                 <ArrowUpward fontSize="large" />
                             </PulsingAvatar>
                             <DropMessage>
-                                {dropActive
+                                {dragActive
                                     ? 'Drop your file to upload'
                                     : 'Drop your file here'}
                             </DropMessage>

@@ -4,6 +4,7 @@ import { Operation } from 'fast-json-patch';
 import { IConstraint } from 'interfaces/strategy';
 import { CreateFeatureSchema } from 'openapi';
 import useAPI from '../useApi/useApi';
+import { IFeatureVariant } from 'interfaces/featureToggle';
 
 const useFeatureApi = () => {
     const { makeRequest, createRequest, errors, loading } = useAPI({
@@ -223,6 +224,26 @@ const useFeatureApi = () => {
         }
     };
 
+    const overrideVariantsInEnvironments = async (
+        projectId: string,
+        featureId: string,
+        variants: IFeatureVariant[],
+        environments: string[]
+    ) => {
+        const put = `api/admin/projects/${projectId}/features/${featureId}/variants-batch`;
+        const req = createRequest(put, {
+            method: 'PUT',
+            body: JSON.stringify({ variants, environments }),
+        });
+
+        try {
+            const res = await makeRequest(req.caller, req.id);
+            return res;
+        } catch (e) {
+            throw e;
+        }
+    };
+
     const cloneFeatureToggle = async (
         projectId: string,
         featureId: string,
@@ -257,6 +278,7 @@ const useFeatureApi = () => {
         patchFeatureToggle,
         patchFeatureVariants,
         patchFeatureEnvironmentVariants,
+        overrideVariantsInEnvironments,
         cloneFeatureToggle,
         loading,
     };

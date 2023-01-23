@@ -112,6 +112,9 @@ export const EnvironmentVariantsTable = ({
                     <VariantsActionCell
                         variant={original}
                         projectId={projectId}
+                        isLastVariableVariant={isProtectedVariant(
+                            original
+                        )}
                         environmentId={environment.name}
                         editVariant={onEditVariant}
                         deleteVariant={onDeleteVariant}
@@ -129,6 +132,23 @@ export const EnvironmentVariantsTable = ({
         }),
         []
     );
+
+    const isProtectedVariant = (variant: IFeatureVariant): boolean => {
+        const isVariable = variant.weightType === 'variable';
+
+        const atLeastOneFixedVariant = variants.some(variant => {
+            return variant.weightType === 'fix';
+        });
+
+        const hasOnlyOneVariableVariant =
+            variants.filter(variant => {
+                return variant.weightType === 'variable';
+            }).length == 1;
+
+        return (
+            atLeastOneFixedVariant && hasOnlyOneVariableVariant && isVariable
+        );
+    };
 
     const { data, getSearchText } = useSearch(columns, searchValue, variants);
 

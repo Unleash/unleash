@@ -1,4 +1,4 @@
-import { ImportLayoutContainer } from './ImportLayoutContainer';
+import { ImportLayoutContainer } from '../ImportLayoutContainer';
 import { Box, styled, Typography } from '@mui/material';
 import { FC } from 'react';
 

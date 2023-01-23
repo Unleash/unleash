@@ -1,12 +1,11 @@
-import { Box, Button, styled } from '@mui/material';
+import { styled } from '@mui/material';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import React, { useState } from 'react';
 import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender';
 import { ImportTimeline } from './ImportTimeline';
 import { ImportStage } from './ImportStage';
-import { ConfigurationStage } from './ConfigurationStage';
-import { ValidationStage } from './ValidationState';
-import { useImportApi } from '../../../../hooks/api/actions/useImportApi/useImportApi';
+import { ConfigurationStage } from './configure/ConfigurationStage';
+import { ValidationStage } from './validate/ValidationState';
 
 const ModalContentContainer = styled('div')(({ theme }) => ({
     minHeight: '100vh',

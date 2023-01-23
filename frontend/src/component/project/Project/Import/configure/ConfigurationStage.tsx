@@ -15,7 +15,7 @@ import { ArrowUpward } from '@mui/icons-material';
 import { ImportExplanation } from './ImportExplanation';
 import React, { FC, useState } from 'react';
 import useToast from 'hooks/useToast';
-import { ImportLayoutContainer } from './ImportLayoutContainer';
+import { ImportLayoutContainer } from '../ImportLayoutContainer';
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
     width: '100%',

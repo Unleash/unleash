@@ -6,6 +6,7 @@ import TimelineConnector from '@mui/lab/TimelineConnector';
 import TimelineDot from '@mui/lab/TimelineDot';
 import TimelineContent from '@mui/lab/TimelineContent';
 import Timeline from '@mui/lab/Timeline';
+import { ImportStage } from './ImportStage';
 
 const StyledTimeline = styled(Timeline)(() => ({
     [`& .${timelineItemClasses.root}:before`]: {
@@ -54,7 +55,7 @@ const TimelineItemDescription = styled(Box)(({ theme }) => ({
 }));
 
 export const ImportTimeline: FC<{
-    stage: 'configure' | 'validate' | 'import';
+    stage: ImportStage['name'];
 }> = ({ stage }) => {
     return (
         <StyledTimeline>

@@ -1,7 +1,7 @@
-import GeneralSelect from '../../../common/GeneralSelect/GeneralSelect';
+import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { KeyboardArrowDownOutlined } from '@mui/icons-material';
-import React, { FC, useEffect, useState } from 'react';
-import { useProjectEnvironments } from '../../../../hooks/api/getters/useProjectEnvironments/useProjectEnvironments';
+import React, { FC, useEffect } from 'react';
+import { useProjectEnvironments } from 'hooks/api/getters/useProjectEnvironments/useProjectEnvironments';
 import { Box, styled, Typography } from '@mui/material';
 
 const ImportOptionsContainer = styled(Box)(({ theme }) => ({
@@ -12,7 +12,7 @@ const ImportOptionsContainer = styled(Box)(({ theme }) => ({
 
 const ImportOptionsHeader = styled(Typography)(({ theme }) => ({
     marginBottom: theme.spacing(3),
-    fontWeight: theme.typography.fontWeightBold,
+    fontWeight: theme.fontWeight.bold,
 }));
 
 const ImportOptionsDescription = styled(Typography)(({ theme }) => ({

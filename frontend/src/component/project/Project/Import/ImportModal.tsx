@@ -5,7 +5,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { ImportTimeline } from './ImportTimeline';
 import { ImportStage } from './ImportStage';
 import { ConfigurationStage } from './configure/ConfigurationStage';
-import { ValidationStage } from './validate/ValidationState';
+import { ValidationStage } from './validate/ValidationStage';
 
 const ModalContentContainer = styled('div')(({ theme }) => ({
     minHeight: '100vh',
@@ -70,6 +70,9 @@ export const ImportModal = ({ open, setOpen, project }: IImportModalProps) => {
                     <ValidationStage
                         project={project}
                         environment={importStage.environment}
+                        payload={JSON.parse(importStage.payload)}
+                        onBack={() => setImportStage({ name: 'configure' })}
+                        onClose={() => setOpen(false)}
                     />
                 ) : (
                     ''

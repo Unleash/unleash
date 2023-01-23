@@ -5,9 +5,9 @@ import {
     IValidationSchema,
     useValidateImportApi,
 } from 'hooks/api/actions/useValidateImportApi/useValidateImportApi';
-import { ConditionallyRender } from '../../../../common/ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useToast from 'hooks/useToast';
-import { formatUnknownError } from '../../../../../utils/formatUnknownError';
+import { formatUnknownError } from 'utils/formatUnknownError';
 import { ActionsContainer } from '../ActionsContainer';
 
 const ImportInfoContainer = styled(Box)(({ theme }) => ({

@@ -1,5 +1,5 @@
 import { IUnleashConfig } from '../types/option';
-import { IUnleashStores } from '../types';
+import { IFlagResolver, IUnleashStores } from '../types';
 import { Logger } from '../logger';
 import BadDataError from '../error/bad-data-error';
 import NameExistsError from '../error/name-exists-error';
@@ -127,6 +127,8 @@ class FeatureToggleService {
 
     private accessService: AccessService;
 
+    private flagResolver: IFlagResolver;
+
     constructor(
         {
             featureStrategiesStore,
@@ -148,7 +150,10 @@ class FeatureToggleService {
             | 'featureEnvironmentStore'
             | 'contextFieldStore'
         >,
-        { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
+        {
+            getLogger,
+            flagResolver,
+        }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>,
         segmentService: SegmentService,
         accessService: AccessService,
     ) {
@@ -163,6 +168,7 @@ class FeatureToggleService {
         this.contextFieldStore = contextFieldStore;
         this.segmentService = segmentService;
         this.accessService = accessService;
+        this.flagResolver = flagResolver;
     }
 
     async validateFeatureContext({
@@ -1248,7 +1254,7 @@ class FeatureToggleService {
         featureName: string,
         project: string,
         newVariants: Operation[],
-        createdBy: string,
+        user: User,
     ): Promise<FeatureToggle> {
         const ft =
             await this.featureStrategiesStore.getFeatureToggleWithVariantEnvs(
@@ -1260,7 +1266,7 @@ class FeatureToggleService {
                 project,
                 env.name,
                 newVariants,
-                createdBy,
+                user,
             ).then((resultingVariants) => (env.variants = resultingVariants)),
         );
         await Promise.all(promises);
@@ -1273,19 +1279,19 @@ class FeatureToggleService {
         project: string,
         environment: string,
         newVariants: Operation[],
-        createdBy: string,
+        user: User,
     ): Promise<IVariant[]> {
         const oldVariants = await this.getVariantsForEnv(
             featureName,
             environment,
         );
         const { newDocument } = await applyPatch(oldVariants, newVariants);
-        return this.saveVariantsOnEnv(
+        return this.crProtectedSaveVariantsOnEnv(
             project,
             featureName,
             environment,
             newDocument,
-            createdBy,
+            user,
             oldVariants,
         );
     }
@@ -1357,6 +1363,52 @@ class FeatureToggleService {
         return fixedVariants;
     }
 
+    async crProtectedSaveVariantsOnEnv(
+        projectId: string,
+        featureName: string,
+        environment: string,
+        newVariants: IVariant[],
+        user: User,
+        oldVariants?: IVariant[],
+    ): Promise<IVariant[]> {
+        if (this.flagResolver.isEnabled('crOnVariants')) {
+            await this.stopWhenChangeRequestsEnabled(
+                projectId,
+                environment,
+                user,
+            );
+        }
+        return this.saveVariantsOnEnv(
+            projectId,
+            featureName,
+            environment,
+            newVariants,
+            user.username,
+            oldVariants,
+        );
+    }
+
+    async crProtectedSetVariantsOnEnvs(
+        projectId: string,
+        featureName: string,
+        environments: string[],
+        newVariants: IVariant[],
+        user: User,
+    ): Promise<IVariant[]> {
+        if (this.flagResolver.isEnabled('crOnVariants')) {
+            for (const env of environments) {
+                await this.stopWhenChangeRequestsEnabled(projectId, env);
+            }
+        }
+        return this.setVariantsOnEnvs(
+            projectId,
+            featureName,
+            environments,
+            newVariants,
+            user.username,
+        );
+    }
+
     async setVariantsOnEnvs(
         projectId: string,
         featureName: string,
@@ -1390,7 +1442,6 @@ class FeatureToggleService {
                     }),
             ),
         );
-
         await this.featureEnvironmentStore.setVariantsToFeatureEnvironments(
             featureName,
             environments,

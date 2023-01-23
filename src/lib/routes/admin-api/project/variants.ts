@@ -189,12 +189,11 @@ export default class VariantsController extends Controller {
         res: Response<FeatureVariantsSchema>,
     ): Promise<void> {
         const { projectId, featureName } = req.params;
-        const userName = extractUsername(req);
         const updatedFeature = await this.featureService.updateVariants(
             featureName,
             projectId,
             req.body,
-            userName,
+            req.user,
         );
         res.status(200).json({
             version: 1,
@@ -231,7 +230,6 @@ export default class VariantsController extends Controller {
     ): Promise<void> {
         const { projectId, featureName } = req.params;
         const { environments, variants } = req.body;
-        const userName = extractUsername(req);
 
         if (environments === undefined || environments.length === 0) {
             throw new BadDataError('No environments provided');
@@ -250,12 +248,12 @@ export default class VariantsController extends Controller {
             ...variant,
         }));
 
-        await this.featureService.setVariantsOnEnvs(
+        await this.featureService.crProtectedSetVariantsOnEnvs(
             projectId,
             featureName,
             environments,
             variantsWithDefaults,
-            userName,
+            req.user,
         );
         res.status(200).json({
             version: 1,
@@ -303,14 +301,13 @@ export default class VariantsController extends Controller {
         res: Response<FeatureVariantsSchema>,
     ): Promise<void> {
         const { projectId, featureName, environment } = req.params;
-        const userName = extractUsername(req);
 
         const variants = await this.featureService.updateVariantsOnEnv(
             featureName,
             projectId,
             environment,
             req.body,
-            userName,
+            req.user,
         );
         res.status(200).json({
             version: 1,
@@ -323,13 +320,12 @@ export default class VariantsController extends Controller {
         res: Response<FeatureVariantsSchema>,
     ): Promise<void> {
         const { featureName, environment, projectId } = req.params;
-        const userName = extractUsername(req);
-        const variants = await this.featureService.saveVariantsOnEnv(
+        const variants = await this.featureService.crProtectedSaveVariantsOnEnv(
             projectId,
             featureName,
             environment,
             req.body,
-            userName,
+            req.user,
         );
         res.status(200).json({
             version: 1,

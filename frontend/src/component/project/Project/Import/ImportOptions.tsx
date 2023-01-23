@@ -12,7 +12,7 @@ const ImportOptionsContainer = styled(Box)(({ theme }) => ({
 
 const ImportOptionsHeader = styled(Typography)(({ theme }) => ({
     marginBottom: theme.spacing(3),
-    fontWeight: theme.typography.fontWeightBold,
+    fontWeight: theme.fontWeight.bold,
 }));
 
 const ImportOptionsDescription = styled(Typography)(({ theme }) => ({

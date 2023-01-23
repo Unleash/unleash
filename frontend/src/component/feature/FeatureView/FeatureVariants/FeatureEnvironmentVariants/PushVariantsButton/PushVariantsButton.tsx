@@ -68,6 +68,15 @@ export const PushVariantsButton = ({
         setPushToAnchorEl(null);
     };
 
+    const hasAccess = environments.reduce((ret, env) => {
+        ret[env.name] = useHasProjectEnvironmentAccess(
+            permission,
+            projectId,
+            env.name
+        );
+        return ret;
+    }, {} as { [env: string]: boolean });
+
     const variants =
         environments.find(environment => environment.name === current)
             ?.variants ?? [];
@@ -104,11 +113,7 @@ export const PushVariantsButton = ({
                                 <MenuItem key={otherEnvironment.name}>
                                     <FormControlLabel
                                         disabled={
-                                            !useHasProjectEnvironmentAccess(
-                                                permission,
-                                                projectId,
-                                                otherEnvironment.name
-                                            )
+                                            !hasAccess[otherEnvironment.name]
                                         }
                                         control={
                                             <Checkbox

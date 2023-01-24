@@ -19,6 +19,7 @@ import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
 import { EnvironmentVariantsCopyFrom } from './EnvironmentVariantsCopyFrom/EnvironmentVariantsCopyFrom';
+import { PushVariantsButton } from './PushVariantsButton/PushVariantsButton';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(4),
@@ -43,7 +44,8 @@ export const FeatureEnvironmentVariants = () => {
         projectId,
         featureId
     );
-    const { patchFeatureEnvironmentVariants } = useFeatureApi();
+    const { patchFeatureEnvironmentVariants, overrideVariantsInEnvironments } =
+        useFeatureApi();
 
     const [searchValue, setSearchValue] = useState('');
     const [selectedEnvironment, setSelectedEnvironment] =
@@ -86,6 +88,27 @@ export const FeatureEnvironmentVariants = () => {
             patch
         );
         refetchFeature();
+    };
+
+    const pushToEnvironments = async (
+        variants: IFeatureVariant[],
+        selected: string[]
+    ) => {
+        try {
+            await overrideVariantsInEnvironments(
+                projectId,
+                featureId,
+                variants,
+                selected
+            );
+            refetchFeature();
+            setToastData({
+                title: `Variants pushed successfully`,
+                type: 'success',
+            });
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
     };
 
     const addVariant = (environment: IFeatureEnvironment) => {
@@ -241,6 +264,18 @@ export const FeatureEnvironmentVariants = () => {
                         }
                     >
                         <StyledButtonContainer>
+                            <PushVariantsButton
+                                current={environment.name}
+                                environments={feature.environments}
+                                permission={UPDATE_FEATURE_ENVIRONMENT_VARIANTS}
+                                projectId={projectId}
+                                onSubmit={selected =>
+                                    pushToEnvironments(
+                                        environment.variants ?? [],
+                                        selected
+                                    )
+                                }
+                            />
                             <EnvironmentVariantsCopyFrom
                                 environment={environment}
                                 permission={UPDATE_FEATURE_ENVIRONMENT_VARIANTS}

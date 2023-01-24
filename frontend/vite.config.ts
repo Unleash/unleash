@@ -31,6 +31,7 @@ export default mergeConfig(
         build: {
             outDir: 'build',
             assetsDir: 'static',
+            modulePreload: false,
         },
         server: {
             open: true,

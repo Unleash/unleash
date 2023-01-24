@@ -1,5 +1,5 @@
-import { Suspense, useCallback, useEffect, useState, useRef } from 'react';
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Suspense } from 'react';
+import { Route, Routes } from 'react-router-dom';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Error } from 'component/layout/Error/Error';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -16,47 +16,10 @@ import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import { SplashPageRedirect } from 'component/splash/SplashPageRedirect/SplashPageRedirect';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import useProjects from '../hooks/api/getters/useProjects/useProjects';
-import { useLastViewedProject } from '../hooks/useLastViewedProject';
+
 import MaintenanceBanner from './maintenance/MaintenanceBanner';
 import { styled } from '@mui/material';
-
-const InitialRedirect = () => {
-    const { lastViewed } = useLastViewedProject();
-    const { projects, loading } = useProjects();
-    const navigate = useNavigate();
-    const ref = useRef<{ redirected: boolean }>({ redirected: false });
-
-    // Redirect based on project and last viewed
-    const getRedirect = useCallback(() => {
-        if (projects && lastViewed) {
-            return `/projects/${lastViewed}`;
-        }
-
-        if (projects && !lastViewed && projects.length === 1) {
-            return `/projects/${projects[0].id}`;
-        }
-
-        return '/projects';
-    }, [lastViewed, projects]);
-
-    const redirect = () => {
-        ref.current = { redirected: true };
-        navigate(getRedirect(), { replace: true });
-    };
-
-    useEffect(() => {
-        if (ref.current?.redirected === true) return;
-
-        redirect();
-    }, [getRedirect]);
-
-    if (loading) {
-        return <Loader />;
-    }
-
-    return <></>;
-};
+import { InitialRedirect } from './InitialRedirect';
 
 const StyledContainer = styled('div')(() => ({
     '& ul': {
@@ -116,21 +79,14 @@ export const App = () => {
                                                 />
                                             ))}
                                             <Route
+                                                path="/"
+                                                element={<InitialRedirect />}
+                                            />
+                                            <Route
                                                 path="*"
                                                 element={<NotFound />}
                                             />
                                         </Routes>
-                                        {/* Only redirect if we are not in test mode */}
-                                        <ConditionallyRender
-                                            condition={
-                                                !(
-                                                    import.meta.env
-                                                        .VITE_TEST_REDIRECT ===
-                                                    'true'
-                                                )
-                                            }
-                                            show={<InitialRedirect />}
-                                        />
 
                                         <FeedbackNPS openUrl="http://feedback.unleash.run" />
 

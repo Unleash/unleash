@@ -8,6 +8,8 @@ interface IUIContext {
     setShowFeedback: React.Dispatch<React.SetStateAction<boolean>>;
     setThemeMode: React.Dispatch<React.SetStateAction<themeMode>>;
     themeMode: themeMode;
+    redirected: boolean;
+    setRedirected: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export type themeMode = 'light' | 'dark';
@@ -35,6 +37,10 @@ const setThemeModePlaceholder = () => {
     throw new Error('setMode called outside UIContext');
 };
 
+const setRedirected = () => {
+    throw new Error('setMode called outside UIContext');
+};
+
 const UIContext = React.createContext<IUIContext>({
     toastData: createEmptyToast(),
     setToast: setToastPlaceholder,
@@ -42,6 +48,8 @@ const UIContext = React.createContext<IUIContext>({
     setShowFeedback: setShowFeedbackPlaceholder,
     themeMode: 'light',
     setThemeMode: setThemeModePlaceholder,
+    redirected: false,
+    setRedirected,
 });
 
 export default UIContext;

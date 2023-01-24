@@ -20,6 +20,7 @@ import { PayloadCell } from './PayloadCell/PayloadCell';
 import { OverridesCell } from './OverridesCell/OverridesCell';
 import { VariantsActionCell } from './VariantsActionsCell/VariantsActionsCell';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
+import { WeightType } from 'constants/variantTypes';
 
 const StyledTableContainer = styled('div')(({ theme }) => ({
     margin: theme.spacing(3, 0),
@@ -112,6 +113,7 @@ export const EnvironmentVariantsTable = ({
                     <VariantsActionCell
                         variant={original}
                         projectId={projectId}
+                        isLastVariableVariant={isProtectedVariant(original)}
                         environmentId={environment.name}
                         editVariant={onEditVariant}
                         deleteVariant={onDeleteVariant}
@@ -129,6 +131,23 @@ export const EnvironmentVariantsTable = ({
         }),
         []
     );
+
+    const isProtectedVariant = (variant: IFeatureVariant): boolean => {
+        const isVariable = variant.weightType === WeightType.VARIABLE;
+
+        const atLeastOneFixedVariant = variants.some(variant => {
+            return variant.weightType === WeightType.FIX;
+        });
+
+        const hasOnlyOneVariableVariant =
+            variants.filter(variant => {
+                return variant.weightType === WeightType.VARIABLE;
+            }).length == 1;
+
+        return (
+            atLeastOneFixedVariant && hasOnlyOneVariableVariant && isVariable
+        );
+    };
 
     const { data, getSearchText } = useSearch(columns, searchValue, variants);
 

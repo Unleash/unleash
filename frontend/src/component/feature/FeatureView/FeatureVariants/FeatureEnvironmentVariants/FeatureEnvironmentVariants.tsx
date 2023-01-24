@@ -66,12 +66,8 @@ export const FeatureEnvironmentVariants = () => {
         patch: jsonpatch.Operation[];
         error?: string;
     } => {
-        try {
-            const updatedNewVariants = updateWeight(newVariants, 1000);
-            return { patch: createPatch(variants, updatedNewVariants) };
-        } catch (error: unknown) {
-            return { patch: [], error: formatUnknownError(error) };
-        }
+        const updatedNewVariants = updateWeight(newVariants, 1000);
+        return { patch: createPatch(variants, updatedNewVariants) };
     };
 
     const updateVariants = async (

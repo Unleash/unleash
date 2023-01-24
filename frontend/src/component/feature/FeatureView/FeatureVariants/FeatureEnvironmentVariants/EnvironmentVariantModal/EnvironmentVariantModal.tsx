@@ -27,6 +27,7 @@ import cloneDeep from 'lodash.clonedeep';
 import { CloudCircle } from '@mui/icons-material';
 import PermissionSwitch from 'component/common/PermissionSwitch/PermissionSwitch';
 import { UPDATE_FEATURE_VARIANTS } from 'component/providers/AccessProvider/permissions';
+import { WeightType } from 'constants/variantTypes';
 
 const StyledFormSubtitle = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -120,11 +121,6 @@ const payloadOptions = [
     { key: 'json', label: 'json' },
     { key: 'csv', label: 'csv' },
 ];
-
-enum WeightType {
-    FIX = 'fix',
-    VARIABLE = 'variable',
-}
 
 const EMPTY_PAYLOAD = { type: 'string', value: '' };
 

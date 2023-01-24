@@ -66,7 +66,3 @@ Whenever there are changes to the backend API, the client should be regenerated:
 This script assumes that you have a running instance of the enterprise backend at `http://localhost:4242`.
 The new OpenAPI client will be generated from the runtime schema of this instance.
 The target URL can be changed by setting the `UNLEASH_OPENAPI_URL` env var.
-
-## Analyzing bundle size
-
-`npx vite-bundle-visualizer` in the root of the frontend directory

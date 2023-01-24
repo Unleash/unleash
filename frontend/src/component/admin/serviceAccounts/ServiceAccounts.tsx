@@ -1,4 +1,5 @@
 import { useContext } from 'react';
+import AdminMenu from '../menu/AdminMenu';
 import AccessContext from 'contexts/AccessContext';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
@@ -10,6 +11,7 @@ export const ServiceAccounts = () => {
 
     return (
         <div>
+            <AdminMenu />
             <ConditionallyRender
                 condition={hasAccess(ADMIN)}
                 show={<ServiceAccountsTable />}

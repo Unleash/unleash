@@ -26,16 +26,12 @@ import { flexRow, focusable } from 'themes/themeStyles';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { IPermission } from 'interfaces/user';
 import { NavigationMenu } from './NavigationMenu/NavigationMenu';
-import {
-    getRoutes,
-    adminMenuRoutes,
-    getCondensedRoutes,
-} from 'component/menu/routes';
+import { getRoutes } from 'component/menu/routes';
 import { KeyboardArrowDown } from '@mui/icons-material';
 import { filterByConfig } from 'component/common/util';
 import { useAuthPermissions } from 'hooks/api/getters/useAuth/useAuthPermissions';
 import { useId } from 'hooks/useId';
-import { INavigationMenuItem } from 'interfaces/route';
+import { IRoute } from 'interfaces/route';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { useThemeMode } from 'hooks/useThemeMode';
 
@@ -138,24 +134,14 @@ const Header: VFC = () => {
 
     const routes = getRoutes();
 
-    const filterByEnterprise = (route: INavigationMenuItem): boolean => {
+    const filterByEnterprise = (route: IRoute): boolean => {
         return !route.menu.isEnterprise || !isOss();
     };
 
     const filteredMainRoutes = {
-        mainNavRoutes: getCondensedRoutes(routes.mainNavRoutes)
-            .concat([
-                {
-                    path: '/admin/api',
-                    title: 'API access',
-                    menu: {},
-                },
-            ])
-            .filter(filterByConfig(uiConfig)),
-        mobileRoutes: getCondensedRoutes(routes.mobileRoutes).filter(
-            filterByConfig(uiConfig)
-        ),
-        adminRoutes: adminMenuRoutes
+        mainNavRoutes: routes.mainNavRoutes.filter(filterByConfig(uiConfig)),
+        mobileRoutes: routes.mobileRoutes.filter(filterByConfig(uiConfig)),
+        adminRoutes: routes.adminRoutes
             .filter(filterByConfig(uiConfig))
             .filter(filterByEnterprise)
             .map(route => ({

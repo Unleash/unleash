@@ -42,7 +42,7 @@ import { ProjectSettings } from './ProjectSettings/ProjectSettings';
 import { useFavoriteProjectsApi } from 'hooks/api/actions/useFavoriteProjectsApi/useFavoriteProjectsApi';
 import { ImportModal } from './Import/ImportModal';
 
-export const Project = () => {
+const Project = () => {
     const projectId = useRequiredPathParam('projectId');
     const params = useQueryParams();
     const { project, loading, refetch } = useProject(projectId);
@@ -278,3 +278,5 @@ export const Project = () => {
         </div>
     );
 };
+
+export default Project;

@@ -1,4 +1,5 @@
 import React from 'react';
+import AdminMenu from '../menu/AdminMenu';
 import { Alert } from '@mui/material';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -33,6 +34,7 @@ export const AuthSettings = () => {
 
     return (
         <div>
+            <AdminMenu />
             <PageContent header="Single Sign-On">
                 <ConditionallyRender
                     condition={authenticationType === 'enterprise'}

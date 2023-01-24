@@ -1,5 +1,5 @@
 import { lazy } from 'react';
-
+import AdminMenu from '../menu/AdminMenu';
 import { styled, Tab, Tabs } from '@mui/material';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import { CenteredNavLink } from '../menu/CenteredNavLink';
@@ -30,6 +30,7 @@ export const Network = () => {
 
     return (
         <div>
+            <AdminMenu />
             <StyledPageContent
                 headerClass="page-header"
                 header={

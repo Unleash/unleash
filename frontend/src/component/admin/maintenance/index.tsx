@@ -1,4 +1,6 @@
+import { useLocation } from 'react-router-dom';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import AdminMenu from '../menu/AdminMenu';
 import { AdminAlert } from 'component/common/AdminAlert/AdminAlert';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import AccessContext from 'contexts/AccessContext';
@@ -11,10 +13,16 @@ import { MaintenanceTooltip } from './MaintenanceTooltip';
 import { MaintenanceToggle } from './MaintenanceToggle';
 
 export const MaintenanceAdmin = () => {
+    const { pathname } = useLocation();
+    const showAdminMenu = pathname.includes('/admin/');
     const { hasAccess } = useContext(AccessContext);
 
     return (
         <div>
+            <ConditionallyRender
+                condition={showAdminMenu}
+                show={<AdminMenu />}
+            />
             <ConditionallyRender
                 condition={hasAccess(ADMIN)}
                 show={<MaintenancePage />}

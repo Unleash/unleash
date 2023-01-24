@@ -14,8 +14,7 @@
     "start": "vite",
     "start:prod": "vite build && vite preview",
     "start:sandbox": "UNLEASH_API=https://sandbox.getunleash.io/ospro yarn run start",
-    "start:demo2": "UNLEASH_API=https://sandbox.getunleash.io/ UNLEASH_BASE_PATH=/demo2/ yarn run start",
-    "start:enterprise": "UNLEASH_API=https://unleash.herokuapp.com VITE_TEST_REDIRECT=true yarn run start",
+    "start:enterprise": "UNLEASH_API=https://unleash.herokuapp.com yarn run start",
     "start:demo": "UNLEASH_BASE_PATH=/demo/ yarn start",
     "test": "tsc && vitest run",
     "test:snapshot": "yarn test -u",
@@ -29,7 +28,6 @@
     "e2e:heroku": "yarn run cypress open --config baseUrl='https://unleash.herokuapp.com' --env AUTH_USER=admin,AUTH_PASSWORD=unleash4all",
     "gen:api": "orval --config orval.config.js",
     "gen:api:demo": "UNLEASH_OPENAPI_URL=https://app.unleash-hosted.com/demo/docs/openapi.json yarn run gen:api",
-    "gen:api:sandbox": "UNLEASH_OPENAPI_URL=https://sandbox.getunleash.io/demo2/docs/openapi.json yarn run gen:api",
     "prepare": "yarn run build"
   },
   "devDependencies": {
@@ -57,9 +55,9 @@
     "@types/react-test-renderer": "17.0.2",
     "@types/react-timeago": "4.1.3",
     "@types/semver": "7.3.13",
-    "@uiw/codemirror-theme-duotone": "4.19.6",
-    "@uiw/react-codemirror": "4.19.6",
-    "@vitejs/plugin-react": "3.0.1",
+    "@uiw/codemirror-theme-duotone": "4.19.5",
+    "@uiw/react-codemirror": "4.19.5",
+    "@vitejs/plugin-react": "3.0.0",
     "chart.js": "3.9.1",
     "chartjs-adapter-date-fns": "3.0.0",
     "classnames": "2.3.2",
@@ -74,7 +72,7 @@
     "fast-json-patch": "3.1.1",
     "http-proxy-middleware": "2.0.6",
     "immer": "9.0.17",
-    "jsdom": "21.0.0",
+    "jsdom": "20.0.3",
     "lodash.clonedeep": "4.5.0",
     "lodash.omit": "4.5.0",
     "mermaid": "^9.3.0",
@@ -87,11 +85,10 @@
     "react": "17.0.2",
     "react-chartjs-2": "4.3.1",
     "react-dom": "17.0.2",
-    "react-dropzone": "14.2.3",
     "react-error-boundary": "3.1.4",
     "react-hooks-global-state": "2.1.0",
     "react-markdown": "^8.0.4",
-    "react-router-dom": "6.6.2",
+    "react-router-dom": "6.6.1",
     "react-table": "7.8.0",
     "react-test-renderer": "17.0.2",
     "react-timeago": "7.1.0",
@@ -104,7 +101,7 @@
     "vite-plugin-env-compatible": "1.1.1",
     "vite-plugin-svgr": "2.4.0",
     "vite-tsconfig-paths": "4.0.3",
-    "vitest": "0.27.1",
+    "vitest": "0.26.3",
     "whatwg-fetch": "3.6.2"
   },
   "optionalDependencies": {
@@ -113,9 +110,7 @@
   "resolutions": {
     "@codemirror/state": "6.2.0",
     "@xmldom/xmldom": "^0.8.4",
-    "json5": "^2.2.2",
-    "@types/react": "17.0.52",
-    "@types/react-dom": "17.0.18"
+    "json5": "^2.2.2"
   },
   "jest": {
     "moduleNameMapper": {

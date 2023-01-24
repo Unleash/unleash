@@ -132,11 +132,13 @@ export const ValidationStage: FC<{
                             this configuration
                         </ErrorHeader>
                         {validationResult.errors.map(error => (
-                            <Box sx={{ p: 2 }}>
+                            <Box key={error.message} sx={{ p: 2 }}>
                                 <ErrorMessage>{error.message}</ErrorMessage>
                                 <StyledItems>
                                     {error.affectedItems.map(item => (
-                                        <StyledItem>{item}</StyledItem>
+                                        <StyledItem key={item}>
+                                            {item}
+                                        </StyledItem>
                                     ))}
                                 </StyledItems>
                             </Box>

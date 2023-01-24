@@ -11,7 +11,7 @@ const ImportExplanationHeader = styled(Typography)(({ theme }) => ({
     marginBottom: theme.spacing(0.5),
 }));
 
-const ImportExplanationDescription = styled(Typography)(({ theme }) => ({
+const ImportExplanationDescription = styled(Box)(({ theme }) => ({
     marginBottom: theme.spacing(3),
     color: theme.palette.text.secondary,
     fontSize: theme.fontSizes.smallBody,

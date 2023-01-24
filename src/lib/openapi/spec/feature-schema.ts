@@ -41,17 +41,17 @@ export const featureSchema = {
             type: 'boolean',
         },
         createdAt: {
-            type: 'string',
+            type: ['string', 'null'],
             format: 'date-time',
             nullable: true,
         },
         archivedAt: {
-            type: 'string',
+            type: ['string', 'null'],
             format: 'date-time',
             nullable: true,
         },
         lastSeenAt: {
-            type: 'string',
+            type: ['string', 'null'],
             format: 'date-time',
             nullable: true,
         },
@@ -68,7 +68,7 @@ export const featureSchema = {
             },
         },
         tags: {
-            type: 'array',
+            type: ['array', 'null'],
             items: {
                 $ref: '#/components/schemas/tagSchema',
             },

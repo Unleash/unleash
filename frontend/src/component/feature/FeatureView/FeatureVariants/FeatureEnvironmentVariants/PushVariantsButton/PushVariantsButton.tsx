@@ -27,6 +27,7 @@ const StyledMenu = styled(Menu)(({ theme }) => ({
 const StyledButton = styled(Button)(({ theme }) => ({
     marginTop: theme.spacing(1),
 }));
+
 interface IPushVariantsButtonProps {
     current: string;
     environments: IFeatureEnvironment[];

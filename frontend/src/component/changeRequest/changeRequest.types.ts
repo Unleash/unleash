@@ -1,3 +1,4 @@
+import { IFeatureVariant } from 'interfaces/featureToggle';
 import { IFeatureStrategy } from '../../interfaces/strategy';
 import { IUser } from '../../interfaces/user';
 
@@ -60,7 +61,8 @@ type ChangeRequestPayload =
     | ChangeRequestEnabled
     | ChangeRequestAddStrategy
     | ChangeRequestEditStrategy
-    | ChangeRequestDeleteStrategy;
+    | ChangeRequestDeleteStrategy
+    | ChangeRequestVariantPatch;
 
 export interface IChangeRequestAddStrategy extends IChangeRequestBase {
     action: 'addStrategy';
@@ -82,11 +84,21 @@ export interface IChangeRequestEnabled extends IChangeRequestBase {
     payload: ChangeRequestEnabled;
 }
 
+export interface IChangeRequestPatchVariant extends IChangeRequestBase {
+    action: 'patchVariant';
+    payload: ChangeRequestVariantPatch;
+}
+
 export type IChange =
     | IChangeRequestAddStrategy
     | IChangeRequestDeleteStrategy
     | IChangeRequestUpdateStrategy
-    | IChangeRequestEnabled;
+    | IChangeRequestEnabled
+    | IChangeRequestPatchVariant;
+
+type ChangeRequestVariantPatch = {
+    variants: IFeatureVariant[];
+};
 
 type ChangeRequestEnabled = { enabled: boolean };
 
@@ -106,7 +118,8 @@ export type ChangeRequestAction =
     | 'updateEnabled'
     | 'addStrategy'
     | 'updateStrategy'
-    | 'deleteStrategy';
+    | 'deleteStrategy'
+    | 'patchVariant';
 
 export const hasNameField = (payload: unknown): payload is { name: string } =>
     typeof payload === 'object' && payload !== null && 'name' in payload;

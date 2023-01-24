@@ -50,7 +50,7 @@ const EventDiff = ({ entry }: IEventDiffProps) => {
 
     const buildDiff = (diff: any, idx: number) => {
         let change;
-        const key = diff.path.join('.');
+        const key = diff.path?.join('.') ?? diff.index;
 
         if (diff.item) {
             change = buildItemDiff(diff.item, key);
@@ -74,13 +74,16 @@ const EventDiff = ({ entry }: IEventDiffProps) => {
             );
         }
 
-        return <div key={idx}>{change}</div>;
+        return { key: key.toString(), value: <div key={idx}>{change}</div> };
     };
 
     let changes;
 
     if (diffs) {
-        changes = diffs.map(buildDiff);
+        changes = diffs
+            .map(buildDiff)
+            .sort((a, b) => a.key.localeCompare(b.key))
+            .map(({ value }) => value);
     } else {
         // Just show the data if there is no diff yet.
         const data = entry.data || entry.preData;

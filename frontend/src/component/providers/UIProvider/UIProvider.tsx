@@ -30,7 +30,6 @@ const UIProvider: React.FC<IUiProviderProps> = ({
 }) => {
     const [toastData, setToast] = useState<IToast>(createEmptyToast());
     const [showFeedback, setShowFeedback] = useState(false);
-    const [redirected, setRedirected] = useState(false);
     const [themeMode, setThemeMode] = useState(resolveMode(darkmode));
 
     const context = React.useMemo(
@@ -41,10 +40,8 @@ const UIProvider: React.FC<IUiProviderProps> = ({
             setShowFeedback,
             themeMode,
             setThemeMode,
-            redirected,
-            setRedirected,
         }),
-        [toastData, showFeedback, themeMode, redirected]
+        [toastData, showFeedback, themeMode]
     );
 
     return <UIContext.Provider value={context}>{children}</UIContext.Provider>;

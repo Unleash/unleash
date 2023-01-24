@@ -8,7 +8,6 @@ import Loader from './common/Loader/Loader';
 export const InitialRedirect = () => {
     const { lastViewed } = useLastViewedProject();
     const { projects, loading } = useProjects();
-    const { redirected, setRedirected } = useContext(UIContext);
     const navigate = useNavigate();
 
     // Redirect based on project and last viewed
@@ -25,12 +24,10 @@ export const InitialRedirect = () => {
     }, [lastViewed, projects]);
 
     const redirect = () => {
-        setRedirected(true);
         navigate(getRedirect(), { replace: true });
     };
 
     useEffect(() => {
-        if (redirected) return;
         redirect();
     }, [getRedirect]);
 

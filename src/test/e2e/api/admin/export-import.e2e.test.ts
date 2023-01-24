@@ -182,7 +182,6 @@ test('exports features', async () => {
                 enabled: false,
                 environment: 'default',
                 featureName: 'first_feature',
-                variants: [],
             },
         ],
         segments: [
@@ -245,7 +244,6 @@ test('should export custom context fields', async () => {
                 enabled: false,
                 environment: 'default',
                 featureName: 'first_feature',
-                variants: [],
             },
         ],
         contextFields: [context],
@@ -286,7 +284,6 @@ test('should export tags', async () => {
                 enabled: false,
                 environment: 'default',
                 featureName: 'first_feature',
-                variants: [],
             },
         ],
         featureTags: [{ featureName, tagValue: 'tag1' }],

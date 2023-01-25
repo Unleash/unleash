@@ -50,13 +50,6 @@ interface IImportModalProps {
     project: string;
 }
 
-interface IImportModalState {
-    stage: StageName;
-    environment: string;
-    importPayload: string;
-    activeTab: ImportMode;
-}
-
 export const ImportModal = ({ open, setOpen, project }: IImportModalProps) => {
     const [importStage, setImportStage] = useState<StageName>('configure');
     const [environment, setEnvironment] = useState('');
@@ -79,10 +72,6 @@ export const ImportModal = ({ open, setOpen, project }: IImportModalProps) => {
         setImportPayload('');
         setActiveTab('file');
     };
-
-    useEffect(() => {
-        console.log('env', environment);
-    }, [environment]);
 
     return (
         <SidebarModal open={open} onClose={close} label="Import toggles">

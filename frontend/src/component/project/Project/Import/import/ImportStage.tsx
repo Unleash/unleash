@@ -7,7 +7,7 @@ import { Avatar, Button, styled, Typography } from '@mui/material';
 import { ActionsContainer } from '../ActionsContainer';
 import { Pending, Check, Error } from '@mui/icons-material';
 import { PulsingAvatar } from '../PulsingAvatar';
-import { ConditionallyRender } from '../../../../common/ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Box } from '@mui/system';
 
 export const ImportStatusArea = styled(Box)(({ theme }) => ({

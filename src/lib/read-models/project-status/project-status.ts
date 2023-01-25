@@ -1,4 +1,4 @@
-import { differenceInDays } from 'date-fns';
+import { differenceInDays, isWithinInterval, subDays } from 'date-fns';
 import { FeatureToggle, IEvent, IProjectEnvironment } from 'lib/types';
 
 interface IFeatureTimeToProdCalculationMap {
@@ -27,10 +27,20 @@ export class ProjectStatus {
         this.events = events;
     }
 
-    calculateAverageTimeToProd(): number {
-        const featureEvents = this.getFeatureEvents();
+    filterEventsByDate = (events: IEvent[], windowStart: Date): IEvent[] => {
+        return events.filter((event) => {
+            return isWithinInterval(new Date(event.createdAt), {
+                start: subDays(windowStart, 30),
+                end: windowStart,
+            });
+        });
+    };
+
+    calculateAverageTimeToProd(windowStart = new Date()): number {
+        const featureEvents = this.getFeatureEvents(windowStart);
         const sortedFeatureEvents =
             this.sortFeatureEventsByCreatedAt(featureEvents);
+
         const timeToProdPerFeature =
             this.calculateTimeToProdForFeatures(sortedFeatureEvents);
 
@@ -39,8 +49,11 @@ export class ProjectStatus {
         return sum / Object.keys(sortedFeatureEvents).length;
     }
 
-    getFeatureEvents(): IFeatureTimeToProdCalculationMap {
-        return this.getProductionEvents(this.events).reduce((acc, event) => {
+    getFeatureEvents(window: Date): IFeatureTimeToProdCalculationMap {
+        return this.filterEventsByDate(
+            this.getProductionEvents(this.events),
+            window,
+        ).reduce((acc, event) => {
             if (acc[event.featureName]) {
                 acc[event.featureName].events.push(event);
             } else {
@@ -74,6 +87,7 @@ export class ProjectStatus {
     ): number[] {
         return Object.keys(featureEvents).map((featureName) => {
             const feature = featureEvents[featureName];
+
             const earliestEvent = feature.events[0];
 
             const createdAtDate = new Date(feature.createdAt);

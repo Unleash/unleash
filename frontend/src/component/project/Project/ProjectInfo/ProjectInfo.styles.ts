@@ -3,10 +3,11 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { flexRow } from 'themes/themeStyles';
 import { styled } from '@mui/material';
 
-export const StyledDivContainer = styled('div')(({ theme }) => ({
+export const StyledProjectInfoSidebarContainer = styled('div')(({ theme }) => ({
     ...flexRow,
     width: '225px',
     flexDirection: 'column',
+    gap: theme.spacing(2),
     boxShadow: 'none',
     [theme.breakpoints.down('md')]: {
         flexDirection: 'row',
@@ -25,7 +26,6 @@ export const StyledDivPercentageContainer = styled('div')(({ theme }) => ({
 export const StyledDivInfoContainer = styled('div')(({ theme }) => ({
     margin: '0',
     textAlign: 'center',
-    marginBottom: theme.spacing(2),
     backgroundColor: theme.palette.background.paper,
     borderRadius: theme.shape.borderRadiusLarge,
     width: '100%',

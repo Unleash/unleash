@@ -4,7 +4,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { DEFAULT_PROJECT_ID } from 'hooks/api/getters/useDefaultProject/useDefaultProjectId';
 import {
     StyledArrowIcon,
-    StyledDivContainer,
+    StyledProjectInfoSidebarContainer,
     StyledDivInfoContainer,
     StyledLink,
     StyledParagraphEmphasizedText,
@@ -39,7 +39,7 @@ const ProjectInfo = ({
 
     return (
         <aside>
-            <StyledDivContainer>
+            <StyledProjectInfoSidebarContainer>
                 <HealthWidget projectId={id} health={health} />
                 <ConditionallyRender
                     condition={id !== DEFAULT_PROJECT_ID}
@@ -64,7 +64,7 @@ const ProjectInfo = ({
                     condition={Boolean(uiConfig?.flags.newProjectOverview)}
                     show={<ToggleTypesWidget features={features} />}
                 />
-            </StyledDivContainer>
+            </StyledProjectInfoSidebarContainer>
         </aside>
     );
 };

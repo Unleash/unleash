@@ -26,7 +26,7 @@ In order to create a toggle through the UI, [you can follow this guide](../how-t
 
 <!-- /end old links -->
 
-If you have set up your own Unleash instance and are using the front-end API, then create a [front-end token](../reference/api-tokens-and-client-keys.md#front-end-tokens) and use `<your-unleash-instance>/api/frontend` as the API URL.
+If you have set up your own Unleash instance and are using the front-end API, then create a [front-end token](../reference/api-tokens-and-client-keys.mdx#front-end-tokens) and use `<your-unleash-instance>/api/frontend` as the API URL.
 
 If you don't have your own Unleash instance set up, you can use the Unleash demo instance's proxy. In that case, the details are:
 - API URL: `https://app.unleash-hosted.com/demo/api/proxy`

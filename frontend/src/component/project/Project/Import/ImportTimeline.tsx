@@ -55,7 +55,7 @@ const TimelineItemDescription = styled(Box)(({ theme }) => ({
 }));
 
 export const ImportTimeline: FC<{
-    stage: ImportStage['name'];
+    stage: ImportStage;
 }> = ({ stage }) => {
     return (
         <StyledTimeline>

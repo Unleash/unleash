@@ -14,7 +14,7 @@ import {
     IFeatureEnvironmentWithCrEnabled,
     IFeatureVariant,
 } from 'interfaces/featureToggle';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { EnvironmentVariantModal } from './EnvironmentVariantModal/EnvironmentVariantModal';
 import { EnvironmentVariantsCard } from './EnvironmentVariantsCard/EnvironmentVariantsCard';
 import { VariantDeleteDialog } from './VariantDeleteDialog/VariantDeleteDialog';
@@ -66,13 +66,16 @@ export const FeatureEnvironmentVariants = () => {
     const [modalOpen, setModalOpen] = useState(false);
     const [deleteOpen, setDeleteOpen] = useState(false);
 
-    const environments: IFeatureEnvironmentWithCrEnabled[] =
-        feature?.environments?.map(environment => ({
-            ...environment,
-            crEnabled:
-                uiConfig.flags.crOnVariants &&
-                isChangeRequestConfigured(environment.name),
-        })) || [];
+    const environments: IFeatureEnvironmentWithCrEnabled[] = useMemo(
+        () =>
+            feature?.environments?.map(environment => ({
+                ...environment,
+                crEnabled:
+                    uiConfig.flags.crOnVariants &&
+                    isChangeRequestConfigured(environment.name),
+            })) || [],
+        [feature.environments, uiConfig.flags.crOnVariants]
+    );
 
     const createPatch = (
         variants: IFeatureVariant[],

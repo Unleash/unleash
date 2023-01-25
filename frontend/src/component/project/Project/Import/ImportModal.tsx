@@ -55,10 +55,6 @@ export const ImportModal = ({ open, setOpen, project }: IImportModalProps) => {
     const [importPayload, setImportPayload] = useState('');
     const [activeTab, setActiveTab] = useState<ImportMode>('file');
 
-    useEffect(() => {
-        console.log('env', environment);
-    }, [environment]);
-
     return (
         <SidebarModal
             open={open}

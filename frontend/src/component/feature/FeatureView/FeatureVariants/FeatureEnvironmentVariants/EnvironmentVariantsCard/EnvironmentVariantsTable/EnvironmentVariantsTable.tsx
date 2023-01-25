@@ -1,6 +1,17 @@
-import { styled, useMediaQuery, useTheme } from '@mui/material';
+import {
+    styled,
+    TableBody,
+    TableRow,
+    useMediaQuery,
+    useTheme,
+} from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
+import {
+    SortableTableHeader,
+    Table,
+    TableCell,
+    TablePlaceholder,
+} from 'component/common/Table';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
@@ -14,7 +25,7 @@ import {
     IPayload,
 } from 'interfaces/featureToggle';
 import { useMemo } from 'react';
-import { useFlexLayout, useSortBy, useTable } from 'react-table';
+import { useSortBy, useTable } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
 import { PayloadCell } from './PayloadCell/PayloadCell';
 import { OverridesCell } from './OverridesCell/OverridesCell';
@@ -54,7 +65,7 @@ export const EnvironmentVariantsTable = ({
                 accessor: 'name',
                 Cell: HighlightCell,
                 sortType: 'alphanumeric',
-                minWidth: 100,
+                minWidth: 350,
                 searchable: true,
             },
             {
@@ -151,7 +162,14 @@ export const EnvironmentVariantsTable = ({
 
     const { data, getSearchText } = useSearch(columns, searchValue, variants);
 
-    const { headerGroups, rows, prepareRow, setHiddenColumns } = useTable(
+    const {
+        getTableProps,
+        getTableBodyProps,
+        headerGroups,
+        rows,
+        prepareRow,
+        setHiddenColumns,
+    } = useTable(
         {
             columns: columns as any[],
             data,
@@ -162,8 +180,7 @@ export const EnvironmentVariantsTable = ({
             disableSortRemove: true,
             disableMultiSort: true,
         },
-        useSortBy,
-        useFlexLayout
+        useSortBy
     );
 
     useConditionallyHiddenColumns(
@@ -184,11 +201,23 @@ export const EnvironmentVariantsTable = ({
     return (
         <StyledTableContainer>
             <SearchHighlightProvider value={getSearchText(searchValue)}>
-                <VirtualizedTable
-                    rows={rows}
-                    headerGroups={headerGroups}
-                    prepareRow={prepareRow}
-                />
+                <Table {...getTableProps()}>
+                    <SortableTableHeader headerGroups={headerGroups as any} />
+                    <TableBody {...getTableBodyProps()}>
+                        {rows.map(row => {
+                            prepareRow(row);
+                            return (
+                                <TableRow hover {...row.getRowProps()}>
+                                    {row.cells.map(cell => (
+                                        <TableCell {...cell.getCellProps()}>
+                                            {cell.render('Cell')}
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            );
+                        })}
+                    </TableBody>
+                </Table>
             </SearchHighlightProvider>
             <ConditionallyRender
                 condition={rows.length === 0}

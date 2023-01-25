@@ -39,6 +39,12 @@ export const ImportOptions: FC<IImportOptionsProps> = ({
             title: environment.name,
         }));
 
+    useEffect(() => {
+        if (environment === '' && environmentOptions[0]) {
+            onChange(environmentOptions[0].key);
+        }
+    }, []);
+
     return (
         <ImportOptionsContainer>
             <ImportOptionsHeader>Import options</ImportOptionsHeader>
@@ -50,7 +56,7 @@ export const ImportOptions: FC<IImportOptionsProps> = ({
                 options={environmentOptions}
                 onChange={onChange}
                 label={'Environment'}
-                value={environment || environmentOptions[0]?.key}
+                value={environment}
                 IconComponent={KeyboardArrowDownOutlined}
                 fullWidth
             />

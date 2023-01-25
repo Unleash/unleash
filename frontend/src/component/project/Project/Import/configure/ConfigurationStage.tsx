@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { StyledFileDropZone } from './StyledFileDropZone';
-import { PulsingAvatar } from './PulsingAvatar';
+import { PulsingAvatar } from '../PulsingAvatar';
 import { ArrowUpward } from '@mui/icons-material';
 import { ImportExplanation } from './ImportExplanation';
 import React, { FC, ReactNode, useState } from 'react';
@@ -95,7 +95,10 @@ export const ImportArea: FC<{
                     }}
                     onDragStatusChange={setDragActive}
                 >
-                    <PulsingAvatar active={dragActive}>
+                    <PulsingAvatar
+                        sx={{ width: 80, height: 80 }}
+                        active={dragActive}
+                    >
                         <ArrowUpward fontSize="large" />
                     </PulsingAvatar>
                     <DropMessage>

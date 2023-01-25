@@ -85,23 +85,26 @@ export const ValidationStage: FC<{
     project: string;
     payload: string;
     onClose: () => void;
+    onSubmit: () => void;
     onBack: () => void;
-}> = ({ environment, project, payload, onClose, onBack }) => {
+}> = ({ environment, project, payload, onClose, onBack, onSubmit }) => {
     const { validateImport } = useValidateImportApi();
     const { setToastData } = useToast();
     const [validationResult, setValidationResult] = useState<IValidationSchema>(
         { errors: [], warnings: [] }
     );
+    const [validJSON, setValidJSON] = useState(true);
 
     useEffect(() => {
-        validateImport({ environment, project, data: payload })
+        validateImport({ environment, project, data: JSON.parse(payload) })
             .then(setValidationResult)
-            .catch(error =>
+            .catch(error => {
+                setValidJSON(false);
                 setToastData({
                     type: 'error',
                     title: formatUnknownError(error),
-                })
-            );
+                });
+            });
     }, []);
 
     return (
@@ -185,7 +188,8 @@ export const ValidationStage: FC<{
                     sx={{ position: 'static' }}
                     variant="contained"
                     type="submit"
-                    disabled={validationResult.errors.length > 0}
+                    onClick={onSubmit}
+                    disabled={validationResult.errors.length > 0 || !validJSON}
                 >
                     Import configuration
                 </Button>

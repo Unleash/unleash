@@ -40,8 +40,10 @@ export const ImportOptions: FC<IImportOptionsProps> = ({
         }));
 
     useEffect(() => {
-        onChange(environmentOptions[0]?.key);
-    }, [JSON.stringify(environmentOptions)]);
+        if (environment === '' && environmentOptions[0]) {
+            onChange(environmentOptions[0].key);
+        }
+    }, []);
 
     return (
         <ImportOptionsContainer>

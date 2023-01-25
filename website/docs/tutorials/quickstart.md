@@ -318,7 +318,7 @@ unleash.on('synchronized', () => {
 The easiest way to connect a client-side SDK to your Unleash instance is to use the [front-end API](../reference/front-end-api.md). You'll need to:
 1. Create a front-end API token ([How do I create API tokens?](../how-to/how-to-create-api-tokens.mdx))
 2. Configure CORS to allow your SDK to connect. For testing, we recommend allowing all origins (`*`).
-3. Point your app at `<your-unleash-instance>/api/front-end`.
+3. Point your app at `<your-unleash-instance>/api/frontend`.
 
 The section on [using the Unleash front-end API](../reference/front-end-api.md#using-the-unleash-front-end-api) has more details for how you configure these settings.
 

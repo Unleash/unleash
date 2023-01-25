@@ -360,7 +360,9 @@ export const EnvironmentVariantModal = ({
         ? 'Add to existing change request'
         : 'Add change to draft';
 
-    const isChangeRequest = isChangeRequestConfigured(environment?.name || '');
+    const isChangeRequest =
+        isChangeRequestConfigured(environment?.name || '') &&
+        uiConfig.flags.crOnVariants;
 
     return (
         <SidebarModal

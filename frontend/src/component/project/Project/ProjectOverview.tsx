@@ -53,7 +53,7 @@ const ProjectOverview = () => {
                 description={description}
                 memberCount={members}
                 health={health}
-                featureCount={features?.length}
+                features={features}
             />
             <StyledContentContainer>
                 <ConditionallyRender

@@ -34,7 +34,7 @@ If you don't have your own Unleash instance set up, you can use the Unleash demo
 
 Now you can open your application code and connect through one of the [client-side SDKs](../reference/sdks#client-side-sdks).
 
-The following example shows you how you could use the [JavaScript SDK](../generated/sdks/client-side/javascript-browser.mdx) to connect to the Unleash demo proxy:
+The following example shows you how you could use the [JavaScript SDK](../generated/sdks/client-side/javascript-browser.md) to connect to the Unleash demo proxy:
 
 ```javascript
 import { UnleashClient } from 'unleash-proxy-client';
@@ -322,7 +322,7 @@ The easiest way to connect a client-side SDK to your Unleash instance is to use 
 
 The section on [using the Unleash front-end API](../reference/front-end-api.md#using-the-unleash-front-end-api) has more details for how you configure these settings.
 
-As an example, here's how you would connect the [JavaScript SDK](../generated/sdks/client-side/javascript-browser.mdx) to a local Unleash instance available at `localhost:4242`
+As an example, here's how you would connect the [JavaScript SDK](../generated/sdks/client-side/javascript-browser.md) to a local Unleash instance available at `localhost:4242`
 
 ```javascript
 import { UnleashClient } from 'unleash-proxy-client';

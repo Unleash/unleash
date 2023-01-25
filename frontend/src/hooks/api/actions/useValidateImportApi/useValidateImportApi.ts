@@ -1,6 +1,10 @@
 import useAPI from '../useApi/useApi';
 
-export interface ImportQuerySchema {}
+export interface ImportQuerySchema {
+    project: string;
+    environment: string;
+    data: object;
+}
 export interface IValidationSchema {
     errors: Array<{ message: string; affectedItems: Array<string> }>;
     warnings: Array<{ message: string; affectedItems: Array<string> }>;

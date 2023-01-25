@@ -127,10 +127,13 @@ export default class ExportImportService {
                 const { createdAt, archivedAt, lastSeenAt, ...rest } = item;
                 return rest;
             }),
-            featureStrategies: featureStrategies.map((item) => ({
-                name: item.strategyName,
-                ...item,
-            })),
+            featureStrategies: featureStrategies.map((item) => {
+                const { createdAt, ...rest } = item;
+                return {
+                    name: rest.strategyName,
+                    ...rest,
+                };
+            }),
             featureEnvironments: featureEnvironments.map((item) => ({
                 ...item,
                 name: item.featureName,

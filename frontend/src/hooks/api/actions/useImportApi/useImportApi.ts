@@ -1,7 +1,10 @@
-import { ExportQuerySchema } from 'openapi';
 import useAPI from '../useApi/useApi';
 
-export interface ImportQuerySchema {}
+export interface ImportQuerySchema {
+    project: string;
+    environment: string;
+    data: object;
+}
 
 export const useImportApi = () => {
     const { makeRequest, createRequest, errors, loading } = useAPI({

@@ -9,7 +9,7 @@ import { Pending, Check, Error } from '@mui/icons-material';
 import { PulsingAvatar } from '../PulsingAvatar';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Box } from '@mui/system';
-import { useChangeRequestsEnabled } from '../../../../../hooks/useChangeRequestsEnabled';
+import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 
 export const ImportStatusArea = styled(Box)(({ theme }) => ({
     padding: theme.spacing(4, 2, 2, 2),

@@ -1,28 +1,34 @@
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import PercentageCircle from 'component/common/PercentageCircle/PercentageCircle';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
-import { DEFAULT_PROJECT_ID } from '../../../../hooks/api/getters/useDefaultProject/useDefaultProjectId';
+import { DEFAULT_PROJECT_ID } from 'hooks/api/getters/useDefaultProject/useDefaultProjectId';
 import {
+    StyledArrowIcon,
     StyledDivContainer,
     StyledDivInfoContainer,
-    StyledDivPercentageContainer,
-    StyledParagraphSubtitle,
-    StyledParagraphEmphasizedText,
     StyledLink,
+    StyledParagraphEmphasizedText,
+    StyledParagraphSubtitle,
     StyledSpanLinkText,
-    StyledArrowIcon,
 } from './ProjectInfo.styles';
+import { IFeatureToggleListItem } from '../../../../interfaces/featureToggle';
+import { HealthWidget } from './HealthWidget';
+import { ToggleTypesWidget } from './ToggleTypesWidget';
 
 interface IProjectInfoProps {
     id: string;
     memberCount: number;
-    featureCount: number;
+    features: IFeatureToggleListItem[];
     health: number;
     description?: string;
 }
 
-const ProjectInfo = ({ id, memberCount, health }: IProjectInfoProps) => {
+const ProjectInfo = ({
+    id,
+    memberCount,
+    health,
+    features,
+}: IProjectInfoProps) => {
     const { uiConfig } = useUiConfig();
 
     let link = `/admin/users`;
@@ -34,23 +40,7 @@ const ProjectInfo = ({ id, memberCount, health }: IProjectInfoProps) => {
     return (
         <aside>
             <StyledDivContainer>
-                <StyledDivInfoContainer>
-                    <StyledDivPercentageContainer>
-                        <PercentageCircle percentage={health} />
-                    </StyledDivPercentageContainer>
-                    <StyledParagraphSubtitle data-loading>
-                        Overall health rating
-                    </StyledParagraphSubtitle>
-                    <StyledParagraphEmphasizedText data-loading>
-                        {health}%
-                    </StyledParagraphEmphasizedText>
-                    <StyledLink data-loading to={`/projects/${id}/health`}>
-                        <StyledSpanLinkText data-loading>
-                            view more{' '}
-                        </StyledSpanLinkText>
-                        <StyledArrowIcon data-loading />
-                    </StyledLink>
-                </StyledDivInfoContainer>
+                <HealthWidget projectId={id} health={health} />
                 <ConditionallyRender
                     condition={id !== DEFAULT_PROJECT_ID}
                     show={
@@ -70,6 +60,7 @@ const ProjectInfo = ({ id, memberCount, health }: IProjectInfoProps) => {
                         </StyledDivInfoContainer>
                     }
                 />
+                <ToggleTypesWidget features={features} />
             </StyledDivContainer>
         </aside>
     );

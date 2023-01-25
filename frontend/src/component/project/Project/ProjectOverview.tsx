@@ -8,7 +8,6 @@ import { usePageTitle } from 'hooks/usePageTitle';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useLastViewedProject } from '../../../hooks/useLastViewedProject';
 import { useEffect } from 'react';
-import { StatusBox } from './ProjectStatus/StatusBox';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ProjectStatus } from './ProjectStatus/ProjectStatus';
@@ -53,7 +52,7 @@ const ProjectOverview = () => {
                 description={description}
                 memberCount={members}
                 health={health}
-                featureCount={features?.length}
+                features={features}
             />
             <StyledContentContainer>
                 <ConditionallyRender

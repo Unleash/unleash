@@ -11,7 +11,6 @@ import {
     Table,
     TableCell,
     TablePlaceholder,
-    VirtualizedTable,
 } from 'component/common/Table';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
@@ -26,7 +25,7 @@ import {
     IPayload,
 } from 'interfaces/featureToggle';
 import { useMemo } from 'react';
-import { useFlexLayout, useSortBy, useTable } from 'react-table';
+import { useSortBy, useTable } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
 import { PayloadCell } from './PayloadCell/PayloadCell';
 import { OverridesCell } from './OverridesCell/OverridesCell';

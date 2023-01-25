@@ -1,3 +1,4 @@
+import { subDays } from 'date-fns';
 import User, { IUser } from '../types/user';
 import { AccessService } from './access-service';
 import NameExistsError from '../error/name-exists-error';
@@ -55,6 +56,16 @@ export interface AccessWithRoles {
     users: IUserWithRole[];
     roles: IRoleDescriptor[];
     groups: IGroupModelWithProjectRole[];
+}
+
+export interface IStatusUpdate {
+    avgTimeToProdCurrentWindow: number;
+    avgTimeToProdPastWindow: number;
+}
+
+interface ICalculateStatus {
+    projectId: string;
+    updates: IStatusUpdate;
 }
 
 export default class ProjectService {
@@ -596,14 +607,27 @@ export default class ProjectService {
     async statusJob(): Promise<void> {
         const projects = await this.store.getAll();
 
-        await Promise.all(
+        const statusUpdates = await Promise.all(
             projects.map((project) =>
                 this.calculateAverageTimeToProd(project.id),
             ),
         );
+
+        console.log('RUNNING JOB', statusUpdates);
+
+        await Promise.all(
+            statusUpdates.map((statusUpdate) => {
+                return this.store.updateStatus(
+                    statusUpdate.projectId,
+                    statusUpdate.updates,
+                );
+            }),
+        );
     }
 
-    async calculateAverageTimeToProd(projectId: string): Promise<number> {
+    async calculateAverageTimeToProd(
+        projectId: string,
+    ): Promise<ICalculateStatus> {
         // Get all features for project with type release
         const features = await this.featureToggleStore.getAll({
             type: 'release',
@@ -632,7 +656,18 @@ export default class ProjectService {
             productionEnvironments,
             events,
         );
-        return projectStatus.calculateAverageTimeToProd();
+
+        return {
+            projectId,
+            updates: {
+                avgTimeToProdCurrentWindow:
+                    projectStatus.calculateAverageTimeToProd(),
+                avgTimeToProdPastWindow:
+                    projectStatus.calculateAverageTimeToProd(
+                        subDays(new Date(), 30),
+                    ),
+            },
+        };
     }
 
     async getProjectOverview(

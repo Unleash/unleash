@@ -1,3 +1,4 @@
+import { IStatusUpdate } from 'lib/services/project-service';
 import {
     IEnvironmentProjectLink,
     IProjectMembersCount,
@@ -75,4 +76,6 @@ export interface IProjectStore extends Store<IProject, string> {
         environment: string,
         projects: string[],
     ): Promise<void>;
+
+    updateStatus(projectId: string, status: IStatusUpdate): Promise<void>;
 }

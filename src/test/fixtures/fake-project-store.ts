@@ -13,6 +13,7 @@ import {
     IEnvironmentProjectLink,
     IProjectMembersCount,
 } from 'lib/db/project-store';
+import { IStatusUpdate } from 'lib/services/project-service';
 
 export default class FakeProjectStore implements IProjectStore {
     projects: IProject[] = [];
@@ -147,6 +148,15 @@ export default class FakeProjectStore implements IProjectStore {
         environment: string,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         projects: string[],
+    ): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
+
+    updateStatus(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        projectId: string,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        status: IStatusUpdate,
     ): Promise<void> {
         throw new Error('Method not implemented.');
     }

@@ -15,6 +15,7 @@ import { DB_TIME } from '../metric-events';
 import EventEmitter from 'events';
 import { IFlagResolver } from '../types';
 import Raw = Knex.Raw;
+import { IStatusUpdate } from 'lib/services/project-service';
 
 const COLUMNS = [
     'id',
@@ -190,6 +191,16 @@ class ProjectStore implements IProjectStore {
             .insert(this.fieldToRow(project))
             .returning('*');
         return this.mapRow(row[0]);
+    }
+
+    async updateStatus(
+        projectId: string,
+        status: IStatusUpdate,
+    ): Promise<void> {
+        await this.db(TABLE).where({ id: projectId }).update({
+            avg_time_to_prod_current_window: status.avgTimeToProdCurrentWindow,
+            avg_time_to_prod_past_window: status.avgTimeToProdPastWindow,
+        });
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types

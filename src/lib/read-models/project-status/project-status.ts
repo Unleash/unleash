@@ -41,12 +41,20 @@ export class ProjectStatus {
         const sortedFeatureEvents =
             this.sortFeatureEventsByCreatedAt(featureEvents);
 
+        console.log(sortedFeatureEvents);
+
         const timeToProdPerFeature =
             this.calculateTimeToProdForFeatures(sortedFeatureEvents);
+        if (timeToProdPerFeature.length) {
+            const sum = timeToProdPerFeature.reduce(
+                (acc, curr) => acc + curr,
+                0,
+            );
 
-        const sum = timeToProdPerFeature.reduce((acc, curr) => acc + curr, 0);
+            return sum / Object.keys(sortedFeatureEvents).length;
+        }
 
-        return sum / Object.keys(sortedFeatureEvents).length;
+        return 0;
     }
 
     getFeatureEvents(window: Date): IFeatureTimeToProdCalculationMap {
@@ -93,6 +101,7 @@ export class ProjectStatus {
             const createdAtDate = new Date(feature.createdAt);
             const eventDate = new Date(earliestEvent.createdAt);
             const diff = differenceInDays(eventDate, createdAtDate);
+            console.log(earliestEvent, createdAtDate, diff);
 
             return diff;
         });

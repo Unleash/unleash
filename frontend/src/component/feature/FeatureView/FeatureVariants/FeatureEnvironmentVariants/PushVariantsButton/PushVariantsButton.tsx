@@ -2,7 +2,6 @@ import {
     Button,
     Checkbox,
     Divider,
-    FormControlLabel,
     Menu,
     MenuItem,
     styled,
@@ -13,19 +12,22 @@ import { useState } from 'react';
 import { useCheckProjectAccess } from 'hooks/useHasAccess';
 
 const StyledMenu = styled(Menu)(({ theme }) => ({
-    '&>div>ul': {
+    '& > div > ul': {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
-        padding: theme.spacing(2),
-        '&>li': {
-            padding: theme.spacing(0),
+        '& > li': {
+            padding: theme.spacing(0, 1),
         },
     },
 }));
 
+const StyledActions = styled('div')(({ theme }) => ({
+    margin: theme.spacing(1, 2),
+}));
+
 const StyledButton = styled(Button)(({ theme }) => ({
-    marginTop: theme.spacing(1),
+    marginTop: theme.spacing(2),
 }));
 
 interface IPushVariantsButtonProps {
@@ -77,6 +79,16 @@ export const PushVariantsButton = ({
         );
     };
 
+    const toggleSelectedEnvironment = (
+        environment: IFeatureEnvironmentWithCrEnabled
+    ) => {
+        if (selectedEnvironments.includes(environment)) {
+            removeSelectedEnvironment(environment);
+        } else {
+            addSelectedEnvironment(environment);
+        }
+    };
+
     const cleanupState = () => {
         setSelectedEnvironments([]);
         setPushToAnchorEl(null);
@@ -115,47 +127,39 @@ export const PushVariantsButton = ({
                         {environments
                             .filter(environment => environment.name !== current)
                             .map(otherEnvironment => (
-                                <MenuItem key={otherEnvironment.name}>
-                                    <FormControlLabel
-                                        disabled={
-                                            !hasAccessTo[
-                                                otherEnvironment.name
-                                            ] ?? false
-                                        }
-                                        control={
-                                            <Checkbox
-                                                onChange={event => {
-                                                    if (event.target.checked) {
-                                                        addSelectedEnvironment(
-                                                            otherEnvironment
-                                                        );
-                                                    } else {
-                                                        removeSelectedEnvironment(
-                                                            otherEnvironment
-                                                        );
-                                                    }
-                                                }}
-                                                checked={selectedEnvironments.includes(
-                                                    otherEnvironment
-                                                )}
-                                                value={otherEnvironment.name}
-                                            />
-                                        }
-                                        label={otherEnvironment.name}
+                                <MenuItem
+                                    key={otherEnvironment.name}
+                                    disabled={
+                                        !hasAccessTo[otherEnvironment.name] ??
+                                        false
+                                    }
+                                    onClick={() =>
+                                        toggleSelectedEnvironment(
+                                            otherEnvironment
+                                        )
+                                    }
+                                >
+                                    <Checkbox
+                                        checked={selectedEnvironments.includes(
+                                            otherEnvironment
+                                        )}
                                     />
+                                    {otherEnvironment.name}
                                 </MenuItem>
                             ))}
-                        <Divider />
-                        <StyledButton
-                            variant="outlined"
-                            onClick={() => {
-                                onSubmit(selectedEnvironments);
-                                cleanupState();
-                            }}
-                            disabled={selectedEnvironments.length === 0}
-                        >
-                            Push to selected ({selectedEnvironments.length})
-                        </StyledButton>
+                        <StyledActions>
+                            <Divider />
+                            <StyledButton
+                                variant="outlined"
+                                onClick={() => {
+                                    onSubmit(selectedEnvironments);
+                                    cleanupState();
+                                }}
+                                disabled={selectedEnvironments.length === 0}
+                            >
+                                Push to selected ({selectedEnvironments.length})
+                            </StyledButton>
+                        </StyledActions>
                     </StyledMenu>
                 </>
             }

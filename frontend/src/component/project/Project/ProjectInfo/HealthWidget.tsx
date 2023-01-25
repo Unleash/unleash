@@ -7,7 +7,7 @@ import {
     StyledParagraphSubtitle,
     StyledSpanLinkText,
 } from './ProjectInfo.styles';
-import PercentageCircle from 'common/PercentageCircle/PercentageCircle';
+import PercentageCircle from 'component/common/PercentageCircle/PercentageCircle';
 
 interface IHealthWidgetProps {
     projectId: string;

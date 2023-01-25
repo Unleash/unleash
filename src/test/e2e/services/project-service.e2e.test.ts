@@ -1109,6 +1109,6 @@ test('should calculate average time to production', async () => {
     await updateEventCreatedAt(7, 'average-prod-time-3');
     await updateEventCreatedAt(14, 'average-prod-time-4');
 
-    const result = await projectService.calculateAverageTimeToProd(project.id);
+    const result = await projectService.getStatusUpdates(project.id);
     expect(result).toBe(9.75);
 });

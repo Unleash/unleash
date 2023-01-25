@@ -62,6 +62,10 @@ export interface AccessWithRoles {
 export interface IStatusUpdate {
     avgTimeToProdCurrentWindow: number;
     avgTimeToProdPastWindow: number;
+    createdThisWindow: number;
+    createdLastWindow: number;
+    archivedThisWindow: number;
+    archivedLastWindow: number;
 }
 
 interface ICalculateStatus {
@@ -614,12 +618,8 @@ export default class ProjectService {
         const projects = await this.store.getAll();
 
         const statusUpdates = await Promise.all(
-            projects.map((project) =>
-                this.calculateAverageTimeToProd(project.id),
-            ),
+            projects.map((project) => this.getStatusUpdates(project.id)),
         );
-
-        console.log('RUNNING JOB', statusUpdates);
 
         await Promise.all(
             statusUpdates.map((statusUpdate) => {
@@ -631,14 +631,50 @@ export default class ProjectService {
         );
     }
 
-    async calculateAverageTimeToProd(
-        projectId: string,
-    ): Promise<ICalculateStatus> {
+    async getStatusUpdates(projectId: string): Promise<ICalculateStatus> {
         // Get all features for project with type release
         const features = await this.featureToggleStore.getAll({
             type: 'release',
             project: projectId,
         });
+
+        const [createdThisWindow, createdLastWindow] = await Promise.all([
+            // @ts-ignore
+            await this.featureToggleStore.getByDate({
+                project: projectId,
+                dateAccessor: 'created_at',
+                date: subDays(new Date(), 30).toISOString(),
+            }),
+            // @ts-ignore
+            await this.featureToggleStore.getByDate({
+                project: projectId,
+                dateAccessor: 'created_at',
+                range: [
+                    subDays(new Date(), 60).toISOString(),
+                    subDays(new Date(), 30).toISOString(),
+                ],
+            }),
+        ]);
+
+        const [archivedThisWindow, archivedLastWindow] = await Promise.all([
+            // @ts-ignore
+            await this.featureToggleStore.getByDate({
+                project: projectId,
+                archived: true,
+                dateAccessor: 'archived_at',
+                date: subDays(new Date(), 30).toISOString(),
+            }),
+            // @ts-ignore
+            await this.featureToggleStore.getByDate({
+                project: projectId,
+                archived: true,
+                dateAccessor: 'archived_at',
+                range: [
+                    subDays(new Date(), 60).toISOString(),
+                    subDays(new Date(), 30).toISOString(),
+                ],
+            }),
+        ]);
 
         // Get all project environments with type of production
         const productionEnvironments =
@@ -672,6 +708,10 @@ export default class ProjectService {
                     projectStatus.calculateAverageTimeToProd(
                         subDays(new Date(), 30),
                     ),
+                createdThisWindow: createdThisWindow.length,
+                createdLastWindow: createdLastWindow.length,
+                archivedThisWindow: archivedThisWindow.length,
+                archivedLastWindow: archivedLastWindow.length,
             },
         };
     }

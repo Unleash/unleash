@@ -111,6 +111,35 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         return rows.map(this.rowToFeature);
     }
 
+    async getByDate(queryModifiers: {
+        archived?: boolean;
+        project?: string;
+        date?: string;
+        range?: string[];
+        dateAccessor: string;
+    }): Promise<FeatureToggle[]> {
+        const { project, archived, dateAccessor } = queryModifiers;
+        let query = this.db
+            .select(FEATURE_COLUMNS)
+            .from(TABLE)
+            .where({ project })
+            .modify(FeatureToggleStore.filterByArchived, archived);
+
+        if (queryModifiers.date) {
+            query.andWhere(dateAccessor, '>=', queryModifiers.date);
+        }
+
+        if (queryModifiers.range && queryModifiers.range.length === 2) {
+            query.andWhereBetween(dateAccessor, [
+                queryModifiers.range[0],
+                queryModifiers.range[1],
+            ]);
+        }
+
+        const rows = await query;
+        return rows.map(this.rowToFeature);
+    }
+
     /**
      * Get projectId from feature filtered by name. Used by Rbac middleware
      * @deprecated

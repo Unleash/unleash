@@ -54,7 +54,7 @@ export const StyledParagraphSubtitle = styled('p')(({ theme }) => ({
 export const StyledParagraphGridRow = styled('div')(({ theme }) => ({
     display: 'grid',
     gridGap: theme.spacing(1),
-    gridTemplateColumns: '10% 60% 20%',
+    gridTemplateColumns: '20px auto auto',
     margin: theme.spacing(1, 0, 1, 0),
     fontSize: theme.fontSizes.smallBody,
     color: theme.palette.text.secondary,

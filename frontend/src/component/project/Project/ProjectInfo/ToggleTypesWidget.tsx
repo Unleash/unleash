@@ -52,27 +52,27 @@ export const ToggleTypesWidget = ({ features }: IToggleTypesWidgetProps) => {
                 Toggle types used
             </StyledParagraphSubtitle>
             <StyledParagraphGridRow data-loading>
-                <ReleaseToggleIcon fontSize="inherit" data-loading />
+                <ReleaseToggleIcon fontSize="small" data-loading />
                 <div>Release</div>
                 <StyledCount>{release}</StyledCount>
             </StyledParagraphGridRow>
             <StyledParagraphGridRow data-loading>
-                <ExperimentToggleIcon fontSize="inherit" data-loading />
+                <ExperimentToggleIcon fontSize="small" data-loading />
                 <div>Experiment</div>
                 <StyledCount>{experiment}</StyledCount>
             </StyledParagraphGridRow>
             <StyledParagraphGridRow data-loading>
-                <OperationalToggleIcon fontSize="inherit" data-loading />
+                <OperationalToggleIcon fontSize="small" data-loading />
                 <div>Operational</div>
                 <StyledCount>{operational}</StyledCount>
             </StyledParagraphGridRow>
             <StyledParagraphGridRow data-loading>
-                <KillToggleIcon fontSize="inherit" data-loading />
+                <KillToggleIcon fontSize="small" data-loading />
                 <div>Kill switch</div>
                 <StyledCount>{kill}</StyledCount>
             </StyledParagraphGridRow>
-            <StyledParagraphGridRow data-loading>
-                <PermissionToggleIcon fontSize="inherit" data-loading />
+            <StyledParagraphGridRow data-loading style={{ margin: 0 }}>
+                <PermissionToggleIcon fontSize="small" data-loading />
                 <div>Permission</div>
                 <StyledCount>{permission}</StyledCount>
             </StyledParagraphGridRow>

@@ -47,6 +47,7 @@ export interface IFlags {
     featuresExportImport?: boolean;
     newProjectOverview?: boolean;
     caseInsensitiveInOperators?: boolean;
+    crOnVariants?: boolean;
 }
 
 export interface IVersionInfo {

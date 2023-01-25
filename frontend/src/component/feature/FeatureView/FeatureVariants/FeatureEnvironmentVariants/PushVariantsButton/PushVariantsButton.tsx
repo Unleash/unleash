@@ -8,7 +8,7 @@ import {
     styled,
 } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { IFeatureEnvironment } from 'interfaces/featureToggle';
+import { IFeatureEnvironmentWithCrEnabled } from 'interfaces/featureToggle';
 import { useState } from 'react';
 import { useCheckProjectAccess } from 'hooks/useHasAccess';
 
@@ -30,10 +30,10 @@ const StyledButton = styled(Button)(({ theme }) => ({
 
 interface IPushVariantsButtonProps {
     current: string;
-    environments: IFeatureEnvironment[];
+    environments: IFeatureEnvironmentWithCrEnabled[];
     permission: string;
     projectId: string;
-    onSubmit: (selected: string[]) => void;
+    onSubmit: (selected: IFeatureEnvironmentWithCrEnabled[]) => void;
 }
 
 export const PushVariantsButton = ({
@@ -48,9 +48,9 @@ export const PushVariantsButton = ({
     );
     const pushToOpen = Boolean(pushToAnchorEl);
 
-    const [selectedEnvironments, setSelectedEnvironments] = useState<string[]>(
-        []
-    );
+    const [selectedEnvironments, setSelectedEnvironments] = useState<
+        IFeatureEnvironmentWithCrEnabled[]
+    >([]);
 
     const hasAccess = useCheckProjectAccess(projectId);
     const hasAccessTo = environments.reduce((acc, env) => {
@@ -58,16 +58,22 @@ export const PushVariantsButton = ({
         return acc;
     }, {} as Record<string, boolean>);
 
-    const addSelectedEnvironment = (name: string) => {
+    const addSelectedEnvironment = (
+        environment: IFeatureEnvironmentWithCrEnabled
+    ) => {
         setSelectedEnvironments(prevSelectedEnvironments => [
             ...prevSelectedEnvironments,
-            name,
+            environment,
         ]);
     };
 
-    const removeSelectedEnvironment = (name: string) => {
+    const removeSelectedEnvironment = (
+        environment: IFeatureEnvironmentWithCrEnabled
+    ) => {
         setSelectedEnvironments(prevSelectedEnvironments =>
-            prevSelectedEnvironments.filter(env => env !== name)
+            prevSelectedEnvironments.filter(
+                ({ name }) => name !== environment.name
+            )
         );
     };
 
@@ -121,16 +127,16 @@ export const PushVariantsButton = ({
                                                 onChange={event => {
                                                     if (event.target.checked) {
                                                         addSelectedEnvironment(
-                                                            otherEnvironment.name
+                                                            otherEnvironment
                                                         );
                                                     } else {
                                                         removeSelectedEnvironment(
-                                                            otherEnvironment.name
+                                                            otherEnvironment
                                                         );
                                                     }
                                                 }}
                                                 checked={selectedEnvironments.includes(
-                                                    otherEnvironment.name
+                                                    otherEnvironment
                                                 )}
                                                 value={otherEnvironment.name}
                                             />

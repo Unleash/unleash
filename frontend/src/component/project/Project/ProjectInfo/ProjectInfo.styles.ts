@@ -57,7 +57,7 @@ export const StyledParagraphGridRow = styled('div')(({ theme }) => ({
     gridTemplateColumns: '10% 70% 20%',
     margin: theme.spacing(1, 2, 1, 2),
     fontSize: theme.fontSizes.smallBody,
-    color: theme.palette.tertiary.dark,
+    color: theme.palette.neutral.dark,
     textAlign: 'left',
     alignItems: 'center',
 }));

@@ -60,7 +60,10 @@ const ProjectInfo = ({
                         </StyledDivInfoContainer>
                     }
                 />
-                <ToggleTypesWidget features={features} />
+                <ConditionallyRender
+                    condition={Boolean(uiConfig?.flags.newProjectOverview)}
+                    show={<ToggleTypesWidget features={features} />}
+                />
             </StyledDivContainer>
         </aside>
     );

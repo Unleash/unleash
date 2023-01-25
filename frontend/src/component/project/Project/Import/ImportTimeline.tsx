@@ -6,7 +6,7 @@ import TimelineConnector from '@mui/lab/TimelineConnector';
 import TimelineDot from '@mui/lab/TimelineDot';
 import TimelineContent from '@mui/lab/TimelineContent';
 import Timeline from '@mui/lab/Timeline';
-import { StageName } from './ImportStage';
+import { StageName } from './StageName';
 
 const StyledTimeline = styled(Timeline)(() => ({
     [`& .${timelineItemClasses.root}:before`]: {

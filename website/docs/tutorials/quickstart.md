@@ -12,31 +12,29 @@ NOTE: This is a demo instance set up with the Enterprise version. Some of the fu
 
 ### I want to test toggles in a client side environment
 
-In order to use feature toggles on the client side you need to connect through [the Unleash proxy](../reference/unleash-proxy.md). The Unleash proxy will provide a security and performance layer between your client application and the Unleash instance. For now, you can use the proxy we have set up on the demo instance.
+To test toggles in a client-side environment, we recommend that you use the [front-end client API](../reference/front-end-api.md). Client-side SDKs act a little differently from server-side SDKs, so the regular client API won't work for this. For more advanced setups, you can also use the [Unleash proxy](../reference/unleash-proxy.md), which offers greater flexibility than the front-end API, but at the cost of increased complexity.
 
 #### Create your first toggle
 
 In order to create a toggle through the UI, [you can follow this guide](../how-to/how-to-create-feature-toggles.md). Once you have created your feature toggle, you are ready to connect your application using an SDK.
 
-#### Connecting to the Unleash proxy from your app
 
-Connection details:
+#### Connecting a client-side SDK to Unleash
+<!-- old link for backwards compatibility -->
 
-```
-Api URL: https://app.unleash-hosted.com/demo/api/proxy
-Secret key: proxy-123
-```
+<div id="connecting-to-the-unleash-proxy-from-your-app"></div>
 
-Now you can open your application code and connect through one of the proxy SDKs:
+<!-- /end old links -->
 
-- [Android Proxy SDK](../reference/sdks/android-proxy.md)
-- [iOS Proxy SDK](../reference/sdks/ios-proxy.md)
-- [Javascript Proxy SDK](../reference/sdks/javascript-browser.md)
-- [React Proxy SDK](../reference/sdks/react.md)
-- [Svelte Proxy SDK](../reference/sdks/svelte.md)
-- [Vue Proxy SDK](../reference/sdks/vue.md)
+If you have set up your own Unleash instance and are using the front-end API, then create a [front-end token](../reference/api-tokens-and-client-keys.mdx#front-end-tokens) and use `<your-unleash-instance>/api/frontend` as the API URL.
 
-Here is a connection example using the JavaScript Proxy SDK:
+If you don't have your own Unleash instance set up, you can use the Unleash demo instance's proxy. In that case, the details are:
+- API URL: `https://app.unleash-hosted.com/demo/api/proxy`
+- Client key: `proxy-123`
+
+Now you can open your application code and connect through one of the [client-side SDKs](../reference/sdks#client-side-sdks).
+
+The following example shows you how you could use the [JavaScript SDK](../generated/sdks/client-side/javascript-browser.mdx) to connect to the Unleash demo proxy:
 
 ```javascript
 import { UnleashClient } from 'unleash-proxy-client';
@@ -49,7 +47,7 @@ const unleash = new UnleashClient({
 
 unleash.on('synchronized', () => {
   if (unleash.isEnabled('proxy.demo')) {
-    // do something
+    // do something once we have connected and synchronized
   }
 });
 
@@ -60,9 +58,7 @@ unleash.updateContext({ userId: '1233' });
 unleash.start();
 ```
 
-Now you are ready to use the feature toggle you created in your client side application, using the appropriate proxy SDK.
-
-### I want to test toggles in a backend environment
+### I want to test toggles in a back-end environment
 
 #### Create your first toggle
 
@@ -256,9 +252,97 @@ username: admin
 password: unleash4all
 ```
 
-### Run Unleash and the Unleash proxy with Docker
 
-Follow steps outlined in the [Run Unleash with Docker](#run-unleash-with-docker) section to get the Unleash instance up and running. Once you have done that you need to first get an API key from your Unleash instance and then use that API key when starting the Unleash proxy.
+### Create your first toggle
+
+In order to create a toggle through the UI, [you can follow this guide](../how-to/how-to-create-feature-toggles.md). Once you have created your feature toggle, you are ready to connect your application using an SDK.
+
+If you'd like to create your feature toggles with code, you can hit the create feature endpoint with the following command:
+
+> CRUD operations require an admin API key. For security reasons we have split the admin and client API into separate APIs. You can view how to create API keys in the next section of this guide. Make sure you create client keys for use in SDKs and restrict Admin api key usage.
+
+```curl
+curl -H "Content-Type: application/json" \
+     -H "Authorization: MY-ADMIN-API-KEY" \
+     -X POST \
+     -d '{
+  "name": "my-unique-feature-name",
+  "description": "lorem ipsum..",
+  "type": "release",
+  "enabled": false,
+  "stale": false,
+  "strategies": [
+    {
+      "name": "default",
+      "parameters": {}
+    }
+  ],
+  "variants": [],
+  "tags": []
+}' \
+http://CHANGEME/api/admin/features
+```
+
+### Connect your server-side SDK
+
+Find the navigation, open up the Admin panel and find the API Access tab. Click the "Add new API key" button and create a client key. This key can be used to connect to the instance with our [SDKs](../reference/sdks/index.md).
+
+You can find more [information about API keys here](../how-to/how-to-create-api-tokens.mdx).
+
+Now that you have your API key created, you have what you need to connect to the SDK (NodeJS example):
+
+```javascript
+const { initialize } = require('unleash-client');
+const unleash = initialize({
+  url: 'https://localhost:4242/api/',
+  appName: 'my-app-name',
+  instanceId: 'my-unique-instance-id',
+  customHeaders: {
+    Authorization: 'YOUR_API_KEY_HERE',
+  },
+});
+
+unleash.on('synchronized', () => {
+  // Unleash is ready to serve updated feature toggles.
+
+  // Check a feature flag
+  const isEnabled = unleash.isEnabled('some-toggle');
+
+  // Check the variant
+  const variant = unleash.getVariant('app.ToggleY');
+});
+```
+
+### Connecting a client-side SDK to your instance
+
+The easiest way to connect a client-side SDK to your Unleash instance is to use the [front-end API](../reference/front-end-api.md). You'll need to:
+1. Create a front-end API token ([How do I create API tokens?](../how-to/how-to-create-api-tokens.mdx))
+2. Configure CORS to allow your SDK to connect. For testing, we recommend allowing all origins (`*`).
+3. Point your app at `<your-unleash-instance>/api/front-end`.
+
+The section on [using the Unleash front-end API](../reference/front-end-api.md#using-the-unleash-front-end-api) has more details for how you configure these settings.
+
+As an example, here's how you would connect the [JavaScript SDK](../generated/sdks/client-side/javascript-browser.mdx) to a local Unleash instance available at `localhost:4242`
+
+```javascript
+import { UnleashClient } from 'unleash-proxy-client';
+
+const unleash = new UnleashClient({
+  url: 'http://localhost:4242/api/proxy',
+  clientKey: '<your-front-end-api-token>',
+  appName: 'my-webapp',
+});
+
+// Start the background polling
+unleash.start();
+```
+
+
+#### Run Unleash and the Unleash proxy with Docker
+
+We designed the [front-end API](../reference/front-end-api.md) to make it as easy as possible to get started and to cover basic use cases for front-end clients. However, if you need more flexibility, then you can also use the [Unleash proxy](../reference/unleash-proxy.md).
+
+Follow the steps outlined in the [run Unleash with Docker](#run-unleash-with-docker) section to get the Unleash instance up and running. Once you have done that, you need to first get an API key from your Unleash instance and then use that API key when starting the Unleash proxy.
 
 1. Get an API key.
 
@@ -305,63 +389,3 @@ Follow steps outlined in the [Run Unleash with Docker](#run-unleash-with-docker)
    ```curl
    curl http://localhost:3000/proxy -H "Authorization: some-secret"
    ```
-
-### Create your first toggle
-
-In order to create a toggle through the UI, [you can follow this guide](../how-to/how-to-create-feature-toggles.md). Once you have created your feature toggle, you are ready to connect your application using an SDK.
-
-If you'd like to create your feature toggles with code, you can hit the create feature endpoint with the following command:
-
-> CRUD operations require an admin API key. For security reasons we have split the admin and client API into separate APIs. You can view how to create API keys in the next section of this guide. Make sure you create client keys for use in SDKs and restrict Admin api key usage.
-
-```curl
-curl -H "Content-Type: application/json" \
-     -H "Authorization: MY-ADMIN-API-KEY" \
-     -X POST \
-     -d '{
-  "name": "my-unique-feature-name",
-  "description": "lorem ipsum..",
-  "type": "release",
-  "enabled": false,
-  "stale": false,
-  "strategies": [
-    {
-      "name": "default",
-      "parameters": {}
-    }
-  ],
-  "variants": [],
-  "tags": []
-}' \
-http://CHANGEME/api/admin/features
-```
-
-### Connect your SDK
-
-Find the navigation, open up the Admin panel and find the API Access tab. Click the "Add new api key" button and create a client key. This key can be used to connect to the instance with our [SDKs](../reference/sdks/index.md).
-
-You can find more [information about API keys here](../how-to/how-to-create-api-tokens.mdx).
-
-Now that you have your API key created, you have what you need to connect to the SDK (NodeJS example):
-
-```javascript
-const { initialize } = require('unleash-client');
-const unleash = initialize({
-  url: 'https://localhost:4242/api/',
-  appName: 'my-app-name',
-  instanceId: 'my-unique-instance-id',
-  customHeaders: {
-    Authorization: 'YOUR_API_KEY_HERE',
-  },
-});
-
-unleash.on('synchronized', () => {
-  // Unleash is ready to serve updated feature toggles.
-
-  // Check a feature flag
-  const isEnabled = unleash.isEnabled('some-toggle');
-
-  // Check the variant
-  const variant = unleash.getVariant('app.ToggleY');
-});
-```

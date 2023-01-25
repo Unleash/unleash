@@ -44,6 +44,10 @@ export interface IFeatureEnvironment {
     variants?: IFeatureVariant[];
 }
 
+export interface IFeatureEnvironmentWithCrEnabled extends IFeatureEnvironment {
+    crEnabled?: boolean;
+}
+
 export interface IFeatureVariant {
     name: string;
     stickiness: string;

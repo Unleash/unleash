@@ -2,38 +2,40 @@ import {
     Button,
     Checkbox,
     Divider,
-    FormControlLabel,
     Menu,
     MenuItem,
     styled,
 } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { IFeatureEnvironment } from 'interfaces/featureToggle';
+import { IFeatureEnvironmentWithCrEnabled } from 'interfaces/featureToggle';
 import { useState } from 'react';
 import { useCheckProjectAccess } from 'hooks/useHasAccess';
 
 const StyledMenu = styled(Menu)(({ theme }) => ({
-    '&>div>ul': {
+    '& > div > ul': {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
-        padding: theme.spacing(2),
-        '&>li': {
-            padding: theme.spacing(0),
+        '& > li': {
+            padding: theme.spacing(0, 1),
         },
     },
 }));
 
+const StyledActions = styled('div')(({ theme }) => ({
+    margin: theme.spacing(1, 2),
+}));
+
 const StyledButton = styled(Button)(({ theme }) => ({
-    marginTop: theme.spacing(1),
+    marginTop: theme.spacing(2),
 }));
 
 interface IPushVariantsButtonProps {
     current: string;
-    environments: IFeatureEnvironment[];
+    environments: IFeatureEnvironmentWithCrEnabled[];
     permission: string;
     projectId: string;
-    onSubmit: (selected: string[]) => void;
+    onSubmit: (selected: IFeatureEnvironmentWithCrEnabled[]) => void;
 }
 
 export const PushVariantsButton = ({
@@ -48,9 +50,9 @@ export const PushVariantsButton = ({
     );
     const pushToOpen = Boolean(pushToAnchorEl);
 
-    const [selectedEnvironments, setSelectedEnvironments] = useState<string[]>(
-        []
-    );
+    const [selectedEnvironments, setSelectedEnvironments] = useState<
+        IFeatureEnvironmentWithCrEnabled[]
+    >([]);
 
     const hasAccess = useCheckProjectAccess(projectId);
     const hasAccessTo = environments.reduce((acc, env) => {
@@ -58,17 +60,33 @@ export const PushVariantsButton = ({
         return acc;
     }, {} as Record<string, boolean>);
 
-    const addSelectedEnvironment = (name: string) => {
+    const addSelectedEnvironment = (
+        environment: IFeatureEnvironmentWithCrEnabled
+    ) => {
         setSelectedEnvironments(prevSelectedEnvironments => [
             ...prevSelectedEnvironments,
-            name,
+            environment,
         ]);
     };
 
-    const removeSelectedEnvironment = (name: string) => {
+    const removeSelectedEnvironment = (
+        environment: IFeatureEnvironmentWithCrEnabled
+    ) => {
         setSelectedEnvironments(prevSelectedEnvironments =>
-            prevSelectedEnvironments.filter(env => env !== name)
+            prevSelectedEnvironments.filter(
+                ({ name }) => name !== environment.name
+            )
         );
+    };
+
+    const toggleSelectedEnvironment = (
+        environment: IFeatureEnvironmentWithCrEnabled
+    ) => {
+        if (selectedEnvironments.includes(environment)) {
+            removeSelectedEnvironment(environment);
+        } else {
+            addSelectedEnvironment(environment);
+        }
     };
 
     const cleanupState = () => {
@@ -109,47 +127,39 @@ export const PushVariantsButton = ({
                         {environments
                             .filter(environment => environment.name !== current)
                             .map(otherEnvironment => (
-                                <MenuItem key={otherEnvironment.name}>
-                                    <FormControlLabel
-                                        disabled={
-                                            !hasAccessTo[
-                                                otherEnvironment.name
-                                            ] ?? false
-                                        }
-                                        control={
-                                            <Checkbox
-                                                onChange={event => {
-                                                    if (event.target.checked) {
-                                                        addSelectedEnvironment(
-                                                            otherEnvironment.name
-                                                        );
-                                                    } else {
-                                                        removeSelectedEnvironment(
-                                                            otherEnvironment.name
-                                                        );
-                                                    }
-                                                }}
-                                                checked={selectedEnvironments.includes(
-                                                    otherEnvironment.name
-                                                )}
-                                                value={otherEnvironment.name}
-                                            />
-                                        }
-                                        label={otherEnvironment.name}
+                                <MenuItem
+                                    key={otherEnvironment.name}
+                                    disabled={
+                                        !hasAccessTo[otherEnvironment.name] ??
+                                        false
+                                    }
+                                    onClick={() =>
+                                        toggleSelectedEnvironment(
+                                            otherEnvironment
+                                        )
+                                    }
+                                >
+                                    <Checkbox
+                                        checked={selectedEnvironments.includes(
+                                            otherEnvironment
+                                        )}
                                     />
+                                    {otherEnvironment.name}
                                 </MenuItem>
                             ))}
-                        <Divider />
-                        <StyledButton
-                            variant="outlined"
-                            onClick={() => {
-                                onSubmit(selectedEnvironments);
-                                cleanupState();
-                            }}
-                            disabled={selectedEnvironments.length === 0}
-                        >
-                            Push to selected ({selectedEnvironments.length})
-                        </StyledButton>
+                        <StyledActions>
+                            <Divider />
+                            <StyledButton
+                                variant="outlined"
+                                onClick={() => {
+                                    onSubmit(selectedEnvironments);
+                                    cleanupState();
+                                }}
+                                disabled={selectedEnvironments.length === 0}
+                            >
+                                Push to selected ({selectedEnvironments.length})
+                            </StyledButton>
+                        </StyledActions>
                     </StyledMenu>
                 </>
             }

@@ -101,7 +101,7 @@ Custom activation strategies can **not** be used with the Unleash-hosted proxy a
 
 :::
 
-The Unleash Proxy can load [custom activation strategies](../reference/custom-activation-strategies.md) for front-end client SDKs ([Android](./sdks/android-proxy.md), [JavaScript](./sdks/javascript-browser.md), [React](./sdks/react.md), [iOS](./sdks/ios-proxy.md), [Flutter](./sdks/flutter.md)). For a step-by-step guide, refer to the [_how to use custom strategies_ guide](../how-to/how-to-use-custom-strategies.md#step-3-b).
+The Unleash Proxy can load [custom activation strategies](../reference/custom-activation-strategies.md) for front-end client SDKs ([Android](/docs/generated/sdks/client-side/android-proxy.md), [JavaScript](/docs/generated/sdks/client-side/javascript-browser.md), [React](/docs/generated/sdks/client-side/react.md), [iOS](/docs/generated/sdks/client-side/ios-proxy.md), [Flutter](/docs/generated/sdks/client-side/flutter.md)). For a step-by-step guide, refer to the [_how to use custom strategies_ guide](../how-to/how-to-use-custom-strategies.md#step-3-b).
 
 To load custom strategies, use either of these two options:
 
@@ -271,11 +271,11 @@ The Unleash Proxy takes the heavy lifting of evaluating toggles and only returns
 
 However in some settings you would like a bit more logic around it to make it as fast as possible, and keep up to date with changes.
 
-- [Android Proxy SDK](sdks/android-proxy.md)
-- [iOS Proxy SDK](sdks/ios-proxy.md)
-- [Javascript Proxy SDK](sdks/javascript-browser.md)
-- [React Proxy SDK](sdks/react.md)
-- [Svelte Proxy SDK](sdks/svelte.md)
-- [Vue Proxy SDK](sdks/vue.md)
+- [Android Proxy SDK](/docs/generated/sdks/client-side/android-proxy.md)
+- [iOS Proxy SDK](/docs/generated/sdks/client-side/ios-proxy.md)
+- [Javascript Proxy SDK](/docs/generated/sdks/client-side/javascript-browser.md)
+- [React Proxy SDK](/docs/generated/sdks/client-side/react.md)
+- [Svelte Proxy SDK](/docs/generated/sdks/client-side/svelte.md)
+- [Vue Proxy SDK](/docs/generated/sdks/client-side/vue.md)
 
 The proxy is also ideal fit for serverless functions such as AWS Lambda. In that scenario the proxy can run on a small container near the serverless function, preferably in the same VPC, giving the lambda extremely fast access to feature flags, at a predictable cost.

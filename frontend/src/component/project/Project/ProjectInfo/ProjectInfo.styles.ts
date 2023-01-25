@@ -54,7 +54,7 @@ export const StyledParagraphSubtitle = styled('p')(({ theme }) => ({
 export const StyledParagraphGridRow = styled('div')(({ theme }) => ({
     display: 'grid',
     gridGap: theme.spacing(1),
-    gridTemplateColumns: '20px auto auto',
+    gridTemplateColumns: `${theme.spacing(1.25)} auto auto`,
     margin: theme.spacing(1, 0, 1, 0),
     fontSize: theme.fontSizes.smallBody,
     color: theme.palette.text.secondary,
@@ -72,7 +72,7 @@ export const StyledParagraphEmphasizedText = styled('p')(({ theme }) => ({
 }));
 
 export const StyledCount = styled('p')(({ theme }) => ({
-    fontSize: '1.25rem',
+    fontSize: theme.typography.h2.fontSize,
     fontWeight: 'bold',
     textAlign: 'right',
     color: theme.palette.text.primary,

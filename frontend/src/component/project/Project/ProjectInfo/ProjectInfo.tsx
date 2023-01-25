@@ -6,7 +6,7 @@ import { IFeatureToggleListItem } from '../../../../interfaces/featureToggle';
 import { HealthWidget } from './HealthWidget';
 import { ToggleTypesWidget } from './ToggleTypesWidget';
 import { ProjectMembersWidget } from './ProjectMembersWidget';
-import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IProjectInfoProps {
     id: string;

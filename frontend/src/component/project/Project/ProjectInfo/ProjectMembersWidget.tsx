@@ -6,7 +6,7 @@ import {
     StyledParagraphSubtitle,
     StyledSpanLinkText,
 } from './ProjectInfo.styles';
-import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IProjectMembersWidgetProps {
     projectId: string;

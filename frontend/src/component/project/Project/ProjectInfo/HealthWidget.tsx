@@ -1,10 +1,10 @@
 import {
     StyledArrowIcon,
-    StyledDivInfoContainer,
+    StyledProjectInfoWidgetContainer,
     StyledDivPercentageContainer,
     StyledLink,
     StyledParagraphEmphasizedText,
-    StyledParagraphSubtitle,
+    StyledWidgetTitle,
     StyledSpanLinkText,
 } from './ProjectInfo.styles';
 import PercentageCircle from 'component/common/PercentageCircle/PercentageCircle';
@@ -15,13 +15,13 @@ interface IHealthWidgetProps {
 }
 export const HealthWidget = ({ projectId, health }: IHealthWidgetProps) => {
     return (
-        <StyledDivInfoContainer>
+        <StyledProjectInfoWidgetContainer>
             <StyledDivPercentageContainer>
                 <PercentageCircle percentage={health} />
             </StyledDivPercentageContainer>
-            <StyledParagraphSubtitle data-loading>
+            <StyledWidgetTitle data-loading>
                 Overall health rating
-            </StyledParagraphSubtitle>
+            </StyledWidgetTitle>
             <StyledParagraphEmphasizedText data-loading>
                 {health}%
             </StyledParagraphEmphasizedText>
@@ -29,6 +29,6 @@ export const HealthWidget = ({ projectId, health }: IHealthWidgetProps) => {
                 <StyledSpanLinkText data-loading>view more </StyledSpanLinkText>
                 <StyledArrowIcon data-loading />
             </StyledLink>
-        </StyledDivInfoContainer>
+        </StyledProjectInfoWidgetContainer>
     );
 };

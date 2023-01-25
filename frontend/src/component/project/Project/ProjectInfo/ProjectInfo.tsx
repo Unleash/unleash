@@ -1,19 +1,20 @@
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import type { IFeatureToggleListItem } from 'interfaces/featureToggle';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 import { DEFAULT_PROJECT_ID } from 'hooks/api/getters/useDefaultProject/useDefaultProjectId';
 import {
     StyledArrowIcon,
     StyledProjectInfoSidebarContainer,
-    StyledDivInfoContainer,
+    StyledProjectInfoWidgetContainer,
     StyledLink,
     StyledParagraphEmphasizedText,
-    StyledParagraphSubtitle,
+    StyledWidgetTitle,
     StyledSpanLinkText,
 } from './ProjectInfo.styles';
-import { IFeatureToggleListItem } from '../../../../interfaces/featureToggle';
 import { HealthWidget } from './HealthWidget';
 import { ToggleTypesWidget } from './ToggleTypesWidget';
+import { MetaWidget } from './MetaWidget';
 
 interface IProjectInfoProps {
     id: string;
@@ -25,6 +26,7 @@ interface IProjectInfoProps {
 
 const ProjectInfo = ({
     id,
+    description,
     memberCount,
     health,
     features,
@@ -40,14 +42,18 @@ const ProjectInfo = ({
     return (
         <aside>
             <StyledProjectInfoSidebarContainer>
+                <ConditionallyRender
+                    condition={Boolean(uiConfig?.flags.newProjectOverview)}
+                    show={<MetaWidget id={id} description={description} />}
+                />
                 <HealthWidget projectId={id} health={health} />
                 <ConditionallyRender
                     condition={id !== DEFAULT_PROJECT_ID}
                     show={
-                        <StyledDivInfoContainer style={{ marginBottom: '0' }}>
-                            <StyledParagraphSubtitle data-loading>
+                        <StyledProjectInfoWidgetContainer style={{ marginBottom: '0' }}>
+                            <StyledWidgetTitle data-loading>
                                 Project members
-                            </StyledParagraphSubtitle>
+                            </StyledWidgetTitle>
                             <StyledParagraphEmphasizedText data-loading>
                                 {memberCount}
                             </StyledParagraphEmphasizedText>
@@ -57,7 +63,7 @@ const ProjectInfo = ({
                                 </StyledSpanLinkText>
                                 <StyledArrowIcon data-loading />
                             </StyledLink>
-                        </StyledDivInfoContainer>
+                        </StyledProjectInfoWidgetContainer>
                     }
                 />
                 <ConditionallyRender

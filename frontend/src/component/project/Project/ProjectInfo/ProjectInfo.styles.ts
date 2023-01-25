@@ -23,7 +23,7 @@ export const StyledDivPercentageContainer = styled('div')(({ theme }) => ({
     margin: theme.spacing(2, 0),
 }));
 
-export const StyledDivInfoContainer = styled('div')(({ theme }) => ({
+export const StyledProjectInfoWidgetContainer = styled('div')(({ theme }) => ({
     margin: '0',
     textAlign: 'center',
     backgroundColor: theme.palette.background.paper,
@@ -47,7 +47,7 @@ export const StyledDivInfoContainer = styled('div')(({ theme }) => ({
     },
 }));
 
-export const StyledParagraphSubtitle = styled('p')(({ theme }) => ({
+export const StyledWidgetTitle = styled('p')(({ theme }) => ({
     marginBottom: theme.spacing(2),
 }));
 

@@ -1,16 +1,21 @@
-import { IFeatureToggleListItem } from '../../../../interfaces/featureToggle';
 import { useMemo } from 'react';
+import { IFeatureToggleListItem } from 'interfaces/featureToggle';
 import {
     StyledCount,
-    StyledDivInfoContainer,
+    StyledProjectInfoWidgetContainer,
     StyledParagraphGridRow,
-    StyledParagraphSubtitle,
+    StyledWidgetTitle,
 } from './ProjectInfo.styles';
 import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
+import { styled } from '@mui/material';
 
 export interface IToggleTypesWidgetProps {
     features: IFeatureToggleListItem[];
 }
+
+const StyledIconContainer = styled('div')(({ theme }) => ({
+    fontSize: theme.typography.h3.fontSize,
+}));
 
 export const ToggleTypesWidget = ({ features }: IToggleTypesWidgetProps) => {
     const { release, experiment, operational, kill, permission } =
@@ -47,35 +52,45 @@ export const ToggleTypesWidget = ({ features }: IToggleTypesWidgetProps) => {
     const PermissionToggleIcon = getFeatureTypeIcons('permission');
 
     return (
-        <StyledDivInfoContainer>
-            <StyledParagraphSubtitle data-loading>
+        <StyledProjectInfoWidgetContainer>
+            <StyledWidgetTitle data-loading>
                 Toggle types used
-            </StyledParagraphSubtitle>
+            </StyledWidgetTitle>
             <StyledParagraphGridRow data-loading>
-                <ReleaseToggleIcon fontSize="inherit" data-loading />
+                <StyledIconContainer>
+                    <ReleaseToggleIcon fontSize="inherit" data-loading />
+                </StyledIconContainer>
                 <div>Release</div>
                 <StyledCount>{release}</StyledCount>
             </StyledParagraphGridRow>
             <StyledParagraphGridRow data-loading>
-                <ExperimentToggleIcon fontSize="inherit" data-loading />
+                <StyledIconContainer>
+                    <ExperimentToggleIcon fontSize="inherit" data-loading />
+                </StyledIconContainer>
                 <div>Experiment</div>
                 <StyledCount>{experiment}</StyledCount>
             </StyledParagraphGridRow>
             <StyledParagraphGridRow data-loading>
-                <OperationalToggleIcon fontSize="inherit" data-loading />
+                <StyledIconContainer>
+                    <OperationalToggleIcon fontSize="inherit" data-loading />
+                </StyledIconContainer>
                 <div>Operational</div>
                 <StyledCount>{operational}</StyledCount>
             </StyledParagraphGridRow>
             <StyledParagraphGridRow data-loading>
-                <KillToggleIcon fontSize="inherit" data-loading />
+                <StyledIconContainer>
+                    <KillToggleIcon fontSize="inherit" data-loading />
+                </StyledIconContainer>
                 <div>Kill switch</div>
                 <StyledCount>{kill}</StyledCount>
             </StyledParagraphGridRow>
             <StyledParagraphGridRow data-loading>
-                <PermissionToggleIcon fontSize="inherit" data-loading />
+                <StyledIconContainer>
+                    <PermissionToggleIcon fontSize="inherit" data-loading />
+                </StyledIconContainer>
                 <div>Permission</div>
                 <StyledCount>{permission}</StyledCount>
             </StyledParagraphGridRow>
-        </StyledDivInfoContainer>
+        </StyledProjectInfoWidgetContainer>
     );
 };

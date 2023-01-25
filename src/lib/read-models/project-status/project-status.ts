@@ -41,8 +41,6 @@ export class ProjectStatus {
         const sortedFeatureEvents =
             this.sortFeatureEventsByCreatedAt(featureEvents);
 
-        console.log(sortedFeatureEvents);
-
         const timeToProdPerFeature =
             this.calculateTimeToProdForFeatures(sortedFeatureEvents);
         if (timeToProdPerFeature.length) {
@@ -101,7 +99,6 @@ export class ProjectStatus {
             const createdAtDate = new Date(feature.createdAt);
             const eventDate = new Date(earliestEvent.createdAt);
             const diff = differenceInDays(eventDate, createdAtDate);
-            console.log(earliestEvent, createdAtDate, diff);
 
             return diff;
         });

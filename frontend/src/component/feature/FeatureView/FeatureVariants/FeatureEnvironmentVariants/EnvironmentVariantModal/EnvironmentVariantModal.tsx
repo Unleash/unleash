@@ -400,7 +400,7 @@ export const EnvironmentVariantModal = ({
                                             {environment
                                                 ? ` for ${environment.name}`
                                                 : ''}
-                                            . Your changes needs to be approved
+                                            . Your changes need to be approved
                                             before they will be live. All the
                                             changes you do now will be added
                                             into a draft that you can submit for

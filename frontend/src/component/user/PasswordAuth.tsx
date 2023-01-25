@@ -71,7 +71,7 @@ const PasswordAuth: VFC<IPasswordAuthProps> = ({ authDetails, redirect }) => {
         try {
             await passwordAuth(authDetails.path, username, password);
             refetchUser();
-            navigate(redirect);
+            navigate(redirect, { replace: true });
         } catch (error: any) {
             if (
                 error instanceof NotFoundError ||

@@ -27,7 +27,7 @@ const SimpleAuth: VFC<ISimpleAuthProps> = ({ authDetails, redirect }) => {
         try {
             await emailAuth(authDetails.path, email);
             refetchUser();
-            navigate(redirect);
+            navigate(redirect, { replace: true });
         } catch (error) {
             setToastApiError(formatUnknownError(error));
         }

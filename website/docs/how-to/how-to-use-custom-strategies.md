@@ -27,7 +27,7 @@ In this example we want to define an activation strategy offers a scheduled rele
 The steps to implement a custom strategy for your client depend on the kind of client SDK you're using:
 
 - if you're using a server-side client SDK, follow the steps in [option A](#step-3-a 'Step 3 option A: implement the strategy for a server-side client SDK').
-- if you're using a front-end client SDK ([Android](../reference/sdks/android-proxy.md), [JavaScript](../reference/sdks/javascript-browser.md), [React](../reference/sdks/react.md), [iOS](../reference/sdks/ios-proxy.md)), follow the steps in [option B](#step-3-b 'Step 3 option B: implementing the strategy for a front-end client SDK')
+- if you're using a front-end client SDK ([Android](/docs/generated/sdks/client-side/android-proxy.md), [JavaScript](/docs/generated/sdks/client-side/javascript-browser.md), [React](/docs/generated/sdks/client-side/react.md), [iOS](/docs/generated/sdks/client-side/ios-proxy.md)), follow the steps in [option B](#step-3-b 'Step 3 option B: implementing the strategy for a front-end client SDK')
 
 ### Option A: Implement the strategy for a server-side client SDK {#step-3-a}
 

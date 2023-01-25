@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import useProject, {
     useProjectNameOrId,
 } from 'hooks/api/getters/useProject/useProject';
@@ -7,8 +8,6 @@ import ProjectInfo from './ProjectInfo/ProjectInfo';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useLastViewedProject } from '../../../hooks/useLastViewedProject';
-import { useEffect } from 'react';
-import { StatusBox } from './ProjectStatus/StatusBox';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ProjectStatus } from './ProjectStatus/ProjectStatus';
@@ -31,6 +30,7 @@ const StyledContentContainer = styled(Box)(() => ({
     display: 'flex',
     flexDirection: 'column',
     width: '100%',
+    minWidth: 0,
 }));
 
 const ProjectOverview = () => {

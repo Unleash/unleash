@@ -49,6 +49,7 @@ import { GroupService } from './group-service';
 import { IGroupModelWithProjectRole, IGroupRole } from 'lib/types/group';
 import { FavoritesService } from './favorites-service';
 import { ProjectStatus } from '../read-models/project-status/project-status';
+import { IProjectStatusStore } from 'lib/types/stores/project-status-store-type';
 
 const getCreatedBy = (user: IUser) => user.email || user.username;
 
@@ -95,6 +96,8 @@ export default class ProjectService {
 
     private favoritesService: FavoritesService;
 
+    private projectStatusStore: IProjectStatusStore;
+
     constructor(
         {
             projectStore,
@@ -105,6 +108,7 @@ export default class ProjectService {
             featureEnvironmentStore,
             featureTagStore,
             accountStore,
+            projectStatusStore,
         }: Pick<
             IUnleashStores,
             | 'projectStore'
@@ -115,6 +119,7 @@ export default class ProjectService {
             | 'featureEnvironmentStore'
             | 'featureTagStore'
             | 'accountStore'
+            | 'projectStatusStore'
         >,
         config: IUnleashConfig,
         accessService: AccessService,
@@ -134,6 +139,7 @@ export default class ProjectService {
         this.tagStore = featureTagStore;
         this.accountStore = accountStore;
         this.groupService = groupService;
+        this.projectStatusStore = projectStatusStore;
         this.logger = config.getLogger('services/project-service.js');
     }
 
@@ -617,7 +623,7 @@ export default class ProjectService {
 
         await Promise.all(
             statusUpdates.map((statusUpdate) => {
-                return this.store.updateStatus(
+                return this.projectStatusStore.updateStatus(
                     statusUpdate.projectId,
                     statusUpdate.updates,
                 );

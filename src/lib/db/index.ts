@@ -35,6 +35,7 @@ import { PublicSignupTokenStore } from './public-signup-token-store';
 import { FavoriteFeaturesStore } from './favorite-features-store';
 import { FavoriteProjectsStore } from './favorite-projects-store';
 import { AccountStore } from './account-store';
+import ProjectStatusStore from './project-status-store';
 
 export const createStores = (
     config: IUnleashConfig,
@@ -113,6 +114,7 @@ export const createStores = (
             eventBus,
             getLogger,
         ),
+        projectStatusStore: new ProjectStatusStore(db, eventBus, getLogger),
     };
 };
 

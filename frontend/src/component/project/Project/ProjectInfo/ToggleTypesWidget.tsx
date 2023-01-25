@@ -6,7 +6,7 @@ import {
     StyledParagraphGridRow,
     StyledParagraphSubtitle,
 } from './ProjectInfo.styles';
-import { getFeatureTypeIcons } from '../../../../utils/getFeatureTypeIcons';
+import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
 
 export interface IToggleTypesWidgetProps {
     features: IFeatureToggleListItem[];

@@ -173,6 +173,41 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         return Promise.resolve(newVariants);
     }
 
+    async getByDate(queryModifiers: {
+        archived?: boolean;
+        project?: string;
+        date?: string;
+        range?: string[];
+        dateAccessor: string;
+    }): Promise<FeatureToggle[]> {
+        return this.features.filter((feature) => {
+            if (feature.archived === queryModifiers.archived) {
+                return true;
+            }
+
+            if (feature.project === queryModifiers.project) {
+                return true;
+            }
+
+            if (
+                new Date(feature[queryModifiers.dateAccessor]).getTime() >=
+                new Date(queryModifiers.date).getTime()
+            ) {
+                return true;
+            }
+
+            const featureDate = new Date(
+                feature[queryModifiers.dateAccessor],
+            ).getTime();
+            if (
+                featureDate >= new Date(queryModifiers.range[0]).getTime() &&
+                featureDate <= new Date(queryModifiers.range[1]).getTime()
+            ) {
+                return true;
+            }
+        });
+    }
+
     dropAllVariants(): Promise<void> {
         this.features.forEach((feature) => (feature.variants = []));
         return Promise.resolve();

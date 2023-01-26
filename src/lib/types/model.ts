@@ -3,6 +3,7 @@ import { LogProvider } from '../logger';
 import { IRole } from './stores/access-store';
 import { IUser } from './user';
 import { ALL_OPERATORS } from '../util/constants';
+import { IProjectStats } from 'lib/services/project-service';
 
 export type Operator = typeof ALL_OPERATORS[number];
 
@@ -182,6 +183,7 @@ export interface IProjectOverview {
     health: number;
     favorite?: boolean;
     updatedAt?: Date;
+    stats: IProjectStats;
 }
 
 export interface IProjectHealthReport extends IProjectOverview {

@@ -795,7 +795,13 @@ export default class ProjectService {
             project: projectId,
             userId,
         });
+
+        const projectStats = await this.projectStatsStore.getProjectStats(
+            projectId,
+        );
+
         return {
+            stats: projectStats,
             name: project.name,
             description: project.description,
             health: project.health,

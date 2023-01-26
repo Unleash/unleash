@@ -7,6 +7,7 @@ import { featureSchema } from './feature-schema';
 import { constraintSchema } from './constraint-schema';
 import { environmentSchema } from './environment-schema';
 import { featureEnvironmentSchema } from './feature-environment-schema';
+import { projectStatsSchema } from './project-stats-schema';
 
 export const healthOverviewSchema = {
     $id: '#/components/schemas/healthOverviewSchema',
@@ -14,6 +15,12 @@ export const healthOverviewSchema = {
     additionalProperties: false,
     required: ['version', 'name'],
     properties: {
+        stats: {
+            type: 'object',
+            items: {
+                $ref: '#/components/schemas/projectStatsSchema',
+            },
+        },
         version: {
             type: 'number',
         },
@@ -60,6 +67,7 @@ export const healthOverviewSchema = {
             parametersSchema,
             featureStrategySchema,
             variantSchema,
+            projectStatsSchema,
         },
     },
 } as const;

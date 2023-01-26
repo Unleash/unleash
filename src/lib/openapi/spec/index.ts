@@ -125,3 +125,4 @@ export * from './requests-per-second-segmented-schema';
 export * from './export-result-schema';
 export * from './export-query-schema';
 export * from './push-variants-schema';
+export * from './project-stats-schema';

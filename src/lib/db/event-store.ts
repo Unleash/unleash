@@ -56,7 +56,7 @@ interface IForFeaturesOperation {
 interface IForFeaturesParams {
     type: string;
     projectId: string;
-    enviroments: string[];
+    environments: string[];
     features: string[];
 }
 

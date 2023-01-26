@@ -11,10 +11,10 @@ export const useTimezones = (): ITimezoneSelect[] => {
     const getAllTimezones = () => {
         return Object.values(
             TimezoneCountries.getAllTimezones({ deprecated: false })
-        ).map(list => ({
-            key: list.name,
-            label: `${list.name}`,
-            utcOffset: list.utcOffsetStr,
+        ).map(timezone => ({
+            key: timezone.name,
+            label: `timezone.name`,
+            utcOffset: timezone.utcOffsetStr,
         }));
     };
 

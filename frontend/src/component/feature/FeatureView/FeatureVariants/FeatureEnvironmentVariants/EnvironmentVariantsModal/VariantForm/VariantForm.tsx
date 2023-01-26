@@ -37,27 +37,48 @@ const StyledDeleteButton = styled(IconButton)(({ theme }) => ({
 }));
 
 const StyledLabel = styled('p')(({ theme }) => ({
+    fontSize: theme.fontSizes.smallBody,
     display: 'flex',
     color: theme.palette.text.primary,
-    '&:not(:first-of-type)': {
-        marginTop: theme.spacing(3),
-        marginBottom: theme.spacing(2),
-    },
+    marginTop: theme.spacing(3),
+    marginBottom: theme.spacing(2),
 }));
 
 const StyledSubLabel = styled('p')(({ theme }) => ({
+    fontSize: theme.fontSizes.smallBody,
     color: theme.palette.text.secondary,
     marginBottom: theme.spacing(2),
 }));
 
 const StyledFormControlLabel = styled(FormControlLabel)(({ theme }) => ({
-    marginTop: theme.spacing(4),
-    marginBottom: theme.spacing(1.5),
+    marginBottom: theme.spacing(1),
+    '& > span': {
+        fontSize: theme.fontSizes.smallBody,
+    },
+    [theme.breakpoints.down('sm')]: {
+        marginTop: theme.spacing(4),
+        marginBottom: theme.spacing(1.5),
+    },
 }));
 
 const StyledInput = styled(Input)(() => ({
     width: '100%',
 }));
+
+const StyledPercentageContainer = styled('div')(({ theme }) => ({
+    marginLeft: theme.spacing(3),
+}));
+
+const StyledWeightInput = styled(Input)(({ theme }) => ({
+    width: theme.spacing(24),
+    [theme.breakpoints.down('sm')]: {
+        width: '100%',
+    },
+}));
+
+const StyledNameContainer = styled('div')({
+    flexGrow: 1,
+});
 
 const StyledRow = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -70,6 +91,11 @@ const StyledRow = styled('div')(({ theme }) => ({
         },
     },
 }));
+
+const StyledTopRow = styled(StyledRow)({
+    alignItems: 'end',
+    justifyContent: 'space-between',
+});
 
 const StyledSelectMenu = styled(SelectMenu)(({ theme }) => ({
     minWidth: theme.spacing(20),
@@ -148,7 +174,7 @@ export const VariantForm = ({
     useEffect(() => {
         clearError(ErrorField.PERCENTAGE);
         if (apiPayload.error?.includes('%')) {
-            setError(ErrorField.PERCENTAGE, apiPayload.error);
+            setError(ErrorField.PERCENTAGE, 'Total weight must equal 100%');
         }
     }, [apiPayload.error]);
 
@@ -255,6 +281,12 @@ export const VariantForm = ({
         });
     }, [name, customPercentage, percentage, payload, overrides]);
 
+    useEffect(() => {
+        if (!customPercentage) {
+            setPercentage(String(variant.weight / 10));
+        }
+    }, [variant.weight]);
+
     return (
         <StyledVariantForm>
             <StyledDeleteButton
@@ -263,60 +295,63 @@ export const VariantForm = ({
             >
                 <Delete />
             </StyledDeleteButton>
-            <StyledLabel>Variant name</StyledLabel>
-            <StyledSubLabel>
-                This will be used to identify the variant in your code
-            </StyledSubLabel>
-            <StyledInput
-                autoFocus
-                label="Variant name"
-                error={Boolean(errors.name)}
-                errorText={errors.name}
-                value={name}
-                onChange={e => onSetName(e.target.value)}
-                disabled={editing}
-                required
-            />
-            <ConditionallyRender
-                condition={customPercentageVisible}
-                show={
-                    <StyledFormControlLabel
-                        label="Custom percentage"
-                        control={
-                            <Switch
-                                checked={customPercentage}
-                                onChange={e =>
-                                    setCustomPercentage(e.target.checked)
+            <StyledTopRow>
+                <StyledNameContainer>
+                    <p>Variant name</p>
+                    <StyledSubLabel>
+                        This will be used to identify the variant in your code
+                    </StyledSubLabel>
+                    <StyledInput
+                        autoFocus
+                        label="Variant name"
+                        error={Boolean(errors.name)}
+                        errorText={errors.name}
+                        value={name}
+                        onChange={e => onSetName(e.target.value)}
+                        disabled={editing}
+                        required
+                    />
+                </StyledNameContainer>
+                <ConditionallyRender
+                    condition={customPercentageVisible}
+                    show={
+                        <StyledPercentageContainer>
+                            <StyledFormControlLabel
+                                label="Custom percentage"
+                                control={
+                                    <Switch
+                                        checked={customPercentage}
+                                        onChange={e =>
+                                            setCustomPercentage(
+                                                e.target.checked
+                                            )
+                                        }
+                                    />
                                 }
                             />
-                        }
-                    />
-                }
-            />
-            <ConditionallyRender
-                condition={customPercentage}
-                show={
-                    <StyledInput
-                        type="number"
-                        label="Variant weight"
-                        error={Boolean(errors.percentage)}
-                        errorText={errors.percentage}
-                        value={percentage}
-                        onChange={e => onSetPercentage(e.target.value)}
-                        required={customPercentage}
-                        disabled={!customPercentage}
-                        aria-valuemin={0}
-                        aria-valuemax={100}
-                        InputProps={{
-                            endAdornment: (
-                                <InputAdornment position="end">
-                                    %
-                                </InputAdornment>
-                            ),
-                        }}
-                    />
-                }
-            />
+                            <StyledWeightInput
+                                type="number"
+                                label="Variant weight"
+                                error={Boolean(errors.percentage)}
+                                errorText={errors.percentage}
+                                value={percentage}
+                                onChange={e => onSetPercentage(e.target.value)}
+                                required={customPercentage}
+                                disabled={!customPercentage}
+                                aria-valuemin={0}
+                                aria-valuemax={100}
+                                InputProps={{
+                                    endAdornment: (
+                                        <InputAdornment position="end">
+                                            %
+                                        </InputAdornment>
+                                    ),
+                                }}
+                            />
+                        </StyledPercentageContainer>
+                    }
+                />
+            </StyledTopRow>
             <StyledLabel>
                 Payload
                 <HelpIcon tooltip="Passed along with the the variant object." />

@@ -18,6 +18,7 @@ import { WeightType } from 'constants/variantTypes';
 import { v4 as uuidv4 } from 'uuid';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
+import { updateWeightEdit } from 'component/common/util';
 
 const StyledFormSubtitle = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -171,8 +172,11 @@ export const EnvironmentVariantsModal = ({
 
     const updateVariant = (updatedVariant: IFeatureVariantEdit, id: string) => {
         setVariantsEdit(prevVariants =>
-            prevVariants.map(prevVariant =>
-                prevVariant.id === id ? updatedVariant : prevVariant
+            updateWeightEdit(
+                prevVariants.map(prevVariant =>
+                    prevVariant.id === id ? updatedVariant : prevVariant
+                ),
+                1000
             )
         );
     };
@@ -340,8 +344,11 @@ export const EnvironmentVariantsModal = ({
                                 }
                                 removeVariant={() =>
                                     setVariantsEdit(variantsEdit =>
-                                        variantsEdit.filter(
-                                            v => v.id !== variant.id
+                                        updateWeightEdit(
+                                            variantsEdit.filter(
+                                                v => v.id !== variant.id
+                                            ),
+                                            1000
                                         )
                                     )
                                 }

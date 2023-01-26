@@ -32,15 +32,18 @@ const StyledVariantForm = styled('div')(({ theme }) => ({
 
 const StyledDeleteButton = styled(IconButton)(({ theme }) => ({
     position: 'absolute',
-    top: theme.spacing(1),
-    right: theme.spacing(1),
+    top: theme.spacing(2),
+    right: theme.spacing(2),
 }));
 
 const StyledLabel = styled('p')(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
+}));
+
+const StyledMarginLabel = styled(StyledLabel)(({ theme }) => ({
     display: 'flex',
     color: theme.palette.text.primary,
-    marginTop: theme.spacing(3),
+    marginTop: theme.spacing(1),
     marginBottom: theme.spacing(2),
 }));
 
@@ -56,7 +59,7 @@ const StyledFormControlLabel = styled(FormControlLabel)(({ theme }) => ({
         fontSize: theme.fontSizes.smallBody,
     },
     [theme.breakpoints.down('sm')]: {
-        marginTop: theme.spacing(4),
+        marginTop: theme.spacing(1),
         marginBottom: theme.spacing(1.5),
     },
 }));
@@ -76,9 +79,10 @@ const StyledWeightInput = styled(Input)(({ theme }) => ({
     },
 }));
 
-const StyledNameContainer = styled('div')({
+const StyledNameContainer = styled('div')(({ theme }) => ({
+    marginTop: theme.spacing(3),
     flexGrow: 1,
-});
+}));
 
 const StyledRow = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -297,7 +301,7 @@ export const VariantForm = ({
             </StyledDeleteButton>
             <StyledTopRow>
                 <StyledNameContainer>
-                    <p>Variant name</p>
+                    <StyledLabel>Variant name</StyledLabel>
                     <StyledSubLabel>
                         This will be used to identify the variant in your code
                     </StyledSubLabel>
@@ -352,10 +356,10 @@ export const VariantForm = ({
                     }
                 />
             </StyledTopRow>
-            <StyledLabel>
+            <StyledMarginLabel>
                 Payload
                 <HelpIcon tooltip="Passed along with the the variant object." />
-            </StyledLabel>
+            </StyledMarginLabel>
             <StyledRow>
                 <StyledSelectMenu
                     id="variant-payload-type"
@@ -393,10 +397,10 @@ export const VariantForm = ({
                     errorText={errors.payload}
                 />
             </StyledRow>
-            <StyledLabel>
+            <StyledMarginLabel>
                 Overrides
                 <HelpIcon tooltip="Here you can specify which users should get this variant." />
-            </StyledLabel>
+            </StyledMarginLabel>
             <OverrideConfig
                 overrides={overrides}
                 overridesDispatch={overridesDispatch}

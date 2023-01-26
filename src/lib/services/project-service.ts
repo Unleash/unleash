@@ -639,13 +639,11 @@ export default class ProjectService {
         });
 
         const [createdCurrentWindow, createdPastWindow] = await Promise.all([
-            // @ts-ignore
             await this.featureToggleStore.getByDate({
                 project: projectId,
                 dateAccessor: 'created_at',
                 date: subDays(new Date(), 30).toISOString(),
             }),
-            // @ts-ignore
             await this.featureToggleStore.getByDate({
                 project: projectId,
                 dateAccessor: 'created_at',
@@ -657,14 +655,12 @@ export default class ProjectService {
         ]);
 
         const [archivedCurrentWindow, archivedPastWindow] = await Promise.all([
-            // @ts-ignore
             await this.featureToggleStore.getByDate({
                 project: projectId,
                 archived: true,
                 dateAccessor: 'archived_at',
                 date: subDays(new Date(), 30).toISOString(),
             }),
-            // @ts-ignore
             await this.featureToggleStore.getByDate({
                 project: projectId,
                 archived: true,

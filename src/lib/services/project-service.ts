@@ -751,13 +751,13 @@ export default class ProjectService {
             },
         ]);
 
-        const projectStatusOne = new ProjectStatus(
+        const currentWindowTimeToProd = new ProjectStatus(
             features,
             productionEnvironments,
             eventsCurrentWindow,
         );
 
-        const projectStatusTwo = new ProjectStatus(
+        const pastWindowTimeToProd = new ProjectStatus(
             features,
             productionEnvironments,
             eventsPastWindow,
@@ -767,9 +767,9 @@ export default class ProjectService {
             projectId,
             updates: {
                 avgTimeToProdCurrentWindow:
-                    projectStatusOne.calculateAverageTimeToProd(),
+                    currentWindowTimeToProd.calculateAverageTimeToProd(),
                 avgTimeToProdPastWindow:
-                    projectStatusTwo.calculateAverageTimeToProd(),
+                    pastWindowTimeToProd.calculateAverageTimeToProd(),
                 createdCurrentWindow: createdCurrentWindow.length,
                 createdPastWindow: createdPastWindow.length,
                 archivedCurrentWindow: archivedCurrentWindow.length,

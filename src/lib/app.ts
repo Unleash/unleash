@@ -26,6 +26,7 @@ import { conditionalMiddleware } from './middleware/conditional-middleware';
 import patMiddleware from './middleware/pat-middleware';
 import { Knex } from 'knex';
 import maintenanceMiddleware from './middleware/maintenance-middleware';
+import { unless } from './middleware/unless-middleware';
 
 export default async function getApp(
     config: IUnleashConfig,
@@ -62,7 +63,17 @@ export default async function getApp(
 
     app.use(compression());
     app.use(cookieParser());
-    app.use(express.json({ strict: false }));
+
+    app.use(
+        `${baseUriPath}/api/admin/features-batch`,
+        express.json({ strict: false, limit: '500kB' }),
+    );
+    app.use(
+        unless(
+            `${baseUriPath}/api/admin/features-batch`,
+            express.json({ strict: false }),
+        ),
+    );
     if (unleashSession) {
         app.use(unleashSession);
     }

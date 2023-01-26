@@ -1,20 +1,12 @@
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import type { IFeatureToggleListItem } from 'interfaces/featureToggle';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-
 import { DEFAULT_PROJECT_ID } from 'hooks/api/getters/useDefaultProject/useDefaultProjectId';
-import {
-    StyledArrowIcon,
-    StyledProjectInfoSidebarContainer,
-    StyledProjectInfoWidgetContainer,
-    StyledLink,
-    StyledParagraphEmphasizedText,
-    StyledWidgetTitle,
-    StyledSpanLinkText,
-} from './ProjectInfo.styles';
+import { StyledProjectInfoSidebarContainer } from './ProjectInfo.styles';
 import { HealthWidget } from './HealthWidget';
 import { ToggleTypesWidget } from './ToggleTypesWidget';
 import { MetaWidget } from './MetaWidget';
+import { ProjectMembersWidget } from './ProjectMembersWidget';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IProjectInfoProps {
     id: string;
@@ -32,13 +24,6 @@ const ProjectInfo = ({
     features,
 }: IProjectInfoProps) => {
     const { uiConfig } = useUiConfig();
-
-    let link = `/admin/users`;
-
-    if (uiConfig?.versionInfo?.current?.enterprise) {
-        link = `/projects/${id}/settings/access`;
-    }
-
     return (
         <aside>
             <StyledProjectInfoSidebarContainer>
@@ -50,26 +35,13 @@ const ProjectInfo = ({
                 <ConditionallyRender
                     condition={id !== DEFAULT_PROJECT_ID}
                     show={
-                        <StyledProjectInfoWidgetContainer style={{ marginBottom: '0' }}>
-                            <StyledWidgetTitle data-loading>
-                                Project members
-                            </StyledWidgetTitle>
-                            <StyledParagraphEmphasizedText data-loading>
-                                {memberCount}
-                            </StyledParagraphEmphasizedText>
-                            <StyledLink data-loading to={link}>
-                                <StyledSpanLinkText data-loading>
-                                    view more{' '}
-                                </StyledSpanLinkText>
-                                <StyledArrowIcon data-loading />
-                            </StyledLink>
-                        </StyledProjectInfoWidgetContainer>
+                        <ProjectMembersWidget
+                            projectId={id}
+                            memberCount={memberCount}
+                        />
                     }
                 />
-                <ConditionallyRender
-                    condition={Boolean(uiConfig?.flags.newProjectOverview)}
-                    show={<ToggleTypesWidget features={features} />}
-                />
+                <ToggleTypesWidget features={features} />
             </StyledProjectInfoSidebarContainer>
         </aside>
     );

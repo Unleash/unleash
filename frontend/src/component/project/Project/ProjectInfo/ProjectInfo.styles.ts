@@ -53,11 +53,11 @@ export const StyledWidgetTitle = styled('p')(({ theme }) => ({
 
 export const StyledParagraphGridRow = styled('div')(({ theme }) => ({
     display: 'grid',
-    gridGap: theme.spacing(2),
-    gridTemplateColumns: '10% 70% 20%',
-    margin: theme.spacing(1, 2, 1, 2),
+    gridGap: theme.spacing(1),
+    gridTemplateColumns: `${theme.spacing(1.25)} auto auto`,
+    margin: theme.spacing(1, 0, 1, 0),
     fontSize: theme.fontSizes.smallBody,
-    color: theme.palette.neutral.dark,
+    color: theme.palette.text.secondary,
     textAlign: 'left',
     alignItems: 'center',
 }));
@@ -72,8 +72,9 @@ export const StyledParagraphEmphasizedText = styled('p')(({ theme }) => ({
 }));
 
 export const StyledCount = styled('p')(({ theme }) => ({
-    fontSize: '1.2rem',
+    fontSize: theme.typography.h2.fontSize,
     fontWeight: 'bold',
+    textAlign: 'right',
     color: theme.palette.text.primary,
 }));
 

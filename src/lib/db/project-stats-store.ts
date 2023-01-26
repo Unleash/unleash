@@ -7,7 +7,7 @@ import EventEmitter from 'events';
 import { IProjectStats } from 'lib/services/project-service';
 import { IProjectStatsStore } from 'lib/types/stores/project-stats-store-type';
 
-const TABLE = 'project_status';
+const TABLE = 'project_stats';
 
 class ProjectStatsStore implements IProjectStatsStore {
     private db: Knex;
@@ -18,10 +18,10 @@ class ProjectStatsStore implements IProjectStatsStore {
 
     constructor(db: Knex, eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
-        this.logger = getLogger('project-store.ts');
+        this.logger = getLogger('project-stats-store.ts');
         this.timer = (action) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
-                store: 'project_status',
+                store: 'project_stats',
                 action,
             });
     }

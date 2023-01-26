@@ -40,7 +40,9 @@ export class TimeToProduction {
                 0,
             );
 
-            return sum / Object.keys(sortedFeatureEvents).length;
+            return Number(
+                (sum / Object.keys(sortedFeatureEvents).length).toFixed(1),
+            );
         }
 
         return 0;

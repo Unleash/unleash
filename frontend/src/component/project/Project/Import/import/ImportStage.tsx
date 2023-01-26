@@ -9,6 +9,7 @@ import { Pending, Check, Error } from '@mui/icons-material';
 import { PulsingAvatar } from '../PulsingAvatar';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Box } from '@mui/system';
+import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 
 export const ImportStatusArea = styled(Box)(({ theme }) => ({
     padding: theme.spacing(4, 2, 2, 2),
@@ -28,6 +29,15 @@ export const SuccessAvatar = styled(Avatar)(({ theme }) => ({
 
 export const ErrorAvatar = styled(Avatar)(({ theme }) => ({
     backgroundColor: theme.palette.error.main,
+}));
+
+const InfoContainer = styled(Box)(({ theme }) => ({
+    border: `1px solid ${theme.palette.info.border}`,
+    borderRadius: theme.shape.borderRadiusLarge,
+    padding: theme.spacing(2),
+    color: theme.palette.info.dark,
+    backgroundColor: theme.palette.info.light,
+    fontSize: theme.fontSizes.smallBody,
 }));
 
 type ApiStatus =
@@ -52,6 +62,7 @@ export const ImportStage: FC<{
 }> = ({ environment, project, payload, onClose }) => {
     const { createImport, loading, errors } = useImportApi();
     const { setToastData } = useToast();
+    const { isChangeRequestConfigured } = useChangeRequestsEnabled(project);
 
     useEffect(() => {
         createImport({ environment, project, data: JSON.parse(payload) }).catch(
@@ -65,6 +76,10 @@ export const ImportStage: FC<{
     }, []);
 
     const importStatus = toApiStatus(loading, errors);
+
+    const showChangeRequestInfo =
+        isChangeRequestConfigured(environment) &&
+        importStatus.status === 'success';
 
     return (
         <ImportLayoutContainer>
@@ -111,6 +126,17 @@ export const ImportStage: FC<{
                     />
                 </ImportMessage>
             </ImportStatusArea>
+            <ConditionallyRender
+                condition={showChangeRequestInfo}
+                show={
+                    <InfoContainer>
+                        For this environment <strong>Change request</strong> is
+                        enabled. This means that the import was generating a
+                        change request and it needs to be approved before the
+                        configuration will be visible in the instance.
+                    </InfoContainer>
+                }
+            />
 
             <ActionsContainer>
                 <Button

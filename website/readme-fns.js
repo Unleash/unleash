@@ -71,6 +71,10 @@ const clientSideSdks = {
     'proxy-client-vue': {
         sidebarName: 'Vue',
     },
+    'unleash-client-nextjs': {
+        sidebarName: 'Next.js',
+        slugName: 'next-js',
+    },
 };
 
 const allSdks = () => {

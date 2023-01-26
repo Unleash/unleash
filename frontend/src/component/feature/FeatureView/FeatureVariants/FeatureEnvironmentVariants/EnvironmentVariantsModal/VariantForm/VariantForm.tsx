@@ -153,7 +153,11 @@ export const VariantForm = ({
     }, [apiPayload.error]);
 
     const editing = !variant.new;
-    const customPercentageVisible = variants.length > 1;
+    const customPercentageVisible =
+        variants.filter(
+            ({ id, weightType }) =>
+                id !== variant.id && weightType === WeightType.VARIABLE
+        ).length > 0;
 
     const isProtectedVariant = (variant: IFeatureVariantEdit): boolean => {
         const isVariable = variant.weightType === WeightType.VARIABLE;

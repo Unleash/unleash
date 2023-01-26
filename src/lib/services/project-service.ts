@@ -676,7 +676,6 @@ export default class ProjectService {
 
         const [projectActivityCurrentWindow, projectActivityPastWindow] =
             await Promise.all([
-                // @ ts-ignore
                 this.eventStore.query([
                     { op: 'where', parameters: { project: projectId } },
                     {
@@ -711,7 +710,6 @@ export default class ProjectService {
         // Get all events for features that correspond to feature toggle environment ON
         // Filter out events that are not a production evironment
 
-        // @ts-ignore
         const eventsCurrentWindow = await this.eventStore.query([
             {
                 op: 'forFeatures',

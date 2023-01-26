@@ -1,6 +1,6 @@
 exports.up = function (db, cb) {
     db.runSql(
-        `CREATE TABLE IF NOT EXISTS project_status (
+        `CREATE TABLE IF NOT EXISTS project_stats (
              project VARCHAR(255) NOT NULL,
              avg_time_to_prod_current_window FLOAT DEFAULT 0,
              avg_time_to_prod_past_window FLOAT DEFAULT 0,

@@ -5,11 +5,11 @@ import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
 import EventEmitter from 'events';
 import { IProjectStats } from 'lib/services/project-service';
-import { IProjectStatusStore } from 'lib/types/stores/project-status-store-type';
+import { IProjectStatsStore } from 'lib/types/stores/project-stats-store-type';
 
 const TABLE = 'project_status';
 
-class ProjectStatusStore implements IProjectStatusStore {
+class ProjectStatsStore implements IProjectStatsStore {
     private db: Knex;
 
     private logger: Logger;
@@ -26,7 +26,7 @@ class ProjectStatusStore implements IProjectStatusStore {
             });
     }
 
-    async updateStatus(
+    async updateProjectStats(
         projectId: string,
         status: IProjectStats,
     ): Promise<void> {
@@ -49,4 +49,4 @@ class ProjectStatusStore implements IProjectStatusStore {
     }
 }
 
-export default ProjectStatusStore;
+export default ProjectStatsStore;

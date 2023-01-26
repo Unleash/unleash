@@ -49,7 +49,7 @@ import { GroupService } from './group-service';
 import { IGroupModelWithProjectRole, IGroupRole } from 'lib/types/group';
 import { FavoritesService } from './favorites-service';
 import { TimeToProduction } from '../read-models/time-to-production/time-to-production';
-import { IProjectStatusStore } from 'lib/types/stores/project-status-store-type';
+import { IProjectStatsStore } from 'lib/types/stores/project-stats-store-type';
 
 const getCreatedBy = (user: IUser) => user.email || user.username;
 
@@ -105,7 +105,7 @@ export default class ProjectService {
 
     private favoritesService: FavoritesService;
 
-    private projectStatusStore: IProjectStatusStore;
+    private projectStatsStore: IProjectStatsStore;
 
     constructor(
         {
@@ -117,7 +117,7 @@ export default class ProjectService {
             featureEnvironmentStore,
             featureTagStore,
             accountStore,
-            projectStatusStore,
+            projectStatsStore,
         }: Pick<
             IUnleashStores,
             | 'projectStore'
@@ -128,7 +128,7 @@ export default class ProjectService {
             | 'featureEnvironmentStore'
             | 'featureTagStore'
             | 'accountStore'
-            | 'projectStatusStore'
+            | 'projectStatsStore'
         >,
         config: IUnleashConfig,
         accessService: AccessService,
@@ -148,7 +148,7 @@ export default class ProjectService {
         this.tagStore = featureTagStore;
         this.accountStore = accountStore;
         this.groupService = groupService;
-        this.projectStatusStore = projectStatusStore;
+        this.projectStatsStore = projectStatsStore;
         this.logger = config.getLogger('services/project-service.js');
     }
 
@@ -628,7 +628,7 @@ export default class ProjectService {
 
         await Promise.all(
             statusUpdates.map((statusUpdate) => {
-                return this.projectStatusStore.updateStatus(
+                return this.projectStatsStore.updateProjectStats(
                     statusUpdate.projectId,
                     statusUpdate.updates,
                 );

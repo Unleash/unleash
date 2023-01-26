@@ -1,6 +1,6 @@
 import { addDays, subDays } from 'date-fns';
 import { IEvent } from 'lib/types';
-import { ProjectStatus } from './project-status';
+import { TimeToProduction } from './time-to-production';
 
 const modifyEventCreatedAt = (events: IEvent[], days: number): IEvent[] => {
     return events.map((event) => {
@@ -143,7 +143,11 @@ const features = [
 
 describe('calculate average time to production', () => {
     test('should build a map of feature events', () => {
-        const projectStatus = new ProjectStatus(features, environments, events);
+        const projectStatus = new TimeToProduction(
+            features,
+            environments,
+            events,
+        );
 
         const featureEvents = projectStatus.getFeatureEvents();
 
@@ -153,7 +157,11 @@ describe('calculate average time to production', () => {
     });
 
     test('should calculate average correctly', () => {
-        const projectStatus = new ProjectStatus(features, environments, events);
+        const projectStatus = new TimeToProduction(
+            features,
+            environments,
+            events,
+        );
 
         const timeToProduction = projectStatus.calculateAverageTimeToProd();
 
@@ -161,7 +169,7 @@ describe('calculate average time to production', () => {
     });
 
     test('should sort events by createdAt', () => {
-        const projectStatus = new ProjectStatus(features, environments, [
+        const projectStatus = new TimeToProduction(features, environments, [
             ...modifyEventCreatedAt(events, 5),
             ...events,
         ]);
@@ -192,7 +200,7 @@ describe('calculate average time to production', () => {
     });
 
     test('should not count events that are development environments', () => {
-        const projectStatus = new ProjectStatus(features, environments, [
+        const projectStatus = new TimeToProduction(features, environments, [
             createEvent('development', {
                 createdAt: subDays(new Date('2023-01-25T09:37:32.504Z'), 10),
             }),

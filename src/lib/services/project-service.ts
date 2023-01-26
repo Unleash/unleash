@@ -48,7 +48,7 @@ import { arraysHaveSameItems } from '../util/arraysHaveSameItems';
 import { GroupService } from './group-service';
 import { IGroupModelWithProjectRole, IGroupRole } from 'lib/types/group';
 import { FavoritesService } from './favorites-service';
-import { ProjectStatus } from '../read-models/project-status/project-status';
+import { TimeToProduction } from '../read-models/time-to-production/time-to-production';
 import { IProjectStatusStore } from 'lib/types/stores/project-status-store-type';
 
 const getCreatedBy = (user: IUser) => user.email || user.username;
@@ -643,19 +643,19 @@ export default class ProjectService {
             project: projectId,
         });
 
+        const dateMinusThirtyDays = subDays(new Date(), 30).toISOString();
+        const dateMinusSixtyDays = subDays(new Date(), 60).toISOString();
+
         const [createdCurrentWindow, createdPastWindow] = await Promise.all([
             await this.featureToggleStore.getByDate({
                 project: projectId,
                 dateAccessor: 'created_at',
-                date: subDays(new Date(), 30).toISOString(),
+                date: dateMinusThirtyDays,
             }),
             await this.featureToggleStore.getByDate({
                 project: projectId,
                 dateAccessor: 'created_at',
-                range: [
-                    subDays(new Date(), 60).toISOString(),
-                    subDays(new Date(), 30).toISOString(),
-                ],
+                range: [dateMinusSixtyDays, dateMinusThirtyDays],
             }),
         ]);
 
@@ -664,16 +664,13 @@ export default class ProjectService {
                 project: projectId,
                 archived: true,
                 dateAccessor: 'archived_at',
-                date: subDays(new Date(), 30).toISOString(),
+                date: dateMinusThirtyDays,
             }),
             await this.featureToggleStore.getByDate({
                 project: projectId,
                 archived: true,
                 dateAccessor: 'archived_at',
-                range: [
-                    subDays(new Date(), 60).toISOString(),
-                    subDays(new Date(), 30).toISOString(),
-                ],
+                range: [dateMinusSixtyDays, dateMinusThirtyDays],
             }),
         ]);
 
@@ -685,7 +682,7 @@ export default class ProjectService {
                         op: 'beforeDate',
                         parameters: {
                             dateAccessor: 'created_at',
-                            date: subDays(new Date(), 30).toISOString(),
+                            date: dateMinusThirtyDays,
                         },
                     },
                 ]),
@@ -695,10 +692,7 @@ export default class ProjectService {
                         op: 'betweenDate',
                         parameters: {
                             dateAccessor: 'created_at',
-                            range: [
-                                subDays(new Date(), 60).toISOString(),
-                                subDays(new Date(), 30).toISOString(),
-                            ],
+                            range: [dateMinusSixtyDays, dateMinusThirtyDays],
                         },
                     },
                 ]),
@@ -727,7 +721,7 @@ export default class ProjectService {
                 op: 'beforeDate',
                 parameters: {
                     dateAccessor: 'created_at',
-                    date: subDays(new Date(), 30).toISOString(),
+                    date: dateMinusThirtyDays,
                 },
             },
         ]);
@@ -746,21 +740,18 @@ export default class ProjectService {
                 op: 'betweenDate',
                 parameters: {
                     dateAccessor: 'created_at',
-                    range: [
-                        subDays(new Date(), 60).toISOString(),
-                        subDays(new Date(), 30).toISOString(),
-                    ],
+                    range: [dateMinusSixtyDays, dateMinusThirtyDays],
                 },
             },
         ]);
 
-        const currentWindowTimeToProd = new ProjectStatus(
+        const currentWindowTimeToProdReadModel = new TimeToProduction(
             features,
             productionEnvironments,
             eventsCurrentWindow,
         );
 
-        const pastWindowTimeToProd = new ProjectStatus(
+        const pastWindowTimeToProdReadModel = new TimeToProduction(
             features,
             productionEnvironments,
             eventsPastWindow,
@@ -770,9 +761,9 @@ export default class ProjectService {
             projectId,
             updates: {
                 avgTimeToProdCurrentWindow:
-                    currentWindowTimeToProd.calculateAverageTimeToProd(),
+                    currentWindowTimeToProdReadModel.calculateAverageTimeToProd(),
                 avgTimeToProdPastWindow:
-                    pastWindowTimeToProd.calculateAverageTimeToProd(),
+                    pastWindowTimeToProdReadModel.calculateAverageTimeToProd(),
                 createdCurrentWindow: createdCurrentWindow.length,
                 createdPastWindow: createdPastWindow.length,
                 archivedCurrentWindow: archivedCurrentWindow.length,

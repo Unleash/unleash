@@ -10,7 +10,7 @@ interface IFeatureTimeToProdData {
     events: IEvent[];
 }
 
-export class ProjectStatus {
+export class TimeToProduction {
     private features: FeatureToggle[];
 
     private productionEnvironments: IProjectEnvironment[];

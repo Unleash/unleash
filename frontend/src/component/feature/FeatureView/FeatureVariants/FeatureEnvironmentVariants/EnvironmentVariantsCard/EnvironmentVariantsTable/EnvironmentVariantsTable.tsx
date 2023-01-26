@@ -1,6 +1,17 @@
-import { styled, useMediaQuery, useTheme } from '@mui/material';
+import {
+    styled,
+    TableBody,
+    TableRow,
+    useMediaQuery,
+    useTheme,
+} from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
+import {
+    SortableTableHeader,
+    Table,
+    TableCell,
+    TablePlaceholder,
+} from 'component/common/Table';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
@@ -14,12 +25,13 @@ import {
     IPayload,
 } from 'interfaces/featureToggle';
 import { useMemo } from 'react';
-import { useFlexLayout, useSortBy, useTable } from 'react-table';
+import { useSortBy, useTable } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
 import { PayloadCell } from './PayloadCell/PayloadCell';
 import { OverridesCell } from './OverridesCell/OverridesCell';
 import { VariantsActionCell } from './VariantsActionsCell/VariantsActionsCell';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
+import { WeightType } from 'constants/variantTypes';
 
 const StyledTableContainer = styled('div')(({ theme }) => ({
     margin: theme.spacing(3, 0),
@@ -53,7 +65,7 @@ export const EnvironmentVariantsTable = ({
                 accessor: 'name',
                 Cell: HighlightCell,
                 sortType: 'alphanumeric',
-                minWidth: 100,
+                minWidth: 350,
                 searchable: true,
             },
             {
@@ -112,6 +124,7 @@ export const EnvironmentVariantsTable = ({
                     <VariantsActionCell
                         variant={original}
                         projectId={projectId}
+                        isLastVariableVariant={isProtectedVariant(original)}
                         environmentId={environment.name}
                         editVariant={onEditVariant}
                         deleteVariant={onDeleteVariant}
@@ -130,9 +143,33 @@ export const EnvironmentVariantsTable = ({
         []
     );
 
+    const isProtectedVariant = (variant: IFeatureVariant): boolean => {
+        const isVariable = variant.weightType === WeightType.VARIABLE;
+
+        const atLeastOneFixedVariant = variants.some(variant => {
+            return variant.weightType === WeightType.FIX;
+        });
+
+        const hasOnlyOneVariableVariant =
+            variants.filter(variant => {
+                return variant.weightType === WeightType.VARIABLE;
+            }).length == 1;
+
+        return (
+            atLeastOneFixedVariant && hasOnlyOneVariableVariant && isVariable
+        );
+    };
+
     const { data, getSearchText } = useSearch(columns, searchValue, variants);
 
-    const { headerGroups, rows, prepareRow, setHiddenColumns } = useTable(
+    const {
+        getTableProps,
+        getTableBodyProps,
+        headerGroups,
+        rows,
+        prepareRow,
+        setHiddenColumns,
+    } = useTable(
         {
             columns: columns as any[],
             data,
@@ -143,8 +180,7 @@ export const EnvironmentVariantsTable = ({
             disableSortRemove: true,
             disableMultiSort: true,
         },
-        useSortBy,
-        useFlexLayout
+        useSortBy
     );
 
     useConditionallyHiddenColumns(
@@ -165,11 +201,23 @@ export const EnvironmentVariantsTable = ({
     return (
         <StyledTableContainer>
             <SearchHighlightProvider value={getSearchText(searchValue)}>
-                <VirtualizedTable
-                    rows={rows}
-                    headerGroups={headerGroups}
-                    prepareRow={prepareRow}
-                />
+                <Table {...getTableProps()}>
+                    <SortableTableHeader headerGroups={headerGroups as any} />
+                    <TableBody {...getTableBodyProps()}>
+                        {rows.map(row => {
+                            prepareRow(row);
+                            return (
+                                <TableRow hover {...row.getRowProps()}>
+                                    {row.cells.map(cell => (
+                                        <TableCell {...cell.getCellProps()}>
+                                            {cell.render('Cell')}
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            );
+                        })}
+                    </TableBody>
+                </Table>
             </SearchHighlightProvider>
             <ConditionallyRender
                 condition={rows.length === 0}

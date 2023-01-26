@@ -27,6 +27,10 @@ import cloneDeep from 'lodash.clonedeep';
 import { CloudCircle } from '@mui/icons-material';
 import PermissionSwitch from 'component/common/PermissionSwitch/PermissionSwitch';
 import { UPDATE_FEATURE_VARIANTS } from 'component/providers/AccessProvider/permissions';
+import { WeightType } from 'constants/variantTypes';
+import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
+import { useChangeRequestInReviewWarning } from 'hooks/useChangeRequestInReviewWarning';
+import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 
 const StyledFormSubtitle = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -98,6 +102,10 @@ const StyledSelectMenu = styled(SelectMenu)(({ theme }) => ({
     marginRight: theme.spacing(10),
 }));
 
+const StyledCRAlert = styled(Alert)(({ theme }) => ({
+    marginBottom: theme.spacing(2),
+}));
+
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginTop: theme.spacing(4),
 }));
@@ -120,11 +128,6 @@ const payloadOptions = [
     { key: 'json', label: 'json' },
     { key: 'csv', label: 'csv' },
 ];
-
-enum WeightType {
-    FIX = 'fix',
-    VARIABLE = 'variable',
-}
 
 const EMPTY_PAYLOAD = { type: 'string', value: '' };
 
@@ -151,6 +154,11 @@ interface IEnvironmentVariantModalProps {
         variants: IFeatureVariant[],
         newVariants: IFeatureVariant[]
     ) => { patch: Operation[]; error?: string };
+    getCrPayload: (variants: IFeatureVariant[]) => {
+        feature: string;
+        action: 'patchVariant';
+        payload: { variants: IFeatureVariant[] };
+    };
     onConfirm: (updatedVariants: IFeatureVariant[]) => void;
 }
 
@@ -160,12 +168,18 @@ export const EnvironmentVariantModal = ({
     open,
     setOpen,
     getApiPayload,
+    getCrPayload,
     onConfirm,
 }: IEnvironmentVariantModalProps) => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
 
     const { uiConfig } = useUiConfig();
+
+    const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
+    const { data } = usePendingChangeRequests(projectId);
+    const { changeRequestInReviewOrApproved, alert } =
+        useChangeRequestInReviewWarning(data);
 
     const [name, setName] = useState('');
     const [customPercentage, setCustomPercentage] = useState(false);
@@ -241,6 +255,7 @@ export const EnvironmentVariantModal = ({
     };
 
     const apiPayload = getApiPayload(variants, getUpdatedVariants());
+    const crPayload = getCrPayload(getUpdatedVariants());
 
     useEffect(() => {
         clearError(ErrorField.PERCENTAGE);
@@ -259,11 +274,21 @@ export const EnvironmentVariantModal = ({
         onConfirm(getUpdatedVariants());
     };
 
-    const formatApiCode = () => `curl --location --request PATCH '${
-        uiConfig.unleashUrl
-    }/api/admin/projects/${projectId}/features/${featureId}/environments/${
-        environment?.name
-    }/variants' \\
+    const formatApiCode = () =>
+        isChangeRequest
+            ? `curl --location --request POST '${
+                  uiConfig.unleashUrl
+              }/api/admin/projects/${projectId}/environments/${
+                  environment?.name
+              }/change-requests' \\
+    --header 'Authorization: INSERT_API_KEY' \\
+    --header 'Content-Type: application/json' \\
+    --data-raw '${JSON.stringify(crPayload, undefined, 2)}'`
+            : `curl --location --request PATCH '${
+                  uiConfig.unleashUrl
+              }/api/admin/projects/${projectId}/features/${featureId}/environments/${
+                  environment?.name
+              }/variants' \\
     --header 'Authorization: INSERT_API_KEY' \\
     --header 'Content-Type: application/json' \\
     --data-raw '${JSON.stringify(apiPayload.patch, undefined, 2)}'`;
@@ -328,6 +353,17 @@ export const EnvironmentVariantModal = ({
         }
     };
 
+    const hasChangeRequestInReviewForEnvironment =
+        changeRequestInReviewOrApproved(environment?.name || '');
+
+    const changeRequestButtonText = hasChangeRequestInReviewForEnvironment
+        ? 'Add to existing change request'
+        : 'Add change to draft';
+
+    const isChangeRequest =
+        isChangeRequestConfigured(environment?.name || '') &&
+        uiConfig.flags.crOnVariants;
+
     return (
         <SidebarModal
             open={open}
@@ -353,6 +389,29 @@ export const EnvironmentVariantModal = ({
                 </StyledFormSubtitle>
                 <StyledForm onSubmit={handleSubmit}>
                     <div>
+                        <ConditionallyRender
+                            condition={hasChangeRequestInReviewForEnvironment}
+                            show={alert}
+                            elseShow={
+                                <ConditionallyRender
+                                    condition={Boolean(isChangeRequest)}
+                                    show={
+                                        <StyledCRAlert severity="info">
+                                            <strong>Change requests</strong> are
+                                            enabled
+                                            {environment
+                                                ? ` for ${environment.name}`
+                                                : ''}
+                                            . Your changes need to be approved
+                                            before they will be live. All the
+                                            changes you do now will be added
+                                            into a draft that you can submit for
+                                            review.
+                                        </StyledCRAlert>
+                                    }
+                                />
+                            }
+                        />
                         <StyledInputDescription>
                             Variant name
                         </StyledInputDescription>
@@ -490,7 +549,11 @@ export const EnvironmentVariantModal = ({
                             color="primary"
                             disabled={!isValid}
                         >
-                            {editing ? 'Save' : 'Add'} variant
+                            {isChangeRequest
+                                ? changeRequestButtonText
+                                : editing
+                                ? 'Save variant'
+                                : 'Add variant'}
                         </Button>
                         <StyledCancelButton
                             onClick={() => {

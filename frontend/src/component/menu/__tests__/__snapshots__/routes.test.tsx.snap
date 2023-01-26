@@ -4,13 +4,6 @@ exports[`returns all baseRoutes 1`] = `
 [
   {
     "component": [Function],
-    "menu": {},
-    "path": "/",
-    "title": "Unleash",
-    "type": "protected",
-  },
-  {
-    "component": [Function],
     "isStandalone": true,
     "menu": {},
     "path": "/splash/:splashId",

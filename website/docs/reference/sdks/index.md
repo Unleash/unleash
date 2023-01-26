@@ -26,13 +26,13 @@ Server-side clients run on your server and communicate directly with your Unleas
 Client-side SDKs can connect to the [Unleash Proxy](../unleash-proxy.md) or to the [Unleash front-end API](../front-end-api.md), but _not_ to the regular Unleash client API.
 
 
-- [Android SDK](android-proxy.md)
-- [Flutter Proxy SDK](flutter.md)
-- [iOS Proxy SDK](ios-proxy.md)
-- [Javascript SDK](javascript-browser.md)
-- [React Proxy SDK](react.md)
-- [Svelte Proxy SDK](svelte.md)
-- [Vue Proxy SDK](vue.md)
+- [Android SDK](/docs/generated/sdks/client-side/android-proxy.md)
+- [Flutter Proxy SDK](/docs/generated/sdks/client-side/flutter.md)
+- [iOS Proxy SDK](/docs/generated/sdks/client-side/ios-proxy.md)
+- [Javascript SDK](/docs/generated/sdks/client-side/javascript-browser.md)
+- [React Proxy SDK](/docs/generated/sdks/client-side/react.md)
+- [Svelte Proxy SDK](/docs/generated/sdks/client-side/svelte.md)
+- [Vue Proxy SDK](/docs/generated/sdks/client-side/vue.md)
 
 ### Server-side SDK compatibility table
 
@@ -142,8 +142,8 @@ By default, all SDKs reach out to the Unleash Server at startup to fetch their t
 
 Bootstrapping is also supported by the following front-end client SDKs:
 
-- [Android SDK](android-proxy.md)
-- [Javascript SDK](javascript-browser.md)
-- [React Proxy SDK](react.md)
-- [Svelte Proxy SDK](svelte.md)
-- [Vue Proxy SDK](vue.md)
+- [Android SDK](/docs/generated/sdks/client-side/android-proxy.md)
+- [Javascript SDK](/docs/generated/sdks/client-side/javascript-browser.md)
+- [React Proxy SDK](/docs/generated/sdks/client-side/react.md)
+- [Svelte Proxy SDK](/docs/generated/sdks/client-side/svelte.md)
+- [Vue Proxy SDK](/docs/generated/sdks/client-side/vue.md)

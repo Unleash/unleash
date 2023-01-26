@@ -45,9 +45,26 @@ import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi
 import { FeatureTagCell } from 'component/common/Table/cells/FeatureTagCell/FeatureTagCell';
 import { useGlobalLocalStorage } from 'hooks/useGlobalLocalStorage';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
+import { flexRow } from 'themes/themeStyles';
+import VariantsWarningTooltip from 'component/feature/FeatureView/FeatureVariants/VariantsTooltipWarning';
 
 const StyledResponsiveButton = styled(ResponsiveButton)(() => ({
     whiteSpace: 'nowrap',
+}));
+
+const StyledSwitchContainer = styled('div', {
+    shouldForwardProp: prop => prop !== 'hasWarning',
+})<{ hasWarning?: boolean }>(({ theme, hasWarning }) => ({
+    flexGrow: 0,
+    ...flexRow,
+    justifyContent: 'center',
+    ...(hasWarning && {
+        '::before': {
+            content: '""',
+            display: 'block',
+            width: theme.spacing(2),
+        },
+    }),
 }));
 
 interface IProjectFeatureTogglesProps {
@@ -64,8 +81,10 @@ type ListItemType = Pick<
         [key in string]: {
             name: string;
             enabled: boolean;
+            variantCount: number;
         };
     };
+    someEnabledEnvironmentHasVariants: boolean;
 };
 
 const staticColumns = ['Actions', 'name', 'favorite'];
@@ -273,15 +292,28 @@ export const ProjectFeatureToggles = ({
                 }: {
                     value: boolean;
                     row: { original: ListItemType };
-                }) => (
-                    <FeatureToggleSwitch
-                        value={value}
-                        projectId={projectId}
-                        featureName={feature?.name}
-                        environmentName={name}
-                        onToggle={onToggle}
-                    />
-                ),
+                }) => {
+                    const hasWarning =
+                        feature.someEnabledEnvironmentHasVariants &&
+                        feature.environments[name].variantCount === 0 &&
+                        feature.environments[name].enabled;
+
+                    return (
+                        <StyledSwitchContainer hasWarning={hasWarning}>
+                            <FeatureToggleSwitch
+                                value={value}
+                                projectId={projectId}
+                                featureName={feature?.name}
+                                environmentName={name}
+                                onToggle={onToggle}
+                            />
+                            <ConditionallyRender
+                                condition={hasWarning}
+                                show={<VariantsWarningTooltip />}
+                            />
+                        </StyledSwitchContainer>
+                    );
+                },
                 sortType: 'boolean',
                 filterName: name,
                 filterParsing: (value: boolean) =>
@@ -311,38 +343,31 @@ export const ProjectFeatureToggles = ({
 
     const featuresData = useMemo(
         () =>
-            features.map(
-                ({
-                    name,
-                    lastSeenAt,
-                    createdAt,
-                    type,
-                    stale,
-                    tags,
-                    favorite,
-                    environments: featureEnvironments,
-                }) => ({
-                    name,
-                    lastSeenAt,
-                    createdAt,
-                    type,
-                    stale,
-                    tags,
-                    favorite,
-                    environments: Object.fromEntries(
-                        environments.map(env => [
+            features.map(feature => ({
+                ...feature,
+                environments: Object.fromEntries(
+                    environments.map(env => {
+                        const thisEnv = feature?.environments.find(
+                            featureEnvironment =>
+                                featureEnvironment?.name === env
+                        );
+                        return [
                             env,
                             {
                                 name: env,
-                                enabled:
-                                    featureEnvironments?.find(
-                                        feature => feature?.name === env
-                                    )?.enabled || false,
+                                enabled: thisEnv?.enabled || false,
+                                variantCount: thisEnv?.variantCount || 0,
                             },
-                        ])
-                    ),
-                })
-            ),
+                        ];
+                    })
+                ),
+                someEnabledEnvironmentHasVariants:
+                    feature.environments?.some(
+                        featureEnvironment =>
+                            featureEnvironment.variantCount > 0 &&
+                            featureEnvironment.enabled
+                    ) || false,
+            })),
         [features, environments]
     );
 

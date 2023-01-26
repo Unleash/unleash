@@ -120,7 +120,6 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
             enabled: r.enabled,
             featureName: r.feature_name,
             environment: r.environment,
-            variants: r.variants,
         }));
     }
 

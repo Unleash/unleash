@@ -1,1 +1,1 @@
-export const ENV_LIMIT = 15;
+export const ENV_LIMIT = 50;

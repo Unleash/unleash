@@ -15,6 +15,7 @@ export interface IFeatureToggleListItem {
 export interface IEnvironments {
     name: string;
     enabled: boolean;
+    variantCount: number;
 }
 
 export interface IFeatureToggle {
@@ -41,6 +42,10 @@ export interface IFeatureEnvironment {
     enabled: boolean;
     strategies: IFeatureStrategy[];
     variants?: IFeatureVariant[];
+}
+
+export interface IFeatureEnvironmentWithCrEnabled extends IFeatureEnvironment {
+    crEnabled?: boolean;
 }
 
 export interface IFeatureVariant {

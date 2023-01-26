@@ -6,17 +6,14 @@ import dbInit, { ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import { IEventStore } from 'lib/types/stores/event-store';
 import {
-    FeatureToggle,
     FeatureToggleDTO,
     IEnvironmentStore,
-    IFeatureStrategy,
     IFeatureToggleStore,
     IProjectStore,
     ISegment,
     IStrategyConfig,
 } from 'lib/types';
 import { DEFAULT_ENV } from '../../../../lib/util';
-import { IImportDTO } from '../../../../lib/services/export-import-service';
 import { ContextFieldSchema } from '../../../../lib/openapi';
 
 let app: IUnleashTest;
@@ -185,7 +182,6 @@ test('exports features', async () => {
                 enabled: false,
                 environment: 'default',
                 featureName: 'first_feature',
-                variants: [],
             },
         ],
         segments: [
@@ -248,7 +244,6 @@ test('should export custom context fields', async () => {
                 enabled: false,
                 environment: 'default',
                 featureName: 'first_feature',
-                variants: [],
             },
         ],
         contextFields: [context],
@@ -289,7 +284,6 @@ test('should export tags', async () => {
                 enabled: false,
                 environment: 'default',
                 featureName: 'first_feature',
-                variants: [],
             },
         ],
         featureTags: [{ featureName, tagValue: 'tag1' }],
@@ -316,104 +310,4 @@ test('returns all features, when no feature was defined', async () => {
         .expect(200);
 
     expect(body.features).toHaveLength(2);
-});
-
-test('import features to existing project and environment', async () => {
-    const feature = 'first_feature';
-    const project = 'new_project';
-    const environment = 'staging';
-    const variants = [
-        {
-            name: 'variantA',
-            weight: 500,
-            payload: {
-                type: 'string',
-                value: 'payloadA',
-            },
-            overrides: [],
-            stickiness: 'default',
-            weightType: 'variable',
-        },
-        {
-            name: 'variantB',
-            weight: 500,
-            payload: {
-                type: 'string',
-                value: 'payloadB',
-            },
-            overrides: [],
-            stickiness: 'default',
-            weightType: 'variable',
-        },
-    ];
-    const exportedFeature: FeatureToggle = {
-        project: 'old_project',
-        name: 'first_feature',
-        variants,
-    };
-    const exportedStrategy: IFeatureStrategy = {
-        id: '798cb25a-2abd-47bd-8a95-40ec13472309',
-        featureName: feature,
-        projectId: 'old_project',
-        environment: 'old_environment',
-        strategyName: 'default',
-        parameters: {},
-        constraints: [],
-    };
-    const importPayload: IImportDTO = {
-        data: {
-            features: [exportedFeature],
-            featureStrategies: [exportedStrategy],
-            featureEnvironments: [
-                {
-                    enabled: true,
-                    featureName: 'first_feature',
-                    environment: 'irrelevant',
-                },
-            ],
-            contextFields: [],
-            segments: [],
-        },
-        project: project,
-        environment: environment,
-    };
-    await createProject(project, environment);
-
-    await app.request
-        .post('/api/admin/features-batch/import')
-        .send(importPayload)
-        .set('Content-Type', 'application/json')
-        .expect(201);
-
-    const { body: importedFeature } = await app.request
-        .get(`/api/admin/features/${feature}`)
-        .expect(200);
-    expect(importedFeature).toMatchObject({
-        name: 'first_feature',
-        project: project,
-        variants,
-    });
-
-    const { body: importedFeatureEnvironment } = await app.request
-        .get(
-            `/api/admin/projects/${project}/features/${feature}/environments/${environment}`,
-        )
-        .expect(200);
-
-    expect(importedFeatureEnvironment).toMatchObject({
-        name: feature,
-        environment,
-        enabled: true,
-        strategies: [
-            {
-                featureName: feature,
-                projectId: project,
-                environment: environment,
-                parameters: {},
-                constraints: [],
-                sortOrder: 9999,
-                name: 'default',
-            },
-        ],
-    });
 });

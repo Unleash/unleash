@@ -1,12 +1,5 @@
 import { IUnleashConfig } from '../types/option';
-import {
-    FeatureToggle,
-    IFeatureEnvironment,
-    IFeatureStrategy,
-    IFeatureStrategySegment,
-    ISegment,
-    ITag,
-} from '../types/model';
+import { IFeatureStrategy, IFeatureStrategySegment } from '../types/model';
 import { Logger } from '../logger';
 import { IFeatureTagStore } from '../types/stores/feature-tag-store';
 import { IProjectStore } from '../types/stores/project-store';
@@ -20,25 +13,15 @@ import { IEnvironmentStore } from '../types/stores/environment-store';
 import { IFeatureEnvironmentStore } from '../types/stores/feature-environment-store';
 import { IContextFieldStore, IUnleashStores } from '../types/stores';
 import { ISegmentStore } from '../types/stores/segment-store';
-import { IContextFieldDto } from '../types/stores/context-field-store';
 import FeatureToggleService from './feature-toggle-service';
-import User from 'lib/types/user';
 import { ExportQuerySchema } from '../openapi/spec/export-query-schema';
 import { FEATURES_EXPORTED, IFlagResolver, IUnleashServices } from '../types';
+import { ExportResultSchema } from '../openapi';
 
 export interface IImportDTO {
-    data: IExportData;
+    data: ExportResultSchema;
     project: string;
     environment: string;
-}
-
-export interface IExportData {
-    features: FeatureToggle[];
-    tags?: ITag[];
-    contextFields: IContextFieldDto[];
-    featureStrategies: IFeatureStrategy[];
-    featureEnvironments: IFeatureEnvironment[];
-    segments: ISegment[];
 }
 
 export default class ExportImportService {
@@ -102,7 +85,7 @@ export default class ExportImportService {
     async export(
         query: ExportQuerySchema,
         userName: string,
-    ): Promise<IExportData> {
+    ): Promise<ExportResultSchema> {
         const [
             features,
             featureEnvironments,
@@ -140,10 +123,25 @@ export default class ExportImportService {
             ),
         );
         const result = {
-            features,
-            featureStrategies,
-            featureEnvironments,
-            contextFields: filteredContextFields,
+            features: features.map((item) => {
+                const { createdAt, archivedAt, lastSeenAt, ...rest } = item;
+                return rest;
+            }),
+            featureStrategies: featureStrategies.map((item) => {
+                const { createdAt, ...rest } = item;
+                return {
+                    name: rest.strategyName,
+                    ...rest,
+                };
+            }),
+            featureEnvironments: featureEnvironments.map((item) => ({
+                ...item,
+                name: item.featureName,
+            })),
+            contextFields: filteredContextFields.map((item) => {
+                const { createdAt, ...rest } = item;
+                return rest;
+            }),
             featureTags,
             segments: filteredSegments,
         };
@@ -168,48 +166,6 @@ export default class ExportImportService {
                 )
                 .map((segment) => segment.segmentId);
         });
-    }
-
-    async import(dto: IImportDTO, user: User): Promise<void> {
-        await Promise.all(
-            dto.data.features.map((feature) =>
-                this.featureToggleService.createFeatureToggle(
-                    dto.project,
-                    feature,
-                    user.name,
-                ),
-            ),
-        );
-        await Promise.all(
-            dto.data.featureStrategies.map((featureStrategy) =>
-                this.featureToggleService.unprotectedCreateStrategy(
-                    {
-                        name: featureStrategy.strategyName,
-                        constraints: featureStrategy.constraints,
-                        parameters: featureStrategy.parameters,
-                        segments: featureStrategy.segments,
-                        sortOrder: featureStrategy.sortOrder,
-                    },
-                    {
-                        featureName: featureStrategy.featureName,
-                        environment: dto.environment,
-                        projectId: dto.project,
-                    },
-                    user.name,
-                ),
-            ),
-        );
-        await Promise.all(
-            dto.data.featureEnvironments.map((featureEnvironment) =>
-                this.featureToggleService.unprotectedUpdateEnabled(
-                    dto.project,
-                    featureEnvironment.featureName,
-                    dto.environment,
-                    featureEnvironment.enabled,
-                    user.name,
-                ),
-            ),
-        );
     }
 }
 

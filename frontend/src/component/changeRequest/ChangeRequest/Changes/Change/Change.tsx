@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from 'react';
+import { FC, ReactNode } from 'react';
 import {
     hasNameField,
     IChange,
@@ -20,6 +20,7 @@ import {
     StrategyDeletedChange,
     StrategyEditedChange,
 } from './StrategyChange';
+import { VariantPatch } from './VariantPatch/VariantPatch';
 
 const StyledSingleChangeBox = styled(Box, {
     shouldForwardProp: (prop: string) => !prop.startsWith('$'),
@@ -137,6 +138,15 @@ export const Change: FC<{
                         </StrategyEditedChange>
                         <StrategyExecution strategy={change.payload} />
                     </>
+                )}
+                {change.action === 'patchVariant' && (
+                    <VariantPatch
+                        feature={feature.name}
+                        project={changeRequest.project}
+                        environment={changeRequest.environment}
+                        change={change}
+                        discard={discard}
+                    />
                 )}
             </Box>
         </StyledSingleChangeBox>

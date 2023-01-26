@@ -1,98 +1,145 @@
-import { Button, styled, TextField } from '@mui/material';
+import { styled } from '@mui/material';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
-import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
-import { KeyboardArrowDownOutlined } from '@mui/icons-material';
 import React, { useEffect, useState } from 'react';
-import { useImportApi } from 'hooks/api/actions/useImportApi/useImportApi';
-import { useProjectEnvironments } from 'hooks/api/getters/useProjectEnvironments/useProjectEnvironments';
-import { StyledFileDropZone } from './ImportTogglesDropZone';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { ImportTimeline } from './ImportTimeline';
+import { StageName } from './StageName';
+import {
+    Actions,
+    ConfigurationStage,
+    ConfigurationTabs,
+    ImportArea,
+    ImportMode,
+} from './configure/ConfigurationStage';
+import { ValidationStage } from './validate/ValidationStage';
+import { ImportStage } from './import/ImportStage';
+import { ImportOptions } from './configure/ImportOptions';
 
-const StyledDiv = styled('div')(({ theme }) => ({
-    backgroundColor: '#efefef',
-    height: '100vh',
-    padding: theme.spacing(2),
+const ModalContentContainer = styled('div')(({ theme }) => ({
+    minHeight: '100vh',
+    display: 'flex',
 }));
 
-const StyledTextField = styled(TextField)(({ theme }) => ({
-    width: '100%',
-    margin: theme.spacing(2, 0),
+const TimelineContainer = styled('div')(({ theme }) => ({
+    backgroundColor: theme.palette.primary.main,
+    padding: theme.spacing(6, 8, 3, 4),
+    flexBasis: '30%',
 }));
+
+const TimelineHeader = styled('div')(({ theme }) => ({
+    textTransform: 'uppercase',
+    fontSize: theme.fontSizes.smallBody,
+    color: theme.palette.text.tertiaryContrast,
+    fontWeight: theme.typography.fontWeightBold,
+    paddingLeft: theme.spacing(2),
+    marginBottom: theme.spacing(4),
+}));
+
+const isValidJSON = (json: string) => {
+    try {
+        JSON.parse(json);
+        return true;
+    } catch (e) {
+        return false;
+    }
+};
 
 interface IImportModalProps {
     open: boolean;
-    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-
+    setOpen: (value: boolean) => void;
     project: string;
 }
 
 export const ImportModal = ({ open, setOpen, project }: IImportModalProps) => {
-    const { environments } = useProjectEnvironments(project);
-    const { createImport } = useImportApi();
-
-    const environmentOptions = environments
-        .filter(environment => environment.enabled)
-        .map(environment => ({
-            key: environment.name,
-            label: environment.name,
-            title: environment.name,
-        }));
-
+    const [importStage, setImportStage] = useState<StageName>('configure');
     const [environment, setEnvironment] = useState('');
-    const [data, setData] = useState('');
+    const [importPayload, setImportPayload] = useState('');
+    const [activeTab, setActiveTab] = useState<ImportMode>('file');
+
+    const close = () => {
+        setOpen(false);
+    };
 
     useEffect(() => {
-        setEnvironment(environmentOptions[0]?.key);
-    }, [JSON.stringify(environmentOptions)]);
+        if (open === true) {
+            setInitialState();
+        }
+    }, [open]);
 
-    const onSubmit = async () => {
-        await createImport({
-            data: JSON.parse(data),
-            environment,
-            project,
-        });
+    const setInitialState = () => {
+        setImportStage('configure');
+        setEnvironment('');
+        setImportPayload('');
+        setActiveTab('file');
     };
 
     return (
-        <SidebarModal
-            open={open}
-            onClose={() => {
-                setOpen(false);
-            }}
-            label={'New service account'}
-        >
-            <StyledDiv>
-                <GeneralSelect
-                    sx={{ width: '140px' }}
-                    options={environmentOptions}
-                    onChange={setEnvironment}
-                    label={'Environment'}
-                    value={environment}
-                    IconComponent={KeyboardArrowDownOutlined}
-                    fullWidth
+        <SidebarModal open={open} onClose={close} label="Import toggles">
+            <ModalContentContainer>
+                <TimelineContainer>
+                    <TimelineHeader>Process</TimelineHeader>
+                    <ImportTimeline stage={importStage} />
+                </TimelineContainer>
+                <ConditionallyRender
+                    condition={importStage === 'configure'}
+                    show={
+                        <ConfigurationStage
+                            tabs={
+                                <ConfigurationTabs
+                                    activeTab={activeTab}
+                                    setActiveTab={setActiveTab}
+                                />
+                            }
+                            importOptions={
+                                <ImportOptions
+                                    project={project}
+                                    environment={environment}
+                                    onChange={setEnvironment}
+                                />
+                            }
+                            importArea={
+                                <ImportArea
+                                    activeTab={activeTab}
+                                    setActiveTab={setActiveTab}
+                                    importPayload={importPayload}
+                                    setImportPayload={setImportPayload}
+                                />
+                            }
+                            actions={
+                                <Actions
+                                    disabled={!isValidJSON(importPayload)}
+                                    onSubmit={() => setImportStage('validate')}
+                                    onClose={close}
+                                />
+                            }
+                        />
+                    }
                 />
-                <StyledFileDropZone onChange={setData}>
-                    <p>
-                        Drag 'n' drop some files here, or click to select files
-                    </p>
-                </StyledFileDropZone>
-                <StyledTextField
-                    label="Exported toggles"
-                    variant="outlined"
-                    onChange={event => setData(event.target.value)}
-                    value={data}
-                    multiline
-                    minRows={20}
-                    maxRows={20}
+                <ConditionallyRender
+                    condition={importStage === 'validate'}
+                    show={
+                        <ValidationStage
+                            project={project}
+                            environment={environment}
+                            payload={importPayload}
+                            onBack={() => setImportStage('configure')}
+                            onSubmit={() => setImportStage('import')}
+                            onClose={close}
+                        />
+                    }
                 />
-                <Button
-                    variant="contained"
-                    color="primary"
-                    type="submit"
-                    onClick={onSubmit}
-                >
-                    Import
-                </Button>{' '}
-            </StyledDiv>
+                <ConditionallyRender
+                    condition={importStage === 'import'}
+                    show={
+                        <ImportStage
+                            project={project}
+                            environment={environment}
+                            payload={importPayload}
+                            onClose={close}
+                        />
+                    }
+                />
+            </ModalContentContainer>
         </SidebarModal>
     );
 };

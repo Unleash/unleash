@@ -103,7 +103,7 @@ export default class PatController extends Controller {
         res: Response,
     ): Promise<void> {
         const { id } = req.params;
-        await this.patService.deletePat(id, req.user.id);
+        await this.patService.deletePat(id, req.user.id, req.user);
         res.status(200).end();
     }
 }

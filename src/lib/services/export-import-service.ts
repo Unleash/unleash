@@ -128,9 +128,16 @@ export default class ExportImportService {
                 return rest;
             }),
             featureStrategies: featureStrategies.map((item) => {
-                const { createdAt, ...rest } = item;
+                const name = item.strategyName;
+                const {
+                    createdAt,
+                    projectId,
+                    environment,
+                    strategyName,
+                    ...rest
+                } = item;
                 return {
-                    name: rest.strategyName,
+                    name,
                     ...rest,
                 };
             }),
@@ -143,7 +150,10 @@ export default class ExportImportService {
                 return rest;
             }),
             featureTags,
-            segments: filteredSegments,
+            segments: filteredSegments.map((item) => {
+                const { createdAt, createdBy, ...rest } = item;
+                return rest;
+            }),
         };
         await this.eventStore.store({
             type: FEATURES_EXPORTED,

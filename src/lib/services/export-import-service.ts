@@ -18,12 +18,6 @@ import { ExportQuerySchema } from '../openapi/spec/export-query-schema';
 import { FEATURES_EXPORTED, IFlagResolver, IUnleashServices } from '../types';
 import { ExportResultSchema } from '../openapi';
 
-export interface IImportDTO {
-    data: ExportResultSchema;
-    project: string;
-    environment: string;
-}
-
 export default class ExportImportService {
     private logger: Logger;
 

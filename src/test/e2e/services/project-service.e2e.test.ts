@@ -1145,8 +1145,8 @@ test('should get correct amount of features created in current and past window',
     ]);
 
     const result = await projectService.getStatusUpdates(project.id);
-    expect(result.updates.createdThisWindow).toBe(2);
-    expect(result.updates.createdLastWindow).toBe(2);
+    expect(result.updates.createdCurrentWindow).toBe(2);
+    expect(result.updates.createdPastWindow).toBe(2);
 });
 
 test('should get correct amount of features archived in current and past window', async () => {
@@ -1194,6 +1194,6 @@ test('should get correct amount of features archived in current and past window'
     ]);
 
     const result = await projectService.getStatusUpdates(project.id);
-    expect(result.updates.archivedThisWindow).toBe(2);
-    expect(result.updates.archivedLastWindow).toBe(2);
+    expect(result.updates.archivedCurrentWindow).toBe(2);
+    expect(result.updates.archivedPastWindow).toBe(2);
 });

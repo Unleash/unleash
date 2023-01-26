@@ -62,10 +62,10 @@ export interface AccessWithRoles {
 export interface IStatusUpdate {
     avgTimeToProdCurrentWindow: number;
     avgTimeToProdPastWindow: number;
-    createdThisWindow: number;
-    createdLastWindow: number;
-    archivedThisWindow: number;
-    archivedLastWindow: number;
+    createdCurrentWindow: number;
+    createdPastWindow: number;
+    archivedCurrentWindow: number;
+    archivedPastWindow: number;
 }
 
 interface ICalculateStatus {
@@ -638,7 +638,7 @@ export default class ProjectService {
             project: projectId,
         });
 
-        const [createdThisWindow, createdLastWindow] = await Promise.all([
+        const [createdCurrentWindow, createdPastWindow] = await Promise.all([
             // @ts-ignore
             await this.featureToggleStore.getByDate({
                 project: projectId,
@@ -656,7 +656,7 @@ export default class ProjectService {
             }),
         ]);
 
-        const [archivedThisWindow, archivedLastWindow] = await Promise.all([
+        const [archivedCurrentWindow, archivedPastWindow] = await Promise.all([
             // @ts-ignore
             await this.featureToggleStore.getByDate({
                 project: projectId,
@@ -708,10 +708,10 @@ export default class ProjectService {
                     projectStatus.calculateAverageTimeToProd(
                         subDays(new Date(), 30),
                     ),
-                createdThisWindow: createdThisWindow.length,
-                createdLastWindow: createdLastWindow.length,
-                archivedThisWindow: archivedThisWindow.length,
-                archivedLastWindow: archivedLastWindow.length,
+                createdCurrentWindow: createdCurrentWindow.length,
+                createdPastWindow: createdPastWindow.length,
+                archivedCurrentWindow: archivedCurrentWindow.length,
+                archivedPastWindow: archivedPastWindow.length,
             },
         };
     }

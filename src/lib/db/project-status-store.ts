@@ -36,10 +36,10 @@ class ProjectStatusStore implements IProjectStatusStore {
                     status.avgTimeToProdCurrentWindow,
                 avg_time_to_prod_past_window: status.avgTimeToProdPastWindow,
                 project: projectId,
-                features_created_current_window: status.createdThisWindow,
-                features_created_past_window: status.createdLastWindow,
-                features_archived_current_window: status.archivedThisWindow,
-                features_archived_past_window: status.archivedLastWindow,
+                features_created_current_window: status.createdCurrentWindow,
+                features_created_past_window: status.createdPastWindow,
+                features_archived_current_window: status.archivedCurrentWindow,
+                features_archived_past_window: status.archivedPastWindow,
             })
             .onConflict('project')
             .merge();

@@ -59,7 +59,7 @@ export interface AccessWithRoles {
     groups: IGroupModelWithProjectRole[];
 }
 
-export interface IStatusUpdate {
+export interface IProjectStats {
     avgTimeToProdCurrentWindow: number;
     avgTimeToProdPastWindow: number;
     createdCurrentWindow: number;
@@ -72,7 +72,7 @@ export interface IStatusUpdate {
 
 interface ICalculateStatus {
     projectId: string;
-    updates: IStatusUpdate;
+    updates: IProjectStats;
 }
 
 export default class ProjectService {

@@ -4,7 +4,7 @@ import { Logger, LogProvider } from '../logger';
 import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
 import EventEmitter from 'events';
-import { IStatusUpdate } from 'lib/services/project-service';
+import { IProjectStats } from 'lib/services/project-service';
 import { IProjectStatusStore } from 'lib/types/stores/project-status-store-type';
 
 const TABLE = 'project_status';
@@ -28,7 +28,7 @@ class ProjectStatusStore implements IProjectStatusStore {
 
     async updateStatus(
         projectId: string,
-        status: IStatusUpdate,
+        status: IProjectStats,
     ): Promise<void> {
         await this.db(TABLE)
             .insert({

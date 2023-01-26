@@ -27,9 +27,7 @@ export const ProjectMembersWidget = ({
 
     return (
         <StyledProjectInfoWidgetContainer>
-            <StyledWidgetTitle data-loading>
-                Project members
-            </StyledWidgetTitle>
+            <StyledWidgetTitle data-loading>Project members</StyledWidgetTitle>
             <StyledParagraphEmphasizedText data-loading>
                 {memberCount}
             </StyledParagraphEmphasizedText>

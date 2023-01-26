@@ -14,6 +14,11 @@ const OPENAPI_TAGS = [
             'Create, update, and delete [Unleash API tokens](https://docs.getunleash.io/reference/api-tokens-and-client-keys).',
     },
     {
+        name: 'Personal access tokens',
+        description:
+            'Create, update, and delete [Personal access tokens](https://docs.getunleash.io/reference/api-tokens-and-client-keys#personal-access-tokens).',
+    },
+    {
         name: 'Archive',
         description:
             'Revive or permanently delete [archived feature toggles](https://docs.getunleash.io/advanced/archived_toggles).',
@@ -97,8 +102,18 @@ const OPENAPI_TAGS = [
     },
     { name: 'Edge', description: 'Endpoints related to Unleash on the Edge.' },
     {
+        name: 'Frontend API',
+        description:
+            'API for connecting client-side (frontend) applications to Unleash.',
+    },
+    {
         name: 'Maintenance',
         description: 'Enable/disable the maintenance mode of Unleash.',
+    },
+    {
+        name: 'Change Requests',
+        description:
+            'API for managing [change requests](https://docs.getunleash.io/reference/change-requests).',
     },
 ] as const;
 

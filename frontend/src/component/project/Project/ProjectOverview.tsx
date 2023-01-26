@@ -36,7 +36,9 @@ const StyledContentContainer = styled(Box)(() => ({
 const ProjectOverview = () => {
     const projectId = useRequiredPathParam('projectId');
     const projectName = useProjectNameOrId(projectId);
-    const { project, loading } = useProject(projectId, { refreshInterval });
+    const { project, loading } = useProject(projectId, {
+        refreshInterval,
+    });
     const { members, features, health, description, environments } = project;
     usePageTitle(`Project overview – ${projectName}`);
     const { setLastViewed } = useLastViewedProject();
@@ -58,7 +60,7 @@ const ProjectOverview = () => {
             <StyledContentContainer>
                 <ConditionallyRender
                     condition={Boolean(uiConfig?.flags.newProjectOverview)}
-                    show={<ProjectStatus />}
+                    show={<ProjectStatus stats={project.stats} />}
                 />
                 <StyledProjectToggles>
                     <ProjectFeatureToggles

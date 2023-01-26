@@ -3,7 +3,7 @@ import { styled } from '@mui/material';
 
 const StyledHeader = styled('h3')(({ theme }) => ({
     fontSize: theme.fontSizes.bodySize,
-    fontWeight: 'normal',
+    fontWeight: theme.typography.fontWeightMedium,
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(0.5),
 }));

@@ -1,16 +1,13 @@
 import { ConstraintFormHeader } from '../ConstraintFormHeader/ConstraintFormHeader';
 import Input from 'component/common/Input/Input';
 import { parseDateValue, parseValidDate } from 'component/common/util';
-import {
-    ITimezoneSelect,
-    useTimezones,
-} from '../../../../../../hooks/useTimezones';
+import { ITimezoneSelect, useGetTimezones } from 'hooks/useGetTimezones';
 import { utcToZonedTime, zonedTimeToUtc } from 'date-fns-tz';
 
 import { useEffect, useMemo, useState } from 'react';
-import GeneralSelect from '../../../../GeneralSelect/GeneralSelect';
-import { ConditionallyRender } from '../../../../ConditionallyRender/ConditionallyRender';
-import useUiConfig from '../../../../../../hooks/api/getters/useUiConfig/useUiConfig';
+import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { styled } from '@mui/material';
 
 interface IDateSingleValueProps {
@@ -23,7 +20,7 @@ interface IDateSingleValueProps {
 const StyledWrapper = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'row',
-    marginBottom: 8,
+    marginBottom: theme.spacing(1),
     alignItems: 'center',
     gap: theme.spacing(1),
 }));
@@ -36,24 +33,26 @@ export const DateSingleValue = ({
 }: IDateSingleValueProps) => {
     const { uiConfig } = useUiConfig();
     const showSelectableTimezone = Boolean(uiConfig.flags.selectableTimezone);
-    const timezones = useTimezones();
-    const { timeZone: local } = Intl.DateTimeFormat().resolvedOptions();
-    const [timezone, setTimezone] = useState(local);
+    const { getAllTimezones } = useGetTimezones();
+    const { timeZone: localTimezoneName } =
+        Intl.DateTimeFormat().resolvedOptions();
+    const [timezone, setTimezone] = useState(localTimezoneName);
+    const [timezones] = useState(getAllTimezones());
     const [pickedDate, setPickedDate] = useState(value || '');
     const [localDate, setLocalDate] = useState(pickedDate || '');
 
     const localTimezone = useMemo<ITimezoneSelect | undefined>(() => {
-        return timezones.find(t => t.key === local);
-    }, [timezones, local]);
+        return timezones.find(t => t.key === localTimezoneName);
+    }, [timezones, localTimezoneName]);
 
     useEffect(() => {
         if (pickedDate && timezone) {
             const utc = zonedTimeToUtc(pickedDate!, timezone);
             setValue(utc.toISOString());
-            const localDate = utcToZonedTime(utc, local);
+            const localDate = utcToZonedTime(utc, localTimezoneName);
             setLocalDate(localDate.toISOString());
         }
-    }, [local, pickedDate, setValue, timezone]);
+    }, [localTimezoneName, pickedDate, setValue, timezone]);
 
     if (!value) return null;
 
@@ -96,15 +95,22 @@ export const DateSingleValue = ({
                         />
                     }
                     elseShow={
-                        <p>
-                            {localTimezone?.key}{' '}
-                            {`(UTC ${localTimezone?.utcOffset})`}
-                        </p>
+                        <ConditionallyRender
+                            condition={Boolean(localTimezone)}
+                            show={
+                                <p>
+                                    {localTimezone?.key}{' '}
+                                    {`(UTC ${localTimezone?.utcOffset})`}
+                                </p>
+                            }
+                        />
                     }
                 />
             </StyledWrapper>
             <ConditionallyRender
-                condition={local !== timezone}
+                condition={
+                    showSelectableTimezone && localTimezoneName !== timezone
+                }
                 show={
                     <p>
                         {parseValidDate(localDate)?.toISOString()} (Your local

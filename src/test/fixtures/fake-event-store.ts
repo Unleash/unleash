@@ -1,6 +1,7 @@
 import { IEventStore } from '../../lib/types/stores/event-store';
 import { IEvent } from '../../lib/types/events';
 import { AnyEventEmitter } from '../../lib/util/anyEventEmitter';
+import { IQueryOperations } from 'lib/db/event-store';
 
 class FakeEventStore extends AnyEventEmitter implements IEventStore {
     events: IEvent[];
@@ -79,6 +80,11 @@ class FakeEventStore extends AnyEventEmitter implements IEventStore {
                 environments.includes(event.data.environment)
             );
         });
+    }
+
+    async query(operations: IQueryOperations[]): Promise<IEvent[]> {
+        if (operations) return [];
+        return [];
     }
 }
 

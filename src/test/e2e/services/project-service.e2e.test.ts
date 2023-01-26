@@ -1057,8 +1057,15 @@ test('should only count active feature toggles for project', async () => {
     expect(theProject?.featureCount).toBe(1);
 });
 
+const updateEventCreatedAt = async (date: Date, featureName: string) => {
+    return db.rawDatabase
+        .table('events')
+        .update({ created_at: date })
+        .where({ feature_name: featureName });
+};
+
 const updateFeature = async (featureName: string, update: any) => {
-    await db.rawDatabase
+    return db.rawDatabase
         .table('features')
         .update(update)
         .where({ name: featureName });
@@ -1077,6 +1084,7 @@ test('should calculate average time to production', async () => {
         { name: 'average-prod-time-2' },
         { name: 'average-prod-time-3' },
         { name: 'average-prod-time-4' },
+        { name: 'average-prod-time-5' },
     ];
 
     const featureToggles = await Promise.all(
@@ -1104,14 +1112,21 @@ test('should calculate average time to production', async () => {
         }),
     );
 
+    await updateEventCreatedAt(subDays(new Date(), 31), 'average-prod-time-5');
+
     await Promise.all(
         featureToggles.map((toggle) =>
             updateFeature(toggle.name, { created_at: subDays(new Date(), 15) }),
         ),
     );
 
+    await updateFeature('average-prod-time-5', {
+        created_at: subDays(new Date(), 33),
+    });
+
     const result = await projectService.getStatusUpdates(project.id);
     expect(result.updates.avgTimeToProdCurrentWindow).toBe(14);
+    expect(result.updates.avgTimeToProdPastWindow).toBe(1);
 });
 
 test('should get correct amount of features created in current and past window', async () => {

@@ -40,6 +40,9 @@ class ProjectStatusStore implements IProjectStatusStore {
                 features_created_past_window: status.createdPastWindow,
                 features_archived_current_window: status.archivedCurrentWindow,
                 features_archived_past_window: status.archivedPastWindow,
+                project_changes_current_window:
+                    status.projectActivityCurrentWindow,
+                project_changes_past_window: status.projectActivityPastWindow,
             })
             .onConflict('project')
             .merge();

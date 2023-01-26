@@ -66,6 +66,8 @@ export interface IStatusUpdate {
     createdPastWindow: number;
     archivedCurrentWindow: number;
     archivedPastWindow: number;
+    projectActivityCurrentWindow: number;
+    projectActivityPastWindow: number;
 }
 
 interface ICalculateStatus {
@@ -672,6 +674,34 @@ export default class ProjectService {
             }),
         ]);
 
+        const [projectActivityCurrentWindow, projectActivityPastWindow] =
+            await Promise.all([
+                // @ ts-ignore
+                this.eventStore.query([
+                    { op: 'where', parameters: { project: projectId } },
+                    {
+                        op: 'beforeDate',
+                        parameters: {
+                            dateAccessor: 'created_at',
+                            date: subDays(new Date(), 30).toISOString(),
+                        },
+                    },
+                ]),
+                this.eventStore.query([
+                    { op: 'where', parameters: { project: projectId } },
+                    {
+                        op: 'betweenDate',
+                        parameters: {
+                            dateAccessor: 'created_at',
+                            range: [
+                                subDays(new Date(), 60).toISOString(),
+                                subDays(new Date(), 30).toISOString(),
+                            ],
+                        },
+                    },
+                ]),
+            ]);
+
         // Get all project environments with type of production
         const productionEnvironments =
             await this.environmentStore.getProjectEnvironments(projectId, {
@@ -680,34 +710,75 @@ export default class ProjectService {
 
         // Get all events for features that correspond to feature toggle environment ON
         // Filter out events that are not a production evironment
-        const events = await this.eventStore.getForFeatures(
-            features.map((feature) => feature.name),
-            productionEnvironments.map((env) => env.name),
-            {
-                type: FEATURE_ENVIRONMENT_ENABLED,
-                projectId,
-            },
-        );
 
-        const projectStatus = new ProjectStatus(
+        // @ts-ignore
+        const eventsCurrentWindow = await this.eventStore.query([
+            {
+                op: 'forFeatures',
+                parameters: {
+                    features: features.map((feature) => feature.name),
+                    environments: productionEnvironments.map((env) => env.name),
+                    type: FEATURE_ENVIRONMENT_ENABLED,
+                    projectId,
+                },
+            },
+            {
+                op: 'beforeDate',
+                parameters: {
+                    dateAccessor: 'created_at',
+                    date: subDays(new Date(), 30).toISOString(),
+                },
+            },
+        ]);
+
+        const eventsPastWindow = await this.eventStore.query([
+            {
+                op: 'forFeatures',
+                parameters: {
+                    features: features.map((feature) => feature.name),
+                    environments: productionEnvironments.map((env) => env.name),
+                    type: FEATURE_ENVIRONMENT_ENABLED,
+                    projectId,
+                },
+            },
+            {
+                op: 'betweenDate',
+                parameters: {
+                    dateAccessor: 'created_at',
+                    range: [
+                        subDays(new Date(), 60).toISOString(),
+                        subDays(new Date(), 30).toISOString(),
+                    ],
+                },
+            },
+        ]);
+
+        const projectStatusOne = new ProjectStatus(
             features,
             productionEnvironments,
-            events,
+            eventsCurrentWindow,
+        );
+
+        const projectStatusTwo = new ProjectStatus(
+            features,
+            productionEnvironments,
+            eventsPastWindow,
         );
 
         return {
             projectId,
             updates: {
                 avgTimeToProdCurrentWindow:
-                    projectStatus.calculateAverageTimeToProd(),
+                    projectStatusOne.calculateAverageTimeToProd(),
                 avgTimeToProdPastWindow:
-                    projectStatus.calculateAverageTimeToProd(
-                        subDays(new Date(), 30),
-                    ),
+                    projectStatusTwo.calculateAverageTimeToProd(),
                 createdCurrentWindow: createdCurrentWindow.length,
                 createdPastWindow: createdPastWindow.length,
                 archivedCurrentWindow: archivedCurrentWindow.length,
                 archivedPastWindow: archivedPastWindow.length,
+                projectActivityCurrentWindow:
+                    projectActivityCurrentWindow.length,
+                projectActivityPastWindow: projectActivityPastWindow.length,
             },
         };
     }

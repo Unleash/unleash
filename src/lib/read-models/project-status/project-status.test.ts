@@ -145,9 +145,7 @@ describe('calculate average time to production', () => {
     test('should build a map of feature events', () => {
         const projectStatus = new ProjectStatus(features, environments, events);
 
-        const featureEvents = projectStatus.getFeatureEvents(
-            new Date('2023-02-05T09:37:32.504Z'),
-        );
+        const featureEvents = projectStatus.getFeatureEvents();
 
         expect(Object.keys(featureEvents).length).toBe(4);
         expect(featureEvents['average-prod-time'].createdAt).toBeTruthy();
@@ -157,9 +155,7 @@ describe('calculate average time to production', () => {
     test('should calculate average correctly', () => {
         const projectStatus = new ProjectStatus(features, environments, events);
 
-        const timeToProduction = projectStatus.calculateAverageTimeToProd(
-            new Date('2023-02-05T09:37:32.504Z'),
-        );
+        const timeToProduction = projectStatus.calculateAverageTimeToProd();
 
         expect(timeToProduction).toBe(21);
     });
@@ -170,9 +166,7 @@ describe('calculate average time to production', () => {
             ...events,
         ]);
 
-        const featureEvents = projectStatus.getFeatureEvents(
-            new Date('2023-02-15T09:37:32.504Z'),
-        );
+        const featureEvents = projectStatus.getFeatureEvents();
         const sortedFeatureEvents =
             projectStatus.sortFeatureEventsByCreatedAt(featureEvents);
 
@@ -208,29 +202,7 @@ describe('calculate average time to production', () => {
             ...events,
         ]);
 
-        const timeToProduction = projectStatus.calculateAverageTimeToProd(
-            new Date('2023-02-05T09:37:32.504Z'),
-        );
+        const timeToProduction = projectStatus.calculateAverageTimeToProd();
         expect(timeToProduction).toBe(21);
-    });
-
-    test('should calculate a thirty day window based on date', () => {
-        const projectStatus = new ProjectStatus(features, environments, [
-            createEvent('default', {
-                createdAt: subDays(new Date('2023-01-25T09:37:32.504Z'), 31),
-            }),
-            ...events,
-        ]);
-
-        const timeToProduction = projectStatus.calculateAverageTimeToProd(
-            new Date('2023-02-05T09:37:32.504Z'),
-        );
-
-        const timeToProduction2 = projectStatus.calculateAverageTimeToProd(
-            subDays(new Date('2023-02-05T09:37:32.504Z'), 20),
-        );
-
-        expect(timeToProduction).toBe(21);
-        expect(timeToProduction2).toBe(20);
     });
 });

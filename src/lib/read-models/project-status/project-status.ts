@@ -1,4 +1,4 @@
-import { differenceInDays, isWithinInterval, subDays } from 'date-fns';
+import { differenceInDays } from 'date-fns';
 import { FeatureToggle, IEvent, IProjectEnvironment } from 'lib/types';
 
 interface IFeatureTimeToProdCalculationMap {
@@ -27,17 +27,8 @@ export class ProjectStatus {
         this.events = events;
     }
 
-    filterEventsByDate = (events: IEvent[], windowStart: Date): IEvent[] => {
-        return events.filter((event) => {
-            return isWithinInterval(new Date(event.createdAt), {
-                start: subDays(windowStart, 30),
-                end: windowStart,
-            });
-        });
-    };
-
-    calculateAverageTimeToProd(windowStart = new Date()): number {
-        const featureEvents = this.getFeatureEvents(windowStart);
+    calculateAverageTimeToProd(): number {
+        const featureEvents = this.getFeatureEvents();
         const sortedFeatureEvents =
             this.sortFeatureEventsByCreatedAt(featureEvents);
 
@@ -55,11 +46,8 @@ export class ProjectStatus {
         return 0;
     }
 
-    getFeatureEvents(window: Date): IFeatureTimeToProdCalculationMap {
-        return this.filterEventsByDate(
-            this.getProductionEvents(this.events),
-            window,
-        ).reduce((acc, event) => {
+    getFeatureEvents(): IFeatureTimeToProdCalculationMap {
+        return this.getProductionEvents(this.events).reduce((acc, event) => {
             if (acc[event.featureName]) {
                 acc[event.featureName].events.push(event);
             } else {

@@ -70,9 +70,9 @@ class ExportImportController extends Controller {
         const timestamp = this.getFormattedDate(Date.now());
         if (query.downloadFile) {
             res.attachment(`export-${timestamp}.json`);
+        } else {
+            res.json(data);
         }
-
-        res.json(data);
     }
 
     private getFormattedDate(millis: number): string {

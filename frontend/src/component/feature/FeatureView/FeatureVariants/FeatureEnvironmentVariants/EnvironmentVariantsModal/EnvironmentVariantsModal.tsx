@@ -350,11 +350,6 @@ export const EnvironmentVariantsModal = ({
                             />
                         ))}
                     </StyledVariantForms>
-                    <StyledAlert severity="error" hidden={!Boolean(error)}>
-                        <strong>Error: </strong>
-                        {error}
-                    </StyledAlert>
-
                     <ConditionallyRender
                         condition={variantsEdit.length > 0}
                         show={
@@ -390,6 +385,11 @@ export const EnvironmentVariantsModal = ({
                             </StyledDescription>
                         }
                     />
+
+                    <StyledAlert severity="error" hidden={!Boolean(error)}>
+                        <strong>Error: </strong>
+                        {error}
+                    </StyledAlert>
 
                     <StyledButtonContainer>
                         <Button

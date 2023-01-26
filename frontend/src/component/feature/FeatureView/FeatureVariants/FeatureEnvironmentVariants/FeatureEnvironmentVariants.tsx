@@ -90,8 +90,12 @@ export const FeatureEnvironmentVariants = () => {
         patch: jsonpatch.Operation[];
         error?: string;
     } => {
-        const updatedNewVariants = updateWeight(newVariants, 1000);
-        return { patch: createPatch(variants, updatedNewVariants) };
+        try {
+            const updatedNewVariants = updateWeight(newVariants, 1000);
+            return { patch: createPatch(variants, updatedNewVariants) };
+        } catch (error: unknown) {
+            return { patch: [], error: formatUnknownError(error) };
+        }
     };
 
     const getCrPayload = (variants: IFeatureVariant[]) => ({
@@ -113,9 +117,20 @@ export const FeatureEnvironmentVariants = () => {
             refetchChangeRequests();
         } else {
             const environmentVariants = environment.variants ?? [];
-            const { patch } = getApiPayload(environmentVariants, variants);
+            const { patch, error } = getApiPayload(
+                environmentVariants,
+                variants
+            );
 
             if (patch.length === 0) return;
+
+            if (error) {
+                setToastData({
+                    type: 'error',
+                    title: error,
+                });
+                return;
+            }
 
             await patchFeatureEnvironmentVariants(
                 projectId,
@@ -198,7 +213,7 @@ export const FeatureEnvironmentVariants = () => {
                 setModalOpen(false);
                 setToastData({
                     title: selectedEnvironment.crEnabled
-                        ? `Variants update added to draft`
+                        ? `Variant changes added to draft`
                         : 'Variants updated successfully',
                     type: 'success',
                 });

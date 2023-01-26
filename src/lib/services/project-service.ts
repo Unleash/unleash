@@ -59,15 +59,18 @@ export interface AccessWithRoles {
     groups: IGroupModelWithProjectRole[];
 }
 
+type Days = number;
+type Count = number;
+
 export interface IProjectStats {
-    avgTimeToProdCurrentWindow: number;
-    avgTimeToProdPastWindow: number;
-    createdCurrentWindow: number;
-    createdPastWindow: number;
-    archivedCurrentWindow: number;
-    archivedPastWindow: number;
-    projectActivityCurrentWindow: number;
-    projectActivityPastWindow: number;
+    avgTimeToProdCurrentWindow: Days;
+    avgTimeToProdPastWindow: Days;
+    createdCurrentWindow: Count;
+    createdPastWindow: Count;
+    archivedCurrentWindow: Count;
+    archivedPastWindow: Count;
+    projectActivityCurrentWindow: Count;
+    projectActivityPastWindow: Count;
 }
 
 interface ICalculateStatus {

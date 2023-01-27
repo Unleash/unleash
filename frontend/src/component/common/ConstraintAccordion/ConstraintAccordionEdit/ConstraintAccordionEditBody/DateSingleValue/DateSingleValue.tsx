@@ -1,15 +1,20 @@
 import { ConstraintFormHeader } from '../ConstraintFormHeader/ConstraintFormHeader';
 import Input from 'component/common/Input/Input';
 import { parseDateValue, parseValidDate } from 'component/common/util';
-import { ITimezoneSelect, useGetTimezones } from 'hooks/useGetTimezones';
 import { utcToZonedTime, zonedTimeToUtc } from 'date-fns-tz';
 
 import { useEffect, useMemo, useState } from 'react';
-import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
+import GeneralSelect, {
+    ISelectOption,
+} from 'component/common/GeneralSelect/GeneralSelect';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { styled } from '@mui/material';
+import TimezoneCountries from 'countries-and-timezones';
 
+interface ITimezoneSelect extends ISelectOption {
+    utcOffset: string;
+}
 interface IDateSingleValueProps {
     setValue: (value: string) => void;
     value?: string;
@@ -33,11 +38,16 @@ export const DateSingleValue = ({
 }: IDateSingleValueProps) => {
     const { uiConfig } = useUiConfig();
     const showSelectableTimezone = Boolean(uiConfig.flags.selectableTimezone);
-    const { getAllTimezones } = useGetTimezones();
+    const timezones = Object.values(
+        TimezoneCountries.getAllTimezones({ deprecated: false })
+    ).map(timezone => ({
+        key: timezone.name,
+        label: `${timezone.name}`,
+        utcOffset: timezone.utcOffsetStr,
+    }));
     const { timeZone: localTimezoneName } =
         Intl.DateTimeFormat().resolvedOptions();
     const [timezone, setTimezone] = useState(localTimezoneName);
-    const [timezones] = useState(getAllTimezones());
     const [pickedDate, setPickedDate] = useState(value || '');
     const [localDate, setLocalDate] = useState(pickedDate || '');
 
@@ -103,6 +113,7 @@ export const DateSingleValue = ({
                                     {`(UTC ${localTimezone?.utcOffset})`}
                                 </p>
                             }
+                            elseShow={<p>No timezone information available</p>}
                         />
                     }
                 />

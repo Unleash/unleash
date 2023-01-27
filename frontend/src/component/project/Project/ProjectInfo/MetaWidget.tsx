@@ -54,7 +54,10 @@ export const MetaWidget: FC<IMetaWidgetProps> = ({ id, description }) => {
                     }
                     elseShow={
                         <Typography variant="body2" textAlign="center">
-                            <Link component={RouterLink} to="./edit">
+                            <Link
+                                component={RouterLink}
+                                to={`/projects/${id}/edit`}
+                            >
                                 Add description
                             </Link>
                         </Typography>

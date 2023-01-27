@@ -29,7 +29,7 @@
     "e2e:heroku": "yarn run cypress open --config baseUrl='https://unleash.herokuapp.com' --env AUTH_USER=admin,AUTH_PASSWORD=unleash4all",
     "gen:api": "orval --config orval.config.js",
     "gen:api:demo": "UNLEASH_OPENAPI_URL=https://app.unleash-hosted.com/demo/docs/openapi.json yarn run gen:api",
-    "gen:api:sandbox": "UNLEASH_OPENAPI_URL=https://sandbox.getunleash.io/demo2/docs/openapi.json yarn run gen:api",
+    "gen:api:sandbox": "UNLEASH_OPENAPI_URL=https://sandbox.getunleash.io/eg/docs/openapi.json yarn run gen:api",
     "prepare": "yarn run build"
   },
   "devDependencies": {

@@ -1,4 +1,6 @@
 import { Box, styled } from '@mui/material';
+import { ProjectStatsSchema } from 'openapi/models';
+import { object } from 'prop-types';
 import { StatusBox } from './StatusBox';
 
 const StyledBox = styled(Box)(({ theme }) => ({
@@ -15,10 +17,14 @@ const StyledBox = styled(Box)(({ theme }) => ({
 }));
 
 interface IProjectStatsProps {
-    stats: any; // awaiting type generation
+    stats: ProjectStatsSchema;
 }
 
 export const ProjectStats = ({ stats }: IProjectStatsProps) => {
+    if (Object.keys(stats).length === 0) {
+        return null;
+    }
+
     const {
         avgTimeToProdCurrentWindow,
         avgTimeToProdPastWindow,
@@ -43,7 +49,7 @@ export const ProjectStats = ({ stats }: IProjectStatsProps) => {
         <StyledBox>
             <StatusBox
                 title="Total changes"
-                boxText={projectActivityCurrentWindow}
+                boxText={`${projectActivityCurrentWindow}`}
                 change={
                     projectActivityCurrentWindow - projectActivityPastWindow
                 }
@@ -59,12 +65,12 @@ export const ProjectStats = ({ stats }: IProjectStatsProps) => {
             />{' '}
             <StatusBox
                 title="Features created"
-                boxText={createdCurrentWindow}
+                boxText={`${createdCurrentWindow}`}
                 change={createdCurrentWindow - createdPastWindow}
             />
             <StatusBox
                 title="Features archived"
-                boxText={archivedCurrentWindow}
+                boxText={`${archivedCurrentWindow}`}
                 change={archivedCurrentWindow - archivedPastWindow}
             />
         </StyledBox>

@@ -84,9 +84,19 @@ class ProjectStatsStore implements IProjectStatsStore {
         return this.mapRow(row);
     }
 
-    mapRow(row: IProjectStatsRow): IProjectStats | undefined {
+    mapRow(row: IProjectStatsRow): IProjectStats {
         if (!row) {
-            return undefined;
+            return {
+                avgTimeToProdCurrentWindow: 0,
+                avgTimeToProdPastWindow: 0,
+                createdCurrentWindow: 0,
+                createdPastWindow: 0,
+                archivedCurrentWindow: 0,
+                archivedPastWindow: 0,
+                projectActivityCurrentWindow: 0,
+                projectActivityPastWindow: 0,
+                projectMembersAddedCurrentWindow: 0,
+            };
         }
 
         return {

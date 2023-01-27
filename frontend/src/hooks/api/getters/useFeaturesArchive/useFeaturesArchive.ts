@@ -1,6 +1,7 @@
 import useSWR from 'swr';
 import { FeatureSchema, FeaturesSchema } from 'openapi';
 import handleErrorResponses from '../httpErrorResponseHandler';
+import { formatApiPath } from 'utils/formatPath';
 
 export interface IUseFeaturesArchiveOutput {
     archivedFeatures?: FeatureSchema[];
@@ -19,9 +20,11 @@ export const useFeaturesArchive = (
     projectId?: string
 ): IUseFeaturesArchiveOutput => {
     const { data, error, mutate, isLoading } = useSWR<FeaturesSchema>(
-        projectId
-            ? `/api/admin/archive/features/${projectId}`
-            : 'api/admin/features',
+        formatApiPath(
+            projectId
+                ? `/api/admin/archive/features/${projectId}`
+                : 'api/admin/features'
+        ),
         fetcher,
         {
             refreshInterval: 15 * 1000, // ms

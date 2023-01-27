@@ -1,10 +1,10 @@
+import type { IFeatureToggleListItem } from 'interfaces/featureToggle';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-
 import { DEFAULT_PROJECT_ID } from 'hooks/api/getters/useDefaultProject/useDefaultProjectId';
-import { StyledDivContainer } from './ProjectInfo.styles';
-import { IFeatureToggleListItem } from '../../../../interfaces/featureToggle';
+import { StyledProjectInfoSidebarContainer } from './ProjectInfo.styles';
 import { HealthWidget } from './HealthWidget';
 import { ToggleTypesWidget } from './ToggleTypesWidget';
+import { MetaWidget } from './MetaWidget';
 import { ProjectMembersWidget } from './ProjectMembersWidget';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
@@ -18,6 +18,7 @@ interface IProjectInfoProps {
 
 const ProjectInfo = ({
     id,
+    description,
     memberCount,
     health,
     features,
@@ -25,7 +26,11 @@ const ProjectInfo = ({
     const { uiConfig } = useUiConfig();
     return (
         <aside>
-            <StyledDivContainer>
+            <StyledProjectInfoSidebarContainer>
+                <ConditionallyRender
+                    condition={Boolean(uiConfig?.flags.newProjectOverview)}
+                    show={<MetaWidget id={id} description={description} />}
+                />
                 <HealthWidget
                     projectId={id}
                     health={health}
@@ -41,11 +46,8 @@ const ProjectInfo = ({
                         />
                     }
                 />
-                <ConditionallyRender
-                    condition={Boolean(uiConfig?.flags.newProjectOverview)}
-                    show={<ToggleTypesWidget features={features} />}
-                />
-            </StyledDivContainer>
+                <ToggleTypesWidget features={features} />
+            </StyledProjectInfoSidebarContainer>
         </aside>
     );
 };

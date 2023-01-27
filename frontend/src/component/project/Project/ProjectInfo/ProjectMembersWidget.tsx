@@ -1,9 +1,9 @@
 import {
     StyledArrowIcon,
-    StyledDivInfoContainer,
+    StyledProjectInfoWidgetContainer,
     StyledLink,
     StyledParagraphEmphasizedText,
-    StyledParagraphSubtitle,
+    StyledWidgetTitle,
     StyledSpanLinkText,
 } from './ProjectInfo.styles';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -26,10 +26,8 @@ export const ProjectMembersWidget = ({
     }
 
     return (
-        <StyledDivInfoContainer>
-            <StyledParagraphSubtitle data-loading>
-                Project members
-            </StyledParagraphSubtitle>
+        <StyledProjectInfoWidgetContainer>
+            <StyledWidgetTitle data-loading>Project members</StyledWidgetTitle>
             <StyledParagraphEmphasizedText data-loading>
                 {memberCount}
             </StyledParagraphEmphasizedText>
@@ -37,6 +35,6 @@ export const ProjectMembersWidget = ({
                 <StyledSpanLinkText data-loading>view more </StyledSpanLinkText>
                 <StyledArrowIcon data-loading />
             </StyledLink>
-        </StyledDivInfoContainer>
+        </StyledProjectInfoWidgetContainer>
     );
 };

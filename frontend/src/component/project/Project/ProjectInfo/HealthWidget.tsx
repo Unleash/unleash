@@ -1,11 +1,11 @@
 import {
     StyledArrowIcon,
     StyledCount,
-    StyledDivInfoContainer,
+    StyledProjectInfoWidgetContainer,
     StyledDivPercentageContainer,
     StyledLink,
     StyledParagraphEmphasizedText,
-    StyledParagraphSubtitle,
+    StyledWidgetTitle,
     StyledSpanLinkText,
 } from './ProjectInfo.styles';
 import PercentageCircle from 'component/common/PercentageCircle/PercentageCircle';
@@ -35,10 +35,10 @@ export const HealthWidget = ({
 
     if (uiConfig?.flags?.newProjectOverview) {
         return (
-            <StyledDivInfoContainer>
-                <StyledParagraphSubtitle data-loading>
+            <StyledProjectInfoWidgetContainer>
+                <StyledWidgetTitle data-loading>
                     Project health
-                </StyledParagraphSubtitle>
+                </StyledWidgetTitle>
                 <StyledDivPercentageContainer>
                     <PercentageCircle percentage={health} />
                 </StyledDivPercentageContainer>
@@ -63,18 +63,18 @@ export const HealthWidget = ({
                         View project health
                     </StyledSpanLinkText>
                 </StyledLink>
-            </StyledDivInfoContainer>
+            </StyledProjectInfoWidgetContainer>
         );
     }
 
     return (
-        <StyledDivInfoContainer>
+        <StyledProjectInfoWidgetContainer>
             <StyledDivPercentageContainer>
                 <PercentageCircle percentage={health} />
             </StyledDivPercentageContainer>
-            <StyledParagraphSubtitle data-loading>
+            <StyledWidgetTitle data-loading>
                 Overall health rating
-            </StyledParagraphSubtitle>
+            </StyledWidgetTitle>
             <StyledParagraphEmphasizedText data-loading>
                 {health}%
             </StyledParagraphEmphasizedText>
@@ -82,6 +82,6 @@ export const HealthWidget = ({
                 <StyledSpanLinkText data-loading>view more </StyledSpanLinkText>
                 <StyledArrowIcon data-loading />
             </StyledLink>
-        </StyledDivInfoContainer>
+        </StyledProjectInfoWidgetContainer>
     );
 };

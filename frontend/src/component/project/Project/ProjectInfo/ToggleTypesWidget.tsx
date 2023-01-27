@@ -1,19 +1,19 @@
-import { IFeatureToggleListItem } from '../../../../interfaces/featureToggle';
 import { useMemo } from 'react';
+import { styled } from '@mui/material';
+import type { IFeatureToggleListItem } from 'interfaces/featureToggle';
+import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
 import {
     StyledCount,
-    StyledDivInfoContainer,
+    StyledProjectInfoWidgetContainer,
     StyledParagraphGridRow,
-    StyledParagraphSubtitle,
+    StyledWidgetTitle,
 } from './ProjectInfo.styles';
-import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
-import { styled } from '@mui/material';
 
 export interface IToggleTypesWidgetProps {
     features: IFeatureToggleListItem[];
 }
 
-const StyledTypeCount = styled(StyledCount)(({ theme }) => ({
+const StyledTypeCount = styled(StyledCount)(() => ({
     marginLeft: 'auto',
 }));
 
@@ -52,10 +52,10 @@ export const ToggleTypesWidget = ({ features }: IToggleTypesWidgetProps) => {
     const PermissionToggleIcon = getFeatureTypeIcons('permission');
 
     return (
-        <StyledDivInfoContainer>
-            <StyledParagraphSubtitle data-loading>
+        <StyledProjectInfoWidgetContainer>
+            <StyledWidgetTitle data-loading>
                 Toggle types used
-            </StyledParagraphSubtitle>
+            </StyledWidgetTitle>
             <StyledParagraphGridRow data-loading>
                 <ReleaseToggleIcon fontSize="small" data-loading />
                 <div>Release</div>
@@ -81,6 +81,6 @@ export const ToggleTypesWidget = ({ features }: IToggleTypesWidgetProps) => {
                 <div>Permission</div>
                 <StyledTypeCount>{permission}</StyledTypeCount>
             </StyledParagraphGridRow>
-        </StyledDivInfoContainer>
+        </StyledProjectInfoWidgetContainer>
     );
 };

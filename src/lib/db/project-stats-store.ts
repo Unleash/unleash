@@ -6,7 +6,6 @@ import { DB_TIME } from '../metric-events';
 import EventEmitter from 'events';
 import { IProjectStats } from 'lib/services/project-service';
 import { IProjectStatsStore } from 'lib/types/stores/project-stats-store-type';
-import NotFoundError from '../../lib/error/notfound-error';
 
 const TABLE = 'project_stats';
 
@@ -85,9 +84,9 @@ class ProjectStatsStore implements IProjectStatsStore {
         return this.mapRow(row);
     }
 
-    mapRow(row: IProjectStatsRow): IProjectStats {
+    mapRow(row: IProjectStatsRow): IProjectStats | undefined {
         if (!row) {
-            throw new NotFoundError('No stats found');
+            return undefined;
         }
 
         return {

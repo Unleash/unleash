@@ -183,7 +183,7 @@ export interface IProjectOverview {
     health: number;
     favorite?: boolean;
     updatedAt?: Date;
-    stats: IProjectStats;
+    stats: IProjectStats | {};
 }
 
 export interface IProjectHealthReport extends IProjectOverview {

@@ -810,7 +810,7 @@ export default class ProjectService {
         );
 
         return {
-            stats: projectStats,
+            stats: projectStats || {},
             name: project.name,
             description: project.description,
             health: project.health,

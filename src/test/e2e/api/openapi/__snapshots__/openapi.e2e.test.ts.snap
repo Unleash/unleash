@@ -2497,16 +2497,7 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "number",
           },
         },
-        "required": [
-          "avgTimeToProdCurrentWindow",
-          "avgTimeToProdPastWindow",
-          "createdCurrentWindow",
-          "createdPastWindow",
-          "archivedCurrentWindow",
-          "archivedPastWindow",
-          "projectActivityCurrentWindow",
-          "projectActivityPastWindow",
-        ],
+        "required": [],
         "type": "object",
       },
       "projectsSchema": {

@@ -17,7 +17,8 @@ export const StyledColumn = styled('div')(() => ({
     flexDirection: 'column',
 }));
 
-export const StyledName = styled('div')(() => ({
+export const StyledName = styled('h1')(({ theme }) => ({
+    fontSize: theme.typography.h1.fontSize,
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',

@@ -43,7 +43,7 @@ export const ImportOptions: FC<IImportOptionsProps> = ({
         if (environment === '' && environmentOptions[0]) {
             onChange(environmentOptions[0].key);
         }
-    }, []);
+    }, [JSON.stringify(environmentOptions)]);
 
     return (
         <ImportOptionsContainer>

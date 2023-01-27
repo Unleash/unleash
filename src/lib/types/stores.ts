@@ -31,6 +31,7 @@ import { IPublicSignupTokenStore } from './stores/public-signup-token-store';
 import { IFavoriteFeaturesStore } from './stores/favorite-features';
 import { IFavoriteProjectsStore } from './stores/favorite-projects';
 import { IAccountStore } from './stores/account-store';
+import { IProjectStatsStore } from './stores/project-stats-store-type';
 
 export interface IUnleashStores {
     accessStore: IAccessStore;
@@ -66,6 +67,7 @@ export interface IUnleashStores {
     publicSignupTokenStore: IPublicSignupTokenStore;
     favoriteFeaturesStore: IFavoriteFeaturesStore;
     favoriteProjectsStore: IFavoriteProjectsStore;
+    projectStatsStore: IProjectStatsStore;
 }
 
 export {

@@ -13,7 +13,7 @@ import { SegmentService } from '../../../lib/services/segment-service';
 import { GroupService } from '../../../lib/services/group-service';
 import { FavoritesService } from '../../../lib/services';
 import { FeatureEnvironmentEvent } from '../../../lib/types/events';
-import { addDays } from 'date-fns';
+import { subDays } from 'date-fns';
 
 let stores;
 let db: ITestDb;
@@ -1057,11 +1057,18 @@ test('should only count active feature toggles for project', async () => {
     expect(theProject?.featureCount).toBe(1);
 });
 
-const updateEventCreatedAt = async (days: number, featureName: string) => {
-    await db.rawDatabase
+const updateEventCreatedAt = async (date: Date, featureName: string) => {
+    return db.rawDatabase
         .table('events')
-        .update({ created_at: addDays(new Date(), days) })
+        .update({ created_at: date })
         .where({ feature_name: featureName });
+};
+
+const updateFeature = async (featureName: string, update: any) => {
+    return db.rawDatabase
+        .table('features')
+        .update(update)
+        .where({ name: featureName });
 };
 
 test('should calculate average time to production', async () => {
@@ -1077,6 +1084,7 @@ test('should calculate average time to production', async () => {
         { name: 'average-prod-time-2' },
         { name: 'average-prod-time-3' },
         { name: 'average-prod-time-4' },
+        { name: 'average-prod-time-5' },
     ];
 
     const featureToggles = await Promise.all(
@@ -1104,11 +1112,139 @@ test('should calculate average time to production', async () => {
         }),
     );
 
-    await updateEventCreatedAt(6, 'average-prod-time');
-    await updateEventCreatedAt(12, 'average-prod-time-2');
-    await updateEventCreatedAt(7, 'average-prod-time-3');
-    await updateEventCreatedAt(14, 'average-prod-time-4');
+    await updateEventCreatedAt(subDays(new Date(), 31), 'average-prod-time-5');
 
-    const result = await projectService.calculateAverageTimeToProd(project.id);
-    expect(result).toBe(9.75);
+    await Promise.all(
+        featureToggles.map((toggle) =>
+            updateFeature(toggle.name, { created_at: subDays(new Date(), 15) }),
+        ),
+    );
+
+    await updateFeature('average-prod-time-5', {
+        created_at: subDays(new Date(), 33),
+    });
+
+    const result = await projectService.getStatusUpdates(project.id);
+    expect(result.updates.avgTimeToProdCurrentWindow).toBe(14);
+    expect(result.updates.avgTimeToProdPastWindow).toBe(1);
+});
+
+test('should get correct amount of features created in current and past window', async () => {
+    const project = {
+        id: 'features-created',
+        name: 'features-created',
+    };
+
+    await projectService.createProject(project, user.id);
+
+    const toggles = [
+        { name: 'features-created' },
+        { name: 'features-created-2' },
+        { name: 'features-created-3' },
+        { name: 'features-created-4' },
+    ];
+
+    await Promise.all(
+        toggles.map((toggle) => {
+            return featureToggleService.createFeatureToggle(
+                project.id,
+                toggle,
+                user,
+            );
+        }),
+    );
+
+    await Promise.all([
+        updateFeature(toggles[2].name, { created_at: subDays(new Date(), 31) }),
+        updateFeature(toggles[3].name, { created_at: subDays(new Date(), 31) }),
+    ]);
+
+    const result = await projectService.getStatusUpdates(project.id);
+    expect(result.updates.createdCurrentWindow).toBe(2);
+    expect(result.updates.createdPastWindow).toBe(2);
+});
+
+test('should get correct amount of features archived in current and past window', async () => {
+    const project = {
+        id: 'features-archived',
+        name: 'features-archived',
+    };
+
+    await projectService.createProject(project, user.id);
+
+    const toggles = [
+        { name: 'features-archived' },
+        { name: 'features-archived-2' },
+        { name: 'features-archived-3' },
+        { name: 'features-archived-4' },
+    ];
+
+    await Promise.all(
+        toggles.map((toggle) => {
+            return featureToggleService.createFeatureToggle(
+                project.id,
+                toggle,
+                user,
+            );
+        }),
+    );
+
+    await Promise.all([
+        updateFeature(toggles[0].name, {
+            archived_at: new Date(),
+            archived: true,
+        }),
+        updateFeature(toggles[1].name, {
+            archived_at: new Date(),
+            archived: true,
+        }),
+        updateFeature(toggles[2].name, {
+            archived_at: subDays(new Date(), 31),
+            archived: true,
+        }),
+        updateFeature(toggles[3].name, {
+            archived_at: subDays(new Date(), 31),
+            archived: true,
+        }),
+    ]);
+
+    const result = await projectService.getStatusUpdates(project.id);
+    expect(result.updates.archivedCurrentWindow).toBe(2);
+    expect(result.updates.archivedPastWindow).toBe(2);
+});
+
+test('should get correct amount of project members for current and past window', async () => {
+    const project = {
+        id: 'features-members',
+        name: 'features-members',
+    };
+
+    await projectService.createProject(project, user.id);
+
+    const users = [
+        { name: 'memberOne', email: 'memberOne@getunleash.io' },
+        { name: 'memberTwo', email: 'memberTwo@getunleash.io' },
+        { name: 'memberThree', email: 'memberThree@getunleash.io' },
+        { name: 'memberFour', email: 'memberFour@getunleash.io' },
+        { name: 'memberFive', email: 'memberFive@getunleash.io' },
+    ];
+
+    const createdUsers = await Promise.all(
+        users.map((userObj) => stores.userStore.insert(userObj)),
+    );
+    const memberRole = await stores.roleStore.getRoleByName(RoleName.MEMBER);
+
+    await Promise.all(
+        createdUsers.map((createdUser) =>
+            projectService.addUser(
+                project.id,
+                memberRole.id,
+                createdUser.id,
+                'test',
+            ),
+        ),
+    );
+
+    const result = await projectService.getStatusUpdates(project.id);
+    expect(result.updates.projectMembersAddedCurrentWindow).toBe(5);
 });

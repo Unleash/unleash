@@ -186,33 +186,41 @@ export const Project = () => {
                             </PermissionIconButton>
                         </StyledDiv>
                     </StyledTopRow>
-                    <StyledColumn>
-                        <StyledProjectTitle>
-                            <div>
-                                <ConditionallyRender
-                                    condition={Boolean(project.description)}
-                                    show={
+                    <ConditionallyRender
+                        condition={!uiConfig?.flags?.newProjectOverview}
+                        // TODO: !!! Remove entire block when removing feature flag!
+                        show={
+                            <StyledColumn>
+                                <StyledProjectTitle>
+                                    <div>
+                                        <ConditionallyRender
+                                            condition={Boolean(
+                                                project.description
+                                            )}
+                                            show={
+                                                <StyledDiv>
+                                                    <StyledTitle data-loading>
+                                                        Description:{' '}
+                                                    </StyledTitle>
+                                                    <StyledText data-loading>
+                                                        {project.description}
+                                                    </StyledText>
+                                                </StyledDiv>
+                                            }
+                                        />
                                         <StyledDiv>
                                             <StyledTitle data-loading>
-                                                Description:&nbsp;
+                                                projectId:{' '}
                                             </StyledTitle>
                                             <StyledText data-loading>
-                                                {project.description}
+                                                {projectId}
                                             </StyledText>
                                         </StyledDiv>
-                                    }
-                                />
-                                <StyledDiv>
-                                    <StyledTitle data-loading>
-                                        projectId:&nbsp;
-                                    </StyledTitle>
-                                    <StyledText data-loading>
-                                        {projectId}
-                                    </StyledText>
-                                </StyledDiv>
-                            </div>
-                        </StyledProjectTitle>
-                    </StyledColumn>
+                                    </div>
+                                </StyledProjectTitle>
+                            </StyledColumn>
+                        }
+                    />
                 </StyledInnerContainer>
 
                 <StyledSeparator />

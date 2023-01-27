@@ -18,12 +18,6 @@ import { ExportQuerySchema } from '../openapi/spec/export-query-schema';
 import { FEATURES_EXPORTED, IFlagResolver, IUnleashServices } from '../types';
 import { ExportResultSchema } from '../openapi';
 
-export interface IImportDTO {
-    data: ExportResultSchema;
-    project: string;
-    environment: string;
-}
-
 export default class ExportImportService {
     private logger: Logger;
 
@@ -106,7 +100,7 @@ export default class ExportImportService {
             ),
             this.segmentStore.getAllFeatureStrategySegments(),
             this.contextFieldStore.getAll(),
-            this.featureTagStore.getAll(),
+            this.featureTagStore.getAllByFeatures(query.features),
             this.segmentStore.getAll(),
         ]);
         this.addSegmentsToStrategies(featureStrategies, strategySegments);
@@ -128,9 +122,16 @@ export default class ExportImportService {
                 return rest;
             }),
             featureStrategies: featureStrategies.map((item) => {
-                const { createdAt, ...rest } = item;
+                const name = item.strategyName;
+                const {
+                    createdAt,
+                    projectId,
+                    environment,
+                    strategyName,
+                    ...rest
+                } = item;
                 return {
-                    name: rest.strategyName,
+                    name,
                     ...rest,
                 };
             }),
@@ -143,7 +144,10 @@ export default class ExportImportService {
                 return rest;
             }),
             featureTags,
-            segments: filteredSegments,
+            segments: filteredSegments.map((item) => {
+                const { createdAt, createdBy, ...rest } = item;
+                return rest;
+            }),
         };
         await this.eventStore.store({
             type: FEATURES_EXPORTED,

@@ -1164,6 +1164,12 @@ exports[`should serve the OpenAPI spec 1`] = `
           "variantCount": {
             "type": "number",
           },
+          "variants": {
+            "items": {
+              "$ref": "#/components/schemas/variantSchema",
+            },
+            "type": "array",
+          },
         },
         "required": [
           "name",
@@ -1621,6 +1627,9 @@ exports[`should serve the OpenAPI spec 1`] = `
           "name": {
             "type": "string",
           },
+          "stats": {
+            "$ref": "#/components/schemas/projectStatsSchema",
+          },
           "updatedAt": {
             "format": "date-time",
             "nullable": true,
@@ -1674,6 +1683,9 @@ exports[`should serve the OpenAPI spec 1`] = `
           },
           "staleCount": {
             "type": "number",
+          },
+          "stats": {
+            "$ref": "#/components/schemas/projectStatsSchema",
           },
           "updatedAt": {
             "format": "date-time",
@@ -2452,6 +2464,39 @@ exports[`should serve the OpenAPI spec 1`] = `
           "id",
           "name",
         ],
+        "type": "object",
+      },
+      "projectStatsSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "archivedCurrentWindow": {
+            "type": "number",
+          },
+          "archivedPastWindow": {
+            "type": "number",
+          },
+          "avgTimeToProdCurrentWindow": {
+            "type": "number",
+          },
+          "avgTimeToProdPastWindow": {
+            "type": "number",
+          },
+          "createdCurrentWindow": {
+            "type": "number",
+          },
+          "createdPastWindow": {
+            "type": "number",
+          },
+          "projectActivityCurrentWindow": {
+            "type": "number",
+          },
+          "projectActivityPastWindow": {
+            "type": "number",
+          },
+          "projectMembersAddedCurrentWindow": {
+            "type": "number",
+          },
+        },
         "type": "object",
       },
       "projectsSchema": {

@@ -159,12 +159,16 @@ export const ValidationStage: FC<{
                             the import, they will be overwritten with the
                             configuration from this import file
                         </WarningHeader>
-                        {validationResult.warnings.map(error => (
-                            <Box sx={{ p: 2 }}>
-                                <WarningMessage>{error.message}</WarningMessage>
+                        {validationResult.warnings.map(warning => (
+                            <Box key={warning.message} sx={{ p: 2 }}>
+                                <WarningMessage>
+                                    {warning.message}
+                                </WarningMessage>
                                 <StyledItems>
-                                    {error.affectedItems.map(item => (
-                                        <StyledItem>{item}</StyledItem>
+                                    {warning.affectedItems.map(item => (
+                                        <StyledItem key={item}>
+                                            {item}
+                                        </StyledItem>
                                     ))}
                                 </StyledItems>
                             </Box>

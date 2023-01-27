@@ -394,6 +394,40 @@ class ProjectStore implements IProjectStore {
         return Number(members.count);
     }
 
+    async getMembersCountByProjectAfterDate(
+        projectId: string,
+        date: string,
+    ): Promise<number> {
+        const members = await this.db
+            .from((db) => {
+                db.select('user_id')
+                    .from('role_user')
+                    .leftJoin('roles', 'role_user.role_id', 'roles.id')
+                    .where((builder) =>
+                        builder
+                            .where('project', projectId)
+                            .whereNot('type', 'root')
+                            .andWhere('role_user.created_at', '>=', date),
+                    )
+                    .union((queryBuilder) => {
+                        queryBuilder
+                            .select('user_id')
+                            .from('group_role')
+                            .leftJoin(
+                                'group_user',
+                                'group_user.group_id',
+                                'group_role.group_id',
+                            )
+                            .where('project', projectId)
+                            .andWhere('group_role.created_at', '>=', date);
+                    })
+                    .as('query');
+            })
+            .count()
+            .first();
+        return Number(members.count);
+    }
+
     async count(): Promise<number> {
         return this.db
             .from(TABLE)

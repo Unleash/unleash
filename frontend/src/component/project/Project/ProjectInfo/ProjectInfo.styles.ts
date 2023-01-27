@@ -3,10 +3,11 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { flexRow } from 'themes/themeStyles';
 import { styled } from '@mui/material';
 
-export const StyledDivContainer = styled('div')(({ theme }) => ({
+export const StyledProjectInfoSidebarContainer = styled('div')(({ theme }) => ({
     ...flexRow,
     width: '225px',
     flexDirection: 'column',
+    gap: theme.spacing(2),
     boxShadow: 'none',
     [theme.breakpoints.down('md')]: {
         flexDirection: 'row',
@@ -22,16 +23,15 @@ export const StyledDivPercentageContainer = styled('div')(({ theme }) => ({
     margin: theme.spacing(2, 0),
 }));
 
-export const StyledDivInfoContainer = styled('div')(({ theme }) => ({
+export const StyledProjectInfoWidgetContainer = styled('div')(({ theme }) => ({
     margin: '0',
     textAlign: 'center',
-    marginBottom: theme.spacing(2),
     backgroundColor: theme.palette.background.paper,
     borderRadius: theme.shape.borderRadiusLarge,
     width: '100%',
     padding: theme.spacing(3, 2, 3, 2),
     [theme.breakpoints.down('md')]: {
-        margin: theme.spacing(0, 0.5),
+        margin: theme.spacing(0, 1),
         ...flexRow,
         flexDirection: 'column',
         justifyContent: 'center',
@@ -47,7 +47,7 @@ export const StyledDivInfoContainer = styled('div')(({ theme }) => ({
     },
 }));
 
-export const StyledParagraphSubtitle = styled('p')(({ theme }) => ({
+export const StyledWidgetTitle = styled('p')(({ theme }) => ({
     marginBottom: theme.spacing(2),
 }));
 
@@ -71,10 +71,9 @@ export const StyledParagraphEmphasizedText = styled('p')(({ theme }) => ({
     },
 }));
 
-export const StyledCount = styled('p')(({ theme }) => ({
+export const StyledCount = styled('span')(({ theme }) => ({
     fontSize: theme.typography.h2.fontSize,
     fontWeight: 'bold',
-    textAlign: 'right',
     color: theme.palette.text.primary,
 }));
 

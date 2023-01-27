@@ -39,7 +39,8 @@ const ProjectOverview = () => {
     const { project, loading } = useProject(projectId, {
         refreshInterval,
     });
-    const { members, features, health, description, environments } = project;
+    const { members, features, health, description, environments, stats } =
+        project;
     usePageTitle(`Project overview – ${projectName}`);
     const { setLastViewed } = useLastViewedProject();
     const { uiConfig } = useUiConfig();
@@ -56,6 +57,7 @@ const ProjectOverview = () => {
                 memberCount={members}
                 health={health}
                 features={features}
+                stats={stats}
             />
             <StyledContentContainer>
                 <ConditionallyRender

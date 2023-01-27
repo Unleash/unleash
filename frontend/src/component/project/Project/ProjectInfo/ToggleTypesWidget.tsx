@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { styled } from '@mui/material';
+import { styled, SvgIconTypeMap, useTheme } from '@mui/material';
 import type { IFeatureToggleListItem } from 'interfaces/featureToggle';
 import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
 import {
@@ -8,6 +8,7 @@ import {
     StyledParagraphGridRow,
     StyledWidgetTitle,
 } from './ProjectInfo.styles';
+import { OverridableComponent } from '@mui/material/OverridableComponent';
 
 export interface IToggleTypesWidgetProps {
     features: IFeatureToggleListItem[];
@@ -17,70 +18,65 @@ const StyledTypeCount = styled(StyledCount)(() => ({
     marginLeft: 'auto',
 }));
 
+interface IToggleTypeRowProps {
+    type: string;
+    Icon: OverridableComponent<SvgIconTypeMap>;
+    count: number;
+}
+const ToggleTypesRow = ({ type, Icon, count }: IToggleTypeRowProps) => {
+    const getTitleText = (str: string) => {
+        return str.charAt(0).toUpperCase() + str.slice(1).replace('-', ' ');
+    };
+    return (
+        <StyledParagraphGridRow data-loading>
+            <Icon fontSize="small" data-loading />
+            <div>{getTitleText(type)}</div>
+            <StyledTypeCount>{count}</StyledTypeCount>
+        </StyledParagraphGridRow>
+    );
+};
+
 export const ToggleTypesWidget = ({ features }: IToggleTypesWidgetProps) => {
-    const { release, experiment, operational, kill, permission } =
-        useMemo(() => {
-            const release =
-                features?.filter(feature => feature.type === 'release')
-                    .length || 0;
-            const experiment =
-                features?.filter(feature => feature.type === 'experiment')
-                    .length || 0;
-            const operational =
-                features?.filter(feature => feature.type === 'operational')
-                    .length || 0;
-            const kill =
-                features?.filter(feature => feature.type === 'kill-switch')
-                    .length || 0;
-            const permission =
-                features?.filter(feature => feature.type === 'permission')
-                    .length || 0;
+    const theme = useTheme();
+    const featureTypeStats = useMemo(() => {
+        const release =
+            features?.filter(feature => feature.type === 'release').length || 0;
+        const experiment =
+            features?.filter(feature => feature.type === 'experiment').length ||
+            0;
+        const operational =
+            features?.filter(feature => feature.type === 'operational')
+                .length || 0;
+        const kill =
+            features?.filter(feature => feature.type === 'kill-switch')
+                .length || 0;
+        const permission =
+            features?.filter(feature => feature.type === 'permission').length ||
+            0;
 
-            return {
-                release,
-                experiment,
-                operational,
-                kill,
-                permission,
-            };
-        }, [features]);
-
-    const ReleaseToggleIcon = getFeatureTypeIcons('release');
-    const ExperimentToggleIcon = getFeatureTypeIcons('experiment');
-    const OperationalToggleIcon = getFeatureTypeIcons('operational');
-    const KillToggleIcon = getFeatureTypeIcons('kill-switch');
-    const PermissionToggleIcon = getFeatureTypeIcons('permission');
+        return {
+            release,
+            experiment,
+            operational,
+            'kill-switch': kill,
+            permission,
+        };
+    }, [features]);
 
     return (
-        <StyledProjectInfoWidgetContainer>
+        <StyledProjectInfoWidgetContainer sx={{ padding: theme.spacing(3) }}>
             <StyledWidgetTitle data-loading>
                 Toggle types used
             </StyledWidgetTitle>
-            <StyledParagraphGridRow data-loading>
-                <ReleaseToggleIcon fontSize="small" data-loading />
-                <div>Release</div>
-                <StyledTypeCount>{release}</StyledTypeCount>
-            </StyledParagraphGridRow>
-            <StyledParagraphGridRow data-loading>
-                <ExperimentToggleIcon fontSize="small" data-loading />
-                <div>Experiment</div>
-                <StyledTypeCount>{experiment}</StyledTypeCount>
-            </StyledParagraphGridRow>
-            <StyledParagraphGridRow data-loading>
-                <OperationalToggleIcon fontSize="small" data-loading />
-                <div>Operational</div>
-                <StyledTypeCount>{operational}</StyledTypeCount>
-            </StyledParagraphGridRow>
-            <StyledParagraphGridRow data-loading>
-                <KillToggleIcon fontSize="small" data-loading />
-                <div>Kill switch</div>
-                <StyledTypeCount>{kill}</StyledTypeCount>
-            </StyledParagraphGridRow>
-            <StyledParagraphGridRow data-loading style={{ margin: 0 }}>
-                <PermissionToggleIcon fontSize="small" data-loading />
-                <div>Permission</div>
-                <StyledTypeCount>{permission}</StyledTypeCount>
-            </StyledParagraphGridRow>
+            {Object.keys(featureTypeStats).map(type => (
+                <ToggleTypesRow
+                    type={type}
+                    Icon={getFeatureTypeIcons(type)}
+                    count={
+                        featureTypeStats[type as keyof typeof featureTypeStats]
+                    }
+                />
+            ))}
         </StyledProjectInfoWidgetContainer>
     );
 };

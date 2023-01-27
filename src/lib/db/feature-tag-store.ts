@@ -1,4 +1,5 @@
 import { Knex } from 'knex';
+import { EventEmitter } from 'stream';
 import { Logger, LogProvider } from '../logger';
 import { ITag } from '../types/model';
 import metricsHelper from '../util/metrics-helper';
@@ -10,7 +11,6 @@ import {
     IFeatureTag,
     IFeatureTagStore,
 } from '../types/stores/feature-tag-store';
-import EventEmitter from 'events';
 
 const COLUMNS = ['feature_name', 'tag_type', 'tag_value'];
 const TABLE = 'feature_tag';

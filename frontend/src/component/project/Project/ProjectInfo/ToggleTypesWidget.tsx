@@ -17,6 +17,10 @@ const StyledTypeCount = styled(StyledCount)(() => ({
     marginLeft: 'auto',
 }));
 
+const StyledDiv = styled('div')(({ theme }) => ({
+    marginLeft: theme.spacing(1.5),
+}));
+
 export const ToggleTypesWidget = ({ features }: IToggleTypesWidgetProps) => {
     const { release, experiment, operational, kill, permission } =
         useMemo(() => {
@@ -58,27 +62,27 @@ export const ToggleTypesWidget = ({ features }: IToggleTypesWidgetProps) => {
             </StyledWidgetTitle>
             <StyledParagraphGridRow data-loading>
                 <ReleaseToggleIcon fontSize="small" data-loading />
-                <div>Release</div>
+                <StyledDiv>Release</StyledDiv>
                 <StyledTypeCount>{release}</StyledTypeCount>
             </StyledParagraphGridRow>
             <StyledParagraphGridRow data-loading>
                 <ExperimentToggleIcon fontSize="small" data-loading />
-                <div>Experiment</div>
+                <StyledDiv>Experiment</StyledDiv>
                 <StyledTypeCount>{experiment}</StyledTypeCount>
             </StyledParagraphGridRow>
             <StyledParagraphGridRow data-loading>
                 <OperationalToggleIcon fontSize="small" data-loading />
-                <div>Operational</div>
+                <StyledDiv>Operational</StyledDiv>
                 <StyledTypeCount>{operational}</StyledTypeCount>
             </StyledParagraphGridRow>
             <StyledParagraphGridRow data-loading>
                 <KillToggleIcon fontSize="small" data-loading />
-                <div>Kill switch</div>
+                <StyledDiv>Kill switch</StyledDiv>
                 <StyledTypeCount>{kill}</StyledTypeCount>
             </StyledParagraphGridRow>
             <StyledParagraphGridRow data-loading style={{ margin: 0 }}>
                 <PermissionToggleIcon fontSize="small" data-loading />
-                <div>Permission</div>
+                <StyledDiv>Permission</StyledDiv>
                 <StyledTypeCount>{permission}</StyledTypeCount>
             </StyledParagraphGridRow>
         </StyledProjectInfoWidgetContainer>

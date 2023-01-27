@@ -1627,9 +1627,6 @@ exports[`should serve the OpenAPI spec 1`] = `
           "name": {
             "type": "string",
           },
-          "stats": {
-            "$ref": "#/components/schemas/projectStatsSchema",
-          },
           "updatedAt": {
             "format": "date-time",
             "nullable": true,
@@ -1683,9 +1680,6 @@ exports[`should serve the OpenAPI spec 1`] = `
           },
           "staleCount": {
             "type": "number",
-          },
-          "stats": {
-            "$ref": "#/components/schemas/projectStatsSchema",
           },
           "updatedAt": {
             "format": "date-time",
@@ -2420,6 +2414,54 @@ exports[`should serve the OpenAPI spec 1`] = `
         },
         "required": [
           "environment",
+        ],
+        "type": "object",
+      },
+      "projectOverviewSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "description": {
+            "type": "string",
+          },
+          "environments": {
+            "items": {
+              "type": "string",
+            },
+            "type": "array",
+          },
+          "favorite": {
+            "type": "boolean",
+          },
+          "features": {
+            "items": {
+              "$ref": "#/components/schemas/featureSchema",
+            },
+            "type": "array",
+          },
+          "health": {
+            "type": "number",
+          },
+          "members": {
+            "type": "number",
+          },
+          "name": {
+            "type": "string",
+          },
+          "stats": {
+            "$ref": "#/components/schemas/projectStatsSchema",
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string",
+          },
+          "version": {
+            "type": "number",
+          },
+        },
+        "required": [
+          "version",
+          "name",
         ],
         "type": "object",
       },
@@ -5392,11 +5434,11 @@ If the provided project does not exist, the list of events will be empty.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/healthOverviewSchema",
+                  "$ref": "#/components/schemas/projectOverviewSchema",
                 },
               },
             },
-            "description": "healthOverviewSchema",
+            "description": "projectOverviewSchema",
           },
         },
         "tags": [

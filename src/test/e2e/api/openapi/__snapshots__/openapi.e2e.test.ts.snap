@@ -1164,6 +1164,12 @@ exports[`should serve the OpenAPI spec 1`] = `
           "variantCount": {
             "type": "number",
           },
+          "variants": {
+            "items": {
+              "$ref": "#/components/schemas/variantSchema",
+            },
+            "type": "array",
+          },
         },
         "required": [
           "name",

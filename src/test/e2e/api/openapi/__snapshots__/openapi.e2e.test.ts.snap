@@ -1621,6 +1621,12 @@ exports[`should serve the OpenAPI spec 1`] = `
           "name": {
             "type": "string",
           },
+          "stats": {
+            "items": {
+              "$ref": "#/components/schemas/projectStatsSchema",
+            },
+            "type": "object",
+          },
           "updatedAt": {
             "format": "date-time",
             "nullable": true,
@@ -1674,6 +1680,12 @@ exports[`should serve the OpenAPI spec 1`] = `
           },
           "staleCount": {
             "type": "number",
+          },
+          "stats": {
+            "items": {
+              "$ref": "#/components/schemas/projectStatsSchema",
+            },
+            "type": "object",
           },
           "updatedAt": {
             "format": "date-time",
@@ -2451,6 +2463,49 @@ exports[`should serve the OpenAPI spec 1`] = `
         "required": [
           "id",
           "name",
+        ],
+        "type": "object",
+      },
+      "projectStatsSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "archivedCurrentWindow": {
+            "type": "number",
+          },
+          "archivedPastWindow": {
+            "type": "number",
+          },
+          "avgTimeToProdCurrentWindow": {
+            "type": "number",
+          },
+          "avgTimeToProdPastWindow": {
+            "type": "number",
+          },
+          "createdCurrentWindow": {
+            "type": "number",
+          },
+          "createdPastWindow": {
+            "type": "number",
+          },
+          "projectActivityCurrentWindow": {
+            "type": "number",
+          },
+          "projectActivityPastWindow": {
+            "type": "number",
+          },
+          "projectMembersAddedCurrentWindow": {
+            "type": "number",
+          },
+        },
+        "required": [
+          "avgTimeToProdCurrentWindow",
+          "avgTimeToProdPastWindow",
+          "createdCurrentWindow",
+          "createdPastWindow",
+          "archivedCurrentWindow",
+          "archivedPastWindow",
+          "projectActivityCurrentWindow",
+          "projectActivityPastWindow",
         ],
         "type": "object",
       },

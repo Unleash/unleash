@@ -127,6 +127,7 @@ import {
     variantSchema,
     variantsSchema,
     versionSchema,
+    projectOverviewSchema,
 } from './spec';
 import { IServerOption } from '../types';
 import { mapValues, omitKeys } from '../util';
@@ -265,6 +266,7 @@ export const schemas = {
     variantSchema,
     variantsSchema,
     versionSchema,
+    projectOverviewSchema,
 };
 
 // Schemas must have an $id property on the form "#/components/schemas/mySchema".

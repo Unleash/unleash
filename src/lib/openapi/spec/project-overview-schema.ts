@@ -9,12 +9,15 @@ import { environmentSchema } from './environment-schema';
 import { featureEnvironmentSchema } from './feature-environment-schema';
 import { projectStatsSchema } from './project-stats-schema';
 
-export const healthOverviewSchema = {
-    $id: '#/components/schemas/healthOverviewSchema',
+export const projectOverviewSchema = {
+    $id: '#/components/schemas/projectOverviewSchema',
     type: 'object',
     additionalProperties: false,
     required: ['version', 'name'],
     properties: {
+        stats: {
+            $ref: '#/components/schemas/projectStatsSchema',
+        },
         version: {
             type: 'number',
         },
@@ -66,4 +69,4 @@ export const healthOverviewSchema = {
     },
 } as const;
 
-export type HealthOverviewSchema = FromSchema<typeof healthOverviewSchema>;
+export type ProjectOverviewSchema = FromSchema<typeof projectOverviewSchema>;

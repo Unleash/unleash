@@ -100,7 +100,7 @@ export default class ExportImportService {
             ),
             this.segmentStore.getAllFeatureStrategySegments(),
             this.contextFieldStore.getAll(),
-            this.featureTagStore.getAll(),
+            this.featureTagStore.getAllByFeatures(query.features),
             this.segmentStore.getAll(),
         ]);
         this.addSegmentsToStrategies(featureStrategies, strategySegments);

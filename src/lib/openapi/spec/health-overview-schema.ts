@@ -15,9 +15,6 @@ export const healthOverviewSchema = {
     additionalProperties: false,
     required: ['version', 'name'],
     properties: {
-        stats: {
-            $ref: '#/components/schemas/projectStatsSchema',
-        },
         version: {
             type: 'number',
         },

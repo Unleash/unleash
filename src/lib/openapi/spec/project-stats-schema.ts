@@ -4,6 +4,17 @@ export const projectStatsSchema = {
     $id: '#/components/schemas/projectStatsSchema',
     type: 'object',
     additionalProperties: false,
+    required: [
+        'avgTimeToProdCurrentWindow',
+        'avgTimeToProdPastWindow',
+        'createdCurrentWindow',
+        'createdPastWindow',
+        'archivedCurrentWindow',
+        'archivedPastWindow',
+        'projectActivityCurrentWindow',
+        'projectActivityPastWindow',
+        'projectMembersAddedCurrentWindow',
+    ],
     properties: {
         avgTimeToProdCurrentWindow: {
             type: 'number',

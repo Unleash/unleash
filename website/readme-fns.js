@@ -14,8 +14,8 @@
 //
 // type ReadmeData = Readme & { repoUrl: string };
 
-const CLIENT_SIDE_SDK = "client-side"
-const SERVER_SIDE_SDK = "server-side"
+const CLIENT_SIDE_SDK = 'client-side';
+const SERVER_SIDE_SDK = 'server-side';
 
 const serverSideSdks = {
     'unleash-client-go': {
@@ -169,9 +169,10 @@ const modifyContent = (filename, content) => {
 This SDK **cannot** connect to the regular (server-side) \`client\` API.`
 
             case SERVER_SIDE_SDK:
-            default: return `To connect to Unleash, you'll need your Unleash API url (e.g. \`https://<your-unleash>/api\`) and a [server-side API token](/reference/api-tokens-and-client-keys.mdx#client-tokens) ([how do I create an API token?](/how-to/how-to-create-api-tokens.mdx)).`
+            default:
+                return `To connect to Unleash, you'll need your Unleash API url (e.g. \`https://<your-unleash>/api\`) and a [server-side API token](/reference/api-tokens-and-client-keys.mdx#client-tokens) ([how do I create an API token?](/how-to/how-to-create-api-tokens.mdx)).`;
         }
-    }
+    };
 
     return {
         filename: `${sdk.type}/${sdk.slugName}.md`,

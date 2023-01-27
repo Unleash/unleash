@@ -7,10 +7,15 @@ import {
     StyledParagraphSubtitle,
 } from './ProjectInfo.styles';
 import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
+import { styled } from '@mui/material';
 
 export interface IToggleTypesWidgetProps {
     features: IFeatureToggleListItem[];
 }
+
+const StyledTypeCount = styled(StyledCount)(({ theme }) => ({
+    marginLeft: 'auto',
+}));
 
 export const ToggleTypesWidget = ({ features }: IToggleTypesWidgetProps) => {
     const { release, experiment, operational, kill, permission } =
@@ -54,27 +59,27 @@ export const ToggleTypesWidget = ({ features }: IToggleTypesWidgetProps) => {
             <StyledParagraphGridRow data-loading>
                 <ReleaseToggleIcon fontSize="small" data-loading />
                 <div>Release</div>
-                <StyledCount>{release}</StyledCount>
+                <StyledTypeCount>{release}</StyledTypeCount>
             </StyledParagraphGridRow>
             <StyledParagraphGridRow data-loading>
                 <ExperimentToggleIcon fontSize="small" data-loading />
                 <div>Experiment</div>
-                <StyledCount>{experiment}</StyledCount>
+                <StyledTypeCount>{experiment}</StyledTypeCount>
             </StyledParagraphGridRow>
             <StyledParagraphGridRow data-loading>
                 <OperationalToggleIcon fontSize="small" data-loading />
                 <div>Operational</div>
-                <StyledCount>{operational}</StyledCount>
+                <StyledTypeCount>{operational}</StyledTypeCount>
             </StyledParagraphGridRow>
             <StyledParagraphGridRow data-loading>
                 <KillToggleIcon fontSize="small" data-loading />
                 <div>Kill switch</div>
-                <StyledCount>{kill}</StyledCount>
+                <StyledTypeCount>{kill}</StyledTypeCount>
             </StyledParagraphGridRow>
             <StyledParagraphGridRow data-loading style={{ margin: 0 }}>
                 <PermissionToggleIcon fontSize="small" data-loading />
                 <div>Permission</div>
-                <StyledCount>{permission}</StyledCount>
+                <StyledTypeCount>{permission}</StyledTypeCount>
             </StyledParagraphGridRow>
         </StyledDivInfoContainer>
     );

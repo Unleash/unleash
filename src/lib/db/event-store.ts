@@ -17,7 +17,48 @@ const EVENT_COLUMNS = [
     'feature_name',
     'project',
     'environment',
-];
+] as const;
+
+export type IQueryOperations =
+    | IWhereOperation
+    | IBeforeDateOperation
+    | IBetweenDatesOperation
+    | IForFeaturesOperation;
+
+interface IWhereOperation {
+    op: 'where';
+    parameters: {
+        [key: string]: string;
+    };
+}
+
+interface IBeforeDateOperation {
+    op: 'beforeDate';
+    parameters: {
+        dateAccessor: string;
+        date: string;
+    };
+}
+
+interface IBetweenDatesOperation {
+    op: 'betweenDate';
+    parameters: {
+        dateAccessor: string;
+        range: string[];
+    };
+}
+
+interface IForFeaturesOperation {
+    op: 'forFeatures';
+    parameters: IForFeaturesParams;
+}
+
+interface IForFeaturesParams {
+    type: string;
+    projectId: string;
+    environments: string[];
+    features: string[];
+}
 
 export interface IEventTable {
     id: number;
@@ -120,23 +161,75 @@ class EventStore extends AnyEventEmitter implements IEventStore {
         return present;
     }
 
-    async getForFeatures(
-        features: string[],
-        environments: string[],
-        query: { type: string; projectId: string },
-    ): Promise<IEvent[]> {
+    async query(operations: IQueryOperations[]): Promise<IEvent[]> {
         try {
-            const rows = await this.db
-                .select(EVENT_COLUMNS)
-                .from(TABLE)
-                .where({ type: query.type, project: query.projectId })
-                .whereIn('feature_name', features)
-                .whereIn('environment', environments);
+            let query: Knex.QueryBuilder = this.select();
 
+            operations.forEach((operation) => {
+                if (operation.op === 'where') {
+                    query = this.where(query, operation.parameters);
+                }
+
+                if (operation.op === 'forFeatures') {
+                    query = this.forFeatures(query, operation.parameters);
+                }
+
+                if (operation.op === 'beforeDate') {
+                    query = this.beforeDate(query, operation.parameters);
+                }
+
+                if (operation.op === 'betweenDate') {
+                    query = this.betweenDate(query, operation.parameters);
+                }
+            });
+
+            const rows = await query;
             return rows.map(this.rowToEvent);
         } catch (e) {
             return [];
         }
+    }
+
+    where(
+        query: Knex.QueryBuilder,
+        parameters: { [key: string]: string },
+    ): Knex.QueryBuilder {
+        return query.where(parameters);
+    }
+
+    beforeDate(
+        query: Knex.QueryBuilder,
+        parameters: { dateAccessor: string; date: string },
+    ): Knex.QueryBuilder {
+        return query.andWhere(parameters.dateAccessor, '>=', parameters.date);
+    }
+
+    betweenDate(
+        query: Knex.QueryBuilder,
+        parameters: { dateAccessor: string; range: string[] },
+    ): Knex.QueryBuilder {
+        if (parameters.range && parameters.range.length === 2) {
+            return query.andWhereBetween(parameters.dateAccessor, [
+                parameters.range[0],
+                parameters.range[1],
+            ]);
+        }
+
+        return query;
+    }
+
+    select(): Knex.QueryBuilder {
+        return this.db.select(EVENT_COLUMNS).from(TABLE);
+    }
+
+    forFeatures(
+        query: Knex.QueryBuilder,
+        parameters: IForFeaturesParams,
+    ): Knex.QueryBuilder {
+        return query
+            .where({ type: parameters.type, project: parameters.projectId })
+            .whereIn('feature_name', parameters.features)
+            .whereIn('environment', parameters.environments);
     }
 
     async get(key: number): Promise<IEvent> {

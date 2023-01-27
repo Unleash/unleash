@@ -1,5 +1,6 @@
 import { FeaturesSchema } from 'openapi';
 import useSWR from 'swr';
+import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 
 const fetcher = (path: string) => {
@@ -10,7 +11,7 @@ const fetcher = (path: string) => {
 
 export const useFeatures = () => {
     const { data, error, mutate } = useSWR<FeaturesSchema>(
-        'api/admin/features',
+        formatApiPath('api/admin/features'),
         fetcher,
         {
             refreshInterval: 15 * 1000, // ms

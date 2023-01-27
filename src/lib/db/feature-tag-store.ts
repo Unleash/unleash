@@ -105,6 +105,19 @@ class FeatureTagStore implements IFeatureTagStore {
         return rows.map(this.featureTagRowToTag);
     }
 
+    async getAllByFeatures(features: string[]): Promise<IFeatureTag[]> {
+        const query = this.db
+            .select(COLUMNS)
+            .from<FeatureTagTable>(TABLE)
+            .whereIn('feature_name', features);
+        const rows = await query;
+        return rows.map((row) => ({
+            featureName: row.feature_name,
+            tagType: row.tag_type,
+            tagValue: row.tag_value,
+        }));
+    }
+
     async tagFeature(featureName: string, tag: ITag): Promise<ITag> {
         const stopTimer = this.timer('tagFeature');
         await this.db<FeatureTagTable>(TABLE)

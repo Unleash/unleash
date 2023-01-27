@@ -10,7 +10,7 @@ interface IFeatureTimeToProdData {
     events: IEvent[];
 }
 
-export class ProjectStatus {
+export class TimeToProduction {
     private features: FeatureToggle[];
 
     private productionEnvironments: IProjectEnvironment[];
@@ -31,16 +31,25 @@ export class ProjectStatus {
         const featureEvents = this.getFeatureEvents();
         const sortedFeatureEvents =
             this.sortFeatureEventsByCreatedAt(featureEvents);
+
         const timeToProdPerFeature =
             this.calculateTimeToProdForFeatures(sortedFeatureEvents);
+        if (timeToProdPerFeature.length) {
+            const sum = timeToProdPerFeature.reduce(
+                (acc, curr) => acc + curr,
+                0,
+            );
 
-        const sum = timeToProdPerFeature.reduce((acc, curr) => acc + curr, 0);
+            return Number(
+                (sum / Object.keys(sortedFeatureEvents).length).toFixed(1),
+            );
+        }
 
-        return sum / Object.keys(sortedFeatureEvents).length;
+        return 0;
     }
 
     getFeatureEvents(): IFeatureTimeToProdCalculationMap {
-        return this.filterEvents(this.events).reduce((acc, event) => {
+        return this.getProductionEvents(this.events).reduce((acc, event) => {
             if (acc[event.featureName]) {
                 acc[event.featureName].events.push(event);
             } else {
@@ -55,7 +64,7 @@ export class ProjectStatus {
         }, {});
     }
 
-    filterEvents(events: IEvent[]): IEvent[] {
+    getProductionEvents(events: IEvent[]): IEvent[] {
         return events.filter((event) => {
             const found = this.productionEnvironments.find(
                 (env) => env.name === event.environment,
@@ -74,6 +83,7 @@ export class ProjectStatus {
     ): number[] {
         return Object.keys(featureEvents).map((featureName) => {
             const feature = featureEvents[featureName];
+
             const earliestEvent = feature.events[0];
 
             const createdAtDate = new Date(feature.createdAt);

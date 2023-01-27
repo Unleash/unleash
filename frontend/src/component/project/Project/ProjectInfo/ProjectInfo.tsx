@@ -31,7 +31,12 @@ const ProjectInfo = ({
                     condition={Boolean(uiConfig?.flags.newProjectOverview)}
                     show={<MetaWidget id={id} description={description} />}
                 />
-                <HealthWidget projectId={id} health={health} />
+                <HealthWidget
+                    projectId={id}
+                    health={health}
+                    total={features.length}
+                    stale={features.filter(feature => feature.stale).length}
+                />
                 <ConditionallyRender
                     condition={id !== DEFAULT_PROJECT_ID}
                     show={

@@ -71,10 +71,9 @@ export const StyledParagraphEmphasizedText = styled('p')(({ theme }) => ({
     },
 }));
 
-export const StyledCount = styled('p')(({ theme }) => ({
+export const StyledCount = styled('span')(({ theme }) => ({
     fontSize: theme.typography.h2.fontSize,
     fontWeight: 'bold',
-    textAlign: 'right',
     color: theme.palette.text.primary,
 }));
 

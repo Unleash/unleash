@@ -10,6 +10,7 @@ import {
     InputAdornment,
     styled,
     Switch,
+    Tooltip,
 } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { IPayload } from 'interfaces/featureToggle';
@@ -30,7 +31,7 @@ const StyledVariantForm = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
 }));
 
-const StyledDeleteButton = styled(IconButton)(({ theme }) => ({
+const StyledDeleteButtonTooltip = styled(Tooltip)(({ theme }) => ({
     position: 'absolute',
     top: theme.spacing(2),
     right: theme.spacing(2),
@@ -293,12 +294,23 @@ export const VariantForm = ({
 
     return (
         <StyledVariantForm>
-            <StyledDeleteButton
-                onClick={() => removeVariant(variant.id)}
-                disabled={isProtectedVariant(variant)}
+            <StyledDeleteButtonTooltip
+                arrow
+                title={
+                    isProtectedVariant(variant)
+                        ? 'You need to have at least one variable variant'
+                        : 'Delete variant'
+                }
             >
-                <Delete />
-            </StyledDeleteButton>
+                <div>
+                    <IconButton
+                        onClick={() => removeVariant(variant.id)}
+                        disabled={isProtectedVariant(variant)}
+                    >
+                        <Delete />
+                    </IconButton>
+                </div>
+            </StyledDeleteButtonTooltip>
             <StyledTopRow>
                 <StyledNameContainer>
                     <StyledLabel>Variant name</StyledLabel>

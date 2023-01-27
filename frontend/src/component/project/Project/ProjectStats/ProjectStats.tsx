@@ -14,7 +14,11 @@ const StyledBox = styled(Box)(({ theme }) => ({
     },
 }));
 
-export const ProjectStats = ({ stats }) => {
+interface IProjectStatsProps {
+    stats: any; // awaiting type generation
+}
+
+export const ProjectStats = ({ stats }: IProjectStatsProps) => {
     const {
         avgTimeToProdCurrentWindow,
         avgTimeToProdPastWindow,

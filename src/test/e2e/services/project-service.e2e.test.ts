@@ -1212,3 +1212,39 @@ test('should get correct amount of features archived in current and past window'
     expect(result.updates.archivedCurrentWindow).toBe(2);
     expect(result.updates.archivedPastWindow).toBe(2);
 });
+
+test('should get correct amount of project members for current and past window', async () => {
+    const project = {
+        id: 'features-members',
+        name: 'features-members',
+    };
+
+    await projectService.createProject(project, user.id);
+
+    const users = [
+        { name: 'memberOne', email: 'memberOne@getunleash.io' },
+        { name: 'memberTwo', email: 'memberTwo@getunleash.io' },
+        { name: 'memberThree', email: 'memberThree@getunleash.io' },
+        { name: 'memberFour', email: 'memberFour@getunleash.io' },
+        { name: 'memberFive', email: 'memberFive@getunleash.io' },
+    ];
+
+    const createdUsers = await Promise.all(
+        users.map((userObj) => stores.userStore.insert(userObj)),
+    );
+    const memberRole = await stores.roleStore.getRoleByName(RoleName.MEMBER);
+
+    await Promise.all(
+        createdUsers.map((createdUser) =>
+            projectService.addUser(
+                project.id,
+                memberRole.id,
+                createdUser.id,
+                'test',
+            ),
+        ),
+    );
+
+    const result = await projectService.getStatusUpdates(project.id);
+    expect(result.updates.projectMembersAddedCurrentWindow).toBe(5);
+});

@@ -54,6 +54,11 @@ export interface IProjectStore extends Store<IProject, string> {
 
     getMembersCountByProject(projectId: string): Promise<number>;
 
+    getMembersCountByProjectAfterDate(
+        projectId: string,
+        date: string,
+    ): Promise<number>;
+
     getProjectsByUser(userId: number): Promise<string[]>;
 
     getMembersCount(): Promise<IProjectMembersCount[]>;

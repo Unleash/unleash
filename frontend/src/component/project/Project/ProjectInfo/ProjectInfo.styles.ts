@@ -31,7 +31,7 @@ export const StyledProjectInfoWidgetContainer = styled('div')(({ theme }) => ({
     width: '100%',
     padding: theme.spacing(3, 2, 3, 2),
     [theme.breakpoints.down('md')]: {
-        margin: theme.spacing(0, 0.5),
+        margin: theme.spacing(0, 1),
         ...flexRow,
         flexDirection: 'column',
         justifyContent: 'center',

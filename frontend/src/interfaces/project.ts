@@ -19,7 +19,7 @@ export interface IProject {
     description?: string;
     environments: string[];
     health: number;
-
+    stats: object;
     favorite: boolean;
     features: IFeatureToggleListItem[];
 }

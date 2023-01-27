@@ -71,6 +71,7 @@ export interface IProjectStats {
     archivedPastWindow: Count;
     projectActivityCurrentWindow: Count;
     projectActivityPastWindow: Count;
+    projectMembersAddedCurrentWindow: Count;
 }
 
 interface ICalculateStatus {
@@ -757,6 +758,12 @@ export default class ProjectService {
             eventsPastWindow,
         );
 
+        const projectMembersAddedCurrentWindow =
+            await this.store.getMembersCountByProjectAfterDate(
+                projectId,
+                dateMinusThirtyDays,
+            );
+
         return {
             projectId,
             updates: {
@@ -771,6 +778,8 @@ export default class ProjectService {
                 projectActivityCurrentWindow:
                     projectActivityCurrentWindow.length,
                 projectActivityPastWindow: projectActivityPastWindow.length,
+                projectMembersAddedCurrentWindow:
+                    projectMembersAddedCurrentWindow,
             },
         };
     }
@@ -795,7 +804,13 @@ export default class ProjectService {
             project: projectId,
             userId,
         });
+
+        const projectStats = await this.projectStatsStore.getProjectStats(
+            projectId,
+        );
+
         return {
+            stats: projectStats || {},
             name: project.name,
             description: project.description,
             health: project.health,

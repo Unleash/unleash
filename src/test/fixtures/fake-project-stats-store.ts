@@ -9,4 +9,8 @@ export default class FakeProjectStatsStore implements IProjectStatsStore {
     ): Promise<void> {
         throw new Error('not implemented');
     }
+
+    getProjectStats(projectId: string): Promise<IProjectStats> {
+        throw new Error('not implemented');
+    }
 }

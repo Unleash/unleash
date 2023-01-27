@@ -9,6 +9,31 @@ import { IProjectStatsStore } from 'lib/types/stores/project-stats-store-type';
 
 const TABLE = 'project_stats';
 
+const PROJECT_STATS_COLUMNS = [
+    'avg_time_to_prod_current_window',
+    'avg_time_to_prod_past_window',
+    'project',
+    'features_created_current_window',
+    'features_created_past_window',
+    'features_archived_current_window',
+    'features_archived_past_window',
+    'project_changes_current_window',
+    'project_changes_past_window',
+    'project_members_added_current_window',
+];
+
+interface IProjectStatsRow {
+    avg_time_to_prod_current_window: number;
+    avg_time_to_prod_past_window: number;
+    features_created_current_window: number;
+    features_created_past_window: number;
+    features_archived_current_window: number;
+    features_archived_past_window: number;
+    project_changes_current_window: number;
+    project_changes_past_window: number;
+    project_members_added_current_window: number;
+}
+
 class ProjectStatsStore implements IProjectStatsStore {
     private db: Knex;
 
@@ -43,9 +68,39 @@ class ProjectStatsStore implements IProjectStatsStore {
                 project_changes_current_window:
                     status.projectActivityCurrentWindow,
                 project_changes_past_window: status.projectActivityPastWindow,
+                project_members_added_current_window:
+                    status.projectMembersAddedCurrentWindow,
             })
             .onConflict('project')
             .merge();
+    }
+
+    async getProjectStats(projectId: string): Promise<IProjectStats> {
+        const row = await this.db(TABLE)
+            .select(PROJECT_STATS_COLUMNS)
+            .where({ project: projectId })
+            .first();
+
+        return this.mapRow(row);
+    }
+
+    mapRow(row: IProjectStatsRow): IProjectStats | undefined {
+        if (!row) {
+            return undefined;
+        }
+
+        return {
+            avgTimeToProdCurrentWindow: row.avg_time_to_prod_current_window,
+            avgTimeToProdPastWindow: row.avg_time_to_prod_past_window,
+            createdCurrentWindow: row.features_created_current_window,
+            createdPastWindow: row.features_created_past_window,
+            archivedCurrentWindow: row.features_archived_current_window,
+            archivedPastWindow: row.features_archived_past_window,
+            projectActivityCurrentWindow: row.project_changes_current_window,
+            projectActivityPastWindow: row.project_changes_past_window,
+            projectMembersAddedCurrentWindow:
+                row.project_members_added_current_window,
+        };
     }
 }
 

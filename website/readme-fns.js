@@ -162,11 +162,8 @@ const modifyContent = (filename, content) => {
 
     const getConnectionTip = (sdkType) => {
         switch (sdkType) {
-        case CLIENT_SIDE_SDK: return `To connect this SDK to Unleash, you'll need to use either
-- the [Unleash front-end API](/reference/front-end-api) (released in Unleash 4.16) ([how do I create an API token?](/how-to/how-to-create-api-tokens.mdx))
-- the [Unleash proxy](/reference/unleash-proxy) ([how do I create client keys?](/reference/api-tokens-and-client-keys#proxy-client-keys))
-
-This SDK **cannot** connect to the regular (server-side) \`client\` API.`
+            case CLIENT_SIDE_SDK:
+                return `To connect to Unleash from a client-side context, you'll need to use the [Unleash front-end API](/reference/front-end-api) ([how do I create an API token?](/how-to/how-to-create-api-tokens.mdx)) or the [Unleash proxy](/reference/unleash-proxy) ([how do I create client keys?](/reference/api-tokens-and-client-keys#proxy-client-keys)).`;
 
             case SERVER_SIDE_SDK:
             default:

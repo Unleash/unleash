@@ -6,6 +6,12 @@ const StyledBox = styled(Box)(({ theme }) => ({
     display: 'flex',
     justifyContent: 'space-between',
     flexWrap: 'wrap',
+    [theme.breakpoints.down('md')]: {
+        paddingLeft: 0,
+    },
+    [theme.breakpoints.down('sm')]: {
+        flexDirection: 'column',
+    },
 }));
 
 export const ProjectStatus = ({ stats }) => {
@@ -20,7 +26,14 @@ export const ProjectStatus = ({ stats }) => {
         archivedPastWindow,
     } = stats;
 
-    const calculatePercentage = () => {};
+    const calculatePercentage = (partial: number, total: number) => {
+        const percentage = (partial * 100) / total;
+
+        if (Number.isInteger(percentage)) {
+            return percentage;
+        }
+        return 0;
+    };
 
     return (
         <StyledBox>
@@ -34,7 +47,11 @@ export const ProjectStatus = ({ stats }) => {
             <StatusBox
                 title="Avg. time to production"
                 boxText={`${avgTimeToProdCurrentWindow} days`}
-                change={-12}
+                change={calculatePercentage(
+                    avgTimeToProdCurrentWindow,
+                    avgTimeToProdPastWindow
+                )}
+                percentage
             />{' '}
             <StatusBox
                 title="Features created"

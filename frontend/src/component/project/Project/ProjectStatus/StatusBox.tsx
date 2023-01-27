@@ -1,15 +1,28 @@
 import { ArrowOutward, SouthEast } from '@mui/icons-material';
 import { Box, Typography, styled } from '@mui/material';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { flexRow } from 'themes/themeStyles';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     padding: theme.spacing(4, 2),
     backgroundColor: theme.palette.background.paper,
-    minWidth: '240px',
+    minWidth: '24%',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     borderRadius: `${theme.shape.borderRadiusLarge}px`,
+    [theme.breakpoints.down('lg')]: {
+        minWidth: '49%',
+        padding: theme.spacing(2),
+        ':nth-child(n+3)': {
+            marginTop: theme.spacing(2),
+        },
+    },
+    [theme.breakpoints.down('sm')]: {
+        ':nth-child(n+2)': {
+            marginTop: theme.spacing(2),
+        },
+    },
 }));
 
 const StyledTypographyHeader = styled(Typography)(({ theme }) => ({
@@ -42,6 +55,7 @@ interface IStatusBoxProps {
     title: string;
     boxText: string;
     change: number;
+    percentage?: boolean;
 }
 
 const resolveIcon = (change: number) => {
@@ -62,23 +76,43 @@ const resolveColor = (change: number) => {
     return 'error.main';
 };
 
-export const StatusBox = ({ title, boxText, change }: IStatusBoxProps) => {
+export const StatusBox = ({
+    title,
+    boxText,
+    change,
+    percentage,
+}: IStatusBoxProps) => {
     return (
         <StyledBox>
             <StyledTypographyHeader>{title}</StyledTypographyHeader>
             <Box sx={{ ...flexRow }}>
                 <StyledTypographyCount>{boxText}</StyledTypographyCount>
-                <StyledBoxChangeContainer>
-                    <Box sx={{ ...flexRow }}>
-                        {resolveIcon(change)}
-                        <StyledTypographyChange color={resolveColor(change)}>
-                            {change}
-                        </StyledTypographyChange>
-                    </Box>
-                    <StyledTypographySubtext>
-                        this month
-                    </StyledTypographySubtext>
-                </StyledBoxChangeContainer>
+                <ConditionallyRender
+                    condition={change !== 0}
+                    show={
+                        <StyledBoxChangeContainer>
+                            <Box sx={{ ...flexRow }}>
+                                {resolveIcon(change)}
+                                <StyledTypographyChange
+                                    color={resolveColor(change)}
+                                >
+                                    {change}
+                                    {percentage ? '%' : ''}
+                                </StyledTypographyChange>
+                            </Box>
+                            <StyledTypographySubtext>
+                                this month
+                            </StyledTypographySubtext>
+                        </StyledBoxChangeContainer>
+                    }
+                    elseShow={
+                        <StyledBoxChangeContainer>
+                            <StyledTypographySubtext>
+                                No change
+                            </StyledTypographySubtext>
+                        </StyledBoxChangeContainer>
+                    }
+                />
             </Box>
         </StyledBox>
     );

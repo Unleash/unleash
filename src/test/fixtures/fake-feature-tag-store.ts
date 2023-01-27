@@ -83,6 +83,14 @@ export default class FakeFeatureTagStore implements IFeatureTagStore {
         });
         return Promise.resolve();
     }
+
+    getAllByFeatures(features: string[]): Promise<IFeatureTag[]> {
+        return Promise.resolve(
+            this.featureTags.filter((tag) =>
+                features.includes(tag.featureName),
+            ),
+        );
+    }
 }
 
 module.exports = FakeFeatureTagStore;

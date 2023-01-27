@@ -49,7 +49,7 @@ export const ProjectStats = ({ stats }: IProjectStatsProps) => {
         <StyledBox>
             <StatusBox
                 title="Total changes"
-                boxText={`${projectActivityCurrentWindow}`}
+                boxText={String(projectActivityCurrentWindow)}
                 change={
                     projectActivityCurrentWindow - projectActivityPastWindow
                 }
@@ -65,12 +65,12 @@ export const ProjectStats = ({ stats }: IProjectStatsProps) => {
             />{' '}
             <StatusBox
                 title="Features created"
-                boxText={`${createdCurrentWindow}`}
+                boxText={String(createdCurrentWindow)}
                 change={createdCurrentWindow - createdPastWindow}
             />
             <StatusBox
                 title="Features archived"
-                boxText={`${archivedCurrentWindow}`}
+                boxText={String(archivedCurrentWindow)}
                 change={archivedCurrentWindow - archivedPastWindow}
             />
         </StyledBox>

@@ -1622,10 +1622,7 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "string",
           },
           "stats": {
-            "items": {
-              "$ref": "#/components/schemas/projectStatsSchema",
-            },
-            "type": "object",
+            "$ref": "#/components/schemas/projectStatsSchema",
           },
           "updatedAt": {
             "format": "date-time",
@@ -1682,10 +1679,7 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "number",
           },
           "stats": {
-            "items": {
-              "$ref": "#/components/schemas/projectStatsSchema",
-            },
-            "type": "object",
+            "$ref": "#/components/schemas/projectStatsSchema",
           },
           "updatedAt": {
             "format": "date-time",
@@ -2497,7 +2491,6 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "number",
           },
         },
-        "required": [],
         "type": "object",
       },
       "projectsSchema": {

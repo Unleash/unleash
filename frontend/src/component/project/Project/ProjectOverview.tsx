@@ -10,7 +10,7 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useLastViewedProject } from '../../../hooks/useLastViewedProject';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { ProjectStatus } from './ProjectStatus/ProjectStatus';
+import { ProjectStats } from './ProjectStats/ProjectStats';
 
 const refreshInterval = 15 * 1000;
 
@@ -60,7 +60,7 @@ const ProjectOverview = () => {
             <StyledContentContainer>
                 <ConditionallyRender
                     condition={Boolean(uiConfig?.flags.newProjectOverview)}
-                    show={<ProjectStatus stats={project.stats} />}
+                    show={<ProjectStats stats={project.stats} />}
                 />
                 <StyledProjectToggles>
                     <ProjectFeatureToggles

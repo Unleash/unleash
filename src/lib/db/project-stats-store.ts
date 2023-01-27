@@ -20,6 +20,7 @@ const PROJECT_STATS_COLUMNS = [
     'features_archived_past_window',
     'project_changes_current_window',
     'project_changes_past_window',
+    'project_members_added_current_window',
 ];
 
 interface IProjectStatsRow {
@@ -31,6 +32,7 @@ interface IProjectStatsRow {
     features_archived_past_window: number;
     project_changes_current_window: number;
     project_changes_past_window: number;
+    project_members_added_current_window: number;
 }
 
 class ProjectStatsStore implements IProjectStatsStore {
@@ -67,6 +69,8 @@ class ProjectStatsStore implements IProjectStatsStore {
                 project_changes_current_window:
                     status.projectActivityCurrentWindow,
                 project_changes_past_window: status.projectActivityPastWindow,
+                project_members_added_current_window:
+                    status.projectMembersAddedCurrentWindow,
             })
             .onConflict('project')
             .merge();
@@ -95,6 +99,8 @@ class ProjectStatsStore implements IProjectStatsStore {
             archivedPastWindow: row.features_archived_past_window,
             projectActivityCurrentWindow: row.project_changes_current_window,
             projectActivityPastWindow: row.project_changes_past_window,
+            projectMembersAddedCurrentWindow:
+                row.project_members_added_current_window,
         };
     }
 }

@@ -14,7 +14,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
     },
 }));
 
-export const ProjectStatus = ({ stats }) => {
+export const ProjectStats = ({ stats }) => {
     const {
         avgTimeToProdCurrentWindow,
         avgTimeToProdPastWindow,

@@ -39,6 +39,9 @@ export const projectStatsSchema = {
         projectActivityPastWindow: {
             type: 'number',
         },
+        projectMembersAddedCurrentWindow: {
+            type: 'number',
+        },
     },
     components: {},
 } as const;

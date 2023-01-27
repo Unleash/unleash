@@ -21,7 +21,7 @@ exports.up = function (db, cb) {
 exports.down = function (db, cb) {
     db.runSql(
         `
-        DROP TABLE project_status;
+        DROP TABLE project_stats;
   `,
         cb,
     );

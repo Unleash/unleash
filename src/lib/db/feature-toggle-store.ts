@@ -6,6 +6,7 @@ import NotFoundError from '../error/notfound-error';
 import { Logger, LogProvider } from '../logger';
 import { FeatureToggle, FeatureToggleDTO, IVariant } from '../types/model';
 import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
+import { Db } from './db';
 
 const FEATURE_COLUMNS = [
     'name',
@@ -40,13 +41,13 @@ const TABLE = 'features';
 const FEATURE_ENVIRONMENTS_TABLE = 'feature_environments';
 
 export default class FeatureToggleStore implements IFeatureToggleStore {
-    private db: Knex;
+    private db: Db;
 
     private logger: Logger;
 
     private timer: Function;
 
-    constructor(db: Knex, eventBus: EventEmitter, getLogger: LogProvider) {
+    constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
         this.logger = getLogger('feature-toggle-store.ts');
         this.timer = (action) =>

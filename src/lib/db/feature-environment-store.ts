@@ -1,5 +1,4 @@
 import EventEmitter from 'events';
-import { Knex } from 'knex';
 import {
     FeatureEnvironmentKey,
     IFeatureEnvironmentStore,
@@ -10,6 +9,7 @@ import { DB_TIME } from '../metric-events';
 import { IFeatureEnvironment, IVariant } from '../types/model';
 import NotFoundError from '../error/notfound-error';
 import { v4 as uuidv4 } from 'uuid';
+import { Db } from './db';
 
 const T = {
     featureEnvs: 'feature_environments',
@@ -30,13 +30,13 @@ interface ISegmentRow {
 }
 
 export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
-    private db: Knex;
+    private db: Db;
 
     private logger: Logger;
 
     private readonly timer: Function;
 
-    constructor(db: Knex, eventBus: EventEmitter, getLogger: LogProvider) {
+    constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
         this.logger = getLogger('feature-environment-store.ts');
         this.timer = (action) =>

@@ -1,6 +1,5 @@
 /* eslint camelcase: "off" */
 
-import { Knex } from 'knex';
 import { Logger, LogProvider } from '../logger';
 import User from '../types/user';
 
@@ -11,6 +10,7 @@ import {
     IUserStore,
     IUserUpdateFields,
 } from '../types/stores/user-store';
+import { Db } from './db';
 
 const TABLE = 'users';
 
@@ -60,11 +60,11 @@ const rowToUser = (row) => {
 };
 
 class UserStore implements IUserStore {
-    private db: Knex;
+    private db: Db;
 
     private logger: Logger;
 
-    constructor(db: Knex, getLogger: LogProvider) {
+    constructor(db: Db, getLogger: LogProvider) {
         this.db = db;
         this.logger = getLogger('user-store.ts');
     }

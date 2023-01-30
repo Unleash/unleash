@@ -24,4 +24,5 @@ export interface IClientInstanceStore
     getDistinctApplications(): Promise<string[]>;
     getDistinctApplicationsCount(daysBefore?: number): Promise<number>;
     deleteForApplication(appName: string): Promise<void>;
+    removeInstancesOlderThanTwoDays(): Promise<void>;
 }

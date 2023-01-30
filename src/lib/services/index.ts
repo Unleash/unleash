@@ -40,7 +40,7 @@ import { InstanceStatsService } from './instance-stats-service';
 import { FavoritesService } from './favorites-service';
 import MaintenanceService from './maintenance-service';
 import ExportImportService from './export-import-service';
-import { minutesToMilliseconds } from 'date-fns';
+import { hoursToMilliseconds, minutesToMilliseconds } from 'date-fns';
 import { AccountService } from './account-service';
 import { SchedulerService } from './scheduler-service';
 
@@ -52,6 +52,7 @@ export const scheduleServices = (
         schedulerService,
         apiTokenService,
         instanceStatsService,
+        clientInstanceService,
         projectService,
     } = services;
 
@@ -70,11 +71,17 @@ export const scheduleServices = (
         minutesToMilliseconds(5),
     );
 
+    schedulerService.schedule(
+        clientInstanceService.removeInstancesOlderThanTwoDays.bind(
+            clientInstanceService,
+        ),
+        hoursToMilliseconds(24),
+    );
+
     if (config.flagResolver.isEnabled('projectStatusApi')) {
-        const ONE_DAY = 1440;
         schedulerService.schedule(
             projectService.statusJob.bind(projectService),
-            minutesToMilliseconds(ONE_DAY),
+            hoursToMilliseconds(24),
         );
     }
 };

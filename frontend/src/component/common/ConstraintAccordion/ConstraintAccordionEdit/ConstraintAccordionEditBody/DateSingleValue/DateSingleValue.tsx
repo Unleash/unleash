@@ -3,14 +3,9 @@ import Input from 'component/common/Input/Input';
 import { parseDateValue, parseValidDate } from 'component/common/util';
 
 import { useMemo, useState } from 'react';
-import { ISelectOption } from 'component/common/GeneralSelect/GeneralSelect';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { styled } from '@mui/material';
 import TimezoneCountries from 'countries-and-timezones';
 
-interface ITimezoneSelect extends ISelectOption {
-    utcOffset: string;
-}
 interface IDateSingleValueProps {
     setValue: (value: string) => void;
     value?: string;
@@ -43,8 +38,13 @@ export const DateSingleValue = ({
         Intl.DateTimeFormat().resolvedOptions();
     const [pickedDate, setPickedDate] = useState(value || '');
 
-    const localTimezone = useMemo<ITimezoneSelect | undefined>(() => {
-        return timezones.find(t => t.key === localTimezoneName);
+    const timezoneText = useMemo<string>(() => {
+        const localTimezone = timezones.find(t => t.key === localTimezoneName);
+        if (localTimezone != null) {
+            return `${localTimezone.key} (UTC ${localTimezone.utcOffset})`;
+        } else {
+            return 'The time shown is in your local time zone according to your browser.';
+        }
     }, [timezones, localTimezoneName]);
 
     if (!value) return null;
@@ -72,21 +72,7 @@ export const DateSingleValue = ({
                     errorText={error}
                     required
                 />
-                <ConditionallyRender
-                    condition={Boolean(localTimezone)}
-                    show={
-                        <p>
-                            {localTimezone!.key}{' '}
-                            {`(UTC ${localTimezone!.utcOffset})`}
-                        </p>
-                    }
-                    elseShow={
-                        <p>
-                            The time shown is in your local time zone according
-                            to your browser.
-                        </p>
-                    }
-                />
+                <p>{timezoneText}</p>
             </StyledWrapper>
         </>
     );

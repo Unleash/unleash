@@ -5,7 +5,6 @@ import {
 } from './ProjectInfo.styles';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { StatusBox } from '../ProjectStats/StatusBox';
-import { useTheme } from '@mui/material';
 
 interface IProjectMembersWidgetProps {
     projectId: string;
@@ -18,7 +17,6 @@ export const ProjectMembersWidget = ({
     memberCount,
     change = 0,
 }: IProjectMembersWidgetProps) => {
-    const theme = useTheme();
     const { uiConfig } = useUiConfig();
 
     let link = `/admin/users`;
@@ -29,7 +27,7 @@ export const ProjectMembersWidget = ({
 
     return (
         <StyledProjectInfoWidgetContainer
-            sx={{ padding: theme.spacing(0, 0, 3, 0) }}
+            sx={{ padding: theme => theme.spacing(0, 0, 3, 0) }}
         >
             <StatusBox
                 title={'Project members'}

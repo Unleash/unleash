@@ -80,7 +80,12 @@ export const DateSingleValue = ({
                             {`(UTC ${localTimezone?.utcOffset})`}
                         </p>
                     }
-                    elseShow={<p>No timezone information available</p>}
+                    elseShow={
+                        <p>
+                            The time shown is in your local time zone according
+                            to your browser.
+                        </p>
+                    }
                 />
             </StyledWrapper>
         </>

@@ -1,6 +1,6 @@
 import { Logger, LogProvider } from '../logger';
 
-export default class SchedulerService {
+export class SchedulerService {
     private intervalIds: NodeJS.Timer[] = [];
 
     private logger: Logger;

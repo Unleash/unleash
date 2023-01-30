@@ -82,4 +82,8 @@ export default class FakeClientInstanceStore implements IClientInstanceStore {
     async insert(details: INewClientInstance): Promise<void> {
         this.instances.push({ createdAt: new Date(), ...details });
     }
+
+    removeInstancesOlderThanTwoDays(): Promise<void> {
+        return Promise.resolve(undefined);
+    }
 }

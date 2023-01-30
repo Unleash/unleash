@@ -5,7 +5,7 @@ import {
     IClientInstanceStore,
     INewClientInstance,
 } from '../types/stores/client-instance-store';
-import { hoursToMilliseconds, subDays } from 'date-fns';
+import { subDays } from 'date-fns';
 import Timeout = NodeJS.Timeout;
 import { Db } from './db';
 
@@ -62,12 +62,9 @@ export default class ClientInstanceStore implements IClientInstanceStore {
                 store: 'instance',
                 action,
             });
-        const clearer = () => this._removeInstancesOlderThanTwoDays();
-        setTimeout(clearer, 10).unref();
-        this.timer = setInterval(clearer, hoursToMilliseconds(24)).unref();
     }
 
-    async _removeInstancesOlderThanTwoDays(): Promise<void> {
+    async removeInstancesOlderThanTwoDays(): Promise<void> {
         const rows = await this.db(TABLE)
             .whereRaw("created_at < now() - interval '2 days'")
             .del();

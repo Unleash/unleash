@@ -76,8 +76,8 @@ export const DateSingleValue = ({
                     condition={Boolean(localTimezone)}
                     show={
                         <p>
-                            {localTimezone.key}{' '}
-                            {`(UTC ${localTimezone.utcOffset})`}
+                            {localTimezone!.key}{' '}
+                            {`(UTC ${localTimezone!.utcOffset})`}
                         </p>
                     }
                     elseShow={

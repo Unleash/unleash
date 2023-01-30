@@ -48,7 +48,6 @@ export interface IFlags {
     newProjectOverview?: boolean;
     caseInsensitiveInOperators?: boolean;
     crOnVariants?: boolean;
-    selectableTimezone?: boolean;
 }
 
 export interface IVersionInfo {

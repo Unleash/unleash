@@ -1,5 +1,4 @@
 import { EventEmitter } from 'events';
-import { Knex } from 'knex';
 import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
 import { Logger } from '../logger';
@@ -17,6 +16,7 @@ import {
     ENVIRONMENT_PERMISSION_TYPE,
     ROOT_PERMISSION_TYPE,
 } from '../util/constants';
+import { Db } from './db';
 
 const T = {
     ROLE_USER: 'role_user',
@@ -47,9 +47,9 @@ export class AccessStore implements IAccessStore {
 
     private timer: Function;
 
-    private db: Knex;
+    private db: Db;
 
-    constructor(db: Knex, eventBus: EventEmitter, getLogger: Function) {
+    constructor(db: Db, eventBus: EventEmitter, getLogger: Function) {
         this.db = db;
         this.logger = getLogger('access-store.ts');
         this.timer = (action: string) =>

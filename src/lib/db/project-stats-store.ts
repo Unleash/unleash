@@ -1,4 +1,3 @@
-import { Knex } from 'knex';
 import { Logger, LogProvider } from '../logger';
 
 import metricsHelper from '../util/metrics-helper';
@@ -6,6 +5,7 @@ import { DB_TIME } from '../metric-events';
 import EventEmitter from 'events';
 import { IProjectStats } from 'lib/services/project-service';
 import { IProjectStatsStore } from 'lib/types/stores/project-stats-store-type';
+import { Db } from './db';
 
 const TABLE = 'project_stats';
 
@@ -35,13 +35,13 @@ interface IProjectStatsRow {
 }
 
 class ProjectStatsStore implements IProjectStatsStore {
-    private db: Knex;
+    private db: Db;
 
     private logger: Logger;
 
     private timer: Function;
 
-    constructor(db: Knex, eventBus: EventEmitter, getLogger: LogProvider) {
+    constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
         this.logger = getLogger('project-stats-store.ts');
         this.timer = (action) =>
@@ -84,9 +84,19 @@ class ProjectStatsStore implements IProjectStatsStore {
         return this.mapRow(row);
     }
 
-    mapRow(row: IProjectStatsRow): IProjectStats | undefined {
+    mapRow(row: IProjectStatsRow): IProjectStats {
         if (!row) {
-            return undefined;
+            return {
+                avgTimeToProdCurrentWindow: 0,
+                avgTimeToProdPastWindow: 0,
+                createdCurrentWindow: 0,
+                createdPastWindow: 0,
+                archivedCurrentWindow: 0,
+                archivedPastWindow: 0,
+                projectActivityCurrentWindow: 0,
+                projectActivityPastWindow: 0,
+                projectMembersAddedCurrentWindow: 0,
+            };
         }
 
         return {

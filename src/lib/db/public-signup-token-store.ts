@@ -1,5 +1,4 @@
 import { EventEmitter } from 'events';
-import { Knex } from 'knex';
 import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
 import { Logger, LogProvider } from '../logger';
@@ -8,6 +7,7 @@ import { PublicSignupTokenSchema } from '../openapi/spec/public-signup-token-sch
 import { IPublicSignupTokenStore } from '../types/stores/public-signup-token-store';
 import { UserSchema } from '../openapi/spec/user-schema';
 import { IPublicSignupTokenCreate } from '../types/models/public-signup-token';
+import { Db } from './db';
 
 const TABLE = 'public_signup_tokens';
 const TOKEN_USERS_TABLE = 'public_signup_tokens_user';
@@ -91,9 +91,9 @@ export class PublicSignupTokenStore implements IPublicSignupTokenStore {
 
     private timer: Function;
 
-    private db: Knex;
+    private db: Db;
 
-    constructor(db: Knex, eventBus: EventEmitter, getLogger: LogProvider) {
+    constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
         this.logger = getLogger('public-signup-tokens.js');
         this.timer = (action: string) =>

@@ -1,4 +1,3 @@
-import { Knex } from 'knex';
 import { Logger, LogProvider } from '../logger';
 
 import NotFoundError from '../error/notfound-error';
@@ -9,6 +8,7 @@ import {
     IStrategyImport,
     IStrategyStore,
 } from '../types/stores/strategy-store';
+import { Db } from './db';
 
 const STRATEGY_COLUMNS = [
     'name',
@@ -29,11 +29,11 @@ interface IStrategyRow {
     display_name: string;
 }
 export default class StrategyStore implements IStrategyStore {
-    private db: Knex;
+    private db: Db;
 
     private logger: Logger;
 
-    constructor(db: Knex, getLogger: LogProvider) {
+    constructor(db: Db, getLogger: LogProvider) {
         this.db = db;
         this.logger = getLogger('strategy-store.ts');
     }

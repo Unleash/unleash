@@ -253,6 +253,10 @@ export default class ClientInstanceService {
         return metrics;
     }
 
+    async removeInstancesOlderThanTwoDays(): Promise<void> {
+        return this.clientInstanceStore.removeInstancesOlderThanTwoDays();
+    }
+
     destroy(): void {
         this.timers.forEach(clearInterval);
     }

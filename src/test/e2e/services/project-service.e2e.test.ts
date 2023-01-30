@@ -1057,6 +1057,28 @@ test('should only count active feature toggles for project', async () => {
     expect(theProject?.featureCount).toBe(1);
 });
 
+test('should list projects with all features archived', async () => {
+    const project = {
+        id: 'only-archived',
+        name: 'Listed project',
+        description: 'Blah',
+    };
+
+    await projectService.createProject(project, user);
+
+    await stores.featureToggleStore.create(project.id, {
+        name: 'archived-toggle',
+        project: project.id,
+        enabled: false,
+    });
+
+    await featureToggleService.archiveToggle('archived-toggle', 'me');
+
+    const projects = await projectService.getProjects();
+    const theProject = projects.find((p) => p.id === project.id);
+    expect(theProject?.featureCount).toBe(0);
+});
+
 const updateEventCreatedAt = async (date: Date, featureName: string) => {
     return db.rawDatabase
         .table('events')

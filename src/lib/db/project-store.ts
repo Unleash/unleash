@@ -15,6 +15,7 @@ import { DB_TIME } from '../metric-events';
 import EventEmitter from 'events';
 import { IFlagResolver } from '../types';
 import Raw = Knex.Raw;
+import { Db } from './db';
 
 const COLUMNS = [
     'id',
@@ -37,7 +38,7 @@ export interface IProjectMembersCount {
 }
 
 class ProjectStore implements IProjectStore {
-    private db: Knex;
+    private db: Db;
 
     private logger: Logger;
 
@@ -46,7 +47,7 @@ class ProjectStore implements IProjectStore {
     private timer: Function;
 
     constructor(
-        db: Knex,
+        db: Db,
         eventBus: EventEmitter,
         getLogger: LogProvider,
         flagResolver: IFlagResolver,
@@ -88,14 +89,13 @@ class ProjectStore implements IProjectStore {
         const projectTimer = this.timer('getProjectsWithCount');
         let projects = this.db(TABLE)
             .leftJoin('features', 'features.project', 'projects.id')
-            .where('features.archived_at', null)
             .orderBy('projects.name', 'asc');
         if (query) {
             projects = projects.where(query);
         }
         let selectColumns = [
             this.db.raw(
-                'projects.id, projects.name, projects.description, projects.health, projects.updated_at, count(features.name) AS number_of_features',
+                'projects.id, projects.name, projects.description, projects.health, projects.updated_at, count(features.name) FILTER (WHERE features.archived_at is null) AS number_of_features',
             ),
         ] as (string | Raw<any>)[];
 

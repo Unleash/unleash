@@ -23,6 +23,7 @@ import { mapValues } from '../util/map-values';
 import { IFlagResolver } from '../types/experimental';
 import { IFeatureProjectUserParams } from '../routes/admin-api/project/features';
 import Raw = Knex.Raw;
+import { Db } from './db';
 
 const COLUMNS = [
     'id',
@@ -117,7 +118,7 @@ function mapStrategyUpdate(
 }
 
 class FeatureStrategiesStore implements IFeatureStrategiesStore {
-    private db: Knex;
+    private db: Db;
 
     private logger: Logger;
 
@@ -126,7 +127,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
     private flagResolver: IFlagResolver;
 
     constructor(
-        db: Knex,
+        db: Db,
         eventBus: EventEmitter,
         getLogger: LogProvider,
         flagResolver: IFlagResolver,

@@ -1,4 +1,3 @@
-import { Knex } from 'knex';
 import EventEmitter from 'events';
 import { Logger, LogProvider } from '../logger';
 import { IAddon, IAddonDto, IAddonStore } from '../types/stores/addon-store';
@@ -6,6 +5,7 @@ import { IAddon, IAddonDto, IAddonStore } from '../types/stores/addon-store';
 import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
 import NotFoundError from '../error/notfound-error';
+import { Db } from './db';
 
 const COLUMNS = [
     'id',
@@ -20,13 +20,13 @@ const COLUMNS = [
 const TABLE = 'addons';
 
 export default class AddonStore implements IAddonStore {
-    private db: Knex;
+    private db: Db;
 
     private logger: Logger;
 
     private readonly timer: Function;
 
-    constructor(db: Knex, eventBus: EventEmitter, getLogger: LogProvider) {
+    constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
         this.logger = getLogger('addons-store.ts');
         this.timer = (action) =>

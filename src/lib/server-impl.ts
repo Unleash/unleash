@@ -5,7 +5,7 @@ import { migrateDb } from '../migrator';
 import getApp from './app';
 import { createMetricsMonitor } from './metrics';
 import { createStores } from './db';
-import { createServices } from './services';
+import { createServices, scheduleServices } from './services';
 import { createConfig } from './create-config';
 import { addEventHook } from './event-hook';
 import registerGracefulShutdown from './util/graceful-shutdown';
@@ -31,6 +31,7 @@ import { SimpleAuthSettings } from './types/settings/simple-auth-settings';
 import { Knex } from 'knex';
 import * as permissions from './types/permissions';
 import * as eventType from './types/events';
+import { Db } from './db/db';
 
 async function createApp(
     config: IUnleashConfig,
@@ -42,6 +43,7 @@ async function createApp(
     const db = createDb(config);
     const stores = createStores(config, db);
     const services = createServices(stores, config);
+    scheduleServices(services, config);
 
     const metricsMonitor = createMetricsMonitor();
     const unleashSession = sessionDb(config, db);
@@ -183,6 +185,7 @@ export {
     RoleName,
     IAuthType,
     Knex,
+    Db,
     permissions,
     eventType,
 };

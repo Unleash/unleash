@@ -40,9 +40,51 @@ import { InstanceStatsService } from './instance-stats-service';
 import { FavoritesService } from './favorites-service';
 import MaintenanceService from './maintenance-service';
 import ExportImportService from './export-import-service';
-import SchedulerService from './scheduler-service';
-import { minutesToMilliseconds } from 'date-fns';
+import { hoursToMilliseconds, minutesToMilliseconds } from 'date-fns';
 import { AccountService } from './account-service';
+import { SchedulerService } from './scheduler-service';
+
+export const scheduleServices = (
+    services: IUnleashServices,
+    config: IUnleashConfig,
+): void => {
+    const {
+        schedulerService,
+        apiTokenService,
+        instanceStatsService,
+        clientInstanceService,
+        projectService,
+    } = services;
+
+    schedulerService.schedule(
+        apiTokenService.fetchActiveTokens.bind(apiTokenService),
+        minutesToMilliseconds(1),
+    );
+
+    schedulerService.schedule(
+        apiTokenService.updateLastSeen.bind(apiTokenService),
+        minutesToMilliseconds(3),
+    );
+
+    schedulerService.schedule(
+        instanceStatsService.refreshStatsSnapshot.bind(instanceStatsService),
+        minutesToMilliseconds(5),
+    );
+
+    schedulerService.schedule(
+        clientInstanceService.removeInstancesOlderThanTwoDays.bind(
+            clientInstanceService,
+        ),
+        hoursToMilliseconds(24),
+    );
+
+    if (config.flagResolver.isEnabled('projectStatusApi')) {
+        schedulerService.schedule(
+            projectService.statusJob.bind(projectService),
+            hoursToMilliseconds(24),
+        );
+    }
+};
 
 export const createServices = (
     stores: IUnleashStores,
@@ -146,28 +188,6 @@ export const createServices = (
     );
 
     const schedulerService = new SchedulerService(config.getLogger);
-    schedulerService.schedule(
-        apiTokenService.fetchActiveTokens.bind(apiTokenService),
-        minutesToMilliseconds(1),
-    );
-
-    schedulerService.schedule(
-        apiTokenService.updateLastSeen.bind(apiTokenService),
-        minutesToMilliseconds(3),
-    );
-
-    schedulerService.schedule(
-        instanceStatsService.refreshStatsSnapshot.bind(instanceStatsService),
-        minutesToMilliseconds(5),
-    );
-
-    if (config.flagResolver.isEnabled('projectStatusApi')) {
-        const ONE_DAY = 1440;
-        schedulerService.schedule(
-            projectService.statusJob.bind(projectService),
-            minutesToMilliseconds(ONE_DAY),
-        );
-    }
 
     return {
         accessService,
@@ -212,6 +232,7 @@ export const createServices = (
         favoritesService,
         maintenanceService,
         exportImportService,
+        schedulerService,
     };
 };
 
@@ -255,4 +276,5 @@ export {
     InstanceStatsService,
     FavoritesService,
     ExportImportService,
+    SchedulerService,
 };

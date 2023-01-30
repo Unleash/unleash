@@ -35,10 +35,11 @@ import PatService from '../services/pat-service';
 import { PublicSignupTokenService } from '../services/public-signup-token-service';
 import { LastSeenService } from '../services/client-metrics/last-seen-service';
 import { InstanceStatsService } from '../services/instance-stats-service';
-import { FavoritesService } from '../services';
+import { FavoritesService } from '../services/favorites-service';
 import MaintenanceService from '../services/maintenance-service';
 import ExportImportService from 'lib/services/export-import-service';
 import { AccountService } from '../services/account-service';
+import { SchedulerService } from '../services/scheduler-service';
 
 export interface IUnleashServices {
     accessService: AccessService;
@@ -83,4 +84,5 @@ export interface IUnleashServices {
     favoritesService: FavoritesService;
     maintenanceService: MaintenanceService;
     exportImportService: ExportImportService;
+    schedulerService: SchedulerService;
 }

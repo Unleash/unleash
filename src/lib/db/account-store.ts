@@ -1,10 +1,10 @@
-import { Knex } from 'knex';
 import { Logger, LogProvider } from '../logger';
 import User from '../types/user';
 
 import NotFoundError from '../error/notfound-error';
 import { IUserLookup } from '../types/stores/user-store';
 import { IAccountStore } from '../types';
+import { Db } from './db';
 
 const TABLE = 'users';
 
@@ -47,11 +47,11 @@ const rowToUser = (row) => {
 };
 
 export class AccountStore implements IAccountStore {
-    private db: Knex;
+    private db: Db;
 
     private logger: Logger;
 
-    constructor(db: Knex, getLogger: LogProvider) {
+    constructor(db: Db, getLogger: LogProvider) {
         this.db = db;
         this.logger = getLogger('account-store.ts');
     }

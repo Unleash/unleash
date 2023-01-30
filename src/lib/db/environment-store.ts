@@ -1,5 +1,5 @@
 import EventEmitter from 'events';
-import { Knex } from 'knex';
+import { Db } from './db';
 import { Logger, LogProvider } from '../logger';
 import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
@@ -95,11 +95,11 @@ const TABLE = 'environments';
 export default class EnvironmentStore implements IEnvironmentStore {
     private logger: Logger;
 
-    private db: Knex;
+    private db: Db;
 
     private timer: (string) => any;
 
-    constructor(db: Knex, eventBus: EventEmitter, getLogger: LogProvider) {
+    constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
         this.logger = getLogger('db/environment-store.ts');
         this.timer = (action) =>

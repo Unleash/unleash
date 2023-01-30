@@ -58,7 +58,7 @@ export default class ProjectApi extends Controller {
                     tags: ['Projects'],
                     operationId: 'getProjectOverview',
                     responses: {
-                        200: createResponseSchema('healthOverviewSchema'),
+                        200: createResponseSchema('projectOverviewSchema'),
                     },
                 }),
             ],

@@ -1,4 +1,4 @@
-import { Knex } from 'knex';
+import { Db } from './db';
 import { Logger, LogProvider } from '../logger';
 import {
     IContextField,
@@ -45,11 +45,11 @@ interface ICreateContextField {
 }
 
 class ContextFieldStore implements IContextFieldStore {
-    private db: Knex;
+    private db: Db;
 
     private logger: Logger;
 
-    constructor(db: Knex, getLogger: LogProvider) {
+    constructor(db: Db, getLogger: LogProvider) {
         this.db = db;
         this.logger = getLogger('context-field-store.ts');
     }

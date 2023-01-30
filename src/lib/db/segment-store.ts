@@ -1,11 +1,11 @@
 import { ISegmentStore } from '../types/stores/segment-store';
 import { IConstraint, IFeatureStrategySegment, ISegment } from '../types/model';
 import { Logger, LogProvider } from '../logger';
-import { Knex } from 'knex';
 import EventEmitter from 'events';
 import NotFoundError from '../error/notfound-error';
 import { PartialSome } from '../types/partial';
 import User from '../types/user';
+import { Db } from './db';
 
 const T = {
     segments: 'segments',
@@ -42,9 +42,9 @@ export default class SegmentStore implements ISegmentStore {
 
     private eventBus: EventEmitter;
 
-    private db: Knex;
+    private db: Db;
 
-    constructor(db: Knex, eventBus: EventEmitter, getLogger: LogProvider) {
+    constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
         this.eventBus = eventBus;
         this.logger = getLogger('lib/db/segment-store.ts');

@@ -1,3 +1,4 @@
+import { ProjectStatsSchema } from 'openapi';
 import { IFeatureToggleListItem } from './featureToggle';
 
 export interface IProjectCard {
@@ -19,7 +20,7 @@ export interface IProject {
     description?: string;
     environments: string[];
     health: number;
-    stats: object;
+    stats: ProjectStatsSchema;
     favorite: boolean;
     features: IFeatureToggleListItem[];
 }

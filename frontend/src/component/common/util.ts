@@ -3,7 +3,6 @@ import { IUiConfig } from 'interfaces/uiConfig';
 import { INavigationMenuItem } from 'interfaces/route';
 import { IFeatureVariant } from 'interfaces/featureToggle';
 import { format, isValid } from 'date-fns';
-import { IFeatureVariantEdit } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/EnvironmentVariantsModal';
 
 export const filterByConfig =
     (config: IUiConfig) => (r: INavigationMenuItem) => {
@@ -78,40 +77,6 @@ export function updateWeight(variants: IFeatureVariant[], totalWeight: number) {
     if (!variableVariantCount) {
         throw new Error('There must be at least one variable variant');
     }
-
-    const percentage = parseInt(
-        String(remainingPercentage / variableVariantCount)
-    );
-
-    return variants.map(variant => {
-        if (variant.weightType !== weightTypes.FIX) {
-            variant.weight = percentage;
-        }
-        return variant;
-    });
-}
-
-export function updateWeightEdit(
-    variants: IFeatureVariantEdit[],
-    totalWeight: number
-) {
-    if (variants.length === 0) {
-        return [];
-    }
-    const { remainingPercentage, variableVariantCount } = variants.reduce(
-        ({ remainingPercentage, variableVariantCount }, variant) => {
-            if (variant.weight && variant.weightType === weightTypes.FIX) {
-                remainingPercentage -= Number(variant.weight);
-            } else {
-                variableVariantCount += 1;
-            }
-            return {
-                remainingPercentage,
-                variableVariantCount,
-            };
-        },
-        { remainingPercentage: totalWeight, variableVariantCount: 0 }
-    );
 
     const percentage = parseInt(
         String(remainingPercentage / variableVariantCount)

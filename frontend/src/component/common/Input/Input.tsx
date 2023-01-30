@@ -48,7 +48,6 @@ const Input = ({
                 onChange={onChange}
                 FormHelperTextProps={{
                     ['data-testid']: INPUT_ERROR_TEXT,
-                    title: errorText,
                     classes: {
                         root: styles.helperText,
                     },

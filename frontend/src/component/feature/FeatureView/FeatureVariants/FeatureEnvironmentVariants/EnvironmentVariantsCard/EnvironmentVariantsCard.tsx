@@ -1,9 +1,11 @@
 import { CloudCircle } from '@mui/icons-material';
 import { styled } from '@mui/material';
-import { IFeatureEnvironment } from 'interfaces/featureToggle';
+import { IFeatureEnvironment, IFeatureVariant } from 'interfaces/featureToggle';
 import { EnvironmentVariantsTable } from './EnvironmentVariantsTable/EnvironmentVariantsTable';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { Badge } from 'component/common/Badge/Badge';
+import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
+import { useMemo } from 'react';
+import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 
 const StyledCard = styled('div')(({ theme }) => ({
     padding: theme.spacing(3),
@@ -14,7 +16,7 @@ const StyledCard = styled('div')(({ theme }) => ({
     },
 }));
 
-const StyledHeader = styled('div')({
+const StyledHeader = styled('div')(() => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -22,7 +24,7 @@ const StyledHeader = styled('div')({
         display: 'flex',
         alignItems: 'center',
     },
-});
+}));
 
 const StyledCloudCircle = styled(CloudCircle, {
     shouldForwardProp: prop => prop !== 'deprecated',
@@ -39,7 +41,6 @@ const StyledName = styled('span', {
         ? theme.palette.text.secondary
         : theme.palette.text.primary,
     marginLeft: theme.spacing(1.25),
-    fontWeight: theme.fontWeight.bold,
 }));
 
 const StyledDescription = styled('p')(({ theme }) => ({
@@ -48,26 +49,56 @@ const StyledDescription = styled('p')(({ theme }) => ({
     marginBottom: theme.spacing(1.5),
 }));
 
-const StyledStickinessContainer = styled('div')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    gap: theme.spacing(1.5),
-    marginBottom: theme.spacing(0.5),
+const StyledGeneralSelect = styled(GeneralSelect)(({ theme }) => ({
+    minWidth: theme.spacing(20),
 }));
 
 interface IEnvironmentVariantsCardProps {
     environment: IFeatureEnvironment;
     searchValue: string;
+    onEditVariant: (variant: IFeatureVariant) => void;
+    onDeleteVariant: (variant: IFeatureVariant) => void;
+    onUpdateStickiness: (variant: IFeatureVariant[]) => void;
     children?: React.ReactNode;
 }
 
 export const EnvironmentVariantsCard = ({
     environment,
     searchValue,
+    onEditVariant,
+    onDeleteVariant,
+    onUpdateStickiness,
     children,
 }: IEnvironmentVariantsCardProps) => {
+    const { context } = useUnleashContext();
+
     const variants = environment.variants ?? [];
     const stickiness = variants[0]?.stickiness || 'default';
+
+    const stickinessOptions = useMemo(
+        () => [
+            'default',
+            ...context.filter(c => c.stickiness).map(c => c.name),
+        ],
+        [context]
+    );
+
+    const options = stickinessOptions.map(c => ({ key: c, label: c }));
+    if (!stickinessOptions.includes(stickiness)) {
+        options.push({ key: stickiness, label: stickiness });
+    }
+
+    const updateStickiness = async (stickiness: string) => {
+        const newVariants = [...variants].map(variant => ({
+            ...variant,
+            stickiness,
+        }));
+        onUpdateStickiness(newVariants);
+    };
+
+    const onStickinessChange = (value: string) => {
+        updateStickiness(value).catch(console.warn);
+    };
 
     return (
         <StyledCard>
@@ -87,15 +118,14 @@ export const EnvironmentVariantsCard = ({
                         <EnvironmentVariantsTable
                             environment={environment}
                             searchValue={searchValue}
+                            onEditVariant={onEditVariant}
+                            onDeleteVariant={onDeleteVariant}
                         />
                         <ConditionallyRender
                             condition={variants.length > 1}
                             show={
                                 <>
-                                    <StyledStickinessContainer>
-                                        <p>Stickiness:</p>
-                                        <Badge>{stickiness}</Badge>
-                                    </StyledStickinessContainer>
+                                    <p>Stickiness</p>
                                     <StyledDescription>
                                         By overriding the stickiness you can
                                         control which parameter is used to
@@ -109,6 +139,11 @@ export const EnvironmentVariantsCard = ({
                                             Read more
                                         </a>
                                     </StyledDescription>
+                                    <StyledGeneralSelect
+                                        options={options}
+                                        value={stickiness}
+                                        onChange={onStickinessChange}
+                                    />
                                 </>
                             }
                         />

@@ -1,4 +1,3 @@
-import { Knex } from 'knex';
 import { Logger, LogProvider } from '../logger';
 import {
     IClientMetricsEnv,
@@ -8,6 +7,7 @@ import {
 import NotFoundError from '../error/notfound-error';
 import { startOfHour } from 'date-fns';
 import { collapseHourlyMetrics } from '../util/collapseHourlyMetrics';
+import { Db } from './db';
 
 interface ClientMetricsEnvTable {
     feature_name: string;
@@ -39,11 +39,11 @@ const toRow = (metric: IClientMetricsEnv): ClientMetricsEnvTable => ({
 });
 
 export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
-    private db: Knex;
+    private db: Db;
 
     private logger: Logger;
 
-    constructor(db: Knex, getLogger: LogProvider) {
+    constructor(db: Db, getLogger: LogProvider) {
         this.db = db;
         this.logger = getLogger('client-metrics-store-v2.js');
     }

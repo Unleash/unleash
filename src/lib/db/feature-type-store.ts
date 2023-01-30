@@ -1,9 +1,9 @@
-import { Knex } from 'knex';
 import { Logger, LogProvider } from '../logger';
 import {
     IFeatureType,
     IFeatureTypeStore,
 } from '../types/stores/feature-type-store';
+import { Db } from './db';
 
 const COLUMNS = ['id', 'name', 'description', 'lifetime_days'];
 const TABLE = 'feature_types';
@@ -16,11 +16,11 @@ interface IFeatureTypeRow {
 }
 
 class FeatureTypeStore implements IFeatureTypeStore {
-    private db: Knex;
+    private db: Db;
 
     private logger: Logger;
 
-    constructor(db: Knex, getLogger: LogProvider) {
+    constructor(db: Db, getLogger: LogProvider) {
         this.db = db;
         this.logger = getLogger('feature-type-store.ts');
     }

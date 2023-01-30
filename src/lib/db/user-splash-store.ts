@@ -1,4 +1,3 @@
-import { Knex } from 'knex';
 import { EventEmitter } from 'events';
 import { LogProvider, Logger } from '../logger';
 import {
@@ -6,6 +5,7 @@ import {
     IUserSplashKey,
     IUserSplashStore,
 } from '../types/stores/user-splash-store';
+import { Db } from './db';
 
 const COLUMNS = ['user_id', 'splash_id', 'seen'];
 const TABLE = 'user_splash';
@@ -29,11 +29,11 @@ const rowToField = (row: IUserSplashTable): IUserSplash => ({
 });
 
 export default class UserSplashStore implements IUserSplashStore {
-    private db: Knex;
+    private db: Db;
 
     private logger: Logger;
 
-    constructor(db: Knex, eventBus: EventEmitter, getLogger: LogProvider) {
+    constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
         this.logger = getLogger('user-splash-store.ts');
     }

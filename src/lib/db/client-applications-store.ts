@@ -1,5 +1,4 @@
 import EventEmitter from 'events';
-import { Knex } from 'knex';
 import NotFoundError from '../error/notfound-error';
 import {
     IClientApplication,
@@ -7,6 +6,7 @@ import {
 } from '../types/stores/client-applications-store';
 import { Logger, LogProvider } from '../logger';
 import { IApplicationQuery } from '../types/query';
+import { Db } from './db';
 
 const COLUMNS = [
     'app_name',
@@ -60,11 +60,11 @@ const remapRow = (input) => {
 export default class ClientApplicationsStore
     implements IClientApplicationsStore
 {
-    private db: Knex;
+    private db: Db;
 
     private logger: Logger;
 
-    constructor(db: Knex, eventBus: EventEmitter, getLogger: LogProvider) {
+    constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
         this.logger = getLogger('client-applications-store.ts');
     }

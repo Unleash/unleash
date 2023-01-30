@@ -1,5 +1,4 @@
 import EventEmitter from 'events';
-import { Knex } from 'knex';
 import { Logger, LogProvider } from '../logger';
 import {
     IClientInstance,
@@ -8,6 +7,7 @@ import {
 } from '../types/stores/client-instance-store';
 import { hoursToMilliseconds, subDays } from 'date-fns';
 import Timeout = NodeJS.Timeout;
+import { Db } from './db';
 
 const metricsHelper = require('../util/metrics-helper');
 const { DB_TIME } = require('../metric-events');
@@ -43,7 +43,7 @@ const mapToDb = (client) => ({
 });
 
 export default class ClientInstanceStore implements IClientInstanceStore {
-    private db: Knex;
+    private db: Db;
 
     private logger: Logger;
 
@@ -53,7 +53,7 @@ export default class ClientInstanceStore implements IClientInstanceStore {
 
     private timer: Timeout;
 
-    constructor(db: Knex, eventBus: EventEmitter, getLogger: LogProvider) {
+    constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
         this.eventBus = eventBus;
         this.logger = getLogger('client-instance-store.ts');

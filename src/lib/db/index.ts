@@ -1,4 +1,3 @@
-import { Knex } from 'knex';
 import { IUnleashConfig } from '../types/option';
 import { IUnleashStores } from '../types/stores';
 
@@ -36,10 +35,11 @@ import { FavoriteFeaturesStore } from './favorite-features-store';
 import { FavoriteProjectsStore } from './favorite-projects-store';
 import { AccountStore } from './account-store';
 import ProjectStatsStore from './project-stats-store';
+import { Db } from './db';
 
 export const createStores = (
     config: IUnleashConfig,
-    db: Knex,
+    db: Db,
 ): IUnleashStores => {
     const { getLogger, eventBus } = config;
     const eventStore = new EventStore(db, getLogger);

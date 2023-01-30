@@ -1,4 +1,3 @@
-import { Knex } from 'knex';
 import { Logger, LogProvider } from '../logger';
 
 import metricsHelper from '../util/metrics-helper';
@@ -6,6 +5,7 @@ import { DB_TIME } from '../metric-events';
 import EventEmitter from 'events';
 import { IProjectStats } from 'lib/services/project-service';
 import { IProjectStatsStore } from 'lib/types/stores/project-stats-store-type';
+import { Db } from './db';
 
 const TABLE = 'project_stats';
 
@@ -35,13 +35,13 @@ interface IProjectStatsRow {
 }
 
 class ProjectStatsStore implements IProjectStatsStore {
-    private db: Knex;
+    private db: Db;
 
     private logger: Logger;
 
     private timer: Function;
 
-    constructor(db: Knex, eventBus: EventEmitter, getLogger: LogProvider) {
+    constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
         this.logger = getLogger('project-stats-store.ts');
         this.timer = (action) =>

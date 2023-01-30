@@ -15,6 +15,7 @@ import { DB_TIME } from '../metric-events';
 import EventEmitter from 'events';
 import { IFlagResolver } from '../types';
 import Raw = Knex.Raw;
+import { Db } from './db';
 
 const COLUMNS = [
     'id',
@@ -37,7 +38,7 @@ export interface IProjectMembersCount {
 }
 
 class ProjectStore implements IProjectStore {
-    private db: Knex;
+    private db: Db;
 
     private logger: Logger;
 
@@ -46,7 +47,7 @@ class ProjectStore implements IProjectStore {
     private timer: Function;
 
     constructor(
-        db: Knex,
+        db: Db,
         eventBus: EventEmitter,
         getLogger: LogProvider,
         flagResolver: IFlagResolver,

@@ -1,4 +1,3 @@
-import { Knex } from 'knex';
 import { EventEmitter } from 'events';
 import { DB_TIME } from '../metric-events';
 import metricsHelper from '../util/metrics-helper';
@@ -6,6 +5,7 @@ import { LogProvider, Logger } from '../logger';
 import NotFoundError from '../error/notfound-error';
 import { ITag } from '../types/model';
 import { ITagStore } from '../types/stores/tag-store';
+import { Db } from './db';
 
 const COLUMNS = ['type', 'value'];
 const TABLE = 'tags';
@@ -16,13 +16,13 @@ interface ITagTable {
 }
 
 export default class TagStore implements ITagStore {
-    private db: Knex;
+    private db: Db;
 
     private logger: Logger;
 
     private readonly timer: Function;
 
-    constructor(db: Knex, eventBus: EventEmitter, getLogger: LogProvider) {
+    constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
         this.logger = getLogger('tag-store.ts');
         this.timer = (action) =>

@@ -1,5 +1,4 @@
 import EventEmitter from 'events';
-import { Knex } from 'knex';
 import { Logger, LogProvider } from '../logger';
 import NotFoundError from '../error/notfound-error';
 import { ICustomRole } from 'lib/types/model';
@@ -9,6 +8,7 @@ import {
     IRoleStore,
 } from 'lib/types/stores/role-store';
 import { IRole, IUserRole } from 'lib/types/stores/access-store';
+import { Db } from './db';
 
 const T = {
     ROLE_USER: 'role_user',
@@ -30,9 +30,9 @@ export default class RoleStore implements IRoleStore {
 
     private eventBus: EventEmitter;
 
-    private db: Knex;
+    private db: Db;
 
-    constructor(db: Knex, eventBus: EventEmitter, getLogger: LogProvider) {
+    constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
         this.eventBus = eventBus;
         this.logger = getLogger('lib/db/role-store.ts');

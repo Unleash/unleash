@@ -89,14 +89,13 @@ class ProjectStore implements IProjectStore {
         const projectTimer = this.timer('getProjectsWithCount');
         let projects = this.db(TABLE)
             .leftJoin('features', 'features.project', 'projects.id')
-            .where('features.archived_at', null)
             .orderBy('projects.name', 'asc');
         if (query) {
             projects = projects.where(query);
         }
         let selectColumns = [
             this.db.raw(
-                'projects.id, projects.name, projects.description, projects.health, projects.updated_at, count(features.name) AS number_of_features',
+                'projects.id, projects.name, projects.description, projects.health, projects.updated_at, count(case when features.archived_at is null then features.name end) AS number_of_features',
             ),
         ] as (string | Raw<any>)[];
 

@@ -1,4 +1,4 @@
-import SchedulerService from './scheduler-service';
+import { SchedulerService } from './scheduler-service';
 
 function ms(timeMs) {
     return new Promise((resolve) => setTimeout(resolve, timeMs));

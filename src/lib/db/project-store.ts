@@ -95,7 +95,7 @@ class ProjectStore implements IProjectStore {
         }
         let selectColumns = [
             this.db.raw(
-                'projects.id, projects.name, projects.description, projects.health, projects.updated_at, count(case when features.archived_at is null then features.name end) AS number_of_features',
+                'projects.id, projects.name, projects.description, projects.health, projects.updated_at, count(features.name) FILTER (WHERE features.archived_at is null) AS number_of_features',
             ),
         ] as (string | Raw<any>)[];
 

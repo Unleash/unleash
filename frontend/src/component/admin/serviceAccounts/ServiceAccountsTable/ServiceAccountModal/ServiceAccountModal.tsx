@@ -29,7 +29,7 @@ import {
     IPersonalAPITokenFormErrors,
     PersonalAPITokenForm,
 } from 'component/user/Profile/PersonalAPITokensTab/CreatePersonalAPIToken/PersonalAPITokenForm/PersonalAPITokenForm';
-import { usePersonalAPITokensApi } from 'hooks/api/actions/usePersonalAPITokensApi/usePersonalAPITokensApi';
+import { useServiceAccountTokensApi } from 'hooks/api/actions/useServiceAccountTokensApi/useServiceAccountTokensApi';
 import { INewPersonalAPIToken } from 'interfaces/personalAPIToken';
 import { ServiceAccountTokens } from './ServiceAccountTokens/ServiceAccountTokens';
 import { IServiceAccount } from 'interfaces/service-account';
@@ -127,7 +127,7 @@ export const ServiceAccountModal = ({
     const { serviceAccounts, roles, refetch } = useServiceAccounts();
     const { addServiceAccount, updateServiceAccount, loading } =
         useServiceAccountsApi();
-    const { createUserPersonalAPIToken } = usePersonalAPITokensApi();
+    const { createServiceAccountToken } = useServiceAccountTokensApi();
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
 
@@ -190,7 +190,7 @@ export const ServiceAccountModal = ({
                     getServiceAccountPayload()
                 );
                 if (tokenGeneration === TokenGeneration.NOW) {
-                    const token = await createUserPersonalAPIToken(id, {
+                    const token = await createServiceAccountToken(id, {
                         description: patDescription,
                         expiresAt: patExpiresAt,
                     });

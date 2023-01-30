@@ -16,7 +16,7 @@ import { HighlightCell } from 'component/common/Table/cells/HighlightCell/Highli
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { PAT_LIMIT } from '@server/util/constants';
-import { usePersonalAPITokens } from 'hooks/api/getters/usePersonalAPITokens/usePersonalAPITokens';
+import { useServiceAccountTokens } from 'hooks/api/getters/useServiceAccountTokens/useServiceAccountTokens';
 import { useSearch } from 'hooks/useSearch';
 import {
     INewPersonalAPIToken,
@@ -32,9 +32,9 @@ import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColum
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import {
-    ICreatePersonalApiTokenPayload,
-    usePersonalAPITokensApi,
-} from 'hooks/api/actions/usePersonalAPITokensApi/usePersonalAPITokensApi';
+    ICreateServiceAccountTokenPayload,
+    useServiceAccountTokensApi,
+} from 'hooks/api/actions/useServiceAccountTokensApi/useServiceAccountTokensApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { IServiceAccount } from 'interfaces/service-account';
@@ -90,12 +90,12 @@ export const ServiceAccountTokens = ({
     const { setToastData, setToastApiError } = useToast();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const isExtraSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-    const { tokens = [], refetchTokens } = usePersonalAPITokens(
+    const { tokens = [], refetchTokens } = useServiceAccountTokens(
         serviceAccount.id
     );
     const { refetch } = useServiceAccounts();
-    const { createUserPersonalAPIToken, deleteUserPersonalAPIToken } =
-        usePersonalAPITokensApi();
+    const { createServiceAccountToken, deleteServiceAccountToken } =
+        useServiceAccountTokensApi();
 
     const [initialState] = useState(() => ({
         sortBy: readOnly ? [{ id: 'seenAt' }] : [defaultSort],
@@ -108,9 +108,11 @@ export const ServiceAccountTokens = ({
     const [newToken, setNewToken] = useState<INewPersonalAPIToken>();
     const [selectedToken, setSelectedToken] = useState<IPersonalAPIToken>();
 
-    const onCreateClick = async (newToken: ICreatePersonalApiTokenPayload) => {
+    const onCreateClick = async (
+        newToken: ICreateServiceAccountTokenPayload
+    ) => {
         try {
-            const token = await createUserPersonalAPIToken(
+            const token = await createServiceAccountToken(
                 serviceAccount.id,
                 newToken
             );
@@ -131,7 +133,7 @@ export const ServiceAccountTokens = ({
     const onDeleteClick = async () => {
         if (selectedToken) {
             try {
-                await deleteUserPersonalAPIToken(
+                await deleteServiceAccountToken(
                     serviceAccount.id,
                     selectedToken?.id
                 );

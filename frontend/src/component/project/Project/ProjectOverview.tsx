@@ -44,6 +44,7 @@ const ProjectOverview = () => {
     const { setLastViewed } = useLastViewedProject();
     const { uiConfig } = useUiConfig();
 
+    console.log({ project });
     useEffect(() => {
         setLastViewed(projectId);
     }, [projectId, setLastViewed]);

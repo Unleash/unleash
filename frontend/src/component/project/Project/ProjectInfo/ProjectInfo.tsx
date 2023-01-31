@@ -7,6 +7,7 @@ import { ToggleTypesWidget } from './ToggleTypesWidget';
 import { MetaWidget } from './MetaWidget';
 import { ProjectMembersWidget } from './ProjectMembersWidget';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { ChangeRequestsWidget } from './ChangeRequestsWidget';
 
 interface IProjectInfoProps {
     id: string;
@@ -23,10 +24,18 @@ const ProjectInfo = ({
     health,
     features,
 }: IProjectInfoProps) => {
-    const { uiConfig } = useUiConfig();
+    const { uiConfig, isEnterprise } = useUiConfig();
+
     return (
         <aside>
             <StyledProjectInfoSidebarContainer>
+                <ConditionallyRender
+                    condition={
+                        isEnterprise() &&
+                        Boolean(uiConfig?.flags.newProjectOverview)
+                    }
+                    show={<ChangeRequestsWidget projectId={id} />}
+                />
                 <ConditionallyRender
                     condition={Boolean(uiConfig?.flags.newProjectOverview)}
                     show={<MetaWidget id={id} description={description} />}

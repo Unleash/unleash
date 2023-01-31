@@ -6,7 +6,7 @@ import {
     IPersonalAPITokenFormErrors,
     PersonalAPITokenForm,
 } from 'component/user/Profile/PersonalAPITokensTab/CreatePersonalAPIToken/PersonalAPITokenForm/PersonalAPITokenForm';
-import { ICreatePersonalApiTokenPayload } from 'hooks/api/actions/usePersonalAPITokensApi/usePersonalAPITokensApi';
+import { ICreateServiceAccountTokenPayload } from 'hooks/api/actions/useServiceAccountTokensApi/useServiceAccountTokensApi';
 import { IPersonalAPIToken } from 'interfaces/personalAPIToken';
 
 const DEFAULT_EXPIRATION = ExpirationOption['30DAYS'];
@@ -15,7 +15,7 @@ interface IServiceAccountCreateTokenDialogProps {
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     tokens: IPersonalAPIToken[];
-    onCreateClick: (newToken: ICreatePersonalApiTokenPayload) => void;
+    onCreateClick: (newToken: ICreateServiceAccountTokenPayload) => void;
 }
 
 export const ServiceAccountCreateTokenDialog = ({

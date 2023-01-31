@@ -44,6 +44,7 @@ import { hoursToMilliseconds, minutesToMilliseconds } from 'date-fns';
 import { AccountService } from './account-service';
 import { SchedulerService } from './scheduler-service';
 
+// TODO: will be moved to scheduler feature directory
 export const scheduleServices = (
     services: IUnleashServices,
     config: IUnleashConfig,
@@ -54,6 +55,7 @@ export const scheduleServices = (
         instanceStatsService,
         clientInstanceService,
         projectService,
+        projectHealthService,
     } = services;
 
     schedulerService.schedule(
@@ -84,6 +86,11 @@ export const scheduleServices = (
             hoursToMilliseconds(24),
         );
     }
+
+    schedulerService.schedule(
+        projectHealthService.setHealthRating.bind(projectHealthService),
+        hoursToMilliseconds(1),
+    );
 };
 
 export const createServices = (

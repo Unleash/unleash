@@ -1,21 +1,21 @@
 import {
-    StyledArrowIcon,
-    StyledProjectInfoWidgetContainer,
     StyledLink,
-    StyledParagraphEmphasizedText,
-    StyledWidgetTitle,
+    StyledProjectInfoWidgetContainer,
     StyledSpanLinkText,
 } from './ProjectInfo.styles';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { StatusBox } from '../ProjectStats/StatusBox';
 
 interface IProjectMembersWidgetProps {
     projectId: string;
     memberCount: number;
+    change?: number;
 }
 
 export const ProjectMembersWidget = ({
     projectId,
     memberCount,
+    change = 0,
 }: IProjectMembersWidgetProps) => {
     const { uiConfig } = useUiConfig();
 
@@ -26,14 +26,19 @@ export const ProjectMembersWidget = ({
     }
 
     return (
-        <StyledProjectInfoWidgetContainer>
-            <StyledWidgetTitle data-loading>Project members</StyledWidgetTitle>
-            <StyledParagraphEmphasizedText data-loading>
-                {memberCount}
-            </StyledParagraphEmphasizedText>
+        <StyledProjectInfoWidgetContainer
+            sx={{ padding: theme => theme.spacing(0, 0, 3, 0) }}
+        >
+            <StatusBox
+                title={'Project members'}
+                boxText={`${memberCount}`}
+                change={change}
+                fullWidthBodyText
+            />
             <StyledLink data-loading to={link}>
-                <StyledSpanLinkText data-loading>view more </StyledSpanLinkText>
-                <StyledArrowIcon data-loading />
+                <StyledSpanLinkText data-loading>
+                    View all members
+                </StyledSpanLinkText>
             </StyledLink>
         </StyledProjectInfoWidgetContainer>
     );

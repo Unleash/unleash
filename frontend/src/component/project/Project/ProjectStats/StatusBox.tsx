@@ -56,6 +56,7 @@ interface IStatusBoxProps {
     boxText: string;
     change: number;
     percentage?: boolean;
+    fullWidthBodyText?: boolean;
 }
 
 const resolveIcon = (change: number) => {
@@ -81,17 +82,30 @@ export const StatusBox = ({
     boxText,
     change,
     percentage,
+    fullWidthBodyText,
 }: IStatusBoxProps) => {
     return (
         <StyledBox>
             <StyledTypographyHeader>{title}</StyledTypographyHeader>
-            <Box sx={{ ...flexRow }}>
+            <Box
+                sx={{
+                    ...flexRow,
+                    justifyContent: fullWidthBodyText
+                        ? 'space-between'
+                        : 'center',
+                    width: fullWidthBodyText ? '65%' : 'auto',
+                }}
+            >
                 <StyledTypographyCount>{boxText}</StyledTypographyCount>
                 <ConditionallyRender
                     condition={change !== 0}
                     show={
                         <StyledBoxChangeContainer>
-                            <Box sx={{ ...flexRow }}>
+                            <Box
+                                sx={{
+                                    ...flexRow,
+                                }}
+                            >
                                 {resolveIcon(change)}
                                 <StyledTypographyChange
                                     color={resolveColor(change)}

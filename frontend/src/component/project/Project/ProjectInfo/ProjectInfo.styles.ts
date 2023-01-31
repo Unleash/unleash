@@ -53,8 +53,8 @@ export const StyledWidgetTitle = styled('p')(({ theme }) => ({
 
 export const StyledParagraphGridRow = styled('div')(({ theme }) => ({
     display: 'grid',
-    gridGap: theme.spacing(1),
-    gridTemplateColumns: `${theme.spacing(1.25)} auto auto`,
+    gridGap: theme.spacing(1.5),
+    gridTemplateColumns: `${theme.spacing(1.25)} auto auto`, //20px auto auto
     margin: theme.spacing(1, 0, 1, 0),
     fontSize: theme.fontSizes.smallBody,
     color: theme.palette.text.secondary,

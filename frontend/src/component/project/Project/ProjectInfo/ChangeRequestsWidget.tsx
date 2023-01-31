@@ -18,7 +18,6 @@ interface IChangeRequestsWidgetProps {
 const StyledChangeBox = styled(Box)(({ theme }) => ({
     textAlign: 'left',
     padding: theme.spacing(1.5),
-    background: theme.palette.success.light,
     marginBottom: theme.spacing(1.5),
     borderRadius: theme.shape.borderRadiusMedium,
     alignItems: 'center',

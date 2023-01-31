@@ -84,17 +84,22 @@ export const StrategyDetails = ({
                     <List>{renderParameters(parameters)}</List>
                 </Grid>
 
-                <Grid item sm={12} md={6}>
+                <Grid item sm={12} md={toggles.length > 0 ? 6 : 12}>
                     <h6>Applications using this strategy</h6>
                     <hr />
                     <AppsLinkList apps={applications} />
                 </Grid>
 
-                <Grid item sm={12} md={6}>
-                    <h6>Toggles using this strategy</h6>
-                    <hr />
-                    <TogglesLinkList toggles={toggles} />
-                </Grid>
+                <ConditionallyRender
+                    condition={toggles.length > 0}
+                    show={() => (
+                        <Grid item sm={12} md={6}>
+                            <h6>Toggles using this strategy</h6>
+                            <hr />
+                            <TogglesLinkList toggles={toggles} />
+                        </Grid>
+                    )}
+                />
             </Grid>
         </div>
     );

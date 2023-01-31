@@ -11,7 +11,6 @@ import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
 import { IFeatureTypeStore } from '../types/stores/feature-type-store';
 import { IProjectStore } from '../types/stores/project-store';
 import { hoursToMilliseconds } from 'date-fns';
-import Timer = NodeJS.Timer;
 import ProjectService from './project-service';
 
 export default class ProjectHealthService {
@@ -24,8 +23,6 @@ export default class ProjectHealthService {
     private featureToggleStore: IFeatureToggleStore;
 
     private featureTypes: Map<string, number>;
-
-    private healthRatingTimer: Timer;
 
     private projectService: ProjectService;
 
@@ -46,10 +43,6 @@ export default class ProjectHealthService {
         this.featureTypeStore = featureTypeStore;
         this.featureToggleStore = featureToggleStore;
         this.featureTypes = new Map();
-        this.healthRatingTimer = setInterval(
-            () => this.setHealthRating(),
-            hoursToMilliseconds(1),
-        ).unref();
 
         this.projectService = projectService;
     }
@@ -150,9 +143,5 @@ export default class ProjectHealthService {
                 });
             }),
         );
-    }
-
-    destroy(): void {
-        clearInterval(this.healthRatingTimer);
     }
 }

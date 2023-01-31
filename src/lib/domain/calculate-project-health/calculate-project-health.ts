@@ -15,7 +15,7 @@ const getPotentiallyStaleCount = (
     return features.filter((feature) => {
         const diff = today - feature.createdAt?.valueOf();
         const featureTypeExpectedLifetime = featureTypes.find(
-            (t) => t.name === feature.type,
+            (t) => t.id === feature.type,
         )?.lifetimeDays;
 
         return (

@@ -36,7 +36,6 @@ process.nextTick(async () => {
                     flags: {
                         embedProxy: true,
                         embedProxyFrontend: true,
-                        batchMetrics: true,
                         anonymiseEventLog: false,
                         responseTimeWithAppName: true,
                         variantsPerEnvironment: true,

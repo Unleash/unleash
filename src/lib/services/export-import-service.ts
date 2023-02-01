@@ -88,6 +88,7 @@ export default class ExportImportService {
             contextFields,
             featureTags,
             segments,
+            tagTypes,
         ] = await Promise.all([
             this.toggleStore.getAllByNames(query.features),
             await this.featureEnvironmentStore.getAllByFeatures(
@@ -102,6 +103,7 @@ export default class ExportImportService {
             this.contextFieldStore.getAll(),
             this.featureTagStore.getAllByFeatures(query.features),
             this.segmentStore.getAll(),
+            this.tagTypeStore.getAll(),
         ]);
         this.addSegmentsToStrategies(featureStrategies, strategySegments);
         const filteredContextFields = contextFields.filter((field) =>
@@ -115,6 +117,9 @@ export default class ExportImportService {
             featureStrategies.some((strategy) =>
                 strategy.segments.includes(segment.id),
             ),
+        );
+        const filteredTagTypes = tagTypes.filter((tagType) =>
+            featureTags.map((tag) => tag.tagType).includes(tagType.name),
         );
         const result = {
             features: features.map((item) => {
@@ -148,6 +153,7 @@ export default class ExportImportService {
                 const { createdAt, createdBy, ...rest } = item;
                 return rest;
             }),
+            tagTypes: filteredTagTypes,
         };
         await this.eventStore.store({
             type: FEATURES_EXPORTED,

@@ -4,6 +4,8 @@ import { useInstanceMetrics } from 'hooks/api/getters/useInstanceMetrics/useInst
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Alert, styled } from '@mui/material';
 import { unknownify } from 'utils/unknownify';
+import logoIcon from 'assets/icons/logoBg.svg';
+import { formatAssetPath } from 'utils/formatPath';
 
 const StyledMermaid = styled(Mermaid)(({ theme }) => ({
     '#mermaid .node rect': {
@@ -61,7 +63,9 @@ export const NetworkOverview = () => {
     graph TD
         subgraph _[ ]
         direction BT
-            Unleash(<img src='https://www.getunleash.io/logos/unleash_glyph_pos.svg' width='60' height='60' /><br/>Unleash)
+            Unleash(<img src='${formatAssetPath(
+                logoIcon
+            )}' width='60' height='60' /><br/>Unleash)
             ${apps
                 .map(
                     ({ label, reqs, type }, i) =>

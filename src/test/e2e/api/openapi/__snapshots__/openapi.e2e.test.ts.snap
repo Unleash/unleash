@@ -1106,6 +1106,7 @@ exports[`should serve the OpenAPI spec 1`] = `
         "required": [
           "features",
           "featureStrategies",
+          "tagTypes",
         ],
         "type": "object",
       },

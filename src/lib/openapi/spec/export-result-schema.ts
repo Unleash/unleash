@@ -17,7 +17,7 @@ export const exportResultSchema = {
     $id: '#/components/schemas/exportResultSchema',
     type: 'object',
     additionalProperties: false,
-    required: ['features', 'featureStrategies'],
+    required: ['features', 'featureStrategies', 'tagTypes'],
     properties: {
         features: {
             type: 'array',

@@ -11,12 +11,13 @@ import { variantSchema } from './variant-schema';
 import { overrideSchema } from './override-schema';
 import { variantsSchema } from './variants-schema';
 import { constraintSchema } from './constraint-schema';
+import { tagTypeSchema } from './tag-type-schema';
 
 export const exportResultSchema = {
     $id: '#/components/schemas/exportResultSchema',
     type: 'object',
     additionalProperties: false,
-    required: ['features', 'featureStrategies'],
+    required: ['features', 'featureStrategies', 'tagTypes'],
     properties: {
         features: {
             type: 'array',
@@ -54,6 +55,12 @@ export const exportResultSchema = {
                 $ref: '#/components/schemas/segmentSchema',
             },
         },
+        tagTypes: {
+            type: 'array',
+            items: {
+                $ref: '#/components/schemas/tagTypeSchema',
+            },
+        },
     },
     components: {
         schemas: {
@@ -69,6 +76,7 @@ export const exportResultSchema = {
             constraintSchema,
             parametersSchema,
             legalValueSchema,
+            tagTypeSchema,
         },
     },
 } as const;

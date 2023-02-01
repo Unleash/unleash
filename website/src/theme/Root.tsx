@@ -16,9 +16,11 @@ function Root({ children }) {
         appName: `docs.getunleash.io-${customFields.environment}`,
     };
 
+    const configIsValid = unleashConfig.clientKey && unleashConfig.url;
+
     const [showFeedback, setShowFeedback] = React.useState(false);
 
-    if (typeof fetch !== 'undefined') {
+    if (configIsValid && typeof fetch !== 'undefined') {
         try {
             const unleash = new UnleashClient(unleashConfig);
             unleash.on('ready', () => {

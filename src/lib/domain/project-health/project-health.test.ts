@@ -1,6 +1,9 @@
 import { subDays } from 'date-fns';
 import type { IFeatureType } from 'lib/types/stores/feature-type-store';
-import { calculateProjectHealth } from './project-health';
+import {
+    calculateProjectHealth,
+    calculateHealthRating,
+} from './project-health';
 
 const exampleFeatureTypes: IFeatureType[] = [
     {
@@ -143,5 +146,58 @@ describe('calculateProjectHealth', () => {
             staleCount: 0,
             potentiallyStaleCount: 1,
         });
+    });
+});
+
+describe('calculateHealthRating', () => {
+    it('works with empty feature toggles', () => {
+        expect(calculateHealthRating([], exampleFeatureTypes)).toEqual(100);
+    });
+
+    it('works with stale and active feature toggles', () => {
+        expect(
+            calculateHealthRating(
+                [{ stale: true }, { stale: true }],
+                exampleFeatureTypes,
+            ),
+        ).toEqual(0);
+        expect(
+            calculateHealthRating(
+                [{ stale: true }, { stale: false }],
+                exampleFeatureTypes,
+            ),
+        ).toEqual(50);
+        expect(
+            calculateHealthRating(
+                [{ stale: false }, { stale: true }, { stale: false }],
+                exampleFeatureTypes,
+            ),
+        ).toEqual(67);
+    });
+
+    it('counts potentially stale toggles', () => {
+        expect(
+            calculateHealthRating(
+                [
+                    { createdAt: subDays(Date.now(), 1), type: 'default' },
+                    {
+                        stale: true,
+                        createdAt: subDays(Date.now(), 1),
+                        type: 'default',
+                    },
+                    {
+                        stale: true,
+                        createdAt: subDays(Date.now(), 31),
+                        type: 'default',
+                    },
+                    {
+                        stale: false,
+                        createdAt: subDays(Date.now(), 31),
+                        type: 'default',
+                    },
+                ],
+                exampleFeatureTypes,
+            ),
+        ).toEqual(25);
     });
 });

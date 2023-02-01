@@ -95,18 +95,11 @@ export default class ClientMetricsServiceV2 {
             no: value.bucket.toggles[name].no,
         }));
 
-        if (this.config.flagResolver.isEnabled('batchMetrics')) {
-            this.unsavedMetrics = collapseHourlyMetrics([
-                ...this.unsavedMetrics,
-                ...clientMetrics,
-            ]);
-            this.lastSeenService.updateLastSeen(clientMetrics);
-        } else {
-            if (toggleNames.length > 0) {
-                await this.featureToggleStore.setLastSeen(toggleNames);
-            }
-            await this.clientMetricsStoreV2.batchInsertMetrics(clientMetrics);
-        }
+        this.unsavedMetrics = collapseHourlyMetrics([
+            ...this.unsavedMetrics,
+            ...clientMetrics,
+        ]);
+        this.lastSeenService.updateLastSeen(clientMetrics);
 
         this.config.eventBus.emit(CLIENT_METRICS, value);
     }

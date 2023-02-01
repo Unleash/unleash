@@ -2,12 +2,14 @@ import { hoursToMilliseconds } from 'date-fns';
 import type { IProjectHealthReport } from 'lib/types';
 import type { IFeatureType } from 'lib/types/stores/feature-type-store';
 
+type IPartialFeatures = Array<{
+    stale?: boolean;
+    createdAt?: Date;
+    type?: string;
+}>;
+
 const getPotentiallyStaleCount = (
-    features: Array<{
-        stale?: boolean;
-        createdAt?: Date;
-        type?: string;
-    }>,
+    features: IPartialFeatures,
     featureTypes: IFeatureType[],
 ) => {
     const today = new Date().valueOf();
@@ -20,17 +22,14 @@ const getPotentiallyStaleCount = (
 
         return (
             !feature.stale &&
+            featureTypeExpectedLifetime !== null &&
             diff >= featureTypeExpectedLifetime * hoursToMilliseconds(24)
         );
     }).length;
 };
 
 export const calculateProjectHealth = (
-    features: Array<{
-        stale?: boolean;
-        createdAt?: Date;
-        type?: string;
-    }>,
+    features: IPartialFeatures,
     featureTypes: IFeatureType[],
 ): Pick<
     IProjectHealthReport,
@@ -41,12 +40,8 @@ export const calculateProjectHealth = (
     staleCount: features.filter((f) => f.stale).length,
 });
 
-export const getHealthRating = (
-    features: Array<{
-        stale?: boolean;
-        createdAt?: Date;
-        type?: string;
-    }>,
+export const calculateHealthRating = (
+    features: IPartialFeatures,
     featureTypes: IFeatureType[],
 ): number => {
     const { potentiallyStaleCount, activeCount, staleCount } =

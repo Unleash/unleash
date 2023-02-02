@@ -1,70 +1,39 @@
 import {
     Autocomplete,
-    AutocompleteValue,
+    AutocompleteProps,
     Checkbox,
     createFilterOptions,
     FilterOptionsState,
     TextField,
 } from '@mui/material';
-import React, { useMemo } from 'react';
+import React from 'react';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { ITag } from '../../../../../interfaces/tags';
 import { ConditionallyRender } from '../../../../common/ConditionallyRender/ConditionallyRender';
 import { Add } from '@mui/icons-material';
-import useTags from '../../../../../hooks/api/getters/useTags/useTags';
-import { AutocompleteChangeReason } from '@mui/base/AutocompleteUnstyled/useAutocomplete';
-import useTagApi from '../../../../../hooks/api/actions/useTagApi/useTagApi';
 
 export type TagOption = {
     title: string;
     inputValue?: string;
 };
 interface ITagsInputProps {
-    tagType: string;
+    options: TagOption[];
     featureTags: ITag[];
-    onChange: (newTags: TagOption[]) => void;
+    tagType: string;
+    onChange: AutocompleteProps<TagOption | string, true, any, any>['onChange'];
 }
 
 const filter = createFilterOptions<TagOption>();
 
 export const TagsInput = ({
+    options,
+    featureTags,
     tagType,
     onChange,
-    featureTags,
 }: ITagsInputProps) => {
-    const { createTag } = useTagApi();
-    const { tags } = useTags(tagType);
-
-    const options: TagOption[] = useMemo(() => {
-        return tags.map(tag => {
-            return {
-                title: tag.value,
-            };
-        });
-    }, [tags]);
-
     const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
     const checkedIcon = <CheckBoxIcon fontSize="small" />;
-
-    const handleChange = (
-        event: React.SyntheticEvent,
-        newValue: AutocompleteValue<TagOption, true, undefined, undefined>,
-        reason: AutocompleteChangeReason
-    ) => {
-        console.log(`reason()`, reason);
-        if (reason === 'selectOption') {
-            newValue.forEach(value => {
-                if (value.inputValue) {
-                    createTag({
-                        value: value.inputValue,
-                        type: tagType,
-                    }).then();
-                }
-            });
-        }
-        newValue && onChange(newValue);
-    };
 
     const getOptionDisabled = (option: TagOption) => {
         return featureTags.some(
@@ -72,10 +41,7 @@ export const TagsInput = ({
         );
     };
 
-    const getOptionLabel = (option: string | TagOption) => {
-        if (typeof option === 'string') {
-            return option;
-        }
+    const getOptionLabel = (option: TagOption) => {
         // Add "xxx" option created dynamically
         if (option.inputValue) {
             return option.inputValue;
@@ -136,15 +102,22 @@ export const TagsInput = ({
         <Autocomplete
             multiple
             id="checkboxes-tags-demo"
-            options={options}
             disableCloseOnSelect
             placeholder="Select Values"
+            options={options}
+            isOptionEqualToValue={(option, value) => {
+                if (value.inputValue && value.inputValue !== '') {
+                    return option.title === value.inputValue;
+                } else {
+                    return option.title === value.title;
+                }
+            }}
             getOptionDisabled={getOptionDisabled}
             getOptionLabel={getOptionLabel}
             renderOption={renderOption}
-            style={{ width: 500 }}
-            onChange={handleChange}
             filterOptions={filterOptions}
+            ListboxProps={{ style: { maxHeight: 200, overflow: 'auto' } }}
+            onChange={onChange}
             renderInput={params => (
                 <TextField
                     {...params}

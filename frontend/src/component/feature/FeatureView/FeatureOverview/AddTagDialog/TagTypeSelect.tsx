@@ -19,17 +19,17 @@ interface ITagSelect {
 const ListItem = styled('li')({
     flexDirection: 'column',
 });
-const TagTypeSelect = ({ value, onChange, ...rest }: ITagSelect) => {
+const TagTypeSelect = ({ value, onChange }: ITagSelect) => {
     const { tagTypes } = useTagTypes();
     const theme = useTheme();
 
     return (
         <>
             <Autocomplete
-                {...rest}
                 disablePortal
                 id="tag-type-select"
                 options={tagTypes}
+                value={value}
                 getOptionLabel={option => option.name}
                 renderOption={(props, option) => (
                     <ListItem
@@ -45,11 +45,12 @@ const TagTypeSelect = ({ value, onChange, ...rest }: ITagSelect) => {
                         </Typography>
                     </ListItem>
                 )}
-                sx={{ width: 500 }}
                 renderInput={params => (
-                    <TextField {...params} label="Select type" />
+                    <TextField {...params} label="Tag type" value={value} />
                 )}
                 onChange={onChange}
+                sx={{ width: 500 }}
+                ListboxProps={{ style: { maxHeight: 200, overflow: 'auto' } }}
             />
         </>
     );

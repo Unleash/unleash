@@ -789,25 +789,28 @@ export default class ProjectService {
         archived: boolean = false,
         userId?: number,
     ): Promise<IProjectOverview> {
-        const project = await this.store.get(projectId);
-        const environments = await this.store.getEnvironmentsForProject(
-            projectId,
-        );
-        const features = await this.featureToggleService.getFeatureOverview({
-            projectId,
-            archived,
-            userId,
-        });
-        const members = await this.store.getMembersCountByProject(projectId);
-
-        const favorite = await this.favoritesService.isFavoriteProject({
-            project: projectId,
-            userId,
-        });
-
-        const projectStats = await this.projectStatsStore.getProjectStats(
-            projectId,
-        );
+        const [
+            project,
+            environments,
+            features,
+            members,
+            favorite,
+            projectStats,
+        ] = await Promise.all([
+            this.store.get(projectId),
+            this.store.getEnvironmentsForProject(projectId),
+            this.featureToggleService.getFeatureOverview({
+                projectId,
+                archived,
+                userId,
+            }),
+            this.store.getMembersCountByProject(projectId),
+            await this.favoritesService.isFavoriteProject({
+                project: projectId,
+                userId,
+            }),
+            await this.projectStatsStore.getProjectStats(projectId),
+        ]);
 
         return {
             stats: projectStats,

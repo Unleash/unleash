@@ -36,7 +36,6 @@ const toGraphData = (metrics?: RequestsPerSecondSchema) => {
             ?.map(result => {
                 const values = (result.values || []) as ResultValue[];
                 const data = values.filter(value => isRecent(value)) || [];
-                console.log('data', data);
                 let reqs = 0;
                 if (data.length) {
                     reqs = parseFloat(data[data.length - 1][1]);

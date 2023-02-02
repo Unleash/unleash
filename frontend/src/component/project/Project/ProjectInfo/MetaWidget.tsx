@@ -39,10 +39,12 @@ export const MetaWidget: FC<IMetaWidgetProps> = ({ id, description }) => {
                 condition={Boolean(description)}
                 show={
                     <Typography
-                        component="span"
                         variant="body2"
-                        mt={1.5}
-                        textAlign="left"
+                        sx={{
+                            marginTop: theme => theme.spacing(1.5),
+                            marginBottom: 0,
+                            textAlign: 'left',
+                        }}
                     >
                         {description}
                     </Typography>

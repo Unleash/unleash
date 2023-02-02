@@ -2,11 +2,13 @@ import { createRef, useLayoutEffect } from 'react';
 
 type refElement = HTMLDivElement;
 
-const useLoading = (loading: boolean) => {
+const useLoading = (loading: boolean, label = 'true') => {
     const ref = createRef<refElement>();
     useLayoutEffect(() => {
         if (ref.current) {
-            const elements = ref.current.querySelectorAll('[data-loading]');
+            const elements = ref.current.querySelectorAll(
+                `[data-loading=${label}]`
+            );
 
             elements.forEach(element => {
                 if (loading) {

@@ -33,13 +33,9 @@ export const ProjectMembersWidget = ({
                 sx={{
                     display: 'flex',
                     justifyContent: 'center',
-                    marginBottom: theme => theme.spacing(2),
                 }}
             >
-                <StatusBox
-                    boxText={`${memberCount}`}
-                    change={change}
-                />
+                <StatusBox boxText={`${memberCount}`} change={change} />
             </Box>
             <WidgetFooterLink to={link}>View all members</WidgetFooterLink>
         </StyledProjectInfoWidgetContainer>

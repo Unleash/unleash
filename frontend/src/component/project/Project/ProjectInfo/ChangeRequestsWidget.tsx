@@ -15,12 +15,19 @@ interface IChangeRequestsWidgetProps {
     projectId: string;
 }
 
+const StyledContentBox = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: theme.spacing(1.5),
+}));
+
 const StyledChangeBox = styled(Box)(({ theme }) => ({
+    flex: 1,
     textAlign: 'left',
     padding: theme.spacing(1.5),
-    marginBottom: theme.spacing(1.5),
     borderRadius: theme.shape.borderRadiusMedium,
     alignItems: 'center',
+    minWidth: 175,
 }));
 
 const StyledChangeRequestStatusInfo = styled(Box)(({ theme }) => ({
@@ -73,27 +80,28 @@ export const ChangeRequestsWidget: FC<IChangeRequestsWidgetProps> = ({
     return (
         <StyledProjectInfoWidgetContainer ref={loadingRef}>
             <StyledWidgetTitle>Open change requests</StyledWidgetTitle>
-
-            <StyledChangeBox
-                sx={{ background: theme => theme.palette.success.light }}
-            >
-                <StyledSubtitle>To be applied</StyledSubtitle>
-                <StyledChangeRequestStatusInfo>
-                    <StyledApprovedCount>
-                        {toBeApplied}
-                    </StyledApprovedCount>{' '}
-                    <ChangeRequestsLabel />
-                </StyledChangeRequestStatusInfo>
-            </StyledChangeBox>
-            <StyledChangeBox
-                sx={{ background: theme => theme.palette.secondary.light }}
-            >
-                <StyledSubtitle>To be reviewed</StyledSubtitle>
-                <StyledChangeRequestStatusInfo>
-                    <StyledInReviewCount>{toBeReviewed}</StyledInReviewCount>{' '}
-                    <ChangeRequestsLabel />
-                </StyledChangeRequestStatusInfo>
-            </StyledChangeBox>
+            <StyledContentBox>
+                <StyledChangeBox
+                    sx={{ background: theme => theme.palette.success.light }}
+                >
+                    <StyledSubtitle>To be applied</StyledSubtitle>
+                    <StyledChangeRequestStatusInfo>
+                        <StyledApprovedCount>{toBeApplied}</StyledApprovedCount>{' '}
+                        <ChangeRequestsLabel />
+                    </StyledChangeRequestStatusInfo>
+                </StyledChangeBox>
+                <StyledChangeBox
+                    sx={{ background: theme => theme.palette.secondary.light }}
+                >
+                    <StyledSubtitle>To be reviewed</StyledSubtitle>
+                    <StyledChangeRequestStatusInfo>
+                        <StyledInReviewCount>
+                            {toBeReviewed}
+                        </StyledInReviewCount>{' '}
+                        <ChangeRequestsLabel />
+                    </StyledChangeRequestStatusInfo>
+                </StyledChangeBox>
+            </StyledContentBox>
             <WidgetFooterLink to={`/projects/${projectId}/change-requests`}>
                 View change requests
             </WidgetFooterLink>

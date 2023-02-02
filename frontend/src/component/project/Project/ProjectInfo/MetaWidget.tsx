@@ -35,23 +35,27 @@ export const MetaWidget: FC<IMetaWidgetProps> = ({ id, description }) => {
                 </Typography>{' '}
                 <code data-loading>{id || '__________'}</code>
             </StyledIDContainer>
-            <Typography mt={1.5} textAlign="left">
-                <ConditionallyRender
-                    condition={Boolean(description)}
-                    show={
-                        <>
-                            <Typography component="span" variant="body2">
-                                {description}
-                            </Typography>
-                        </>
-                    }
-                    elseShow={
-                        <WidgetFooterLink to={`/projects/${id}/edit`}>
-                            Add description
-                        </WidgetFooterLink>
-                    }
-                />
-            </Typography>
+            <ConditionallyRender
+                condition={Boolean(description)}
+                show={
+                    <Typography
+                        component="span"
+                        variant="body2"
+                        mt={1.5}
+                        textAlign="left"
+                    >
+                        {description}
+                    </Typography>
+                }
+            />
+            <ConditionallyRender
+                condition={!Boolean(description)}
+                show={
+                    <WidgetFooterLink to={`/projects/${id}/edit`}>
+                        Add description
+                    </WidgetFooterLink>
+                }
+            />
         </StyledProjectInfoWidgetContainer>
     );
 };

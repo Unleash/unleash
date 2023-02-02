@@ -1,21 +1,5 @@
-import { Link } from 'react-router-dom';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { flexRow } from 'themes/themeStyles';
 import { styled } from '@mui/material';
-
-export const StyledProjectInfoSidebarContainer = styled('div')(({ theme }) => ({
-    ...flexRow,
-    width: '225px',
-    flexDirection: 'column',
-    gap: theme.spacing(2),
-    boxShadow: 'none',
-    [theme.breakpoints.down('md')]: {
-        flexDirection: 'row',
-        alignItems: 'stretch',
-        width: '100%',
-        marginBottom: theme.spacing(2),
-    },
-}));
 
 export const StyledProjectInfoWidgetContainer = styled('div')(({ theme }) => ({
     margin: '0',
@@ -23,12 +7,11 @@ export const StyledProjectInfoWidgetContainer = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
     borderRadius: theme.shape.borderRadiusLarge,
     width: '100%',
+    minWidth: 225,
     padding: theme.spacing(3),
     [theme.breakpoints.down('md')]: {
-        ...flexRow,
+        display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'center',
-        fontSize: theme.fontSizes.smallBody,
         position: 'relative',
         padding: theme.spacing(1.5),
     },
@@ -47,17 +30,6 @@ export const StyledCount = styled('span')(({ theme }) => ({
 export const StyledSpanLinkText = styled('p')(({ theme }) => ({
     [theme.breakpoints.down('md')]: {
         display: 'none',
-    },
-}));
-
-export const StyledLink = styled(Link)(({ theme }) => ({
-    textDecoration: 'none',
-    ...flexRow,
-    justifyContent: 'center',
-    color: theme.palette.primary.main,
-    [theme.breakpoints.down('md')]: {
-        position: 'absolute',
-        bottom: theme.spacing(1.5),
     },
 }));
 

@@ -14,7 +14,11 @@ export const WidgetFooterLink: FC<IWidgetFooterLinkProps> = ({
         <Typography
             variant="body2"
             textAlign="center"
-            sx={{ marginTop: theme => theme.spacing(2.5) }}
+            sx={{
+                paddingTop: theme => theme.spacing(2.5),
+                marginTop: 'auto',
+                justifySelf: 'flex-end',
+            }}
         >
             <Link component={RouterLink} to={to}>
                 {children}

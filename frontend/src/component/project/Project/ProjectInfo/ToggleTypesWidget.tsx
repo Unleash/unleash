@@ -26,20 +26,24 @@ interface IToggleTypeRowProps {
 }
 
 export const StyledParagraphGridRow = styled('div')(({ theme }) => ({
-    display: 'grid',
-    gridGap: theme.spacing(1.5),
+    display: 'flex',
+    gap: theme.spacing(1.5),
+    width: '100%',
     gridTemplateColumns: `${theme.spacing(2.5)} auto auto`, //20px auto auto
-    margin: theme.spacing(1, 0, 1, 0),
+    margin: theme.spacing(1, 0),
     fontSize: theme.fontSizes.smallBody,
     color: theme.palette.text.secondary,
-    textAlign: 'left',
     alignItems: 'center',
+    [theme.breakpoints.down('md')]: {
+        margin: 0,
+    },
 }));
 
 const ToggleTypesRow = ({ type, Icon, count }: IToggleTypeRowProps) => {
     const getTitleText = (str: string) => {
         return str.charAt(0).toUpperCase() + str.slice(1).replace('-', ' ');
     };
+
     return (
         <StyledParagraphGridRow data-loading>
             <Icon fontSize="small" data-loading />

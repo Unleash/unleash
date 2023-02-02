@@ -1,14 +1,15 @@
+import { Box, styled, useMediaQuery, useTheme } from '@mui/material';
+import type { ProjectStatsSchema } from '@server/openapi';
 import type { IFeatureToggleListItem } from 'interfaces/featureToggle';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { DEFAULT_PROJECT_ID } from 'hooks/api/getters/useDefaultProject/useDefaultProjectId';
-import { StyledProjectInfoSidebarContainer } from './ProjectInfo.styles';
 import { HealthWidget } from './HealthWidget';
 import { ToggleTypesWidget } from './ToggleTypesWidget';
 import { MetaWidget } from './MetaWidget';
 import { ProjectMembersWidget } from './ProjectMembersWidget';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { ProjectStatsSchema } from '@server/openapi';
 import { ChangeRequestsWidget } from './ChangeRequestsWidget';
+import { flexRow } from 'themes/themeStyles';
 
 interface IProjectInfoProps {
     id: string;
@@ -19,6 +20,23 @@ interface IProjectInfoProps {
     stats: ProjectStatsSchema;
 }
 
+export const StyledProjectInfoSidebarContainer = styled(Box)(({ theme }) => ({
+    ...flexRow,
+    width: '225px',
+    flexDirection: 'column',
+    gap: theme.spacing(2),
+    boxShadow: 'none',
+    [theme.breakpoints.down('md')]: {
+        display: 'grid',
+        width: '100%',
+        alignItems: 'stretch',
+        marginBottom: theme.spacing(2),
+    },
+    [theme.breakpoints.down('sm')]: {
+        display: 'flex',
+    },
+}));
+
 const ProjectInfo = ({
     id,
     description,
@@ -28,27 +46,62 @@ const ProjectInfo = ({
     stats,
 }: IProjectInfoProps) => {
     const { uiConfig, isEnterprise } = useUiConfig();
+    const theme = useTheme();
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
+
+    const showChangeRequestsWidget = isEnterprise() && false;
+    const showProjectMembersWidget = id !== DEFAULT_PROJECT_ID && false;
+    const fitMoreColumns =
+        (!showChangeRequestsWidget && !showProjectMembersWidget) ||
+        (isSmallScreen && showChangeRequestsWidget && showProjectMembersWidget);
 
     return (
         <aside>
-            <StyledProjectInfoSidebarContainer>
+            <StyledProjectInfoSidebarContainer
+                sx={
+                    fitMoreColumns
+                        ? {
+                              gridTemplateColumns:
+                                  'repeat(auto-fill, minmax(225px, 1fr))',
+                          }
+                        : { gridTemplateColumns: 'repeat(2, 1fr)' }
+                }
+            >
                 <ConditionallyRender
                     condition={
-                        isEnterprise() &&
+                        showChangeRequestsWidget &&
                         Boolean(uiConfig?.flags.newProjectOverview)
                     }
-                    show={<ChangeRequestsWidget projectId={id} />}
+                    show={
+                        <Box
+                            sx={{
+                                gridColumnStart: showProjectMembersWidget
+                                    ? 'span 2'
+                                    : 'span 1',
+                                flex: 1,
+                                display: 'flex',
+                            }}
+                        >
+                            <ChangeRequestsWidget projectId={id} />
+                        </Box>
+                    }
                 />
                 <ConditionallyRender
                     condition={Boolean(uiConfig?.flags.newProjectOverview)}
-                    show={<MetaWidget id={id} description={description} />}
+                    show={
+                        <Box
+                            sx={{
+                                flex: 1,
+                                display: 'flex',
+                            }}
+                        >
+                            <MetaWidget id={id} description={description} />
+                        </Box>
+                    }
                 />
-                <HealthWidget
-                    projectId={id}
-                    health={health}
-                />
+                <HealthWidget projectId={id} health={health} />
                 <ConditionallyRender
-                    condition={id !== DEFAULT_PROJECT_ID}
+                    condition={showProjectMembersWidget}
                     show={
                         <ProjectMembersWidget
                             projectId={id}

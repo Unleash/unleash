@@ -5,11 +5,15 @@ import { StatusBox } from './StatusBox';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     padding: theme.spacing(0, 0, 2, 2),
-    display: 'flex',
-    justifyContent: 'space-between',
+    display: 'grid',
+    gap: theme.spacing(2),
+    gridTemplateColumns: 'repeat(4, 1fr)',
     flexWrap: 'wrap',
+    [theme.breakpoints.down('lg')]: {
+        gridTemplateColumns: 'repeat(2, 1fr)',
+    },
     [theme.breakpoints.down('md')]: {
-        paddingLeft: 0,
+        padding: theme.spacing(0, 0, 2),
     },
     [theme.breakpoints.down('sm')]: {
         flexDirection: 'column',
@@ -19,23 +23,14 @@ const StyledBox = styled(Box)(({ theme }) => ({
 const StyledWidget = styled(Box)(({ theme }) => ({
     padding: theme.spacing(3),
     backgroundColor: theme.palette.background.paper,
-    minWidth: '24%',
+    flex: 1,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: `${theme.shape.borderRadiusLarge}px`,
     [theme.breakpoints.down('lg')]: {
-        minWidth: '49%',
         padding: theme.spacing(2),
-        ':nth-child(n+3)': {
-            marginTop: theme.spacing(2),
-        },
-    },
-    [theme.breakpoints.down('sm')]: {
-        ':nth-child(n+2)': {
-            marginTop: theme.spacing(2),
-        },
     },
 }));
 

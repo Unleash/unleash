@@ -1,10 +1,11 @@
 import { Box, styled, Typography } from '@mui/material';
+import { Link } from 'react-router-dom';
 import PercentageCircle from 'component/common/PercentageCircle/PercentageCircle';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { flexRow } from 'themes/themeStyles';
 import {
     StyledArrowIcon,
     StyledProjectInfoWidgetContainer,
-    StyledLink,
     StyledWidgetTitle,
     StyledSpanLinkText,
 } from './ProjectInfo.styles';
@@ -28,6 +29,17 @@ export const StyledParagraphEmphasizedText = styled('p')(({ theme }) => ({
 export const StyledDivPercentageContainer = styled('div')(() => ({
     display: 'flex',
     justifyContent: 'center',
+}));
+
+export const StyledLink = styled(Link)(({ theme }) => ({
+    textDecoration: 'none',
+    ...flexRow,
+    justifyContent: 'center',
+    color: theme.palette.primary.main,
+    [theme.breakpoints.down('md')]: {
+        position: 'absolute',
+        bottom: theme.spacing(1.5),
+    },
 }));
 
 export const HealthWidget = ({ projectId, health }: IHealthWidgetProps) => {

@@ -29,7 +29,7 @@ export const StyledProjectInfoWidgetContainer = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
     borderRadius: theme.shape.borderRadiusLarge,
     width: '100%',
-    padding: theme.spacing(3, 2, 3, 2),
+    padding: theme.spacing(3),
     [theme.breakpoints.down('md')]: {
         margin: theme.spacing(0, 1),
         ...flexRow,
@@ -49,17 +49,6 @@ export const StyledProjectInfoWidgetContainer = styled('div')(({ theme }) => ({
 
 export const StyledWidgetTitle = styled('p')(({ theme }) => ({
     marginBottom: theme.spacing(2),
-}));
-
-export const StyledParagraphGridRow = styled('div')(({ theme }) => ({
-    display: 'grid',
-    gridGap: theme.spacing(1.5),
-    gridTemplateColumns: `${theme.spacing(1.25)} auto auto`, //20px auto auto
-    margin: theme.spacing(1, 0, 1, 0),
-    fontSize: theme.fontSizes.smallBody,
-    color: theme.palette.text.secondary,
-    textAlign: 'left',
-    alignItems: 'center',
 }));
 
 export const StyledParagraphEmphasizedText = styled('p')(({ theme }) => ({

@@ -4,7 +4,6 @@ import type { IFeatureToggleListItem } from 'interfaces/featureToggle';
 import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
 import {
     StyledCount,
-    StyledParagraphGridRow,
     StyledProjectInfoWidgetContainer,
     StyledWidgetTitle,
 } from './ProjectInfo.styles';
@@ -23,6 +22,18 @@ interface IToggleTypeRowProps {
     Icon: OverridableComponent<SvgIconTypeMap>;
     count: number;
 }
+
+export const StyledParagraphGridRow = styled('div')(({ theme }) => ({
+    display: 'grid',
+    gridGap: theme.spacing(1.5),
+    gridTemplateColumns: `${theme.spacing(2.5)} auto auto`, //20px auto auto
+    margin: theme.spacing(1, 0, 1, 0),
+    fontSize: theme.fontSizes.smallBody,
+    color: theme.palette.text.secondary,
+    textAlign: 'left',
+    alignItems: 'center',
+}));
+
 const ToggleTypesRow = ({ type, Icon, count }: IToggleTypeRowProps) => {
     const getTitleText = (str: string) => {
         return str.charAt(0).toUpperCase() + str.slice(1).replace('-', ' ');

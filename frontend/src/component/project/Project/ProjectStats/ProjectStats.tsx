@@ -1,4 +1,4 @@
-import { Box, styled } from '@mui/material';
+import { Box, styled, Typography } from '@mui/material';
 import { ProjectStatsSchema } from 'openapi/models';
 import { object } from 'prop-types';
 import { StatusBox } from './StatusBox';
@@ -51,12 +51,23 @@ export const ProjectStats = ({ stats }: IProjectStatsProps) => {
                 title="Total changes"
                 boxText={String(projectActivityCurrentWindow)}
                 change={
-                    projectActivityCurrentWindow - projectActivityPastWindow
+                    projectActivityCurrentWindow - projectActivityPastWindow - 20
                 }
             />
             <StatusBox
                 title="Avg. time to production"
-                boxText={`${avgTimeToProdCurrentWindow} days`}
+                boxText={
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: theme => theme.spacing(1),
+                        }}
+                    >
+                        {avgTimeToProdCurrentWindow}{' '}
+                        <Typography component="span">days</Typography>
+                    </Box>
+                }
                 change={calculatePercentage(
                     avgTimeToProdCurrentWindow,
                     avgTimeToProdPastWindow

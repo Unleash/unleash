@@ -17,7 +17,7 @@ const StyledMermaid = styled(Mermaid)(({ theme }) => ({
 }));
 
 const isRecent = (value: ResultValue) => {
-    const threshold = 60000; // ten minutes
+    const threshold = 600000; // ten minutes
     return value[0] * 1000 > new Date().getTime() - threshold;
 };
 
@@ -36,6 +36,7 @@ const toGraphData = (metrics?: RequestsPerSecondSchema) => {
             ?.map(result => {
                 const values = (result.values || []) as ResultValue[];
                 const data = values.filter(value => isRecent(value)) || [];
+                console.log('data', data);
                 let reqs = 0;
                 if (data.length) {
                     reqs = parseFloat(data[data.length - 1][1]);

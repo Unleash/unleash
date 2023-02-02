@@ -200,7 +200,7 @@ export const Project = () => {
                                             show={
                                                 <StyledDiv>
                                                     <StyledTitle data-loading>
-                                                        Description:{' '}
+                                                        Description:&nbsp;
                                                     </StyledTitle>
                                                     <StyledText data-loading>
                                                         {project.description}
@@ -210,7 +210,7 @@ export const Project = () => {
                                         />
                                         <StyledDiv>
                                             <StyledTitle data-loading>
-                                                projectId:{' '}
+                                                projectId:&nbsp;
                                             </StyledTitle>
                                             <StyledText data-loading>
                                                 {projectId}

@@ -1,4 +1,3 @@
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { styled } from '@mui/material';
 
 export const StyledProjectInfoWidgetContainer = styled('div')(({ theme }) => ({
@@ -25,15 +24,4 @@ export const StyledCount = styled('span')(({ theme }) => ({
     fontSize: theme.typography.h2.fontSize,
     fontWeight: 'bold',
     color: theme.palette.text.primary,
-}));
-
-export const StyledSpanLinkText = styled('p')(({ theme }) => ({
-    [theme.breakpoints.down('md')]: {
-        display: 'none',
-    },
-}));
-
-export const StyledArrowIcon = styled(ArrowForwardIcon)(({ theme }) => ({
-    color: theme.palette.primary.main,
-    marginLeft: theme.spacing(1),
 }));

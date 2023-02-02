@@ -25,7 +25,7 @@ interface IToggleTypeRowProps {
     count: number;
 }
 
-export const StyledParagraphGridRow = styled('div')(({ theme }) => ({
+const StyledParagraphGridRow = styled('div')(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(1.5),
     width: '100%',

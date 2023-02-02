@@ -10,6 +10,8 @@ import { ProjectMembersWidget } from './ProjectMembersWidget';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ChangeRequestsWidget } from './ChangeRequestsWidget';
 import { flexRow } from 'themes/themeStyles';
+import { LegacyHealthWidget } from './LegacyHealthWidget';
+import { LegacyProjectMembersWidget } from './LegacyProjectMembersWidget';
 
 interface IProjectInfoProps {
     id: string;
@@ -20,7 +22,7 @@ interface IProjectInfoProps {
     stats: ProjectStatsSchema;
 }
 
-export const StyledProjectInfoSidebarContainer = styled(Box)(({ theme }) => ({
+const StyledProjectInfoSidebarContainer = styled(Box)(({ theme }) => ({
     ...flexRow,
     width: '225px',
     flexDirection: 'column',
@@ -49,11 +51,36 @@ const ProjectInfo = ({
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
-    const showChangeRequestsWidget = isEnterprise() && false;
-    const showProjectMembersWidget = id !== DEFAULT_PROJECT_ID && false;
+    const showChangeRequestsWidget = isEnterprise();
+    const showProjectMembersWidget = id !== DEFAULT_PROJECT_ID;
     const fitMoreColumns =
         (!showChangeRequestsWidget && !showProjectMembersWidget) ||
         (isSmallScreen && showChangeRequestsWidget && showProjectMembersWidget);
+
+    if (Boolean(uiConfig?.flags.newProjectOverview)) {
+        return (
+            <Box
+                component="aside"
+                sx={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(225px, 1fr))',
+                    gap: theme => theme.spacing(2),
+                    paddingBottom: theme => theme.spacing(2),
+                }}
+            >
+                <LegacyHealthWidget projectId={id} health={health} />
+                <ConditionallyRender
+                    condition={showProjectMembersWidget}
+                    show={
+                        <LegacyProjectMembersWidget
+                            projectId={id}
+                            memberCount={memberCount}
+                        />
+                    }
+                />
+            </Box>
+        );
+    }
 
     return (
         <aside>
@@ -68,10 +95,7 @@ const ProjectInfo = ({
                 }
             >
                 <ConditionallyRender
-                    condition={
-                        showChangeRequestsWidget &&
-                        Boolean(uiConfig?.flags.newProjectOverview)
-                    }
+                    condition={showChangeRequestsWidget}
                     show={
                         <Box
                             sx={{
@@ -86,19 +110,7 @@ const ProjectInfo = ({
                         </Box>
                     }
                 />
-                <ConditionallyRender
-                    condition={Boolean(uiConfig?.flags.newProjectOverview)}
-                    show={
-                        <Box
-                            sx={{
-                                flex: 1,
-                                display: 'flex',
-                            }}
-                        >
-                            <MetaWidget id={id} description={description} />
-                        </Box>
-                    }
-                />
+                <MetaWidget id={id} description={description} />
                 <HealthWidget projectId={id} health={health} />
                 <ConditionallyRender
                     condition={showProjectMembersWidget}
@@ -110,10 +122,7 @@ const ProjectInfo = ({
                         />
                     }
                 />
-                <ConditionallyRender
-                    condition={Boolean(uiConfig?.flags.newProjectOverview)}
-                    show={<ToggleTypesWidget features={features} />}
-                />
+                <ToggleTypesWidget features={features} />
             </StyledProjectInfoSidebarContainer>
         </aside>
     );

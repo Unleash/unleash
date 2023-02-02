@@ -11,8 +11,8 @@ import type { IProjectStore } from '../types/stores/project-store';
 import ProjectService from './project-service';
 import {
     calculateProjectHealth,
-    getHealthRating,
-} from '../domain/calculate-project-health/calculate-project-health';
+    calculateHealthRating,
+} from '../domain/project-health/project-health';
 
 export default class ProjectHealthService {
     private logger: Logger;
@@ -82,7 +82,7 @@ export default class ProjectHealthService {
             archived: false,
         });
 
-        return getHealthRating(toggles, this.featureTypes);
+        return calculateHealthRating(toggles, this.featureTypes);
     }
 
     async setHealthRating(): Promise<void> {

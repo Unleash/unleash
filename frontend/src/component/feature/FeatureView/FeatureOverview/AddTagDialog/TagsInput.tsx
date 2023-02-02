@@ -9,8 +9,8 @@ import {
 import React from 'react';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import { ITag } from '../../../../../interfaces/tags';
-import { ConditionallyRender } from '../../../../common/ConditionallyRender/ConditionallyRender';
+import { ITag } from 'interfaces/tags';
+import { ConditionallyRender } from 'common/ConditionallyRender/ConditionallyRender';
 import { Add } from '@mui/icons-material';
 
 export type TagOption = {

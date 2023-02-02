@@ -8,7 +8,7 @@ import {
     Typography,
     useTheme,
 } from '@mui/material';
-import { ITagType } from '../../../../../interfaces/tags';
+import { ITagType } from 'interfaces/tags';
 
 interface ITagSelect {
     value: ITagType;

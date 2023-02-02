@@ -11,7 +11,11 @@ export const WidgetFooterLink: FC<IWidgetFooterLinkProps> = ({
     to,
 }) => {
     return (
-        <Typography variant="body2" textAlign="center">
+        <Typography
+            variant="body2"
+            textAlign="center"
+            sx={{ marginTop: theme => theme.spacing(2.5) }}
+        >
             <Link component={RouterLink} to={to}>
                 {children}
             </Link>

@@ -40,13 +40,6 @@ export const MetaWidget: FC<IMetaWidgetProps> = ({ id, description }) => {
                     condition={Boolean(description)}
                     show={
                         <>
-                            <Typography
-                                component="span"
-                                variant="body2"
-                                color="text.secondary"
-                            >
-                                Description:{' '}
-                            </Typography>
                             <Typography component="span" variant="body2">
                                 {description}
                             </Typography>

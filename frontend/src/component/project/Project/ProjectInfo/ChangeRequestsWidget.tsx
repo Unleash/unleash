@@ -42,8 +42,18 @@ const StyledInReviewCount = styled(StyledCount)(({ theme }) => ({
     borderRadius: theme.shape.borderRadius,
 }));
 
+const StyledSubtitle = styled(Typography)(({ theme }) => ({
+    fontSize: theme.typography.body2.fontSize,
+    marginBottom: theme.spacing(0.5),
+}));
+
 const ChangeRequestsLabel = () => (
-    <Typography component="span" variant="body2" color="text.secondary">
+    <Typography
+        component="span"
+        variant="body2"
+        color="text.secondary"
+        lineHeight={1}
+    >
         change requests
     </Typography>
 );
@@ -67,16 +77,18 @@ export const ChangeRequestsWidget: FC<IChangeRequestsWidgetProps> = ({
             <StyledChangeBox
                 sx={{ background: theme => theme.palette.success.light }}
             >
-                <Typography variant="body2">To be applied</Typography>
+                <StyledSubtitle>To be applied</StyledSubtitle>
                 <StyledChangeRequestStatusInfo>
-                    <StyledApprovedCount>{toBeApplied}</StyledApprovedCount>{' '}
+                    <StyledApprovedCount>
+                        {toBeApplied}
+                    </StyledApprovedCount>{' '}
                     <ChangeRequestsLabel />
                 </StyledChangeRequestStatusInfo>
             </StyledChangeBox>
             <StyledChangeBox
                 sx={{ background: theme => theme.palette.secondary.light }}
             >
-                <Typography variant="body2">To be reviewed</Typography>
+                <StyledSubtitle>To be reviewed</StyledSubtitle>
                 <StyledChangeRequestStatusInfo>
                     <StyledInReviewCount>{toBeReviewed}</StyledInReviewCount>{' '}
                     <ChangeRequestsLabel />

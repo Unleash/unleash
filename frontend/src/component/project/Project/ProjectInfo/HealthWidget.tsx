@@ -1,11 +1,10 @@
+import { Box, styled, Typography } from '@mui/material';
 import PercentageCircle from 'component/common/PercentageCircle/PercentageCircle';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import {
     StyledArrowIcon,
     StyledProjectInfoWidgetContainer,
-    StyledDivPercentageContainer,
     StyledLink,
-    StyledParagraphEmphasizedText,
     StyledWidgetTitle,
     StyledSpanLinkText,
 } from './ProjectInfo.styles';
@@ -18,6 +17,19 @@ interface IHealthWidgetProps {
     stale?: number;
 }
 
+export const StyledParagraphEmphasizedText = styled('p')(({ theme }) => ({
+    fontSize: '1.5rem',
+    [theme.breakpoints.down('md')]: {
+        fontSize: theme.fontSizes.bodySize,
+        marginBottom: theme.spacing(4),
+    },
+}));
+
+export const StyledDivPercentageContainer = styled('div')(() => ({
+    display: 'flex',
+    justifyContent: 'center',
+}));
+
 export const HealthWidget = ({ projectId, health }: IHealthWidgetProps) => {
     const { uiConfig } = useUiConfig();
 
@@ -27,12 +39,21 @@ export const HealthWidget = ({ projectId, health }: IHealthWidgetProps) => {
                 <StyledWidgetTitle data-loading>
                     Project health
                 </StyledWidgetTitle>
-                <StyledDivPercentageContainer>
-                    <PercentageCircle percentage={health} />
-                </StyledDivPercentageContainer>
-                <StyledParagraphEmphasizedText data-loading>
-                    {health}%
-                </StyledParagraphEmphasizedText>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: theme => theme.spacing(2),
+                    }}
+                >
+                    <StyledDivPercentageContainer>
+                        <PercentageCircle percentage={health} />
+                    </StyledDivPercentageContainer>
+                    <StyledParagraphEmphasizedText data-loading>
+                        {health}%
+                    </StyledParagraphEmphasizedText>
+                </Box>
                 <WidgetFooterLink to={`/projects/${projectId}/health`}>
                     View project health
                 </WidgetFooterLink>
@@ -45,12 +66,12 @@ export const HealthWidget = ({ projectId, health }: IHealthWidgetProps) => {
             <StyledDivPercentageContainer>
                 <PercentageCircle percentage={health} />
             </StyledDivPercentageContainer>
-            <StyledWidgetTitle data-loading>
-                Overall health rating
-            </StyledWidgetTitle>
-            <StyledParagraphEmphasizedText data-loading>
-                {health}%
-            </StyledParagraphEmphasizedText>
+            <Typography data-loading>Overall health rating</Typography>
+            <Box sx={{ marginBottom: theme => theme.spacing(2.5) }}>
+                <StyledParagraphEmphasizedText data-loading>
+                    {health}%
+                </StyledParagraphEmphasizedText>
+            </Box>
             <StyledLink data-loading to={`/projects/${projectId}/health`}>
                 <StyledSpanLinkText data-loading>view more </StyledSpanLinkText>
                 <StyledArrowIcon data-loading />

@@ -17,12 +17,6 @@ export const StyledProjectInfoSidebarContainer = styled('div')(({ theme }) => ({
     },
 }));
 
-export const StyledDivPercentageContainer = styled('div')(({ theme }) => ({
-    display: 'flex',
-    justifyContent: 'center',
-    margin: theme.spacing(2, 0),
-}));
-
 export const StyledProjectInfoWidgetContainer = styled('div')(({ theme }) => ({
     margin: '0',
     textAlign: 'center',
@@ -31,33 +25,17 @@ export const StyledProjectInfoWidgetContainer = styled('div')(({ theme }) => ({
     width: '100%',
     padding: theme.spacing(3),
     [theme.breakpoints.down('md')]: {
-        margin: theme.spacing(0, 1),
         ...flexRow,
         flexDirection: 'column',
         justifyContent: 'center',
         fontSize: theme.fontSizes.smallBody,
         position: 'relative',
         padding: theme.spacing(1.5),
-        '&:first-of-type': {
-            marginLeft: '0',
-        },
-        '&:last-of-type': {
-            marginRight: '0',
-        },
     },
 }));
 
 export const StyledWidgetTitle = styled('p')(({ theme }) => ({
-    marginBottom: theme.spacing(2),
-}));
-
-export const StyledParagraphEmphasizedText = styled('p')(({ theme }) => ({
-    fontSize: '1.5rem',
-    marginBottom: theme.spacing(2),
-    [theme.breakpoints.down('md')]: {
-        fontSize: theme.fontSizes.bodySize,
-        marginBottom: theme.spacing(4),
-    },
+    marginBottom: theme.spacing(2.5),
 }));
 
 export const StyledCount = styled('span')(({ theme }) => ({

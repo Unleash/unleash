@@ -1,12 +1,12 @@
 import { FC } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-import { Box, styled, Typography, Link } from '@mui/material';
+import { styled, Typography } from '@mui/material';
 
 import {
     StyledProjectInfoWidgetContainer,
     StyledWidgetTitle,
 } from './ProjectInfo.styles';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { WidgetFooterLink } from './WidgetFooterLink';
 
 interface IMetaWidgetProps {
     id?: string;
@@ -53,14 +53,9 @@ export const MetaWidget: FC<IMetaWidgetProps> = ({ id, description }) => {
                         </>
                     }
                     elseShow={
-                        <Typography variant="body2" textAlign="center">
-                            <Link
-                                component={RouterLink}
-                                to={`/projects/${id}/edit`}
-                            >
-                                Add description
-                            </Link>
-                        </Typography>
+                        <WidgetFooterLink to={`/projects/${id}/edit`}>
+                            Add description
+                        </WidgetFooterLink>
                     }
                 />
             </Typography>

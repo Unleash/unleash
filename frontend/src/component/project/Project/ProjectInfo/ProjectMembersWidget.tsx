@@ -1,10 +1,7 @@
-import {
-    StyledLink,
-    StyledProjectInfoWidgetContainer,
-    StyledSpanLinkText,
-} from './ProjectInfo.styles';
+import { StyledProjectInfoWidgetContainer } from './ProjectInfo.styles';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { StatusBox } from '../ProjectStats/StatusBox';
+import { WidgetFooterLink } from './WidgetFooterLink';
 
 interface IProjectMembersWidgetProps {
     projectId: string;
@@ -35,11 +32,7 @@ export const ProjectMembersWidget = ({
                 change={change}
                 fullWidthBodyText
             />
-            <StyledLink data-loading to={link}>
-                <StyledSpanLinkText data-loading>
-                    View all members
-                </StyledSpanLinkText>
-            </StyledLink>
+            <WidgetFooterLink to={link}>View all members</WidgetFooterLink>
         </StyledProjectInfoWidgetContainer>
     );
 };

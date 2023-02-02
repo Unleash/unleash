@@ -13,8 +13,10 @@ export interface IToggleTypesWidgetProps {
     features: IFeatureToggleListItem[];
 }
 
-const StyledTypeCount = styled(StyledCount)(() => ({
+const StyledTypeCount = styled(StyledCount)(({ theme }) => ({
     marginLeft: 'auto',
+    fontWeight: theme.typography.fontWeightRegular,
+    color: theme.palette.text.secondary,
 }));
 
 interface IToggleTypeRowProps {

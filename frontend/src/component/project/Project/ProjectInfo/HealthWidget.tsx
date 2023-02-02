@@ -1,6 +1,7 @@
+import PercentageCircle from 'component/common/PercentageCircle/PercentageCircle';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import {
     StyledArrowIcon,
-    StyledCount,
     StyledProjectInfoWidgetContainer,
     StyledDivPercentageContainer,
     StyledLink,
@@ -8,9 +9,7 @@ import {
     StyledWidgetTitle,
     StyledSpanLinkText,
 } from './ProjectInfo.styles';
-import PercentageCircle from 'component/common/PercentageCircle/PercentageCircle';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { Box, styled, Typography } from '@mui/material';
+import { WidgetFooterLink } from './WidgetFooterLink';
 
 interface IHealthWidgetProps {
     projectId: string;
@@ -19,18 +18,7 @@ interface IHealthWidgetProps {
     stale?: number;
 }
 
-const StyledWarning = styled('span')<{ active?: boolean }>(
-    ({ theme, active }) => ({
-        color: active ? theme.palette.warning.dark : 'inherit',
-    })
-);
-
-export const HealthWidget = ({
-    projectId,
-    health,
-    total,
-    stale,
-}: IHealthWidgetProps) => {
+export const HealthWidget = ({ projectId, health }: IHealthWidgetProps) => {
     const { uiConfig } = useUiConfig();
 
     if (uiConfig?.flags?.newProjectOverview) {
@@ -45,24 +33,9 @@ export const HealthWidget = ({
                 <StyledParagraphEmphasizedText data-loading>
                     {health}%
                 </StyledParagraphEmphasizedText>
-                <Typography data-loading>
-                    <StyledCount>{total}</StyledCount> toggles in total
-                </Typography>
-                <Typography data-loading sx={{ marginBottom: 2 }}>
-                    <StyledCount>
-                        <StyledWarning active={Boolean(stale)}>
-                            {stale}
-                        </StyledWarning>
-                    </StyledCount>{' '}
-                    <StyledWarning active={Boolean(stale)}>
-                        potentially stale
-                    </StyledWarning>
-                </Typography>
-                <StyledLink data-loading to={`/projects/${projectId}/health`}>
-                    <StyledSpanLinkText data-loading>
-                        View project health
-                    </StyledSpanLinkText>
-                </StyledLink>
+                <WidgetFooterLink to={`/projects/${projectId}/health`}>
+                    View project health
+                </WidgetFooterLink>
             </StyledProjectInfoWidgetContainer>
         );
     }

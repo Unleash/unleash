@@ -46,8 +46,6 @@ const ProjectInfo = ({
                 <HealthWidget
                     projectId={id}
                     health={health}
-                    total={features.length}
-                    stale={features.filter(feature => feature.stale).length}
                 />
                 <ConditionallyRender
                     condition={id !== DEFAULT_PROJECT_ID}

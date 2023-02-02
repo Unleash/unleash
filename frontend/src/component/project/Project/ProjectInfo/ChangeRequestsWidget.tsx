@@ -1,7 +1,6 @@
 import { FC } from 'react';
 import useLoading from 'hooks/useLoading';
-import { Link as RouterLink } from 'react-router-dom';
-import { Box, styled, Typography, Link } from '@mui/material';
+import { Box, styled, Typography } from '@mui/material';
 import { IChangeRequest } from 'component/changeRequest/changeRequest.types';
 
 import {
@@ -10,6 +9,7 @@ import {
     StyledWidgetTitle,
 } from './ProjectInfo.styles';
 import { useProjectChangeRequests } from 'hooks/api/getters/useProjectChangeRequests/useProjectChangeRequests';
+import { WidgetFooterLink } from './WidgetFooterLink';
 
 interface IChangeRequestsWidgetProps {
     projectId: string;
@@ -82,14 +82,9 @@ export const ChangeRequestsWidget: FC<IChangeRequestsWidgetProps> = ({
                     <ChangeRequestsLabel />
                 </StyledChangeRequestStatusInfo>
             </StyledChangeBox>
-            <Typography variant="body2" textAlign="center">
-                <Link
-                    component={RouterLink}
-                    to={`/projects/${projectId}/change-requests`}
-                >
-                    View change requests
-                </Link>
-            </Typography>
+            <WidgetFooterLink to={`/projects/${projectId}/change-requests`}>
+                View change requests
+            </WidgetFooterLink>
         </StyledProjectInfoWidgetContainer>
     );
 };

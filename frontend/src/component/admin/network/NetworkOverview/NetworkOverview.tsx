@@ -5,7 +5,10 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { Alert, styled } from '@mui/material';
 import { unknownify } from 'utils/unknownify';
 import { useMemo } from 'react';
-import { RequestsPerSecondSchema } from 'openapi';
+import {
+    RequestsPerSecondSchema,
+    RequestsPerSecondSchemaDataResultItem,
+} from 'openapi';
 import logoIcon from 'assets/icons/logoBg.svg';
 import { formatAssetPath } from 'utils/formatPath';
 
@@ -24,30 +27,51 @@ const isRecent = (value: ResultValue) => {
 type ResultValue = [number, string];
 
 interface INetworkApp {
-    label?: string;
-    reqs: string;
+    label: string;
+    reqs: number;
     type: string;
 }
 
+const asNetworkAppData = (result: RequestsPerSecondSchemaDataResultItem) => {
+    const values = (result.values || []) as ResultValue[];
+    const data = values.filter(value => isRecent(value)) || [];
+    let reqs = 0;
+    if (data.length) {
+        reqs = parseFloat(data[data.length - 1][1]);
+    }
+    return {
+        label: unknownify(result.metric?.appName),
+        reqs: reqs,
+        type: unknownify(result.metric?.endpoint?.split('/')[2]),
+    };
+};
+
+const summingReqsByLabelAndType = (
+    acc: {
+        [group: string]: INetworkApp;
+    },
+    current: INetworkApp
+) => {
+    const groupBy = current.label + current.type;
+    acc[groupBy] = {
+        ...current,
+        reqs: current.reqs + (acc[groupBy]?.reqs ?? 0),
+    };
+    return acc;
+};
+
 const toGraphData = (metrics?: RequestsPerSecondSchema) => {
-    const results = metrics?.data?.result;
+    const results =
+        metrics?.data?.result?.filter(
+            result => unknownify(result.metric?.appName) !== 'unknown'
+        ) || [];
+    const aggregated = results
+        .map(asNetworkAppData)
+        .reduce(summingReqsByLabelAndType, {});
     return (
-        results
-            ?.map(result => {
-                const values = (result.values || []) as ResultValue[];
-                const data = values.filter(value => isRecent(value)) || [];
-                let reqs = 0;
-                if (data.length) {
-                    reqs = parseFloat(data[data.length - 1][1]);
-                }
-                return {
-                    label: unknownify(result.metric?.appName),
-                    reqs: reqs.toFixed(2),
-                    type: unknownify(result.metric?.endpoint?.split('/')[2]),
-                };
-            })
-            .filter(app => app.label !== 'unknown')
-            .filter(app => app.reqs !== '0.00') ?? []
+        Object.values(aggregated).filter(
+            app => app.reqs.toFixed(2) !== '0.00'
+        ) ?? []
     );
 };
 
@@ -68,7 +92,9 @@ export const NetworkOverview = () => {
             ${apps
                 .map(
                     ({ label, reqs, type }, i) =>
-                        `app-${i}(${label}) -- ${reqs} req/s<br>${type} --> Unleash`
+                        `app-${i}(${label}) -- ${reqs.toFixed(
+                            2
+                        )} req/s<br>${type} --> Unleash`
                 )
                 .join('\n')}
         end

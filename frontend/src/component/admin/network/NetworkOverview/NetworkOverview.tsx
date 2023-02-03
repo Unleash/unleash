@@ -34,7 +34,7 @@ interface INetworkApp {
 
 const asNetworkAppData = (result: RequestsPerSecondSchemaDataResultItem) => {
     const values = (result.values || []) as ResultValue[];
-    const data = values.filter(value => isRecent(value)) || [];
+    const data = values.filter(value => isRecent(value));
     const reqs = data.length ? parseFloat(data[data.length - 1][1]) : 0;
     return {
         label: unknownify(result.metric?.appName),

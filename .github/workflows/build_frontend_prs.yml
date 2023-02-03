@@ -8,9 +8,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: frontend
     strategy:
       matrix:
         node-version: [14.x]
@@ -21,7 +18,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: yarn --frozen-lockfile
-    - run: yarn run test
-    - run: yarn run fmt:check
-    - run: yarn run lint:check
-    - run: yarn run ts:check # TODO: optimize
+    - run: (cd frontend && yarn run test)
+    - run: (cd frontend && yarn run fmt:check)
+    - run: (cd frontend && yarn run lint:check)
+    - run: (cd frontend && yarn run ts:check) # TODO: optimize

@@ -5,7 +5,10 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { Alert, styled } from '@mui/material';
 import { unknownify } from 'utils/unknownify';
 import { useMemo } from 'react';
-import { RequestsPerSecondSchema } from 'openapi';
+import {
+    RequestsPerSecondSchema,
+    RequestsPerSecondSchemaDataResultItem,
+} from 'openapi';
 import logoIcon from 'assets/icons/logoBg.svg';
 import { formatAssetPath } from 'utils/formatPath';
 
@@ -24,29 +27,45 @@ const isRecent = (value: ResultValue) => {
 type ResultValue = [number, string];
 
 interface INetworkApp {
-    label?: string;
-    reqs: string;
+    label: string;
+    reqs: number;
     type: string;
 }
 
+const asNetworkAppData = (result: RequestsPerSecondSchemaDataResultItem) => {
+    const values = (result.values || []) as ResultValue[];
+    const data = values.filter(value => isRecent(value));
+    const reqs = data.length ? parseFloat(data[data.length - 1][1]) : 0;
+    return {
+        label: unknownify(result.metric?.appName),
+        reqs,
+        type: unknownify(result.metric?.endpoint?.split('/')[2]),
+    };
+};
+
+const summingReqsByLabelAndType = (
+    acc: {
+        [group: string]: INetworkApp;
+    },
+    current: INetworkApp
+) => {
+    const groupBy = current.label + current.type;
+    acc[groupBy] = {
+        ...current,
+        reqs: current.reqs + (acc[groupBy]?.reqs ?? 0),
+    };
+    return acc;
+};
+
 const toGraphData = (metrics?: RequestsPerSecondSchema) => {
-    const results = metrics?.data?.result;
+    const results =
+        metrics?.data?.result?.filter(result => result.metric?.appName) || [];
+    const aggregated = results
+        .map(asNetworkAppData)
+        .reduce(summingReqsByLabelAndType, {});
     return (
-        results
-            ?.map(result => {
-                const values = (result.values || []) as ResultValue[];
-                const data = values.filter(value => isRecent(value)) || [];
-                let reqs = 0;
-                if (data.length) {
-                    reqs = parseFloat(data[data.length - 1][1]);
-                }
-                return {
-                    label: unknownify(result.metric?.appName),
-                    reqs: reqs.toFixed(2),
-                    type: unknownify(result.metric?.endpoint?.split('/')[2]),
-                };
-            })
-            .filter(app => app.label !== 'unknown')
+        Object.values(aggregated)
+            .map(app => ({ ...app, reqs: app.reqs.toFixed(2) }))
             .filter(app => app.reqs !== '0.00') ?? []
     );
 };
@@ -54,7 +73,7 @@ const toGraphData = (metrics?: RequestsPerSecondSchema) => {
 export const NetworkOverview = () => {
     usePageTitle('Network - Overview');
     const { metrics } = useInstanceMetrics();
-    const apps: INetworkApp[] = useMemo(() => {
+    const apps = useMemo(() => {
         return toGraphData(metrics);
     }, [metrics]);
 

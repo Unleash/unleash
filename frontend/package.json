@@ -10,7 +10,7 @@
     "node": ">=14"
   },
   "scripts": {
-    "build": "vite build",
+    "build": "tsc && vite build",
     "start": "vite",
     "start:prod": "vite build && vite preview",
     "start:sandbox": "UNLEASH_API=https://sandbox.getunleash.io/ospro yarn run start",

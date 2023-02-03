@@ -38,7 +38,7 @@ const asNetworkAppData = (result: RequestsPerSecondSchemaDataResultItem) => {
     const reqs = data.length ? parseFloat(data[data.length - 1][1]) : 0;
     return {
         label: unknownify(result.metric?.appName),
-        reqs: reqs,
+        reqs,
         type: unknownify(result.metric?.endpoint?.split('/')[2]),
     };
 };

@@ -4,6 +4,8 @@ import { useInstanceMetrics } from 'hooks/api/getters/useInstanceMetrics/useInst
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Alert, styled } from '@mui/material';
 import { unknownify } from 'utils/unknownify';
+import { useMemo } from 'react';
+import { RequestsPerSecondSchema } from 'openapi';
 import logoIcon from 'assets/icons/logoBg.svg';
 import { formatAssetPath } from 'utils/formatPath';
 
@@ -15,7 +17,7 @@ const StyledMermaid = styled(Mermaid)(({ theme }) => ({
 }));
 
 const isRecent = (value: ResultValue) => {
-    const threshold = 60000; // ten minutes
+    const threshold = 600000; // ten minutes
     return value[0] * 1000 > new Date().getTime() - threshold;
 };
 
@@ -27,37 +29,34 @@ interface INetworkApp {
     type: string;
 }
 
+const toGraphData = (metrics?: RequestsPerSecondSchema) => {
+    const results = metrics?.data?.result;
+    return (
+        results
+            ?.map(result => {
+                const values = (result.values || []) as ResultValue[];
+                const data = values.filter(value => isRecent(value)) || [];
+                let reqs = 0;
+                if (data.length) {
+                    reqs = parseFloat(data[data.length - 1][1]);
+                }
+                return {
+                    label: unknownify(result.metric?.appName),
+                    reqs: reqs.toFixed(2),
+                    type: unknownify(result.metric?.endpoint?.split('/')[2]),
+                };
+            })
+            .filter(app => app.label !== 'unknown')
+            .filter(app => app.reqs !== '0.00') ?? []
+    );
+};
+
 export const NetworkOverview = () => {
     usePageTitle('Network - Overview');
     const { metrics } = useInstanceMetrics();
-    const results = metrics?.data?.result;
-
-    const apps: INetworkApp[] = [];
-
-    if (results) {
-        apps.push(
-            ...(
-                results
-                    ?.map(result => {
-                        const values = (result.values || []) as ResultValue[];
-                        const data =
-                            values.filter(value => isRecent(value)) || [];
-                        let reqs = 0;
-                        if (data.length) {
-                            reqs = parseFloat(data[data.length - 1][1]);
-                        }
-                        return {
-                            label: unknownify(result.metric?.appName),
-                            reqs: reqs.toFixed(2),
-                            type: unknownify(
-                                result.metric?.endpoint?.split('/')[2]
-                            ),
-                        };
-                    })
-                    .filter(app => app.label !== 'unknown') || []
-            ).filter(app => app.reqs !== '0.00')
-        );
-    }
+    const apps: INetworkApp[] = useMemo(() => {
+        return toGraphData(metrics);
+    }, [metrics]);
 
     const graph = `
     graph TD

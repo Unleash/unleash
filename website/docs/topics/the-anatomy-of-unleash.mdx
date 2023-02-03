@@ -132,7 +132,13 @@ When you create new variants for a feature, they must be given a name and a **we
 
 You can use the variant payload to attach arbitrary data to a variant. Variants can have different kinds of payloads.
 
-A feature toggle can have as many variants as you want. Importantly, variants are independent of [environments](../reference/environments.md). In other words: you’ll always have the exact same variants with the exact same weightings and the exact same payloads in all environments.
+A feature toggle can have as many variants as you want.
+
+### Variants and environments
+
+Prior to 4.21, variants were independent of [environments](../reference/environments.md). In other words: if you're on 4.19 or lower, you’ll always have the exact same variants with the exact same weightings and the exact same payloads in all environments.
+
+As of version 4.21, a feature can have different variants in different environments. For instance, a development environment might have no variants, while a production environment has 2 variants. Payloads, weightings and anything else can also differ between environments.
 
 <Figure img="/img/anatomy-of-unleash-variants.png" caption="Feature toggle variants are the same for all environments."/>
 

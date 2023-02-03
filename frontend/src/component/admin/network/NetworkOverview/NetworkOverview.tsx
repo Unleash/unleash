@@ -35,10 +35,7 @@ interface INetworkApp {
 const asNetworkAppData = (result: RequestsPerSecondSchemaDataResultItem) => {
     const values = (result.values || []) as ResultValue[];
     const data = values.filter(value => isRecent(value)) || [];
-    let reqs = 0;
-    if (data.length) {
-        reqs = parseFloat(data[data.length - 1][1]);
-    }
+    const reqs = data.length ? parseFloat(data[data.length - 1][1]) : 0;
     return {
         label: unknownify(result.metric?.appName),
         reqs: reqs,
@@ -62,23 +59,21 @@ const summingReqsByLabelAndType = (
 
 const toGraphData = (metrics?: RequestsPerSecondSchema) => {
     const results =
-        metrics?.data?.result?.filter(
-            result => unknownify(result.metric?.appName) !== 'unknown'
-        ) || [];
+        metrics?.data?.result?.filter(result => result.metric?.appName) || [];
     const aggregated = results
         .map(asNetworkAppData)
         .reduce(summingReqsByLabelAndType, {});
     return (
-        Object.values(aggregated).filter(
-            app => app.reqs.toFixed(2) !== '0.00'
-        ) ?? []
+        Object.values(aggregated)
+            .map(app => ({ ...app, reqs: app.reqs.toFixed(2) }))
+            .filter(app => app.reqs !== '0.00') ?? []
     );
 };
 
 export const NetworkOverview = () => {
     usePageTitle('Network - Overview');
     const { metrics } = useInstanceMetrics();
-    const apps: INetworkApp[] = useMemo(() => {
+    const apps = useMemo(() => {
         return toGraphData(metrics);
     }, [metrics]);
 
@@ -92,9 +87,7 @@ export const NetworkOverview = () => {
             ${apps
                 .map(
                     ({ label, reqs, type }, i) =>
-                        `app-${i}(${label}) -- ${reqs.toFixed(
-                            2
-                        )} req/s<br>${type} --> Unleash`
+                        `app-${i}(${label}) -- ${reqs} req/s<br>${type} --> Unleash`
                 )
                 .join('\n')}
         end

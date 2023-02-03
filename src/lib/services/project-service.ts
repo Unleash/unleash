@@ -805,11 +805,11 @@ export default class ProjectService {
                 userId,
             }),
             this.store.getMembersCountByProject(projectId),
-            await this.favoritesService.isFavoriteProject({
+            this.favoritesService.isFavoriteProject({
                 project: projectId,
                 userId,
             }),
-            await this.projectStatsStore.getProjectStats(projectId),
+            this.projectStatsStore.getProjectStats(projectId),
         ]);
 
         return {

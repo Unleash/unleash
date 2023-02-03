@@ -7,7 +7,7 @@ const useLoading = (loading: boolean, label = 'true') => {
     useLayoutEffect(() => {
         if (ref.current) {
             const elements = ref.current.querySelectorAll(
-                `[data-loading=${label}]`
+                `[data-loading=${label === 'true' ? 'true' : `'${label}'`}]`
             );
 
             elements.forEach(element => {

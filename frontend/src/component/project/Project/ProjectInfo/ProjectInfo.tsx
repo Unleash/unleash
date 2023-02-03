@@ -1,5 +1,5 @@
 import { Box, styled, useMediaQuery, useTheme } from '@mui/material';
-import type { ProjectStatsSchema } from '@server/openapi';
+import type { ProjectStatsSchema } from 'openapi/models/projectStatsSchema';
 import type { IFeatureToggleListItem } from 'interfaces/featureToggle';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { DEFAULT_PROJECT_ID } from 'hooks/api/getters/useDefaultProject/useDefaultProjectId';

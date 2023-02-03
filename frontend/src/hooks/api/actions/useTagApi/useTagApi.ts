@@ -1,5 +1,5 @@
 import useAPI from '../useApi/useApi';
-import { TagSchema } from '@server/openapi';
+import { TagSchema } from 'openapi/models/tagSchema';
 
 const useTagApi = () => {
     const { makeRequest, createRequest, errors, loading } = useAPI({

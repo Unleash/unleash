@@ -422,3 +422,49 @@ test('clientFeaturesSchema client specification test 15', () => {
         ),
     ).toBeUndefined();
 });
+
+test('clientFeaturesSchema response with favorite and tags', () => {
+    const json = `{
+    "version": 2,
+    "segments": [
+      {
+        "id": 1,
+        "name": "some-name",
+        "description": null,
+        "constraints": [
+          {
+            "contextName": "some-name",
+            "operator": "IN",
+            "value": "name",
+            "inverted": false,
+            "caseInsensitive": true
+          }
+        ]
+      }
+    ],
+    "features": [
+      {
+        "name": "Test.old",
+        "description": "No variants here!",
+        "enabled": true,
+        "strategies": [
+          {
+            "name": "default"
+          }
+        ],
+        "variants": null,
+        "createdAt": "2019-01-24T10:38:10.370Z",
+        "archived": false,
+        "archivedAt": null,
+        "favorite": true
+      },
+    ]
+  }`;
+
+    expect(
+        validateSchema(
+            '#/components/schemas/clientFeaturesSchema',
+            JSON.parse(json),
+        ),
+    ).toBeUndefined();
+});

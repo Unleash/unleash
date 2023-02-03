@@ -7,7 +7,7 @@ import { ToggleTypesWidget } from './ToggleTypesWidget';
 import { MetaWidget } from './MetaWidget';
 import { ProjectMembersWidget } from './ProjectMembersWidget';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { ProjectStatsSchema } from '@server/openapi';
+import { ProjectStatsSchema } from 'openapi/models/projectStatsSchema';
 import { ChangeRequestsWidget } from './ChangeRequestsWidget';
 
 interface IProjectInfoProps {

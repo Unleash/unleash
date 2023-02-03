@@ -98,6 +98,7 @@ test('exportResultSchema', () => {
             },
         ],
         segments: [],
+        tagTypes: [{ name: 'simple', description: 'test' }],
     };
 
     expect(

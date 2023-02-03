@@ -69,7 +69,6 @@ exports[`should create default config 1`] = `
     "flags": {
       "ENABLE_DARK_MODE_SUPPORT": false,
       "anonymiseEventLog": false,
-      "batchMetrics": false,
       "caseInsensitiveInOperators": false,
       "crOnVariants": false,
       "embedProxy": true,
@@ -91,7 +90,6 @@ exports[`should create default config 1`] = `
     "experiments": {
       "ENABLE_DARK_MODE_SUPPORT": false,
       "anonymiseEventLog": false,
-      "batchMetrics": false,
       "caseInsensitiveInOperators": false,
       "crOnVariants": false,
       "embedProxy": true,

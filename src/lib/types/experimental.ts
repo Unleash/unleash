@@ -22,10 +22,6 @@ const flags = {
         process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY_FRONTEND,
         true,
     ),
-    batchMetrics: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_BATCH_METRICS,
-        false,
-    ),
     responseTimeWithAppName: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_RESPONSE_TIME_WITH_APP_NAME,
         false,

@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { Chip, styled } from '@mui/material';
 import { Close, Label } from '@mui/icons-material';
-import useTags from 'hooks/api/getters/useTags/useTags';
+import useFeatureTags from 'hooks/api/getters/useFeatureTags/useFeatureTags';
 import slackIcon from 'assets/icons/slack.svg';
 import jiraIcon from 'assets/icons/jira.svg';
 import webhookIcon from 'assets/icons/webhooks.svg';
@@ -58,7 +58,7 @@ const FeatureOverviewTags: React.FC<IFeatureOverviewTagsProps> = ({
         type: '',
     });
     const featureId = useRequiredPathParam('featureId');
-    const { tags, refetch } = useTags(featureId);
+    const { tags, refetch } = useFeatureTags(featureId);
     const { tagTypes } = useTagTypes();
     const { deleteTagFromFeature } = useFeatureApi();
     const { setToastData, setToastApiError } = useToast();

@@ -5,19 +5,19 @@ import { ITag } from 'interfaces/tags';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
 
-const useTags = (type: string, options: SWRConfiguration = {}) => {
+const useFeatureTags = (featureId: string, options: SWRConfiguration = {}) => {
     const fetcher = async () => {
-        const path = formatApiPath(`api/admin/tags/${type}`);
+        const path = formatApiPath(`api/admin/features/${featureId}/tags`);
         const res = await fetch(path, {
             method: 'GET',
         }).then(handleErrorResponses('Tags'));
         return res.json();
     };
 
-    const KEY = `api/admin/tags/${type}`;
+    const KEY = `api/admin/features/${featureId}/tags`;
 
     const { data, error } = useConditionalSWR<{ tags: ITag[] }>(
-        Boolean(type),
+        Boolean(featureId),
         { tags: [] },
         KEY,
         fetcher,
@@ -41,4 +41,4 @@ const useTags = (type: string, options: SWRConfiguration = {}) => {
     };
 };
 
-export default useTags;
+export default useFeatureTags;

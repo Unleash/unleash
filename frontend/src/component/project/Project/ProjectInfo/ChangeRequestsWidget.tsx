@@ -85,27 +85,21 @@ export const ChangeRequestsWidget: FC<IChangeRequestsWidgetProps> = ({
             <StyledWidgetTitle>Open change requests</StyledWidgetTitle>
             <StyledContentBox>
                 <StyledChangeBox
-                    sx={{
-                        background: theme => theme.palette.success.light,
-                    }}
+                    sx={{ background: theme => theme.palette.success.light }}
                 >
                     <StyledSubtitle>To be applied</StyledSubtitle>
                     <StyledChangeRequestStatusInfo>
-                        <StyledApprovedCount data-loading={LOADING_LABEL}>
-                            {toBeApplied || 0}
-                        </StyledApprovedCount>{' '}
+                        <StyledApprovedCount>{toBeApplied}</StyledApprovedCount>{' '}
                         <ChangeRequestsLabel />
                     </StyledChangeRequestStatusInfo>
                 </StyledChangeBox>
                 <StyledChangeBox
-                    sx={{
-                        background: theme => theme.palette.secondary.light,
-                    }}
+                    sx={{ background: theme => theme.palette.secondary.light }}
                 >
                     <StyledSubtitle>To be reviewed</StyledSubtitle>
                     <StyledChangeRequestStatusInfo>
-                        <StyledInReviewCount data-loading={LOADING_LABEL}>
-                            {toBeReviewed || 0}
+                        <StyledInReviewCount>
+                            {toBeReviewed}
                         </StyledInReviewCount>{' '}
                         <ChangeRequestsLabel />
                     </StyledChangeRequestStatusInfo>

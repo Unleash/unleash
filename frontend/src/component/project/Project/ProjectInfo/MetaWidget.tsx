@@ -45,7 +45,6 @@ export const MetaWidget: FC<IMetaWidgetProps> = ({ id, description }) => {
                             marginBottom: 0,
                             textAlign: 'left',
                         }}
-                        data-loading
                     >
                         {description}
                     </Typography>

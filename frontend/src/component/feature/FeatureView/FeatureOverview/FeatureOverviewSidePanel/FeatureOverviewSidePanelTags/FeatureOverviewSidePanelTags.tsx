@@ -1,7 +1,7 @@
 import { IFeatureToggle } from 'interfaces/featureToggle';
 import { useContext, useState } from 'react';
 import { Button, Chip, Divider, styled } from '@mui/material';
-import useTags from 'hooks/api/getters/useTags/useTags';
+import useFeatureTags from 'hooks/api/getters/useFeatureTags/useFeatureTags';
 import { Add, Cancel } from '@mui/icons-material';
 import AddTagDialog from 'component/feature/FeatureView/FeatureOverview/AddTagDialog/AddTagDialog';
 import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
@@ -51,7 +51,7 @@ export const FeatureOverviewSidePanelTags = ({
     feature,
     header,
 }: IFeatureOverviewSidePanelTagsProps) => {
-    const { tags, refetch } = useTags(feature.name);
+    const { tags, refetch } = useFeatureTags(feature.name);
     const { deleteTagFromFeature } = useFeatureApi();
 
     const [openTagDialog, setOpenTagDialog] = useState(false);

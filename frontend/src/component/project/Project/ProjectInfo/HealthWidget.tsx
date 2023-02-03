@@ -31,7 +31,7 @@ const StyledPercentageText = styled('p')(({ theme }) => ({
 export const HealthWidget = ({ projectId, health }: IHealthWidgetProps) => {
     return (
         <StyledProjectInfoWidgetContainer>
-            <StyledWidgetTitle>Project health</StyledWidgetTitle>
+            <StyledWidgetTitle data-loading>Project health</StyledWidgetTitle>
             <Box
                 sx={{
                     display: 'flex',

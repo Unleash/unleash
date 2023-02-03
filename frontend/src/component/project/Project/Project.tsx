@@ -187,7 +187,9 @@ export const Project = () => {
                         </StyledDiv>
                     </StyledTopRow>
                     <ConditionallyRender
-                        condition={!Boolean(uiConfig?.flags?.newProjectOverview)}
+                        condition={
+                            !Boolean(uiConfig?.flags?.newProjectOverview)
+                        }
                         // TODO: !!! Remove entire block when removing feature flag!
                         show={() => (
                             <StyledColumn>

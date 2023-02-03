@@ -6,7 +6,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { Edit } from '@mui/icons-material';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
-import useTags from 'hooks/api/getters/useTags/useTags';
+import useFeatureTags from 'hooks/api/getters/useFeatureTags/useFeatureTags';
 import FeatureOverviewTags from './FeatureOverviewTags/FeatureOverviewTags';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -69,7 +69,7 @@ const FeatureOverviewMetaData = () => {
     const { uiConfig } = useUiConfig();
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
-    const { tags } = useTags(featureId);
+    const { tags } = useFeatureTags(featureId);
     const { feature } = useFeature(projectId, featureId);
     const { project, description, type } = feature;
 

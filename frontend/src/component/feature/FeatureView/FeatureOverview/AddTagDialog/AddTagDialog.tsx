@@ -90,9 +90,7 @@ const AddTagDialog = ({ open, setOpen }: IAddTagDialogProps) => {
             added > 0 &&
                 setToastData({
                     type: 'success',
-                    title: `Added ${added} tag${
-                        added > 1 ? 's' : ''
-                    } to toggle`,
+                    title: `Added tag${added > 1 ? 's' : ''} to toggle`,
                     text: `We successfully added ${added} new tag${
                         added > 1 ? 's' : ''
                     } to your toggle`,

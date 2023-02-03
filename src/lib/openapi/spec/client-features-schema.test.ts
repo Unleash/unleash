@@ -457,7 +457,7 @@ test('clientFeaturesSchema response with favorite and tags', () => {
         "archived": false,
         "archivedAt": null,
         "favorite": true
-      },
+      }
     ]
   }`;
 

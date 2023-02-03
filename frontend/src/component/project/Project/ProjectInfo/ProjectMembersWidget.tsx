@@ -1,10 +1,11 @@
 import {
-    StyledLink,
     StyledProjectInfoWidgetContainer,
-    StyledSpanLinkText,
+    StyledWidgetTitle,
 } from './ProjectInfo.styles';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { StatusBox } from '../ProjectStats/StatusBox';
+import { WidgetFooterLink } from './WidgetFooterLink';
+import { Box } from '@mui/material';
 
 interface IProjectMembersWidgetProps {
     projectId: string;
@@ -26,20 +27,17 @@ export const ProjectMembersWidget = ({
     }
 
     return (
-        <StyledProjectInfoWidgetContainer
-            sx={{ padding: theme => theme.spacing(0, 0, 3, 0) }}
-        >
-            <StatusBox
-                title={'Project members'}
-                boxText={`${memberCount}`}
-                change={change}
-                fullWidthBodyText
-            />
-            <StyledLink data-loading to={link}>
-                <StyledSpanLinkText data-loading>
-                    View all members
-                </StyledSpanLinkText>
-            </StyledLink>
+        <StyledProjectInfoWidgetContainer>
+            <StyledWidgetTitle data-loading>Project members</StyledWidgetTitle>
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                }}
+            >
+                <StatusBox boxText={`${memberCount}`} change={change} />
+            </Box>
+            <WidgetFooterLink to={link}>View all members</WidgetFooterLink>
         </StyledProjectInfoWidgetContainer>
     );
 };

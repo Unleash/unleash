@@ -1,7 +1,6 @@
 import { FC } from 'react';
 import useLoading from 'hooks/useLoading';
-import { Link as RouterLink } from 'react-router-dom';
-import { Box, styled, Typography, Link } from '@mui/material';
+import { Box, styled, Typography } from '@mui/material';
 import { IChangeRequest } from 'component/changeRequest/changeRequest.types';
 
 import {
@@ -10,17 +9,25 @@ import {
     StyledWidgetTitle,
 } from './ProjectInfo.styles';
 import { useProjectChangeRequests } from 'hooks/api/getters/useProjectChangeRequests/useProjectChangeRequests';
+import { WidgetFooterLink } from './WidgetFooterLink';
 
 interface IChangeRequestsWidgetProps {
     projectId: string;
 }
 
+const StyledContentBox = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: theme.spacing(1.5),
+}));
+
 const StyledChangeBox = styled(Box)(({ theme }) => ({
+    flex: 1,
     textAlign: 'left',
     padding: theme.spacing(1.5),
-    marginBottom: theme.spacing(1.5),
     borderRadius: theme.shape.borderRadiusMedium,
     alignItems: 'center',
+    minWidth: 175,
 }));
 
 const StyledChangeRequestStatusInfo = styled(Box)(({ theme }) => ({
@@ -42,8 +49,18 @@ const StyledInReviewCount = styled(StyledCount)(({ theme }) => ({
     borderRadius: theme.shape.borderRadius,
 }));
 
+const StyledSubtitle = styled(Typography)(({ theme }) => ({
+    fontSize: theme.typography.body2.fontSize,
+    marginBottom: theme.spacing(0.5),
+}));
+
 const ChangeRequestsLabel = () => (
-    <Typography component="span" variant="body2" color="text.secondary">
+    <Typography
+        component="span"
+        variant="body2"
+        color="text.secondary"
+        lineHeight={1}
+    >
         change requests
     </Typography>
 );
@@ -63,33 +80,31 @@ export const ChangeRequestsWidget: FC<IChangeRequestsWidgetProps> = ({
     return (
         <StyledProjectInfoWidgetContainer ref={loadingRef}>
             <StyledWidgetTitle>Open change requests</StyledWidgetTitle>
-
-            <StyledChangeBox
-                sx={{ background: theme => theme.palette.success.light }}
-            >
-                <Typography variant="body2">To be applied</Typography>
-                <StyledChangeRequestStatusInfo>
-                    <StyledApprovedCount>{toBeApplied}</StyledApprovedCount>{' '}
-                    <ChangeRequestsLabel />
-                </StyledChangeRequestStatusInfo>
-            </StyledChangeBox>
-            <StyledChangeBox
-                sx={{ background: theme => theme.palette.secondary.light }}
-            >
-                <Typography variant="body2">To be reviewed</Typography>
-                <StyledChangeRequestStatusInfo>
-                    <StyledInReviewCount>{toBeReviewed}</StyledInReviewCount>{' '}
-                    <ChangeRequestsLabel />
-                </StyledChangeRequestStatusInfo>
-            </StyledChangeBox>
-            <Typography variant="body2" textAlign="center">
-                <Link
-                    component={RouterLink}
-                    to={`/projects/${projectId}/change-requests`}
+            <StyledContentBox>
+                <StyledChangeBox
+                    sx={{ background: theme => theme.palette.success.light }}
                 >
-                    View change requests
-                </Link>
-            </Typography>
+                    <StyledSubtitle>To be applied</StyledSubtitle>
+                    <StyledChangeRequestStatusInfo>
+                        <StyledApprovedCount>{toBeApplied}</StyledApprovedCount>{' '}
+                        <ChangeRequestsLabel />
+                    </StyledChangeRequestStatusInfo>
+                </StyledChangeBox>
+                <StyledChangeBox
+                    sx={{ background: theme => theme.palette.secondary.light }}
+                >
+                    <StyledSubtitle>To be reviewed</StyledSubtitle>
+                    <StyledChangeRequestStatusInfo>
+                        <StyledInReviewCount>
+                            {toBeReviewed}
+                        </StyledInReviewCount>{' '}
+                        <ChangeRequestsLabel />
+                    </StyledChangeRequestStatusInfo>
+                </StyledChangeBox>
+            </StyledContentBox>
+            <WidgetFooterLink to={`/projects/${projectId}/change-requests`}>
+                View change requests
+            </WidgetFooterLink>
         </StyledProjectInfoWidgetContainer>
     );
 };

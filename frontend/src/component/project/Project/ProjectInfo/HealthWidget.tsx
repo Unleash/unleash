@@ -1,16 +1,10 @@
-import {
-    StyledArrowIcon,
-    StyledCount,
-    StyledProjectInfoWidgetContainer,
-    StyledDivPercentageContainer,
-    StyledLink,
-    StyledParagraphEmphasizedText,
-    StyledWidgetTitle,
-    StyledSpanLinkText,
-} from './ProjectInfo.styles';
+import { Box, styled } from '@mui/material';
 import PercentageCircle from 'component/common/PercentageCircle/PercentageCircle';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { Box, styled, Typography } from '@mui/material';
+import {
+    StyledProjectInfoWidgetContainer,
+    StyledWidgetTitle,
+} from './ProjectInfo.styles';
+import { WidgetFooterLink } from './WidgetFooterLink';
 
 interface IHealthWidgetProps {
     projectId: string;
@@ -19,69 +13,43 @@ interface IHealthWidgetProps {
     stale?: number;
 }
 
-const StyledWarning = styled('span')<{ active?: boolean }>(
-    ({ theme, active }) => ({
-        color: active ? theme.palette.warning.dark : 'inherit',
-    })
-);
+const StyledParagraphEmphasizedText = styled('p')(({ theme }) => ({
+    fontSize: '1.5rem',
+    [theme.breakpoints.down('md')]: {
+        fontSize: theme.fontSizes.bodySize,
+        marginBottom: theme.spacing(4),
+    },
+}));
 
-export const HealthWidget = ({
-    projectId,
-    health,
-    total,
-    stale,
-}: IHealthWidgetProps) => {
-    const { uiConfig } = useUiConfig();
+const StyledPercentageText = styled('p')(({ theme }) => ({
+    fontSize: '1.5rem',
+    [theme.breakpoints.down('md')]: {
+        fontSize: theme.fontSizes.bodySize,
+    },
+}));
 
-    if (uiConfig?.flags?.newProjectOverview) {
-        return (
-            <StyledProjectInfoWidgetContainer>
-                <StyledWidgetTitle data-loading>
-                    Project health
-                </StyledWidgetTitle>
-                <StyledDivPercentageContainer>
+export const HealthWidget = ({ projectId, health }: IHealthWidgetProps) => {
+    return (
+        <StyledProjectInfoWidgetContainer>
+            <StyledWidgetTitle data-loading>Project health</StyledWidgetTitle>
+            <Box
+                sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: theme => theme.spacing(2),
+                }}
+            >
+                <StyledPercentageText>
                     <PercentageCircle percentage={health} />
-                </StyledDivPercentageContainer>
+                </StyledPercentageText>
                 <StyledParagraphEmphasizedText data-loading>
                     {health}%
                 </StyledParagraphEmphasizedText>
-                <Typography data-loading>
-                    <StyledCount>{total}</StyledCount> toggles in total
-                </Typography>
-                <Typography data-loading sx={{ marginBottom: 2 }}>
-                    <StyledCount>
-                        <StyledWarning active={Boolean(stale)}>
-                            {stale}
-                        </StyledWarning>
-                    </StyledCount>{' '}
-                    <StyledWarning active={Boolean(stale)}>
-                        potentially stale
-                    </StyledWarning>
-                </Typography>
-                <StyledLink data-loading to={`/projects/${projectId}/health`}>
-                    <StyledSpanLinkText data-loading>
-                        View project health
-                    </StyledSpanLinkText>
-                </StyledLink>
-            </StyledProjectInfoWidgetContainer>
-        );
-    }
-
-    return (
-        <StyledProjectInfoWidgetContainer>
-            <StyledDivPercentageContainer>
-                <PercentageCircle percentage={health} />
-            </StyledDivPercentageContainer>
-            <StyledWidgetTitle data-loading>
-                Overall health rating
-            </StyledWidgetTitle>
-            <StyledParagraphEmphasizedText data-loading>
-                {health}%
-            </StyledParagraphEmphasizedText>
-            <StyledLink data-loading to={`/projects/${projectId}/health`}>
-                <StyledSpanLinkText data-loading>view more </StyledSpanLinkText>
-                <StyledArrowIcon data-loading />
-            </StyledLink>
+            </Box>
+            <WidgetFooterLink to={`/projects/${projectId}/health`}>
+                View project health
+            </WidgetFooterLink>
         </StyledProjectInfoWidgetContainer>
     );
 };

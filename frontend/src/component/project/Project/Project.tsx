@@ -187,9 +187,11 @@ export const Project = () => {
                         </StyledDiv>
                     </StyledTopRow>
                     <ConditionallyRender
-                        condition={!uiConfig?.flags?.newProjectOverview}
+                        condition={
+                            !Boolean(uiConfig?.flags?.newProjectOverview)
+                        }
                         // TODO: !!! Remove entire block when removing feature flag!
-                        show={
+                        show={() => (
                             <StyledColumn>
                                 <StyledProjectTitle>
                                     <div>
@@ -200,7 +202,7 @@ export const Project = () => {
                                             show={
                                                 <StyledDiv>
                                                     <StyledTitle data-loading>
-                                                        Description:{' '}
+                                                        Description:&nbsp;
                                                     </StyledTitle>
                                                     <StyledText data-loading>
                                                         {project.description}
@@ -210,7 +212,7 @@ export const Project = () => {
                                         />
                                         <StyledDiv>
                                             <StyledTitle data-loading>
-                                                projectId:{' '}
+                                                projectId:&nbsp;
                                             </StyledTitle>
                                             <StyledText data-loading>
                                                 {projectId}
@@ -219,7 +221,7 @@ export const Project = () => {
                                     </div>
                                 </StyledProjectTitle>
                             </StyledColumn>
-                        }
+                        )}
                     />
                 </StyledInnerContainer>
 

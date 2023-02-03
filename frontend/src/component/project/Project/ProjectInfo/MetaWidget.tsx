@@ -1,12 +1,12 @@
 import { FC } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-import { Box, styled, Typography, Link } from '@mui/material';
+import { styled, Typography } from '@mui/material';
 
 import {
     StyledProjectInfoWidgetContainer,
     StyledWidgetTitle,
 } from './ProjectInfo.styles';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { WidgetFooterLink } from './WidgetFooterLink';
 
 interface IMetaWidgetProps {
     id?: string;
@@ -35,35 +35,29 @@ export const MetaWidget: FC<IMetaWidgetProps> = ({ id, description }) => {
                 </Typography>{' '}
                 <code data-loading>{id || '__________'}</code>
             </StyledIDContainer>
-            <Typography mt={1.5} textAlign="left">
-                <ConditionallyRender
-                    condition={Boolean(description)}
-                    show={
-                        <>
-                            <Typography
-                                component="span"
-                                variant="body2"
-                                color="text.secondary"
-                            >
-                                Description:{' '}
-                            </Typography>
-                            <Typography component="span" variant="body2">
-                                {description}
-                            </Typography>
-                        </>
-                    }
-                    elseShow={
-                        <Typography variant="body2" textAlign="center">
-                            <Link
-                                component={RouterLink}
-                                to={`/projects/${id}/edit`}
-                            >
-                                Add description
-                            </Link>
-                        </Typography>
-                    }
-                />
-            </Typography>
+            <ConditionallyRender
+                condition={Boolean(description)}
+                show={
+                    <Typography
+                        variant="body2"
+                        sx={{
+                            marginTop: theme => theme.spacing(1.5),
+                            marginBottom: 0,
+                            textAlign: 'left',
+                        }}
+                    >
+                        {description}
+                    </Typography>
+                }
+            />
+            <ConditionallyRender
+                condition={!Boolean(description)}
+                show={
+                    <WidgetFooterLink to={`/projects/${id}/edit`}>
+                        Add description
+                    </WidgetFooterLink>
+                }
+            />
         </StyledProjectInfoWidgetContainer>
     );
 };

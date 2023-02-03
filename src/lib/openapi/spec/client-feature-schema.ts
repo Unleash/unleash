@@ -57,6 +57,17 @@ export const clientFeatureSchema = {
             },
             nullable: true,
         },
+        favorite: {
+            type: 'boolean',
+        },
+        archived: {
+            type: 'boolean',
+        },
+        archivedAt: {
+            type: 'string',
+            format: 'date-time',
+            nullable: true,
+        },
     },
     components: {
         schemas: {

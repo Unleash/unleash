@@ -68,6 +68,12 @@ export const clientFeatureSchema = {
             format: 'date-time',
             nullable: true,
         },
+        tags: {
+            type: 'array',
+            items: {
+                $ref: '#/components/schemas/tagSchema',
+            },
+        },
     },
     components: {
         schemas: {

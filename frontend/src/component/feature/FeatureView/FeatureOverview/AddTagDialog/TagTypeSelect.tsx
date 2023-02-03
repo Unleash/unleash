@@ -27,8 +27,9 @@ const TagTypeSelect = ({ value, onChange }: ITagSelect) => {
         <Autocomplete
             disablePortal
             id="tag-type-select"
-            sx={{ marginTop: theme => theme.spacing(2), maxWidth: '100%' }}
+            sx={{ marginTop: theme => theme.spacing(2), width: 500 }}
             options={tagTypes}
+            disableClearable
             value={value}
             getOptionLabel={option => option.name}
             renderOption={(props, option) => (

@@ -102,6 +102,7 @@ export const TagsInput = ({
         <Autocomplete
             multiple
             id="checkboxes-tags-demo"
+            sx={{ marginTop: theme => theme.spacing(2), maxWidth: '100%' }}
             disableCloseOnSelect
             placeholder="Select Values"
             options={options}

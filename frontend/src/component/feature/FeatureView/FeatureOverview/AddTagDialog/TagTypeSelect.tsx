@@ -24,35 +24,33 @@ const TagTypeSelect = ({ value, onChange }: ITagSelect) => {
     const theme = useTheme();
 
     return (
-        <>
-            <Autocomplete
-                disablePortal
-                id="tag-type-select"
-                options={tagTypes}
-                value={value}
-                getOptionLabel={option => option.name}
-                renderOption={(props, option) => (
-                    <ListItem
-                        {...props}
-                        style={{
-                            alignItems: 'flex-start',
-                            gap: theme.spacing(0.5),
-                        }}
-                    >
-                        <Typography variant="body1">{option.name}</Typography>
-                        <Typography variant="caption">
-                            {option.description}
-                        </Typography>
-                    </ListItem>
-                )}
-                renderInput={params => (
-                    <TextField {...params} label="Tag type" value={value} />
-                )}
-                onChange={onChange}
-                sx={{ width: 500 }}
-                ListboxProps={{ style: { maxHeight: 200, overflow: 'auto' } }}
-            />
-        </>
+        <Autocomplete
+            disablePortal
+            id="tag-type-select"
+            sx={{ marginTop: theme => theme.spacing(2), maxWidth: '100%' }}
+            options={tagTypes}
+            value={value}
+            getOptionLabel={option => option.name}
+            renderOption={(props, option) => (
+                <ListItem
+                    {...props}
+                    style={{
+                        alignItems: 'flex-start',
+                        gap: theme.spacing(0.5),
+                    }}
+                >
+                    <Typography variant="body1">{option.name}</Typography>
+                    <Typography variant="caption">
+                        {option.description}
+                    </Typography>
+                </ListItem>
+            )}
+            renderInput={params => (
+                <TextField {...params} label="Tag type" value={value} />
+            )}
+            onChange={onChange}
+            ListboxProps={{ style: { maxHeight: 200, overflow: 'auto' } }}
+        />
     );
 };
 

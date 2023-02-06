@@ -9,7 +9,7 @@ import {
 import { useMaintenance } from 'hooks/api/getters/useMaintenance/useMaintenance';
 import { useMaintenanceApi } from 'hooks/api/actions/useMaintenanceApi/useMaintenanceApi';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import useToast from '../../../hooks/useToast';
+import useToast from 'hooks/useToast';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',

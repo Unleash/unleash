@@ -9,6 +9,7 @@ import {
 import { useMaintenance } from 'hooks/api/getters/useMaintenance/useMaintenance';
 import { useMaintenanceApi } from 'hooks/api/actions/useMaintenanceApi/useMaintenanceApi';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import useToast from '../../../hooks/useToast';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -39,7 +40,14 @@ export const MaintenanceToggle = () => {
     const { enabled, refetchMaintenance } = useMaintenance();
     const { toggleMaintenance } = useMaintenanceApi();
     const { trackEvent } = usePlausibleTracker();
+    const { setToastData } = useToast();
     const updateEnabled = async () => {
+        setToastData({
+            type: 'success',
+            title: `Maintenance mode has been successfully ${
+                enabled ? 'disabled' : 'enabled'
+            }`,
+        });
         trackEvent('maintenance', {
             props: {
                 eventType: `maintenance ${enabled ? 'de' : ''}activated`,

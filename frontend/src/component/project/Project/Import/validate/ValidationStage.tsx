@@ -154,10 +154,8 @@ export const ValidationStage: FC<{
                 show={
                     <WarningContainer>
                         <WarningHeader>
-                            <strong>Warning!</strong> There are existing feature
-                            toggles in the current instance and if you continue
-                            the import, they will be overwritten with the
-                            configuration from this import file
+                            <strong>Warning!</strong> It is recommended to
+                            verify the following information before importing.
                         </WarningHeader>
                         {validationResult.warnings.map(warning => (
                             <Box key={warning.message} sx={{ p: 2 }}>

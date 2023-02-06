@@ -20,7 +20,6 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useSearch } from 'hooks/useSearch';
 import {
     IFeatureEnvironment,
-    IFeatureVariant,
     IOverride,
     IPayload,
 } from 'interfaces/featureToggle';
@@ -29,9 +28,7 @@ import { useSortBy, useTable } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
 import { PayloadCell } from './PayloadCell/PayloadCell';
 import { OverridesCell } from './OverridesCell/OverridesCell';
-import { VariantsActionCell } from './VariantsActionsCell/VariantsActionsCell';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
-import { WeightType } from 'constants/variantTypes';
 
 const StyledTableContainer = styled('div')(({ theme }) => ({
     margin: theme.spacing(3, 0),
@@ -40,15 +37,11 @@ const StyledTableContainer = styled('div')(({ theme }) => ({
 interface IEnvironmentVariantsTableProps {
     environment: IFeatureEnvironment;
     searchValue: string;
-    onEditVariant: (variant: IFeatureVariant) => void;
-    onDeleteVariant: (variant: IFeatureVariant) => void;
 }
 
 export const EnvironmentVariantsTable = ({
     environment,
     searchValue,
-    onEditVariant,
-    onDeleteVariant,
 }: IEnvironmentVariantsTableProps) => {
     const projectId = useRequiredPathParam('projectId');
 
@@ -108,29 +101,10 @@ export const EnvironmentVariantsTable = ({
             },
             {
                 Header: 'Type',
-                accessor: 'weightType',
+                accessor: (row: any) =>
+                    row.weightType === 'fix' ? 'Fixed' : 'Variable',
                 Cell: TextCell,
                 sortType: 'alphanumeric',
-            },
-            {
-                Header: 'Actions',
-                id: 'Actions',
-                align: 'center',
-                Cell: ({
-                    row: { original },
-                }: {
-                    row: { original: IFeatureVariant };
-                }) => (
-                    <VariantsActionCell
-                        variant={original}
-                        projectId={projectId}
-                        isLastVariableVariant={isProtectedVariant(original)}
-                        environmentId={environment.name}
-                        editVariant={onEditVariant}
-                        deleteVariant={onDeleteVariant}
-                    />
-                ),
-                disableSortBy: true,
             },
         ],
         [projectId, variants, environment]
@@ -142,23 +116,6 @@ export const EnvironmentVariantsTable = ({
         }),
         []
     );
-
-    const isProtectedVariant = (variant: IFeatureVariant): boolean => {
-        const isVariable = variant.weightType === WeightType.VARIABLE;
-
-        const atLeastOneFixedVariant = variants.some(variant => {
-            return variant.weightType === WeightType.FIX;
-        });
-
-        const hasOnlyOneVariableVariant =
-            variants.filter(variant => {
-                return variant.weightType === WeightType.VARIABLE;
-            }).length == 1;
-
-        return (
-            atLeastOneFixedVariant && hasOnlyOneVariableVariant && isVariable
-        );
-    };
 
     const { data, getSearchText } = useSearch(columns, searchValue, variants);
 

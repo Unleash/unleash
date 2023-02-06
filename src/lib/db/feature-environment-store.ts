@@ -112,7 +112,9 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
         features: string[],
         environment?: string,
     ): Promise<IFeatureEnvironment[]> {
-        let rows = this.db(T.featureEnvs).whereIn('feature_name', features);
+        let rows = this.db(T.featureEnvs)
+            .whereIn('feature_name', features)
+            .orderBy('feature_name', 'asc');
         if (environment) {
             rows = rows.where({ environment });
         }

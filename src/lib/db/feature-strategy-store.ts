@@ -209,7 +209,8 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         const query = this.db
             .select(COLUMNS)
             .from<IFeatureStrategiesTable>(T.featureStrategies)
-            .whereIn('feature_name', features);
+            .whereIn('feature_name', features)
+            .orderBy('feature_name', 'asc');
         if (environment) {
             query.where('environment', environment);
         }

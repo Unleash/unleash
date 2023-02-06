@@ -109,7 +109,8 @@ class FeatureTagStore implements IFeatureTagStore {
         const query = this.db
             .select(COLUMNS)
             .from<FeatureTagTable>(TABLE)
-            .whereIn('feature_name', features);
+            .whereIn('feature_name', features)
+            .orderBy('feature_name', 'asc');
         const rows = await query;
         return rows.map((row) => ({
             featureName: row.feature_name,

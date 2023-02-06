@@ -1,15 +1,8 @@
-import {
-    Button,
-    Checkbox,
-    Divider,
-    Menu,
-    MenuItem,
-    styled,
-} from '@mui/material';
+import { Button, Divider, Menu, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { IFeatureEnvironmentWithCrEnabled } from 'interfaces/featureToggle';
 import { useState } from 'react';
-import { useCheckProjectAccess } from 'hooks/useHasAccess';
+import { PermissionCheckboxMenuItem } from './PermissionCheckboxMenuItem';
 
 const StyledMenu = styled(Menu)(({ theme }) => ({
     '& > div > ul': {
@@ -53,12 +46,6 @@ export const PushVariantsButton = ({
     const [selectedEnvironments, setSelectedEnvironments] = useState<
         IFeatureEnvironmentWithCrEnabled[]
     >([]);
-
-    const hasAccess = useCheckProjectAccess(projectId);
-    const hasAccessTo = environments.reduce((acc, env) => {
-        acc[env.name] = hasAccess(permission, env.name);
-        return acc;
-    }, {} as Record<string, boolean>);
 
     const addSelectedEnvironment = (
         environment: IFeatureEnvironmentWithCrEnabled
@@ -127,25 +114,20 @@ export const PushVariantsButton = ({
                         {environments
                             .filter(environment => environment.name !== current)
                             .map(otherEnvironment => (
-                                <MenuItem
+                                <PermissionCheckboxMenuItem
+                                    projectId={projectId}
+                                    permission={permission}
+                                    environment={otherEnvironment.name}
                                     key={otherEnvironment.name}
-                                    disabled={
-                                        !hasAccessTo[otherEnvironment.name] ??
-                                        false
-                                    }
+                                    checked={selectedEnvironments.includes(
+                                        otherEnvironment
+                                    )}
                                     onClick={() =>
                                         toggleSelectedEnvironment(
                                             otherEnvironment
                                         )
                                     }
-                                >
-                                    <Checkbox
-                                        checked={selectedEnvironments.includes(
-                                            otherEnvironment
-                                        )}
-                                    />
-                                    {otherEnvironment.name}
-                                </MenuItem>
+                                />
                             ))}
                         <StyledActions>
                             <Divider />

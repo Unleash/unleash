@@ -390,6 +390,14 @@ exports[`should serve the OpenAPI spec 1`] = `
       "clientFeatureSchema": {
         "additionalProperties": false,
         "properties": {
+          "archived": {
+            "type": "boolean",
+          },
+          "archivedAt": {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string",
+          },
           "createdAt": {
             "format": "date-time",
             "nullable": true,
@@ -400,6 +408,9 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "string",
           },
           "enabled": {
+            "type": "boolean",
+          },
+          "favorite": {
             "type": "boolean",
           },
           "impressionData": {
@@ -423,6 +434,12 @@ exports[`should serve the OpenAPI spec 1`] = `
           "strategies": {
             "items": {
               "$ref": "#/components/schemas/featureStrategySchema",
+            },
+            "type": "array",
+          },
+          "tags": {
+            "items": {
+              "$ref": "#/components/schemas/tagSchema",
             },
             "type": "array",
           },

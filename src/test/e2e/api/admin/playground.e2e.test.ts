@@ -97,6 +97,7 @@ describe('Playground API E2E', () => {
                         ...feature,
                         createdAt: undefined,
                         variants: null,
+                        archivedAt: null,
                     },
                 );
 

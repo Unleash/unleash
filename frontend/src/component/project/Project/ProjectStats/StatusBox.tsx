@@ -8,7 +8,7 @@ const StyledTypographyHeader = styled(Typography)(({ theme }) => ({
     marginBottom: theme.spacing(2.5),
 }));
 
-const StyledTypographyCount = styled(Typography)(({ theme }) => ({
+const StyledTypographyCount = styled(Box)(({ theme }) => ({
     fontSize: theme.fontSizes.largeHeader,
 }));
 

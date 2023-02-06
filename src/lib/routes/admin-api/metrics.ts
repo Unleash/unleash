@@ -10,14 +10,9 @@ import { createResponseSchema } from '../../openapi/util/create-response-schema'
 import { ApplicationSchema } from '../../openapi/spec/application-schema';
 import { ApplicationsSchema } from '../../openapi/spec/applications-schema';
 import { emptyResponse } from '../../openapi/util/standard-responses';
-import { RequestsPerSecondSegmentedSchema } from 'lib/openapi/spec/requests-per-second-segmented-schema';
-import { IFlagResolver } from 'lib/types';
 
-type RpsError = string;
 class MetricsController extends Controller {
     private logger: Logger;
-
-    private flagResolver: IFlagResolver;
 
     private clientInstanceService: ClientInstanceService;
 
@@ -30,7 +25,6 @@ class MetricsController extends Controller {
     ) {
         super(config);
         this.logger = config.getLogger('/admin-api/metrics.ts');
-        this.flagResolver = config.flagResolver;
 
         this.clientInstanceService = clientInstanceService;
 
@@ -102,24 +96,6 @@ class MetricsController extends Controller {
                 }),
             ],
         });
-
-        this.route({
-            method: 'get',
-            path: '/rps',
-            handler: this.getRps,
-            permission: NONE,
-            middleware: [
-                openApiService.validPath({
-                    tags: ['Metrics'],
-                    operationId: 'getRequestsPerSecond',
-                    responses: {
-                        200: createResponseSchema(
-                            'requestsPerSecondSegmentedSchema',
-                        ),
-                    },
-                }),
-            ],
-        });
     }
 
     async deprecated(req: Request, res: Response): Promise<void> {
@@ -175,24 +151,6 @@ class MetricsController extends Controller {
             appName,
         );
         res.json(appDetails);
-    }
-
-    async getRps(
-        req: Request,
-        res: Response<RequestsPerSecondSegmentedSchema | RpsError>,
-    ): Promise<void> {
-        if (!this.flagResolver.isEnabled('networkView')) {
-            res.status(404).send('Not enabled');
-            return;
-        }
-        try {
-            const hoursToQuery = 6;
-            const rps = await this.clientInstanceService.getRPS(hoursToQuery);
-            res.json(rps || {});
-        } catch (err) {
-            this.logger.error('Failed to fetch RPS metrics', err);
-            res.status(500).send('Error fetching RPS metrics');
-        }
     }
 }
 export default MetricsController;

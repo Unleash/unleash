@@ -12,7 +12,7 @@ import { ChangeRequestsWidget } from './ChangeRequestsWidget';
 import { flexRow } from 'themes/themeStyles';
 import { LegacyHealthWidget } from './LegacyHealthWidget';
 import { LegacyProjectMembersWidget } from './LegacyProjectMembersWidget';
-import { useChangeRequestConfig } from 'hooks/api/getters/useChangeRequestConfig/useChangeRequestConfig';
+import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 
 interface IProjectInfoProps {
     id: string;
@@ -51,11 +51,10 @@ const ProjectInfo = ({
     const { uiConfig, isEnterprise } = useUiConfig();
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
-    const hasChangeRequestsEnabled = useChangeRequestConfig(id).data?.some(
-        environment => environment.changeRequestEnabled
-    );
+    const { isChangeRequestConfiguredInAnyEnv } = useChangeRequestsEnabled(id);
 
-    const showChangeRequestsWidget = isEnterprise() && hasChangeRequestsEnabled;
+    const showChangeRequestsWidget =
+        isEnterprise() && isChangeRequestConfiguredInAnyEnv();
     const showProjectMembersWidget = id !== DEFAULT_PROJECT_ID;
     const fitMoreColumns =
         (!showChangeRequestsWidget && !showProjectMembersWidget) ||

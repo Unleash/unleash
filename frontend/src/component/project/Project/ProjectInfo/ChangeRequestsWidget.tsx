@@ -72,7 +72,7 @@ export const ChangeRequestsWidget: FC<IChangeRequestsWidgetProps> = ({
     projectId,
 }) => {
     const { changeRequests, loading } = useProjectChangeRequests(projectId);
-    const loadingRef = useLoading(loading, LOADING_LABEL);
+    const loadingRef = useLoading(loading, `[data-loading="${LOADING_LABEL}"]`);
     const toBeApplied = changeRequests?.filter(
         (changeRequest: IChangeRequest) => changeRequest?.state === 'Approved'
     ).length;
@@ -89,7 +89,9 @@ export const ChangeRequestsWidget: FC<IChangeRequestsWidgetProps> = ({
                 >
                     <StyledSubtitle>To be applied</StyledSubtitle>
                     <StyledChangeRequestStatusInfo>
-                        <StyledApprovedCount>{toBeApplied}</StyledApprovedCount>{' '}
+                        <StyledApprovedCount data-loading={LOADING_LABEL}>
+                            {toBeApplied || 0}
+                        </StyledApprovedCount>{' '}
                         <ChangeRequestsLabel />
                     </StyledChangeRequestStatusInfo>
                 </StyledChangeBox>
@@ -98,8 +100,8 @@ export const ChangeRequestsWidget: FC<IChangeRequestsWidgetProps> = ({
                 >
                     <StyledSubtitle>To be reviewed</StyledSubtitle>
                     <StyledChangeRequestStatusInfo>
-                        <StyledInReviewCount>
-                            {toBeReviewed}
+                        <StyledInReviewCount data-loading={LOADING_LABEL}>
+                            {toBeReviewed || 0}
                         </StyledInReviewCount>{' '}
                         <ChangeRequestsLabel />
                     </StyledChangeRequestStatusInfo>

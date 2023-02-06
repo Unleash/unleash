@@ -6,8 +6,13 @@ import {
     UPDATE_FEATURE_STRATEGY,
     DELETE_FEATURE_STRATEGY,
     UPDATE_FEATURE_ENVIRONMENT,
+    UPDATE_FEATURE_ENVIRONMENT_VARIANTS,
 } from '../component/providers/AccessProvider/permissions';
 
+/**
+ * This is for features not integrated with change request.
+ * If the feature is integrated with change request, use useCheckProjectAccess instead.
+ */
 const useCheckProjectPermissions = (projectId?: string) => {
     const { hasAccess } = useContext(AccessContext);
 
@@ -44,6 +49,11 @@ const useCheckProjectPermissions = (projectId?: string) => {
     };
 };
 
+/**
+ * This is for features integrated with change request.
+ * If the feature is not integrated with change request, use useCheckProjectPermissions instead.
+ * When change request is enabled, the user will have access to the feature because permissions will be checked later
+ */
 export const useCheckProjectAccess = (projectId: string) => {
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const checkAccess = useCheckProjectPermissions(projectId);
@@ -61,12 +71,17 @@ const ALLOWED_CHANGE_REQUEST_PERMISSIONS = [
     UPDATE_FEATURE_STRATEGY,
     DELETE_FEATURE_STRATEGY,
     UPDATE_FEATURE_ENVIRONMENT,
+    UPDATE_FEATURE_ENVIRONMENT_VARIANTS,
 ];
 
 const intersect = (array1: string[], array2: string[]) => {
     return array1.filter(value => array2.includes(value)).length > 0;
 };
 
+/**
+ * This methods does the same as useCheckProjectAccess but also checks if the permission is in ALLOWED_CHANGE_REQUEST_PERMISSIONS
+ * If you know what you're doing you can skip that check and call useCheckProjectAccess
+ */
 export const useHasProjectEnvironmentAccess = (
     permission: string | string[],
     projectId: string,

@@ -36,7 +36,7 @@ export const ProjectSettings = () => {
     if (Boolean(showProjectApiAccess)) {
         tabs.push({
             id: 'api-access',
-            label: 'Api access',
+            label: 'API access',
         });
     }
 

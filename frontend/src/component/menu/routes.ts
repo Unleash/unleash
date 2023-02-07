@@ -469,7 +469,6 @@ export const adminMenuRoutes: INavigationMenuItem[] = [
         path: '/admin/service-accounts',
         title: 'Service accounts',
         menu: { adminSettings: true },
-        flag: 'serviceAccounts',
     },
     {
         path: '/admin/network/*',

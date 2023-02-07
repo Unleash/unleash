@@ -51,7 +51,7 @@ export const StyledInnerContainer = styled('div')(({ theme }) => ({
     alignItems: 'start',
 }));
 
-export const StyledProjectTitle = styled('h2')(({ theme }) => ({
+export const StyledProjectTitle = styled('span')(({ theme }) => ({
     margin: 0,
     width: '100%',
     fontSize: theme.fontSizes.mainHeader,

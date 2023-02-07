@@ -1,5 +1,5 @@
 import { Box, styled, useMediaQuery, useTheme } from '@mui/material';
-import { ProjectStatsSchema } from 'openapi/models/projectStatsSchema';
+import type { ProjectStatsSchema } from 'openapi/models/projectStatsSchema';
 import type { IFeatureToggleListItem } from 'interfaces/featureToggle';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { DEFAULT_PROJECT_ID } from 'hooks/api/getters/useDefaultProject/useDefaultProjectId';
@@ -12,6 +12,7 @@ import { ChangeRequestsWidget } from './ChangeRequestsWidget';
 import { flexRow } from 'themes/themeStyles';
 import { LegacyHealthWidget } from './LegacyHealthWidget';
 import { LegacyProjectMembersWidget } from './LegacyProjectMembersWidget';
+import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 
 interface IProjectInfoProps {
     id: string;
@@ -50,8 +51,10 @@ const ProjectInfo = ({
     const { uiConfig, isEnterprise } = useUiConfig();
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
+    const { isChangeRequestConfiguredInAnyEnv } = useChangeRequestsEnabled(id);
 
-    const showChangeRequestsWidget = isEnterprise();
+    const showChangeRequestsWidget =
+        isEnterprise() && isChangeRequestConfiguredInAnyEnv();
     const showProjectMembersWidget = id !== DEFAULT_PROJECT_ID;
     const fitMoreColumns =
         (!showChangeRequestsWidget && !showProjectMembersWidget) ||

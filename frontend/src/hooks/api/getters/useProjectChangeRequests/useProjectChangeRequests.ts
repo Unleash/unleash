@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import useUiConfig from '../useUiConfig/useUiConfig';
 import { useEnterpriseSWR } from '../useEnterpriseSWR/useEnterpriseSWR';
 
 const fetcher = (path: string) => {

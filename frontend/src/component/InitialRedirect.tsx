@@ -1,8 +1,7 @@
-import { useCallback, useEffect, useContext } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useProjects from '../hooks/api/getters/useProjects/useProjects';
 import { useLastViewedProject } from '../hooks/useLastViewedProject';
-import UIContext from 'contexts/UIContext';
 import Loader from './common/Loader/Loader';
 
 export const InitialRedirect = () => {

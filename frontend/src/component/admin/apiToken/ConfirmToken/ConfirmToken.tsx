@@ -1,6 +1,5 @@
 import { Alert, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { useThemeStyles } from 'themes/themeStyles';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { UserToken } from './UserToken/UserToken';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -19,8 +18,6 @@ export const ConfirmToken = ({
     token,
     type,
 }: IConfirmUserLink) => {
-    const { classes: themeStyles } = useThemeStyles();
-
     return (
         <Dialogue
             open={open}

@@ -20,7 +20,6 @@ import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { sortTypes } from 'utils/sortTypes';
 import { useMemo } from 'react';
 import theme from 'themes/theme';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ProjectsList } from 'component/admin/apiToken/ProjectsList/ProjectsList';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
@@ -33,7 +32,6 @@ const hiddenColumnsSmall = ['Icon', 'createdAt'];
 export const ApiTokenTable = () => {
     const { tokens, loading } = useApiTokens();
     const initialState = useMemo(() => ({ sortBy: [{ id: 'createdAt' }] }), []);
-    const { uiConfig } = useUiConfig();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
     const {

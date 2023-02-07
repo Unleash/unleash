@@ -5,10 +5,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { GroupCardAvatars } from './GroupCardAvatars/GroupCardAvatars';
 import { Badge } from 'component/common/Badge/Badge';
 import { GroupCardActions } from './GroupCardActions/GroupCardActions';
-import { RemoveGroup } from 'component/admin/groups/RemoveGroup/RemoveGroup';
-import { useState } from 'react';
 import TopicOutlinedIcon from '@mui/icons-material/TopicOutlined';
-import { EditGroupUsers } from 'component/admin/groups/Group/EditGroupUsers/EditGroupUsers';
 
 const StyledLink = styled(Link)(({ theme }) => ({
     textDecoration: 'none',

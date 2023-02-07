@@ -6,7 +6,6 @@ import { useUiConfigApi } from 'hooks/api/actions/useUiConfigApi/useUiConfigApi'
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useId } from 'hooks/useId';
-import { fontSize } from '@mui/system';
 
 interface ICorsFormProps {
     frontendApiOrigins: string[] | undefined;

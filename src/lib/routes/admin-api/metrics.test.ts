@@ -12,9 +12,6 @@ async function getSetup() {
         preRouterHook: perms.hook,
     });
     const services = createServices(stores, config);
-    jest.spyOn(services.clientInstanceService, 'getRPS').mockImplementation(
-        async () => {},
-    );
     const app = await getApp(config, stores, services);
 
     return {
@@ -32,14 +29,12 @@ async function getSetup() {
 let stores;
 let request;
 let destroy;
-let config;
 
 beforeEach(async () => {
     const setup = await getSetup();
     stores = setup.stores;
     request = setup.request;
     destroy = setup.destroy;
-    config = setup.config;
 });
 
 afterEach(() => {
@@ -117,21 +112,4 @@ test('should delete application', () => {
     return request
         .delete(`/api/admin/metrics/applications/${appName}`)
         .expect(200);
-});
-
-test('/api/admin/metrics/rps with flag disabled', () => {
-    return request.get('/api/admin/metrics/rps').expect(404);
-});
-
-test('/api/admin/metrics/rps should return data with flag enabled', () => {
-    const mockedResponse = {};
-    config.experimental.flags.networkView = true;
-    expect(config.flagResolver.isEnabled('networkView')).toBeTruthy();
-    return request
-        .get('/api/admin/metrics/rps')
-        .expect(200)
-        .expect((res) => {
-            const metrics = res.body;
-            expect(metrics).toStrictEqual(mockedResponse);
-        });
 });

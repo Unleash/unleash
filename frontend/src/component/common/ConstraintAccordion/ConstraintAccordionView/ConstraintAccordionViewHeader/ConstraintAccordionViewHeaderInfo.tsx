@@ -1,4 +1,4 @@
-import { Divider, styled, Tooltip } from '@mui/material';
+import { styled, Tooltip } from '@mui/material';
 import { ConstraintViewHeaderOperator } from './ConstraintViewHeaderOperator';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ConstraintAccordionViewHeaderSingleValue } from './ConstraintAccordionViewHeaderSingleValue';

@@ -63,12 +63,12 @@ const PremiumFeatures = {
     },
 };
 
-type PremiumFeature = keyof typeof PremiumFeatures;
+type PremiumFeatureType = keyof typeof PremiumFeatures;
 
 const UPGRADE_URL = 'https://www.getunleash.io/plans';
 
 export interface PremiumFeatureProps {
-    feature: PremiumFeature;
+    feature: PremiumFeatureType;
     tooltip?: boolean;
 }
 

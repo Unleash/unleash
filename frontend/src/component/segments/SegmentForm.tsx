@@ -9,16 +9,6 @@ import { styled } from '@mui/material';
 export type SegmentFormStep = 1 | 2;
 export type SegmentFormMode = 'create' | 'edit';
 
-const Styled = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    margin: theme.spacing(6),
-    marginLeft: 'auto',
-    marginRight: 'auto',
-}));
-
 interface ISegmentProps {
     name: string;
     description: string;

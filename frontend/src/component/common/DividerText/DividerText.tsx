@@ -1,4 +1,4 @@
-import { FormControl, styled, Typography } from '@mui/material';
+import { styled, Typography } from '@mui/material';
 interface IDividerTextProps {
     text: string;
 }

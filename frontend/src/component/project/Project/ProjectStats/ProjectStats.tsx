@@ -1,6 +1,5 @@
 import { Box, styled, Typography } from '@mui/material';
 import { ProjectStatsSchema } from 'openapi/models';
-import { object } from 'prop-types';
 import { StatusBox } from './StatusBox';
 
 const StyledBox = styled(Box)(({ theme }) => ({

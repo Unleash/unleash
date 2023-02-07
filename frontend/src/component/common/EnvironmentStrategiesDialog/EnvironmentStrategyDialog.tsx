@@ -3,7 +3,7 @@ import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/perm
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import PermissionButton from '../PermissionButton/PermissionButton';
 import { formatCreateStrategyPath } from 'component/feature/FeatureStrategy/FeatureStrategyCreate/FeatureStrategyCreate';
-import { FormControl, styled } from '@mui/material';
+import { styled } from '@mui/material';
 
 interface IEnvironmentStrategyDialogProps {
     open: boolean;

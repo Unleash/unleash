@@ -1,5 +1,4 @@
-import { ComponentType, FC } from 'react';
-import { Link, styled, Typography } from '@mui/material';
+import { FC } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';

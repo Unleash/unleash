@@ -76,7 +76,7 @@ export const NewUser = () => {
         }
     };
 
-    if (isValidToken === false && isValidInvite == false) {
+    if (!isValidToken && !isValidInvite) {
         return (
             <NewUserWrapper loading={resetLoading || inviteLoading}>
                 <InvalidToken />

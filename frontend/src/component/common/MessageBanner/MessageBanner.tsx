@@ -53,6 +53,7 @@ interface IMessageFlag {
 }
 
 // TODO: Grab a real feature flag instead
+/* eslint-disable @typescript-eslint/no-unused-vars */
 const mockFlag: IMessageFlag = {
     enabled: true,
     message:

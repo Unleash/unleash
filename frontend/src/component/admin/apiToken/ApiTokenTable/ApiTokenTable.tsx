@@ -31,7 +31,7 @@ const hiddenColumnsSmall = ['Icon', 'createdAt'];
 const hiddenColumnsCompact = ['Icon', 'project', 'seenAt'];
 
 interface IApiTokenTableProps {
-    compact: boolean;
+    compact?: boolean;
     filterForProject?: string;
 }
 export const ApiTokenTable = ({

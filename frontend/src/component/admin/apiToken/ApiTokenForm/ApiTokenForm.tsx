@@ -213,10 +213,7 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
                             Which project do you want to give access to?
                         </StyledInputDescription>
                         <SelectProjectInput
-                            disabled={
-                                type === TokenType.ADMIN ||
-                                disableProjectSelection
-                            }
+                            disabled={type === TokenType.ADMIN}
                             options={selectableProjects}
                             defaultValue={projects}
                             onChange={setProjects}

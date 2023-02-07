@@ -16,6 +16,12 @@ import React, { FC, ReactNode, useState } from 'react';
 import useToast from 'hooks/useToast';
 import { ImportLayoutContainer } from '../ImportLayoutContainer';
 import { ActionsContainer } from '../ActionsContainer';
+import {
+    CODE_EDITOR_TAB,
+    CODE_TEXT_FIELD,
+    IMPORT_BUTTON,
+    VALIDATE_BUTTON,
+} from '../../../../../utils/testIds';
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
     width: '100%',
@@ -58,6 +64,7 @@ export const ConfigurationTabs: FC<{
             <Tab
                 label="Code editor"
                 value="code"
+                data-testid={CODE_EDITOR_TAB}
                 onClick={() => setActiveTab('code')}
             />
         </Tabs>
@@ -119,6 +126,7 @@ export const ImportArea: FC<{
                     variant="outlined"
                     onChange={event => setImportPayload(event.target.value)}
                     value={importPayload}
+                    data-testid={CODE_TEXT_FIELD}
                     multiline
                     minRows={13}
                     maxRows={13}
@@ -139,6 +147,7 @@ export const Actions: FC<{
             variant="contained"
             type="submit"
             onClick={onSubmit}
+            data-testid={VALIDATE_BUTTON}
             disabled={disabled}
         >
             Validate

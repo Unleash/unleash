@@ -13,6 +13,7 @@ import { scrollToTop } from 'component/common/util';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { GO_BACK } from 'constants/navigate';
+import { useApiTokens } from '../../../../hooks/api/getters/useApiTokens/useApiTokens';
 
 const pageTitle = 'Create API token';
 
@@ -46,6 +47,7 @@ export const CreateApiToken = ({
     } = useApiTokenForm(project);
 
     const { createToken, loading } = useApiTokensApi();
+    const { refetch } = useApiTokens();
 
     usePageTitle(pageTitle);
 
@@ -70,7 +72,8 @@ export const CreateApiToken = ({
 
     const closeConfirm = () => {
         setShowConfirm(false);
-        navigate('/admin/api');
+        refetch();
+        navigate(GO_BACK);
     };
 
     const formatApiCode = () => {

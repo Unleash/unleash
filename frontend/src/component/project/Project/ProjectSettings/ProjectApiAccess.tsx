@@ -29,7 +29,7 @@ export const ProjectApiAccess = () => {
 
     return (
         <div style={{ width: '100%', overflow: 'hidden' }}>
-            <ApiTokenTable compact />
+            <ApiTokenTable compact filterForProject={projectId} />
         </div>
     );
 };

@@ -40,7 +40,6 @@ describe('imports', () => {
     it('can import data', () => {
         cy.visit('/projects/default');
         cy.get("[data-testid='IMPORT_BUTTON']").click();
-        cy.get("[data-testid='CODE_EDITOR_TAB']").click();
 
         const exportText = {
             features: [
@@ -107,12 +106,17 @@ describe('imports', () => {
 
         cy.get("[data-testid='VALIDATE_BUTTON']").should('be.disabled');
 
-        cy.get("[data-testid='CODE_TEXT_FIELD']").type(
-            JSON.stringify(exportText),
-            { parseSpecialCharSequences: false, force: true }
-        );
+        // cypress can only work with input@file that is visible
+        cy.get('input[type=file]')
+            .invoke('attr', 'style', 'display: block')
+            .selectFile({
+                contents: Cypress.Buffer.from(JSON.stringify(exportText)),
+                fileName: 'upload.json',
+                lastModified: Date.now(),
+            });
         cy.get("[data-testid='VALIDATE_BUTTON']").click();
         cy.get("[data-testid='IMPORT_CONFIGURATION_BUTTON']").click();
+        cy.contains('Import completed');
 
         cy.visit(`/projects/default/features/${randomFeatureName}`);
         cy.contains('enabled in development');

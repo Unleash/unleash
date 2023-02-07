@@ -207,26 +207,24 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
                         ))}
                     </RadioGroup>
                 </FormControl>
-                {!Boolean(disableProjectSelection) &&
-                    projects &&
-                    setProjects && (
-                        <>
-                            <StyledInputDescription>
-                                Which project do you want to give access to?
-                            </StyledInputDescription>
-                            <SelectProjectInput
-                                disabled={
-                                    type === TokenType.ADMIN ||
-                                    disableProjectSelection
-                                }
-                                options={selectableProjects}
-                                defaultValue={projects}
-                                onChange={setProjects}
-                                error={errors?.projects}
-                                onFocus={() => clearErrors('projects')}
-                            />
-                        </>
-                    )}
+                {!Boolean(disableProjectSelection) && (
+                    <>
+                        <StyledInputDescription>
+                            Which project do you want to give access to?
+                        </StyledInputDescription>
+                        <SelectProjectInput
+                            disabled={
+                                type === TokenType.ADMIN ||
+                                disableProjectSelection
+                            }
+                            options={selectableProjects}
+                            defaultValue={projects}
+                            onChange={setProjects}
+                            error={errors?.projects}
+                            onFocus={() => clearErrors('projects')}
+                        />
+                    </>
+                )}
                 <StyledInputDescription>
                     Which environment should the token have access to?
                 </StyledInputDescription>

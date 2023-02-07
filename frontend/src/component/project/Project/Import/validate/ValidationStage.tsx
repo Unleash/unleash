@@ -9,10 +9,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { ActionsContainer } from '../ActionsContainer';
-import {
-    IMPORT_CONFIGURATION_BUTTON,
-    VALIDATE_BUTTON,
-} from '../../../../../utils/testIds';
+import { IMPORT_CONFIGURATION_BUTTON } from 'utils/testIds';
 
 const ImportInfoContainer = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.secondaryContainer,

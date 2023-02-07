@@ -19,9 +19,8 @@ import { ActionsContainer } from '../ActionsContainer';
 import {
     CODE_EDITOR_TAB,
     CODE_TEXT_FIELD,
-    IMPORT_BUTTON,
     VALIDATE_BUTTON,
-} from '../../../../../utils/testIds';
+} from 'utils/testIds';
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
     width: '100%',

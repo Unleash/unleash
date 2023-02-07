@@ -41,10 +41,7 @@ import { ProjectChangeRequests } from '../../changeRequest/ProjectChangeRequests
 import { ProjectSettings } from './ProjectSettings/ProjectSettings';
 import { useFavoriteProjectsApi } from 'hooks/api/actions/useFavoriteProjectsApi/useFavoriteProjectsApi';
 import { ImportModal } from './Import/ImportModal';
-import {
-    IMPORT_BUTTON,
-    NAVIGATE_TO_CREATE_GROUP,
-} from '../../../utils/testIds';
+import { IMPORT_BUTTON } from 'utils/testIds';
 
 export const Project = () => {
     const projectId = useRequiredPathParam('projectId');

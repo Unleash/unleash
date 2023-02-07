@@ -109,7 +109,7 @@ describe('imports', () => {
 
         cy.get("[data-testid='CODE_TEXT_FIELD']").type(
             JSON.stringify(exportText),
-            { parseSpecialCharSequences: false, force: true }
+            { parseSpecialCharSequences: false, delay: 0 }
         );
         cy.get("[data-testid='VALIDATE_BUTTON']").click();
         cy.get("[data-testid='IMPORT_CONFIGURATION_BUTTON']").click();

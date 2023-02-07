@@ -25,7 +25,7 @@ import { TokenType } from 'interfaces/token';
 interface IApiTokenFormProps {
     username: string;
     type: string;
-    projects?: string[];
+    projects: string[];
     environment?: string;
     setTokenType: (value: string) => void;
     setUsername: React.Dispatch<React.SetStateAction<string>>;

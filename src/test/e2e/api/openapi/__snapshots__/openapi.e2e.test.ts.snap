@@ -5344,26 +5344,6 @@ If the provided project does not exist, the list of events will be empty.",
         ],
       },
     },
-    "/api/admin/metrics/rps": {
-      "get": {
-        "operationId": "getRequestsPerSecond",
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/requestsPerSecondSegmentedSchema",
-                },
-              },
-            },
-            "description": "requestsPerSecondSegmentedSchema",
-          },
-        },
-        "tags": [
-          "Metrics",
-        ],
-      },
-    },
     "/api/admin/playground": {
       "post": {
         "description": "Use the provided \`context\`, \`environment\`, and \`projects\` to evaluate toggles on this Unleash instance. Returns a list of all toggles that match the parameters and what they evaluate to. The response also contains the input parameters that were provided.",

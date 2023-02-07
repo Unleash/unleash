@@ -17,7 +17,8 @@ const VariantsWarningTooltip = () => {
                     feature's variants in this environment, you will get the{' '}
                     <a
                         href="https://docs.getunleash.io/reference/feature-toggle-variants#the-disabled-variant"
-                        target="_blank" rel="noreferrer"
+                        target="_blank"
+                        rel="noreferrer"
                     >
                         disabled variant
                     </a>

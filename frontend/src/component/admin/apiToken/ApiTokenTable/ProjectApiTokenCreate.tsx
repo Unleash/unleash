@@ -1,9 +1,9 @@
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useProjectAccess from 'hooks/api/getters/useProjectAccess/useProjectAccess';
 import { useAccess } from 'hooks/api/getters/useAccess/useAccess';
-import { GO_BACK } from '../../../../constants/navigate';
+import { GO_BACK } from 'constants/navigate';
 import { CreateApiToken } from '../CreateApiToken/CreateApiToken';
-import { SidebarModal } from '../../../common/SidebarModal/SidebarModal';
+import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { useNavigate } from 'react-router-dom';
 
 export const ProjectApiTokenCreate = () => {

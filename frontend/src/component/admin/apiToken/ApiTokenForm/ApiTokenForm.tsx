@@ -25,7 +25,7 @@ import { TokenType } from 'interfaces/token';
 interface IApiTokenFormProps {
     username: string;
     type: string;
-    projects: string[];
+    projects?: string[];
     environment?: string;
     setTokenType: (value: string) => void;
     setUsername: React.Dispatch<React.SetStateAction<string>>;
@@ -36,6 +36,7 @@ interface IApiTokenFormProps {
     errors: { [key: string]: string };
     mode: 'Create' | 'Edit';
     clearErrors: (error?: ApiTokenFormErrorType) => void;
+    disableProjectSelection?: boolean;
 }
 
 const StyledContainer = styled('div')(() => ({
@@ -84,6 +85,7 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
     username,
     type,
     projects,
+    disableProjectSelection = false,
     environment,
     setUsername,
     setTokenType,
@@ -205,17 +207,26 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
                         ))}
                     </RadioGroup>
                 </FormControl>
-                <StyledInputDescription>
-                    Which project do you want to give access to?
-                </StyledInputDescription>
-                <SelectProjectInput
-                    disabled={type === TokenType.ADMIN}
-                    options={selectableProjects}
-                    defaultValue={projects}
-                    onChange={setProjects}
-                    error={errors?.projects}
-                    onFocus={() => clearErrors('projects')}
-                />
+                {!Boolean(disableProjectSelection) &&
+                    projects &&
+                    setProjects && (
+                        <>
+                            <StyledInputDescription>
+                                Which project do you want to give access to?
+                            </StyledInputDescription>
+                            <SelectProjectInput
+                                disabled={
+                                    type === TokenType.ADMIN ||
+                                    disableProjectSelection
+                                }
+                                options={selectableProjects}
+                                defaultValue={projects}
+                                onChange={setProjects}
+                                error={errors?.projects}
+                                onFocus={() => clearErrors('projects')}
+                            />
+                        </>
+                    )}
                 <StyledInputDescription>
                     Which environment should the token have access to?
                 </StyledInputDescription>

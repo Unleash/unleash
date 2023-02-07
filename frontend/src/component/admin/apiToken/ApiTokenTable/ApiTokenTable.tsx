@@ -1,12 +1,12 @@
 import { useApiTokens } from 'hooks/api/getters/useApiTokens/useApiTokens';
-import { useTable, useGlobalFilter, useSortBy } from 'react-table';
+import { useGlobalFilter, useSortBy, useTable } from 'react-table';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import {
     SortableTableHeader,
     TableCell,
     TablePlaceholder,
 } from 'component/common/Table';
-import { Table, TableBody, Box, TableRow, useMediaQuery } from '@mui/material';
+import { Box, Table, TableBody, TableRow, useMediaQuery } from '@mui/material';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { ApiTokenDocs } from 'component/admin/apiToken/ApiTokenDocs/ApiTokenDocs';
@@ -26,6 +26,8 @@ import { HighlightCell } from 'component/common/Table/cells/HighlightCell/Highli
 import { Search } from 'component/common/Search/Search';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
+import { Route, Routes } from 'react-router-dom';
+import { ProjectApiTokenCreate } from './ProjectApiTokenCreate';
 
 const hiddenColumnsSmall = ['Icon', 'createdAt'];
 const hiddenColumnsCompact = ['Icon', 'project', 'seenAt'];
@@ -174,6 +176,17 @@ export const ApiTokenTable = ({
                             </TablePlaceholder>
                         }
                     />
+                }
+            />
+            <ConditionallyRender
+                condition={Boolean(filterForProject)}
+                show={
+                    <Routes>
+                        <Route
+                            path="create"
+                            element={<ProjectApiTokenCreate />}
+                        />
+                    </Routes>
                 }
             />
         </PageContent>

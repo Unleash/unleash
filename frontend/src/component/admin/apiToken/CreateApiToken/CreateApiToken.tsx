@@ -16,7 +16,14 @@ import { GO_BACK } from 'constants/navigate';
 
 const pageTitle = 'Create API token';
 
-export const CreateApiToken = () => {
+interface ICreateApiTokenProps {
+    modal?: boolean;
+    project?: string;
+}
+export const CreateApiToken = ({
+    modal = false,
+    project,
+}: ICreateApiTokenProps) => {
     const { setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
     const navigate = useNavigate();
@@ -36,7 +43,7 @@ export const CreateApiToken = () => {
         isValid,
         errors,
         clearErrors,
-    } = useApiTokenForm();
+    } = useApiTokenForm(project);
 
     const { createToken, loading } = useApiTokensApi();
 
@@ -83,6 +90,7 @@ export const CreateApiToken = () => {
         <FormTemplate
             loading={loading}
             title={pageTitle}
+            modal={modal}
             description="Unleash SDKs use API tokens to authenticate to the Unleash API. Client SDKs need a token with 'client privileges', which allows them to fetch feature toggle configurations and post usage metrics."
             documentationLink="https://docs.getunleash.io/reference/api-tokens-and-client-keys"
             documentationLinkLabel="API tokens documentation"
@@ -91,6 +99,7 @@ export const CreateApiToken = () => {
             <ApiTokenForm
                 username={username}
                 type={type}
+                disableProjectSelection={Boolean(project)}
                 projects={projects}
                 environment={environment}
                 setEnvironment={setEnvironment}

@@ -39,7 +39,7 @@ process.nextTick(async () => {
                         anonymiseEventLog: false,
                         responseTimeWithAppName: true,
                         variantsPerEnvironment: true,
-                        maintenance: false,
+                        maintenance: true,
                         featuresExportImport: true,
                         newProjectOverview: true,
                         projectStatusApi: true,

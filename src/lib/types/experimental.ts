@@ -52,7 +52,7 @@ const flags = {
     ),
     serviceAccounts: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SERVICE_ACCOUNTS,
-        false,
+        true,
     ),
     featuresExportImport: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FEATURES_EXPORT_IMPORT,

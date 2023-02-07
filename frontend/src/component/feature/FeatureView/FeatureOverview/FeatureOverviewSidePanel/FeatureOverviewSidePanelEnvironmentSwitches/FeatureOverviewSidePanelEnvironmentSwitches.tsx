@@ -88,7 +88,7 @@ export const FeatureOverviewSidePanelEnvironmentSwitches = ({
 
                 const hasWarning =
                     environment.enabled &&
-                    variants.length == 0 &&
+                    variants.length === 0 &&
                     someEnabledEnvironmentHasVariants;
                 return (
                     <FeatureOverviewSidePanelEnvironmentSwitch

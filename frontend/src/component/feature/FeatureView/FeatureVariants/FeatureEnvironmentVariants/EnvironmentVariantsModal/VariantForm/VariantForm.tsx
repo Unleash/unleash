@@ -200,7 +200,7 @@ export const VariantForm = ({
         const hasOnlyOneVariableVariant =
             variants.filter(variant => {
                 return variant.weightType === WeightType.VARIABLE;
-            }).length == 1;
+            }).length === 1;
 
         return (
             atLeastOneFixedVariant && hasOnlyOneVariableVariant && isVariable

@@ -1,5 +1,5 @@
 import { FC, VFC } from 'react';
-import { Box, Button, styled, Typography, useTheme } from '@mui/material';
+import { Box, Button, styled, Typography } from '@mui/material';
 import { DynamicSidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';

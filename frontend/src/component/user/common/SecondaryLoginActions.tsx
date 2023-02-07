@@ -1,4 +1,4 @@
-import { Alert, styled, Typography } from '@mui/material';
+import { styled, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 const StyledContainer = styled('div')(({ theme }) => ({

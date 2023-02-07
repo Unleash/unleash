@@ -18,6 +18,7 @@ const VariantsWarningTooltip = () => {
                     <a
                         href="https://docs.getunleash.io/reference/feature-toggle-variants#the-disabled-variant"
                         target="_blank"
+                        rel="noreferrer"
                     >
                         disabled variant
                     </a>

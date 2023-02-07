@@ -16,8 +16,6 @@ import { useFavoriteProjectsApi } from 'hooks/api/actions/useFavoriteProjectsApi
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { FavoriteIconButton } from 'component/common/FavoriteIconButton/FavoriteIconButton';
 import { DeleteProjectDialogue } from '../Project/DeleteProject/DeleteProjectDialogue';
-import { styled } from '@mui/material';
-import { flexRow } from 'themes/themeStyles';
 import {
     StyledProjectCard,
     StyledDivHeader,

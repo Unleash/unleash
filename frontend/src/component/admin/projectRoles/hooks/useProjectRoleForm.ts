@@ -4,7 +4,6 @@ import cloneDeep from 'lodash.clonedeep';
 import useProjectRolePermissions from 'hooks/api/getters/useProjectRolePermissions/useProjectRolePermissions';
 import useProjectRolesApi from 'hooks/api/actions/useProjectRolesApi/useProjectRolesApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 export interface ICheckedPermission {
     [key: string]: IPermission;
@@ -24,7 +23,6 @@ const useProjectRoleForm = (
     initialRoleDesc = '',
     initialCheckedPermissions: IPermission[] = []
 ) => {
-    const { uiConfig } = useUiConfig();
     const { permissions } = useProjectRolePermissions({
         revalidateIfStale: false,
         revalidateOnReconnect: false,

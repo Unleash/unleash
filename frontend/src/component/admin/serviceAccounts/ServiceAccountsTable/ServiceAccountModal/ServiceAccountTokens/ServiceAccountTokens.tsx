@@ -219,13 +219,7 @@ export const ServiceAccountTokens = ({
         tokens
     );
 
-    const {
-        headerGroups,
-        rows,
-        prepareRow,
-        state: { sortBy },
-        setHiddenColumns,
-    } = useTable(
+    const { headerGroups, rows, prepareRow, setHiddenColumns } = useTable(
         {
             columns,
             data,

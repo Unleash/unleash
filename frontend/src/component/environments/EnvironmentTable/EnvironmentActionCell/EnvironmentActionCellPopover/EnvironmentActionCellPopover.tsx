@@ -25,7 +25,6 @@ import {
     VisibilityOffOutlined,
     VisibilityOutlined,
 } from '@mui/icons-material';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledMenuList = styled(MenuList)(({ theme }) => ({
@@ -59,8 +58,6 @@ export const EnvironmentActionCellPopover = ({
     onClone,
     onDelete,
 }: IEnvironmentActionCellPopoverProps) => {
-    const { uiConfig } = useUiConfig();
-
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
     const open = Boolean(anchorEl);

@@ -5,7 +5,6 @@ import {
     InputLabel,
     SelectChangeEvent,
     styled,
-    Box,
 } from '@mui/material';
 import {
     Operator,
@@ -17,7 +16,6 @@ import {
 } from 'constants/operators';
 import React, { useState } from 'react';
 import { formatOperatorDescription } from 'component/common/ConstraintAccordion/ConstraintOperator/formatOperatorDescription';
-import classNames from 'classnames';
 
 interface IConstraintOperatorSelectProps {
     options: Operator[];

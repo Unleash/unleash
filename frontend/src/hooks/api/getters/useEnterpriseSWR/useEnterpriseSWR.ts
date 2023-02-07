@@ -10,7 +10,7 @@ export const useEnterpriseSWR = <Data = any, Error = any>(
 ) => {
     const { isEnterprise } = useUiConfig();
 
-    const result = useConditionalSWR(
+    const result = useConditionalSWR<Data, Error>(
         isEnterprise(),
         fallback,
         key,

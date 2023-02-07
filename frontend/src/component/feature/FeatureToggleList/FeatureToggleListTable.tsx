@@ -33,8 +33,6 @@ import { FavoriteIconHeader } from 'component/common/Table/FavoriteIconHeader/Fa
 import { useGlobalLocalStorage } from 'hooks/useGlobalLocalStorage';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import FileDownload from '@mui/icons-material/FileDownload';
-import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import { ExportDialog } from './ExportDialog';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';

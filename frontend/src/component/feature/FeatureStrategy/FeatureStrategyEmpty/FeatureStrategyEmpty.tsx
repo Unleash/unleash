@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Box, Button, styled } from '@mui/material';
+import { Box, styled } from '@mui/material';
 import { SectionSeparator } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/SectionSeparator/SectionSeparator';
 import useFeatureStrategyApi from 'hooks/api/actions/useFeatureStrategyApi/useFeatureStrategyApi';
 import useToast from 'hooks/useToast';

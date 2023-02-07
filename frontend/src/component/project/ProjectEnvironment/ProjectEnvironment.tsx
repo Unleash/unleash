@@ -57,7 +57,6 @@ const ProjectEnvironmentList = () => {
 
     // api state
     const { setToastData, setToastApiError } = useToast();
-    const { uiConfig } = useUiConfig();
     const { environments, loading, error, refetchEnvironments } =
         useProjectEnvironments(projectId);
     const { project, refetch: refetchProject } = useProject(projectId);

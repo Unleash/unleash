@@ -3,7 +3,7 @@ import { CREATE_API_TOKEN } from 'component/providers/AccessProvider/permissions
 import { CREATE_API_TOKEN_BUTTON } from 'utils/testIds';
 import { useNavigate } from 'react-router-dom';
 import { Add } from '@mui/icons-material';
-import { useOptionalPathParam } from '../../../../hooks/useOptionalPathParam';
+import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 
 export const CreateApiTokenButton = () => {
     const navigate = useNavigate();

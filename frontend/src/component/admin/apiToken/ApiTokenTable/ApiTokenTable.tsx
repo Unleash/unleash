@@ -28,8 +28,9 @@ import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColum
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
 
 const hiddenColumnsSmall = ['Icon', 'createdAt'];
+const hiddenColumnsCompact = ['Icon', 'project', 'seenAt'];
 
-export const ApiTokenTable = () => {
+export const ApiTokenTable = ({ compact = false }) => {
     const { tokens, loading } = useApiTokens();
     const initialState = useMemo(() => ({ sortBy: [{ id: 'createdAt' }] }), []);
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -61,6 +62,10 @@ export const ApiTokenTable = () => {
             {
                 condition: isSmallScreen,
                 columns: hiddenColumnsSmall,
+            },
+            {
+                condition: compact,
+                columns: hiddenColumnsCompact,
             },
         ],
         setHiddenColumns,

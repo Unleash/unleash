@@ -50,10 +50,6 @@ const flags = {
         process.env.UNLEASH_EXPERIMENTAL_MESSAGE_BANNER,
         false,
     ),
-    serviceAccounts: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_SERVICE_ACCOUNTS,
-        true,
-    ),
     featuresExportImport: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FEATURES_EXPORT_IMPORT,
         false,

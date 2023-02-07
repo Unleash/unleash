@@ -83,6 +83,7 @@ exports[`should create default config 1`] = `
       "proxyReturnAllToggles": false,
       "responseTimeWithAppName": false,
       "serviceAccounts": false,
+      "showProjectApiAccess": false,
       "variantsPerEnvironment": false,
     },
   },
@@ -104,6 +105,7 @@ exports[`should create default config 1`] = `
       "proxyReturnAllToggles": false,
       "responseTimeWithAppName": false,
       "serviceAccounts": false,
+      "showProjectApiAccess": false,
       "variantsPerEnvironment": false,
     },
     "externalResolver": {

@@ -9,10 +9,14 @@ import { ITab, VerticalTabs } from 'component/common/VerticalTabs/VerticalTabs';
 import { ProjectAccess } from 'component/project/ProjectAccess/ProjectAccess';
 import ProjectEnvironmentList from 'component/project/ProjectEnvironment/ProjectEnvironment';
 import { ChangeRequestConfiguration } from './ChangeRequestConfiguration/ChangeRequestConfiguration';
+import { ProjectApiAccess } from './ProjectApiAccess';
+import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
 
 export const ProjectSettings = () => {
     const location = useLocation();
     const navigate = useNavigate();
+    const { uiConfig } = useUiConfig();
+    const { showProjectApiAccess } = uiConfig.flags;
 
     const tabs: ITab[] = [
         {
@@ -28,6 +32,13 @@ export const ProjectSettings = () => {
             label: 'Change request configuration',
         },
     ];
+
+    if (Boolean(showProjectApiAccess)) {
+        tabs.push({
+            id: 'api-access',
+            label: 'API access',
+        });
+    }
 
     const onChange = (tab: ITab) => {
         navigate(tab.id);
@@ -53,6 +64,9 @@ export const ProjectSettings = () => {
                     path="change-requests/*"
                     element={<ChangeRequestConfiguration />}
                 />
+                {Boolean(showProjectApiAccess) && (
+                    <Route path="api-access/*" element={<ProjectApiAccess />} />
+                )}
                 <Route
                     path="*"
                     element={<Navigate replace to={tabs[0].id} />}

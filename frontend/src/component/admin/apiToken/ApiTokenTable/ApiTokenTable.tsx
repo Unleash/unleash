@@ -28,11 +28,37 @@ import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColum
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
 
 const hiddenColumnsSmall = ['Icon', 'createdAt'];
+const hiddenColumnsCompact = ['Icon', 'project', 'seenAt'];
 
-export const ApiTokenTable = () => {
+interface IApiTokenTableProps {
+    compact?: boolean;
+    filterForProject?: string;
+}
+export const ApiTokenTable = ({
+    compact = false,
+    filterForProject,
+}: IApiTokenTableProps) => {
     const { tokens, loading } = useApiTokens();
     const initialState = useMemo(() => ({ sortBy: [{ id: 'createdAt' }] }), []);
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
+
+    const filteredTokens = useMemo(() => {
+        if (Boolean(filterForProject)) {
+            return tokens.filter(token => {
+                if (token.projects) {
+                    if (token.projects?.length > 1) return false;
+                    if (
+                        token.projects?.length === 1 &&
+                        token.projects[0] === filterForProject
+                    )
+                        return true;
+                }
+
+                return token.project === filterForProject;
+            });
+        }
+        return tokens;
+    }, [tokens, filterForProject]);
 
     const {
         getTableProps,
@@ -46,7 +72,7 @@ export const ApiTokenTable = () => {
     } = useTable(
         {
             columns: COLUMNS as any,
-            data: tokens as any,
+            data: filteredTokens as any,
             initialState,
             sortTypes,
             autoResetHiddenColumns: false,
@@ -61,6 +87,10 @@ export const ApiTokenTable = () => {
             {
                 condition: isSmallScreen,
                 columns: hiddenColumnsSmall,
+            },
+            {
+                condition: compact,
+                columns: hiddenColumnsCompact,
             },
         ],
         setHiddenColumns,

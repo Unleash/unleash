@@ -48,6 +48,7 @@ export interface IFlags {
     newProjectOverview?: boolean;
     caseInsensitiveInOperators?: boolean;
     crOnVariants?: boolean;
+    showProjectApiAccess?: boolean;
 }
 
 export interface IVersionInfo {

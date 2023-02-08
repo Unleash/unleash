@@ -41,6 +41,7 @@ import { ProjectChangeRequests } from '../../changeRequest/ProjectChangeRequests
 import { ProjectSettings } from './ProjectSettings/ProjectSettings';
 import { useFavoriteProjectsApi } from 'hooks/api/actions/useFavoriteProjectsApi/useFavoriteProjectsApi';
 import { ImportModal } from './Import/ImportModal';
+import { IMPORT_BUTTON } from 'utils/testIds';
 
 export const Project = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -150,6 +151,7 @@ export const Project = () => {
                                         }}
                                         onClick={() => setModalOpen(true)}
                                         tooltipProps={{ title: 'Import' }}
+                                        data-testid={IMPORT_BUTTON}
                                         data-loading
                                     >
                                         <FileUpload />

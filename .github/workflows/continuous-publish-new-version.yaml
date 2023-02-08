@@ -13,7 +13,7 @@ on:
       - main
 
 # To trigger auto version publish name your squashed commits using conventional notation
-# We support: feat:, fix: and :refactor
+# We support: feat:, fix:m :refactor and :chore
 jobs:
   build:
     if: ${{ startsWith(github.event.head_commit.message, 'feat:') || startsWith(github.event.head_commit.message, 'fix:') || startsWith(github.event.head_commit.message, 'refactor:') || startsWith(github.event.head_commit.message, 'chore:') }}

@@ -22,7 +22,6 @@ const FeatureLog = () => {
         <StyledContainer>
             <EventLog
                 title="Event log"
-                project={projectId}
                 feature={featureId}
                 displayInline
             />

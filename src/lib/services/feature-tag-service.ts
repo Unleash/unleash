@@ -1,9 +1,8 @@
 import NotFoundError from '../error/notfound-error';
 import { Logger } from '../logger';
-import { nameSchema } from '../schema/feature-schema';
 import { FEATURE_TAGGED, FEATURE_UNTAGGED, TAG_CREATED } from '../types/events';
 import { IUnleashConfig } from '../types/option';
-import { IUnleashStores } from '../types/stores';
+import { IFeatureToggleStore, IUnleashStores } from '../types/stores';
 import { tagSchema } from './tag-schema';
 import { IFeatureTagStore } from '../types/stores/feature-tag-store';
 import { IEventStore } from '../types/stores/event-store';
@@ -15,6 +14,8 @@ class FeatureTagService {
 
     private featureTagStore: IFeatureTagStore;
 
+    private featureToggleStore: IFeatureToggleStore;
+
     private eventStore: IEventStore;
 
     private logger: Logger;
@@ -24,12 +25,17 @@ class FeatureTagService {
             tagStore,
             featureTagStore,
             eventStore,
-        }: Pick<IUnleashStores, 'tagStore' | 'featureTagStore' | 'eventStore'>,
+            featureToggleStore,
+        }: Pick<
+            IUnleashStores,
+            'tagStore' | 'featureTagStore' | 'eventStore' | 'featureToggleStore'
+        >,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
     ) {
         this.logger = getLogger('/services/feature-tag-service.ts');
         this.tagStore = tagStore;
         this.featureTagStore = featureTagStore;
+        this.featureToggleStore = featureToggleStore;
         this.eventStore = eventStore;
     }
 
@@ -43,7 +49,7 @@ class FeatureTagService {
         tag: ITag,
         userName: string,
     ): Promise<ITag> {
-        await nameSchema.validateAsync({ name: featureName });
+        const featureToggle = await this.featureToggleStore.get(featureName);
         const validatedTag = await tagSchema.validateAsync(tag);
         await this.createTagIfNeeded(validatedTag, userName);
         await this.featureTagStore.tagFeature(featureName, validatedTag);
@@ -52,6 +58,7 @@ class FeatureTagService {
             type: FEATURE_TAGGED,
             createdBy: userName,
             featureName,
+            project: featureToggle.project,
             data: validatedTag,
         });
         return validatedTag;
@@ -78,11 +85,13 @@ class FeatureTagService {
         tag: ITag,
         userName: string,
     ): Promise<void> {
+        const featureToggle = await this.featureToggleStore.get(featureName);
         await this.featureTagStore.untagFeature(featureName, tag);
         await this.eventStore.store({
             type: FEATURE_UNTAGGED,
             createdBy: userName,
             featureName,
+            project: featureToggle.project,
             data: tag,
         });
     }

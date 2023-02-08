@@ -21,7 +21,7 @@ const OPENAPI_TAGS = [
     {
         name: 'Service Accounts',
         description:
-            'Endpoints for managing [Service Accounts](https://docs.getunleash.io/reference/service-accounts) enabling apps to access Unleash API programatically.',
+            'Endpoints for managing [Service Accounts](https://docs.getunleash.io/reference/service-accounts), which enable programmatic access to the Unleash API.',
     },
     {
         name: 'Archive',

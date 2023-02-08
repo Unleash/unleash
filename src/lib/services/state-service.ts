@@ -397,6 +397,8 @@ export default class StateService {
                     await this.eventStore.store({
                         type: FEATURE_IMPORT,
                         createdBy: userName,
+                        featureName: feature.name,
+                        project: feature.project,
                         data: feature,
                     });
                 }),
@@ -607,6 +609,7 @@ export default class StateService {
             const importedFeatureTagEvents = importedFeatureTags.map((tag) => ({
                 type: FEATURE_TAG_IMPORT,
                 createdBy: userName,
+                featureName: tag.featureName,
                 data: tag,
             }));
             await this.eventStore.batchStore(importedFeatureTagEvents);

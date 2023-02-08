@@ -26,8 +26,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          # using GITHUB_TOKEN prevents the commits from this action to trigger recursively
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GH_PUSH_TOKEN }}
       - name: setup git config
         # GitHub bot will be the author of the auto commits
         run: |

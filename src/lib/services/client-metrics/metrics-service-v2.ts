@@ -21,7 +21,6 @@ import User from '../../types/user';
 import { collapseHourlyMetrics } from '../../util/collapseHourlyMetrics';
 import { LastSeenService } from './last-seen-service';
 import { generateHourBuckets } from '../../util/time-utils';
-import { IFlagResolver } from '../../types/experimental';
 
 export default class ClientMetricsServiceV2 {
     private config: IUnleashConfig;
@@ -35,8 +34,6 @@ export default class ClientMetricsServiceV2 {
     private featureToggleStore: IFeatureToggleStore;
 
     private lastSeenService: LastSeenService;
-
-    private flagResolver: IFlagResolver;
 
     private logger: Logger;
 
@@ -53,7 +50,6 @@ export default class ClientMetricsServiceV2 {
         this.clientMetricsStoreV2 = clientMetricsStoreV2;
         this.lastSeenService = lastSeenService;
         this.config = config;
-        this.flagResolver = config.flagResolver;
         this.logger = config.getLogger(
             '/services/client-metrics/client-metrics-service-v2.ts',
         );
@@ -100,15 +96,16 @@ export default class ClientMetricsServiceV2 {
     }
 
     async registerBulkMetrics(value: IEdgeApp[]): Promise<void> {
-
         const clientMetrics: IClientMetricsEnv[] = value.map((metric) => ({
             featureName: metric.featureName,
             appName: metric.appName,
             environment: metric.environment,
-            timestamp: metric.timestamp, //we might need to approximate between start/stop...
-            yes: metric.yes,
-            no: metric.no,
+            timestamp: metric.timestamp, // we might need to approximate between start/stop...
+            yes: metric.yes ?? 0,
+            no: metric.no ?? 0,
         }));
+
+        // TODO handle variants metrics
 
         await this.registerPrecomputedMetrics(clientMetrics);
     }

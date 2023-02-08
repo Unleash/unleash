@@ -4,12 +4,13 @@ import { IUnleashConfig, IUnleashServices } from '../../types';
 import { Logger } from '../../logger';
 import { NONE } from '../../types/permissions';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
-import { RequestBody } from '../unleash-types';
+import { IAuthRequest, RequestBody } from '../unleash-types';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import {
     validateEdgeTokensSchema,
     ValidateEdgeTokensSchema,
 } from '../../openapi/spec/validate-edge-tokens-schema';
+import ClientInstanceService from '../../services/client-metrics/instance-service';
 import EdgeService from '../../services/edge-service';
 import { OpenApiService } from '../../services/openapi-service';
 import { emptyResponse } from '../../openapi/util/standard-responses';
@@ -25,15 +26,21 @@ export default class EdgeController extends Controller {
 
     private metricsV2: ClientMetricsServiceV2;
 
+    private clientInstanceService: ClientInstanceService;
+
     constructor(
         config: IUnleashConfig,
         {
             edgeService,
             openApiService,
             clientMetricsServiceV2,
+            clientInstanceService,
         }: Pick<
             IUnleashServices,
-            'edgeService' | 'openApiService' | 'clientMetricsServiceV2'
+            | 'edgeService'
+            | 'openApiService'
+            | 'clientMetricsServiceV2'
+            | 'clientInstanceService'
         >,
     ) {
         super(config);
@@ -41,6 +48,7 @@ export default class EdgeController extends Controller {
         this.edgeService = edgeService;
         this.openApiService = openApiService;
         this.metricsV2 = clientMetricsServiceV2;
+        this.clientInstanceService = clientInstanceService;
 
         this.route({
             method: 'post',
@@ -65,12 +73,12 @@ export default class EdgeController extends Controller {
             method: 'post',
             path: '/metrics',
             handler: this.bulkMetrics,
-            permission: NONE,
+            permission: NONE, // should have a permission but not bound to any environment
             middleware: [
                 this.openApiService.validPath({
                     tags: ['Edge'],
                     operationId: 'bulkMetrics',
-                    requestBody: createRequestSchema('bulkMetricsSchemaSchema'),
+                    requestBody: createRequestSchema('bulkMetricsSchema'),
                     responses: {
                         202: emptyResponse,
                     },
@@ -95,15 +103,20 @@ export default class EdgeController extends Controller {
     }
 
     async bulkMetrics(
-        req: RequestBody<BulkMetricsSchema>,
+        req: IAuthRequest<void, void, BulkMetricsSchema>,
         res: Response<void>,
     ): Promise<void> {
-        const { metrics, applications } = req.body;
+        const { body, ip: clientIp } = req;
+        const { metrics, applications } = body;
 
         try {
-            // for (const app in applications) {
-
-            // }
+            let promises: Promise<void>[] = [];
+            for (const app of applications) {
+                promises.push(
+                    this.clientInstanceService.registerClient(app, clientIp),
+                );
+            }
+            await Promise.all(promises);
             await this.metricsV2.registerBulkMetrics(metrics);
             res.status(202).end();
         } catch (e) {

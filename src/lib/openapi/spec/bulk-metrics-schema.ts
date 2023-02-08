@@ -1,11 +1,11 @@
 import { FromSchema } from 'json-schema-to-ts';
 import { bulkMetricSchema } from './bulk-metric-schema';
 import { bulkRegistrationSchema } from './bulk-registration-schema';
+import { dateSchema } from './date-schema';
 
 export const bulkMetricsSchema = {
     $id: '#/components/schemas/bulkMetricsSchema',
     type: 'object',
-    required: ['name'],
     properties: {
         applications: {
             type: 'array',
@@ -24,6 +24,7 @@ export const bulkMetricsSchema = {
         schemas: {
             bulkMetricSchema,
             bulkRegistrationSchema,
+            dateSchema,
         },
     },
 } as const;

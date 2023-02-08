@@ -1,9 +1,10 @@
 import { FromSchema } from 'json-schema-to-ts';
+import { dateSchema } from './date-schema';
 
 export const bulkMetricSchema = {
     $id: '#/components/schemas/bulkMetricSchema',
     type: 'object',
-    required: ['name'],
+    required: ['appName', 'featureName', 'environment', 'timestamp'],
     properties: {
         featureName: {
             type: 'string',
@@ -30,7 +31,9 @@ export const bulkMetricSchema = {
             type: 'array',
         },
     },
-    components: {},
+    components: {
+        dateSchema,
+    },
 } as const;
 
 export type BulkMetricSchema = FromSchema<typeof bulkMetricSchema>;

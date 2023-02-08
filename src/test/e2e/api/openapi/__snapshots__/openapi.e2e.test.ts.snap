@@ -328,6 +328,98 @@ exports[`should serve the OpenAPI spec 1`] = `
         },
         "type": "object",
       },
+      "bulkMetricSchema": {
+        "properties": {
+          "appName": {
+            "type": "string",
+          },
+          "environment": {
+            "type": "string",
+          },
+          "featureName": {
+            "type": "string",
+          },
+          "instanceId": {
+            "type": "string",
+          },
+          "no": {
+            "type": "number",
+          },
+          "timestamp": {
+            "$ref": "#/components/schemas/dateSchema",
+          },
+          "variants": {
+            "type": "array",
+          },
+          "yes": {
+            "type": "number",
+          },
+        },
+        "required": [
+          "appName",
+          "featureName",
+          "environment",
+          "timestamp",
+        ],
+        "type": "object",
+      },
+      "bulkMetricsSchema": {
+        "properties": {
+          "applications": {
+            "items": {
+              "$ref": "#/components/schemas/bulkRegistrationSchema",
+            },
+            "type": "array",
+          },
+          "metrics": {
+            "items": {
+              "$ref": "#/components/schemas/bulkMetricSchema",
+            },
+            "type": "array",
+          },
+        },
+        "type": "object",
+      },
+      "bulkRegistrationSchema": {
+        "properties": {
+          "appName": {
+            "type": "string",
+          },
+          "connectVia": {
+            "items": {
+              "type": "string",
+            },
+            "type": "array",
+          },
+          "environment": {
+            "type": "string",
+          },
+          "instanceId": {
+            "type": "string",
+          },
+          "interval": {
+            "type": "number",
+          },
+          "sdkVersion": {
+            "type": "string",
+          },
+          "started": {
+            "type": "number",
+          },
+          "strategies": {
+            "items": {
+              "type": "string",
+            },
+            "type": "array",
+          },
+        },
+        "required": [
+          "appName",
+          "instanceId",
+        ],
+        "schemas": {},
+        "type": "object",
+      },
       "changePasswordSchema": {
         "additionalProperties": false,
         "properties": {
@@ -8179,6 +8271,30 @@ If the provided project does not exist, the list of events will be empty.",
         },
         "tags": [
           "Auth",
+        ],
+      },
+    },
+    "/edge/metrics": {
+      "post": {
+        "operationId": "bulkMetrics",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/bulkMetricsSchema",
+              },
+            },
+          },
+          "description": "bulkMetricsSchema",
+          "required": true,
+        },
+        "responses": {
+          "202": {
+            "description": "This response has no body.",
+          },
+        },
+        "tags": [
+          "Edge",
         ],
       },
     },

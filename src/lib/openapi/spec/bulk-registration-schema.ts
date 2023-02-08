@@ -3,7 +3,7 @@ import { FromSchema } from 'json-schema-to-ts';
 export const bulkRegistrationSchema = {
     $id: '#/components/schemas/bulkRegistrationSchema',
     type: 'object',
-    required: ['name'],
+    required: ['appName', 'instanceId'],
     properties: {
         connectVia: {
             type: 'array',

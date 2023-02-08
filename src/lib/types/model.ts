@@ -319,12 +319,12 @@ export interface IClientApp {
 export interface IEdgeApp {
     appName: string;
     featureName: string;
-    connectVia: string[];
-    bucket: any;
+    connectVia?: string[];
+    bucket: any; // TODO change me
     environment: string;
     timestamp: Date;
-    yes: number;
-    no: number;
+    yes?: number;
+    no?: number;
 }
 
 export interface IAppFeature {

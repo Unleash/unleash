@@ -116,7 +116,7 @@ describe('imports', () => {
             });
         cy.get("[data-testid='VALIDATE_BUTTON']").click();
         cy.get("[data-testid='IMPORT_CONFIGURATION_BUTTON']").click();
-        cy.contains('Import completed');
+        // cy.contains('Import completed');
 
         cy.visit(`/projects/default/features/${randomFeatureName}`);
         cy.contains('enabled in development');

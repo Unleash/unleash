@@ -12,6 +12,9 @@ import {
 } from '../../openapi/spec/validate-edge-tokens-schema';
 import EdgeService from '../../services/edge-service';
 import { OpenApiService } from '../../services/openapi-service';
+import { emptyResponse } from '../../openapi/util/standard-responses';
+import { BulkMetricsSchema } from '../../openapi/spec/bulk-metrics-schema';
+import ClientMetricsServiceV2 from '../../services/client-metrics/metrics-service-v2';
 
 export default class EdgeController extends Controller {
     private readonly logger: Logger;
@@ -20,17 +23,24 @@ export default class EdgeController extends Controller {
 
     private openApiService: OpenApiService;
 
+    private metricsV2: ClientMetricsServiceV2;
+
     constructor(
         config: IUnleashConfig,
         {
             edgeService,
             openApiService,
-        }: Pick<IUnleashServices, 'edgeService' | 'openApiService'>,
+            clientMetricsServiceV2,
+        }: Pick<
+            IUnleashServices,
+            'edgeService' | 'openApiService' | 'clientMetricsServiceV2'
+        >,
     ) {
         super(config);
         this.logger = config.getLogger('edge-api/index.ts');
         this.edgeService = edgeService;
         this.openApiService = openApiService;
+        this.metricsV2 = clientMetricsServiceV2;
 
         this.route({
             method: 'post',
@@ -50,6 +60,23 @@ export default class EdgeController extends Controller {
                 }),
             ],
         });
+
+        this.route({
+            method: 'post',
+            path: '/metrics',
+            handler: this.bulkMetrics,
+            permission: NONE,
+            middleware: [
+                this.openApiService.validPath({
+                    tags: ['Edge'],
+                    operationId: 'bulkMetrics',
+                    requestBody: createRequestSchema('bulkMetricsSchemaSchema'),
+                    responses: {
+                        202: emptyResponse,
+                    },
+                }),
+            ],
+        });
     }
 
     async getValidTokens(
@@ -65,5 +92,22 @@ export default class EdgeController extends Controller {
             validateEdgeTokensSchema.$id,
             tokens,
         );
+    }
+
+    async bulkMetrics(
+        req: RequestBody<BulkMetricsSchema>,
+        res: Response<void>,
+    ): Promise<void> {
+        const { metrics, applications } = req.body;
+
+        try {
+            // for (const app in applications) {
+
+            // }
+            await this.metricsV2.registerBulkMetrics(metrics);
+            res.status(202).end();
+        } catch (e) {
+            res.status(400).end();
+        }
     }
 }

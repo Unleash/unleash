@@ -316,6 +316,17 @@ export interface IClientApp {
     color?: string;
 }
 
+export interface IEdgeApp {
+    appName: string;
+    featureName: string;
+    connectVia: string[];
+    bucket: any;
+    environment: string;
+    timestamp: Date;
+    yes: number;
+    no: number;
+}
+
 export interface IAppFeature {
     name: string;
     description: string;

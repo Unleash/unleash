@@ -1,6 +1,6 @@
 import { Logger } from '../../logger';
 import { IUnleashConfig } from '../../server-impl';
-import { IUnleashStores } from '../../types';
+import { IEdgeApp, IUnleashStores } from '../../types';
 import { IClientApp } from '../../types/model';
 import { ToggleMetricsSummary } from '../../types/models/metrics';
 import {
@@ -95,13 +95,32 @@ export default class ClientMetricsServiceV2 {
             no: value.bucket.toggles[name].no,
         }));
 
+        await this.registerPrecomputedMetrics(clientMetrics);
+        this.config.eventBus.emit(CLIENT_METRICS, value);
+    }
+
+    async registerBulkMetrics(value: IEdgeApp[]): Promise<void> {
+
+        const clientMetrics: IClientMetricsEnv[] = value.map((metric) => ({
+            featureName: metric.featureName,
+            appName: metric.appName,
+            environment: metric.environment,
+            timestamp: metric.timestamp, //we might need to approximate between start/stop...
+            yes: metric.yes,
+            no: metric.no,
+        }));
+
+        await this.registerPrecomputedMetrics(clientMetrics);
+    }
+
+    async registerPrecomputedMetrics(
+        clientMetrics: IClientMetricsEnv[],
+    ): Promise<void> {
         this.unsavedMetrics = collapseHourlyMetrics([
             ...this.unsavedMetrics,
             ...clientMetrics,
         ]);
         this.lastSeenService.updateLastSeen(clientMetrics);
-
-        this.config.eventBus.emit(CLIENT_METRICS, value);
     }
 
     async bulkAdd(): Promise<void> {

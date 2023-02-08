@@ -111,10 +111,10 @@ const createInstanceChartOptions = (
         x: {
             type: 'time',
             time: { unit: 'minute' },
-            grid: { display: false },
+            grid: { display: true },
             ticks: {
                 callback: (_, i, data) =>
-                    formatDateHM(data[i].value, locationSettings.locale),
+                    formatDateHM(data[i].value * 1000, locationSettings.locale),
             },
         },
     },

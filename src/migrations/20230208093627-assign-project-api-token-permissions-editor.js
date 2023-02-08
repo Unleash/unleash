@@ -9,7 +9,6 @@ exports.up = function (db, cb) {
                      CROSS JOIN environments e
             WHERE p.permission IN
                   ('READ_PROJECT_API_TOKEN');
-            \`,
         `,
         cb,
     );

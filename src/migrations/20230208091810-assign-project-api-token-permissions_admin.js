@@ -11,7 +11,6 @@ exports.up = function (db, cb) {
                   ('READ_PROJECT_API_TOKEN',
                    'CREATE_PROJECT_API_TOKEN',
                    'DELETE_PROJECT_API_TOKEN');
-            \`,
         `,
         cb,
     );

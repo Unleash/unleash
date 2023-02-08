@@ -1,7 +1,9 @@
 import memoizee from 'memoizee';
 import { Response } from 'express';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import hasSum from 'hash-sum';
 import Controller from '../controller';
-import { IUnleashConfig, IUnleashServices } from '../../types';
+import { IFlagResolver, IUnleashConfig, IUnleashServices } from '../../types';
 import FeatureToggleService from '../../services/feature-toggle-service';
 import { Logger } from '../../logger';
 import { querySchema } from '../../schema/feature-schema';
@@ -25,6 +27,8 @@ import {
     ClientFeaturesSchema,
 } from '../../openapi/spec/client-features-schema';
 import { ISegmentService } from 'lib/segments/segment-service-interface';
+import { EventService } from 'lib/services';
+import { hoursToMilliseconds } from 'date-fns';
 
 const version = 2;
 
@@ -44,9 +48,15 @@ export default class FeatureController extends Controller {
 
     private openApiService: OpenApiService;
 
+    private eventService: EventService;
+
     private readonly cache: boolean;
 
     private cachedFeatures: any;
+
+    private cachedFeatures2: any;
+
+    private flagResolver: IFlagResolver;
 
     constructor(
         {
@@ -54,21 +64,25 @@ export default class FeatureController extends Controller {
             segmentService,
             clientSpecService,
             openApiService,
+            eventService,
         }: Pick<
             IUnleashServices,
             | 'featureToggleServiceV2'
             | 'segmentService'
             | 'clientSpecService'
             | 'openApiService'
+            | 'eventService'
         >,
         config: IUnleashConfig,
     ) {
         super(config);
-        const { clientFeatureCaching } = config;
+        const { clientFeatureCaching, flagResolver } = config;
         this.featureToggleServiceV2 = featureToggleServiceV2;
         this.segmentService = segmentService;
         this.clientSpecService = clientSpecService;
         this.openApiService = openApiService;
+        this.flagResolver = flagResolver;
+        this.eventService = eventService;
         this.logger = config.getLogger('client-api/feature.js');
 
         this.route({
@@ -116,12 +130,27 @@ export default class FeatureController extends Controller {
                     },
                 },
             );
+
+            this.cachedFeatures2 = memoizee(
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                (query: IFeatureToggleQuery, etag: string) =>
+                    this.resolveFeaturesAndSegments(query),
+                {
+                    promise: true,
+                    maxAge: hoursToMilliseconds(1),
+                    normalizer(args) {
+                        // args is arguments object as accessible in memoized function
+                        return args[1];
+                    },
+                },
+            );
         }
     }
 
     private async resolveFeaturesAndSegments(
         query?: IFeatureToggleQuery,
     ): Promise<[FeatureConfigurationClient[], ISegment[]]> {
+        this.logger.debug('bypass cache');
         return Promise.all([
             this.featureToggleServiceV2.getClientFeatures(query),
             this.segmentService.getActive(),
@@ -199,6 +228,10 @@ export default class FeatureController extends Controller {
         req: IAuthRequest,
         res: Response<ClientFeaturesSchema>,
     ): Promise<void> {
+        if (this.flagResolver.isEnabled('optimal304')) {
+            return this.optimal304(req, res);
+        }
+
         const query = await this.resolveQuery(req);
 
         const [features, segments] = this.cache
@@ -218,6 +251,57 @@ export default class FeatureController extends Controller {
                 res,
                 clientFeaturesSchema.$id,
                 { version, features, query },
+            );
+        }
+    }
+
+    async optimal304(
+        req: IAuthRequest,
+        res: Response<ClientFeaturesSchema>,
+    ): Promise<void> {
+        const query = await this.resolveQuery(req);
+
+        const revisionId = await this.eventService.getMaxRevisionId();
+
+        // TODO: We will need to standardize this to be able to implement this a cross languages (Edge in Rust?).
+        const queryHash = hasSum(query);
+        const etag = `${queryHash}:${revisionId}`;
+        const userVersion = req.headers['if-none-match'];
+        const meta = { revisionId, etag, queryHash };
+
+        res.setHeader('etag', etag);
+
+        if (etag === userVersion) {
+            res.status(304);
+            res.end();
+            return;
+        } else {
+            this.logger.debug(
+                `Provided revision: ${userVersion}, calculated revision: ${etag}`,
+            );
+        }
+
+        const [features, segments] = await this.cachedFeatures2(query, etag);
+
+        if (this.clientSpecService.requestSupportsSpec(req, 'segments')) {
+            this.openApiService.respondWithValidation(
+                200,
+                res,
+                clientFeaturesSchema.$id,
+                {
+                    version,
+                    features,
+                    query: { ...query },
+                    segments,
+                    meta,
+                },
+            );
+        } else {
+            this.openApiService.respondWithValidation(
+                200,
+                res,
+                clientFeaturesSchema.$id,
+                { version, features, query, meta },
             );
         }
     }

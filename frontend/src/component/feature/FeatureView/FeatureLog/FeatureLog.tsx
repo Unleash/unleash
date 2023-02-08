@@ -20,12 +20,7 @@ const FeatureLog = () => {
 
     return (
         <StyledContainer>
-            <EventLog
-                title="Event log"
-                project={projectId}
-                feature={featureId}
-                displayInline
-            />
+            <EventLog title="Event log" feature={featureId} displayInline />
         </StyledContainer>
     );
 };

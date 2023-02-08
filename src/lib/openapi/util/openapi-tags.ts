@@ -19,6 +19,11 @@ const OPENAPI_TAGS = [
             'Create, update, and delete [Personal access tokens](https://docs.getunleash.io/reference/api-tokens-and-client-keys#personal-access-tokens).',
     },
     {
+        name: 'Service Accounts',
+        description:
+            'Endpoints for managing [Service Accounts](https://docs.getunleash.io/reference/service-accounts), which enable programmatic access to the Unleash API.',
+    },
+    {
         name: 'Archive',
         description:
             'Revive or permanently delete [archived feature toggles](https://docs.getunleash.io/advanced/archived_toggles).',

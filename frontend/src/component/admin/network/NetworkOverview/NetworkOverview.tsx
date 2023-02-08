@@ -59,7 +59,7 @@ const summingReqsByLabelAndType = (
 
 const toGraphData = (metrics?: RequestsPerSecondSchema) => {
     const results =
-        metrics?.data?.result?.filter(result => result.metric?.appName) || [];
+        metrics?.data?.result?.filter(result => result?.metric?.appName) || [];
     const aggregated = results
         .map(asNetworkAppData)
         .reduce(summingReqsByLabelAndType, {});

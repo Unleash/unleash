@@ -211,7 +211,6 @@ export default class FeatureToggleClientStore
             feature.impressionData = r.impression_data;
             feature.enabled = !!r.enabled;
             feature.name = r.name;
-            feature.favorite = r.favorite;
             feature.description = r.description;
             feature.project = r.project;
             feature.stale = r.stale;
@@ -219,6 +218,7 @@ export default class FeatureToggleClientStore
             feature.variants = r.variants || [];
             feature.project = r.project;
             if (isAdmin) {
+                feature.favorite = r.favorite;
                 feature.lastSeenAt = r.last_seen_at;
                 feature.createdAt = r.created_at;
             }

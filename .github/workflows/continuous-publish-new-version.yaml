@@ -28,7 +28,6 @@ jobs:
         with:
           token: ${{ secrets.GH_PUSH_TOKEN }}
       - name: setup git config
-        # GitHub bot will be the author of the auto commits
         run: |
           git config user.name "GitHub Actions Bot"
           git config user.email "<>"

@@ -12,7 +12,7 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
 }));
 
 function AdminMenu() {
-    const { uiConfig } = useUiConfig();
+    const { uiConfig, isEnterprise } = useUiConfig();
     const { pathname } = useLocation();
     const { isBilling } = useInstanceStatus();
     const { flags } = uiConfig;
@@ -35,7 +35,7 @@ function AdminMenu() {
                         </CenteredNavLink>
                     }
                 />
-                {flags.serviceAccounts && (
+                {isEnterprise() && (
                     <Tab
                         value="service-accounts"
                         label={

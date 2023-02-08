@@ -43,7 +43,6 @@ export interface IFlags {
     maintenance?: boolean;
     maintenanceMode?: boolean;
     messageBanner?: boolean;
-    serviceAccounts?: boolean;
     featuresExportImport?: boolean;
     newProjectOverview?: boolean;
     caseInsensitiveInOperators?: boolean;

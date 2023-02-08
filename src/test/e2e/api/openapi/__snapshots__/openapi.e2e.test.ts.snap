@@ -8424,7 +8424,7 @@ If the provided project does not exist, the list of events will be empty.",
       "name": "Segments",
     },
     {
-      "description": "Endpoints for managing [Service Accounts](https://docs.getunleash.io/reference/service-accounts) enabling apps to access Unleash API programatically.",
+      "description": "Endpoints for managing [Service Accounts](https://docs.getunleash.io/reference/service-accounts), which enable programmatic access to the Unleash API.",
       "name": "Service Accounts",
     },
     {

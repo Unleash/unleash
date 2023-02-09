@@ -80,7 +80,7 @@ export class ApiTokenController extends Controller {
             method: 'get',
             path: '',
             handler: this.getAllApiTokens,
-            permission: READ_API_TOKEN || READ_PROJECT_API_TOKEN,
+            permission: READ_API_TOKEN,
             middleware: [
                 openApiService.validPath({
                     tags: ['API tokens'],

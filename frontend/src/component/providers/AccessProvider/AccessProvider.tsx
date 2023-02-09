@@ -1,6 +1,6 @@
 import { ReactElement, ReactNode, useMemo } from 'react';
 import AccessContext, { IAccessContext } from 'contexts/AccessContext';
-import { ADMIN, DELETE_PROJECT_API_TOKEN } from './permissions';
+import { ADMIN } from './permissions';
 import { IPermission } from 'interfaces/user';
 import { useAuthPermissions } from 'hooks/api/getters/useAuth/useAuthPermissions';
 
@@ -74,6 +74,7 @@ const checkPermission = (
     ) {
         return true;
     }
+
     if (
         p.permission === permission &&
         (p.project === project || p.project === '*') &&

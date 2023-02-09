@@ -74,9 +74,6 @@ const checkPermission = (
     ) {
         return true;
     }
-    if (permission === DELETE_PROJECT_API_TOKEN) {
-        debugger;
-    }
     if (
         p.permission === permission &&
         (p.project === project || p.project === '*') &&

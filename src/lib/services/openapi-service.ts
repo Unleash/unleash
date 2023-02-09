@@ -78,7 +78,7 @@ export class OpenApiService {
         const errors = validateSchema<S>(schema, data);
 
         if (errors) {
-            this.logger.info(
+            this.logger.debug(
                 'Invalid response:',
                 JSON.stringify(errors, null, 4),
             );

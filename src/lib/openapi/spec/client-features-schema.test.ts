@@ -423,7 +423,7 @@ test('clientFeaturesSchema client specification test 15', () => {
     ).toBeUndefined();
 });
 
-test('clientFeaturesSchema response with favorite and tags', () => {
+test('clientFeaturesSchema response with tags', () => {
     const json = `{
     "version": 2,
     "segments": [
@@ -455,8 +455,7 @@ test('clientFeaturesSchema response with favorite and tags', () => {
         "variants": null,
         "createdAt": "2019-01-24T10:38:10.370Z",
         "archived": false,
-        "archivedAt": null,
-        "favorite": true
+        "archivedAt": null
       }
     ]
   }`;

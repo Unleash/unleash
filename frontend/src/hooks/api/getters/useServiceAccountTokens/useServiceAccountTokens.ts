@@ -12,10 +12,10 @@ export interface IUseServiceAccountTokensOutput {
 }
 
 export const useServiceAccountTokens = (id: number) => {
-    const { uiConfig, isEnterprise } = useUiConfig();
+    const { isEnterprise } = useUiConfig();
 
     const { data, error, mutate } = useConditionalSWR(
-        Boolean(uiConfig.flags.serviceAccounts) && isEnterprise(),
+        isEnterprise(),
         { tokens: [] },
         formatApiPath(`api/admin/service-account/${id}/token`),
         fetcher

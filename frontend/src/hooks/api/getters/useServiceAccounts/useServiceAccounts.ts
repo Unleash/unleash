@@ -10,7 +10,7 @@ export const useServiceAccounts = () => {
     const { uiConfig, isEnterprise } = useUiConfig();
 
     const { data, error, mutate } = useConditionalSWR(
-        Boolean(uiConfig.flags.serviceAccounts) && isEnterprise(),
+        isEnterprise(),
         { serviceAccounts: [], rootRoles: [] },
         formatApiPath(`api/admin/service-account`),
         fetcher

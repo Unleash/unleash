@@ -32,12 +32,14 @@ interface INetworkApp {
     type: string;
 }
 
-const asNetworkAppData = (result: RequestsPerSecondSchemaDataResultItem) => {
+const asNetworkAppData = (
+    result: RequestsPerSecondSchemaDataResultItem & { label: string }
+) => {
     const values = (result.values || []) as ResultValue[];
     const data = values.filter(value => isRecent(value));
     const reqs = data.length ? parseFloat(data[data.length - 1][1]) : 0;
     return {
-        label: unknownify(result.metric?.appName),
+        label: result.label,
         reqs,
         type: unknownify(result.metric?.endpoint?.split('/')[2]),
     };
@@ -59,7 +61,12 @@ const summingReqsByLabelAndType = (
 
 const toGraphData = (metrics?: RequestsPerSecondSchema) => {
     const results =
-        metrics?.data?.result?.filter(result => result.metric?.appName) || [];
+        metrics?.data?.result
+            ?.map(result => ({
+                ...result,
+                label: unknownify(result.metric?.appName),
+            }))
+            .filter(result => result.label !== 'unknown') || [];
     const aggregated = results
         .map(asNetworkAppData)
         .reduce(summingReqsByLabelAndType, {});

@@ -70,6 +70,10 @@ const flags = {
         process.env.UNLEASH_EXPERIMENTAL_PROJECT_API_ACCESS,
         false,
     ),
+    strictSchemaValidation: parseEnvVarBoolean(
+        process.env.UNLEASH_STRICT_SCHEMA_VALIDTION,
+        false,
+    ),
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

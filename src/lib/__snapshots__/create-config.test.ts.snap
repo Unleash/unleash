@@ -84,6 +84,7 @@ exports[`should create default config 1`] = `
       "responseTimeWithAppName": false,
       "serviceAccounts": false,
       "showProjectApiAccess": false,
+      "strictSchemaValidation": false,
       "variantsPerEnvironment": false,
     },
   },
@@ -106,6 +107,7 @@ exports[`should create default config 1`] = `
       "responseTimeWithAppName": false,
       "serviceAccounts": false,
       "showProjectApiAccess": false,
+      "strictSchemaValidation": false,
       "variantsPerEnvironment": false,
     },
     "externalResolver": {

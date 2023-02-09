@@ -410,9 +410,6 @@ exports[`should serve the OpenAPI spec 1`] = `
           "enabled": {
             "type": "boolean",
           },
-          "favorite": {
-            "type": "boolean",
-          },
           "impressionData": {
             "nullable": true,
             "type": "boolean",

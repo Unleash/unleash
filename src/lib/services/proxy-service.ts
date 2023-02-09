@@ -16,8 +16,7 @@ import {
     frontendSettingsKey,
 } from '../types/settings/frontend-settings';
 import { validateOrigins } from '../util';
-import { BadDataError } from '../error';
-import assert from 'assert';
+import { BadDataError, InvalidTokenError } from '../error';
 import { minutesToMilliseconds } from 'date-fns';
 
 type Config = Pick<
@@ -158,7 +157,9 @@ export class ProxyService {
     }
 
     private static assertExpectedTokenType({ type }: ApiUser) {
-        assert(type === ApiTokenType.FRONTEND || type === ApiTokenType.ADMIN);
+        if (!(type === ApiTokenType.FRONTEND || type === ApiTokenType.ADMIN)) {
+            throw new InvalidTokenError();
+        }
     }
 
     async setFrontendSettings(

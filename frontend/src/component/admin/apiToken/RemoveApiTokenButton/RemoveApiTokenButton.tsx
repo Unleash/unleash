@@ -56,7 +56,7 @@ export const RemoveApiTokenButton = ({
                 tooltipProps={{ title: 'Delete token', arrow: true }}
                 onClick={() => setOpen(true)}
                 size="large"
-                disabled={hasAccess(permission)}
+                disabled={hasAccess(permission, project)}
             >
                 <Delete />
             </PermissionIconButton>

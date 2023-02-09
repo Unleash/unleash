@@ -112,7 +112,7 @@ export class ApiTokenController extends Controller {
             method: 'post',
             path: '',
             handler: this.createApiToken,
-            permission: CREATE_API_TOKEN || CREATE_PROJECT_API_TOKEN,
+            permission: CREATE_API_TOKEN,
             middleware: [
                 openApiService.validPath({
                     tags: ['API tokens'],
@@ -133,7 +133,7 @@ export class ApiTokenController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['API tokens'],
-                    operationId: 'createApiToken',
+                    operationId: 'createProjectApiToken',
                     requestBody: createRequestSchema('createApiTokenSchema'),
                     responses: {
                         201: resourceCreatedResponseSchema('apiTokenSchema'),
@@ -184,7 +184,7 @@ export class ApiTokenController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['API tokens'],
-                    operationId: 'deleteApiToken',
+                    operationId: 'deleteProjectApiToken',
                     responses: {
                         200: emptyResponse,
                     },

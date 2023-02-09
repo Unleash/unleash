@@ -42,7 +42,7 @@ export const CopyApiTokenButton = ({
             tooltipProps={{ title: 'Copy token', arrow: true }}
             onClick={() => copyToken(token.secret)}
             size="large"
-            disabled={!hasAccess(permission)}
+            disabled={!hasAccess(permission, project)}
         >
             <FileCopy />
         </PermissionIconButton>

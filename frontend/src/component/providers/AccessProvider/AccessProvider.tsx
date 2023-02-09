@@ -47,7 +47,7 @@ export const hasAccess = (
     if (!permissions) {
         return false;
     }
-
+    debugger;
     return permissions.some(p => {
         return checkPermission(p, permission, project, environment);
     });

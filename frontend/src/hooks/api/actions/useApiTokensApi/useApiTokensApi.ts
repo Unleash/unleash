@@ -1,5 +1,5 @@
 import useAPI from '../useApi/useApi';
-import { formatApiPath } from '../../../../utils/formatPath';
+import { formatApiPath } from 'utils/formatPath';
 
 export interface IApiTokenCreate {
     username: string;
@@ -16,7 +16,7 @@ const useApiTokensApi = () => {
     const deleteToken = async (secret: string, project?: string) => {
         const path = formatApiPath(
             `api/admin/api-tokens/${secret}${
-                Boolean(project) && project !== '' ? `/${project}` : ''
+                Boolean(project) ? `/${project}` : ''
             }`
         );
         const req = createRequest(path, { method: 'DELETE' });
@@ -32,9 +32,7 @@ const useApiTokensApi = () => {
 
     const createToken = async (newToken: IApiTokenCreate, project?: string) => {
         const path = formatApiPath(
-            `api/admin/api-tokens${
-                Boolean(project) && project !== '' ? `/${project}` : ''
-            }`
+            `api/admin/api-tokens${Boolean(project) ? `/${project}` : ''}`
         );
         const req = createRequest(path, {
             method: 'POST',

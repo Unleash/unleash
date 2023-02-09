@@ -3659,7 +3659,7 @@ interpret@^2.2.0:
   resolved "https://registry.yarnpkg.com/interpret/-/interpret-2.2.0.tgz#1a78a0b5965c40a5416d007ad6f50ad27c417df9"
   integrity sha512-Ju0Bz/cEia55xDwUWEa8+olFpCiQoypjnQySseKtmjNrnps3P+xfpUmGr90T7yjlVJmOtybRvPXhKMbHr+fWnw==
 
-ip@^1.1.5, ip@^1.1.8:
+ip@^1.1.8:
   version "1.1.8"
   resolved "https://registry.yarnpkg.com/ip/-/ip-1.1.8.tgz#ae05948f6b075435ed3307acce04629da8cdbf48"
   integrity sha512-PuExPYUiu6qMBQb4l06ecm6T6ujzhmh+MeJcW9wa89PoAz5pvd4zPgN5WJV104mb6S2T1AwNIAaB70JNrLQWhg==
@@ -6730,15 +6730,15 @@ universalify@^0.1.0:
   resolved "https://registry.yarnpkg.com/universalify/-/universalify-0.1.2.tgz#b646f69be3942dabcecc9d6639c80dc105efaa66"
   integrity sha512-rBJeI5CXAlmy1pV+617WB9J63U6XcazHHF2f2dbJix4XzpUF0RS3Zbj0FGIOCAva5P/d/GBOYaACQ1w+0azUkg==
 
-unleash-client@3.16.1:
-  version "3.16.1"
-  resolved "https://registry.yarnpkg.com/unleash-client/-/unleash-client-3.16.1.tgz#81eede77202789eb20eda126d9c7747567bb0628"
-  integrity sha512-N8c0b2B8LFjfDErCJYMZfAPRZiRRGYFZ0aBLRMnpA1K5iFm/I/TH91UgAGsylOsWngnUKXTST7kYeDgK1Aydug==
+unleash-client@3.18.0:
+  version "3.18.0"
+  resolved "https://registry.yarnpkg.com/unleash-client/-/unleash-client-3.18.0.tgz#4ea32b38e9b7518ef8816dcaac884a8eb32fea25"
+  integrity sha512-BCq/m59XgrfgfI05wxdY1n3zAPeAvMMIKkHhKzKgObjRz1ucwPYcPTB3lQTU0foqP7AuieDRHsJxqBpkCCqbCw==
   dependencies:
-    ip "^1.1.5"
+    ip "^1.1.8"
     make-fetch-happen "^10.2.1"
     murmurhash3js "^3.0.1"
-    semver "^7.3.5"
+    semver "^7.3.8"
 
 unpipe@1.0.0, unpipe@~1.0.0:
   version "1.0.0"

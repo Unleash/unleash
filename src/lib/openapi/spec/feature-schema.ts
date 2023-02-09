@@ -21,6 +21,7 @@ export const featureSchema = {
         },
         description: {
             type: 'string',
+            nullable: true,
         },
         archived: {
             type: 'boolean',

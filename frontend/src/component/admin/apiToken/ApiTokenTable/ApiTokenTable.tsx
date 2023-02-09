@@ -44,6 +44,89 @@ export const ApiTokenTable = ({
     const initialState = useMemo(() => ({ sortBy: [{ id: 'createdAt' }] }), []);
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
+    const COLUMNS = useMemo(() => {
+        return [
+            {
+                id: 'Icon',
+                width: '1%',
+                Cell: () => <IconCell icon={<Key color="disabled" />} />,
+                disableSortBy: true,
+                disableGlobalFilter: true,
+            },
+            {
+                Header: 'Username',
+                accessor: 'username',
+                Cell: HighlightCell,
+            },
+            {
+                Header: 'Type',
+                accessor: 'type',
+                Cell: ({
+                    value,
+                }: {
+                    value: 'admin' | 'client' | 'frontend';
+                }) => (
+                    <HighlightCell
+                        value={tokenDescriptions[value].label}
+                        subtitle={tokenDescriptions[value].title}
+                    />
+                ),
+                minWidth: 280,
+            },
+            {
+                Header: 'Project',
+                accessor: 'project',
+                Cell: (props: any) => (
+                    <ProjectsList
+                        project={props.row.original.project}
+                        projects={props.row.original.projects}
+                    />
+                ),
+                minWidth: 120,
+            },
+            {
+                Header: 'Environment',
+                accessor: 'environment',
+                Cell: HighlightCell,
+                minWidth: 120,
+            },
+            {
+                Header: 'Created',
+                accessor: 'createdAt',
+                Cell: DateCell,
+                minWidth: 150,
+                disableGlobalFilter: true,
+            },
+            {
+                Header: 'Last seen',
+                accessor: 'seenAt',
+                Cell: TimeAgoCell,
+                minWidth: 150,
+                disableGlobalFilter: true,
+            },
+            {
+                Header: 'Actions',
+                id: 'Actions',
+                align: 'center',
+                width: '1%',
+                disableSortBy: true,
+                disableGlobalFilter: true,
+                Cell: (props: any) => (
+                    <ActionCell>
+                        <CopyApiTokenButton
+                            token={props.row.original}
+                            project={filterForProject}
+                        />
+                        <RemoveApiTokenButton
+                            token={props.row.original}
+                            project={filterForProject}
+                        />
+                    </ActionCell>
+                ),
+            },
+        ];
+    }, [filterForProject]);
+
     const filteredTokens = useMemo(() => {
         if (Boolean(filterForProject)) {
             return tokens.filter(token => {
@@ -207,74 +290,3 @@ const tokenDescriptions = {
         title: 'Full access for managing Unleash',
     },
 };
-
-const COLUMNS = [
-    {
-        id: 'Icon',
-        width: '1%',
-        Cell: () => <IconCell icon={<Key color="disabled" />} />,
-        disableSortBy: true,
-        disableGlobalFilter: true,
-    },
-    {
-        Header: 'Username',
-        accessor: 'username',
-        Cell: HighlightCell,
-    },
-    {
-        Header: 'Type',
-        accessor: 'type',
-        Cell: ({ value }: { value: 'admin' | 'client' | 'frontend' }) => (
-            <HighlightCell
-                value={tokenDescriptions[value].label}
-                subtitle={tokenDescriptions[value].title}
-            />
-        ),
-        minWidth: 280,
-    },
-    {
-        Header: 'Project',
-        accessor: 'project',
-        Cell: (props: any) => (
-            <ProjectsList
-                project={props.row.original.project}
-                projects={props.row.original.projects}
-            />
-        ),
-        minWidth: 120,
-    },
-    {
-        Header: 'Environment',
-        accessor: 'environment',
-        Cell: HighlightCell,
-        minWidth: 120,
-    },
-    {
-        Header: 'Created',
-        accessor: 'createdAt',
-        Cell: DateCell,
-        minWidth: 150,
-        disableGlobalFilter: true,
-    },
-    {
-        Header: 'Last seen',
-        accessor: 'seenAt',
-        Cell: TimeAgoCell,
-        minWidth: 150,
-        disableGlobalFilter: true,
-    },
-    {
-        Header: 'Actions',
-        id: 'Actions',
-        align: 'center',
-        width: '1%',
-        disableSortBy: true,
-        disableGlobalFilter: true,
-        Cell: (props: any) => (
-            <ActionCell>
-                <CopyApiTokenButton token={props.row.original} />
-                <RemoveApiTokenButton token={props.row.original} />
-            </ActionCell>
-        ),
-    },
-];

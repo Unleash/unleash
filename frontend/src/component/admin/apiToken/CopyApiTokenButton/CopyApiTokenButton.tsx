@@ -1,14 +1,23 @@
-import { IconButton, Tooltip } from '@mui/material';
 import { IApiToken } from 'hooks/api/getters/useApiTokens/useApiTokens';
 import useToast from 'hooks/useToast';
 import copy from 'copy-to-clipboard';
 import { FileCopy } from '@mui/icons-material';
+import { DELETE_PROJECT_API_TOKEN } from '@server/types';
+import { DELETE_API_TOKEN } from '../../../providers/AccessProvider/permissions';
+import PermissionIconButton from '../../../common/PermissionIconButton/PermissionIconButton';
+import { useContext } from 'react';
+import AccessContext from '../../../../contexts/AccessContext';
 
 interface ICopyApiTokenButtonProps {
     token: IApiToken;
+    project?: string;
 }
 
-export const CopyApiTokenButton = ({ token }: ICopyApiTokenButtonProps) => {
+export const CopyApiTokenButton = ({
+    token,
+    project,
+}: ICopyApiTokenButtonProps) => {
+    const { hasAccess } = useContext(AccessContext);
     const { setToastData } = useToast();
 
     const copyToken = (value: string) => {
@@ -20,11 +29,20 @@ export const CopyApiTokenButton = ({ token }: ICopyApiTokenButtonProps) => {
         }
     };
 
+    const permission = Boolean(project)
+        ? DELETE_PROJECT_API_TOKEN
+        : DELETE_API_TOKEN;
+
     return (
-        <Tooltip title="Copy token" arrow>
-            <IconButton onClick={() => copyToken(token.secret)} size="large">
-                <FileCopy />
-            </IconButton>
-        </Tooltip>
+        <PermissionIconButton
+            permission={permission}
+            projectId={project}
+            tooltipProps={{ title: 'Copy token', arrow: true }}
+            onClick={() => copyToken(token.secret)}
+            size="large"
+            disabled={!hasAccess(permission)}
+        >
+            <FileCopy />
+        </PermissionIconButton>
     );
 };

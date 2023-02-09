@@ -23,7 +23,7 @@ jobs:
         node-version: [14.x]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           token: ${{ secrets.GH_PUSH_TOKEN }}
       - name: setup git config

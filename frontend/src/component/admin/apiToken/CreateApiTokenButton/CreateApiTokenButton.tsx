@@ -1,10 +1,12 @@
 import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
-import { CREATE_API_TOKEN } from 'component/providers/AccessProvider/permissions';
+import {
+    CREATE_API_TOKEN,
+    CREATE_PROJECT_API_TOKEN,
+} from 'component/providers/AccessProvider/permissions';
 import { CREATE_API_TOKEN_BUTTON } from 'utils/testIds';
 import { useNavigate } from 'react-router-dom';
 import { Add } from '@mui/icons-material';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
-import { CREATE_PROJECT_API_TOKEN } from '@server/types';
 
 export const CreateApiTokenButton = () => {
     const navigate = useNavigate();

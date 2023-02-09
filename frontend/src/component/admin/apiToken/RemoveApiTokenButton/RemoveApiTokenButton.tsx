@@ -1,4 +1,7 @@
-import { DELETE_API_TOKEN } from 'component/providers/AccessProvider/permissions';
+import {
+    DELETE_API_TOKEN,
+    DELETE_PROJECT_API_TOKEN,
+} from 'component/providers/AccessProvider/permissions';
 import { Delete } from '@mui/icons-material';
 import { styled } from '@mui/material';
 import {
@@ -10,7 +13,6 @@ import { useContext, useState } from 'react';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import useToast from 'hooks/useToast';
 import useApiTokensApi from 'hooks/api/actions/useApiTokensApi/useApiTokensApi';
-import { DELETE_PROJECT_API_TOKEN } from '@server/types';
 import PermissionIconButton from '../../../common/PermissionIconButton/PermissionIconButton';
 
 const StyledUl = styled('ul')({

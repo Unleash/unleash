@@ -4,8 +4,11 @@ import Controller from '../controller';
 import {
     ADMIN,
     CREATE_API_TOKEN,
+    CREATE_PROJECT_API_TOKEN,
     DELETE_API_TOKEN,
+    DELETE_PROJECT_API_TOKEN,
     READ_API_TOKEN,
+    READ_PROJECT_API_TOKEN,
     UPDATE_API_TOKEN,
 } from '../../types/permissions';
 import { ApiTokenService } from '../../services/api-token-service';
@@ -77,7 +80,7 @@ export class ApiTokenController extends Controller {
             method: 'get',
             path: '',
             handler: this.getAllApiTokens,
-            permission: READ_API_TOKEN,
+            permission: READ_API_TOKEN || READ_PROJECT_API_TOKEN,
             middleware: [
                 openApiService.validPath({
                     tags: ['API tokens'],
@@ -93,7 +96,7 @@ export class ApiTokenController extends Controller {
             method: 'post',
             path: '',
             handler: this.createApiToken,
-            permission: CREATE_API_TOKEN,
+            permission: CREATE_API_TOKEN || CREATE_PROJECT_API_TOKEN,
             middleware: [
                 openApiService.validPath({
                     tags: ['API tokens'],
@@ -128,7 +131,7 @@ export class ApiTokenController extends Controller {
             path: '/:token',
             handler: this.deleteApiToken,
             acceptAnyContentType: true,
-            permission: DELETE_API_TOKEN,
+            permission: DELETE_API_TOKEN || DELETE_PROJECT_API_TOKEN,
             middleware: [
                 openApiService.validPath({
                     tags: ['API tokens'],

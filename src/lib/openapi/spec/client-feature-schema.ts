@@ -57,9 +57,6 @@ export const clientFeatureSchema = {
             },
             nullable: true,
         },
-        favorite: {
-            type: 'boolean',
-        },
         archived: {
             type: 'boolean',
         },

@@ -47,14 +47,3 @@ jobs:
           git push --tags
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - name: Trigger sync
-        uses: actions/github-script@v6
-        with:
-            github-token: ${{ secrets.UNLEASH_CI_BUILDER_GITHUB_TOKEN }}
-            script: |
-              await github.rest.actions.createWorkflowDispatch({
-                owner: 'ivarconr',
-                repo: 'unleash-enterprise',
-                workflow_id: 'continuous_version_sync.yaml',
-                ref: 'master'
-              })          

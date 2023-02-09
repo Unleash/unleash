@@ -164,7 +164,7 @@ export class ApiTokenController extends Controller {
             path: '/:token',
             handler: this.deleteApiToken,
             acceptAnyContentType: true,
-            permission: DELETE_API_TOKEN || DELETE_PROJECT_API_TOKEN,
+            permission: DELETE_API_TOKEN,
             middleware: [
                 openApiService.validPath({
                     tags: ['API tokens'],

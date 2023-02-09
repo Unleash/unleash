@@ -93,10 +93,43 @@ export class ApiTokenController extends Controller {
         });
 
         this.route({
+            method: 'get',
+            path: '/:project',
+            handler: this.getProjectApiTokens,
+            permission: READ_PROJECT_API_TOKEN,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['API tokens'],
+                    operationId: 'getProjectApiTokens',
+                    responses: {
+                        200: createResponseSchema('apiTokensSchema'),
+                    },
+                }),
+            ],
+        });
+
+        this.route({
             method: 'post',
             path: '',
             handler: this.createApiToken,
             permission: CREATE_API_TOKEN || CREATE_PROJECT_API_TOKEN,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['API tokens'],
+                    operationId: 'createApiToken',
+                    requestBody: createRequestSchema('createApiTokenSchema'),
+                    responses: {
+                        201: resourceCreatedResponseSchema('apiTokenSchema'),
+                    },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'post',
+            path: '/:project',
+            handler: this.createApiToken,
+            permission: CREATE_PROJECT_API_TOKEN,
             middleware: [
                 openApiService.validPath({
                     tags: ['API tokens'],
@@ -142,6 +175,40 @@ export class ApiTokenController extends Controller {
                 }),
             ],
         });
+        this.route({
+            method: 'delete',
+            path: '/:token/:project',
+            handler: this.deleteApiToken,
+            acceptAnyContentType: true,
+            permission: DELETE_PROJECT_API_TOKEN,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['API tokens'],
+                    operationId: 'deleteApiToken',
+                    responses: {
+                        200: emptyResponse,
+                    },
+                }),
+            ],
+        });
+    }
+
+    async getProjectApiTokens(
+        req: IAuthRequest,
+        res: Response<ApiTokensSchema>,
+    ): Promise<void> {
+        const { user } = req;
+        const { projectId } = req.params;
+        const tokens = await this.accessibleTokens(user);
+        const projectTokens = tokens.filter((token) =>
+            [token.project, ...token.projects].includes(projectId),
+        );
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            apiTokensSchema.$id,
+            { tokens: serializeDates(projectTokens) },
+        );
     }
 
     async getAllApiTokens(

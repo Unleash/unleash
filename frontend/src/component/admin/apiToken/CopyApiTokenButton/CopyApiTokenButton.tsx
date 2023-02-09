@@ -2,8 +2,10 @@ import { IApiToken } from 'hooks/api/getters/useApiTokens/useApiTokens';
 import useToast from 'hooks/useToast';
 import copy from 'copy-to-clipboard';
 import { FileCopy } from '@mui/icons-material';
-import { DELETE_PROJECT_API_TOKEN } from '@server/types';
-import { DELETE_API_TOKEN } from '../../../providers/AccessProvider/permissions';
+import {
+    READ_API_TOKEN,
+    READ_PROJECT_API_TOKEN,
+} from '../../../providers/AccessProvider/permissions';
 import PermissionIconButton from '../../../common/PermissionIconButton/PermissionIconButton';
 import { useContext } from 'react';
 import AccessContext from '../../../../contexts/AccessContext';
@@ -30,8 +32,8 @@ export const CopyApiTokenButton = ({
     };
 
     const permission = Boolean(project)
-        ? DELETE_PROJECT_API_TOKEN
-        : DELETE_API_TOKEN;
+        ? READ_PROJECT_API_TOKEN
+        : READ_API_TOKEN;
 
     return (
         <PermissionIconButton

@@ -13,8 +13,13 @@ export interface IApiToken {
     environment: string;
 }
 
-export const useApiTokens = (options: SWRConfiguration = {}) => {
-    const path = formatApiPath(`api/admin/api-tokens`);
+export const useApiTokens = (
+    project?: string,
+    options: SWRConfiguration = {}
+) => {
+    const path = formatApiPath(
+        `api/admin/api-tokens${Boolean(project) ? `/${project}` : ''}`
+    );
     const { data, error, mutate } = useSWR<IApiToken[]>(path, fetcher, options);
 
     const tokens = useMemo(() => {

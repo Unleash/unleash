@@ -37,7 +37,7 @@ export const RemoveApiTokenButton = ({
         : DELETE_API_TOKEN;
 
     const onRemove = async () => {
-        await deleteToken(token.secret);
+        await deleteToken(token.secret, project);
         setOpen(false);
         refetch();
         setToastData({

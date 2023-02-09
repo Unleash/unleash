@@ -58,7 +58,7 @@ export const CreateApiToken = ({
         }
         try {
             const payload = getApiTokenPayload();
-            await createToken(payload)
+            await createToken(payload, project)
                 .then(res => res.json())
                 .then(api => {
                     scrollToTop();

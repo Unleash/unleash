@@ -1525,6 +1525,7 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "string",
           },
           "description": {
+            "nullable": true,
             "type": "string",
           },
           "id": {

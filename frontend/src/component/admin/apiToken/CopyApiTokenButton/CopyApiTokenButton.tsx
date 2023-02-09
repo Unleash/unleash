@@ -6,7 +6,7 @@ import {
     READ_API_TOKEN,
     READ_PROJECT_API_TOKEN,
 } from '../../../providers/AccessProvider/permissions';
-import PermissionIconButton from '../../../common/PermissionIconButton/PermissionIconButton';
+import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { useContext } from 'react';
 import AccessContext from '../../../../contexts/AccessContext';
 

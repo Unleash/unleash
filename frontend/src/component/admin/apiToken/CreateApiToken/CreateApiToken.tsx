@@ -9,6 +9,7 @@ import useToast from 'hooks/useToast';
 import { useApiTokenForm } from 'component/admin/apiToken/ApiTokenForm/useApiTokenForm';
 import {
     ADMIN,
+    CREATE_API_TOKEN,
     CREATE_PROJECT_API_TOKEN,
 } from 'component/providers/AccessProvider/permissions';
 import { ConfirmToken } from '../ConfirmToken/ConfirmToken';
@@ -60,7 +61,9 @@ export const CreateApiToken = ({
     const PATH = Boolean(project)
         ? `api/admin/project/${project}/api-tokens`
         : 'api/admin/api-tokens';
-    const permission = Boolean(project) ? CREATE_PROJECT_API_TOKEN : ADMIN;
+    const permission = Boolean(project)
+        ? CREATE_PROJECT_API_TOKEN
+        : CREATE_API_TOKEN;
     const scope = Boolean(project) ? 'project' : 'global';
     const loading = globalLoading || projectLoading;
 
@@ -138,7 +141,11 @@ export const CreateApiToken = ({
                 mode="Create"
                 clearErrors={clearErrors}
             >
-                <CreateButton name="token" permission={permission} />
+                <CreateButton
+                    name="token"
+                    permission={permission}
+                    projectId={project}
+                />
             </ApiTokenForm>
             <ConfirmToken
                 open={showConfirm}

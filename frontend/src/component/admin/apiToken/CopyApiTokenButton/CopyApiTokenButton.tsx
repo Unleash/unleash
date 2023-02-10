@@ -7,7 +7,7 @@ import {
     READ_PROJECT_API_TOKEN,
 } from 'component/providers/AccessProvider/permissions';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
-import { useContext } from 'react';
+import { useCallback, useContext, useMemo } from 'react';
 import AccessContext from 'contexts/AccessContext';
 
 interface ICopyApiTokenButtonProps {
@@ -22,6 +22,22 @@ export const CopyApiTokenButton = ({
     const { hasAccess } = useContext(AccessContext);
     const { setToastData } = useToast();
 
+    const permission = Boolean(project)
+        ? READ_PROJECT_API_TOKEN
+        : READ_API_TOKEN;
+
+    const canAccess = useCallback(() => {
+        if (token && token.projects && project && permission) {
+            const { projects } = token;
+            for (const tokenProject of projects) {
+                if (!hasAccess(permission, tokenProject)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }, [hasAccess, token, project, permission]);
+
     const copyToken = (value: string) => {
         if (copy(value)) {
             setToastData({
@@ -31,10 +47,6 @@ export const CopyApiTokenButton = ({
         }
     };
 
-    const permission = Boolean(project)
-        ? READ_PROJECT_API_TOKEN
-        : READ_API_TOKEN;
-
     return (
         <PermissionIconButton
             permission={permission}
@@ -42,7 +54,7 @@ export const CopyApiTokenButton = ({
             tooltipProps={{ title: 'Copy token', arrow: true }}
             onClick={() => copyToken(token.secret)}
             size="large"
-            disabled={!hasAccess(permission, project)}
+            disabled={!canAccess()}
         >
             <FileCopy />
         </PermissionIconButton>

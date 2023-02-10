@@ -15,6 +15,7 @@ export const projectsSchema = {
             items: {
                 $ref: '#/components/schemas/projectSchema',
             },
+            description: 'A list of projects in the Unleash instance',
         },
     },
     components: {

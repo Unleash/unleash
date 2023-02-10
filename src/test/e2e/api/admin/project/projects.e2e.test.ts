@@ -1,5 +1,5 @@
 import dbInit from '../../../helpers/database-init';
-import { setupApp } from '../../../helpers/test-helper';
+import { setupAppWithCustomConfig } from '../../../helpers/test-helper';
 import getLogger from '../../../../fixtures/no-logger';
 import ProjectStore from '../../../../../lib/db/project-store';
 
@@ -10,7 +10,13 @@ let projectStore: ProjectStore;
 
 beforeAll(async () => {
     db = await dbInit('projects_api_serial', getLogger);
-    app = await setupApp(db.stores);
+    app = await setupAppWithCustomConfig(db.stores, {
+        experimental: {
+            flags: {
+                strictSchemaValidation: true,
+            },
+        },
+    });
     projectStore = db.stores.projectStore;
 });
 

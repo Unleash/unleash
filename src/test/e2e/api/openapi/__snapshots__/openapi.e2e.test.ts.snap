@@ -2550,32 +2550,44 @@ exports[`should serve the OpenAPI spec 1`] = `
       "projectSchema": {
         "additionalProperties": false,
         "properties": {
-          "changeRequestsEnabled": {
-            "type": "boolean",
-          },
           "createdAt": {
             "format": "date-time",
             "type": "string",
           },
           "description": {
+            "description": "Additional information about the project",
+            "example": "DX squad feature release",
+            "nullable": true,
             "type": "string",
           },
           "favorite": {
+            "description": "Is this project added to your favorite list",
+            "example": true,
             "type": "boolean",
           },
           "featureCount": {
+            "description": "The number of features this project has",
+            "example": 10,
             "type": "number",
           },
           "health": {
+            "description": "An indicator of the [project's health](https://docs.getunleash.io/reference/technical-debt#health-rating) on a scale from 0 to 100",
+            "example": 50,
             "type": "number",
           },
           "id": {
+            "description": "The id of this project",
+            "example": "dx-squad",
             "type": "string",
           },
           "memberCount": {
+            "description": "The number of members this project has",
+            "example": 4,
             "type": "number",
           },
           "name": {
+            "description": "The name of this project",
+            "example": "DX-Squad",
             "type": "string",
           },
           "updatedAt": {
@@ -2661,6 +2673,7 @@ Stats are divided into current and previous **windows**.
         "additionalProperties": false,
         "properties": {
           "projects": {
+            "description": "A list of projects in the Unleash instance",
             "items": {
               "$ref": "#/components/schemas/projectSchema",
             },

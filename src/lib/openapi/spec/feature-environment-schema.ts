@@ -9,6 +9,7 @@ export const featureEnvironmentSchema = {
     type: 'object',
     additionalProperties: false,
     required: ['name', 'enabled'],
+    description: 'A detailed description of the feature environment',
     properties: {
         name: {
             type: 'string',
@@ -37,7 +38,7 @@ export const featureEnvironmentSchema = {
             type: 'number',
             example: 3,
             description:
-                'The sort order where the lower the value the higher on the list it appears',
+                'The sort order of the feature environment in the feature environments list',
         },
         variantCount: {
             type: 'number',

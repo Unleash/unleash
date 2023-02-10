@@ -30,7 +30,7 @@ export const environmentSchema = {
             type: 'number',
             example: 3,
             description:
-                'The sort order where the lower the value the higher on the list it appears',
+                'The sort order of the environment in the environments list',
         },
         projectCount: {
             type: 'number',
@@ -42,7 +42,7 @@ export const environmentSchema = {
             type: 'number',
             nullable: true,
             example: 6,
-            description: 'The number of API token for the project environment',
+            description: 'The number of API tokens for the project environment',
         },
         enabledToggleCount: {
             type: 'number',

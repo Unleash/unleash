@@ -886,7 +886,7 @@ exports[`should serve the OpenAPI spec 1`] = `
         "description": "A definition of the project environment",
         "properties": {
           "apiTokenCount": {
-            "description": "The number of API token for the project environment",
+            "description": "The number of API tokens for the project environment",
             "example": 6,
             "nullable": true,
             "type": "number",
@@ -917,7 +917,7 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "boolean",
           },
           "sortOrder": {
-            "description": "The sort order where the lower the value the higher on the list it appears",
+            "description": "The sort order of the environment in the environments list",
             "example": 3,
             "type": "number",
           },
@@ -1158,6 +1158,7 @@ exports[`should serve the OpenAPI spec 1`] = `
       },
       "featureEnvironmentSchema": {
         "additionalProperties": false,
+        "description": "A detailed description of the feature environment",
         "properties": {
           "enabled": {
             "description": "\`true\` if the feature is enabled for the environment, otherwise \`false\`.",
@@ -1177,7 +1178,7 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "string",
           },
           "sortOrder": {
-            "description": "The sort order where the lower the value the higher on the list it appears",
+            "description": "The sort order of the feature environment in the feature environments list",
             "example": 3,
             "type": "number",
           },

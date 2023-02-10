@@ -52,7 +52,8 @@ export const projectSchema = {
         favorite: {
             type: 'boolean',
             example: true,
-            description: 'Is this project added to your favorite list',
+            description:
+                '`true` if the project was favorited, otherwise `false`.',
         },
     },
     components: {},

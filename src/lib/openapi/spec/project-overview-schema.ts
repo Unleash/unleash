@@ -26,6 +26,7 @@ export const projectOverviewSchema = {
         },
         description: {
             type: 'string',
+            nullable: true,
         },
         members: {
             type: 'number',

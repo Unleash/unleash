@@ -3,7 +3,10 @@ import { PageContent } from 'component/common/PageContent/PageContent';
 import { Alert } from '@mui/material';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import AccessContext from 'contexts/AccessContext';
-import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
+import {
+    READ_PROJECT_API_TOKEN,
+    UPDATE_PROJECT,
+} from 'component/providers/AccessProvider/permissions';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { useProjectNameOrId } from 'hooks/api/getters/useProject/useProject';
@@ -18,12 +21,12 @@ export const ProjectApiAccess = () => {
 
     usePageTitle(`Project api access – ${projectName}`);
 
-    if (!hasAccess(UPDATE_PROJECT, projectId)) {
+    if (!hasAccess(READ_PROJECT_API_TOKEN, projectId)) {
         return (
             <PageContent header={<PageHeader title="Api access" />}>
                 <Alert severity="error">
-                    You need project owner or admin permissions to access this
-                    section.
+                    You need to be a member of the project or admin permissions
+                    to access this section.
                 </Alert>
             </PageContent>
         );

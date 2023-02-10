@@ -15,17 +15,17 @@ export const projectStatsSchema = {
         'projectActivityPastWindow',
         'projectMembersAddedCurrentWindow',
     ],
-    description: "Statistics for a project, including the average time to production, number of features created, the project activity and more.
-    
-Stats are divided into current and previous **windows**. 
-- The **current window** is the past 30 days. 
-- The **previous window** is the 30 days **before** the current window (from 60 to 30 days ago)",
+    description: `Statistics for a project, including the average time to production, number of features created, the project activity and more.
+
+Stats are divided into current and previous **windows**.
+- The **current window** is the past 30 days.
+- The **previous window** is the 30 days **before** the current window (from 60 to 30 days ago)`,
     properties: {
         avgTimeToProdCurrentWindow: {
             type: 'number',
             example: 10,
             description:
-                'The average time from when a feature was created to when it was enabled in the "production" environment during the current window",
+                'The average time from when a feature was created to when it was enabled in the "production" environment during the current window',
         },
         avgTimeToProdPastWindow: {
             type: 'number',

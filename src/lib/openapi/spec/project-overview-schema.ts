@@ -24,7 +24,6 @@ export const projectOverviewSchema = {
         version: {
             type: 'number',
             example: 1,
-            description: '',
         },
         name: {
             type: 'string',
@@ -73,7 +72,8 @@ export const projectOverviewSchema = {
         favorite: {
             type: 'boolean',
             example: true,
-            description: 'Is this project added to your favorite list',
+            description:
+                '`true` if the project was favorited, otherwise `false`.',
         },
     },
     components: {

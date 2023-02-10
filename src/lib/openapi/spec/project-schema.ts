@@ -5,6 +5,8 @@ export const projectSchema = {
     type: 'object',
     additionalProperties: false,
     required: ['id', 'name'],
+    description:
+        'A definition of the project used for projects listing purposes',
     properties: {
         id: {
             type: 'string',

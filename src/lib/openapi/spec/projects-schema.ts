@@ -6,6 +6,7 @@ export const projectsSchema = {
     type: 'object',
     additionalProperties: false,
     required: ['version', 'projects'],
+    description: 'An overview of all the projects in the Unleash instance',
     properties: {
         version: {
             type: 'integer',

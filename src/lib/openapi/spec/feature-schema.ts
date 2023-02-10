@@ -34,7 +34,8 @@ export const featureSchema = {
         archived: {
             type: 'boolean',
             example: true,
-            description: 'Is this feature archived',
+            description:
+                '`true` if the feature is archived, otherwise `false`.',
         },
         project: {
             type: 'string',
@@ -49,53 +50,52 @@ export const featureSchema = {
             type: 'boolean',
             example: false,
             description:
-                'Is the feature considered stale depending on its age and feature type',
+                '`true` if the feature is stale based on the age and feature type, otherwise `false`.',
         },
         favorite: {
             type: 'boolean',
             example: true,
-            description: 'Is this feature added to your favourite list',
+            description:
+                '`true` if the feature was favorited, otherwise `false`.',
         },
         impressionData: {
             type: 'boolean',
             example: false,
             description:
-                'Is impression data collection enabled for this feature',
+                '`true` if the impression data collection is enabled for the feature, otherwise `false`.',
         },
         createdAt: {
             type: 'string',
             format: 'date-time',
             nullable: true,
             example: '2023-01-28T15:21:39.975Z',
-            description: 'When was the feature created',
         },
         archivedAt: {
             type: 'string',
             format: 'date-time',
             nullable: true,
             example: '2023-01-29T15:21:39.975Z',
-            description: 'When was the feature archived',
         },
         lastSeenAt: {
             type: 'string',
             format: 'date-time',
             nullable: true,
             example: '2023-01-28T16:21:39.975Z',
-            description: 'When was the feature last seen',
         },
         environments: {
             type: 'array',
             items: {
                 $ref: '#/components/schemas/featureEnvironmentSchema',
             },
-            description: 'List of environments where the feature can be used',
+            description:
+                'The list of environments where the feature can be used',
         },
         variants: {
             type: 'array',
             items: {
                 $ref: '#/components/schemas/variantSchema',
             },
-            description: 'List of feature variants',
+            description: 'The list of feature variants',
         },
         tags: {
             type: 'array',
@@ -103,7 +103,7 @@ export const featureSchema = {
                 $ref: '#/components/schemas/tagSchema',
             },
             nullable: true,
-            description: 'List of feature tags',
+            description: 'The list of feature tags',
         },
     },
     components: {

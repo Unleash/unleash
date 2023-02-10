@@ -30,7 +30,8 @@ export const featureEnvironmentSchema = {
         enabled: {
             type: 'boolean',
             example: true,
-            description: 'Is the feature enabled in this environment',
+            description:
+                '`true` if the feature is enabled for the environment, otherwise `false`.',
         },
         sortOrder: {
             type: 'number',

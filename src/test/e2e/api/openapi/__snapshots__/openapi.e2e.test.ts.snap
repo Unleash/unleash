@@ -883,6 +883,7 @@ exports[`should serve the OpenAPI spec 1`] = `
       },
       "environmentSchema": {
         "additionalProperties": false,
+        "description": "A definition of the project environment",
         "properties": {
           "apiTokenCount": {
             "description": "The number of API token for the project environment",
@@ -891,7 +892,7 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "number",
           },
           "enabled": {
-            "description": "Is this environment enabled for the project",
+            "description": "\`true\` if the environment is enabled for the project, otherwise \`false\`.",
             "example": true,
             "type": "boolean",
           },
@@ -1159,7 +1160,7 @@ exports[`should serve the OpenAPI spec 1`] = `
         "additionalProperties": false,
         "properties": {
           "enabled": {
-            "description": "Is the feature enabled in this environment",
+            "description": "\`true\` if the feature is enabled for the environment, otherwise \`false\`.",
             "example": true,
             "type": "boolean",
           },
@@ -1257,19 +1258,17 @@ exports[`should serve the OpenAPI spec 1`] = `
         "additionalProperties": false,
         "properties": {
           "archived": {
-            "description": "Is this feature archived",
+            "description": "\`true\` if the feature is archived, otherwise \`false\`.",
             "example": true,
             "type": "boolean",
           },
           "archivedAt": {
-            "description": "When was the feature archived",
             "example": "2023-01-29T15:21:39.975Z",
             "format": "date-time",
             "nullable": true,
             "type": "string",
           },
           "createdAt": {
-            "description": "When was the feature created",
             "example": "2023-01-28T15:21:39.975Z",
             "format": "date-time",
             "nullable": true,
@@ -1286,24 +1285,23 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "boolean",
           },
           "environments": {
-            "description": "List of environments where the feature can be used",
+            "description": "The list of environments where the feature can be used",
             "items": {
               "$ref": "#/components/schemas/featureEnvironmentSchema",
             },
             "type": "array",
           },
           "favorite": {
-            "description": "Is this feature added to your favourite list",
+            "description": "\`true\` if the feature was favorited, otherwise \`false\`.",
             "example": true,
             "type": "boolean",
           },
           "impressionData": {
-            "description": "Is impression data collection enabled for this feature",
+            "description": "\`true\` if the impression data collection is enabled for the feature, otherwise \`false\`.",
             "example": false,
             "type": "boolean",
           },
           "lastSeenAt": {
-            "description": "When was the feature last seen",
             "example": "2023-01-28T16:21:39.975Z",
             "format": "date-time",
             "nullable": true,
@@ -1320,12 +1318,12 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "string",
           },
           "stale": {
-            "description": "Is the feature considered stale depending on its age and feature type",
+            "description": "\`true\` if the feature is stale based on the age and feature type, otherwise \`false\`.",
             "example": false,
             "type": "boolean",
           },
           "tags": {
-            "description": "List of feature tags",
+            "description": "The list of feature tags",
             "items": {
               "$ref": "#/components/schemas/tagSchema",
             },
@@ -1338,7 +1336,7 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "string",
           },
           "variants": {
-            "description": "List of feature variants",
+            "description": "The list of feature variants",
             "items": {
               "$ref": "#/components/schemas/variantSchema",
             },
@@ -2499,7 +2497,7 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "array",
           },
           "favorite": {
-            "description": "Is this project added to your favorite list",
+            "description": "\`true\` if the project was favorited, otherwise \`false\`.",
             "example": true,
             "type": "boolean",
           },
@@ -2536,7 +2534,6 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "string",
           },
           "version": {
-            "description": "",
             "example": 1,
             "type": "number",
           },
@@ -2549,6 +2546,7 @@ exports[`should serve the OpenAPI spec 1`] = `
       },
       "projectSchema": {
         "additionalProperties": false,
+        "description": "A definition of the project used for projects listing purposes",
         "properties": {
           "createdAt": {
             "format": "date-time",
@@ -2671,6 +2669,7 @@ Stats are divided into current and previous **windows**.
       },
       "projectsSchema": {
         "additionalProperties": false,
+        "description": "An overview of all the projects in the Unleash instance",
         "properties": {
           "projects": {
             "description": "A list of projects in the Unleash instance",

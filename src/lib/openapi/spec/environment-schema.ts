@@ -5,6 +5,7 @@ export const environmentSchema = {
     type: 'object',
     additionalProperties: false,
     required: ['name', 'type', 'enabled'],
+    description: 'A definition of the project environment',
     properties: {
         name: {
             type: 'string',
@@ -19,7 +20,8 @@ export const environmentSchema = {
         enabled: {
             type: 'boolean',
             example: true,
-            description: 'Is this environment enabled for the project',
+            description:
+                '`true` if the environment is enabled for the project, otherwise `false`.',
         },
         protected: {
             type: 'boolean',

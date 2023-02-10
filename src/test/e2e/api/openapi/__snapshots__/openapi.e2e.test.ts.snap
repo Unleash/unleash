@@ -885,20 +885,30 @@ exports[`should serve the OpenAPI spec 1`] = `
         "additionalProperties": false,
         "properties": {
           "apiTokenCount": {
+            "description": "The number of API token for the project environment",
+            "example": 6,
             "nullable": true,
             "type": "number",
           },
           "enabled": {
+            "description": "Is this environment enabled for the project",
+            "example": true,
             "type": "boolean",
           },
           "enabledToggleCount": {
+            "description": "The number of enabled toggles for the project environment",
+            "example": 10,
             "nullable": true,
             "type": "number",
           },
           "name": {
+            "description": "The name of the environment",
+            "example": "my-dev-env",
             "type": "string",
           },
           "projectCount": {
+            "description": "The number of projects with this environment",
+            "example": 10,
             "nullable": true,
             "type": "number",
           },
@@ -906,9 +916,13 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "boolean",
           },
           "sortOrder": {
+            "description": "The sort order where the lower the value the higher on the list it appears",
+            "example": 3,
             "type": "number",
           },
           "type": {
+            "description": "The type of the environment",
+            "example": "development",
             "type": "string",
           },
         },
@@ -1145,33 +1159,44 @@ exports[`should serve the OpenAPI spec 1`] = `
         "additionalProperties": false,
         "properties": {
           "enabled": {
+            "description": "Is the feature enabled in this environment",
+            "example": true,
             "type": "boolean",
           },
           "environment": {
             "type": "string",
           },
           "featureName": {
+            "example": "disable-comments",
             "type": "string",
           },
           "name": {
+            "description": "The name of the environment",
+            "example": "my-dev-env",
             "type": "string",
           },
           "sortOrder": {
+            "description": "The sort order where the lower the value the higher on the list it appears",
+            "example": 3,
             "type": "number",
           },
           "strategies": {
+            "description": "A list of activation strategies for the feature environment",
             "items": {
               "$ref": "#/components/schemas/featureStrategySchema",
             },
             "type": "array",
           },
           "type": {
+            "description": "The type of the environment",
+            "example": "development",
             "type": "string",
           },
           "variantCount": {
             "type": "number",
           },
           "variants": {
+            "description": "A list of variants for the feature environment",
             "items": {
               "$ref": "#/components/schemas/variantSchema",
             },
@@ -1232,52 +1257,75 @@ exports[`should serve the OpenAPI spec 1`] = `
         "additionalProperties": false,
         "properties": {
           "archived": {
+            "description": "Is this feature archived",
+            "example": true,
             "type": "boolean",
           },
           "archivedAt": {
+            "description": "When was the feature archived",
+            "example": "2023-01-29T15:21:39.975Z",
             "format": "date-time",
             "nullable": true,
             "type": "string",
           },
           "createdAt": {
+            "description": "When was the feature created",
+            "example": "2023-01-28T15:21:39.975Z",
             "format": "date-time",
             "nullable": true,
             "type": "string",
           },
           "description": {
+            "description": "Detailed description of the feature",
+            "example": "Controls disabling of the comments section in case of an incident",
             "nullable": true,
             "type": "string",
           },
           "enabled": {
+            "example": true,
             "type": "boolean",
           },
           "environments": {
+            "description": "List of environments where the feature can be used",
             "items": {
               "$ref": "#/components/schemas/featureEnvironmentSchema",
             },
             "type": "array",
           },
           "favorite": {
+            "description": "Is this feature added to your favourite list",
+            "example": true,
             "type": "boolean",
           },
           "impressionData": {
+            "description": "Is impression data collection enabled for this feature",
+            "example": false,
             "type": "boolean",
           },
           "lastSeenAt": {
+            "description": "When was the feature last seen",
+            "example": "2023-01-28T16:21:39.975Z",
             "format": "date-time",
             "nullable": true,
             "type": "string",
           },
           "name": {
+            "description": "Unique feature name",
+            "example": "disable-comments",
             "type": "string",
           },
           "project": {
+            "description": "Name of the project the feature belongs to",
+            "example": "dx-squad",
             "type": "string",
           },
           "stale": {
+            "description": "Is the feature considered stale depending on its age and feature type",
+            "example": false,
             "type": "boolean",
           },
           "tags": {
+            "description": "List of feature tags",
             "items": {
               "$ref": "#/components/schemas/tagSchema",
             },
@@ -1285,9 +1333,12 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "array",
           },
           "type": {
+            "description": "Type of the toggle e.g. experiment, kill-switch, release, operational, permission",
+            "example": "kill-switch",
             "type": "string",
           },
           "variants": {
+            "description": "List of feature variants",
             "items": {
               "$ref": "#/components/schemas/variantSchema",
             },
@@ -2428,44 +2479,65 @@ exports[`should serve the OpenAPI spec 1`] = `
       },
       "projectOverviewSchema": {
         "additionalProperties": false,
+        "description": "A high-level overview of a project. It contains information such as project statistics, the name of the project, what members and what features it contains, etc.",
         "properties": {
           "description": {
+            "description": "Additional information about the project",
+            "example": "DX squad feature release",
             "nullable": true,
             "type": "string",
           },
           "environments": {
+            "description": "The environments that are enabled for this project",
+            "example": [
+              "development",
+              "production",
+            ],
             "items": {
               "type": "string",
             },
             "type": "array",
           },
           "favorite": {
+            "description": "Is this project added to your favorite list",
+            "example": true,
             "type": "boolean",
           },
           "features": {
+            "description": "The full list of features in this project (excluding archived features)",
             "items": {
               "$ref": "#/components/schemas/featureSchema",
             },
             "type": "array",
           },
           "health": {
+            "description": "An indicator of the [project's health](https://docs.getunleash.io/reference/technical-debt#health-rating) on a scale from 0 to 100",
+            "example": 50,
             "type": "number",
           },
           "members": {
+            "description": "The number of members this project has",
+            "example": 4,
             "type": "number",
           },
           "name": {
+            "description": "The name of this project",
+            "example": "dx-squad",
             "type": "string",
           },
           "stats": {
             "$ref": "#/components/schemas/projectStatsSchema",
+            "description": "Project statistics",
           },
           "updatedAt": {
+            "example": "2023-02-10T08:36:35.262Z",
             "format": "date-time",
             "nullable": true,
             "type": "string",
           },
           "version": {
+            "description": "",
+            "example": 1,
             "type": "number",
           },
         },
@@ -2520,32 +2592,55 @@ exports[`should serve the OpenAPI spec 1`] = `
       },
       "projectStatsSchema": {
         "additionalProperties": false,
+        "description": "Statistics for a project, including the average time to production, number of features created, the project activity and more.
+
+Stats are divided into current and previous **windows**.
+- The **current window** is the past 30 days.
+- The **previous window** is the 30 days **before** the current window (from 60 to 30 days ago)",
         "properties": {
           "archivedCurrentWindow": {
+            "description": "The number of feature toggles that were archived during the current window",
+            "example": 5,
             "type": "number",
           },
           "archivedPastWindow": {
+            "description": "The number of feature toggles that were archived during the previous window",
+            "example": 5,
             "type": "number",
           },
           "avgTimeToProdCurrentWindow": {
+            "description": "The average time from when a feature was created to when it was enabled in the "production" environment during the current window",
+            "example": 10,
             "type": "number",
           },
           "avgTimeToProdPastWindow": {
+            "description": "The average time from when a feature was created to when it was enabled in the "production" environment during the previous window",
+            "example": 10,
             "type": "number",
           },
           "createdCurrentWindow": {
+            "description": "The number of feature toggles created during the current window",
+            "example": 15,
             "type": "number",
           },
           "createdPastWindow": {
+            "description": "The number of feature toggles created during the previous window",
+            "example": 15,
             "type": "number",
           },
           "projectActivityCurrentWindow": {
+            "description": "The number of project events that occurred during the current window",
+            "example": 100,
             "type": "number",
           },
           "projectActivityPastWindow": {
+            "description": "The number of project events that occurred during the previous window",
+            "example": 100,
             "type": "number",
           },
           "projectMembersAddedCurrentWindow": {
+            "description": "The number of members that were added to the project during the current window",
+            "example": 1,
             "type": "number",
           },
         },

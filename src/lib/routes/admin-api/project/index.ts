@@ -21,6 +21,7 @@ import {
     healthOverviewSchema,
 } from '../../../../lib/openapi';
 import { IArchivedQuery, IProjectParam } from '../../../types/model';
+import { ProjectApiTokenController } from './api-token';
 
 export default class ProjectApi extends Controller {
     private projectService: ProjectService;
@@ -68,6 +69,7 @@ export default class ProjectApi extends Controller {
         this.use('/', new EnvironmentsController(config, services).router);
         this.use('/', new ProjectHealthReport(config, services).router);
         this.use('/', new VariantsController(config, services).router);
+        this.use('/', new ProjectApiTokenController(config, services).router);
     }
 
     async getProjects(

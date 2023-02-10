@@ -36,7 +36,7 @@ interface IApiTokenFormProps {
     errors: { [key: string]: string };
     mode: 'Create' | 'Edit';
     clearErrors: (error?: ApiTokenFormErrorType) => void;
-    disableProjectSelection?: boolean;
+    scope?: 'global' | 'project';
 }
 
 const StyledContainer = styled('div')(() => ({
@@ -85,7 +85,6 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
     username,
     type,
     projects,
-    disableProjectSelection = false,
     environment,
     setUsername,
     setTokenType,
@@ -95,10 +94,13 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
     handleCancel,
     errors,
     clearErrors,
+    scope = 'global',
 }) => {
     const { uiConfig } = useUiConfig();
     const { environments } = useEnvironments();
     const { projects: availableProjects } = useProjects();
+
+    const disableProjectSelection = scope === 'project';
 
     const selectableTypes = [
         {
@@ -106,12 +108,15 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
             label: `Server-side SDK (${TokenType.CLIENT})`,
             title: 'Connect server-side SDK or Unleash Proxy',
         },
-        {
+    ];
+
+    if (scope === 'global') {
+        selectableTypes.push({
             key: TokenType.ADMIN,
             label: TokenType.ADMIN,
             title: 'Full access for managing Unleash',
-        },
-    ];
+        });
+    }
 
     if (uiConfig.flags.embedProxyFrontend) {
         selectableTypes.splice(1, 0, {
@@ -207,21 +212,24 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
                         ))}
                     </RadioGroup>
                 </FormControl>
-                {!Boolean(disableProjectSelection) && (
-                    <>
-                        <StyledInputDescription>
-                            Which project do you want to give access to?
-                        </StyledInputDescription>
-                        <SelectProjectInput
-                            disabled={type === TokenType.ADMIN}
-                            options={selectableProjects}
-                            defaultValue={projects}
-                            onChange={setProjects}
-                            error={errors?.projects}
-                            onFocus={() => clearErrors('projects')}
-                        />
-                    </>
-                )}
+                <ConditionallyRender
+                    condition={!disableProjectSelection}
+                    show={
+                        <>
+                            <StyledInputDescription>
+                                Which project do you want to give access to?
+                            </StyledInputDescription>
+                            <SelectProjectInput
+                                disabled={type === TokenType.ADMIN}
+                                options={selectableProjects}
+                                defaultValue={projects}
+                                onChange={setProjects}
+                                error={errors?.projects}
+                                onFocus={() => clearErrors('projects')}
+                            />
+                        </>
+                    }
+                />
                 <StyledInputDescription>
                     Which environment should the token have access to?
                 </StyledInputDescription>

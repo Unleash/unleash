@@ -2,19 +2,13 @@ import useSWR, { SWRConfiguration } from 'swr';
 import { useCallback, useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
+import { IApiToken } from '../useApiTokens/useApiTokens';
 
-export interface IApiToken {
-    createdAt: Date;
-    username: string;
-    secret: string;
-    type: string;
-    project?: string;
-    projects?: string | string[];
-    environment: string;
-}
-
-export const useApiTokens = (options: SWRConfiguration = {}) => {
-    const path = formatApiPath(`api/admin/api-tokens`);
+export const useProjectApiTokens = (
+    project?: string,
+    options: SWRConfiguration = {}
+) => {
+    const path = formatApiPath(`api/admin/project/${project}/api-tokens`);
     const { data, error, mutate } = useSWR<IApiToken[]>(path, fetcher, options);
 
     const tokens = useMemo(() => {
@@ -34,7 +28,9 @@ export const useApiTokens = (options: SWRConfiguration = {}) => {
 };
 
 const fetcher = async (path: string): Promise<IApiToken[]> => {
-    const res = await fetch(path).then(handleErrorResponses('Api tokens'));
+    const res = await fetch(path).then(
+        handleErrorResponses('Project Api tokens')
+    );
     const data = await res.json();
     return data.tokens;
 };

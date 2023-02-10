@@ -68,7 +68,7 @@ export const projectStatsSchema = {
             type: 'number',
             example: 1,
             description:
-                'Number of members added to the project in the current window (last 30 days)',
+                'The number of members that were added to the project during the current window',
         },
     },
     components: {},

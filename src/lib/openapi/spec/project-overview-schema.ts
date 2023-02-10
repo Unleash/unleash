@@ -14,6 +14,7 @@ export const projectOverviewSchema = {
     type: 'object',
     additionalProperties: false,
     required: ['version', 'name'],
+    description: "A high-level overview of a project. It contains information such as project statistics, the name of the project, what members and what features it contains, etc.",
     properties: {
         stats: {
             $ref: '#/components/schemas/projectStatsSchema',
@@ -70,7 +71,7 @@ export const projectOverviewSchema = {
         favorite: {
             type: 'boolean',
             example: true,
-            description: 'Is this project added to your favourite list',
+            description: 'Is this project added to your favorite list',
         },
     },
     components: {

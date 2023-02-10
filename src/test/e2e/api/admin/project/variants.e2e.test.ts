@@ -1,4 +1,7 @@
-import { IUnleashTest, setupApp } from '../../../helpers/test-helper';
+import {
+    IUnleashTest,
+    setupAppWithCustomConfig,
+} from '../../../helpers/test-helper';
 import dbInit, { ITestDb } from '../../../helpers/database-init';
 import getLogger from '../../../../fixtures/no-logger';
 import * as jsonpatch from 'fast-json-patch';
@@ -9,7 +12,13 @@ let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('project_feature_variants_api_serial', getLogger);
-    app = await setupApp(db.stores);
+    app = await setupAppWithCustomConfig(db.stores, {
+        experimental: {
+            flags: {
+                strictSchemaValidation: true,
+            },
+        },
+    });
     await db.stores.environmentStore.create({
         name: 'development',
         type: 'development',

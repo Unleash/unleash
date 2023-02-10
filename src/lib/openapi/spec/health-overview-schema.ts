@@ -23,6 +23,7 @@ export const healthOverviewSchema = {
         },
         description: {
             type: 'string',
+            nullable: true,
         },
         members: {
             type: 'number',
@@ -49,6 +50,10 @@ export const healthOverviewSchema = {
         },
         favorite: {
             type: 'boolean',
+        },
+        stats: {
+            $ref: '#/components/schemas/projectStatsSchema',
+            description: 'Project statistics',
         },
     },
     components: {

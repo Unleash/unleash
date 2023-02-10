@@ -1,6 +1,6 @@
 import dbInit from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
-import { setupApp } from '../../helpers/test-helper';
+import { setupAppWithCustomConfig } from '../../helpers/test-helper';
 
 let app;
 let db;
@@ -9,7 +9,13 @@ const PATH = '/api/admin/constraints/validate';
 
 beforeAll(async () => {
     db = await dbInit('constraints', getLogger);
-    app = await setupApp(db.stores);
+    app = await setupAppWithCustomConfig(db.stores, {
+        experimental: {
+            flags: {
+                strictSchemaValidation: true,
+            },
+        },
+    });
 });
 
 afterAll(async () => {

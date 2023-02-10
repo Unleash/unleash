@@ -17,7 +17,6 @@ import {
     IUnleashServices,
     READ_PROJECT_API_TOKEN,
     serializeDates,
-    UPDATE_API_TOKEN,
 } from '../../../types';
 import { ApiTokenType, IApiToken } from '../../../types/models/api-token';
 import {
@@ -71,7 +70,7 @@ export class ProjectApiTokenController extends Controller {
         this.accessService = accessService;
         this.proxyService = proxyService;
         this.openApiService = openApiService;
-        this.logger = config.getLogger('api-token-controller.js');
+        this.logger = config.getLogger('project-api-token-controller.js');
 
         this.route({
             method: 'get',
@@ -198,16 +197,10 @@ export class ProjectApiTokenController extends Controller {
             return allTokens;
         }
 
-        if (await this.accessService.hasPermission(user, UPDATE_API_TOKEN)) {
-            return allTokens;
-        }
-
         return allTokens.filter(
             (token) =>
                 token.type !== ApiTokenType.ADMIN &&
-                (token.project === project ||
-                    (token.projects.length === 1 &&
-                        token.project[0] === project)),
+                (token.project === project || token.projects.includes(project)),
         );
     }
 }

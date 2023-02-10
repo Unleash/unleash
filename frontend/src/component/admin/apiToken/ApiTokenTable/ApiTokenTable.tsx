@@ -1,4 +1,4 @@
-import { useApiTokens } from 'hooks/api/getters/useApiTokens/useApiTokens';
+import { IApiToken } from 'hooks/api/getters/useApiTokens/useApiTokens';
 import { useGlobalFilter, useSortBy, useTable } from 'react-table';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import {
@@ -35,12 +35,15 @@ const hiddenColumnsCompact = ['Icon', 'project', 'seenAt'];
 interface IApiTokenTableProps {
     compact?: boolean;
     filterForProject?: string;
+    tokens: IApiToken[];
+    loading: boolean;
 }
 export const ApiTokenTable = ({
     compact = false,
     filterForProject,
+    tokens,
+    loading,
 }: IApiTokenTableProps) => {
-    const { tokens, loading } = useApiTokens();
     const initialState = useMemo(() => ({ sortBy: [{ id: 'createdAt' }] }), []);
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -127,24 +130,6 @@ export const ApiTokenTable = ({
         ];
     }, [filterForProject]);
 
-    const filteredTokens = useMemo(() => {
-        if (Boolean(filterForProject)) {
-            return tokens.filter(token => {
-                if (token.projects) {
-                    if (token.projects?.length > 1) return false;
-                    if (
-                        token.projects?.length === 1 &&
-                        token.projects[0] === filterForProject
-                    )
-                        return true;
-                }
-
-                return token.project === filterForProject;
-            });
-        }
-        return tokens;
-    }, [tokens, filterForProject]);
-
     const {
         getTableProps,
         getTableBodyProps,
@@ -157,7 +142,7 @@ export const ApiTokenTable = ({
     } = useTable(
         {
             columns: COLUMNS as any,
-            data: filteredTokens as any,
+            data: tokens as any,
             initialState,
             sortTypes,
             autoResetHiddenColumns: false,

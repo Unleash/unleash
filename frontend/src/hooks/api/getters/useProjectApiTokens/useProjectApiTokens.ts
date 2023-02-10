@@ -5,10 +5,10 @@ import handleErrorResponses from '../httpErrorResponseHandler';
 import { IApiToken } from '../useApiTokens/useApiTokens';
 
 export const useProjectApiTokens = (
-    project?: string,
+    project: string,
     options: SWRConfiguration = {}
 ) => {
-    const path = formatApiPath(`api/admin/project/${project}/api-tokens`);
+    const path = formatApiPath(`api/admin/projects/${project}/api-tokens`);
     const { data, error, mutate } = useSWR<IApiToken[]>(path, fetcher, options);
 
     const tokens = useMemo(() => {

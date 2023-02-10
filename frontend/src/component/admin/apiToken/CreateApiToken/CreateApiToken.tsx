@@ -71,7 +71,7 @@ export const CreateApiToken = ({
         }
         try {
             const payload = getApiTokenPayload();
-            if (Boolean(project)) {
+            if (project) {
                 await createProjectToken(payload, project)
                     .then(res => res.json())
                     .then(api => {

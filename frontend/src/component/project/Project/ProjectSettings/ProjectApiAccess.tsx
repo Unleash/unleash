@@ -8,11 +8,13 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { useProjectNameOrId } from 'hooks/api/getters/useProject/useProject';
 import { ApiTokenTable } from '../../../admin/apiToken/ApiTokenTable/ApiTokenTable';
+import { useProjectApiTokens } from '../../../../hooks/api/getters/useProjectApiTokens/useProjectApiTokens';
 
 export const ProjectApiAccess = () => {
     const projectId = useRequiredPathParam('projectId');
     const projectName = useProjectNameOrId(projectId);
     const { hasAccess } = useContext(AccessContext);
+    const { tokens, loading } = useProjectApiTokens(projectId);
 
     usePageTitle(`Project api access – ${projectName}`);
 
@@ -29,7 +31,12 @@ export const ProjectApiAccess = () => {
 
     return (
         <div style={{ width: '100%', overflow: 'hidden' }}>
-            <ApiTokenTable compact filterForProject={projectId} />
+            <ApiTokenTable
+                tokens={tokens}
+                loading={loading}
+                compact
+                filterForProject={projectId}
+            />
         </div>
     );
 };

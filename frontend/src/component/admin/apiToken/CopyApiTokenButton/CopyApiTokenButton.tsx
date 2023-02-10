@@ -5,10 +5,10 @@ import { FileCopy } from '@mui/icons-material';
 import {
     READ_API_TOKEN,
     READ_PROJECT_API_TOKEN,
-} from '../../../providers/AccessProvider/permissions';
+} from 'component/providers/AccessProvider/permissions';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { useContext } from 'react';
-import AccessContext from '../../../../contexts/AccessContext';
+import AccessContext from 'contexts/AccessContext';
 
 interface ICopyApiTokenButtonProps {
     token: IApiToken;

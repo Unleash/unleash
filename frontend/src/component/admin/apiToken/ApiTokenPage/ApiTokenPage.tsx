@@ -4,7 +4,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { READ_API_TOKEN } from 'component/providers/AccessProvider/permissions';
 import { AdminAlert } from 'component/common/AdminAlert/AdminAlert';
 import { ApiTokenTable } from 'component/admin/apiToken/ApiTokenTable/ApiTokenTable';
-import { useApiTokens } from '../../../../hooks/api/getters/useApiTokens/useApiTokens';
+import { useApiTokens } from 'hooks/api/getters/useApiTokens/useApiTokens';
 
 export const ApiTokenPage = () => {
     const { hasAccess } = useContext(AccessContext);

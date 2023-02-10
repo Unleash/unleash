@@ -16,8 +16,8 @@ import { scrollToTop } from 'component/common/util';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { GO_BACK } from 'constants/navigate';
-import { useApiTokens } from '../../../../hooks/api/getters/useApiTokens/useApiTokens';
-import useProjectApiTokensApi from '../../../../hooks/api/actions/useProjectApiTokensApi/useProjectApiTokensApi';
+import { useApiTokens } from 'hooks/api/getters/useApiTokens/useApiTokens';
+import useProjectApiTokensApi from 'hooks/api/actions/useProjectApiTokensApi/useProjectApiTokensApi';
 
 const pageTitle = 'Create API token';
 

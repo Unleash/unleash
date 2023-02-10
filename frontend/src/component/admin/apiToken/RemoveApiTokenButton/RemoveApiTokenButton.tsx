@@ -13,7 +13,8 @@ import { useContext, useState } from 'react';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import useToast from 'hooks/useToast';
 import useApiTokensApi from 'hooks/api/actions/useApiTokensApi/useApiTokensApi';
-import PermissionIconButton from '../../../common/PermissionIconButton/PermissionIconButton';
+import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
+import useProjectApiTokensApi from '../../../../hooks/api/actions/useProjectApiTokensApi/useProjectApiTokensApi';
 
 const StyledUl = styled('ul')({
     marginBottom: 0,
@@ -30,6 +31,7 @@ export const RemoveApiTokenButton = ({
 }: IRemoveApiTokenButtonProps) => {
     const { hasAccess } = useContext(AccessContext);
     const { deleteToken } = useApiTokensApi();
+    const { deleteToken: deleteProjectToken } = useProjectApiTokensApi();
     const [open, setOpen] = useState(false);
     const { setToastData } = useToast();
     const { refetch } = useApiTokens();
@@ -39,7 +41,11 @@ export const RemoveApiTokenButton = ({
         : DELETE_API_TOKEN;
 
     const onRemove = async () => {
-        await deleteToken(token.secret, project);
+        if (project) {
+            await deleteProjectToken(token.secret, project);
+        } else {
+            await deleteToken(token.secret);
+        }
         setOpen(false);
         refetch();
         setToastData({

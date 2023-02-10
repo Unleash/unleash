@@ -14,44 +14,66 @@ export const projectOverviewSchema = {
     type: 'object',
     additionalProperties: false,
     required: ['version', 'name'],
+    description:
+        'A high-level overview of a project. It contains information such as project statistics, the name of the project, what members and what features it contains, etc.',
     properties: {
         stats: {
             $ref: '#/components/schemas/projectStatsSchema',
+            description: 'Project statistics',
         },
         version: {
             type: 'number',
+            example: 1,
         },
         name: {
             type: 'string',
+            example: 'dx-squad',
+            description: 'The name of this project',
         },
         description: {
             type: 'string',
+            nullable: true,
+            example: 'DX squad feature release',
+            description: 'Additional information about the project',
         },
         members: {
             type: 'number',
+            example: 4,
+            description: 'The number of members this project has',
         },
         health: {
             type: 'number',
+            example: 50,
+            description:
+                "An indicator of the [project's health](https://docs.getunleash.io/reference/technical-debt#health-rating) on a scale from 0 to 100",
         },
         environments: {
             type: 'array',
             items: {
                 type: 'string',
             },
+            example: ['development', 'production'],
+            description: 'The environments that are enabled for this project',
         },
         features: {
             type: 'array',
             items: {
                 $ref: '#/components/schemas/featureSchema',
             },
+            description:
+                'The full list of features in this project (excluding archived features)',
         },
         updatedAt: {
             type: 'string',
             format: 'date-time',
             nullable: true,
+            example: '2023-02-10T08:36:35.262Z',
         },
         favorite: {
             type: 'boolean',
+            example: true,
+            description:
+                '`true` if the project was favorited, otherwise `false`.',
         },
     },
     components: {

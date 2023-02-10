@@ -1,7 +1,7 @@
 {
   "name": "unleash-server",
   "description": "Unleash is an enterprise ready feature toggles service. It provides different strategies for handling feature toggles.",
-  "version": "4.21.0-beta.21",
+  "version": "4.21.0-beta.23",
   "keywords": [
     "unleash",
     "feature toggle",
@@ -133,7 +133,7 @@
     "stoppable": "^1.1.0",
     "ts-toolbelt": "^9.6.0",
     "type-is": "^1.6.18",
-    "unleash-client": "3.16.1",
+    "unleash-client": "3.18.0",
     "use-deep-compare-effect": "^1.8.1",
     "uuid": "^9.0.0"
   },

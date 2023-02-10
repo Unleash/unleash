@@ -6,6 +6,7 @@ export const projectsSchema = {
     type: 'object',
     additionalProperties: false,
     required: ['version', 'projects'],
+    description: 'An overview of all the projects in the Unleash instance',
     properties: {
         version: {
             type: 'integer',
@@ -15,6 +16,7 @@ export const projectsSchema = {
             items: {
                 $ref: '#/components/schemas/projectSchema',
             },
+            description: 'A list of projects in the Unleash instance',
         },
     },
     components: {

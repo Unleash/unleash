@@ -138,9 +138,12 @@ A feature toggle can have as many variants as you want.
 
 Prior to 4.21, variants were independent of [environments](../reference/environments.md). In other words: if you're on 4.19 or lower, you’ll always have the exact same variants with the exact same weightings and the exact same payloads in all environments.
 
+<Figure img="/img/anatomy-of-unleash-variants.png" caption="Before Unleash 4.21, feature toggle variants were the same for all environments."/>
+
 As of version 4.21, a feature can have different variants in different environments. For instance, a development environment might have no variants, while a production environment has 2 variants. Payloads, weightings and anything else can also differ between environments.
 
-<Figure img="/img/anatomy-of-unleash-variants.png" caption="Feature toggle variants are the same for all environments."/>
+<Figure img="/img/anatomy-of-unleash-variants-per-environment.png" caption="From Unleash 4.21 on, a feature toggle can have different in each environment."/>
+
 
 ## Use case: changing website colors {#use-case}
 

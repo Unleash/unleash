@@ -5,7 +5,6 @@ import ApiUser from '../types/api-user';
 import {
     Context,
     InMemStorageProvider,
-    startUnleash,
     Unleash,
     UnleashEvents,
 } from 'unleash-client';
@@ -134,7 +133,7 @@ export class ProxyService {
             token,
         );
 
-        const client = await startUnleash({
+        const client = new Unleash({
             appName: 'proxy',
             url: 'unused',
             storageProvider: new InMemStorageProvider(),
@@ -145,6 +144,8 @@ export class ProxyService {
         client.on(UnleashEvents.Error, (error) => {
             this.logger.error(error);
         });
+
+        await client.start();
 
         return client;
     }

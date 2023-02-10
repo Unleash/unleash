@@ -31,6 +31,7 @@ import Controller from '../../controller';
 import { Logger } from '../../../logger';
 import { Response } from 'express';
 import { createApiToken } from '../../../schema/api-token-schema';
+import { timingSafeEqual } from 'crypto';
 
 interface ProjectTokenParam {
     token: string;
@@ -173,7 +174,7 @@ export class ProjectApiTokenController extends Controller {
         const { user } = req;
         const { projectId, token } = req.params;
         const storedToken = (await this.accessibleTokens(user, projectId)).find(
-            (t) => t.secret === token,
+            (t) => this.tokenEquals(t.secret, token),
         );
         if (
             storedToken &&
@@ -185,6 +186,13 @@ export class ProjectApiTokenController extends Controller {
             this.proxyService.deleteClientForProxyToken(token);
             res.status(200).end();
         }
+    }
+
+    private tokenEquals(token1: string, token2: string) {
+        return (
+            token1.length === token2.length &&
+            timingSafeEqual(Buffer.from(token1), Buffer.from(token2))
+        );
     }
 
     private async accessibleTokens(

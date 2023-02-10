@@ -19,7 +19,7 @@ export const CopyApiTokenButton = ({
     token,
     project,
 }: ICopyApiTokenButtonProps) => {
-    const { hasAccess } = useContext(AccessContext);
+    const { hasAccess, isAdmin } = useContext(AccessContext);
     const { setToastData } = useToast();
 
     const permission = Boolean(project)
@@ -27,6 +27,9 @@ export const CopyApiTokenButton = ({
         : READ_API_TOKEN;
 
     const canCopy = useMemo(() => {
+        if (isAdmin) {
+            return true;
+        }
         if (token && token.projects && project && permission) {
             const { projects } = token;
             for (const tokenProject of projects) {

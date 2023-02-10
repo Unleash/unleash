@@ -29,7 +29,7 @@ export const RemoveApiTokenButton = ({
     token,
     project,
 }: IRemoveApiTokenButtonProps) => {
-    const { hasAccess } = useContext(AccessContext);
+    const { hasAccess, isAdmin } = useContext(AccessContext);
     const { deleteToken } = useApiTokensApi();
     const { deleteToken: deleteProjectToken } = useProjectApiTokensApi();
     const [open, setOpen] = useState(false);
@@ -41,6 +41,9 @@ export const RemoveApiTokenButton = ({
         : DELETE_API_TOKEN;
 
     const canRemove = useMemo(() => {
+        if (isAdmin) {
+            return true;
+        }
         if (token && token.projects && project && permission) {
             const { projects } = token;
             for (const tokenProject of projects) {

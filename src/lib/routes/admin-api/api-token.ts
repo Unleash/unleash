@@ -4,11 +4,8 @@ import Controller from '../controller';
 import {
     ADMIN,
     CREATE_API_TOKEN,
-    CREATE_PROJECT_API_TOKEN,
     DELETE_API_TOKEN,
-    DELETE_PROJECT_API_TOKEN,
     READ_API_TOKEN,
-    READ_PROJECT_API_TOKEN,
     UPDATE_API_TOKEN,
 } from '../../types/permissions';
 import { ApiTokenService } from '../../services/api-token-service';
@@ -93,22 +90,6 @@ export class ApiTokenController extends Controller {
         });
 
         this.route({
-            method: 'get',
-            path: '/:project',
-            handler: this.getProjectApiTokens,
-            permission: READ_PROJECT_API_TOKEN,
-            middleware: [
-                openApiService.validPath({
-                    tags: ['API tokens'],
-                    operationId: 'getProjectApiTokens',
-                    responses: {
-                        200: createResponseSchema('apiTokensSchema'),
-                    },
-                }),
-            ],
-        });
-
-        this.route({
             method: 'post',
             path: '',
             handler: this.createApiToken,
@@ -117,23 +98,6 @@ export class ApiTokenController extends Controller {
                 openApiService.validPath({
                     tags: ['API tokens'],
                     operationId: 'createApiToken',
-                    requestBody: createRequestSchema('createApiTokenSchema'),
-                    responses: {
-                        201: resourceCreatedResponseSchema('apiTokenSchema'),
-                    },
-                }),
-            ],
-        });
-
-        this.route({
-            method: 'post',
-            path: '/:project',
-            handler: this.createApiToken,
-            permission: CREATE_PROJECT_API_TOKEN,
-            middleware: [
-                openApiService.validPath({
-                    tags: ['API tokens'],
-                    operationId: 'createProjectApiToken',
                     requestBody: createRequestSchema('createApiTokenSchema'),
                     responses: {
                         201: resourceCreatedResponseSchema('apiTokenSchema'),
@@ -169,22 +133,6 @@ export class ApiTokenController extends Controller {
                 openApiService.validPath({
                     tags: ['API tokens'],
                     operationId: 'deleteApiToken',
-                    responses: {
-                        200: emptyResponse,
-                    },
-                }),
-            ],
-        });
-        this.route({
-            method: 'delete',
-            path: '/:token/:project',
-            handler: this.deleteApiToken,
-            acceptAnyContentType: true,
-            permission: DELETE_PROJECT_API_TOKEN,
-            middleware: [
-                openApiService.validPath({
-                    tags: ['API tokens'],
-                    operationId: 'deleteProjectApiToken',
                     responses: {
                         200: emptyResponse,
                     },

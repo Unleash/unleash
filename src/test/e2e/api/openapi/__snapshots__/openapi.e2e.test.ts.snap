@@ -4121,84 +4121,6 @@ exports[`should serve the OpenAPI spec 1`] = `
         ],
       },
     },
-    "/api/admin/api-tokens/{project}": {
-      "get": {
-        "operationId": "getProjectApiTokens",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "project",
-            "required": true,
-            "schema": {
-              "type": "string",
-            },
-          },
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/apiTokensSchema",
-                },
-              },
-            },
-            "description": "apiTokensSchema",
-          },
-        },
-        "tags": [
-          "API tokens",
-        ],
-      },
-      "post": {
-        "operationId": "createProjectApiToken",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "project",
-            "required": true,
-            "schema": {
-              "type": "string",
-            },
-          },
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/createApiTokenSchema",
-              },
-            },
-          },
-          "description": "createApiTokenSchema",
-          "required": true,
-        },
-        "responses": {
-          "201": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/apiTokenSchema",
-                },
-              },
-            },
-            "description": "The resource was successfully created.",
-            "headers": {
-              "location": {
-                "description": "The location of the newly created resource.",
-                "schema": {
-                  "format": "uri",
-                  "type": "string",
-                },
-              },
-            },
-          },
-        },
-        "tags": [
-          "API tokens",
-        ],
-      },
-    },
     "/api/admin/api-tokens/{token}": {
       "delete": {
         "operationId": "deleteApiToken",
@@ -4244,37 +4166,6 @@ exports[`should serve the OpenAPI spec 1`] = `
           "description": "updateApiTokenSchema",
           "required": true,
         },
-        "responses": {
-          "200": {
-            "description": "This response has no body.",
-          },
-        },
-        "tags": [
-          "API tokens",
-        ],
-      },
-    },
-    "/api/admin/api-tokens/{token}/{project}": {
-      "delete": {
-        "operationId": "deleteProjectApiToken",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "token",
-            "required": true,
-            "schema": {
-              "type": "string",
-            },
-          },
-          {
-            "in": "path",
-            "name": "project",
-            "required": true,
-            "schema": {
-              "type": "string",
-            },
-          },
-        ],
         "responses": {
           "200": {
             "description": "This response has no body.",

@@ -141,24 +141,6 @@ export class ApiTokenController extends Controller {
         });
     }
 
-    async getProjectApiTokens(
-        req: IAuthRequest,
-        res: Response<ApiTokensSchema>,
-    ): Promise<void> {
-        const { user } = req;
-        const { projectId } = req.params;
-        const tokens = await this.accessibleTokens(user);
-        const projectTokens = tokens.filter((token) =>
-            [token.project, ...token.projects].includes(projectId),
-        );
-        this.openApiService.respondWithValidation(
-            200,
-            res,
-            apiTokensSchema.$id,
-            { tokens: serializeDates(projectTokens) },
-        );
-    }
-
     async getAllApiTokens(
         req: IAuthRequest,
         res: Response<ApiTokensSchema>,

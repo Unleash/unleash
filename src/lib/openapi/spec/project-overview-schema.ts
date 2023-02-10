@@ -61,7 +61,7 @@ export const projectOverviewSchema = {
             items: {
                 $ref: '#/components/schemas/featureSchema',
             },
-            description: 'List of features in this project',
+            description: 'The full list of features in this project (excluding archived features)',
         },
         updatedAt: {
             type: 'string',

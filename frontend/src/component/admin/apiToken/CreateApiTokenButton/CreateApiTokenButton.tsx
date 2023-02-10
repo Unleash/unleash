@@ -15,8 +15,8 @@ export const CreateApiTokenButton = () => {
 
     const to = Boolean(project) ? 'create' : '/admin/api/create-token';
     const permission = Boolean(project)
-        ? CREATE_API_TOKEN
-        : CREATE_PROJECT_API_TOKEN;
+        ? CREATE_PROJECT_API_TOKEN
+        : CREATE_API_TOKEN;
 
     return (
         <ResponsiveButton
@@ -24,6 +24,7 @@ export const CreateApiTokenButton = () => {
             onClick={() => navigate(to)}
             data-testid={CREATE_API_TOKEN_BUTTON}
             permission={permission}
+            projectId={project}
             maxWidth="700px"
         >
             New API token

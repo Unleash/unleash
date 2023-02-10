@@ -14,7 +14,8 @@ export const projectOverviewSchema = {
     type: 'object',
     additionalProperties: false,
     required: ['version', 'name'],
-    description: "A high-level overview of a project. It contains information such as project statistics, the name of the project, what members and what features it contains, etc.",
+    description:
+        'A high-level overview of a project. It contains information such as project statistics, the name of the project, what members and what features it contains, etc.',
     properties: {
         stats: {
             $ref: '#/components/schemas/projectStatsSchema',
@@ -44,7 +45,8 @@ export const projectOverviewSchema = {
         health: {
             type: 'number',
             example: 50,
-            description: 'An indicator of the [project's health](https://docs.getunleash.io/reference/technical-debt#health-rating) on a scale from 0 to 100'
+            description:
+                "An indicator of the [project's health](https://docs.getunleash.io/reference/technical-debt#health-rating) on a scale from 0 to 100",
         },
         environments: {
             type: 'array',
@@ -66,7 +68,6 @@ export const projectOverviewSchema = {
             format: 'date-time',
             nullable: true,
             example: '2023-02-10T08:36:35.262Z',
-            description: 'Last modification data of this project',
         },
         favorite: {
             type: 'boolean',

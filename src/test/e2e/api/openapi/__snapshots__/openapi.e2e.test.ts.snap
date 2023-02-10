@@ -2430,6 +2430,7 @@ exports[`should serve the OpenAPI spec 1`] = `
         "additionalProperties": false,
         "properties": {
           "description": {
+            "nullable": true,
             "type": "string",
           },
           "environments": {

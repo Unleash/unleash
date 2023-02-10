@@ -27,7 +27,7 @@ export const projectOverviewSchema = {
         name: {
             type: 'string',
             example: 'dx-squad',
-            description: 'Name of this project used to identify it',
+            description: 'The name of this project',
         },
         description: {
             type: 'string',
@@ -38,12 +38,12 @@ export const projectOverviewSchema = {
         members: {
             type: 'number',
             example: 4,
-            description: 'Count of the project members',
+            description: 'The number of members this project has',
         },
         health: {
             type: 'number',
             example: 50,
-            description: 'Indicator of the project health in the 0-100 scale',
+            description: 'An indicator of the [project's health](https://docs.getunleash.io/reference/technical-debt#health-rating) on a scale from 0 to 100'
         },
         environments: {
             type: 'array',
@@ -51,7 +51,7 @@ export const projectOverviewSchema = {
                 type: 'string',
             },
             example: ['development', 'production'],
-            description: 'Enabled environments for this project',
+            description: 'The environments that are enabled for this project',
         },
         features: {
             type: 'array',

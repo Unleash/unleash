@@ -15,54 +15,59 @@ export const projectStatsSchema = {
         'projectActivityPastWindow',
         'projectMembersAddedCurrentWindow',
     ],
+    description: "Statistics for a project, including the average time to production, number of features created, the project activity and more.
+    
+Stats are divided into current and previous **windows**. 
+- The **current window** is the past 30 days. 
+- The **previous window** is the 30 days **before** the current window (from 60 to 30 days ago)",
     properties: {
         avgTimeToProdCurrentWindow: {
             type: 'number',
             example: 10,
             description:
-                'Average time to production for features in the current window (last 30 days)',
+                'The average time from when a feature was created to when it was enabled in the "production" environment during the current window",
         },
         avgTimeToProdPastWindow: {
             type: 'number',
             example: 10,
             description:
-                'Average time to production for features in the past window (previous 30 days before current window)',
+                'The average time from when a feature was created to when it was enabled in the "production" environment during the previous window',
         },
         createdCurrentWindow: {
             type: 'number',
             example: 15,
             description:
-                'Number of feature toggles created in the current window (last 30 days)',
+                'The number of feature toggles created during the current window',
         },
         createdPastWindow: {
             type: 'number',
             example: 15,
             description:
-                'Number of feature toggles created in the past window (previous 30 days before current window)',
+                'The number of feature toggles created during the previous window',
         },
         archivedCurrentWindow: {
             type: 'number',
             example: 5,
             description:
-                'Number of feature toggles archived in the current window (last 30 days)',
+                'The number of feature toggles that were archived during the current window',
         },
         archivedPastWindow: {
             type: 'number',
             example: 5,
             description:
-                'Number of feature toggles archived in the past window (previous 30 days before current window)',
+                'The number of feature toggles that were archived during the previous window',
         },
         projectActivityCurrentWindow: {
             type: 'number',
             example: 100,
             description:
-                'Number of event from the event log in the current window (last 30 days)',
+                'The number of project events that occurred during the current window',
         },
         projectActivityPastWindow: {
             type: 'number',
             example: 100,
             description:
-                'Number of event from the event log in the past window (previous 30 days before current window)',
+                'The number of project events that occurred during the previous window',
         },
         projectMembersAddedCurrentWindow: {
             type: 'number',

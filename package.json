@@ -144,7 +144,7 @@
     "@swc/jest": "0.2.24",
     "@types/bcryptjs": "2.4.2",
     "@types/cors": "2.8.13",
-    "@types/express": "4.17.15",
+    "@types/express": "4.17.17",
     "@types/express-session": "1.17.5",
     "@types/faker": "5.5.9",
     "@types/jest": "29.2.5",

@@ -50,7 +50,7 @@
     "@types/lodash.clonedeep": "4.5.7",
     "@types/lodash.omit": "4.5.7",
     "@types/node": "17.0.18",
-    "@types/react": "17.0.52",
+    "@types/react": "17.0.53",
     "@types/react-dom": "17.0.18",
     "@types/react-router-dom": "5.3.3",
     "@types/react-table": "7.7.14",
@@ -117,7 +117,7 @@
     "@codemirror/state": "6.2.0",
     "@xmldom/xmldom": "^0.8.4",
     "json5": "^2.2.2",
-    "@types/react": "17.0.52",
+    "@types/react": "17.0.53",
     "@types/react-dom": "17.0.18"
   },
   "jest": {

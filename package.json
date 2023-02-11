@@ -169,7 +169,7 @@
     "eslint-config-airbnb-base": "15.0.0",
     "eslint-config-airbnb-typescript": "17.0.0",
     "eslint-config-prettier": "8.6.0",
-    "eslint-plugin-import": "2.27.4",
+    "eslint-plugin-import": "2.27.5",
     "eslint-plugin-no-only-tests": "^3.1.0",
     "eslint-plugin-prettier": "4.2.1",
     "faker": "5.5.3",

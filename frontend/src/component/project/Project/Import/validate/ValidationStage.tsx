@@ -10,6 +10,8 @@ import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { ActionsContainer } from '../ActionsContainer';
 import { IMPORT_CONFIGURATION_BUTTON } from 'utils/testIds';
+import PermissionButton from 'component/common/PermissionButton/PermissionButton';
+import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 
 const ImportInfoContainer = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.secondaryContainer,
@@ -92,7 +94,7 @@ export const ValidationStage: FC<{
     const { validateImport } = useValidateImportApi();
     const { setToastData } = useToast();
     const [validationResult, setValidationResult] = useState<IValidationSchema>(
-        { errors: [], warnings: [] }
+        { errors: [], warnings: [], permissions: [] }
     );
     const [validJSON, setValidJSON] = useState(true);
 
@@ -125,6 +127,30 @@ export const ValidationStage: FC<{
                     </span>
                 </Box>
             </ImportInfoContainer>
+            <ConditionallyRender
+                condition={validationResult.permissions.length > 0}
+                show={
+                    <ErrorContainer>
+                        <ErrorHeader>
+                            <strong>Missing permissions!</strong> There are some
+                            permissions that you need to be granted before
+                            importing this configuration
+                        </ErrorHeader>
+                        {validationResult.permissions.map(error => (
+                            <Box key={error.message} sx={{ p: 2 }}>
+                                <ErrorMessage>{error.message}</ErrorMessage>
+                                <StyledItems>
+                                    {error.affectedItems.map(item => (
+                                        <StyledItem key={item}>
+                                            {item}
+                                        </StyledItem>
+                                    ))}
+                                </StyledItems>
+                            </Box>
+                        ))}
+                    </ErrorContainer>
+                }
+            />
             <ConditionallyRender
                 condition={validationResult.errors.length > 0}
                 show={
@@ -187,7 +213,9 @@ export const ValidationStage: FC<{
                 >
                     Back
                 </Button>
-                <Button
+                <PermissionButton
+                    permission={CREATE_FEATURE}
+                    projectId={project}
                     sx={{ position: 'static' }}
                     variant="contained"
                     type="submit"
@@ -196,7 +224,7 @@ export const ValidationStage: FC<{
                     disabled={validationResult.errors.length > 0 || !validJSON}
                 >
                     Import configuration
-                </Button>
+                </PermissionButton>
                 <Button
                     sx={{ position: 'static', ml: 2 }}
                     variant="outlined"

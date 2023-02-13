@@ -26,4 +26,10 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'yarn'
-      - run: ./current/scripts/gradual-strict-null-checks.sh
+          cache-dependency-path: |
+            current/yarn.lock
+            main/yarn.lock
+      - run: ./current/scripts/gradual-strict-null-checks.sh ./current > ./current-count
+      - run: ./current/scripts/gradual-strict-null-checks.sh ./main > ./main-count
+      - run: cat ./current-count
+      - run: cat ./main-count

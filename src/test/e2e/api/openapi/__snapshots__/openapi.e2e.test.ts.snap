@@ -1660,6 +1660,7 @@ exports[`should serve the OpenAPI spec 1`] = `
         "additionalProperties": false,
         "properties": {
           "description": {
+            "nullable": true,
             "type": "string",
           },
           "environments": {
@@ -1686,6 +1687,10 @@ exports[`should serve the OpenAPI spec 1`] = `
           "name": {
             "type": "string",
           },
+          "stats": {
+            "$ref": "#/components/schemas/projectStatsSchema",
+            "description": "Project statistics",
+          },
           "updatedAt": {
             "format": "date-time",
             "nullable": true,
@@ -1708,6 +1713,7 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "number",
           },
           "description": {
+            "nullable": true,
             "type": "string",
           },
           "environments": {
@@ -1739,6 +1745,10 @@ exports[`should serve the OpenAPI spec 1`] = `
           },
           "staleCount": {
             "type": "number",
+          },
+          "stats": {
+            "$ref": "#/components/schemas/projectStatsSchema",
+            "description": "Project statistics",
           },
           "updatedAt": {
             "format": "date-time",

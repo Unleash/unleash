@@ -29,7 +29,11 @@ jobs:
           cache-dependency-path: |
             current/yarn.lock
             main/yarn.lock
-      - run: ./current/scripts/gradual-strict-null-checks.sh ./current > ./current-count
-      - run: ./current/scripts/gradual-strict-null-checks.sh ./main > ./main-count
-      - run: cat ./current-count
-      - run: cat ./main-count
+      # intentionally use the same script from current branch against both repositories
+      - run: |
+          CURRENT=$(./current/scripts/gradual-strict-null-checks.sh ./current)
+          MAIN=$(./current/scripts/gradual-strict-null-checks.sh ./main)
+          if [ $CURRENT -gt $MAIN ]; then
+            echo "The PR is increasing the number of null check errors from ${MAIN} to ${CURRENT}. Consider fixing them before merging"
+            exit 1
+          fi

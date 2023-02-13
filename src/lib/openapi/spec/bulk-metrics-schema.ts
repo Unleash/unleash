@@ -1,6 +1,6 @@
 import { FromSchema } from 'json-schema-to-ts';
-import { bulkMetricSchema } from './bulk-metric-schema';
 import { bulkRegistrationSchema } from './bulk-registration-schema';
+import { clientMetricsSchema } from './client-metrics-schema';
 import { dateSchema } from './date-schema';
 
 export const bulkMetricsSchema = {
@@ -16,15 +16,15 @@ export const bulkMetricsSchema = {
         metrics: {
             type: 'array',
             items: {
-                $ref: '#/components/schemas/bulkMetricSchema',
+                $ref: '#/components/schemas/clientMetricsSchema',
             },
         },
     },
     components: {
         schemas: {
-            bulkMetricSchema,
             bulkRegistrationSchema,
             dateSchema,
+            clientMetricsSchema,
         },
     },
 } as const;

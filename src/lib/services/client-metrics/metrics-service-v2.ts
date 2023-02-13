@@ -1,6 +1,6 @@
 import { Logger } from '../../logger';
 import { IUnleashConfig } from '../../server-impl';
-import { IEdgeApp, IUnleashStores } from '../../types';
+import { IUnleashStores } from '../../types';
 import { IClientApp } from '../../types/model';
 import { ToggleMetricsSummary } from '../../types/models/metrics';
 import {
@@ -21,6 +21,7 @@ import User from '../../types/user';
 import { collapseHourlyMetrics } from '../../util/collapseHourlyMetrics';
 import { LastSeenService } from './last-seen-service';
 import { generateHourBuckets } from '../../util/time-utils';
+import { ClientMetricsSchema } from 'lib/openapi';
 
 export default class ClientMetricsServiceV2 {
     private config: IUnleashConfig;
@@ -95,14 +96,16 @@ export default class ClientMetricsServiceV2 {
         this.config.eventBus.emit(CLIENT_METRICS, value);
     }
 
-    async registerBulkMetrics(value: IEdgeApp[]): Promise<void> {
-        const clientMetrics: IClientMetricsEnv[] = value.map((metric) => ({
-            featureName: metric.featureName,
-            appName: metric.appName,
-            environment: metric.environment,
-            timestamp: metric.timestamp, // we might need to approximate between start/stop...
-            yes: metric.yes ?? 0,
-            no: metric.no ?? 0,
+    async registerBulkMetrics(value: ClientMetricsSchema): Promise<void> {
+        const clientMetrics: IClientMetricsEnv[] = Object.keys(
+            value.bucket.toggles,
+        ).map((toggle) => ({
+            featureName: toggle,
+            appName: value.appName,
+            environment: value.environment,
+            timestamp: new Date(value.bucket.start), // we might need to approximate between start/stop...
+            yes: value.bucket.toggles[toggle].yes ?? 0,
+            no: value.bucket.toggles[toggle].no ?? 0,
         }));
 
         // TODO handle variants metrics

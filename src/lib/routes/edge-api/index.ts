@@ -116,8 +116,12 @@ export default class EdgeController extends Controller {
                     this.clientInstanceService.registerClient(app, clientIp),
                 );
             }
+            if (metrics) {
+                for (const metric of metrics) {
+                    promises.push(this.metricsV2.registerBulkMetrics(metric));
+                }
+            }
             await Promise.all(promises);
-            await this.metricsV2.registerBulkMetrics(metrics);
             res.status(202).end();
         } catch (e) {
             res.status(400).end();

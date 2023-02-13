@@ -704,10 +704,14 @@ class FeatureToggleService {
         userId?: number,
         archived: boolean = false,
     ): Promise<FeatureToggle[]> {
-        return this.featureToggleClientStore.getAdmin({
+        const results = await this.featureToggleClientStore.getAdmin({
             featureQuery: query,
             userId,
             archived,
+        });
+        return results.map((toggle) => {
+            const { strategies, ...rest } = toggle;
+            return rest;
         });
     }
 

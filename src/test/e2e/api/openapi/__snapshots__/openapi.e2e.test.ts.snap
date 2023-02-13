@@ -328,41 +328,6 @@ exports[`should serve the OpenAPI spec 1`] = `
         },
         "type": "object",
       },
-      "bulkMetricSchema": {
-        "properties": {
-          "appName": {
-            "type": "string",
-          },
-          "environment": {
-            "type": "string",
-          },
-          "featureName": {
-            "type": "string",
-          },
-          "instanceId": {
-            "type": "string",
-          },
-          "no": {
-            "type": "number",
-          },
-          "timestamp": {
-            "$ref": "#/components/schemas/dateSchema",
-          },
-          "variants": {
-            "type": "array",
-          },
-          "yes": {
-            "type": "number",
-          },
-        },
-        "required": [
-          "appName",
-          "featureName",
-          "environment",
-          "timestamp",
-        ],
-        "type": "object",
-      },
       "bulkMetricsSchema": {
         "properties": {
           "applications": {
@@ -373,7 +338,7 @@ exports[`should serve the OpenAPI spec 1`] = `
           },
           "metrics": {
             "items": {
-              "$ref": "#/components/schemas/bulkMetricSchema",
+              "$ref": "#/components/schemas/clientMetricsSchema",
             },
             "type": "array",
           },
@@ -417,7 +382,6 @@ exports[`should serve the OpenAPI spec 1`] = `
           "appName",
           "instanceId",
         ],
-        "schemas": {},
         "type": "object",
       },
       "changePasswordSchema": {

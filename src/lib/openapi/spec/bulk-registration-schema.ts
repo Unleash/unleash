@@ -36,7 +36,9 @@ export const bulkRegistrationSchema = {
             type: 'string',
         },
     },
-    schemas: {},
+    components: {
+        schemas: {},
+    },
 } as const;
 
 export type BulkRegistrationSchema = FromSchema<typeof bulkRegistrationSchema>;

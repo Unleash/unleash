@@ -135,8 +135,8 @@ import { openApiTags } from './util';
 import { URL } from 'url';
 import apiVersion from '../util/version';
 import { maintenanceSchema } from './spec/maintenance-schema';
-import { bulkMetricsSchema } from './spec/bulk-metrics-schema';
 import { bulkRegistrationSchema } from './spec/bulk-registration-schema';
+import { bulkMetricsSchema } from './spec/bulk-metrics-schema';
 
 // All schemas in `openapi/spec` should be listed here.
 export const schemas = {
@@ -149,8 +149,8 @@ export const schemas = {
     apiTokensSchema,
     applicationSchema,
     applicationsSchema,
-    bulkMetricsSchema,
     bulkRegistrationSchema,
+    bulkMetricsSchema,
     changePasswordSchema,
     clientApplicationSchema,
     clientFeatureSchema,

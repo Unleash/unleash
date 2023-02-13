@@ -9,7 +9,7 @@ import {
     useApiTokens,
 } from 'hooks/api/getters/useApiTokens/useApiTokens';
 import AccessContext from 'contexts/AccessContext';
-import { useContext, useMemo, useState } from 'react';
+import { useContext, useState } from 'react';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import useToast from 'hooks/useToast';
 import useApiTokensApi from 'hooks/api/actions/useApiTokensApi/useApiTokensApi';
@@ -40,7 +40,7 @@ export const RemoveApiTokenButton = ({
         ? DELETE_PROJECT_API_TOKEN
         : DELETE_API_TOKEN;
 
-    const canRemove = useMemo(() => {
+    const canRemove = () => {
         if (isAdmin) {
             return true;
         }
@@ -53,7 +53,7 @@ export const RemoveApiTokenButton = ({
             }
             return true;
         }
-    }, [hasAccess, token, project, permission]);
+    };
 
     const onRemove = async () => {
         if (project) {
@@ -77,7 +77,7 @@ export const RemoveApiTokenButton = ({
                 tooltipProps={{ title: 'Delete token', arrow: true }}
                 onClick={() => setOpen(true)}
                 size="large"
-                disabled={!canRemove}
+                disabled={!canRemove()}
             >
                 <Delete />
             </PermissionIconButton>

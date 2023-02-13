@@ -174,7 +174,7 @@ export class ProjectApiTokenController extends Controller {
         const { user } = req;
         const { projectId, token } = req.params;
         const storedToken = (await this.accessibleTokens(user, projectId)).find(
-            (t) => this.tokenEquals(t.secret, token),
+            (currentToken) => this.tokenEquals(currentToken.secret, token),
         );
         if (
             storedToken &&

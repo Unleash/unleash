@@ -39,3 +39,14 @@ jobs:
       - name: Publish static assets to S3
         run: |
           aws s3 cp frontend/build s3://getunleash-static/unleash/${{ steps.get_version.outputs.VERSION }} --recursive
+      - name: Trigger sync
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.UNLEASH_CI_BUILDER_GITHUB_TOKEN }}
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: 'ivarconr',
+              repo: 'unleash-enterprise',
+              workflow_id: 'continuous_version_sync.yaml',
+              ref: 'master'
+            })

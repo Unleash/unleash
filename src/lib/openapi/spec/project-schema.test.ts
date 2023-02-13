@@ -10,7 +10,6 @@ test('projectSchema', () => {
         featureCount: 10,
         memberCount: 3,
         updatedAt: '2022-06-28T17:33:53.963Z',
-        changeRequestsEnabled: false,
     };
 
     expect(

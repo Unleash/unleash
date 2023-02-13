@@ -50,10 +50,6 @@ const flags = {
         process.env.UNLEASH_EXPERIMENTAL_MESSAGE_BANNER,
         false,
     ),
-    serviceAccounts: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_SERVICE_ACCOUNTS,
-        false,
-    ),
     featuresExportImport: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FEATURES_EXPORT_IMPORT,
         false,
@@ -68,6 +64,10 @@ const flags = {
     ),
     showProjectApiAccess: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PROJECT_API_ACCESS,
+        false,
+    ),
+    strictSchemaValidation: parseEnvVarBoolean(
+        process.env.UNLEASH_STRICT_SCHEMA_VALIDTION,
         false,
     ),
 };

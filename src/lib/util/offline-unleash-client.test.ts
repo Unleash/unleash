@@ -22,6 +22,7 @@ export const offlineUnleashClientNode = async ({
         appName: context.appName,
         disableMetrics: true,
         refreshInterval: 0,
+        skipInstanceCountWarning: true,
         url: 'not-needed',
         storageProvider: new InMemStorageProviderNode(),
         bootstrap: {

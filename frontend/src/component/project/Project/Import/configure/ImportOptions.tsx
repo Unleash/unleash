@@ -3,6 +3,7 @@ import { KeyboardArrowDownOutlined } from '@mui/icons-material';
 import React, { FC, useEffect } from 'react';
 import { useProjectEnvironments } from 'hooks/api/getters/useProjectEnvironments/useProjectEnvironments';
 import { Box, styled, Typography } from '@mui/material';
+import { IMPORT_ENVIRONMENT } from 'utils/testIds';
 
 const ImportOptionsContainer = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.secondaryContainer,
@@ -57,6 +58,7 @@ export const ImportOptions: FC<IImportOptionsProps> = ({
                 onChange={onChange}
                 label={'Environment'}
                 value={environment}
+                data-testid={IMPORT_ENVIRONMENT}
                 IconComponent={KeyboardArrowDownOutlined}
                 fullWidth
             />

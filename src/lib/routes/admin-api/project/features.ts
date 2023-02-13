@@ -24,6 +24,7 @@ import {
     createRequestSchema,
     createResponseSchema,
     emptyResponse,
+    featureEnvironmentSchema,
     FeatureEnvironmentSchema,
     featureSchema,
     FeatureSchema,
@@ -590,7 +591,13 @@ export default class ProjectFeaturesController extends Controller {
         const result = {
             ...environmentInfo,
             strategies: environmentInfo.strategies.map((strategy) => {
-                const { strategyName, ...rest } = strategy;
+                const {
+                    strategyName,
+                    projectId: project,
+                    environment: environmentId,
+                    createdAt,
+                    ...rest
+                } = strategy;
                 return { ...rest, name: strategyName };
             }),
         };
@@ -598,7 +605,7 @@ export default class ProjectFeaturesController extends Controller {
         this.openApiService.respondWithValidation(
             200,
             res,
-            featureSchema.$id,
+            featureEnvironmentSchema.$id,
             serializeDates(result),
         );
     }

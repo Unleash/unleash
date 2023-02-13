@@ -4,7 +4,7 @@ title: Service accounts
 
 :::info
 
-Service accounts is an upcoming enterprise feature, and is scheduled to become available in one of the next few releases.
+Service accounts is an enterprise feature available from Unleash 4.21 onwards.
 
 :::
 

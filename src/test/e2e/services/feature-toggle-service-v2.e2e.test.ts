@@ -433,6 +433,7 @@ test('If change requests are enabled, cannot change variants without going via C
 });
 
 test('If CRs are protected for any environment in the project stops bulk update of variants', async () => {
+    const user = { email: 'test@example.com', username: 'test-user' } as User;
     const project = await stores.projectStore.create({
         id: 'crOnVariantsProject',
         name: 'crOnVariantsProject',
@@ -476,7 +477,7 @@ test('If CRs are protected for any environment in the project stops bulk update 
     const toggle = await service.createFeatureToggle(
         project.id,
         { name: 'crOnVariantToggle' },
-        'test-user',
+        user.username,
     );
 
     const variant: IVariant = {
@@ -495,7 +496,7 @@ test('If CRs are protected for any environment in the project stops bulk update 
         toggle.name,
         [enabledEnv.name, disabledEnv.name],
         [variant],
-        'test-user',
+        user,
     );
 
     const newVariants = [

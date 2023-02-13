@@ -104,7 +104,7 @@
     "vite": "4.0.4",
     "vite-plugin-env-compatible": "1.1.1",
     "vite-plugin-svgr": "2.4.0",
-    "vite-tsconfig-paths": "4.0.3",
+    "vite-tsconfig-paths": "4.0.5",
     "vitest": "0.27.1",
     "whatwg-fetch": "3.6.2",
     "countries-and-timezones": "^3.4.0",

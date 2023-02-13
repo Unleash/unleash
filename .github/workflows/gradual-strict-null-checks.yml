@@ -36,4 +36,6 @@ jobs:
           if [ $CURRENT -gt $MAIN ]; then
             echo "The PR is increasing the number of null check errors from ${MAIN} to ${CURRENT}. Consider fixing them before merging"
             exit 1
+          else
+            echo "The PR has $CURRENT null check errors against $MAIN in main. You're good to go!"
           fi

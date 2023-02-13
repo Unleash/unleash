@@ -221,7 +221,11 @@ export const ValidationStage: FC<{
                     type="submit"
                     onClick={onSubmit}
                     data-testid={IMPORT_CONFIGURATION_BUTTON}
-                    disabled={validationResult.errors.length > 0 || !validJSON}
+                    disabled={
+                        validationResult.errors.length > 0 ||
+                        validationResult.permissions.length > 0 ||
+                        !validJSON
+                    }
                 >
                     Import configuration
                 </PermissionButton>

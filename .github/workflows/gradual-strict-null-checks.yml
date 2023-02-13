@@ -12,10 +12,18 @@ jobs:
         node-version: [16.x]
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout current branch
+        uses: actions/checkout@v3
+        with:
+          path: current
+      - name: Checkout main branch
+        uses: actions/checkout@v3
+        with:
+          ref: main
+          path: main
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'yarn'
-      - run: ./scripts/gradual-strict-null-checks.sh
+      - run: ./current/scripts/gradual-strict-null-checks.sh

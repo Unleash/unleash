@@ -10,10 +10,6 @@ const flags = {
         process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY,
         true,
     ),
-    anotherNullCheckIssue: parseEnvVarBoolean(
-        process.env.ANOTHER_NULL_CHECK_ISSUE,
-        true,
-    ),
     projectStatusApi: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PROJECT_STATUS_API,
         false,

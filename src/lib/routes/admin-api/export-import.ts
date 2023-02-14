@@ -66,13 +66,6 @@ class ExportImportController extends Controller {
             exportResultSchema.$id,
             serializeDates(data),
         );
-
-        const timestamp = this.getFormattedDate(Date.now());
-        if (query.downloadFile) {
-            res.attachment(`export-${timestamp}.json`);
-        }
-
-        res.json(data);
     }
 
     private getFormattedDate(millis: number): string {

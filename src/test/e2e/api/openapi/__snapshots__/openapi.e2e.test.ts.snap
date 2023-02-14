@@ -5616,6 +5616,9 @@ If the provided project does not exist, the list of events will be empty.",
               },
             },
           },
+          "409": {
+            "description": "This response has no body.",
+          },
         },
         "tags": [
           "Projects",

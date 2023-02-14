@@ -145,17 +145,6 @@ const FeatureOverviewMetaData = () => {
                     />
                 </StyledBody>
             </StyledPaddingContainerTop>
-            <ConditionallyRender
-                condition={
-                    tags.length > 0 &&
-                    !Boolean(uiConfig.flags.variantsPerEnvironment)
-                }
-                show={
-                    <StyledPaddingContainerBottom>
-                        <FeatureOverviewTags projectId={projectId} />
-                    </StyledPaddingContainerBottom>
-                }
-            />
         </StyledContainer>
     );
 };

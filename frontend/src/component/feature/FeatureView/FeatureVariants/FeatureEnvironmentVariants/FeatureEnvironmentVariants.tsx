@@ -318,6 +318,7 @@ export const FeatureEnvironmentVariants = () => {
                                 )}
                                 show={
                                     <PermissionIconButton
+                                        data-testid="EDIT_VARIANTS_BUTTON"
                                         onClick={() =>
                                             editVariants(environment)
                                         }
@@ -332,6 +333,7 @@ export const FeatureEnvironmentVariants = () => {
                                 }
                                 elseShow={
                                     <PermissionButton
+                                        data-testid="ADD_VARIANT_BUTTON"
                                         onClick={() =>
                                             editVariants(environment)
                                         }

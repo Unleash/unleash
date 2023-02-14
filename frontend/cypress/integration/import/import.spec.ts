@@ -119,7 +119,11 @@ describe('imports', () => {
         // cy.contains('Import completed');
 
         cy.visit(`/projects/default/features/${randomFeatureName}`);
-        cy.contains('enabled in development');
+        cy.get(
+            "[data-testid='feature-toggle-status'] input[type='checkbox']:checked"
+        )
+            .closest('div')
+            .contains('development');
         cy.contains('50%');
     });
 });

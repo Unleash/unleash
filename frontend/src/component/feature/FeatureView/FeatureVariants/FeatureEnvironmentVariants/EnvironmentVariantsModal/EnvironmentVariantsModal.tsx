@@ -284,6 +284,7 @@ export const EnvironmentVariantsModal = ({
                         </StyledName>
                     </div>
                     <PermissionButton
+                        data-testid="MODAL_ADD_VARIANT_BUTTON"
                         onClick={() =>
                             setVariantsEdit(variantsEdit => [
                                 ...variantsEdit,
@@ -400,6 +401,7 @@ export const EnvironmentVariantsModal = ({
 
                     <StyledButtonContainer>
                         <Button
+                            data-testid="DIALOGUE_CONFIRM_ID"
                             type="submit"
                             variant="contained"
                             color="primary"

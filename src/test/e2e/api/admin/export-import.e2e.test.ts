@@ -290,7 +290,7 @@ test('should export tags', async () => {
     });
 });
 
-test('returns all features, when no feature was defined', async () => {
+test('returns no features, when no feature was requested', async () => {
     await createProject('default', 'default');
     await createToggle({
         name: 'first_feature',
@@ -309,5 +309,5 @@ test('returns all features, when no feature was defined', async () => {
         .set('Content-Type', 'application/json')
         .expect(200);
 
-    expect(body.features).toHaveLength(2);
+    expect(body.features).toHaveLength(0);
 });

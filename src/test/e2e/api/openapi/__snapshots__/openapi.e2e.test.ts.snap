@@ -1223,6 +1223,10 @@ exports[`should serve the OpenAPI spec 1`] = `
           "toggleName": {
             "type": "string",
           },
+          "totalEvents": {
+            "minimum": 0,
+            "type": "integer",
+          },
           "version": {
             "type": "number",
           },

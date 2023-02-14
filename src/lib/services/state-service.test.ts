@@ -27,7 +27,6 @@ function getSetup() {
 }
 
 async function setupV3VariantsCompatibilityScenario(
-    variantsPerEnvironment: boolean,
     envs = [
         { name: 'env-2', enabled: true },
         { name: 'env-3', enabled: true },
@@ -55,9 +54,7 @@ async function setupV3VariantsCompatibilityScenario(
             env.name,
             [
                 {
-                    name: variantsPerEnvironment
-                        ? `${env.name}-variant`
-                        : 'variant-name',
+                    name: `${env.name}-variant`,
                     stickiness: 'default',
                     weight: 1000,
                     weightType: 'variable',
@@ -69,7 +66,7 @@ async function setupV3VariantsCompatibilityScenario(
         stateService: new StateService(stores, {
             getLogger,
             flagResolver: {
-                isEnabled: () => variantsPerEnvironment,
+                isEnabled: () => true,
                 getAll: () => ({}),
             },
         }),
@@ -622,88 +619,8 @@ test('exporting to new format works', async () => {
     expect(exported.featureStrategies).toHaveLength(1);
 });
 
-test('exporting with no environments should fail', async () => {
-    const { stateService, stores } = await setupV3VariantsCompatibilityScenario(
-        false,
-    );
-    await stores.environmentStore.deleteAll();
-
-    expect(stateService.export({})).rejects.toThrowError();
-});
-
-// This test should be removed as soon as variants per environment is GA
-test('exporting variants to v3 format should pick variants from the correct env', async () => {
-    const { stateService } = await setupV3VariantsCompatibilityScenario(false);
-
-    const exported = await stateService.export({});
-    expect(exported.features).toHaveLength(1);
-
-    expect(exported.features[0].variants).toStrictEqual([
-        {
-            name: 'variant-name',
-            stickiness: 'default',
-            weight: 1000,
-            weightType: 'variable',
-        },
-    ]);
-    exported.featureEnvironments.forEach((fe) =>
-        expect(fe.variants).toBeUndefined(),
-    );
-    expect(exported.environments).toHaveLength(3);
-});
-
-// This test should be removed as soon as variants per environment is GA
-test('exporting variants to v3 format when some envs are disabled should export variants', async () => {
-    const { stateService } = await setupV3VariantsCompatibilityScenario(false, [
-        { name: 'env-2', enabled: false },
-        { name: 'env-3', enabled: false },
-        { name: 'env-1', enabled: true },
-    ]);
-
-    const exported = await stateService.export({});
-    expect(exported.features).toHaveLength(1);
-
-    expect(exported.features[0].variants).toStrictEqual([
-        {
-            name: 'variant-name',
-            stickiness: 'default',
-            weight: 1000,
-            weightType: 'variable',
-        },
-    ]);
-    exported.featureEnvironments.forEach((fe) =>
-        expect(fe.variants).toBeUndefined(),
-    );
-    expect(exported.environments).toHaveLength(3);
-});
-
-// This test should be removed as soon as variants per environment is GA
-test('exporting variants to v3 format when all envs are disabled should export variants', async () => {
-    const { stateService } = await setupV3VariantsCompatibilityScenario(false, [
-        { name: 'env-2', enabled: false },
-        { name: 'env-3', enabled: false },
-        { name: 'env-1', enabled: false },
-    ]);
-
-    const exported = await stateService.export({});
-    expect(exported.features).toHaveLength(1);
-
-    expect(exported.features[0].variants).toStrictEqual([
-        {
-            name: 'variant-name',
-            stickiness: 'default',
-            weight: 1000,
-            weightType: 'variable',
-        },
-    ]);
-    exported.featureEnvironments.forEach((fe) =>
-        expect(fe.variants).toBeUndefined(),
-    );
-    expect(exported.environments).toHaveLength(3);
-});
-
 test('exporting variants to v4 format should not include variants in features', async () => {
-    const { stateService } = await setupV3VariantsCompatibilityScenario(true);
+    const { stateService } = await setupV3VariantsCompatibilityScenario();
     const exported = await stateService.export({});
 
     expect(exported.features).toHaveLength(1);

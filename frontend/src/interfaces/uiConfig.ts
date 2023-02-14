@@ -38,7 +38,6 @@ export interface IFlags {
     UG?: boolean;
     ENABLE_DARK_MODE_SUPPORT?: boolean;
     embedProxyFrontend?: boolean;
-    variantsPerEnvironment?: boolean;
     networkView?: boolean;
     maintenance?: boolean;
     maintenanceMode?: boolean;

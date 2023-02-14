@@ -97,13 +97,6 @@ export default class EnvironmentService {
                 environment,
                 projectId,
             );
-
-            if (!this.flagResolver.isEnabled('variantsPerEnvironment')) {
-                await this.featureEnvironmentStore.clonePreviousVariants(
-                    environment,
-                    projectId,
-                );
-            }
         } catch (e) {
             if (e.code === UNIQUE_CONSTRAINT_VIOLATION) {
                 throw new NameExistsError(

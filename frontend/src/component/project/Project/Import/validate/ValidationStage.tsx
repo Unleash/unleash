@@ -156,10 +156,8 @@ export const ValidationStage: FC<{
                 show={
                     <ErrorContainer>
                         <ErrorHeader>
-                            <strong>Conflict!</strong> There are some
-                            configurations that don't exist in the current
-                            instance and need to be created before importing
-                            this configuration
+                            <strong>Conflict!</strong> There are some errors
+                            that need to be fixed before the import.
                         </ErrorHeader>
                         {validationResult.errors.map(error => (
                             <Box key={error.message} sx={{ p: 2 }}>

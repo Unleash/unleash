@@ -1178,7 +1178,19 @@ exports[`should serve the OpenAPI spec 1`] = `
           },
           "segments": {
             "items": {
-              "$ref": "#/components/schemas/segmentSchema",
+              "additionalProperties": false,
+              "properties": {
+                "id": {
+                  "type": "number",
+                },
+                "name": {
+                  "type": "string",
+                },
+              },
+              "required": [
+                "id",
+              ],
+              "type": "object",
             },
             "type": "array",
           },

@@ -84,7 +84,6 @@ exports[`should create default config 1`] = `
       "responseTimeWithAppName": false,
       "showProjectApiAccess": false,
       "strictSchemaValidation": false,
-      "variantsPerEnvironment": false,
     },
   },
   "flagResolver": FlagResolver {
@@ -106,7 +105,6 @@ exports[`should create default config 1`] = `
       "responseTimeWithAppName": false,
       "showProjectApiAccess": false,
       "strictSchemaValidation": false,
-      "variantsPerEnvironment": false,
     },
     "externalResolver": {
       "isEnabled": [Function],

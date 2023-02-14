@@ -10,6 +10,8 @@ import { PulsingAvatar } from '../PulsingAvatar';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Box } from '@mui/system';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
+import useProject from 'hooks/api/getters/useProject/useProject';
+import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 
 export const ImportStatusArea = styled(Box)(({ theme }) => ({
     padding: theme.spacing(4, 2, 2, 2),
@@ -61,18 +63,24 @@ export const ImportStage: FC<{
     onClose: () => void;
 }> = ({ environment, project, payload, onClose }) => {
     const { createImport, loading, errors } = useImportApi();
+    const { refetch: refreshProject } = useProject(project);
+    const { refetch: refreshChangeRequests } =
+        usePendingChangeRequests(project);
     const { setToastData } = useToast();
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(project);
 
     useEffect(() => {
-        createImport({ environment, project, data: JSON.parse(payload) }).catch(
-            error => {
+        createImport({ environment, project, data: JSON.parse(payload) })
+            .then(() => {
+                refreshProject();
+                refreshChangeRequests();
+            })
+            .catch(error => {
                 setToastData({
                     type: 'error',
                     title: formatUnknownError(error),
                 });
-            }
-        );
+            });
     }, []);
 
     const importStatus = toApiStatus(loading, errors);

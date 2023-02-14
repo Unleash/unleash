@@ -14,11 +14,6 @@ import {
 import { ValidationStage } from './validate/ValidationStage';
 import { ImportStage } from './import/ImportStage';
 import { ImportOptions } from './configure/ImportOptions';
-import {
-    IMPORT_BUTTON,
-    IMPORT_CONFIGURATION_BUTTON,
-    VALIDATE_BUTTON,
-} from '../../../../utils/testIds';
 
 const ModalContentContainer = styled('div')(({ theme }) => ({
     minHeight: '100vh',

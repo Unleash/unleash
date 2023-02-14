@@ -8,6 +8,7 @@ export interface ImportQuerySchema {
 export interface IValidationSchema {
     errors: Array<{ message: string; affectedItems: Array<string> }>;
     warnings: Array<{ message: string; affectedItems: Array<string> }>;
+    permissions: Array<{ message: string; affectedItems: Array<string> }>;
 }
 
 export const useValidateImportApi = () => {

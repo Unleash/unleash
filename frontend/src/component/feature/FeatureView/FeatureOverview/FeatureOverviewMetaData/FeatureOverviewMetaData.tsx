@@ -6,10 +6,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { Edit } from '@mui/icons-material';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
-import useFeatureTags from 'hooks/api/getters/useFeatureTags/useFeatureTags';
-import FeatureOverviewTags from './FeatureOverviewTags/FeatureOverviewTags';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
@@ -30,11 +27,6 @@ const StyledContainer = styled('div')(({ theme }) => ({
 const StyledPaddingContainerTop = styled('div')({
     padding: '1.5rem 1.5rem 0 1.5rem',
 });
-
-const StyledPaddingContainerBottom = styled('div')(({ theme }) => ({
-    padding: '0 1.5rem 1.5rem 1.5rem',
-    borderTop: `1px solid ${theme.palette.divider}`,
-}));
 
 const StyledMetaDataHeader = styled('div')({
     display: 'flex',
@@ -66,10 +58,8 @@ const StyledDescriptionContainer = styled('div')(({ theme }) => ({
 }));
 
 const FeatureOverviewMetaData = () => {
-    const { uiConfig } = useUiConfig();
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
-    const { tags } = useFeatureTags(featureId);
     const { feature } = useFeature(projectId, featureId);
     const { project, description, type } = feature;
 

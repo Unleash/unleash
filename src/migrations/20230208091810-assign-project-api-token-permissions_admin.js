@@ -17,7 +17,14 @@ exports.up = function (db, cb) {
 exports.down = function (db, cb) {
     db.runSql(
         `
-  `,
+            DELETE FROM role_permission
+            WHERE permission_id IN (SELECT id from permissions WHERE permission IN ('READ_PROJECT_API_TOKEN',
+                                                                                    'CREATE_PROJECT_API_TOKEN',
+                                                                                    'DELETE_PROJECT_API_TOKEN'))
+              AND role_id = (SELECT id as role_id from roles WHERE name = 'Admin' LIMIT 1)
+
+
+        `,
         cb,
     );
 };

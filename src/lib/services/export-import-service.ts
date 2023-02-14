@@ -150,8 +150,8 @@ export default class ExportImportService {
             }),
             featureTags,
             segments: filteredSegments.map((item) => {
-                const { createdAt, createdBy, ...rest } = item;
-                return rest;
+                const { id, name } = item;
+                return { id, name };
             }),
             tagTypes: filteredTagTypes,
         };

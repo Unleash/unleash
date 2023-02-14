@@ -4,7 +4,6 @@ import { featureStrategySchema } from './feature-strategy-schema';
 import { featureEnvironmentSchema } from './feature-environment-schema';
 import { contextFieldSchema } from './context-field-schema';
 import { featureTagSchema } from './feature-tag-schema';
-import { segmentSchema } from './segment-schema';
 import { parametersSchema } from './parameters-schema';
 import { legalValueSchema } from './legal-value-schema';
 import { variantSchema } from './variant-schema';
@@ -52,7 +51,17 @@ export const exportResultSchema = {
         segments: {
             type: 'array',
             items: {
-                $ref: '#/components/schemas/segmentSchema',
+                type: 'object',
+                additionalProperties: false,
+                required: ['id'],
+                properties: {
+                    id: {
+                        type: 'number',
+                    },
+                    name: {
+                        type: 'string',
+                    },
+                },
             },
         },
         tagTypes: {
@@ -69,7 +78,6 @@ export const exportResultSchema = {
             featureEnvironmentSchema,
             contextFieldSchema,
             featureTagSchema,
-            segmentSchema,
             variantsSchema,
             variantSchema,
             overrideSchema,

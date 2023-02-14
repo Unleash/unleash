@@ -1294,6 +1294,10 @@ exports[`should serve the OpenAPI spec 1`] = `
           "toggleName": {
             "type": "string",
           },
+          "totalEvents": {
+            "minimum": 0,
+            "type": "integer",
+          },
           "version": {
             "type": "number",
           },
@@ -1393,6 +1397,13 @@ exports[`should serve the OpenAPI spec 1`] = `
             "description": "\`true\` if the feature is stale based on the age and feature type, otherwise \`false\`.",
             "example": false,
             "type": "boolean",
+          },
+          "strategies": {
+            "description": "This is a legacy field that will be deprecated",
+            "items": {
+              "type": "object",
+            },
+            "type": "array",
           },
           "tags": {
             "description": "The list of feature tags",
@@ -1731,6 +1742,7 @@ exports[`should serve the OpenAPI spec 1`] = `
         "additionalProperties": false,
         "properties": {
           "description": {
+            "nullable": true,
             "type": "string",
           },
           "environments": {
@@ -1757,6 +1769,10 @@ exports[`should serve the OpenAPI spec 1`] = `
           "name": {
             "type": "string",
           },
+          "stats": {
+            "$ref": "#/components/schemas/projectStatsSchema",
+            "description": "Project statistics",
+          },
           "updatedAt": {
             "format": "date-time",
             "nullable": true,
@@ -1779,6 +1795,7 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "number",
           },
           "description": {
+            "nullable": true,
             "type": "string",
           },
           "environments": {
@@ -1810,6 +1827,10 @@ exports[`should serve the OpenAPI spec 1`] = `
           },
           "staleCount": {
             "type": "number",
+          },
+          "stats": {
+            "$ref": "#/components/schemas/projectStatsSchema",
+            "description": "Project statistics",
           },
           "updatedAt": {
             "format": "date-time",

@@ -97,6 +97,13 @@ export const featureSchema = {
             },
             description: 'The list of feature variants',
         },
+        strategies: {
+            type: 'array',
+            items: {
+                type: 'object',
+            },
+            description: 'This is a legacy field that will be deprecated',
+        },
         tags: {
             type: 'array',
             items: {

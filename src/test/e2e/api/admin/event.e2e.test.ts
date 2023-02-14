@@ -1,4 +1,7 @@
-import { IUnleashTest, setupApp } from '../../helpers/test-helper';
+import {
+    IUnleashTest,
+    setupAppWithCustomConfig,
+} from '../../helpers/test-helper';
 import dbInit, { ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import { FEATURE_CREATED, IBaseEvent } from '../../../../lib/types/events';
@@ -11,7 +14,13 @@ let eventStore: IEventStore;
 
 beforeAll(async () => {
     db = await dbInit('event_api_serial', getLogger);
-    app = await setupApp(db.stores);
+    app = await setupAppWithCustomConfig(db.stores, {
+        experimental: {
+            flags: {
+                strictSchemaValidation: true,
+            },
+        },
+    });
     eventStore = db.stores.eventStore;
 });
 

@@ -1,4 +1,3 @@
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useProjects from '../hooks/api/getters/useProjects/useProjects';
@@ -8,7 +7,6 @@ import Loader from './common/Loader/Loader';
 export const InitialRedirect = () => {
     const { lastViewed } = useLastViewedProject();
     const { projects, loading } = useProjects();
-    const { refetch: refetchUiConfig } = useUiConfig();
     const navigate = useNavigate();
 
     // Redirect based on project and last viewed
@@ -27,10 +25,6 @@ export const InitialRedirect = () => {
     const redirect = () => {
         navigate(getRedirect(), { replace: true });
     };
-
-    useEffect(() => {
-        refetchUiConfig();
-    }, []);
 
     useEffect(() => {
         redirect();

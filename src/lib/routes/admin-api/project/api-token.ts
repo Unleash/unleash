@@ -100,6 +100,7 @@ export class ProjectApiTokenController extends Controller {
                     requestBody: createRequestSchema('createApiTokenSchema'),
                     responses: {
                         201: resourceCreatedResponseSchema('apiTokenSchema'),
+                        409: emptyResponse,
                     },
                 }),
             ],

@@ -327,6 +327,9 @@ export const FeatureEnvironmentVariants = () => {
                                         }
                                         projectId={projectId}
                                         environmentId={environment.name}
+                                        tooltipProps={{
+                                            title: 'Edit variants',
+                                        }}
                                     >
                                         <Edit />
                                     </PermissionIconButton>

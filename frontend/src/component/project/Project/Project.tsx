@@ -28,6 +28,7 @@ import ProjectOverview from './ProjectOverview';
 import ProjectHealth from './ProjectHealth/ProjectHealth';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import {
+    CREATE_FEATURE,
     DELETE_PROJECT,
     UPDATE_PROJECT,
 } from 'component/providers/AccessProvider/permissions';
@@ -142,7 +143,7 @@ export const Project = () => {
                                 )}
                                 show={
                                     <PermissionIconButton
-                                        permission={UPDATE_PROJECT}
+                                        permission={CREATE_FEATURE}
                                         projectId={projectId}
                                         sx={{
                                             visibility: isOss()

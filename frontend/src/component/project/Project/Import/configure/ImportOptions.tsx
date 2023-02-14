@@ -4,6 +4,7 @@ import React, { FC, useEffect } from 'react';
 import { useProjectEnvironments } from 'hooks/api/getters/useProjectEnvironments/useProjectEnvironments';
 import { Box, styled, Typography } from '@mui/material';
 import { IMPORT_ENVIRONMENT } from 'utils/testIds';
+import useProject from '../../../../../hooks/api/getters/useProject/useProject';
 
 const ImportOptionsContainer = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.secondaryContainer,
@@ -31,14 +32,12 @@ export const ImportOptions: FC<IImportOptionsProps> = ({
     environment,
     onChange,
 }) => {
-    const { environments } = useProjectEnvironments(project);
-    const environmentOptions = environments
-        .filter(environment => environment.enabled)
-        .map(environment => ({
-            key: environment.name,
-            label: environment.name,
-            title: environment.name,
-        }));
+    const { project: projectInfo } = useProject(project);
+    const environmentOptions = projectInfo.environments.map(environment => ({
+        key: environment,
+        label: environment,
+        title: environment,
+    }));
 
     useEffect(() => {
         if (environment === '' && environmentOptions[0]) {

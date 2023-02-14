@@ -1,0 +1,50 @@
+name: Lower null checks
+
+on:
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+      - name: Checkout current branch
+        uses: actions/checkout@v3
+        with:
+          path: current
+      - name: Checkout main branch
+        uses: actions/checkout@v3
+        with:
+          ref: main
+          path: main
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'yarn'
+          cache-dependency-path: |
+            current/yarn.lock
+            main/yarn.lock
+      # intentionally use the same script from current branch against both repositories
+      - run: |
+          ./current/scripts/gradual-strict-null-checks.sh ./current > ./current-count &
+          pid1=$!
+          ./current/scripts/gradual-strict-null-checks.sh ./main > ./main-count &
+          pid2=$!
+          wait $pid1 && wait $pid2
+          MAIN=$(cat ./main-count)
+          CURRENT=$(cat ./current-count)
+          if [ $CURRENT -gt $MAIN ]; then
+            echo "The PR is increasing the number of null check errors from ${MAIN} to ${CURRENT}. Check if your branch is up-to-date and consider fixing them before merging"
+            exit 1
+          else
+            echo "The PR has $CURRENT null check errors against $MAIN in main. You're good to go!"
+          fi

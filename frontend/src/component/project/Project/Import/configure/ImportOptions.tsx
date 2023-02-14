@@ -1,10 +1,9 @@
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { KeyboardArrowDownOutlined } from '@mui/icons-material';
 import React, { FC, useEffect } from 'react';
-import { useProjectEnvironments } from 'hooks/api/getters/useProjectEnvironments/useProjectEnvironments';
 import { Box, styled, Typography } from '@mui/material';
 import { IMPORT_ENVIRONMENT } from 'utils/testIds';
-import useProject from '../../../../../hooks/api/getters/useProject/useProject';
+import useProject from 'hooks/api/getters/useProject/useProject';
 
 const ImportOptionsContainer = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.secondaryContainer,

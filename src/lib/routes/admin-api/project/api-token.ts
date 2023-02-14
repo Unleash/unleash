@@ -163,6 +163,10 @@ export class ProjectApiTokenController extends Controller {
                 serializeDates(token),
                 { location: `api-tokens` },
             );
+        } else {
+            res.statusMessage =
+                'Project level tokens can only be created for one project';
+            res.status(409);
         }
     }
 

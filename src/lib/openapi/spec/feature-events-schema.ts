@@ -16,6 +16,10 @@ export const featureEventsSchema = {
             type: 'array',
             items: { $ref: eventSchema.$id },
         },
+        totalEvents: {
+            type: 'integer',
+            minimum: 0,
+        },
     },
     components: {
         schemas: {

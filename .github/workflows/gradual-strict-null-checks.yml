@@ -39,7 +39,7 @@ jobs:
           MAIN=$(cat ./main-count)
           CURRENT=$(cat ./current-count)
           if [ $CURRENT -gt $MAIN ]; then
-            echo "The PR is increasing the number of null check errors from ${MAIN} to ${CURRENT}. Consider fixing them before merging"
+            echo "The PR is increasing the number of null check errors from ${MAIN} to ${CURRENT}. Check if your branch is up-to-date and consider fixing them before merging"
             exit 1
           else
             echo "The PR has $CURRENT null check errors against $MAIN in main. You're good to go!"

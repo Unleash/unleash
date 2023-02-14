@@ -10,8 +10,8 @@ import { PulsingAvatar } from '../PulsingAvatar';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Box } from '@mui/system';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
-import useProject from '../../../../../hooks/api/getters/useProject/useProject';
-import { usePendingChangeRequests } from '../../../../../hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
+import useProject from 'hooks/api/getters/useProject/useProject';
+import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 
 export const ImportStatusArea = styled(Box)(({ theme }) => ({
     padding: theme.spacing(4, 2, 2, 2),

@@ -157,7 +157,7 @@ export const ValidationStage: FC<{
                     <ErrorContainer>
                         <ErrorHeader>
                             <strong>Conflict!</strong> There are some errors
-                            that prevent this import.
+                            that need to be fixed before the import.
                         </ErrorHeader>
                         {validationResult.errors.map(error => (
                             <Box key={error.message} sx={{ p: 2 }}>

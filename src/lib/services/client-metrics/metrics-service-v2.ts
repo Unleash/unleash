@@ -1,7 +1,6 @@
 import { Logger } from '../../logger';
 import { IUnleashConfig } from '../../server-impl';
 import { IUnleashStores } from '../../types';
-import { IClientApp } from '../../types/model';
 import { ToggleMetricsSummary } from '../../types/models/metrics';
 import {
     IClientMetricsEnv,
@@ -13,7 +12,6 @@ import {
     hoursToMilliseconds,
     secondsToMilliseconds,
 } from 'date-fns';
-import { IFeatureToggleStore } from '../../types/stores/feature-toggle-store';
 import { CLIENT_METRICS } from '../../types/events';
 import ApiUser from '../../types/api-user';
 import { ALL } from '../../types/models/api-token';
@@ -32,22 +30,16 @@ export default class ClientMetricsServiceV2 {
 
     private clientMetricsStoreV2: IClientMetricsStoreV2;
 
-    private featureToggleStore: IFeatureToggleStore;
-
     private lastSeenService: LastSeenService;
 
     private logger: Logger;
 
     constructor(
-        {
-            featureToggleStore,
-            clientMetricsStoreV2,
-        }: Pick<IUnleashStores, 'featureToggleStore' | 'clientMetricsStoreV2'>,
+        { clientMetricsStoreV2 }: Pick<IUnleashStores, 'clientMetricsStoreV2'>,
         config: IUnleashConfig,
         lastSeenService: LastSeenService,
         bulkInterval = secondsToMilliseconds(5),
     ) {
-        this.featureToggleStore = featureToggleStore;
         this.clientMetricsStoreV2 = clientMetricsStoreV2;
         this.lastSeenService = lastSeenService;
         this.config = config;
@@ -69,7 +61,7 @@ export default class ClientMetricsServiceV2 {
     }
 
     async registerClientMetrics(
-        data: IClientApp,
+        data: ClientMetricsSchema,
         clientIp: string,
     ): Promise<void> {
         const value = await clientMetricsSchema.validateAsync(data);
@@ -92,35 +84,12 @@ export default class ClientMetricsServiceV2 {
             no: value.bucket.toggles[name].no,
         }));
 
-        await this.registerPrecomputedMetrics(clientMetrics);
-        this.config.eventBus.emit(CLIENT_METRICS, value);
-    }
-
-    async registerBulkMetrics(value: ClientMetricsSchema): Promise<void> {
-        const clientMetrics: IClientMetricsEnv[] = Object.keys(
-            value.bucket.toggles,
-        ).map((toggle) => ({
-            featureName: toggle,
-            appName: value.appName,
-            environment: value.environment,
-            timestamp: new Date(value.bucket.start), // we might need to approximate between start/stop...
-            yes: value.bucket.toggles[toggle].yes ?? 0,
-            no: value.bucket.toggles[toggle].no ?? 0,
-        }));
-
-        // TODO handle variants metrics
-
-        await this.registerPrecomputedMetrics(clientMetrics);
-    }
-
-    async registerPrecomputedMetrics(
-        clientMetrics: IClientMetricsEnv[],
-    ): Promise<void> {
         this.unsavedMetrics = collapseHourlyMetrics([
             ...this.unsavedMetrics,
             ...clientMetrics,
         ]);
         this.lastSeenService.updateLastSeen(clientMetrics);
+        this.config.eventBus.emit(CLIENT_METRICS, value);
     }
 
     async bulkAdd(): Promise<void> {
@@ -215,7 +184,10 @@ export default class ClientMetricsServiceV2 {
         return result.sort((a, b) => compareAsc(a.timestamp, b.timestamp));
     }
 
-    resolveMetricsEnvironment(user: User | ApiUser, data: IClientApp): string {
+    resolveMetricsEnvironment(
+        user: User | ApiUser,
+        data: { environment?: string },
+    ): string {
         if (user instanceof ApiUser) {
             if (user.environment !== ALL) {
                 return user.environment;

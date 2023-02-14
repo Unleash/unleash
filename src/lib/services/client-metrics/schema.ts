@@ -1,4 +1,5 @@
 import joi from 'joi';
+import { IMetricsBucket } from 'lib/types';
 
 const countSchema = joi
     .object()
@@ -9,8 +10,16 @@ const countSchema = joi
         variants: joi.object().pattern(joi.string(), joi.number().min(0)),
     });
 
+// validated type from client-metrics-schema.ts with default values
+export type ValidatedClientMetrics = {
+    environment?: string;
+    appName: string;
+    instanceId: string;
+    bucket: IMetricsBucket;
+};
+
 export const clientMetricsSchema = joi
-    .object()
+    .object<ValidatedClientMetrics>()
     .options({ stripUnknown: true })
     .keys({
         environment: joi.string().optional(),

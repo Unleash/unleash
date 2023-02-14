@@ -118,7 +118,9 @@ export default class EdgeController extends Controller {
             }
             if (metrics) {
                 for (const metric of metrics) {
-                    promises.push(this.metricsV2.registerBulkMetrics(metric));
+                    promises.push(
+                        this.metricsV2.registerClientMetrics(metric, clientIp),
+                    );
                 }
             }
             await Promise.all(promises);

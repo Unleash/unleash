@@ -590,6 +590,21 @@ exports[`should serve the OpenAPI spec 1`] = `
                   },
                   "type": "object",
                 },
+                "example": {
+                  "myCoolToggle": {
+                    "no": 42,
+                    "variants": {
+                      "blue": 6,
+                      "green": 15,
+                      "red": 46,
+                    },
+                    "yes": 25,
+                  },
+                  "myOtherToggle": {
+                    "no": 100,
+                    "yes": 0,
+                  },
+                },
                 "type": "object",
               },
             },

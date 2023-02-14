@@ -8,7 +8,6 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
 import { useApiTokenForm } from 'component/admin/apiToken/ApiTokenForm/useApiTokenForm';
 import {
-    ADMIN,
     CREATE_API_TOKEN,
     CREATE_PROJECT_API_TOKEN,
 } from 'component/providers/AccessProvider/permissions';
@@ -19,6 +18,10 @@ import { usePageTitle } from 'hooks/usePageTitle';
 import { GO_BACK } from 'constants/navigate';
 import { useApiTokens } from 'hooks/api/getters/useApiTokens/useApiTokens';
 import useProjectApiTokensApi from 'hooks/api/actions/useProjectApiTokensApi/useProjectApiTokensApi';
+import { TokenInfo } from '../ApiTokenForm/TokenInfo/TokenInfo';
+import { TokenTypeSelector } from '../ApiTokenForm/TokenTypeSelector/TokenTypeSelector';
+import { ProjectSelector } from '../ApiTokenForm/ProjectSelector/ProjectSelector';
+import { EnvironmentSelector } from '../ApiTokenForm/EnvironmentSelector/EnvironmentSelector';
 
 const pageTitle = 'Create API token';
 
@@ -64,7 +67,6 @@ export const CreateApiToken = ({
     const permission = Boolean(project)
         ? CREATE_PROJECT_API_TOKEN
         : CREATE_API_TOKEN;
-    const scope = Boolean(project) ? 'project' : 'global';
     const loading = globalLoading || projectLoading;
 
     const handleSubmit = async (e: Event) => {
@@ -126,25 +128,35 @@ export const CreateApiToken = ({
             formatApiCode={formatApiCode}
         >
             <ApiTokenForm
-                username={username}
-                type={type}
-                scope={scope}
-                projects={projects}
-                environment={environment}
-                setEnvironment={setEnvironment}
-                setTokenType={setTokenType}
-                setUsername={setUsername}
-                setProjects={setProjects}
-                errors={errors}
                 handleSubmit={handleSubmit}
                 handleCancel={handleCancel}
                 mode="Create"
-                clearErrors={clearErrors}
+                actions={
+                    <CreateButton
+                        name="token"
+                        permission={permission}
+                        projectId={project}
+                    />
+                }
             >
-                <CreateButton
-                    name="token"
-                    permission={permission}
-                    projectId={project}
+                <TokenInfo
+                    username={username}
+                    setUsername={setUsername}
+                    errors={errors}
+                    clearErrors={clearErrors}
+                />
+                <TokenTypeSelector type={type} setType={setTokenType} />
+                <ProjectSelector
+                    type={type}
+                    projects={projects}
+                    setProjects={setProjects}
+                    errors={errors}
+                    clearErrors={clearErrors}
+                />
+                <EnvironmentSelector
+                    type={type}
+                    environment={environment}
+                    setEnvironment={setEnvironment}
                 />
             </ApiTokenForm>
             <ConfirmToken

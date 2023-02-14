@@ -30,7 +30,6 @@ import { IAuthRequest } from '../../unleash-types';
 import Controller from '../../controller';
 import { Logger } from '../../../logger';
 import { Response } from 'express';
-import { createApiToken } from '../../../schema/api-token-schema';
 import { timingSafeEqual } from 'crypto';
 
 interface ProjectTokenParam {
@@ -143,7 +142,7 @@ export class ProjectApiTokenController extends Controller {
         req: IAuthRequest,
         res: Response<ApiTokenSchema>,
     ): Promise<any> {
-        const createToken = await createApiToken.validateAsync(req.body);
+        const createToken = req.body;
         const { projectId } = req.params;
         if (!createToken.project) {
             createToken.project = projectId;

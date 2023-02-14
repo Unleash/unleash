@@ -290,7 +290,7 @@ test('should export tags', async () => {
     });
 });
 
-test('returns no features, when no feature was requests', async () => {
+test('returns no features, when no feature was requested', async () => {
     await createProject('default', 'default');
     await createToggle({
         name: 'first_feature',

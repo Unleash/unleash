@@ -1,7 +1,11 @@
 import { sha256 } from 'js-sha256';
 import { Logger } from '../logger';
 import { IUnleashConfig } from '../types/option';
-import { IClientInstanceStore, IUnleashStores } from '../types/stores';
+import {
+    IClientInstanceStore,
+    IEventStore,
+    IUnleashStores,
+} from '../types/stores';
 import { IContextFieldStore } from '../types/stores/context-field-store';
 import { IEnvironmentStore } from '../types/stores/environment-store';
 import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
@@ -13,6 +17,7 @@ import { ISegmentStore } from '../types/stores/segment-store';
 import { IRoleStore } from '../types/stores/role-store';
 import VersionService from './version-service';
 import { ISettingStore } from '../types/stores/settings-store';
+import { FEATURES_EXPORTED, FEATURES_IMPORTED } from '../types';
 
 type TimeRange = 'allTime' | '30d' | '7d';
 
@@ -26,6 +31,8 @@ export interface InstanceStats {
     projects: number;
     contextFields: number;
     roles: number;
+    featureExports: number;
+    featureImports: number;
     groups: number;
     environments: number;
     segments: number;
@@ -60,6 +67,8 @@ export class InstanceStatsService {
 
     private roleStore: IRoleStore;
 
+    private eventStore: IEventStore;
+
     private versionService: VersionService;
 
     private settingStore: ISettingStore;
@@ -83,6 +92,7 @@ export class InstanceStatsService {
             roleStore,
             settingStore,
             clientInstanceStore,
+            eventStore,
         }: Pick<
             IUnleashStores,
             | 'featureToggleStore'
@@ -96,6 +106,7 @@ export class InstanceStatsService {
             | 'roleStore'
             | 'settingStore'
             | 'clientInstanceStore'
+            | 'eventStore'
         >,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
         versionService: VersionService,
@@ -111,6 +122,7 @@ export class InstanceStatsService {
         this.roleStore = roleStore;
         this.versionService = versionService;
         this.settingStore = settingStore;
+        this.eventStore = eventStore;
         this.clientInstanceStore = clientInstanceStore;
         this.logger = getLogger('services/stats-service.js');
     }
@@ -171,6 +183,8 @@ export class InstanceStatsService {
             SAMLenabled,
             OIDCenabled,
             clientApps,
+            featureExports,
+            featureImports,
         ] = await Promise.all([
             this.getToggleCount(),
             this.userStore.count(),
@@ -184,6 +198,8 @@ export class InstanceStatsService {
             this.hasSAML(),
             this.hasOIDC(),
             this.getLabeledAppCounts(),
+            this.eventStore.filteredCount({ type: FEATURES_EXPORTED }),
+            this.eventStore.filteredCount({ type: FEATURES_IMPORTED }),
         ]);
 
         return {
@@ -203,6 +219,8 @@ export class InstanceStatsService {
             SAMLenabled,
             OIDCenabled,
             clientApps,
+            featureExports,
+            featureImports,
         };
     }
 

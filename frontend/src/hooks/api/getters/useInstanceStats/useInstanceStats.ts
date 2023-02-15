@@ -17,6 +17,10 @@ interface InstanceStats {
     environments: number;
     segments: number;
     strategies: number;
+
+    featureExports: number;
+
+    featureImports: number;
     SAMLenabled: boolean;
     OIDCenabled: boolean;
 }

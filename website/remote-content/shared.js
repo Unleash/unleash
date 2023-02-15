@@ -41,7 +41,7 @@ module.exports.getRepoData = (documents) => (filename) => {
 // However, if the old link goes to a redirect, then the client-side redirect
 // will not kick in, so you'll end up with a "Page not found".
 const replaceLinks = ({ content, repo }) => {
-    const replacer = (url) => {
+    const replace = (processRelativeUrl) => (url) => {
         try {
             // This constructor will throw if the URL is relative.
             // https://developer.mozilla.org/en-US/docs/Web/API/URL/URL
@@ -49,31 +49,24 @@ const replaceLinks = ({ content, repo }) => {
 
             return url;
         } catch {
-            // case 1
-            if (url.startsWith('#')) {
-                // ignore links to other doc sections
-                return url;
-            } else {
-                const separator = url.startsWith('/') ? '' : '/';
-                return `${repo.url}/blob/${repo.branch}${separator}${url}`;
-            }
-        }
-    };
-
-    const imageReplacer = (url) => {
-        // https://raw.githubusercontent.com/Unleash/unleash-proxy/main/.github/img/connection-overview.svg
-
-        try {
-            new URL(url);
-
-            return url;
-        } catch {
-            console.log('got this relative image url', url, repo);
-
             const separator = url.startsWith('/') ? '' : '/';
-            return `https://raw.githubusercontent.com/Unleash/${repo.name}/${repo.branch}${separator}${url}`;
+            return processRelativeUrl(url, separator);
         }
     };
+
+    const replaceMarkdownLink = replace((url, separator) => {
+        // case 1
+        if (url.startsWith('#')) {
+            // ignore links to other doc sections
+            return url;
+        } else {
+            return `${repo.url}/blob/${repo.branch}${separator}${url}`;
+        }
+    });
+
+    const replaceImageSrcLink = replace((url, separator) => {
+        return `https://raw.githubusercontent.com/Unleash/${repo.name}/${repo.branch}${separator}${url}`;
+    });
 
     // matches the URL portion of markdown links like [I go here](path/link "comment")
     const markdownLink = /(?<=\[.*\]\(\s?)([^\s\)]+)(?=.*\))/g;
@@ -83,8 +76,8 @@ const replaceLinks = ({ content, repo }) => {
     const imageSrcLink = /(?<=src=")([^")]+\.(png|svg|jpe?g|webp|gif))(?=")/g;
 
     return content
-        .replaceAll(markdownLink, replacer)
-        .replaceAll(imageSrcLink, imageReplacer);
+        .replaceAll(markdownLink, replaceMarkdownLink)
+        .replaceAll(imageSrcLink, replaceImageSrcLink);
 };
 
 module.exports.modifyContent =

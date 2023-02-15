@@ -145,11 +145,6 @@ export const Project = () => {
                                     <PermissionIconButton
                                         permission={CREATE_FEATURE}
                                         projectId={projectId}
-                                        sx={{
-                                            visibility: isOss()
-                                                ? 'hidden'
-                                                : 'visible',
-                                        }}
                                         onClick={() => setModalOpen(true)}
                                         tooltipProps={{ title: 'Import' }}
                                         data-testid={IMPORT_BUTTON}

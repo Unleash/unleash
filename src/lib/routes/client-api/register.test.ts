@@ -8,7 +8,7 @@ import { createServices } from '../../services';
 async function getSetup() {
     const stores = createStores();
     const config = createTestConfig();
-    const services = createServices(stores, config);
+    const services = createServices(stores, config, stores.db);
     const app = await getApp(config, stores, services);
 
     return {

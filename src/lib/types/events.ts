@@ -106,6 +106,7 @@ export const PROJECT_FAVORITED = 'project-favorited';
 export const PROJECT_UNFAVORITED = 'project-unfavorited';
 
 export const FEATURES_EXPORTED = 'features-exported';
+export const FEATURES_IMPORTED = 'features-imported';
 
 export interface IBaseEvent {
     type: string;

@@ -128,6 +128,9 @@ import {
     variantsSchema,
     versionSchema,
     projectOverviewSchema,
+    importTogglesSchema,
+    importTogglesValidateSchema,
+    importTogglesValidateItemSchema,
 } from './spec';
 import { IServerOption } from '../types';
 import { mapValues, omitKeys } from '../util';
@@ -271,6 +274,9 @@ export const schemas = {
     variantsSchema,
     versionSchema,
     projectOverviewSchema,
+    importTogglesSchema,
+    importTogglesValidateSchema,
+    importTogglesValidateItemSchema,
 };
 
 // Schemas must have an $id property on the form "#/components/schemas/mySchema".

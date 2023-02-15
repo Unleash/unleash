@@ -20,7 +20,7 @@ describe('Public Signup API', () => {
             removeRolesOfTypeForUser: jest.fn(),
         };
 
-        const services = createServices(stores, config);
+        const services = createServices(stores, config, stores.db);
         const app = await getApp(config, stores, services);
 
         await stores.roleStore.create({

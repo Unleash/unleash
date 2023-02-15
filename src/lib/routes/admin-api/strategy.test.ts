@@ -15,7 +15,7 @@ async function getSetup() {
         server: { baseUriPath: randomBase },
         preRouterHook: perms.hook,
     });
-    const services = createServices(stores, config);
+    const services = createServices(stores, config, stores.db);
     const app = await getApp(config, stores, services);
 
     destroy = () => {

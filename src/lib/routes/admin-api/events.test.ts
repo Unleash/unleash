@@ -14,7 +14,7 @@ async function getSetup(anonymise: boolean = false) {
         server: { baseUriPath: base },
         experimental: { flags: { anonymiseEventLog: anonymise } },
     });
-    const services = createServices(stores, config);
+    const services = createServices(stores, config, stores.db);
     const app = await getApp(config, stores, services);
 
     return { base, eventStore: stores.eventStore, request: supertest(app) };

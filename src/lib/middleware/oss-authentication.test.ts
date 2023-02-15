@@ -21,7 +21,7 @@ async function getSetup(preRouterHook) {
         },
     });
     const stores = createStores();
-    const services = createServices(stores, config);
+    const services = createServices(stores, config, stores.db);
     const unleashSession = sessionDb(config, undefined);
     const app = await getApp(config, stores, services, unleashSession);
 

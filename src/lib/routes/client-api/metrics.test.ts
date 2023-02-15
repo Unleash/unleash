@@ -10,7 +10,7 @@ async function getSetup(opts?: IUnleashOptions) {
     const stores = createStores();
 
     const config = createTestConfig(opts);
-    const services = createServices(stores, config);
+    const services = createServices(stores, config, stores.db);
     const app = await getApp(config, stores, services);
 
     return {

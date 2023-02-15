@@ -9,7 +9,7 @@ test('should enable prometheus', async () => {
     expect.assertions(0);
     const stores = createStores();
     const config = createTestConfig();
-    const services = createServices(stores, config, stores.db);
+    const services = createServices(stores, config);
 
     const app = await getApp(config, stores, services);
 

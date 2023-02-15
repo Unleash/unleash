@@ -35,7 +35,7 @@ async function createApp(
         },
         ...customOptions,
     });
-    const services = createServices(stores, config, stores.db);
+    const services = createServices(stores, config);
     const unleashSession = sessionDb(config, undefined);
     const emitter = new EventEmitter();
     emitter.setMaxListeners(0);

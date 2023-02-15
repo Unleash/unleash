@@ -33,15 +33,14 @@ import FakeFavoriteFeaturesStore from './fake-favorite-features-store';
 import FakeFavoriteProjectsStore from './fake-favorite-projects-store';
 import { FakeAccountStore } from './fake-account-store';
 import FakeProjectStatsStore from './fake-project-stats-store';
-import { Db } from '../../lib/db/db';
 
 const db = {
     select: () => ({
         from: () => Promise.resolve(),
     }),
-} as unknown as Db;
+};
 
-const createStores: () => IUnleashStores & { db } = () => {
+const createStores: () => IUnleashStores = () => {
     return {
         db,
         clientApplicationsStore: new FakeClientApplicationsStore(),

@@ -20,6 +20,20 @@ import RoleStore from '../db/role-store';
 import EnvironmentStore from '../db/environment-store';
 import { Db } from '../db/db';
 import { IUnleashConfig } from '../types';
+import FakeEventStore from '../../test/fixtures/fake-event-store';
+import FakeFeatureStrategiesStore from '../../test/fixtures/fake-feature-strategies-store';
+import FakeFeatureToggleStore from '../../test/fixtures/fake-feature-toggle-store';
+import FakeFeatureToggleClientStore from '../../test/fixtures/fake-feature-toggle-client-store';
+import FakeProjectStore from '../../test/fixtures/fake-project-store';
+import FakeFeatureTagStore from '../../test/fixtures/fake-feature-tag-store';
+import FakeFeatureEnvironmentStore from '../../test/fixtures/fake-feature-environment-store';
+import FakeSegmentStore from '../../test/fixtures/fake-segment-store';
+import FakeContextFieldStore from '../../test/fixtures/fake-context-field-store';
+import FakeGroupStore from '../../test/fixtures/fake-group-store';
+import { FakeAccountStore } from '../../test/fixtures/fake-account-store';
+import FakeAccessStore from '../../test/fixtures/fake-access-store';
+import FakeRoleStore from '../../test/fixtures/fake-role-store';
+import FakeEnvironmentStore from '../../test/fixtures/fake-environment-store';
 
 export const createFeatureToggleService = (
     db: Db,
@@ -60,6 +74,55 @@ export const createFeatureToggleService = (
     const accessStore = new AccessStore(db, eventBus, getLogger);
     const roleStore = new RoleStore(db, eventBus, getLogger);
     const environmentStore = new EnvironmentStore(db, eventBus, getLogger);
+    const groupService = new GroupService(
+        { groupStore, eventStore, accountStore },
+        { getLogger },
+    );
+    const accessService = new AccessService(
+        { accessStore, accountStore, roleStore, environmentStore },
+        { getLogger },
+        groupService,
+    );
+    const segmentService = new SegmentService(
+        { segmentStore, featureStrategiesStore, eventStore },
+        config,
+    );
+    const featureToggleService = new FeatureToggleService(
+        {
+            featureStrategiesStore,
+            featureToggleStore,
+            featureToggleClientStore,
+            projectStore,
+            eventStore,
+            featureTagStore,
+            featureEnvironmentStore,
+            contextFieldStore,
+        },
+        { getLogger, flagResolver },
+        segmentService,
+        accessService,
+    );
+    return featureToggleService;
+};
+
+export const createFakeFeatureToggleService = (
+    config: IUnleashConfig,
+): FeatureToggleService => {
+    const { getLogger, flagResolver } = config;
+    const eventStore = new FakeEventStore();
+    const featureStrategiesStore = new FakeFeatureStrategiesStore();
+    const featureToggleStore = new FakeFeatureToggleStore();
+    const featureToggleClientStore = new FakeFeatureToggleClientStore();
+    const projectStore = new FakeProjectStore();
+    const featureTagStore = new FakeFeatureTagStore();
+    const featureEnvironmentStore = new FakeFeatureEnvironmentStore();
+    const segmentStore = new FakeSegmentStore();
+    const contextFieldStore = new FakeContextFieldStore();
+    const groupStore = new FakeGroupStore();
+    const accountStore = new FakeAccountStore();
+    const accessStore = new FakeAccessStore();
+    const roleStore = new FakeRoleStore();
+    const environmentStore = new FakeEnvironmentStore();
     const groupService = new GroupService(
         { groupStore, eventStore, accountStore },
         { getLogger },

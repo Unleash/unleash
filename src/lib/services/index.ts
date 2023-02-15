@@ -43,7 +43,10 @@ import { hoursToMilliseconds, minutesToMilliseconds } from 'date-fns';
 import { AccountService } from './account-service';
 import { SchedulerService } from './scheduler-service';
 import { Knex } from 'knex';
-import { createExportImportTogglesService } from '../export-import-toggles';
+import {
+    createExportImportTogglesService,
+    createFakeExportImportTogglesService,
+} from '../export-import-toggles';
 import { Db } from '../db/db';
 
 // TODO: will be moved to scheduler feature directory
@@ -98,7 +101,7 @@ export const scheduleServices = (
 export const createServices = (
     stores: IUnleashStores,
     config: IUnleashConfig,
-    db: Db,
+    db?: Db,
 ): IUnleashServices => {
     const groupService = new GroupService(stores, config);
     const accessService = new AccessService(stores, config, groupService);
@@ -158,7 +161,9 @@ export const createServices = (
         config,
         projectService,
     );
-    const exportImportService = createExportImportTogglesService(db, config);
+    const exportImportService = db
+        ? createExportImportTogglesService(db, config)
+        : createFakeExportImportTogglesService(config);
     const transactionalExportImportService = (txDb: Knex.Transaction) =>
         createExportImportTogglesService(txDb, config);
     const userSplashService = new UserSplashService(stores, config);

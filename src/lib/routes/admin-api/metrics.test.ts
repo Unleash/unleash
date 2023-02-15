@@ -11,7 +11,7 @@ async function getSetup() {
     const config = createTestConfig({
         preRouterHook: perms.hook,
     });
-    const services = createServices(stores, config, stores.db);
+    const services = createServices(stores, config);
     const app = await getApp(config, stores, services);
 
     return {

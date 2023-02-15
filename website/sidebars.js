@@ -331,8 +331,8 @@ module.exports = {
                         'reference/change-requests',
                     ],
                 },
-                'generated/unleash-proxy',
                 'generated/unleash-edge',
+                'generated/unleash-proxy',
             ],
         },
         {

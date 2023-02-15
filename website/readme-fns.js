@@ -1,3 +1,10 @@
+const {
+    enrichAdditional,
+    modifyContent,
+    getRepoData,
+    getUrls,
+} = require('./remote-content/shared');
+
 // Type definitions
 //
 // type Readme = {
@@ -77,130 +84,38 @@ const clientSideSdks = {
     },
 };
 
-const allSdks = () => {
-    const enrich =
-        (sdkType) =>
-        ([repoName, repoData]) => {
-            const repoUrl = `https://github.com/Unleash/${repoName}`;
-            const slugName = (
-                repoData.slugName ?? repoData.sidebarName
-            ).toLowerCase();
-            const branch = repoData.branch ?? 'main';
-
-            return [
-                repoName,
-                { ...repoData, repoUrl, slugName, branch, type: sdkType },
-            ];
-        };
-
+const SDKS = (() => {
     const serverSide = Object.entries(serverSideSdks).map(
-        enrich(SERVER_SIDE_SDK),
+        enrichAdditional({ type: SERVER_SIDE_SDK }),
     );
     const clientSide = Object.entries(clientSideSdks).map(
-        enrich(CLIENT_SIDE_SDK),
+        enrichAdditional({ type: CLIENT_SIDE_SDK }),
     );
 
     return Object.fromEntries(serverSide.concat(clientSide));
-};
+})();
 
-const SDKS = allSdks();
-
-function getReadmeRepoData(filename) {
-    const repoName = filename.split('/')[0];
-
-    const repoData = SDKS[repoName];
-
-    return repoData;
-}
-
-const documentUrls = Object.entries(SDKS).map(
-    ([repo, { branch }]) => `${repo}/${branch}/README.md`,
-);
-
-// Replace links in the incoming readme content.
-//
-// There's one cases we want to handle:
-//
-// 1. Relative links that point to the repo. These must be prefixed with the
-// link to the github repo.
-//
-// Note: You might be tempted to handle absolute links to docs.getunleash.io and
-// make them relative. While absolute links will work, they trigger full page
-// refreshes. Relative links give a slightly smoother user experience.
-//
-// However, if the old link goes to a redirect, then the client-side redirect
-// will not kick in, so you'll end up with a "Page not found".
-const replaceLinks = ({ content, repo }) => {
-    const markdownLink = /(?<=\[.*\]\(\s?)([^\s\)]+)(?=.*\))/g;
-
-    const replacer = (url) => {
-        try {
-            // This constructor will throw if the URL is relative.
-            // https://developer.mozilla.org/en-US/docs/Web/API/URL/URL
-            const parsedUrl = new URL(url);
-
-            return url;
-        } catch {
-            // case 1
-            if (url.startsWith('#')) {
-                // ignore links to other doc sections
-                return url;
-            } else {
-                const separator = url.startsWith('/') ? '' : '/';
-                return `${repo.url}/blob/${repo.branch}${separator}${url}`;
-            }
-        }
+const getAdmonitions = (sdk) => {
+    const admonitions = {
+        [CLIENT_SIDE_SDK]: `To connect to Unleash from a client-side context, you'll need to use the [Unleash front-end API](/reference/front-end-api) ([how do I create an API token?](/how-to/how-to-create-api-tokens.mdx)) or the [Unleash proxy](/reference/unleash-proxy) ([how do I create client keys?](/reference/api-tokens-and-client-keys#proxy-client-keys)).`,
+        [SERVER_SIDE_SDK]: `To connect to Unleash, you'll need your Unleash API url (e.g. \`https://<your-unleash>/api\`) and a [server-side API token](/reference/api-tokens-and-client-keys.mdx#client-tokens) ([how do I create an API token?](/how-to/how-to-create-api-tokens.mdx)).`,
     };
 
-    return content.replaceAll(markdownLink, replacer);
+    const wrap = (text) => `:::tip\n${text}\n:::`;
+
+    return [wrap(admonitions[sdk.type])];
 };
 
-const modifyContent = (filename, content) => {
-    const sdk = getReadmeRepoData(filename);
+const modifyContent2 = modifyContent({
+    getRepoDataFn: getRepoData(SDKS),
+    urlPath: '/reference/sdks',
+    filePath: (sdk) => `sdks/${sdk.type}`,
+    getAdditionalAdmonitions: getAdmonitions,
+});
 
-    const generationTime = new Date();
-
-    const getConnectionTip = (sdkType) => {
-        switch (sdkType) {
-            case CLIENT_SIDE_SDK:
-                return `To connect to Unleash from a client-side context, you'll need to use the [Unleash front-end API](/reference/front-end-api) ([how do I create an API token?](/how-to/how-to-create-api-tokens.mdx)) or the [Unleash proxy](/reference/unleash-proxy) ([how do I create client keys?](/reference/api-tokens-and-client-keys#proxy-client-keys)).`;
-
-            case SERVER_SIDE_SDK:
-            default:
-                return `To connect to Unleash, you'll need your Unleash API url (e.g. \`https://<your-unleash>/api\`) and a [server-side API token](/reference/api-tokens-and-client-keys.mdx#client-tokens) ([how do I create an API token?](/how-to/how-to-create-api-tokens.mdx)).`;
-        }
-    };
-
-    return {
-        filename: `${sdk.type}/${sdk.slugName}.md`,
-        content: `---
-title: ${sdk.sidebarName} SDK
-slug: /reference/sdks/${sdk.slugName}
----
-
-:::info Generated content
-This document was generated from the README in the [${
-            sdk.sidebarName
-        } SDK's GitHub repository](${sdk.repoUrl}).
-:::
-
-:::tip Connecting to Unleash
-${getConnectionTip(sdk.type)}
-:::
-
-${replaceLinks({ content, repo: { url: sdk.repoUrl, branch: sdk.branch } })}
-
----
-
-This content was generated on <time datetime="${generationTime.toISOString()}">${generationTime.toLocaleString(
-            'en-gb',
-            { dateStyle: 'long', timeStyle: 'full' },
-        )}</time>
-`,
-    };
-};
+console.log('sdk urls', getUrls(SDKS));
 
 module.exports.readmes = {
-    documentUrls,
-    modifyContent,
+    urls: getUrls(SDKS),
+    modifyContent: modifyContent2,
 };

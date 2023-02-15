@@ -66,16 +66,20 @@ const replaceLinks = ({ content, repo }) => {
 };
 
 module.exports.modifyContent =
-    ({ getRepoDataFn, filePath, urlPath, getAdditionalAdmonitions }) =>
+    ({
+        getRepoDataFn,
+        filePath = () => {},
+        urlPath,
+        getAdditionalAdmonitions,
+    }) =>
     (filename, content) => {
-        console.log('got here');
         const data = getRepoDataFn(filename);
 
         const generationTime = new Date();
 
         const processedFilename = (() => {
             const constructed =
-                path.join(filePath ?? '', data.slugName) + '.md';
+                path.join(filePath(data) ?? '', data.slugName) + '.md';
 
             // ensure the file path does *not* start with a leading /
             return constructed.charAt(0) === '/'

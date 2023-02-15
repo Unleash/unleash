@@ -61,7 +61,7 @@
     "@uiw/codemirror-theme-duotone": "4.19.7",
     "@uiw/react-codemirror": "4.19.7",
     "@vitejs/plugin-react": "3.1.0",
-    "chart.js": "3.9.1",
+    "chart.js": "4.2.1",
     "chartjs-adapter-date-fns": "3.0.0",
     "classnames": "2.3.2",
     "copy-to-clipboard": "3.3.3",

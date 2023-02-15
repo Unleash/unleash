@@ -1874,6 +1874,73 @@ exports[`should serve the OpenAPI spec 1`] = `
         ],
         "type": "object",
       },
+      "importTogglesSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/exportResultSchema",
+          },
+          "environment": {
+            "type": "string",
+          },
+          "project": {
+            "type": "string",
+          },
+        },
+        "required": [
+          "project",
+          "environment",
+          "data",
+        ],
+        "type": "object",
+      },
+      "importTogglesValidateItemSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "affectedItems": {
+            "items": {
+              "type": "string",
+            },
+            "type": "array",
+          },
+          "message": {
+            "type": "string",
+          },
+        },
+        "required": [
+          "message",
+          "affectedItems",
+        ],
+        "type": "object",
+      },
+      "importTogglesValidateSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "errors": {
+            "items": {
+              "$ref": "#/components/schemas/importTogglesValidateItemSchema",
+            },
+            "type": "array",
+          },
+          "permissions": {
+            "items": {
+              "$ref": "#/components/schemas/importTogglesValidateItemSchema",
+            },
+            "type": "array",
+          },
+          "warnings": {
+            "items": {
+              "$ref": "#/components/schemas/importTogglesValidateItemSchema",
+            },
+            "type": "array",
+          },
+        },
+        "required": [
+          "errors",
+          "warnings",
+        ],
+        "type": "object",
+      },
       "instanceAdminStatsSchema": {
         "additionalProperties": false,
         "properties": {
@@ -5054,6 +5121,65 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "exportResultSchema",
           },
         },
+        "tags": [
+          "Unstable",
+        ],
+      },
+    },
+    "/api/admin/features-batch/full-import": {
+      "post": {
+        "description": "Unleash toggles exported from a different instance can be imported into a new project and environment",
+        "operationId": "importToggles",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/importTogglesSchema",
+              },
+            },
+          },
+          "description": "importTogglesSchema",
+          "required": true,
+        },
+        "responses": {
+          "200": {
+            "description": "This response has no body.",
+          },
+        },
+        "summary": "Import feature toggles for an environment in the project",
+        "tags": [
+          "Unstable",
+        ],
+      },
+    },
+    "/api/admin/features-batch/full-validate": {
+      "post": {
+        "description": "Unleash toggles exported from a different instance can be imported into a new project and environment",
+        "operationId": "validateImport",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/importTogglesSchema",
+              },
+            },
+          },
+          "description": "importTogglesSchema",
+          "required": true,
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/importTogglesValidateSchema",
+                },
+              },
+            },
+            "description": "importTogglesValidateSchema",
+          },
+        },
+        "summary": "Validate import of feature toggles for an environment in the project",
         "tags": [
           "Unstable",
         ],

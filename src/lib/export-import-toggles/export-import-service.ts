@@ -9,7 +9,7 @@ import { Logger } from '../logger';
 import { IFeatureTagStore } from '../types/stores/feature-tag-store';
 import { ITagTypeStore } from '../types/stores/tag-type-store';
 import { IEventStore } from '../types/stores/event-store';
-import { IStrategy, IStrategyStore } from '../types/stores/strategy-store';
+import { IStrategy } from '../types/stores/strategy-store';
 import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
 import { IFeatureStrategiesStore } from '../types/stores/feature-strategies-store';
 import { IFeatureEnvironmentStore } from '../types/stores/feature-environment-store';
@@ -57,8 +57,6 @@ export default class ExportImportService {
     private toggleStore: IFeatureToggleStore;
 
     private featureStrategiesStore: IFeatureStrategiesStore;
-
-    private strategyStore: IStrategyStore;
 
     private eventStore: IEventStore;
 

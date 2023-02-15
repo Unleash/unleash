@@ -12,7 +12,7 @@ Unleash can provide you with **impression data** about the toggles in your appli
 
 :::caution Front-end SDKs and disabled toggles
 
-Older versions of the front-end SDKs and other SDKs that connect the [Unleash proxy](../reference/unleash-proxy.md) or the [Unleash front-end API](../reference/front-end-api.md) would **not** emit impression events when a toggle is disabled.
+Older versions of the front-end SDKs and other SDKs that connect the [Unleash proxy](../generated/unleash-proxy.md) or the [Unleash front-end API](../reference/front-end-api.md) would **not** emit impression events when a toggle is disabled.
 
 This is because impression data is a **per-toggle** setting and the Proxy and front-end API only transmit information about toggles that are enabled. As such, the SDK will never know that it should emit an impression event if a toggle is disabled.
 

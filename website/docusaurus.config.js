@@ -1,4 +1,5 @@
 const { readmes } = require('./readme-fns');
+const { externalDocs } = require('./external-docs');
 
 // for a given redirect object, modify it's `from` property such that for every
 // path that doesn't start with `/docs/`, a corresponding path that _does_ start
@@ -615,6 +616,17 @@ module.exports = {
                 outDir: 'docs/generated/sdks', // the base directory to output to.
                 documents: readmes.documentUrls, // the file names to download
                 modifyContent: readmes.modifyContent,
+            },
+        ],
+        [
+            'docusaurus-plugin-remote-content',
+            {
+                // more info at https://github.com/rdilweb/docusaurus-plugin-remote-content#options
+                name: 'content-external',
+                sourceBaseUrl: 'https://raw.githubusercontent.com/Unleash/', // gets prepended to all of the documents when fetching
+                outDir: 'docs/generated/', // the base directory to output to.
+                documents: externalDocs.urls, // the file names to download
+                modifyContent: externalDocs.modifyContent,
             },
         ],
     ],

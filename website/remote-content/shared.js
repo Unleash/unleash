@@ -136,7 +136,7 @@ ${replaceLinks({
 
 ---
 
-This content was generated on <time datetime="${generationTime.toISOString()}">${generationTime.toLocaleString(
+This content was generated on <time dateTime="${generationTime.toISOString()}">${generationTime.toLocaleString(
                 'en-gb',
                 { dateStyle: 'long', timeStyle: 'full' },
             )}</time>

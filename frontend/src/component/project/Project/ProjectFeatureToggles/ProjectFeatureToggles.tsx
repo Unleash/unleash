@@ -55,7 +55,7 @@ import { flexRow } from 'themes/themeStyles';
 import VariantsWarningTooltip from 'component/feature/FeatureView/FeatureVariants/VariantsTooltipWarning';
 import FileDownload from '@mui/icons-material/FileDownload';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { ExportDialog } from '../../../feature/FeatureToggleList/ExportDialog';
+import { ExportDialog } from 'component/feature/FeatureToggleList/ExportDialog';
 
 const StyledResponsiveButton = styled(ResponsiveButton)(() => ({
     whiteSpace: 'nowrap',

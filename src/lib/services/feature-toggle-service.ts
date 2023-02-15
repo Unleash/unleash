@@ -400,7 +400,6 @@ class FeatureToggleService {
             );
             return strategy;
         } catch (e) {
-            console.log(e);
             if (e.code === FOREIGN_KEY_VIOLATION) {
                 throw new BadDataError(
                     'You have not added the current environment to the project',

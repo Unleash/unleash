@@ -37,7 +37,7 @@ const modifyContent2 = modifyContent({
     getAdditionalAdmonitions: getAdmonitions,
 });
 
-module.exports.externalDocs = {
+module.exports.docs = {
     urls: getUrls(DOCS),
     modifyContent: modifyContent2,
 };

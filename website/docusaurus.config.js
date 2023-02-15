@@ -1,5 +1,5 @@
 const { sdks } = require('./remote-content/sdks');
-const { externalDocs } = require('./remote-content/edge-proxy');
+const { docs: edgeAndProxy } = require('./remote-content/edge-proxy');
 
 // for a given redirect object, modify it's `from` property such that for every
 // path that doesn't start with `/docs/`, a corresponding path that _does_ start
@@ -625,8 +625,8 @@ module.exports = {
                 name: 'content-external',
                 sourceBaseUrl: 'https://raw.githubusercontent.com/Unleash/', // gets prepended to all of the documents when fetching
                 outDir: 'docs/generated/', // the base directory to output to.
-                documents: externalDocs.urls, // the file names to download
-                modifyContent: externalDocs.modifyContent,
+                documents: edgeAndProxy.urls, // the file names to download
+                modifyContent: edgeAndProxy.modifyContent,
             },
         ],
     ],

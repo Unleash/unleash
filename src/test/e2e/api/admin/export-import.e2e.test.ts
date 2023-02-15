@@ -4,19 +4,19 @@ import {
 } from '../../helpers/test-helper';
 import dbInit, { ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
-import { IEventStore } from 'lib/types/stores/event-store';
 import {
     FeatureToggleDTO,
     IEnvironmentStore,
+    IEventStore,
     IFeatureToggleStore,
     IProjectStore,
     ISegment,
     IStrategyConfig,
     IVariant,
 } from 'lib/types';
-import { DEFAULT_ENV } from 'lib/util';
-import { ContextFieldSchema } from 'lib/openapi';
-import User from 'lib/types/user';
+import { DEFAULT_ENV } from '../../../../lib/util';
+import { ContextFieldSchema } from '../../../../lib/openapi';
+import User from '../../../../lib/types/user';
 
 let app: IUnleashTest;
 let db: ITestDb;

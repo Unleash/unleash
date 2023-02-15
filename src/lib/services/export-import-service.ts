@@ -106,14 +106,26 @@ export default class ExportImportService {
             this.tagTypeStore.getAll(),
         ]);
         this.addSegmentsToStrategies(featureStrategies, strategySegments);
-        const filteredContextFields = contextFields.filter((field) =>
-            featureStrategies.some(
-                (strategy) =>
-                    strategy.parameters.stickiness === field.name ||
-                    strategy.constraints.some(
-                        (constraint) => constraint.contextName === field.name,
+        const filteredContextFields = contextFields.filter(
+            (field) =>
+                featureEnvironments.some((featureEnv) =>
+                    featureEnv.variants.some(
+                        (variant) =>
+                            variant.stickiness === field.name ||
+                            variant.overrides.some(
+                                (override) =>
+                                    override.contextName === field.name,
+                            ),
                     ),
-            ),
+                ) ||
+                featureStrategies.some(
+                    (strategy) =>
+                        strategy.parameters.stickiness === field.name ||
+                        strategy.constraints.some(
+                            (constraint) =>
+                                constraint.contextName === field.name,
+                        ),
+                ),
         );
         const filteredSegments = segments.filter((segment) =>
             featureStrategies.some((strategy) =>

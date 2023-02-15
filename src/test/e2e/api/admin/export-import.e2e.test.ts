@@ -4,17 +4,19 @@ import {
 } from '../../helpers/test-helper';
 import dbInit, { ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
-import { IEventStore } from 'lib/types/stores/event-store';
 import {
     FeatureToggleDTO,
     IEnvironmentStore,
+    IEventStore,
     IFeatureToggleStore,
     IProjectStore,
     ISegment,
     IStrategyConfig,
+    IVariant,
 } from 'lib/types';
 import { DEFAULT_ENV } from '../../../../lib/util';
 import { ContextFieldSchema } from '../../../../lib/openapi';
+import User from '../../../../lib/types/user';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -77,6 +79,21 @@ const createContext = async (context: ContextFieldSchema = defaultContext) => {
         .send(context)
         .set('Content-Type', 'application/json')
         .expect(201);
+};
+
+const createVariants = async (
+    project: string,
+    feature: string,
+    environment: string,
+    variants: IVariant[],
+) => {
+    await app.services.featureToggleService.saveVariantsOnEnv(
+        project,
+        feature,
+        environment,
+        variants,
+        new User({ id: 1 }),
+    );
 };
 
 const createProject = async (project: string, environment: string) => {
@@ -192,24 +209,32 @@ test('exports features', async () => {
     });
 });
 
-test('should export custom context fields', async () => {
+test('should export custom context fields from strategies and variants', async () => {
     await createProject('default', 'default');
-    const context = {
-        name: 'test-export',
+    const strategyContext = {
+        name: 'strategy-context',
         legalValues: [
-            { value: 'estonia' },
-            { value: 'norway' },
-            { value: 'poland' },
+            { value: 'strategy-context-1' },
+            { value: 'strategy-context-2' },
+            { value: 'strategy-context-3' },
         ],
     };
-    await createContext(context);
+    const strategyStickinessContext = {
+        name: 'strategy-stickiness',
+        legalValues: [
+            { value: 'strategy-stickiness-1' },
+            { value: 'strategy-stickiness-2' },
+        ],
+    };
+    await createContext(strategyContext);
+    await createContext(strategyStickinessContext);
     const strategy = {
         name: 'default',
-        parameters: { rollout: '100', stickiness: 'default' },
+        parameters: { rollout: '100', stickiness: 'strategy-stickiness' },
         constraints: [
             {
-                contextName: context.name,
-                values: ['estonia', 'norway'],
+                contextName: strategyContext.name,
+                values: ['strategy-context-1', 'strategy-context-2'],
                 operator: 'IN' as const,
             },
         ],
@@ -221,6 +246,36 @@ test('should export custom context fields', async () => {
         },
         strategy,
     );
+    const variantStickinessContext = {
+        name: 'variant-stickiness-context',
+        legalValues: [
+            { value: 'variant-stickiness-context-1' },
+            { value: 'variant-stickiness-context-2' },
+        ],
+    };
+    const variantOverridesContext = {
+        name: 'variant-overrides-context',
+        legalValues: [
+            { value: 'variant-overrides-context-1' },
+            { value: 'variant-overrides-context-2' },
+        ],
+    };
+    await createContext(variantStickinessContext);
+    await createContext(variantOverridesContext);
+    await createVariants('default', 'first_feature', 'default', [
+        {
+            name: 'irrelevant',
+            weight: 1000,
+            stickiness: 'variant-stickiness-context',
+            weightType: 'variable',
+            overrides: [
+                {
+                    contextName: 'variant-overrides-context',
+                    values: ['variant-overrides-context-1'],
+                },
+            ],
+        },
+    ]);
 
     const { body } = await app.request
         .post('/api/admin/features-batch/export')
@@ -246,7 +301,12 @@ test('should export custom context fields', async () => {
                 featureName: 'first_feature',
             },
         ],
-        contextFields: [context],
+        contextFields: [
+            strategyContext,
+            strategyStickinessContext,
+            variantOverridesContext,
+            variantStickinessContext,
+        ],
     });
 });
 

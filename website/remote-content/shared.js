@@ -24,7 +24,7 @@ module.exports.getRepoData = (documents) => (filename) => {
 
     const repoData = documents[repoName];
 
-    return repoData;
+    return { name: repoName, ...repoData };
 };
 
 // Replace links in the incoming readme content.
@@ -41,8 +41,6 @@ module.exports.getRepoData = (documents) => (filename) => {
 // However, if the old link goes to a redirect, then the client-side redirect
 // will not kick in, so you'll end up with a "Page not found".
 const replaceLinks = ({ content, repo }) => {
-    const markdownLink = /(?<=\[.*\]\(\s?)([^\s\)]+)(?=.*\))/g;
-
     const replacer = (url) => {
         try {
             // This constructor will throw if the URL is relative.
@@ -62,7 +60,31 @@ const replaceLinks = ({ content, repo }) => {
         }
     };
 
-    return content.replaceAll(markdownLink, replacer);
+    const imageReplacer = (url) => {
+        // https://raw.githubusercontent.com/Unleash/unleash-proxy/main/.github/img/connection-overview.svg
+
+        try {
+            new URL(url);
+
+            return url;
+        } catch {
+            console.log('got this relative image url', url, repo);
+
+            const separator = url.startsWith('/') ? '' : '/';
+            return `https://raw.githubusercontent.com/Unleash/${repo.name}/${repo.branch}${separator}${url}`;
+        }
+    };
+
+    // matches the URL portion of markdown links like [I go here](path/link "comment")
+    const markdownLink = /(?<=\[.*\]\(\s?)([^\s\)]+)(?=.*\))/g;
+
+    // matches the URL portion of src links that contain an image file type
+    // extension, e.g. src="./.github/img/get-request.png"
+    const imageSrcLink = /(?<=src=")([^")]+\.(png|svg|jpe?g|webp|gif))(?=")/g;
+
+    return content
+        .replaceAll(markdownLink, replacer)
+        .replaceAll(imageSrcLink, imageReplacer);
 };
 
 module.exports.modifyContent =
@@ -114,7 +136,10 @@ This document was generated from the README in the [${
 
 ${additionalAdmonitions}
 
-${replaceLinks({ content, repo: { url: data.repoUrl, branch: data.branch } })}
+${replaceLinks({
+    content,
+    repo: { url: data.repoUrl, branch: data.branch, name: data.name },
+})}
 
 ---
 

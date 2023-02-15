@@ -50,6 +50,7 @@ module.exports = {
     organizationName: 'Unleash', // Usually your GitHub org/user name.
     projectName: 'unleash.github.io', // Usually your repo name.
     trailingSlash: false,
+    markdown: { mermaid: true },
     customFields: {
         // expose env vars etc here
         unleashProxyUrl: process.env.UNLEASH_PROXY_URL,
@@ -630,5 +631,8 @@ module.exports = {
             },
         ],
     ],
-    themes: ['docusaurus-theme-openapi-docs'], // Allows use of @theme/ApiItem and other components
+    themes: [
+        'docusaurus-theme-openapi-docs', // Allows use of @theme/ApiItem and other components
+        '@docusaurus/theme-mermaid',
+    ],
 };

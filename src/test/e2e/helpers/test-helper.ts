@@ -9,6 +9,7 @@ import { createServices } from '../../../lib/services';
 import sessionDb from '../../../lib/middleware/session-db';
 import { IUnleashStores } from '../../../lib/types';
 import { IUnleashServices } from '../../../lib/types/services';
+import { Db } from '../../../lib/db/db';
 
 process.env.NODE_ENV = 'test';
 
@@ -24,6 +25,7 @@ async function createApp(
     adminAuthentication = IAuthType.NONE,
     preHook?: Function,
     customOptions?: any,
+    db?: Db,
 ): Promise<IUnleashTest> {
     const config = createTestConfig({
         authentication: {
@@ -35,7 +37,7 @@ async function createApp(
         },
         ...customOptions,
     });
-    const services = createServices(stores, config);
+    const services = createServices(stores, config, db);
     const unleashSession = sessionDb(config, undefined);
     const emitter = new EventEmitter();
     emitter.setMaxListeners(0);
@@ -60,8 +62,9 @@ export async function setupApp(stores: IUnleashStores): Promise<IUnleashTest> {
 export async function setupAppWithCustomConfig(
     stores: IUnleashStores,
     customOptions: any,
+    db?: Db,
 ): Promise<IUnleashTest> {
-    return createApp(stores, undefined, undefined, customOptions);
+    return createApp(stores, undefined, undefined, customOptions, db);
 }
 
 export async function setupAppWithAuth(

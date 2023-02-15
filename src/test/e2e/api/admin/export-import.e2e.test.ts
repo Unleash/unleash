@@ -122,13 +122,17 @@ const createSegment = (postData: object): Promise<ISegment> => {
 
 beforeAll(async () => {
     db = await dbInit('export_import_api_serial', getLogger);
-    app = await setupAppWithCustomConfig(db.stores, {
-        experimental: {
-            flags: {
-                featuresExportImport: true,
+    app = await setupAppWithCustomConfig(
+        db.stores,
+        {
+            experimental: {
+                flags: {
+                    featuresExportImport: true,
+                },
             },
         },
-    });
+        db.rawDatabase,
+    );
     eventStore = db.stores.eventStore;
     environmentStore = db.stores.environmentStore;
     projectStore = db.stores.projectStore;

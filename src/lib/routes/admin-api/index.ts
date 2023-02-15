@@ -28,9 +28,9 @@ import { PublicSignupController } from './public-signup';
 import InstanceAdminController from './instance-admin';
 import FavoritesController from './favorites';
 import MaintenanceController from './maintenance';
-import ExportImportController from '../../export-import-toggles/export-import';
 import { createKnexTransactionStarter } from '../../db/transaction';
 import { Db } from '../../db/db';
+import ExportImportController from '../../export-import-toggles/export-import-controller';
 
 class AdminApi extends Controller {
     constructor(config: IUnleashConfig, services: IUnleashServices, db: Db) {

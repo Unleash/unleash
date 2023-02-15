@@ -18,7 +18,7 @@ import {
     TagTypeService,
 } from '../services';
 import { createAccessService } from '../access';
-import { createFeatureToggleService } from '../featureToggle';
+import { createFeatureToggleService } from '../feature-toggle';
 import SegmentStore from '../db/segment-store';
 import { FeatureEnvironmentStore } from '../db/feature-environment-store';
 

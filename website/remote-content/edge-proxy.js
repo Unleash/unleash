@@ -23,8 +23,11 @@ const getAdmonitions = (data) => {
 
 Looking for how to run the Unleash proxy? Check out the [_how to run the Unleash proxy_ guide](../how-to/how-to-run-the-unleash-proxy.mdx)!
 
-:::`, 'unleash-edge': `:::caution 🏗️ Under construction
-Unleash Edge is currently considered very experimental. Run it at your own risk
+:::`, 'unleash-edge': `:::caution 🏗️ Under construction!
+Unleash Edge is currently considered very experimental. Use it at your own risk.
+
+
+Share your comments in [🗣️ GitHub Discussions](https://github.com/Unleash/unleash/discussions) or the [💬 Unleash community Slack](https://slack.unleash.run/).
 :::`
     }
 

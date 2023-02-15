@@ -46,9 +46,9 @@ jobs:
           yarn --mutex network --cwd ./main 2> .stderr-main  > .out-main &
           pid2=$!
 
-          wait $pid1 || echo "Failed $pid1"
-          wait $pid2 || echo "Failed $pid2"
-
+          wait $pid1
+          wait $pid2
+          
           CURRENT=$(grep "Found [0-9]* errors" .out-current | sed 's/Found \(.*\) errors in .* files./\1/')
           MAIN=$(grep "Found [0-9]* errors" .out-main | sed 's/Found \(.*\) errors in .* files./\1/')
 

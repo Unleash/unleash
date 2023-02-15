@@ -13,6 +13,7 @@ export interface IUiConfig {
     links: ILinks[];
     disablePasswordAuth?: boolean;
     emailEnabled?: boolean;
+    networkViewEnabled: boolean;
 
     maintenanceMode?: boolean;
     toast?: IProclamationToast;
@@ -38,7 +39,6 @@ export interface IFlags {
     UG?: boolean;
     ENABLE_DARK_MODE_SUPPORT?: boolean;
     embedProxyFrontend?: boolean;
-    networkView?: boolean;
     maintenance?: boolean;
     maintenanceMode?: boolean;
     messageBanner?: boolean;

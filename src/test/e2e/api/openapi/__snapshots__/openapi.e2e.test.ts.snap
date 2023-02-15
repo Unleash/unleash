@@ -3705,6 +3705,9 @@ Stats are divided into current and previous **windows**.
           "name": {
             "type": "string",
           },
+          "networkViewEnabled": {
+            "type": "boolean",
+          },
           "segmentValuesLimit": {
             "type": "number",
           },

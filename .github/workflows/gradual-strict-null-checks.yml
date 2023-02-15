@@ -46,9 +46,12 @@ jobs:
           yarn --mutex network --cwd ./main 2> .stderr-main  > .out-main &
           pid2=$!
 
+          # wait for the processes that are expected to fail
+          set +e
           wait $pid1
           wait $pid2
-          
+          set -e
+
           CURRENT=$(grep "Found [0-9]* errors" .out-current | sed 's/Found \(.*\) errors in .* files./\1/')
           MAIN=$(grep "Found [0-9]* errors" .out-main | sed 's/Found \(.*\) errors in .* files./\1/')
 

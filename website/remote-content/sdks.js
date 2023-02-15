@@ -113,8 +113,6 @@ const modifyContent2 = modifyContent({
     getAdditionalAdmonitions: getAdmonitions,
 });
 
-console.log('sdk urls', getUrls(SDKS));
-
 module.exports.sdks = {
     urls: getUrls(SDKS),
     modifyContent: modifyContent2,

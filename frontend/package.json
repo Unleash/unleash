@@ -39,7 +39,7 @@
     "@mui/icons-material": "5.11.0",
     "@mui/lab": "5.0.0-alpha.119",
     "@mui/material": "5.11.8",
-    "@testing-library/dom": "8.19.1",
+    "@testing-library/dom": "8.20.0",
     "@testing-library/jest-dom": "5.16.5",
     "@testing-library/react": "12.1.5",
     "@testing-library/react-hooks": "7.0.2",

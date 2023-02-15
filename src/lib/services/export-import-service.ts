@@ -107,10 +107,12 @@ export default class ExportImportService {
         ]);
         this.addSegmentsToStrategies(featureStrategies, strategySegments);
         const filteredContextFields = contextFields.filter((field) =>
-            featureStrategies.some((strategy) =>
-                strategy.constraints.some(
-                    (constraint) => constraint.contextName === field.name,
-                ),
+            featureStrategies.some(
+                (strategy) =>
+                    strategy.parameters.stickiness === field.name ||
+                    strategy.constraints.some(
+                        (constraint) => constraint.contextName === field.name,
+                    ),
             ),
         );
         const filteredSegments = segments.filter((segment) =>

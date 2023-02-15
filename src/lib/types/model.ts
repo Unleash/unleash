@@ -307,7 +307,6 @@ export interface IClientApp {
     seenToggles?: string[];
     metricsCount?: number;
     strategies?: string[] | Record<string, string>[];
-    bucket?: any;
     count?: number;
     started?: string | number | Date;
     interval?: number;
@@ -342,7 +341,7 @@ export interface IMetricCounts {
 export interface IMetricsBucket {
     start: Date;
     stop: Date;
-    toggles: IMetricCounts;
+    toggles: { [key: string]: IMetricCounts };
 }
 
 export interface IImportFile extends ImportCommon {

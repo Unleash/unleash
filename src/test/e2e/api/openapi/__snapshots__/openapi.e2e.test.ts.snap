@@ -328,6 +328,62 @@ exports[`should serve the OpenAPI spec 1`] = `
         },
         "type": "object",
       },
+      "bulkMetricsSchema": {
+        "properties": {
+          "applications": {
+            "items": {
+              "$ref": "#/components/schemas/bulkRegistrationSchema",
+            },
+            "type": "array",
+          },
+          "metrics": {
+            "items": {
+              "$ref": "#/components/schemas/clientMetricsSchema",
+            },
+            "type": "array",
+          },
+        },
+        "type": "object",
+      },
+      "bulkRegistrationSchema": {
+        "properties": {
+          "appName": {
+            "type": "string",
+          },
+          "connectVia": {
+            "items": {
+              "type": "string",
+            },
+            "type": "array",
+          },
+          "environment": {
+            "type": "string",
+          },
+          "instanceId": {
+            "type": "string",
+          },
+          "interval": {
+            "type": "number",
+          },
+          "sdkVersion": {
+            "type": "string",
+          },
+          "started": {
+            "type": "number",
+          },
+          "strategies": {
+            "items": {
+              "type": "string",
+            },
+            "type": "array",
+          },
+        },
+        "required": [
+          "appName",
+          "instanceId",
+        ],
+        "type": "object",
+      },
       "changePasswordSchema": {
         "additionalProperties": false,
         "properties": {
@@ -533,6 +589,21 @@ exports[`should serve the OpenAPI spec 1`] = `
                     },
                   },
                   "type": "object",
+                },
+                "example": {
+                  "myCoolToggle": {
+                    "no": 42,
+                    "variants": {
+                      "blue": 6,
+                      "green": 15,
+                      "red": 46,
+                    },
+                    "yes": 25,
+                  },
+                  "myOtherToggle": {
+                    "no": 100,
+                    "yes": 0,
+                  },
                 },
                 "type": "object",
               },
@@ -8323,6 +8394,30 @@ If the provided project does not exist, the list of events will be empty.",
         },
         "tags": [
           "Auth",
+        ],
+      },
+    },
+    "/edge/metrics": {
+      "post": {
+        "operationId": "bulkMetrics",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/bulkMetricsSchema",
+              },
+            },
+          },
+          "description": "bulkMetricsSchema",
+          "required": true,
+        },
+        "responses": {
+          "202": {
+            "description": "This response has no body.",
+          },
+        },
+        "tags": [
+          "Edge",
         ],
       },
     },

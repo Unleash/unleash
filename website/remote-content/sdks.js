@@ -3,7 +3,7 @@ const {
     modifyContent,
     getRepoData,
     getUrls,
-} = require('./remote-content/shared');
+} = require('./shared');
 
 // Type definitions
 //
@@ -115,7 +115,7 @@ const modifyContent2 = modifyContent({
 
 console.log('sdk urls', getUrls(SDKS));
 
-module.exports.readmes = {
+module.exports.sdks = {
     urls: getUrls(SDKS),
     modifyContent: modifyContent2,
 };

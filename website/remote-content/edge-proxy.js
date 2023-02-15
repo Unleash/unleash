@@ -4,7 +4,7 @@ const {
     modifyContent,
     getRepoData,
     getUrls,
-} = require('./remote-content/shared');
+} = require('./shared');
 
 const DOCS = mapObject(enrich)({
     'unleash-proxy': {

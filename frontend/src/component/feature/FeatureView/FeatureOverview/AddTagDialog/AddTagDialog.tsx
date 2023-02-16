@@ -13,6 +13,7 @@ import useTagApi from 'hooks/api/actions/useTagApi/useTagApi';
 import { AutocompleteChangeReason } from '@mui/base/AutocompleteUnstyled/useAutocomplete';
 import useTags from 'hooks/api/getters/useTags/useTags';
 import cloneDeep from 'lodash.clonedeep';
+import { usePlausibleTracker } from '../../../../../hooks/usePlausibleTracker';
 
 interface IAddTagDialogProps {
     open: boolean;
@@ -36,6 +37,8 @@ const AddTagDialog = ({ open, setOpen }: IAddTagDialogProps) => {
         description: 'Simple tag to get you started',
         icon: '',
     });
+
+    const { trackEvent } = usePlausibleTracker();
 
     const [selectedTagOptions, setSelectedTagOptions] = useState<TagOption[]>(
         []
@@ -87,6 +90,10 @@ const AddTagDialog = ({ open, setOpen }: IAddTagDialogProps) => {
                     }
                 }
             }
+            added > 1 &&
+                trackEvent('suggest_tags', {
+                    props: { eventType: 'multiple_tags_added' },
+                });
             added > 0 &&
                 setToastData({
                     type: 'success',
@@ -134,6 +141,9 @@ const AddTagDialog = ({ open, setOpen }: IAddTagDialogProps) => {
                         type: tagType.name,
                     };
                     createTag(payload).then(() => {
+                        trackEvent('suggest_tags', {
+                            props: { eventType: 'tag_created' },
+                        });
                         refetchAllTags();
                     });
                     value.title = value.inputValue;

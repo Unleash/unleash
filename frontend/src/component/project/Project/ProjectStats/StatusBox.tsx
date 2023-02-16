@@ -1,6 +1,6 @@
-import type { ReactNode } from 'react';
+import type { FC, ReactNode } from 'react';
 import { CallMade, SouthEast } from '@mui/icons-material';
-import { Box, Typography, styled } from '@mui/material';
+import { Box, Typography, styled, Tooltip } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { flexRow } from 'themes/themeStyles';
 
@@ -31,7 +31,7 @@ const StyledTypographyChange = styled(Typography)(({ theme }) => ({
 }));
 
 interface IStatusBoxProps {
-    title?: string;
+    title: string;
     boxText: ReactNode;
     change: number;
     percentage?: boolean;
@@ -53,17 +53,19 @@ const resolveColor = (change: number) => {
     return 'warning.dark';
 };
 
-export const StatusBox = ({
+export const StatusBox: FC<IStatusBoxProps> = ({
     title,
     boxText,
     change,
     percentage,
-}: IStatusBoxProps) => (
+    children,
+}) => (
     <>
         <ConditionallyRender
             condition={Boolean(title)}
             show={<StyledTypographyHeader>{title}</StyledTypographyHeader>}
         />
+        {children}
         <Box
             sx={{
                 ...flexRow,

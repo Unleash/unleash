@@ -54,6 +54,7 @@ async function createApp(
             const stopServer = promisify(server.stop);
             await stopServer();
         }
+        services.schedulerService.stop();
         metricsMonitor.stopMonitoring();
         stores.clientInstanceStore.destroy();
         services.clientMetricsServiceV2.destroy();

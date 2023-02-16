@@ -15,7 +15,7 @@ import FakeUserFeedbackStore from './fake-user-feedback-store';
 import FakeFeatureTagStore from './fake-feature-tag-store';
 import FakeEnvironmentStore from './fake-environment-store';
 import FakeStrategiesStore from './fake-strategies-store';
-import { IUnleashStores } from '../../lib/types';
+import { IImportTogglesStore, IUnleashStores } from '../../lib/types';
 import FakeSessionStore from './fake-session-store';
 import FakeFeatureEnvironmentStore from './fake-feature-environment-store';
 import FakeApiTokenStore from './fake-api-token-store';
@@ -34,13 +34,13 @@ import FakeFavoriteProjectsStore from './fake-favorite-projects-store';
 import { FakeAccountStore } from './fake-account-store';
 import FakeProjectStatsStore from './fake-project-stats-store';
 
-const createStores: () => IUnleashStores = () => {
-    const db = {
-        select: () => ({
-            from: () => Promise.resolve(),
-        }),
-    };
+const db = {
+    select: () => ({
+        from: () => Promise.resolve(),
+    }),
+};
 
+const createStores: () => IUnleashStores = () => {
     return {
         db,
         clientApplicationsStore: new FakeClientApplicationsStore(),
@@ -77,6 +77,7 @@ const createStores: () => IUnleashStores = () => {
         favoriteFeaturesStore: new FakeFavoriteFeaturesStore(),
         favoriteProjectsStore: new FakeFavoriteProjectsStore(),
         projectStatsStore: new FakeProjectStatsStore(),
+        importTogglesStore: {} as IImportTogglesStore,
     };
 };
 

@@ -145,11 +145,6 @@ export const Project = () => {
                                     <PermissionIconButton
                                         permission={CREATE_FEATURE}
                                         projectId={projectId}
-                                        sx={{
-                                            visibility: isOss()
-                                                ? 'hidden'
-                                                : 'visible',
-                                        }}
                                         onClick={() => setModalOpen(true)}
                                         tooltipProps={{ title: 'Import' }}
                                         data-testid={IMPORT_BUTTON}
@@ -159,34 +154,42 @@ export const Project = () => {
                                     </PermissionIconButton>
                                 }
                             />
-                            <PermissionIconButton
-                                permission={UPDATE_PROJECT}
-                                projectId={projectId}
-                                sx={{
-                                    visibility: isOss() ? 'hidden' : 'visible',
-                                }}
-                                onClick={() =>
-                                    navigate(`/projects/${projectId}/edit`)
+                            <ConditionallyRender
+                                condition={!isOss()}
+                                show={
+                                    <PermissionIconButton
+                                        permission={UPDATE_PROJECT}
+                                        projectId={projectId}
+                                        onClick={() =>
+                                            navigate(
+                                                `/projects/${projectId}/edit`
+                                            )
+                                        }
+                                        tooltipProps={{ title: 'Edit project' }}
+                                        data-loading
+                                    >
+                                        <Edit />
+                                    </PermissionIconButton>
                                 }
-                                tooltipProps={{ title: 'Edit project' }}
-                                data-loading
-                            >
-                                <Edit />
-                            </PermissionIconButton>
-                            <PermissionIconButton
-                                permission={DELETE_PROJECT}
-                                projectId={projectId}
-                                sx={{
-                                    visibility: isOss() ? 'hidden' : 'visible',
-                                }}
-                                onClick={() => {
-                                    setShowDelDialog(true);
-                                }}
-                                tooltipProps={{ title: 'Delete project' }}
-                                data-loading
-                            >
-                                <Delete />
-                            </PermissionIconButton>
+                            />
+                            <ConditionallyRender
+                                condition={!isOss()}
+                                show={
+                                    <PermissionIconButton
+                                        permission={DELETE_PROJECT}
+                                        projectId={projectId}
+                                        onClick={() => {
+                                            setShowDelDialog(true);
+                                        }}
+                                        tooltipProps={{
+                                            title: 'Delete project',
+                                        }}
+                                        data-loading
+                                    >
+                                        <Delete />
+                                    </PermissionIconButton>
+                                }
+                            />
                         </StyledDiv>
                     </StyledTopRow>
                     <ConditionallyRender

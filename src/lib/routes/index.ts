@@ -13,9 +13,10 @@ import ProxyController from './proxy-api';
 import { conditionalMiddleware } from '../middleware';
 import EdgeController from './edge-api';
 import { PublicInviteController } from './public-invite';
+import { Db } from '../db/db';
 
 class IndexRouter extends Controller {
-    constructor(config: IUnleashConfig, services: IUnleashServices) {
+    constructor(config: IUnleashConfig, services: IUnleashServices, db: Db) {
         super(config);
 
         this.use('/health', new HealthCheckController(config, services).router);
@@ -40,7 +41,7 @@ class IndexRouter extends Controller {
             new ResetPasswordController(config, services).router,
         );
 
-        this.use('/api/admin', new AdminApi(config, services).router);
+        this.use('/api/admin', new AdminApi(config, services, db).router);
         this.use('/api/client', new ClientApi(config, services).router);
 
         this.use(

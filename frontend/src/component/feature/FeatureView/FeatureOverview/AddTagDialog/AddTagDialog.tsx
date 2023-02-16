@@ -13,7 +13,7 @@ import useTagApi from 'hooks/api/actions/useTagApi/useTagApi';
 import { AutocompleteChangeReason } from '@mui/base/AutocompleteUnstyled/useAutocomplete';
 import useTags from 'hooks/api/getters/useTags/useTags';
 import cloneDeep from 'lodash.clonedeep';
-import { usePlausibleTracker } from '../../../../../hooks/usePlausibleTracker';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 interface IAddTagDialogProps {
     open: boolean;

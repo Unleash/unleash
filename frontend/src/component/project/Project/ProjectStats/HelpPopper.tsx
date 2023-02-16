@@ -1,5 +1,4 @@
 import { FC, useState } from 'react';
-
 import { Close, HelpOutline } from '@mui/icons-material';
 import {
     Box,
@@ -8,6 +7,8 @@ import {
     Paper,
     ClickAwayListener,
 } from '@mui/material';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { Feedback } from './Feedback';
 
 interface IHelpPopperProps {
@@ -16,6 +17,7 @@ interface IHelpPopperProps {
 
 export const HelpPopper: FC<IHelpPopperProps> = ({ children, id }) => {
     const [anchor, setAnchorEl] = useState<null | Element>(null);
+    const { isPro } = useUiConfig();
 
     const onOpen = (event: React.FormEvent<HTMLButtonElement>) =>
         setAnchorEl(event.currentTarget);
@@ -67,7 +69,10 @@ export const HelpPopper: FC<IHelpPopperProps> = ({ children, id }) => {
                             />
                         </IconButton>
                         {children}
-                        <Feedback id={id} />
+                        <ConditionallyRender
+                            condition={isPro()}
+                            show={() => <Feedback id={id} />}
+                        />
                     </Paper>
                 </ClickAwayListener>
             </Popper>

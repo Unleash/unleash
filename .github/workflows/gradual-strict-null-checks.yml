@@ -34,16 +34,30 @@ jobs:
             current/yarn.lock
             main/yarn.lock
       # intentionally use the same script from current branch against both repositories
-      - run: |
-          ./current/scripts/gradual-strict-null-checks.sh ./current > ./current-count &
+      - name: Compare errors if enabling strictNullChecks
+        run: |
+          set -x
+          sed -i 's/\/\/\s*"strictNullChecks":\s*true,/"strictNullChecks": true,/' "current/tsconfig.json"
+          sed -i 's/\/\/\s*"strictNullChecks":\s*true,/"strictNullChecks": true,/' "main/tsconfig.json"
+
+          yarn --mutex network --cwd ./current 2> .stderr-current > .out-current &
           pid1=$!
-          ./current/scripts/gradual-strict-null-checks.sh ./main > ./main-count &
+          
+          yarn --mutex network --cwd ./main 2> .stderr-main  > .out-main &
           pid2=$!
-          wait $pid1 && wait $pid2
-          MAIN=$(cat ./main-count)
-          CURRENT=$(cat ./current-count)
+
+          # wait for the processes that are expected to fail
+          set +e
+          wait $pid1
+          wait $pid2
+          set -e
+
+          CURRENT=$(grep "Found [0-9]* errors" .out-current | sed 's/Found \(.*\) errors in .* files./\1/')
+          MAIN=$(grep "Found [0-9]* errors" .out-main | sed 's/Found \(.*\) errors in .* files./\1/')
+
           if [ $CURRENT -gt $MAIN ]; then
-            echo "The PR is increasing the number of null check errors from ${MAIN} to ${CURRENT}. Check if your branch is up-to-date and consider fixing them before merging"
+            diff .out-current .out-main
+            echo "The PR is increasing the number of null check errors from ${MAIN} to ${CURRENT}. Check if your branch is up-to-date and consider fixing them before merging. The diff above should give you some details"
             exit 1
           else
             echo "The PR has $CURRENT null check errors against $MAIN in main. You're good to go!"

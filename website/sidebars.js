@@ -328,10 +328,11 @@ module.exports = {
                         'reference/tags',
                         'reference/technical-debt',
                         'reference/unleash-context',
-                        'reference/unleash-proxy',
                         'reference/change-requests',
                     ],
                 },
+                'generated/unleash-edge',
+                'generated/unleash-proxy',
             ],
         },
         {

@@ -40,7 +40,7 @@ jobs:
           URL: ${{ github.event.pull_request.comments_url }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          comment() {
+          comment () {
             curl -X POST $URL \
               -H "Content-Type: application/json" \
               -H "Authorization: token $GITHUB_TOKEN" \
@@ -66,8 +66,8 @@ jobs:
           MAIN=$(grep "Found [0-9]* errors" .out-main | sed 's/Found \(.*\) errors in .* files./\1/')
 
           if [ $CURRENT -gt $MAIN ]; then
-            diff .out-current .out-main
             comment "After enabling strictNullChecks this PR would be increasing the number of null check errors from ${MAIN} to ${CURRENT}. Make sure your branch is up-to-date with ${MAIN_BRANCH} and check the diff in the console output to gather more details"
+            diff .out-current .out-main
             exit 1
           else
             echo "The PR has $CURRENT null check errors against $MAIN in main. You're good to go!"

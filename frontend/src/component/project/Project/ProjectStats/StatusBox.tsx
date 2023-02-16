@@ -31,7 +31,7 @@ const StyledTypographyChange = styled(Typography)(({ theme }) => ({
 }));
 
 interface IStatusBoxProps {
-    title: string;
+    title?: string;
     boxText: ReactNode;
     change: number;
     percentage?: boolean;

@@ -5,7 +5,10 @@ exports.up = function (db, cb) {
             SELECT (SELECT id as role_id from roles WHERE name = 'Member' LIMIT 1),
                    p.id   as permission_id
             FROM permissions p
-            WHERE p.permission='READ_PROJECT_API_TOKEN';
+            WHERE p.permission IN
+                  ('READ_PROJECT_API_TOKEN',
+                   'CREATE_PROJECT_API_TOKEN',
+                   'DELETE_PROJECT_API_TOKEN');
         `,
         cb,
     );

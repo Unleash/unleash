@@ -10,6 +10,8 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      MAIN_BRANCH: main
 
     strategy:
       matrix:
@@ -23,7 +25,7 @@ jobs:
       - name: Checkout main branch
         uses: actions/checkout@v3
         with:
-          ref: main
+          ref: ${{ env.MAIN_BRANCH }}
           path: main
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
@@ -33,10 +35,18 @@ jobs:
           cache-dependency-path: |
             current/yarn.lock
             main/yarn.lock
-      # intentionally use the same script from current branch against both repositories
       - name: Compare errors if enabling strictNullChecks
+        env:
+          URL: ${{ github.event.pull_request.comments_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          set -x
+          comment() {
+            curl -X POST $URL \
+              -H "Content-Type: application/json" \
+              -H "Authorization: token $GITHUB_TOKEN" \
+              --data "{ \"body\": \"${1}\" }"
+          }
+
           sed -i 's/\/\/\s*"strictNullChecks":\s*true,/"strictNullChecks": true,/' "current/tsconfig.json"
           sed -i 's/\/\/\s*"strictNullChecks":\s*true,/"strictNullChecks": true,/' "main/tsconfig.json"
 
@@ -57,7 +67,7 @@ jobs:
 
           if [ $CURRENT -gt $MAIN ]; then
             diff .out-current .out-main
-            echo "The PR is increasing the number of null check errors from ${MAIN} to ${CURRENT}. Check if your branch is up-to-date and consider fixing them before merging. The diff above should give you some details"
+            comment "After enabling strictNullChecks this PR would be increasing the number of null check errors from ${MAIN} to ${CURRENT}. Make sure your branch is up-to-date with ${MAIN_BRANCH} and check the diff in the console output to gather more details"
             exit 1
           else
             echo "The PR has $CURRENT null check errors against $MAIN in main. You're good to go!"

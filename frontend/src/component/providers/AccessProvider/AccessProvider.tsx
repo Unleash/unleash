@@ -47,7 +47,6 @@ export const hasAccess = (
     if (!permissions) {
         return false;
     }
-
     return permissions.some(p => {
         return checkPermission(p, permission, project, environment);
     });
@@ -79,7 +78,7 @@ const checkPermission = (
     if (
         p.permission === permission &&
         (p.project === project || p.project === '*') &&
-        p.environment === null
+        !Boolean(p.environment)
     ) {
         return true;
     }

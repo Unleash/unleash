@@ -1,10 +1,11 @@
 import {
     IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../helpers/test-helper';
-import dbInit, { ITestDb } from '../../helpers/database-init';
-import getLogger from '../../../fixtures/no-logger';
+} from '../../test/e2e/helpers/test-helper';
+import dbInit, { ITestDb } from '../../test/e2e/helpers/database-init';
+import getLogger from '../../test/fixtures/no-logger';
 import {
+    DEFAULT_PROJECT,
     FeatureToggleDTO,
     IEnvironmentStore,
     IEventStore,
@@ -13,14 +14,15 @@ import {
     ISegment,
     IStrategyConfig,
     IVariant,
-} from 'lib/types';
-import { DEFAULT_ENV } from '../../../../lib/util';
+} from '../types';
+import { DEFAULT_ENV } from '../util';
 import {
     ContextFieldSchema,
     ImportTogglesSchema,
-} from '../../../../lib/openapi';
-import User from '../../../../lib/types/user';
-import { IContextFieldDto } from '../../../../lib/types/stores/context-field-store';
+    VariantsSchema,
+} from '../openapi';
+import User from '../types/user';
+import { IContextFieldDto } from '../types/stores/context-field-store';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -85,35 +87,30 @@ const createContext = async (context: ContextFieldSchema = defaultContext) => {
         .expect(201);
 };
 
-const createVariants = async (
-    project: string,
-    feature: string,
-    environment: string,
-    variants: IVariant[],
-) => {
+const createVariants = async (feature: string, variants: IVariant[]) => {
     await app.services.featureToggleService.saveVariantsOnEnv(
-        project,
+        DEFAULT_PROJECT,
         feature,
-        environment,
+        DEFAULT_ENV,
         variants,
         new User({ id: 1 }),
     );
 };
 
-const createProject = async (project: string, environment: string) => {
+const createProject = async () => {
     await db.stores.environmentStore.create({
-        name: environment,
+        name: DEFAULT_ENV,
         type: 'production',
     });
     await db.stores.projectStore.create({
-        name: project,
+        name: DEFAULT_PROJECT,
         description: '',
-        id: project,
+        id: DEFAULT_PROJECT,
     });
     await app.request
-        .post(`/api/admin/projects/${project}/environments`)
+        .post(`/api/admin/projects/${DEFAULT_PROJECT}/environments`)
         .send({
-            environment,
+            environment: DEFAULT_ENV,
         })
         .expect(200);
 };
@@ -128,9 +125,9 @@ const createContextField = async (contextField: IContextFieldDto) => {
     await app.request.post(`/api/admin/context`).send(contextField).expect(201);
 };
 
-const createFeature = async (featureName: string, project: string) => {
+const createFeature = async (featureName: string) => {
     await app.request
-        .post(`/api/admin/projects/${project}/features`)
+        .post(`/api/admin/projects/${DEFAULT_PROJECT}/features`)
         .send({
             name: featureName,
         })
@@ -138,9 +135,11 @@ const createFeature = async (featureName: string, project: string) => {
         .expect(201);
 };
 
-const archiveFeature = async (featureName: string, project: string) => {
+const archiveFeature = async (featureName: string) => {
     await app.request
-        .delete(`/api/admin/projects/${project}/features/${featureName}`)
+        .delete(
+            `/api/admin/projects/${DEFAULT_PROJECT}/features/${featureName}`,
+        )
         .set('Content-Type', 'application/json')
         .expect(202);
 };
@@ -188,7 +187,7 @@ afterAll(async () => {
 
 test('exports features', async () => {
     const segmentName = 'my-segment';
-    await createProject('default', 'default');
+    await createProject();
     const segment = await createSegment({ name: segmentName, constraints: [] });
     const strategy = {
         name: 'default',
@@ -249,7 +248,7 @@ test('exports features', async () => {
 });
 
 test('should export custom context fields from strategies and variants', async () => {
-    await createProject('default', 'default');
+    await createProject();
     const strategyContext = {
         name: 'strategy-context',
         legalValues: [
@@ -301,7 +300,7 @@ test('should export custom context fields from strategies and variants', async (
     };
     await createContext(variantStickinessContext);
     await createContext(variantOverridesContext);
-    await createVariants('default', 'first_feature', 'default', [
+    await createVariants('first_feature', [
         {
             name: 'irrelevant',
             weight: 1000,
@@ -351,7 +350,7 @@ test('should export custom context fields from strategies and variants', async (
 
 test('should export tags', async () => {
     const featureName = 'first_feature';
-    await createProject('default', 'default');
+    await createProject();
     await createToggle(
         {
             name: featureName,
@@ -390,7 +389,7 @@ test('should export tags', async () => {
 });
 
 test('returns no features, when no feature was requested', async () => {
-    await createProject('default', 'default');
+    await createProject();
     await createToggle({
         name: 'first_feature',
         description: 'the #1 feature',
@@ -424,34 +423,31 @@ const importToggles = (
         .expect(expect);
 
 const defaultFeature = 'first_feature';
-const defaultProject = 'default';
-const defaultEnvironment = 'defalt';
 
-const variants: ImportTogglesSchema['data']['featureEnvironments'][0]['variants'] =
-    [
-        {
-            name: 'variantA',
-            weight: 500,
-            payload: {
-                type: 'string',
-                value: 'payloadA',
-            },
-            overrides: [],
-            stickiness: 'default',
-            weightType: 'variable',
+const variants: VariantsSchema = [
+    {
+        name: 'variantA',
+        weight: 500,
+        payload: {
+            type: 'string',
+            value: 'payloadA',
         },
-        {
-            name: 'variantB',
-            weight: 500,
-            payload: {
-                type: 'string',
-                value: 'payloadB',
-            },
-            overrides: [],
-            stickiness: 'default',
-            weightType: 'variable',
+        overrides: [],
+        stickiness: 'default',
+        weightType: 'variable',
+    },
+    {
+        name: 'variantB',
+        weight: 500,
+        payload: {
+            type: 'string',
+            value: 'payloadB',
         },
-    ];
+        overrides: [],
+        stickiness: 'default',
+        weightType: 'variable',
+    },
+];
 const exportedFeature: ImportTogglesSchema['data']['features'][0] = {
     project: 'old_project',
     name: 'first_feature',
@@ -522,21 +518,17 @@ const defaultImportPayload: ImportTogglesSchema = {
         contextFields: [],
         segments: [],
     },
-    project: defaultProject,
-    environment: defaultEnvironment,
+    project: DEFAULT_PROJECT,
+    environment: DEFAULT_ENV,
 };
 
 const getFeature = async (feature: string) =>
     app.request.get(`/api/admin/features/${feature}`).expect(200);
 
-const getFeatureEnvironment = (
-    project: string,
-    feature: string,
-    environment: string,
-) =>
+const getFeatureEnvironment = (feature: string) =>
     app.request
         .get(
-            `/api/admin/projects/${project}/features/${feature}/environments/${environment}`,
+            `/api/admin/projects/${DEFAULT_PROJECT}/features/${feature}/environments/${DEFAULT_ENV}`,
         )
         .expect(200);
 
@@ -551,25 +543,23 @@ const validateImport = (importPayload: ImportTogglesSchema, status = 200) =>
         .expect(status);
 
 test('import features to existing project and environment', async () => {
-    await createProject(defaultProject, defaultEnvironment);
+    await createProject();
 
     await importToggles(defaultImportPayload);
 
     const { body: importedFeature } = await getFeature(defaultFeature);
     expect(importedFeature).toMatchObject({
         name: 'first_feature',
-        project: defaultProject,
+        project: DEFAULT_PROJECT,
         variants,
     });
 
     const { body: importedFeatureEnvironment } = await getFeatureEnvironment(
-        defaultProject,
         defaultFeature,
-        defaultEnvironment,
     );
     expect(importedFeatureEnvironment).toMatchObject({
         name: defaultFeature,
-        environment: defaultEnvironment,
+        environment: DEFAULT_ENV,
         enabled: true,
         strategies: [
             {
@@ -589,26 +579,24 @@ test('import features to existing project and environment', async () => {
 });
 
 test('importing same JSON should work multiple times in a row', async () => {
-    await createProject(defaultProject, defaultEnvironment);
+    await createProject();
     await importToggles(defaultImportPayload);
     await importToggles(defaultImportPayload);
 
     const { body: importedFeature } = await getFeature(defaultFeature);
     expect(importedFeature).toMatchObject({
         name: 'first_feature',
-        project: defaultProject,
+        project: DEFAULT_PROJECT,
         variants,
     });
 
     const { body: importedFeatureEnvironment } = await getFeatureEnvironment(
-        defaultProject,
         defaultFeature,
-        defaultEnvironment,
     );
 
     expect(importedFeatureEnvironment).toMatchObject({
         name: defaultFeature,
-        environment: defaultEnvironment,
+        environment: DEFAULT_ENV,
         enabled: true,
         strategies: [
             {
@@ -623,7 +611,7 @@ test('importing same JSON should work multiple times in a row', async () => {
 });
 
 test('reject import with unknown context fields', async () => {
-    await createProject(defaultProject, defaultEnvironment);
+    await createProject();
     const contextField = {
         name: 'ContextField1',
         legalValues: [{ value: 'Value1', description: '' }],
@@ -654,12 +642,14 @@ test('reject import with unknown context fields', async () => {
 });
 
 test('reject import with unsupported strategies', async () => {
-    await createProject(defaultProject, defaultEnvironment);
+    await createProject();
     const importPayloadWithContextFields: ImportTogglesSchema = {
         ...defaultImportPayload,
         data: {
             ...defaultImportPayload.data,
-            featureStrategies: [{ name: 'customStrategy' }],
+            featureStrategies: [
+                { name: 'customStrategy', featureName: 'featureName' },
+            ],
         },
     };
 
@@ -675,7 +665,7 @@ test('reject import with unsupported strategies', async () => {
 });
 
 test('validate import data', async () => {
-    await createProject(defaultProject, defaultEnvironment);
+    await createProject();
     const contextField: IContextFieldDto = {
         name: 'validate_context_field',
         legalValues: [{ value: 'Value1' }],
@@ -686,8 +676,8 @@ test('validate import data', async () => {
         legalValues: [{ value: 'new_value' }],
     };
 
-    await createFeature(defaultFeature, defaultProject);
-    await archiveFeature(defaultFeature, defaultProject);
+    await createFeature(defaultFeature);
+    await archiveFeature(defaultFeature);
 
     await createContextField(contextField);
     const importPayloadWithContextFields: ImportTogglesSchema = {
@@ -733,7 +723,7 @@ test('validate import data', async () => {
 });
 
 test('should create new context', async () => {
-    await createProject(defaultProject, defaultEnvironment);
+    await createProject();
     const context = {
         name: 'create-new-context',
         legalValues: [{ value: 'Value1' }],
@@ -753,10 +743,10 @@ test('should create new context', async () => {
 });
 
 test('should not import archived features tags', async () => {
-    await createProject(defaultProject, defaultEnvironment);
+    await createProject();
     await importToggles(defaultImportPayload);
 
-    await archiveFeature(defaultFeature, defaultProject);
+    await archiveFeature(defaultFeature);
 
     await importToggles({
         ...defaultImportPayload,

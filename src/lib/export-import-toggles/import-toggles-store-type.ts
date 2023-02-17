@@ -13,7 +13,14 @@ export interface IImportTogglesStore {
 
     deleteTagsForFeatures(tags: string[]): Promise<void>;
 
+    strategiesExistForFeatures(
+        featureNames: string[],
+        environment: string,
+    ): Promise<boolean>;
+
     getDisplayPermissions(
         names: string[],
     ): Promise<{ name: string; displayName: string }[]>;
+
+    getExistingFeatures(featureNames: string[]): Promise<string[]>;
 }

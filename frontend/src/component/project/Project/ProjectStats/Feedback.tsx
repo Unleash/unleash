@@ -1,17 +1,39 @@
 import { useState, VFC } from 'react';
-import { Box, Paper, Button } from '@mui/material';
+import { Box, Paper, Button, styled } from '@mui/material';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IFeedbackProps {
     id: string;
 }
 
+const StyledBox = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    gap: theme.spacing(1),
+    marginTop: theme.spacing(0.5),
+}));
+
+import { createLocalStorage } from 'utils/createLocalStorage';
+
 export const Feedback: VFC<IFeedbackProps> = ({ id }) => {
-    const [selected, setSelected] = useState<'yes' | 'no'>();
+    const { uiConfig } = useUiConfig();
+    const { value: selectedValue, setValue: setSelectedValue } =
+        createLocalStorage<{ value?: 'yes' | 'no' }>(
+            `ProjectOverviewFeedback:v1:${id}`,
+            {}
+        );
+    const [selected, setSelected] = useState<'yes' | 'no' | undefined>(
+        selectedValue.value
+    );
     const { trackEvent } = usePlausibleTracker();
+
+    if (!uiConfig?.flags?.T) {
+        return null;
+    }
 
     const onTrackFeedback = (value: 'yes' | 'no') => {
         setSelected(value);
+        setSelectedValue({ value });
         trackEvent('project_overview', {
             props: {
                 eventType: id,
@@ -30,13 +52,7 @@ export const Feedback: VFC<IFeedbackProps> = ({ id }) => {
             }}
         >
             Was this information useful to you?
-            <Box
-                sx={{
-                    display: 'flex',
-                    gap: theme => theme.spacing(1),
-                    marginTop: theme => theme.spacing(0.5),
-                }}
-            >
+            <StyledBox>
                 <Button
                     size="small"
                     variant={selected === 'yes' ? 'contained' : 'outlined'}
@@ -55,7 +71,7 @@ export const Feedback: VFC<IFeedbackProps> = ({ id }) => {
                 >
                     No
                 </Button>
-            </Box>
+            </StyledBox>
         </Paper>
     );
 };

@@ -6,18 +6,25 @@ import {
     Popper,
     Paper,
     ClickAwayListener,
+    styled,
 } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { Feedback } from './Feedback';
 
 interface IHelpPopperProps {
     id: string;
 }
 
+const StyledPaper = styled(Paper)(({ theme }) => ({
+    padding: theme.spacing(3, 3),
+    maxWidth: '350px',
+    borderRadius: `${theme.shape.borderRadiusMedium}px`,
+    border: `1px solid ${theme.palette.neutral.border}`,
+    fontSize: theme.typography.body2.fontSize,
+}));
+
 export const HelpPopper: FC<IHelpPopperProps> = ({ children, id }) => {
     const [anchor, setAnchorEl] = useState<null | Element>(null);
-    const { isPro } = useUiConfig();
 
     const onOpen = (event: React.FormEvent<HTMLButtonElement>) =>
         setAnchorEl(event.currentTarget);
@@ -47,16 +54,7 @@ export const HelpPopper: FC<IHelpPopperProps> = ({ children, id }) => {
                 sx={theme => ({ zIndex: theme.zIndex.tooltip })}
             >
                 <ClickAwayListener onClickAway={onClose}>
-                    <Paper
-                        sx={theme => ({
-                            padding: theme.spacing(3, 3),
-                            maxWidth: '350px',
-                            borderRadius: `${theme.shape.borderRadiusMedium}px`,
-                            border: `1px solid ${theme.palette.neutral.border}`,
-                            fontSize: theme.typography.body2.fontSize,
-                        })}
-                        elevation={3}
-                    >
+                    <StyledPaper elevation={3}>
                         <IconButton
                             onClick={onClose}
                             sx={{ position: 'absolute', right: 4, top: 4 }}
@@ -69,11 +67,8 @@ export const HelpPopper: FC<IHelpPopperProps> = ({ children, id }) => {
                             />
                         </IconButton>
                         {children}
-                        <ConditionallyRender
-                            condition={isPro()}
-                            show={() => <Feedback id={id} />}
-                        />
-                    </Paper>
+                        <Feedback id={id} />
+                    </StyledPaper>
                 </ClickAwayListener>
             </Popper>
         </Box>

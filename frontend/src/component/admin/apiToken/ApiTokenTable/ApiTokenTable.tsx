@@ -1,4 +1,4 @@
-import { useApiTokens } from 'hooks/api/getters/useApiTokens/useApiTokens';
+import { IApiToken } from 'hooks/api/getters/useApiTokens/useApiTokens';
 import { useGlobalFilter, useSortBy, useTable } from 'react-table';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import {
@@ -35,32 +35,100 @@ const hiddenColumnsCompact = ['Icon', 'project', 'seenAt'];
 interface IApiTokenTableProps {
     compact?: boolean;
     filterForProject?: string;
+    tokens: IApiToken[];
+    loading: boolean;
 }
 export const ApiTokenTable = ({
     compact = false,
     filterForProject,
+    tokens,
+    loading,
 }: IApiTokenTableProps) => {
-    const { tokens, loading } = useApiTokens();
     const initialState = useMemo(() => ({ sortBy: [{ id: 'createdAt' }] }), []);
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
-    const filteredTokens = useMemo(() => {
-        if (Boolean(filterForProject)) {
-            return tokens.filter(token => {
-                if (token.projects) {
-                    if (token.projects?.length > 1) return false;
-                    if (
-                        token.projects?.length === 1 &&
-                        token.projects[0] === filterForProject
-                    )
-                        return true;
-                }
-
-                return token.project === filterForProject;
-            });
-        }
-        return tokens;
-    }, [tokens, filterForProject]);
+    const COLUMNS = useMemo(() => {
+        return [
+            {
+                id: 'Icon',
+                width: '1%',
+                Cell: () => <IconCell icon={<Key color="disabled" />} />,
+                disableSortBy: true,
+                disableGlobalFilter: true,
+            },
+            {
+                Header: 'Username',
+                accessor: 'username',
+                Cell: HighlightCell,
+            },
+            {
+                Header: 'Type',
+                accessor: 'type',
+                Cell: ({
+                    value,
+                }: {
+                    value: 'admin' | 'client' | 'frontend';
+                }) => (
+                    <HighlightCell
+                        value={tokenDescriptions[value].label}
+                        subtitle={tokenDescriptions[value].title}
+                    />
+                ),
+                minWidth: 280,
+            },
+            {
+                Header: 'Project',
+                accessor: 'project',
+                Cell: (props: any) => (
+                    <ProjectsList
+                        project={props.row.original.project}
+                        projects={props.row.original.projects}
+                    />
+                ),
+                minWidth: 120,
+            },
+            {
+                Header: 'Environment',
+                accessor: 'environment',
+                Cell: HighlightCell,
+                minWidth: 120,
+            },
+            {
+                Header: 'Created',
+                accessor: 'createdAt',
+                Cell: DateCell,
+                minWidth: 150,
+                disableGlobalFilter: true,
+            },
+            {
+                Header: 'Last seen',
+                accessor: 'seenAt',
+                Cell: TimeAgoCell,
+                minWidth: 150,
+                disableGlobalFilter: true,
+            },
+            {
+                Header: 'Actions',
+                id: 'Actions',
+                align: 'center',
+                width: '1%',
+                disableSortBy: true,
+                disableGlobalFilter: true,
+                Cell: (props: any) => (
+                    <ActionCell>
+                        <CopyApiTokenButton
+                            token={props.row.original}
+                            project={filterForProject}
+                        />
+                        <RemoveApiTokenButton
+                            token={props.row.original}
+                            project={filterForProject}
+                        />
+                    </ActionCell>
+                ),
+            },
+        ];
+    }, [filterForProject]);
 
     const {
         getTableProps,
@@ -74,7 +142,7 @@ export const ApiTokenTable = ({
     } = useTable(
         {
             columns: COLUMNS as any,
-            data: filteredTokens as any,
+            data: tokens as any,
             initialState,
             sortTypes,
             autoResetHiddenColumns: false,
@@ -207,74 +275,3 @@ const tokenDescriptions = {
         title: 'Full access for managing Unleash',
     },
 };
-
-const COLUMNS = [
-    {
-        id: 'Icon',
-        width: '1%',
-        Cell: () => <IconCell icon={<Key color="disabled" />} />,
-        disableSortBy: true,
-        disableGlobalFilter: true,
-    },
-    {
-        Header: 'Username',
-        accessor: 'username',
-        Cell: HighlightCell,
-    },
-    {
-        Header: 'Type',
-        accessor: 'type',
-        Cell: ({ value }: { value: 'admin' | 'client' | 'frontend' }) => (
-            <HighlightCell
-                value={tokenDescriptions[value].label}
-                subtitle={tokenDescriptions[value].title}
-            />
-        ),
-        minWidth: 280,
-    },
-    {
-        Header: 'Project',
-        accessor: 'project',
-        Cell: (props: any) => (
-            <ProjectsList
-                project={props.row.original.project}
-                projects={props.row.original.projects}
-            />
-        ),
-        minWidth: 120,
-    },
-    {
-        Header: 'Environment',
-        accessor: 'environment',
-        Cell: HighlightCell,
-        minWidth: 120,
-    },
-    {
-        Header: 'Created',
-        accessor: 'createdAt',
-        Cell: DateCell,
-        minWidth: 150,
-        disableGlobalFilter: true,
-    },
-    {
-        Header: 'Last seen',
-        accessor: 'seenAt',
-        Cell: TimeAgoCell,
-        minWidth: 150,
-        disableGlobalFilter: true,
-    },
-    {
-        Header: 'Actions',
-        id: 'Actions',
-        align: 'center',
-        width: '1%',
-        disableSortBy: true,
-        disableGlobalFilter: true,
-        Cell: (props: any) => (
-            <ActionCell>
-                <CopyApiTokenButton token={props.row.original} />
-                <RemoveApiTokenButton token={props.row.original} />
-            </ActionCell>
-        ),
-    },
-];

@@ -181,7 +181,9 @@ beforeEach(async () => {
     await toggleStore.deleteAll();
     await projectStore.deleteAll();
     await environmentStore.deleteAll();
+
     await contextFieldStore.deleteAll();
+    await createContextField({ name: 'appName' });
 });
 
 afterAll(async () => {

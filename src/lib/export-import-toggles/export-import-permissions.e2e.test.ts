@@ -265,6 +265,10 @@ beforeEach(async () => {
     await projectStore.deleteAll();
     await environmentStore.deleteAll();
     await contextFieldStore.deleteAll();
+
+    await contextFieldStore.deleteAll();
+    await loginAdminUser();
+    await createContextField({ name: 'appName' });
 });
 
 afterAll(async () => {

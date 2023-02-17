@@ -16,7 +16,7 @@ const StyledContainer = styled('li')(({ theme }) => ({
     alignItems: 'start',
     gap: theme.spacing(1),
     padding: theme.spacing(1),
-    background: theme.palette.secondaryContainer,
+    background: theme.palette.background.elevation2,
     borderRadius: theme.shape.borderRadius,
     wordBreak: 'break-word',
 }));

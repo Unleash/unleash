@@ -43,7 +43,7 @@ const StyledClose = styled('div')({
 
 const StyledCloseIcon = styled(CloseOutlined)(({ theme }) => ({
     fontSize: '1.5rem',
-    color: theme.palette.inactiveIcon,
+    color: theme.palette.action.disabled,
 }));
 
 export const FeedbackCES = ({ state }: IFeedbackCESProps) => {

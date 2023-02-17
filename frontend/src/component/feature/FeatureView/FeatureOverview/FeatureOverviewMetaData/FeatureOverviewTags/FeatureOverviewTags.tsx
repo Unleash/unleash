@@ -37,7 +37,7 @@ const StyledContainer = styled('div')(({ theme }) => ({
 const StyledTagChip = styled(Chip)(({ theme }) => ({
     marginRight: theme.spacing(0.5),
     marginTop: theme.spacing(1),
-    backgroundColor: theme.palette.text.tertiaryContrast,
+    backgroundColor: theme.palette.primary.contrastText,
     fontSize: theme.fontSizes.smallBody,
 }));
 

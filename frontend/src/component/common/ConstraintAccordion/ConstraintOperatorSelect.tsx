@@ -64,7 +64,7 @@ const StyledMenuItem = styled(MenuItem, {
                   left: 0,
                   right: 0,
                   borderTop: '1px solid',
-                  borderTopColor: theme.palette.tertiary.contrast,
+                  borderTopColor: theme.palette.divider,
               },
           }
         : {}

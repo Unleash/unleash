@@ -59,7 +59,7 @@ export const Separator = () => (
         sx={{
             marginLeft: 1.5,
             marginRight: 1.5,
-            color: 'dividerAlternative',
+            color: 'divider',
         }}
     >
         |

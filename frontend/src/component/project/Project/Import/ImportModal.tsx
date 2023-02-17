@@ -34,7 +34,7 @@ const TimelineContainer = styled('div')(({ theme }) => ({
 const TimelineHeader = styled('div')(({ theme }) => ({
     textTransform: 'uppercase',
     fontSize: theme.fontSizes.smallBody,
-    color: theme.palette.text.tertiaryContrast,
+    color: theme.palette.primary.contrastText,
     fontWeight: theme.typography.fontWeightBold,
     paddingLeft: theme.spacing(2),
     marginBottom: theme.spacing(4),

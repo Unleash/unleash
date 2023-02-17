@@ -13,8 +13,8 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
-    color: theme.palette.text.tertiaryContrast,
-    backgroundColor: theme.palette.featureMetaData,
+    color: theme.palette.primary.contrastText,
+    backgroundColor: theme.palette.background.sidebar,
     display: 'flex',
     flexDirection: 'column',
     maxWidth: '350px',
@@ -62,7 +62,7 @@ const StyledBodyItem = styled('span')(({ theme }) => ({
 const StyledDescriptionContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
-    color: theme.palette.text.tertiaryContrast,
+    color: theme.palette.primary.contrastText,
 }));
 
 const FeatureOverviewMetaData = () => {
@@ -84,7 +84,7 @@ const FeatureOverviewMetaData = () => {
                             marginRight: theme.spacing(2),
                             height: '40px',
                             width: '40px',
-                            fill: theme.palette.text.tertiaryContrast,
+                            fill: theme.palette.primary.contrastText,
                         })}
                     />{' '}
                     <StyledHeader>{capitalize(type || '')} toggle</StyledHeader>
@@ -111,8 +111,7 @@ const FeatureOverviewMetaData = () => {
                                     >
                                         <Edit
                                             sx={theme => ({
-                                                color: theme.palette.text
-                                                    .tertiaryContrast,
+                                                color: theme.palette.primary.contrastText,
                                             })}
                                         />
                                     </PermissionIconButton>
@@ -134,8 +133,7 @@ const FeatureOverviewMetaData = () => {
                                     >
                                         <Edit
                                             sx={theme => ({
-                                                color: theme.palette.text
-                                                    .tertiaryContrast,
+                                                color: theme.palette.primary.contrastText,
                                             })}
                                         />
                                     </PermissionIconButton>

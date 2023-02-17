@@ -53,7 +53,7 @@ const StyledInputDescription = styled('p')(({ theme }) => ({
 
 const StyledAddContextContainer = styled('div')(({ theme }) => ({
     marginTop: '1rem',
-    borderBottom: `1px solid ${theme.palette.grey[300]}`,
+    borderBottom: `1px solid ${theme.palette.divider}`,
     paddingBottom: '2rem',
 }));
 
@@ -70,7 +70,7 @@ const StyledNoConstraintText = styled('div')(({ theme }) => ({
 
 const StyledSubtitle = styled('p')(({ theme }) => ({
     fontSize: theme.fontSizes.bodySize,
-    color: theme.palette.tertiary.dark,
+    color: theme.palette.text.disabled,
     maxWidth: 515,
     marginBottom: theme.spacing(2.5),
     wordBreak: 'break-word',
@@ -86,7 +86,7 @@ const StyledButtonContainer = styled('div')(({ theme }) => ({
     marginTop: 'auto',
     display: 'flex',
     justifyContent: 'flex-end',
-    borderTop: `1px solid ${theme.palette.tertiary.contrast}`,
+    borderTop: `1px solid ${theme.palette.divider}`,
     paddingTop: theme.spacing(2),
 }));
 

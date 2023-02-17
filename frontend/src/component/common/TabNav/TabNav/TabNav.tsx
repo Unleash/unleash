@@ -51,7 +51,7 @@ export const TabNav = ({
                 sx={{
                     backgroundColor: theme => theme.palette.background.paper,
                     borderBottom: '1px solid',
-                    borderBottomColor: theme => theme.palette.grey[300],
+                    borderBottomColor: theme => theme.palette.divider,
                     borderRadius: 0,
                 }}
             >

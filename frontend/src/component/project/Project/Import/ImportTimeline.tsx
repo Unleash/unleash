@@ -24,7 +24,7 @@ const StyledTimelineDot = styled(TimelineDot, {
     shouldForwardProp: prop => prop !== 'active',
 })<{ active: boolean }>(({ theme, active }) => ({
     color: active ? theme.palette.primary.main : theme.palette.neutral.border,
-    backgroundColor: active ? theme.palette.text.tertiaryContrast : 'initial',
+    backgroundColor: active ? theme.palette.primary.contrastText : 'initial',
     fontWeight: active ? theme.fontWeight.bold : theme.fontWeight.medium,
     borderColor: theme.palette.neutral.border,
     width: '40px',
@@ -40,7 +40,7 @@ const StyledTimelineContent = styled(TimelineContent, {
 })<{ active: boolean }>(({ theme, active }) => ({
     marginBottom: theme.spacing(6),
     color: active
-        ? theme.palette.text.tertiaryContrast
+        ? theme.palette.common.white
         : theme.palette.neutral.border,
     marginTop: theme.spacing(2),
 }));

@@ -99,7 +99,7 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
                     />
                     <Icon
                         sx={{
-                            fill: theme => theme.palette.inactiveIcon,
+                            fill: theme => theme.palette.action.disabled,
                         }}
                     />
                     <StringTruncator

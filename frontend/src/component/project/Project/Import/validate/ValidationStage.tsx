@@ -12,7 +12,7 @@ import { ActionsContainer } from '../ActionsContainer';
 import { IMPORT_CONFIGURATION_BUTTON } from 'utils/testIds';
 
 const ImportInfoContainer = styled(Box)(({ theme }) => ({
-    backgroundColor: theme.palette.secondaryContainer,
+    backgroundColor: theme.palette.background.elevation2,
     borderRadius: theme.shape.borderRadiusLarge,
     padding: theme.spacing(3),
 }));

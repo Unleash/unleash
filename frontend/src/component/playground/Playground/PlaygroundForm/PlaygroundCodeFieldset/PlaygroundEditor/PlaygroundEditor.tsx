@@ -25,7 +25,7 @@ const StyledEditorHeader = styled('aside')(({ theme }) => ({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    border: `1px solid ${theme.palette.lightBorder}`,
+    border: `1px solid ${theme.palette.divider}`,
     borderBottom: 'none',
 }));
 
@@ -52,7 +52,7 @@ const EditorStatusOk = () => {
     return (
         <StyledEditorStatusContainer
             style={{
-                color: theme.palette.text.tertiaryContrast,
+                color: theme.palette.success.contrastText,
                 backgroundColor: theme.palette.success.main,
             }}
         >
@@ -67,7 +67,7 @@ const EditorStatusError = () => {
     return (
         <StyledEditorStatusContainer
             style={{
-                color: theme.palette.text.tertiaryContrast,
+                color: theme.palette.error.contrastText,
                 backgroundColor: theme.palette.error.main,
             }}
         >
@@ -117,7 +117,7 @@ export const PlaygroundEditor: VFC<IPlaygroundEditorProps> = ({
                 extensions={[json()]}
                 onChange={onCodeFieldChange}
                 style={{
-                    border: `1px solid ${theme.palette.lightBorder}`,
+                    border: `1px solid ${theme.palette.divider}`,
                     borderTop: 'none',
                     borderBottomLeftRadius: theme.shape.borderRadiusMedium,
                     borderBottomRightRadius: theme.shape.borderRadiusMedium,

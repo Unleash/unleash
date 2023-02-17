@@ -6,7 +6,7 @@ import { Box, styled, Typography } from '@mui/material';
 import { IMPORT_ENVIRONMENT } from 'utils/testIds';
 
 const ImportOptionsContainer = styled(Box)(({ theme }) => ({
-    backgroundColor: theme.palette.secondaryContainer,
+    backgroundColor: theme.palette.background.elevation2,
     borderRadius: theme.shape.borderRadiusLarge,
     padding: theme.spacing(3),
 }));

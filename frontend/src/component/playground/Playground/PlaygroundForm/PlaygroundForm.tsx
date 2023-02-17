@@ -49,7 +49,7 @@ export const PlaygroundForm: VFC<IPlaygroundFormProps> = ({
                 variant="fullWidth"
                 sx={{
                     mb: 2,
-                    borderColor: theme.palette.dividerAlternative,
+                    borderColor: theme.palette.divider,
                     borderStyle: 'dashed',
                 }}
             />
@@ -60,7 +60,7 @@ export const PlaygroundForm: VFC<IPlaygroundFormProps> = ({
                 sx={{
                     mt: 3,
                     mb: 2,
-                    borderColor: theme.palette.dividerAlternative,
+                    borderColor: theme.palette.divider,
                 }}
             />
             <Box

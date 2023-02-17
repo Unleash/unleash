@@ -104,7 +104,7 @@ export default createTheme({
             paper: themeColors.main,
         },
         divider: themeColors.secondary,
-        dividerAlternative: colors.grey[400],
+        // dividerAlternative: colors.grey[400],
         tableHeaderHover: colors.darkblue[700],
         tableHeaderBackground: themeColors.secondary,
         tableHeaderColor: themeColors.textColor,
@@ -168,13 +168,13 @@ export default createTheme({
             inactive: themeColors.secondary,
             abandoned: themeColors.secondary,
         },
-        tertiary: {
-            light: themeColors.secondary,
-            main: colors.grey[400],
-            dark: colors.grey[600],
-            background: 'white',
-            contrast: colors.grey[300],
-        },
+        // tertiary: {
+        //     light: themeColors.secondary,
+        //     main: colors.grey[400],
+        //     dark: colors.grey[600],
+        //     background: 'white',
+        //     contrast: colors.grey[300],
+        // },
         inactiveIcon: colors.grey[600],
     },
     components: {
@@ -195,7 +195,7 @@ export default createTheme({
         MuiIconButton: {
             styleOverrides: {
                 root: {
-                    color: colors.white,
+                    color: colors.grey[50],
                     '&:hover': {
                         backgroundColor: themeColors.hover,
                     },
@@ -210,7 +210,7 @@ export default createTheme({
         MuiLink: {
             styleOverrides: {
                 root: {
-                    color: colors.white,
+                    color: colors.grey[50],
                     '&:hover': {
                         textDecoration: 'none',
                     },
@@ -370,10 +370,10 @@ export default createTheme({
         MuiIcon: {
             styleOverrides: {
                 root: {
-                    color: colors.white,
+                    color: colors.grey[50],
                 },
                 colorDisabled: {
-                    color: colors.white[600],
+                    color: colors.grey[50],
                 },
             },
         },

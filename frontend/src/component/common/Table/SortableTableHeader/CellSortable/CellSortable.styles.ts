@@ -22,7 +22,7 @@ export const StyledTableCell = styled(TableCell, {
     ...(isSortable && {
         padding: 0,
         '&:hover, &:focus': {
-            backgroundColor: theme.palette.tableHeaderHover,
+            backgroundColor: theme.palette.table.headerHover,
             '& svg': {
                 color: 'inherit',
             },

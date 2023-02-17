@@ -46,13 +46,13 @@ const StyledHtmlTooltip = styled(
             color: theme.palette.text.primary,
             fontWeight: theme.fontWeight.medium,
             maxWidth: 'inherit',
-            border: `1px solid ${theme.palette.lightBorder}`,
+            border: `1px solid ${theme.palette.divider}`,
             maxHeight,
             fontSize,
         },
         [`& .${tooltipClasses.arrow}`]: {
             '&:before': {
-                border: `1px solid ${theme.palette.lightBorder}`,
+                border: `1px solid ${theme.palette.divider}`,
             },
             color: theme.palette.background.paper,
         },

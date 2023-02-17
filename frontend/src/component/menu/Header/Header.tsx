@@ -40,7 +40,7 @@ import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { useThemeMode } from 'hooks/useThemeMode';
 
 const StyledHeader = styled(AppBar)(({ theme }) => ({
-    backgroundColor: theme.palette.headerBackground,
+    backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(1),
     boxShadow: 'none',
     position: 'relative',

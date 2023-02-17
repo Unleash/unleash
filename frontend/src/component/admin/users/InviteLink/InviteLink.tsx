@@ -174,7 +174,7 @@ export const InviteLink: VFC<ICreateInviteLinkProps> = () => {
                             borderRadius: theme =>
                                 `${theme.shape.borderRadiusMedium}px`,
                             backgroundColor: theme =>
-                                theme.palette.secondaryContainer,
+                                theme.palette.background.elevation2,
                         }}
                     >
                         <Typography variant="body2" fontWeight="bold">

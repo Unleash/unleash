@@ -20,7 +20,7 @@ const CommentPaper = styled(Paper)(({ theme }) => ({
 const CommentHeader = styled(Box)(({ theme }) => ({
     display: 'flex',
     borderBottom: '1px solid',
-    borderColor: theme.palette.dividerAlternative,
+    borderColor: theme.palette.divider,
     paddingBottom: theme.spacing(1.5),
 }));
 

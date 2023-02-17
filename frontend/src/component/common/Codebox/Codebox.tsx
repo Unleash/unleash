@@ -17,7 +17,7 @@ const StyledCode = styled('pre')(({ theme }) => ({
     margin: 0,
     wordBreak: 'break-all',
     whiteSpace: 'pre-wrap',
-    color: theme.palette.formSidebarTextColor,
+    color: theme.palette.common.white,
     fontSize: theme.fontSizes.smallBody,
 }));
 

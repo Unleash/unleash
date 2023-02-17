@@ -9,7 +9,7 @@ const StyledHeader = styled('span')(({ theme }) => ({
 }));
 
 const StyledCode = styled('span')(({ theme }) => ({
-    backgroundColor: theme.palette.secondaryContainer,
+    backgroundColor: theme.palette.background.elevation2,
     color: theme.palette.text.primary,
     padding: theme.spacing(0, 0.5),
     borderRadius: theme.spacing(0.5),

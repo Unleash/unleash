@@ -6,7 +6,7 @@ import { PageHeader } from '../../../common/PageHeader/PageHeader';
 const StyledHelpOutline = styled(HelpOutline)(({ theme }) => ({
     fontSize: theme.fontSizes.mainHeader,
     marginLeft: '0.3rem',
-    color: theme.palette.grey[700],
+    color: theme.palette.action.active,
 }));
 
 const StyledHeaderHint = styled('div')(({ theme }) => ({

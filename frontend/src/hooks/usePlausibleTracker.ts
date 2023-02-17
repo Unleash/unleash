@@ -16,6 +16,7 @@ type CustomEvents =
     | 'maintenance'
     | 'message_banner'
     | 'hidden_environment'
+    | 'project_overview'
     | 'suggest_tags'
     | 'unknown_ui_error';
 

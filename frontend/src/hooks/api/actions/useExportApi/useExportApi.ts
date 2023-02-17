@@ -17,7 +17,6 @@ export const useExportApi = () => {
 
         try {
             const res = await makeRequest(req.caller, req.id);
-
             trackEvent('export_import', {
                 props: {
                     eventType: `features exported`,

@@ -2,6 +2,7 @@ import { useState, VFC } from 'react';
 import { Box, Paper, Button, styled } from '@mui/material';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { createLocalStorage } from 'utils/createLocalStorage';
 
 interface IFeedbackProps {
     id: string;
@@ -12,8 +13,6 @@ const StyledBox = styled(Box)(({ theme }) => ({
     gap: theme.spacing(1),
     marginTop: theme.spacing(0.5),
 }));
-
-import { createLocalStorage } from 'utils/createLocalStorage';
 
 export const Feedback: VFC<IFeedbackProps> = ({ id }) => {
     const { uiConfig } = useUiConfig();

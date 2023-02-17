@@ -12,6 +12,7 @@ import { ActionsContainer } from '../ActionsContainer';
 import { IMPORT_CONFIGURATION_BUTTON } from 'utils/testIds';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const ImportInfoContainer = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.secondaryContainer,
@@ -93,14 +94,32 @@ export const ValidationStage: FC<{
 }> = ({ environment, project, payload, onClose, onBack, onSubmit }) => {
     const { validateImport } = useValidateImportApi();
     const { setToastData } = useToast();
+    const { trackEvent } = usePlausibleTracker();
     const [validationResult, setValidationResult] = useState<IValidationSchema>(
         { errors: [], warnings: [], permissions: [] }
     );
     const [validJSON, setValidJSON] = useState(true);
 
+    const trackValidation = (result: IValidationSchema) => {
+        if (result.errors.length > 0 || result.permissions.length > 0) {
+            trackEvent('export_import', {
+                props: {
+                    eventType: `validation fail`,
+                },
+            });
+        } else {
+            trackEvent('export_import', {
+                props: {
+                    eventType: `validation success`,
+                },
+            });
+        }
+        setValidationResult(result);
+    };
+
     useEffect(() => {
         validateImport({ environment, project, data: JSON.parse(payload) })
-            .then(setValidationResult)
+            .then(trackValidation)
             .catch(error => {
                 setValidJSON(false);
                 setToastData({

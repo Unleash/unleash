@@ -17,7 +17,8 @@ type CustomEvents =
     | 'message_banner'
     | 'hidden_environment'
     | 'suggest_tags'
-    | 'unknown_ui_error';
+    | 'unknown_ui_error'
+    | 'export_import';
 
 export const usePlausibleTracker = () => {
     const plausible = useContext(PlausibleContext);

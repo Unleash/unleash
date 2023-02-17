@@ -86,12 +86,6 @@ const createProject = async () => {
         description: '',
         id: DEFAULT_PROJECT,
     });
-    // await app.request
-    //     .post(`/api/admin/projects/${DEFAULT_PROJECT}/environments`)
-    //     .send({
-    //         DEFAULT_ENV,
-    //     })
-    //     .expect(200);
 };
 
 const newFeature = 'new_feature';

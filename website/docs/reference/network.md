@@ -1,10 +1,10 @@
 ---
-title: Network
+title: Network view
 ---
 
 :::info Availability
 
-The Unleash network view was released in Unleash 4.21 for our paid plans.
+The Network view was released in Unleash 4.21. It is available to Pro and Enterprise users.
 
 :::
 

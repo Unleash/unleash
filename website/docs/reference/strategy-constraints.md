@@ -182,13 +182,13 @@ This value can still be negated as explained in [the section on negating values]
 
 ## Constraint limitations (or "how many user IDs can I add to a constraint") {#limitations}
 
-When using a constraint operator that accepts a list of values, it might be tempting to add a large number of values to that list. However, we strongly advise you **not** to do that: Unleash is **not** a database, and is not intended to store large amounts of data. Instead you should try and find a different way to achieve what you want.
+When using a constraint operator that accepts a list of values, it might be tempting to add a large number of values to that list. However, we advise you **not** to do that: Unleash is not a database, and is not intended to store large amounts of data. Instead you should try and find a different way to achieve what you want.
 
-Because Unleash's server-side SDKs fetch the full feature toggle configuration from Unleash, every value that you add to that constraint value list will increase the payload size. For small numbers, this isn't an issue, but as the list grows, so will the payload, and so will the time and processing power used by the SDK to evaluate the feature.
-
-If you find yourself in this situation, try and think about whether there is another way to do what you want. For instance, instead of adding hundreds of user ids to the constraint value list, think about what properties those users share. Are they beta testers? Are they premium members? Are they employees?
+For instance, instead of adding hundreds of user ids to the constraint value list, think about what properties those users share. Are they beta testers? Are they premium members? Are they employees?
 
 Can you map their common feature into an [Unleash context](../reference/unleash-context) property instead and set the constraint on that? If they're beta testers, how about using a `betaTester` property? And likewise, for premium members, you could check to see if their `membership` is `premium`? And if they're employees, maybe you're better off checking whether their user ID ends with `@yourcompany.tld`?
+
+The **reason** why you should try and keep value lists small has to do with Unleash's evaluation model: Because Unleash's server-side SDKs fetch the full feature toggle configuration from Unleash, every value that you add to that constraint value list will increase the payload size. For small numbers, this isn't an issue, but as the list grows, so will the payload, and so will the time and processing power used by the SDK to evaluate the feature.
 
 ## Incompatibilities and undefined behavior {#incompatibilities}
 

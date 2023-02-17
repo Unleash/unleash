@@ -16,7 +16,7 @@
     "start:sandbox": "UNLEASH_API=https://sandbox.getunleash.io/ospro yarn run start",
     "start:demo2": "UNLEASH_API=https://sandbox.getunleash.io/ UNLEASH_BASE_PATH=/demo2/ yarn run start",
     "start:enterprise": "UNLEASH_API=https://unleash.herokuapp.com VITE_TEST_REDIRECT=true yarn run start",
-    "start:demo": "UNLEASH_BASE_PATH=/demo/ yarn start",
+    "start:demo": "UNLEASH_BASE_PATH=/demo/ UNLEASH_API=https://app.unleash-hosted.com/ yarn run start",
     "test": "tsc && vitest run",
     "test:snapshot": "yarn test -u",
     "test:watch": "vitest watch",

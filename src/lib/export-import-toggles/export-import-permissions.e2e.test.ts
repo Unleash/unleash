@@ -6,6 +6,7 @@ import dbInit, { ITestDb } from '../../test/e2e/helpers/database-init';
 import getLogger from '../../test/fixtures/no-logger';
 import {
     DEFAULT_PROJECT,
+    IContextFieldStore,
     IEnvironmentStore,
     IEventStore,
     IFeatureToggleStore,
@@ -22,6 +23,7 @@ let app: IUnleashTest;
 let db: ITestDb;
 let eventStore: IEventStore;
 let environmentStore: IEnvironmentStore;
+let contextFieldStore: IContextFieldStore;
 let projectStore: IProjectStore;
 let toggleStore: IFeatureToggleStore;
 let accessService: AccessService;
@@ -242,6 +244,7 @@ beforeAll(async () => {
     projectStore = db.stores.projectStore;
     toggleStore = db.stores.featureToggleStore;
     accessService = app.services.accessService;
+    contextFieldStore = db.stores.contextFieldStore;
 
     const roles = await accessService.getRootRoles();
     adminRole = roles.find((role) => role.name === RoleName.ADMIN);
@@ -261,6 +264,11 @@ beforeEach(async () => {
     await toggleStore.deleteAll();
     await projectStore.deleteAll();
     await environmentStore.deleteAll();
+    await contextFieldStore.deleteAll();
+
+    await contextFieldStore.deleteAll();
+    await loginAdminUser();
+    await createContextField({ name: 'appName' });
 });
 
 afterAll(async () => {

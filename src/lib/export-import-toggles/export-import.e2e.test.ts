@@ -7,6 +7,7 @@ import getLogger from '../../test/fixtures/no-logger';
 import {
     DEFAULT_PROJECT,
     FeatureToggleDTO,
+    IContextFieldStore,
     IEnvironmentStore,
     IEventStore,
     IFeatureToggleStore,
@@ -28,6 +29,7 @@ let app: IUnleashTest;
 let db: ITestDb;
 let eventStore: IEventStore;
 let environmentStore: IEnvironmentStore;
+let contextFieldStore: IContextFieldStore;
 let projectStore: IProjectStore;
 let toggleStore: IFeatureToggleStore;
 
@@ -170,6 +172,7 @@ beforeAll(async () => {
     eventStore = db.stores.eventStore;
     environmentStore = db.stores.environmentStore;
     projectStore = db.stores.projectStore;
+    contextFieldStore = db.stores.contextFieldStore;
     toggleStore = db.stores.featureToggleStore;
 });
 
@@ -178,6 +181,9 @@ beforeEach(async () => {
     await toggleStore.deleteAll();
     await projectStore.deleteAll();
     await environmentStore.deleteAll();
+
+    await contextFieldStore.deleteAll();
+    await createContextField({ name: 'appName' });
 });
 
 afterAll(async () => {

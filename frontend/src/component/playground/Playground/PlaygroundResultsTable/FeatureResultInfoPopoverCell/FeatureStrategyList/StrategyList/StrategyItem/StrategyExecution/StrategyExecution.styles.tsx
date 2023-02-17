@@ -5,5 +5,5 @@ export const StyledBoxSummary = styled(Box)(({ theme }) => ({
     height: 'auto',
     padding: theme.spacing(2, 3),
     borderRadius: theme.shape.borderRadiusMedium,
-    border: `1px solid ${theme.palette.dividerAlternative}`,
+    border: `1px solid ${theme.palette.divider}`,
 }));

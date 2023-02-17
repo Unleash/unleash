@@ -63,13 +63,24 @@ export default createTheme({
         tableRowHeightCompact: 56,
         tableRowHeightDense: 48,
     },
+
+
     palette: {
+        common: { // Used for text color
+            white: colors.grey[50],
+        },
+        text: {
+            primary: colors.grey[900],
+            secondary: colors.grey[800],
+            disabled: colors.grey[600],
+        },
         primary: {
             main: colors.purple[800],
             light: colors.purple[700],
             dark: colors.purple[900],
+            contrastText: colors.grey[50], // Color used for content when primary.main is used as a background
         },
-        secondary: {
+        secondary: { // Used for purple badges and puple light elements
             light: colors.purple[50],
             main: colors.purple[800],
             dark: colors.purple[900],
@@ -79,195 +90,238 @@ export default createTheme({
             light: colors.blue[50],
             main: colors.blue[500],
             dark: colors.blue[700],
+            contrastText: colors.grey[50], // Color used for content when info.main is used as a background
             border: colors.blue[200],
         },
         success: {
             light: colors.green[50],
             main: colors.green[600],
             dark: colors.green[800],
+            contrastText: colors.grey[50], // Color used for content when success.main is used as a background
             border: colors.green[300],
         },
         warning: {
             light: colors.orange[100],
             main: colors.orange[800],
             dark: colors.orange[900],
+            contrastText: colors.grey[50], // Color used for content when warning.main is used as a background
             border: colors.orange[500],
         },
         error: {
             light: colors.red[50],
             main: colors.red[700],
             dark: colors.red[800],
+            contrastText: colors.grey[50], // Color used for content when error.main is used as a background
             border: colors.red[300],
         },
-        neutral: {
+
+        /**
+         * Generic neutral palette color.
+         */
+        neutral: { // Used for grey badges and grey light elements
             light: colors.grey[100],
             main: colors.grey[700],
             dark: colors.grey[800],
             border: colors.grey[500],
         },
-        tertiary: {
-            light: colors.grey[200],
-            main: colors.grey[400],
-            dark: colors.grey[600],
-            background: 'white',
-            contrast: colors.grey[300],
+
+        background: {
+            paper: colors.grey[50],
+            default: colors.grey[50], // Defined value from MUI - Not used
+            application: colors.grey[300],
+            sidebar: colors.purple[800],
+            elevation1: colors.grey[100],
+            elevation2: colors.grey[200],
         },
-        divider: colors.grey[300],
-        dividerAlternative: colors.grey[400],
-        tableHeaderHover: colors.grey[400],
-        tableHeaderBackground: colors.grey[200],
-        tableHeaderColor: colors.grey[900],
-        formSidebarTextColor: colors.white,
-        highlight: '#FFEACC',
-        secondaryContainer: colors.grey[200],
-        contentWrapper: colors.grey[300],
-        headerBackground: colors.white,
-        footerBackground: colors.white,
-        formBackground: colors.white,
-        formSidebar: colors.purple[800],
-        featureMetaData: colors.purple[800],
-        codebox: 'rgba(32,32,33, 0.2)',
-        sidebarContainer: 'rgba(32,32,33, 0.2)',
-        playgroundBackground: colors.grey[200],
-        playgroundFormBackground: colors.grey[200],
-        standaloneBackground: colors.grey[300],
-        constraintAccordion: {
-            editBackground: '#F6F6FA',
-            background: colors.white,
-            operatorBackground: colors.grey[200],
-        },
-        projectCard: {
+        
+        action: { // Check if transparacy works, i used them
+            active: colors.grey[700],
             hover: colors.grey[100],
-            textColor: '#4A4599',
-        },
-        standaloneBannerGradient: {
-            from: colors.purple[900],
-            to: '#173341',
-        },
-        checkmarkBadge: colors.purple[800],
-        inputLabelBackground: colors.white,
-        featureStrategySegmentChipBackground: colors.purple[800],
-        featureSegmentSearchBackground: colors.purple[800],
-        dialogHeaderBackground: colors.purple[800],
-        dialogHeaderText: '#ffffffe6',
-        grey: colors.grey,
-        lightBorder: colors.grey[400],
-        text: {
-            primary: colors.grey[900],
-            secondary: colors.grey[800],
+            hoverOpacity: 0.04,
+            selected: colors.grey[200],
+            selectedOpacity: 0.08,
             disabled: colors.grey[600],
-            tertiaryContrast: '#fff',
+            disabledOpacity: 0.38,
+            disabledBackground: colors.grey[400],
+            focus: colors.grey[400],
+            focusOpacity: 0.12,
+            activatedOpacity: 0.12,
         },
-        code: {
-            main: '#0b8c8f',
-            diffAdd: '#3b6600',
-            diffSub: '#d11525',
-            diffNeutral: 'black',
-            edited: 'black',
+
+        divider: colors.grey[400],
+        // dividerAlternative: colors.grey[500],
+        // grey: colors.grey, //###CHECK what can be this?
+
+        /**
+         * Table colors.
+         */
+        table: {
+            headerColor: colors.grey[900], //New - Is needed? ###CHECK
+            headerBackground: colors.grey[200],
+            headerHover: colors.grey[300],
+            divider: colors.grey[300],
+            rowHover: colors.grey[100],
         },
-        activityIndicators: {
+
+        /**
+         * Text highlight effect color. Used when filtering/searching over content.
+         */
+        highlight: colors.orange[200],
+
+        /**
+         * Background color used for the API command in the sidebar
+         */
+        codebox: colors.grey[900.2], //###CHECK if we should use rgba colors
+
+        /**
+         * Gradient for the login page
+         */
+        loginGradient: {
+            from: colors.purple[800],
+            to: colors.purple[950],
+        },
+
+        /**
+         * Colors for event log output.
+         */
+        eventLog: {
+            diffAdd: colors.green[800],
+            diffSub: colors.red[800],
+            edited: colors.grey[900],
+        },
+
+        /**
+         * For 'Seen' column on feature toggles list and other.
+         */
+        seen: {
             unknown: colors.grey[100],
             recent: colors.green[100],
             inactive: colors.orange[200],
             abandoned: colors.red[200],
             primary: colors.purple[100],
         },
-        inactiveIcon: colors.grey[600],
     },
+
+
     components: {
+        // Links
         MuiLink: {
             styleOverrides: {
-                root: {
-                    color: colors.purple[900],
+                root: ({ theme }) => ({
+                    color: theme.palette.primary.dark,
                     '&:hover': {
                         textDecoration: 'none',
                     },
-                },
+                }),
             },
         },
+
+
+        // Breadcrumb
         MuiBreadcrumbs: {
             styleOverrides: {
-                root: {
-                    color: colors.grey[900],
+                root: ({ theme }) => ({
+                    color: theme.palette.text.primary,
                     fontSize: '0.875rem',
                     '& a': {
-                        color: colors.purple[900],
+                        color: theme.palette.primary.dark,
                         textDecoration: 'none',
                         '&:hover': {
                             textDecoration: 'underline',
                         },
                     },
-                },
+                }),
             },
         },
+
+
+        // Table 
+        // ############################################# CHECK THIS
+        // Is enough to have it here only? or we need it also on SortableTableHeader.tsx
         MuiTableHead: {
             styleOverrides: {
-                root: {
-                    background: 'transparent',
+                root: ({ theme }) => ({
+                    // background: 'transparent',
                     '& th': {
-                        background: colors.grey[200],
+                        height: theme.shape.tableRowHeightCompact,
+                        backgroundColor: theme.palette.table.headerBackground,
+                        border: 0,
+                        '&:first-of-type': {
+                            borderTopLeftRadius: theme.shape.borderRadiusMedium,
+                            borderBottomLeftRadius: theme.shape.borderRadiusMedium,
+                        },
+                        '&:last-of-type': {
+                            borderTopRightRadius: theme.shape.borderRadiusMedium,
+                            borderBottomRightRadius: theme.shape.borderRadiusMedium,
+                        },
                     },
-                },
+                }),
             },
         },
         MuiTableRow: {
             styleOverrides: {
-                root: {
-                    '&.MuiTableRow-hover:hover': {
-                        background: colors.grey[100],
+                root: ({ theme }) => ({
+                    '&.MuiTableRow-root:hover': { //Not all the tables have row hover background. This will add background color on row hover for all the tables
+                        background: theme.palette.table.rowHover, //overwrite action.hover
                     },
-                },
+                }),
             },
         },
         MuiTableCell: {
             styleOverrides: {
-                root: {
-                    borderBottomColor: colors.grey[300],
-                },
+                root: ({ theme }) => ({
+                    borderBottomColor: theme.palette.table.divider,
+                }),
             },
         },
+
+
+        // Alerts
         MuiAlert: {
             styleOverrides: {
-                root: {
-                    borderRadius: '8px',
+                root: ({ theme }) => ({
+                    borderRadius: theme.shape.borderRadiusMedium,
                     a: {
                         color: 'inherit',
                     },
                     '&.MuiAlert-standardInfo': {
-                        backgroundColor: colors.blue[50],
-                        color: colors.blue[700],
-                        border: `1px solid ${colors.blue[200]}`,
+                        backgroundColor: theme.palette.info.light,
+                        color: theme.palette.info.dark,
+                        border: `1px solid ${theme.palette.info.border}`,
                         '& .MuiAlert-icon': {
-                            color: colors.blue[500],
+                            color: theme.palette.info.main,
                         },
                     },
                     '&.MuiAlert-standardSuccess': {
-                        backgroundColor: colors.green[50],
-                        color: colors.green[800],
-                        border: `1px solid ${colors.green[300]}`,
+                        backgroundColor: theme.palette.success.light,
+                        color: theme.palette.success.dark,
+                        border: `1px solid ${theme.palette.success.border}`,
                         '& .MuiAlert-icon': {
-                            color: colors.green[500],
+                            color: theme.palette.success.main,
                         },
                     },
                     '&.MuiAlert-standardWarning': {
-                        backgroundColor: colors.orange[100],
-                        color: colors.orange[900],
-                        border: `1px solid ${colors.orange[500]}`,
+                        backgroundColor: theme.palette.warning.light,
+                        color: theme.palette.warning.dark,
+                        border: `1px solid ${theme.palette.warning.border}`,
                         '& .MuiAlert-icon': {
-                            color: colors.orange[800],
+                            color: theme.palette.warning.main,
                         },
                     },
                     '&.MuiAlert-standardError': {
-                        backgroundColor: colors.red[50],
-                        color: colors.red[800],
-                        border: `1px solid ${colors.red[300]}`,
+                        backgroundColor: theme.palette.error.light,
+                        color: theme.palette.error.dark,
+                        border: `1px solid ${theme.palette.error.border}`,
                         '& .MuiAlert-icon': {
-                            color: colors.red[700],
+                            color: theme.palette.error.main,
                         },
                     },
-                },
+                }),
             },
         },
+
+
+        // Horizontal menu tabs
         MuiTabs: {
             styleOverrides: {
                 root: ({ theme }) => ({
@@ -284,21 +338,21 @@ export default createTheme({
         MuiTab: {
             styleOverrides: {
                 root: ({ theme }) => ({
-                    color: colors.grey[900],
+                    color: theme.palette.text.primary,
                     fontSize: '1rem',
                     textTransform: 'none',
                     fontWeight: 400,
                     lineHeight: '1',
                     minHeight: '62px',
                     '&:hover': {
-                        backgroundColor: colors.grey[200],
+                        backgroundColor: theme.palette.background.elevation2, //try to use action.hover
                     },
                     '&.Mui-selected': {
-                        color: colors.grey[900],
+                        color: theme.palette.text.primary,
                         fontWeight: 700,
                     },
                     '& > span': {
-                        color: colors.purple[900],
+                        color: theme.palette.primary.main, //Based on this color is created the focus color/effect
                     },
                     [theme.breakpoints.down('md')]: {
                         padding: '12px 0px',
@@ -306,6 +360,8 @@ export default createTheme({
                 }),
             },
         },
+
+        // Constraint accordion / cards
         MuiAccordion: {
             styleOverrides: {
                 root: ({ theme }) => ({
@@ -327,23 +383,29 @@ export default createTheme({
                 },
             },
         },
+
+        // Project overview, switch disabled focus effect color
         MuiSwitch: {
             styleOverrides: {
-                switchBase: {
+                root: ({ theme }) => ({
                     zIndex: 1,
                     '&:not(.Mui-checked) .MuiTouchRipple-child': {
-                        color: colors.grey['500'],
+                        color: theme.palette.neutral.border,
                     },
-                },
+                }),
             },
         },
-        MuiIcon: {
-            styleOverrides: {
-                colorDisabled: {
-                    color: colors.grey[600],
-                },
-            },
-        },
+
+        //###CHECK is this used? i can't find it -> if yes update color
+        //###CHECK maybe on PRO/ENT?
+        // MuiIcon: { 
+        //     styleOverrides: {
+        //         colorDisabled: {
+        //             color: colors.grey[600],
+        //         },
+        //     },
+        // },
+        
         MuiMenuItem: {
             styleOverrides: {
                 root: {
@@ -353,6 +415,10 @@ export default createTheme({
                 },
             },
         },
+
+        // Chips customization - used on constraint cards/ Envrionments cards
+        // are these used in other places?
+        // Maybe we should use the badges from Nuno
         MuiChip: {
             styleOverrides: {
                 root: ({ ownerState, theme }) => ({
@@ -364,16 +430,16 @@ export default createTheme({
                             borderStyle: 'solid',
                             fontWeight: theme.typography.fontWeightBold,
                             fontSize: theme.typography.caption.fontSize,
-                            ...(ownerState.color === 'success' && {
-                                backgroundColor: colors.green[50],
+                            ...(ownerState.color === 'success' && { // constraint cards
+                                backgroundColor: 'red',
                                 borderColor: theme.palette.success.border,
                                 color: theme.palette.success.dark,
                             }),
-                            ...(ownerState.color === 'default' && {
-                                color: theme.palette.text.secondary,
+                            ...(ownerState.color === 'default' && { // environment cards
+                                color: 'blue',
                             }),
-                            ...(ownerState.color === 'error' && {
-                                color: theme.palette.error.dark,
+                            ...(ownerState.color === 'error' && { // dont know???
+                                color: 'green',
                                 background: theme.palette.error.light,
                                 borderColor: theme.palette.error.border,
                             }),
@@ -381,25 +447,31 @@ export default createTheme({
                 }),
             },
         },
+
+        // Inputs background - see if this is needed
         MuiInputBase: {
             styleOverrides: {
-                root: {
-                    backgroundColor: '#fff',
-                },
+                root: ({ theme }) => ({
+                    backgroundColor: theme.palette.background.paper,
+                }),
             },
         },
-        MuiPaper: {
-            styleOverrides: {
-                root: {
-                    backgroundColor: '#fff',
-                },
-            },
-        },
+
+        // overwrite for background.paper??? - We don't need it
+        // MuiPaper: {
+        //     styleOverrides: {
+        //         root: {
+        //             backgroundColor: '#fff',
+        //         },
+        //     },
+        // },
+
+        // Top menu text color
         MuiAppBar: {
             styleOverrides: {
-                root: {
-                    color: colors.black,
-                },
+                root: ({ theme }) => ({
+                    color: theme.palette.text.primary,
+                }),
             },
         },
     },

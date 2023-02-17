@@ -37,7 +37,7 @@ const StyledText = styled('p')(({ theme }) => ({
     padding: theme.spacing(2, 0, 0, 0),
     borderTopWidth: '1px',
     borderTopStyle: 'solid',
-    borderTopColor: theme.palette.dividerAlternative,
+    borderTopColor: theme.palette.divider,
     fontSize: theme.fontSizes.smallerBody,
     color: theme.palette.text.secondary,
 }));

@@ -55,7 +55,7 @@ const StyledAccordionDetails = styled(AccordionDetails, {
     shouldForwardProp: prop => prop !== 'enabled',
 })<{ enabled: boolean }>(({ theme, enabled }) => ({
     padding: theme.spacing(3),
-    background: theme.palette.secondaryContainer,
+    background: theme.palette.background.elevation2,
     borderBottomLeftRadius: theme.shape.borderRadiusLarge,
     borderBottomRightRadius: theme.shape.borderRadiusLarge,
     borderBottom: `4px solid ${

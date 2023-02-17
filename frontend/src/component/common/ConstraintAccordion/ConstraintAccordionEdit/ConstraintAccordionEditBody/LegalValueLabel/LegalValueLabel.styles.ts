@@ -12,6 +12,6 @@ export const useStyles = makeStyles()(theme => ({
     description: {
         lineHeight: 1.33,
         fontSize: theme.fontSizes.smallerBody,
-        color: theme.palette.grey[700],
+        color: theme.palette.action.active,
     },
 }));

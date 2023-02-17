@@ -15,7 +15,7 @@ const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     padding: theme.spacing(3),
-    border: `1px solid ${theme.palette.dividerAlternative}`,
+    border: `1px solid ${theme.palette.divider}`,
     borderRadius: theme.shape.borderRadiusLarge,
 }));
 

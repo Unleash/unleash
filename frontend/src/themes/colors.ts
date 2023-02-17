@@ -4,8 +4,6 @@
  * @see https://www.figma.com/file/qdwpPfuitJUNinm6mvmCmG/Unleash-application?node-id=7175%3A44590
  */
 export const colors = {
-    white: '#FFFFFF',
-    black: '#000000',
     grey: {
         900: '#202021',
         800: '#6E6E70',
@@ -17,8 +15,10 @@ export const colors = {
         200: '#F2F2F5',
         100: '#F7F7FA',
         50: '#FFFFFF',
+        900.2: 'rgba(32,32,33, 0.2)',
     },
     purple: {
+        950: '#4944a7',
         900: '#615BC2',
         800: '#6C65E5',
         700: '#817AFE',
@@ -28,7 +28,7 @@ export const colors = {
         300: '#BEBBF3',
         200: '#CECCF6',
         100: '#E4E3F9',
-        50: '#F1F0FC',
+        50:  '#F1F0FC',
     },
     red: {
         900: '#A6000E',

@@ -86,8 +86,8 @@ const StandaloneBanner: FC<IStandaloneBannerProps> = ({ title }) => {
 
     return (
         <StyledGradient
-            from={theme.palette.standaloneBannerGradient.from}
-            to={theme.palette.standaloneBannerGradient.to}
+            from={theme.palette.loginGradient.from}
+            to={theme.palette.loginGradient.to}
         >
             <StyledContainer>
                 <StyledTitle variant="h1">{title}</StyledTitle>

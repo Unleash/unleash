@@ -28,7 +28,7 @@ const MainLayoutContentWrapper = styled('main')(({ theme }) => ({
     overflow: 'auto', // prevent margin collapsing
     flex: 1,
     width: '100%',
-    backgroundColor: theme.palette.contentWrapper,
+    backgroundColor: theme.palette.background.application,
     position: 'relative',
 }));
 

@@ -29,26 +29,26 @@ const resolveBorder = (state: ChangeRequestState, theme: Theme) => {
         return `2px solid ${theme.palette.primary.main}`;
     }
 
-    return `1px solid ${theme.palette.tertiary.main}`;
+    return `1px solid ${theme.palette.divider}`;
 };
 
 const resolveIconColors = (state: ChangeRequestState, theme: Theme) => {
     if (state === 'Approved') {
         return {
             bgColor: theme.palette.success.main!,
-            svgColor: theme.palette.tertiary.background,
+            svgColor: theme.palette.background.paper,
         };
     }
 
     if (state === 'Applied') {
         return {
             bgColor: theme.palette.primary.main!,
-            svgColor: theme.palette.tertiary.background,
+            svgColor: theme.palette.background.paper,
         };
     }
 
     return {
-        bgColor: theme.palette.tableHeaderBackground,
+        bgColor: theme.palette.background.elevation2,
         svgColor: theme.palette.neutral.main!,
     };
 };

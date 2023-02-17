@@ -29,7 +29,7 @@ const NoItems: VFC = () => (
 
 const StyledValueContainer = styled(Box)(({ theme }) => ({
     padding: theme.spacing(2, 3),
-    border: `1px solid ${theme.palette.dividerAlternative}`,
+    border: `1px solid ${theme.palette.divider}`,
     borderRadius: theme.shape.borderRadiusMedium,
 }));
 

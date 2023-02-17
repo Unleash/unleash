@@ -8,7 +8,7 @@ const StyledInfoBox = styled('aside')(({ theme }) => ({
     padding: theme.spacing(4),
     height: '100%',
     borderRadius: theme.shape.borderRadiusLarge,
-    backgroundColor: theme.palette.secondaryContainer,
+    backgroundColor: theme.palette.background.elevation2,
 }));
 
 const StyledTitle = styled(Typography)(({ theme }) => ({
@@ -26,7 +26,7 @@ const StyledInfoLabel = styled(Typography)(({ theme }) => ({
 
 const StyledDivider = styled(Divider)(({ theme }) => ({
     margin: `${theme.spacing(2.5)} 0`,
-    borderColor: theme.palette.dividerAlternative,
+    borderColor: theme.palette.divider,
 }));
 interface IBillingInformationProps {
     instanceStatus: IInstanceStatus;

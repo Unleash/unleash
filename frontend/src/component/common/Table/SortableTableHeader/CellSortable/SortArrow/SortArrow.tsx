@@ -36,7 +36,7 @@ export const SortArrow: VFC<ISortArrowProps> = ({
                     <KeyboardArrowDown
                         sx={theme => ({
                             ...iconStyle(theme),
-                            color: theme.palette.tableHeaderColor,
+                            color: theme.palette.table.headerColor,
                         })}
                         className={className}
                         fontSize="inherit"
@@ -46,7 +46,7 @@ export const SortArrow: VFC<ISortArrowProps> = ({
                     <KeyboardArrowUp
                         sx={theme => ({
                             ...iconStyle(theme),
-                            color: theme.palette.tableHeaderColor,
+                            color: theme.palette.table.headerColor,
                         })}
                         className={className}
                         fontSize="inherit"

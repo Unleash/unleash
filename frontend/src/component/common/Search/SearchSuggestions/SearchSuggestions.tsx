@@ -38,12 +38,12 @@ const StyledFilterList = styled(FilterList)(({ theme }) => ({
 }));
 
 const StyledDivider = styled(Divider)(({ theme }) => ({
-    border: `1px dashed ${theme.palette.dividerAlternative}`,
+    border: `1px dashed ${theme.palette.divider}`,
     margin: theme.spacing(1.5, 0),
 }));
 
 const StyledCode = styled('span')(({ theme }) => ({
-    backgroundColor: theme.palette.secondaryContainer,
+    backgroundColor: theme.palette.background.elevation2,
     color: theme.palette.text.primary,
     padding: theme.spacing(0, 0.5),
     borderRadius: theme.spacing(0.5),

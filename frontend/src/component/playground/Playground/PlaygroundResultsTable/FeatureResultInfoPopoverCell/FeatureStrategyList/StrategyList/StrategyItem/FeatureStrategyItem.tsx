@@ -45,7 +45,7 @@ export const FeatureStrategyItem = ({
             <StrategyExecution
                 strategyResult={strategy}
                 input={input}
-                percentageFill={theme.palette.tertiary.light}
+                percentageFill={theme.palette.background.elevation2}
             />
         </StrategyItemContainer>
     );

@@ -57,7 +57,7 @@ export const InviteLinkBar: VFC = () => {
     return (
         <Box
             sx={{
-                backgroundColor: 'tertiary.background',
+                backgroundColor: 'background.paper',
                 py: 2,
                 px: 4,
                 mb: 2,

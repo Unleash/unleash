@@ -10,20 +10,20 @@ interface ISortableTableHeaderProps {
 }
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    '& > th': {
-        height: theme.shape.tableRowHeightCompact,
-        border: 0,
-        backgroundColor: theme.palette.tableHeaderBackground,
-        color: theme.palette.tableHeaderColor,
-        '&:first-of-type': {
-            borderTopLeftRadius: theme.shape.borderRadiusMedium,
-            borderBottomLeftRadius: theme.shape.borderRadiusMedium,
-        },
-        '&:last-of-type': {
-            borderTopRightRadius: theme.shape.borderRadiusMedium,
-            borderBottomRightRadius: theme.shape.borderRadiusMedium,
-        },
-    },
+    // ############################################# CHECK THIS
+    // '& > th': {
+    //     height: theme.shape.tableRowHeightCompact,
+    //     border: 0,
+    //     // backgroundColor: theme.palette.table.headerBackground,
+    //     '&:first-of-type': {
+    //         borderTopLeftRadius: theme.shape.borderRadiusMedium,
+    //         borderBottomLeftRadius: theme.shape.borderRadiusMedium,
+    //     },
+    //     '&:last-of-type': {
+    //         borderTopRightRadius: theme.shape.borderRadiusMedium,
+    //         borderBottomRightRadius: theme.shape.borderRadiusMedium,
+    //     },
+    // },
 }));
 
 export const SortableTableHeader: VFC<ISortableTableHeaderProps> = ({

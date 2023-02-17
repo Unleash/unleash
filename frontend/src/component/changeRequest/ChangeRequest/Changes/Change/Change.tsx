@@ -48,11 +48,11 @@ const StyledSingleChangeBox = styled(Box, {
         borderColor:
             $hasConflict || $isInConflictFeature
                 ? theme.palette.warning.border
-                : theme.palette.dividerAlternative,
+                : theme.palette.divider,
         borderTopColor:
             ($hasConflict || $isAfterWarning) && !$isInConflictFeature
                 ? theme.palette.warning.border
-                : theme.palette.dividerAlternative,
+                : theme.palette.divider,
     })
 );
 

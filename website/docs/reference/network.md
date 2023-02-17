@@ -26,6 +26,6 @@ Network traffic can help you identify misconfigured apps, surges in traffic or o
 ![Network traffic showing 3 sources and unregistered apps as unknown](/img/network-traffic.png)
 
 # Prerequisites
-This features uses a Prometheus-like API to query data produced by Unleash server. Our managed instances receive this a part of our service.
+This features uses a Prometheus-like API to query data produced by Unleash server [internal metrics](/reference/api/legacy/unleash/internal/prometheus). Our managed instances receive this a part of our service.
 
 It's most useful when having the toggle `responseTimeWithAppName` enabled (for hosted customers we enabled it for all customers), because it will allow you to identify the applications generating the traffic.

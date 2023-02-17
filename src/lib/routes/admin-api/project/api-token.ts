@@ -100,7 +100,7 @@ export class ProjectApiTokenController extends Controller {
                     requestBody: createRequestSchema('createApiTokenSchema'),
                     responses: {
                         201: resourceCreatedResponseSchema('apiTokenSchema'),
-                        409: emptyResponse,
+                        400: emptyResponse,
                     },
                 }),
             ],
@@ -167,7 +167,7 @@ export class ProjectApiTokenController extends Controller {
         } else {
             res.statusMessage =
                 'Project level tokens can only be created for one project';
-            res.status(409);
+            res.status(400);
         }
     }
 

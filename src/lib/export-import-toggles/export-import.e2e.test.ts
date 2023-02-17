@@ -16,7 +16,11 @@ import {
     IVariant,
 } from '../types';
 import { DEFAULT_ENV } from '../util';
-import { ContextFieldSchema, ImportTogglesSchema } from '../openapi';
+import {
+    ContextFieldSchema,
+    ImportTogglesSchema,
+    VariantsSchema,
+} from '../openapi';
 import User from '../types/user';
 import { IContextFieldDto } from '../types/stores/context-field-store';
 
@@ -420,31 +424,30 @@ const importToggles = (
 
 const defaultFeature = 'first_feature';
 
-const variants: ImportTogglesSchema['data']['featureEnvironments'][0]['variants'] =
-    [
-        {
-            name: 'variantA',
-            weight: 500,
-            payload: {
-                type: 'string',
-                value: 'payloadA',
-            },
-            overrides: [],
-            stickiness: 'default',
-            weightType: 'variable',
+const variants: VariantsSchema = [
+    {
+        name: 'variantA',
+        weight: 500,
+        payload: {
+            type: 'string',
+            value: 'payloadA',
         },
-        {
-            name: 'variantB',
-            weight: 500,
-            payload: {
-                type: 'string',
-                value: 'payloadB',
-            },
-            overrides: [],
-            stickiness: 'default',
-            weightType: 'variable',
+        overrides: [],
+        stickiness: 'default',
+        weightType: 'variable',
+    },
+    {
+        name: 'variantB',
+        weight: 500,
+        payload: {
+            type: 'string',
+            value: 'payloadB',
         },
-    ];
+        overrides: [],
+        stickiness: 'default',
+        weightType: 'variable',
+    },
+];
 const exportedFeature: ImportTogglesSchema['data']['features'][0] = {
     project: 'old_project',
     name: 'first_feature',

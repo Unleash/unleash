@@ -13,7 +13,7 @@ import {
     IUnleashStores,
     RoleName,
 } from '../types';
-import { ImportTogglesSchema } from '../openapi';
+import { ImportTogglesSchema, VariantsSchema } from '../openapi';
 import { IContextFieldDto } from '../types/stores/context-field-store';
 import { AccessService } from '../services';
 import { DEFAULT_ENV } from '../util';
@@ -92,31 +92,30 @@ const newFeature = 'new_feature';
 const archivedFeature = 'archived_feature';
 const existingFeature = 'existing_feature';
 
-const variants: ImportTogglesSchema['data']['featureEnvironments'][0]['variants'] =
-    [
-        {
-            name: 'variantA',
-            weight: 500,
-            payload: {
-                type: 'string',
-                value: 'payloadA',
-            },
-            overrides: [],
-            stickiness: 'default',
-            weightType: 'variable',
+const variants: VariantsSchema = [
+    {
+        name: 'variantA',
+        weight: 500,
+        payload: {
+            type: 'string',
+            value: 'payloadA',
         },
-        {
-            name: 'variantB',
-            weight: 500,
-            payload: {
-                type: 'string',
-                value: 'payloadB',
-            },
-            overrides: [],
-            stickiness: 'default',
-            weightType: 'variable',
+        overrides: [],
+        stickiness: 'default',
+        weightType: 'variable',
+    },
+    {
+        name: 'variantB',
+        weight: 500,
+        payload: {
+            type: 'string',
+            value: 'payloadB',
         },
-    ];
+        overrides: [],
+        stickiness: 'default',
+        weightType: 'variable',
+    },
+];
 const feature1: ImportTogglesSchema['data']['features'][0] = {
     project: 'old_project',
     name: archivedFeature,

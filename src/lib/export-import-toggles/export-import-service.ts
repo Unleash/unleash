@@ -28,6 +28,7 @@ import {
     UPDATE_FEATURE,
     UPDATE_FEATURE_ENVIRONMENT_VARIANTS,
     UPDATE_TAG_TYPE,
+    WithRequired,
 } from '../types';
 import {
     ExportResultSchema,
@@ -162,8 +163,8 @@ export default class ExportImportService {
         const errors = this.compileErrors(
             dto.project,
             unsupportedStrategies,
-            unsupportedContextFields,
             otherProjectFeatures,
+            unsupportedContextFields,
         );
         const warnings = this.compileWarnings(
             usedCustomStrategies,
@@ -224,24 +225,32 @@ export default class ExportImportService {
     }
 
     private async importStrategies(dto: ImportTogglesSchema, user: User) {
+        const hasFeatureName = (
+            featureStrategy: FeatureStrategySchema,
+        ): featureStrategy is WithRequired<
+            FeatureStrategySchema,
+            'featureName'
+        > => Boolean(featureStrategy.featureName);
         await Promise.all(
-            dto.data.featureStrategies?.map((featureStrategy) =>
-                this.featureToggleService.createStrategy(
-                    {
-                        name: featureStrategy.name,
-                        constraints: featureStrategy.constraints,
-                        parameters: featureStrategy.parameters,
-                        segments: featureStrategy.segments,
-                        sortOrder: featureStrategy.sortOrder,
-                    },
-                    {
-                        featureName: featureStrategy.featureName,
-                        environment: dto.environment,
-                        projectId: dto.project,
-                    },
-                    extractUsernameFromUser(user),
+            dto.data.featureStrategies
+                ?.filter(hasFeatureName)
+                .map((featureStrategy) =>
+                    this.featureToggleService.createStrategy(
+                        {
+                            name: featureStrategy.name,
+                            constraints: featureStrategy.constraints,
+                            parameters: featureStrategy.parameters,
+                            segments: featureStrategy.segments,
+                            sortOrder: featureStrategy.sortOrder,
+                        },
+                        {
+                            featureName: featureStrategy.featureName,
+                            environment: dto.environment,
+                            projectId: dto.project,
+                        },
+                        extractUsernameFromUser(user),
+                    ),
                 ),
-            ),
         );
     }
 
@@ -268,7 +277,7 @@ export default class ExportImportService {
     }
 
     private async importContextFields(dto: ImportTogglesSchema, user: User) {
-        const newContextFields = await this.getNewContextFields(dto);
+        const newContextFields = (await this.getNewContextFields(dto)) || [];
         await Promise.all(
             newContextFields.map((contextField) =>
                 this.contextService.createContextField(
@@ -297,9 +306,12 @@ export default class ExportImportService {
     }
 
     private async importToggleVariants(dto: ImportTogglesSchema, user: User) {
-        const featureEnvsWithVariants = dto.data.featureEnvironments?.filter(
-            (featureEnvironment) => featureEnvironment.variants?.length > 0,
-        );
+        const featureEnvsWithVariants =
+            dto.data.featureEnvironments?.filter(
+                (featureEnvironment) =>
+                    Array.isArray(featureEnvironment.variants) &&
+                    featureEnvironment.variants.length > 0,
+            ) || [];
         await Promise.all(
             featureEnvsWithVariants.map((featureEnvironment) =>
                 this.featureToggleService.saveVariantsOnEnv(
@@ -335,7 +347,10 @@ export default class ExportImportService {
         const unsupportedContextFields = await this.getUnsupportedContextFields(
             dto,
         );
-        if (unsupportedContextFields.length > 0) {
+        if (
+            Array.isArray(unsupportedContextFields) &&
+            unsupportedContextFields.length > 0
+        ) {
             throw new BadDataError(
                 `Context fields with errors: ${unsupportedContextFields
                     .map((field) => field.name)
@@ -387,9 +402,10 @@ export default class ExportImportService {
 
     private async removeArchivedFeatures(dto: ImportTogglesSchema) {
         const archivedFeatures = await this.getArchivedFeatures(dto);
-        const featureTags = dto.data.featureTags.filter(
-            (tag) => !archivedFeatures.includes(tag.featureName),
-        );
+        const featureTags =
+            dto.data.featureTags?.filter(
+                (tag) => !archivedFeatures.includes(tag.featureName),
+            ) || [];
         return {
             ...dto,
             data: {
@@ -397,12 +413,14 @@ export default class ExportImportService {
                 features: dto.data.features.filter(
                     (feature) => !archivedFeatures.includes(feature.name),
                 ),
-                featureEnvironments: dto.data.featureEnvironments.filter(
+                featureEnvironments: dto.data.featureEnvironments?.filter(
                     (environment) =>
+                        environment.featureName &&
                         !archivedFeatures.includes(environment.featureName),
                 ),
                 featureStrategies: dto.data.featureStrategies.filter(
                     (strategy) =>
+                        strategy.featureName &&
                         !archivedFeatures.includes(strategy.featureName),
                 ),
                 featureTags,
@@ -429,8 +447,8 @@ export default class ExportImportService {
     private compileErrors(
         projectName: string,
         strategies: FeatureStrategySchema[],
-        contextFields: IContextFieldDto[],
         otherProjectFeatures: string[],
+        contextFields?: IContextFieldDto[],
     ) {
         const errors: ImportTogglesValidateItemSchema[] = [];
 
@@ -441,7 +459,7 @@ export default class ExportImportService {
                 affectedItems: strategies.map((strategy) => strategy.name),
             });
         }
-        if (contextFields.length > 0) {
+        if (Array.isArray(contextFields) && contextFields.length > 0) {
             errors.push({
                 message:
                     'We detected the following context fields that do not have matching legal values with the imported ones:',
@@ -566,7 +584,7 @@ export default class ExportImportService {
         if (newTagTypes.length > 0) {
             permissions.push(UPDATE_TAG_TYPE);
         }
-        if (newContextFields.length > 0) {
+        if (Array.isArray(newContextFields) && newContextFields.length > 0) {
             permissions.push(CREATE_CONTEXT_FIELD);
         }
 
@@ -584,9 +602,12 @@ export default class ExportImportService {
             permissions.push(CREATE_FEATURE_STRATEGY);
         }
 
-        const featureEnvsWithVariants = dto.data.featureEnvironments?.filter(
-            (featureEnvironment) => featureEnvironment.variants?.length > 0,
-        );
+        const featureEnvsWithVariants =
+            dto.data.featureEnvironments?.filter(
+                (featureEnvironment) =>
+                    Array.isArray(featureEnvironment.variants) &&
+                    featureEnvironment.variants.length > 0,
+            ) || [];
 
         if (featureEnvsWithVariants.length > 0) {
             permissions.push(UPDATE_FEATURE_ENVIRONMENT_VARIANTS);
@@ -627,9 +648,10 @@ export default class ExportImportService {
         const existingTagTypes = (await this.tagTypeService.getAll()).map(
             (tagType) => tagType.name,
         );
-        const newTagTypes = dto.data.tagTypes?.filter(
-            (tagType) => !existingTagTypes.includes(tagType.name),
-        );
+        const newTagTypes =
+            dto.data.tagTypes?.filter(
+                (tagType) => !existingTagTypes.includes(tagType.name),
+            ) || [];
         const uniqueTagTypes = [
             ...new Map(newTagTypes.map((item) => [item.name, item])).values(),
         ];
@@ -681,10 +703,10 @@ export default class ExportImportService {
         const filteredContextFields = contextFields.filter(
             (field) =>
                 featureEnvironments.some((featureEnv) =>
-                    featureEnv.variants.some(
+                    featureEnv.variants?.some(
                         (variant) =>
                             variant.stickiness === field.name ||
-                            variant.overrides.some(
+                            variant.overrides?.some(
                                 (override) =>
                                     override.contextName === field.name,
                             ),
@@ -701,7 +723,7 @@ export default class ExportImportService {
         );
         const filteredSegments = segments.filter((segment) =>
             featureStrategies.some((strategy) =>
-                strategy.segments.includes(segment.id),
+                strategy.segments?.includes(segment.id),
             ),
         );
         const filteredTagTypes = tagTypes.filter((tagType) =>

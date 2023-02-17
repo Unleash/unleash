@@ -78,7 +78,7 @@ const checkPermission = (
     if (
         p.permission === permission &&
         (p.project === project || p.project === '*') &&
-        p.environment == null
+        !Boolean(p.environment)
     ) {
         return true;
     }

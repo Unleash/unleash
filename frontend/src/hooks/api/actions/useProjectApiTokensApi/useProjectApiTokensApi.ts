@@ -26,7 +26,7 @@ const useProjectApiTokensApi = () => {
     };
 
     const createToken = async (newToken: IApiTokenCreate, project: string) => {
-        const path = `api/admin/project/${project}/api-tokens`;
+        const path = `api/admin/projects/${project}/api-tokens`;
         const req = createRequest(path, {
             method: 'POST',
             body: JSON.stringify(newToken),

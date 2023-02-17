@@ -1,9 +1,9 @@
 import {
     IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../helpers/test-helper';
-import dbInit, { ITestDb } from '../../helpers/database-init';
-import getLogger from '../../../fixtures/no-logger';
+} from '../../test/e2e/helpers/test-helper';
+import dbInit, { ITestDb } from '../../test/e2e/helpers/database-init';
+import getLogger from '../../test/fixtures/no-logger';
 import {
     FeatureToggleDTO,
     IEnvironmentStore,
@@ -14,13 +14,10 @@ import {
     IStrategyConfig,
     IVariant,
 } from 'lib/types';
-import { DEFAULT_ENV } from '../../../../lib/util';
-import {
-    ContextFieldSchema,
-    ImportTogglesSchema,
-} from '../../../../lib/openapi';
-import User from '../../../../lib/types/user';
-import { IContextFieldDto } from '../../../../lib/types/stores/context-field-store';
+import { DEFAULT_ENV } from '../util';
+import { ContextFieldSchema, ImportTogglesSchema } from '../openapi';
+import User from '../types/user';
+import { IContextFieldDto } from '../types/stores/context-field-store';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -425,7 +422,7 @@ const importToggles = (
 
 const defaultFeature = 'first_feature';
 const defaultProject = 'default';
-const defaultEnvironment = 'defalt';
+const defaultEnvironment = 'default';
 
 const variants: ImportTogglesSchema['data']['featureEnvironments'][0]['variants'] =
     [

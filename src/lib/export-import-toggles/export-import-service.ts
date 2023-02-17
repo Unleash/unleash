@@ -558,23 +558,47 @@ export default class ExportImportService {
         dto: ImportTogglesSchema,
         user: User,
     ): Promise<string[]> {
-        const requiredImportPermission = [
-            CREATE_FEATURE,
-            UPDATE_FEATURE,
-            DELETE_FEATURE_STRATEGY,
-            CREATE_FEATURE_STRATEGY,
-            UPDATE_FEATURE_ENVIRONMENT_VARIANTS,
-        ];
         const [newTagTypes, newContextFields] = await Promise.all([
             this.getNewTagTypes(dto),
             this.getNewContextFields(dto),
         ]);
-        const permissions = [...requiredImportPermission];
+        const permissions = [UPDATE_FEATURE];
         if (newTagTypes.length > 0) {
             permissions.push(UPDATE_TAG_TYPE);
         }
         if (newContextFields.length > 0) {
             permissions.push(CREATE_CONTEXT_FIELD);
+        }
+
+        const strategiesExistForFeatures =
+            await this.importTogglesStore.strategiesExistForFeatures(
+                dto.data.features.map((feature) => feature.name),
+                dto.environment,
+            );
+
+        if (strategiesExistForFeatures) {
+            permissions.push(DELETE_FEATURE_STRATEGY);
+        }
+
+        if (dto.data.featureStrategies.length > 0) {
+            permissions.push(CREATE_FEATURE_STRATEGY);
+        }
+
+        const featureEnvsWithVariants = dto.data.featureEnvironments?.filter(
+            (featureEnvironment) => featureEnvironment.variants?.length > 0,
+        );
+
+        if (featureEnvsWithVariants.length > 0) {
+            permissions.push(UPDATE_FEATURE_ENVIRONMENT_VARIANTS);
+        }
+
+        const existingFeatures =
+            await this.importTogglesStore.getExistingFeatures(
+                dto.data.features.map((feature) => feature.name),
+            );
+
+        if (existingFeatures.length < dto.data.features.length) {
+            permissions.push(CREATE_FEATURE);
         }
 
         const displayPermissions =

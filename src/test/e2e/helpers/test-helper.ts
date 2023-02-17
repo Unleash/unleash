@@ -70,8 +70,9 @@ export async function setupAppWithCustomConfig(
 export async function setupAppWithAuth(
     stores: IUnleashStores,
     customOptions?: any,
+    db?: Db,
 ): Promise<IUnleashTest> {
-    return createApp(stores, IAuthType.DEMO, undefined, customOptions);
+    return createApp(stores, IAuthType.DEMO, undefined, customOptions, db);
 }
 
 export async function setupAppWithCustomAuth(

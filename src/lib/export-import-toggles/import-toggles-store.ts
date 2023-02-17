@@ -4,7 +4,7 @@ import { Knex } from 'knex';
 const T = {
     featureStrategies: 'feature_strategies',
     features: 'features',
-    feature_tag: 'feature_tag',
+    featureTag: 'feature_tag',
 };
 export class ImportTogglesStore implements IImportTogglesStore {
     private db: Knex;
@@ -35,11 +35,30 @@ export class ImportTogglesStore implements IImportTogglesStore {
             .del();
     }
 
+    async strategiesExistForFeatures(
+        featureNames: string[],
+        environment: string,
+    ): Promise<boolean> {
+        const result = await this.db.raw(
+            'SELECT EXISTS (SELECT 1 FROM feature_strategies WHERE environment = ? and feature_name in  (' +
+                featureNames.map(() => '?').join(',') +
+                ')) AS present',
+            [environment, ...featureNames],
+        );
+        const { present } = result.rows[0];
+        return present;
+    }
+
     async getArchivedFeatures(featureNames: string[]): Promise<string[]> {
         const rows = await this.db(T.features)
             .select('name')
             .whereNot('archived_at', null)
             .whereIn('name', featureNames);
+        return rows.map((row) => row.name);
+    }
+
+    async getExistingFeatures(featureNames: string[]): Promise<string[]> {
+        const rows = await this.db(T.features).whereIn('name', featureNames);
         return rows.map((row) => row.name);
     }
 
@@ -54,7 +73,7 @@ export class ImportTogglesStore implements IImportTogglesStore {
         return rows.map((row) => ({ name: row.name, project: row.project }));
     }
 
-    async deleteTagsForFeatures(tags: string[]): Promise<void> {
-        return this.db(T.feature_tag).whereIn('feature_name', tags).del();
+    async deleteTagsForFeatures(features: string[]): Promise<void> {
+        return this.db(T.featureTag).whereIn('feature_name', features).del();
     }
 }

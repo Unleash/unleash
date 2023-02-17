@@ -525,14 +525,10 @@ const defaultImportPayload: ImportTogglesSchema = {
 const getFeature = async (feature: string) =>
     app.request.get(`/api/admin/features/${feature}`).expect(200);
 
-const getFeatureEnvironment = (
-    project: string,
-    feature: string,
-    environment: string,
-) =>
+const getFeatureEnvironment = (feature: string) =>
     app.request
         .get(
-            `/api/admin/projects/${DEFAULT_PROJECT}/features/${feature}/environments/${environment}`,
+            `/api/admin/projects/${DEFAULT_PROJECT}/features/${feature}/environments/${DEFAULT_ENV}`,
         )
         .expect(200);
 
@@ -559,9 +555,7 @@ test('import features to existing project and environment', async () => {
     });
 
     const { body: importedFeatureEnvironment } = await getFeatureEnvironment(
-        DEFAULT_PROJECT,
         defaultFeature,
-        DEFAULT_ENV,
     );
     expect(importedFeatureEnvironment).toMatchObject({
         name: defaultFeature,
@@ -597,9 +591,7 @@ test('importing same JSON should work multiple times in a row', async () => {
     });
 
     const { body: importedFeatureEnvironment } = await getFeatureEnvironment(
-        DEFAULT_PROJECT,
         defaultFeature,
-        DEFAULT_ENV,
     );
 
     expect(importedFeatureEnvironment).toMatchObject({

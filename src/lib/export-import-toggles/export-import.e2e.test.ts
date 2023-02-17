@@ -655,7 +655,9 @@ test('reject import with unsupported strategies', async () => {
         ...defaultImportPayload,
         data: {
             ...defaultImportPayload.data,
-            featureStrategies: [{ name: 'customStrategy' }],
+            featureStrategies: [
+                { name: 'customStrategy', featureName: 'featureName' },
+            ],
         },
     };
 

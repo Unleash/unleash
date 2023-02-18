@@ -133,7 +133,7 @@
     "stoppable": "^1.1.0",
     "ts-toolbelt": "^9.6.0",
     "type-is": "^1.6.18",
-    "unleash-client": "3.18.0",
+    "unleash-client": "3.18.1",
     "use-deep-compare-effect": "^1.8.1",
     "uuid": "^9.0.0"
   },

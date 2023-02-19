@@ -114,7 +114,6 @@ Here's some of the fantastic work our community has done to make Unleash work in
 - Elixir ([afontaine/unleash_ex](https://gitlab.com/afontaine/unleash_ex))
 - Kotlin ([silvercar/unleash-client-kotlin](https://github.com/silvercar/unleash-client-kotlin))
 - Laravel - PHP ([mikefrancis/laravel-unleash](https://github.com/mikefrancis/laravel-unleash))
-- NestJS - Node.js ([pmb0/nestjs-unleash](https://github.com/pmb0/nestjs-unleash))
 - PHP ([minds/unleash-client-php](https://gitlab.com/minds/unleash-client-php))
 - PHP - Symfony ([Stogon/unleash-bundle](https://github.com/Stogon/unleash-bundle))
 - React Native / Expo ([nunogois/proxy-client-react-native](https://github.com/nunogois/proxy-client-react-native))

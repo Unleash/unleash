@@ -14,7 +14,7 @@ import {
     FEATURE_PROJECT_CHANGE,
     IEvent,
     FEATURE_VARIANTS_UPDATED,
-} from '../types/events';
+} from '../types';
 
 export interface FeatureEventFormatter {
     format: (event: IEvent) => string;
@@ -75,7 +75,22 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
         const feature = this.generateFeatureLink(event);
         let strategyText: string = '';
         if (FEATURE_STRATEGY_UPDATE === type) {
-            strategyText = `by updating strategy ${data?.name} in *${environment}*`;
+            if (data.name === 'flexibleRollout') {
+                const { rollout: oldRollout, stickiness: oldStickiness } =
+                    preData.parameters;
+                const { rollout, stickiness } = data.parameters;
+                const stickinessText =
+                    oldStickiness === stickiness
+                        ? ''
+                        : ` from ${oldStickiness} stickiness to ${stickiness}`;
+                const rolloutText =
+                    oldRollout === rollout
+                        ? ''
+                        : ` from ${oldRollout}% to ${rollout}%`;
+                strategyText = `by updating strategy ${data?.name} in *${environment}*${stickinessText}${rolloutText}`;
+            } else {
+                strategyText = `by updating strategy ${data?.name} in *${environment}*`;
+            }
         } else if (FEATURE_STRATEGY_ADD === type) {
             strategyText = `by adding strategy ${data?.name} in *${environment}*`;
         } else if (FEATURE_STRATEGY_REMOVE === type) {

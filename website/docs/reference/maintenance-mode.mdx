@@ -8,7 +8,14 @@ Maintenance mode was introduced in Unleash 4.21.0.
 
 :::
 
-Unleash maintenance mode is a feature that allows administrators to switch Unleash into a read-only "use-only" mode, with the exception that clients can still send metrics. While maintenance mode is enabled, users in unleash will be unable to change any configuration settings in the admin panel, and the APIs will not allow you to persist any changes. This feature is particularly useful during important events when any accidental or deliberate changes to the feature/strategy configuration could lead to issues.
+Unleash maintenance mode is a feature that lets administrators put Unleash into a mostly read-only mode. While Unleash is in maintenance mode: 
+- Unleash users **can not change any configuration settings**
+- Unleash's APIs will not allow you to persist any changes
+
+However, any metrics sent to Unleash from client SDKs are still processed, so this mode does not have any effect on client SDKs.
+
+Maintenance mode is particularly useful during important events when any accidental or deliberate changes the feature/strategy configurations could lead to issues.
+
 ## Maintenance mode configuration
 
 You can easily toggle maintenance mode on and off in the Unleash admin view by navigating to the "Maintenance" section.

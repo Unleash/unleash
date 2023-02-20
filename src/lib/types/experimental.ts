@@ -23,8 +23,8 @@ const flags = {
         true,
     ),
     responseTimeWithAppName: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_RESPONSE_TIME_WITH_APP_NAME,
-        false,
+        process.env.UNLEASH_RESPONSE_TIME_WITH_APP_NAME,
+        true,
     ),
     proxyReturnAllToggles: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PROXY_RETURN_ALL_TOGGLES,

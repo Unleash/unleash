@@ -207,4 +207,5 @@ export interface IUnleashConfig {
     clientFeatureCaching: IClientCachingOption;
     accessControlMaxAge: number;
     prometheusApi?: string;
+    responseTimeWithAppNames: boolean;
 }

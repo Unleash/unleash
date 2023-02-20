@@ -463,6 +463,11 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
 
     const clientFeatureCaching = loadClientCachingOptions(options);
 
+    // This delegates on the flag resolver which uses an environment variable to define its value and if not set, defaults to the external resolver. Ultimately, it's assumed to be true
+    const responseTimeWithAppName = flagResolver.isEnabled(
+        'responseTimeWithAppName',
+    );
+
     const prometheusApi = options.prometheusApi || process.env.PROMETHEUS_API;
     return {
         db,
@@ -495,6 +500,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         clientFeatureCaching,
         accessControlMaxAge,
         prometheusApi,
+        responseTimeWithAppName,
     };
 }
 

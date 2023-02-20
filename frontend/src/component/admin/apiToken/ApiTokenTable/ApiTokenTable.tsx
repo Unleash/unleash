@@ -247,18 +247,30 @@ export const ApiTokenTable = ({
         </PageContent>
     );
 };
-const tokenDescriptions: { [index: string]: { label: string; title: string } } =
-    {
-        client: {
-            label: 'CLIENT',
-            title: 'Connect server-side SDK or Unleash Proxy',
-        },
-        frontend: {
-            label: 'FRONTEND',
-            title: 'Connect web and mobile SDK',
-        },
-        admin: {
-            label: 'ADMIN',
-            title: 'Full access for managing Unleash',
-        },
-    };
+//TODO fix me - remove duplicate keys
+const tokenDescriptions = {
+    client: {
+        label: 'CLIENT',
+        title: 'Connect server-side SDK or Unleash Proxy',
+    },
+    frontend: {
+        label: 'FRONTEND',
+        title: 'Connect web and mobile SDK',
+    },
+    admin: {
+        label: 'ADMIN',
+        title: 'Full access for managing Unleash',
+    },
+    CLIENT: {
+        label: 'CLIENT',
+        title: 'Connect server-side SDK or Unleash Proxy',
+    },
+    FRONTEND: {
+        label: 'FRONTEND',
+        title: 'Connect web and mobile SDK',
+    },
+    ADMIN: {
+        label: 'ADMIN',
+        title: 'Full access for managing Unleash',
+    },
+};

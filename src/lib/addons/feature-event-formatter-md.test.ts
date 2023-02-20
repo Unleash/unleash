@@ -2,6 +2,7 @@ import {
     IEvent,
     FEATURE_STRATEGY_UPDATE,
     FEATURE_STRATEGY_ADD,
+    FEATURE_STRATEGY_REMOVE,
 } from '../types';
 
 import { FeatureEventFormatterMd } from './feature-event-formatter-md';
@@ -167,6 +168,27 @@ const testCases: [string, IEvent, string][] = [
             environment: 'production',
         },
         'user@company.com updated *[new-feature](unleashUrl/projects/my-other-project/features/new-feature)* in project *my-other-project* by adding strategy flexibleRollout in *production*',
+    ],
+    [
+        'when strategy removed',
+        {
+            id: 918,
+            type: FEATURE_STRATEGY_REMOVE,
+            createdBy: 'user@company.com',
+            createdAt: new Date('2022-06-01T10:03:00.229Z'),
+            data: null,
+            preData: {
+                id: '9591090e-acb0-4088-8958-21faaeb7147d',
+                name: 'default',
+                parameters: {},
+                constraints: [],
+            },
+            tags: [],
+            featureName: 'new-feature',
+            project: 'my-other-project',
+            environment: 'production',
+        },
+        'user@company.com updated *[new-feature](unleashUrl/projects/my-other-project/features/new-feature)* in project *my-other-project* by removing strategy default in *production*',
     ],
 ];
 

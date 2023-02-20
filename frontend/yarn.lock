@@ -2749,17 +2749,17 @@
     "@codemirror/state" "^6.0.0"
     "@codemirror/view" "^6.0.0"
 
-"@uiw/codemirror-theme-duotone@4.19.8":
-  version "4.19.8"
-  resolved "https://registry.yarnpkg.com/@uiw/codemirror-theme-duotone/-/codemirror-theme-duotone-4.19.8.tgz#2bd860b07ae8e7e18759ba46686eafbe6c816545"
-  integrity sha512-SJkjyKxU2Nazv6uEctvRdz62/ZQ8rBP4xtXrjF/zcjOdWmx2ecUAGn/j5Euw5V55Dr74yIQFs0L+GB5UTHCHDA==
+"@uiw/codemirror-theme-duotone@4.19.9":
+  version "4.19.9"
+  resolved "https://registry.yarnpkg.com/@uiw/codemirror-theme-duotone/-/codemirror-theme-duotone-4.19.9.tgz#85c88801fa6a97b0b0ba9c17f21b1bc373a77a6e"
+  integrity sha512-UbC1jZRYZaWFbw5UDUfU57Emvtc3ZXpI6t0Uw7GiqZH0WKfJA1Y7mZtrZNaJxV9ua/78SHL4CflidVajwZcdmQ==
   dependencies:
-    "@uiw/codemirror-themes" "4.19.8"
+    "@uiw/codemirror-themes" "4.19.9"
 
-"@uiw/codemirror-themes@4.19.8":
-  version "4.19.8"
-  resolved "https://registry.yarnpkg.com/@uiw/codemirror-themes/-/codemirror-themes-4.19.8.tgz#464eaf449fe3dd58a8d2d56a1d10bb1fc98a9e48"
-  integrity sha512-k+0molX6YuQZ7vYymS5DEl3NcHxVE4VP4J0nB7RBnzLrhDwT2K8R5ie7J2eH+4bpppIK1ZZdZ6Mie7U48dH5dQ==
+"@uiw/codemirror-themes@4.19.9":
+  version "4.19.9"
+  resolved "https://registry.yarnpkg.com/@uiw/codemirror-themes/-/codemirror-themes-4.19.9.tgz#988876213a2e350244ac2a0d479ebb792afbe94d"
+  integrity sha512-PH3hl1w42z7GXe/zoD9gSadOGBWyKPl7vHm/8V1PUuHXT21+neyfRc7v0xPwb05pGP6ExfbmPi78y4+g6cHopg==
   dependencies:
     "@codemirror/language" "^6.0.0"
     "@codemirror/state" "^6.0.0"

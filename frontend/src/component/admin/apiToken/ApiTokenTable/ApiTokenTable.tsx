@@ -26,8 +26,6 @@ import { HighlightCell } from 'component/common/Table/cells/HighlightCell/Highli
 import { Search } from 'component/common/Search/Search';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
-import { Route, Routes } from 'react-router-dom';
-import { ProjectApiTokenCreate } from './ProjectApiTokenCreate';
 
 const hiddenColumnsSmall = ['Icon', 'createdAt'];
 const hiddenColumnsCompact = ['Icon', 'project', 'seenAt'];
@@ -246,17 +244,6 @@ export const ApiTokenTable = ({
                     />
                 }
             />
-            <ConditionallyRender
-                condition={Boolean(filterForProject)}
-                show={
-                    <Routes>
-                        <Route
-                            path="create"
-                            element={<ProjectApiTokenCreate />}
-                        />
-                    </Routes>
-                }
-            />
         </PageContent>
     );
 };
@@ -274,7 +261,7 @@ const tokenDescriptions = {
         label: 'ADMIN',
         title: 'Full access for managing Unleash',
     },
-    CLiENT: {
+    CLIENT: {
         label: 'CLIENT',
         title: 'Connect server-side SDK or Unleash Proxy',
     },

@@ -7,32 +7,23 @@ import useApiTokensApi from 'hooks/api/actions/useApiTokensApi/useApiTokensApi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
 import { useApiTokenForm } from 'component/admin/apiToken/ApiTokenForm/useApiTokenForm';
-import {
-    CREATE_API_TOKEN,
-    CREATE_PROJECT_API_TOKEN,
-} from 'component/providers/AccessProvider/permissions';
+import { CREATE_API_TOKEN } from 'component/providers/AccessProvider/permissions';
 import { ConfirmToken } from '../ConfirmToken/ConfirmToken';
 import { scrollToTop } from 'component/common/util';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { GO_BACK } from 'constants/navigate';
 import { useApiTokens } from 'hooks/api/getters/useApiTokens/useApiTokens';
-import useProjectApiTokensApi from 'hooks/api/actions/useProjectApiTokensApi/useProjectApiTokensApi';
 import { TokenInfo } from '../ApiTokenForm/TokenInfo/TokenInfo';
 import { TokenTypeSelector } from '../ApiTokenForm/TokenTypeSelector/TokenTypeSelector';
 import { ProjectSelector } from '../ApiTokenForm/ProjectSelector/ProjectSelector';
 import { EnvironmentSelector } from '../ApiTokenForm/EnvironmentSelector/EnvironmentSelector';
 
 const pageTitle = 'Create API token';
-
 interface ICreateApiTokenProps {
     modal?: boolean;
-    project?: string;
 }
-export const CreateApiToken = ({
-    modal = false,
-    project,
-}: ICreateApiTokenProps) => {
+export const CreateApiToken = ({ modal = false }: ICreateApiTokenProps) => {
     const { setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
     const navigate = useNavigate();
@@ -52,22 +43,16 @@ export const CreateApiToken = ({
         isValid,
         errors,
         clearErrors,
-    } = useApiTokenForm(project);
+    } = useApiTokenForm();
 
-    const { createToken, loading: globalLoading } = useApiTokensApi();
-    const { createToken: createProjectToken, loading: projectLoading } =
-        useProjectApiTokensApi();
+    const { createToken, loading } = useApiTokensApi();
     const { refetch } = useApiTokens();
 
     usePageTitle(pageTitle);
 
-    const PATH = Boolean(project)
-        ? `api/admin/project/${project}/api-tokens`
-        : 'api/admin/api-tokens';
-    const permission = Boolean(project)
-        ? CREATE_PROJECT_API_TOKEN
-        : CREATE_API_TOKEN;
-    const loading = globalLoading || projectLoading;
+    const PATH = `api/admin/api-tokens`;
+
+    const permission = CREATE_API_TOKEN;
 
     const handleSubmit = async (e: Event) => {
         e.preventDefault();
@@ -76,23 +61,15 @@ export const CreateApiToken = ({
         }
         try {
             const payload = getApiTokenPayload();
-            if (project) {
-                await createProjectToken(payload, project)
-                    .then(res => res.json())
-                    .then(api => {
-                        scrollToTop();
-                        setToken(api.secret);
-                        setShowConfirm(true);
-                    });
-            } else {
-                await createToken(payload)
-                    .then(res => res.json())
-                    .then(api => {
-                        scrollToTop();
-                        setToken(api.secret);
-                        setShowConfirm(true);
-                    });
-            }
+
+            await createToken(payload)
+                .then(res => res.json())
+                .then(api => {
+                    scrollToTop();
+                    setToken(api.secret);
+                    setShowConfirm(true);
+                    refetch();
+                });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }
@@ -100,7 +77,6 @@ export const CreateApiToken = ({
 
     const closeConfirm = () => {
         setShowConfirm(false);
-        refetch();
         navigate(GO_BACK);
     };
 

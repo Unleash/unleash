@@ -4,11 +4,11 @@ title: Network view
 
 :::info Availability
 
-The Network view was released in Unleash 4.21. It is available to Pro and Enterprise users.
+The network view was released in Unleash 4.21. It is available to Pro and Enterprise users.
 
 :::
 
-The **Network** page presents 2 different views of how your applications are connected to Unleash. A simplified view of the connected instances, and a line graph showing the change over time of the different sources of traffic. 
+The **network** page presents 2 different views of how your applications are connected to Unleash. A simplified view of the connected instances, and a line graph showing the change over time of the different sources of traffic. 
 
 
 This should help you understand if there is some misconfiguration in some of your applications or if there is a recent surge in traffic in some of them. 

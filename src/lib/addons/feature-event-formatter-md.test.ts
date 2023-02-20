@@ -1,4 +1,8 @@
-import { IEvent, FEATURE_STRATEGY_UPDATE } from '../types';
+import {
+    IEvent,
+    FEATURE_STRATEGY_UPDATE,
+    FEATURE_STRATEGY_ADD,
+} from '../types';
 
 import { FeatureEventFormatterMd } from './feature-event-formatter-md';
 
@@ -138,6 +142,31 @@ const testCases: [string, IEvent, string][] = [
             environment: 'production',
         },
         'user@company.com updated *[new-feature](unleashUrl/projects/my-other-project/features/new-feature)* in project *my-other-project* by updating strategy flexibleRollout in *production*',
+    ],
+    [
+        'when strategy added',
+        {
+            id: 919,
+            type: FEATURE_STRATEGY_ADD,
+            createdBy: 'user@company.com',
+            createdAt: new Date('2022-06-01T10:03:08.290Z'),
+            data: {
+                id: '3f4bf713-696c-43a4-8ce7-d6c607108858',
+                name: 'flexibleRollout',
+                constraints: [],
+                parameters: {
+                    groupId: 'new-feature',
+                    rollout: '67',
+                    stickiness: 'default',
+                },
+            },
+            preData: null,
+            tags: [],
+            featureName: 'new-feature',
+            project: 'my-other-project',
+            environment: 'production',
+        },
+        'user@company.com updated *[new-feature](unleashUrl/projects/my-other-project/features/new-feature)* in project *my-other-project* by adding strategy flexibleRollout in *production*',
     ],
 ];
 

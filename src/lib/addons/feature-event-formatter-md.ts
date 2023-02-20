@@ -1,19 +1,19 @@
 import {
-    FEATURE_CREATED,
-    FEATURE_UPDATED,
     FEATURE_ARCHIVED,
-    FEATURE_STALE_ON,
-    FEATURE_STRATEGY_UPDATE,
-    FEATURE_STRATEGY_ADD,
-    FEATURE_ENVIRONMENT_ENABLED,
-    FEATURE_REVIVED,
-    FEATURE_STALE_OFF,
+    FEATURE_CREATED,
     FEATURE_ENVIRONMENT_DISABLED,
-    FEATURE_STRATEGY_REMOVE,
+    FEATURE_ENVIRONMENT_ENABLED,
     FEATURE_METADATA_UPDATED,
     FEATURE_PROJECT_CHANGE,
-    IEvent,
+    FEATURE_REVIVED,
+    FEATURE_STALE_OFF,
+    FEATURE_STALE_ON,
+    FEATURE_STRATEGY_ADD,
+    FEATURE_STRATEGY_REMOVE,
+    FEATURE_STRATEGY_UPDATE,
+    FEATURE_UPDATED,
     FEATURE_VARIANTS_UPDATED,
+    IEvent,
 } from '../types';
 
 export interface FeatureEventFormatter {
@@ -71,32 +71,38 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
     }
 
     generateStrategyChangeText(event: IEvent): string {
-        const { createdBy, environment, project, data, preData, type } = event;
+        const { createdBy, environment, project, data, preData } = event;
         const feature = this.generateFeatureLink(event);
-        let strategyText: string = '';
-        if (FEATURE_STRATEGY_UPDATE === type) {
-            if (data.name === 'flexibleRollout') {
-                const { rollout: oldRollout, stickiness: oldStickiness } =
-                    preData.parameters;
-                const { rollout, stickiness } = data.parameters;
-                const stickinessText =
-                    oldStickiness === stickiness
-                        ? ''
-                        : ` from ${oldStickiness} stickiness to ${stickiness}`;
-                const rolloutText =
-                    oldRollout === rollout
-                        ? ''
-                        : ` from ${oldRollout}% to ${rollout}%`;
-                strategyText = `by updating strategy ${data?.name} in *${environment}*${stickinessText}${rolloutText}`;
-            } else {
-                strategyText = `by updating strategy ${data?.name} in *${environment}*`;
-            }
-        } else if (FEATURE_STRATEGY_ADD === type) {
-            strategyText = `by adding strategy ${data?.name} in *${environment}*`;
-        } else if (FEATURE_STRATEGY_REMOVE === type) {
-            strategyText = `by removing strategy ${preData?.name} in *${environment}*`;
+        let strategyText: string;
+        if (data.name === 'flexibleRollout') {
+            const { rollout: oldRollout, stickiness: oldStickiness } =
+                preData.parameters;
+            const { rollout, stickiness } = data.parameters;
+            const stickinessText =
+                oldStickiness === stickiness
+                    ? ''
+                    : ` from ${oldStickiness} stickiness to ${stickiness}`;
+            const rolloutText =
+                oldRollout === rollout
+                    ? ''
+                    : ` from ${oldRollout}% to ${rollout}%`;
+            strategyText = `by updating strategy ${data?.name} in *${environment}*${stickinessText}${rolloutText}`;
+        } else {
+            strategyText = `by updating strategy ${data?.name} in *${environment}*`;
         }
         return `${createdBy} updated *${feature}* in project *${project}* ${strategyText}`;
+    }
+
+    generateStrategyRemoveText(event: IEvent): string {
+        const { createdBy, environment, project, preData } = event;
+        const feature = this.generateFeatureLink(event);
+        return `${createdBy} updated *${feature}* in project *${project}* by removing strategy ${preData?.name} in *${environment}*`;
+    }
+
+    generateStrategyAddText(event: IEvent): string {
+        const { createdBy, environment, project, data } = event;
+        const feature = this.generateFeatureLink(event);
+        return `${createdBy} updated *${feature}* in project *${project}* by adding strategy ${data?.name} in *${environment}*`;
     }
 
     generateMetadataText(event: IEvent): string {
@@ -153,8 +159,10 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
             case FEATURE_ENVIRONMENT_DISABLED:
             case FEATURE_ENVIRONMENT_ENABLED:
                 return this.generateEnvironmentToggleText(event);
-            case FEATURE_STRATEGY_ADD:
             case FEATURE_STRATEGY_REMOVE:
+                return this.generateStrategyRemoveText(event);
+            case FEATURE_STRATEGY_ADD:
+                return this.generateStrategyAddText(event);
             case FEATURE_STRATEGY_UPDATE:
                 return this.generateStrategyChangeText(event);
             case FEATURE_METADATA_UPDATED:

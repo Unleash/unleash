@@ -1,5 +1,4 @@
-import { Chip, styled } from '@mui/material';
-import { Badge } from '../Badge/Badge';
+import { Badge } from 'component/common/Badge/Badge';
 
 interface IStatusChip {
     stale: boolean;
@@ -21,10 +20,7 @@ export const FeatureStatusChip = ({
 
     return (
         <div data-loading style={{ marginLeft: '8px' }}>
-            <Badge
-                color={stale ? 'neutral' : "secondary"}
-                title={title}
-            >
+            <Badge color={stale ? 'neutral' : 'secondary'} title={title}>
                 {value}
             </Badge>
         </div>

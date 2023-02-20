@@ -16,6 +16,7 @@ import {
     parseParameterStrings,
 } from 'utils/parseParameter';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
+import { Badge } from 'component/common/Badge/Badge';
 
 interface IStrategyExecutionProps {
     strategy: IFeatureStrategyPayload;
@@ -72,13 +73,8 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
                                 />
                             </Box>
                             <div>
-                                <Chip
-                                    color="success"
-                                    variant="outlined"
-                                    size="small"
-                                    label={`${percentage}%`}
-                                />{' '}
-                                of your base{' '}
+                                <Badge color="success">{percentage}%</Badge> of
+                                your base{' '}
                                 {constraints.length > 0
                                     ? 'who match constraints'
                                     : ''}{' '}
@@ -167,12 +163,7 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
                             <div>
                                 {nameItem}
                                 {isSetTo}
-                                <Chip
-                                    color="success"
-                                    variant="outlined"
-                                    size="small"
-                                    label={`${percentage}%`}
-                                />
+                                <Badge color="success">{percentage}%</Badge>
                             </div>
                         </StyledValueContainer>
                     ) : null;
@@ -187,16 +178,15 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
                                 text={name}
                             />
                             {isSetTo}
-                            <Chip
+                            <Badge
                                 color={
                                     parameters[name] === 'true'
                                         ? 'success'
                                         : 'error'
                                 }
-                                variant="outlined"
-                                size="small"
-                                label={parameters[name]}
-                            />
+                            >
+                                {parameters[name]}
+                            </Badge>
                         </StyledValueContainer>
                     ) : null;
 
@@ -266,13 +256,7 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
         strategy.name === 'default' && (
             <>
                 <StyledValueContainer sx={{ width: '100%' }}>
-                    The standard strategy is{' '}
-                    <Chip
-                        variant="outlined"
-                        size="small"
-                        color="success"
-                        label="ON"
-                    />{' '}
+                    The standard strategy is <Badge color="success">ON</Badge>{' '}
                     for all users.
                 </StyledValueContainer>
             </>

@@ -63,9 +63,9 @@ export default createTheme({
         tableRowHeightDense: 48,
     },
 
-
     palette: {
-        common: { // Used for text color
+        common: {
+            // Used for text color
             white: colors.grey[50],
         },
         text: {
@@ -79,7 +79,8 @@ export default createTheme({
             dark: colors.purple[900],
             contrastText: colors.grey[50], // Color used for content when primary.main is used as a background
         },
-        secondary: { // Used for purple badges and puple light elements
+        secondary: {
+            // Used for purple badges and puple light elements
             light: colors.purple[50],
             main: colors.purple[800],
             dark: colors.purple[900],
@@ -117,7 +118,8 @@ export default createTheme({
         /**
          * Generic neutral palette color.
          */
-        neutral: { // Used for grey badges and grey light elements
+        neutral: {
+            // Used for grey badges and grey light elements
             light: colors.grey[100],
             main: colors.grey[700],
             dark: colors.grey[800],
@@ -132,8 +134,9 @@ export default createTheme({
             elevation1: colors.grey[100],
             elevation2: colors.grey[200],
         },
-        
-        action: { // Check if transparacy works, i used them
+
+        action: {
+            // Check if transparacy works, i used them
             active: colors.grey[700],
             hover: colors.grey[100],
             hoverOpacity: 0.04,
@@ -201,7 +204,6 @@ export default createTheme({
         },
     },
 
-
     components: {
         // Links
         MuiLink: {
@@ -214,7 +216,6 @@ export default createTheme({
                 }),
             },
         },
-
 
         // Breadcrumb
         MuiBreadcrumbs: {
@@ -233,8 +234,7 @@ export default createTheme({
             },
         },
 
-
-        // Table 
+        // Table
         // ############################################# CHECK THIS
         // Is enough to have it here only? or we need it also on SortableTableHeader.tsx
         MuiTableHead: {
@@ -247,11 +247,14 @@ export default createTheme({
                         border: 0,
                         '&:first-of-type': {
                             borderTopLeftRadius: theme.shape.borderRadiusMedium,
-                            borderBottomLeftRadius: theme.shape.borderRadiusMedium,
+                            borderBottomLeftRadius:
+                                theme.shape.borderRadiusMedium,
                         },
                         '&:last-of-type': {
-                            borderTopRightRadius: theme.shape.borderRadiusMedium,
-                            borderBottomRightRadius: theme.shape.borderRadiusMedium,
+                            borderTopRightRadius:
+                                theme.shape.borderRadiusMedium,
+                            borderBottomRightRadius:
+                                theme.shape.borderRadiusMedium,
                         },
                     },
                 }),
@@ -260,7 +263,8 @@ export default createTheme({
         MuiTableRow: {
             styleOverrides: {
                 root: ({ theme }) => ({
-                    '&.MuiTableRow-root:hover': { //Not all the tables have row hover background. This will add background color on row hover for all the tables
+                    '&.MuiTableRow-root:hover': {
+                        //Not all the tables have row hover background. This will add background color on row hover for all the tables
                         background: theme.palette.table.rowHover, //overwrite action.hover
                     },
                 }),
@@ -273,7 +277,6 @@ export default createTheme({
                 }),
             },
         },
-
 
         // Alerts
         MuiAlert: {
@@ -318,7 +321,6 @@ export default createTheme({
                 }),
             },
         },
-
 
         // Horizontal menu tabs
         MuiTabs: {
@@ -397,14 +399,14 @@ export default createTheme({
 
         //###CHECK is this used? i can't find it -> if yes update color
         //###CHECK maybe on PRO/ENT?
-        // MuiIcon: { 
+        // MuiIcon: {
         //     styleOverrides: {
         //         colorDisabled: {
         //             color: colors.grey[600],
         //         },
         //     },
         // },
-        
+
         MuiMenuItem: {
             styleOverrides: {
                 root: {
@@ -418,6 +420,7 @@ export default createTheme({
         // Chips customization - used on constraint cards/ Envrionments cards
         // are these used in other places?
         // Maybe we should use the badges from Nuno
+        // Nuno: I think we can now safely delete this
         MuiChip: {
             styleOverrides: {
                 root: ({ ownerState, theme }) => ({
@@ -429,15 +432,18 @@ export default createTheme({
                             borderStyle: 'solid',
                             fontWeight: theme.typography.fontWeightBold,
                             fontSize: theme.typography.caption.fontSize,
-                            ...(ownerState.color === 'success' && { // constraint cards
+                            ...(ownerState.color === 'success' && {
+                                // constraint cards
                                 backgroundColor: 'red',
                                 borderColor: theme.palette.success.border,
                                 color: theme.palette.success.dark,
                             }),
-                            ...(ownerState.color === 'default' && { // environment cards
+                            ...(ownerState.color === 'default' && {
+                                // environment cards
                                 color: 'blue',
                             }),
-                            ...(ownerState.color === 'error' && { // dont know???
+                            ...(ownerState.color === 'error' && {
+                                // dont know???
                                 color: 'green',
                                 background: theme.palette.error.light,
                                 borderColor: theme.palette.error.border,

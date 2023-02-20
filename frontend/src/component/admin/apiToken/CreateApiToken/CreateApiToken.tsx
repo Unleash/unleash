@@ -107,13 +107,7 @@ export const CreateApiToken = ({ modal = false }: ICreateApiTokenProps) => {
                 handleSubmit={handleSubmit}
                 handleCancel={handleCancel}
                 mode="Create"
-                actions={
-                    <CreateButton
-                        name="token"
-                        permission={permission}
-                        projectId={project}
-                    />
-                }
+                actions={<CreateButton name="token" permission={permission} />}
             >
                 <TokenInfo
                     username={username}

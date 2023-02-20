@@ -17,29 +17,20 @@ import { IContextFieldStore, IUnleashStores } from '../types/stores';
 import { ISegmentStore } from '../types/stores/segment-store';
 import { ExportQuerySchema } from '../openapi/spec/export-query-schema';
 import {
-    CREATE_CONTEXT_FIELD,
-    CREATE_FEATURE,
-    CREATE_FEATURE_STRATEGY,
-    DELETE_FEATURE_STRATEGY,
     FEATURES_EXPORTED,
     FEATURES_IMPORTED,
     IFlagResolver,
     IUnleashServices,
-    UPDATE_FEATURE,
-    UPDATE_FEATURE_ENVIRONMENT_VARIANTS,
-    UPDATE_TAG_TYPE,
     WithRequired,
 } from '../types';
 import {
     ExportResultSchema,
     FeatureStrategySchema,
-    ImportTogglesValidateItemSchema,
     ImportTogglesValidateSchema,
 } from '../openapi';
 import { ImportTogglesSchema } from '../openapi/spec/import-toggles-schema';
 import User from '../types/user';
-import { IContextFieldDto } from '../types/stores/context-field-store';
-import { BadDataError, InvalidOperationError } from '../error';
+import { BadDataError } from '../error';
 import { extractUsernameFromUser } from '../util';
 import {
     AccessService,
@@ -51,6 +42,8 @@ import {
 } from '../services';
 import { isValidField } from './import-context-validation';
 import { IImportTogglesStore } from './import-toggles-store-type';
+import { ImportPermissionsService } from './import-permissions-service';
+import { ImportValidationMessages } from './import-validation-messages';
 
 export default class ExportImportService {
     private logger: Logger;
@@ -86,6 +79,8 @@ export default class ExportImportService {
     private tagTypeService: TagTypeService;
 
     private featureTagService: FeatureTagService;
+
+    private importPermissionsService: ImportPermissionsService;
 
     constructor(
         stores: Pick<
@@ -137,6 +132,12 @@ export default class ExportImportService {
         this.accessService = accessService;
         this.tagTypeService = tagTypeService;
         this.featureTagService = featureTagService;
+        this.importPermissionsService = new ImportPermissionsService(
+            this.importTogglesStore,
+            this.accessService,
+            this.tagTypeService,
+            this.contextService,
+        );
         this.logger = getLogger('services/state-service.js');
     }
 
@@ -157,20 +158,29 @@ export default class ExportImportService {
             this.getUnsupportedContextFields(dto),
             this.getArchivedFeatures(dto),
             this.getOtherProjectFeatures(dto),
-            this.getMissingPermissions(dto, user),
+            this.importPermissionsService.getMissingPermissions(
+                dto,
+                user,
+                'regular',
+            ),
         ]);
 
-        const errors = this.compileErrors(
+        const errors = ImportValidationMessages.compileErrors(
             dto.project,
             unsupportedStrategies,
-            otherProjectFeatures,
             unsupportedContextFields,
+            [],
+            otherProjectFeatures,
+            false,
         );
-        const warnings = this.compileWarnings(
+        const warnings = ImportValidationMessages.compileWarnings(
             usedCustomStrategies,
             archivedFeatures,
         );
-        const permissions = this.compilePermissionErrors(missingPermissions);
+        const permissions =
+            ImportValidationMessages.compilePermissionErrors(
+                missingPermissions,
+            );
 
         return {
             errors,
@@ -185,7 +195,11 @@ export default class ExportImportService {
         await Promise.all([
             this.verifyStrategies(cleanedDto),
             this.verifyContextFields(cleanedDto),
-            this.verifyPermissions(dto, user),
+            this.importPermissionsService.verifyPermissions(
+                dto,
+                user,
+                'regular',
+            ),
             this.verifyFeatures(dto),
         ]);
         await this.createToggles(cleanedDto, user);
@@ -359,15 +373,6 @@ export default class ExportImportService {
         }
     }
 
-    private async verifyPermissions(dto: ImportTogglesSchema, user: User) {
-        const missingPermissions = await this.getMissingPermissions(dto, user);
-        if (missingPermissions.length > 0) {
-            throw new InvalidOperationError(
-                'You are missing permissions to import',
-            );
-        }
-    }
-
     private async verifyFeatures(dto: ImportTogglesSchema) {
         const otherProjectFeatures = await this.getOtherProjectFeatures(dto);
         if (otherProjectFeatures.length > 0) {
@@ -444,75 +449,6 @@ export default class ExportImportService {
         }
     }
 
-    private compileErrors(
-        projectName: string,
-        strategies: FeatureStrategySchema[],
-        otherProjectFeatures: string[],
-        contextFields?: IContextFieldDto[],
-    ) {
-        const errors: ImportTogglesValidateItemSchema[] = [];
-
-        if (strategies.length > 0) {
-            errors.push({
-                message:
-                    'We detected the following custom strategy in the import file that needs to be created first:',
-                affectedItems: strategies.map((strategy) => strategy.name),
-            });
-        }
-        if (Array.isArray(contextFields) && contextFields.length > 0) {
-            errors.push({
-                message:
-                    'We detected the following context fields that do not have matching legal values with the imported ones:',
-                affectedItems: contextFields.map(
-                    (contextField) => contextField.name,
-                ),
-            });
-        }
-        if (otherProjectFeatures.length > 0) {
-            errors.push({
-                message: `You cannot import a features that already exist in other projects. You already have the following features defined outside of project ${projectName}:`,
-                affectedItems: otherProjectFeatures,
-            });
-        }
-
-        return errors;
-    }
-
-    private compileWarnings(
-        usedCustomStrategies: string[],
-        archivedFeatures: string[],
-    ) {
-        const warnings: ImportTogglesValidateItemSchema[] = [];
-        if (usedCustomStrategies.length > 0) {
-            warnings.push({
-                message:
-                    'The following strategy types will be used in import. Please make sure the strategy type parameters are configured as in source environment:',
-                affectedItems: usedCustomStrategies,
-            });
-        }
-        if (archivedFeatures.length > 0) {
-            warnings.push({
-                message:
-                    'The following features will not be imported as they are currently archived. To import them, please unarchive them first:',
-                affectedItems: archivedFeatures,
-            });
-        }
-        return warnings;
-    }
-
-    private compilePermissionErrors(missingPermissions: string[]) {
-        const errors: ImportTogglesValidateItemSchema[] = [];
-        if (missingPermissions.length > 0) {
-            errors.push({
-                message:
-                    'We detected you are missing the following permissions:',
-                affectedItems: missingPermissions,
-            });
-        }
-
-        return errors;
-    }
-
     private async getUnsupportedStrategies(
         dto: ImportTogglesSchema,
     ): Promise<FeatureStrategySchema[]> {
@@ -570,80 +506,6 @@ export default class ExportImportService {
         return otherProjectsFeatures.map(
             (it) => `${it.name} (in project ${it.project})`,
         );
-    }
-
-    private async getMissingPermissions(
-        dto: ImportTogglesSchema,
-        user: User,
-    ): Promise<string[]> {
-        const [
-            newTagTypes,
-            newContextFields,
-            strategiesExistForFeatures,
-            featureEnvsWithVariants,
-            existingFeatures,
-        ] = await Promise.all([
-            this.getNewTagTypes(dto),
-            this.getNewContextFields(dto),
-            this.importTogglesStore.strategiesExistForFeatures(
-                dto.data.features.map((feature) => feature.name),
-                dto.environment,
-            ),
-            dto.data.featureEnvironments?.filter(
-                (featureEnvironment) =>
-                    Array.isArray(featureEnvironment.variants) &&
-                    featureEnvironment.variants.length > 0,
-            ) || Promise.resolve([]),
-            this.importTogglesStore.getExistingFeatures(
-                dto.data.features.map((feature) => feature.name),
-            ),
-        ]);
-
-        const permissions = [UPDATE_FEATURE];
-        if (newTagTypes.length > 0) {
-            permissions.push(UPDATE_TAG_TYPE);
-        }
-
-        if (Array.isArray(newContextFields) && newContextFields.length > 0) {
-            permissions.push(CREATE_CONTEXT_FIELD);
-        }
-
-        if (strategiesExistForFeatures) {
-            permissions.push(DELETE_FEATURE_STRATEGY);
-        }
-
-        if (dto.data.featureStrategies.length > 0) {
-            permissions.push(CREATE_FEATURE_STRATEGY);
-        }
-
-        if (featureEnvsWithVariants.length > 0) {
-            permissions.push(UPDATE_FEATURE_ENVIRONMENT_VARIANTS);
-        }
-
-        if (existingFeatures.length < dto.data.features.length) {
-            permissions.push(CREATE_FEATURE);
-        }
-
-        const displayPermissions =
-            await this.importTogglesStore.getDisplayPermissions(permissions);
-
-        const results = await Promise.all(
-            displayPermissions.map((permission) =>
-                this.accessService
-                    .hasPermission(
-                        user,
-                        permission.name,
-                        dto.project,
-                        dto.environment,
-                    )
-                    .then(
-                        (hasPermission) => [permission, hasPermission] as const,
-                    ),
-            ),
-        );
-        return results
-            .filter(([, hasAccess]) => !hasAccess)
-            .map(([permission]) => permission.displayName);
     }
 
     private async getNewTagTypes(dto: ImportTogglesSchema) {

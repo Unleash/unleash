@@ -1,7 +1,7 @@
 import { GO_BACK } from 'constants/navigate';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { useNavigate } from 'react-router-dom';
-import { CreateProjectApiTokenForm } from './CreateProjectApiTokenFORM';
+import { CreateProjectApiTokenForm } from './CreateProjectApiTokenForm';
 
 export const CreateProjectApiToken = () => {
     const navigate = useNavigate();

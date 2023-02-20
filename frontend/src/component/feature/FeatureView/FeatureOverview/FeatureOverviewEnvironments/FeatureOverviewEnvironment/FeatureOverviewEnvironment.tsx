@@ -22,6 +22,7 @@ import { FEATURE_ENVIRONMENT_ACCORDION } from 'utils/testIds';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { FeatureStrategyIcons } from 'component/feature/FeatureStrategy/FeatureStrategyIcons/FeatureStrategyIcons';
 import { useGlobalLocalStorage } from 'hooks/useGlobalLocalStorage';
+import { Badge } from 'component/common/Badge/Badge';
 
 interface IFeatureOverviewEnvironmentProps {
     env: IFeatureEnvironment;
@@ -162,12 +163,12 @@ const FeatureOverviewEnvironment = ({
                                     <ConditionallyRender
                                         condition={!env.enabled}
                                         show={
-                                            <Chip
-                                                size="small"
-                                                variant="outlined"
-                                                label="Disabled"
+                                            <Badge
+                                                color="neutral"
                                                 sx={{ ml: 1 }}
-                                            />
+                                            >
+                                                Disabled
+                                            </Badge>
                                         }
                                     />
                                 </StyledHeaderTitle>

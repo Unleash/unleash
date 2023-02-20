@@ -329,6 +329,7 @@ module.exports = {
                         'reference/technical-debt',
                         'reference/unleash-context',
                         'reference/change-requests',
+                        'reference/maintenance-mode',
                     ],
                 },
                 'generated/unleash-edge',

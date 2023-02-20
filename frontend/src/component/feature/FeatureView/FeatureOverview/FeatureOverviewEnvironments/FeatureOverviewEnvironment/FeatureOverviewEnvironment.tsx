@@ -3,7 +3,6 @@ import {
     AccordionDetails,
     AccordionSummary,
     Box,
-    Chip,
     styled,
 } from '@mui/material';
 import { ExpandMore } from '@mui/icons-material';

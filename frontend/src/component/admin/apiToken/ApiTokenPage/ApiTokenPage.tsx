@@ -43,7 +43,7 @@ export const ApiTokenPage = () => {
             <RemoveApiTokenButton
                 token={props.row.original}
                 permission={DELETE_API_TOKEN}
-                remove={async () => {
+                onRemove={async () => {
                     await deleteToken(props.row.original.secret);
                     refetch();
                 }}

@@ -122,18 +122,19 @@ export const useApiTokenTable = (
     };
 };
 
-const tokenDescriptions: { [index: string]: { label: string; title: string } } =
-    {
-        client: {
-            label: 'CLIENT',
-            title: 'Connect server-side SDK or Unleash Proxy',
-        },
-        frontend: {
-            label: 'FRONTEND',
-            title: 'Connect web and mobile SDK',
-        },
-        admin: {
-            label: 'ADMIN',
-            title: 'Full access for managing Unleash',
-        },
-    };
+const tokenDescriptions: {
+    [key in 'client' | 'frontend' | 'admin']: { label: string; title: string };
+} = {
+    client: {
+        label: 'CLIENT',
+        title: 'Connect server-side SDK or Unleash Proxy',
+    },
+    frontend: {
+        label: 'FRONTEND',
+        title: 'Connect web and mobile SDK',
+    },
+    admin: {
+        label: 'ADMIN',
+        title: 'Full access for managing Unleash',
+    },
+};

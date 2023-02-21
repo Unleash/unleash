@@ -67,18 +67,16 @@ export const ProjectApiAccess = () => {
                 token={props.row.original}
                 permission={DELETE_PROJECT_API_TOKEN}
                 project={projectId}
-                remove={async () => {
+                onRemove={async () => {
                     await deleteProjectToken(
                         props.row.original.secret,
                         projectId
                     );
-                    refetchProjectTokens();
-                }}
-                track={() =>
                     trackEvent('project_api_tokens', {
                         props: { eventType: 'api_key_deleted' },
-                    })
-                }
+                    });
+                    refetchProjectTokens();
+                }}
             />
         </ActionCell>
     ));

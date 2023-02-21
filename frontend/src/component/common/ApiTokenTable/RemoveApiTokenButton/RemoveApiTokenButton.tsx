@@ -14,33 +14,28 @@ const StyledUl = styled('ul')({
 interface IRemoveApiTokenButtonProps {
     token: IApiToken;
     permission: string;
-    remove: () => void;
-    track?: () => void;
+    onRemove: () => void;
     project?: string;
 }
 
 export const RemoveApiTokenButton = ({
     token,
     permission,
-    remove,
-    track,
+    onRemove,
     project,
 }: IRemoveApiTokenButtonProps) => {
     const [open, setOpen] = useState(false);
     const { setToastData, setToastApiError } = useToast();
 
-    const onRemove = async () => {
+    const onRemoveToken = async () => {
         try {
-            await remove();
+            await onRemove();
             setOpen(false);
 
             setToastData({
                 type: 'success',
                 title: 'API token removed',
             });
-            if (track && typeof track === 'function') {
-                track();
-            }
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }
@@ -59,7 +54,7 @@ export const RemoveApiTokenButton = ({
             </PermissionIconButton>
             <Dialogue
                 open={open}
-                onClick={onRemove}
+                onClick={onRemoveToken}
                 onClose={() => setOpen(false)}
                 title="Confirm deletion"
             >

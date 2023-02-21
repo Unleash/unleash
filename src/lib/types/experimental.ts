@@ -62,6 +62,7 @@ const flags = {
         process.env.UNLEASH_STRICT_SCHEMA_VALIDTION,
         false,
     ),
+    notifications: parseEnvVarBoolean(process.env.NOTIFICATIONS, false),
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

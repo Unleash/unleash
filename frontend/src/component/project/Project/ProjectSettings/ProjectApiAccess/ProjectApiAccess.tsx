@@ -7,8 +7,10 @@ import { READ_PROJECT_API_TOKEN } from 'component/providers/AccessProvider/permi
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { useProjectNameOrId } from 'hooks/api/getters/useProject/useProject';
-import { ApiTokenTable } from '../../../admin/apiToken/ApiTokenTable/ApiTokenTable';
-import { useProjectApiTokens } from '../../../../hooks/api/getters/useProjectApiTokens/useProjectApiTokens';
+import { CreateProjectApiToken } from 'component/project/Project/ProjectSettings/ProjectApiAccess/CreateProjectApiToken';
+import { Routes, Route } from 'react-router-dom';
+import { ApiTokenTable } from 'component/admin/apiToken/ApiTokenTable/ApiTokenTable';
+import { useProjectApiTokens } from 'hooks/api/getters/useProjectApiTokens/useProjectApiTokens';
 
 export const ProjectApiAccess = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -37,6 +39,10 @@ export const ProjectApiAccess = () => {
                 compact
                 filterForProject={projectId}
             />
+
+            <Routes>
+                <Route path="create" element={<CreateProjectApiToken />} />
+            </Routes>
         </div>
     );
 };

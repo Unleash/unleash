@@ -26,8 +26,6 @@ import { HighlightCell } from 'component/common/Table/cells/HighlightCell/Highli
 import { Search } from 'component/common/Search/Search';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
-import { Route, Routes } from 'react-router-dom';
-import { ProjectApiTokenCreate } from './ProjectApiTokenCreate';
 
 const hiddenColumnsSmall = ['Icon', 'createdAt'];
 const hiddenColumnsCompact = ['Icon', 'project', 'seenAt'];
@@ -67,11 +65,11 @@ export const ApiTokenTable = ({
                 Cell: ({
                     value,
                 }: {
-                    value: keyof typeof tokenDescriptions;
+                    value: 'client' | 'admin' | 'frontend';
                 }) => (
                     <HighlightCell
-                        value={tokenDescriptions[value].label}
-                        subtitle={tokenDescriptions[value].title}
+                        value={tokenDescriptions[value.toLowerCase()].label}
+                        subtitle={tokenDescriptions[value.toLowerCase()].title}
                     />
                 ),
                 minWidth: 280,
@@ -246,44 +244,21 @@ export const ApiTokenTable = ({
                     />
                 }
             />
-            <ConditionallyRender
-                condition={Boolean(filterForProject)}
-                show={
-                    <Routes>
-                        <Route
-                            path="create"
-                            element={<ProjectApiTokenCreate />}
-                        />
-                    </Routes>
-                }
-            />
         </PageContent>
     );
 };
-//TODO fix me - remove duplicate keys
-const tokenDescriptions = {
-    client: {
-        label: 'CLIENT',
-        title: 'Connect server-side SDK or Unleash Proxy',
-    },
-    frontend: {
-        label: 'FRONTEND',
-        title: 'Connect web and mobile SDK',
-    },
-    admin: {
-        label: 'ADMIN',
-        title: 'Full access for managing Unleash',
-    },
-    CLiENT: {
-        label: 'CLIENT',
-        title: 'Connect server-side SDK or Unleash Proxy',
-    },
-    FRONTEND: {
-        label: 'FRONTEND',
-        title: 'Connect web and mobile SDK',
-    },
-    ADMIN: {
-        label: 'ADMIN',
-        title: 'Full access for managing Unleash',
-    },
-};
+const tokenDescriptions: { [index: string]: { label: string; title: string } } =
+    {
+        client: {
+            label: 'CLIENT',
+            title: 'Connect server-side SDK or Unleash Proxy',
+        },
+        frontend: {
+            label: 'FRONTEND',
+            title: 'Connect web and mobile SDK',
+        },
+        admin: {
+            label: 'ADMIN',
+            title: 'Full access for managing Unleash',
+        },
+    };

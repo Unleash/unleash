@@ -1,29 +1,31 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
-import ApiTokenForm from '../ApiTokenForm/ApiTokenForm';
+
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
-import useApiTokensApi from 'hooks/api/actions/useApiTokensApi/useApiTokensApi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
 import { useApiTokenForm } from 'component/admin/apiToken/ApiTokenForm/useApiTokenForm';
-import { CREATE_API_TOKEN } from 'component/providers/AccessProvider/permissions';
-import { ConfirmToken } from '../ConfirmToken/ConfirmToken';
+import { CREATE_PROJECT_API_TOKEN } from 'component/providers/AccessProvider/permissions';
 import { scrollToTop } from 'component/common/util';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { GO_BACK } from 'constants/navigate';
-import { useApiTokens } from 'hooks/api/getters/useApiTokens/useApiTokens';
-import { TokenInfo } from '../ApiTokenForm/TokenInfo/TokenInfo';
-import { TokenTypeSelector } from '../ApiTokenForm/TokenTypeSelector/TokenTypeSelector';
-import { ProjectSelector } from '../ApiTokenForm/ProjectSelector/ProjectSelector';
-import { EnvironmentSelector } from '../ApiTokenForm/EnvironmentSelector/EnvironmentSelector';
+import useProjectApiTokensApi from 'hooks/api/actions/useProjectApiTokensApi/useProjectApiTokensApi';
 
-const pageTitle = 'Create API token';
-interface ICreateApiTokenProps {
-    modal?: boolean;
-}
-export const CreateApiToken = ({ modal = false }: ICreateApiTokenProps) => {
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import ApiTokenForm from 'component/admin/apiToken/ApiTokenForm/ApiTokenForm';
+import { EnvironmentSelector } from 'component/admin/apiToken/ApiTokenForm/EnvironmentSelector/EnvironmentSelector';
+import { TokenInfo } from 'component/admin/apiToken/ApiTokenForm/TokenInfo/TokenInfo';
+import { TokenTypeSelector } from 'component/admin/apiToken/ApiTokenForm/TokenTypeSelector/TokenTypeSelector';
+import { ConfirmToken } from 'component/admin/apiToken/ConfirmToken/ConfirmToken';
+import { useProjectApiTokens } from 'hooks/api/getters/useProjectApiTokens/useProjectApiTokens';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+
+const pageTitle = 'Create project API token';
+
+export const CreateProjectApiTokenForm = () => {
+    const project = useRequiredPathParam('projectId');
     const { setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
     const navigate = useNavigate();
@@ -34,25 +36,24 @@ export const CreateApiToken = ({ modal = false }: ICreateApiTokenProps) => {
         getApiTokenPayload,
         username,
         type,
-        projects,
         environment,
         setUsername,
         setTokenType,
-        setProjects,
         setEnvironment,
         isValid,
         errors,
         clearErrors,
-    } = useApiTokenForm();
+    } = useApiTokenForm(project);
 
-    const { createToken, loading } = useApiTokensApi();
-    const { refetch } = useApiTokens();
+    const { createToken: createProjectToken, loading } =
+        useProjectApiTokensApi();
+    const { refetch: refetchProjectTokens } = useProjectApiTokens(project);
+    const { trackEvent } = usePlausibleTracker();
 
     usePageTitle(pageTitle);
 
-    const PATH = `api/admin/api-tokens`;
-
-    const permission = CREATE_API_TOKEN;
+    const PATH = `api/admin/project/${project}/api-tokens`;
+    const permission = CREATE_PROJECT_API_TOKEN;
 
     const handleSubmit = async (e: Event) => {
         e.preventDefault();
@@ -62,13 +63,17 @@ export const CreateApiToken = ({ modal = false }: ICreateApiTokenProps) => {
         try {
             const payload = getApiTokenPayload();
 
-            await createToken(payload)
+            await createProjectToken(payload, project)
                 .then(res => res.json())
                 .then(api => {
                     scrollToTop();
                     setToken(api.secret);
                     setShowConfirm(true);
-                    refetch();
+                    trackEvent('project_api_tokens', {
+                        props: { eventType: 'api_key_created' },
+                    });
+
+                    refetchProjectTokens();
                 });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
@@ -97,7 +102,7 @@ export const CreateApiToken = ({ modal = false }: ICreateApiTokenProps) => {
         <FormTemplate
             loading={loading}
             title={pageTitle}
-            modal={modal}
+            modal
             description="Unleash SDKs use API tokens to authenticate to the Unleash API. Client SDKs need a token with 'client privileges', which allows them to fetch feature toggle configurations and post usage metrics."
             documentationLink="https://docs.getunleash.io/reference/api-tokens-and-client-keys"
             documentationLinkLabel="API tokens documentation"
@@ -107,7 +112,13 @@ export const CreateApiToken = ({ modal = false }: ICreateApiTokenProps) => {
                 handleSubmit={handleSubmit}
                 handleCancel={handleCancel}
                 mode="Create"
-                actions={<CreateButton name="token" permission={permission} />}
+                actions={
+                    <CreateButton
+                        name="token"
+                        permission={permission}
+                        projectId={project}
+                    />
+                }
             >
                 <TokenInfo
                     username={username}
@@ -116,13 +127,6 @@ export const CreateApiToken = ({ modal = false }: ICreateApiTokenProps) => {
                     clearErrors={clearErrors}
                 />
                 <TokenTypeSelector type={type} setType={setTokenType} />
-                <ProjectSelector
-                    type={type}
-                    projects={projects}
-                    setProjects={setProjects}
-                    errors={errors}
-                    clearErrors={clearErrors}
-                />
                 <EnvironmentSelector
                     type={type}
                     environment={environment}

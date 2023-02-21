@@ -17,6 +17,7 @@ export const CreateApiTokenButton = () => {
     const permission = Boolean(project)
         ? CREATE_PROJECT_API_TOKEN
         : CREATE_API_TOKEN;
+
     return (
         <ResponsiveButton
             Icon={Add}

@@ -69,10 +69,13 @@ export const CreateProjectApiTokenForm = () => {
                     scrollToTop();
                     setToken(api.secret);
                     setShowConfirm(true);
+<<<<<<< HEAD
                     trackEvent('project_api_tokens', {
                         props: { eventType: 'api_key_created' },
                     });
 
+=======
+>>>>>>> 6983d9cfa (fix: remove console log)
                     refetchProjectTokens();
                 });
         } catch (error: unknown) {

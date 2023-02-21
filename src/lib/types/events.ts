@@ -1,3 +1,4 @@
+import { extractUsernameFromUser } from '../util';
 import { FeatureToggle, IStrategyConfig, ITag, IVariant } from './model';
 import { IApiToken } from './models/api-token';
 import { IUser } from './user';
@@ -142,9 +143,9 @@ class BaseEvent implements IBaseEvent {
     constructor(type: string, createdBy: string | IUser, tags: ITag[] = []) {
         this.type = type;
         this.createdBy =
-            typeof createdBy === 'string' || typeof createdBy === 'undefined'
+            typeof createdBy === 'string'
                 ? createdBy
-                : createdBy.email || createdBy.username || 'unknown';
+                : extractUsernameFromUser(createdBy);
         this.tags = tags;
     }
 }

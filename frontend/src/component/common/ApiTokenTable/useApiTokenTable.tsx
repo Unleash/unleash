@@ -1,18 +1,12 @@
 import { useMemo } from 'react';
-import {
-    IApiToken,
-    useApiTokens,
-} from 'hooks/api/getters/useApiTokens/useApiTokens';
-import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
+import { IApiToken } from 'hooks/api/getters/useApiTokens/useApiTokens';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
 import { useTable, useGlobalFilter, useSortBy } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
-import { CopyApiTokenButton } from 'component/common/ApiTokenTable/CopyApiTokenButton/CopyApiTokenButton';
 import { ProjectsList } from 'component/admin/apiToken/ProjectsList/ProjectsList';
-import { RemoveApiTokenButton } from 'component/common/ApiTokenTable/RemoveApiTokenButton/RemoveApiTokenButton';
 import { Key } from '@mui/icons-material';
 
 export const useApiTokenTable = (

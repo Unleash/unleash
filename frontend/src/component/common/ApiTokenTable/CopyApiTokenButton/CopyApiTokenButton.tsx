@@ -2,13 +2,7 @@ import { IApiToken } from 'hooks/api/getters/useApiTokens/useApiTokens';
 import useToast from 'hooks/useToast';
 import copy from 'copy-to-clipboard';
 import { FileCopy } from '@mui/icons-material';
-import {
-    READ_API_TOKEN,
-    READ_PROJECT_API_TOKEN,
-} from 'component/providers/AccessProvider/permissions';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
-import { useContext } from 'react';
-import AccessContext from 'contexts/AccessContext';
 
 interface ICopyApiTokenButtonProps {
     token: IApiToken;

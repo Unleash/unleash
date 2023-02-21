@@ -16,7 +16,6 @@ import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightC
 import { ApiTokenDocs } from 'component/admin/apiToken/ApiTokenDocs/ApiTokenDocs';
 
 import theme from 'themes/theme';
-import { ProjectsList } from 'component/admin/apiToken/ProjectsList/ProjectsList';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';

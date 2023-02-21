@@ -11,7 +11,6 @@ const ajv = new Ajv({
     schemas: Object.values(schemas).map((schema) =>
         omitKeys(schema, 'components'),
     ),
-
     // example was superseded by examples in openapi 3.1, but we're still on 3.0, so
     // let's add it back in!
     keywords: ['example'],

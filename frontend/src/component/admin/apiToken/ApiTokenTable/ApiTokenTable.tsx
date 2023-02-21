@@ -65,7 +65,7 @@ export const ApiTokenTable = ({
                 Cell: ({
                     value,
                 }: {
-                    value: keyof typeof tokenDescriptions;
+                    value: 'client' | 'admin' | 'frontend';
                 }) => (
                     <HighlightCell
                         value={tokenDescriptions[value.toLowerCase()].label}
@@ -247,18 +247,18 @@ export const ApiTokenTable = ({
         </PageContent>
     );
 };
-
-const tokenDescriptions = {
-    client: {
-        label: 'CLIENT',
-        title: 'Connect server-side SDK or Unleash Proxy',
-    },
-    frontend: {
-        label: 'FRONTEND',
-        title: 'Connect web and mobile SDK',
-    },
-    admin: {
-        label: 'ADMIN',
-        title: 'Full access for managing Unleash',
-    },
-};
+const tokenDescriptions: { [index: string]: { label: string; title: string } } =
+    {
+        client: {
+            label: 'CLIENT',
+            title: 'Connect server-side SDK or Unleash Proxy',
+        },
+        frontend: {
+            label: 'FRONTEND',
+            title: 'Connect web and mobile SDK',
+        },
+        admin: {
+            label: 'ADMIN',
+            title: 'Full access for managing Unleash',
+        },
+    };

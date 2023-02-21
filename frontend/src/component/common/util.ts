@@ -1,4 +1,4 @@
-import { weightTypes } from '../feature/FeatureView/FeatureVariants/FeatureVariantsList/AddFeatureVariant/enums';
+import { weightTypes } from 'constants/weightTypes';
 import { IUiConfig } from 'interfaces/uiConfig';
 import { INavigationMenuItem } from 'interfaces/route';
 import { IFeatureVariant } from 'interfaces/featureToggle';

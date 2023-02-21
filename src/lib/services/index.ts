@@ -39,10 +39,15 @@ import { LastSeenService } from './client-metrics/last-seen-service';
 import { InstanceStatsService } from './instance-stats-service';
 import { FavoritesService } from './favorites-service';
 import MaintenanceService from './maintenance-service';
-import ExportImportService from './export-import-service';
 import { hoursToMilliseconds, minutesToMilliseconds } from 'date-fns';
 import { AccountService } from './account-service';
 import { SchedulerService } from './scheduler-service';
+import { Knex } from 'knex';
+import {
+    createExportImportTogglesService,
+    createFakeExportImportTogglesService,
+} from '../features/export-import-toggles/createExportImportService';
+import { Db } from '../db/db';
 
 // TODO: will be moved to scheduler feature directory
 export const scheduleServices = (
@@ -96,6 +101,7 @@ export const scheduleServices = (
 export const createServices = (
     stores: IUnleashStores,
     config: IUnleashConfig,
+    db?: Db,
 ): IUnleashServices => {
     const groupService = new GroupService(stores, config);
     const accessService = new AccessService(stores, config, groupService);
@@ -139,9 +145,6 @@ export const createServices = (
         segmentService,
         accessService,
     );
-    const exportImportService = new ExportImportService(stores, config, {
-        featureToggleService: featureToggleServiceV2,
-    });
     const environmentService = new EnvironmentService(stores, config);
     const featureTagService = new FeatureTagService(stores, config);
     const favoritesService = new FavoritesService(stores, config);
@@ -158,6 +161,13 @@ export const createServices = (
         config,
         projectService,
     );
+
+    // TODO: this is a temporary seam to enable packaging by feature
+    const exportImportService = db
+        ? createExportImportTogglesService(db, config)
+        : createFakeExportImportTogglesService(config);
+    const transactionalExportImportService = (txDb: Knex.Transaction) =>
+        createExportImportTogglesService(txDb, config);
     const userSplashService = new UserSplashService(stores, config);
     const openApiService = new OpenApiService(config);
     const clientSpecService = new ClientSpecService(config);
@@ -239,6 +249,7 @@ export const createServices = (
         favoritesService,
         maintenanceService,
         exportImportService,
+        transactionalExportImportService,
         schedulerService,
     };
 };
@@ -282,6 +293,5 @@ export {
     LastSeenService,
     InstanceStatsService,
     FavoritesService,
-    ExportImportService,
     SchedulerService,
 };

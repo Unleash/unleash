@@ -169,7 +169,7 @@ export default async function getApp(
     }
 
     // Setup API routes
-    app.use(`${baseUriPath}/`, new IndexRouter(config, services).router);
+    app.use(`${baseUriPath}/`, new IndexRouter(config, services, db).router);
 
     if (services.openApiService) {
         services.openApiService.useErrorHandler(app);

@@ -38,11 +38,11 @@ process.nextTick(async () => {
                         embedProxyFrontend: true,
                         anonymiseEventLog: false,
                         responseTimeWithAppName: true,
-                        variantsPerEnvironment: true,
                         maintenance: true,
                         featuresExportImport: true,
                         newProjectOverview: true,
                         projectStatusApi: true,
+                        showProjectApiAccess: true,
                     },
                 },
                 authentication: {

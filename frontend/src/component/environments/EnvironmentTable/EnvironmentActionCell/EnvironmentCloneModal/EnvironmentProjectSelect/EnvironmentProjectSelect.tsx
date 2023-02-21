@@ -11,7 +11,7 @@ import { caseInsensitiveSearch } from 'utils/search';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { Fragment } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { SelectAllButton } from 'component/admin/apiToken/ApiTokenForm/SelectProjectInput/SelectAllButton/SelectAllButton';
+import { SelectAllButton } from 'component/admin/apiToken/ApiTokenForm/ProjectSelector/SelectProjectInput/SelectAllButton/SelectAllButton';
 
 const StyledOption = styled('div')(({ theme }) => ({
     display: 'flex',

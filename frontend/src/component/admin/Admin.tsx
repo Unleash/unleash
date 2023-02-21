@@ -1,5 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
-import { ApiPage } from './api';
+import { ApiTokenPage } from './apiToken/ApiTokenPage/ApiTokenPage';
 import { CreateApiToken } from './apiToken/CreateApiToken/CreateApiToken';
 import { AuthSettings } from './auth/AuthSettings';
 import { Billing } from './billing/Billing';
@@ -29,7 +29,7 @@ export const Admin = () => (
             <Route path="users" element={<UsersAdmin />} />
             <Route path="create-project-role" element={<CreateProjectRole />} />
             <Route path="roles/:id/edit" element={<EditProjectRole />} />
-            <Route path="api" element={<ApiPage />} />
+            <Route path="api" element={<ApiTokenPage />} />
             <Route path="api/create-token" element={<CreateApiToken />} />
             <Route path="users/:id/edit" element={<EditUser />} />
             <Route path="service-accounts" element={<ServiceAccounts />} />

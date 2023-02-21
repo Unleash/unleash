@@ -474,7 +474,7 @@ export const adminMenuRoutes: INavigationMenuItem[] = [
         path: '/admin/network/*',
         title: 'Network',
         menu: { adminSettings: true },
-        flag: 'networkView',
+        configFlag: 'networkViewEnabled',
     },
     {
         path: '/admin/maintenance',

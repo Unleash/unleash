@@ -1,5 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { styled, useMediaQuery, useTheme } from '@mui/material';
+import {
+    IconButton,
+    styled,
+    Tooltip,
+    useMediaQuery,
+    useTheme,
+} from '@mui/material';
 import { Add } from '@mui/icons-material';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { SortingRule, useFlexLayout, useSortBy, useTable } from 'react-table';
@@ -47,6 +53,9 @@ import { useGlobalLocalStorage } from 'hooks/useGlobalLocalStorage';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { flexRow } from 'themes/themeStyles';
 import VariantsWarningTooltip from 'component/feature/FeatureView/FeatureVariants/VariantsTooltipWarning';
+import FileDownload from '@mui/icons-material/FileDownload';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { ExportDialog } from 'component/feature/FeatureToggleList/ExportDialog';
 
 const StyledResponsiveButton = styled(ResponsiveButton)(() => ({
     whiteSpace: 'nowrap',
@@ -145,6 +154,8 @@ export const ProjectFeatureToggles = ({
         onChangeRequestToggleConfirm,
         changeRequestDialogDetails,
     } = useChangeRequestToggle(projectId);
+    const [showExportDialog, setShowExportDialog] = useState(false);
+    const { uiConfig } = useUiConfig();
 
     const onToggle = useCallback(
         async (
@@ -377,7 +388,7 @@ export const ProjectFeatureToggles = ({
         getSearchContext,
     } = useSearch(columns, searchValue, featuresData);
 
-    const data = useMemo<object[]>(() => {
+    const data = useMemo(() => {
         if (loading) {
             return Array(6).fill({
                 type: '-',
@@ -542,6 +553,28 @@ export const ProjectFeatureToggles = ({
                                 setHiddenColumns={setHiddenColumns}
                             />
                             <PageHeader.Divider sx={{ marginLeft: 0 }} />
+                            <ConditionallyRender
+                                condition={Boolean(
+                                    uiConfig?.flags?.featuresExportImport
+                                )}
+                                show={
+                                    <Tooltip
+                                        title="Export current selection"
+                                        arrow
+                                    >
+                                        <IconButton
+                                            onClick={() =>
+                                                setShowExportDialog(true)
+                                            }
+                                            sx={theme => ({
+                                                marginRight: theme.spacing(2),
+                                            })}
+                                        >
+                                            <FileDownload />
+                                        </IconButton>
+                                    </Tooltip>
+                                }
+                            />
                             <StyledResponsiveButton
                                 onClick={() =>
                                     navigate(getCreateTogglePath(projectId))
@@ -636,6 +669,17 @@ export const ProjectFeatureToggles = ({
                         featureName={changeRequestDialogDetails.featureName!}
                         enabled={changeRequestDialogDetails.enabled!}
                         environment={changeRequestDialogDetails?.environment!}
+                    />
+                }
+            />
+            <ConditionallyRender
+                condition={Boolean(uiConfig?.flags?.featuresExportImport)}
+                show={
+                    <ExportDialog
+                        showExportDialog={showExportDialog}
+                        data={data}
+                        onClose={() => setShowExportDialog(false)}
+                        environments={environments}
                     />
                 }
             />

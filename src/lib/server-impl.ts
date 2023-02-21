@@ -42,7 +42,7 @@ async function createApp(
     const serverVersion = version;
     const db = createDb(config);
     const stores = createStores(config, db);
-    const services = createServices(stores, config);
+    const services = createServices(stores, config, db);
     scheduleServices(services, config);
 
     const metricsMonitor = createMetricsMonitor();
@@ -54,6 +54,7 @@ async function createApp(
             const stopServer = promisify(server.stop);
             await stopServer();
         }
+        services.schedulerService.stop();
         metricsMonitor.stopMonitoring();
         stores.clientInstanceStore.destroy();
         services.clientMetricsServiceV2.destroy();

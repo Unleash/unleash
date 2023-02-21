@@ -8,3 +8,5 @@ export type PartialDeep<T> = T extends object
 // Mark one or more properties as optional.
 export type PartialSome<T, K extends keyof T> = Pick<Partial<T>, K> &
     Omit<T, K>;
+
+export type WithRequired<T, K extends keyof T> = T & { [P in K]-?: T[P] };

@@ -12,7 +12,7 @@ NOTE: This is a demo instance set up with the Enterprise version. Some of the fu
 
 ### I want to test toggles in a client side environment
 
-To test toggles in a client-side environment, we recommend that you use the [front-end client API](../reference/front-end-api.md). Client-side SDKs act a little differently from server-side SDKs, so the regular client API won't work for this. For more advanced setups, you can also use the [Unleash proxy](../reference/unleash-proxy.md), which offers greater flexibility than the front-end API, but at the cost of increased complexity.
+To test toggles in a client-side environment, we recommend that you use the [front-end client API](../reference/front-end-api.md). Client-side SDKs act a little differently from server-side SDKs, so the regular client API won't work for this. For more advanced setups, you can also use the [Unleash proxy](../generated/unleash-proxy.md), which offers greater flexibility than the front-end API, but at the cost of increased complexity.
 
 #### Create your first toggle
 
@@ -340,7 +340,7 @@ unleash.start();
 
 #### Run Unleash and the Unleash proxy with Docker
 
-We designed the [front-end API](../reference/front-end-api.md) to make it as easy as possible to get started and to cover basic use cases for front-end clients. However, if you need more flexibility, then you can also use the [Unleash proxy](../reference/unleash-proxy.md).
+We designed the [front-end API](../reference/front-end-api.md) to make it as easy as possible to get started and to cover basic use cases for front-end clients. However, if you need more flexibility, then you can also use the [Unleash proxy](../generated/unleash-proxy.md).
 
 Follow the steps outlined in the [run Unleash with Docker](#run-unleash-with-docker) section to get the Unleash instance up and running. Once you have done that, you need to first get an API key from your Unleash instance and then use that API key when starting the Unleash proxy.
 

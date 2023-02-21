@@ -68,8 +68,8 @@ export const ApiTokenTable = ({
                     value: keyof typeof tokenDescriptions;
                 }) => (
                     <HighlightCell
-                        value={tokenDescriptions[value].label}
-                        subtitle={tokenDescriptions[value].title}
+                        value={tokenDescriptions[value.toLowerCase()].label}
+                        subtitle={tokenDescriptions[value.toLowerCase()].title}
                     />
                 ),
                 minWidth: 280,
@@ -247,7 +247,7 @@ export const ApiTokenTable = ({
         </PageContent>
     );
 };
-//TODO fix me - remove duplicate keys
+
 const tokenDescriptions = {
     client: {
         label: 'CLIENT',
@@ -258,18 +258,6 @@ const tokenDescriptions = {
         title: 'Connect web and mobile SDK',
     },
     admin: {
-        label: 'ADMIN',
-        title: 'Full access for managing Unleash',
-    },
-    CLIENT: {
-        label: 'CLIENT',
-        title: 'Connect server-side SDK or Unleash Proxy',
-    },
-    FRONTEND: {
-        label: 'FRONTEND',
-        title: 'Connect web and mobile SDK',
-    },
-    ADMIN: {
         label: 'ADMIN',
         title: 'Full access for managing Unleash',
     },

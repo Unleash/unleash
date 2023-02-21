@@ -1,16 +1,16 @@
 import { Response } from 'express';
 import { Knex } from 'knex';
-import Controller from '../routes/controller';
-import { Logger } from '../logger';
+import Controller from '../../routes/controller';
+import { Logger } from '../../logger';
 import ExportImportService from './export-import-service';
-import { OpenApiService } from '../services';
-import { TransactionCreator, UnleashTransaction } from '../db/transaction';
+import { OpenApiService } from '../../services';
+import { TransactionCreator, UnleashTransaction } from '../../db/transaction';
 import {
     IUnleashConfig,
     IUnleashServices,
     NONE,
     serializeDates,
-} from '../types';
+} from '../../types';
 import {
     createRequestSchema,
     createResponseSchema,
@@ -19,10 +19,10 @@ import {
     exportResultSchema,
     ImportTogglesSchema,
     importTogglesValidateSchema,
-} from '../openapi';
-import { IAuthRequest } from '../routes/unleash-types';
-import { extractUsername } from '../util';
-import { InvalidOperationError } from '../error';
+} from '../../openapi';
+import { IAuthRequest } from '../../routes/unleash-types';
+import { extractUsername } from '../../util';
+import { InvalidOperationError } from '../../error';
 
 class ExportImportController extends Controller {
     private logger: Logger;

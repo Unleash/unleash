@@ -3,37 +3,37 @@ import {
     FeatureToggleService,
     GroupService,
     SegmentService,
-} from '../services';
-import EventStore from '../db/event-store';
-import FeatureStrategiesStore from '../db/feature-strategy-store';
-import FeatureToggleStore from '../db/feature-toggle-store';
-import FeatureToggleClientStore from '../db/feature-toggle-client-store';
-import ProjectStore from '../db/project-store';
-import FeatureTagStore from '../db/feature-tag-store';
-import { FeatureEnvironmentStore } from '../db/feature-environment-store';
-import SegmentStore from '../db/segment-store';
-import ContextFieldStore from '../db/context-field-store';
-import GroupStore from '../db/group-store';
-import { AccountStore } from '../db/account-store';
-import { AccessStore } from '../db/access-store';
-import RoleStore from '../db/role-store';
-import EnvironmentStore from '../db/environment-store';
-import { Db } from '../db/db';
-import { IUnleashConfig } from '../types';
-import FakeEventStore from '../../test/fixtures/fake-event-store';
-import FakeFeatureStrategiesStore from '../../test/fixtures/fake-feature-strategies-store';
-import FakeFeatureToggleStore from '../../test/fixtures/fake-feature-toggle-store';
-import FakeFeatureToggleClientStore from '../../test/fixtures/fake-feature-toggle-client-store';
-import FakeProjectStore from '../../test/fixtures/fake-project-store';
-import FakeFeatureTagStore from '../../test/fixtures/fake-feature-tag-store';
-import FakeFeatureEnvironmentStore from '../../test/fixtures/fake-feature-environment-store';
-import FakeSegmentStore from '../../test/fixtures/fake-segment-store';
-import FakeContextFieldStore from '../../test/fixtures/fake-context-field-store';
-import FakeGroupStore from '../../test/fixtures/fake-group-store';
-import { FakeAccountStore } from '../../test/fixtures/fake-account-store';
-import FakeAccessStore from '../../test/fixtures/fake-access-store';
-import FakeRoleStore from '../../test/fixtures/fake-role-store';
-import FakeEnvironmentStore from '../../test/fixtures/fake-environment-store';
+} from '../../services';
+import EventStore from '../../db/event-store';
+import FeatureStrategiesStore from '../../db/feature-strategy-store';
+import FeatureToggleStore from '../../db/feature-toggle-store';
+import FeatureToggleClientStore from '../../db/feature-toggle-client-store';
+import ProjectStore from '../../db/project-store';
+import FeatureTagStore from '../../db/feature-tag-store';
+import { FeatureEnvironmentStore } from '../../db/feature-environment-store';
+import SegmentStore from '../../db/segment-store';
+import ContextFieldStore from '../../db/context-field-store';
+import GroupStore from '../../db/group-store';
+import { AccountStore } from '../../db/account-store';
+import { AccessStore } from '../../db/access-store';
+import RoleStore from '../../db/role-store';
+import EnvironmentStore from '../../db/environment-store';
+import { Db } from '../../db/db';
+import { IUnleashConfig } from '../../types';
+import FakeEventStore from '../../../test/fixtures/fake-event-store';
+import FakeFeatureStrategiesStore from '../../../test/fixtures/fake-feature-strategies-store';
+import FakeFeatureToggleStore from '../../../test/fixtures/fake-feature-toggle-store';
+import FakeFeatureToggleClientStore from '../../../test/fixtures/fake-feature-toggle-client-store';
+import FakeProjectStore from '../../../test/fixtures/fake-project-store';
+import FakeFeatureTagStore from '../../../test/fixtures/fake-feature-tag-store';
+import FakeFeatureEnvironmentStore from '../../../test/fixtures/fake-feature-environment-store';
+import FakeSegmentStore from '../../../test/fixtures/fake-segment-store';
+import FakeContextFieldStore from '../../../test/fixtures/fake-context-field-store';
+import FakeGroupStore from '../../../test/fixtures/fake-group-store';
+import { FakeAccountStore } from '../../../test/fixtures/fake-account-store';
+import FakeAccessStore from '../../../test/fixtures/fake-access-store';
+import FakeRoleStore from '../../../test/fixtures/fake-role-store';
+import FakeEnvironmentStore from '../../../test/fixtures/fake-environment-store';
 
 export const createFeatureToggleService = (
     db: Db,

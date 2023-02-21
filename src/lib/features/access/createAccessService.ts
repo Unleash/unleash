@@ -1,17 +1,17 @@
 import { Db, IUnleashConfig } from 'lib/server-impl';
-import EventStore from '../db/event-store';
-import GroupStore from '../db/group-store';
-import { AccountStore } from '../db/account-store';
-import RoleStore from '../db/role-store';
-import EnvironmentStore from '../db/environment-store';
-import { AccessStore } from '../db/access-store';
-import { AccessService, GroupService } from '../services';
-import FakeEventStore from '../../test/fixtures/fake-event-store';
-import FakeGroupStore from '../../test/fixtures/fake-group-store';
-import { FakeAccountStore } from '../../test/fixtures/fake-account-store';
-import FakeRoleStore from '../../test/fixtures/fake-role-store';
-import FakeEnvironmentStore from '../../test/fixtures/fake-environment-store';
-import FakeAccessStore from '../../test/fixtures/fake-access-store';
+import EventStore from '../../db/event-store';
+import GroupStore from '../../db/group-store';
+import { AccountStore } from '../../db/account-store';
+import RoleStore from '../../db/role-store';
+import EnvironmentStore from '../../db/environment-store';
+import { AccessStore } from '../../db/access-store';
+import { AccessService, GroupService } from '../../services';
+import FakeGroupStore from '../../../test/fixtures/fake-group-store';
+import FakeEventStore from '../../../test/fixtures/fake-event-store';
+import { FakeAccountStore } from '../../../test/fixtures/fake-account-store';
+import FakeRoleStore from '../../../test/fixtures/fake-role-store';
+import FakeEnvironmentStore from '../../../test/fixtures/fake-environment-store';
+import FakeAccessStore from '../../../test/fixtures/fake-access-store';
 
 export const createAccessService = (
     db: Db,

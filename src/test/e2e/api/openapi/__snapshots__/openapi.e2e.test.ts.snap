@@ -5129,7 +5129,7 @@ If the provided project does not exist, the list of events will be empty.",
         ],
       },
     },
-    "/api/admin/features-batch/full-import": {
+    "/api/admin/features-batch/import": {
       "post": {
         "description": "Unleash toggles exported from a different instance can be imported into a new project and environment",
         "operationId": "importToggles",
@@ -5155,7 +5155,7 @@ If the provided project does not exist, the list of events will be empty.",
         ],
       },
     },
-    "/api/admin/features-batch/full-validate": {
+    "/api/admin/features-batch/validate": {
       "post": {
         "description": "Unleash toggles exported from a different instance can be imported into a new project and environment",
         "operationId": "validateImport",

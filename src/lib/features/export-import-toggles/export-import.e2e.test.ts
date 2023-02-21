@@ -1,9 +1,9 @@
 import {
     IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../test/e2e/helpers/test-helper';
-import dbInit, { ITestDb } from '../../test/e2e/helpers/database-init';
-import getLogger from '../../test/fixtures/no-logger';
+} from '../../../test/e2e/helpers/test-helper';
+import dbInit, { ITestDb } from '../../../test/e2e/helpers/database-init';
+import getLogger from '../../../test/fixtures/no-logger';
 import {
     DEFAULT_PROJECT,
     FeatureToggleDTO,
@@ -15,15 +15,15 @@ import {
     ISegment,
     IStrategyConfig,
     IVariant,
-} from '../types';
-import { DEFAULT_ENV } from '../util';
+} from '../../types';
+import { DEFAULT_ENV } from '../../util';
 import {
     ContextFieldSchema,
     ImportTogglesSchema,
     VariantsSchema,
-} from '../openapi';
-import User from '../types/user';
-import { IContextFieldDto } from '../types/stores/context-field-store';
+} from '../../openapi';
+import User from '../../types/user';
+import { IContextFieldDto } from '../../types/stores/context-field-store';
 
 let app: IUnleashTest;
 let db: ITestDb;

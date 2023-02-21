@@ -1,20 +1,11 @@
-import {
-    DELETE_API_TOKEN,
-    DELETE_PROJECT_API_TOKEN,
-} from 'component/providers/AccessProvider/permissions';
 import { Delete } from '@mui/icons-material';
 import { styled } from '@mui/material';
-import {
-    IApiToken,
-    useApiTokens,
-} from 'hooks/api/getters/useApiTokens/useApiTokens';
-import AccessContext from 'contexts/AccessContext';
-import { useContext, useState } from 'react';
+import { IApiToken } from 'hooks/api/getters/useApiTokens/useApiTokens';
+import { useState } from 'react';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import useToast from 'hooks/useToast';
-import useApiTokensApi from 'hooks/api/actions/useApiTokensApi/useApiTokensApi';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
-import useProjectApiTokensApi from '../../../../hooks/api/actions/useProjectApiTokensApi/useProjectApiTokensApi';
+import { formatUnknownError } from 'utils/formatUnknownError';
 
 const StyledUl = styled('ul')({
     marginBottom: 0,
@@ -22,51 +13,37 @@ const StyledUl = styled('ul')({
 
 interface IRemoveApiTokenButtonProps {
     token: IApiToken;
+    permission: string;
+    remove: () => void;
+    track?: () => void;
     project?: string;
 }
 
 export const RemoveApiTokenButton = ({
     token,
+    permission,
+    remove,
+    track,
     project,
 }: IRemoveApiTokenButtonProps) => {
-    const { hasAccess, isAdmin } = useContext(AccessContext);
-    const { deleteToken } = useApiTokensApi();
-    const { deleteToken: deleteProjectToken } = useProjectApiTokensApi();
     const [open, setOpen] = useState(false);
-    const { setToastData } = useToast();
-    const { refetch } = useApiTokens();
-
-    const permission = Boolean(project)
-        ? DELETE_PROJECT_API_TOKEN
-        : DELETE_API_TOKEN;
-
-    const canRemove = () => {
-        if (isAdmin) {
-            return true;
-        }
-        if (token && token.projects && project && permission) {
-            const { projects } = token;
-            for (const tokenProject of projects) {
-                if (!hasAccess(permission, tokenProject)) {
-                    return false;
-                }
-            }
-            return true;
-        }
-    };
+    const { setToastData, setToastApiError } = useToast();
 
     const onRemove = async () => {
-        if (project) {
-            await deleteProjectToken(token.secret, project);
-        } else {
-            await deleteToken(token.secret);
+        try {
+            await remove();
+            setOpen(false);
+
+            setToastData({
+                type: 'success',
+                title: 'API token removed',
+            });
+            if (track && typeof track === 'function') {
+                track();
+            }
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
         }
-        setOpen(false);
-        refetch();
-        setToastData({
-            type: 'success',
-            title: 'API token removed',
-        });
     };
 
     return (
@@ -77,7 +54,6 @@ export const RemoveApiTokenButton = ({
                 tooltipProps={{ title: 'Delete token', arrow: true }}
                 onClick={() => setOpen(true)}
                 size="large"
-                disabled={!canRemove()}
             >
                 <Delete />
             </PermissionIconButton>

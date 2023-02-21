@@ -9,7 +9,7 @@ import { ITab, VerticalTabs } from 'component/common/VerticalTabs/VerticalTabs';
 import { ProjectAccess } from 'component/project/ProjectAccess/ProjectAccess';
 import ProjectEnvironmentList from 'component/project/ProjectEnvironment/ProjectEnvironment';
 import { ChangeRequestConfiguration } from './ChangeRequestConfiguration/ChangeRequestConfiguration';
-import { ProjectApiAccess } from './ProjectApiAccess/ProjectApiAccess';
+import { ProjectApiAccess } from 'component/project/Project/ProjectSettings/ProjectApiAccess/ProjectApiAccess';
 import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
 
 export const ProjectSettings = () => {

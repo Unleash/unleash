@@ -12,34 +12,18 @@ import AccessContext from 'contexts/AccessContext';
 
 interface ICopyApiTokenButtonProps {
     token: IApiToken;
+    permission: string;
     project?: string;
+    track?: () => void;
 }
 
 export const CopyApiTokenButton = ({
     token,
     project,
+    permission,
+    track,
 }: ICopyApiTokenButtonProps) => {
-    const { hasAccess, isAdmin } = useContext(AccessContext);
     const { setToastData } = useToast();
-
-    const permission = Boolean(project)
-        ? READ_PROJECT_API_TOKEN
-        : READ_API_TOKEN;
-
-    const canCopy = () => {
-        if (isAdmin) {
-            return true;
-        }
-        if (token && token.projects && project && permission) {
-            const { projects } = token;
-            for (const tokenProject of projects) {
-                if (!hasAccess(permission, tokenProject)) {
-                    return false;
-                }
-            }
-            return true;
-        }
-    };
 
     const copyToken = (value: string) => {
         if (copy(value)) {
@@ -47,6 +31,10 @@ export const CopyApiTokenButton = ({
                 type: 'success',
                 title: `Token copied to clipboard`,
             });
+
+            if (track && typeof track === 'function') {
+                track();
+            }
         }
     };
 
@@ -57,7 +45,6 @@ export const CopyApiTokenButton = ({
             tooltipProps={{ title: 'Copy token', arrow: true }}
             onClick={() => copyToken(token.secret)}
             size="large"
-            disabled={!canCopy()}
         >
             <FileCopy />
         </PermissionIconButton>

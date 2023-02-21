@@ -69,19 +69,10 @@ export const CreateProjectApiTokenForm = () => {
                     scrollToTop();
                     setToken(api.secret);
                     setShowConfirm(true);
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> bda4500a6 (feat: plausible tracking for create)
                     trackEvent('project_api_tokens', {
                         props: { eventType: 'api_key_created' },
                     });
 
-<<<<<<< HEAD
-=======
->>>>>>> 6983d9cfa (fix: remove console log)
-=======
->>>>>>> bda4500a6 (feat: plausible tracking for create)
                     refetchProjectTokens();
                 });
         } catch (error: unknown) {

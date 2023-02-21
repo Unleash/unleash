@@ -20,6 +20,7 @@ import { TokenInfo } from 'component/admin/apiToken/ApiTokenForm/TokenInfo/Token
 import { TokenTypeSelector } from 'component/admin/apiToken/ApiTokenForm/TokenTypeSelector/TokenTypeSelector';
 import { ConfirmToken } from 'component/admin/apiToken/ConfirmToken/ConfirmToken';
 import { useProjectApiTokens } from 'hooks/api/getters/useProjectApiTokens/useProjectApiTokens';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const pageTitle = 'Create project API token';
 
@@ -47,6 +48,7 @@ export const CreateProjectApiTokenForm = () => {
     const { createToken: createProjectToken, loading } =
         useProjectApiTokensApi();
     const { refetch: refetchProjectTokens } = useProjectApiTokens(project);
+    const { trackEvent } = usePlausibleTracker();
 
     usePageTitle(pageTitle);
 
@@ -67,6 +69,10 @@ export const CreateProjectApiTokenForm = () => {
                     scrollToTop();
                     setToken(api.secret);
                     setShowConfirm(true);
+                    trackEvent('project_api_tokens', {
+                        props: { eventType: 'api_key_created' },
+                    });
+
                     refetchProjectTokens();
                 });
         } catch (error: unknown) {

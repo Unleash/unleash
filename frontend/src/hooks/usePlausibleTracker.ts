@@ -19,7 +19,8 @@ type CustomEvents =
     | 'project_overview'
     | 'suggest_tags'
     | 'unknown_ui_error'
-    | 'export_import';
+    | 'export_import'
+    | 'project_api_tokens';
 
 export const usePlausibleTracker = () => {
     const plausible = useContext(PlausibleContext);

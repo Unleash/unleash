@@ -123,7 +123,7 @@ export const useApiTokenTable = (
 };
 
 const tokenDescriptions: {
-    [key in 'client' | 'frontend' | 'admin']: { label: string; title: string };
+    [index: string]: { label: string; title: string };
 } = {
     client: {
         label: 'CLIENT',

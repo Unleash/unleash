@@ -422,7 +422,7 @@ const importToggles = (
     expect: (response) => void = () => {},
 ) =>
     app.request
-        .post('/api/admin/features-batch/full-import')
+        .post('/api/admin/features-batch/import')
         .send(importPayload)
         .set('Content-Type', 'application/json')
         .expect(status)
@@ -543,7 +543,7 @@ const getTags = (feature: string) =>
 
 const validateImport = (importPayload: ImportTogglesSchema, status = 200) =>
     app.request
-        .post('/api/admin/features-batch/full-validate')
+        .post('/api/admin/features-batch/validate')
         .send(importPayload)
         .set('Content-Type', 'application/json')
         .expect(status);

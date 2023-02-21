@@ -76,7 +76,7 @@ class ExportImportController extends Controller {
         });
         this.route({
             method: 'post',
-            path: '/full-validate',
+            path: '/validate',
             permission: NONE,
             handler: this.validateImport,
             middleware: [
@@ -97,7 +97,7 @@ class ExportImportController extends Controller {
         });
         this.route({
             method: 'post',
-            path: '/full-import',
+            path: '/import',
             permission: NONE,
             handler: this.importData,
             middleware: [

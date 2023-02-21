@@ -35,7 +35,7 @@ const adminUserName = 'admin-user';
 
 const validateImport = (importPayload: ImportTogglesSchema, status = 200) =>
     app.request
-        .post('/api/admin/features-batch/full-validate')
+        .post('/api/admin/features-batch/validate')
         .send(importPayload)
         .set('Content-Type', 'application/json')
         .expect(status);

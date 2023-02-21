@@ -14,7 +14,7 @@ export const useImportApi = () => {
     const { trackEvent } = usePlausibleTracker();
 
     const createImport = async (payload: ImportQuerySchema) => {
-        const path = `api/admin/features-batch/full-import`;
+        const path = `api/admin/features-batch/import`;
         const req = createRequest(path, {
             method: 'POST',
             body: JSON.stringify(payload),

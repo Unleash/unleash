@@ -30,7 +30,7 @@ import FavoritesController from './favorites';
 import MaintenanceController from './maintenance';
 import { createKnexTransactionStarter } from '../../db/transaction';
 import { Db } from '../../db/db';
-import ExportImportController from '../../export-import-toggles/export-import-controller';
+import ExportImportController from '../../features/export-import-toggles/export-import-controller';
 
 class AdminApi extends Controller {
     constructor(config: IUnleashConfig, services: IUnleashServices, db: Db) {

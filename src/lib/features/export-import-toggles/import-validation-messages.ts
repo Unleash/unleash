@@ -1,8 +1,8 @@
 import {
     FeatureStrategySchema,
     ImportTogglesValidateItemSchema,
-} from '../openapi';
-import { IContextFieldDto } from '../types/stores/context-field-store';
+} from '../../openapi';
+import { IContextFieldDto } from '../../types/stores/context-field-store';
 
 export class ImportValidationMessages {
     static compilePermissionErrors(

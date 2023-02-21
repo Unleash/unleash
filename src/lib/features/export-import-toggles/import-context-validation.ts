@@ -1,4 +1,4 @@
-import { IContextFieldDto } from '../types/stores/context-field-store';
+import { IContextFieldDto } from '../../types/stores/context-field-store';
 
 export const isValidField = (
     importedField: IContextFieldDto,

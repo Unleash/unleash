@@ -1,8 +1,8 @@
 import { IImportTogglesStore } from './import-toggles-store-type';
-import { AccessService, ContextService, TagTypeService } from '../services';
-import { ContextFieldSchema, ImportTogglesSchema } from '../openapi';
-import { ITagType } from '../types/stores/tag-type-store';
-import User from '../types/user';
+import { AccessService, ContextService, TagTypeService } from '../../services';
+import { ContextFieldSchema, ImportTogglesSchema } from '../../openapi';
+import { ITagType } from '../../types/stores/tag-type-store';
+import User from '../../types/user';
 import {
     CREATE_CONTEXT_FIELD,
     CREATE_FEATURE,
@@ -11,8 +11,8 @@ import {
     UPDATE_FEATURE,
     UPDATE_FEATURE_ENVIRONMENT_VARIANTS,
     UPDATE_TAG_TYPE,
-} from '../types';
-import { InvalidOperationError } from '../error';
+} from '../../types';
+import { InvalidOperationError } from '../../error';
 
 type Mode = 'regular' | 'change_request';
 

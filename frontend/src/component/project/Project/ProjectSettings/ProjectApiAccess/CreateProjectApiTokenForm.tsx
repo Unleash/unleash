@@ -67,7 +67,6 @@ export const CreateProjectApiTokenForm = () => {
                     scrollToTop();
                     setToken(api.secret);
                     setShowConfirm(true);
-                    console.log('REFETCHING TOKENS');
                     refetchProjectTokens();
                 });
         } catch (error: unknown) {

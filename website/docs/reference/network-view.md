@@ -8,9 +8,15 @@ The network view was released in Unleash 4.21. It is available to Pro and Enterp
 
 :::
 
-The **network** page enables customers to get a glance at the requests per second made by Unleash clients to the Unleash server.
+The Unleash admin UI contains a **network view** as part of the admin configuration pages.
 
-It presents 2 different views of the same data helping you visualize how your applications are connected to Unleash and identify potential misconfigurations of your clients or sudden surges of requests. 
+This network view was designed to give you an overview and understanding of incoming requests to your Unleash instance. If you need detailed metrics and connection graphs, then you're still better off using specialized tools, The
+
+but network view offers two different visualizations of the same data, known as the [network overview](#network-overview) and the [network traffic](#network-traffic) views.
+
+enables users to get a glance at the requests per second made by Unleash clients to the Unleash server.
+
+It presents 2 different views of the same data helping you visualize how your applications are connected to Unleash and identify potential misconfigurations of your clients or sudden surges of requests.
 
 The two views are presented in two tabs:
 ## Network overview

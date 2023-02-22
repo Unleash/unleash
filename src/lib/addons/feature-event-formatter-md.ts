@@ -73,24 +73,80 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
     generateStrategyChangeText(event: IEvent): string {
         const { createdBy, environment, project, data, preData } = event;
         const feature = this.generateFeatureLink(event);
-        let strategyText: string;
-        if (data.name === 'flexibleRollout') {
-            const { rollout: oldRollout, stickiness: oldStickiness } =
-                preData.parameters;
-            const { rollout, stickiness } = data.parameters;
-            const stickinessText =
-                oldStickiness === stickiness
-                    ? ''
-                    : ` from ${oldStickiness} stickiness to ${stickiness}`;
-            const rolloutText =
-                oldRollout === rollout
-                    ? ''
-                    : ` from ${oldRollout}% to ${rollout}%`;
-            strategyText = `by updating strategy ${data?.name} in *${environment}*${stickinessText}${rolloutText}`;
-        } else {
-            strategyText = `by updating strategy ${data?.name} in *${environment}*`;
-        }
+        const map = {
+            ['flexibleRollout']: () =>
+                this.flexibleRolloutStrategyChangeText(
+                    preData,
+                    data,
+                    environment,
+                ),
+            ['default']: () =>
+                this.defaultStrategyChangeText(preData, data, environment),
+        };
+        const strategyText = map.hasOwnProperty(data.name)
+            ? map[data.name]()
+            : `by updating strategy ${data?.name} in *${environment}*`;
         return `${createdBy} updated *${feature}* in project *${project}* ${strategyText}`;
+    }
+
+    private flexibleRolloutStrategyChangeText(
+        preData,
+        data,
+        environment: string,
+    ) {
+        const { rollout: oldRollout, stickiness: oldStickiness } =
+            preData.parameters;
+        const { rollout, stickiness } = data.parameters;
+        const stickinessText =
+            oldStickiness === stickiness
+                ? ''
+                : ` from ${oldStickiness} stickiness to ${stickiness}`;
+        const rolloutText =
+            oldRollout === rollout ? '' : ` from ${oldRollout}% to ${rollout}%`;
+        return `by updating strategy ${data?.name} in *${environment}*${stickinessText}${rolloutText}`;
+    }
+
+    private defaultStrategyChangeText(preData, data, environment: string) {
+        const constraintOperatorDescriptions = {
+            IN: 'is one of',
+            NOT_IN: 'is not one of',
+            STR_CONTAINS: 'is a string that contains',
+            STR_STARTS_WITH: 'is a string that starts with',
+            STR_ENDS_WITH: 'is a string that ends with',
+            NUM_EQ: 'is a number equal to',
+            NUM_GT: 'is a number greater than',
+            NUM_GTE: 'is a number greater than or equal to',
+            NUM_LT: 'is a number less than',
+            NUM_LTE: 'is a number less than or equal to',
+            DATE_BEFORE: 'is a date before',
+            DATE_AFTER: 'is a date after',
+            SEMVER_EQ: 'is a SemVer equal to',
+            SEMVER_GT: 'is a SemVer greater than',
+            SEMVER_LT: 'is a SemVer less than',
+        };
+        const formatConstraint = (constraint) => {
+            const val = constraint.hasOwnProperty('value')
+                ? constraint.value
+                : `(${constraint.values.join(',')})`;
+            const operator = constraintOperatorDescriptions.hasOwnProperty(
+                constraint.operator,
+            )
+                ? constraintOperatorDescriptions[constraint.operator]
+                : constraint.operator;
+
+            return `${constraint.contextName} ${
+                constraint.inverted ? 'not ' : ''
+            }${operator} ${val}`;
+        };
+
+        const constraintStrings = (constraints) =>
+            constraints.length === 0
+                ? 'empty set of constraints'
+                : `[${constraints.map(formatConstraint).join(', ')}]`;
+
+        const oldConstraints = constraintStrings(preData.constraints);
+        const newConstraints = constraintStrings(data.constraints);
+        return `by updating strategy ${data?.name} in *${environment}* from ${oldConstraints} to ${newConstraints}`;
     }
 
     generateStrategyRemoveText(event: IEvent): string {

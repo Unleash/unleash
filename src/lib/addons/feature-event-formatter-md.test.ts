@@ -1,11 +1,28 @@
 import {
-    IEvent,
-    FEATURE_STRATEGY_UPDATE,
     FEATURE_STRATEGY_ADD,
     FEATURE_STRATEGY_REMOVE,
+    FEATURE_STRATEGY_UPDATE,
+    IEvent,
 } from '../types';
 
 import { FeatureEventFormatterMd } from './feature-event-formatter-md';
+import {
+    DATE_AFTER,
+    DATE_BEFORE,
+    IN,
+    NOT_IN,
+    NUM_EQ,
+    NUM_GT,
+    NUM_GTE,
+    NUM_LT,
+    NUM_LTE,
+    SEMVER_EQ,
+    SEMVER_GT,
+    SEMVER_LT,
+    STR_CONTAINS,
+    STR_ENDS_WITH,
+    STR_STARTS_WITH,
+} from '../util';
 
 const testCases: [string, IEvent, string][] = [
     [
@@ -190,6 +207,110 @@ const testCases: [string, IEvent, string][] = [
         },
         'user@company.com updated *[new-feature](unleashUrl/projects/my-other-project/features/new-feature)* in project *my-other-project* by removing strategy default in *production*',
     ],
+    ...[
+        [IN, 'is one of'],
+        [NOT_IN, 'is not one of'],
+        [STR_CONTAINS, 'is a string that contains'],
+        [STR_STARTS_WITH, 'is a string that starts with'],
+        [STR_ENDS_WITH, 'is a string that ends with'],
+    ].map(
+        ([operator, display]) =>
+            <[string, IEvent, string]>[
+                'when default strategy updated',
+                {
+                    id: 39,
+                    type: FEATURE_STRATEGY_UPDATE,
+                    createdBy: 'admin',
+                    createdAt: new Date('2023-02-20T20:23:28.791Z'),
+                    data: {
+                        id: 'f2d34aac-52ec-49d2-82d3-08d710e89eaa',
+                        name: 'default',
+                        constraints: [
+                            {
+                                values: ['x', 'y'],
+                                inverted: false,
+                                operator: operator,
+                                contextName: 'appName',
+                                caseInsensitive: false,
+                            },
+                            {
+                                values: ['x'],
+                                inverted: true,
+                                operator: operator,
+                                contextName: 'appName',
+                                caseInsensitive: false,
+                            },
+                        ],
+                        parameters: {},
+                        segments: [],
+                    },
+                    preData: {
+                        id: 'f2d34aac-52ec-49d2-82d3-08d710e89eaa',
+                        name: 'default',
+                        segments: [],
+                        parameters: {},
+                        constraints: [],
+                    },
+                    tags: [],
+                    featureName: 'aaa',
+                    project: 'default',
+                    environment: 'production',
+                },
+                `admin updated *[aaa](unleashUrl/projects/default/features/aaa)* in project *default* by updating strategy default in *production* from empty set of constraints to [appName ${display} (x,y), appName not ${display} (x)]`,
+            ],
+    ),
+    ...[
+        [NUM_EQ, 'is a number equal to'],
+        [NUM_GT, 'is a number greater than'],
+        [NUM_GTE, 'is a number greater than or equal to'],
+        [NUM_LT, 'is a number less than'],
+        [NUM_LTE, 'is a number less than or equal to'],
+        [DATE_BEFORE, 'is a date before'],
+        [DATE_AFTER, 'is a date after'],
+        [SEMVER_EQ, 'is a SemVer equal to'],
+        [SEMVER_GT, 'is a SemVer greater than'],
+        [SEMVER_LT, 'is a SemVer less than'],
+    ].map(
+        ([operator, display]) =>
+            <[string, IEvent, string]>[
+                'when default strategy updated with numeric constraint ' +
+                    operator,
+                {
+                    id: 39,
+                    type: FEATURE_STRATEGY_UPDATE,
+                    createdBy: 'admin',
+                    createdAt: new Date('2023-02-20T20:23:28.791Z'),
+                    data: {
+                        id: 'f2d34aac-52ec-49d2-82d3-08d710e89eaa',
+                        name: 'default',
+                        constraints: [],
+                        parameters: {},
+                        segments: [],
+                    },
+                    preData: {
+                        id: 'f2d34aac-52ec-49d2-82d3-08d710e89eaa',
+                        name: 'default',
+                        segments: [],
+                        parameters: {},
+                        constraints: [
+                            {
+                                value: '4',
+                                values: [],
+                                inverted: false,
+                                operator: operator,
+                                contextName: 'appName',
+                                caseInsensitive: false,
+                            },
+                        ],
+                    },
+                    tags: [],
+                    featureName: 'aaa',
+                    project: 'default',
+                    environment: 'production',
+                },
+                `admin updated *[aaa](unleashUrl/projects/default/features/aaa)* in project *default* by updating strategy default in *production* from [appName ${display} 4] to empty set of constraints`,
+            ],
+    ),
 ];
 
 testCases.forEach(([description, event, expected]) =>

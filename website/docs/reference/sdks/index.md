@@ -112,8 +112,9 @@ For a more distinct overview, refer to the next section [UPDATE THIS BEFORE MERG
 
 - For strategies, refer to the proxy capabiities.
 - For constraint support, refer to the proxy capabilities
+- isEnabled calls don't support fallbacks
 
-| Capability | [Android](/docs/generated/sdks/client-side/android-proxy.md) | [Flutter.js](/docs/generated/sdks/client-side/flutter.md) | [iOS](/docs/generated/sdks/client-side/ios-proxy.md) | [JavaScript](/docs/generated/sdks/client-side/javascript-browser.md) | [React](/docs/generated/sdks/client-side/react.md) | [Svelte](/docs/generated/sdks/client-side/svelte.md) | [Vue](/docs/generated/sdks/client-side/vue.md) |
+| Capability | [Android](/docs/generated/sdks/client-side/android-proxy.md) | [Flutter](/docs/generated/sdks/client-side/flutter.md) | [iOS](/docs/generated/sdks/client-side/ios-proxy.md) | [JavaScript](/docs/generated/sdks/client-side/javascript-browser.md) | [React](/docs/generated/sdks/client-side/react.md) | [Svelte](/docs/generated/sdks/client-side/svelte.md) | [Vue](/docs/generated/sdks/client-side/vue.md) |
 | --- | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
 | **Category: Initialization** |  |  |  |  |  |  |  |
 | Async initialization | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ |
@@ -127,8 +128,6 @@ For a more distinct overview, refer to the next section [UPDATE THIS BEFORE MERG
 | Static fields (`environment`, `appName`) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Defined fields | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Custom properties | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **Category: [`isEnabled`](../client-specification#implementation-of-isenabled)** |  |  |  |  |  |  |  |
-| Fallback function | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ | ⭕ |
 | **Category: [Variants](../feature-toggle-variants.md)** |  |  |  |  |  |  |  |
 | Basic support | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | [Custom stickiness (beta)](../stickiness.md#custom-stickiness-beta) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |

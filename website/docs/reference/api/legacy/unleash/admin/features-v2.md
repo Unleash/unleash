@@ -378,7 +378,16 @@ Vary: Accept-Encoding
     "name": "DemoNew",
     "project": "default",
     "stale": false,
-    "type": "release"
+    "type": "release",
+    "variants": [
+        {
+            "name": "blue",
+            "overrides": [],
+            "stickiness": "default",
+            "weight": 1000,
+            "weightType": "variable"
+        }
+    ]
 }
 
 ```
@@ -600,10 +609,10 @@ Transfer-Encoding: chunked
 
 ## Feature Variants
 
-**Note:** from 4.21 variants are tied to an environment.
-
 ### Put variants for Feature Toggle {#update-variants}
 :::caution 
+
+From 4.21 variants are tied to an environment. Check our Open API docs for the up-to-date docs: https://docs.getunleash.io/reference/api/unleash/features
 
 This endpoint affects all environments at once. If you only want to update a single environment, use [#update-variants-per-environment](#update-variants-per-environment) instead.
 
@@ -696,9 +705,13 @@ Content-Type: application/json; charset=utf-8
 ### PATCH variants for a feature toggle
 :::caution
 
+From 4.21 variants are tied to an environment. Check our Open API docs for the up-to-date docs: https://docs.getunleash.io/reference/api/unleash/features
+
  This endpoint affects all environments at once. If you only want to update a single environment, use [#update-variants-per-environment](#update-variants-per-environment) instead.
 
-<ApiRequest verb="patch" url="api/admin/projects/:projectId/features/:featureName/variants" title="Patch variants for a feature toggle (example data)" payload={[{"op": "add", "path": "/1", "value": {
+:::
+
+<ApiRequest verb="patch" url="api/admin/projects/:projectId/features/:featureName/variants" title="Patch variants for a feature toggle trying to apply the changes in all environments (example data)" payload={[{"op": "add", "path": "/1", "value": {
   "name": "new-variant",
   "weightType": "fix",
   "weight": 200
@@ -714,137 +727,6 @@ echo '[{"op": "add", "path": "/1", "value": {
 }}]' | \
 http PATCH \
 http://localhost:4242/api/admin/projects/default/features/demo/variants \
-Authorization:$KEY
-```
-
-** Example Response **
-```json
-{
-  "version": "1",
-  "variants": [
-    {
-      "name": "variant2",
-      "weightType": "variable",
-      "weight": 150
-    },
-    {
-      "name": "new-variant",
-      "weightType": "fix",
-      "weight": 200
-    },
-    {
-      "name": "variant1",
-      "weightType": "fix",
-      "weight": 650
-    }
-  ]
-}
-```
-
-### Put variants for Feature Toggle on environment {#update-variants-per-environment}
-
-<ApiRequest verb="put" url="api/admin/projects/:projectId/features/:featureName/environments/:environment/variants" title="Create (overwrite) variants for a feature toggle under the provided environment (example data)" payload={[
-	{
-		"name": "variant1",
-		"weightType": "fix",
-		"weight": 650,
-        "payload": {
-          "type": "json",
-          "value": "{\"key1\": \"value\", \"key2\": 123}"
-        },
-        "stickiness": "userId",
-        "overrides": [ {
-          "contextName": "userId",
-          "values": ["1", "23"]
-        } ]
-	},
-	{
-		"name": "variant2",
-		"weightType": "variable",
-		"weight": 123
-	}
-]}/>
-
-This overwrites the current variants for the feature toggle specified in the :featureName parameter for the :environment parameter.
-The backend will validate the input for the following invariants
-
-* If there are variants, there needs to be at least one variant with `weightType: variable`
-* The sum of the weights of variants with `weightType: fix` must be below 1000 (< 1000)
-
-The back end will also distribute remaining weight up to 1000 after adding the variants with `weightType: fix` together amongst the variants of `weightType: variable`
-
-**Example Query**
-```bash
-echo '[
-	{
-		"name": "variant1",
-		"weightType": "fix",
-		"weight": 650,
-        "payload": {
-          "type": "json",
-          "value": "{\"key1\": \"value\", \"key2\": 123}"
-        },
-        "stickiness": "userId",
-        "overrides": [{
-          "contextName": "userId",
-          "values": ["1", "23"]
-        }]
-	},
-	{
-		"name": "variant2",
-		"weightType": "variable",
-		"weight": 123
-	}
-]' | \
-http PUT http://localhost:4242/api/admin/projects/default/features/demo/environments/development/variants Authorization:$KEY
-```
-
-**Example response:**
-
-```bash
-HTTP/1.1 200 OK
-Access-Control-Allow-Origin: *
-Connection: keep-alive
-Date: Tue, 23 Nov 2021 08:46:32 GMT
-Keep-Alive: timeout=60
-Transfer-Encoding: chunked
-Content-Type: application/json; charset=utf-8
-
-{
-  "version": "1",
-  "variants": [
-    {
-      "name": "variant2",
-      "weightType": "variable",
-      "weight": 350
-    },
-    {
-      "name": "variant1",
-      "weightType": "fix",
-      "weight": 650
-    }
-  ]
-}
-```
-
-### PATCH variants for a feature toggle on environment
-
-<ApiRequest verb="patch" url="api/admin/projects/:projectId/features/:featureName/environments/:environment/variants" title="Patch variants for a feature toggle under the provided environment (example data)" payload={[{"op": "add", "path": "/1", "value": {
-  "name": "new-variant",
-  "weightType": "fix",
-  "weight": 200
-}}]}/>
-
-**Example Query**
-
-```bash
-echo '[{"op": "add", "path": "/1", "value": {
-  "name": "new-variant",
-  "weightType": "fix",
-  "weight": 200
-}}]' | \
-http PATCH \
-http://localhost:4242/api/admin/projects/default/features/demo/environments/development/variants \
 Authorization:$KEY
 ```
 

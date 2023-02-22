@@ -65,6 +65,9 @@ export default class VariantsController extends Controller {
             handler: this.getVariants,
             middleware: [
                 openApiService.validPath({
+                    summary:
+                        '(deprecated from 4.21) Since variants per environment this endpoint will attempt to choose one of the production environments as the source of truth. If more than one production environment is found, the first one will be used.',
+                    deprecated: true,
                     tags: ['Features'],
                     operationId: 'getFeatureVariants',
                     responses: {
@@ -80,6 +83,10 @@ export default class VariantsController extends Controller {
             handler: this.patchVariants,
             middleware: [
                 openApiService.validPath({
+                    summary:
+                        'This will apply the same patch to variants in all environments.',
+                    description:
+                        'This method is not atomic which is the main reason why it is not recommended to use.',
                     tags: ['Features'],
                     operationId: 'patchFeatureVariants',
                     requestBody: createRequestSchema('patchesSchema'),
@@ -96,6 +103,16 @@ export default class VariantsController extends Controller {
             handler: this.overwriteVariants,
             middleware: [
                 openApiService.validPath({
+                    summary:
+                        'Create (overwrite) variants for a feature toggle in all environments',
+                    description: `This overwrites the current variants for the feature toggle specified in the :featureName parameter in all environments.
+
+                    The backend will validate the input for the following invariants
+
+                    * If there are variants, there needs to be at least one variant with ${'`'}weightType: variable${'`'}
+                    * The sum of the weights of variants with ${'`'}weightType: fix${'`'} must be below 1000 (< 1000)
+
+                    The backend will also distribute remaining weight up to 1000 after adding the variants with ${'`'}weightType: fix${'`'} together amongst the variants of ${'`'}weightType: variable${'`'}`,
                     tags: ['Features'],
                     operationId: 'overwriteFeatureVariants',
                     requestBody: createRequestSchema('variantsSchema'),
@@ -112,6 +129,9 @@ export default class VariantsController extends Controller {
             handler: this.getVariantsOnEnv,
             middleware: [
                 openApiService.validPath({
+                    summary:
+                        'Get variants for a feature in a specific environment',
+                    description: `Returns the variants for a feature in a specific environment.`,
                     tags: ['Features'],
                     operationId: 'getEnvironmentFeatureVariants',
                     responses: {
@@ -127,6 +147,9 @@ export default class VariantsController extends Controller {
             handler: this.patchVariantsOnEnv,
             middleware: [
                 openApiService.validPath({
+                    summary:
+                        'Patch variants for a feature toggle under the provided environment',
+                    description: `Returns the variants for a feature in a specific environment.`,
                     tags: ['Features'],
                     operationId: 'patchEnvironmentsFeatureVariants',
                     requestBody: createRequestSchema('patchesSchema'),
@@ -143,6 +166,17 @@ export default class VariantsController extends Controller {
             handler: this.overwriteVariantsOnEnv,
             middleware: [
                 openApiService.validPath({
+                    summary:
+                        'Create (overwrite) variants for a feature toggle under the provided environment',
+                    description: `This overwrites the current variants for the feature toggle specified in the :featureName parameter for the :environment parameter.
+                        
+                        The backend will validate the input for the following invariants:
+                        
+                        * If there are variants, there needs to be at least one variant with ${'`'}weightType: variable${'`'}
+                        * The sum of the weights of variants with ${'`'}weightType: fix${'`'} must be below 1000 (< 1000)
+                        
+                        The backend will also distribute remaining weight up to 1000 after adding the variants with ${'`'}weightType: fix${'`'} together amongst the variants of ${'`'}weightType: variable${'`'}.
+                        `,
                     tags: ['Features'],
                     operationId: 'overwriteEnvironmentFeatureVariants',
                     requestBody: createRequestSchema('variantsSchema'),

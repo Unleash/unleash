@@ -1,5 +1,5 @@
 import { IImportTogglesStore } from './import-toggles-store-type';
-import { Knex } from 'knex';
+import { Db } from '../../db/db';
 
 const T = {
     featureStrategies: 'feature_strategies',
@@ -7,9 +7,9 @@ const T = {
     featureTag: 'feature_tag',
 };
 export class ImportTogglesStore implements IImportTogglesStore {
-    private db: Knex;
+    private db: Db;
 
-    constructor(db: Knex) {
+    constructor(db: Db) {
         this.db = db;
     }
 

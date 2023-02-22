@@ -27,9 +27,9 @@ export enum LinkStyle {
 }
 
 export class FeatureEventFormatterMd implements FeatureEventFormatter {
-    private unleashUrl: string;
+    private readonly unleashUrl: string;
 
-    private linkStyle: LinkStyle;
+    private readonly linkStyle: LinkStyle;
 
     constructor(unleashUrl: string, linkStyle: LinkStyle = LinkStyle.MD) {
         this.unleashUrl = unleashUrl;

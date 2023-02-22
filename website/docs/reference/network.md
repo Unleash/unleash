@@ -8,24 +8,33 @@ The network view was released in Unleash 4.21. It is available to Pro and Enterp
 
 :::
 
-The **network** page presents 2 different views of how your applications are connected to Unleash. A simplified view of the connected instances, and a line graph showing the change over time of the different sources of traffic. 
+The **network** page enables customers to get a glance at the requests per second made by Unleash clients to the Unleash server.
 
+It presents 2 different views of the same data helping you visualize how your applications are connected to Unleash and identify potential misconfigurations of your clients or sudden surges of requests. 
 
-This should help you understand if there is some misconfiguration in some of your applications or if there is a recent surge in traffic in some of them. 
-
+The two views are presented in two tabs:
 ## Network overview
 
-Using this page you can see connected nodes at glance with their requests per second (req/s)
+It's a simplified view displaying the connected nodes at glance with their requests per second (req/s)
 
 ![Network overview showing 3 connected apps](/img/network-overview.png)
 
 ## Network traffic
 
-Network traffic can help you identify misconfigured apps, surges in traffic or other anomalies.
+Network traffic presents a breakdown by client and base url (we've chosen /admin and /client plus one additional level for the aggregation) in a line graph that shows the change over time. This can help you drill down into more details.
+
+_Note that if the applications are not sending the application name they will be displayed as `unknown`._
 
 ![Network traffic showing 3 sources and unregistered apps as unknown](/img/network-traffic.png)
+.
+## Data source
+The network view sources its data from an external Prometheus-like API, which is controlled by the environment variable `PROMETHEUS_API` that should point to the base path of the Prometheus installation. Prometheus has to be configured to get its data from Unleashe's [Internal Backstage API](https://docs.getunleash.io/reference/api/legacy/unleash/internal/prometheus), e.g. by defining a scraping job:
 
-# Prerequisites
-This features uses a Prometheus-like API to query data produced by Unleash server [internal metrics](/reference/api/legacy/unleash/internal/prometheus). Our managed instances receive this a part of our service.
+```yaml
+  - job_name: unleash_internal_metrics
+    metrics_path: /internal-backstage/prometheus
+    static_configs:
+      - targets: ['unleash-url']
+```
 
-It's most useful when having the toggle `responseTimeWithAppName` enabled (for hosted customers we enabled it for all customers), because it will allow you to identify the applications generating the traffic.
+How to set up Prometheus to collect metrics from that API is outside of the scope of this document.

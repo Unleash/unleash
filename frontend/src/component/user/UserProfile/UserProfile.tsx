@@ -1,18 +1,35 @@
 import { useState } from 'react';
-import classnames from 'classnames';
 import { Button, ClickAwayListener, styled } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { useStyles } from 'component/user/UserProfile/UserProfile.styles';
-import { useThemeStyles } from 'themes/themeStyles';
 import { UserProfileContent } from './UserProfileContent/UserProfileContent';
 import { IUser } from 'interfaces/user';
 import { HEADER_USER_AVATAR } from 'utils/testIds';
 import { useId } from 'hooks/useId';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
+import { flexRow, focusable, itemsCenter } from 'themes/themeStyles';
 
 const StyledUserAvatar = styled(UserAvatar)(({ theme }) => ({
     width: theme.spacing(4.5),
     height: theme.spacing(4.5),
+}));
+
+const StyledProfileContainer = styled('div')(({ theme }) => ({
+    position: 'relative',
+}));
+
+const StyledButton = styled(Button)(({ theme }) => ({
+    ...focusable(theme),
+    ...flexRow,
+    ...itemsCenter,
+    color: 'inherit',
+    padding: theme.spacing(0.5, 2),
+    '&:hover': {
+        backgroundColor: 'transparent',
+    },
+}));
+
+const StyledIcon = styled(KeyboardArrowDownIcon)(({ theme }) => ({
+    color: theme.palette.neutral.main,
 }));
 
 interface IUserProfileProps {
@@ -23,19 +40,10 @@ const UserProfile = ({ profile }: IUserProfileProps) => {
     const [showProfile, setShowProfile] = useState(false);
     const modalId = useId();
 
-    const { classes: styles } = useStyles();
-    const { classes: themeStyles } = useThemeStyles();
-
     return (
         <ClickAwayListener onClickAway={() => setShowProfile(false)}>
-            <div className={styles.profileContainer}>
-                <Button
-                    className={classnames(
-                        themeStyles.flexRow,
-                        themeStyles.itemsCenter,
-                        themeStyles.focusable,
-                        styles.button
-                    )}
+            <StyledProfileContainer>
+                <StyledButton
                     onClick={() => setShowProfile(prev => !prev)}
                     aria-controls={showProfile ? modalId : undefined}
                     aria-expanded={showProfile}
@@ -46,15 +54,15 @@ const UserProfile = ({ profile }: IUserProfileProps) => {
                         user={profile}
                         data-testid={HEADER_USER_AVATAR}
                     />
-                    <KeyboardArrowDownIcon className={styles.icon} />
-                </Button>
+                    <StyledIcon />
+                </StyledButton>
                 <UserProfileContent
                     id={modalId}
                     showProfile={showProfile}
                     setShowProfile={setShowProfile}
                     profile={profile}
                 />
-            </div>
+            </StyledProfileContainer>
         </ClickAwayListener>
     );
 };

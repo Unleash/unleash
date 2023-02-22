@@ -7,6 +7,7 @@ import {
     IAddonMultiSelectorProps,
     AddonMultiSelector,
 } from './AddonMultiSelector';
+import { testServerRoute, testServerSetup } from 'utils/testServer';
 
 const onChange = vi.fn();
 const onFocus = vi.fn();
@@ -24,10 +25,13 @@ const mockProps: IAddonMultiSelectorProps = {
     entityName: 'project',
 };
 
+const server = testServerSetup();
+
 describe('AddonMultiSelector', () => {
     beforeEach(() => {
         onChange.mockClear();
         onFocus.mockClear();
+        testServerRoute(server, '/api/admin/ui-config', {});
     });
 
     it('renders with default state', () => {

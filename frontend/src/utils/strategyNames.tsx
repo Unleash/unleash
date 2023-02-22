@@ -1,5 +1,5 @@
-import { FC, ElementType } from 'react';
-import { SvgIcon } from '@mui/material';
+import { FC } from 'react';
+import { SvgIcon, useTheme } from '@mui/material';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import PeopleIcon from '@mui/icons-material/People';
 import LanguageIcon from '@mui/icons-material/Language';
@@ -19,7 +19,7 @@ const RolloutSvgIcon: FC = props => (
     />
 );
 
-export const getFeatureStrategyIcon = (strategyName: string): ElementType => {
+export const getFeatureStrategyIcon = (strategyName: string) => {
     switch (strategyName) {
         case 'default':
             return PowerSettingsNewIcon;
@@ -39,8 +39,9 @@ export const getFeatureStrategyIcon = (strategyName: string): ElementType => {
 export const GetFeatureStrategyIcon: FC<{ strategyName: string }> = ({
     strategyName,
 }) => {
+    const theme = useTheme();
     const Icon = getFeatureStrategyIcon(strategyName);
-    return <Icon />;
+    return <Icon style={{ color: theme.palette.neutral.main }} />;
 };
 
 export const formattedStrategyNames: Record<string, string> = {

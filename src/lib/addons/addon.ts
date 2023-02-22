@@ -39,7 +39,7 @@ export default abstract class Addon {
 
     async fetchRetry(
         url: string,
-        options = {},
+        options: any = {},
         retries: number = 1,
     ): Promise<Response> {
         let res;
@@ -52,6 +52,13 @@ export default abstract class Addon {
             });
             return res;
         } catch (e) {
+            const { method } = options;
+            this.logger.warn(
+                `Error querying ${url} with method ${
+                    method || 'GET'
+                } status code ${e.code}`,
+                e,
+            );
             res = { statusCode: e.code, ok: false };
         }
         return res;

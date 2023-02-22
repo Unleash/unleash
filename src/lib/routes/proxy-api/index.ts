@@ -63,7 +63,7 @@ export default class ProxyController extends Controller {
             permission: NONE,
             middleware: [
                 this.services.openApiService.validPath({
-                    tags: ['Unstable'],
+                    tags: ['Frontend API'],
                     operationId: 'getFrontendFeatures',
                     responses: {
                         200: createResponseSchema('proxyFeaturesSchema'),
@@ -93,7 +93,7 @@ export default class ProxyController extends Controller {
             permission: NONE,
             middleware: [
                 this.services.openApiService.validPath({
-                    tags: ['Unstable'],
+                    tags: ['Frontend API'],
                     operationId: 'registerFrontendMetrics',
                     requestBody: createRequestSchema('proxyMetricsSchema'),
                     responses: { 200: emptyResponse },
@@ -108,7 +108,7 @@ export default class ProxyController extends Controller {
             permission: NONE,
             middleware: [
                 this.services.openApiService.validPath({
-                    tags: ['Unstable'],
+                    tags: ['Frontend API'],
                     operationId: 'registerFrontendClient',
                     requestBody: createRequestSchema('proxyClientSchema'),
                     responses: { 200: emptyResponse },
@@ -156,6 +156,9 @@ export default class ProxyController extends Controller {
                 ProxyController.createContext(req),
             );
         }
+
+        res.set('Cache-control', 'public, max-age=2');
+
         this.services.openApiService.respondWithValidation(
             200,
             res,

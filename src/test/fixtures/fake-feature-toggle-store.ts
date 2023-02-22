@@ -28,6 +28,10 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         return this.features.filter(this.getFilterQuery(query)).length;
     }
 
+    async getAllByNames(names: string[]): Promise<FeatureToggle[]> {
+        return this.features.filter((f) => names.includes(f.name));
+    }
+
     async getProjectId(name: string): Promise<string> {
         return this.get(name).then((f) => f.project);
     }
@@ -167,6 +171,41 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
     ): Promise<IVariant[]> {
         await this.saveVariants('default', featureName, newVariants);
         return Promise.resolve(newVariants);
+    }
+
+    async getByDate(queryModifiers: {
+        archived?: boolean;
+        project?: string;
+        date?: string;
+        range?: string[];
+        dateAccessor: string;
+    }): Promise<FeatureToggle[]> {
+        return this.features.filter((feature) => {
+            if (feature.archived === queryModifiers.archived) {
+                return true;
+            }
+
+            if (feature.project === queryModifiers.project) {
+                return true;
+            }
+
+            if (
+                new Date(feature[queryModifiers.dateAccessor]).getTime() >=
+                new Date(queryModifiers.date).getTime()
+            ) {
+                return true;
+            }
+
+            const featureDate = new Date(
+                feature[queryModifiers.dateAccessor],
+            ).getTime();
+            if (
+                featureDate >= new Date(queryModifiers.range[0]).getTime() &&
+                featureDate <= new Date(queryModifiers.range[1]).getTime()
+            ) {
+                return true;
+            }
+        });
     }
 
     dropAllVariants(): Promise<void> {

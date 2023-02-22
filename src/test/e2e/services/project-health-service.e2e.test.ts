@@ -37,19 +37,20 @@ beforeAll(async () => {
         new SegmentService(stores, config),
         accessService,
     );
+    favoritesService = new FavoritesService(stores, config);
+
     projectService = new ProjectService(
         stores,
         config,
         accessService,
         featureToggleService,
         groupService,
+        favoritesService,
     );
-    favoritesService = new FavoritesService(stores, config);
     projectHealthService = new ProjectHealthService(
         stores,
         config,
-        featureToggleService,
-        favoritesService,
+        projectService,
     );
 });
 

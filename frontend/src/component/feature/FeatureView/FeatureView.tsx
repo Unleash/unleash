@@ -1,19 +1,12 @@
-import { IconButton, Tab, Tabs, useMediaQuery } from '@mui/material';
-import React, { useCallback, useState } from 'react';
-import {
-    Archive,
-    FileCopy,
-    Label,
-    WatchLater,
-    Star as StarIcon,
-    StarBorder as StarBorderIcon,
-} from '@mui/icons-material';
+import { useState } from 'react';
+import { styled, Tab, Tabs, useMediaQuery } from '@mui/material';
+import { Archive, FileCopy, Label, WatchLater } from '@mui/icons-material';
 import {
     Link,
     Route,
-    useNavigate,
     Routes,
     useLocation,
+    useNavigate,
 } from 'react-router-dom';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import useProject from 'hooks/api/getters/useProject/useProject';
@@ -25,9 +18,8 @@ import {
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import FeatureLog from './FeatureLog/FeatureLog';
 import FeatureOverview from './FeatureOverview/FeatureOverview';
-import FeatureVariants from './FeatureVariants/FeatureVariants';
+import { FeatureEnvironmentVariants } from './FeatureVariants/FeatureEnvironmentVariants/FeatureEnvironmentVariants';
 import { FeatureMetrics } from './FeatureMetrics/FeatureMetrics';
-import { useStyles } from './FeatureView.styles';
 import { FeatureSettings } from './FeatureSettings/FeatureSettings';
 import useLoading from 'hooks/useLoading';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -37,12 +29,62 @@ import { FeatureStatusChip } from 'component/common/FeatureStatusChip/FeatureSta
 import { FeatureNotFound } from 'component/feature/FeatureView/FeatureNotFound/FeatureNotFound';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
-import { DraftBanner } from 'component/changeRequest/DraftBanner/DraftBanner';
-import { MainLayout } from 'component/layout/MainLayout/MainLayout';
-import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { FavoriteIconButton } from 'component/common/FavoriteIconButton/FavoriteIconButton';
+
+const StyledHeader = styled('div')(({ theme }) => ({
+    backgroundColor: theme.palette.background.paper,
+    borderRadius: theme.shape.borderRadiusLarge,
+    marginBottom: theme.spacing(2),
+}));
+
+const StyledInnerContainer = styled('div')(({ theme }) => ({
+    padding: theme.spacing(2, 4, 2, 2),
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    [theme.breakpoints.down(500)]: {
+        flexDirection: 'column',
+    },
+}));
+
+const StyledToggleInfoContainer = styled('div')({
+    display: 'flex',
+    alignItems: 'center',
+});
+
+const StyledFeatureViewHeader = styled('h1')(({ theme }) => ({
+    fontSize: theme.fontSizes.mainHeader,
+    fontWeight: 'normal',
+    display: 'flex',
+    alignItems: 'center',
+    wordBreak: 'break-all',
+}));
+
+const StyledToolbarContainer = styled('div')({
+    flexShrink: 0,
+    display: 'flex',
+});
+
+const StyledSeparator = styled('div')(({ theme }) => ({
+    width: '100%',
+    backgroundColor: theme.palette.tertiary.light,
+    height: '1px',
+}));
+
+const StyledTabContainer = styled('div')(({ theme }) => ({
+    padding: theme.spacing(0, 4),
+}));
+
+const StyledTabButton = styled(Tab)(({ theme }) => ({
+    textTransform: 'none',
+    width: 'auto',
+    fontSize: theme.fontSizes.bodySize,
+    padding: '0 !important',
+    [theme.breakpoints.up('md')]: {
+        minWidth: 160,
+    },
+}));
 
 export const FeatureView = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -50,9 +92,6 @@ export const FeatureView = () => {
     const { refetch: projectRefetch } = useProject(projectId);
     const { favorite, unfavorite } = useFavoriteFeaturesApi();
     const { refetchFeature } = useFeature(projectId, featureId);
-    const { isChangeRequestConfiguredInAnyEnv } =
-        useChangeRequestsEnabled(projectId);
-    const { uiConfig } = useUiConfig();
 
     const [openTagDialog, setOpenTagDialog] = useState(false);
     const [showDelDialog, setShowDelDialog] = useState(false);
@@ -64,7 +103,6 @@ export const FeatureView = () => {
         featureId
     );
 
-    const { classes: styles } = useStyles();
     const navigate = useNavigate();
     const { pathname } = useLocation();
     const ref = useLoading(loading);
@@ -93,10 +131,6 @@ export const FeatureView = () => {
 
     const activeTab = tabData.find(tab => tab.path === pathname) ?? tabData[0];
 
-    if (status === 404) {
-        return <FeatureNotFound />;
-    }
-
     const onFavorite = async () => {
         if (feature?.favorite) {
             await unfavorite(projectId, feature.name);
@@ -106,157 +140,127 @@ export const FeatureView = () => {
         refetchFeature();
     };
 
-    return (
-        <MainLayout
-            ref={ref}
-            subheader={
-                isChangeRequestConfiguredInAnyEnv() ? (
-                    <DraftBanner project={projectId} />
-                ) : null
-            }
-        >
-            <ConditionallyRender
-                condition={error === undefined}
-                show={
-                    <div ref={ref}>
-                        <div className={styles.header}>
-                            <div className={styles.innerContainer}>
-                                <div className={styles.toggleInfoContainer}>
-                                    <ConditionallyRender
-                                        condition={Boolean(
-                                            uiConfig?.flags?.favorites
-                                        )}
-                                        show={() => (
-                                            <FavoriteIconButton
-                                                onClick={onFavorite}
-                                                isFavorite={feature?.favorite}
-                                            />
-                                        )}
-                                    />
-                                    <h1
-                                        className={styles.featureViewHeader}
-                                        data-loading
-                                    >
-                                        {feature.name}{' '}
-                                    </h1>
-                                    <ConditionallyRender
-                                        condition={!smallScreen}
-                                        show={
-                                            <FeatureStatusChip
-                                                stale={feature?.stale}
-                                            />
-                                        }
-                                    />
-                                </div>
+    if (status === 404) {
+        return <FeatureNotFound />;
+    }
 
-                                <div className={styles.toolbarContainer}>
-                                    <PermissionIconButton
-                                        permission={CREATE_FEATURE}
-                                        projectId={projectId}
-                                        data-loading
-                                        component={Link}
-                                        to={`/projects/${projectId}/features/${featureId}/strategies/copy`}
-                                        tooltipProps={{
-                                            title: 'Copy feature toggle',
-                                        }}
-                                    >
-                                        <FileCopy />
-                                    </PermissionIconButton>
-                                    <PermissionIconButton
-                                        permission={DELETE_FEATURE}
-                                        projectId={projectId}
-                                        tooltipProps={{
-                                            title: 'Archive feature toggle',
-                                        }}
-                                        data-loading
-                                        onClick={() => setShowDelDialog(true)}
-                                    >
-                                        <Archive />
-                                    </PermissionIconButton>
-                                    <PermissionIconButton
-                                        onClick={() => setOpenStaleDialog(true)}
-                                        permission={UPDATE_FEATURE}
-                                        projectId={projectId}
-                                        tooltipProps={{
-                                            title: 'Toggle stale state',
-                                        }}
-                                        data-loading
-                                    >
-                                        <WatchLater />
-                                    </PermissionIconButton>
-                                    <PermissionIconButton
-                                        onClick={() => setOpenTagDialog(true)}
-                                        permission={UPDATE_FEATURE}
-                                        projectId={projectId}
-                                        tooltipProps={{ title: 'Add tag' }}
-                                        data-loading
-                                    >
-                                        <Label />
-                                    </PermissionIconButton>
-                                </div>
-                            </div>
-                            <div className={styles.separator} />
-                            <div className={styles.tabContainer}>
-                                <Tabs
-                                    value={activeTab.path}
-                                    indicatorColor="primary"
-                                    textColor="primary"
-                                >
-                                    {tabData.map(tab => (
-                                        <Tab
-                                            key={tab.title}
-                                            label={tab.title}
-                                            value={tab.path}
-                                            onClick={() => navigate(tab.path)}
-                                            className={styles.tabButton}
-                                        />
-                                    ))}
-                                </Tabs>
-                            </div>
-                        </div>
-                        <Routes>
-                            <Route
-                                path="metrics"
-                                element={<FeatureMetrics />}
-                            />
-                            <Route path="logs" element={<FeatureLog />} />
-                            <Route
-                                path="variants"
-                                element={<FeatureVariants />}
-                            />
-                            <Route
-                                path="settings"
-                                element={<FeatureSettings />}
-                            />
-                            <Route path="*" element={<FeatureOverview />} />
-                        </Routes>
-                        <FeatureArchiveDialog
-                            isOpen={showDelDialog}
-                            onConfirm={() => {
-                                projectRefetch();
-                                navigate(`/projects/${projectId}`);
-                            }}
-                            onClose={() => setShowDelDialog(false)}
+    if (error !== undefined) {
+        return <div ref={ref} />;
+    }
+
+    return (
+        <div ref={ref}>
+            <StyledHeader>
+                <StyledInnerContainer>
+                    <StyledToggleInfoContainer>
+                        <FavoriteIconButton
+                            onClick={onFavorite}
+                            isFavorite={feature?.favorite}
+                        />
+                        <StyledFeatureViewHeader data-loading>
+                            {feature.name}{' '}
+                        </StyledFeatureViewHeader>
+                        <ConditionallyRender
+                            condition={!smallScreen}
+                            show={<FeatureStatusChip stale={feature?.stale} />}
+                        />
+                    </StyledToggleInfoContainer>
+
+                    <StyledToolbarContainer>
+                        <PermissionIconButton
+                            permission={CREATE_FEATURE}
                             projectId={projectId}
-                            featureId={featureId}
-                        />
-                        <FeatureStaleDialog
-                            isStale={feature.stale}
-                            isOpen={openStaleDialog}
-                            onClose={() => {
-                                setOpenStaleDialog(false);
-                                refetchFeature();
+                            data-loading
+                            component={Link}
+                            to={`/projects/${projectId}/features/${featureId}/strategies/copy`}
+                            tooltipProps={{
+                                title: 'Copy feature toggle',
                             }}
-                            featureId={featureId}
+                        >
+                            <FileCopy />
+                        </PermissionIconButton>
+                        <PermissionIconButton
+                            permission={DELETE_FEATURE}
                             projectId={projectId}
-                        />
-                        <AddTagDialog
-                            open={openTagDialog}
-                            setOpen={setOpenTagDialog}
-                        />
-                    </div>
-                }
+                            tooltipProps={{
+                                title: 'Archive feature toggle',
+                            }}
+                            data-loading
+                            onClick={() => setShowDelDialog(true)}
+                        >
+                            <Archive />
+                        </PermissionIconButton>
+                        <PermissionIconButton
+                            onClick={() => setOpenStaleDialog(true)}
+                            permission={UPDATE_FEATURE}
+                            projectId={projectId}
+                            tooltipProps={{
+                                title: 'Toggle stale state',
+                            }}
+                            data-loading
+                        >
+                            <WatchLater />
+                        </PermissionIconButton>
+                        <PermissionIconButton
+                            onClick={() => setOpenTagDialog(true)}
+                            permission={UPDATE_FEATURE}
+                            projectId={projectId}
+                            tooltipProps={{ title: 'Add tag' }}
+                            data-loading
+                        >
+                            <Label />
+                        </PermissionIconButton>
+                    </StyledToolbarContainer>
+                </StyledInnerContainer>
+                <StyledSeparator />
+                <StyledTabContainer>
+                    <Tabs
+                        value={activeTab.path}
+                        indicatorColor="primary"
+                        textColor="primary"
+                    >
+                        {tabData.map(tab => (
+                            <StyledTabButton
+                                key={tab.title}
+                                label={tab.title}
+                                value={tab.path}
+                                onClick={() => navigate(tab.path)}
+                            />
+                        ))}
+                    </Tabs>
+                </StyledTabContainer>
+            </StyledHeader>
+            <Routes>
+                <Route path="metrics" element={<FeatureMetrics />} />
+                <Route path="logs" element={<FeatureLog />} />
+                <Route
+                    path="variants"
+                    element={<FeatureEnvironmentVariants />}
+                />
+                <Route path="settings" element={<FeatureSettings />} />
+                <Route path="*" element={<FeatureOverview />} />
+            </Routes>
+            <FeatureArchiveDialog
+                isOpen={showDelDialog}
+                onConfirm={() => {
+                    projectRefetch();
+                    navigate(`/projects/${projectId}`);
+                }}
+                onClose={() => setShowDelDialog(false)}
+                projectId={projectId}
+                featureId={featureId}
             />
-        </MainLayout>
+            <FeatureStaleDialog
+                isStale={feature.stale}
+                isOpen={openStaleDialog}
+                onClose={() => {
+                    setOpenStaleDialog(false);
+                    refetchFeature();
+                }}
+                featureId={featureId}
+                projectId={projectId}
+            />
+            <AddTagDialog open={openTagDialog} setOpen={setOpenTagDialog} />
+        </div>
     );
 };

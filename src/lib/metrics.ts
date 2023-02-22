@@ -23,6 +23,7 @@ import { IUnleashStores } from './types/stores';
 import { hoursToMilliseconds, minutesToMilliseconds } from 'date-fns';
 import Timer = NodeJS.Timer;
 import { InstanceStatsService } from './services/instance-stats-service';
+import { ValidatedClientMetrics } from './services/client-metrics/schema';
 
 export default class MetricsMonitor {
     timer?: Timer;
@@ -118,6 +119,12 @@ export default class MetricsMonitor {
             help: 'Number of strategies',
         });
 
+        const clientAppsTotal = new client.Gauge({
+            name: 'client_apps_total',
+            help: 'Number of registered client apps aggregated by range by last seen',
+            labelNames: ['range'],
+        });
+
         const samlEnabled = new client.Gauge({
             name: 'saml_enabled',
             help: 'Whether SAML is enabled',
@@ -170,6 +177,13 @@ export default class MetricsMonitor {
 
                 oidcEnabled.reset();
                 oidcEnabled.set(stats.OIDCenabled ? 1 : 0);
+
+                clientAppsTotal.reset();
+                stats.clientApps.forEach((clientStat) =>
+                    clientAppsTotal
+                        .labels({ range: clientStat.range })
+                        .set(clientStat.count),
+                );
             } catch (e) {}
         }
 
@@ -255,16 +269,13 @@ export default class MetricsMonitor {
             featureToggleUpdateTotal.labels(featureName, project, 'n/a').inc();
         });
 
-        eventBus.on(CLIENT_METRICS, (m) => {
-            // eslint-disable-next-line no-restricted-syntax
+        eventBus.on(CLIENT_METRICS, (m: ValidatedClientMetrics) => {
             for (const entry of Object.entries(m.bucket.toggles)) {
                 featureToggleUsageTotal
                     .labels(entry[0], 'true', m.appName)
-                    // @ts-expect-error
                     .inc(entry[1].yes);
                 featureToggleUsageTotal
                     .labels(entry[0], 'false', m.appName)
-                    // @ts-expect-error
                     .inc(entry[1].no);
             }
         });

@@ -122,6 +122,14 @@ test('should collect metrics for feature toggle size', async () => {
     expect(metrics).toMatch(/feature_toggles_total{version="(.*)"} 0/);
 });
 
+test('should collect metrics for feature toggle size', async () => {
+    await new Promise((done) => {
+        setTimeout(done, 10);
+    });
+    const metrics = await prometheusRegister.metrics();
+    expect(metrics).toMatch(/client_apps_total{range="(.*)"} 0/);
+});
+
 test('Should collect metrics for database', async () => {
     const metrics = await prometheusRegister.metrics();
     expect(metrics).toMatch(/db_pool_max/);

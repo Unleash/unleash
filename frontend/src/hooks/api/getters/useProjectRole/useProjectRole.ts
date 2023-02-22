@@ -1,7 +1,8 @@
-import useSWR, { mutate, SWRConfiguration } from 'swr';
+import { mutate, SWRConfiguration } from 'swr';
 import { useState, useEffect } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
+import { useEnterpriseSWR } from '../useEnterpriseSWR/useEnterpriseSWR';
 
 const useProjectRole = (id: string, options: SWRConfiguration = {}) => {
     const fetcher = () => {
@@ -13,7 +14,12 @@ const useProjectRole = (id: string, options: SWRConfiguration = {}) => {
             .then(res => res.json());
     };
 
-    const { data, error } = useSWR(`api/admin/roles/${id}`, fetcher, options);
+    const { data, error } = useEnterpriseSWR(
+        {},
+        `api/admin/roles/${id}`,
+        fetcher,
+        options
+    );
     const [loading, setLoading] = useState(!error && !data);
 
     const refetch = () => {

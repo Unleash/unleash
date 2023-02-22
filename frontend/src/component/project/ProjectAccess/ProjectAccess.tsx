@@ -9,6 +9,7 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { ProjectAccessTable } from 'component/project/ProjectAccess/ProjectAccessTable/ProjectAccessTable';
 import { useProjectNameOrId } from 'hooks/api/getters/useProject/useProject';
+import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
 
 export const ProjectAccess = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -19,26 +20,18 @@ export const ProjectAccess = () => {
 
     if (isOss()) {
         return (
-            <PageContent header={<PageHeader title="Project access" />}>
-                <Alert severity="error">
-                    Controlling access to projects requires a paid version of
-                    Unleash. Check out{' '}
-                    <a
-                        href="https://www.getunleash.io"
-                        target="_blank"
-                        rel="noreferrer"
-                    >
-                        getunleash.io
-                    </a>{' '}
-                    to find out more.
-                </Alert>
+            <PageContent
+                header={<PageHeader title="Access" />}
+                sx={{ justifyContent: 'center' }}
+            >
+                <PremiumFeature feature="access" />
             </PageContent>
         );
     }
 
     if (!hasAccess(UPDATE_PROJECT, projectId)) {
         return (
-            <PageContent header={<PageHeader title="Project access" />}>
+            <PageContent header={<PageHeader title="Access" />}>
                 <Alert severity="error">
                     You need project owner permissions to access this section.
                 </Alert>

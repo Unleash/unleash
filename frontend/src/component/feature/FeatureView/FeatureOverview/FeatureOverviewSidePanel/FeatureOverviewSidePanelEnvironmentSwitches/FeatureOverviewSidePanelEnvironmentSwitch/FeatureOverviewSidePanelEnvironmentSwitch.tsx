@@ -13,12 +13,15 @@ import { UpdateEnabledMessage } from 'component/changeRequest/ChangeRequestConfi
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { styled } from '@mui/material';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
+import { FeatureOverviewSidePanelEnvironmentHider } from './FeatureOverviewSidePanelEnvironmentHider';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     marginLeft: theme.spacing(-1.5),
     '&:not(:last-of-type)': {
         marginBottom: theme.spacing(2),
     },
+    display: 'flex',
+    alignItems: 'center',
 }));
 
 const StyledLabel = styled('label')(() => ({
@@ -32,6 +35,8 @@ interface IFeatureOverviewSidePanelEnvironmentSwitchProps {
     callback?: () => void;
     showInfoBox: () => void;
     children?: React.ReactNode;
+    hiddenEnvironments: Set<String>;
+    setHiddenEnvironments: (environment: string) => void;
 }
 
 export const FeatureOverviewSidePanelEnvironmentSwitch = ({
@@ -39,6 +44,8 @@ export const FeatureOverviewSidePanelEnvironmentSwitch = ({
     callback,
     showInfoBox,
     children,
+    hiddenEnvironments,
+    setHiddenEnvironments,
 }: IFeatureOverviewSidePanelEnvironmentSwitchProps) => {
     const { name, enabled } = environment;
 
@@ -136,6 +143,11 @@ export const FeatureOverviewSidePanelEnvironmentSwitch = ({
                 />
                 {children ?? defaultContent}
             </StyledLabel>
+            <FeatureOverviewSidePanelEnvironmentHider
+                environment={environment}
+                hiddenEnvironments={hiddenEnvironments}
+                setHiddenEnvironments={setHiddenEnvironments}
+            />
             <ChangeRequestDialogue
                 isOpen={changeRequestDialogDetails.isOpen}
                 onClose={onChangeRequestToggleClose}

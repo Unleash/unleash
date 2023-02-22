@@ -4,8 +4,8 @@ import { IUnleashServices } from '../../types/services';
 import { IAuthType, IUnleashConfig } from '../../types/option';
 import version from '../../util/version';
 import Controller from '../controller';
-import VersionService from '../../services/version-service';
-import SettingService from '../../services/setting-service';
+import VersionService from 'lib/services/version-service';
+import SettingService from 'lib/services/setting-service';
 import {
     simpleAuthSettingsKey,
     SimpleAuthSettings,
@@ -24,13 +24,19 @@ import { extractUsername } from '../../util/extract-user';
 import NotFoundError from '../../error/notfound-error';
 import { SetUiConfigSchema } from '../../openapi/spec/set-ui-config-schema';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
+import { ProxyService } from 'lib/services';
+import MaintenanceService from 'lib/services/maintenance-service';
 
 class ConfigController extends Controller {
     private versionService: VersionService;
 
     private settingService: SettingService;
 
+    private proxyService: ProxyService;
+
     private emailService: EmailService;
+
+    private maintenanceService: MaintenanceService;
 
     private readonly openApiService: OpenApiService;
 
@@ -41,12 +47,16 @@ class ConfigController extends Controller {
             settingService,
             emailService,
             openApiService,
+            proxyService,
+            maintenanceService,
         }: Pick<
             IUnleashServices,
             | 'versionService'
             | 'settingService'
             | 'emailService'
             | 'openApiService'
+            | 'proxyService'
+            | 'maintenanceService'
         >,
     ) {
         super(config);
@@ -54,6 +64,8 @@ class ConfigController extends Controller {
         this.settingService = settingService;
         this.emailService = emailService;
         this.openApiService = openApiService;
+        this.proxyService = proxyService;
+        this.maintenanceService = maintenanceService;
 
         this.route({
             method: 'get',
@@ -91,10 +103,14 @@ class ConfigController extends Controller {
         req: AuthedRequest,
         res: Response<UiConfigSchema>,
     ): Promise<void> {
-        const [frontendSettings, simpleAuthSettings] = await Promise.all([
-            this.settingService.getFrontendSettings(),
-            this.settingService.get<SimpleAuthSettings>(simpleAuthSettingsKey),
-        ]);
+        const [frontendSettings, simpleAuthSettings, maintenanceMode] =
+            await Promise.all([
+                this.proxyService.getFrontendSettings(false),
+                this.settingService.get<SimpleAuthSettings>(
+                    simpleAuthSettingsKey,
+                ),
+                this.maintenanceService.isMaintenanceMode(),
+            ]);
 
         const disablePasswordAuth =
             simpleAuthSettings?.disabled ||
@@ -117,7 +133,9 @@ class ConfigController extends Controller {
             strategySegmentsLimit: this.config.strategySegmentsLimit,
             frontendApiOrigins: frontendSettings.frontendApiOrigins,
             versionInfo: this.versionService.getVersionInfo(),
+            networkViewEnabled: this.config.prometheusApi !== undefined,
             disablePasswordAuth,
+            maintenanceMode,
         };
 
         this.openApiService.respondWithValidation(
@@ -133,7 +151,7 @@ class ConfigController extends Controller {
         res: Response<string>,
     ): Promise<void> {
         if (req.body.frontendSettings) {
-            await this.settingService.setFrontendSettings(
+            await this.proxyService.setFrontendSettings(
                 req.body.frontendSettings,
                 extractUsername(req),
             );

@@ -1,3 +1,4 @@
+import { subDays } from 'date-fns';
 import User, { IUser } from '../types/user';
 import { AccessService } from './access-service';
 import NameExistsError from '../error/name-exists-error';
@@ -15,8 +16,9 @@ import {
     ProjectGroupAddedEvent,
     ProjectGroupRemovedEvent,
     ProjectGroupUpdateRoleEvent,
+    FEATURE_ENVIRONMENT_ENABLED,
 } from '../types/events';
-import { IUnleashStores, IUnleashConfig } from '../types';
+import { IUnleashStores, IUnleashConfig, IAccountStore } from '../types';
 import {
     FeatureToggle,
     IProject,
@@ -42,10 +44,12 @@ import IncompatibleProjectError from '../error/incompatible-project-error';
 import { DEFAULT_PROJECT } from '../types/project';
 import { IFeatureTagStore } from 'lib/types/stores/feature-tag-store';
 import ProjectWithoutOwnerError from '../error/project-without-owner-error';
-import { IUserStore } from 'lib/types/stores/user-store';
 import { arraysHaveSameItems } from '../util/arraysHaveSameItems';
 import { GroupService } from './group-service';
 import { IGroupModelWithProjectRole, IGroupRole } from 'lib/types/group';
+import { FavoritesService } from './favorites-service';
+import { TimeToProduction } from '../read-models/time-to-production/time-to-production';
+import { IProjectStatsStore } from 'lib/types/stores/project-stats-store-type';
 
 const getCreatedBy = (user: IUser) => user.email || user.username;
 
@@ -53,6 +57,26 @@ export interface AccessWithRoles {
     users: IUserWithRole[];
     roles: IRoleDescriptor[];
     groups: IGroupModelWithProjectRole[];
+}
+
+type Days = number;
+type Count = number;
+
+export interface IProjectStats {
+    avgTimeToProdCurrentWindow: Days;
+    avgTimeToProdPastWindow: Days;
+    createdCurrentWindow: Count;
+    createdPastWindow: Count;
+    archivedCurrentWindow: Count;
+    archivedPastWindow: Count;
+    projectActivityCurrentWindow: Count;
+    projectActivityPastWindow: Count;
+    projectMembersAddedCurrentWindow: Count;
+}
+
+interface ICalculateStatus {
+    projectId: string;
+    updates: IProjectStats;
 }
 
 export default class ProjectService {
@@ -78,7 +102,11 @@ export default class ProjectService {
 
     private tagStore: IFeatureTagStore;
 
-    private userStore: IUserStore;
+    private accountStore: IAccountStore;
+
+    private favoritesService: FavoritesService;
+
+    private projectStatsStore: IProjectStatsStore;
 
     constructor(
         {
@@ -89,7 +117,8 @@ export default class ProjectService {
             environmentStore,
             featureEnvironmentStore,
             featureTagStore,
-            userStore,
+            accountStore,
+            projectStatsStore,
         }: Pick<
             IUnleashStores,
             | 'projectStore'
@@ -99,12 +128,14 @@ export default class ProjectService {
             | 'environmentStore'
             | 'featureEnvironmentStore'
             | 'featureTagStore'
-            | 'userStore'
+            | 'accountStore'
+            | 'projectStatsStore'
         >,
         config: IUnleashConfig,
         accessService: AccessService,
         featureToggleService: FeatureToggleService,
         groupService: GroupService,
+        favoriteService: FavoritesService,
     ) {
         this.store = projectStore;
         this.environmentStore = environmentStore;
@@ -114,9 +145,11 @@ export default class ProjectService {
         this.featureToggleStore = featureToggleStore;
         this.featureTypeStore = featureTypeStore;
         this.featureToggleService = featureToggleService;
+        this.favoritesService = favoriteService;
         this.tagStore = featureTagStore;
-        this.userStore = userStore;
+        this.accountStore = accountStore;
         this.groupService = groupService;
+        this.projectStatsStore = projectStatsStore;
         this.logger = config.getLogger('services/project-service.js');
     }
 
@@ -312,7 +345,7 @@ export default class ProjectService {
         const [roles, users] = await this.accessService.getProjectRoleAccess(
             projectId,
         );
-        const user = await this.userStore.get(userId);
+        const user = await this.accountStore.get(userId);
 
         const role = roles.find((r) => r.id === roleId);
         if (!role) {
@@ -354,7 +387,7 @@ export default class ProjectService {
 
         await this.accessService.removeUserFromRole(userId, role.id, projectId);
 
-        const user = await this.userStore.get(userId);
+        const user = await this.accountStore.get(userId);
 
         await this.eventStore.store(
             new ProjectUserRemovedEvent({
@@ -587,24 +620,206 @@ export default class ProjectService {
         return this.store.getProjectsByUser(userId);
     }
 
+    async statusJob(): Promise<void> {
+        const projects = await this.store.getAll();
+
+        const statusUpdates = await Promise.all(
+            projects.map((project) => this.getStatusUpdates(project.id)),
+        );
+
+        await Promise.all(
+            statusUpdates.map((statusUpdate) => {
+                return this.projectStatsStore.updateProjectStats(
+                    statusUpdate.projectId,
+                    statusUpdate.updates,
+                );
+            }),
+        );
+    }
+
+    async getStatusUpdates(projectId: string): Promise<ICalculateStatus> {
+        // Get all features for project with type release
+        const features = await this.featureToggleStore.getAll({
+            type: 'release',
+            project: projectId,
+        });
+
+        const dateMinusThirtyDays = subDays(new Date(), 30).toISOString();
+        const dateMinusSixtyDays = subDays(new Date(), 60).toISOString();
+
+        const [createdCurrentWindow, createdPastWindow] = await Promise.all([
+            await this.featureToggleStore.getByDate({
+                project: projectId,
+                dateAccessor: 'created_at',
+                date: dateMinusThirtyDays,
+            }),
+            await this.featureToggleStore.getByDate({
+                project: projectId,
+                dateAccessor: 'created_at',
+                range: [dateMinusSixtyDays, dateMinusThirtyDays],
+            }),
+        ]);
+
+        const [archivedCurrentWindow, archivedPastWindow] = await Promise.all([
+            await this.featureToggleStore.getByDate({
+                project: projectId,
+                archived: true,
+                dateAccessor: 'archived_at',
+                date: dateMinusThirtyDays,
+            }),
+            await this.featureToggleStore.getByDate({
+                project: projectId,
+                archived: true,
+                dateAccessor: 'archived_at',
+                range: [dateMinusSixtyDays, dateMinusThirtyDays],
+            }),
+        ]);
+
+        const [projectActivityCurrentWindow, projectActivityPastWindow] =
+            await Promise.all([
+                this.eventStore.query([
+                    { op: 'where', parameters: { project: projectId } },
+                    {
+                        op: 'beforeDate',
+                        parameters: {
+                            dateAccessor: 'created_at',
+                            date: dateMinusThirtyDays,
+                        },
+                    },
+                ]),
+                this.eventStore.query([
+                    { op: 'where', parameters: { project: projectId } },
+                    {
+                        op: 'betweenDate',
+                        parameters: {
+                            dateAccessor: 'created_at',
+                            range: [dateMinusSixtyDays, dateMinusThirtyDays],
+                        },
+                    },
+                ]),
+            ]);
+
+        // Get all project environments with type of production
+        const productionEnvironments =
+            await this.environmentStore.getProjectEnvironments(projectId, {
+                type: 'production',
+            });
+
+        // Get all events for features that correspond to feature toggle environment ON
+        // Filter out events that are not a production evironment
+
+        const eventsCurrentWindow = await this.eventStore.query([
+            {
+                op: 'forFeatures',
+                parameters: {
+                    features: features.map((feature) => feature.name),
+                    environments: productionEnvironments.map((env) => env.name),
+                    type: FEATURE_ENVIRONMENT_ENABLED,
+                    projectId,
+                },
+            },
+            {
+                op: 'beforeDate',
+                parameters: {
+                    dateAccessor: 'created_at',
+                    date: dateMinusThirtyDays,
+                },
+            },
+        ]);
+
+        const eventsPastWindow = await this.eventStore.query([
+            {
+                op: 'forFeatures',
+                parameters: {
+                    features: features.map((feature) => feature.name),
+                    environments: productionEnvironments.map((env) => env.name),
+                    type: FEATURE_ENVIRONMENT_ENABLED,
+                    projectId,
+                },
+            },
+            {
+                op: 'betweenDate',
+                parameters: {
+                    dateAccessor: 'created_at',
+                    range: [dateMinusSixtyDays, dateMinusThirtyDays],
+                },
+            },
+        ]);
+
+        const currentWindowTimeToProdReadModel = new TimeToProduction(
+            features,
+            productionEnvironments,
+            eventsCurrentWindow,
+        );
+
+        const pastWindowTimeToProdReadModel = new TimeToProduction(
+            features,
+            productionEnvironments,
+            eventsPastWindow,
+        );
+
+        const projectMembersAddedCurrentWindow =
+            await this.store.getMembersCountByProjectAfterDate(
+                projectId,
+                dateMinusThirtyDays,
+            );
+
+        return {
+            projectId,
+            updates: {
+                avgTimeToProdCurrentWindow:
+                    currentWindowTimeToProdReadModel.calculateAverageTimeToProd(),
+                avgTimeToProdPastWindow:
+                    pastWindowTimeToProdReadModel.calculateAverageTimeToProd(),
+                createdCurrentWindow: createdCurrentWindow.length,
+                createdPastWindow: createdPastWindow.length,
+                archivedCurrentWindow: archivedCurrentWindow.length,
+                archivedPastWindow: archivedPastWindow.length,
+                projectActivityCurrentWindow:
+                    projectActivityCurrentWindow.length,
+                projectActivityPastWindow: projectActivityPastWindow.length,
+                projectMembersAddedCurrentWindow:
+                    projectMembersAddedCurrentWindow,
+            },
+        };
+    }
+
     async getProjectOverview(
         projectId: string,
         archived: boolean = false,
+        userId?: number,
     ): Promise<IProjectOverview> {
-        const project = await this.store.get(projectId);
-        const environments = await this.store.getEnvironmentsForProject(
-            projectId,
-        );
-        const features = await this.featureToggleService.getFeatureOverview({
-            projectId,
-            archived,
-        });
-        const members = await this.store.getMembersCountByProject(projectId);
-        return {
-            name: project.name,
+        const [
+            project,
             environments,
+            features,
+            members,
+            favorite,
+            projectStats,
+        ] = await Promise.all([
+            this.store.get(projectId),
+            this.store.getEnvironmentsForProject(projectId),
+            this.featureToggleService.getFeatureOverview({
+                projectId,
+                archived,
+                userId,
+            }),
+            this.store.getMembersCountByProject(projectId),
+            this.favoritesService.isFavoriteProject({
+                project: projectId,
+                userId,
+            }),
+            this.projectStatsStore.getProjectStats(projectId),
+        ]);
+
+        return {
+            stats: projectStats,
+            name: project.name,
             description: project.description,
             health: project.health,
+            favorite: favorite,
+            updatedAt: project.updatedAt,
+            environments,
             features,
             members,
             version: 1,

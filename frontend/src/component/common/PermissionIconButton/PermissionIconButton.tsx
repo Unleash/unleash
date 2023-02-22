@@ -1,6 +1,5 @@
 import { IconButton, IconButtonProps } from '@mui/material';
-import React, { ReactNode, useContext } from 'react';
-import AccessContext from 'contexts/AccessContext';
+import React, { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import {
     ITooltipResolverProps,
@@ -8,6 +7,10 @@ import {
 } from 'component/common/TooltipResolver/TooltipResolver';
 import { formatAccessText } from 'utils/formatAccessText';
 import { useId } from 'hooks/useId';
+import {
+    useHasProjectEnvironmentAccess,
+    useHasRootAccess,
+} from 'hooks/useHasAccess';
 
 interface IPermissionIconButtonProps {
     permission: string;
@@ -26,6 +29,7 @@ interface IPermissionIconButtonProps {
 
 interface IButtonProps extends IPermissionIconButtonProps {
     onClick: (event: React.SyntheticEvent) => void;
+    style?: React.CSSProperties;
 }
 
 interface ILinkProps extends IPermissionIconButtonProps {
@@ -33,7 +37,33 @@ interface ILinkProps extends IPermissionIconButtonProps {
     to: string;
 }
 
-const PermissionIconButton = ({
+const RootPermissionIconButton = (props: IButtonProps | ILinkProps) => {
+    const access = useHasRootAccess(
+        props.permission,
+        props.projectId,
+        props.environmentId
+    );
+
+    return <BasePermissionIconButton {...props} access={access} />;
+};
+
+const ProjectEnvironmentPermissionIconButton = (
+    props: (IButtonProps | ILinkProps) & {
+        environmentId: string;
+        projectId: string;
+    }
+) => {
+    const access = useHasProjectEnvironmentAccess(
+        props.permission,
+        props.projectId,
+        props.environmentId
+    );
+
+    return <BasePermissionIconButton {...props} access={access} />;
+};
+
+const BasePermissionIconButton = ({
+    access,
     permission,
     projectId,
     children,
@@ -41,18 +71,8 @@ const PermissionIconButton = ({
     tooltipProps,
     disabled,
     ...rest
-}: IButtonProps | ILinkProps) => {
-    const { hasAccess } = useContext(AccessContext);
+}: (IButtonProps | ILinkProps) & { access: boolean }) => {
     const id = useId();
-    let access;
-
-    if (projectId && environmentId) {
-        access = hasAccess(permission, projectId, environmentId);
-    } else if (projectId) {
-        access = hasAccess(permission, projectId);
-    } else {
-        access = hasAccess(permission);
-    }
 
     return (
         <TooltipResolver
@@ -73,6 +93,23 @@ const PermissionIconButton = ({
             </div>
         </TooltipResolver>
     );
+};
+
+const PermissionIconButton = (props: IButtonProps | ILinkProps) => {
+    if (
+        typeof props.projectId !== 'undefined' &&
+        typeof props.environmentId !== 'undefined'
+    ) {
+        return (
+            <ProjectEnvironmentPermissionIconButton
+                {...props}
+                projectId={props.projectId}
+                environmentId={props.environmentId}
+            />
+        );
+    }
+
+    return <RootPermissionIconButton {...props} />;
 };
 
 export default PermissionIconButton;

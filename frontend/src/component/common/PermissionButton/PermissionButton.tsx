@@ -1,7 +1,6 @@
 import { Button, ButtonProps } from '@mui/material';
 import { Lock } from '@mui/icons-material';
-import AccessContext from 'contexts/AccessContext';
-import React, { useContext } from 'react';
+import React from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
     TooltipResolver,
@@ -9,6 +8,10 @@ import {
 } from 'component/common/TooltipResolver/TooltipResolver';
 import { formatAccessText } from 'utils/formatAccessText';
 import { useId } from 'hooks/useId';
+import {
+    useHasRootAccess,
+    useHasProjectEnvironmentAccess,
+} from 'hooks/useHasAccess';
 
 export interface IPermissionButtonProps extends Omit<ButtonProps, 'title'> {
     permission: string | string[];
@@ -19,85 +22,110 @@ export interface IPermissionButtonProps extends Omit<ButtonProps, 'title'> {
     tooltipProps?: Omit<ITooltipResolverProps, 'children'>;
 }
 
-const PermissionButton: React.FC<IPermissionButtonProps> = React.forwardRef(
-    (
-        {
-            permission,
-            variant = 'contained',
-            color = 'primary',
-            onClick,
-            children,
-            disabled,
-            projectId,
-            environmentId,
-            tooltipProps,
-            ...rest
-        },
-        ref
-    ) => {
-        const { hasAccess } = useContext(AccessContext);
-        const id = useId();
-        let access;
+interface IPermissionBaseButtonProps extends IPermissionButtonProps {
+    access: boolean;
+}
 
-        const handleAccess = () => {
-            let access;
-            if (Array.isArray(permission)) {
-                access = permission.some(permission => {
-                    if (projectId && environmentId) {
-                        return hasAccess(permission, projectId, environmentId);
-                    } else if (projectId) {
-                        return hasAccess(permission, projectId);
-                    } else {
-                        return hasAccess(permission);
-                    }
-                });
-            } else {
-                if (projectId && environmentId) {
-                    access = hasAccess(permission, projectId, environmentId);
-                } else if (projectId) {
-                    access = hasAccess(permission, projectId);
-                } else {
-                    access = hasAccess(permission);
-                }
-            }
+export interface IProjectPermissionButtonProps extends IPermissionButtonProps {
+    projectId: string;
+    environmentId: string;
+}
 
-            return access;
-        };
-
-        access = handleAccess();
-
-        return (
-            <TooltipResolver
-                {...tooltipProps}
-                title={formatAccessText(access, tooltipProps?.title)}
-                arrow
-            >
-                <span id={id}>
-                    <Button
-                        ref={ref}
-                        onClick={onClick}
-                        disabled={disabled || !access}
-                        aria-labelledby={id}
-                        variant={variant}
-                        color={color}
-                        {...rest}
-                        endIcon={
-                            <>
-                                <ConditionallyRender
-                                    condition={!access}
-                                    show={<Lock titleAccess="Locked" />}
-                                    elseShow={
-                                        Boolean(rest.endIcon) && rest.endIcon
-                                    }
-                                />
-                            </>
-                        }
-                    >
-                        {children}
-                    </Button>
-                </span>
-            </TooltipResolver>
+const ProjectEnvironmentPermissionButton: React.FC<IProjectPermissionButtonProps> =
+    React.forwardRef((props, ref) => {
+        const access = useHasProjectEnvironmentAccess(
+            props.permission,
+            props.projectId,
+            props.environmentId
         );
+
+        return <BasePermissionButton {...props} access={access} ref={ref} />;
+    });
+
+const RootPermissionButton: React.FC<IPermissionButtonProps> = React.forwardRef(
+    (props, ref) => {
+        const access = useHasRootAccess(
+            props.permission,
+            props.projectId,
+            props.environmentId
+        );
+
+        return <BasePermissionButton {...props} access={access} ref={ref} />;
+    }
+);
+
+const BasePermissionButton: React.FC<IPermissionBaseButtonProps> =
+    React.forwardRef(
+        (
+            {
+                permission,
+                access,
+                variant = 'contained',
+                color = 'primary',
+                onClick,
+                children,
+                disabled,
+                projectId,
+                environmentId,
+                tooltipProps,
+                ...rest
+            },
+            ref
+        ) => {
+            const id = useId();
+
+            return (
+                <TooltipResolver
+                    {...tooltipProps}
+                    title={formatAccessText(access, tooltipProps?.title)}
+                    arrow
+                >
+                    <span id={id}>
+                        <Button
+                            ref={ref}
+                            onClick={onClick}
+                            disabled={disabled || !access}
+                            aria-labelledby={id}
+                            variant={variant}
+                            color={color}
+                            {...rest}
+                            endIcon={
+                                <>
+                                    <ConditionallyRender
+                                        condition={!access}
+                                        show={<Lock titleAccess="Locked" />}
+                                        elseShow={
+                                            Boolean(rest.endIcon) &&
+                                            rest.endIcon
+                                        }
+                                    />
+                                </>
+                            }
+                        >
+                            {children}
+                        </Button>
+                    </span>
+                </TooltipResolver>
+            );
+        }
+    );
+
+const PermissionButton: React.FC<IPermissionButtonProps> = React.forwardRef(
+    (props, ref) => {
+        if (
+            typeof props.projectId !== 'undefined' &&
+            typeof props.environmentId !== 'undefined'
+        ) {
+            return (
+                <ProjectEnvironmentPermissionButton
+                    {...props}
+                    environmentId={props.environmentId}
+                    projectId={props.projectId}
+                    ref={ref}
+                />
+            );
+        }
+        return <RootPermissionButton {...props} ref={ref} />;
     }
 );
 

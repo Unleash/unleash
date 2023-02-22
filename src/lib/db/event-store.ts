@@ -1,10 +1,11 @@
-import { Knex } from 'knex';
 import { IEvent, IBaseEvent } from '../types/events';
 import { LogProvider, Logger } from '../logger';
 import { IEventStore } from '../types/stores/event-store';
 import { ITag } from '../types/model';
 import { SearchEventsSchema } from '../openapi/spec/search-events-schema';
 import { AnyEventEmitter } from '../util/anyEventEmitter';
+import { Db } from './db';
+import { Knex } from 'knex';
 
 const EVENT_COLUMNS = [
     'id',
@@ -17,7 +18,48 @@ const EVENT_COLUMNS = [
     'feature_name',
     'project',
     'environment',
-];
+] as const;
+
+export type IQueryOperations =
+    | IWhereOperation
+    | IBeforeDateOperation
+    | IBetweenDatesOperation
+    | IForFeaturesOperation;
+
+interface IWhereOperation {
+    op: 'where';
+    parameters: {
+        [key: string]: string;
+    };
+}
+
+interface IBeforeDateOperation {
+    op: 'beforeDate';
+    parameters: {
+        dateAccessor: string;
+        date: string;
+    };
+}
+
+interface IBetweenDatesOperation {
+    op: 'betweenDate';
+    parameters: {
+        dateAccessor: string;
+        range: string[];
+    };
+}
+
+interface IForFeaturesOperation {
+    op: 'forFeatures';
+    parameters: IForFeaturesParams;
+}
+
+interface IForFeaturesParams {
+    type: string;
+    projectId: string;
+    environments: string[];
+    features: string[];
+}
 
 export interface IEventTable {
     id: number;
@@ -35,11 +77,11 @@ export interface IEventTable {
 const TABLE = 'events';
 
 class EventStore extends AnyEventEmitter implements IEventStore {
-    private db: Knex;
+    private db: Db;
 
     private logger: Logger;
 
-    constructor(db: Knex, getLogger: LogProvider) {
+    constructor(db: Db, getLogger: LogProvider) {
         super();
         this.db = db;
         this.logger = getLogger('lib/db/event-store.ts');
@@ -118,6 +160,77 @@ class EventStore extends AnyEventEmitter implements IEventStore {
         );
         const { present } = result.rows[0];
         return present;
+    }
+
+    async query(operations: IQueryOperations[]): Promise<IEvent[]> {
+        try {
+            let query: Knex.QueryBuilder = this.select();
+
+            operations.forEach((operation) => {
+                if (operation.op === 'where') {
+                    query = this.where(query, operation.parameters);
+                }
+
+                if (operation.op === 'forFeatures') {
+                    query = this.forFeatures(query, operation.parameters);
+                }
+
+                if (operation.op === 'beforeDate') {
+                    query = this.beforeDate(query, operation.parameters);
+                }
+
+                if (operation.op === 'betweenDate') {
+                    query = this.betweenDate(query, operation.parameters);
+                }
+            });
+
+            const rows = await query;
+            return rows.map(this.rowToEvent);
+        } catch (e) {
+            return [];
+        }
+    }
+
+    where(
+        query: Knex.QueryBuilder,
+        parameters: { [key: string]: string },
+    ): Knex.QueryBuilder {
+        return query.where(parameters);
+    }
+
+    beforeDate(
+        query: Knex.QueryBuilder,
+        parameters: { dateAccessor: string; date: string },
+    ): Knex.QueryBuilder {
+        return query.andWhere(parameters.dateAccessor, '>=', parameters.date);
+    }
+
+    betweenDate(
+        query: Knex.QueryBuilder,
+        parameters: { dateAccessor: string; range: string[] },
+    ): Knex.QueryBuilder {
+        if (parameters.range && parameters.range.length === 2) {
+            return query.andWhereBetween(parameters.dateAccessor, [
+                parameters.range[0],
+                parameters.range[1],
+            ]);
+        }
+
+        return query;
+    }
+
+    select(): Knex.QueryBuilder {
+        return this.db.select(EVENT_COLUMNS).from(TABLE);
+    }
+
+    forFeatures(
+        query: Knex.QueryBuilder,
+        parameters: IForFeaturesParams,
+    ): Knex.QueryBuilder {
+        return query
+            .where({ type: parameters.type, project: parameters.projectId })
+            .whereIn('feature_name', parameters.features)
+            .whereIn('environment', parameters.environments);
     }
 
     async get(key: number): Promise<IEvent> {

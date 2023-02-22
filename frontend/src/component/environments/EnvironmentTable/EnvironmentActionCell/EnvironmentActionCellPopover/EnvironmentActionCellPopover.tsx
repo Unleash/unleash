@@ -25,7 +25,6 @@ import {
     VisibilityOffOutlined,
     VisibilityOutlined,
 } from '@mui/icons-material';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledMenuList = styled(MenuList)(({ theme }) => ({
@@ -59,8 +58,6 @@ export const EnvironmentActionCellPopover = ({
     onClone,
     onDelete,
 }: IEnvironmentActionCellPopoverProps) => {
-    const { uiConfig } = useUiConfig();
-
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
     const open = Boolean(anchorEl);
@@ -118,31 +115,26 @@ export const EnvironmentActionCellPopover = ({
                             </StyledMenuItem>
                         )}
                     </PermissionHOC>
-                    <ConditionallyRender
-                        condition={Boolean(uiConfig.flags.cloneEnvironment)}
-                        show={
-                            <PermissionHOC permission={ADMIN}>
-                                {({ hasAccess }) => (
-                                    <StyledMenuItem
-                                        onClick={() => {
-                                            onClone();
-                                            handleClose();
-                                        }}
-                                        disabled={!hasAccess}
-                                    >
-                                        <ListItemIcon>
-                                            <CopyIcon />
-                                        </ListItemIcon>
-                                        <ListItemText>
-                                            <Typography variant="body2">
-                                                Clone
-                                            </Typography>
-                                        </ListItemText>
-                                    </StyledMenuItem>
-                                )}
-                            </PermissionHOC>
-                        }
-                    />
+                    <PermissionHOC permission={ADMIN}>
+                        {({ hasAccess }) => (
+                            <StyledMenuItem
+                                onClick={() => {
+                                    onClone();
+                                    handleClose();
+                                }}
+                                disabled={!hasAccess}
+                            >
+                                <ListItemIcon>
+                                    <CopyIcon />
+                                </ListItemIcon>
+                                <ListItemText>
+                                    <Typography variant="body2">
+                                        Clone
+                                    </Typography>
+                                </ListItemText>
+                            </StyledMenuItem>
+                        )}
+                    </PermissionHOC>
                     <PermissionHOC permission={UPDATE_ENVIRONMENT}>
                         {({ hasAccess }) => (
                             <StyledMenuItem

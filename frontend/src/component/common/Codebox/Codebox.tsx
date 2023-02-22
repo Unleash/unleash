@@ -1,16 +1,31 @@
-import { useStyles } from './Codebox.styles';
+import { styled } from '@mui/material';
 
 interface ICodeboxProps {
     text: string;
 }
 
-const Codebox = ({ text }: ICodeboxProps) => {
-    const { classes: styles } = useStyles();
+const StyledContainer = styled('div')(({ theme }) => ({
+    backgroundColor: theme.palette.codebox,
+    padding: theme.spacing(2),
+    borderRadius: theme.shape.borderRadiusMedium,
+    position: 'relative',
+    maxHeight: '500px',
+    overflow: 'auto',
+}));
 
+const StyledCode = styled('pre')(({ theme }) => ({
+    margin: 0,
+    wordBreak: 'break-all',
+    whiteSpace: 'pre-wrap',
+    color: theme.palette.formSidebarTextColor,
+    fontSize: theme.fontSizes.smallBody,
+}));
+
+const Codebox = ({ text }: ICodeboxProps) => {
     return (
-        <div className={styles.container}>
-            <pre className={styles.code}>{text}</pre>
-        </div>
+        <StyledContainer>
+            <StyledCode>{text}</StyledCode>
+        </StyledContainer>
     );
 };
 

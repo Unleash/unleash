@@ -23,11 +23,23 @@ export default class FakeFeatureEnvironmentStore
         environment: string,
         variants: IVariant[],
     ): Promise<void> {
+        this.setVariantsToFeatureEnvironments(
+            featureName,
+            [environment],
+            variants,
+        );
+    }
+
+    async setVariantsToFeatureEnvironments(
+        featureName: string,
+        environments: string[],
+        variants: IVariant[],
+    ): Promise<void> {
         this.featureEnvironments
             .filter(
                 (fe) =>
                     fe.featureName === featureName &&
-                    fe.environment === environment,
+                    environments.includes(fe.environment),
             )
             .map((fe) => (fe.variants = variants));
     }
@@ -216,6 +228,15 @@ export default class FakeFeatureEnvironmentStore
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         project: string,
     ): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
+
+    getAllByFeatures(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        features: string[],
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        environment?: string,
+    ): Promise<IFeatureEnvironment[]> {
         throw new Error('Method not implemented.');
     }
 }

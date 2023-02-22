@@ -15,6 +15,7 @@ import { DB_TIME } from '../metric-events';
 import EventEmitter from 'events';
 import { IFlagResolver } from '../types';
 import Raw = Knex.Raw;
+import { Db } from './db';
 
 const COLUMNS = [
     'id',
@@ -37,7 +38,7 @@ export interface IProjectMembersCount {
 }
 
 class ProjectStore implements IProjectStore {
-    private db: Knex;
+    private db: Db;
 
     private logger: Logger;
 
@@ -46,7 +47,7 @@ class ProjectStore implements IProjectStore {
     private timer: Function;
 
     constructor(
-        db: Knex,
+        db: Db,
         eventBus: EventEmitter,
         getLogger: LogProvider,
         flagResolver: IFlagResolver,
@@ -94,13 +95,13 @@ class ProjectStore implements IProjectStore {
         }
         let selectColumns = [
             this.db.raw(
-                'projects.id, projects.name, projects.description, projects.health, projects.updated_at, count(features.name) AS number_of_features',
+                'projects.id, projects.name, projects.description, projects.health, projects.updated_at, count(features.name) FILTER (WHERE features.archived_at is null) AS number_of_features',
             ),
         ] as (string | Raw<any>)[];
 
         let groupByColumns = ['projects.id'];
 
-        if (userId && this.flagResolver.isEnabled('favorites')) {
+        if (userId) {
             projects = projects.leftJoin(`favorite_projects`, function () {
                 this.on('favorite_projects.project', 'projects.id').andOnVal(
                     'favorite_projects.user_id',
@@ -393,6 +394,40 @@ class ProjectStore implements IProjectStore {
         return Number(members.count);
     }
 
+    async getMembersCountByProjectAfterDate(
+        projectId: string,
+        date: string,
+    ): Promise<number> {
+        const members = await this.db
+            .from((db) => {
+                db.select('user_id')
+                    .from('role_user')
+                    .leftJoin('roles', 'role_user.role_id', 'roles.id')
+                    .where((builder) =>
+                        builder
+                            .where('project', projectId)
+                            .whereNot('type', 'root')
+                            .andWhere('role_user.created_at', '>=', date),
+                    )
+                    .union((queryBuilder) => {
+                        queryBuilder
+                            .select('user_id')
+                            .from('group_role')
+                            .leftJoin(
+                                'group_user',
+                                'group_user.group_id',
+                                'group_role.group_id',
+                            )
+                            .where('project', projectId)
+                            .andWhere('group_role.created_at', '>=', date);
+                    })
+                    .as('query');
+            })
+            .count()
+            .first();
+        return Number(members.count);
+    }
+
     async count(): Promise<number> {
         return this.db
             .from(TABLE)
@@ -419,7 +454,7 @@ class ProjectStore implements IProjectStore {
             name: row.name,
             description: row.description,
             createdAt: row.created_at,
-            health: row.health || 100,
+            health: row.health ?? 100,
             updatedAt: row.updated_at || new Date(),
         };
     }

@@ -1,9 +1,9 @@
 import EventEmitter from 'events';
 import { IFavoriteFeaturesStore } from '../types';
 import { Logger, LogProvider } from '../logger';
-import { Knex } from 'knex';
 import { IFavoriteFeatureKey } from '../types/stores/favorite-features';
 import { IFavoriteFeature } from '../types/favorites';
+import { Db } from './db';
 
 const T = {
     FAVORITE_FEATURES: 'favorite_features',
@@ -28,9 +28,9 @@ export class FavoriteFeaturesStore implements IFavoriteFeaturesStore {
 
     private eventBus: EventEmitter;
 
-    private db: Knex;
+    private db: Db;
 
-    constructor(db: Knex, eventBus: EventEmitter, getLogger: LogProvider) {
+    constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
         this.eventBus = eventBus;
         this.logger = getLogger('lib/db/favorites-store.ts');

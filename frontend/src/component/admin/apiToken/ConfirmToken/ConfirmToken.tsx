@@ -1,6 +1,5 @@
 import { Alert, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { useThemeStyles } from 'themes/themeStyles';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { UserToken } from './UserToken/UserToken';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -19,8 +18,6 @@ export const ConfirmToken = ({
     token,
     type,
 }: IConfirmUserLink) => {
-    const { classes: themeStyles } = useThemeStyles();
-
     return (
         <Dialogue
             open={open}
@@ -28,12 +25,10 @@ export const ConfirmToken = ({
             primaryButtonText="Close"
             title="New token created"
         >
-            <div className={themeStyles.contentSpacingYLarge}>
-                <Typography variant="body1">
-                    Your new token has been created successfully.
-                </Typography>
-                <UserToken token={token} />
-            </div>
+            <Typography variant="body1">
+                Your new token has been created successfully.
+            </Typography>
+            <UserToken token={token} />
             <ConditionallyRender
                 condition={type === TokenType.FRONTEND}
                 show={

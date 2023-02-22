@@ -1,5 +1,8 @@
 import dbInit, { ITestDb } from '../../../helpers/database-init';
-import { IUnleashTest, setupApp } from '../../../helpers/test-helper';
+import {
+    IUnleashTest,
+    setupAppWithCustomConfig,
+} from '../../../helpers/test-helper';
 import getLogger from '../../../../fixtures/no-logger';
 import { DEFAULT_ENV } from '../../../../../lib/util/constants';
 import {
@@ -85,7 +88,13 @@ const updateStrategy = async (
 
 beforeAll(async () => {
     db = await dbInit('feature_strategy_api_serial', getLogger);
-    app = await setupApp(db.stores);
+    app = await setupAppWithCustomConfig(db.stores, {
+        experimental: {
+            flags: {
+                strictSchemaValidation: true,
+            },
+        },
+    });
 });
 
 afterEach(async () => {
@@ -515,7 +524,7 @@ test('Trying to toggle environment that does not exist yields 404', async () => 
 test('Getting feature that does not exist should yield 404', async () => {
     await app.request
         .get('/api/admin/projects/default/features/non.existing.feature')
-        .expect(404);
+        .expect(403);
 });
 
 describe('Interacting with features using project IDs that belong to other projects', () => {
@@ -2630,7 +2639,7 @@ test('should return strategies in correct order when new strategies are added', 
     expect(strategiesReOrdered[3].id).toBe(strategyThree.id);
 });
 
-test.only('should create a strategy with segments', async () => {
+test('should create a strategy with segments', async () => {
     const feature = { name: uuidv4(), impressionData: false };
     await createFeatureToggle(feature.name);
     const segment = await createSegment('segmentOne');
@@ -2678,7 +2687,7 @@ test.only('should create a strategy with segments', async () => {
         });
 });
 
-test.only('should add multiple segments to a strategy', async () => {
+test('should add multiple segments to a strategy', async () => {
     const feature = { name: uuidv4(), impressionData: false };
     await createFeatureToggle(feature.name);
     const segment = await createSegment('seg1');
@@ -2708,5 +2717,104 @@ test.only('should add multiple segments to a strategy', async () => {
                 segmentTwo.id,
                 segmentThree.id,
             ]);
+        });
+});
+
+test('Can filter based on tags', async () => {
+    const tag = { type: 'simple', value: 'hello-tags' };
+    await db.stores.tagStore.createTag(tag);
+    await db.stores.featureToggleStore.create('default', {
+        name: 'to-be-tagged',
+    });
+    await db.stores.featureToggleStore.create('default', {
+        name: 'not-tagged',
+    });
+    await db.stores.featureTagStore.tagFeature('to-be-tagged', tag);
+    await app.request
+        .get('/api/admin/projects/default/features?tag=simple:hello-tags')
+        .expect((res) => {
+            expect(res.body.features).toHaveLength(1);
+        });
+});
+
+test('Can query for features with namePrefix', async () => {
+    await db.stores.featureToggleStore.create('default', {
+        name: 'nameprefix-to-be-hit',
+    });
+    await db.stores.featureToggleStore.create('default', {
+        name: 'nameprefix-not-be-hit',
+    });
+    await app.request
+        .get('/api/admin/projects/default/features?namePrefix=nameprefix-to')
+        .expect((res) => {
+            expect(res.body.features).toHaveLength(1);
+        });
+});
+
+test('Can query for features with namePrefix and tags', async () => {
+    const tag = { type: 'simple', value: 'hello-nameprefix-tags' };
+    await db.stores.tagStore.createTag(tag);
+    await db.stores.featureToggleStore.create('default', {
+        name: 'to-be-tagged-nameprefix-and-tags',
+    });
+    await db.stores.featureToggleStore.create('default', {
+        name: 'not-tagged-nameprefix-and-tags',
+    });
+    await db.stores.featureToggleStore.create('default', {
+        name: 'tagged-but-not-hit-nameprefix-and-tags',
+    });
+    await db.stores.featureTagStore.tagFeature(
+        'to-be-tagged-nameprefix-and-tags',
+        tag,
+    );
+    await db.stores.featureTagStore.tagFeature(
+        'tagged-but-not-hit-nameprefix-and-tags',
+        tag,
+    );
+    await app.request
+        .get(
+            '/api/admin/projects/default/features?namePrefix=to&tag=simple:hello-nameprefix-tags',
+        )
+        .expect((res) => {
+            expect(res.body.features).toHaveLength(1);
+        });
+});
+
+test('Can query for two tags at the same time. Tags are ORed together', async () => {
+    const tag = { type: 'simple', value: 'twotags-first-tag' };
+    const secondTag = { type: 'simple', value: 'twotags-second-tag' };
+    await db.stores.tagStore.createTag(tag);
+    await db.stores.tagStore.createTag(secondTag);
+    const taggedWithFirst = await db.stores.featureToggleStore.create(
+        'default',
+        {
+            name: 'tagged-with-first-tag',
+        },
+    );
+    const taggedWithSecond = await db.stores.featureToggleStore.create(
+        'default',
+        {
+            name: 'tagged-with-second-tag',
+        },
+    );
+    const taggedWithBoth = await db.stores.featureToggleStore.create(
+        'default',
+        {
+            name: 'tagged-with-both-tags',
+        },
+    );
+    await db.stores.featureTagStore.tagFeature(taggedWithFirst.name, tag);
+    await db.stores.featureTagStore.tagFeature(
+        taggedWithSecond.name,
+        secondTag,
+    );
+    await db.stores.featureTagStore.tagFeature(taggedWithBoth.name, tag);
+    await db.stores.featureTagStore.tagFeature(taggedWithBoth.name, secondTag);
+    await app.request
+        .get(
+            `/api/admin/projects/default/features?tag=${tag.type}:${tag.value}&tag=${secondTag.type}:${secondTag.value}`,
+        )
+        .expect((res) => {
+            expect(res.body.features).toHaveLength(3);
         });
 });

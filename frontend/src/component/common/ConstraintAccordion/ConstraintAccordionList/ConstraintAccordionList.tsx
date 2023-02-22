@@ -1,5 +1,5 @@
 import React, { forwardRef, Fragment, useImperativeHandle } from 'react';
-import { Button, Tooltip } from '@mui/material';
+import { Button, styled, Tooltip } from '@mui/material';
 import { HelpOutline } from '@mui/icons-material';
 import { IConstraint } from 'interfaces/strategy';
 import { ConstraintAccordion } from 'component/common/ConstraintAccordion/ConstraintAccordion';
@@ -7,7 +7,6 @@ import produce from 'immer';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import { useWeakMap } from 'hooks/useWeakMap';
 import { objectId } from 'utils/objectId';
-import { useStyles } from './ConstraintAccordionList.styles';
 import { createEmptyConstraint } from 'component/common/ConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
@@ -35,6 +34,36 @@ interface IConstraintAccordionListItemState {
 
 export const constraintAccordionListId = 'constraintAccordionListId';
 
+const StyledContainer = styled('div')({
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+});
+
+const StyledHelpWrapper = styled(Tooltip)(({ theme }) => ({
+    marginLeft: theme.spacing(0.75),
+    height: theme.spacing(1.5),
+}));
+
+const StyledHelp = styled(HelpOutline)(({ theme }) => ({
+    fill: theme.palette.tertiary.dark,
+    [theme.breakpoints.down(860)]: {
+        display: 'none',
+    },
+}));
+
+const StyledConstraintLabel = styled('p')(({ theme }) => ({
+    marginBottom: theme.spacing(1),
+    color: theme.palette.text.secondary,
+}));
+
+const StyledAddCustomLabel = styled('div')(({ theme }) => ({
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
+    color: theme.palette.text.secondary,
+    display: 'flex',
+}));
+
 export const ConstraintAccordionList = forwardRef<
     IConstraintAccordionListRef | undefined,
     IConstraintAccordionListProps
@@ -48,7 +77,6 @@ export const ConstraintAccordionList = forwardRef<
             IConstraintAccordionListItemState
         >();
         const { context } = useUnleashContext();
-        const { classes: styles } = useStyles();
 
         const addConstraint =
             setConstraints &&
@@ -108,15 +136,15 @@ export const ConstraintAccordionList = forwardRef<
         }
 
         return (
-            <div className={styles.container} id={constraintAccordionListId}>
+            <StyledContainer id={constraintAccordionListId}>
                 <ConditionallyRender
                     condition={
                         constraints && constraints.length > 0 && showLabel
                     }
                     show={
-                        <p className={styles.customConstraintLabel}>
+                        <StyledConstraintLabel>
                             Constraints
-                        </p>
+                        </StyledConstraintLabel>
                     }
                 />
                 {constraints.map((constraint, index) => (
@@ -140,13 +168,9 @@ export const ConstraintAccordionList = forwardRef<
                     condition={Boolean(showCreateButton && onAdd)}
                     show={
                         <div>
-                            <div className={styles.addCustomLabel}>
+                            <StyledAddCustomLabel>
                                 <p>Add any number of constraints</p>
-                                <Tooltip
-                                    title="Help"
-                                    arrow
-                                    className={styles.helpWrapper}
-                                >
+                                <StyledHelpWrapper title="Help" arrow>
                                     <a
                                         href={
                                             'https://docs.getunleash.io/reference/strategy-constraints'
@@ -154,10 +178,10 @@ export const ConstraintAccordionList = forwardRef<
                                         target="_blank"
                                         rel="noopener noreferrer"
                                     >
-                                        <HelpOutline className={styles.help} />
+                                        <StyledHelp />
                                     </a>
-                                </Tooltip>
-                            </div>
+                                </StyledHelpWrapper>
+                            </StyledAddCustomLabel>
                             <Button
                                 type="button"
                                 onClick={onAdd}
@@ -169,7 +193,7 @@ export const ConstraintAccordionList = forwardRef<
                         </div>
                     }
                 />
-            </div>
+            </StyledContainer>
         );
     }
 );

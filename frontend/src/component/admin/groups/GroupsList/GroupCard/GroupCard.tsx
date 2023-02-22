@@ -5,10 +5,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { GroupCardAvatars } from './GroupCardAvatars/GroupCardAvatars';
 import { Badge } from 'component/common/Badge/Badge';
 import { GroupCardActions } from './GroupCardActions/GroupCardActions';
-import { RemoveGroup } from 'component/admin/groups/RemoveGroup/RemoveGroup';
-import { useState } from 'react';
 import TopicOutlinedIcon from '@mui/icons-material/TopicOutlined';
-import { EditGroupUsers } from 'component/admin/groups/Group/EditGroupUsers/EditGroupUsers';
 
 const StyledLink = styled(Link)(({ theme }) => ({
     textDecoration: 'none',
@@ -80,11 +77,15 @@ const ProjectBadgeContainer = styled('div')(({ theme }) => ({
 
 interface IGroupCardProps {
     group: IGroup;
+    onEditUsers: (group: IGroup) => void;
+    onRemoveGroup: (group: IGroup) => void;
 }
 
-export const GroupCard = ({ group }: IGroupCardProps) => {
-    const [editUsersOpen, setEditUsersOpen] = useState(false);
-    const [removeOpen, setRemoveOpen] = useState(false);
+export const GroupCard = ({
+    group,
+    onEditUsers,
+    onRemoveGroup,
+}: IGroupCardProps) => {
     const navigate = useNavigate();
     return (
         <>
@@ -95,8 +96,8 @@ export const GroupCard = ({ group }: IGroupCardProps) => {
                         <StyledHeaderActions>
                             <GroupCardActions
                                 groupId={group.id}
-                                onEditUsers={() => setEditUsersOpen(true)}
-                                onRemove={() => setRemoveOpen(true)}
+                                onEditUsers={() => onEditUsers(group)}
+                                onRemove={() => onRemoveGroup(group)}
                             />
                         </StyledHeaderActions>
                     </StyledTitleRow>
@@ -126,7 +127,7 @@ export const GroupCard = ({ group }: IGroupCardProps) => {
                                             onClick={e => {
                                                 e.preventDefault();
                                                 navigate(
-                                                    `/projects/${project}/access`
+                                                    `/projects/${project}/settings/access`
                                                 );
                                             }}
                                             color="secondary"
@@ -150,16 +151,6 @@ export const GroupCard = ({ group }: IGroupCardProps) => {
                     </StyledBottomRow>
                 </StyledGroupCard>
             </StyledLink>
-            <EditGroupUsers
-                open={editUsersOpen}
-                setOpen={setEditUsersOpen}
-                group={group}
-            />
-            <RemoveGroup
-                open={removeOpen}
-                setOpen={setRemoveOpen}
-                group={group!}
-            />
         </>
     );
 };

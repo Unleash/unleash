@@ -2,7 +2,7 @@ import { IUnleashConfig, IUnleashStores } from '../types';
 import { Logger } from '../logger';
 import { IPatStore } from '../types/stores/pat-store';
 import { IEventStore } from '../types/stores/event-store';
-import { PAT_CREATED } from '../types/events';
+import { PAT_CREATED, PAT_DELETED } from '../types/events';
 import { IPat } from '../types/models/pat';
 import crypto from 'crypto';
 import User from '../types/user';
@@ -33,28 +33,41 @@ export default class PatService {
         this.eventStore = eventStore;
     }
 
-    async createPat(pat: IPat, user: User): Promise<IPat> {
-        await this.validatePat(pat, user.id);
+    async createPat(pat: IPat, forUserId: number, editor: User): Promise<IPat> {
+        await this.validatePat(pat, forUserId);
         pat.secret = this.generateSecretKey();
-        pat.userId = user.id;
+        pat.userId = forUserId;
         const newPat = await this.patStore.create(pat);
 
         pat.secret = '***';
         await this.eventStore.store({
             type: PAT_CREATED,
-            createdBy: user.email || user.username,
+            createdBy: editor.email || editor.username,
             data: pat,
         });
 
         return newPat;
     }
 
-    async getAll(user: User): Promise<IPat[]> {
-        return this.patStore.getAllByUser(user.id);
+    async getAll(userId: number): Promise<IPat[]> {
+        return this.patStore.getAllByUser(userId);
     }
 
-    async deletePat(id: number, userId: number): Promise<void> {
-        return this.patStore.deleteForUser(id, userId);
+    async deletePat(
+        id: number,
+        forUserId: number,
+        editor: User,
+    ): Promise<void> {
+        const pat = await this.patStore.get(id);
+
+        pat.secret = '***';
+        await this.eventStore.store({
+            type: PAT_DELETED,
+            createdBy: editor.email || editor.username,
+            data: pat,
+        });
+
+        return this.patStore.deleteForUser(id, forUserId);
     }
 
     async validatePat(

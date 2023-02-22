@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
     Table,
     SortableTableHeader,
@@ -28,6 +28,7 @@ import { HighlightCell } from 'component/common/Table/cells/HighlightCell/Highli
 import theme from 'themes/theme';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
 import { Search } from 'component/common/Search/Search';
+import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 
 const ROOTROLE = 'root';
 const BUILTIN_ROLE_TYPE = 'project';
@@ -164,6 +165,7 @@ const ProjectRoleList = () => {
             initialState,
             sortTypes,
             autoResetGlobalFilter: false,
+            autoResetHiddenColumns: false,
             autoResetSortBy: false,
             disableSortRemove: true,
             defaultColumn: {
@@ -174,13 +176,16 @@ const ProjectRoleList = () => {
         useSortBy
     );
 
-    useEffect(() => {
-        const hiddenColumns = [];
-        if (isExtraSmallScreen) {
-            hiddenColumns.push('Icon');
-        }
-        setHiddenColumns(hiddenColumns);
-    }, [setHiddenColumns, isExtraSmallScreen]);
+    useConditionallyHiddenColumns(
+        [
+            {
+                condition: isExtraSmallScreen,
+                columns: ['Icon'],
+            },
+        ],
+        setHiddenColumns,
+        columns
+    );
 
     let count =
         data.length < rows.length
@@ -257,7 +262,7 @@ const ProjectRoleList = () => {
             <ProjectRoleDeleteConfirm
                 role={currentRole!}
                 open={delDialog}
-                setDeldialogue={setDelDialog}
+                setDialogue={setDelDialog}
                 handleDeleteRole={deleteProjectRole}
                 confirmName={confirmName}
                 setConfirmName={setConfirmName}

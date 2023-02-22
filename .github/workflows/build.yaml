@@ -52,19 +52,3 @@ jobs:
       - name: Publish static assets to S3
         run: |
           aws s3 cp frontend/build s3://getunleash-static/unleash/main/$(git rev-parse HEAD) --recursive
-
-  trigger-ci-build:
-    runs-on: ubuntu-latest
-    needs: [build]
-    if: github.event.commits && github.ref == 'refs/heads/main'
-    steps:
-      - uses: actions/checkout@v2
-      - name: Trigger CI build
-        env:
-          UNLEASH_CI_BUILDER_GITHUB_TOKEN: ${{ secrets.UNLEASH_CI_BUILDER_GITHUB_TOKEN }}
-          COMMITS: ${{ toJSON(github.event.commits[*].id) }}
-          SLUG: ${{ github.event.repository.full_name }}
-        run: |
-          curl -X POST -H "Accept: application/vnd.github+json" -H "Authorization: Bearer ${UNLEASH_CI_BUILDER_GITHUB_TOKEN}" \
-            https://api.github.com/repos/bricks-software/unleash-ci-builder/dispatches \
-            -d "{\"event_type\":\"trigger-unleash-cloud-build\",\"client_payload\":{\"source\":\"${SLUG}\",\"commits\":${COMMITS}}}"

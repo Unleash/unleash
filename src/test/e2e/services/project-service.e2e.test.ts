@@ -11,6 +11,9 @@ import EnvironmentService from '../../../lib/services/environment-service';
 import IncompatibleProjectError from '../../../lib/error/incompatible-project-error';
 import { SegmentService } from '../../../lib/services/segment-service';
 import { GroupService } from '../../../lib/services/group-service';
+import { FavoritesService } from '../../../lib/services';
+import { FeatureEnvironmentEvent } from '../../../lib/types/events';
+import { subDays } from 'date-fns';
 
 let stores;
 let db: ITestDb;
@@ -20,6 +23,7 @@ let groupService: GroupService;
 let accessService: AccessService;
 let environmentService: EnvironmentService;
 let featureToggleService: FeatureToggleService;
+let favoritesService: FavoritesService;
 let user;
 
 beforeAll(async () => {
@@ -42,6 +46,8 @@ beforeAll(async () => {
         new SegmentService(stores, config),
         accessService,
     );
+
+    favoritesService = new FavoritesService(stores, config);
     environmentService = new EnvironmentService(stores, config);
     projectService = new ProjectService(
         stores,
@@ -49,6 +55,7 @@ beforeAll(async () => {
         accessService,
         featureToggleService,
         groupService,
+        favoritesService,
     );
 });
 
@@ -67,6 +74,7 @@ afterEach(async () => {
     const wipeUserPermissions = users.map(async (u) => {
         await stores.accessStore.unlinkUserRoles(u.id);
     });
+    await stores.eventStore.deleteAll();
     await Promise.allSettled(deleteEnvs);
     await Promise.allSettled(wipeUserPermissions);
 });
@@ -1020,4 +1028,245 @@ test('Should allow bulk update of only groups', async () => {
         },
         'some-admin-user',
     );
+});
+
+test('should only count active feature toggles for project', async () => {
+    const project = {
+        id: 'only-active',
+        name: 'New project',
+        description: 'Blah',
+    };
+
+    await projectService.createProject(project, user);
+
+    await stores.featureToggleStore.create(project.id, {
+        name: 'only-active-t1',
+        project: project.id,
+        enabled: false,
+    });
+    await stores.featureToggleStore.create(project.id, {
+        name: 'only-active-t2',
+        project: project.id,
+        enabled: false,
+    });
+
+    await featureToggleService.archiveToggle('only-active-t2', 'me');
+
+    const projects = await projectService.getProjects();
+    const theProject = projects.find((p) => p.id === project.id);
+    expect(theProject?.featureCount).toBe(1);
+});
+
+test('should list projects with all features archived', async () => {
+    const project = {
+        id: 'only-archived',
+        name: 'Listed project',
+        description: 'Blah',
+    };
+
+    await projectService.createProject(project, user);
+
+    await stores.featureToggleStore.create(project.id, {
+        name: 'archived-toggle',
+        project: project.id,
+        enabled: false,
+    });
+
+    await featureToggleService.archiveToggle('archived-toggle', 'me');
+
+    const projects = await projectService.getProjects();
+    const theProject = projects.find((p) => p.id === project.id);
+    expect(theProject?.featureCount).toBe(0);
+});
+
+const updateEventCreatedAt = async (date: Date, featureName: string) => {
+    return db.rawDatabase
+        .table('events')
+        .update({ created_at: date })
+        .where({ feature_name: featureName });
+};
+
+const updateFeature = async (featureName: string, update: any) => {
+    return db.rawDatabase
+        .table('features')
+        .update(update)
+        .where({ name: featureName });
+};
+
+test('should calculate average time to production', async () => {
+    const project = {
+        id: 'average-time-to-prod',
+        name: 'average-time-to-prod',
+    };
+
+    await projectService.createProject(project, user.id);
+
+    const toggles = [
+        { name: 'average-prod-time' },
+        { name: 'average-prod-time-2' },
+        { name: 'average-prod-time-3' },
+        { name: 'average-prod-time-4' },
+        { name: 'average-prod-time-5' },
+    ];
+
+    const featureToggles = await Promise.all(
+        toggles.map((toggle) => {
+            return featureToggleService.createFeatureToggle(
+                project.id,
+                toggle,
+                user,
+            );
+        }),
+    );
+
+    await Promise.all(
+        featureToggles.map((toggle) => {
+            return stores.eventStore.store(
+                new FeatureEnvironmentEvent({
+                    enabled: true,
+                    project: project.id,
+                    featureName: toggle.name,
+                    environment: 'default',
+                    createdBy: 'Fredrik',
+                    tags: [],
+                }),
+            );
+        }),
+    );
+
+    await updateEventCreatedAt(subDays(new Date(), 31), 'average-prod-time-5');
+
+    await Promise.all(
+        featureToggles.map((toggle) =>
+            updateFeature(toggle.name, { created_at: subDays(new Date(), 15) }),
+        ),
+    );
+
+    await updateFeature('average-prod-time-5', {
+        created_at: subDays(new Date(), 33),
+    });
+
+    const result = await projectService.getStatusUpdates(project.id);
+    expect(result.updates.avgTimeToProdCurrentWindow).toBe(14);
+    expect(result.updates.avgTimeToProdPastWindow).toBe(1);
+});
+
+test('should get correct amount of features created in current and past window', async () => {
+    const project = {
+        id: 'features-created',
+        name: 'features-created',
+    };
+
+    await projectService.createProject(project, user.id);
+
+    const toggles = [
+        { name: 'features-created' },
+        { name: 'features-created-2' },
+        { name: 'features-created-3' },
+        { name: 'features-created-4' },
+    ];
+
+    await Promise.all(
+        toggles.map((toggle) => {
+            return featureToggleService.createFeatureToggle(
+                project.id,
+                toggle,
+                user,
+            );
+        }),
+    );
+
+    await Promise.all([
+        updateFeature(toggles[2].name, { created_at: subDays(new Date(), 31) }),
+        updateFeature(toggles[3].name, { created_at: subDays(new Date(), 31) }),
+    ]);
+
+    const result = await projectService.getStatusUpdates(project.id);
+    expect(result.updates.createdCurrentWindow).toBe(2);
+    expect(result.updates.createdPastWindow).toBe(2);
+});
+
+test('should get correct amount of features archived in current and past window', async () => {
+    const project = {
+        id: 'features-archived',
+        name: 'features-archived',
+    };
+
+    await projectService.createProject(project, user.id);
+
+    const toggles = [
+        { name: 'features-archived' },
+        { name: 'features-archived-2' },
+        { name: 'features-archived-3' },
+        { name: 'features-archived-4' },
+    ];
+
+    await Promise.all(
+        toggles.map((toggle) => {
+            return featureToggleService.createFeatureToggle(
+                project.id,
+                toggle,
+                user,
+            );
+        }),
+    );
+
+    await Promise.all([
+        updateFeature(toggles[0].name, {
+            archived_at: new Date(),
+            archived: true,
+        }),
+        updateFeature(toggles[1].name, {
+            archived_at: new Date(),
+            archived: true,
+        }),
+        updateFeature(toggles[2].name, {
+            archived_at: subDays(new Date(), 31),
+            archived: true,
+        }),
+        updateFeature(toggles[3].name, {
+            archived_at: subDays(new Date(), 31),
+            archived: true,
+        }),
+    ]);
+
+    const result = await projectService.getStatusUpdates(project.id);
+    expect(result.updates.archivedCurrentWindow).toBe(2);
+    expect(result.updates.archivedPastWindow).toBe(2);
+});
+
+test('should get correct amount of project members for current and past window', async () => {
+    const project = {
+        id: 'features-members',
+        name: 'features-members',
+    };
+
+    await projectService.createProject(project, user.id);
+
+    const users = [
+        { name: 'memberOne', email: 'memberOne@getunleash.io' },
+        { name: 'memberTwo', email: 'memberTwo@getunleash.io' },
+        { name: 'memberThree', email: 'memberThree@getunleash.io' },
+        { name: 'memberFour', email: 'memberFour@getunleash.io' },
+        { name: 'memberFive', email: 'memberFive@getunleash.io' },
+    ];
+
+    const createdUsers = await Promise.all(
+        users.map((userObj) => stores.userStore.insert(userObj)),
+    );
+    const memberRole = await stores.roleStore.getRoleByName(RoleName.MEMBER);
+
+    await Promise.all(
+        createdUsers.map((createdUser) =>
+            projectService.addUser(
+                project.id,
+                memberRole.id,
+                createdUser.id,
+                'test',
+            ),
+        ),
+    );
+
+    const result = await projectService.getStatusUpdates(project.id);
+    expect(result.updates.projectMembersAddedCurrentWindow).toBe(5);
 });

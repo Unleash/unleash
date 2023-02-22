@@ -14,6 +14,9 @@ export const featureStrategySchema = {
         name: {
             type: 'string',
         },
+        featureName: {
+            type: 'string',
+        },
         sortOrder: {
             type: 'number',
         },

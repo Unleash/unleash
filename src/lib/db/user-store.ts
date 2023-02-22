@@ -1,6 +1,5 @@
 /* eslint camelcase: "off" */
 
-import { Knex } from 'knex';
 import { Logger, LogProvider } from '../logger';
 import User from '../types/user';
 
@@ -11,19 +10,9 @@ import {
     IUserStore,
     IUserUpdateFields,
 } from '../types/stores/user-store';
+import { Db } from './db';
 
 const TABLE = 'users';
-
-const USER_COLUMNS = [
-    'id',
-    'name',
-    'username',
-    'email',
-    'image_url',
-    'login_attempts',
-    'seen_at',
-    'created_at',
-];
 
 const USER_COLUMNS_PUBLIC = [
     'id',
@@ -32,7 +21,10 @@ const USER_COLUMNS_PUBLIC = [
     'email',
     'image_url',
     'seen_at',
+    'is_service',
 ];
+
+const USER_COLUMNS = [...USER_COLUMNS_PUBLIC, 'login_attempts', 'created_at'];
 
 const emptify = (value) => {
     if (!value) {
@@ -63,15 +55,16 @@ const rowToUser = (row) => {
         loginAttempts: row.login_attempts,
         seenAt: row.seen_at,
         createdAt: row.created_at,
+        isService: row.is_service,
     });
 };
 
 class UserStore implements IUserStore {
-    private db: Knex;
+    private db: Db;
 
     private logger: Logger;
 
-    constructor(db: Knex, getLogger: LogProvider) {
+    constructor(db: Db, getLogger: LogProvider) {
         this.db = db;
         this.logger = getLogger('user-store.ts');
     }
@@ -100,7 +93,7 @@ class UserStore implements IUserStore {
     }
 
     buildSelectUser(q: IUserLookup): any {
-        const query = this.activeUsers();
+        const query = this.activeAll();
         if (q.id) {
             return query.where('id', q.id);
         }
@@ -113,8 +106,17 @@ class UserStore implements IUserStore {
         throw new Error('Can only find users with id, username or email.');
     }
 
+    activeAll(): any {
+        return this.db(TABLE).where({
+            deleted_at: null,
+        });
+    }
+
     activeUsers(): any {
-        return this.db(TABLE).where('deleted_at', null);
+        return this.db(TABLE).where({
+            deleted_at: null,
+            is_service: false,
+        });
     }
 
     async hasUser(idQuery: IUserLookup): Promise<number | undefined> {
@@ -213,31 +215,6 @@ class UserStore implements IUserStore {
     async get(id: number): Promise<User> {
         const row = await this.activeUsers().where({ id }).first();
         return rowToUser(row);
-    }
-
-    async getUserByPersonalAccessToken(secret: string): Promise<User> {
-        const row = await this.activeUsers()
-            .select(USER_COLUMNS.map((column) => `${TABLE}.${column}`))
-            .leftJoin(
-                'personal_access_tokens',
-                'personal_access_tokens.user_id',
-                `${TABLE}.id`,
-            )
-            .where('secret', secret)
-            .andWhere('expires_at', '>', 'now()')
-            .first();
-        return rowToUser(row);
-    }
-
-    async markSeenAt(secrets: string[]): Promise<void> {
-        const now = new Date();
-        try {
-            await this.db('personal_access_tokens')
-                .whereIn('secret', secrets)
-                .update({ seen_at: now });
-        } catch (err) {
-            this.logger.error('Could not update lastSeen, error: ', err);
-        }
     }
 }
 

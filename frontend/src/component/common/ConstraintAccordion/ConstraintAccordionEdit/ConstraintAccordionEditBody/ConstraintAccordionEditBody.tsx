@@ -1,8 +1,7 @@
-import { Button } from '@mui/material';
+import { Button, styled } from '@mui/material';
 import { IConstraint } from 'interfaces/strategy';
 import { CANCEL } from '../ConstraintAccordionEdit';
 
-import { useStyles } from './ConstraintAccordionEditBody.styles';
 import React from 'react';
 import { newOperators } from 'constants/operators';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -18,42 +17,66 @@ interface IConstraintAccordionBody {
     onSubmit: () => void;
 }
 
+const StyledInputContainer = styled('div')(({ theme }) => ({
+    padding: theme.spacing(2),
+    backgroundColor: theme.palette.neutral.light,
+}));
+
+const StyledButtonContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    marginTop: theme.spacing(2),
+    borderTop: `1px solid ${theme.palette.divider}`,
+    width: '100%',
+    padding: theme.spacing(2),
+}));
+
+const StyledInputButtonContainer = styled('div')({
+    marginLeft: 'auto',
+});
+
+const StyledLeftButton = styled(Button)(({ theme }) => ({
+    marginRight: theme.spacing(1),
+    minWidth: '125px',
+}));
+
+const StyledRightButton = styled(Button)(({ theme }) => ({
+    marginLeft: theme.spacing(1),
+    minWidth: '125px',
+}));
+
 export const ConstraintAccordionEditBody: React.FC<
     IConstraintAccordionBody
 > = ({ localConstraint, children, triggerTransition, setAction, onSubmit }) => {
-    const { classes: styles } = useStyles();
-
     return (
         <>
-            <div className={styles.inputContainer}>
+            <StyledInputContainer>
                 <ConditionallyRender
                     condition={oneOf(newOperators, localConstraint.operator)}
                     show={<OperatorUpgradeAlert />}
                 />
                 {children}
-            </div>
-            <div className={styles.buttonContainer}>
-                <div className={styles.innerButtonContainer}>
-                    <Button
+            </StyledInputContainer>
+            <StyledButtonContainer>
+                <StyledInputButtonContainer>
+                    <StyledLeftButton
                         type="button"
                         onClick={onSubmit}
                         variant="contained"
                         color="primary"
-                        className={styles.leftButton}
                     >
                         Save
-                    </Button>
-                    <Button
+                    </StyledLeftButton>
+                    <StyledRightButton
                         onClick={() => {
                             setAction(CANCEL);
                             triggerTransition();
                         }}
-                        className={styles.rightButton}
                     >
                         Cancel
-                    </Button>
-                </div>
-            </div>
+                    </StyledRightButton>
+                </StyledInputButtonContainer>
+            </StyledButtonContainer>
         </>
     );
 };

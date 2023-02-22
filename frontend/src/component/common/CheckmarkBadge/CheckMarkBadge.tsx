@@ -1,22 +1,45 @@
 import { Check, Close } from '@mui/icons-material';
-import { useStyles } from './CheckMarkBadge.styles';
-import classnames from 'classnames';
+import { styled } from '@mui/material';
 
 interface ICheckMarkBadgeProps {
     className: string;
     type?: string;
 }
 
+const StyledBatch = styled('div')(({ theme }) => ({
+    backgroundColor: theme.palette.checkmarkBadge,
+    width: '75px',
+    height: '75px',
+    borderRadius: '50px',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    [theme.breakpoints.down('sm')]: {
+        width: '50px',
+        height: '50px',
+    },
+}));
+
+const StyledClose = styled(Close)(({ theme }) => ({
+    color: theme.palette.tertiary.background,
+    width: '35px',
+    height: '35px',
+}));
+const StyledCheck = styled(Check)(({ theme }) => ({
+    color: theme.palette.tertiary.background,
+    width: '35px',
+    height: '35px',
+}));
+
 const CheckMarkBadge = ({ type, className }: ICheckMarkBadgeProps) => {
-    const { classes: styles } = useStyles();
     return (
-        <div className={classnames(styles.badge, className)}>
+        <StyledBatch className={className}>
             {type === 'error' ? (
-                <Close className={styles.check} titleAccess="Error" />
+                <StyledClose titleAccess="Error" />
             ) : (
-                <Check className={styles.check} />
+                <StyledCheck />
             )}
-        </div>
+        </StyledBatch>
     );
 };
 

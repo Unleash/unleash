@@ -1,0 +1,88 @@
+{
+  "version": 3,
+  "features": [
+    {
+      "name": "test-variants-postman",
+      "description": "",
+      "type": "experiment",
+      "project": "default",
+      "stale": false,
+      "createdAt": "2023-01-13T09:17:43.989Z",
+      "lastSeenAt": null,
+      "impressionData": false,
+      "archivedAt": null,
+      "archived": false,
+      "variants": [
+        {
+          "name": "fake",
+          "weight": 500,
+          "payload": {
+            "type": "string",
+            "value": "123"
+          },
+          "overrides": [],
+          "stickiness": "default",
+          "weightType": "variable"
+        },
+        {
+          "name": "fake2",
+          "weight": 500,
+          "payload": {
+            "type": "json",
+            "value": "{\"hello\":\"world\"}"
+          },
+          "overrides": [],
+          "stickiness": "default",
+          "weightType": "variable"
+        }
+      ]
+    }
+  ],
+  "strategies": [],
+  "projects": [
+    {
+      "id": "default",
+      "name": "Default",
+      "description": "Default project",
+      "createdAt": "2023-01-10T13:11:03.260Z",
+      "health": 100,
+      "updatedAt": "2023-01-13T09:09:12.494Z"
+    }
+  ],
+  "tagTypes": [],
+  "tags": [],
+  "featureTags": [],
+  "featureStrategies": [],
+  "environments": [
+    {
+      "name": "default",
+      "type": "production",
+      "sortOrder": 1,
+      "enabled": false,
+      "protected": true
+    },
+    {
+      "name": "development",
+      "type": "development",
+      "sortOrder": 100,
+      "enabled": true,
+      "protected": false
+    },
+    {
+      "name": "production",
+      "type": "production",
+      "sortOrder": 200,
+      "enabled": true,
+      "protected": false
+    }
+  ],
+  "featureEnvironments": [
+    {
+      "enabled": true,
+      "featureName": "test-variants-postman",
+      "environment": "development"
+    }
+  ],
+  "segments": [],
+  "featureStrategySegments": []
+}

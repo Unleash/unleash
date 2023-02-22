@@ -1,20 +1,31 @@
-import { Button } from '@mui/material';
-import classnames from 'classnames';
+import { Button, styled } from '@mui/material';
 import React, { SyntheticEvent, useCallback, useEffect, useState } from 'react';
-import { useThemeStyles } from 'themes/themeStyles';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import PasswordChecker from './PasswordChecker/PasswordChecker';
-import PasswordMatcher from './PasswordMatcher/PasswordMatcher';
-import { useStyles } from './ResetPasswordForm.styles';
+import PasswordChecker from './PasswordChecker';
+import PasswordMatcher from './PasswordMatcher';
 import PasswordField from 'component/common/PasswordField/PasswordField';
 
 interface IResetPasswordProps {
     onSubmit: (password: string) => void;
 }
 
+const StyledForm = styled('form')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    position: 'relative',
+    '& > *': {
+        marginTop: `${theme.spacing(1)} !important`,
+        marginBottom: `${theme.spacing(1)} !important`,
+    },
+}));
+
+const StyledButton = styled(Button)(({ theme }) => ({
+    width: '150px',
+    margin: theme.spacing(2, 'auto'),
+    display: 'block',
+}));
+
 const ResetPasswordForm = ({ onSubmit }: IResetPasswordProps) => {
-    const { classes: styles } = useStyles();
-    const { classes: themeStyles } = useThemeStyles();
     const [password, setPassword] = useState('');
     const [showPasswordChecker, setShowPasswordChecker] = useState(false);
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -50,13 +61,7 @@ const ResetPasswordForm = ({ onSubmit }: IResetPasswordProps) => {
     const started = Boolean(password && confirmPassword);
 
     return (
-        <form
-            onSubmit={handleSubmit}
-            className={classnames(
-                themeStyles.contentSpacingY,
-                styles.container
-            )}
-        >
+        <StyledForm onSubmit={handleSubmit}>
             <PasswordField
                 placeholder="Password"
                 value={password || ''}
@@ -91,17 +96,16 @@ const ResetPasswordForm = ({ onSubmit }: IResetPasswordProps) => {
                 started={started}
                 matchingPasswords={matchingPasswords}
             />
-            <Button
+            <StyledButton
                 variant="contained"
                 color="primary"
                 type="submit"
-                className={styles.button}
                 data-loading
                 disabled={!submittable}
             >
                 Submit
-            </Button>
-        </form>
+            </StyledButton>
+        </StyledForm>
     );
 };
 

@@ -1,9 +1,9 @@
 import EventEmitter from 'events';
-import { Knex } from 'knex';
 import { Logger, LogProvider } from '../logger';
 import NotFoundError from '../error/notfound-error';
 import { ISession, ISessionStore } from '../types/stores/session-store';
 import { addDays } from 'date-fns';
+import { Db } from './db';
 
 const TABLE = 'unleash_session';
 
@@ -19,9 +19,9 @@ export default class SessionStore implements ISessionStore {
 
     private eventBus: EventEmitter;
 
-    private db: Knex;
+    private db: Db;
 
-    constructor(db: Knex, eventBus: EventEmitter, getLogger: LogProvider) {
+    constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
         this.eventBus = eventBus;
         this.logger = getLogger('lib/db/session-store.ts');

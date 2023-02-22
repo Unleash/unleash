@@ -5,9 +5,10 @@ import { useTable, useGlobalFilter, useSortBy } from 'react-table';
 import { SortableTableHeader, TableCell, Table } from 'component/common/Table';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
 import { Assessment } from '@mui/icons-material';
-import { useMemo, useEffect } from 'react';
+import { useMemo } from 'react';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import theme from 'themes/theme';
+import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 
 interface IFeatureMetricsTableProps {
     metrics: IFeatureMetricsRaw[];
@@ -34,6 +35,7 @@ export const FeatureMetricsTable = ({
             initialState,
             columns: COLUMNS as any,
             data: metrics as any,
+            autoResetHiddenColumns: false,
             disableSortRemove: true,
             defaultColumn: { Cell: TextCell },
         },
@@ -41,13 +43,16 @@ export const FeatureMetricsTable = ({
         useSortBy
     );
 
-    useEffect(() => {
-        const hiddenColumns = [];
-        if (isMediumScreen) {
-            hiddenColumns.push('appName', 'environment');
-        }
-        setHiddenColumns(hiddenColumns);
-    }, [setHiddenColumns, isMediumScreen]);
+    useConditionallyHiddenColumns(
+        [
+            {
+                condition: isMediumScreen,
+                columns: ['appName', 'environment'],
+            },
+        ],
+        setHiddenColumns,
+        COLUMNS
+    );
 
     if (metrics.length === 0) {
         return null;

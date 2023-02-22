@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import Input from 'component/common/Input/Input';
-import { useStyles } from './SegmentDeleteConfirm.styles';
 import { ISegment } from 'interfaces/segment';
 import { SEGMENT_DIALOG_NAME_ID } from 'utils/testIds';
+import { styled } from '@mui/material';
+
+const StyledInput = styled(Input)(({ theme }) => ({
+    marginTop: theme.spacing(2),
+}));
 
 interface ISegmentDeleteConfirmProps {
     segment: ISegment;
@@ -18,7 +22,6 @@ export const SegmentDeleteConfirm = ({
     onClose,
     onRemove,
 }: ISegmentDeleteConfirmProps) => {
-    const { classes: styles } = useStyles();
     const [confirmName, setConfirmName] = useState('');
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -43,18 +46,17 @@ export const SegmentDeleteConfirm = ({
             onClose={handleCancel}
             formId={formId}
         >
-            <p className={styles.deleteParagraph}>
+            <p>
                 In order to delete this segment, please enter the name of the
                 segment in the field below: <strong>{segment?.name}</strong>
             </p>
 
             <form id={formId}>
-                <Input
+                <StyledInput
                     autoFocus
                     onChange={handleChange}
                     value={confirmName}
                     label="Segment name"
-                    className={styles.deleteInput}
                     data-testid={SEGMENT_DIALOG_NAME_ID}
                 />
             </form>

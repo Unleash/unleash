@@ -1,4 +1,3 @@
-import { Knex } from 'knex';
 import { Logger, LogProvider } from '../logger';
 
 import NotFoundError from '../error/notfound-error';
@@ -6,8 +5,10 @@ import {
     IEditableStrategy,
     IMinimalStrategyRow,
     IStrategy,
+    IStrategyImport,
     IStrategyStore,
 } from '../types/stores/strategy-store';
+import { Db } from './db';
 
 const STRATEGY_COLUMNS = [
     'name',
@@ -28,11 +29,11 @@ interface IStrategyRow {
     display_name: string;
 }
 export default class StrategyStore implements IStrategyStore {
-    private db: Knex;
+    private db: Db;
 
     private logger: Logger;
 
-    constructor(db: Knex, getLogger: LogProvider) {
+    constructor(db: Db, getLogger: LogProvider) {
         this.db = db;
         this.logger = getLogger('strategy-store.ts');
     }
@@ -156,9 +157,16 @@ export default class StrategyStore implements IStrategyStore {
         await this.db(TABLE).where({ name }).del();
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    async importStrategy(data): Promise<void> {
-        const rowData = this.eventDataToRow(data);
+    async importStrategy(data: IStrategyImport): Promise<void> {
+        const rowData = {
+            name: data.name,
+            description: data.description,
+            deprecated: data.deprecated || false,
+            parameters: JSON.stringify(data.parameters || []),
+            built_in: data.builtIn ? 1 : 0,
+            sort_order: data.sortOrder || 9999,
+            display_name: data.displayName,
+        };
         await this.db(TABLE).insert(rowData).onConflict(['name']).merge();
     }
 

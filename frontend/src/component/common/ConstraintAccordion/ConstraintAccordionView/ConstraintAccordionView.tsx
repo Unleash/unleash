@@ -5,6 +5,7 @@ import {
     AccordionDetails,
     SxProps,
     Theme,
+    styled,
 } from '@mui/material';
 import { IConstraint } from 'interfaces/strategy';
 import { ConstraintAccordionViewBody } from './ConstraintAccordionViewBody/ConstraintAccordionViewBody';
@@ -15,7 +16,6 @@ import {
     numOperators,
     semVerOperators,
 } from 'constants/operators';
-import { useStyles } from '../ConstraintAccordion.styles';
 
 interface IConstraintAccordionViewProps {
     constraint: IConstraint;
@@ -26,6 +26,41 @@ interface IConstraintAccordionViewProps {
     renderAfter?: JSX.Element;
 }
 
+const StyledAccordion = styled(Accordion)(({ theme }) => ({
+    border: `1px solid ${theme.palette.dividerAlternative}`,
+    borderRadius: theme.shape.borderRadiusMedium,
+    backgroundColor: theme.palette.constraintAccordion.background,
+    boxShadow: 'none',
+    margin: 0,
+
+    '& .root': {
+        '&:before': {
+            opacity: '0 !important',
+        },
+    },
+}));
+
+const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
+    '& .root': {
+        border: 'none',
+        padding: theme.spacing(0.5, 3),
+        '&:hover .valuesExpandLabel': {
+            textDecoration: 'underline',
+        },
+    },
+}));
+const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
+    borderTop: `1px dashed ${theme.palette.divider}`,
+    display: 'flex',
+    flexDirection: 'column',
+}));
+
+const StyledWrapper = styled('div')({
+    display: 'flex',
+    flexDirection: 'column',
+    width: '100%',
+});
+
 export const ConstraintAccordionView = ({
     constraint,
     onEdit,
@@ -34,7 +69,6 @@ export const ConstraintAccordionView = ({
     compact = false,
     renderAfter,
 }: IConstraintAccordionViewProps) => {
-    const { classes: styles } = useStyles();
     const [expandable, setExpandable] = useState(true);
     const [expanded, setExpanded] = useState(false);
 
@@ -49,14 +83,8 @@ export const ConstraintAccordionView = ({
     };
 
     return (
-        <Accordion
-            className={styles.accordion}
-            classes={{ root: styles.accordionRoot }}
-            expanded={expanded}
-            sx={sx}
-        >
-            <AccordionSummary
-                classes={{ root: styles.summary }}
+        <StyledAccordion expanded={expanded} sx={sx}>
+            <StyledAccordionSummary
                 expandIcon={null}
                 onClick={handleClick}
                 sx={{
@@ -66,13 +94,7 @@ export const ConstraintAccordionView = ({
                     },
                 }}
             >
-                <div
-                    style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        width: '100%',
-                    }}
-                >
+                <StyledWrapper>
                     <ConstraintAccordionViewHeader
                         constraint={constraint}
                         onEdit={onEdit}
@@ -83,12 +105,12 @@ export const ConstraintAccordionView = ({
                         compact={compact}
                     />
                     {renderAfter}
-                </div>
-            </AccordionSummary>
+                </StyledWrapper>
+            </StyledAccordionSummary>
 
-            <AccordionDetails className={styles.accordionDetails}>
+            <StyledAccordionDetails>
                 <ConstraintAccordionViewBody constraint={constraint} />
-            </AccordionDetails>
-        </Accordion>
+            </StyledAccordionDetails>
+        </StyledAccordion>
     );
 };

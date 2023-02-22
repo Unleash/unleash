@@ -1,11 +1,7 @@
-import {
-    PlaygroundFeatureSchema,
-    PlaygroundRequestSchema,
-} from 'component/playground/Playground/interfaces/playground.model';
+import { useRef, useState } from 'react';
+import { PlaygroundFeatureSchema, PlaygroundRequestSchema } from 'openapi';
 import { IconButton, Popover, styled } from '@mui/material';
 import { InfoOutlined } from '@mui/icons-material';
-import React, { useRef, useState } from 'react';
-import { useStyles } from './FeatureResultInfoPopoverCell.styles';
 import { FeatureDetails } from './FeatureDetails/FeatureDetails';
 import { PlaygroundResultFeatureStrategyList } from './FeatureStrategyList/PlaygroundResultFeatureStrategyList';
 
@@ -24,7 +20,6 @@ export const FeatureResultInfoPopoverCell = ({
     input,
 }: FeatureResultInfoPopoverCellProps) => {
     const [open, setOpen] = useState(false);
-    const { classes: styles } = useStyles();
     const ref = useRef(null);
 
     const togglePopover = () => {
@@ -44,6 +39,19 @@ export const FeatureResultInfoPopoverCell = ({
                 open={open}
                 onClose={() => setOpen(false)}
                 anchorEl={ref.current}
+                PaperProps={{
+                    sx: theme => ({
+                        display: 'flex',
+                        flexDirection: 'column',
+                        padding: theme.spacing(6),
+                        width: 728,
+                        maxWidth: '100%',
+                        height: 'auto',
+                        overflowY: 'auto',
+                        backgroundColor: theme.palette.tertiary.light,
+                        borderRadius: theme.shape.borderRadius,
+                    }),
+                }}
                 anchorOrigin={{
                     vertical: 'top',
                     horizontal: 'right',
@@ -52,7 +60,6 @@ export const FeatureResultInfoPopoverCell = ({
                     vertical: 'center',
                     horizontal: 'left',
                 }}
-                classes={{ paper: styles.popoverPaper }}
             >
                 <FeatureDetails
                     feature={feature}

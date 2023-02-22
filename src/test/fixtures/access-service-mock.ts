@@ -16,7 +16,7 @@ class AccessServiceMock extends AccessService {
         super(
             {
                 accessStore: undefined,
-                userStore: undefined,
+                accountStore: undefined,
                 roleStore: undefined,
                 environmentStore: undefined,
             },

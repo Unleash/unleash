@@ -8,7 +8,7 @@ import {
 } from 'component/common/Table';
 import { SortingRule, useSortBy, useTable } from 'react-table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { Tab, Tabs, useMediaQuery } from '@mui/material';
+import { styled, Tab, Tabs, useMediaQuery } from '@mui/material';
 import { sortTypes } from 'utils/sortTypes';
 import { useEffect, useMemo, useState } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -17,32 +17,43 @@ import { featuresPlaceholder } from 'component/feature/FeatureToggleList/Feature
 import theme from 'themes/theme';
 import { useSearch } from 'hooks/useSearch';
 import { useSearchParams } from 'react-router-dom';
-import { TimeAgoCell } from '../../../common/Table/cells/TimeAgoCell/TimeAgoCell';
-import { TextCell } from '../../../common/Table/cells/TextCell/TextCell';
+import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
+import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { ChangeRequestStatusCell } from './ChangeRequestStatusCell/ChangeRequestStatusCell';
-import { ChangeRequestActionCell } from './ChangeRequestActionCell/ChangeRequestActionCell';
 import { AvatarCell } from './AvatarCell/AvatarCell';
 import { ChangeRequestTitleCell } from './ChangeRequestTitleCell/ChangeRequestTitleCell';
-import { TableBody, TableRow } from '../../../common/Table';
+import { TableBody, TableRow } from 'component/common/Table';
+import { createLocalStorage } from 'utils/createLocalStorage';
+import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { useStyles } from './ChangeRequestsTabs.styles';
 
 export interface IChangeRequestTableProps {
     changeRequests: any[];
     loading: boolean;
-    storedParams: SortingRule<string>;
-    setStoredParams: (
-        newValue:
-            | SortingRule<string>
-            | ((prev: SortingRule<string>) => SortingRule<string>)
-    ) => SortingRule<string>;
     projectId: string;
 }
+
+const defaultSort: SortingRule<string> & {
+    columns?: string[];
+} = { id: 'createdAt' };
+
+const StyledTabContainer = styled('div')({
+    paddingLeft: 0,
+    paddingBottom: 0,
+});
+
+const StyledTabButton = styled(Tab)(({ theme }) => ({
+    textTransform: 'none',
+    width: 'auto',
+    fontSize: theme.fontSizes.bodySize,
+    [theme.breakpoints.up('md')]: {
+        minWidth: 160,
+    },
+}));
 
 export const ChangeRequestsTabs = ({
     changeRequests = [],
     loading,
-    storedParams,
-    setStoredParams,
     projectId,
 }: IChangeRequestTableProps) => {
     const { classes } = useStyles();
@@ -52,6 +63,9 @@ export const ChangeRequestsTabs = ({
     const [searchValue, setSearchValue] = useState(
         searchParams.get('search') || ''
     );
+
+    const { value: storedParams, setValue: setStoredParams } =
+        createLocalStorage(`${projectId}:ProjectChangeRequest`, defaultSort);
 
     const [openChangeRequests, closedChangeRequests] = useMemo(() => {
         const open = changeRequests.filter(
@@ -110,25 +124,17 @@ export const ChangeRequestsTabs = ({
             {
                 Header: 'Environment',
                 accessor: 'environment',
+                searchable: true,
                 maxWidth: 100,
                 Cell: TextCell,
-                sortType: 'text',
             },
             {
                 Header: 'Status',
                 accessor: 'state',
+                searchable: true,
                 minWidth: 150,
                 width: 150,
                 Cell: ChangeRequestStatusCell,
-                sortType: 'text',
-            },
-            {
-                Header: '',
-                id: 'Actions',
-                minWidth: 50,
-                width: 50,
-                canSort: false,
-                Cell: ChangeRequestActionCell,
             },
         ],
         //eslint-disable-next-line
@@ -172,6 +178,7 @@ export const ChangeRequestsTabs = ({
             data,
             initialState,
             sortTypes,
+            autoResetHiddenColumns: false,
             disableSortRemove: true,
             autoResetSortBy: false,
             defaultColumn: {
@@ -181,13 +188,16 @@ export const ChangeRequestsTabs = ({
         useSortBy
     );
 
-    useEffect(() => {
-        const hiddenColumns = [''];
-        if (isSmallScreen) {
-            hiddenColumns.push('createdBy', 'updatedAt');
-        }
-        setHiddenColumns(hiddenColumns);
-    }, [setHiddenColumns, isSmallScreen]);
+    useConditionallyHiddenColumns(
+        [
+            {
+                condition: isSmallScreen,
+                columns: ['createdBy'],
+            },
+        ],
+        setHiddenColumns,
+        columns
+    );
 
     useEffect(() => {
         if (loading) {
@@ -205,33 +215,40 @@ export const ChangeRequestsTabs = ({
         setSearchParams(tableState, {
             replace: true,
         });
-        setStoredParams({ id: sortBy[0].id, desc: sortBy[0].desc || false });
-    }, [loading, sortBy, searchValue]); // eslint-disable-line react-hooks/exhaustive-deps
+        setStoredParams(params => ({
+            ...params,
+            id: sortBy[0].id,
+            desc: sortBy[0].desc || false,
+        }));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [loading, sortBy, searchValue, setSearchParams]);
 
     return (
         <PageContent
             isLoading={loading}
+            bodyClass={classes.bodyClass}
             headerClass={classes.header}
             header={
                 <PageHeader
                     titleElement={
-                        <div className={classes.tabContainer}>
+                        <StyledTabContainer>
                             <Tabs
                                 value={tabs[activeTab]?.title}
                                 indicatorColor="primary"
                                 textColor="primary"
+                                variant="scrollable"
+                                allowScrollButtonsMobile
                             >
                                 {tabs.map((tab, index) => (
-                                    <Tab
+                                    <StyledTabButton
                                         key={tab.title}
                                         label={`${tab.title} (${tab.data.length})`}
                                         value={tab.title}
                                         onClick={() => setActiveTab(index)}
-                                        className={classes.tabButton}
                                     />
                                 ))}
                             </Tabs>
-                        </div>
+                        </StyledTabContainer>
                     }
                     actions={
                         <Search
@@ -279,7 +296,7 @@ export const ChangeRequestsTabs = ({
                         }
                         elseShow={
                             <TablePlaceholder>
-                                None of the changes where submitted yet.
+                                None of the changes were submitted yet.
                             </TablePlaceholder>
                         }
                     />

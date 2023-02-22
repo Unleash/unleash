@@ -12,7 +12,7 @@ import {
     PROJECT_IMPORT,
 } from '../types/events';
 import { GLOBAL_ENV } from '../types/environment';
-
+import variantsExportV3 from '../../test/examples/variantsexport_v3.json';
 const oldExportExample = require('./state-service-export-v1.json');
 
 function getSetup() {
@@ -27,83 +27,46 @@ function getSetup() {
 }
 
 async function setupV3VariantsCompatibilityScenario(
-    variantsPerEnvironment: boolean,
+    envs = [
+        { name: 'env-2', enabled: true },
+        { name: 'env-3', enabled: true },
+        { name: 'env-1', enabled: true },
+    ],
 ) {
     const stores = createStores();
-    await stores.environmentStore.create({
-        name: 'env-1',
-        type: 'production',
-        sortOrder: 3,
-    });
-    await stores.environmentStore.create({
-        name: 'env-2',
-        type: 'production',
-        sortOrder: 1,
-    });
-    await stores.environmentStore.create({
-        name: 'env-3',
-        type: 'production',
-        sortOrder: 2,
-    });
     await stores.featureToggleStore.create('some-project', {
         name: 'Feature-with-variants',
     });
-    await stores.featureEnvironmentStore.addEnvironmentToFeature(
-        'Feature-with-variants',
-        'env-1',
-        true,
-    );
-    await stores.featureEnvironmentStore.addEnvironmentToFeature(
-        'Feature-with-variants',
-        'env-2',
-        true,
-    );
-    await stores.featureEnvironmentStore.addEnvironmentToFeature(
-        'Feature-with-variants',
-        'env-3',
-        true,
-    );
-    await stores.featureEnvironmentStore.addVariantsToFeatureEnvironment(
-        'Feature-with-variants',
-        'env-1',
-        [
-            {
-                name: 'env-1-variant',
-                stickiness: 'default',
-                weight: 1000,
-                weightType: 'variable',
-            },
-        ],
-    );
-    await stores.featureEnvironmentStore.addVariantsToFeatureEnvironment(
-        'Feature-with-variants',
-        'env-2',
-        [
-            {
-                name: 'env-2-variant',
-                stickiness: 'default',
-                weight: 1000,
-                weightType: 'variable',
-            },
-        ],
-    );
-    await stores.featureEnvironmentStore.addVariantsToFeatureEnvironment(
-        'Feature-with-variants',
-        'env-3',
-        [
-            {
-                name: 'env-3-variant',
-                stickiness: 'default',
-                weight: 1000,
-                weightType: 'variable',
-            },
-        ],
-    );
+    let sortOrder = 1;
+    envs.forEach(async (env) => {
+        await stores.environmentStore.create({
+            name: env.name,
+            type: 'production',
+            sortOrder: sortOrder++,
+        });
+        await stores.featureEnvironmentStore.addEnvironmentToFeature(
+            'Feature-with-variants',
+            env.name,
+            env.enabled,
+        );
+        await stores.featureEnvironmentStore.addVariantsToFeatureEnvironment(
+            'Feature-with-variants',
+            env.name,
+            [
+                {
+                    name: `${env.name}-variant`,
+                    stickiness: 'default',
+                    weight: 1000,
+                    weightType: 'variable',
+                },
+            ],
+        );
+    });
     return {
         stateService: new StateService(stores, {
             getLogger,
             flagResolver: {
-                isEnabled: () => variantsPerEnvironment,
+                isEnabled: () => true,
                 getAll: () => ({}),
             },
         }),
@@ -656,38 +619,8 @@ test('exporting to new format works', async () => {
     expect(exported.featureStrategies).toHaveLength(1);
 });
 
-test('exporting with no environments should fail', async () => {
-    const { stateService, stores } = await setupV3VariantsCompatibilityScenario(
-        false,
-    );
-    await stores.environmentStore.deleteAll();
-
-    expect(stateService.export({})).rejects.toThrowError();
-});
-
-// This test should be removed as soon as variants per environment is GA
-test('exporting variants to v3 format should pick variants from the correct env', async () => {
-    const { stateService } = await setupV3VariantsCompatibilityScenario(false);
-
-    const exported = await stateService.export({});
-    expect(exported.features).toHaveLength(1);
-    // env 2 has the lowest sortOrder so we expect env-2-variant to be selected
-    expect(exported.features[0].variants).toStrictEqual([
-        {
-            name: 'env-2-variant',
-            stickiness: 'default',
-            weight: 1000,
-            weightType: 'variable',
-        },
-    ]);
-    exported.featureEnvironments.forEach((fe) =>
-        expect(fe.variants).toBeUndefined(),
-    );
-    expect(exported.environments).toHaveLength(3);
-});
-
 test('exporting variants to v4 format should not include variants in features', async () => {
-    const { stateService } = await setupV3VariantsCompatibilityScenario(true);
+    const { stateService } = await setupV3VariantsCompatibilityScenario();
     const exported = await stateService.export({});
 
     expect(exported.features).toHaveLength(1);
@@ -812,4 +745,56 @@ test('Import v1 and exporting v2 should work', async () => {
         ),
     ).toBeTruthy();
     expect(exported.featureStrategies).toHaveLength(strategiesCount);
+});
+
+test('Importing states with deprecated strategies should keep their deprecated state', async () => {
+    const { stateService, stores } = getSetup();
+    const deprecatedStrategyExample = {
+        version: 4,
+        features: [],
+        strategies: [
+            {
+                name: 'deprecatedstrat',
+                description: 'This should be deprecated when imported',
+                deprecated: true,
+                parameters: [],
+                builtIn: false,
+                sortOrder: 9999,
+                displayName: 'Deprecated strategy',
+            },
+        ],
+        featureStrategies: [],
+    };
+    await stateService.import({
+        data: deprecatedStrategyExample,
+        userName: 'strategy-importer',
+        dropBeforeImport: true,
+        keepExisting: false,
+    });
+    const deprecatedStrategy = await stores.strategyStore.get(
+        'deprecatedstrat',
+    );
+    expect(deprecatedStrategy.deprecated).toBe(true);
+});
+
+test('Exporting a deprecated strategy and then importing it should keep correct state', async () => {
+    const { stateService, stores } = getSetup();
+    await stateService.import({
+        data: variantsExportV3,
+        keepExisting: false,
+        dropBeforeImport: true,
+        userName: 'strategy importer',
+    });
+    const rolloutRandom = await stores.strategyStore.get(
+        'gradualRolloutRandom',
+    );
+    expect(rolloutRandom.deprecated).toBe(true);
+    const rolloutSessionId = await stores.strategyStore.get(
+        'gradualRolloutSessionId',
+    );
+    expect(rolloutSessionId.deprecated).toBe(true);
+    const rolloutUserId = await stores.strategyStore.get(
+        'gradualRolloutUserId',
+    );
+    expect(rolloutUserId.deprecated).toBe(true);
 });

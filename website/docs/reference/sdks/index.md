@@ -12,26 +12,27 @@ Unleash provides official client SDKs for a number of programming language. Addi
 
 Server-side clients run on your server and communicate directly with your Unleash instance. We provide these official clients:
 
-- [Go SDK](go.md)
-- [Java SDK](java.md)
-- [Node.js SDK](node.md)
-- [PHP SDK](php.md)
-- [Python SDK](python.md)
-- [Ruby SDK](ruby.md)
-- [Rust SDK](https://github.com/unleash/unleash-client-rust)
-- [.NET SDK](dotnet.md)
+- [Go SDK](/docs/generated/sdks/server-side/go.md)
+- [Java SDK](/docs/generated/sdks/server-side/java.md)
+- [Node.js SDK](/docs/generated/sdks/server-side/node.md)
+- [PHP SDK](/docs/generated/sdks/server-side/php.md)
+- [Python SDK](/docs/generated/sdks/server-side/python.md)
+- [Ruby SDK](/docs/generated/sdks/server-side/ruby.md)
+- [Rust SDK](/docs/generated/sdks/server-side/rust.md)
+- [.NET SDK](/docs/generated/sdks/server-side/dotnet.md)
 
 ### Client-side SDKs
 
-Client-side SDKs can connect to the [Unleash Proxy](../unleash-proxy.md) or to the [Unleash front-end API](../front-end-api.md), but _not_ to the regular Unleash client API.
+Client-side SDKs can connect to the [Unleash Proxy](../../generated/unleash-proxy.md) or to the [Unleash front-end API](../front-end-api.md), but _not_ to the regular Unleash client API.
 
 
-- [Android SDK](android-proxy.md)
-- [iOS Proxy SDK](ios-proxy.md)
-- [Javascript SDK](javascript-browser.md)
-- [React Proxy SDK](react.md)
-- [Svelte Proxy SDK](svelte.md)
-- [Vue Proxy SDK](vue.md)
+- [Android SDK](/docs/generated/sdks/client-side/android-proxy.md)
+- [Flutter Proxy SDK](/docs/generated/sdks/client-side/flutter.md)
+- [iOS Proxy SDK](/docs/generated/sdks/client-side/ios-proxy.md)
+- [Javascript SDK](/docs/generated/sdks/client-side/javascript-browser.md)
+- [React Proxy SDK](/docs/generated/sdks/client-side/react.md)
+- [Svelte Proxy SDK](/docs/generated/sdks/client-side/svelte.md)
+- [Vue Proxy SDK](/docs/generated/sdks/client-side/vue.md)
 
 ### Server-side SDK compatibility table
 
@@ -50,57 +51,57 @@ If you see an item marked with a ❌ that you would find useful, feel free to re
 
 :::
 
-| Capability | [Java](/reference/sdks/java.md) | [Node.js](/reference/sdks/node.md) | [Go](/reference/sdks/go.md) | [Python](/reference/sdks/python.md) | [Ruby](/reference/sdks/ruby.md) | [.NET](/reference/sdks/dotnet) | [PHP](/reference/sdks/php.md) | [Rust](https://github.com/unleash/unleash-client-rust) | [Unleash Proxy](/reference/unleash-proxy.md) |
-| --- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
-| **Category: Initialization** |  |  |  |  |  |  |  |  |  |
-| Async initialization | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ | N/A |
-| Can block until synchronized | ✅ | ✅ | ✅ | ⭕ | ⭕ | ✅ | ✅ | ⭕ | N/A |
-| Default refresh interval | 10s | 15s | 15s | 15s | 15s | 30s | 30s | 15s | 5s |
-| Default metrics interval | 60s | 60s | 60s | 60s | 60s | 60s | 30s | 15s | 30s |
-| Context provider | ✅ | N/A | N/A | N/A | N/A | ✅ | ✅ | N/A | N/A |
-| Global fallback function | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | N/A |
-| Toggle Query: `namePrefix` | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ✅ |
-| Toggle Query: `tags` | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ✅ |
-| Toggle Query: `project_name` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | N/A | ⭕ | ✅ |
-| **Category: Custom Headers** |  |  |  |  |  |  |  |  |  |
-| static | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ | N/A |
-| function | ✅ | ✅ | ⭕ | ✅ | ✅ (4.3) | ✅ | ✅ | ⭕ | N/A |
-| **Category: Built-in strategies** |  |  |  |  |  |  |  |  |  |
-| [Standard](../reference/activation-strategies#standard) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| [Gradual rollout](../reference/activation-strategies#gradual-rollout) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| [Gradual rollout: custom stickiness](../reference/activation-strategies#customize-stickiness-beta) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ | ✅ |
-| [UserID](../reference/activation-strategies#userids) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| [IP](../reference/activation-strategies#ips) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| [IP](../reference/activation-strategies#ips): CIDR syntax | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ | ✅ | ✅ | ✅ |
-| [Hostname](../reference/activation-strategies#hostnames) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **Category: [Custom strategies](../custom-activation-strategies.md)** |  |  |  |  |  |  |  |  |  |
-| Basic support | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| <span id="strategy-constraints">**Category: [Strategy constraints](../strategy-constraints.md)**</span> |  |  |  |  |  |  |  |  |  |
-| Basic support (`IN`, `NOT_IN` operators) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| <span id="strategy-constraints-advanced-support">Advanced support (Semver, date, numeric and extended string operators)</span> (introduced in) | ✅ (5.1) | ✅ (3.12) | ✅ (3.3) | ✅ (5.1) | ✅ (4.2) | ✅ (2.1) | ✅ (1.3.1) | ⭕ | ✅ (0.8) |
-| **Category: [Unleash Context](../reference/unleash-context)** |  |  |  |  |  |  |  |  |  |
-| Static fields (`environment`, `appName`) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Defined fields | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Custom properties | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **Category: [`isEnabled`](../client-specification#implementation-of-isenabled)** |  |  |  |  |  |  |  |  |  |
-| Can take context | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Override fallback value | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Fallback function | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ | ⭕ | ⭕ | ✅ |
-| **Category: [Variants](../feature-toggle-variants.md)** |  |  |  |  |  |  |  |  |  |
-| Basic support | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Custom fallback variant | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ | ✅ |
-| Custom weight | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ | ✅ |
-| [Custom stickiness (beta)](../stickiness.md#custom-stickiness-beta) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ | ✅ |
-| **Category: Local backup** |  |  |  |  |  |  |  |  |  |
-| File based backup | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ | ✅ |
-| **Category: Usage metrics** |  |  |  |  |  |  |  |  |  |
-| Can disable metrics | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Client registration | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Basic usage metrics (yes/no) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| [Impression data](../impression-data.md) | ⭕ | ✅ | ⭕ | ⭕ | ⭕ | ⭕ | ✅ | ⭕ | ✅ |
-| **Category: Bootstrap (beta)** |  |  |  |  |  |  |  |  |  |
-| Bootstrap from file | ✅ | ✅ | ✅ | ⭕ | ✅ | ✅ | ✅ | ⭕ | ✅ |
-| Custom Bootstrap implementation | ✅ | ✅ | ✅ | ⭕ | ✅ | ✅ | ✅ | ⭕ | ✅ |
+| Capability | [Java](/docs/generated/sdks/server-side/java.md) | [Node.js](/docs/generated/sdks/server-side/node.md) | [Go](/docs/generated/sdks/server-side/go.md) | [Python](/docs/generated/sdks/server-side/python.md) | [Ruby](/docs/generated/sdks/server-side/ruby.md) | [.NET](/docs/generated/sdks/server-side/dotnet.md) | [PHP](/docs/generated/sdks/server-side/php.md) | [Rust](/docs/generated/sdks/server-side/rust.md) |
+| --- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
+| **Category: Initialization** |  |  |  |  |  |  |  |  |
+| Async initialization | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ |
+| Can block until synchronized | ✅ | ✅ | ✅ | ⭕ | ⭕ | ✅ | ✅ | ⭕ |
+| Default refresh interval | 10s | 15s | 15s | 15s | 15s | 30s | 30s | 15s |
+| Default metrics interval | 60s | 60s | 60s | 60s | 60s | 60s | 30s | 15s |
+| Context provider | ✅ | N/A | N/A | N/A | N/A | ✅ | ✅ | N/A |
+| Global fallback function | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
+| Toggle Query: `namePrefix` | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ |
+| Toggle Query: `tags` | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ |
+| Toggle Query: `project_name` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | N/A | ⭕ |
+| **Category: Custom Headers** |  |  |  |  |  |  |  |  |
+| static | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ |
+| function | ✅ | ✅ | ⭕ | ✅ | ✅ (4.3) | ✅ | ✅ | ⭕ |
+| **Category: Built-in strategies** |  |  |  |  |  |  |  |  |
+| [Standard](../reference/activation-strategies#standard) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| [Gradual rollout](../reference/activation-strategies#gradual-rollout) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| [Gradual rollout: custom stickiness](../reference/activation-strategies#customize-stickiness-beta) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ |
+| [UserID](../reference/activation-strategies#userids) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| [IP](../reference/activation-strategies#ips) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| [IP](../reference/activation-strategies#ips): CIDR syntax | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ | ✅ | ✅ |
+| [Hostname](../reference/activation-strategies#hostnames) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **Category: [Custom strategies](../custom-activation-strategies.md)** |  |  |  |  |  |  |  |  |
+| Basic support | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| <span id="strategy-constraints">**Category: [Strategy constraints](../strategy-constraints.md)**</span> |  |  |  |  |  |  |  |  |
+| Basic support (`IN`, `NOT_IN` operators) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| <span id="strategy-constraints-advanced-support">Advanced support (Semver, date, numeric and extended string operators)</span> (introduced in) | ✅ (5.1) | ✅ (3.12) | ✅ (3.3) | ✅ (5.1) | ✅ (4.2) | ✅ (2.1) | ✅ (1.3.1) | ⭕ |
+| **Category: [Unleash Context](../reference/unleash-context)** |  |  |  |  |  |  |  |  |
+| Static fields (`environment`, `appName`) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Defined fields | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Custom properties | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **Category: [`isEnabled`](../client-specification#implementation-of-isenabled)** |  |  |  |  |  |  |  |  |
+| Can take context | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Override fallback value | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Fallback function | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ | ⭕ | ⭕ |
+| **Category: [Variants](../feature-toggle-variants.md)** |  |  |  |  |  |  |  |  |
+| Basic support | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Custom fallback variant | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ |
+| Custom weight | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ |
+| [Custom stickiness (beta)](../stickiness.md#custom-stickiness-beta) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ |
+| **Category: Local backup** |  |  |  |  |  |  |  |  |
+| File based backup | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ |
+| **Category: Usage metrics** |  |  |  |  |  |  |  |  |
+| Can disable metrics | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Client registration | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Basic usage metrics (yes/no) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| [Impression data](../impression-data.md) | ⭕ | ✅ | ⭕ | ⭕ | ⭕ | ⭕ | ✅ | ⭕ |
+| **Category: Bootstrap (beta)** |  |  |  |  |  |  |  |  |
+| Bootstrap from file | ✅ | ✅ | ✅ | ⭕ | ✅ | ✅ | ✅ | ⭕ |
+| Custom Bootstrap implementation | ✅ | ✅ | ✅ | ⭕ | ✅ | ✅ | ✅ | ⭕ |
 
 ## Community SDKs ❤️ {#community-sdks}
 
@@ -141,8 +142,8 @@ By default, all SDKs reach out to the Unleash Server at startup to fetch their t
 
 Bootstrapping is also supported by the following front-end client SDKs:
 
-- [Android SDK](android-proxy.md)
-- [Javascript SDK](javascript-browser.md)
-- [React Proxy SDK](react.md)
-- [Svelte Proxy SDK](svelte.md)
-- [Vue Proxy SDK](vue.md)
+- [Android SDK](/docs/generated/sdks/client-side/android-proxy.md)
+- [Javascript SDK](/docs/generated/sdks/client-side/javascript-browser.md)
+- [React Proxy SDK](/docs/generated/sdks/client-side/react.md)
+- [Svelte Proxy SDK](/docs/generated/sdks/client-side/svelte.md)
+- [Vue Proxy SDK](/docs/generated/sdks/client-side/vue.md)

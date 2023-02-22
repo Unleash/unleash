@@ -13,6 +13,9 @@ export interface IUiConfig {
     links: ILinks[];
     disablePasswordAuth?: boolean;
     emailEnabled?: boolean;
+    networkViewEnabled: boolean;
+
+    maintenanceMode?: boolean;
     toast?: IProclamationToast;
     segmentValuesLimit?: number;
     strategySegmentsLimit?: number;
@@ -27,26 +30,23 @@ export interface IProclamationToast {
 }
 
 export interface IFlags {
-    C: boolean;
     P: boolean;
-    E: boolean;
     RE: boolean;
     EEA?: boolean;
-    OIDC?: boolean;
-    CO?: boolean;
     SE?: boolean;
     T?: boolean;
     UNLEASH_CLOUD?: boolean;
     UG?: boolean;
     ENABLE_DARK_MODE_SUPPORT?: boolean;
     embedProxyFrontend?: boolean;
-    syncSSOGroups?: boolean;
-    changeRequests?: boolean;
-    cloneEnvironment?: boolean;
-    variantsPerEnvironment?: boolean;
-    tokensLastSeen?: boolean;
-    favorites?: boolean;
-    networkView?: boolean;
+    maintenance?: boolean;
+    maintenanceMode?: boolean;
+    messageBanner?: boolean;
+    featuresExportImport?: boolean;
+    newProjectOverview?: boolean;
+    caseInsensitiveInOperators?: boolean;
+    crOnVariants?: boolean;
+    showProjectApiAccess?: boolean;
 }
 
 export interface IVersionInfo {

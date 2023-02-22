@@ -18,10 +18,10 @@ async function getSetup() {
         request: supertest(app),
         stores,
         perms,
+        config,
         destroy: () => {
             services.versionService.destroy();
             services.clientInstanceService.destroy();
-            services.apiTokenService.destroy();
         },
     };
 }

@@ -9,7 +9,7 @@
         "ecmaVersion": 2019,
         "project": "./tsconfig.json"
     },
-    "plugins": ["@typescript-eslint", "prettier", "import"],
+    "plugins": ["@typescript-eslint", "prettier", "import", "no-only-tests"],
     "root": true,
     "rules": {
         "@typescript-eslint/no-var-requires": 0,
@@ -26,6 +26,7 @@
         "no-param-reassign": "error",
         "no-return-await": "error",
         "max-nested-callbacks": "off",
+        "no-only-tests/no-only-tests": "error",
         "new-cap": [
             "error",
             {

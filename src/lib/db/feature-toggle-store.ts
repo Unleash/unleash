@@ -6,6 +6,7 @@ import NotFoundError from '../error/notfound-error';
 import { Logger, LogProvider } from '../logger';
 import { FeatureToggle, FeatureToggleDTO, IVariant } from '../types/model';
 import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
+import { Db } from './db';
 
 const FEATURE_COLUMNS = [
     'name',
@@ -40,13 +41,13 @@ const TABLE = 'features';
 const FEATURE_ENVIRONMENTS_TABLE = 'feature_environments';
 
 export default class FeatureToggleStore implements IFeatureToggleStore {
-    private db: Knex;
+    private db: Db;
 
     private logger: Logger;
 
     private timer: Function;
 
-    constructor(db: Knex, eventBus: EventEmitter, getLogger: LogProvider) {
+    constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
         this.logger = getLogger('feature-toggle-store.ts');
         this.timer = (action) =>
@@ -99,6 +100,42 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             .from(TABLE)
             .where(rest)
             .modify(FeatureToggleStore.filterByArchived, archived);
+        return rows.map(this.rowToFeature);
+    }
+
+    async getAllByNames(names: string[]): Promise<FeatureToggle[]> {
+        const query = this.db<FeaturesTable>(TABLE).orderBy('name', 'asc');
+        query.whereIn('name', names);
+        const rows = await query;
+        return rows.map(this.rowToFeature);
+    }
+
+    async getByDate(queryModifiers: {
+        archived?: boolean;
+        project?: string;
+        date?: string;
+        range?: string[];
+        dateAccessor: string;
+    }): Promise<FeatureToggle[]> {
+        const { project, archived, dateAccessor } = queryModifiers;
+        let query = this.db
+            .select(FEATURE_COLUMNS)
+            .from(TABLE)
+            .where({ project })
+            .modify(FeatureToggleStore.filterByArchived, archived);
+
+        if (queryModifiers.date) {
+            query.andWhere(dateAccessor, '>=', queryModifiers.date);
+        }
+
+        if (queryModifiers.range && queryModifiers.range.length === 2) {
+            query.andWhereBetween(dateAccessor, [
+                queryModifiers.range[0],
+                queryModifiers.range[1],
+            ]);
+        }
+
+        const rows = await query;
         return rows.map(this.rowToFeature);
     }
 

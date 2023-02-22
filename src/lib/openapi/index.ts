@@ -1,5 +1,6 @@
 import { OpenAPIV3 } from 'openapi-types';
 import {
+    adminFeaturesQuerySchema,
     addonParameterSchema,
     addonSchema,
     addonsSchema,
@@ -32,6 +33,8 @@ import {
     environmentsSchema,
     eventSchema,
     eventsSchema,
+    exportResultSchema,
+    exportQuerySchema,
     featureEnvironmentMetricsSchema,
     featureEnvironmentSchema,
     featureEventsSchema,
@@ -81,10 +84,14 @@ import {
     proxyFeaturesSchema,
     proxyMetricsSchema,
     publicSignupTokenCreateSchema,
+    projectStatsSchema,
     publicSignupTokenSchema,
     publicSignupTokensSchema,
     publicSignupTokenUpdateSchema,
+    pushVariantsSchema,
     resetPasswordSchema,
+    requestsPerSecondSchema,
+    requestsPerSecondSegmentedSchema,
     roleSchema,
     sdkContextSchema,
     searchEventsSchema,
@@ -120,15 +127,23 @@ import {
     variantSchema,
     variantsSchema,
     versionSchema,
+    projectOverviewSchema,
+    importTogglesSchema,
+    importTogglesValidateSchema,
+    importTogglesValidateItemSchema,
 } from './spec';
 import { IServerOption } from '../types';
 import { mapValues, omitKeys } from '../util';
 import { openApiTags } from './util';
 import { URL } from 'url';
 import apiVersion from '../util/version';
+import { maintenanceSchema } from './spec/maintenance-schema';
+import { bulkRegistrationSchema } from './spec/bulk-registration-schema';
+import { bulkMetricsSchema } from './spec/bulk-metrics-schema';
 
 // All schemas in `openapi/spec` should be listed here.
 export const schemas = {
+    adminFeaturesQuerySchema,
     addonParameterSchema,
     addonSchema,
     addonsSchema,
@@ -137,6 +152,8 @@ export const schemas = {
     apiTokensSchema,
     applicationSchema,
     applicationsSchema,
+    bulkRegistrationSchema,
+    bulkMetricsSchema,
     changePasswordSchema,
     clientApplicationSchema,
     clientFeatureSchema,
@@ -161,6 +178,8 @@ export const schemas = {
     environmentsProjectSchema,
     eventSchema,
     eventsSchema,
+    exportResultSchema,
+    exportQuerySchema,
     featureEnvironmentMetricsSchema,
     featureEnvironmentSchema,
     featureEventsSchema,
@@ -185,6 +204,7 @@ export const schemas = {
     instanceAdminStatsSchema,
     legalValueSchema,
     loginSchema,
+    maintenanceSchema,
     meSchema,
     nameSchema,
     overrideSchema,
@@ -213,7 +233,11 @@ export const schemas = {
     publicSignupTokenSchema,
     publicSignupTokensSchema,
     publicSignupTokenUpdateSchema,
+    pushVariantsSchema,
+    projectStatsSchema,
     resetPasswordSchema,
+    requestsPerSecondSchema,
+    requestsPerSecondSegmentedSchema,
     roleSchema,
     sdkContextSchema,
     searchEventsSchema,
@@ -249,6 +273,10 @@ export const schemas = {
     variantSchema,
     variantsSchema,
     versionSchema,
+    projectOverviewSchema,
+    importTogglesSchema,
+    importTogglesValidateSchema,
+    importTogglesValidateItemSchema,
 };
 
 // Schemas must have an $id property on the form "#/components/schemas/mySchema".

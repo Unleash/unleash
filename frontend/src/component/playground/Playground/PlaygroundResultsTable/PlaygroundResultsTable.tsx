@@ -18,14 +18,12 @@ import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { useSearch } from 'hooks/useSearch';
 import { createLocalStorage } from 'utils/createLocalStorage';
 import { FeatureStatusCell } from './FeatureStatusCell/FeatureStatusCell';
-import {
-    PlaygroundFeatureSchema,
-    PlaygroundRequestSchema,
-} from 'component/playground/Playground/interfaces/playground.model';
+import { PlaygroundFeatureSchema, PlaygroundRequestSchema } from 'openapi';
 import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
 import useLoading from 'hooks/useLoading';
 import { VariantCell } from './VariantCell/VariantCell';
 import { FeatureResultInfoPopoverCell } from './FeatureResultInfoPopoverCell/FeatureResultInfoPopoverCell';
+import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 
 const defaultSort: SortingRule<string> = { id: 'name' };
 const { value, setValue } = createLocalStorage(
@@ -172,6 +170,7 @@ export const PlaygroundResultsTable = ({
             data: data as any,
             sortTypes,
             autoResetGlobalFilter: false,
+            autoResetHiddenColumns: false,
             autoResetSortBy: false,
             disableSortRemove: true,
             disableMultiSort: true,
@@ -184,16 +183,20 @@ export const PlaygroundResultsTable = ({
         useSortBy
     );
 
-    useEffect(() => {
-        const hiddenColumns = [];
-        if (isSmallScreen) {
-            hiddenColumns.push('projectId');
-        }
-        if (isExtraSmallScreen) {
-            hiddenColumns.push('variant');
-        }
-        setHiddenColumns(hiddenColumns);
-    }, [setHiddenColumns, isExtraSmallScreen, isSmallScreen]);
+    useConditionallyHiddenColumns(
+        [
+            {
+                condition: isExtraSmallScreen,
+                columns: ['variant'],
+            },
+            {
+                condition: isSmallScreen,
+                columns: ['projectId'],
+            },
+        ],
+        setHiddenColumns,
+        COLUMNS
+    );
 
     useEffect(() => {
         if (loading) {

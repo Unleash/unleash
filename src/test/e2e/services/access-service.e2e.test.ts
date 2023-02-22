@@ -14,12 +14,14 @@ import { DEFAULT_PROJECT } from '../../../lib/types/project';
 import { ALL_PROJECTS } from '../../../lib/util/constants';
 import { SegmentService } from '../../../lib/services/segment-service';
 import { GroupService } from '../../../lib/services/group-service';
+import { FavoritesService } from '../../../lib/services';
 
 let db: ITestDb;
 let stores: IUnleashStores;
 let accessService;
 let groupService;
 let featureToggleService;
+let favoritesService;
 let projectService;
 let editorUser;
 let superUser;
@@ -220,12 +222,14 @@ beforeAll(async () => {
         new SegmentService(stores, config),
         accessService,
     );
+    favoritesService = new FavoritesService(stores, config);
     projectService = new ProjectService(
         stores,
         config,
         accessService,
         featureToggleService,
         groupService,
+        favoritesService,
     );
 
     editorUser = await createUserEditorAccess('Bob Test', 'bob@getunleash.io');

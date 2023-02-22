@@ -1,5 +1,4 @@
 import { EventEmitter } from 'events';
-import { Knex } from 'knex';
 import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
 import { Logger, LogProvider } from '../logger';
@@ -12,6 +11,7 @@ import {
     isAllProjects,
 } from '../types/models/api-token';
 import { ALL_PROJECTS } from '../util/constants';
+import { Db } from './db';
 
 const TABLE = 'api_tokens';
 const API_LINK_TABLE = 'api_token_project';
@@ -80,9 +80,9 @@ export class ApiTokenStore implements IApiTokenStore {
 
     private timer: Function;
 
-    private db: Knex;
+    private db: Db;
 
-    constructor(db: Knex, eventBus: EventEmitter, getLogger: LogProvider) {
+    constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
         this.logger = getLogger('api-tokens.js');
         this.timer = (action: string) =>

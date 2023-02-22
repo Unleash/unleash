@@ -1,8 +1,7 @@
-import useSWR from 'swr';
 import { useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import useUiConfig from '../useUiConfig/useUiConfig';
+import { useEnterpriseSWR } from '../useEnterpriseSWR/useEnterpriseSWR';
 
 const fetcher = (path: string) => {
     return fetch(path)
@@ -11,17 +10,17 @@ const fetcher = (path: string) => {
 };
 
 export const useProjectChangeRequests = (project: string) => {
-    const { isOss } = useUiConfig();
-    const { data, error, mutate } = useSWR(
+    const { data, error, mutate } = useEnterpriseSWR(
+        [],
         formatApiPath(`api/admin/projects/${project}/change-requests`),
-        isOss() ? () => Promise.resolve([]) : fetcher
+        fetcher
     );
 
     return useMemo(
         () => ({
             changeRequests: data,
             loading: !error && !data,
-            refetch: () => mutate(),
+            refetch: mutate,
             error,
         }),
         [data, error, mutate]

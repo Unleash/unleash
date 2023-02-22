@@ -13,7 +13,7 @@ const StyledMainHeader = styled(Paper)(({ theme }) => ({
 
 const StyledTitleHeader = styled('div')(({ theme }) => ({
     display: 'flex',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     justifyContent: 'space-between',
 }));
 

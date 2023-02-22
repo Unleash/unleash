@@ -84,7 +84,7 @@ const ChangeRequestStatusBadge = ({
     }
 
     return (
-        <>
+        <Box sx={{ mr: 1.5 }}>
             <ConditionallyRender
                 condition={change?.action === 'updateStrategy'}
                 show={<Badge color="warning">Modified in draft</Badge>}
@@ -93,6 +93,6 @@ const ChangeRequestStatusBadge = ({
                 condition={change?.action === 'deleteStrategy'}
                 show={<Badge color="error">Deleted in draft</Badge>}
             />
-        </>
+        </Box>
     );
 };

@@ -15,6 +15,10 @@ export interface IFeatureEnvironmentStore
     getEnvironmentsForFeature(
         featureName: string,
     ): Promise<IFeatureEnvironment[]>;
+    getAllByFeatures(
+        features: string[],
+        environment?: string,
+    ): Promise<IFeatureEnvironment[]>;
     isEnvironmentEnabled(
         featureName: string,
         environment: string,
@@ -68,6 +72,12 @@ export interface IFeatureEnvironmentStore
     addVariantsToFeatureEnvironment(
         featureName: string,
         environment: string,
+        variants: IVariant[],
+    ): Promise<void>;
+
+    setVariantsToFeatureEnvironments(
+        featureName: string,
+        environments: string[],
         variants: IVariant[],
     ): Promise<void>;
 

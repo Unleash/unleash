@@ -7,9 +7,9 @@ export const ProjectAccessCreate = () => {
     const projectId = useRequiredPathParam('projectId');
 
     const { access } = useProjectAccess(projectId);
-    const { users, groups } = useAccess();
+    const { users, serviceAccounts, groups } = useAccess();
 
-    if (!access || !users || !groups) {
+    if (!access || !users || !serviceAccounts || !groups) {
         return null;
     }
 
@@ -17,6 +17,7 @@ export const ProjectAccessCreate = () => {
         <ProjectAccessAssign
             accesses={access.rows}
             users={users}
+            serviceAccounts={serviceAccounts}
             groups={groups}
             roles={access.roles}
         />

@@ -7,39 +7,39 @@ exports[`renders an empty list correctly 1`] = `
     aria-live="polite"
   >
     <div
-      className="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 css-p9j8ie-MuiPaper-root-container"
+      className="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1  css-162esap-MuiPaper-root"
     >
       <div
-        className="header css-zq4ve2-headerContainer css-70tvrt-headerPadding"
+        className="header mui-70tvrt-headerPadding css-13qk6zu"
       >
         <div
-          className="css-1ylehva-headerContainer"
+          className="css-j7qwjs"
         >
           <div
-            className="css-1uxyh7x-topContainer"
+            className="css-mt0dvk"
           >
             <div
-              className="css-sd6bs4-header"
+              className=" css-1gg5pjj"
               data-loading={true}
             >
               <h1
-                className="MuiTypography-root MuiTypography-h1 css-ypmm1t-MuiTypography-root-headerTitle"
+                className="MuiTypography-root MuiTypography-h1  css-1pr8obe-MuiTypography-root"
               >
                 Tag types (5)
               </h1>
             </div>
             <div
-              className="css-u5t8ea-headerActions"
+              className="css-j2179i"
             >
               <div
-                className="css-1oozr04-container"
+                className="css-uds21r"
               >
                 <div
-                  className="css-1xjrf9m-search search-container"
+                  className="css-19ebc6o"
                 >
                   <svg
                     aria-hidden={true}
-                    className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium search-icon css-1kyy7n4-MuiSvgIcon-root-searchIcon"
+                    className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1dfm5ba-MuiSvgIcon-root"
                     data-testid="SearchIcon"
                     focusable="false"
                     viewBox="0 0 24 24"
@@ -49,7 +49,7 @@ exports[`renders an empty list correctly 1`] = `
                     />
                   </svg>
                   <div
-                    className="MuiInputBase-root input-container MuiInputBase-colorPrimary css-tubodl-MuiInputBase-root-inputRoot"
+                    className="MuiInputBase-root MuiInputBase-colorPrimary css-1vp7ju7-MuiInputBase-root"
                     onClick={[Function]}
                   >
                     <input
@@ -65,12 +65,12 @@ exports[`renders an empty list correctly 1`] = `
                     />
                   </div>
                   <div
-                    className="css-llttyo-clearContainer clear-container"
+                    className="MuiBox-root css-1ty7gog"
                   />
                 </div>
               </div>
               <hr
-                className="MuiDivider-root MuiDivider-middle MuiDivider-vertical css-1p1j01b-MuiDivider-root"
+                className="MuiDivider-root MuiDivider-middle MuiDivider-vertical css-19a8bca-MuiDivider-root"
               />
               <span
                 id="useId-0"
@@ -109,10 +109,10 @@ exports[`renders an empty list correctly 1`] = `
         </div>
       </div>
       <div
-        className="body css-54jt3w-bodyContainer"
+        className="body mui-ccg7sp-bodyContainer"
       >
         <table
-          className="MuiTable-root css-1h6dscb-MuiTable-root-table"
+          className="MuiTable-root css-1repbac-MuiTable-root"
           role="table"
         >
           <thead
@@ -120,11 +120,11 @@ exports[`renders an empty list correctly 1`] = `
             role={null}
           >
             <tr
-              className="MuiTableRow-root MuiTableRow-head css-1gnoged-MuiTableRow-root-tableHeader"
+              className="MuiTableRow-root MuiTableRow-head css-1b9hsk7-MuiTableRow-root"
               role="row"
             >
               <th
-                className="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium css-b9leyc-MuiTableCell-root-header"
+                className="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium css-uzyimr-MuiTableCell-root"
                 scope="col"
                 style={
                   {
@@ -140,7 +140,7 @@ exports[`renders an empty list correctly 1`] = `
               </th>
               <th
                 aria-sort="ascending"
-                className="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium css-masipn-MuiTableCell-root-header-sortable"
+                className="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium css-1ts7or6-MuiTableCell-root"
                 scope="col"
                 style={
                   {
@@ -153,7 +153,7 @@ exports[`renders an empty list correctly 1`] = `
                 <button
                   aria-label=""
                   aria-labelledby={null}
-                  className="css-14l86a5-sortedButton css-1inbba3-sortButton"
+                  className=" css-1xwc11x"
                   data-mui-internal-clone-element={true}
                   onBlur={[Function]}
                   onClick={[Function]}
@@ -166,10 +166,10 @@ exports[`renders an empty list correctly 1`] = `
                 >
                   <span
                     aria-hidden={true}
-                    className="css-r8z9jm-hiddenMeasurementLayer"
+                    className="css-15yxmxx"
                   >
                     <span
-                      className="css-1j5tskk-label"
+                      className="css-1w3kvnb"
                       data-text="Name"
                       tabIndex={-1}
                     >
@@ -177,7 +177,7 @@ exports[`renders an empty list correctly 1`] = `
                     </span>
                     <svg
                       aria-hidden={true}
-                      className="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit css-1ekkz6x-MuiSvgIcon-root-icon-sorted"
+                      className="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit css-57xzpo-MuiSvgIcon-root"
                       data-testid="KeyboardArrowUpIcon"
                       focusable="false"
                       viewBox="0 0 24 24"
@@ -188,7 +188,7 @@ exports[`renders an empty list correctly 1`] = `
                     </svg>
                   </span>
                   <span
-                    className="css-bqel7i-visibleAbsoluteLayer"
+                    className="css-y8b3t8"
                   >
                     <span
                       tabIndex={-1}
@@ -199,7 +199,7 @@ exports[`renders an empty list correctly 1`] = `
                     </span>
                     <svg
                       aria-hidden={true}
-                      className="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit sort-arrow css-1ekkz6x-MuiSvgIcon-root-icon-sorted"
+                      className="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit sort-arrow css-57xzpo-MuiSvgIcon-root"
                       data-testid="KeyboardArrowUpIcon"
                       focusable="false"
                       viewBox="0 0 24 24"
@@ -212,7 +212,7 @@ exports[`renders an empty list correctly 1`] = `
                 </button>
               </th>
               <th
-                className="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium css-b9leyc-MuiTableCell-root-header"
+                className="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium css-uzyimr-MuiTableCell-root"
                 scope="col"
                 style={
                   {
@@ -223,7 +223,12 @@ exports[`renders an empty list correctly 1`] = `
                 }
               >
                 <div
-                  className="css-1x6va6g-alignCenter"
+                  style={
+                    {
+                      "justifyContent": "center",
+                      "textAlign": "center",
+                    }
+                  }
                 >
                   Actions
                 </div>
@@ -240,7 +245,7 @@ exports[`renders an empty list correctly 1`] = `
             >
               <td
                 aria-sort={null}
-                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-fv4mw1-MuiTableCell-root-tableCell"
+                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-iiibbc-MuiTableCell-root"
                 role="cell"
               >
                 <div
@@ -262,17 +267,17 @@ exports[`renders an empty list correctly 1`] = `
               </td>
               <td
                 aria-sort={null}
-                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-fv4mw1-MuiTableCell-root-tableCell"
+                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-iiibbc-MuiTableCell-root"
                 role="cell"
               >
-                <span
-                  className="css-g3rrgy-wrapper"
+                <div
+                  className="css-1prhjm6"
                 >
                   <div
-                    className="css-1sfnvgj-container"
+                    className="css-u8cmsa"
                   >
                     <span
-                      className="css-lcjmxf-title"
+                      className="css-697v50"
                       data-loading={true}
                       style={
                         {
@@ -284,17 +289,17 @@ exports[`renders an empty list correctly 1`] = `
                       Tag type name
                     </span>
                     <span
-                      className="MuiTypography-root MuiTypography-body1 css-kyf98y-MuiTypography-root-description"
+                      className="css-1121jr7"
                       data-loading={true}
                     >
                       Tag type description when loading
                     </span>
                   </div>
-                </span>
+                </div>
               </td>
               <td
                 aria-sort={null}
-                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-fv4mw1-MuiTableCell-root-tableCell"
+                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-iiibbc-MuiTableCell-root"
                 role="cell"
               >
                 <div
@@ -410,7 +415,7 @@ exports[`renders an empty list correctly 1`] = `
             >
               <td
                 aria-sort={null}
-                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-fv4mw1-MuiTableCell-root-tableCell"
+                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-iiibbc-MuiTableCell-root"
                 role="cell"
               >
                 <div
@@ -432,17 +437,17 @@ exports[`renders an empty list correctly 1`] = `
               </td>
               <td
                 aria-sort={null}
-                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-fv4mw1-MuiTableCell-root-tableCell"
+                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-iiibbc-MuiTableCell-root"
                 role="cell"
               >
-                <span
-                  className="css-g3rrgy-wrapper"
+                <div
+                  className="css-1prhjm6"
                 >
                   <div
-                    className="css-1sfnvgj-container"
+                    className="css-u8cmsa"
                   >
                     <span
-                      className="css-lcjmxf-title"
+                      className="css-697v50"
                       data-loading={true}
                       style={
                         {
@@ -454,17 +459,17 @@ exports[`renders an empty list correctly 1`] = `
                       Tag type name
                     </span>
                     <span
-                      className="MuiTypography-root MuiTypography-body1 css-kyf98y-MuiTypography-root-description"
+                      className="css-1121jr7"
                       data-loading={true}
                     >
                       Tag type description when loading
                     </span>
                   </div>
-                </span>
+                </div>
               </td>
               <td
                 aria-sort={null}
-                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-fv4mw1-MuiTableCell-root-tableCell"
+                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-iiibbc-MuiTableCell-root"
                 role="cell"
               >
                 <div
@@ -580,7 +585,7 @@ exports[`renders an empty list correctly 1`] = `
             >
               <td
                 aria-sort={null}
-                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-fv4mw1-MuiTableCell-root-tableCell"
+                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-iiibbc-MuiTableCell-root"
                 role="cell"
               >
                 <div
@@ -602,17 +607,17 @@ exports[`renders an empty list correctly 1`] = `
               </td>
               <td
                 aria-sort={null}
-                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-fv4mw1-MuiTableCell-root-tableCell"
+                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-iiibbc-MuiTableCell-root"
                 role="cell"
               >
-                <span
-                  className="css-g3rrgy-wrapper"
+                <div
+                  className="css-1prhjm6"
                 >
                   <div
-                    className="css-1sfnvgj-container"
+                    className="css-u8cmsa"
                   >
                     <span
-                      className="css-lcjmxf-title"
+                      className="css-697v50"
                       data-loading={true}
                       style={
                         {
@@ -624,17 +629,17 @@ exports[`renders an empty list correctly 1`] = `
                       Tag type name
                     </span>
                     <span
-                      className="MuiTypography-root MuiTypography-body1 css-kyf98y-MuiTypography-root-description"
+                      className="css-1121jr7"
                       data-loading={true}
                     >
                       Tag type description when loading
                     </span>
                   </div>
-                </span>
+                </div>
               </td>
               <td
                 aria-sort={null}
-                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-fv4mw1-MuiTableCell-root-tableCell"
+                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-iiibbc-MuiTableCell-root"
                 role="cell"
               >
                 <div
@@ -750,7 +755,7 @@ exports[`renders an empty list correctly 1`] = `
             >
               <td
                 aria-sort={null}
-                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-fv4mw1-MuiTableCell-root-tableCell"
+                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-iiibbc-MuiTableCell-root"
                 role="cell"
               >
                 <div
@@ -772,17 +777,17 @@ exports[`renders an empty list correctly 1`] = `
               </td>
               <td
                 aria-sort={null}
-                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-fv4mw1-MuiTableCell-root-tableCell"
+                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-iiibbc-MuiTableCell-root"
                 role="cell"
               >
-                <span
-                  className="css-g3rrgy-wrapper"
+                <div
+                  className="css-1prhjm6"
                 >
                   <div
-                    className="css-1sfnvgj-container"
+                    className="css-u8cmsa"
                   >
                     <span
-                      className="css-lcjmxf-title"
+                      className="css-697v50"
                       data-loading={true}
                       style={
                         {
@@ -794,17 +799,17 @@ exports[`renders an empty list correctly 1`] = `
                       Tag type name
                     </span>
                     <span
-                      className="MuiTypography-root MuiTypography-body1 css-kyf98y-MuiTypography-root-description"
+                      className="css-1121jr7"
                       data-loading={true}
                     >
                       Tag type description when loading
                     </span>
                   </div>
-                </span>
+                </div>
               </td>
               <td
                 aria-sort={null}
-                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-fv4mw1-MuiTableCell-root-tableCell"
+                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-iiibbc-MuiTableCell-root"
                 role="cell"
               >
                 <div
@@ -920,7 +925,7 @@ exports[`renders an empty list correctly 1`] = `
             >
               <td
                 aria-sort={null}
-                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-fv4mw1-MuiTableCell-root-tableCell"
+                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-iiibbc-MuiTableCell-root"
                 role="cell"
               >
                 <div
@@ -942,17 +947,17 @@ exports[`renders an empty list correctly 1`] = `
               </td>
               <td
                 aria-sort={null}
-                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-fv4mw1-MuiTableCell-root-tableCell"
+                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-iiibbc-MuiTableCell-root"
                 role="cell"
               >
-                <span
-                  className="css-g3rrgy-wrapper"
+                <div
+                  className="css-1prhjm6"
                 >
                   <div
-                    className="css-1sfnvgj-container"
+                    className="css-u8cmsa"
                   >
                     <span
-                      className="css-lcjmxf-title"
+                      className="css-697v50"
                       data-loading={true}
                       style={
                         {
@@ -964,17 +969,17 @@ exports[`renders an empty list correctly 1`] = `
                       Tag type name
                     </span>
                     <span
-                      className="MuiTypography-root MuiTypography-body1 css-kyf98y-MuiTypography-root-description"
+                      className="css-1121jr7"
                       data-loading={true}
                     >
                       Tag type description when loading
                     </span>
                   </div>
-                </span>
+                </div>
               </td>
               <td
                 aria-sort={null}
-                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-fv4mw1-MuiTableCell-root-tableCell"
+                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-iiibbc-MuiTableCell-root"
                 role="cell"
               >
                 <div
@@ -1092,7 +1097,7 @@ exports[`renders an empty list correctly 1`] = `
   <div
     aria-atomic={true}
     aria-live="polite"
-    className="css-i8rqz1-container"
+    className="css-gqbqkz"
     data-testid="ANNOUNCER_ELEMENT_TEST_ID"
     role="status"
   >

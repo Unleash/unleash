@@ -5,6 +5,13 @@ import { screen } from '@testing-library/react';
 import { addDays, subDays } from 'date-fns';
 import { INSTANCE_STATUS_BAR_ID } from 'utils/testIds';
 import { UNKNOWN_INSTANCE_STATUS } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
+import { testServerRoute, testServerSetup } from 'utils/testServer';
+
+const server = testServerSetup();
+
+beforeEach(() => {
+    testServerRoute(server, '/api/admin/ui-config', {});
+});
 
 test('InstanceStatusBar should be hidden by default', async () => {
     render(<InstanceStatusBar instanceStatus={UNKNOWN_INSTANCE_STATUS} />);

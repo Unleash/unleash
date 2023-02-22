@@ -1,10 +1,10 @@
-import { ITag } from 'interfaces/tags';
-import useAPI from '../useApi/useApi';
-import { Operation } from 'fast-json-patch';
-import { CreateFeatureSchema } from 'openapi';
-import { openApiAdmin } from 'utils/openapiClient';
-import { IConstraint } from 'interfaces/strategy';
 import { useCallback } from 'react';
+import { ITag } from 'interfaces/tags';
+import { Operation } from 'fast-json-patch';
+import { IConstraint } from 'interfaces/strategy';
+import { CreateFeatureSchema } from 'openapi';
+import useAPI from '../useApi/useApi';
+import { IFeatureVariant } from 'interfaces/featureToggle';
 
 const useFeatureApi = () => {
     const { makeRequest, createRequest, errors, loading } = useAPI({
@@ -42,10 +42,12 @@ const useFeatureApi = () => {
         projectId: string,
         createFeatureSchema: CreateFeatureSchema
     ) => {
-        return openApiAdmin.createFeature({
-            projectId,
-            createFeatureSchema,
+        const path = `/api/admin/projects/${projectId}/features`;
+        const req = createRequest(path, {
+            method: 'POST',
+            body: JSON.stringify(createFeatureSchema),
         });
+        await makeRequest(req.caller, req.id);
     };
 
     const toggleFeatureEnvironmentOn = useCallback(
@@ -222,6 +224,26 @@ const useFeatureApi = () => {
         }
     };
 
+    const overrideVariantsInEnvironments = async (
+        projectId: string,
+        featureId: string,
+        variants: IFeatureVariant[],
+        environments: string[]
+    ) => {
+        const put = `api/admin/projects/${projectId}/features/${featureId}/variants-batch`;
+        const req = createRequest(put, {
+            method: 'PUT',
+            body: JSON.stringify({ variants, environments }),
+        });
+
+        try {
+            const res = await makeRequest(req.caller, req.id);
+            return res;
+        } catch (e) {
+            throw e;
+        }
+    };
+
     const cloneFeatureToggle = async (
         projectId: string,
         featureId: string,
@@ -256,6 +278,7 @@ const useFeatureApi = () => {
         patchFeatureToggle,
         patchFeatureVariants,
         patchFeatureEnvironmentVariants,
+        overrideVariantsInEnvironments,
         cloneFeatureToggle,
         loading,
     };

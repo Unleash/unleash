@@ -2,8 +2,8 @@ import { useNavigate } from 'react-router-dom';
 import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import PermissionButton from '../PermissionButton/PermissionButton';
-import { useStyles } from './EnvironmentStrategyDialog.styles';
 import { formatCreateStrategyPath } from 'component/feature/FeatureStrategy/FeatureStrategyCreate/FeatureStrategyCreate';
+import { styled } from '@mui/material';
 
 interface IEnvironmentStrategyDialogProps {
     open: boolean;
@@ -12,6 +12,11 @@ interface IEnvironmentStrategyDialogProps {
     onClose: () => void;
     environmentName: string;
 }
+
+const StyledParagraph = styled('p')(({ theme }) => ({
+    marginBottom: theme.spacing(0.5),
+    fontSize: theme.fontSizes.bodySize,
+}));
 const EnvironmentStrategyDialog = ({
     open,
     environmentName,
@@ -19,7 +24,6 @@ const EnvironmentStrategyDialog = ({
     projectId,
     onClose,
 }: IEnvironmentStrategyDialogProps) => {
-    const { classes: styles } = useStyles();
     const navigate = useNavigate();
 
     const createStrategyPath = formatCreateStrategyPath(
@@ -54,14 +58,14 @@ const EnvironmentStrategyDialog = ({
             }
             secondaryButtonText="Cancel"
         >
-            <p className={styles.infoText}>
+            <StyledParagraph>
                 Before you can enable the toggle in the environment, you need to
                 add an activation strategy.
-            </p>
-            <p className={styles.infoText}>
+            </StyledParagraph>
+            <StyledParagraph>
                 You can add the activation strategy by selecting the toggle,
                 open the environment accordion and add the activation strategy.
-            </p>
+            </StyledParagraph>
         </Dialogue>
     );
 };

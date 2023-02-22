@@ -1,5 +1,5 @@
-import { Suspense, useCallback, useEffect, useState } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Suspense, useEffect } from 'react';
+import { Route, Routes } from 'react-router-dom';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Error } from 'component/layout/Error/Error';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -15,53 +15,36 @@ import { routes } from 'component/menu/routes';
 import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import { SplashPageRedirect } from 'component/splash/SplashPageRedirect/SplashPageRedirect';
-import { useStyles } from './App.styles';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import useProjects from '../hooks/api/getters/useProjects/useProjects';
-import { useLastViewedProject } from '../hooks/useLastViewedProject';
 
-const InitialRedirect = () => {
-    const { lastViewed } = useLastViewedProject();
-    const { projects, loading } = useProjects();
+import MaintenanceBanner from './maintenance/MaintenanceBanner';
+import { styled } from '@mui/material';
+import { InitialRedirect } from './InitialRedirect';
 
-    const [redirectTo, setRedirectTo] = useState<string | undefined>();
-
-    const getRedirect = useCallback(() => {
-        if (projects && lastViewed) {
-            return `/projects/${lastViewed}`;
-        }
-
-        if (projects && !lastViewed && projects.length === 1) {
-            return `/projects/${projects[0].id}`;
-        }
-
-        return '/projects';
-    }, [lastViewed, projects]);
-
-    useEffect(() => {
-        if (!loading) {
-            setRedirectTo(getRedirect());
-        }
-    }, [loading, getRedirect]);
-
-    if (loading || !redirectTo) {
-        return <Loader />;
-    }
-
-    return <Navigate to={redirectTo} />;
-};
+const StyledContainer = styled('div')(() => ({
+    '& ul': {
+        margin: 0,
+    },
+}));
 
 export const App = () => {
     const { authDetails } = useAuthDetails();
+    const { refetch: refetchUiConfig } = useUiConfig();
+
     const { user } = useAuthUser();
     const hasFetchedAuth = Boolean(authDetails || user);
 
-    const { classes: styles } = useStyles();
-    const { isOss } = useUiConfig();
+    const { isOss, uiConfig } = useUiConfig();
 
     const availableRoutes = isOss()
         ? routes.filter(route => !route.enterprise)
         : routes;
+
+    useEffect(() => {
+        if (hasFetchedAuth && Boolean(user?.id)) {
+            refetchUiConfig();
+        }
+    }, [authDetails, user]);
 
     return (
         <ErrorBoundary FallbackComponent={Error}>
@@ -73,7 +56,16 @@ export const App = () => {
                             show={<Loader />}
                             elseShow={
                                 <>
-                                    <div className={styles.container}>
+                                    <ConditionallyRender
+                                        condition={
+                                            Boolean(
+                                                uiConfig?.flags?.maintenance
+                                            ) &&
+                                            Boolean(uiConfig?.maintenanceMode)
+                                        }
+                                        show={<MaintenanceBanner />}
+                                    />
+                                    <StyledContainer>
                                         <ToastRenderer />
                                         <Routes>
                                             {availableRoutes.map(route => (
@@ -103,9 +95,11 @@ export const App = () => {
                                                 element={<NotFound />}
                                             />
                                         </Routes>
+
                                         <FeedbackNPS openUrl="http://feedback.unleash.run" />
+
                                         <SplashPageRedirect />
-                                    </div>
+                                    </StyledContainer>
                                 </>
                             }
                         />

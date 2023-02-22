@@ -7,16 +7,23 @@ import useApiTokensApi from 'hooks/api/actions/useApiTokensApi/useApiTokensApi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
 import { useApiTokenForm } from 'component/admin/apiToken/ApiTokenForm/useApiTokenForm';
-import { ADMIN } from 'component/providers/AccessProvider/permissions';
+import { CREATE_API_TOKEN } from 'component/providers/AccessProvider/permissions';
 import { ConfirmToken } from '../ConfirmToken/ConfirmToken';
 import { scrollToTop } from 'component/common/util';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { GO_BACK } from 'constants/navigate';
+import { useApiTokens } from 'hooks/api/getters/useApiTokens/useApiTokens';
+import { TokenInfo } from '../ApiTokenForm/TokenInfo/TokenInfo';
+import { TokenTypeSelector } from '../ApiTokenForm/TokenTypeSelector/TokenTypeSelector';
+import { ProjectSelector } from '../ApiTokenForm/ProjectSelector/ProjectSelector';
+import { EnvironmentSelector } from '../ApiTokenForm/EnvironmentSelector/EnvironmentSelector';
 
 const pageTitle = 'Create API token';
-
-export const CreateApiToken = () => {
+interface ICreateApiTokenProps {
+    modal?: boolean;
+}
+export const CreateApiToken = ({ modal = false }: ICreateApiTokenProps) => {
     const { setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
     const navigate = useNavigate();
@@ -39,8 +46,13 @@ export const CreateApiToken = () => {
     } = useApiTokenForm();
 
     const { createToken, loading } = useApiTokensApi();
+    const { refetch } = useApiTokens();
 
     usePageTitle(pageTitle);
+
+    const PATH = `api/admin/api-tokens`;
+
+    const permission = CREATE_API_TOKEN;
 
     const handleSubmit = async (e: Event) => {
         e.preventDefault();
@@ -49,12 +61,14 @@ export const CreateApiToken = () => {
         }
         try {
             const payload = getApiTokenPayload();
+
             await createToken(payload)
                 .then(res => res.json())
                 .then(api => {
                     scrollToTop();
                     setToken(api.secret);
                     setShowConfirm(true);
+                    refetch();
                 });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
@@ -63,13 +77,13 @@ export const CreateApiToken = () => {
 
     const closeConfirm = () => {
         setShowConfirm(false);
-        navigate('/admin/api');
+        navigate(GO_BACK);
     };
 
     const formatApiCode = () => {
         return `curl --location --request POST '${
             uiConfig.unleashUrl
-        }/api/admin/api-tokens' \\
+        }/${PATH}' \\
 --header 'Authorization: INSERT_API_KEY' \\
 --header 'Content-Type: application/json' \\
 --data-raw '${JSON.stringify(getApiTokenPayload(), undefined, 2)}'`;
@@ -83,27 +97,37 @@ export const CreateApiToken = () => {
         <FormTemplate
             loading={loading}
             title={pageTitle}
+            modal={modal}
             description="Unleash SDKs use API tokens to authenticate to the Unleash API. Client SDKs need a token with 'client privileges', which allows them to fetch feature toggle configurations and post usage metrics."
             documentationLink="https://docs.getunleash.io/reference/api-tokens-and-client-keys"
             documentationLinkLabel="API tokens documentation"
             formatApiCode={formatApiCode}
         >
             <ApiTokenForm
-                username={username}
-                type={type}
-                projects={projects}
-                environment={environment}
-                setEnvironment={setEnvironment}
-                setTokenType={setTokenType}
-                setUsername={setUsername}
-                setProjects={setProjects}
-                errors={errors}
                 handleSubmit={handleSubmit}
                 handleCancel={handleCancel}
                 mode="Create"
-                clearErrors={clearErrors}
+                actions={<CreateButton name="token" permission={permission} />}
             >
-                <CreateButton name="token" permission={ADMIN} />
+                <TokenInfo
+                    username={username}
+                    setUsername={setUsername}
+                    errors={errors}
+                    clearErrors={clearErrors}
+                />
+                <TokenTypeSelector type={type} setType={setTokenType} />
+                <ProjectSelector
+                    type={type}
+                    projects={projects}
+                    setProjects={setProjects}
+                    errors={errors}
+                    clearErrors={clearErrors}
+                />
+                <EnvironmentSelector
+                    type={type}
+                    environment={environment}
+                    setEnvironment={setEnvironment}
+                />
             </ApiTokenForm>
             <ConfirmToken
                 open={showConfirm}

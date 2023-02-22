@@ -26,6 +26,7 @@ import { FeatureArchivedCell } from './FeatureArchivedCell/FeatureArchivedCell';
 import { useSearchParams } from 'react-router-dom';
 import { ArchivedFeatureDeleteConfirm } from './ArchivedFeatureActionCell/ArchivedFeatureDeleteConfirm/ArchivedFeatureDeleteConfirm';
 import { IFeatureToggle } from 'interfaces/featureToggle';
+import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 
 export interface IFeaturesArchiveTableProps {
     archivedFeatures: FeatureSchema[];
@@ -84,7 +85,6 @@ export const ArchiveTable = ({
     const columns = useMemo(
         () => [
             {
-                id: 'Seen',
                 Header: 'Seen',
                 width: 85,
                 canSort: true,
@@ -174,6 +174,8 @@ export const ArchiveTable = ({
             // Always hidden -- for search
             {
                 accessor: 'description',
+                header: 'Description',
+                searchable: true,
             },
         ],
         //eslint-disable-next-line
@@ -215,6 +217,7 @@ export const ArchiveTable = ({
             data,
             initialState,
             sortTypes,
+            autoResetHiddenColumns: false,
             disableSortRemove: true,
             autoResetSortBy: false,
         },
@@ -222,16 +225,20 @@ export const ArchiveTable = ({
         useSortBy
     );
 
-    useEffect(() => {
-        const hiddenColumns = ['description'];
-        if (isMediumScreen) {
-            hiddenColumns.push('lastSeenAt', 'status');
-        }
-        if (isSmallScreen) {
-            hiddenColumns.push('type', 'createdAt');
-        }
-        setHiddenColumns(hiddenColumns);
-    }, [setHiddenColumns, isSmallScreen, isMediumScreen]);
+    useConditionallyHiddenColumns(
+        [
+            {
+                condition: isSmallScreen,
+                columns: ['type', 'createdAt'],
+            },
+            {
+                condition: isMediumScreen,
+                columns: ['lastSeenAt', 'stale'],
+            },
+        ],
+        setHiddenColumns,
+        columns
+    );
 
     useEffect(() => {
         if (loading) {

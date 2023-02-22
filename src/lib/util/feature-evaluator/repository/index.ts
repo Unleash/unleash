@@ -2,6 +2,8 @@ import { ClientFeaturesResponse, FeatureInterface } from '../feature';
 import { BootstrapProvider } from './bootstrap-provider';
 import { StorageProvider } from './storage-provider';
 import { Segment } from '../strategy/strategy';
+import { EventEmitter } from 'stream';
+import { UnleashEvents } from 'unleash-client';
 
 export interface RepositoryInterface {
     getToggle(name: string): FeatureInterface;
@@ -20,7 +22,7 @@ interface FeatureToggleData {
     [key: string]: FeatureInterface;
 }
 
-export default class Repository {
+export default class Repository extends EventEmitter {
     private timer: NodeJS.Timer | undefined;
 
     private appName: string;
@@ -38,14 +40,16 @@ export default class Repository {
         bootstrapProvider,
         storageProvider,
     }: RepositoryOptions) {
+        super();
         this.appName = appName;
         this.bootstrapProvider = bootstrapProvider;
         this.storageProvider = storageProvider;
         this.segments = new Map();
     }
 
-    start(): Promise<void> {
-        return this.loadBootstrap();
+    async start(): Promise<void> {
+        await this.loadBootstrap();
+        process.nextTick(() => this.emit(UnleashEvents.Ready));
     }
 
     createSegmentLookup(segments: Segment[] | undefined): Map<number, Segment> {

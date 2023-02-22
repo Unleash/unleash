@@ -1,8 +1,8 @@
-import { Knex } from 'knex';
 import { Logger, LogProvider } from '../logger';
 import { IPatStore } from '../types/stores/pat-store';
 import Pat, { IPat } from '../types/models/pat';
 import NotFoundError from '../error/notfound-error';
+import { Db } from './db';
 
 const TABLE = 'personal_access_tokens';
 
@@ -38,11 +38,11 @@ const toRow = (pat: IPat) => ({
 });
 
 export default class PatStore implements IPatStore {
-    private db: Knex;
+    private db: Db;
 
     private logger: Logger;
 
-    constructor(db: Knex, getLogger: LogProvider) {
+    constructor(db: Db, getLogger: LogProvider) {
         this.db = db;
         this.logger = getLogger('pat-store.ts');
     }

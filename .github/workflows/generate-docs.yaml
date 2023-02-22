@@ -8,8 +8,9 @@ on:
       - website/**
 
   workflow_dispatch:
-    schedule:
-      - cron: '@daily'
+
+  schedule:
+    - cron: '0 0 * * *'
 
 jobs:
   build:

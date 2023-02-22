@@ -1,29 +1,70 @@
 import { styled, Tooltip, tooltipClasses, TooltipProps } from '@mui/material';
+import { SpacingArgument } from '@mui/system/createTheme/createSpacing';
 
-const StyledHtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
-    <Tooltip {...props} classes={{ popper: className }} />
-))(({ theme }) => ({
-    maxWidth: theme.spacing(37.5),
-    [`& .${tooltipClasses.tooltip}`]: {
-        display: 'flex',
-        flexDirection: 'column',
-        backgroundColor: theme.palette.background.paper,
-        padding: theme.spacing(1, 1.5),
-        borderRadius: theme.shape.borderRadiusMedium,
-        boxShadow: theme.shadows[2],
-        color: theme.palette.text.primary,
-        fontWeight: theme.fontWeight.medium,
-        maxWidth: 'inherit',
-        border: `1px solid ${theme.palette.lightBorder}`,
-    },
-    [`& .${tooltipClasses.arrow}`]: {
-        '&:before': {
-            border: `1px solid ${theme.palette.lightBorder}`,
-        },
-        color: theme.palette.background.paper,
-    },
+const StyledHtmlTooltipBody = styled('div')(({ theme }) => ({
+    overflow: 'auto',
+    padding: theme.spacing(1, 1.5),
 }));
 
-export const HtmlTooltip = (props: TooltipProps) => (
+const StyledHtmlTooltip = styled(
+    ({
+        className,
+        maxWidth,
+        maxHeight,
+        fontSize,
+        ...props
+    }: IHtmlTooltipProps) => (
+        <Tooltip
+            {...props}
+            title={<StyledHtmlTooltipBody>{props.title}</StyledHtmlTooltipBody>}
+            classes={{ popper: className }}
+        />
+    ),
+    {
+        shouldForwardProp: prop =>
+            prop !== 'maxWidth' && prop !== 'maxHeight' && prop !== 'fontSize',
+    }
+)<{
+    maxWidth?: SpacingArgument;
+    maxHeight?: SpacingArgument;
+    fontSize?: string;
+}>(
+    ({
+        theme,
+        maxWidth = theme.spacing(37.5),
+        maxHeight = theme.spacing(37.5),
+        fontSize = theme.fontSizes.smallerBody,
+    }) => ({
+        maxWidth,
+        [`& .${tooltipClasses.tooltip}`]: {
+            display: 'flex',
+            flexDirection: 'column',
+            backgroundColor: theme.palette.background.paper,
+            padding: 0,
+            borderRadius: theme.shape.borderRadiusMedium,
+            boxShadow: theme.shadows[2],
+            color: theme.palette.text.primary,
+            fontWeight: theme.fontWeight.medium,
+            maxWidth: 'inherit',
+            border: `1px solid ${theme.palette.lightBorder}`,
+            maxHeight,
+            fontSize,
+        },
+        [`& .${tooltipClasses.arrow}`]: {
+            '&:before': {
+                border: `1px solid ${theme.palette.lightBorder}`,
+            },
+            color: theme.palette.background.paper,
+        },
+    })
+);
+
+export interface IHtmlTooltipProps extends TooltipProps {
+    maxWidth?: SpacingArgument;
+    maxHeight?: SpacingArgument;
+    fontSize?: string;
+}
+
+export const HtmlTooltip = (props: IHtmlTooltipProps) => (
     <StyledHtmlTooltip {...props}>{props.children}</StyledHtmlTooltip>
 );

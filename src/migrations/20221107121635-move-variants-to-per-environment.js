@@ -5,7 +5,8 @@ exports.up = function (db, callback) {
         `
             ALTER TABLE feature_environments ADD COLUMN variants JSONB DEFAULT '[]'::jsonb NOT NULL;
             WITH feature_variants AS (SELECT variants, name FROM features)
-            UPDATE feature_environments SET variants = feature_variants.variants FROM feature_variants WHERE feature_name = feature_variants.name;
+            UPDATE feature_environments SET variants = feature_variants.variants FROM feature_variants
+            WHERE feature_name = feature_variants.name and feature_variants.variants is not null;
 
             CREATE VIEW features_view AS
             SELECT

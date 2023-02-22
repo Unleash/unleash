@@ -1,6 +1,17 @@
-import { styled, useMediaQuery, useTheme } from '@mui/material';
+import {
+    styled,
+    TableBody,
+    TableRow,
+    useMediaQuery,
+    useTheme,
+} from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
+import {
+    SortableTableHeader,
+    Table,
+    TableCell,
+    TablePlaceholder,
+} from 'component/common/Table';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
@@ -9,16 +20,15 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useSearch } from 'hooks/useSearch';
 import {
     IFeatureEnvironment,
-    IFeatureVariant,
     IOverride,
     IPayload,
 } from 'interfaces/featureToggle';
-import { useEffect, useMemo } from 'react';
-import { useFlexLayout, useSortBy, useTable } from 'react-table';
+import { useMemo } from 'react';
+import { useSortBy, useTable } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
 import { PayloadCell } from './PayloadCell/PayloadCell';
 import { OverridesCell } from './OverridesCell/OverridesCell';
-import { VariantsActionCell } from './VariantsActionsCell/VariantsActionsCell';
+import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 
 const StyledTableContainer = styled('div')(({ theme }) => ({
     margin: theme.spacing(3, 0),
@@ -27,15 +37,11 @@ const StyledTableContainer = styled('div')(({ theme }) => ({
 interface IEnvironmentVariantsTableProps {
     environment: IFeatureEnvironment;
     searchValue: string;
-    onEditVariant: (variant: IFeatureVariant) => void;
-    onDeleteVariant: (variant: IFeatureVariant) => void;
 }
 
 export const EnvironmentVariantsTable = ({
     environment,
     searchValue,
-    onEditVariant,
-    onDeleteVariant,
 }: IEnvironmentVariantsTableProps) => {
     const projectId = useRequiredPathParam('projectId');
 
@@ -52,7 +58,7 @@ export const EnvironmentVariantsTable = ({
                 accessor: 'name',
                 Cell: HighlightCell,
                 sortType: 'alphanumeric',
-                minWidth: 100,
+                minWidth: 350,
                 searchable: true,
             },
             {
@@ -95,28 +101,10 @@ export const EnvironmentVariantsTable = ({
             },
             {
                 Header: 'Type',
-                accessor: 'weightType',
+                accessor: (row: any) =>
+                    row.weightType === 'fix' ? 'Fixed' : 'Variable',
                 Cell: TextCell,
                 sortType: 'alphanumeric',
-            },
-            {
-                Header: 'Actions',
-                id: 'Actions',
-                align: 'center',
-                Cell: ({
-                    row: { original },
-                }: {
-                    row: { original: IFeatureVariant };
-                }) => (
-                    <VariantsActionCell
-                        variant={original}
-                        projectId={projectId}
-                        environmentId={environment.name}
-                        editVariant={onEditVariant}
-                        deleteVariant={onDeleteVariant}
-                    />
-                ),
-                disableSortBy: true,
             },
         ],
         [projectId, variants, environment]
@@ -131,39 +119,62 @@ export const EnvironmentVariantsTable = ({
 
     const { data, getSearchText } = useSearch(columns, searchValue, variants);
 
-    const { headerGroups, rows, prepareRow, setHiddenColumns } = useTable(
+    const {
+        getTableProps,
+        getTableBodyProps,
+        headerGroups,
+        rows,
+        prepareRow,
+        setHiddenColumns,
+    } = useTable(
         {
             columns: columns as any[],
             data,
             initialState,
             sortTypes,
+            autoResetHiddenColumns: false,
             autoResetSortBy: false,
             disableSortRemove: true,
             disableMultiSort: true,
         },
-        useSortBy,
-        useFlexLayout
+        useSortBy
     );
 
-    useEffect(() => {
-        const hiddenColumns = [];
-        if (isLargeScreen) {
-            hiddenColumns.push('weightType');
-        }
-        if (isMediumScreen) {
-            hiddenColumns.push('payload', 'overrides');
-        }
-        setHiddenColumns(hiddenColumns);
-    }, [setHiddenColumns, isMediumScreen, isLargeScreen]);
+    useConditionallyHiddenColumns(
+        [
+            {
+                condition: isMediumScreen,
+                columns: ['payload', 'overrides'],
+            },
+            {
+                condition: isLargeScreen,
+                columns: ['weightType'],
+            },
+        ],
+        setHiddenColumns,
+        columns
+    );
 
     return (
         <StyledTableContainer>
             <SearchHighlightProvider value={getSearchText(searchValue)}>
-                <VirtualizedTable
-                    rows={rows}
-                    headerGroups={headerGroups}
-                    prepareRow={prepareRow}
-                />
+                <Table {...getTableProps()}>
+                    <SortableTableHeader headerGroups={headerGroups as any} />
+                    <TableBody {...getTableBodyProps()}>
+                        {rows.map(row => {
+                            prepareRow(row);
+                            return (
+                                <TableRow hover {...row.getRowProps()}>
+                                    {row.cells.map(cell => (
+                                        <TableCell {...cell.getCellProps()}>
+                                            {cell.render('Cell')}
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            );
+                        })}
+                    </TableBody>
+                </Table>
             </SearchHighlightProvider>
             <ConditionallyRender
                 condition={rows.length === 0}

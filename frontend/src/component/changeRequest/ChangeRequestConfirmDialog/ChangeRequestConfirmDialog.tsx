@@ -24,9 +24,9 @@ export const ChangeRequestDialogue: FC<IChangeRequestDialogueProps> = ({
     messageComponent,
 }) => {
     const projectId = useRequiredPathParam('projectId');
-    const { draft } = usePendingChangeRequests(projectId);
+    const { data } = usePendingChangeRequests(projectId);
     const { changeRequestInReviewOrApproved, alert } =
-        useChangeRequestInReviewWarning(draft);
+        useChangeRequestInReviewWarning(data);
 
     const hasChangeRequestInReviewForEnvironment =
         changeRequestInReviewOrApproved(environment || '');
@@ -54,7 +54,7 @@ export const ChangeRequestDialogue: FC<IChangeRequestDialogueProps> = ({
                 show={
                     <Alert severity="info" sx={{ mb: 2 }}>
                         Change requests feature is enabled for {environment}.
-                        Your changes needs to be approved before they will be
+                        Your changes need to be approved before they will be
                         live. All the changes you do now will be added into a
                         draft that you can submit for review.
                     </Alert>

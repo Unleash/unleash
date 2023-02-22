@@ -6,9 +6,9 @@ import { modalStyles } from 'component/admin/users/util';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import PasswordChecker, {
     PASSWORD_FORMAT_MESSAGE,
-} from 'component/user/common/ResetPasswordForm/PasswordChecker/PasswordChecker';
+} from 'component/user/common/ResetPasswordForm/PasswordChecker';
 import { useThemeStyles } from 'themes/themeStyles';
-import PasswordMatcher from 'component/user/common/ResetPasswordForm/PasswordMatcher/PasswordMatcher';
+import PasswordMatcher from 'component/user/common/ResetPasswordForm/PasswordMatcher';
 import { IUser } from 'interfaces/user';
 import useAdminUsersApi from 'hooks/api/actions/useAdminUsersApi/useAdminUsersApi';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';

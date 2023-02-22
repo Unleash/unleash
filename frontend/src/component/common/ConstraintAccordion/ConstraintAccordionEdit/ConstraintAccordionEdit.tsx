@@ -1,10 +1,13 @@
 import { useCallback, useEffect, useState } from 'react';
-import classnames from 'classnames';
 import { IConstraint } from 'interfaces/strategy';
-import { useStyles } from '../ConstraintAccordion.styles';
 import { ConstraintAccordionEditBody } from './ConstraintAccordionEditBody/ConstraintAccordionEditBody';
 import { ConstraintAccordionEditHeader } from './ConstraintAccordionEditHeader/ConstraintAccordionEditHeader';
-import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
+import {
+    Accordion,
+    AccordionDetails,
+    AccordionSummary,
+    styled,
+} from '@mui/material';
 import { cleanConstraint } from 'utils/cleanConstraint';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
@@ -44,6 +47,36 @@ const resolveContextDefinition = (
     );
 };
 
+const StyledForm = styled('div')({ padding: 0, margin: 0, width: '100%' });
+
+const StyledAccordion = styled(Accordion)(({ theme }) => ({
+    border: `1px solid ${theme.palette.dividerAlternative}`,
+    borderRadius: theme.shape.borderRadiusMedium,
+    backgroundColor: theme.palette.constraintAccordion.editBackground,
+    boxShadow: 'none',
+    margin: 0,
+    '& .expanded': {
+        '&:before': {
+            opacity: '0 !important',
+        },
+    },
+}));
+
+const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
+    border: 'none',
+    padding: theme.spacing(0.5, 3),
+    '&:hover .valuesExpandLabel': {
+        textDecoration: 'underline',
+    },
+}));
+
+const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
+    borderTop: `1px dashed ${theme.palette.divider}`,
+    display: 'flex',
+    flexDirection: 'column',
+    padding: 0,
+}));
+
 export const ConstraintAccordionEdit = ({
     constraint,
     compact,
@@ -62,7 +95,6 @@ export const ConstraintAccordionEdit = ({
     const { validateConstraint } = useFeatureApi();
     const [expanded, setExpanded] = useState(false);
     const [action, setAction] = useState('');
-    const { classes: styles } = useStyles();
 
     useEffect(() => {
         // Setting expanded to true on mount will cause the accordion
@@ -177,13 +209,8 @@ export const ConstraintAccordionEdit = ({
     }, [localConstraint.operator, localConstraint.contextName, setError]);
 
     return (
-        <div className={styles.form}>
-            <Accordion
-                className={classnames(styles.accordion, styles.accordionEdit)}
-                classes={{
-                    expanded: styles.accordionRoot,
-                }}
-                style={{ boxShadow: 'none' }}
+        <StyledForm>
+            <StyledAccordion
                 expanded={expanded}
                 TransitionProps={{
                     onExited: () => {
@@ -197,7 +224,7 @@ export const ConstraintAccordionEdit = ({
                     },
                 }}
             >
-                <AccordionSummary className={styles.summary}>
+                <StyledAccordionSummary>
                     <ConstraintAccordionEditHeader
                         localConstraint={localConstraint}
                         setLocalConstraint={setLocalConstraint}
@@ -209,12 +236,9 @@ export const ConstraintAccordionEdit = ({
                         setCaseInsensitive={setCaseInsensitive}
                         onDelete={onDelete}
                     />
-                </AccordionSummary>
+                </StyledAccordionSummary>
 
-                <AccordionDetails
-                    className={styles.accordionDetails}
-                    style={{ padding: 0 }}
-                >
+                <StyledAccordionDetails>
                     <ConstraintAccordionEditBody
                         localConstraint={localConstraint}
                         setValues={setValues}
@@ -234,8 +258,8 @@ export const ConstraintAccordionEdit = ({
                             removeValue={removeValue}
                         />
                     </ConstraintAccordionEditBody>
-                </AccordionDetails>
-            </Accordion>
-        </div>
+                </StyledAccordionDetails>
+            </StyledAccordion>
+        </StyledForm>
     );
 };

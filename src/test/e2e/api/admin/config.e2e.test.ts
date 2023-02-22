@@ -44,7 +44,7 @@ test('gets ui config with disablePasswordAuth', async () => {
 
 test('gets ui config with frontendSettings', async () => {
     const frontendApiOrigins = ['https://example.net'];
-    await app.services.settingService.setFrontendSettings(
+    await app.services.proxyService.setFrontendSettings(
         { frontendApiOrigins },
         randomId(),
     );

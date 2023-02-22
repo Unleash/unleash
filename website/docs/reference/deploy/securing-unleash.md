@@ -56,3 +56,4 @@ Examples of custom authentication hooks:
 - [securing-google-auth](https://github.com/Unleash/unleash-examples/tree/main/v4/securing-google-auth)
 - [securing-basic-auth](https://github.com/Unleash/unleash-examples/tree/main/v4/securing-basic-auth)
 - [securing-keycloak-auth](https://github.com/Unleash/unleash-examples/tree/main/v4/securing-keycloak-auth)
+- [securing-azure-auth](https://github.com/Unleash/unleash-examples/tree/main/v4/securing-azure-auth)

@@ -11,7 +11,7 @@ import { useFlexLayout, useSortBy, useTable } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import theme from 'themes/theme';
-import useHiddenColumns from 'hooks/useHiddenColumns';
+import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 
 const hiddenColumnsSmall = ['imageUrl', 'name'];
 
@@ -92,6 +92,7 @@ export const GroupFormUsersTable: VFC<IGroupFormUsersTableProps> = ({
             columns: columns as any[],
             data: users as any[],
             sortTypes,
+            autoResetHiddenColumns: false,
             autoResetSortBy: false,
             disableSortRemove: true,
             disableMultiSort: true,
@@ -100,7 +101,16 @@ export const GroupFormUsersTable: VFC<IGroupFormUsersTableProps> = ({
         useFlexLayout
     );
 
-    useHiddenColumns(setHiddenColumns, hiddenColumnsSmall, isSmallScreen);
+    useConditionallyHiddenColumns(
+        [
+            {
+                condition: isSmallScreen,
+                columns: hiddenColumnsSmall,
+            },
+        ],
+        setHiddenColumns,
+        columns
+    );
 
     return (
         <ConditionallyRender

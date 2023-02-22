@@ -38,10 +38,70 @@ import { PublicSignupTokenService } from './public-signup-token-service';
 import { LastSeenService } from './client-metrics/last-seen-service';
 import { InstanceStatsService } from './instance-stats-service';
 import { FavoritesService } from './favorites-service';
+import MaintenanceService from './maintenance-service';
+import { hoursToMilliseconds, minutesToMilliseconds } from 'date-fns';
+import { AccountService } from './account-service';
+import { SchedulerService } from './scheduler-service';
+import { Knex } from 'knex';
+import {
+    createExportImportTogglesService,
+    createFakeExportImportTogglesService,
+} from '../features/export-import-toggles/createExportImportService';
+import { Db } from '../db/db';
+
+// TODO: will be moved to scheduler feature directory
+export const scheduleServices = (
+    services: IUnleashServices,
+    config: IUnleashConfig,
+): void => {
+    const {
+        schedulerService,
+        apiTokenService,
+        instanceStatsService,
+        clientInstanceService,
+        projectService,
+        projectHealthService,
+    } = services;
+
+    schedulerService.schedule(
+        apiTokenService.fetchActiveTokens.bind(apiTokenService),
+        minutesToMilliseconds(1),
+    );
+
+    schedulerService.schedule(
+        apiTokenService.updateLastSeen.bind(apiTokenService),
+        minutesToMilliseconds(3),
+    );
+
+    schedulerService.schedule(
+        instanceStatsService.refreshStatsSnapshot.bind(instanceStatsService),
+        minutesToMilliseconds(5),
+    );
+
+    schedulerService.schedule(
+        clientInstanceService.removeInstancesOlderThanTwoDays.bind(
+            clientInstanceService,
+        ),
+        hoursToMilliseconds(24),
+    );
+
+    if (config.flagResolver.isEnabled('projectStatusApi')) {
+        schedulerService.schedule(
+            projectService.statusJob.bind(projectService),
+            hoursToMilliseconds(24),
+        );
+    }
+
+    schedulerService.schedule(
+        projectHealthService.setHealthRating.bind(projectHealthService),
+        hoursToMilliseconds(1),
+    );
+};
 
 export const createServices = (
     stores: IUnleashStores,
     config: IUnleashConfig,
+    db?: Db,
 ): IUnleashServices => {
     const groupService = new GroupService(stores, config);
     const accessService = new AccessService(stores, config, groupService);
@@ -72,6 +132,9 @@ export const createServices = (
         sessionService,
         settingService,
     });
+    const accountService = new AccountService(stores, config, {
+        accessService,
+    });
     const versionService = new VersionService(stores, config);
     const healthService = new HealthService(stores, config);
     const userFeedbackService = new UserFeedbackService(stores, config);
@@ -85,19 +148,26 @@ export const createServices = (
     const environmentService = new EnvironmentService(stores, config);
     const featureTagService = new FeatureTagService(stores, config);
     const favoritesService = new FavoritesService(stores, config);
-    const projectHealthService = new ProjectHealthService(
-        stores,
-        config,
-        featureToggleServiceV2,
-        favoritesService,
-    );
     const projectService = new ProjectService(
         stores,
         config,
         accessService,
         featureToggleServiceV2,
         groupService,
+        favoritesService,
     );
+    const projectHealthService = new ProjectHealthService(
+        stores,
+        config,
+        projectService,
+    );
+
+    // TODO: this is a temporary seam to enable packaging by feature
+    const exportImportService = db
+        ? createExportImportTogglesService(db, config)
+        : createFakeExportImportTogglesService(config);
+    const transactionalExportImportService = (txDb: Knex.Transaction) =>
+        createExportImportTogglesService(txDb, config);
     const userSplashService = new UserSplashService(stores, config);
     const openApiService = new OpenApiService(config);
     const clientSpecService = new ClientSpecService(config);
@@ -109,6 +179,7 @@ export const createServices = (
         featureToggleServiceV2,
         clientMetricsServiceV2,
         segmentService,
+        settingService,
     });
 
     const edgeService = new EdgeService(stores, config);
@@ -127,8 +198,17 @@ export const createServices = (
         versionService,
     );
 
+    const maintenanceService = new MaintenanceService(
+        stores,
+        config,
+        settingService,
+    );
+
+    const schedulerService = new SchedulerService(config.getLogger);
+
     return {
         accessService,
+        accountService,
         addonService,
         featureToggleService: featureToggleServiceV2,
         featureToggleServiceV2,
@@ -167,6 +247,10 @@ export const createServices = (
         lastSeenService,
         instanceStatsService,
         favoritesService,
+        maintenanceService,
+        exportImportService,
+        transactionalExportImportService,
+        schedulerService,
     };
 };
 
@@ -209,4 +293,5 @@ export {
     LastSeenService,
     InstanceStatsService,
     FavoritesService,
+    SchedulerService,
 };

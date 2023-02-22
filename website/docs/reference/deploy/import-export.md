@@ -64,6 +64,14 @@ For example if you want to download just feature-toggles as yaml:
 
 ### API Import {#api-import}
 
+:::caution Importing environments in Unleash 4.19 and below
+
+This is only relevant if you use **Unleash 4.19 or earlier**:
+
+If you import an environment into an instance that already has that environment defined, Unleash will delete any API keys created specifically for that environment. This is to prevent unexpected access to the newly imported environments.
+
+:::
+
 You can import feature-toggles and strategies by POSTing to the `/api/admin/state/import` endpoint (keep in mind this will require authentication).\
 You can either send the data as JSON in the POST-body or send a `file` parameter with `multipart/form-data` (YAML files are also accepted here).
 
@@ -76,7 +84,11 @@ You can customize the import with query parameters:
 
 If you want the database to be cleaned before import (**all strategies and features will be removed**), specify a `drop` query parameter.
 
-> You should never use this in production environments.
+:::caution
+
+You should be cautious about using the `drop` query parameter in production environments.
+
+:::
 
 Example usage:
 

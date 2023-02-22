@@ -1,6 +1,8 @@
 import { IEventStore } from '../../lib/types/stores/event-store';
 import { IEvent } from '../../lib/types/events';
 import { AnyEventEmitter } from '../../lib/util/anyEventEmitter';
+import { IQueryOperations } from 'lib/db/event-store';
+import { SearchEventsSchema } from '../../lib/openapi';
 
 class FakeEventStore extends AnyEventEmitter implements IEventStore {
     events: IEvent[];
@@ -44,8 +46,9 @@ class FakeEventStore extends AnyEventEmitter implements IEventStore {
         return Promise.resolve(this.events.length);
     }
 
-    filteredCount(): Promise<number> {
-        throw new Error('Method not implemented');
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    filteredCount(search: SearchEventsSchema): Promise<number> {
+        return Promise.resolve(0);
     }
 
     destroy(): void {}
@@ -64,6 +67,26 @@ class FakeEventStore extends AnyEventEmitter implements IEventStore {
 
     async searchEvents(): Promise<IEvent[]> {
         throw new Error('Method not implemented.');
+    }
+
+    async getForFeatures(
+        features: string[],
+        environments: string[],
+        query: { type: string; projectId: string },
+    ): Promise<IEvent[]> {
+        return this.events.filter((event) => {
+            return (
+                event.type === query.type &&
+                event.project === query.projectId &&
+                features.includes(event.data.featureName) &&
+                environments.includes(event.data.environment)
+            );
+        });
+    }
+
+    async query(operations: IQueryOperations[]): Promise<IEvent[]> {
+        if (operations) return [];
+        return [];
     }
 }
 

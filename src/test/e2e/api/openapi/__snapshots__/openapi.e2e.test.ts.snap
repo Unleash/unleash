@@ -189,6 +189,28 @@ exports[`should serve the OpenAPI spec 1`] = `
         ],
         "type": "object",
       },
+      "adminFeaturesQuerySchema": {
+        "additionalProperties": false,
+        "properties": {
+          "namePrefix": {
+            "description": "A case-insensitive prefix filter for the names of feature toggles",
+            "example": "demo.part1",
+            "type": "string",
+          },
+          "tag": {
+            "description": "Used to filter by tags. For each entry, a TAGTYPE:TAGVALUE is expected",
+            "example": [
+              "simple:mytag",
+            ],
+            "items": {
+              "pattern": "\\w+:\\w+",
+              "type": "string",
+            },
+            "type": "array",
+          },
+        },
+        "type": "object",
+      },
       "apiTokenSchema": {
         "additionalProperties": false,
         "properties": {
@@ -304,6 +326,62 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "array",
           },
         },
+        "type": "object",
+      },
+      "bulkMetricsSchema": {
+        "properties": {
+          "applications": {
+            "items": {
+              "$ref": "#/components/schemas/bulkRegistrationSchema",
+            },
+            "type": "array",
+          },
+          "metrics": {
+            "items": {
+              "$ref": "#/components/schemas/clientMetricsSchema",
+            },
+            "type": "array",
+          },
+        },
+        "type": "object",
+      },
+      "bulkRegistrationSchema": {
+        "properties": {
+          "appName": {
+            "type": "string",
+          },
+          "connectVia": {
+            "items": {
+              "type": "string",
+            },
+            "type": "array",
+          },
+          "environment": {
+            "type": "string",
+          },
+          "instanceId": {
+            "type": "string",
+          },
+          "interval": {
+            "type": "number",
+          },
+          "sdkVersion": {
+            "type": "string",
+          },
+          "started": {
+            "type": "number",
+          },
+          "strategies": {
+            "items": {
+              "type": "string",
+            },
+            "type": "array",
+          },
+        },
+        "required": [
+          "appName",
+          "instanceId",
+        ],
         "type": "object",
       },
       "changePasswordSchema": {
@@ -511,6 +589,21 @@ exports[`should serve the OpenAPI spec 1`] = `
                     },
                   },
                   "type": "object",
+                },
+                "example": {
+                  "myCoolToggle": {
+                    "no": 42,
+                    "variants": {
+                      "blue": 6,
+                      "green": 15,
+                      "red": 46,
+                    },
+                    "yes": 25,
+                  },
+                  "myOtherToggle": {
+                    "no": 100,
+                    "yes": 0,
+                  },
                 },
                 "type": "object",
               },
@@ -861,22 +954,33 @@ exports[`should serve the OpenAPI spec 1`] = `
       },
       "environmentSchema": {
         "additionalProperties": false,
+        "description": "A definition of the project environment",
         "properties": {
           "apiTokenCount": {
+            "description": "The number of API tokens for the project environment",
+            "example": 6,
             "nullable": true,
             "type": "number",
           },
           "enabled": {
+            "description": "\`true\` if the environment is enabled for the project, otherwise \`false\`.",
+            "example": true,
             "type": "boolean",
           },
           "enabledToggleCount": {
+            "description": "The number of enabled toggles for the project environment",
+            "example": 10,
             "nullable": true,
             "type": "number",
           },
           "name": {
+            "description": "The name of the environment",
+            "example": "my-dev-env",
             "type": "string",
           },
           "projectCount": {
+            "description": "The number of projects with this environment",
+            "example": 10,
             "nullable": true,
             "type": "number",
           },
@@ -884,9 +988,13 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "boolean",
           },
           "sortOrder": {
+            "description": "The sort order of the environment in the environments list",
+            "example": 3,
             "type": "number",
           },
           "type": {
+            "description": "The type of the environment",
+            "example": "development",
             "type": "string",
           },
         },
@@ -1012,6 +1120,94 @@ exports[`should serve the OpenAPI spec 1`] = `
         ],
         "type": "object",
       },
+      "exportQuerySchema": {
+        "additionalProperties": false,
+        "properties": {
+          "downloadFile": {
+            "type": "boolean",
+          },
+          "environment": {
+            "type": "string",
+          },
+          "features": {
+            "items": {
+              "minLength": 1,
+              "type": "string",
+            },
+            "type": "array",
+          },
+        },
+        "required": [
+          "features",
+          "environment",
+        ],
+        "type": "object",
+      },
+      "exportResultSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "contextFields": {
+            "items": {
+              "$ref": "#/components/schemas/contextFieldSchema",
+            },
+            "type": "array",
+          },
+          "featureEnvironments": {
+            "items": {
+              "$ref": "#/components/schemas/featureEnvironmentSchema",
+            },
+            "type": "array",
+          },
+          "featureStrategies": {
+            "items": {
+              "$ref": "#/components/schemas/featureStrategySchema",
+            },
+            "type": "array",
+          },
+          "featureTags": {
+            "items": {
+              "$ref": "#/components/schemas/featureTagSchema",
+            },
+            "type": "array",
+          },
+          "features": {
+            "items": {
+              "$ref": "#/components/schemas/featureSchema",
+            },
+            "type": "array",
+          },
+          "segments": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "id": {
+                  "type": "number",
+                },
+                "name": {
+                  "type": "string",
+                },
+              },
+              "required": [
+                "id",
+              ],
+              "type": "object",
+            },
+            "type": "array",
+          },
+          "tagTypes": {
+            "items": {
+              "$ref": "#/components/schemas/tagTypeSchema",
+            },
+            "type": "array",
+          },
+        },
+        "required": [
+          "features",
+          "featureStrategies",
+          "tagTypes",
+        ],
+        "type": "object",
+      },
       "featureEnvironmentMetricsSchema": {
         "additionalProperties": false,
         "properties": {
@@ -1045,67 +1241,51 @@ exports[`should serve the OpenAPI spec 1`] = `
       },
       "featureEnvironmentSchema": {
         "additionalProperties": false,
+        "description": "A detailed description of the feature environment",
         "properties": {
           "enabled": {
+            "description": "\`true\` if the feature is enabled for the environment, otherwise \`false\`.",
+            "example": true,
             "type": "boolean",
           },
           "environment": {
             "type": "string",
           },
-          "name": {
+          "featureName": {
+            "example": "disable-comments",
             "type": "string",
           },
+          "name": {
+            "description": "The name of the environment",
+            "example": "my-dev-env",
+            "type": "string",
+          },
+          "sortOrder": {
+            "description": "The sort order of the feature environment in the feature environments list",
+            "example": 3,
+            "type": "number",
+          },
           "strategies": {
+            "description": "A list of activation strategies for the feature environment",
             "items": {
-              "additionalProperties": false,
-              "properties": {
-                "constraints": {
-                  "items": {
-                    "$ref": "#/components/schemas/constraintSchema",
-                  },
-                  "type": "array",
-                },
-                "createdAt": {
-                  "format": "date-time",
-                  "type": "string",
-                },
-                "environment": {
-                  "type": "string",
-                },
-                "featureName": {
-                  "type": "string",
-                },
-                "id": {
-                  "type": "string",
-                },
-                "parameters": {
-                  "$ref": "#/components/schemas/parametersSchema",
-                },
-                "projectId": {
-                  "type": "string",
-                },
-                "sortOrder": {
-                  "type": "number",
-                },
-                "strategyName": {
-                  "type": "string",
-                },
-              },
-              "required": [
-                "id",
-                "featureName",
-                "projectId",
-                "environment",
-                "strategyName",
-                "constraints",
-                "parameters",
-              ],
-              "type": "object",
+              "$ref": "#/components/schemas/featureStrategySchema",
             },
             "type": "array",
           },
           "type": {
+            "description": "The type of the environment",
+            "example": "development",
             "type": "string",
+          },
+          "variantCount": {
+            "type": "number",
+          },
+          "variants": {
+            "description": "A list of variants for the feature environment",
+            "items": {
+              "$ref": "#/components/schemas/variantSchema",
+            },
+            "type": "array",
           },
         },
         "required": [
@@ -1125,6 +1305,10 @@ exports[`should serve the OpenAPI spec 1`] = `
           },
           "toggleName": {
             "type": "string",
+          },
+          "totalEvents": {
+            "minimum": 0,
+            "type": "integer",
           },
           "version": {
             "type": "number",
@@ -1162,57 +1346,79 @@ exports[`should serve the OpenAPI spec 1`] = `
         "additionalProperties": false,
         "properties": {
           "archived": {
+            "description": "\`true\` if the feature is archived, otherwise \`false\`.",
+            "example": true,
             "type": "boolean",
           },
           "archivedAt": {
+            "example": "2023-01-29T15:21:39.975Z",
             "format": "date-time",
             "nullable": true,
             "type": "string",
           },
           "createdAt": {
+            "example": "2023-01-28T15:21:39.975Z",
             "format": "date-time",
             "nullable": true,
             "type": "string",
           },
           "description": {
+            "description": "Detailed description of the feature",
+            "example": "Controls disabling of the comments section in case of an incident",
+            "nullable": true,
             "type": "string",
           },
           "enabled": {
+            "example": true,
             "type": "boolean",
           },
           "environments": {
+            "description": "The list of environments where the feature can be used",
             "items": {
-              "$ref": "#/components/schemas/environmentSchema",
+              "$ref": "#/components/schemas/featureEnvironmentSchema",
             },
             "type": "array",
           },
           "favorite": {
+            "description": "\`true\` if the feature was favorited, otherwise \`false\`.",
+            "example": true,
             "type": "boolean",
           },
           "impressionData": {
+            "description": "\`true\` if the impression data collection is enabled for the feature, otherwise \`false\`.",
+            "example": false,
             "type": "boolean",
           },
           "lastSeenAt": {
+            "example": "2023-01-28T16:21:39.975Z",
             "format": "date-time",
             "nullable": true,
             "type": "string",
           },
           "name": {
+            "description": "Unique feature name",
+            "example": "disable-comments",
             "type": "string",
           },
           "project": {
+            "description": "Name of the project the feature belongs to",
+            "example": "dx-squad",
             "type": "string",
           },
           "stale": {
+            "description": "\`true\` if the feature is stale based on the age and feature type, otherwise \`false\`.",
+            "example": false,
             "type": "boolean",
           },
           "strategies": {
+            "description": "This is a legacy field that will be deprecated",
             "items": {
-              "$ref": "#/components/schemas/featureStrategySchema",
+              "type": "object",
             },
             "type": "array",
           },
           "tags": {
+            "description": "The list of feature tags",
             "items": {
               "$ref": "#/components/schemas/tagSchema",
             },
@@ -1220,9 +1426,12 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "array",
           },
           "type": {
+            "description": "Type of the toggle e.g. experiment, kill-switch, release, operational, permission",
+            "example": "kill-switch",
             "type": "string",
           },
           "variants": {
+            "description": "The list of feature variants",
             "items": {
               "$ref": "#/components/schemas/variantSchema",
             },
@@ -1242,6 +1451,9 @@ exports[`should serve the OpenAPI spec 1`] = `
               "$ref": "#/components/schemas/constraintSchema",
             },
             "type": "array",
+          },
+          "featureName": {
+            "type": "string",
           },
           "id": {
             "type": "string",
@@ -1457,6 +1669,7 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "string",
           },
           "description": {
+            "nullable": true,
             "type": "string",
           },
           "id": {
@@ -1541,6 +1754,7 @@ exports[`should serve the OpenAPI spec 1`] = `
         "additionalProperties": false,
         "properties": {
           "description": {
+            "nullable": true,
             "type": "string",
           },
           "environments": {
@@ -1567,6 +1781,10 @@ exports[`should serve the OpenAPI spec 1`] = `
           "name": {
             "type": "string",
           },
+          "stats": {
+            "$ref": "#/components/schemas/projectStatsSchema",
+            "description": "Project statistics",
+          },
           "updatedAt": {
             "format": "date-time",
             "nullable": true,
@@ -1589,6 +1807,7 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "number",
           },
           "description": {
+            "nullable": true,
             "type": "string",
           },
           "environments": {
@@ -1621,6 +1840,10 @@ exports[`should serve the OpenAPI spec 1`] = `
           "staleCount": {
             "type": "number",
           },
+          "stats": {
+            "$ref": "#/components/schemas/projectStatsSchema",
+            "description": "Project statistics",
+          },
           "updatedAt": {
             "format": "date-time",
             "nullable": true,
@@ -1648,6 +1871,73 @@ exports[`should serve the OpenAPI spec 1`] = `
         },
         "required": [
           "id",
+        ],
+        "type": "object",
+      },
+      "importTogglesSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/exportResultSchema",
+          },
+          "environment": {
+            "type": "string",
+          },
+          "project": {
+            "type": "string",
+          },
+        },
+        "required": [
+          "project",
+          "environment",
+          "data",
+        ],
+        "type": "object",
+      },
+      "importTogglesValidateItemSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "affectedItems": {
+            "items": {
+              "type": "string",
+            },
+            "type": "array",
+          },
+          "message": {
+            "type": "string",
+          },
+        },
+        "required": [
+          "message",
+          "affectedItems",
+        ],
+        "type": "object",
+      },
+      "importTogglesValidateSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "errors": {
+            "items": {
+              "$ref": "#/components/schemas/importTogglesValidateItemSchema",
+            },
+            "type": "array",
+          },
+          "permissions": {
+            "items": {
+              "$ref": "#/components/schemas/importTogglesValidateItemSchema",
+            },
+            "type": "array",
+          },
+          "warnings": {
+            "items": {
+              "$ref": "#/components/schemas/importTogglesValidateItemSchema",
+            },
+            "type": "array",
+          },
+        },
+        "required": [
+          "errors",
+          "warnings",
         ],
         "type": "object",
       },
@@ -1738,6 +2028,18 @@ exports[`should serve the OpenAPI spec 1`] = `
         "required": [
           "username",
           "password",
+        ],
+        "type": "object",
+      },
+      "maintenanceSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+          },
+        },
+        "required": [
+          "enabled",
         ],
         "type": "object",
       },
@@ -2345,35 +2647,117 @@ exports[`should serve the OpenAPI spec 1`] = `
         ],
         "type": "object",
       },
-      "projectSchema": {
+      "projectOverviewSchema": {
         "additionalProperties": false,
+        "description": "A high-level overview of a project. It contains information such as project statistics, the name of the project, what members and what features it contains, etc.",
         "properties": {
-          "changeRequestsEnabled": {
+          "description": {
+            "description": "Additional information about the project",
+            "example": "DX squad feature release",
+            "nullable": true,
+            "type": "string",
+          },
+          "environments": {
+            "description": "The environments that are enabled for this project",
+            "example": [
+              "development",
+              "production",
+            ],
+            "items": {
+              "type": "string",
+            },
+            "type": "array",
+          },
+          "favorite": {
+            "description": "\`true\` if the project was favorited, otherwise \`false\`.",
+            "example": true,
             "type": "boolean",
           },
+          "features": {
+            "description": "The full list of features in this project (excluding archived features)",
+            "items": {
+              "$ref": "#/components/schemas/featureSchema",
+            },
+            "type": "array",
+          },
+          "health": {
+            "description": "An indicator of the [project's health](https://docs.getunleash.io/reference/technical-debt#health-rating) on a scale from 0 to 100",
+            "example": 50,
+            "type": "number",
+          },
+          "members": {
+            "description": "The number of members this project has",
+            "example": 4,
+            "type": "number",
+          },
+          "name": {
+            "description": "The name of this project",
+            "example": "dx-squad",
+            "type": "string",
+          },
+          "stats": {
+            "$ref": "#/components/schemas/projectStatsSchema",
+            "description": "Project statistics",
+          },
+          "updatedAt": {
+            "example": "2023-02-10T08:36:35.262Z",
+            "format": "date-time",
+            "nullable": true,
+            "type": "string",
+          },
+          "version": {
+            "example": 1,
+            "type": "number",
+          },
+        },
+        "required": [
+          "version",
+          "name",
+        ],
+        "type": "object",
+      },
+      "projectSchema": {
+        "additionalProperties": false,
+        "description": "A definition of the project used for projects listing purposes",
+        "properties": {
           "createdAt": {
             "format": "date-time",
             "type": "string",
           },
           "description": {
+            "description": "Additional information about the project",
+            "example": "DX squad feature release",
+            "nullable": true,
             "type": "string",
           },
           "favorite": {
+            "description": "\`true\` if the project was favorited, otherwise \`false\`.",
+            "example": true,
             "type": "boolean",
           },
           "featureCount": {
+            "description": "The number of features this project has",
+            "example": 10,
             "type": "number",
           },
           "health": {
+            "description": "An indicator of the [project's health](https://docs.getunleash.io/reference/technical-debt#health-rating) on a scale from 0 to 100",
+            "example": 50,
             "type": "number",
           },
           "id": {
+            "description": "The id of this project",
+            "example": "dx-squad",
             "type": "string",
           },
           "memberCount": {
+            "description": "The number of members this project has",
+            "example": 4,
             "type": "number",
           },
           "name": {
+            "description": "The name of this project",
+            "example": "DX-Squad",
             "type": "string",
           },
           "updatedAt": {
@@ -2388,10 +2772,79 @@ exports[`should serve the OpenAPI spec 1`] = `
         ],
         "type": "object",
       },
+      "projectStatsSchema": {
+        "additionalProperties": false,
+        "description": "Statistics for a project, including the average time to production, number of features created, the project activity and more.
+
+Stats are divided into current and previous **windows**.
+- The **current window** is the past 30 days.
+- The **previous window** is the 30 days **before** the current window (from 60 to 30 days ago)",
+        "properties": {
+          "archivedCurrentWindow": {
+            "description": "The number of feature toggles that were archived during the current window",
+            "example": 5,
+            "type": "number",
+          },
+          "archivedPastWindow": {
+            "description": "The number of feature toggles that were archived during the previous window",
+            "example": 5,
+            "type": "number",
+          },
+          "avgTimeToProdCurrentWindow": {
+            "description": "The average time from when a feature was created to when it was enabled in the "production" environment during the current window",
+            "example": 10,
+            "type": "number",
+          },
+          "avgTimeToProdPastWindow": {
+            "description": "The average time from when a feature was created to when it was enabled in the "production" environment during the previous window",
+            "example": 10,
+            "type": "number",
+          },
+          "createdCurrentWindow": {
+            "description": "The number of feature toggles created during the current window",
+            "example": 15,
+            "type": "number",
+          },
+          "createdPastWindow": {
+            "description": "The number of feature toggles created during the previous window",
+            "example": 15,
+            "type": "number",
+          },
+          "projectActivityCurrentWindow": {
+            "description": "The number of project events that occurred during the current window",
+            "example": 100,
+            "type": "number",
+          },
+          "projectActivityPastWindow": {
+            "description": "The number of project events that occurred during the previous window",
+            "example": 100,
+            "type": "number",
+          },
+          "projectMembersAddedCurrentWindow": {
+            "description": "The number of members that were added to the project during the current window",
+            "example": 1,
+            "type": "number",
+          },
+        },
+        "required": [
+          "avgTimeToProdCurrentWindow",
+          "avgTimeToProdPastWindow",
+          "createdCurrentWindow",
+          "createdPastWindow",
+          "archivedCurrentWindow",
+          "archivedPastWindow",
+          "projectActivityCurrentWindow",
+          "projectActivityPastWindow",
+          "projectMembersAddedCurrentWindow",
+        ],
+        "type": "object",
+      },
       "projectsSchema": {
         "additionalProperties": false,
+        "description": "An overview of all the projects in the Unleash instance",
         "properties": {
           "projects": {
+            "description": "A list of projects in the Unleash instance",
             "items": {
               "$ref": "#/components/schemas/projectSchema",
             },
@@ -2703,6 +3156,88 @@ exports[`should serve the OpenAPI spec 1`] = `
         ],
         "type": "object",
       },
+      "pushVariantsSchema": {
+        "properties": {
+          "environments": {
+            "items": {
+              "type": "string",
+            },
+            "type": "array",
+          },
+          "variants": {
+            "items": {
+              "$ref": "#/components/schemas/variantSchema",
+            },
+            "type": "array",
+          },
+        },
+        "type": "object",
+      },
+      "requestsPerSecondSchema": {
+        "properties": {
+          "data": {
+            "properties": {
+              "result": {
+                "description": "An array of values per metric. Each one represents a line in the graph labeled by its metric name",
+                "items": {
+                  "properties": {
+                    "metric": {
+                      "description": "A key value set representing the metric",
+                      "properties": {
+                        "appName": {
+                          "type": "string",
+                        },
+                        "endpoint": {
+                          "type": "string",
+                        },
+                      },
+                      "type": "object",
+                    },
+                    "values": {
+                      "description": "An array of arrays. Each element of the array is an array of size 2 consisting of the 2 axis for the graph: in position zero the x axis represented as a number and position one the y axis represented as string",
+                      "items": {
+                        "items": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                            },
+                            {
+                              "type": "number",
+                            },
+                          ],
+                        },
+                        "type": "array",
+                      },
+                      "type": "array",
+                    },
+                  },
+                  "type": "object",
+                },
+                "type": "array",
+              },
+              "resultType": {
+                "type": "string",
+              },
+            },
+            "type": "object",
+          },
+          "status": {
+            "type": "string",
+          },
+        },
+        "type": "object",
+      },
+      "requestsPerSecondSegmentedSchema": {
+        "properties": {
+          "adminMetrics": {
+            "$ref": "#/components/schemas/requestsPerSecondSchema",
+          },
+          "clientMetrics": {
+            "$ref": "#/components/schemas/requestsPerSecondSchema",
+          },
+        },
+        "type": "object",
+      },
       "resetPasswordSchema": {
         "additionalProperties": false,
         "properties": {
@@ -2739,10 +3274,7 @@ exports[`should serve the OpenAPI spec 1`] = `
         "type": "object",
       },
       "sdkContextSchema": {
-        "additionalProperties": {
-          "example": "top-level custom context value",
-          "type": "string",
-        },
+        "additionalProperties": true,
         "description": "The Unleash context as modeled in client SDKs",
         "properties": {
           "appName": {
@@ -3234,8 +3766,14 @@ exports[`should serve the OpenAPI spec 1`] = `
             },
             "type": "array",
           },
+          "maintenanceMode": {
+            "type": "boolean",
+          },
           "name": {
             "type": "string",
+          },
+          "networkViewEnabled": {
+            "type": "boolean",
           },
           "segmentValuesLimit": {
             "type": "number",
@@ -3424,6 +3962,9 @@ exports[`should serve the OpenAPI spec 1`] = `
       "userSchema": {
         "additionalProperties": false,
         "properties": {
+          "accountType": {
+            "type": "string",
+          },
           "createdAt": {
             "format": "date-time",
             "type": "string",
@@ -4557,6 +5098,96 @@ If the provided project does not exist, the list of events will be empty.",
         ],
       },
     },
+    "/api/admin/features-batch/export": {
+      "post": {
+        "operationId": "exportFeatures",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/exportQuerySchema",
+              },
+            },
+          },
+          "description": "exportQuerySchema",
+          "required": true,
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/exportResultSchema",
+                },
+              },
+            },
+            "description": "exportResultSchema",
+          },
+        },
+        "tags": [
+          "Unstable",
+        ],
+      },
+    },
+    "/api/admin/features-batch/import": {
+      "post": {
+        "description": "Unleash toggles exported from a different instance can be imported into a new project and environment",
+        "operationId": "importToggles",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/importTogglesSchema",
+              },
+            },
+          },
+          "description": "importTogglesSchema",
+          "required": true,
+        },
+        "responses": {
+          "200": {
+            "description": "This response has no body.",
+          },
+        },
+        "summary": "Import feature toggles for an environment in the project",
+        "tags": [
+          "Unstable",
+        ],
+      },
+    },
+    "/api/admin/features-batch/validate": {
+      "post": {
+        "description": "Unleash toggles exported from a different instance can be imported into a new project and environment",
+        "operationId": "validateImport",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/importTogglesSchema",
+              },
+            },
+          },
+          "description": "importTogglesSchema",
+          "required": true,
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/importTogglesValidateSchema",
+                },
+              },
+            },
+            "description": "importTogglesValidateSchema",
+          },
+        },
+        "summary": "Validate import of feature toggles for an environment in the project",
+        "tags": [
+          "Unstable",
+        ],
+      },
+    },
     "/api/admin/features/validate": {
       "post": {
         "operationId": "validateFeature",
@@ -4912,6 +5543,48 @@ If the provided project does not exist, the list of events will be empty.",
         ],
       },
     },
+    "/api/admin/maintenance": {
+      "get": {
+        "operationId": "getMaintenance",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/maintenanceSchema",
+                },
+              },
+            },
+            "description": "maintenanceSchema",
+          },
+        },
+        "tags": [
+          "Maintenance",
+        ],
+      },
+      "post": {
+        "operationId": "toggleMaintenance",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/maintenanceSchema",
+              },
+            },
+          },
+          "description": "maintenanceSchema",
+          "required": true,
+        },
+        "responses": {
+          "204": {
+            "description": "This response has no body.",
+          },
+        },
+        "tags": [
+          "Maintenance",
+        ],
+      },
+    },
     "/api/admin/metrics/applications": {
       "get": {
         "operationId": "getApplications",
@@ -5076,7 +5749,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/projects/{projectId}": {
       "get": {
-        "operationId": "getProjectHealthOverview",
+        "operationId": "getProjectOverview",
         "parameters": [
           {
             "in": "path",
@@ -5092,11 +5765,123 @@ If the provided project does not exist, the list of events will be empty.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/healthOverviewSchema",
+                  "$ref": "#/components/schemas/projectOverviewSchema",
                 },
               },
             },
-            "description": "healthOverviewSchema",
+            "description": "projectOverviewSchema",
+          },
+        },
+        "tags": [
+          "Projects",
+        ],
+      },
+    },
+    "/api/admin/projects/{projectId}/api-tokens": {
+      "get": {
+        "operationId": "getProjectApiTokens",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apiTokensSchema",
+                },
+              },
+            },
+            "description": "apiTokensSchema",
+          },
+        },
+        "tags": [
+          "Projects",
+        ],
+      },
+      "post": {
+        "operationId": "createProjectApiToken",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/createApiTokenSchema",
+              },
+            },
+          },
+          "description": "createApiTokenSchema",
+          "required": true,
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apiTokenSchema",
+                },
+              },
+            },
+            "description": "The resource was successfully created.",
+            "headers": {
+              "location": {
+                "description": "The location of the newly created resource.",
+                "schema": {
+                  "format": "uri",
+                  "type": "string",
+                },
+              },
+            },
+          },
+          "400": {
+            "description": "This response has no body.",
+          },
+        },
+        "tags": [
+          "Projects",
+        ],
+      },
+    },
+    "/api/admin/projects/{projectId}/api-tokens/{token}": {
+      "delete": {
+        "operationId": "deleteProjectApiToken",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+          {
+            "in": "path",
+            "name": "token",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": {
+          "200": {
+            "description": "This response has no body.",
           },
         },
         "tags": [
@@ -5166,6 +5951,50 @@ If the provided project does not exist, the list of events will be empty.",
         },
         "tags": [
           "Projects",
+        ],
+      },
+    },
+    "/api/admin/projects/{projectId}/favorites": {
+      "delete": {
+        "operationId": "removeFavoriteProject",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": {
+          "200": {
+            "description": "This response has no body.",
+          },
+        },
+        "tags": [
+          "Features",
+        ],
+      },
+      "post": {
+        "operationId": "addFavoriteProject",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": {
+          "200": {
+            "description": "This response has no body.",
+          },
+        },
+        "tags": [
+          "Features",
         ],
       },
     },
@@ -6140,6 +6969,66 @@ If the provided project does not exist, the list of events will be empty.",
         ],
       },
     },
+    "/api/admin/projects/{projectId}/features/{featureName}/favorites": {
+      "delete": {
+        "operationId": "removeFavoriteFeature",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+          {
+            "in": "path",
+            "name": "featureName",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": {
+          "200": {
+            "description": "This response has no body.",
+          },
+        },
+        "tags": [
+          "Features",
+        ],
+      },
+      "post": {
+        "operationId": "addFavoriteFeature",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+          {
+            "in": "path",
+            "name": "featureName",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": {
+          "200": {
+            "description": "This response has no body.",
+          },
+        },
+        "tags": [
+          "Features",
+        ],
+      },
+    },
     "/api/admin/projects/{projectId}/features/{featureName}/variants": {
       "get": {
         "operationId": "getFeatureVariants",
@@ -6253,6 +7142,55 @@ If the provided project does not exist, the list of events will be empty.",
             },
           },
           "description": "variantsSchema",
+          "required": true,
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/featureVariantsSchema",
+                },
+              },
+            },
+            "description": "featureVariantsSchema",
+          },
+        },
+        "tags": [
+          "Features",
+        ],
+      },
+    },
+    "/api/admin/projects/{projectId}/features/{featureName}/variants-batch": {
+      "put": {
+        "operationId": "overwriteFeatureVariantsOnEnvironments",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+          {
+            "in": "path",
+            "name": "featureName",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/pushVariantsSchema",
+              },
+            },
+          },
+          "description": "pushVariantsSchema",
           "required": true,
         },
         "responses": {
@@ -7420,7 +8358,7 @@ If the provided project does not exist, the list of events will be empty.",
           },
         },
         "tags": [
-          "API tokens",
+          "Personal access tokens",
         ],
       },
       "post": {
@@ -7449,7 +8387,7 @@ If the provided project does not exist, the list of events will be empty.",
           },
         },
         "tags": [
-          "API tokens",
+          "Personal access tokens",
         ],
       },
     },
@@ -7472,7 +8410,7 @@ If the provided project does not exist, the list of events will be empty.",
           },
         },
         "tags": [
-          "API tokens",
+          "Personal access tokens",
         ],
       },
     },
@@ -7700,6 +8638,30 @@ If the provided project does not exist, the list of events will be empty.",
         ],
       },
     },
+    "/edge/metrics": {
+      "post": {
+        "operationId": "bulkMetrics",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/bulkMetricsSchema",
+              },
+            },
+          },
+          "description": "bulkMetricsSchema",
+          "required": true,
+        },
+        "responses": {
+          "202": {
+            "description": "This response has no body.",
+          },
+        },
+        "tags": [
+          "Edge",
+        ],
+      },
+    },
     "/edge/validate": {
       "post": {
         "operationId": "getValidTokens",
@@ -7870,6 +8832,10 @@ If the provided project does not exist, the list of events will be empty.",
       "name": "Auth",
     },
     {
+      "description": "API for managing [change requests](https://docs.getunleash.io/reference/change-requests).",
+      "name": "Change Requests",
+    },
+    {
       "description": "Endpoints for [Unleash server-side clients](https://docs.getunleash.io/reference/sdks).",
       "name": "Client",
     },
@@ -7894,6 +8860,10 @@ If the provided project does not exist, the list of events will be empty.",
       "name": "Features",
     },
     {
+      "description": "API for connecting client-side (frontend) applications to Unleash.",
+      "name": "Frontend API",
+    },
+    {
       "description": "[Import and export](https://docs.getunleash.io/deploy/import_export) the state of your Unleash instance.",
       "name": "Import/Export",
     },
@@ -7902,12 +8872,20 @@ If the provided project does not exist, the list of events will be empty.",
       "name": "Instance Admin",
     },
     {
+      "description": "Enable/disable the maintenance mode of Unleash.",
+      "name": "Maintenance",
+    },
+    {
       "description": "Register, read, or delete metrics recorded by Unleash.",
       "name": "Metrics",
     },
     {
       "description": "Endpoints related to the operational status of this Unleash instance.",
       "name": "Operational",
+    },
+    {
+      "description": "Create, update, and delete [Personal access tokens](https://docs.getunleash.io/reference/api-tokens-and-client-keys#personal-access-tokens).",
+      "name": "Personal access tokens",
     },
     {
       "description": "Evaluate an Unleash context against your feature toggles.",
@@ -7924,6 +8902,10 @@ If the provided project does not exist, the list of events will be empty.",
     {
       "description": "Create, update, delete, and manage [segments](https://docs.getunleash.io/reference/segments).",
       "name": "Segments",
+    },
+    {
+      "description": "Endpoints for managing [Service Accounts](https://docs.getunleash.io/reference/service-accounts), which enable programmatic access to the Unleash API.",
+      "name": "Service Accounts",
     },
     {
       "description": "Create, update, delete, manage [custom strategies](https://docs.getunleash.io/reference/custom-activation-strategies).",

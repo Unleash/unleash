@@ -15,7 +15,7 @@ import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useSearch } from 'hooks/useSearch';
-import useHiddenColumns from 'hooks/useHiddenColumns';
+import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import {
     Link,
     Route,
@@ -151,7 +151,7 @@ export const ProjectAccessTable: VFC = () => {
                 id: 'username',
                 Header: 'Username',
                 accessor: (row: IProjectAccess) => {
-                    if (row.type === ENTITY_TYPE.USER) {
+                    if (row.type !== ENTITY_TYPE.GROUP) {
                         const userRow = row.entity as IUser;
                         return userRow.username || userRow.email;
                     }
@@ -170,6 +170,7 @@ export const ProjectAccessTable: VFC = () => {
                 Cell: ({ value, row: { original: row } }: any) => (
                     <ProjectAccessRoleCell
                         roleId={row.entity.roleId}
+                        projectId={projectId}
                         value={value}
                     />
                 ),
@@ -187,13 +188,13 @@ export const ProjectAccessTable: VFC = () => {
                     <TimeAgoCell value={value} emptyText="Never" />
                 ),
                 sortType: 'date',
-                maxWidth: 100,
+                maxWidth: 130,
             },
             {
                 id: 'lastLogin',
                 Header: 'Last login',
                 accessor: (row: IProjectAccess) => {
-                    if (row.type === ENTITY_TYPE.USER) {
+                    if (row.type !== ENTITY_TYPE.GROUP) {
                         const userRow = row.entity as IUser;
                         return userRow.seenAt || '';
                     }
@@ -207,7 +208,7 @@ export const ProjectAccessTable: VFC = () => {
                     <TimeAgoCell value={value} emptyText="Never" />
                 ),
                 sortType: 'date',
-                maxWidth: 100,
+                maxWidth: 130,
             },
             {
                 id: 'actions',
@@ -227,7 +228,9 @@ export const ProjectAccessTable: VFC = () => {
                             permission={UPDATE_PROJECT}
                             projectId={projectId}
                             to={`edit/${
-                                row.type === ENTITY_TYPE.USER ? 'user' : 'group'
+                                row.type === ENTITY_TYPE.GROUP
+                                    ? 'group'
+                                    : 'user'
                             }/${row.entity.id}`}
                             disabled={access?.rows.length === 1}
                             tooltipProps={{
@@ -296,6 +299,7 @@ export const ProjectAccessTable: VFC = () => {
             data,
             initialState,
             sortTypes,
+            autoResetHiddenColumns: false,
             autoResetSortBy: false,
             disableSortRemove: true,
             disableMultiSort: true,
@@ -307,8 +311,20 @@ export const ProjectAccessTable: VFC = () => {
         useFlexLayout
     );
 
-    useHiddenColumns(setHiddenColumns, hiddenColumnsSmall, isSmallScreen);
-    useHiddenColumns(setHiddenColumns, hiddenColumnsMedium, isMediumScreen);
+    useConditionallyHiddenColumns(
+        [
+            {
+                condition: isSmallScreen,
+                columns: hiddenColumnsSmall,
+            },
+            {
+                condition: isMediumScreen,
+                columns: hiddenColumnsMedium,
+            },
+        ],
+        setHiddenColumns,
+        columns
+    );
 
     useEffect(() => {
         const tableState: PageQueryType = {};
@@ -330,13 +346,13 @@ export const ProjectAccessTable: VFC = () => {
         if (!userOrGroup) return;
         const { id, roleId } = userOrGroup.entity;
         let name = userOrGroup.entity.name;
-        if (userOrGroup.type === ENTITY_TYPE.USER) {
+        if (userOrGroup.type !== ENTITY_TYPE.GROUP) {
             const user = userOrGroup.entity as IUser;
             name = name || user.email || user.username || '';
         }
 
         try {
-            if (userOrGroup.type === ENTITY_TYPE.USER) {
+            if (userOrGroup.type !== ENTITY_TYPE.GROUP) {
                 await removeUserFromRole(projectId, roleId, id);
             } else {
                 await removeGroupFromRole(projectId, roleId, id);

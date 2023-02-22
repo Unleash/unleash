@@ -22,7 +22,6 @@ export const ProjectsList: VFC<IProjectsListProps> = ({
     project,
 }) => {
     const { searchQuery } = useSearchHighlightContext();
-
     let fields: string[] =
         projects && Array.isArray(projects)
             ? projects

@@ -18,7 +18,6 @@ import useAuthSettingsApi from 'hooks/api/actions/useAuthSettingsApi/useAuthSett
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { removeEmptyStringFields } from 'utils/removeEmptyStringFields';
 import { SsoGroupSettings } from '../SsoGroupSettings';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const initialState = {
     enabled: false,
@@ -40,7 +39,6 @@ export const SamlAuth = () => {
     const { hasAccess } = useContext(AccessContext);
     const { config } = useAuthSettings('saml');
     const { updateSettings, errors, loading } = useAuthSettingsApi('saml');
-    const ssoSyncShown = Boolean(uiConfig.flags.syncSSOGroups);
 
     useEffect(() => {
         if (config.entityId) {
@@ -251,15 +249,11 @@ export const SamlAuth = () => {
                         />
                     </Grid>
                 </Grid>
-                <ConditionallyRender
-                    condition={ssoSyncShown}
-                    show={
-                        <SsoGroupSettings
-                            ssoType="SAML"
-                            data={data}
-                            setValue={setValue}
-                        />
-                    }
+
+                <SsoGroupSettings
+                    ssoType="SAML"
+                    data={data}
+                    setValue={setValue}
                 />
 
                 <AutoCreateForm data={data} setValue={setValue} />

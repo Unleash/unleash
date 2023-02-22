@@ -10,6 +10,7 @@ import {
 import { ApiOperation } from '../openapi/util/api-operation';
 import { Logger } from '../logger';
 import { validateSchema } from '../openapi/validate';
+import { IFlagResolver } from '../types';
 
 export class OpenApiService {
     private readonly config: IUnleashConfig;
@@ -18,14 +19,17 @@ export class OpenApiService {
 
     private readonly api: IExpressOpenApi;
 
+    private flagResolver: IFlagResolver;
+
     constructor(config: IUnleashConfig) {
         this.config = config;
+        this.flagResolver = config.flagResolver;
         this.logger = config.getLogger('openapi-service.ts');
 
         this.api = openapi(
             this.docsPath(),
             createOpenApiSchema(config.server),
-            { coerce: true },
+            { coerce: true, extendRefs: true },
         );
     }
 
@@ -64,17 +68,23 @@ export class OpenApiService {
         });
     }
 
-    respondWithValidation<T>(
+    respondWithValidation<T, S = SchemaId>(
         status: number,
         res: Response<T>,
-        schema: SchemaId,
+        schema: S,
         data: T,
         headers: { [header: string]: string } = {},
     ): void {
-        const errors = validateSchema(schema, data);
+        const errors = validateSchema<S>(schema, data);
 
         if (errors) {
-            this.logger.debug('Invalid response:', errors);
+            this.logger.debug(
+                'Invalid response:',
+                JSON.stringify(errors, null, 4),
+            );
+            if (this.flagResolver.isEnabled('strictSchemaValidation')) {
+                throw new Error(JSON.stringify(errors, null, 4));
+            }
         }
 
         Object.entries(headers).forEach(([header, value]) =>

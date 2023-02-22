@@ -2,6 +2,7 @@ import {
     IEditableStrategy,
     IMinimalStrategy,
     IStrategy,
+    IStrategyImport,
     IStrategyStore,
 } from '../../lib/types/stores/strategy-store';
 import NotFoundError from '../../lib/error/notfound-error';
@@ -104,7 +105,7 @@ export default class FakeStrategiesStore implements IStrategyStore {
         throw new NotFoundError(`Could not find strategy with name: ${name}`);
     }
 
-    async importStrategy(data: IMinimalStrategy): Promise<void> {
+    async importStrategy(data: IStrategyImport): Promise<void> {
         return this.createStrategy(data);
     }
 

@@ -1,15 +1,12 @@
-import { Card, Menu, MenuItem } from '@mui/material';
-import { useStyles } from './ProjectCard.styles';
+import { Menu, MenuItem } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { ReactComponent as ProjectIcon } from 'assets/icons/projectIcon.svg';
-import React, { useState, SyntheticEvent, useContext } from 'react';
+import React, { SyntheticEvent, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Delete, Edit } from '@mui/icons-material';
 import { getProjectEditPath } from 'utils/routePathHelpers';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import {
-    UPDATE_PROJECT,
     DELETE_PROJECT,
+    UPDATE_PROJECT,
 } from 'component/providers/AccessProvider/permissions';
 import AccessContext from 'contexts/AccessContext';
 import { DEFAULT_PROJECT_ID } from 'hooks/api/getters/useDefaultProject/useDefaultProjectId';
@@ -19,6 +16,18 @@ import { useFavoriteProjectsApi } from 'hooks/api/actions/useFavoriteProjectsApi
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { FavoriteIconButton } from 'component/common/FavoriteIconButton/FavoriteIconButton';
 import { DeleteProjectDialogue } from '../Project/DeleteProject/DeleteProjectDialogue';
+import {
+    StyledProjectCard,
+    StyledDivHeader,
+    StyledBox,
+    StyledH2Title,
+    StyledEditIcon,
+    StyledDeleteIcon,
+    StyledProjectIcon,
+    StyledDivInfo,
+    StyledDivInfoContainer,
+    StyledParagraphInfo,
+} from './ProjectCard.styles';
 
 interface IProjectCardProps {
     name: string;
@@ -39,9 +48,8 @@ export const ProjectCard = ({
     id,
     isFavorite = false,
 }: IProjectCardProps) => {
-    const { classes } = useStyles();
     const { hasAccess } = useContext(AccessContext);
-    const { isOss, uiConfig } = useUiConfig();
+    const { isOss } = useUiConfig();
     const [anchorEl, setAnchorEl] = useState<Element | null>(null);
     const [showDelDialog, setShowDelDialog] = useState(false);
     const navigate = useNavigate();
@@ -56,7 +64,7 @@ export const ProjectCard = ({
     const canDeleteProject =
         hasAccess(DELETE_PROJECT, id) && id !== DEFAULT_PROJECT_ID;
 
-    const onFavorite = async (e: Event) => {
+    const onFavorite = async (e: React.SyntheticEvent) => {
         e.preventDefault();
         if (isFavorite) {
             await unfavorite(id);
@@ -67,21 +75,20 @@ export const ProjectCard = ({
     };
 
     return (
-        <Card className={classes.projectCard} onMouseEnter={onHover}>
-            <div className={classes.header} data-loading>
-                <ConditionallyRender
-                    condition={Boolean(uiConfig?.flags?.favorites)}
-                    show={() => (
-                        <FavoriteIconButton
-                            onClick={onFavorite}
-                            isFavorite={isFavorite}
-                            size="medium"
-                        />
-                    )}
-                />
-                <h2 className={classes.title}>{name}</h2>
+        <StyledProjectCard onMouseEnter={onHover}>
+            <StyledDivHeader data-loading>
+                <StyledBox>
+                    <FavoriteIconButton
+                        onClick={onFavorite}
+                        isFavorite={isFavorite}
+                        size="medium"
+                        sx={{ ml: -1 }}
+                    />
+                    <StyledH2Title>{name}</StyledH2Title>
+                </StyledBox>
 
                 <PermissionIconButton
+                    style={{ transform: 'translateX(7px)' }}
                     permission={UPDATE_PROJECT}
                     hidden={isOss()}
                     projectId={id}
@@ -89,7 +96,6 @@ export const ProjectCard = ({
                     onClick={handleClick}
                     tooltipProps={{
                         title: 'Options',
-                        className: classes.actionsBtn,
                     }}
                 >
                     <MoreVertIcon />
@@ -114,7 +120,7 @@ export const ProjectCard = ({
                             navigate(getProjectEditPath(id));
                         }}
                     >
-                        <Edit className={classes.icon} />
+                        <StyledEditIcon />
                         Edit project
                     </MenuItem>
                     <MenuItem
@@ -124,42 +130,42 @@ export const ProjectCard = ({
                         }}
                         disabled={!canDeleteProject}
                     >
-                        <Delete className={classes.icon} />
+                        <StyledDeleteIcon />
                         {id === DEFAULT_PROJECT_ID && !canDeleteProject
                             ? "You can't delete the default project"
                             : 'Delete project'}
                     </MenuItem>
                 </Menu>
-            </div>
+            </StyledDivHeader>
             <div data-loading>
-                <ProjectIcon className={classes.projectIcon} />
+                <StyledProjectIcon />
             </div>
-            <div className={classes.info}>
-                <div className={classes.infoBox}>
-                    <p className={classes.infoStats} data-loading>
+            <StyledDivInfo>
+                <StyledDivInfoContainer>
+                    <StyledParagraphInfo data-loading>
                         {featureCount}
-                    </p>
+                    </StyledParagraphInfo>
                     <p data-loading>toggles</p>
-                </div>
-                <div className={classes.infoBox}>
-                    <p className={classes.infoStats} data-loading>
+                </StyledDivInfoContainer>
+                <StyledDivInfoContainer>
+                    <StyledParagraphInfo data-loading>
                         {health}%
-                    </p>
+                    </StyledParagraphInfo>
                     <p data-loading>health</p>
-                </div>
+                </StyledDivInfoContainer>
 
                 <ConditionallyRender
                     condition={id !== DEFAULT_PROJECT_ID}
                     show={
-                        <div className={classes.infoBox}>
-                            <p className={classes.infoStats} data-loading>
+                        <StyledDivInfoContainer>
+                            <StyledParagraphInfo data-loading>
                                 {memberCount}
-                            </p>
+                            </StyledParagraphInfo>
                             <p data-loading>members</p>
-                        </div>
+                        </StyledDivInfoContainer>
                     }
                 />
-            </div>
+            </StyledDivInfo>
             <DeleteProjectDialogue
                 project={id}
                 open={showDelDialog}
@@ -168,6 +174,6 @@ export const ProjectCard = ({
                     setShowDelDialog(false);
                 }}
             />
-        </Card>
+        </StyledProjectCard>
     );
 };

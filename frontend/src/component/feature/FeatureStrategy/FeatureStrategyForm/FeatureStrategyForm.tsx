@@ -1,6 +1,6 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Alert, Button } from '@mui/material';
+import { Alert, Button, styled } from '@mui/material';
 import {
     IFeatureStrategy,
     IFeatureStrategyParameters,
@@ -10,12 +10,10 @@ import { FeatureStrategyType } from '../FeatureStrategyType/FeatureStrategyType'
 import { FeatureStrategyEnabled } from './FeatureStrategyEnabled/FeatureStrategyEnabled';
 import { FeatureStrategyConstraints } from '../FeatureStrategyConstraints/FeatureStrategyConstraints';
 import { IFeatureToggle } from 'interfaces/featureToggle';
-import { useStyles } from './FeatureStrategyForm.styles';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { STRATEGY_FORM_SUBMIT_ID } from 'utils/testIds';
 import { useConstraintsValidation } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
-import AccessContext from 'contexts/AccessContext';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { FeatureStrategySegment } from 'component/feature/FeatureStrategy/FeatureStrategySegment/FeatureStrategySegment';
 import { ISegment } from 'interfaces/segment';
@@ -30,9 +28,11 @@ import {
 import { formatFeaturePath } from '../FeatureStrategyEdit/FeatureStrategyEdit';
 import { useChangeRequestInReviewWarning } from 'hooks/useChangeRequestInReviewWarning';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
+import { useHasProjectEnvironmentAccess } from 'hooks/useHasAccess';
 
 interface IFeatureStrategyFormProps {
     feature: IFeatureToggle;
+    projectId: string;
     environmentId: string;
     permission: string;
     onSubmit: () => void;
@@ -47,7 +47,28 @@ interface IFeatureStrategyFormProps {
     errors: IFormErrors;
 }
 
+const StyledForm = styled('form')(({ theme }) => ({
+    display: 'grid',
+    gap: theme.spacing(2),
+}));
+
+const StyledHr = styled('hr')(({ theme }) => ({
+    width: '100%',
+    height: '1px',
+    margin: theme.spacing(2, 0),
+    border: 'none',
+    background: theme.palette.tertiary.light,
+}));
+
+const StyledButtons = styled('div')(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'end',
+    gap: theme.spacing(2),
+    paddingBottom: theme.spacing(10),
+}));
+
 export const FeatureStrategyForm = ({
+    projectId,
     feature,
     environmentId,
     permission,
@@ -60,16 +81,19 @@ export const FeatureStrategyForm = ({
     errors,
     isChangeRequest,
 }: IFeatureStrategyFormProps) => {
-    const { classes: styles } = useStyles();
     const [showProdGuard, setShowProdGuard] = useState(false);
     const hasValidConstraints = useConstraintsValidation(strategy.constraints);
     const enableProdGuard = useFeatureStrategyProdGuard(feature, environmentId);
-    const { hasAccess } = useContext(AccessContext);
+    const access = useHasProjectEnvironmentAccess(
+        permission,
+        projectId,
+        environmentId
+    );
     const { strategyDefinition } = useStrategy(strategy?.name);
 
-    const { draft } = usePendingChangeRequests(feature.project);
+    const { data } = usePendingChangeRequests(feature.project);
     const { changeRequestInReviewOrApproved, alert } =
-        useChangeRequestInReviewWarning(draft);
+        useChangeRequestInReviewWarning(data);
 
     const hasChangeRequestInReviewForEnvironment =
         changeRequestInReviewOrApproved(environmentId || '');
@@ -142,7 +166,7 @@ export const FeatureStrategyForm = ({
     };
 
     return (
-        <form className={styles.form} onSubmit={onSubmitWithValidation}>
+        <StyledForm onSubmit={onSubmitWithValidation}>
             <ConditionallyRender
                 condition={hasChangeRequestInReviewForEnvironment}
                 show={alert}
@@ -182,7 +206,7 @@ export const FeatureStrategyForm = ({
                     }
                 />
             </FeatureStrategyEnabled>
-            <hr className={styles.hr} />
+            <StyledHr />
             <ConditionallyRender
                 condition={Boolean(uiConfig.flags.SE)}
                 show={
@@ -198,21 +222,17 @@ export const FeatureStrategyForm = ({
                 strategy={strategy}
                 setStrategy={setStrategy}
             />
-            <hr className={styles.hr} />
+            <StyledHr />
             <FeatureStrategyType
                 strategy={strategy}
                 strategyDefinition={strategyDefinition}
                 setStrategy={setStrategy}
                 validateParameter={validateParameter}
                 errors={errors}
-                hasAccess={hasAccess(
-                    permission,
-                    feature.project,
-                    environmentId
-                )}
+                hasAccess={access}
             />
-            <hr className={styles.hr} />
-            <div className={styles.buttons}>
+            <StyledHr />
+            <StyledButtons>
                 <PermissionButton
                     permission={permission}
                     projectId={feature.project}
@@ -246,7 +266,7 @@ export const FeatureStrategyForm = ({
                     loading={loading}
                     label="Save strategy"
                 />
-            </div>
-        </form>
+            </StyledButtons>
+        </StyledForm>
     );
 };

@@ -1,18 +1,15 @@
 import { Fragment, VFC } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
-import { Box, Chip, styled } from '@mui/material';
-import { useStyles } from './StrategyExecution.styles';
-import {
-    PlaygroundRequestSchema,
-    PlaygroundStrategySchema,
-} from 'component/playground/Playground/interfaces/playground.model';
+import { Chip, styled } from '@mui/material';
+import { PlaygroundRequestSchema, PlaygroundStrategySchema } from 'openapi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ConstraintExecution } from './ConstraintExecution/ConstraintExecution';
 import { SegmentExecution } from './SegmentExecution/SegmentExecution';
 import { PlaygroundResultStrategyExecutionParameters } from './StrategyExecutionParameters/StrategyExecutionParameters';
 import { CustomStrategyParams } from './CustomStrategyParams/CustomStrategyParams';
 import { formattedStrategyNames } from 'utils/strategyNames';
+import { StyledBoxSummary } from './StrategyExecution.styles';
 
 interface IStrategyExecutionProps {
     strategyResult: PlaygroundStrategySchema;
@@ -31,7 +28,6 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
     const { name, constraints, segments, parameters } = strategyResult;
 
     const { uiConfig } = useUiConfig();
-    const { classes: styles } = useStyles();
 
     const hasSegments =
         Boolean(uiConfig.flags.SE) && Boolean(segments && segments.length > 0);
@@ -63,7 +59,7 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
             <CustomStrategyParams strategyName={name} parameters={parameters} />
         ),
         name === 'default' && (
-            <Box sx={{ width: '100%' }} className={styles.summary}>
+            <StyledBoxSummary sx={{ width: '100%' }}>
                 The standard strategy is{' '}
                 <Chip
                     variant="outlined"
@@ -72,7 +68,7 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
                     label="ON"
                 />{' '}
                 for all users.
-            </Box>
+            </StyledBoxSummary>
         ),
     ].filter(Boolean);
 

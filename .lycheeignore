@@ -2,6 +2,7 @@ dev-example-okta.com
 .*-dsn.algolia.net
 www.linkedin.com/company/getunleash
 www.instagram.com/getunleash
+twitter.com/getunleash
 
 .*.unleash.host.*.com.*
 unleash.*.com/api/

@@ -39,7 +39,7 @@ export default class PatController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['API tokens'],
+                    tags: ['Personal access tokens'],
                     operationId: 'getPats',
                     responses: { 200: createResponseSchema('patsSchema') },
                 }),
@@ -52,7 +52,7 @@ export default class PatController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['API tokens'],
+                    tags: ['Personal access tokens'],
                     operationId: 'createPat',
                     requestBody: createRequestSchema('patSchema'),
                     responses: { 200: createResponseSchema('patSchema') },
@@ -68,7 +68,7 @@ export default class PatController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['API tokens'],
+                    tags: ['Personal access tokens'],
                     operationId: 'deletePat',
                     responses: { 200: emptyResponse },
                 }),
@@ -78,7 +78,11 @@ export default class PatController extends Controller {
 
     async createPat(req: IAuthRequest, res: Response): Promise<void> {
         const pat = req.body;
-        const createdPat = await this.patService.createPat(pat, req.user);
+        const createdPat = await this.patService.createPat(
+            pat,
+            req.user.id,
+            req.user,
+        );
         this.openApiService.respondWithValidation(
             201,
             res,
@@ -88,7 +92,7 @@ export default class PatController extends Controller {
     }
 
     async getPats(req: IAuthRequest, res: Response<PatSchema>): Promise<void> {
-        const pats = await this.patService.getAll(req.user);
+        const pats = await this.patService.getAll(req.user.id);
         this.openApiService.respondWithValidation(200, res, patsSchema.$id, {
             pats: serializeDates(pats),
         });
@@ -99,7 +103,7 @@ export default class PatController extends Controller {
         res: Response,
     ): Promise<void> {
         const { id } = req.params;
-        await this.patService.deletePat(id, req.user.id);
+        await this.patService.deletePat(id, req.user.id, req.user);
         res.status(200).end();
     }
 }

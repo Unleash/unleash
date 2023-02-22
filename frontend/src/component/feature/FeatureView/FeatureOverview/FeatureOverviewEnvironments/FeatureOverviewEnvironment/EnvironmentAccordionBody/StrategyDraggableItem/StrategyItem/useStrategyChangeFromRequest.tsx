@@ -6,9 +6,9 @@ export const useStrategyChangeFromRequest = (
     environment: string,
     strategyId: string
 ) => {
-    const { draft } = usePendingChangeRequests(projectId);
+    const { data } = usePendingChangeRequests(projectId);
 
-    const environmentDraft = draft?.find(
+    const environmentDraft = data?.find(
         draft => draft.environment === environment
     );
     const feature = environmentDraft?.features.find(

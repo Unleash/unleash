@@ -5,10 +5,12 @@ import { DEFAULT_ENV } from '../../../lib/util/constants';
 import { SegmentService } from '../../../lib/services/segment-service';
 import { FeatureStrategySchema } from '../../../lib/openapi/spec/feature-strategy-schema';
 import User from '../../../lib/types/user';
-import { IConstraint } from '../../../lib/types/model';
+import { IConstraint, IVariant } from '../../../lib/types/model';
 import { AccessService } from '../../../lib/services/access-service';
 import { GroupService } from '../../../lib/services/group-service';
 import EnvironmentService from '../../../lib/services/environment-service';
+import { NoAccessError } from '../../../lib/error';
+import { SKIP_CHANGE_REQUEST } from '../../../lib/types';
 
 let stores;
 let db;
@@ -366,4 +368,167 @@ test('Cloning a feature toggle also clones segments correctly', async () => {
         feature.environments.find((x) => x.name === 'default').strategies[0]
             .segments,
     ).toHaveLength(1);
+});
+
+test('If change requests are enabled, cannot change variants without going via CR', async () => {
+    const featureName = 'feature-with-variants-per-env-and-cr';
+    await service.createFeatureToggle(
+        'default',
+        { name: featureName },
+        'test-user',
+    );
+    const groupService = new GroupService(stores, unleashConfig);
+    const accessService = new AccessService(
+        stores,
+        unleashConfig,
+        groupService,
+    );
+    // Force all feature flags on to make sure we have Change requests on
+    const customFeatureService = new FeatureToggleService(
+        stores,
+        {
+            ...unleashConfig,
+            flagResolver: {
+                isEnabled: () => true,
+            },
+        },
+        segmentService,
+        accessService,
+    );
+
+    const newVariant: IVariant = {
+        name: 'cr-enabled',
+        weight: 100,
+        weightType: 'variable',
+        stickiness: 'default',
+    };
+    await db.rawDatabase('change_request_settings').insert({
+        project: 'default',
+        environment: 'default',
+    });
+    return expect(async () =>
+        customFeatureService.crProtectedSaveVariantsOnEnv(
+            'default',
+            featureName,
+            'default',
+            [newVariant],
+            {
+                createdAt: undefined,
+                email: '',
+                id: 0,
+                imageUrl: '',
+                loginAttempts: 0,
+                name: '',
+                permissions: [],
+                seenAt: undefined,
+                username: '',
+                generateImageUrl(): string {
+                    return '';
+                },
+                isAPI: true,
+            },
+            [],
+        ),
+    ).rejects.toThrowError(new NoAccessError(SKIP_CHANGE_REQUEST));
+});
+
+test('If CRs are protected for any environment in the project stops bulk update of variants', async () => {
+    const user = { email: 'test@example.com', username: 'test-user' } as User;
+    const project = await stores.projectStore.create({
+        id: 'crOnVariantsProject',
+        name: 'crOnVariantsProject',
+    });
+    const enabledEnv = await stores.environmentStore.create({
+        name: 'crenabledenv',
+        type: 'production',
+    });
+    const disabledEnv = await stores.environmentStore.create({
+        name: 'crdisabledenv',
+        type: 'production',
+    });
+
+    await stores.projectStore.addEnvironmentToProject(
+        project.id,
+        enabledEnv.name,
+    );
+    await stores.projectStore.addEnvironmentToProject(
+        project.id,
+        disabledEnv.name,
+    );
+    const groupService = new GroupService(stores, unleashConfig);
+    const accessService = new AccessService(
+        stores,
+        unleashConfig,
+        groupService,
+    );
+    // Force all feature flags on to make sure we have Change requests on
+    const customFeatureService = new FeatureToggleService(
+        stores,
+        {
+            ...unleashConfig,
+            flagResolver: {
+                isEnabled: () => true,
+            },
+        },
+        segmentService,
+        accessService,
+    );
+
+    const toggle = await service.createFeatureToggle(
+        project.id,
+        { name: 'crOnVariantToggle' },
+        user.username,
+    );
+
+    const variant: IVariant = {
+        name: 'cr-enabled',
+        weight: 100,
+        weightType: 'variable',
+        stickiness: 'default',
+    };
+    await db.rawDatabase('change_request_settings').insert({
+        project: project.id,
+        environment: enabledEnv.name,
+    });
+
+    await customFeatureService.setVariantsOnEnvs(
+        project.id,
+        toggle.name,
+        [enabledEnv.name, disabledEnv.name],
+        [variant],
+        user,
+    );
+
+    const newVariants = [
+        { ...variant, weight: 500 },
+        {
+            name: 'cr-enabled-2',
+            weight: 500,
+            weightType: 'fix',
+            stickiness: 'default',
+        },
+    ];
+    return expect(async () =>
+        customFeatureService.crProtectedSetVariantsOnEnvs(
+            project.id,
+            toggle.name,
+            [enabledEnv.name, disabledEnv.name],
+            newVariants,
+            {
+                createdAt: undefined,
+                email: '',
+                id: 0,
+                imageUrl: '',
+                loginAttempts: 0,
+                name: '',
+                permissions: [],
+                seenAt: undefined,
+                username: '',
+                generateImageUrl(): string {
+                    return '';
+                },
+                isAPI: true,
+            },
+        ),
+    ).rejects.toThrowError(new NoAccessError(SKIP_CHANGE_REQUEST));
 });

@@ -1,15 +1,21 @@
 import { VFC } from 'react';
-import { Tooltip } from '@mui/material';
+import { styled, Tooltip } from '@mui/material';
 import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
 import useFeatureTypes from 'hooks/api/getters/useFeatureTypes/useFeatureTypes';
-import { useStyles } from './FeatureTypeCell.styles';
 
 interface IFeatureTypeProps {
     value?: string;
 }
 
+const StyledContainer = styled('div')(({ theme }) => ({
+    padding: theme.spacing(1.5),
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: theme.palette.text.disabled,
+}));
+
 export const FeatureTypeCell: VFC<IFeatureTypeProps> = ({ value }) => {
-    const { classes: styles } = useStyles();
     const { featureTypes } = useFeatureTypes();
     const IconComponent = getFeatureTypeIcons(value);
 
@@ -20,10 +26,10 @@ export const FeatureTypeCell: VFC<IFeatureTypeProps> = ({ value }) => {
     const title = `This is a "${typeName || value}" toggle`;
 
     return (
-        <div className={styles.container}>
+        <StyledContainer>
             <Tooltip arrow title={title} describeChild>
-                <IconComponent data-loading className={styles.icon} />
+                <IconComponent data-loading />
             </Tooltip>
-        </div>
+        </StyledContainer>
     );
 };

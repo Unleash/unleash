@@ -1,85 +1,27 @@
-import { makeStyles } from 'tss-react/mui';
+import { styled } from '@mui/material';
 
-export const useStyles = makeStyles()(theme => ({
-    projectInfo: {
-        width: '225px',
+export const StyledProjectInfoWidgetContainer = styled('div')(({ theme }) => ({
+    margin: '0',
+    textAlign: 'center',
+    backgroundColor: theme.palette.background.paper,
+    borderRadius: theme.shape.borderRadiusLarge,
+    width: '100%',
+    minWidth: 225,
+    padding: theme.spacing(3),
+    [theme.breakpoints.down('md')]: {
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center',
-        boxShadow: 'none',
-        [theme.breakpoints.down('md')]: {
-            flexDirection: 'row',
-            alignItems: 'stretch',
-            width: '100%',
-            marginBottom: '1rem',
-        },
+        position: 'relative',
+        padding: theme.spacing(1.5),
     },
-    percentageContainer: {
-        display: 'flex',
-        justifyContent: 'center',
-        margin: '1rem 0',
-    },
-    projectIcon: {
-        margin: '2rem 0',
-        [theme.breakpoints.down('md')]: {
-            margin: '0 0 0.25rem 0',
-            width: '53px',
-        },
-    },
-    subtitle: {
-        marginBottom: '1rem',
-    },
-    emphazisedText: {
-        fontSize: '1.5rem',
-        marginBottom: '1rem',
-        [theme.breakpoints.down('md')]: {
-            fontSize: '1rem',
-            marginBottom: '2rem',
-        },
-    },
-    infoSection: {
-        margin: '0',
-        textAlign: 'center',
-        marginBottom: '1rem',
-        backgroundColor: theme.palette.background.paper,
-        borderRadius: theme.shape.borderRadiusLarge,
-        width: '100%',
-        padding: '1.5rem 1rem 1.5rem 1rem',
-        [theme.breakpoints.down('md')]: {
-            margin: '0 0.25rem',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '0.8rem',
-            position: 'relative',
-            padding: '0.8rem',
-            '&:first-of-type': {
-                marginLeft: '0',
-            },
-            '&:last-of-type': {
-                marginRight: '0',
-            },
-        },
-    },
-    arrowIcon: {
-        color: '#635dc5',
-        marginLeft: '0.5rem',
-    },
-    permissionButtonShortDesc: {
-        transform: `translateY(-10px)`,
-    },
-    infoLink: {
-        textDecoration: 'none',
-        color: '#635dc5',
-        [theme.breakpoints.down('md')]: {
-            position: 'absolute',
-            bottom: '5px',
-        },
-    },
-    linkText: {
-        [theme.breakpoints.down('md')]: {
-            display: 'none',
-        },
-    },
+}));
+
+export const StyledWidgetTitle = styled('p')(({ theme }) => ({
+    marginBottom: theme.spacing(2.5),
+}));
+
+export const StyledCount = styled('span')(({ theme }) => ({
+    fontSize: theme.typography.h2.fontSize,
+    fontWeight: 'bold',
+    color: theme.palette.text.primary,
 }));

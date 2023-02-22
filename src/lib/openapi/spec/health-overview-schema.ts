@@ -6,6 +6,8 @@ import { featureStrategySchema } from './feature-strategy-schema';
 import { featureSchema } from './feature-schema';
 import { constraintSchema } from './constraint-schema';
 import { environmentSchema } from './environment-schema';
+import { featureEnvironmentSchema } from './feature-environment-schema';
+import { projectStatsSchema } from './project-stats-schema';
 
 export const healthOverviewSchema = {
     $id: '#/components/schemas/healthOverviewSchema',
@@ -21,6 +23,7 @@ export const healthOverviewSchema = {
         },
         description: {
             type: 'string',
+            nullable: true,
         },
         members: {
             type: 'number',
@@ -48,16 +51,22 @@ export const healthOverviewSchema = {
         favorite: {
             type: 'boolean',
         },
+        stats: {
+            $ref: '#/components/schemas/projectStatsSchema',
+            description: 'Project statistics',
+        },
     },
     components: {
         schemas: {
             constraintSchema,
             environmentSchema,
             featureSchema,
+            featureEnvironmentSchema,
             overrideSchema,
             parametersSchema,
             featureStrategySchema,
             variantSchema,
+            projectStatsSchema,
         },
     },
 } as const;

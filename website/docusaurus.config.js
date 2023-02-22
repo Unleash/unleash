@@ -1,3 +1,43 @@
+const { sdks } = require('./remote-content/sdks');
+const { docs: edgeAndProxy } = require('./remote-content/edge-proxy');
+
+// for a given redirect object, modify it's `from` property such that for every
+// path that doesn't start with `/docs/`, a corresponding path that _does_ start
+// with `/docs/` is added.
+//
+// For instance, given the object
+//
+// {
+//   to: '/new/path',
+//   from: ['/old/path', '/docs/other/old/path'],
+// }
+//
+// it will produce
+//
+// {
+//   to: '/new/path',
+//   from: ['/old/path', '/docs/old/path', '/docs/other/old/path'],
+// }
+//
+const addDocsRoutePrefix = ({ from, ...rest }) => {
+    const addDocs = (from) => {
+        if (Array.isArray(from)) {
+            // if `from` is a list, then check each entry
+            return from.flatMap(addDocs);
+        } else {
+            if (from.startsWith('/docs/')) {
+                return [from];
+            } else {
+                return [from, `/docs${from}`];
+            }
+        }
+    };
+
+    return {
+        ...rest,
+        from: addDocs(from),
+    };
+};
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 module.exports = {
     title: 'Unleash',
@@ -10,6 +50,7 @@ module.exports = {
     organizationName: 'Unleash', // Usually your GitHub org/user name.
     projectName: 'unleash.github.io', // Usually your repo name.
     trailingSlash: false,
+    markdown: { mermaid: true },
     customFields: {
         // expose env vars etc here
         unleashProxyUrl: process.env.UNLEASH_PROXY_URL,
@@ -25,12 +66,6 @@ module.exports = {
             appId: '5U05JI5NE1',
             apiKey: 'dc9c4491fcf9143ee34015f22d1dd9d6',
             indexName: 'getunleash',
-        },
-        announcementBar: {
-            id: 'strategy-constraints-announcement',
-            content:
-                '🚀 Unleash brings powerful Constraints feature to OSS users. <a href=https://www.getunleash.io/blog/unleash-brings-powerful-constraints-feature-to-oss-users title="Unleash blog: Constraints are now available to open-source users">Read more</a> →',
-            isCloseable: true,
         },
         navbar: {
             title: 'Unleash',
@@ -55,11 +90,13 @@ module.exports = {
         prism: {
             additionalLanguages: [
                 'csharp',
+                'dart',
                 'http',
                 'java',
                 'kotlin',
                 'php',
                 'ruby',
+                'rust',
                 'swift',
             ],
         },
@@ -79,7 +116,11 @@ module.exports = {
                         },
                         {
                             label: 'Roadmap',
-                            href: 'https://github.com/orgs/Unleash/projects/5',
+                            href: 'https://github.com/orgs/Unleash/projects/10',
+                        },
+                        {
+                            label: 'Unleash help center',
+                            href: 'https://getunleash.zendesk.com/hc/en-gb',
                         },
                     ],
                 },
@@ -87,12 +128,16 @@ module.exports = {
                     title: 'Community',
                     items: [
                         {
-                            label: 'Stack Overflow',
-                            href: 'https://stackoverflow.com/questions/tagged/unleash',
+                            label: 'GitHub discussions',
+                            href: 'https://github.com/unleash/unleash/discussions/',
                         },
                         {
                             label: 'Slack',
                             href: 'https://slack.unleash.run/',
+                        },
+                        {
+                            label: 'Stack Overflow',
+                            href: 'https://stackoverflow.com/questions/tagged/unleash',
                         },
                         {
                             label: 'Twitter',
@@ -172,7 +217,10 @@ module.exports = {
                         to: '/reference/archived-toggles',
                     },
                     {
-                        from: '/advanced/custom-activation-strategy',
+                        from: [
+                            '/advanced/custom-activation-strategy',
+                            '/advanced/custom_activation_strategy',
+                        ],
                         to: '/reference/custom-activation-strategies',
                     },
                     {
@@ -183,6 +231,7 @@ module.exports = {
                         from: [
                             '/toggle_variants',
                             '/advanced/feature_toggle_variants',
+                            '/advanced/toggle_variants',
                         ],
                         to: '/reference/feature-toggle-variants',
                     },
@@ -360,11 +409,14 @@ module.exports = {
                         to: '/reference/sdks/ios-proxy',
                     },
                     {
-                        from: '/sdks/javascript-browser',
+                        from: [
+                            '/sdks/proxy-javascript',
+                            '/sdks/javascript-browser',
+                        ],
                         to: '/reference/sdks/javascript-browser',
                     },
                     {
-                        from: '/sdks/react',
+                        from: ['/sdks/proxy-react', '/sdks/react'],
                         to: '/reference/sdks/react',
                     },
                     {
@@ -427,7 +479,10 @@ module.exports = {
                         to: '/tutorials/important-concepts',
                     },
                     {
-                        from: '/user_guide/quickstart',
+                        from: [
+                            '/user_guide/quickstart',
+                            '/docs/getting_started',
+                        ],
                         to: '/tutorials/quickstart',
                     },
                     {
@@ -518,7 +573,11 @@ module.exports = {
                         from: '/api/internal/health',
                         to: '/reference/api/legacy/unleash/internal/health',
                     },
-                ],
+                    {
+                        from: '/help',
+                        to: '/',
+                    },
+                ].map(addDocsRoutePrefix), // add /docs prefixes
                 createRedirects: function (toPath) {
                     if (
                         toPath.indexOf('/docs/') === -1 &&
@@ -549,6 +608,31 @@ module.exports = {
                 },
             },
         ],
+        [
+            'docusaurus-plugin-remote-content',
+            {
+                // more info at https://github.com/rdilweb/docusaurus-plugin-remote-content#options
+                name: 'content-sdks',
+                sourceBaseUrl: 'https://raw.githubusercontent.com/Unleash/', // gets prepended to all of the documents when fetching
+                outDir: 'docs/generated', // the base directory to output to.
+                documents: sdks.urls, // the file names to download
+                modifyContent: sdks.modifyContent,
+            },
+        ],
+        [
+            'docusaurus-plugin-remote-content',
+            {
+                // more info at https://github.com/rdilweb/docusaurus-plugin-remote-content#options
+                name: 'content-external',
+                sourceBaseUrl: 'https://raw.githubusercontent.com/Unleash/', // gets prepended to all of the documents when fetching
+                outDir: 'docs/generated/', // the base directory to output to.
+                documents: edgeAndProxy.urls, // the file names to download
+                modifyContent: edgeAndProxy.modifyContent,
+            },
+        ],
     ],
-    themes: ['docusaurus-theme-openapi-docs'], // Allows use of @theme/ApiItem and other components
+    themes: [
+        'docusaurus-theme-openapi-docs', // Allows use of @theme/ApiItem and other components
+        '@docusaurus/theme-mermaid',
+    ],
 };

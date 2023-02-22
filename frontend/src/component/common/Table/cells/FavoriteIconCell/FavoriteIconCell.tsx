@@ -6,35 +6,45 @@ import {
 } from '@mui/icons-material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
+const StyledCell = styled(Box)(({ theme }) => ({
+    paddingLeft: theme.spacing(1.25),
+}));
+
+const StyledIconButton = styled(IconButton)(({ theme }) => ({
+    color: theme.palette.primary.main,
+    padding: theme.spacing(1.25),
+}));
+
+const StyledIconButtonInactive = styled(StyledIconButton)({
+    opacity: 0,
+});
+
 interface IFavoriteIconCellProps {
     value?: boolean;
     onClick?: () => void;
 }
 
-const InactiveIconButton = styled(IconButton)(({ theme }) => ({
-    color: 'transparent',
-    '&:hover, &:focus': {
-        color: theme.palette.primary.main,
-    },
-}));
-
 export const FavoriteIconCell: VFC<IFavoriteIconCellProps> = ({
-    value = false,
+    value,
     onClick,
 }) => (
-    <Box sx={{ pl: 1.25 }}>
+    <StyledCell>
         <ConditionallyRender
-            condition={value}
+            condition={Boolean(value)}
             show={
-                <IconButton onClick={onClick} color="primary" size="small">
+                <StyledIconButton onClick={onClick} size="small">
                     <StarIcon fontSize="small" />
-                </IconButton>
+                </StyledIconButton>
             }
             elseShow={
-                <InactiveIconButton onClick={onClick} size="small">
+                <StyledIconButtonInactive
+                    className="show-row-hover"
+                    onClick={onClick}
+                    size="small"
+                >
                     <StarBorderIcon fontSize="small" />
-                </InactiveIconButton>
+                </StyledIconButtonInactive>
             }
         />
-    </Box>
+    </StyledCell>
 );

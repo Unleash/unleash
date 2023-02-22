@@ -1,13 +1,13 @@
 import EventEmitter from 'events';
-import { Knex } from 'knex';
 import { Logger, LogProvider } from '../logger';
 import {
     IClientInstance,
     IClientInstanceStore,
     INewClientInstance,
 } from '../types/stores/client-instance-store';
-import { hoursToMilliseconds } from 'date-fns';
+import { subDays } from 'date-fns';
 import Timeout = NodeJS.Timeout;
+import { Db } from './db';
 
 const metricsHelper = require('../util/metrics-helper');
 const { DB_TIME } = require('../metric-events');
@@ -43,7 +43,7 @@ const mapToDb = (client) => ({
 });
 
 export default class ClientInstanceStore implements IClientInstanceStore {
-    private db: Knex;
+    private db: Db;
 
     private logger: Logger;
 
@@ -53,7 +53,7 @@ export default class ClientInstanceStore implements IClientInstanceStore {
 
     private timer: Timeout;
 
-    constructor(db: Knex, eventBus: EventEmitter, getLogger: LogProvider) {
+    constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
         this.eventBus = eventBus;
         this.logger = getLogger('client-instance-store.ts');
@@ -62,12 +62,9 @@ export default class ClientInstanceStore implements IClientInstanceStore {
                 store: 'instance',
                 action,
             });
-        const clearer = () => this._removeInstancesOlderThanTwoDays();
-        setTimeout(clearer, 10).unref();
-        this.timer = setInterval(clearer, hoursToMilliseconds(24)).unref();
     }
 
-    async _removeInstancesOlderThanTwoDays(): Promise<void> {
+    async removeInstancesOlderThanTwoDays(): Promise<void> {
         const rows = await this.db(TABLE)
             .whereRaw("created_at < now() - interval '2 days'")
             .del();
@@ -180,6 +177,20 @@ export default class ClientInstanceStore implements IClientInstanceStore {
             .orderBy('app_name', 'desc');
 
         return rows.map((r) => r.app_name);
+    }
+
+    async getDistinctApplicationsCount(daysBefore?: number): Promise<number> {
+        let query = this.db.from(TABLE);
+        if (daysBefore) {
+            query = query.where(
+                'last_seen',
+                '>',
+                subDays(new Date(), daysBefore),
+            );
+        }
+        return query
+            .countDistinct('app_name')
+            .then((res) => Number(res[0].count));
     }
 
     async deleteForApplication(appName: string): Promise<void> {

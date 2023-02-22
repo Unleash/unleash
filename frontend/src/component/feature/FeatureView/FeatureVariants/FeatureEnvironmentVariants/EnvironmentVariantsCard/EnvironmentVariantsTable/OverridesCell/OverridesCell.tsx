@@ -1,18 +1,12 @@
-import { Link, styled, Typography } from '@mui/material';
+import { styled, Typography } from '@mui/material';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
-import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
+import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import { IOverride } from 'interfaces/featureToggle';
 
 const StyledItem = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,
-}));
-
-const StyledLink = styled(Link, {
-    shouldForwardProp: prop => prop !== 'highlighted',
-})<{ highlighted?: boolean }>(({ theme, highlighted }) => ({
-    backgroundColor: highlighted ? theme.palette.highlight : 'transparent',
 }));
 
 interface IOverridesCellProps {
@@ -29,8 +23,8 @@ export const OverridesCell = ({ value: overrides }: IOverridesCellProps) => {
 
     return (
         <TextCell>
-            <HtmlTooltip
-                title={
+            <TooltipLink
+                tooltip={
                     <>
                         {overrides.map((override, index) => (
                             <StyledItem key={override.contextName + index}>
@@ -41,23 +35,19 @@ export const OverridesCell = ({ value: overrides }: IOverridesCellProps) => {
                         ))}
                     </>
                 }
+                highlighted={
+                    searchQuery.length > 0 &&
+                    overrides
+                        ?.map(overrideToString)
+                        .join('\n')
+                        .toLowerCase()
+                        .includes(searchQuery.toLowerCase())
+                }
             >
-                <StyledLink
-                    underline="always"
-                    highlighted={
-                        searchQuery.length > 0 &&
-                        overrides
-                            ?.map(overrideToString)
-                            .join('\n')
-                            .toLowerCase()
-                            .includes(searchQuery.toLowerCase())
-                    }
-                >
-                    {overrides.length === 1
-                        ? '1 override'
-                        : `${overrides.length} overrides`}
-                </StyledLink>
-            </HtmlTooltip>
+                {overrides.length === 1
+                    ? '1 override'
+                    : `${overrides.length} overrides`}
+            </TooltipLink>
         </TextCell>
     );
 };

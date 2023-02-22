@@ -1,10 +1,9 @@
 import useSWR, { SWRConfiguration } from 'swr';
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 import { emptyFeature } from './emptyFeature';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { formatApiPath } from 'utils/formatPath';
 import { IFeatureToggle } from 'interfaces/featureToggle';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 export interface IUseFeatureOutput {
     feature: IFeatureToggle;
@@ -26,24 +25,15 @@ export const useFeature = (
 ): IUseFeatureOutput => {
     const path = formatFeatureApiPath(projectId, featureId);
 
-    const { uiConfig } = useUiConfig();
-    const {
-        flags: { variantsPerEnvironment },
-    } = uiConfig;
-
     const { data, error, mutate } = useSWR<IFeatureResponse>(
         ['useFeature', path],
-        () => featureFetcher(path, variantsPerEnvironment),
+        () => featureFetcher(path),
         options
     );
 
     const refetchFeature = useCallback(() => {
         mutate().catch(console.warn);
     }, [mutate]);
-
-    useEffect(() => {
-        mutate();
-    }, [mutate, variantsPerEnvironment]);
 
     return {
         feature: data?.body || emptyFeature,
@@ -55,14 +45,9 @@ export const useFeature = (
 };
 
 export const featureFetcher = async (
-    path: string,
-    variantsPerEnvironment?: boolean
+    path: string
 ): Promise<IFeatureResponse> => {
-    const variantEnvironments = variantsPerEnvironment
-        ? '?variantEnvironments=true'
-        : '';
-
-    const res = await fetch(path + variantEnvironments);
+    const res = await fetch(path);
 
     if (res.status === 404) {
         return { status: 404 };
@@ -83,6 +68,6 @@ export const formatFeatureApiPath = (
     featureId: string
 ): string => {
     return formatApiPath(
-        `api/admin/projects/${projectId}/features/${featureId}`
+        `api/admin/projects/${projectId}/features/${featureId}?variantEnvironments=true`
     );
 };

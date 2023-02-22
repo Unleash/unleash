@@ -1,5 +1,4 @@
 import EventEmitter from 'events';
-import { Knex } from 'knex';
 import {
     FeatureEnvironmentKey,
     IFeatureEnvironmentStore,
@@ -10,6 +9,7 @@ import { DB_TIME } from '../metric-events';
 import { IFeatureEnvironment, IVariant } from '../types/model';
 import NotFoundError from '../error/notfound-error';
 import { v4 as uuidv4 } from 'uuid';
+import { Db } from './db';
 
 const T = {
     featureEnvs: 'feature_environments',
@@ -30,13 +30,13 @@ interface ISegmentRow {
 }
 
 export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
-    private db: Knex;
+    private db: Db;
 
     private logger: Logger;
 
     private readonly timer: Function;
 
-    constructor(db: Knex, eventBus: EventEmitter, getLogger: LogProvider) {
+    constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
         this.logger = getLogger('feature-environment-store.ts');
         this.timer = (action) =>
@@ -99,6 +99,24 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
         let rows = this.db(T.featureEnvs);
         if (query) {
             rows = rows.where(query);
+        }
+        return (await rows).map((r) => ({
+            enabled: r.enabled,
+            featureName: r.feature_name,
+            environment: r.environment,
+            variants: r.variants,
+        }));
+    }
+
+    async getAllByFeatures(
+        features: string[],
+        environment?: string,
+    ): Promise<IFeatureEnvironment[]> {
+        let rows = this.db(T.featureEnvs)
+            .whereIn('feature_name', features)
+            .orderBy('feature_name', 'asc');
+        if (environment) {
+            rows = rows.where({ environment });
         }
         return (await rows).map((r) => ({
             enabled: r.enabled,
@@ -356,15 +374,29 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
         environment: string,
         variants: IVariant[],
     ): Promise<void> {
+        return this.setVariantsToFeatureEnvironments(
+            featureName,
+            [environment],
+            variants,
+        );
+    }
+
+    async setVariantsToFeatureEnvironments(
+        featureName: string,
+        environments: string[],
+        variants: IVariant[],
+    ): Promise<void> {
         let v = variants || [];
         v.sort((a, b) => a.name.localeCompare(b.name));
+        const variantsString = JSON.stringify(v);
+        const records = environments.map((env) => ({
+            variants: variantsString,
+            enabled: false, // default value for enabled in case it's not set
+            feature_name: featureName,
+            environment: env,
+        }));
         await this.db(T.featureEnvs)
-            .insert({
-                variants: JSON.stringify(v),
-                enabled: false,
-                feature_name: featureName,
-                environment: environment,
-            })
+            .insert(records)
             .onConflict(['feature_name', 'environment'])
             .merge(['variants']);
     }

@@ -3,14 +3,15 @@ import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironmen
 import { IApiTokenCreate } from 'hooks/api/actions/useApiTokensApi/useApiTokensApi';
 
 export type ApiTokenFormErrorType = 'username' | 'projects';
-
-export const useApiTokenForm = () => {
+export const useApiTokenForm = (project?: string) => {
     const { environments } = useEnvironments();
     const initialEnvironment = environments?.find(e => e.enabled)?.name;
 
     const [username, setUsername] = useState('');
     const [type, setType] = useState('CLIENT');
-    const [projects, setProjects] = useState<string[]>(['*']);
+    const [projects, setProjects] = useState<string[]>([
+        project ? project : '*',
+    ]);
     const [memorizedProjects, setMemorizedProjects] =
         useState<string[]>(projects);
     const [environment, setEnvironment] = useState<string>();

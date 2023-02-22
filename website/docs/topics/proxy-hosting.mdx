@@ -2,7 +2,7 @@
 title: Proxy hosting strategies
 ---
 
-Because the [Unleash proxy](../reference/unleash-proxy.md) is a separate piece of the Unleash architecture and because it should sit close to your application, there are numerous ways of hosting it. Another important distinction is whether you're hosting Unleash yourself or you have a managed solution.
+Because the [Unleash proxy](../generated/unleash-proxy.md) is a separate piece of the Unleash architecture and because it should sit close to your application, there are numerous ways of hosting it. Another important distinction is whether you're hosting Unleash yourself or you have a managed solution.
 
 This document describes the three main ways of hosting the proxy alongside the Unleash API and the tradeoffs between hosting the proxy yourself and having Unleash host it for you.
 
@@ -15,7 +15,7 @@ If you want Unleash to host the proxy for you, you should be aware of the follow
 -   This is only available to Pro and Enterprise customers who have signed up for a managed Unleash instance.
 -   Pro customers will get a total of two (2) proxies: One for the "development" environment and one for the "production" environment.
 -   We do allow short spikes in traffic and our adaptive infrastructure will automatically scale your needs.
--   If you go above an average of 10 requests per second, then you'll be charged extra for the hosted proxy.
+-   Please check the [Fair Use Policy](https://www.getunleash.io/fair-use-policy) to see the limits of the Unleash-hosted proxy.
 -   There's no guarantee that it'll be close to your applications. This means you'll get higher response times.
 -   When we host the proxy, we will also receive whatever end user data you put in the [Unleash context](../reference/unleash-context.md). This may or may not be an issue depending on your business requirements.
 

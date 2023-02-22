@@ -17,6 +17,7 @@ import { ensureStringValue } from '../util/ensureStringValue';
 import { mapValues } from '../util/map-values';
 import { IFlagResolver } from '../types/experimental';
 import Raw = Knex.Raw;
+import { Db } from './db';
 
 export interface FeaturesTable {
     name: string;
@@ -46,7 +47,7 @@ export interface IGetAdminFeatures {
 export default class FeatureToggleClientStore
     implements IFeatureToggleClientStore
 {
-    private db: Knex;
+    private db: Db;
 
     private logger: Logger;
 
@@ -57,7 +58,7 @@ export default class FeatureToggleClientStore
     private flagResolver: IFlagResolver;
 
     constructor(
-        db: Knex,
+        db: Db,
         eventBus: EventEmitter,
         getLogger: LogProvider,
         inlineSegmentConstraints: boolean,
@@ -135,20 +136,18 @@ export default class FeatureToggleClientStore
             .leftJoin('segments', `segments.id`, `fss.segment_id`);
 
         if (isAdmin) {
-            if (this.flagResolver.isEnabled('toggleTagFiltering')) {
-                query = query.leftJoin(
-                    'feature_tag as ft',
-                    'ft.feature_name',
-                    'features.name',
-                );
-                selectColumns = [
-                    ...selectColumns,
-                    'ft.tag_value as tag_value',
-                    'ft.tag_type as tag_type',
-                ];
-            }
+            query = query.leftJoin(
+                'feature_tag as ft',
+                'ft.feature_name',
+                'features.name',
+            );
+            selectColumns = [
+                ...selectColumns,
+                'ft.tag_value as tag_value',
+                'ft.tag_type as tag_type',
+            ];
 
-            if (userId && this.flagResolver.isEnabled('favorites')) {
+            if (userId) {
                 query = query.leftJoin(`favorite_features`, function () {
                     this.on(
                         'favorite_features.feature',

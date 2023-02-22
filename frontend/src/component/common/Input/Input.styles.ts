@@ -4,9 +4,9 @@ export const useStyles = makeStyles()(theme => ({
     helperText: {
         position: 'absolute',
         bottom: '-1rem',
-    },
-    inputContainer: {
-        width: '100%',
-        position: 'relative',
+        whiteSpace: 'nowrap',
+        maxWidth: '100%',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
     },
 }));

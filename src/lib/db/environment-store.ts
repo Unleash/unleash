@@ -1,5 +1,5 @@
 import EventEmitter from 'events';
-import { Knex } from 'knex';
+import { Db } from './db';
 import { Logger, LogProvider } from '../logger';
 import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
@@ -95,11 +95,11 @@ const TABLE = 'environments';
 export default class EnvironmentStore implements IEnvironmentStore {
     private logger: Logger;
 
-    private db: Knex;
+    private db: Db;
 
     private timer: (string) => any;
 
-    constructor(db: Knex, eventBus: EventEmitter, getLogger: LogProvider) {
+    constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
         this.logger = getLogger('db/environment-store.ts');
         this.timer = (action) =>
@@ -183,6 +183,7 @@ export default class EnvironmentStore implements IEnvironmentStore {
 
     async getProjectEnvironments(
         projectId: string,
+        query?: Object,
     ): Promise<IProjectEnvironment[]> {
         let qB = this.db<IEnvironmentsWithProjectCountsTable>(TABLE)
             .select(
@@ -200,7 +201,13 @@ export default class EnvironmentStore implements IEnvironmentStore {
                 { column: 'sort_order', order: 'asc' },
                 { column: 'created_at', order: 'asc' },
             ]);
+
+        if (query) {
+            qB = qB.where(query);
+        }
+
         const rows = await qB;
+
         return rows.map(mapRowWithProjectCounts);
     }
 

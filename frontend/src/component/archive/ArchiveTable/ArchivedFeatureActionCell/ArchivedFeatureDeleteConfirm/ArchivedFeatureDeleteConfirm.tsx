@@ -15,7 +15,7 @@ interface IArchivedFeatureDeleteConfirmProps {
 }
 
 const StyledDeleteParagraph = styled('p')(({ theme }) => ({
-    marginTop: theme.spacing(4),
+    marginTop: theme.spacing(3),
 }));
 
 const StyledFormInput = styled(Input)(({ theme }) => ({
@@ -79,9 +79,7 @@ export const ArchivedFeatureDeleteConfirm = ({
 
             <StyledDeleteParagraph>
                 In order to delete this feature toggle, please enter its name in
-                the text field below:
-                <br />
-                <strong>{deletedFeature?.name}</strong>
+                the text field below: <strong>{deletedFeature?.name}</strong>
             </StyledDeleteParagraph>
 
             <form id={formId}>

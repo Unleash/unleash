@@ -1,11 +1,10 @@
 import { Request, Response } from 'express';
 import { applyPatch, Operation } from 'fast-json-patch';
 import Controller from '../../controller';
-import { IUnleashConfig } from '../../../types/option';
-import { IUnleashServices } from '../../../types';
-import FeatureToggleService from '../../../services/feature-toggle-service';
-import { Logger } from '../../../logger';
 import {
+    IUnleashConfig,
+    IUnleashServices,
+    serializeDates,
     CREATE_FEATURE,
     CREATE_FEATURE_STRATEGY,
     DELETE_FEATURE,
@@ -14,35 +13,36 @@ import {
     UPDATE_FEATURE,
     UPDATE_FEATURE_ENVIRONMENT,
     UPDATE_FEATURE_STRATEGY,
-} from '../../../types/permissions';
-import { extractUsername } from '../../../util/extract-user';
+} from '../../../types';
+import { Logger } from '../../../logger';
+import { extractUsername } from '../../../util';
 import { IAuthRequest } from '../../unleash-types';
-import { CreateFeatureSchema } from '../../../openapi/spec/create-feature-schema';
 import {
+    AdminFeaturesQuerySchema,
+    CreateFeatureSchema,
+    CreateFeatureStrategySchema,
+    createRequestSchema,
+    createResponseSchema,
+    emptyResponse,
+    featureEnvironmentSchema,
+    FeatureEnvironmentSchema,
     featureSchema,
     FeatureSchema,
-} from '../../../openapi/spec/feature-schema';
-import { FeatureStrategySchema } from '../../../openapi/spec/feature-strategy-schema';
-import { ParametersSchema } from '../../../openapi/spec/parameters-schema';
-import {
     featuresSchema,
     FeaturesSchema,
-} from '../../../openapi/spec/features-schema';
-import { UpdateFeatureSchema } from '../../../openapi/spec/update-feature-schema';
-import { UpdateFeatureStrategySchema } from '../../../openapi/spec/update-feature-strategy-schema';
-import { CreateFeatureStrategySchema } from '../../../openapi/spec/create-feature-strategy-schema';
-import { serializeDates } from '../../../types/serialize-dates';
-import { OpenApiService } from '../../../services/openapi-service';
-import { createRequestSchema } from '../../../openapi/util/create-request-schema';
-import { createResponseSchema } from '../../../openapi/util/create-response-schema';
-import { FeatureEnvironmentSchema } from '../../../openapi/spec/feature-environment-schema';
-import { SetStrategySortOrderSchema } from '../../../openapi/spec/set-strategy-sort-order-schema';
-
-import {
-    emptyResponse,
+    FeatureStrategySchema,
     getStandardResponses,
-} from '../../../openapi/util/standard-responses';
-import { SegmentService } from '../../../services/segment-service';
+    ParametersSchema,
+    SetStrategySortOrderSchema,
+    UpdateFeatureSchema,
+    UpdateFeatureStrategySchema,
+} from '../../../openapi';
+import {
+    OpenApiService,
+    SegmentService,
+    FeatureToggleService,
+} from '../../../services';
+import { querySchema } from '../../../schema/feature-schema';
 
 interface FeatureStrategyParams {
     projectId: string;
@@ -66,6 +66,9 @@ interface StrategyIdParams extends FeatureStrategyParams {
 export interface IFeatureProjectUserParams extends ProjectParam {
     archived?: boolean;
     userId?: number;
+
+    tag?: string[][];
+    namePrefix?: string;
 }
 
 const PATH = '/:projectId/features';
@@ -399,19 +402,45 @@ export default class ProjectFeaturesController extends Controller {
     }
 
     async getFeatures(
-        req: IAuthRequest<ProjectParam, any, any, any>,
+        req: IAuthRequest<ProjectParam, any, any, AdminFeaturesQuerySchema>,
         res: Response<FeaturesSchema>,
     ): Promise<void> {
         const { projectId } = req.params;
-        const features = await this.featureService.getFeatureOverview({
-            projectId,
-        });
+        const query = await this.prepQuery(req.query, projectId);
+        const features = await this.featureService.getFeatureOverview(query);
         this.openApiService.respondWithValidation(
             200,
             res,
             featuresSchema.$id,
             { version: 2, features: serializeDates(features) },
         );
+    }
+
+    async prepQuery(
+        // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+        { tag, namePrefix }: AdminFeaturesQuerySchema,
+        projectId: string,
+    ): Promise<IFeatureProjectUserParams> {
+        if (!tag && !namePrefix) {
+            return { projectId };
+        }
+        const tagQuery = this.paramToArray(tag);
+        const query = await querySchema.validateAsync({
+            tag: tagQuery,
+            namePrefix,
+        });
+        if (query.tag) {
+            query.tag = query.tag.map((q) => q.split(':'));
+        }
+        return { projectId, ...query };
+    }
+
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    paramToArray(param: any): Array<any> {
+        if (!param) {
+            return param;
+        }
+        return Array.isArray(param) ? param : [param];
     }
 
     async cloneFeature(
@@ -558,11 +587,26 @@ export default class ProjectFeaturesController extends Controller {
             environment,
             featureName,
         );
+
+        const result = {
+            ...environmentInfo,
+            strategies: environmentInfo.strategies.map((strategy) => {
+                const {
+                    strategyName,
+                    projectId: project,
+                    environment: environmentId,
+                    createdAt,
+                    ...rest
+                } = strategy;
+                return { ...rest, name: strategyName };
+            }),
+        };
+
         this.openApiService.respondWithValidation(
             200,
             res,
-            featureSchema.$id,
-            serializeDates(environmentInfo),
+            featureEnvironmentSchema.$id,
+            serializeDates(result),
         );
     }
 
@@ -618,6 +662,7 @@ export default class ProjectFeaturesController extends Controller {
             strategyConfig,
             { environment, projectId, featureName },
             userName,
+            req.user,
         );
 
         const updatedStrategy = await this.featureService.getStrategy(
@@ -674,6 +719,7 @@ export default class ProjectFeaturesController extends Controller {
             req.body,
             { environment, projectId, featureName },
             userName,
+            req.user,
         );
         res.status(200).json(updatedStrategy);
     }
@@ -692,6 +738,7 @@ export default class ProjectFeaturesController extends Controller {
             newDocument,
             { environment, projectId, featureName },
             userName,
+            req.user,
         );
         res.status(200).json(updatedStrategy);
     }
@@ -720,6 +767,7 @@ export default class ProjectFeaturesController extends Controller {
             strategyId,
             { environment, projectId, featureName },
             userName,
+            req.user,
         );
         res.status(200).json(strategy);
     }

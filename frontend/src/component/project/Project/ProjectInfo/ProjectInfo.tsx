@@ -1,104 +1,134 @@
-import { useStyles } from './ProjectInfo.styles';
-import { Link } from 'react-router-dom';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import classnames from 'classnames';
-
-import { useThemeStyles } from 'themes/themeStyles';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import PercentageCircle from 'component/common/PercentageCircle/PercentageCircle';
+import { Box, styled, useMediaQuery, useTheme } from '@mui/material';
+import type { ProjectStatsSchema } from 'openapi/models/projectStatsSchema';
+import type { IFeatureToggleListItem } from 'interfaces/featureToggle';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-
-import { DEFAULT_PROJECT_ID } from '../../../../hooks/api/getters/useDefaultProject/useDefaultProjectId';
+import { DEFAULT_PROJECT_ID } from 'hooks/api/getters/useDefaultProject/useDefaultProjectId';
+import { HealthWidget } from './HealthWidget';
+import { ToggleTypesWidget } from './ToggleTypesWidget';
+import { MetaWidget } from './MetaWidget';
+import { ProjectMembersWidget } from './ProjectMembersWidget';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { ChangeRequestsWidget } from './ChangeRequestsWidget';
+import { flexRow } from 'themes/themeStyles';
+import { LegacyHealthWidget } from './LegacyHealthWidget';
+import { LegacyProjectMembersWidget } from './LegacyProjectMembersWidget';
+import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 
 interface IProjectInfoProps {
     id: string;
     memberCount: number;
-    featureCount: number;
+    features: IFeatureToggleListItem[];
     health: number;
     description?: string;
+    stats: ProjectStatsSchema;
 }
+
+const StyledProjectInfoSidebarContainer = styled(Box)(({ theme }) => ({
+    ...flexRow,
+    width: '225px',
+    flexDirection: 'column',
+    gap: theme.spacing(2),
+    boxShadow: 'none',
+    [theme.breakpoints.down('md')]: {
+        display: 'grid',
+        width: '100%',
+        alignItems: 'stretch',
+        marginBottom: theme.spacing(2),
+    },
+    [theme.breakpoints.down('sm')]: {
+        display: 'flex',
+    },
+}));
 
 const ProjectInfo = ({
     id,
+    description,
     memberCount,
     health,
-    description,
+    features,
+    stats,
 }: IProjectInfoProps) => {
-    const { classes: themeStyles } = useThemeStyles();
-    const { classes: styles } = useStyles();
-    const { uiConfig } = useUiConfig();
+    const { uiConfig, isEnterprise } = useUiConfig();
+    const theme = useTheme();
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
+    const { isChangeRequestConfiguredInAnyEnv } = useChangeRequestsEnabled(id);
 
-    let link = `/admin/users`;
+    const showChangeRequestsWidget =
+        isEnterprise() && isChangeRequestConfiguredInAnyEnv();
+    const showProjectMembersWidget = id !== DEFAULT_PROJECT_ID;
+    const fitMoreColumns =
+        (!showChangeRequestsWidget && !showProjectMembersWidget) ||
+        (isSmallScreen && showChangeRequestsWidget && showProjectMembersWidget);
 
-    if (uiConfig?.versionInfo?.current?.enterprise) {
-        link = `/projects/${id}/access`;
+    if (!Boolean(uiConfig?.flags.newProjectOverview)) {
+        return (
+            <aside>
+                <Box
+                    sx={{
+                        display: 'grid',
+                        gridTemplateColumns:
+                            'repeat(auto-fit, minmax(225px, 1fr))',
+                        gap: theme => theme.spacing(2),
+                        paddingBottom: theme => theme.spacing(2),
+                    }}
+                >
+                    <LegacyHealthWidget projectId={id} health={health} />
+                    <ConditionallyRender
+                        condition={showProjectMembersWidget}
+                        show={
+                            <LegacyProjectMembersWidget
+                                projectId={id}
+                                memberCount={memberCount}
+                            />
+                        }
+                    />
+                </Box>
+            </aside>
+        );
     }
 
     return (
         <aside>
-            <div className={styles.projectInfo}>
-                <div className={styles.infoSection}>
-                    <div data-loading className={styles.percentageContainer}>
-                        <PercentageCircle percentage={health} />
-                    </div>
-                    <p className={styles.subtitle} data-loading>
-                        Overall health rating
-                    </p>
-                    <p className={styles.emphazisedText} data-loading>
-                        {health}%
-                    </p>
-                    <Link
-                        data-loading
-                        className={classnames(
-                            themeStyles.flexRow,
-                            themeStyles.justifyCenter,
-                            styles.infoLink
-                        )}
-                        to={`/projects/${id}/health`}
-                    >
-                        <span className={styles.linkText} data-loading>
-                            view more{' '}
-                        </span>
-                        <ArrowForwardIcon
-                            data-loading
-                            className={styles.arrowIcon}
-                        />
-                    </Link>
-                </div>
+            <StyledProjectInfoSidebarContainer
+                sx={
+                    fitMoreColumns
+                        ? {
+                              gridTemplateColumns:
+                                  'repeat(auto-fill, minmax(225px, 1fr))',
+                          }
+                        : { gridTemplateColumns: 'repeat(2, 1fr)' }
+                }
+            >
                 <ConditionallyRender
-                    condition={id !== DEFAULT_PROJECT_ID}
+                    condition={showChangeRequestsWidget}
                     show={
-                        <div
-                            className={styles.infoSection}
-                            style={{ marginBottom: '0' }}
+                        <Box
+                            sx={{
+                                gridColumnStart: showProjectMembersWidget
+                                    ? 'span 2'
+                                    : 'span 1',
+                                flex: 1,
+                                display: 'flex',
+                            }}
                         >
-                            <p className={styles.subtitle} data-loading>
-                                Project members
-                            </p>
-                            <p data-loading className={styles.emphazisedText}>
-                                {memberCount}
-                            </p>
-                            <Link
-                                data-loading
-                                className={classnames(
-                                    themeStyles.flexRow,
-                                    themeStyles.justifyCenter,
-                                    styles.infoLink
-                                )}
-                                to={link}
-                            >
-                                <span className={styles.linkText} data-loading>
-                                    view more{' '}
-                                </span>
-                                <ArrowForwardIcon
-                                    data-loading
-                                    className={styles.arrowIcon}
-                                />
-                            </Link>
-                        </div>
+                            <ChangeRequestsWidget projectId={id} />
+                        </Box>
                     }
                 />
-            </div>
+                <MetaWidget id={id} description={description} />
+                <HealthWidget projectId={id} health={health} />
+                <ConditionallyRender
+                    condition={showProjectMembersWidget}
+                    show={
+                        <ProjectMembersWidget
+                            projectId={id}
+                            memberCount={memberCount}
+                            change={stats?.projectMembersAddedCurrentWindow}
+                        />
+                    }
+                />
+                <ToggleTypesWidget features={features} />
+            </StyledProjectInfoSidebarContainer>
         </aside>
     );
 };

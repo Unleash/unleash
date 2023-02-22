@@ -1,11 +1,11 @@
 import EventEmitter from 'events';
 import { Logger, LogProvider } from '../logger';
-import { Knex } from 'knex';
 import { IFavoriteProject } from '../types/favorites';
 import {
     IFavoriteProjectKey,
     IFavoriteProjectsStore,
 } from '../types/stores/favorite-projects';
+import { Db } from './db';
 
 const T = {
     FAVORITE_PROJECTS: 'favorite_projects',
@@ -30,9 +30,9 @@ export class FavoriteProjectsStore implements IFavoriteProjectsStore {
 
     private eventBus: EventEmitter;
 
-    private db: Knex;
+    private db: Db;
 
-    constructor(db: Knex, eventBus: EventEmitter, getLogger: LogProvider) {
+    constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
         this.eventBus = eventBus;
         this.logger = getLogger('lib/db/favorites-store.ts');

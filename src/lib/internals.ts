@@ -13,3 +13,4 @@ export * from './services';
 export * from './types';
 export * from './util';
 export * from './error';
+export * from './features';

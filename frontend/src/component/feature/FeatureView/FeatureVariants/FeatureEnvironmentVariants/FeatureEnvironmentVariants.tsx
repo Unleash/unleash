@@ -10,15 +10,24 @@ import { updateWeight } from 'component/common/util';
 import { UPDATE_FEATURE_ENVIRONMENT_VARIANTS } from 'component/providers/AccessProvider/permissions';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { IFeatureEnvironment, IFeatureVariant } from 'interfaces/featureToggle';
-import { useState } from 'react';
-import { EnvironmentVariantModal } from './EnvironmentVariantModal/EnvironmentVariantModal';
+import {
+    IFeatureEnvironmentWithCrEnabled,
+    IFeatureVariant,
+} from 'interfaces/featureToggle';
+import { useMemo, useState } from 'react';
+import { EnvironmentVariantsModal } from './EnvironmentVariantsModal/EnvironmentVariantsModal';
 import { EnvironmentVariantsCard } from './EnvironmentVariantsCard/EnvironmentVariantsCard';
-import { VariantDeleteDialog } from './VariantDeleteDialog/VariantDeleteDialog';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
 import { EnvironmentVariantsCopyFrom } from './EnvironmentVariantsCopyFrom/EnvironmentVariantsCopyFrom';
+import { PushVariantsButton } from './PushVariantsButton/PushVariantsButton';
+import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
+import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
+import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
+import { Edit } from '@mui/icons-material';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(4),
@@ -33,6 +42,7 @@ const StyledButtonContainer = styled('div')(({ theme }) => ({
 }));
 
 export const FeatureEnvironmentVariants = () => {
+    const { uiConfig } = useUiConfig();
     const { setToastData, setToastApiError } = useToast();
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -43,14 +53,28 @@ export const FeatureEnvironmentVariants = () => {
         projectId,
         featureId
     );
-    const { patchFeatureEnvironmentVariants } = useFeatureApi();
+    const { patchFeatureEnvironmentVariants, overrideVariantsInEnvironments } =
+        useFeatureApi();
+    const { refetch: refetchChangeRequests } =
+        usePendingChangeRequests(projectId);
+    const { addChange } = useChangeRequestApi();
+    const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
 
     const [searchValue, setSearchValue] = useState('');
     const [selectedEnvironment, setSelectedEnvironment] =
-        useState<IFeatureEnvironment>();
-    const [selectedVariant, setSelectedVariant] = useState<IFeatureVariant>();
+        useState<IFeatureEnvironmentWithCrEnabled>();
     const [modalOpen, setModalOpen] = useState(false);
-    const [deleteOpen, setDeleteOpen] = useState(false);
+
+    const environments: IFeatureEnvironmentWithCrEnabled[] = useMemo(
+        () =>
+            feature?.environments?.map(environment => ({
+                ...environment,
+                crEnabled:
+                    uiConfig.flags.crOnVariants &&
+                    isChangeRequestConfigured(environment.name),
+            })) || [],
+        [feature.environments, uiConfig.flags.crOnVariants]
+    );
 
     const createPatch = (
         variants: IFeatureVariant[],
@@ -74,78 +98,123 @@ export const FeatureEnvironmentVariants = () => {
         }
     };
 
+    const getCrPayload = (variants: IFeatureVariant[]) => ({
+        feature: featureId,
+        action: 'patchVariant' as const,
+        payload: { variants },
+    });
+
     const updateVariants = async (
-        environment: IFeatureEnvironment,
+        environment: IFeatureEnvironmentWithCrEnabled,
         variants: IFeatureVariant[]
     ) => {
-        const environmentVariants = environment.variants ?? [];
-        const { patch } = getApiPayload(environmentVariants, variants);
+        if (environment.crEnabled) {
+            await addChange(
+                projectId,
+                environment.name,
+                getCrPayload(variants)
+            );
+            refetchChangeRequests();
+        } else {
+            const environmentVariants = environment.variants ?? [];
+            const { patch, error } = getApiPayload(
+                environmentVariants,
+                variants
+            );
 
-        if (patch.length === 0) return;
+            if (patch.length === 0) return;
 
-        await patchFeatureEnvironmentVariants(
-            projectId,
-            featureId,
-            environment.name,
-            patch
-        );
+            if (error) {
+                setToastData({
+                    type: 'error',
+                    title: error,
+                });
+                return;
+            }
+
+            await patchFeatureEnvironmentVariants(
+                projectId,
+                featureId,
+                environment.name,
+                patch
+            );
+        }
         refetchFeature();
     };
 
-    const addVariant = (environment: IFeatureEnvironment) => {
-        setSelectedEnvironment(environment);
-        setSelectedVariant(undefined);
-        setModalOpen(true);
-    };
-
-    const editVariant = (
-        environment: IFeatureEnvironment,
-        variant: IFeatureVariant
+    const pushToEnvironments = async (
+        variants: IFeatureVariant[],
+        selected: IFeatureEnvironmentWithCrEnabled[]
     ) => {
-        setSelectedEnvironment(environment);
-        setSelectedVariant(variant);
-        setModalOpen(true);
-    };
-
-    const deleteVariant = (
-        environment: IFeatureEnvironment,
-        variant: IFeatureVariant
-    ) => {
-        setSelectedEnvironment(environment);
-        setSelectedVariant(variant);
-        setDeleteOpen(true);
-    };
-
-    const onDeleteConfirm = async () => {
-        if (selectedEnvironment && selectedVariant) {
-            const variants = selectedEnvironment.variants ?? [];
-
-            const updatedVariants = variants.filter(
-                ({ name }) => name !== selectedVariant.name
+        try {
+            const selectedWithCrEnabled = selected.filter(
+                ({ crEnabled }) => crEnabled
+            );
+            const selectedWithCrDisabled = selected.filter(
+                ({ crEnabled }) => !crEnabled
             );
 
-            try {
-                await updateVariants(selectedEnvironment, updatedVariants);
-                setDeleteOpen(false);
-                setToastData({
-                    title: `Variant deleted successfully`,
-                    type: 'success',
-                });
-            } catch (error: unknown) {
-                setToastApiError(formatUnknownError(error));
+            if (selectedWithCrEnabled.length) {
+                await Promise.all(
+                    selectedWithCrEnabled.map(environment =>
+                        addChange(
+                            projectId,
+                            environment.name,
+                            getCrPayload(variants)
+                        )
+                    )
+                );
             }
+            if (selectedWithCrDisabled.length) {
+                await overrideVariantsInEnvironments(
+                    projectId,
+                    featureId,
+                    variants,
+                    selectedWithCrDisabled.map(({ name }) => name)
+                );
+            }
+            refetchChangeRequests();
+            refetchFeature();
+            const pushTitle = selectedWithCrDisabled.length
+                ? `Variants pushed to ${
+                      selectedWithCrDisabled.length === 1
+                          ? selectedWithCrDisabled[0].name
+                          : `${selectedWithCrDisabled.length} environments`
+                  }`
+                : '';
+            const draftTitle = selectedWithCrEnabled.length
+                ? `Variants push added to ${
+                      selectedWithCrEnabled.length === 1
+                          ? `${selectedWithCrEnabled[0].name} draft`
+                          : `${selectedWithCrEnabled.length} drafts`
+                  }`
+                : '';
+            const title = `${pushTitle}${
+                pushTitle && draftTitle ? '. ' : ''
+            }${draftTitle}`;
+            setToastData({
+                title,
+                type: 'success',
+            });
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
         }
     };
 
-    const onVariantConfirm = async (updatedVariants: IFeatureVariant[]) => {
+    const editVariants = (environment: IFeatureEnvironmentWithCrEnabled) => {
+        setSelectedEnvironment(environment);
+        setModalOpen(true);
+    };
+
+    const onVariantsConfirm = async (updatedVariants: IFeatureVariant[]) => {
         if (selectedEnvironment) {
             try {
                 await updateVariants(selectedEnvironment, updatedVariants);
                 setModalOpen(false);
                 setToastData({
-                    title: `Variant ${
-                        selectedVariant ? 'updated' : 'added'
-                    } successfully`,
+                    title: selectedEnvironment.crEnabled
+                        ? `Variant changes added to draft`
+                        : 'Variants updated successfully',
                     type: 'success',
                 });
             } catch (error: unknown) {
@@ -155,29 +224,16 @@ export const FeatureEnvironmentVariants = () => {
     };
 
     const onCopyVariantsFrom = async (
-        fromEnvironment: IFeatureEnvironment,
-        toEnvironment: IFeatureEnvironment
+        fromEnvironment: IFeatureEnvironmentWithCrEnabled,
+        toEnvironment: IFeatureEnvironmentWithCrEnabled
     ) => {
         try {
             const variants = fromEnvironment.variants ?? [];
             await updateVariants(toEnvironment, variants);
             setToastData({
-                title: 'Variants copied successfully',
-                type: 'success',
-            });
-        } catch (error: unknown) {
-            setToastApiError(formatUnknownError(error));
-        }
-    };
-
-    const onUpdateStickiness = async (
-        environment: IFeatureEnvironment,
-        updatedVariants: IFeatureVariant[]
-    ) => {
-        try {
-            await updateVariants(environment, updatedVariants);
-            setToastData({
-                title: 'Variant stickiness updated successfully',
+                title: toEnvironment.crEnabled
+                    ? 'Variants copy added to draft'
+                    : 'Variants copied successfully',
                 type: 'success',
             });
         } catch (error: unknown) {
@@ -223,8 +279,8 @@ export const FeatureEnvironmentVariants = () => {
                 variants you should use the <code>getVariant()</code> method in
                 the Client SDK.
             </StyledAlert>
-            {feature.environments.map(environment => {
-                const otherEnvsWithVariants = feature.environments.filter(
+            {environments.map(environment => {
+                const otherEnvsWithVariants = environments.filter(
                     ({ name, variants }) =>
                         name !== environment.name && variants?.length
                 );
@@ -234,17 +290,20 @@ export const FeatureEnvironmentVariants = () => {
                         key={environment.name}
                         environment={environment}
                         searchValue={searchValue}
-                        onEditVariant={(variant: IFeatureVariant) =>
-                            editVariant(environment, variant)
-                        }
-                        onDeleteVariant={(variant: IFeatureVariant) =>
-                            deleteVariant(environment, variant)
-                        }
-                        onUpdateStickiness={(variants: IFeatureVariant[]) =>
-                            onUpdateStickiness(environment, variants)
-                        }
                     >
                         <StyledButtonContainer>
+                            <PushVariantsButton
+                                current={environment.name}
+                                environments={environments}
+                                permission={UPDATE_FEATURE_ENVIRONMENT_VARIANTS}
+                                projectId={projectId}
+                                onSubmit={selected =>
+                                    pushToEnvironments(
+                                        environment.variants ?? [],
+                                        selected
+                                    )
+                                }
+                            />
                             <EnvironmentVariantsCopyFrom
                                 environment={environment}
                                 permission={UPDATE_FEATURE_ENVIRONMENT_VARIANTS}
@@ -253,32 +312,56 @@ export const FeatureEnvironmentVariants = () => {
                                 onCopyVariantsFrom={onCopyVariantsFrom}
                                 otherEnvsWithVariants={otherEnvsWithVariants}
                             />
-                            <PermissionButton
-                                onClick={() => addVariant(environment)}
-                                variant="outlined"
-                                permission={UPDATE_FEATURE_ENVIRONMENT_VARIANTS}
-                                projectId={projectId}
-                                environmentId={environment.name}
-                            >
-                                Add variant
-                            </PermissionButton>
+                            <ConditionallyRender
+                                condition={Boolean(
+                                    environment.variants?.length
+                                )}
+                                show={
+                                    <PermissionIconButton
+                                        data-testid="EDIT_VARIANTS_BUTTON"
+                                        onClick={() =>
+                                            editVariants(environment)
+                                        }
+                                        permission={
+                                            UPDATE_FEATURE_ENVIRONMENT_VARIANTS
+                                        }
+                                        projectId={projectId}
+                                        environmentId={environment.name}
+                                        tooltipProps={{
+                                            title: 'Edit variants',
+                                        }}
+                                    >
+                                        <Edit />
+                                    </PermissionIconButton>
+                                }
+                                elseShow={
+                                    <PermissionButton
+                                        data-testid="ADD_VARIANT_BUTTON"
+                                        onClick={() =>
+                                            editVariants(environment)
+                                        }
+                                        variant="outlined"
+                                        permission={
+                                            UPDATE_FEATURE_ENVIRONMENT_VARIANTS
+                                        }
+                                        projectId={projectId}
+                                        environmentId={environment.name}
+                                    >
+                                        Add variant
+                                    </PermissionButton>
+                                }
+                            />
                         </StyledButtonContainer>
                     </EnvironmentVariantsCard>
                 );
             })}
-            <EnvironmentVariantModal
+            <EnvironmentVariantsModal
                 environment={selectedEnvironment}
-                variant={selectedVariant}
                 open={modalOpen}
                 setOpen={setModalOpen}
                 getApiPayload={getApiPayload}
-                onConfirm={onVariantConfirm}
-            />
-            <VariantDeleteDialog
-                variant={selectedVariant}
-                open={deleteOpen}
-                setOpen={setDeleteOpen}
-                onConfirm={onDeleteConfirm}
+                getCrPayload={getCrPayload}
+                onConfirm={onVariantsConfirm}
             />
         </PageContent>
     );

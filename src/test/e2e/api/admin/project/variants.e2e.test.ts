@@ -1,4 +1,7 @@
-import { IUnleashTest, setupApp } from '../../../helpers/test-helper';
+import {
+    IUnleashTest,
+    setupAppWithCustomConfig,
+} from '../../../helpers/test-helper';
 import dbInit, { ITestDb } from '../../../helpers/database-init';
 import getLogger from '../../../../fixtures/no-logger';
 import * as jsonpatch from 'fast-json-patch';
@@ -9,7 +12,21 @@ let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('project_feature_variants_api_serial', getLogger);
-    app = await setupApp(db.stores);
+    app = await setupAppWithCustomConfig(db.stores, {
+        experimental: {
+            flags: {
+                strictSchemaValidation: true,
+            },
+        },
+    });
+    await db.stores.environmentStore.create({
+        name: 'development',
+        type: 'development',
+    });
+    await db.stores.environmentStore.create({
+        name: 'production',
+        type: 'production',
+    });
 });
 
 afterAll(async () => {
@@ -117,6 +134,174 @@ test('Can patch variants for a feature and get a response of new variant', async
             expect(res.body.version).toBe(1);
             expect(res.body.variants).toHaveLength(1);
             expect(res.body.variants[0].name).toBe(expectedVariantName);
+        });
+});
+
+test('Can patch variants for a feature patches all environments independently', async () => {
+    const featureName = 'feature-to-patch';
+    const addedVariantName = 'patched-variant-name';
+    const variants = (name: string) => [
+        {
+            name,
+            stickiness: 'default',
+            weight: 1000,
+            weightType: WeightType.VARIABLE,
+        },
+    ];
+
+    await db.stores.featureToggleStore.create('default', {
+        name: featureName,
+    });
+    await db.stores.featureEnvironmentStore.addEnvironmentToFeature(
+        featureName,
+        'development',
+        true,
+    );
+    await db.stores.featureEnvironmentStore.addEnvironmentToFeature(
+        featureName,
+        'production',
+        true,
+    );
+    await db.stores.featureEnvironmentStore.addVariantsToFeatureEnvironment(
+        featureName,
+        'development',
+        variants('dev-variant'),
+    );
+    await db.stores.featureEnvironmentStore.addVariantsToFeatureEnvironment(
+        featureName,
+        'production',
+        variants('prod-variant'),
+    );
+
+    const patch = [
+        {
+            op: 'add',
+            path: '/1',
+            value: {
+                name: addedVariantName,
+                weightType: 'fix',
+                weight: 50,
+            },
+        },
+    ];
+
+    await app.request
+        .patch(`/api/admin/projects/default/features/${featureName}/variants`)
+        .send(patch)
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.version).toBe(1);
+            expect(res.body.variants).toHaveLength(2);
+            // it picks variants from the first environment (sorted by name)
+            expect(res.body.variants[0].name).toBe('dev-variant');
+            expect(res.body.variants[1].name).toBe(addedVariantName);
+        });
+
+    await app.request
+        .get(
+            `/api/admin/projects/default/features/${featureName}?variantEnvironments=true`,
+        )
+        .expect((res) => {
+            const environments = res.body.environments;
+            expect(environments).toHaveLength(2);
+            const developmentVariants = environments.find(
+                (x) => x.name === 'development',
+            ).variants;
+            const productionVariants = environments.find(
+                (x) => x.name === 'production',
+            ).variants;
+            expect(developmentVariants).toHaveLength(2);
+            expect(productionVariants).toHaveLength(2);
+            expect(
+                developmentVariants.find((x) => x.name === addedVariantName),
+            ).toBeTruthy();
+            expect(
+                productionVariants.find((x) => x.name === addedVariantName),
+            ).toBeTruthy();
+            expect(
+                developmentVariants.find((x) => x.name === 'dev-variant'),
+            ).toBeTruthy();
+            expect(
+                productionVariants.find((x) => x.name === 'prod-variant'),
+            ).toBeTruthy();
+        });
+});
+
+test('Can push variants to multiple environments', async () => {
+    const featureName = 'feature-to-override';
+    const variant = (name: string, weight: number) => ({
+        name,
+        stickiness: 'default',
+        weight,
+        weightType: WeightType.VARIABLE,
+    });
+    await db.stores.featureToggleStore.create('default', {
+        name: featureName,
+    });
+    await db.stores.featureEnvironmentStore.addEnvironmentToFeature(
+        featureName,
+        'development',
+        true,
+    );
+    await db.stores.featureEnvironmentStore.addEnvironmentToFeature(
+        featureName,
+        'production',
+        true,
+    );
+    await db.stores.featureEnvironmentStore.addVariantsToFeatureEnvironment(
+        featureName,
+        'development',
+        [
+            variant('dev-variant-1', 250),
+            variant('dev-variant-2', 250),
+            variant('dev-variant-3', 250),
+            variant('dev-variant-4', 250),
+        ],
+    );
+    await db.stores.featureEnvironmentStore.addVariantsToFeatureEnvironment(
+        featureName,
+        'production',
+        [variant('prod-variant', 1000)],
+    );
+
+    const overrideWith = {
+        variants: [
+            variant('new-variant-1', 500),
+            variant('new-variant-2', 500),
+        ],
+        environments: ['development', 'production'],
+    };
+
+    await app.request
+        .put(
+            `/api/admin/projects/default/features/${featureName}/variants-batch`,
+        )
+        .send(overrideWith)
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.version).toBe(1);
+            expect(res.body.variants).toHaveLength(2);
+            expect(res.body.variants[0].name).toBe('new-variant-1');
+            expect(res.body.variants[1].name).toBe('new-variant-2');
+        });
+
+    await app.request
+        .get(
+            `/api/admin/projects/default/features/${featureName}?variantEnvironments=true`,
+        )
+        .expect((res) => {
+            const environments = res.body.environments;
+            expect(environments).toHaveLength(2);
+            const developmentVariants = environments.find(
+                (x) => x.name === 'development',
+            ).variants;
+            const productionVariants = environments.find(
+                (x) => x.name === 'production',
+            ).variants;
+            expect(developmentVariants).toHaveLength(2);
+            expect(productionVariants).toHaveLength(2);
+            expect(developmentVariants[0].name).toBe('new-variant-1');
+            expect(developmentVariants[1].name).toBe('new-variant-2');
         });
 });
 
@@ -315,6 +500,11 @@ test('Invalid variant in PATCH also throws 400 exception', async () => {
     await db.stores.featureToggleStore.create('default', {
         name: featureName,
     });
+    await db.stores.featureEnvironmentStore.addEnvironmentToFeature(
+        featureName,
+        'default',
+        true,
+    );
 
     const invalidPatch = `[{
         "op": "add",
@@ -439,6 +629,11 @@ test('PATCHING with no variable variants fails with 400', async () => {
     await db.stores.featureToggleStore.create('default', {
         name: featureName,
     });
+    await db.stores.featureEnvironmentStore.addEnvironmentToFeature(
+        featureName,
+        'default',
+        true,
+    );
 
     const newVariants: IVariant[] = [];
 

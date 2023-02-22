@@ -5,11 +5,41 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
+    styled,
 } from '@mui/material';
 
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useStyles } from './Dialogue.styles';
 import { DIALOGUE_CONFIRM_ID } from 'utils/testIds';
+
+const StyledDialog = styled(Dialog)(({ theme, maxWidth }) => ({
+    '& .MuiDialog-paper': {
+        borderRadius: theme.shape.borderRadiusLarge,
+        maxWidth: !maxWidth ? theme.spacing(85) : undefined,
+        backgroundColor: 'transparent',
+    },
+}));
+
+const StyledDialogTitle = styled(DialogTitle)(({ theme }) => ({
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.text.tertiaryContrast,
+    padding: theme.spacing(3.5, 6),
+    fontWeight: theme.fontWeight.medium,
+}));
+
+const StyledDialogBody = styled('div')(({ theme }) => ({
+    padding: theme.spacing(6),
+    backgroundColor: theme.palette.background.paper,
+}));
+
+const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
+    padding: 0,
+    marginBottom: theme.spacing(6),
+}));
+
+const StyledDialogActions = styled(DialogActions)(({ theme }) => ({
+    gap: theme.spacing(2),
+    padding: 0,
+}));
 
 interface IDialogue {
     primaryButtonText?: string;
@@ -35,12 +65,11 @@ export const Dialogue: React.FC<IDialogue> = ({
     primaryButtonText,
     disabledPrimaryButton = false,
     secondaryButtonText,
-    maxWidth = 'sm',
+    maxWidth,
     fullWidth = false,
     formId,
     permissionButton,
 }) => {
-    const { classes: styles } = useStyles();
     const handleClick = formId
         ? (e: React.SyntheticEvent) => {
               e.preventDefault();
@@ -50,7 +79,7 @@ export const Dialogue: React.FC<IDialogue> = ({
           }
         : onClick;
     return (
-        <Dialog
+        <StyledDialog
             open={open}
             onClose={onClose}
             fullWidth={fullWidth}
@@ -58,50 +87,47 @@ export const Dialogue: React.FC<IDialogue> = ({
             aria-describedby={'simple-modal-description'}
             maxWidth={maxWidth}
         >
-            <DialogTitle className={styles.dialogTitle}>{title}</DialogTitle>
-            <ConditionallyRender
-                condition={Boolean(children)}
-                show={
-                    <DialogContent className={styles.dialogContentPadding}>
-                        {children}
-                    </DialogContent>
-                }
-            />
-
-            <DialogActions>
+            <StyledDialogTitle>{title}</StyledDialogTitle>
+            <StyledDialogBody>
                 <ConditionallyRender
-                    condition={Boolean(permissionButton)}
-                    show={permissionButton!}
-                    elseShow={
-                        <ConditionallyRender
-                            condition={Boolean(onClick)}
-                            show={
-                                <Button
-                                    form={formId}
-                                    color="primary"
-                                    variant="contained"
-                                    onClick={handleClick}
-                                    autoFocus={!formId}
-                                    disabled={disabledPrimaryButton}
-                                    data-testid={DIALOGUE_CONFIRM_ID}
-                                    type={formId ? 'submit' : 'button'}
-                                >
-                                    {primaryButtonText || "Yes, I'm sure"}
-                                </Button>
-                            }
-                        />
-                    }
+                    condition={Boolean(children)}
+                    show={<StyledDialogContent>{children}</StyledDialogContent>}
                 />
+                <StyledDialogActions>
+                    <ConditionallyRender
+                        condition={Boolean(permissionButton)}
+                        show={permissionButton!}
+                        elseShow={
+                            <ConditionallyRender
+                                condition={Boolean(onClick)}
+                                show={
+                                    <Button
+                                        form={formId}
+                                        color="primary"
+                                        variant="contained"
+                                        onClick={handleClick}
+                                        autoFocus={!formId}
+                                        disabled={disabledPrimaryButton}
+                                        data-testid={DIALOGUE_CONFIRM_ID}
+                                        type={formId ? 'submit' : 'button'}
+                                    >
+                                        {primaryButtonText || "Yes, I'm sure"}
+                                    </Button>
+                                }
+                            />
+                        }
+                    />
 
-                <ConditionallyRender
-                    condition={Boolean(onClose)}
-                    show={
-                        <Button onClick={onClose}>
-                            {secondaryButtonText || 'No, take me back'}
-                        </Button>
-                    }
-                />
-            </DialogActions>
-        </Dialog>
+                    <ConditionallyRender
+                        condition={Boolean(onClose)}
+                        show={
+                            <Button onClick={onClose}>
+                                {secondaryButtonText || 'No, take me back'}
+                            </Button>
+                        }
+                    />
+                </StyledDialogActions>
+            </StyledDialogBody>
+        </StyledDialog>
     );
 };

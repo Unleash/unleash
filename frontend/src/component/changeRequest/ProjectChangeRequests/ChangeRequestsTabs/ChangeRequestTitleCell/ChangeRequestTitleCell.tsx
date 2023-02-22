@@ -29,34 +29,34 @@ export const ChangeRequestTitleCell = ({
     }
 
     return (
-        <TextCell>
+        <TextCell sx={{ minWidth: '200px' }}>
             <StyledLink>
-                <Link
-                    component={RouterLink}
-                    underline={'hover'}
-                    to={path}
-                    sx={{ pt: 0.2 }}
-                >
-                    Change request
-                </Link>
                 <Typography
                     component={'span'}
+                    variant={'body2'}
                     color={theme.palette.text.secondary}
-                    sx={{ margin: theme.spacing(0, 1), pt: 0 }}
                 >
+                    <Link
+                        component={RouterLink}
+                        underline={'hover'}
+                        to={path}
+                        sx={theme => ({
+                            paddingTop: theme.spacing(0.2),
+                            marginRight: theme.spacing(1),
+                            '&:hover': {
+                                textDecoration: 'underline',
+                            },
+                        })}
+                    >
+                        Change request
+                    </Link>
                     {`#${id}`}
                 </Typography>
             </StyledLink>
-            <StyledLink>
-                <Link
-                    component={RouterLink}
-                    underline={'hover'}
-                    to={path}
-                >{`${changes?.length}`}</Link>
-                <span style={{ margin: 'auto 8px' }}>
-                    {changes.length < 1 ? `update` : 'updates'}
-                </span>
-            </StyledLink>
+            <span>
+                {`${changes?.length}`}{' '}
+                {changes.length <= 1 ? `update` : 'updates'}
+            </span>
         </TextCell>
     );
 };

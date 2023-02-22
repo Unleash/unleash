@@ -1,6 +1,5 @@
-import { Chip } from '@mui/material';
+import { Chip, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useStyles } from './ConstraintItem.styles';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 
 interface IConstraintItemProps {
@@ -8,22 +7,40 @@ interface IConstraintItemProps {
     text: string;
 }
 
+const StyledContainer = styled('div')(({ theme }) => ({
+    width: '100%',
+    padding: theme.spacing(2, 3),
+    borderRadius: theme.shape.borderRadiusMedium,
+    border: `1px solid ${theme.palette.divider}`,
+}));
+
+const StyledParagraph = styled('p')(({ theme }) => ({
+    display: 'inline',
+    margin: theme.spacing(0.5, 0),
+    maxWidth: '95%',
+    textAlign: 'center',
+    wordBreak: 'break-word',
+}));
+
+const StyledChip = styled(Chip)(({ theme }) => ({
+    margin: theme.spacing(0.5),
+}));
+
 export const ConstraintItem = ({ value, text }: IConstraintItemProps) => {
-    const { classes: styles } = useStyles();
     return (
-        <div className={styles.container}>
+        <StyledContainer>
             <ConditionallyRender
                 condition={value.length === 0}
                 show={<p>No {text}s added yet.</p>}
                 elseShow={
                     <div>
-                        <p className={styles.paragraph}>
+                        <StyledParagraph>
                             {value.length}{' '}
                             {value.length > 1 ? `${text}s` : text} will get
                             access.
-                        </p>
+                        </StyledParagraph>
                         {value.map((v: string) => (
-                            <Chip
+                            <StyledChip
                                 key={v}
                                 label={
                                     <StringTruncator
@@ -32,12 +49,11 @@ export const ConstraintItem = ({ value, text }: IConstraintItemProps) => {
                                         maxLength={50}
                                     />
                                 }
-                                className={styles.chip}
                             />
                         ))}
                     </div>
                 }
             />
-        </div>
+        </StyledContainer>
     );
 };

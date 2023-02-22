@@ -27,10 +27,13 @@ import PatController from './user/pat';
 import { PublicSignupController } from './public-signup';
 import InstanceAdminController from './instance-admin';
 import FavoritesController from './favorites';
-import { conditionalMiddleware } from '../../middleware';
+import MaintenanceController from './maintenance';
+import { createKnexTransactionStarter } from '../../db/transaction';
+import { Db } from '../../db/db';
+import ExportImportController from '../../features/export-import-toggles/export-import-controller';
 
 class AdminApi extends Controller {
-    constructor(config: IUnleashConfig, services: IUnleashServices) {
+    constructor(config: IUnleashConfig, services: IUnleashServices, db: Db) {
         super(config);
 
         this.app.use(
@@ -77,6 +80,14 @@ class AdminApi extends Controller {
             new ContextController(config, services).router,
         );
         this.app.use('/state', new StateController(config, services).router);
+        this.app.use(
+            '/features-batch',
+            new ExportImportController(
+                config,
+                services,
+                createKnexTransactionStarter(db),
+            ).router,
+        );
         this.app.use('/tags', new TagController(config, services).router);
         this.app.use(
             '/tag-types',
@@ -119,10 +130,12 @@ class AdminApi extends Controller {
         );
         this.app.use(
             `/projects`,
-            conditionalMiddleware(
-                () => config.flagResolver.isEnabled('favorites'),
-                new FavoritesController(config, services).router,
-            ),
+            new FavoritesController(config, services).router,
+        );
+
+        this.app.use(
+            '/maintenance',
+            new MaintenanceController(config, services).router,
         );
     }
 }

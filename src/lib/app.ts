@@ -25,6 +25,8 @@ import { findPublicFolder } from './util/findPublicFolder';
 import { conditionalMiddleware } from './middleware/conditional-middleware';
 import patMiddleware from './middleware/pat-middleware';
 import { Knex } from 'knex';
+import maintenanceMiddleware from './middleware/maintenance-middleware';
+import { unless } from './middleware/unless-middleware';
 
 export default async function getApp(
     config: IUnleashConfig,
@@ -44,7 +46,13 @@ export default async function getApp(
     app.set('port', config.server.port);
     app.locals.baseUriPath = baseUriPath;
     if (config.server.serverMetrics && config.eventBus) {
-        app.use(responseTimeMetrics(config.eventBus, config.flagResolver));
+        app.use(
+            responseTimeMetrics(
+                config.eventBus,
+                config.flagResolver,
+                services.instanceStatsService,
+            ),
+        );
     }
 
     app.use(requestLogger(config));
@@ -55,7 +63,17 @@ export default async function getApp(
 
     app.use(compression());
     app.use(cookieParser());
-    app.use(express.json({ strict: false }));
+
+    app.use(
+        `${baseUriPath}/api/admin/features-batch`,
+        express.json({ strict: false, limit: '500kB' }),
+    );
+    app.use(
+        unless(
+            `${baseUriPath}/api/admin/features-batch`,
+            express.json({ strict: false }),
+        ),
+    );
     if (unleashSession) {
         app.use(unleashSession);
     }
@@ -138,12 +156,20 @@ export default async function getApp(
         rbacMiddleware(config, stores, services.accessService),
     );
 
+    app.use(
+        `${baseUriPath}/api/admin`,
+        conditionalMiddleware(
+            () => config.flagResolver.isEnabled('maintenance'),
+            maintenanceMiddleware(config, services.maintenanceService),
+        ),
+    );
+
     if (typeof config.preRouterHook === 'function') {
         config.preRouterHook(app, config, services, stores, db);
     }
 
     // Setup API routes
-    app.use(`${baseUriPath}/`, new IndexRouter(config, services).router);
+    app.use(`${baseUriPath}/`, new IndexRouter(config, services, db).router);
 
     if (services.openApiService) {
         services.openApiService.useErrorHandler(app);

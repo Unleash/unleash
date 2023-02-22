@@ -148,7 +148,7 @@ export const ReportCard = ({ healthReport }: IReportCardProps) => {
                     </li>
                 </StyledList>
             </Box>
-            <Box>
+            <Box sx={{ flexBasis: '40%' }}>
                 <StyledHeader>Potential actions</StyledHeader>
                 <StyledList>
                     <li>
@@ -168,11 +168,7 @@ export const ReportCard = ({ healthReport }: IReportCardProps) => {
                             toggles.
                         </StyledAlignedItem>
                     }
-                    elseShow={
-                        <StyledAlignedItem>
-                            No action is required
-                        </StyledAlignedItem>
-                    }
+                    elseShow={<span>No action is required</span>}
                 />
             </Box>
         </StyledPaper>

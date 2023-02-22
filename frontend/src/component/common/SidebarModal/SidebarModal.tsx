@@ -1,5 +1,6 @@
 import { FC } from 'react';
-import { Modal, Backdrop, styled } from '@mui/material';
+import { Modal, Backdrop, styled, IconButton, Tooltip } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import Fade from '@mui/material/Fade';
 import { SIDEBAR_MODAL_ID } from 'utils/testIds';
 import * as React from 'react';
@@ -28,6 +29,13 @@ const FixedWidthContentWrapper = styled(ModalContentWrapper)({
     width: 1300,
 });
 
+const StyledIconButton = styled(IconButton)(({ theme }) => ({
+    zIndex: 1,
+    position: 'absolute',
+    top: theme.spacing(3),
+    right: theme.spacing(3),
+}));
+
 export const BaseModal: FC<ISidebarModalProps> = ({
     open,
     onClose,
@@ -43,6 +51,7 @@ export const BaseModal: FC<ISidebarModalProps> = ({
             BackdropComponent={Backdrop}
             BackdropProps={{ timeout: TRANSITION_DURATION }}
             data-testid={SIDEBAR_MODAL_ID}
+            sx={{ minHeight: '100vh' }}
         >
             <Fade timeout={TRANSITION_DURATION} in={open}>
                 {children}
@@ -64,7 +73,14 @@ export const SidebarModal: FC<ISidebarModalProps> = props => {
 export const DynamicSidebarModal: FC<ISidebarModalProps> = props => {
     return (
         <BaseModal {...props}>
-            <ModalContentWrapper>{props.children}</ModalContentWrapper>
+            <ModalContentWrapper>
+                <Tooltip title="Close" arrow describeChild>
+                    <StyledIconButton onClick={props.onClose}>
+                        <CloseIcon />
+                    </StyledIconButton>
+                </Tooltip>
+                {props.children}
+            </ModalContentWrapper>
         </BaseModal>
     );
 };

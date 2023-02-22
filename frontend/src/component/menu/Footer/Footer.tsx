@@ -1,18 +1,38 @@
 /* eslint-disable react/jsx-no-target-blank */
 
 import { VFC } from 'react';
-import { List, ListItem, ListItemText, Grid } from '@mui/material';
+import { List, ListItem, ListItemText, Grid, styled } from '@mui/material';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ApiDetails } from './ApiDetails/ApiDetails';
-import { useStyles } from './Footer.styles';
 import { FooterTitle } from './FooterTitle';
 
+const StyledFooter = styled('footer')(({ theme }) => ({
+    padding: theme.spacing(4, 8),
+    width: '100%',
+    flexGrow: 1,
+    zIndex: 100,
+    backgroundColor: theme.palette.footerBackground,
+}));
+
+const StyledList = styled(List)({
+    padding: 0,
+    margin: 0,
+});
+
+const StyledListItem = styled(ListItem)(({ theme }) => ({
+    padding: 0,
+    margin: 0,
+    '& a': {
+        textDecoration: 'none',
+        color: theme.palette.text.primary,
+    },
+}));
+
 export const Footer: VFC = () => {
-    const { classes: styles } = useStyles();
     const { uiConfig } = useUiConfig();
 
     return (
-        <footer className={styles.footer}>
+        <StyledFooter>
             <Grid
                 container
                 justifyContent="center"
@@ -27,8 +47,8 @@ export const Footer: VFC = () => {
                         <Grid item>
                             <section title="Unleash SDK">
                                 <FooterTitle>Server SDKs</FooterTitle>
-                                <List className={styles.list} dense>
-                                    <ListItem className={styles.listItem}>
+                                <StyledList dense>
+                                    <StyledListItem>
                                         <ListItemText
                                             primary={
                                                 <a
@@ -39,8 +59,8 @@ export const Footer: VFC = () => {
                                                 </a>
                                             }
                                         />
-                                    </ListItem>
-                                    <ListItem className={styles.listItem}>
+                                    </StyledListItem>
+                                    <StyledListItem>
                                         <ListItemText
                                             primary={
                                                 <a
@@ -51,8 +71,8 @@ export const Footer: VFC = () => {
                                                 </a>
                                             }
                                         />
-                                    </ListItem>
-                                    <ListItem className={styles.listItem}>
+                                    </StyledListItem>
+                                    <StyledListItem>
                                         <ListItemText
                                             primary={
                                                 <a
@@ -63,8 +83,8 @@ export const Footer: VFC = () => {
                                                 </a>
                                             }
                                         />
-                                    </ListItem>{' '}
-                                    <ListItem className={styles.listItem}>
+                                    </StyledListItem>{' '}
+                                    <StyledListItem>
                                         <ListItemText
                                             primary={
                                                 <a
@@ -75,8 +95,8 @@ export const Footer: VFC = () => {
                                                 </a>
                                             }
                                         />
-                                    </ListItem>{' '}
-                                    <ListItem className={styles.listItem}>
+                                    </StyledListItem>{' '}
+                                    <StyledListItem>
                                         <ListItemText
                                             primary={
                                                 <a
@@ -87,8 +107,8 @@ export const Footer: VFC = () => {
                                                 </a>
                                             }
                                         />
-                                    </ListItem>
-                                    <ListItem className={styles.listItem}>
+                                    </StyledListItem>
+                                    <StyledListItem>
                                         <ListItemText
                                             primary={
                                                 <a
@@ -99,8 +119,8 @@ export const Footer: VFC = () => {
                                                 </a>
                                             }
                                         />
-                                    </ListItem>
-                                    <ListItem className={styles.listItem}>
+                                    </StyledListItem>
+                                    <StyledListItem>
                                         <ListItemText
                                             primary={
                                                 <a
@@ -111,8 +131,8 @@ export const Footer: VFC = () => {
                                                 </a>
                                             }
                                         />
-                                    </ListItem>
-                                    <ListItem className={styles.listItem}>
+                                    </StyledListItem>
+                                    <StyledListItem>
                                         <ListItemText
                                             primary={
                                                 <a
@@ -123,15 +143,15 @@ export const Footer: VFC = () => {
                                                 </a>
                                             }
                                         />
-                                    </ListItem>
-                                </List>
+                                    </StyledListItem>
+                                </StyledList>
                             </section>
                         </Grid>
                         <Grid item>
                             <section title="Unleash SDK">
                                 <FooterTitle>Frontend SDKs</FooterTitle>
-                                <List className={styles.list} dense>
-                                    <ListItem className={styles.listItem}>
+                                <StyledList dense>
+                                    <StyledListItem>
                                         <ListItemText
                                             primary={
                                                 <a
@@ -142,8 +162,8 @@ export const Footer: VFC = () => {
                                                 </a>
                                             }
                                         />
-                                    </ListItem>
-                                    <ListItem className={styles.listItem}>
+                                    </StyledListItem>
+                                    <StyledListItem>
                                         <ListItemText
                                             primary={
                                                 <a
@@ -154,8 +174,8 @@ export const Footer: VFC = () => {
                                                 </a>
                                             }
                                         />
-                                    </ListItem>
-                                    <ListItem className={styles.listItem}>
+                                    </StyledListItem>
+                                    <StyledListItem>
                                         <ListItemText
                                             primary={
                                                 <a
@@ -166,8 +186,8 @@ export const Footer: VFC = () => {
                                                 </a>
                                             }
                                         />
-                                    </ListItem>
-                                    <ListItem className={styles.listItem}>
+                                    </StyledListItem>
+                                    <StyledListItem>
                                         <ListItemText
                                             primary={
                                                 <a
@@ -178,8 +198,8 @@ export const Footer: VFC = () => {
                                                 </a>
                                             }
                                         />
-                                    </ListItem>
-                                    <ListItem className={styles.listItem}>
+                                    </StyledListItem>
+                                    <StyledListItem>
                                         <ListItemText
                                             primary={
                                                 <a
@@ -190,15 +210,15 @@ export const Footer: VFC = () => {
                                                 </a>
                                             }
                                         />
-                                    </ListItem>
-                                </List>
+                                    </StyledListItem>
+                                </StyledList>
                             </section>
                         </Grid>
                         <Grid item>
                             <section>
                                 <FooterTitle>About</FooterTitle>
-                                <List className={styles.list} dense>
-                                    <ListItem className={styles.listItem}>
+                                <StyledList dense>
+                                    <StyledListItem>
                                         <ListItemText
                                             primary={
                                                 <a
@@ -209,8 +229,8 @@ export const Footer: VFC = () => {
                                                 </a>
                                             }
                                         />
-                                    </ListItem>
-                                    <ListItem className={styles.listItem}>
+                                    </StyledListItem>
+                                    <StyledListItem>
                                         <ListItemText
                                             primary={
                                                 <a
@@ -221,8 +241,8 @@ export const Footer: VFC = () => {
                                                 </a>
                                             }
                                         />
-                                    </ListItem>
-                                    <ListItem className={styles.listItem}>
+                                    </StyledListItem>
+                                    <StyledListItem>
                                         <ListItemText
                                             primary={
                                                 <a
@@ -233,8 +253,8 @@ export const Footer: VFC = () => {
                                                 </a>
                                             }
                                         />
-                                    </ListItem>
-                                    <ListItem className={styles.listItem}>
+                                    </StyledListItem>
+                                    <StyledListItem>
                                         <ListItemText
                                             primary={
                                                 <a
@@ -245,8 +265,8 @@ export const Footer: VFC = () => {
                                                 </a>
                                             }
                                         />
-                                    </ListItem>
-                                    <ListItem className={styles.listItem}>
+                                    </StyledListItem>
+                                    <StyledListItem>
                                         <ListItemText
                                             primary={
                                                 <a
@@ -257,14 +277,14 @@ export const Footer: VFC = () => {
                                                 </a>
                                             }
                                         />
-                                    </ListItem>
-                                </List>
+                                    </StyledListItem>
+                                </StyledList>
                             </section>
                         </Grid>
                     </Grid>
                 </Grid>
             </Grid>
-        </footer>
+        </StyledFooter>
     );
 };
 

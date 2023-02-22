@@ -3,7 +3,6 @@ lerna-debug
 npm-debug
 .DS_Store
 /dist
-website/docs/reference/api/**/sidebar.js
 
 # Logs
 logs
@@ -52,3 +51,7 @@ package-lock.json
 .env
 
 #report.json
+
+# Generated docs
+website/docs/reference/api/**/sidebar.js
+website/docs/generated

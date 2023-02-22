@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
 import ChangePassword from './ChangePassword/ChangePassword';
 import DeleteUser from './DeleteUser/DeleteUser';
@@ -32,6 +32,7 @@ import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCel
 import { UsersActionsCell } from './UsersActionsCell/UsersActionsCell';
 import { Search } from 'component/common/Search/Search';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
+import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 
 const UsersList = () => {
     const navigate = useNavigate();
@@ -105,15 +106,6 @@ const UsersList = () => {
                 sortType: 'boolean',
             },
             {
-                Header: 'Created',
-                accessor: 'createdAt',
-                Cell: DateCell,
-                disableGlobalFilter: true,
-                sortType: 'date',
-                width: 120,
-                maxWidth: 120,
-            },
-            {
                 Header: 'Avatar',
                 accessor: 'imageUrl',
                 Cell: ({ row: { original: user } }: any) => (
@@ -144,6 +136,15 @@ const UsersList = () => {
                     roles.find((role: IRole) => role.id === row.rootRole)
                         ?.name || '',
                 disableGlobalFilter: true,
+                maxWidth: 120,
+            },
+            {
+                Header: 'Created',
+                accessor: 'createdAt',
+                Cell: DateCell,
+                disableGlobalFilter: true,
+                sortType: 'date',
+                width: 120,
                 maxWidth: 120,
             },
             {
@@ -205,6 +206,7 @@ const UsersList = () => {
             initialState,
             sortTypes,
             autoResetGlobalFilter: false,
+            autoResetHiddenColumns: false,
             autoResetSortBy: false,
             disableSortRemove: true,
             defaultColumn: {
@@ -216,19 +218,24 @@ const UsersList = () => {
         useFlexLayout
     );
 
-    useEffect(() => {
-        const hiddenColumns = [];
-        if (!isBillingUsers || isSmallScreen) {
-            hiddenColumns.push('type');
-        }
-        if (isSmallScreen) {
-            hiddenColumns.push('createdAt', 'last-login');
-        }
-        if (isExtraSmallScreen) {
-            hiddenColumns.push('imageUrl', 'role');
-        }
-        setHiddenColumns(hiddenColumns);
-    }, [setHiddenColumns, isExtraSmallScreen, isSmallScreen, isBillingUsers]);
+    useConditionallyHiddenColumns(
+        [
+            {
+                condition: !isBillingUsers || isSmallScreen,
+                columns: ['type'],
+            },
+            {
+                condition: isExtraSmallScreen,
+                columns: ['imageUrl', 'role'],
+            },
+            {
+                condition: isSmallScreen,
+                columns: ['createdAt', 'last-login'],
+            },
+        ],
+        setHiddenColumns,
+        columns
+    );
 
     return (
         <PageContent

@@ -162,3 +162,53 @@ test('Should import variants in new format (per environment)', async () => {
     let featureEnvironments = await stores.featureEnvironmentStore.getAll();
     expect(featureEnvironments).toHaveLength(6); // 3 environments, 2 features === 6 rows
 });
+
+test('Importing states with deprecated strategies should keep their deprecated state', async () => {
+    const deprecatedStrategyExample = {
+        version: 4,
+        features: [],
+        strategies: [
+            {
+                name: 'deprecatedstrat',
+                description: 'This should be deprecated when imported',
+                deprecated: true,
+                parameters: [],
+                builtIn: false,
+                sortOrder: 9999,
+                displayName: 'Deprecated strategy',
+            },
+        ],
+        featureStrategies: [],
+    };
+    await stateService.import({
+        data: deprecatedStrategyExample,
+        userName: 'strategy-importer',
+        dropBeforeImport: true,
+        keepExisting: false,
+    });
+    const deprecatedStrategy = await stores.strategyStore.get(
+        'deprecatedstrat',
+    );
+    expect(deprecatedStrategy.deprecated).toBe(true);
+});
+
+test('Exporting a deprecated strategy and then importing it should keep correct state', async () => {
+    await stateService.import({
+        data: oldFormat,
+        keepExisting: false,
+        dropBeforeImport: true,
+        userName: 'strategy importer',
+    });
+    const rolloutRandom = await stores.strategyStore.get(
+        'gradualRolloutRandom',
+    );
+    expect(rolloutRandom.deprecated).toBe(true);
+    const rolloutSessionId = await stores.strategyStore.get(
+        'gradualRolloutSessionId',
+    );
+    expect(rolloutSessionId.deprecated).toBe(true);
+    const rolloutUserId = await stores.strategyStore.get(
+        'gradualRolloutUserId',
+    );
+    expect(rolloutUserId.deprecated).toBe(true);
+});

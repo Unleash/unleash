@@ -3,6 +3,7 @@ import { LogProvider } from '../logger';
 import { IRole } from './stores/access-store';
 import { IUser } from './user';
 import { ALL_OPERATORS } from '../util/constants';
+import { IProjectStats } from 'lib/services/project-service';
 
 export type Operator = typeof ALL_OPERATORS[number];
 
@@ -21,6 +22,7 @@ export enum WeightType {
 export interface IStrategyConfig {
     id?: string;
     name: string;
+    featureName?: string;
     constraints?: IConstraint[];
     segments?: number[];
     parameters?: { [key: string]: string };
@@ -90,7 +92,7 @@ export interface FeatureToggleLegacy extends FeatureToggle {
     enabled: boolean;
 }
 
-export interface IEnvironmentDetail extends IEnvironmentOverview {
+export interface IEnvironmentDetail extends IEnvironmentBase {
     strategies: IStrategyConfig[];
     variants: IVariant[];
 }
@@ -151,11 +153,15 @@ export interface IEnvironmentClone {
     clonePermissions?: boolean;
 }
 
-export interface IEnvironmentOverview {
+export interface IEnvironmentBase {
     name: string;
     enabled: boolean;
     type: string;
     sortOrder: number;
+}
+
+export interface IEnvironmentOverview extends IEnvironmentBase {
+    variantCount: number;
 }
 
 export interface IFeatureOverview {
@@ -177,6 +183,7 @@ export interface IProjectOverview {
     health: number;
     favorite?: boolean;
     updatedAt?: Date;
+    stats?: IProjectStats;
 }
 
 export interface IProjectHealthReport extends IProjectOverview {
@@ -300,7 +307,6 @@ export interface IClientApp {
     seenToggles?: string[];
     metricsCount?: number;
     strategies?: string[] | Record<string, string>[];
-    bucket?: any;
     count?: number;
     started?: string | number | Date;
     interval?: number;
@@ -335,7 +341,7 @@ export interface IMetricCounts {
 export interface IMetricsBucket {
     start: Date;
     stop: Date;
-    toggles: IMetricCounts;
+    toggles: { [key: string]: IMetricCounts };
 }
 
 export interface IImportFile extends ImportCommon {

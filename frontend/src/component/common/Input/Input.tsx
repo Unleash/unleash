@@ -1,6 +1,6 @@
 import { INPUT_ERROR_TEXT } from 'utils/testIds';
+import { TextField, OutlinedTextFieldProps, styled } from '@mui/material';
 import { useStyles } from './Input.styles';
-import { TextField, OutlinedTextFieldProps } from '@mui/material';
 
 interface IInputProps extends Omit<OutlinedTextFieldProps, 'variant'> {
     label: string;
@@ -16,6 +16,10 @@ interface IInputProps extends Omit<OutlinedTextFieldProps, 'variant'> {
     rows?: number;
 }
 
+const StyledDiv = styled('div')({
+    position: 'relative',
+});
+
 const Input = ({
     label,
     placeholder,
@@ -29,7 +33,7 @@ const Input = ({
 }: IInputProps) => {
     const { classes: styles } = useStyles();
     return (
-        <div className={styles.inputContainer} data-loading>
+        <StyledDiv data-loading>
             <TextField
                 size="small"
                 variant="outlined"
@@ -43,13 +47,14 @@ const Input = ({
                 onChange={onChange}
                 FormHelperTextProps={{
                     ['data-testid']: INPUT_ERROR_TEXT,
+                    title: errorText,
                     classes: {
                         root: styles.helperText,
                     },
                 }}
                 {...rest}
             />
-        </div>
+        </StyledDiv>
     );
 };
 

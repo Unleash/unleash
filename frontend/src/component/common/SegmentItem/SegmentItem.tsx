@@ -7,11 +7,11 @@ import {
     AccordionDetails,
     AccordionSummary,
     Button,
+    styled,
     Typography,
 } from '@mui/material';
-import { ConstraintAccordionList } from '../ConstraintAccordion/ConstraintAccordionList/ConstraintAccordionList';
-import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
-import { useStyles } from './SegmentItem.styles';
+import { ConstraintAccordionList } from 'component/common/ConstraintAccordion/ConstraintAccordionList/ConstraintAccordionList';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface ISegmentItemProps {
     segment: Partial<ISegment>;
@@ -20,36 +20,52 @@ interface ISegmentItemProps {
     headerContent?: JSX.Element;
 }
 
+const StyledAccordion = styled(Accordion)(({ theme }) => ({
+    border: `1px solid ${theme.palette.dividerAlternative}`,
+    borderRadius: theme.shape.borderRadiusMedium,
+    backgroundColor: theme.palette.background.paper,
+    boxShadow: 'none',
+    margin: 0,
+    transition: 'all 0.1s ease',
+    '&:before': {
+        opacity: '0 !important',
+    },
+    '&.Mui-expanded': { backgroundColor: theme.palette.neutral.light },
+}));
+
+const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
+    margin: theme.spacing(0, 0.5),
+    fontSize: theme.typography.body2.fontSize,
+    '.MuiAccordionSummary-content': {
+        display: 'flex',
+        alignItems: 'center',
+    },
+}));
+
+const StyledLink = styled(Link)(({ theme }) => ({
+    textDecoration: 'none',
+    marginLeft: theme.spacing(1),
+    '&:hover': {
+        textDecoration: 'underline',
+    },
+}));
+
 export const SegmentItem: VFC<ISegmentItemProps> = ({
     segment,
     isExpanded,
     headerContent,
     constraintList,
 }) => {
-    const { classes } = useStyles();
     const [isOpen, setIsOpen] = useState(isExpanded || false);
 
     return (
-        <Accordion
-            expanded={isOpen}
-            className={classes.accordion}
-            classes={{
-                root: classes.accordionRoot,
-                expanded: classes.accordionExpanded,
-            }}
-        >
-            <AccordionSummary
-                id={`segment-accordion-${segment.id}`}
-                className={classes.summary}
-            >
+        <StyledAccordion expanded={isOpen}>
+            <StyledAccordionSummary id={`segment-accordion-${segment.id}`}>
                 <DonutLarge color="secondary" sx={{ mr: 1 }} />
-                Segment:
-                <Link
-                    to={`/segments/edit/${segment.id}`}
-                    className={classes.link}
-                >
+                <span>Segment:</span>
+                <StyledLink to={`/segments/edit/${segment.id}`}>
                     {segment.name}
-                </Link>
+                </StyledLink>
                 <ConditionallyRender
                     condition={Boolean(headerContent)}
                     show={headerContent}
@@ -61,13 +77,18 @@ export const SegmentItem: VFC<ISegmentItemProps> = ({
                             size="small"
                             variant="outlined"
                             onClick={() => setIsOpen(value => !value)}
-                            className={classes.previewButton}
+                            sx={{
+                                my: 0,
+                                ml: 'auto',
+                                fontSize: theme =>
+                                    theme.typography.body2.fontSize,
+                            }}
                         >
                             {isOpen ? 'Close preview' : 'Preview'}
                         </Button>
                     }
                 />
-            </AccordionSummary>
+            </StyledAccordionSummary>
             <AccordionDetails sx={{ pt: 0 }}>
                 <ConditionallyRender
                     condition={Boolean(constraintList)}
@@ -90,6 +111,6 @@ export const SegmentItem: VFC<ISegmentItemProps> = ({
                     }
                 />
             </AccordionDetails>
-        </Accordion>
+        </StyledAccordion>
     );
 };

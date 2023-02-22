@@ -15,7 +15,7 @@ import FakeUserFeedbackStore from './fake-user-feedback-store';
 import FakeFeatureTagStore from './fake-feature-tag-store';
 import FakeEnvironmentStore from './fake-environment-store';
 import FakeStrategiesStore from './fake-strategies-store';
-import { IUnleashStores } from '../../lib/types';
+import { IImportTogglesStore, IUnleashStores } from '../../lib/types';
 import FakeSessionStore from './fake-session-store';
 import FakeFeatureEnvironmentStore from './fake-feature-environment-store';
 import FakeApiTokenStore from './fake-api-token-store';
@@ -31,14 +31,16 @@ import FakePatStore from './fake-pat-store';
 import FakePublicSignupStore from './fake-public-signup-store';
 import FakeFavoriteFeaturesStore from './fake-favorite-features-store';
 import FakeFavoriteProjectsStore from './fake-favorite-projects-store';
+import { FakeAccountStore } from './fake-account-store';
+import FakeProjectStatsStore from './fake-project-stats-store';
+
+const db = {
+    select: () => ({
+        from: () => Promise.resolve(),
+    }),
+};
 
 const createStores: () => IUnleashStores = () => {
-    const db = {
-        select: () => ({
-            from: () => Promise.resolve(),
-        }),
-    };
-
     return {
         db,
         clientApplicationsStore: new FakeClientApplicationsStore(),
@@ -56,6 +58,7 @@ const createStores: () => IUnleashStores = () => {
         projectStore: new FakeProjectStore(),
         userStore: new FakeUserStore(),
         accessStore: new FakeAccessStore(),
+        accountStore: new FakeAccountStore(),
         userFeedbackStore: new FakeUserFeedbackStore(),
         featureStrategiesStore: new FakeFeatureStrategiesStore(),
         featureTagStore: new FakeFeatureTagStore(),
@@ -73,6 +76,8 @@ const createStores: () => IUnleashStores = () => {
         publicSignupTokenStore: new FakePublicSignupStore(),
         favoriteFeaturesStore: new FakeFavoriteFeaturesStore(),
         favoriteProjectsStore: new FakeFavoriteProjectsStore(),
+        projectStatsStore: new FakeProjectStatsStore(),
+        importTogglesStore: {} as IImportTogglesStore,
     };
 };
 

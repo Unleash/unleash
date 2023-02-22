@@ -1,4 +1,3 @@
-import { Knex } from 'knex';
 import { EventEmitter } from 'stream';
 import { Logger, LogProvider } from '../logger';
 import { ITag } from '../types/model';
@@ -11,6 +10,7 @@ import {
     IFeatureTag,
     IFeatureTagStore,
 } from '../types/stores/feature-tag-store';
+import { Db } from './db';
 
 const COLUMNS = ['feature_name', 'tag_type', 'tag_value'];
 const TABLE = 'feature_tag';
@@ -22,13 +22,13 @@ interface FeatureTagTable {
 }
 
 class FeatureTagStore implements IFeatureTagStore {
-    private db: Knex;
+    private db: Db;
 
     private logger: Logger;
 
     private readonly timer: Function;
 
-    constructor(db: Knex, eventBus: EventEmitter, getLogger: LogProvider) {
+    constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
         this.logger = getLogger('feature-tag-store.ts');
         this.timer = (action) =>
@@ -103,6 +103,20 @@ class FeatureTagStore implements IFeatureTagStore {
             .where({ feature_name: featureName });
         stopTimer();
         return rows.map(this.featureTagRowToTag);
+    }
+
+    async getAllByFeatures(features: string[]): Promise<IFeatureTag[]> {
+        const query = this.db
+            .select(COLUMNS)
+            .from<FeatureTagTable>(TABLE)
+            .whereIn('feature_name', features)
+            .orderBy('feature_name', 'asc');
+        const rows = await query;
+        return rows.map((row) => ({
+            featureName: row.feature_name,
+            tagType: row.tag_type,
+            tagValue: row.tag_value,
+        }));
     }
 
     async tagFeature(featureName: string, tag: ITag): Promise<ITag> {

@@ -1,4 +1,3 @@
-import { Knex } from 'knex';
 import { IUnleashConfig } from '../types/option';
 import { IUnleashStores } from '../types/stores';
 
@@ -34,10 +33,14 @@ import PatStore from './pat-store';
 import { PublicSignupTokenStore } from './public-signup-token-store';
 import { FavoriteFeaturesStore } from './favorite-features-store';
 import { FavoriteProjectsStore } from './favorite-projects-store';
+import { AccountStore } from './account-store';
+import ProjectStatsStore from './project-stats-store';
+import { Db } from './db';
+import { ImportTogglesStore } from '../features/export-import-toggles/import-toggles-store';
 
 export const createStores = (
     config: IUnleashConfig,
-    db: Knex,
+    db: Db,
 ): IUnleashStores => {
     const { getLogger, eventBus } = config;
     const eventStore = new EventStore(db, getLogger);
@@ -57,6 +60,7 @@ export const createStores = (
         contextFieldStore: new ContextFieldStore(db, getLogger),
         settingStore: new SettingStore(db, getLogger),
         userStore: new UserStore(db, getLogger),
+        accountStore: new AccountStore(db, getLogger),
         projectStore: new ProjectStore(
             db,
             eventBus,
@@ -111,6 +115,8 @@ export const createStores = (
             eventBus,
             getLogger,
         ),
+        projectStatsStore: new ProjectStatsStore(db, eventBus, getLogger),
+        importTogglesStore: new ImportTogglesStore(db),
     };
 };
 

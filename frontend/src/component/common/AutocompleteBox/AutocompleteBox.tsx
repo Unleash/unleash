@@ -1,9 +1,8 @@
 import { useStyles } from 'component/common/AutocompleteBox/AutocompleteBox.styles';
 import { Search, ArrowDropDown } from '@mui/icons-material';
-import { Autocomplete } from '@mui/material';
+import { Autocomplete, styled } from '@mui/material';
 import { AutocompleteRenderInputParams } from '@mui/material/Autocomplete';
 import { TextField } from '@mui/material';
-import classNames from 'classnames';
 
 interface IAutocompleteBoxProps {
     label: string;
@@ -17,6 +16,36 @@ export interface IAutocompleteBoxOption {
     value: string;
     label: string;
 }
+
+const StyledContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    borderRadius: theme.spacing(2),
+    '& .MuiInputLabel-root[data-shrink="false"]': {
+        top: 3,
+    },
+}));
+
+const StyledIcon = styled('div', {
+    shouldForwardProp: (prop: string) => !prop.startsWith('$'),
+})<{ $disabled: boolean }>(({ theme, $disabled }) => ({
+    background: $disabled
+        ? theme.palette.primary.light
+        : theme.palette.featureSegmentSearchBackground,
+    height: '48px',
+    width: '48px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingLeft: 6,
+    borderTopLeftRadius: '40px',
+    borderBottomLeftRadius: '40px',
+    color: theme.palette.text.tertiaryContrast,
+}));
+
+const StyledAutocomplete = styled(Autocomplete)({
+    flex: 1,
+}) as typeof Autocomplete;
 
 export const AutocompleteBox = ({
     label,
@@ -32,18 +61,11 @@ export const AutocompleteBox = ({
     };
 
     return (
-        <div className={styles.container}>
-            <div
-                className={classNames(
-                    styles.icon,
-                    disabled && styles.iconDisabled
-                )}
-                aria-hidden
-            >
+        <StyledContainer>
+            <StyledIcon $disabled={Boolean(disabled)} aria-hidden>
                 <Search />
-            </div>
-            <Autocomplete
-                className={styles.autocomplete}
+            </StyledIcon>
+            <StyledAutocomplete
                 classes={{ inputRoot: styles.inputRoot }}
                 options={options}
                 value={value}
@@ -55,6 +77,6 @@ export const AutocompleteBox = ({
                 size="small"
                 multiple
             />
-        </div>
+        </StyledContainer>
     );
 };

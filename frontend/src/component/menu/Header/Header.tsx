@@ -9,6 +9,8 @@ import {
     IconButton,
     Tooltip,
     Switch,
+    styled,
+    Theme,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -20,20 +22,91 @@ import { ReactComponent as UnleashLogoWhite } from 'assets/img/logoWithWhiteText
 
 import { DrawerMenu } from './DrawerMenu/DrawerMenu';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { useThemeStyles } from 'themes/themeStyles';
+import { flexRow, focusable } from 'themes/themeStyles';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { IPermission } from 'interfaces/user';
 import { NavigationMenu } from './NavigationMenu/NavigationMenu';
-import { getRoutes } from 'component/menu/routes';
+import {
+    getRoutes,
+    adminMenuRoutes,
+    getCondensedRoutes,
+} from 'component/menu/routes';
 import { KeyboardArrowDown } from '@mui/icons-material';
 import { filterByConfig } from 'component/common/util';
 import { useAuthPermissions } from 'hooks/api/getters/useAuth/useAuthPermissions';
-import { useStyles } from './Header.styles';
-import classNames from 'classnames';
 import { useId } from 'hooks/useId';
-import { IRoute } from 'interfaces/route';
+import { INavigationMenuItem } from 'interfaces/route';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { useThemeMode } from 'hooks/useThemeMode';
+
+const StyledHeader = styled(AppBar)(({ theme }) => ({
+    backgroundColor: theme.palette.headerBackground,
+    padding: theme.spacing(1),
+    boxShadow: 'none',
+    position: 'relative',
+    zIndex: 300,
+}));
+
+const StyledContainer = styled(Container)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    maxWidth: 1280,
+    [theme.breakpoints.down('md')]: {
+        padding: '0',
+    },
+}));
+
+const StyledUserContainer = styled('div')({
+    marginLeft: 'auto',
+    display: 'flex',
+    alignItems: 'center',
+});
+
+const StyledNav = styled('nav')({
+    display: 'flex',
+    alignItems: 'center',
+    flexGrow: 1,
+});
+
+const StyledUnleashLogoWhite = styled(UnleashLogoWhite)({ width: '150px' });
+
+const StyledUnleashLogo = styled(UnleashLogo)({ width: '150px' });
+
+const StyledLinks = styled('div')(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'center',
+    marginLeft: theme.spacing(3),
+    '& a': {
+        textDecoration: 'none',
+        color: 'inherit',
+        marginRight: theme.spacing(3),
+        display: 'flex',
+        alignItems: 'center',
+    },
+}));
+
+const StyledAdvancedNavButton = styled('button')(({ theme }) => ({
+    border: 'none',
+    background: 'transparent',
+    height: '100%',
+    display: 'flex',
+    fontSize: theme.fontSizes.bodySize,
+    fontFamily: theme.typography.fontFamily,
+    alignItems: 'center',
+    color: 'inherit',
+    cursor: 'pointer',
+}));
+
+const styledIconProps = (theme: Theme) => ({
+    color: theme.palette.neutral.main,
+});
+
+const StyledLink = styled(Link)(({ theme }) => focusable(theme));
+
+const StyledIconButton = styled(IconButton)(({ theme }) => ({
+    ...focusable(theme),
+    borderRadius: 100,
+}));
 
 const Header: VFC = () => {
     const { onSetThemeMode, themeMode } = useThemeMode();
@@ -47,8 +120,6 @@ const Header: VFC = () => {
     const { permissions } = useAuthPermissions();
     const { uiConfig, isOss } = useUiConfig();
     const smallScreen = useMediaQuery(theme.breakpoints.down('md'));
-    const { classes: styles } = useStyles();
-    const { classes: themeStyles } = useThemeStyles();
     const [openDrawer, setOpenDrawer] = useState(false);
 
     const toggleDrawer = () => setOpenDrawer(prev => !prev);
@@ -67,25 +138,39 @@ const Header: VFC = () => {
 
     const routes = getRoutes();
 
-    const filterByEnterprise = (route: IRoute): boolean => {
+    const filterByEnterprise = (route: INavigationMenuItem): boolean => {
         return !route.menu.isEnterprise || !isOss();
     };
 
     const filteredMainRoutes = {
-        mainNavRoutes: routes.mainNavRoutes.filter(filterByConfig(uiConfig)),
-        mobileRoutes: routes.mobileRoutes.filter(filterByConfig(uiConfig)),
-        adminRoutes: routes.adminRoutes
+        mainNavRoutes: getCondensedRoutes(routes.mainNavRoutes)
+            .concat([
+                {
+                    path: '/admin/api',
+                    title: 'API access',
+                    menu: {},
+                },
+            ])
+            .filter(filterByConfig(uiConfig)),
+        mobileRoutes: getCondensedRoutes(routes.mobileRoutes).filter(
+            filterByConfig(uiConfig)
+        ),
+        adminRoutes: adminMenuRoutes
             .filter(filterByConfig(uiConfig))
-            .filter(filterByEnterprise),
+            .filter(filterByEnterprise)
+            .map(route => ({
+                ...route,
+                path: route.path.replace('/*', ''),
+            })),
     };
 
     if (smallScreen) {
         return (
-            <AppBar className={styles.header} position="static">
-                <Container className={styles.container}>
+            <StyledHeader position="static">
+                <StyledContainer>
                     <Tooltip title="Menu" arrow>
                         <IconButton
-                            className={styles.drawerButton}
+                            sx={{ color: theme => theme.palette.text.primary }}
                             onClick={toggleDrawer}
                             aria-controls="header-drawer"
                             aria-expanded={openDrawer}
@@ -103,63 +188,40 @@ const Header: VFC = () => {
                         admin={admin}
                         routes={filteredMainRoutes}
                     />
-                    <div className={styles.userContainer}>
+                    <StyledUserContainer>
                         <UserProfile />
-                    </div>
-                </Container>
-            </AppBar>
+                    </StyledUserContainer>
+                </StyledContainer>
+            </StyledHeader>
         );
     }
 
     return (
-        <AppBar className={styles.header} position="static">
-            <Container className={styles.container}>
-                <Link
-                    to="/"
-                    className={classNames(
-                        themeStyles.flexRow,
-                        themeStyles.focusable
-                    )}
-                    aria-label="Home"
-                >
+        <StyledHeader position="static">
+            <StyledContainer>
+                <StyledLink to="/" sx={flexRow} aria-label="Home">
                     <ThemeMode
                         darkmode={
-                            <UnleashLogoWhite
-                                className={styles.logo}
-                                aria-label="Unleash logo"
-                            />
+                            <StyledUnleashLogoWhite aria-label="Unleash logo" />
                         }
                         lightmode={
-                            <UnleashLogo
-                                className={styles.logo}
-                                aria-label="Unleash logo"
-                            />
+                            <StyledUnleashLogo aria-label="Unleash logo" />
                         }
                     />
-                </Link>
-                <nav className={styles.nav}>
-                    <div className={styles.links}>
-                        <Link to="/projects" className={themeStyles.focusable}>
-                            Projects
-                        </Link>
-                        <Link to="/features" className={themeStyles.focusable}>
-                            Feature toggles
-                        </Link>
-                        <Link
-                            to="/playground"
-                            className={themeStyles.focusable}
-                        >
-                            Playground
-                        </Link>
-                        <button
-                            className={styles.advancedNavButton}
+                </StyledLink>
+                <StyledNav>
+                    <StyledLinks>
+                        <StyledLink to="/projects">Projects</StyledLink>
+                        <StyledLink to="/features">Feature toggles</StyledLink>
+                        <StyledLink to="/playground">Playground</StyledLink>
+                        <StyledAdvancedNavButton
                             onClick={e => setConfigRef(e.currentTarget)}
                             aria-controls={configRef ? configId : undefined}
                             aria-expanded={Boolean(configRef)}
                         >
                             Configure
-                            <KeyboardArrowDown className={styles.icon} />
-                        </button>
+                            <KeyboardArrowDown sx={styledIconProps} />
+                        </StyledAdvancedNavButton>
                         <NavigationMenu
                             id={configId}
                             options={filteredMainRoutes.mainNavRoutes}
@@ -167,8 +229,8 @@ const Header: VFC = () => {
                             handleClose={onConfigureClose}
                             style={{ top: 10 }}
                         />
-                    </div>
-                    <div className={styles.userContainer}>
+                    </StyledLinks>
+                    <StyledUserContainer>
                         <ConditionallyRender
                             condition={Boolean(
                                 uiConfig.flags.ENABLE_DARK_MODE_SUPPORT
@@ -192,7 +254,7 @@ const Header: VFC = () => {
                                 rel="noopener noreferrer"
                                 size="large"
                                 disableRipple
-                                className={themeStyles.focusable}
+                                sx={focusable}
                             >
                                 <MenuBookIcon />
                             </IconButton>
@@ -201,14 +263,10 @@ const Header: VFC = () => {
                             condition={admin}
                             show={
                                 <Tooltip title="Settings" arrow>
-                                    <IconButton
+                                    <StyledIconButton
                                         onClick={e =>
                                             setAdminRef(e.currentTarget)
                                         }
-                                        className={classNames(
-                                            styles.wideButton,
-                                            themeStyles.focusable
-                                        )}
                                         aria-controls={
                                             adminRef ? adminId : undefined
                                         }
@@ -218,9 +276,9 @@ const Header: VFC = () => {
                                     >
                                         <SettingsIcon />
                                         <KeyboardArrowDown
-                                            className={styles.icon}
+                                            sx={styledIconProps}
                                         />
-                                    </IconButton>
+                                    </StyledIconButton>
                                 </Tooltip>
                             }
                         />
@@ -232,10 +290,10 @@ const Header: VFC = () => {
                             style={{ top: 5, left: -100 }}
                         />{' '}
                         <UserProfile />
-                    </div>
-                </nav>
-            </Container>
-        </AppBar>
+                    </StyledUserContainer>
+                </StyledNav>
+            </StyledContainer>
+        </StyledHeader>
     );
 };
 

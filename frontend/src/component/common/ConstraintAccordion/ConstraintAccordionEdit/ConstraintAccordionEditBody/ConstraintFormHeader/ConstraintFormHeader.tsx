@@ -1,22 +1,15 @@
-import { makeStyles } from 'tss-react/mui';
 import React from 'react';
+import { styled } from '@mui/material';
 
-const useStyles = makeStyles()(theme => ({
-    header: {
-        fontSize: theme.fontSizes.bodySize,
-        fontWeight: 'normal',
-        marginTop: '1rem',
-        marginBottom: '0.25rem',
-    },
+const StyledHeader = styled('h3')(({ theme }) => ({
+    fontSize: theme.fontSizes.bodySize,
+    fontWeight: theme.typography.fontWeightMedium,
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(0.5),
 }));
 
 export const ConstraintFormHeader: React.FC<
     React.HTMLAttributes<HTMLDivElement>
 > = ({ children, ...rest }) => {
-    const { classes: styles } = useStyles();
-    return (
-        <h3 {...rest} className={styles.header}>
-            {children}
-        </h3>
-    );
+    return <StyledHeader {...rest}>{children}</StyledHeader>;
 };

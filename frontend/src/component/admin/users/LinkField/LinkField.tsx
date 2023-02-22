@@ -41,7 +41,7 @@ export const LinkField = ({ inviteLink, small }: ILinkFieldProps) => {
                 py: 4,
                 px: 4,
                 borderRadius: theme => `${theme.shape.borderRadius}px`,
-                my: 2,
+                mt: 2,
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',

@@ -1,91 +1,161 @@
-import { styled, Typography } from '@mui/material';
-import React, { useState } from 'react';
+import { AutocompleteValue, styled, Typography } from '@mui/material';
+import React, { useMemo, useState } from 'react';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import Input from 'component/common/Input/Input';
-import { useStyles } from './AddTagDialog.styles';
-import { trim } from 'component/common/util';
-import TagSelect from 'component/common/TagSelect/TagSelect';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
-import useTags from 'hooks/api/getters/useTags/useTags';
+import useFeatureTags from 'hooks/api/getters/useFeatureTags/useFeatureTags';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { ITag } from 'interfaces/tags';
-
-const StyledInput = styled(Input)(() => ({
-    width: '100%',
-}));
+import { ITagType } from 'interfaces/tags';
+import { TagOption, TagsInput } from './TagsInput';
+import TagTypeSelect from './TagTypeSelect';
+import useTagApi from 'hooks/api/actions/useTagApi/useTagApi';
+import { AutocompleteChangeReason } from '@mui/base/AutocompleteUnstyled/useAutocomplete';
+import useTags from 'hooks/api/getters/useTags/useTags';
+import cloneDeep from 'lodash.clonedeep';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 interface IAddTagDialogProps {
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-interface IDefaultTag {
-    type: string;
-    value: string;
-
-    [index: string]: string;
-}
+const StyledDialogFormContent = styled('section')(({ theme }) => ({
+    ['& > *']: {
+        margin: theme.spacing(1, 0),
+    },
+}));
 
 const AddTagDialog = ({ open, setOpen }: IAddTagDialogProps) => {
-    const DEFAULT_TAG: IDefaultTag = { type: 'simple', value: '' };
-    const { classes: styles } = useStyles();
     const featureId = useRequiredPathParam('featureId');
+    const { createTag } = useTagApi();
     const { addTagToFeature, loading } = useFeatureApi();
-    const { tags, refetch } = useTags(featureId);
-    const [errors, setErrors] = useState({ tagError: '' });
+    const { tags, refetch } = useFeatureTags(featureId);
     const { setToastData } = useToast();
-    const [tag, setTag] = useState(DEFAULT_TAG);
+    const [tagType, setTagType] = useState<ITagType>({
+        name: 'simple',
+        description: 'Simple tag to get you started',
+        icon: '',
+    });
+
+    const { trackEvent } = usePlausibleTracker();
+
+    const [selectedTagOptions, setSelectedTagOptions] = useState<TagOption[]>(
+        []
+    );
+
+    const { tags: allTags, refetch: refetchAllTags } = useTags(tagType.name);
+
+    const tagTypeOptions: TagOption[] = useMemo(() => {
+        return allTags.map(tag => {
+            return {
+                title: tag.value,
+            };
+        });
+    }, [allTags]);
 
     const onCancel = () => {
         setOpen(false);
-        setErrors({ tagError: '' });
-        setTag(DEFAULT_TAG);
+        setSelectedTagOptions([]);
     };
 
     const onSubmit = async (evt: React.SyntheticEvent) => {
         evt.preventDefault();
-        if (!tag.type) {
-            tag.type = 'simple';
-        }
-        try {
-            await addTagToFeature(featureId, tag);
-
+        let added = 0;
+        if (selectedTagOptions.length !== 0) {
+            for (const tagOption of selectedTagOptions) {
+                if (
+                    !tags.includes({
+                        type: tagType.name,
+                        value: tagOption.title,
+                    })
+                ) {
+                    try {
+                        if (!tagOption.title.startsWith('Create')) {
+                            await addTagToFeature(featureId, {
+                                type: tagType.name,
+                                value: tagOption.title,
+                            });
+                            added++;
+                            await refetch();
+                        }
+                    } catch (error: unknown) {
+                        const message = formatUnknownError(error);
+                        setToastData({
+                            type: 'error',
+                            title: `Failed to add tag`,
+                            text: message,
+                            confetti: false,
+                        });
+                    }
+                }
+            }
+            added > 1 &&
+                trackEvent('suggest_tags', {
+                    props: { eventType: 'multiple_tags_added' },
+                });
+            added > 0 &&
+                setToastData({
+                    type: 'success',
+                    title: `Added tag${added > 1 ? 's' : ''} to toggle`,
+                    text: `We successfully added ${added} new tag${
+                        added > 1 ? 's' : ''
+                    } to your toggle`,
+                    confetti: true,
+                });
             setOpen(false);
-            setTag(DEFAULT_TAG);
-            refetch();
-            setToastData({
-                type: 'success',
-                title: 'Added tag to toggle',
-                text: 'We successfully added a tag to your toggle',
-                confetti: true,
-            });
-        } catch (error: unknown) {
-            const message = formatUnknownError(error);
-            setErrors({ tagError: message });
+            setSelectedTagOptions([]);
         }
     };
 
-    const isValueNotEmpty = (name: string) => name.length;
-    const isTagUnique = (tag: ITag) =>
-        !tags.some(
-            ({ type, value }) => type === tag.type && value === tag.value
-        );
-    const isValid = isValueNotEmpty(tag.value) && isTagUnique(tag);
-
-    const onUpdateTag = (key: string, value: string) => {
-        setErrors({ tagError: '' });
-        const updatedTag = { ...tag, [key]: trim(value) };
-
-        if (!isTagUnique(updatedTag)) {
-            setErrors({
-                tagError: 'Tag already exists for this feature toggle.',
-            });
+    const handleTagTypeChange = (
+        event: React.SyntheticEvent,
+        value: AutocompleteValue<ITagType, false, any, any>
+    ) => {
+        if (value != null && typeof value !== 'string') {
+            event.preventDefault();
+            setTagType(value);
         }
-
-        setTag(updatedTag);
     };
+
+    const handleInputChange = (
+        event: React.SyntheticEvent,
+        newValue: AutocompleteValue<
+            TagOption | string,
+            true,
+            undefined,
+            undefined
+        >,
+        reason: AutocompleteChangeReason
+    ) => {
+        if (reason === 'selectOption') {
+            const clone = cloneDeep(newValue) as TagOption[];
+            newValue.forEach((value, index) => {
+                if (
+                    typeof value !== 'string' &&
+                    value.inputValue &&
+                    value.inputValue !== ''
+                ) {
+                    const payload = {
+                        value: value.inputValue,
+                        type: tagType.name,
+                    };
+                    createTag(payload).then(() => {
+                        trackEvent('suggest_tags', {
+                            props: { eventType: 'tag_created' },
+                        });
+                        refetchAllTags();
+                    });
+                    value.title = value.inputValue;
+                    value.inputValue = '';
+                    clone[index] = value;
+                }
+            });
+            setSelectedTagOptions(clone);
+        }
+    };
+
+    const hasSelectedValues = selectedTagOptions.length !== 0;
 
     const formId = 'add-tag-form';
 
@@ -94,39 +164,34 @@ const AddTagDialog = ({ open, setOpen }: IAddTagDialogProps) => {
             <Dialogue
                 open={open}
                 secondaryButtonText="Cancel"
-                primaryButtonText="Add tag"
+                primaryButtonText={`Add tag (${selectedTagOptions.length})`}
                 title="Add tags to feature toggle"
                 onClick={onSubmit}
-                disabledPrimaryButton={loading || !isValid}
+                disabledPrimaryButton={loading || !hasSelectedValues}
                 onClose={onCancel}
                 formId={formId}
             >
                 <>
-                    <Typography paragraph>
+                    <Typography
+                        paragraph
+                        sx={{ marginBottom: theme => theme.spacing(2.5) }}
+                    >
                         Tags allow you to group features together
                     </Typography>
                     <form id={formId} onSubmit={onSubmit}>
-                        <section className={styles.dialogFormContent}>
-                            <TagSelect
+                        <StyledDialogFormContent>
+                            <TagTypeSelect
                                 autoFocus
-                                name="type"
-                                value={tag.type}
-                                onChange={type => onUpdateTag('type', type)}
+                                value={tagType}
+                                onChange={handleTagTypeChange}
                             />
-                            <br />
-                            <StyledInput
-                                label="Value"
-                                name="value"
-                                placeholder="Your tag"
-                                value={tag.value}
-                                error={Boolean(errors.tagError)}
-                                errorText={errors.tagError}
-                                onChange={e =>
-                                    onUpdateTag('value', e.target.value)
-                                }
-                                required
+                            <TagsInput
+                                options={tagTypeOptions}
+                                tagType={tagType.name}
+                                featureTags={tags}
+                                onChange={handleInputChange}
                             />
-                        </section>
+                        </StyledDialogFormContent>
                     </form>
                 </>
             </Dialogue>

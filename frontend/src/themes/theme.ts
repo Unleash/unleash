@@ -41,6 +41,7 @@ export default createTheme({
         },
     },
     fontSizes: {
+        largeHeader: '2rem',
         mainHeader: '1.25rem',
         bodySize: '1rem',
         smallBody: `${14 / 16}rem`,
@@ -190,9 +191,9 @@ export default createTheme({
                     fontSize: '0.875rem',
                     '& a': {
                         color: colors.purple[900],
-                        textDecoration: 'underline',
+                        textDecoration: 'none',
                         '&:hover': {
-                            textDecoration: 'none',
+                            textDecoration: 'underline',
                         },
                     },
                 },

@@ -35,10 +35,16 @@ import PatService from '../services/pat-service';
 import { PublicSignupTokenService } from '../services/public-signup-token-service';
 import { LastSeenService } from '../services/client-metrics/last-seen-service';
 import { InstanceStatsService } from '../services/instance-stats-service';
-import { FavoritesService } from '../services';
+import { FavoritesService } from '../services/favorites-service';
+import MaintenanceService from '../services/maintenance-service';
+import { AccountService } from '../services/account-service';
+import { SchedulerService } from '../services/scheduler-service';
+import { Knex } from 'knex';
+import ExportImportService from '../features/export-import-toggles/export-import-service';
 
 export interface IUnleashServices {
     accessService: AccessService;
+    accountService: AccountService;
     addonService: AddonService;
     apiTokenService: ApiTokenService;
     clientInstanceService: ClientInstanceService;
@@ -77,4 +83,10 @@ export interface IUnleashServices {
     lastSeenService: LastSeenService;
     instanceStatsService: InstanceStatsService;
     favoritesService: FavoritesService;
+    maintenanceService: MaintenanceService;
+    exportImportService: ExportImportService;
+    schedulerService: SchedulerService;
+    transactionalExportImportService: (
+        db: Knex.Transaction,
+    ) => ExportImportService;
 }

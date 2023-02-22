@@ -1,7 +1,5 @@
 /// <reference types="cypress" />
 
-export {};
-
 const ENTERPRISE = Boolean(Cypress.env('ENTERPRISE'));
 const randomId = String(Math.random()).split('.')[1];
 const featureToggleName = `unleash-e2e-${randomId}`;
@@ -234,36 +232,29 @@ describe('feature', () => {
         cy.wait('@addStrategyToFeature');
     });
 
-    it('can add two variant to the feature', () => {
+    it('can add two variants to the development environment', () => {
         cy.visit(`/projects/default/features/${featureToggleName}/variants`);
 
         cy.intercept(
             'PATCH',
-            `/api/admin/projects/default/features/${featureToggleName}/variants`,
+            `/api/admin/projects/default/features/${featureToggleName}/environments/development/variants`,
             req => {
-                if (req.body.length === 1) {
-                    expect(req.body[0].op).to.equal('add');
-                    expect(req.body[0].path).to.match(/\//);
-                    expect(req.body[0].value.name).to.equal(variant1);
-                } else if (req.body.length === 2) {
-                    expect(req.body[0].op).to.equal('replace');
-                    expect(req.body[0].path).to.match(/weight/);
-                    expect(req.body[0].value).to.equal(500);
-                    expect(req.body[1].op).to.equal('add');
-                    expect(req.body[1].path).to.match(/\//);
-                    expect(req.body[1].value.name).to.equal(variant2);
-                }
+                expect(req.body[0].op).to.equal('add');
+                expect(req.body[0].path).to.equal('/0');
+                expect(req.body[0].value.name).to.equal(variant1);
+                expect(req.body[0].value.weight).to.equal(500);
+                expect(req.body[1].op).to.equal('add');
+                expect(req.body[1].path).to.equal('/1');
+                expect(req.body[1].value.name).to.equal(variant2);
+                expect(req.body[1].value.weight).to.equal(500);
             }
         ).as('variantCreation');
 
-        cy.get('[data-testid=ADD_VARIANT_BUTTON]').click();
+        cy.get('[data-testid=ADD_VARIANT_BUTTON]').first().click();
         cy.wait(1000);
         cy.get('[data-testid=VARIANT_NAME_INPUT]').type(variant1);
-        cy.get('[data-testid=DIALOGUE_CONFIRM_ID]').click();
-        cy.wait('@variantCreation');
-        cy.get('[data-testid=ADD_VARIANT_BUTTON]').click();
-        cy.wait(1000);
-        cy.get('[data-testid=VARIANT_NAME_INPUT]').type(variant2);
+        cy.get('[data-testid=MODAL_ADD_VARIANT_BUTTON]').click();
+        cy.get('[data-testid=VARIANT_NAME_INPUT]').last().type(variant2);
         cy.get('[data-testid=DIALOGUE_CONFIRM_ID]').click();
         cy.wait('@variantCreation');
     });
@@ -271,60 +262,61 @@ describe('feature', () => {
     it('can set weight to fixed value for one of the variants', () => {
         cy.visit(`/projects/default/features/${featureToggleName}/variants`);
 
-        cy.get(`[data-testid=VARIANT_EDIT_BUTTON_${variant1}]`).click();
+        cy.get('[data-testid=EDIT_VARIANTS_BUTTON]').click();
         cy.wait(1000);
         cy.get('[data-testid=VARIANT_NAME_INPUT]')
+            .last()
             .children()
             .find('input')
             .should('have.attr', 'disabled');
-        cy.get('[data-testid=VARIANT_WEIGHT_CHECK]').find('input').check();
-        cy.get('[data-testid=VARIANT_WEIGHT_INPUT]').clear().type('15');
+        cy.get('[data-testid=VARIANT_WEIGHT_CHECK]')
+            .last()
+            .find('input')
+            .check();
+        cy.get('[data-testid=VARIANT_WEIGHT_INPUT]').last().clear().type('15');
 
         cy.intercept(
             'PATCH',
-            `/api/admin/projects/default/features/${featureToggleName}/variants`,
+            `/api/admin/projects/default/features/${featureToggleName}/environments/development/variants`,
             req => {
                 expect(req.body[0].op).to.equal('replace');
-                expect(req.body[0].path).to.match(/weight/);
-                expect(req.body[0].value).to.equal(850);
+                expect(req.body[0].path).to.equal('/1/weightType');
+                expect(req.body[0].value).to.equal('fix');
                 expect(req.body[1].op).to.equal('replace');
-                expect(req.body[1].path).to.match(/weightType/);
-                expect(req.body[1].value).to.equal('fix');
+                expect(req.body[1].path).to.equal('/1/weight');
+                expect(req.body[1].value).to.equal(150);
                 expect(req.body[2].op).to.equal('replace');
-                expect(req.body[2].path).to.match(/weight/);
-                expect(req.body[2].value).to.equal(150);
+                expect(req.body[2].path).to.equal('/0/weight');
+                expect(req.body[2].value).to.equal(850);
             }
         ).as('variantUpdate');
 
         cy.get('[data-testid=DIALOGUE_CONFIRM_ID]').click();
         cy.wait('@variantUpdate');
-        cy.get(`[data-testid=VARIANT_WEIGHT_${variant1}]`).should(
+        cy.get(`[data-testid=VARIANT_WEIGHT_${variant2}]`).should(
             'have.text',
             '15 %'
         );
     });
 
     it('can delete variant', () => {
-        const variantName = 'to-be-deleted';
-
         cy.visit(`/projects/default/features/${featureToggleName}/variants`);
-        cy.get('[data-testid=ADD_VARIANT_BUTTON]').click();
+        cy.get('[data-testid=EDIT_VARIANTS_BUTTON]').click();
         cy.wait(1000);
-        cy.get('[data-testid=VARIANT_NAME_INPUT]').type(variantName);
-        cy.get('[data-testid=DIALOGUE_CONFIRM_ID]').click();
+        cy.get(`[data-testid=VARIANT_DELETE_BUTTON_${variant2}]`).click();
 
         cy.intercept(
             'PATCH',
-            `/api/admin/projects/default/features/${featureToggleName}/variants`,
+            `/api/admin/projects/default/features/${featureToggleName}/environments/development/variants`,
             req => {
-                const patch = req.body.find(
-                    (patch: Record<string, string>) => patch.op === 'remove'
-                );
-                expect(patch.path).to.match(/\//);
+                expect(req.body[0].op).to.equal('remove');
+                expect(req.body[0].path).to.equal('/1');
+                expect(req.body[1].op).to.equal('replace');
+                expect(req.body[1].path).to.equal('/0/weight');
+                expect(req.body[1].value).to.equal(1000);
             }
         ).as('delete');
 
-        cy.get(`[data-testid=VARIANT_DELETE_BUTTON_${variantName}]`).click();
         cy.get('[data-testid=DIALOGUE_CONFIRM_ID]').click();
         cy.wait('@delete');
     });

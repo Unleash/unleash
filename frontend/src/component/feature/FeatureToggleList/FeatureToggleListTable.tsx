@@ -1,5 +1,11 @@
 import { useCallback, useEffect, useMemo, useState, VFC } from 'react';
-import { Link, useMediaQuery, useTheme } from '@mui/material';
+import {
+    IconButton,
+    Link,
+    Tooltip,
+    useMediaQuery,
+    useTheme,
+} from '@mui/material';
 import { Link as RouterLink, useSearchParams } from 'react-router-dom';
 import { SortingRule, useFlexLayout, useSortBy, useTable } from 'react-table';
 import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
@@ -24,8 +30,12 @@ import { usePinnedFavorites } from 'hooks/usePinnedFavorites';
 import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';
 import { FavoriteIconCell } from 'component/common/Table/cells/FavoriteIconCell/FavoriteIconCell';
 import { FavoriteIconHeader } from 'component/common/Table/FavoriteIconHeader/FavoriteIconHeader';
+import { useGlobalLocalStorage } from 'hooks/useGlobalLocalStorage';
+import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
+import FileDownload from '@mui/icons-material/FileDownload';
+import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
+import { ExportDialog } from './ExportDialog';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { usePlausibleTracker } from '../../../hooks/usePlausibleTracker';
 
 export const featuresPlaceholder: FeatureSchema[] = Array(15).fill({
     name: 'Name of the feature',
@@ -43,15 +53,21 @@ const defaultSort: SortingRule<string> = { id: 'createdAt' };
 
 const { value: storedParams, setValue: setStoredParams } = createLocalStorage(
     'FeatureToggleListTable:v1',
-    { ...defaultSort, favorites: false }
+    defaultSort
 );
 
 export const FeatureToggleListTable: VFC = () => {
     const theme = useTheme();
+    const { environments } = useEnvironments();
+    const enabledEnvironments = environments
+        .filter(env => env.enabled)
+        .map(env => env.name);
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const isMediumScreen = useMediaQuery(theme.breakpoints.down('lg'));
+    const [showExportDialog, setShowExportDialog] = useState(false);
     const { features = [], loading, refetchFeatures } = useFeatures();
     const [searchParams, setSearchParams] = useSearchParams();
+    const { uiConfig } = useUiConfig();
     const [initialState] = useState(() => ({
         sortBy: [
             {
@@ -64,15 +80,16 @@ export const FeatureToggleListTable: VFC = () => {
         hiddenColumns: ['description'],
         globalFilter: searchParams.get('search') || '',
     }));
+    const { value: globalStore, setValue: setGlobalStore } =
+        useGlobalLocalStorage();
     const { isFavoritesPinned, sortTypes, onChangeIsFavoritePinned } =
         usePinnedFavorites(
             searchParams.has('favorites')
                 ? searchParams.get('favorites') === 'true'
-                : storedParams.favorites
+                : globalStore.favorites
         );
     const [searchValue, setSearchValue] = useState(initialState.globalFilter);
     const { favorite, unfavorite } = useFavoriteFeaturesApi();
-    const { uiConfig } = useUiConfig();
     const onFavorite = useCallback(
         async (feature: any) => {
             if (feature?.favorite) {
@@ -87,27 +104,23 @@ export const FeatureToggleListTable: VFC = () => {
 
     const columns = useMemo(
         () => [
-            ...(uiConfig?.flags?.favorites
-                ? [
-                      {
-                          Header: (
-                              <FavoriteIconHeader
-                                  isActive={isFavoritesPinned}
-                                  onClick={onChangeIsFavoritePinned}
-                              />
-                          ),
-                          accessor: 'favorite',
-                          Cell: ({ row: { original: feature } }: any) => (
-                              <FavoriteIconCell
-                                  value={feature?.favorite}
-                                  onClick={() => onFavorite(feature)}
-                              />
-                          ),
-                          maxWidth: 50,
-                          disableSortBy: true,
-                      },
-                  ]
-                : []),
+            {
+                Header: (
+                    <FavoriteIconHeader
+                        isActive={isFavoritesPinned}
+                        onClick={onChangeIsFavoritePinned}
+                    />
+                ),
+                accessor: 'favorite',
+                Cell: ({ row: { original: feature } }: any) => (
+                    <FavoriteIconCell
+                        value={feature?.favorite}
+                        onClick={() => onFavorite(feature)}
+                    />
+                ),
+                maxWidth: 50,
+                disableSortBy: true,
+            },
             {
                 Header: 'Seen',
                 accessor: 'lastSeenAt',
@@ -172,9 +185,11 @@ export const FeatureToggleListTable: VFC = () => {
             // Always hidden -- for search
             {
                 accessor: 'description',
+                Header: 'Description',
+                searchable: true,
             },
         ],
-        [isFavoritesPinned, uiConfig?.flags?.favorites]
+        [isFavoritesPinned]
     );
 
     const {
@@ -203,6 +218,7 @@ export const FeatureToggleListTable: VFC = () => {
             data,
             initialState,
             sortTypes,
+            autoResetHiddenColumns: false,
             autoResetSortBy: false,
             disableSortRemove: true,
             disableMultiSort: true,
@@ -211,19 +227,24 @@ export const FeatureToggleListTable: VFC = () => {
         useFlexLayout
     );
 
-    useEffect(() => {
-        const hiddenColumns = ['description'];
-        if (!features.some(({ tags }) => tags?.length)) {
-            hiddenColumns.push('tags');
-        }
-        if (isMediumScreen) {
-            hiddenColumns.push('lastSeenAt', 'stale');
-        }
-        if (isSmallScreen) {
-            hiddenColumns.push('type', 'createdAt', 'tags');
-        }
-        setHiddenColumns(hiddenColumns);
-    }, [setHiddenColumns, isSmallScreen, isMediumScreen, features, columns]);
+    useConditionallyHiddenColumns(
+        [
+            {
+                condition: !features.some(({ tags }) => tags?.length),
+                columns: ['tags'],
+            },
+            {
+                condition: isSmallScreen,
+                columns: ['type', 'createdAt', 'tags'],
+            },
+            {
+                condition: isMediumScreen,
+                columns: ['lastSeenAt', 'stale'],
+            },
+        ],
+        setHiddenColumns,
+        columns
+    );
 
     useEffect(() => {
         const tableState: PageQueryType = {};
@@ -244,9 +265,16 @@ export const FeatureToggleListTable: VFC = () => {
         setStoredParams({
             id: sortBy[0].id,
             desc: sortBy[0].desc || false,
-            favorites: isFavoritesPinned || false,
         });
+        setGlobalStore(params => ({
+            ...params,
+            favorites: Boolean(isFavoritesPinned),
+        }));
     }, [sortBy, searchValue, setSearchParams, isFavoritesPinned]);
+
+    if (!(environments.length > 0)) {
+        return null;
+    }
 
     return (
         <PageContent
@@ -282,6 +310,29 @@ export const FeatureToggleListTable: VFC = () => {
                             >
                                 View archive
                             </Link>
+                            <ConditionallyRender
+                                condition={Boolean(
+                                    uiConfig?.flags?.featuresExportImport
+                                )}
+                                show={
+                                    <Tooltip
+                                        title="Export current selection"
+                                        arrow
+                                    >
+                                        <IconButton
+                                            onClick={() =>
+                                                setShowExportDialog(true)
+                                            }
+                                            sx={theme => ({
+                                                marginRight: theme.spacing(2),
+                                            })}
+                                        >
+                                            <FileDownload />
+                                        </IconButton>
+                                    </Tooltip>
+                                }
+                            />
+
                             <CreateFeatureButton
                                 loading={false}
                                 filter={{ query: '', project: 'default' }}
@@ -328,6 +379,17 @@ export const FeatureToggleListTable: VFC = () => {
                                 adding a new feature toggle.
                             </TablePlaceholder>
                         }
+                    />
+                }
+            />
+            <ConditionallyRender
+                condition={Boolean(uiConfig?.flags?.featuresExportImport)}
+                show={
+                    <ExportDialog
+                        showExportDialog={showExportDialog}
+                        data={data}
+                        onClose={() => setShowExportDialog(false)}
+                        environments={enabledEnvironments}
                     />
                 }
             />

@@ -12,7 +12,15 @@ type CustomEvents =
     | 'invite'
     | 'upgrade_plan_clicked'
     | 'change_request'
-    | 'favorite';
+    | 'favorite'
+    | 'maintenance'
+    | 'message_banner'
+    | 'hidden_environment'
+    | 'project_overview'
+    | 'suggest_tags'
+    | 'unknown_ui_error'
+    | 'export_import'
+    | 'project_api_tokens';
 
 export const usePlausibleTracker = () => {
     const plausible = useContext(PlausibleContext);

@@ -30,7 +30,13 @@ export const EnvironmentNameCell = ({
     const { searchQuery } = useSearchHighlightContext();
 
     return (
-        <TextCell>
+        <TextCell
+            sx={theme => ({
+                [theme.breakpoints.up('sm')]: {
+                    minWidth: '350px',
+                },
+            })}
+        >
             <Highlighter search={searchQuery}>{environment.name}</Highlighter>
             <ConditionallyRender
                 condition={environment.protected}
@@ -40,7 +46,7 @@ export const EnvironmentNameCell = ({
                 condition={!environment.enabled}
                 show={
                     <HtmlTooltip
-                        sx={{ maxWidth: '270px' }}
+                        maxWidth="270px"
                         title={
                             <>
                                 <StyledTooltipTitle>
@@ -54,6 +60,7 @@ export const EnvironmentNameCell = ({
                             </>
                         }
                         describeChild
+                        arrow
                     >
                         <StyledBadge color="neutral">Deprecated</StyledBadge>
                     </HtmlTooltip>

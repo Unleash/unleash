@@ -10,6 +10,7 @@ import Group, {
     IGroupUserModel,
 } from '../types/group';
 import Transaction = Knex.Transaction;
+import { Db } from './db';
 
 const T = {
     GROUPS: 'groups',
@@ -62,9 +63,9 @@ const groupToRow = (group: IStoreGroup) => ({
 });
 
 export default class GroupStore implements IGroupStore {
-    private db: Knex;
+    private db: Db;
 
-    constructor(db: Knex) {
+    constructor(db: Db) {
         this.db = db;
     }
 

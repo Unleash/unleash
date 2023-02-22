@@ -2,7 +2,6 @@ import { IInstanceStatus, InstancePlan } from 'interfaces/instance';
 import { useApiGetter } from 'hooks/api/getters/useApiGetter/useApiGetter';
 import { formatApiPath } from 'utils/formatPath';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { useEffect } from 'react';
 
 export interface IUseInstanceStatusOutput {
     instanceStatus?: IInstanceStatus;
@@ -20,13 +19,9 @@ export const useInstanceStatus = (): IUseInstanceStatusOutput => {
     } = uiConfig;
 
     const { data, refetch, loading, error } = useApiGetter(
-        'useInstanceStatus',
+        ['useInstanceStatus', UNLEASH_CLOUD],
         () => fetchInstanceStatus(UNLEASH_CLOUD)
     );
-
-    useEffect(() => {
-        refetch();
-    }, [refetch, UNLEASH_CLOUD]);
 
     const billingPlans = [
         InstancePlan.PRO,

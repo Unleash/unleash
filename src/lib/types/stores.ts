@@ -30,9 +30,13 @@ import { IPatStore } from './stores/pat-store';
 import { IPublicSignupTokenStore } from './stores/public-signup-token-store';
 import { IFavoriteFeaturesStore } from './stores/favorite-features';
 import { IFavoriteProjectsStore } from './stores/favorite-projects';
+import { IAccountStore } from './stores/account-store';
+import { IProjectStatsStore } from './stores/project-stats-store-type';
+import { IImportTogglesStore } from '../features/export-import-toggles/import-toggles-store-type';
 
 export interface IUnleashStores {
     accessStore: IAccessStore;
+    accountStore: IAccountStore;
     addonStore: IAddonStore;
     apiTokenStore: IApiTokenStore;
     clientApplicationsStore: IClientApplicationsStore;
@@ -64,10 +68,13 @@ export interface IUnleashStores {
     publicSignupTokenStore: IPublicSignupTokenStore;
     favoriteFeaturesStore: IFavoriteFeaturesStore;
     favoriteProjectsStore: IFavoriteProjectsStore;
+    projectStatsStore: IProjectStatsStore;
+    importTogglesStore: IImportTogglesStore;
 }
 
 export {
     IAccessStore,
+    IAccountStore,
     IAddonStore,
     IApiTokenStore,
     IClientApplicationsStore,
@@ -99,4 +106,5 @@ export {
     IUserStore,
     IFavoriteFeaturesStore,
     IFavoriteProjectsStore,
+    IImportTogglesStore,
 };

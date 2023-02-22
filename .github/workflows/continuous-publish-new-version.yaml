@@ -1,0 +1,49 @@
+name: Continuous beta version publish to npm
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+
+on:
+  push:
+    branches:
+      - main
+
+# To trigger auto version publish name your squashed commits using conventional notation
+# We support: feat:, fix:, refactor: and chore:
+jobs:
+  build:
+    if: ${{ startsWith(github.event.head_commit.message, 'feat:') || startsWith(github.event.head_commit.message, 'fix:') || startsWith(github.event.head_commit.message, 'refactor:') || startsWith(github.event.head_commit.message, 'chore:') }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [14.x]
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GH_PUSH_TOKEN }}
+      - name: setup git config
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "<>"
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          registry-url: 'https://registry.npmjs.org'
+      - name: update package version
+        # This step always creates beta version
+        # sample transition after official release: 4.20.0 -> 4.21.0-beta.0
+        # sample transition after previous beta release: 4.21.0-beta.0 -> 4.21.0-beta.1
+        #
+        # The new version is pushed back to master and to npm
+        run: |
+          npm version prerelease --preid=beta --ignore-scripts
+          git push origin ${{ github.ref_name }}
+          git push --tags
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

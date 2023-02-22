@@ -4,8 +4,6 @@ import getLogger from '../../../fixtures/no-logger';
 import { DEFAULT_ENV } from '../../../../lib/util/constants';
 import { collectIds } from '../../../../lib/util/collect-ids';
 import { ApiTokenType } from '../../../../lib/types/models/api-token';
-import variantsv3 from '../../../examples/variantsexport_v3.json';
-import { StateService } from '../../../../lib/services';
 
 const importData = require('../../../examples/import.json');
 
@@ -416,40 +414,6 @@ test(`should not delete api_tokens on import when drop-flag is set`, async () =>
     expect(apiTokens[0].username).toBe(apiTokenName);
 });
 
-test(`should clean apitokens for not existing environment after import with drop`, async () => {
-    const projectId = 'not-reimported-project';
-    const environment = 'not-reimported-environment';
-    const apiTokenName = 'dropped-token';
-
-    await db.stores.environmentStore.create({
-        name: environment,
-        type: 'test',
-    });
-    await db.stores.projectStore.create({
-        name: projectId,
-        id: projectId,
-        description: 'Project for export',
-    });
-    await app.services.environmentService.addEnvironmentToProject(
-        environment,
-        projectId,
-    );
-    await app.services.apiTokenService.createApiTokenWithProjects({
-        username: apiTokenName,
-        type: ApiTokenType.CLIENT,
-        environment: environment,
-        projects: [projectId],
-    });
-
-    await app.request
-        .post('/api/admin/state/import?drop=true')
-        .attach('file', 'src/test/examples/v3-minimal.json')
-        .expect(202);
-
-    const apiTokens = await app.services.apiTokenService.getAllTokens();
-    expect(apiTokens.length).toEqual(0);
-});
-
 test(`should not show environment on feature toggle, when environment is disabled`, async () => {
     await app.request
         .post('/api/admin/state/import?drop=true')
@@ -467,34 +431,4 @@ test(`should not show environment on feature toggle, when environment is disable
     expect(result[0].enabled).toBeTruthy();
     expect(result[1].name).toBe('production');
     expect(result[1].enabled).toBeFalsy();
-});
-
-test(`should handle v3 export with variants in features`, async () => {
-    app.services.stateService = new StateService(db.stores, {
-        getLogger,
-        flagResolver: {
-            isEnabled: () => false,
-            getAll: () => ({}),
-        },
-    });
-
-    await app.request
-        .post('/api/admin/state/import?drop=true')
-        .attach('file', 'src/test/examples/variantsexport_v3.json')
-        .expect(202);
-
-    const exported = await app.services.stateService.export({});
-    let exportedFeatures = exported.features
-        .map((f) => {
-            delete f.createdAt;
-            return f;
-        })
-        .sort();
-    let importedFeatures = variantsv3.features
-        .map((f) => {
-            delete f.createdAt;
-            return f;
-        })
-        .sort();
-    expect(exportedFeatures).toStrictEqual(importedFeatures);
 });

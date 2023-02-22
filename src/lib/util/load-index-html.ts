@@ -9,6 +9,7 @@ export async function loadIndexHTML(
     publicFolder: string,
 ): Promise<string> {
     const { cdnPrefix, baseUriPath = '' } = config.server;
+    const uiFlags = JSON.stringify(config.ui.flags);
 
     let indexHTML: string;
     if (cdnPrefix) {
@@ -20,5 +21,5 @@ export async function loadIndexHTML(
             .toString();
     }
 
-    return rewriteHTML(indexHTML, baseUriPath, cdnPrefix);
+    return rewriteHTML(indexHTML, baseUriPath, cdnPrefix, uiFlags);
 }

@@ -31,11 +31,17 @@ export const uiConfigSchema = {
         emailEnabled: {
             type: 'boolean',
         },
+        maintenanceMode: {
+            type: 'boolean',
+        },
         segmentValuesLimit: {
             type: 'number',
         },
         strategySegmentsLimit: {
             type: 'number',
+        },
+        networkViewEnabled: {
+            type: 'boolean',
         },
         frontendApiOrigins: {
             type: 'array',

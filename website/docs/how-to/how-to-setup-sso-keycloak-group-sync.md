@@ -4,7 +4,7 @@ title: 'How to set up Keycloak and Unleash to sync user groups'
 
 :::info availability
 
-User group syncing is an upcoming Unleash feature that will be available for enterprise customers.
+User group syncing was released in Unleash 4.18 and is available to enterprise customers.
 
 :::
 
@@ -64,7 +64,7 @@ Give your new scope a name. Set the type to "Optional". Make sure the protocol i
 
 ![The Keycloak Add Client Scope page with the Name, Type, Protocol and Include in Token Response fields highlighted.](/img/setup-keycloak-sync-7.png)
 
-Navigate the the Mappers tab and select "Configure new Mapper".
+Navigate to the Mappers tab and select "Configure new Mapper".
 
 ![The Keycloak Client Scope details page with the Mappers tab and Configure new Mapper element highlighted.](/img/setup-keycloak-sync-8.png)
 

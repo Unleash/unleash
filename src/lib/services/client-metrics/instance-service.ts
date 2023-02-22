@@ -72,7 +72,6 @@ export default class ClientInstanceService {
         this.clientApplicationsStore = clientApplicationsStore;
         this.clientInstanceStore = clientInstanceStore;
         this.eventStore = eventStore;
-
         this.logger = getLogger(
             '/services/client-metrics/client-instance-service.ts',
         );
@@ -208,6 +207,10 @@ export default class ClientInstanceService {
     async createApplication(input: IApplication): Promise<void> {
         const applicationData = await applicationSchema.validateAsync(input);
         await this.clientApplicationsStore.upsert(applicationData);
+    }
+
+    async removeInstancesOlderThanTwoDays(): Promise<void> {
+        return this.clientInstanceStore.removeInstancesOlderThanTwoDays();
     }
 
     destroy(): void {

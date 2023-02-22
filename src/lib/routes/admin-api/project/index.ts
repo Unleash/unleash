@@ -16,6 +16,12 @@ import { OpenApiService } from '../../../services/openapi-service';
 import { serializeDates } from '../../../types/serialize-dates';
 import { createResponseSchema } from '../../../openapi/util/create-response-schema';
 import { IAuthRequest } from '../../unleash-types';
+import {
+    ProjectOverviewSchema,
+    projectOverviewSchema,
+} from '../../../../lib/openapi';
+import { IArchivedQuery, IProjectParam } from '../../../types/model';
+import { ProjectApiTokenController } from './api-token';
 
 export default class ProjectApi extends Controller {
     private projectService: ProjectService;
@@ -43,10 +49,27 @@ export default class ProjectApi extends Controller {
             ],
         });
 
+        this.route({
+            method: 'get',
+            path: '/:projectId',
+            handler: this.getProjectOverview,
+            permission: NONE,
+            middleware: [
+                services.openApiService.validPath({
+                    tags: ['Projects'],
+                    operationId: 'getProjectOverview',
+                    responses: {
+                        200: createResponseSchema('projectOverviewSchema'),
+                    },
+                }),
+            ],
+        });
+
         this.use('/', new ProjectFeaturesController(config, services).router);
         this.use('/', new EnvironmentsController(config, services).router);
         this.use('/', new ProjectHealthReport(config, services).router);
         this.use('/', new VariantsController(config, services).router);
+        this.use('/', new ProjectApiTokenController(config, services).router);
     }
 
     async getProjects(
@@ -66,6 +89,26 @@ export default class ProjectApi extends Controller {
             res,
             projectsSchema.$id,
             { version: 1, projects: serializeDates(projects) },
+        );
+    }
+
+    async getProjectOverview(
+        req: IAuthRequest<IProjectParam, unknown, unknown, IArchivedQuery>,
+        res: Response<ProjectOverviewSchema>,
+    ): Promise<void> {
+        const { projectId } = req.params;
+        const { archived } = req.query;
+        const { user } = req;
+        const overview = await this.projectService.getProjectOverview(
+            projectId,
+            archived,
+            user.id,
+        );
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            projectOverviewSchema.$id,
+            serializeDates(overview),
         );
     }
 }

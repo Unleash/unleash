@@ -75,7 +75,15 @@ export default class FakeClientInstanceStore implements IClientInstanceStore {
         return Array.from(apps.values());
     }
 
+    async getDistinctApplicationsCount(): Promise<number> {
+        return this.getDistinctApplications().then((apps) => apps.length);
+    }
+
     async insert(details: INewClientInstance): Promise<void> {
         this.instances.push({ createdAt: new Date(), ...details });
+    }
+
+    removeInstancesOlderThanTwoDays(): Promise<void> {
+        return Promise.resolve(undefined);
     }
 }

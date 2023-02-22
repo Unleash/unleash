@@ -316,7 +316,7 @@ module.exports = {
                         'reference/feature-toggle-types',
                         'reference/feature-toggle-variants',
                         'reference/front-end-api',
-                        'reference/network',
+                        'reference/network-view',
                         'reference/playground',
                         'reference/public-signup',
                         'reference/projects',

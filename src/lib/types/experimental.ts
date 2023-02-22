@@ -22,8 +22,8 @@ const flags = {
         process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY_FRONTEND,
         true,
     ),
-    responseTimeWithAppName: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_RESPONSE_TIME_WITH_APP_NAME,
+    responseTimeWithAppNameKillSwitch: parseEnvVarBoolean(
+        process.env.UNLEASH_RESPONSE_TIME_WITH_APP_NAME_KILL_SWITCH,
         false,
     ),
     proxyReturnAllToggles: parseEnvVarBoolean(

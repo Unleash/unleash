@@ -131,6 +131,7 @@ unleash.start(unleashOptions);
 - **frontendApi** - Configuration options for the [Unleash front-end API](../front-end-api.md).
   - `refreshIntervalInMs` - how often (in milliseconds) front-end clients should refresh their data from the cache. Overridable with the `FRONTEND_API_REFRESH_INTERVAL_MS` environment variable.
 - **accessControlMaxAge** - You can configure the max-age of the Access-Control-Max-Age header. Defaults to 86400 seconds. Overridable with the `ACCESS_CONTROL_MAX_AGE` environment variable.
+- **responseTimeWithAppNameKillSwitch** - use this to disable metrics with app names. This is enabled by default but may increase the cardinality of metrics causing Unleash memory usage to grow if your app name is randomly generated (which is not recommended). Overridable with the `UNLEASH_RESPONSE_TIME_WITH_APP_NAME_KILL_SWITCH` environment variable.
 
 You can also set the environment variable `ENABLED_ENVIRONMENTS` to a comma delimited string of environment names to override environments.
 

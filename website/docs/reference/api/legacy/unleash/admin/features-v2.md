@@ -600,12 +600,7 @@ Transfer-Encoding: chunked
 
 ## Feature Variants
 
-**Important notes:** 
-1. Variants were previously linked to feature toggles making it impossible to have different variants per environment. We are migrating to variants per environment which will allow you to manage variants independently in each environment. 
-2. As part of the migration, existing variants will be copied to all the environments of its feature which will respect the behaviour prior to having variants per environment.
-3. Clients and SDKs are not affected by this changes as they always access features within one environment.
-4. The export format will change to have variants linked to environments. Old exported formats will be gracefully handled if used to import data.
-5. Because this change adds more data, it won't be possible to down migrate without data loss (i.e. if variants are different per environment, there's no way of representing that in the model where variants were linked to features and applying to all environments)
+**Note:** from 4.21 variants are tied to an environment.
 
 ### Put variants for Feature Toggle {#update-variants}
 :::caution 

@@ -83,7 +83,7 @@
     ]
   },
   "dependencies": {
-    "@unleash/express-openapi": "^0.2.1",
+    "@unleash/express-openapi": "^0.2.2",
     "ajv": "^8.11.0",
     "ajv-formats": "^2.1.1",
     "async": "^3.2.4",

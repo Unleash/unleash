@@ -29,7 +29,7 @@ export class OpenApiService {
         this.api = openapi(
             this.docsPath(),
             createOpenApiSchema(config.server),
-            { coerce: true },
+            { coerce: true, extendRefs: true },
         );
     }
 

@@ -62,6 +62,10 @@ const flags = {
         process.env.UNLEASH_STRICT_SCHEMA_VALIDTION,
         false,
     ),
+    proPlanAutoCharge: parseEnvVarBoolean(
+        process.env.UNLEASH_PRO_PLAN_AUTO_CHARGE,
+        false,
+    ),
     notifications: parseEnvVarBoolean(process.env.NOTIFICATIONS, false),
 };
 

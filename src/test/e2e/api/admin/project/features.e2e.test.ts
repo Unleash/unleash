@@ -1,5 +1,8 @@
 import dbInit, { ITestDb } from '../../../helpers/database-init';
-import { IUnleashTest, setupApp } from '../../../helpers/test-helper';
+import {
+    IUnleashTest,
+    setupAppWithCustomConfig,
+} from '../../../helpers/test-helper';
 import getLogger from '../../../../fixtures/no-logger';
 import { DEFAULT_ENV } from '../../../../../lib/util/constants';
 import {
@@ -85,7 +88,13 @@ const updateStrategy = async (
 
 beforeAll(async () => {
     db = await dbInit('feature_strategy_api_serial', getLogger);
-    app = await setupApp(db.stores);
+    app = await setupAppWithCustomConfig(db.stores, {
+        experimental: {
+            flags: {
+                strictSchemaValidation: true,
+            },
+        },
+    });
 });
 
 afterEach(async () => {

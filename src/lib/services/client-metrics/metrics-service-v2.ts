@@ -1,7 +1,6 @@
 import { Logger } from '../../logger';
 import { IUnleashConfig } from '../../server-impl';
 import { IUnleashStores } from '../../types';
-import { IClientApp } from '../../types/model';
 import { ToggleMetricsSummary } from '../../types/models/metrics';
 import {
     IClientMetricsEnv,
@@ -13,7 +12,6 @@ import {
     hoursToMilliseconds,
     secondsToMilliseconds,
 } from 'date-fns';
-import { IFeatureToggleStore } from '../../types/stores/feature-toggle-store';
 import { CLIENT_METRICS } from '../../types/events';
 import ApiUser from '../../types/api-user';
 import { ALL } from '../../types/models/api-token';
@@ -21,7 +19,7 @@ import User from '../../types/user';
 import { collapseHourlyMetrics } from '../../util/collapseHourlyMetrics';
 import { LastSeenService } from './last-seen-service';
 import { generateHourBuckets } from '../../util/time-utils';
-import { IFlagResolver } from '../../types/experimental';
+import { ClientMetricsSchema } from 'lib/openapi';
 
 export default class ClientMetricsServiceV2 {
     private config: IUnleashConfig;
@@ -32,28 +30,19 @@ export default class ClientMetricsServiceV2 {
 
     private clientMetricsStoreV2: IClientMetricsStoreV2;
 
-    private featureToggleStore: IFeatureToggleStore;
-
     private lastSeenService: LastSeenService;
-
-    private flagResolver: IFlagResolver;
 
     private logger: Logger;
 
     constructor(
-        {
-            featureToggleStore,
-            clientMetricsStoreV2,
-        }: Pick<IUnleashStores, 'featureToggleStore' | 'clientMetricsStoreV2'>,
+        { clientMetricsStoreV2 }: Pick<IUnleashStores, 'clientMetricsStoreV2'>,
         config: IUnleashConfig,
         lastSeenService: LastSeenService,
         bulkInterval = secondsToMilliseconds(5),
     ) {
-        this.featureToggleStore = featureToggleStore;
         this.clientMetricsStoreV2 = clientMetricsStoreV2;
         this.lastSeenService = lastSeenService;
         this.config = config;
-        this.flagResolver = config.flagResolver;
         this.logger = config.getLogger(
             '/services/client-metrics/client-metrics-service-v2.ts',
         );
@@ -72,7 +61,7 @@ export default class ClientMetricsServiceV2 {
     }
 
     async registerClientMetrics(
-        data: IClientApp,
+        data: ClientMetricsSchema,
         clientIp: string,
     ): Promise<void> {
         const value = await clientMetricsSchema.validateAsync(data);
@@ -100,7 +89,6 @@ export default class ClientMetricsServiceV2 {
             ...clientMetrics,
         ]);
         this.lastSeenService.updateLastSeen(clientMetrics);
-
         this.config.eventBus.emit(CLIENT_METRICS, value);
     }
 
@@ -196,7 +184,10 @@ export default class ClientMetricsServiceV2 {
         return result.sort((a, b) => compareAsc(a.timestamp, b.timestamp));
     }
 
-    resolveMetricsEnvironment(user: User | ApiUser, data: IClientApp): string {
+    resolveMetricsEnvironment(
+        user: User | ApiUser,
+        data: { environment?: string },
+    ): string {
         if (user instanceof ApiUser) {
             if (user.environment !== ALL) {
                 return user.environment;

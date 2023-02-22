@@ -5,7 +5,6 @@ import ApiUser from '../types/api-user';
 import {
     Context,
     InMemStorageProvider,
-    startUnleash,
     Unleash,
     UnleashEvents,
 } from 'unleash-client';
@@ -16,8 +15,7 @@ import {
     frontendSettingsKey,
 } from '../types/settings/frontend-settings';
 import { validateOrigins } from '../util';
-import { BadDataError } from '../error';
-import assert from 'assert';
+import { BadDataError, InvalidTokenError } from '../error';
 import { minutesToMilliseconds } from 'date-fns';
 
 type Config = Pick<
@@ -134,7 +132,7 @@ export class ProxyService {
             token,
         );
 
-        const client = await startUnleash({
+        const client = new Unleash({
             appName: 'proxy',
             url: 'unused',
             storageProvider: new InMemStorageProvider(),
@@ -145,6 +143,8 @@ export class ProxyService {
         client.on(UnleashEvents.Error, (error) => {
             this.logger.error(error);
         });
+
+        await client.start();
 
         return client;
     }
@@ -158,7 +158,9 @@ export class ProxyService {
     }
 
     private static assertExpectedTokenType({ type }: ApiUser) {
-        assert(type === ApiTokenType.FRONTEND || type === ApiTokenType.ADMIN);
+        if (!(type === ApiTokenType.FRONTEND || type === ApiTokenType.ADMIN)) {
+            throw new InvalidTokenError();
+        }
     }
 
     async setFrontendSettings(

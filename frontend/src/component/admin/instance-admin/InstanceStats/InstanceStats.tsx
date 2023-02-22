@@ -39,6 +39,8 @@ export const InstanceStats: VFC = () => {
         { title: 'Groups', value: stats?.groups },
         { title: 'Context fields', value: stats?.contextFields },
         { title: 'Strategies', value: stats?.strategies },
+        { title: 'Feature exports', value: stats?.featureExports },
+        { title: 'Feature imports', value: stats?.featureImports },
     ];
 
     if (stats?.versionEnterprise) {

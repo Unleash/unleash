@@ -13,7 +13,7 @@ interface IExportDialogProps {
     showExportDialog: boolean;
     data: FeatureSchema[];
     onClose: () => void;
-    environments: IEnvironment[];
+    environments: string[];
 }
 
 const StyledSelect = styled(GeneralSelect)(({ theme }) => ({
@@ -27,15 +27,15 @@ export const ExportDialog = ({
     onClose,
     environments,
 }: IExportDialogProps) => {
-    const [selected, setSelected] = useState(environments[0].name);
+    const [selected, setSelected] = useState(environments[0]);
     const { createExport } = useExportApi();
     const ref = createRef<HTMLDivElement>();
     const { setToastApiError } = useToast();
 
     const getOptions = () =>
         environments.map(env => ({
-            key: env.name,
-            label: env.name,
+            key: env,
+            label: env,
         }));
 
     const getPayload = () => {

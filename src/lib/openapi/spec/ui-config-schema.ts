@@ -40,6 +40,9 @@ export const uiConfigSchema = {
         strategySegmentsLimit: {
             type: 'number',
         },
+        networkViewEnabled: {
+            type: 'boolean',
+        },
         frontendApiOrigins: {
             type: 'array',
             items: {

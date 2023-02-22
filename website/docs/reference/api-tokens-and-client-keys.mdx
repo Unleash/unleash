@@ -2,7 +2,7 @@
 title: API tokens and client keys
 ---
 
-For Unleash to be of any use, it requires at least a server and a [consuming client](../reference/sdks/index.md). More advanced use cases may call for multiple clients, automated feature toggle updates, the [Unleash proxy](../reference/unleash-proxy.md) and [Unleash proxy clients](../reference/sdks/index.md#front-end-sdks), and more. To facilitate communication between all these moving parts, Unleash uses a system of API tokens and client keys, all with a specific purpose in mind.
+For Unleash to be of any use, it requires at least a server and a [consuming client](../reference/sdks/index.md). More advanced use cases may call for multiple clients, automated feature toggle updates, the [Unleash proxy](../generated/unleash-proxy.md) and [Unleash proxy clients](../reference/sdks/index.md#front-end-sdks), and more. To facilitate communication between all these moving parts, Unleash uses a system of API tokens and client keys, all with a specific purpose in mind.
 
 This document details the three kinds of tokens and keys that you will need to fully connect any Unleash system:
 
@@ -94,13 +94,13 @@ Each client token is only **valid for a single environment**.
 Use client tokens:
 
 -   In [server-side client SDKs](../reference/sdks/index.md#server-side-sdks)
--   To connect [the Unleash Proxy](../reference/unleash-proxy.md) to the Unleash API
+-   To connect [the Unleash Proxy](../generated/unleash-proxy.md) to the Unleash API
 
 Do **not** use client tokens in:
 
 -   [Front-end SDKs](../reference/sdks/index.md#front-end-sdks). You will _not_ be able to connect to the Unleash server due to CORS restrictions. To connect front-end SDKs, choose one of the following options:
 -   Enable the [Unleash front-end API](./front-end-api.md) and create a [front-end token](#front-end-tokens).
--   Configure an [Unleash Proxy](../reference/unleash-proxy.md) and use [Proxy client keys](#proxy-client-keys).
+-   Configure an [Unleash Proxy](../generated/unleash-proxy.md) and use [Proxy client keys](#proxy-client-keys).
 
 ### Front-end tokens
 
@@ -177,13 +177,13 @@ Some example client tokens are:
 
 ## Proxy client keys {#proxy-client-keys}
 
-Use proxy client keys to connect [Proxy client SDKs (front-end SDKs)](../reference/sdks/index.md#front-end-sdks) to the [Unleash Proxy](../reference/unleash-proxy.md). As opposed to the [API tokens](#api-tokens), Proxy client keys are _not_ considered secret and are safe to use on any clients (refer to the [the proxy documentation for more about privacy](../reference/unleash-proxy.md#we-care-about-privacy)). They do _not_ let you connect to the Unleash server API.
+Use proxy client keys to connect [Proxy client SDKs (front-end SDKs)](../reference/sdks/index.md#front-end-sdks) to the [Unleash Proxy](../generated/unleash-proxy.md). As opposed to the [API tokens](#api-tokens), Proxy client keys are _not_ considered secret and are safe to use on any clients (refer to the [the proxy documentation for more about privacy](../generated/unleash-proxy.md#we-care-about-privacy)). They do _not_ let you connect to the Unleash server API.
 
 Proxy client keys are arbitrary strings that you _must_ provide the Unleash proxy with on startup. They can be whatever you want and you **create them yourself**.
 
 :::info Creating proxy client keys
 
-To designate a string as a proxy client key, add it to the `clientKeys` list when starting the proxy, as mentioned in the [_configuration_ section of the Unleash proxy documentation](../reference/unleash-proxy.md#configuration). Connecting clients should then specify the same string as their client key.
+To designate a string as a proxy client key, add it to the `clientKeys` list when starting the proxy, as mentioned in the [_configuration_ section of the Unleash proxy documentation](../generated/unleash-proxy.md#configuration). Connecting clients should then specify the same string as their client key.
 
 :::
 
@@ -191,7 +191,7 @@ Unleash does not generate proxy client keys for you. Because of this, they have 
 
 Use Proxy client keys to:
 
--   Connect [Proxy client SDKs](../reference/sdks/index.md#front-end-sdks) to the [Unleash Proxy](../reference/unleash-proxy.md)
+-   Connect [Proxy client SDKs](../reference/sdks/index.md#front-end-sdks) to the [Unleash Proxy](../generated/unleash-proxy.md)
 -   Connect your own custom Proxy clients (or pure HTTP requests) to the Unleash Proxy
 
 Do **not** use Proxy client keys to:

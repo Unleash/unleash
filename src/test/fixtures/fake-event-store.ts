@@ -2,6 +2,7 @@ import { IEventStore } from '../../lib/types/stores/event-store';
 import { IEvent } from '../../lib/types/events';
 import { AnyEventEmitter } from '../../lib/util/anyEventEmitter';
 import { IQueryOperations } from 'lib/db/event-store';
+import { SearchEventsSchema } from '../../lib/openapi';
 
 class FakeEventStore extends AnyEventEmitter implements IEventStore {
     events: IEvent[];
@@ -45,8 +46,9 @@ class FakeEventStore extends AnyEventEmitter implements IEventStore {
         return Promise.resolve(this.events.length);
     }
 
-    filteredCount(): Promise<number> {
-        throw new Error('Method not implemented');
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    filteredCount(search: SearchEventsSchema): Promise<number> {
+        return Promise.resolve(0);
     }
 
     destroy(): void {}

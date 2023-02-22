@@ -59,6 +59,9 @@ const { value: storedParams, setValue: setStoredParams } = createLocalStorage(
 export const FeatureToggleListTable: VFC = () => {
     const theme = useTheme();
     const { environments } = useEnvironments();
+    const enabledEnvironments = environments
+        .filter(env => env.enabled)
+        .map(env => env.name);
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const isMediumScreen = useMediaQuery(theme.breakpoints.down('lg'));
     const [showExportDialog, setShowExportDialog] = useState(false);
@@ -386,7 +389,7 @@ export const FeatureToggleListTable: VFC = () => {
                         showExportDialog={showExportDialog}
                         data={data}
                         onClose={() => setShowExportDialog(false)}
-                        environments={environments}
+                        environments={enabledEnvironments}
                     />
                 }
             />

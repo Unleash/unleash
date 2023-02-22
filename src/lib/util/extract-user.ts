@@ -1,6 +1,6 @@
-import { IAuthRequest, User } from '../server-impl';
+import { IAuthRequest, IUser } from '../server-impl';
 
-export function extractUsernameFromUser(user: User): string {
+export function extractUsernameFromUser(user: IUser): string {
     return user ? user.email || user.username : 'unknown';
 }
 

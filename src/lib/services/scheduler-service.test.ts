@@ -63,9 +63,9 @@ test('Can schedule multiple jobs at the different intervals', async () => {
     const job = jest.fn();
     const anotherJob = jest.fn();
 
-    schedulerService.schedule(job, 10);
-    schedulerService.schedule(anotherJob, 20);
-    await ms(25);
+    schedulerService.schedule(job, 100);
+    schedulerService.schedule(anotherJob, 200);
+    await ms(250);
 
     expect(job).toBeCalledTimes(3);
     expect(anotherJob).toBeCalledTimes(2);

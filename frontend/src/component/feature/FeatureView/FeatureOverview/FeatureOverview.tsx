@@ -1,6 +1,5 @@
 import FeatureOverviewMetaData from './FeatureOverviewMetaData/FeatureOverviewMetaData';
 import FeatureOverviewEnvironments from './FeatureOverviewEnvironments/FeatureOverviewEnvironments';
-import FeatureOverviewEnvSwitches from './FeatureOverviewEnvSwitches/FeatureOverviewEnvSwitches';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import { FeatureStrategyCreate } from 'component/feature/FeatureStrategy/FeatureStrategyCreate/FeatureStrategyCreate';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
@@ -10,8 +9,6 @@ import {
 } from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { usePageTitle } from 'hooks/usePageTitle';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { FeatureOverviewSidePanel } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewSidePanel/FeatureOverviewSidePanel';
 import { useHiddenEnvironments } from 'hooks/useHiddenEnvironments';
 import { styled } from '@mui/material';
@@ -34,7 +31,6 @@ const StyledMainContent = styled('div')(({ theme }) => ({
 }));
 
 const FeatureOverview = () => {
-    const { uiConfig } = useUiConfig();
     const navigate = useNavigate();
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
@@ -48,20 +44,9 @@ const FeatureOverview = () => {
         <StyledContainer>
             <div>
                 <FeatureOverviewMetaData />
-                <ConditionallyRender
-                    condition={Boolean(uiConfig.flags.variantsPerEnvironment)}
-                    show={
-                        <FeatureOverviewSidePanel
-                            hiddenEnvironments={hiddenEnvironments}
-                            setHiddenEnvironments={setHiddenEnvironments}
-                        />
-                    }
-                    elseShow={
-                        <FeatureOverviewEnvSwitches
-                            hiddenEnvironments={hiddenEnvironments}
-                            setHiddenEnvironments={setHiddenEnvironments}
-                        />
-                    }
+                <FeatureOverviewSidePanel
+                    hiddenEnvironments={hiddenEnvironments}
+                    setHiddenEnvironments={setHiddenEnvironments}
                 />
             </div>
             <StyledMainContent>

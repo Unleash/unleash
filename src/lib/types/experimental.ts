@@ -30,14 +30,6 @@ const flags = {
         process.env.UNLEASH_EXPERIMENTAL_PROXY_RETURN_ALL_TOGGLES,
         false,
     ),
-    variantsPerEnvironment: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_VARIANTS_PER_ENVIRONMENT,
-        false,
-    ),
-    networkView: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_NETWORK_VIEW,
-        false,
-    ),
     maintenance: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_MAINTENANCE,
         false,
@@ -70,6 +62,7 @@ const flags = {
         process.env.UNLEASH_STRICT_SCHEMA_VALIDTION,
         false,
     ),
+    notifications: parseEnvVarBoolean(process.env.NOTIFICATIONS, false),
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

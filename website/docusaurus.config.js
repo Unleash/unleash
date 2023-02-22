@@ -1,4 +1,5 @@
-const { readmes } = require('./readme-fns');
+const { sdks } = require('./remote-content/sdks');
+const { docs: edgeAndProxy } = require('./remote-content/edge-proxy');
 
 // for a given redirect object, modify it's `from` property such that for every
 // path that doesn't start with `/docs/`, a corresponding path that _does_ start
@@ -49,6 +50,7 @@ module.exports = {
     organizationName: 'Unleash', // Usually your GitHub org/user name.
     projectName: 'unleash.github.io', // Usually your repo name.
     trailingSlash: false,
+    markdown: { mermaid: true },
     customFields: {
         // expose env vars etc here
         unleashProxyUrl: process.env.UNLEASH_PROXY_URL,
@@ -612,11 +614,25 @@ module.exports = {
                 // more info at https://github.com/rdilweb/docusaurus-plugin-remote-content#options
                 name: 'content-sdks',
                 sourceBaseUrl: 'https://raw.githubusercontent.com/Unleash/', // gets prepended to all of the documents when fetching
-                outDir: 'docs/generated/sdks', // the base directory to output to.
-                documents: readmes.documentUrls, // the file names to download
-                modifyContent: readmes.modifyContent,
+                outDir: 'docs/generated', // the base directory to output to.
+                documents: sdks.urls, // the file names to download
+                modifyContent: sdks.modifyContent,
+            },
+        ],
+        [
+            'docusaurus-plugin-remote-content',
+            {
+                // more info at https://github.com/rdilweb/docusaurus-plugin-remote-content#options
+                name: 'content-external',
+                sourceBaseUrl: 'https://raw.githubusercontent.com/Unleash/', // gets prepended to all of the documents when fetching
+                outDir: 'docs/generated/', // the base directory to output to.
+                documents: edgeAndProxy.urls, // the file names to download
+                modifyContent: edgeAndProxy.modifyContent,
             },
         ],
     ],
-    themes: ['docusaurus-theme-openapi-docs'], // Allows use of @theme/ApiItem and other components
+    themes: [
+        'docusaurus-theme-openapi-docs', // Allows use of @theme/ApiItem and other components
+        '@docusaurus/theme-mermaid',
+    ],
 };

@@ -8,7 +8,7 @@ Unleash provides official client SDKs for a number of programming language. Addi
 
 ## Official SDKs
 
-### Server-side SDKs:
+### Server-side SDKs
 
 Server-side clients run on your server and communicate directly with your Unleash instance. We provide these official clients:
 
@@ -21,22 +21,9 @@ Server-side clients run on your server and communicate directly with your Unleas
 - [Rust SDK](/docs/generated/sdks/server-side/rust.md)
 - [.NET SDK](/docs/generated/sdks/server-side/dotnet.md)
 
-### Client-side SDKs
+#### Server-side SDK compatibility table
 
-Client-side SDKs can connect to the [Unleash Proxy](../../generated/unleash-proxy.md) or to the [Unleash front-end API](../front-end-api.md), but _not_ to the regular Unleash client API.
-
-
-- [Android SDK](/docs/generated/sdks/client-side/android-proxy.md)
-- [Flutter Proxy SDK](/docs/generated/sdks/client-side/flutter.md)
-- [iOS Proxy SDK](/docs/generated/sdks/client-side/ios-proxy.md)
-- [Javascript SDK](/docs/generated/sdks/client-side/javascript-browser.md)
-- [React Proxy SDK](/docs/generated/sdks/client-side/react.md)
-- [Svelte Proxy SDK](/docs/generated/sdks/client-side/svelte.md)
-- [Vue Proxy SDK](/docs/generated/sdks/client-side/vue.md)
-
-### Server-side SDK compatibility table
-
-The below table shows what features the various server-side SDKs support. Note that certain features make sense only for some clients due to how the programming language works or due to how the client works.
+The below table shows what features the official server-side SDKs support. Note that certain features make sense only for some clients due to how the programming language works or due to how the client works.
 
 **Legend**:
 
@@ -47,7 +34,7 @@ The below table shows what features the various server-side SDKs support. Note t
 
 :::note
 
-If you see an item marked with a ❌ that you would find useful, feel free to reach out to us ([on Slack](https://slack.unleash.run/), for instance) with your use case. It may not be something we can prioritize right now, but if you'd like to contribute it back to the community, we'd love to help you build it.
+If you see an item marked with a ❌ that you would find useful, feel free to reach out to us (on [GitHub discussions](https://github.com/Unleash/unleash/discussions/new/choose) or on [Slack](https://slack.unleash.run/)) with your use case. It may not be something we can prioritize right now, but if you'd like to contribute it back to the community, we'd love to help you build it.
 
 :::
 
@@ -102,6 +89,101 @@ If you see an item marked with a ❌ that you would find useful, feel free to re
 | **Category: Bootstrap (beta)** |  |  |  |  |  |  |  |  |
 | Bootstrap from file | ✅ | ✅ | ✅ | ⭕ | ✅ | ✅ | ✅ | ⭕ |
 | Custom Bootstrap implementation | ✅ | ✅ | ✅ | ⭕ | ✅ | ✅ | ✅ | ⭕ |
+
+
+### Client-side SDKs
+
+Client-side SDKs can connect to the [Unleash front-end API](../front-end-api.md), [Unleash Edge](../../generated/unleash-edge.md), or to the [Unleash Proxy](../../generated/unleash-proxy.md), but _not_ to the regular Unleash client API.
+
+The list of official client-side SDKs is:
+
+- [Android SDK](/docs/generated/sdks/client-side/android-proxy.md)
+- [Flutter Proxy SDK](/docs/generated/sdks/client-side/flutter.md)
+- [iOS Proxy SDK](/docs/generated/sdks/client-side/ios-proxy.md)
+- [Javascript SDK](/docs/generated/sdks/client-side/javascript-browser.md)
+- [React Proxy SDK](/docs/generated/sdks/client-side/react.md)
+- [Svelte Proxy SDK](/docs/generated/sdks/client-side/svelte.md)
+- [Vue Proxy SDK](/docs/generated/sdks/client-side/vue.md)
+
+#### Client-side SDK compatibility table
+
+Because client-side SDKs don't evaluate their features locally, some of their capabilities depend on the service that they connect to.
+For a more distinct overview, refer to the next section [UPDATE THIS BEFORE MERGE].
+
+- For strategies, refer to the proxy capabiities.
+- For constraint support, refer to the proxy capabilities
+
+| Capability | [Android](/docs/generated/sdks/client-side/android-proxy.md) | [Flutter.js](/docs/generated/sdks/client-side/flutter.md) | [iOS](/docs/generated/sdks/client-side/ios-proxy.md) | [JavaScript](/docs/generated/sdks/client-side/javascript-browser.md) | [React](/docs/generated/sdks/client-side/react.md) | [Svelte](/docs/generated/sdks/client-side/svelte.md) | [Vue](/docs/generated/sdks/client-side/vue.md) |
+| --- | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
+| **Category: Initialization** |  |  |  |  |  |  |  |
+| Async initialization | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ |
+| Can block until synchronized | ✅ | ✅ | ✅ | ⭕ | ⭕ | ✅ | ✅ |
+| Default refresh interval | 10s | 15s | 15s | 15s | 15s | 30s | 30s |
+| Default metrics interval | 60s | 60s | 60s | 60s | 60s | 60s | 30s |
+| **Category: Custom Headers** |  |  |  |  |  |  |  |
+| static | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| function | ✅ | ✅ | ⭕ | ✅ | ✅ (4.3) | ✅ | ✅ |
+| **Category: [Unleash Context](../reference/unleash-context)** |  |  |  |  |  |  |  |
+| Static fields (`environment`, `appName`) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Defined fields | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Custom properties | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **Category: [`isEnabled`](../client-specification#implementation-of-isenabled)** |  |  |  |  |  |  |  |
+| Fallback function | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ | ⭕ |
+| **Category: [Variants](../feature-toggle-variants.md)** |  |  |  |  |  |  |  |
+| Basic support | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| [Custom stickiness (beta)](../stickiness.md#custom-stickiness-beta) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **Category: Local backup** |  |  |  |  |  |  |  |
+| File based backup | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **Category: Usage metrics** |  |  |  |  |  |  |  |
+| Can disable metrics | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Client registration | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Basic usage metrics (yes/no) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| [Impression data](../impression-data.md) | ⭕ | ✅ | ⭕ | ⭕ | ⭕ | ⭕ | ✅ |
+| **Category: Bootstrap (beta)** |  |  |  |  |  |  |  |
+| Bootstrap from file | ✅ | ✅ | ✅ | ⭕ | ✅ | ✅ | ✅ |
+| Custom Bootstrap implementation | ✅ | ✅ | ✅ | ⭕ | ✅ | ✅ | ✅ |
+
+#### Edge, proxy, front-end api capabilities
+
+| Capability | [Edge](/docs/generated/unleash-edge.md) | [Front-end API](../front-end-api.md) | [Proxy](/docs/generated/unleash-proxy.md) |
+| --- | :-: | :-: | :-: |
+| **Category: Initialization** |  |  |  |
+| Default refresh interval | 10s | 15s | 5s |
+| Default metrics interval | 60s | 60s | 30s |
+| Toggle Query: `namePrefix` | ✅ | ✅ | ✅ |
+| Toggle Query: `tags` | ✅ | ✅ | ✅ |
+| Toggle Query: `project_name` | ✅ | ✅ | ✅ |
+| **Category: Built-in strategies** |  |  |  |
+| [Standard](../reference/activation-strategies#standard) | ✅ | ✅ | ✅ |
+| [Gradual rollout](../reference/activation-strategies#gradual-rollout) | ✅ | ✅ | ✅ |
+| [Gradual rollout: custom stickiness](../reference/activation-strategies#customize-stickiness-beta) | ✅ | ✅ | ✅ |
+| [UserID](../reference/activation-strategies#userids) | ✅ | ✅ | ✅ |
+| [IP](../reference/activation-strategies#ips) | ✅ | ✅ | ✅ |
+| [IP](../reference/activation-strategies#ips): CIDR syntax | ✅ | ✅ | ✅ |
+| [Hostname](../reference/activation-strategies#hostnames) | ✅ | ✅ | ✅ |
+| **Category: [Custom strategies](../custom-activation-strategies.md)** |  |  |  |
+| Basic support | ✅ | ✅ | ✅ |
+| <span id="strategy-constraints-[something]">**Category: [Strategy constraints](../strategy-constraints.md)**</span> |  |  |  |
+| Basic support (`IN`, `NOT_IN` operators) | ✅ | ✅ | ✅ |
+| <span id="strategy-constraints-advanced-support">Advanced support (Semver, date, numeric and extended string operators)</span> (introduced in) | ✅ (5.1) | ✅ (3.12) | ✅ (0.8) |
+| **Category: [Unleash Context](../reference/unleash-context)** |  |  |  |
+| Static fields (`environment`, `appName`) | ✅ | ✅ | ✅ |
+| Defined fields | ✅ | ✅ | ✅ |
+| Custom properties | ✅ | ✅ | ✅ |
+| **Category: [Variants](../feature-toggle-variants.md)** |  |  |  |
+| Basic support | ✅ | ✅ | ✅ |
+| Custom weight | ✅ | ✅ | ✅ |
+| [Custom stickiness (beta)](../stickiness.md#custom-stickiness-beta) | ✅ | ✅ | ✅ |
+| **Category: Local backup** |  |  |  |
+| File based backup | ✅ | ✅ | ✅ |
+| **Category: Usage metrics** |  |  |  |
+| Can disable metrics | ✅ | ✅ | ✅ |
+| Client registration | ✅ | ✅ | ✅ |
+| Basic usage metrics (yes/no) | ✅ | ✅ | ✅ |
+| [Impression data](../impression-data.md) | ⭕ | ✅ | ⭕ |
+| **Category: Bootstrap (beta)** |  |  |  |
+| Bootstrap from file | ✅ | ✅ | ✅ |
+| Custom Bootstrap implementation | ✅ | ✅ | ✅ |
 
 ## Community SDKs ❤️ {#community-sdks}
 

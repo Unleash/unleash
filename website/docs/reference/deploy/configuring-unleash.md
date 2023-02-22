@@ -59,15 +59,15 @@ unleash.start(unleashOptions);
 
 - **authentication** - (object) - An object for configuring/implementing custom admin authentication
 
-  - enableApiToken (boolean) - Should unleash require API tokens for access? Defaults to `true`
-  - type (string) What kind of authentication to use. Possible values
+  - `enableApiToken` / `AUTH_ENABLE_API_TOKEN`:  `boolean` — Should unleash require API tokens for access? Defaults to `true`.
+  - `type` / `AUTH_TYPE`: `string` —  What kind of authentication to use. Possible values
     - `open-source` - Sign in with username and password. This is the default value.
     - `custom` - If implementing your own authentication hook, use this
     - `none` - Turn off authentication all together
     - `demo` - Only requires an email to sign in (was default in v3)
-  - customAuthHandler: (function) - custom express middleware handling authentication. Used when type is set to `custom`
-  - createAdminUser: (boolean) - whether to create an admin user with default password - Defaults to `true`
-  - initApiTokens: (ApiTokens[]) - Array of API tokens to create on startup. The tokens will only be created if the database doesn't already contain any API tokens. Example:
+  - `customAuthHandler`: function `(app: any, config: IUnleashConfig): void` — custom express middleware handling authentication. Used when type is set to `custom`. Can not be set via environment variables.
+  - `createAdminUser`: `boolean` — whether to create an admin user with default password - Defaults to `true`. Can not be set via environment variables. Can not be set via environment variables.
+  - `initApiTokens` / `INIT_ADMIN_API_TOKENS` and `INIT_CLIENT_API_TOKENS` (see below): `ApiTokens[]` — Array of API tokens to create on startup. The tokens will only be created if the database doesn't already contain any API tokens. Example:
 
     ```ts
     [
@@ -83,7 +83,7 @@ unleash.start(unleashOptions);
 
     The tokens can be of any API token type. Note that _admin_ tokens **must** target all environments and projects (i.e. use `'*'` for `environments` and `project` and start the secret with `*:*.`).
 
-    You can also use the environment variables `INIT_ADMIN_API_TOKENS` or `INIT_CLIENT_API_TOKENS` to create API admin or client tokens on startup. Both variables require a comma-separated list of API tokens to initialize (for instance `*:*.some-random-string, *:*.some-other-token`). The tokens found in `INIT_ADMIN_API_TOKENS` and `INIT_CLIENT_API_TOKENS` will be created as admin and client tokens respectively and Unleash will assign a username automatically.
+    You can use the environment variables `INIT_ADMIN_API_TOKENS` or `INIT_CLIENT_API_TOKENS` to create API admin or client tokens on startup. Both variables require a comma-separated list of API tokens to initialize (for instance `*:*.some-random-string, *:*.some-other-token`). The tokens found in `INIT_ADMIN_API_TOKENS` and `INIT_CLIENT_API_TOKENS` will be created as admin and client tokens respectively and Unleash will assign usernames automatically.
 
 - **databaseUrl** - (_deprecated_) the postgres database url to connect to. Only used if _db_ object is not specified, and overrides the _db_ object and any environment variables that change parts of it (like `DATABASE_SSL`). Should include username/password. This value may also be set via the `DATABASE_URL` environment variable. Alternatively, if you would like to read the database url from a file, you may set the `DATABASE_URL_FILE` environment variable with the full file path. The contents of the file must be the database url exactly.
 - **db** - The database configuration object. See [the database configuration section](#database-configuration) for a full overview of the available properties.

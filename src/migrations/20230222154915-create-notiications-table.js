@@ -15,7 +15,7 @@ exports.up = function (db, cb) {
                 notification_id INTEGER NOT NULL REFERENCES notifications (id),
                 user_id         INTEGER NOT NULL REFERENCES  users (id),
                 read_at         TIMESTAMP WITH TIME ZONE,
-                primary key (notification_id, user_id)
+                PRIMARY KEY (notification_id, user_id)
             );
         `,
         cb,

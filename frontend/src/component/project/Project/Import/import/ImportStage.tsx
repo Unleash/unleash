@@ -139,8 +139,8 @@ export const ImportStage: FC<{
                 show={
                     <InfoContainer>
                         For this environment <strong>Change request</strong> is
-                        enabled. This means that the import was generating a
-                        change request and it needs to be approved before the
+                        enabled. This means that the import has generated a
+                        change request which needs to be approved before the
                         configuration will be visible in the instance.
                     </InfoContainer>
                 }

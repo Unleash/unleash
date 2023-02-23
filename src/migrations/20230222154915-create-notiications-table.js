@@ -5,15 +5,17 @@ exports.up = function (db, cb) {
         `
             create table if not exists notifications (
                  id serial primary key,
-                 created_at timestamp with time zone not null default now(),
-                 event_id integer not null references events (id)
+                 event_id integer not null references events (id),
+                 createdBy integer not null references users (id),
+                 created_at timestamp with time zone not null default now()
             );
 
-            create table if not exists user_notifications (
-                id serial primary key,
+            create table if not exists user_notifications
+            (
                 notification_id integer not null references notifications (id),
-                read_at timestamp with time zone,
-                user_id integer not null references users (id)
+                user_id         integer not null references users (id),
+                read_at         timestamp with time zone,
+                primary key (notification_id, user_id)
             )
         `,
         cb,

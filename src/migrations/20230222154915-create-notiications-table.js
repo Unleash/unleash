@@ -25,8 +25,9 @@ exports.up = function (db, cb) {
 exports.down = function (db, cb) {
     db.runSql(
         `
+        DROP TABLE IF EXISTS user_notifications;
         DROP TABLE IF EXISTS notifications;
-        DROP TABLE IF EXISTS user_notifications;`,
+        `,
         cb,
     );
 };

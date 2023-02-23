@@ -36,11 +36,11 @@ Because Unleash can't separate these based on their application names, all "unkn
 
 ## Network overview
 
-The network overview is a diagram that shows the Unleash instance and all [applications](#applications) that have connected to it within the last X hours.
+The network overview is a diagram that shows the Unleash instance and known [applications](#applications) that have connected to it within the last five minutes. [Unknown applications](#unknown-applications) are not shown.
 
 Each application shown on the diagram has:
 - An application name
-- the average number of requests per second (_req/s_) that we have registered over the last X hours.
+- the average number of requests per second (_req/s_) that we have registered over the last five minutes.
 
 <Figure caption="The network overview showing three different instances of the Unleash proxy connected to Unleash. Each application has an average of 20 req/s." img="/img/network-overview.png"/>
 

@@ -67,6 +67,10 @@ const flags = {
         false,
     ),
     notifications: parseEnvVarBoolean(process.env.NOTIFICATIONS, false),
+    loginEventLog: parseEnvVarBoolean(
+        process.env.UNLEASH_LOGIN_EVENT_LOG,
+        false,
+    ),
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

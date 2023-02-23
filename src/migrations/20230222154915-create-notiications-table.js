@@ -3,25 +3,30 @@
 exports.up = function (db, cb) {
     db.runSql(
         `
-            create table if not exists notifications (
-                 id serial primary key,
-                 event_id integer not null references events (id),
-                 createdBy integer not null references users (id),
-                 created_at timestamp with time zone not null default now()
+            CREATE TABLE IF NOT EXISTS notifications (
+                 id SERIAL PRIMARY KEY,
+                 event_id INTEGER NOT NULL REFERENCES  events (id),
+                 created_by INTEGER NOT NULL REFERENCES  users (id),
+                 created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()
             );
 
-            create table if not exists user_notifications
+            CREATE TABLE if not exists user_notifications
             (
-                notification_id integer not null references notifications (id),
-                user_id         integer not null references users (id),
-                read_at         timestamp with time zone,
+                notification_id INTEGER NOT NULL REFERENCES notifications (id),
+                user_id         INTEGER NOT NULL REFERENCES  users (id),
+                read_at         TIMESTAMP WITH TIME ZONE,
                 primary key (notification_id, user_id)
-            )
+            );
         `,
         cb,
     );
 };
 
 exports.down = function (db, cb) {
-    db.runSql(`drop table if exists notifications`, cb);
+    db.runSql(
+        `
+        DROP TABLE IF EXISTS notifications;
+        DROP TABLE IF EXISTS user_notifications;`,
+        cb,
+    );
 };

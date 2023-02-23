@@ -65,7 +65,8 @@ export default class VariantsController extends Controller {
             handler: this.getVariants,
             middleware: [
                 openApiService.validPath({
-                    summary:
+                    summary: 'Retrieve variants for a feature (deprecated) ',
+                    description:
                         '(deprecated from 4.21) Retrieve the variants for the specified feature. From Unleash 4.21 onwards, this endpoint will attempt to choose a [production-type environment](https://docs.getunleash.io/reference/environments) as the source of truth. If more than one production environment is found, the first one will be used.',
                     deprecated: true,
                     tags: ['Features'],

@@ -47,6 +47,7 @@ export interface IFlags {
     caseInsensitiveInOperators?: boolean;
     crOnVariants?: boolean;
     showProjectApiAccess?: boolean;
+    proPlanAutoCharge?: boolean;
 }
 
 export interface IVersionInfo {

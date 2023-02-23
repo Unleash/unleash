@@ -20,6 +20,8 @@ Because Unleash doesn't store this kind of data itself, the network view require
 
 The network view is intended to provide a simple and Unleash-centric overview that serves basic use cases. If you need detailed metrics and connection graphs, you may be better off using specialized network monitoring tools.
 
+[^1]: For instance: when using Unleash in an API setting, a common mistake is to instantiate a new SDK for every request instead of sharing a single instance across requests. This would be visible in the network overview graph as a large number of requests from the same app.
+
 ## Applications
 
 Both the network overview and the network traffic diagrams show you **applications** that have made requests to the Unleash instance. An **application** is defined as anything that sends requests to [Unleash client API](/reference/api/unleash/client), such as [Unleash SDKs](./sdks/index.md), [Unleash Edge](/docs/generated/unleash-edge), or the [Unleash proxy](/docs/generated/unleash-proxy).
@@ -52,19 +54,40 @@ Unleash aggregates requests by **client** (using application name) and **base UR
 2. Within each of these groups, group all requests by their next URL path segment. For instance: `/client/features` and `/client/features/feature-a` are grouped together, while `/client/register` and `/admin/features` are separate groups.
 
 
-<Figure caption="The network traffic chart showing three different instances of the Unleash proxy connected to Unleash. Each application has an average of 20 req/s." img="/img/network-traffic.png"/>
-![Network traffic showing 3 sources and unregistered apps as unknown](/img/network-traffic.png).
+<Figure caption="The network traffic chart plots req/s on the Y axis and time on the X axis. Requests are bundled per endpoint per application." img="/img/network-traffic.png"/>
 
 ## Data source
-The network view sources its data from an external Prometheus-like API, which is controlled by the environment variable `PROMETHEUS_API` that should point to the base path of the Prometheus installation. Prometheus has to be configured to get its data from Unleashe's [Internal Backstage API](https://docs.getunleash.io/reference/api/legacy/unleash/internal/prometheus), e.g. by defining a scraping job:
 
-```yaml
+:::info Prometheus and other sources
+
+The network view was written to be used with [Prometheus](https://prometheus.io/) and is therefore compatible with Prometheus' API.
+
+Other services that offer the same capabilities and the same API may work as substitutes, but we make no guarantees.
+
+This section will refer to the external source as Prometheus for simplicity.
+
+:::
+
+The network view uses an external Prometheus-like API to create diagrams. Because of this, Unleash will not enable the network view feature unless you set the `PROMETHEUS_API` environment variable.
+
+The `PROMETHEUS_API` environment variable should point to the base path of the Prometheus installation, and Prometheus should be configured to get its data from Unleash's [internal backstage API](api/legacy/unleash/internal/prometheus.md). This can for example be done via a scraping job[^2]:
+
+```yaml title="Scraping job for Unleash metrics"
   - job_name: unleash_internal_metrics
     metrics_path: /internal-backstage/prometheus
     static_configs:
       - targets: ['unleash-url']
 ```
 
-How to set up Prometheus to collect metrics from that API is outside of the scope of this document.
+This setup means that there is a mutual dependency between Unleash and Prometheus, where Prometheus regularly fetches data from Unleash's backstage API and Unleash fetches and displays this data when you use the network view. This diagram provides a visual representation of that.
 
-[^1]: For instance: when using Unleash in an API setting, a common mistake is to instantiate a new SDK for every request instead of sharing a single instance across requests. This would be visible in the network overview graph as a large number of requests from the same app.
+```mermaid
+sequenceDiagram
+    participant Unleash
+    loop Scrape data
+    Prometheus-->>Unleash: fetch internal-backstage/prometheus
+    end
+    Unleash->>+Prometheus: Query data for network view
+```
+
+[^2]: How to set up Prometheus to collect metrics from that API is outside of the scope of this document.

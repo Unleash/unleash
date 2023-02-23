@@ -1,7 +1,7 @@
 exports.up = function (db, cb) {
     db.runSql(
         `
-        CREATE TABLE login_events (
+        CREATE TABLE IF NOT EXISTS login_events (
             id SERIAL PRIMARY KEY NOT NULL,
             username TEXT NOT NULL,
             auth_type TEXT NOT NULL,
@@ -10,7 +10,7 @@ exports.up = function (db, cb) {
             ip INET,
             failure_reason TEXT
         );
-        CREATE INDEX login_events_ip_idx ON login_events(ip);
+        CREATE INDEX IF NOT EXISTS login_events_ip_idx ON login_events(ip);
     `,
         cb,
     );
@@ -19,8 +19,8 @@ exports.up = function (db, cb) {
 exports.down = function (db, cb) {
     db.runSql(
         `
-        DROP INDEX login_events_ip_idx;
-        DROP TABLE login_events;
+        DROP INDEX IF EXISTS login_events_ip_idx;
+        DROP TABLE IF EXISTS login_events;
     `,
         cb,
     );

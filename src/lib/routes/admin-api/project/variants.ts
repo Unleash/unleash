@@ -130,7 +130,7 @@ export default class VariantsController extends Controller {
             middleware: [
                 openApiService.validPath({
                     summary: 'Get variants for a feature in an environment',
-                    description: `Returns the variants for a feature in a specific environment.`,
+                    description: `Returns the variants for a feature in a specific environment. If the feature has no variants it will return an empty array of variants`,
                     tags: ['Features'],
                     operationId: 'getEnvironmentFeatureVariants',
                     responses: {

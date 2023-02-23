@@ -6815,6 +6815,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/projects/{projectId}/features/{featureName}/environments/{environment}/variants": {
       "get": {
+        "description": "Returns the variants for a feature in a specific environment. If the feature has no variants it will return an empty array of variants",
         "operationId": "getEnvironmentFeatureVariants",
         "parameters": [
           {
@@ -6854,11 +6855,13 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "featureVariantsSchema",
           },
         },
+        "summary": "Get variants for a feature in an environment",
         "tags": [
           "Features",
         ],
       },
       "patch": {
+        "description": "Returns the variants for a feature in a specific environment.",
         "operationId": "patchEnvironmentsFeatureVariants",
         "parameters": [
           {
@@ -6909,11 +6912,20 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "featureVariantsSchema",
           },
         },
+        "summary": "Patch a feature's variants in an environment",
         "tags": [
           "Features",
         ],
       },
       "put": {
+        "description": "This overwrites the current variants for the feature toggle in the :featureName parameter for the :environment parameter.
+                        
+                        The backend will validate the input for the following invariants:
+                        
+                    * If there are variants, there needs to be at least one variant with \`weightType: variable\`
+                    * The sum of the weights of variants with \`weightType: fix\` must be strictly less than 1000 (< 1000)
+
+                    The backend will also distribute remaining weight up to 1000 after adding the variants with \`weightType: fix\` together amongst the variants of \`weightType: variable\`",
         "operationId": "overwriteEnvironmentFeatureVariants",
         "parameters": [
           {
@@ -6964,6 +6976,7 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "featureVariantsSchema",
           },
         },
+        "summary": "Create (overwrite) variants for a feature in an environment",
         "tags": [
           "Features",
         ],
@@ -7031,6 +7044,8 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/projects/{projectId}/features/{featureName}/variants": {
       "get": {
+        "deprecated": true,
+        "description": "(deprecated from 4.21) Retrieve the variants for the specified feature. From Unleash 4.21 onwards, this endpoint will attempt to choose a [production-type environment](https://docs.getunleash.io/reference/environments) as the source of truth. If more than one production environment is found, the first one will be used.",
         "operationId": "getFeatureVariants",
         "parameters": [
           {
@@ -7062,11 +7077,13 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "featureVariantsSchema",
           },
         },
+        "summary": "Retrieve variants for a feature (deprecated) ",
         "tags": [
           "Features",
         ],
       },
       "patch": {
+        "description": "This method is not atomic which is the main reason why it is not recommended to use.",
         "operationId": "patchFeatureVariants",
         "parameters": [
           {
@@ -7109,11 +7126,20 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "featureVariantsSchema",
           },
         },
+        "summary": "Apply a patch to a feature's variants (in all environments).",
         "tags": [
           "Features",
         ],
       },
       "put": {
+        "description": "This overwrites the current variants for the feature specified in the :featureName parameter in all environments.
+
+                    The backend will validate the input for the following invariants
+
+                    * If there are variants, there needs to be at least one variant with \`weightType: variable\`
+                    * The sum of the weights of variants with \`weightType: fix\` must be strictly less than 1000 (< 1000)
+
+                    The backend will also distribute remaining weight up to 1000 after adding the variants with \`weightType: fix\` together amongst the variants of \`weightType: variable\`",
         "operationId": "overwriteFeatureVariants",
         "parameters": [
           {
@@ -7156,6 +7182,7 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "featureVariantsSchema",
           },
         },
+        "summary": "Create (overwrite) variants for a feature toggle in all environments",
         "tags": [
           "Features",
         ],

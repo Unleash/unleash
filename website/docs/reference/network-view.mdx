@@ -20,15 +20,13 @@ Because Unleash doesn't store this kind of data itself, the network view require
 
 The network view is intended to provide a simple and Unleash-centric overview that serves basic use cases. If you need detailed metrics and connection graphs, you may be better off using specialized network monitoring tools.
 
-[^1]: For instance: when using Unleash in an API setting, a common mistake is to instantiate a new SDK for every request instead of sharing a single instance across requests. This would be visible in the network overview graph as a large number of requests from the same app.
-
 ## Applications
 
 Both the network overview and the network traffic diagrams show you **applications** that have made requests to the Unleash instance. An **application** is defined as anything that sends requests to [Unleash client API](/reference/api/unleash/client), such as [Unleash SDKs](./sdks/index.md), [Unleash Edge](/docs/generated/unleash-edge), or the [Unleash proxy](/docs/generated/unleash-proxy).
 
 ### "unknown" applications
 
-Requests that come from Unleash SDKs and other official Unleash applications will always have an application name defined. But you might sometimes see some applications listed as "unknown" in the diagram.
+Requests that come from Unleash SDKs and other official Unleash applications will always have an application name defined. But you might sometimes see some applications listed as "unknown" in the diagrams.
 
 This happens when Unleash receives requests that don't contain an application name. This can happen, for instance, if you make HTTP requests from the command line to test Unleash connections or if you write your own HTTP client for Unleash that doesn't provide an application name.
 
@@ -42,7 +40,7 @@ Each application shown on the diagram has:
 - An application name
 - the average number of requests per second (_req/s_) that we have registered over the last five minutes.
 
-<Figure caption="The network overview showing three different instances of the Unleash proxy connected to Unleash. Each application has an average of 20 req/s." img="/img/network-overview.png"/>
+<Figure caption="The network overview shows applications that have recently made requests to Unleash. In this figure, it's showing three different instances of the Unleash proxy connected to Unleash. Each instance has an average of 20 req/s." img="/img/network-overview.png"/>
 
 ## Network traffic
 
@@ -89,5 +87,8 @@ sequenceDiagram
     end
     Unleash->>+Prometheus: Query data for network view
 ```
+
+
+[^1]: For instance: when using Unleash in an API setting, a common mistake is to instantiate a new SDK for every request instead of sharing a single instance across requests. This would be visible in the network overview graph as a large number of requests from the same app.
 
 [^2]: How to set up Prometheus to collect metrics from that API is outside of the scope of this document.

@@ -84,7 +84,7 @@ export default class VariantsController extends Controller {
             middleware: [
                 openApiService.validPath({
                     summary:
-                        'Apply a patch to a feature's variants (in all environments).',
+                        "Apply a patch to a feature's variants (in all environments).",
                     description:
                         'This method is not atomic which is the main reason why it is not recommended to use.',
                     tags: ['Features'],
@@ -129,8 +129,7 @@ export default class VariantsController extends Controller {
             handler: this.getVariantsOnEnv,
             middleware: [
                 openApiService.validPath({
-                    summary:
-                        'Get variants for a feature in an environment',
+                    summary: 'Get variants for a feature in an environment',
                     description: `Returns the variants for a feature in a specific environment.`,
                     tags: ['Features'],
                     operationId: 'getEnvironmentFeatureVariants',
@@ -147,8 +146,7 @@ export default class VariantsController extends Controller {
             handler: this.patchVariantsOnEnv,
             middleware: [
                 openApiService.validPath({
-                    summary:
-                        'Patch a feature's variants in an environment',
+                    summary: "Patch a feature's variants in an environment",
                     description: `Returns the variants for a feature in a specific environment.`,
                     tags: ['Features'],
                     operationId: 'patchEnvironmentsFeatureVariants',
@@ -176,7 +174,6 @@ export default class VariantsController extends Controller {
                     * The sum of the weights of variants with \`weightType: fix\` must be strictly less than 1000 (< 1000)
 
                     The backend will also distribute remaining weight up to 1000 after adding the variants with \`weightType: fix\` together amongst the variants of \`weightType: variable\``,
-                        `,
                     tags: ['Features'],
                     operationId: 'overwriteEnvironmentFeatureVariants',
                     requestBody: createRequestSchema('variantsSchema'),

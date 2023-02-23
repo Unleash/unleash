@@ -12,12 +12,12 @@ Variants facilitate A/B testing and experimentation by letting you create contro
 
 ## What are variants?
 
-Whenever you create a feature toggle, you can assign it any number of _variants_. This is commonly done in cases where you want to serve your users different versions of a feature to see which performs better. You can assign different variants in each environment.
+Whenever you create a feature toggle, you can assign it any number of _variants_. This is commonly done in cases where you want to serve your users different versions of a feature to see which performs better. A feature can have different variants in each of its environments.
 
 A variant has four components that define it:
 - a **name**:
 
-    This must be unique among the toggle's variants in an environment. When working with a toggle with variants in a client, you will typically use the variant's name to find out which variant it is.
+    This must be unique among the toggle's variants in the specified environment. When working with a feature with variants in a client, you will typically use the variant's name to find out which variant it is.
 
 - a **weight**:
 

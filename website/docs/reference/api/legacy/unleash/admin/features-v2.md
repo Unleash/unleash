@@ -610,6 +610,7 @@ Transfer-Encoding: chunked
 ## Feature Variants
 
 ### Put variants for Feature Toggle {#update-variants}
+
 :::caution 
 
 From 4.21 variants are tied to an environment. Check our Open API docs for the up-to-date docs: https://docs.getunleash.io/reference/api/unleash/features
@@ -703,6 +704,7 @@ Content-Type: application/json; charset=utf-8
 ```
 
 ### PATCH variants for a feature toggle
+
 :::caution
 
 From 4.21 variants are tied to an environment. Check our Open API docs for the up-to-date docs: https://docs.getunleash.io/reference/api/unleash/features
@@ -711,7 +713,7 @@ From 4.21 variants are tied to an environment. Check our Open API docs for the u
 
 :::
 
-<ApiRequest verb="patch" url="api/admin/projects/:projectId/features/:featureName/variants" title="Patch variants for a feature toggle trying to apply the changes in all environments (example data)" payload={[{"op": "add", "path": "/1", "value": {
+<ApiRequest verb="patch" url="api/admin/projects/:projectId/features/:featureName/variants" title="Patch variants for a feature toggle in all environments (example data)" payload={[{"op": "add", "path": "/1", "value": {
   "name": "new-variant",
   "weightType": "fix",
   "weight": 200

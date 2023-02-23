@@ -66,7 +66,7 @@ export default class VariantsController extends Controller {
             middleware: [
                 openApiService.validPath({
                     summary:
-                        '(deprecated from 4.21) Since variants per environment this endpoint will attempt to choose one of the production environments as the source of truth. If more than one production environment is found, the first one will be used.',
+                        '(deprecated from 4.21) Retrieve the variants for the specified feature. From Unleash 4.21 onwards, this endpoint will attempt to choose a [production-type environment](https://docs.getunleash.io/reference/environments) as the source of truth. If more than one production environment is found, the first one will be used.',
                     deprecated: true,
                     tags: ['Features'],
                     operationId: 'getFeatureVariants',
@@ -84,7 +84,7 @@ export default class VariantsController extends Controller {
             middleware: [
                 openApiService.validPath({
                     summary:
-                        'This will apply the same patch to variants in all environments.',
+                        'Apply a patch to a feature's variants (in all environments).',
                     description:
                         'This method is not atomic which is the main reason why it is not recommended to use.',
                     tags: ['Features'],
@@ -105,14 +105,14 @@ export default class VariantsController extends Controller {
                 openApiService.validPath({
                     summary:
                         'Create (overwrite) variants for a feature toggle in all environments',
-                    description: `This overwrites the current variants for the feature toggle specified in the :featureName parameter in all environments.
+                    description: `This overwrites the current variants for the feature specified in the :featureName parameter in all environments.
 
                     The backend will validate the input for the following invariants
 
-                    * If there are variants, there needs to be at least one variant with ${'`'}weightType: variable${'`'}
-                    * The sum of the weights of variants with ${'`'}weightType: fix${'`'} must be below 1000 (< 1000)
+                    * If there are variants, there needs to be at least one variant with \`weightType: variable\`
+                    * The sum of the weights of variants with \`weightType: fix\` must be strictly less than 1000 (< 1000)
 
-                    The backend will also distribute remaining weight up to 1000 after adding the variants with ${'`'}weightType: fix${'`'} together amongst the variants of ${'`'}weightType: variable${'`'}`,
+                    The backend will also distribute remaining weight up to 1000 after adding the variants with \`weightType: fix\` together amongst the variants of \`weightType: variable\``,
                     tags: ['Features'],
                     operationId: 'overwriteFeatureVariants',
                     requestBody: createRequestSchema('variantsSchema'),
@@ -130,7 +130,7 @@ export default class VariantsController extends Controller {
             middleware: [
                 openApiService.validPath({
                     summary:
-                        'Get variants for a feature in a specific environment',
+                        'Get variants for a feature in an environment',
                     description: `Returns the variants for a feature in a specific environment.`,
                     tags: ['Features'],
                     operationId: 'getEnvironmentFeatureVariants',
@@ -148,7 +148,7 @@ export default class VariantsController extends Controller {
             middleware: [
                 openApiService.validPath({
                     summary:
-                        'Patch variants for a feature toggle under the provided environment',
+                        'Patch a feature's variants in an environment',
                     description: `Returns the variants for a feature in a specific environment.`,
                     tags: ['Features'],
                     operationId: 'patchEnvironmentsFeatureVariants',
@@ -167,15 +167,15 @@ export default class VariantsController extends Controller {
             middleware: [
                 openApiService.validPath({
                     summary:
-                        'Create (overwrite) variants for a feature toggle under the provided environment',
-                    description: `This overwrites the current variants for the feature toggle specified in the :featureName parameter for the :environment parameter.
+                        'Create (overwrite) variants for a feature in an environment',
+                    description: `This overwrites the current variants for the feature toggle in the :featureName parameter for the :environment parameter.
                         
                         The backend will validate the input for the following invariants:
                         
-                        * If there are variants, there needs to be at least one variant with ${'`'}weightType: variable${'`'}
-                        * The sum of the weights of variants with ${'`'}weightType: fix${'`'} must be below 1000 (< 1000)
-                        
-                        The backend will also distribute remaining weight up to 1000 after adding the variants with ${'`'}weightType: fix${'`'} together amongst the variants of ${'`'}weightType: variable${'`'}.
+                    * If there are variants, there needs to be at least one variant with \`weightType: variable\`
+                    * The sum of the weights of variants with \`weightType: fix\` must be strictly less than 1000 (< 1000)
+
+                    The backend will also distribute remaining weight up to 1000 after adding the variants with \`weightType: fix\` together amongst the variants of \`weightType: variable\``,
                         `,
                     tags: ['Features'],
                     operationId: 'overwriteEnvironmentFeatureVariants',

@@ -60,7 +60,7 @@ In order for the SDK to download the feature toggle configuration for the correc
 
 :::note Availability
 
-Environment cloning is an upcoming feature, and is scheduled to become available in one of the next few releases.
+Environment cloning was made available in Unleash 4.19.
 
 :::
 

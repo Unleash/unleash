@@ -25,6 +25,12 @@ Despite this being a shift in how Unleash works, everything will continue to wor
 
 ![A graph showing how environments work. Each project can have multiple features, and each feature can have different activation strategies in each of its environments.](/img/environments_overview.svg 'A feature toggle exists across all environments, but take different activation strategies per environment.')
 
+## Environment types
+
+All environments in Unleash have a **type**. By default, Unleash uses the types "development" and "production", but you can assign any value you want. The environment type is used to ... What?
+
+The **production** environment type is special, in that Unleash will show additional confirmation prompts when you do something that could impact users.
+
 ## Global and project-level environments
 
 Environments exist on a global level, so they are available to all projects within Unleash. However, every [project](./projects.md) might not need to use every environment. That's why you can also choose which of the global environments should be available within a project.

@@ -5129,7 +5129,7 @@ If the provided project does not exist, the list of events will be empty.",
         ],
       },
     },
-    "/api/admin/features-batch/full-import": {
+    "/api/admin/features-batch/import": {
       "post": {
         "description": "Unleash toggles exported from a different instance can be imported into a new project and environment",
         "operationId": "importToggles",
@@ -5155,7 +5155,7 @@ If the provided project does not exist, the list of events will be empty.",
         ],
       },
     },
-    "/api/admin/features-batch/full-validate": {
+    "/api/admin/features-batch/validate": {
       "post": {
         "description": "Unleash toggles exported from a different instance can be imported into a new project and environment",
         "operationId": "validateImport",
@@ -5770,6 +5770,118 @@ If the provided project does not exist, the list of events will be empty.",
               },
             },
             "description": "projectOverviewSchema",
+          },
+        },
+        "tags": [
+          "Projects",
+        ],
+      },
+    },
+    "/api/admin/projects/{projectId}/api-tokens": {
+      "get": {
+        "operationId": "getProjectApiTokens",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apiTokensSchema",
+                },
+              },
+            },
+            "description": "apiTokensSchema",
+          },
+        },
+        "tags": [
+          "Projects",
+        ],
+      },
+      "post": {
+        "operationId": "createProjectApiToken",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/createApiTokenSchema",
+              },
+            },
+          },
+          "description": "createApiTokenSchema",
+          "required": true,
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apiTokenSchema",
+                },
+              },
+            },
+            "description": "The resource was successfully created.",
+            "headers": {
+              "location": {
+                "description": "The location of the newly created resource.",
+                "schema": {
+                  "format": "uri",
+                  "type": "string",
+                },
+              },
+            },
+          },
+          "400": {
+            "description": "This response has no body.",
+          },
+        },
+        "tags": [
+          "Projects",
+        ],
+      },
+    },
+    "/api/admin/projects/{projectId}/api-tokens/{token}": {
+      "delete": {
+        "operationId": "deleteProjectApiToken",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+          {
+            "in": "path",
+            "name": "token",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": {
+          "200": {
+            "description": "This response has no body.",
           },
         },
         "tags": [

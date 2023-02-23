@@ -20,7 +20,7 @@ export function responseTimeMetrics(
 
         let appName;
         if (
-            flagResolver.isEnabled('responseTimeWithAppName') &&
+            !flagResolver.isEnabled('responseTimeWithAppNameKillSwitch') &&
             (instanceStatsService.getAppCountSnapshot('7d') ??
                 appNameReportingThreshold) < appNameReportingThreshold
         ) {

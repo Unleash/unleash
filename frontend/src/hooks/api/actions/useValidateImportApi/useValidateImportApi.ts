@@ -19,7 +19,7 @@ export const useValidateImportApi = () => {
     const validateImport = async (
         payload: ImportQuerySchema
     ): Promise<IValidationSchema> => {
-        const path = `api/admin/features-batch/full-validate`;
+        const path = `api/admin/features-batch/validate`;
         const req = createRequest(path, {
             method: 'POST',
             body: JSON.stringify(payload),

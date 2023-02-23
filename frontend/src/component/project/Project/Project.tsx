@@ -28,7 +28,7 @@ import ProjectOverview from './ProjectOverview';
 import ProjectHealth from './ProjectHealth/ProjectHealth';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import {
-    CREATE_FEATURE,
+    UPDATE_FEATURE,
     DELETE_PROJECT,
     UPDATE_PROJECT,
 } from 'component/providers/AccessProvider/permissions';
@@ -143,7 +143,7 @@ export const Project = () => {
                                 )}
                                 show={
                                     <PermissionIconButton
-                                        permission={CREATE_FEATURE}
+                                        permission={UPDATE_FEATURE}
                                         projectId={projectId}
                                         onClick={() => setModalOpen(true)}
                                         tooltipProps={{ title: 'Import' }}

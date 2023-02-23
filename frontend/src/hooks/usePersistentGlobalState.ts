@@ -12,7 +12,7 @@ type UsePersistentGlobalState<T> = () => [
  * The state is also persisted to localStorage and restored on page load.
  * The localStorage state is not synced between tabs.
  *
- * @deprecated `hooks/useLocalStorage` -- we don't need `react-hooks-global-state`
+ * @deprecated `utils/createLocalStorage` -- we don't need `react-hooks-global-state`
  */
 export const createPersistentGlobalStateHook = <T extends object>(
     key: string,

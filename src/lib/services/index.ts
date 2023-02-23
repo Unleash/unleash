@@ -46,7 +46,7 @@ import { Knex } from 'knex';
 import {
     createExportImportTogglesService,
     createFakeExportImportTogglesService,
-} from '../export-import-toggles';
+} from '../features/export-import-toggles/createExportImportService';
 import { Db } from '../db/db';
 
 // TODO: will be moved to scheduler feature directory
@@ -161,6 +161,8 @@ export const createServices = (
         config,
         projectService,
     );
+
+    // TODO: this is a temporary seam to enable packaging by feature
     const exportImportService = db
         ? createExportImportTogglesService(db, config)
         : createFakeExportImportTogglesService(config);

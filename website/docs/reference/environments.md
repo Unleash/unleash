@@ -3,10 +3,11 @@ id: environments
 title: Environments
 ---
 
-<div class="alert alert--info">
-  <em>Environments</em> are available in <i>Unleash v4.3.x</i> and later. They can also be enabled from <i>Unleash v4.2.x</i> with a feature toggle.
-</div>
-<br />
+:::info Availability
+
+Environments were released in Unleash v4.3.0.
+
+:::
 
 <div style={{position: 'relative', paddingBottom: '56.25%', height: '0'}}>
     <iframe src="https://www.loom.com/embed/95239e875bbc4e09a5c5833e1942e4b0" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style={{position: 'absolute', top: '0', left: '0', width: '100%', height: '100%'}}></iframe>

@@ -20,6 +20,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import { ReactComponent as UnleashLogo } from 'assets/img/logoDarkWithText.svg';
 import { ReactComponent as UnleashLogoWhite } from 'assets/img/logoWithWhiteText.svg';
+import NotificationsIcon from '@mui/icons-material/Notifications';
 
 import { DrawerMenu } from './DrawerMenu/DrawerMenu';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -290,14 +291,14 @@ const Header: VFC = () => {
                             condition={Boolean(uiConfig?.flags?.notifications)}
                             show={
                                 <Box sx={{ position: 'relative' }}>
-                                    <StyledIconButton>
-                                        <NotificationAdd
-                                            onClick={() =>
-                                                setShowNotifications(
-                                                    !showNotifications
-                                                )
-                                            }
-                                        />
+                                    <StyledIconButton
+                                        onClick={() =>
+                                            setShowNotifications(
+                                                !showNotifications
+                                            )
+                                        }
+                                    >
+                                        <NotificationsIcon />
                                     </StyledIconButton>
 
                                     <ConditionallyRender

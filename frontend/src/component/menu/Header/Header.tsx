@@ -20,7 +20,6 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import { ReactComponent as UnleashLogo } from 'assets/img/logoDarkWithText.svg';
 import { ReactComponent as UnleashLogoWhite } from 'assets/img/logoWithWhiteText.svg';
-import NotificationsIcon from '@mui/icons-material/Notifications';
 
 import { DrawerMenu } from './DrawerMenu/DrawerMenu';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -33,7 +32,7 @@ import {
     adminMenuRoutes,
     getCondensedRoutes,
 } from 'component/menu/routes';
-import { KeyboardArrowDown, NotificationAdd } from '@mui/icons-material';
+import { KeyboardArrowDown } from '@mui/icons-material';
 import { filterByConfig } from 'component/common/util';
 import { useAuthPermissions } from 'hooks/api/getters/useAuth/useAuthPermissions';
 import { useId } from 'hooks/useId';
@@ -118,7 +117,6 @@ const Header: VFC = () => {
     const configId = useId();
     const [adminRef, setAdminRef] = useState<HTMLButtonElement | null>(null);
     const [configRef, setConfigRef] = useState<HTMLButtonElement | null>(null);
-    const [showNotifications, setShowNotifications] = useState(false);
 
     const [admin, setAdmin] = useState(false);
     const { permissions } = useAuthPermissions();
@@ -289,24 +287,7 @@ const Header: VFC = () => {
                         />
                         <ConditionallyRender
                             condition={Boolean(uiConfig?.flags?.notifications)}
-                            show={
-                                <Box sx={{ position: 'relative' }}>
-                                    <StyledIconButton
-                                        onClick={() =>
-                                            setShowNotifications(
-                                                !showNotifications
-                                            )
-                                        }
-                                    >
-                                        <NotificationsIcon />
-                                    </StyledIconButton>
-
-                                    <ConditionallyRender
-                                        condition={showNotifications}
-                                        show={<Notifications />}
-                                    />
-                                </Box>
-                            }
+                            show={<Notifications />}
                         />
                         <NavigationMenu
                             id={adminId}

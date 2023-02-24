@@ -27,9 +27,17 @@ Despite this being a shift in how Unleash works, everything will continue to wor
 
 ## Environment types
 
-All environments in Unleash have a **type**. By default, Unleash uses the types "development" and "production", but you can assign any value you want. The environment type is used to ... What?
+All environments in Unleash have a **type**. When you create a new environment, you must also assign it a type.
 
-The **production** environment type is special, in that Unleash will show additional confirmation prompts when you do something that could impact users.
+The built-in environment types are:
+- Development
+- Test
+- Pre-production
+- Production
+
+The **production** environment type is special: Unleash will show additional confirmation prompts when you change something that could impact users in environments of this type. The built-in "production" environment is a production-type environment.
+
+The other environment types do not currently have any functionality associated with them. This may change in the future.
 
 ## Global and project-level environments
 

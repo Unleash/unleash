@@ -148,7 +148,7 @@ export default class VariantsController extends Controller {
             middleware: [
                 openApiService.validPath({
                     summary: "Patch a feature's variants in an environment",
-                    description: `Returns the variants for a feature in a specific environment.`,
+                    description: `Apply a list of patches to the features environments in the specified environment. The patch objects should conform to the [JSON-patch format (RFC 6902)](https://www.rfc-editor.org/rfc/rfc6902).`,
                     tags: ['Features'],
                     operationId: 'patchEnvironmentsFeatureVariants',
                     requestBody: createRequestSchema('patchesSchema'),

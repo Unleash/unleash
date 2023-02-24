@@ -2,8 +2,10 @@
 title: Feature Toggle Variants
 ---
 :::info Availability
-  **Feature toggle variants** were introduced in Unleash 3.2.
-  **Per-environment variants** were introduced in Unleash 4.21.
+
+**Feature toggle variants** were first introduced in Unleash 3.2.
+In Unleash 4.21, variants were updated to be **environment-dependent**, meaning the same feature could have different variant configurations in different environments.
+
 :::
 
 Every toggle in Unleash can have something called _variants_. Where _feature toggles_ allow you to decide which users get access to a feature, _toggle variants_ allow you to further split those users into segments. Say, for instance, that you're testing out a new feature, such as an alternate sign-up form. The feature toggle would expose the form only to a select group of users. The variants could decide whether the user sees a blue or a green submit button on that form.

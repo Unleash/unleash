@@ -250,6 +250,10 @@ const Header: VFC = () => {
                                 />
                             }
                         />
+                        <ConditionallyRender
+                            condition={Boolean(uiConfig?.flags?.notifications)}
+                            show={<Notifications />}
+                        />
                         <Tooltip title="Documentation" arrow>
                             <IconButton
                                 href="https://docs.getunleash.io/"
@@ -284,10 +288,6 @@ const Header: VFC = () => {
                                     </StyledIconButton>
                                 </Tooltip>
                             }
-                        />
-                        <ConditionallyRender
-                            condition={Boolean(uiConfig?.flags?.notifications)}
-                            show={<Notifications />}
                         />
                         <NavigationMenu
                             id={adminId}

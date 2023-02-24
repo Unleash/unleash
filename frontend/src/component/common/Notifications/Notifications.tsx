@@ -6,6 +6,7 @@ import {
     IconButton,
     styled,
     ClickAwayListener,
+    Button,
 } from '@mui/material';
 import { useNotifications } from 'hooks/api/getters/useNotifications/useNotifications';
 import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
@@ -24,6 +25,8 @@ const StyledPrimaryContainerBox = styled(Box)(() => ({
 const StyledInnerContainerBox = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.neutral.light,
     padding: theme.spacing(1, 3),
+    display: 'flex',
+    justifyContent: 'center',
 }));
 
 const StyledTypography = styled(Typography)(({ theme }) => ({
@@ -44,7 +47,9 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
 
 export const Notifications = () => {
     const [showNotifications, setShowNotifications] = useState(false);
-    const { notifications } = useNotifications({ refreshInterval: 15 });
+    const { notifications, refetchNotifications } = useNotifications({
+        refreshInterval: 15,
+    });
     const navigate = useNavigate();
     const { markAsRead } = useNotificationsApi();
 
@@ -59,6 +64,18 @@ export const Notifications = () => {
         } catch (e) {
             // No need to display this in the UI. Minor inconvinence if this call fails.
             console.error('Error marking notification as read: ', e);
+        }
+    };
+
+    const onMarkAllAsRead = () => {
+        try {
+            if (notifications && notifications.length > 0) {
+                markAsRead(notifications);
+                refetchNotifications();
+            }
+        } catch (e) {
+            // No need to display this in the UI. Minor inconvinence if this call fails.
+            console.error('Error marking all notification as read: ', e);
         }
     };
 
@@ -79,9 +96,12 @@ export const Notifications = () => {
                         <StyledPaper>
                             <NotificationsHeader />
                             <StyledInnerContainerBox>
-                                <StyledTypography>
-                                    Mark all as read ({notifications?.length})
-                                </StyledTypography>
+                                <Button onClick={onMarkAllAsRead}>
+                                    <StyledTypography>
+                                        Mark all as read (
+                                        {notifications?.length})
+                                    </StyledTypography>
+                                </Button>
                             </StyledInnerContainerBox>
                             <NotificationsList>
                                 {notifications?.map(notification => (

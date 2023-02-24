@@ -352,7 +352,7 @@ exports[`returns all baseRoutes 1`] = `
     "menu": {
       "adminSettings": true,
     },
-    "path": "/sign-on-log",
+    "path": "/admin/sign-on-log",
     "title": "Sign on log",
     "type": "protected",
   },

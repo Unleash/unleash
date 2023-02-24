@@ -107,6 +107,12 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
     }
 
     private defaultStrategyChangeText(preData, data, environment: string) {
+        const oldConstraints = this.formatConstraints(preData.constraints);
+        const newConstraints = this.formatConstraints(data.constraints);
+        return `by updating strategy ${data?.name} in *${environment}* from ${oldConstraints} to ${newConstraints}`;
+    }
+
+    private formatConstraints(constraints) {
         const constraintOperatorDescriptions = {
             IN: 'is one of',
             NOT_IN: 'is not one of',
@@ -139,14 +145,9 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
             }${operator} ${val}`;
         };
 
-        const constraintStrings = (constraints) =>
-            constraints.length === 0
-                ? 'empty set of constraints'
-                : `[${constraints.map(formatConstraint).join(', ')}]`;
-
-        const oldConstraints = constraintStrings(preData.constraints);
-        const newConstraints = constraintStrings(data.constraints);
-        return `by updating strategy ${data?.name} in *${environment}* from ${oldConstraints} to ${newConstraints}`;
+        return constraints.length === 0
+            ? 'empty set of constraints'
+            : `[${constraints.map(formatConstraint).join(', ')}]`;
     }
 
     generateStrategyRemoveText(event: IEvent): string {

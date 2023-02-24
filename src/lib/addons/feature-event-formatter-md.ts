@@ -73,22 +73,32 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
     generateStrategyChangeText(event: IEvent): string {
         const { createdBy, environment, project, data, preData } = event;
         const feature = this.generateFeatureLink(event);
-        const map = {
-            ['flexibleRollout']: () =>
-                this.flexibleRolloutStrategyChangeText(
-                    preData,
-                    data,
-                    environment,
-                ),
-            ['default']: () =>
-                this.defaultStrategyChangeText(preData, data, environment),
-            ['userWithId']: () =>
-                this.userWithIdStrategyChangeText(preData, data, environment),
+        const strategyText = () => {
+            switch (data.name) {
+                case 'flexibleRollout':
+                    return this.flexibleRolloutStrategyChangeText(
+                        preData,
+                        data,
+                        environment,
+                    );
+                case 'default':
+                    return this.defaultStrategyChangeText(
+                        preData,
+                        data,
+                        environment,
+                    );
+                case 'userWithId':
+                    return this.userWithIdStrategyChangeText(
+                        preData,
+                        data,
+                        environment,
+                    );
+                default:
+                    return `by updating strategy ${data?.name} in *${environment}*`;
+            }
         };
-        const strategyText = map.hasOwnProperty(data.name)
-            ? map[data.name]()
-            : `by updating strategy ${data?.name} in *${environment}*`;
-        return `${createdBy} updated *${feature}* in project *${project}* ${strategyText}`;
+
+        return `${createdBy} updated *${feature}* in project *${project}* ${strategyText()}`;
     }
 
     private userWithIdStrategyChangeText(preData, data, environment: string) {

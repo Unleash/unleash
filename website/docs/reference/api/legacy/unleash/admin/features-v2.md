@@ -707,9 +707,9 @@ Content-Type: application/json; charset=utf-8
 
 :::caution
 
-From 4.21 variants are tied to an environment. Check our Open API docs for the up-to-date docs: https://docs.getunleash.io/reference/api/unleash/features
+This API documentation is no longer maintained. You should use the [OpenAPI docs for this endpoint](/docs/reference/api/unleash/overwrite-feature-variants.api.mdx) instead.
 
- This endpoint affects all environments at once. If you only want to update a single environment, use [#update-variants-per-environment](#update-variants-per-environment) instead.
+This endpoint affects all environments at once. If you only want to update a single environment, use the [operation for updating variants per enviroment](/docs/reference/api/unleash/overwrite-feature-variants-on-environments.api.mdx) instead.
 
 :::
 

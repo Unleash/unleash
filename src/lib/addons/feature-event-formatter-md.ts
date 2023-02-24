@@ -82,11 +82,35 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
                 ),
             ['default']: () =>
                 this.defaultStrategyChangeText(preData, data, environment),
+            ['userWithId']: () =>
+                this.userWithIdStrategyChangeText(preData, data, environment),
         };
         const strategyText = map.hasOwnProperty(data.name)
             ? map[data.name]()
             : `by updating strategy ${data?.name} in *${environment}*`;
         return `${createdBy} updated *${feature}* in project *${project}* ${strategyText}`;
+    }
+
+    private userWithIdStrategyChangeText(preData, data, environment: string) {
+        const userIdText = (userIds) =>
+            userIds.length === 0 ? 'empty set of user ids' : userIds;
+        const usersText =
+            preData.parameters.userIds === data.parameters.userIds
+                ? ''
+                : ` user ids from ${userIdText(
+                      preData.parameters.userIds,
+                  )} to ${userIdText(data.parameters.userIds)}`;
+        const oldConstraints = this.formatConstraints(preData.constraints);
+        const newConstraints = this.formatConstraints(data.constraints);
+        const constraintText =
+            oldConstraints === newConstraints
+                ? ''
+                : ` constraints from ${oldConstraints} to ${newConstraints}`;
+
+        const strategySpecificText = [usersText, constraintText]
+            .filter((x) => x.length)
+            .join(';');
+        return `by updating strategy ${data?.name} in *${environment}*${strategySpecificText}`;
     }
 
     private flexibleRolloutStrategyChangeText(

@@ -319,6 +319,46 @@ const testCases: [string, IEvent, string][] = [
                 `admin updated *[aaa](unleashUrl/projects/default/features/aaa)* in project *default* by updating strategy default in *production* from [appName ${display} 4] to empty set of constraints`,
             ],
     ),
+    [
+        'when userIds changed',
+        {
+            id: 920,
+            type: FEATURE_STRATEGY_UPDATE,
+            createdBy: 'user@company.com',
+            createdAt: new Date('2022-06-01T10:03:11.549Z'),
+            data: {
+                name: 'userWithId',
+                constraints: [
+                    {
+                        values: ['x', 'y'],
+                        inverted: false,
+                        operator: IN,
+                        contextName: 'appName',
+                        caseInsensitive: false,
+                    },
+                ],
+                parameters: {
+                    userIds: 'a,b',
+                },
+                sortOrder: 9999,
+                id: '9a995d94-5944-4897-a82f-0f7e65c2fb3f',
+            },
+            preData: {
+                name: 'userWithId',
+                constraints: [],
+                parameters: {
+                    userIds: '',
+                },
+                sortOrder: 9999,
+                id: '9a995d94-5944-4897-a82f-0f7e65c2fb3f',
+            },
+            tags: [],
+            featureName: 'new-feature',
+            project: 'my-other-project',
+            environment: 'production',
+        },
+        'user@company.com updated *[new-feature](unleashUrl/projects/my-other-project/features/new-feature)* in project *my-other-project* by updating strategy userWithId in *production* user ids from empty set of user ids to a,b; constraints from empty set of constraints to [appName is one of (x,y)]',
+    ],
 ];
 
 testCases.forEach(([description, event, expected]) =>

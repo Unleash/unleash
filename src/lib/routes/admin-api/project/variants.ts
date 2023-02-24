@@ -86,8 +86,7 @@ export default class VariantsController extends Controller {
                 openApiService.validPath({
                     summary:
                         "Apply a patch to a feature's variants (in all environments).",
-                    description:
-                        `Apply a list of patches patch to the specified feature's variants. The patch objects should conform to the [JSON-patch format (RFC 6902)](https://www.rfc-editor.org/rfc/rfc6902).
+                    description: `Apply a list of patches patch to the specified feature's variants. The patch objects should conform to the [JSON-patch format (RFC 6902)](https://www.rfc-editor.org/rfc/rfc6902).
                         
                         ⚠️ **Warning**: This method is not atomic. If something fails in the middle of applying the patch, you can be left with a half-applied patch. We recommend that you instead [patch variants on a per-environment basis](/docs/reference/api/unleash/patch-environments-feature-variants.api.mdx), which **is** an atomic operation.`,
                     tags: ['Features'],

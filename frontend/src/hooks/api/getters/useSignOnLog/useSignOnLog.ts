@@ -12,7 +12,7 @@ export const useSignOnLog = () => {
 
     const { data, error, mutate } = useConditionalSWR(
         loginEventLog && isEnterprise(),
-        { events: [] },
+        [],
         formatApiPath(`api/admin/login-event`),
         fetcher
     );

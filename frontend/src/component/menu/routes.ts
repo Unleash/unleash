@@ -357,7 +357,7 @@ export const routes: IRoute[] = [
     },
 
     {
-        path: '/sign-on-log',
+        path: '/admin/sign-on-log',
         title: 'Sign on log',
         component: SignOnLog,
         type: 'protected',
@@ -448,7 +448,7 @@ export const adminMenuRoutes: INavigationMenuItem[] = [
         menu: { adminSettings: true },
     },
     {
-        path: '/sign-on-log',
+        path: '/admin/sign-on-log',
         title: 'Sign-on log',
         menu: { adminSettings: true },
         flag: 'loginEventLog',

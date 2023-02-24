@@ -28,7 +28,7 @@ Both the network overview and the network traffic diagrams show you **applicatio
 
 Requests that come from Unleash SDKs and other official Unleash applications will always have an application name defined. But you might sometimes see some applications listed as "unknown" in the diagrams.
 
-This happens when Unleash receives requests that don't contain an application name. This can happen, for instance, if you make HTTP requests from the command line to test Unleash connections or if you write your own HTTP client for Unleash that doesn't provide an application name.
+This happens when Unleash receives requests that don't contain an application name header (`UNLEASH_APPNAME`). This can happen, for instance, if you make HTTP requests from the command line to test Unleash connections or if you write your own HTTP client for Unleash that doesn't provide an application name.
 
 Because Unleash can't separate these based on their application names, all "unknown" clients will get lumped together as one application in the overview.
 

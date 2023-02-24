@@ -11,6 +11,7 @@ import {
     Switch,
     styled,
     Theme,
+    Box,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -31,13 +32,14 @@ import {
     adminMenuRoutes,
     getCondensedRoutes,
 } from 'component/menu/routes';
-import { KeyboardArrowDown } from '@mui/icons-material';
+import { KeyboardArrowDown, NotificationAdd } from '@mui/icons-material';
 import { filterByConfig } from 'component/common/util';
 import { useAuthPermissions } from 'hooks/api/getters/useAuth/useAuthPermissions';
 import { useId } from 'hooks/useId';
 import { INavigationMenuItem } from 'interfaces/route';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { useThemeMode } from 'hooks/useThemeMode';
+import { Notifications } from 'component/common/Notifications/Notifications';
 
 const StyledHeader = styled(AppBar)(({ theme }) => ({
     backgroundColor: theme.palette.headerBackground,
@@ -115,6 +117,7 @@ const Header: VFC = () => {
     const configId = useId();
     const [adminRef, setAdminRef] = useState<HTMLButtonElement | null>(null);
     const [configRef, setConfigRef] = useState<HTMLButtonElement | null>(null);
+    const [showNotifications, setShowNotifications] = useState(false);
 
     const [admin, setAdmin] = useState(false);
     const { permissions } = useAuthPermissions();
@@ -209,6 +212,7 @@ const Header: VFC = () => {
                         }
                     />
                 </StyledLink>
+
                 <StyledNav>
                     <StyledLinks>
                         <StyledLink to="/projects">Projects</StyledLink>
@@ -280,6 +284,27 @@ const Header: VFC = () => {
                                         />
                                     </StyledIconButton>
                                 </Tooltip>
+                            }
+                        />
+                        <ConditionallyRender
+                            condition={Boolean(uiConfig?.flags?.notifications)}
+                            show={
+                                <Box sx={{ position: 'relative' }}>
+                                    <StyledIconButton>
+                                        <NotificationAdd
+                                            onClick={() =>
+                                                setShowNotifications(
+                                                    !showNotifications
+                                                )
+                                            }
+                                        />
+                                    </StyledIconButton>
+
+                                    <ConditionallyRender
+                                        condition={showNotifications}
+                                        show={<Notifications />}
+                                    />
+                                </Box>
                             }
                         />
                         <NavigationMenu

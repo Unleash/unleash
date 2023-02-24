@@ -94,7 +94,7 @@ const testCases: [string, IEvent, string][] = [
         'user@company.com updated *[new-feature](unleashUrl/projects/my-other-project/features/new-feature)* in project *my-other-project* by updating strategy flexibleRollout in *production* from default stickiness to random',
     ],
     [
-        'when rollout percentage and stickiness changed',
+        'when constraints and rollout percentage and stickiness changed',
         {
             id: 920,
             type: FEATURE_STRATEGY_UPDATE,
@@ -103,7 +103,15 @@ const testCases: [string, IEvent, string][] = [
             data: {
                 id: '3f4bf713-696c-43a4-8ce7-d6c607108858',
                 name: 'flexibleRollout',
-                constraints: [],
+                constraints: [
+                    {
+                        values: ['x', 'y'],
+                        inverted: false,
+                        operator: IN,
+                        contextName: 'appName',
+                        caseInsensitive: false,
+                    },
+                ],
                 parameters: {
                     groupId: 'new-feature',
                     rollout: '32',
@@ -125,7 +133,7 @@ const testCases: [string, IEvent, string][] = [
             project: 'my-other-project',
             environment: 'production',
         },
-        'user@company.com updated *[new-feature](unleashUrl/projects/my-other-project/features/new-feature)* in project *my-other-project* by updating strategy flexibleRollout in *production* from default stickiness to random from 67% to 32%',
+        'user@company.com updated *[new-feature](unleashUrl/projects/my-other-project/features/new-feature)* in project *my-other-project* by updating strategy flexibleRollout in *production* from default stickiness to random from 67% to 32% constraints from empty set of constraints to [appName is one of (x,y)]',
     ],
     [
         'when neither rollout percentage nor stickiness changed',

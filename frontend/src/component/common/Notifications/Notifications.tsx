@@ -14,8 +14,9 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import { NotificationsHeader } from './NotificationsHeader';
 import { NotificationsList } from './NotificationsList';
 import { Notification } from './Notification';
+import { EmptyNotifications } from './EmptyNotifications';
 import { NotificationsSchemaItem } from 'openapi';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useNotificationsApi } from 'hooks/api/actions/useNotificationsApi/useNotificationsApi';
 
 const StyledPrimaryContainerBox = styled(Box)(() => ({
@@ -60,7 +61,9 @@ export const Notifications = () => {
         // Intentionally not wait for this request. We don't want to hold the user back
         // only to mark a notification as read.
         try {
-            markAsRead([notification]);
+            markAsRead({
+                notifications: [notification.id],
+            });
         } catch (e) {
             // No need to display this in the UI. Minor inconvinence if this call fails.
             console.error('Error marking notification as read: ', e);
@@ -70,7 +73,11 @@ export const Notifications = () => {
     const onMarkAllAsRead = () => {
         try {
             if (notifications && notifications.length > 0) {
-                markAsRead(notifications);
+                markAsRead({
+                    notifications: notifications.map(
+                        notification => notification.id
+                    ),
+                });
                 refetchNotifications();
             }
         } catch (e) {
@@ -79,11 +86,31 @@ export const Notifications = () => {
         }
     };
 
+    const unreadNotifications = notifications?.filter(
+        notification => notification.readAt === null
+    );
+
     return (
         <StyledPrimaryContainerBox>
             <IconButton
                 onClick={() => setShowNotifications(!showNotifications)}
             >
+                <ConditionallyRender
+                    condition={unreadNotifications?.length > 0}
+                    show={
+                        <Box
+                            sx={theme => ({
+                                backgroundColor: theme.palette.primary.main,
+                                borderRadius: '100%',
+                                width: '7px',
+                                height: '7px',
+                                position: 'absolute',
+                                top: 7,
+                                right: 4,
+                            })}
+                        />
+                    }
+                />
                 <NotificationsIcon />
             </IconButton>
 
@@ -95,15 +122,25 @@ export const Notifications = () => {
                     >
                         <StyledPaper>
                             <NotificationsHeader />
-                            <StyledInnerContainerBox>
-                                <Button onClick={onMarkAllAsRead}>
-                                    <StyledTypography>
-                                        Mark all as read (
-                                        {notifications?.length})
-                                    </StyledTypography>
-                                </Button>
-                            </StyledInnerContainerBox>
+                            <ConditionallyRender
+                                condition={unreadNotifications?.length > 0}
+                                show={
+                                    <StyledInnerContainerBox>
+                                        <Button onClick={onMarkAllAsRead}>
+                                            <StyledTypography>
+                                                Mark all as read (
+                                                {unreadNotifications?.length})
+                                            </StyledTypography>
+                                        </Button>
+                                    </StyledInnerContainerBox>
+                                }
+                            />
+
                             <NotificationsList>
+                                <ConditionallyRender
+                                    condition={notifications?.length === 0}
+                                    show={<EmptyNotifications />}
+                                />
                                 {notifications?.map(notification => (
                                     <Notification
                                         notification={notification}

@@ -6,10 +6,15 @@ import {
 } from 'openapi';
 import { ReactComponent as ChangesAppliedIcon } from 'assets/icons/merge.svg';
 import TimeAgo from 'react-timeago';
+import { ToggleOffOutlined } from '@mui/icons-material';
 
-const StyledContainerbox = styled(Box)(({ theme }) => ({
+const StyledContainerBox = styled(Box, {
+    shouldForwardProp: prop => prop !== 'readAt',
+})<{ readAt: boolean }>(({ theme, readAt }) => ({
     padding: theme.spacing(0.5),
-    backgroundColor: theme.palette.secondary.light,
+    backgroundColor: readAt
+        ? theme.palette.neutral.light
+        : theme.palette.secondary.light,
     width: '30px',
     height: '30px',
     display: 'flex',
@@ -28,12 +33,14 @@ const StyledListItem = styled(ListItem)(({ theme }) => ({
     '&:not(:last-child)': {
         borderBottom: `2px solid ${theme.palette.tertiary.contrast}`,
     },
+    width: '100%',
 }));
 
 const StyledNotificationMessageBox = styled(Box)(({ theme }) => ({
     marginLeft: theme.spacing(4),
     display: 'flex',
     flexDirection: 'column',
+    width: '100%',
 }));
 
 const StyledSecondaryInfoBox = styled(Box)(({ theme }) => ({
@@ -42,9 +49,11 @@ const StyledSecondaryInfoBox = styled(Box)(({ theme }) => ({
     margin: theme.spacing(1, 0, 1, 0),
 }));
 
-const StyledMessageTypography = styled(Typography)(({ theme }) => ({
+const StyledMessageTypography = styled(Typography, {
+    shouldForwardProp: prop => prop !== 'readAt',
+})<{ readAt: boolean }>(({ theme, readAt }) => ({
     fontSize: theme.fontSizes.smallBody,
-    fontWeight: 'bold',
+    fontWeight: readAt ? 'normal' : 'bold',
     textDecoration: 'none',
     color: 'inherit',
 }));
@@ -64,16 +73,37 @@ export const Notification = ({
     onNotificationClick,
 }: INotificationProps) => {
     const theme = useTheme();
+    const { readAt } = notification;
 
     const resolveIcon = (type: NotificationsSchemaItemNotificationType) => {
-        if (type === 'change-request' && notification.readAt === undefined) {
+        if (type === 'change-request') {
             return (
-                <StyledContainerbox>
+                <StyledContainerBox readAt={Boolean(readAt)}>
                     <ChangesAppliedIcon
-                        color={theme.palette.primary.main}
+                        color={
+                            notification.readAt
+                                ? theme.palette.neutral.main
+                                : theme.palette.primary.main
+                        }
                         style={{ transform: 'scale(0.8)' }}
                     />
-                </StyledContainerbox>
+                </StyledContainerBox>
+            );
+        }
+
+        if (type === 'toggle') {
+            return (
+                <StyledContainerBox readAt={Boolean(readAt)}>
+                    <ToggleOffOutlined
+                        sx={theme => ({
+                            height: '20px',
+                            width: '20px',
+                            color: Boolean(readAt)
+                                ? theme.palette.neutral.main
+                                : theme.palette.primary.main,
+                        })}
+                    />
+                </StyledContainerBox>
             );
         }
     };
@@ -82,7 +112,7 @@ export const Notification = ({
         <StyledListItem onClick={() => onNotificationClick(notification)}>
             {resolveIcon(notification.notificationType)}{' '}
             <StyledNotificationMessageBox>
-                <StyledMessageTypography>
+                <StyledMessageTypography readAt={Boolean(readAt)}>
                     {notification.message}
                 </StyledMessageTypography>
                 <StyledSecondaryInfoBox>

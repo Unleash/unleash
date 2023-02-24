@@ -6,7 +6,7 @@ export const useNotificationsApi = () => {
         propagateErrors: true,
     });
 
-    const markAsRead = async (payload: NotificationsSchemaItem[]) => {
+    const markAsRead = async (payload: { notifications: number[] }) => {
         const path = `api/admin/notifications/read`;
         const req = createRequest(path, {
             method: 'POST',

@@ -57,7 +57,7 @@ const testCases: [string, IEvent, string][] = [
             project: 'my-other-project',
             environment: 'production',
         },
-        'user@company.com updated *[new-feature](unleashUrl/projects/my-other-project/features/new-feature)* in project *my-other-project* by updating strategy flexibleRollout in *production* from 67% to 32%',
+        'user@company.com updated *[new-feature](unleashUrl/projects/my-other-project/features/new-feature)* in project *my-other-project* by updating strategy flexibleRollout in *production* rollout from 67% to 32%',
     ],
     [
         'when stickiness changed',
@@ -91,7 +91,7 @@ const testCases: [string, IEvent, string][] = [
             project: 'my-other-project',
             environment: 'production',
         },
-        'user@company.com updated *[new-feature](unleashUrl/projects/my-other-project/features/new-feature)* in project *my-other-project* by updating strategy flexibleRollout in *production* from default stickiness to random',
+        'user@company.com updated *[new-feature](unleashUrl/projects/my-other-project/features/new-feature)* in project *my-other-project* by updating strategy flexibleRollout in *production* stickiness from default to random',
     ],
     [
         'when constraints and rollout percentage and stickiness changed',
@@ -133,7 +133,7 @@ const testCases: [string, IEvent, string][] = [
             project: 'my-other-project',
             environment: 'production',
         },
-        'user@company.com updated *[new-feature](unleashUrl/projects/my-other-project/features/new-feature)* in project *my-other-project* by updating strategy flexibleRollout in *production* from default stickiness to random from 67% to 32% constraints from empty set of constraints to [appName is one of (x,y)]',
+        'user@company.com updated *[new-feature](unleashUrl/projects/my-other-project/features/new-feature)* in project *my-other-project* by updating strategy flexibleRollout in *production* stickiness from default to random; rollout from 67% to 32%; constraints from empty set of constraints to [appName is one of (x,y)]',
     ],
     [
         'when neither rollout percentage nor stickiness changed',

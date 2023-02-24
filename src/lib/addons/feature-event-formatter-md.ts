@@ -100,16 +100,25 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
         const stickinessText =
             oldStickiness === stickiness
                 ? ''
-                : ` from ${oldStickiness} stickiness to ${stickiness}`;
+                : ` stickiness from ${oldStickiness} to ${stickiness}`;
         const rolloutText =
-            oldRollout === rollout ? '' : ` from ${oldRollout}% to ${rollout}%`;
+            oldRollout === rollout
+                ? ''
+                : ` rollout from ${oldRollout}% to ${rollout}%`;
         const oldConstraints = this.formatConstraints(preData.constraints);
         const newConstraints = this.formatConstraints(data.constraints);
         const constraintText =
             oldConstraints === newConstraints
                 ? ''
                 : ` constraints from ${oldConstraints} to ${newConstraints}`;
-        return `by updating strategy ${data?.name} in *${environment}*${stickinessText}${rolloutText}${constraintText}`;
+        const strategySpecificText = [
+            stickinessText,
+            rolloutText,
+            constraintText,
+        ]
+            .filter((txt) => txt.length)
+            .join(';');
+        return `by updating strategy ${data?.name} in *${environment}*${strategySpecificText}`;
     }
 
     private defaultStrategyChangeText(preData, data, environment: string) {

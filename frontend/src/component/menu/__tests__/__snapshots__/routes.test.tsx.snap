@@ -349,6 +349,15 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
+    "menu": {
+      "adminSettings": true,
+    },
+    "path": "/sign-on-log",
+    "title": "Sign on log",
+    "type": "protected",
+  },
+  {
+    "component": [Function],
     "menu": {},
     "path": "/archive",
     "title": "Archived toggles",

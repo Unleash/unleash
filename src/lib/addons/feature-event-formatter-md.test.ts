@@ -359,6 +359,42 @@ const testCases: [string, IEvent, string][] = [
         },
         'user@company.com updated *[new-feature](unleashUrl/projects/my-other-project/features/new-feature)* in project *my-other-project* by updating strategy userWithId in *production* user ids from empty set of user ids to a,b; constraints from empty set of constraints to [appName is one of (x,y)]',
     ],
+    [
+        'when IPs changed',
+        {
+            id: 920,
+            type: FEATURE_STRATEGY_UPDATE,
+            createdBy: 'user@company.com',
+            createdAt: new Date('2022-06-01T10:03:11.549Z'),
+            data: {
+                name: 'remoteAddress',
+                constraints: [
+                    {
+                        values: ['x', 'y'],
+                        inverted: false,
+                        operator: IN,
+                        contextName: 'appName',
+                        caseInsensitive: false,
+                    },
+                ],
+                parameters: {
+                    IPs: '127.0.0.1',
+                },
+            },
+            preData: {
+                name: 'remoteAddress',
+                constraints: [],
+                parameters: {
+                    IPs: '',
+                },
+            },
+            tags: [],
+            featureName: 'new-feature',
+            project: 'my-other-project',
+            environment: 'production',
+        },
+        'user@company.com updated *[new-feature](unleashUrl/projects/my-other-project/features/new-feature)* in project *my-other-project* by updating strategy remoteAddress in *production* IPs from empty set of IPs to 127.0.0.1; constraints from empty set of constraints to [appName is one of (x,y)]',
+    ],
 ];
 
 testCases.forEach(([description, event, expected]) =>

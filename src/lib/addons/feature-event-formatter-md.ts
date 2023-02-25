@@ -93,12 +93,44 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
                         data,
                         environment,
                     );
+                case 'remoteAddress':
+                    return this.remoteAddressStrategyChangeText(
+                        preData,
+                        data,
+                        environment,
+                    );
                 default:
                     return `by updating strategy ${data?.name} in *${environment}*`;
             }
         };
 
         return `${createdBy} updated *${feature}* in project *${project}* ${strategyText()}`;
+    }
+
+    private remoteAddressStrategyChangeText(
+        preData,
+        data,
+        environment: string,
+    ) {
+        const ipListText = (IPs) =>
+            IPs.length === 0 ? 'empty set of IPs' : IPs;
+        const ipComparisonText =
+            preData.parameters.IPs === data.parameters.IPs
+                ? ''
+                : ` IPs from ${ipListText(
+                      preData.parameters.IPs,
+                  )} to ${ipListText(data.parameters.IPs)}`;
+        const oldConstraints = this.formatConstraints(preData.constraints);
+        const newConstraints = this.formatConstraints(data.constraints);
+        const constraintText =
+            oldConstraints === newConstraints
+                ? ''
+                : ` constraints from ${oldConstraints} to ${newConstraints}`;
+
+        const strategySpecificText = [ipComparisonText, constraintText]
+            .filter((x) => x.length)
+            .join(';');
+        return `by updating strategy ${data?.name} in *${environment}*${strategySpecificText}`;
     }
 
     private userWithIdStrategyChangeText(preData, data, environment: string) {

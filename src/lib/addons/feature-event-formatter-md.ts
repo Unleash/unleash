@@ -99,12 +99,31 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
                         data,
                         environment,
                     );
+                case 'applicationHostname':
+                    return this.applicationHostnameStrategyChangeText(
+                        preData,
+                        data,
+                        environment,
+                    );
                 default:
                     return `by updating strategy ${data?.name} in *${environment}*`;
             }
         };
 
         return `${createdBy} updated *${feature}* in project *${project}* ${strategyText()}`;
+    }
+
+    private applicationHostnameStrategyChangeText(
+        preData,
+        data,
+        environment: string,
+    ) {
+        return this.listOfValuesStrategyChangeText(
+            preData,
+            data,
+            environment,
+            'hostNames',
+        );
     }
 
     private remoteAddressStrategyChangeText(

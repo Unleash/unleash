@@ -179,9 +179,12 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
         data,
         environment: string,
     ) {
-        const { rollout: oldRollout, stickiness: oldStickiness } =
-            preData.parameters;
-        const { rollout, stickiness } = data.parameters;
+        const {
+            rollout: oldRollout,
+            stickiness: oldStickiness,
+            groupId: oldGroupId,
+        } = preData.parameters;
+        const { rollout, stickiness, groupId } = data.parameters;
         const stickinessText =
             oldStickiness === stickiness
                 ? ''
@@ -190,6 +193,10 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
             oldRollout === rollout
                 ? ''
                 : ` rollout from ${oldRollout}% to ${rollout}%`;
+        const groupIdText =
+            oldGroupId === groupId
+                ? ''
+                : ` groupId from ${oldGroupId} to ${groupId}`;
         const constraintText = this.constraintChangeText(
             preData.constraints,
             data.constraints,
@@ -197,6 +204,7 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
         const strategySpecificText = [
             stickinessText,
             rolloutText,
+            groupIdText,
             constraintText,
         ]
             .filter((txt) => txt.length)

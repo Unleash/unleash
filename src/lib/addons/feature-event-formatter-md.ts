@@ -112,43 +112,43 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
         data,
         environment: string,
     ) {
-        const ipListText = (IPs) =>
-            IPs.length === 0 ? 'empty set of IPs' : IPs;
-        const ipComparisonText =
-            preData.parameters.IPs === data.parameters.IPs
-                ? ''
-                : ` IPs from ${ipListText(
-                      preData.parameters.IPs,
-                  )} to ${ipListText(data.parameters.IPs)}`;
-        const oldConstraints = this.formatConstraints(preData.constraints);
-        const newConstraints = this.formatConstraints(data.constraints);
-        const constraintText =
-            oldConstraints === newConstraints
-                ? ''
-                : ` constraints from ${oldConstraints} to ${newConstraints}`;
-
-        const strategySpecificText = [ipComparisonText, constraintText]
-            .filter((x) => x.length)
-            .join(';');
-        return `by updating strategy ${data?.name} in *${environment}*${strategySpecificText}`;
+        return this.listOfValuesStrategyChangeText(
+            preData,
+            data,
+            environment,
+            'IPs',
+        );
     }
 
     private userWithIdStrategyChangeText(preData, data, environment: string) {
-        const userIdText = (userIds) =>
-            userIds.length === 0 ? 'empty set of user ids' : userIds;
-        const usersText =
-            preData.parameters.userIds === data.parameters.userIds
-                ? ''
-                : ` user ids from ${userIdText(
-                      preData.parameters.userIds,
-                  )} to ${userIdText(data.parameters.userIds)}`;
-        const oldConstraints = this.formatConstraints(preData.constraints);
-        const newConstraints = this.formatConstraints(data.constraints);
-        const constraintText =
-            oldConstraints === newConstraints
-                ? ''
-                : ` constraints from ${oldConstraints} to ${newConstraints}`;
+        return this.listOfValuesStrategyChangeText(
+            preData,
+            data,
+            environment,
+            'userIds',
+        );
+    }
 
+    private listOfValuesStrategyChangeText(
+        preData,
+        data,
+        environment: string,
+        propertyName: string,
+    ) {
+        const userIdText = (values) =>
+            values.length === 0
+                ? `empty set of ${propertyName}`
+                : `[${values}]`;
+        const usersText =
+            preData.parameters[propertyName] === data.parameters[propertyName]
+                ? ''
+                : ` ${propertyName} from ${userIdText(
+                      preData.parameters[propertyName],
+                  )} to ${userIdText(data.parameters[propertyName])}`;
+        const constraintText = this.constraintChangeText(
+            preData.constraints,
+            data.constraints,
+        );
         const strategySpecificText = [usersText, constraintText]
             .filter((x) => x.length)
             .join(';');
@@ -171,12 +171,10 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
             oldRollout === rollout
                 ? ''
                 : ` rollout from ${oldRollout}% to ${rollout}%`;
-        const oldConstraints = this.formatConstraints(preData.constraints);
-        const newConstraints = this.formatConstraints(data.constraints);
-        const constraintText =
-            oldConstraints === newConstraints
-                ? ''
-                : ` constraints from ${oldConstraints} to ${newConstraints}`;
+        const constraintText = this.constraintChangeText(
+            preData.constraints,
+            data.constraints,
+        );
         const strategySpecificText = [
             stickinessText,
             rolloutText,
@@ -188,47 +186,57 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
     }
 
     private defaultStrategyChangeText(preData, data, environment: string) {
-        const oldConstraints = this.formatConstraints(preData.constraints);
-        const newConstraints = this.formatConstraints(data.constraints);
-        return `by updating strategy ${data?.name} in *${environment}* from ${oldConstraints} to ${newConstraints}`;
+        return `by updating strategy ${
+            data?.name
+        } in *${environment}*${this.constraintChangeText(
+            preData.constraints,
+            data.constraints,
+        )}`;
     }
 
-    private formatConstraints(constraints) {
-        const constraintOperatorDescriptions = {
-            IN: 'is one of',
-            NOT_IN: 'is not one of',
-            STR_CONTAINS: 'is a string that contains',
-            STR_STARTS_WITH: 'is a string that starts with',
-            STR_ENDS_WITH: 'is a string that ends with',
-            NUM_EQ: 'is a number equal to',
-            NUM_GT: 'is a number greater than',
-            NUM_GTE: 'is a number greater than or equal to',
-            NUM_LT: 'is a number less than',
-            NUM_LTE: 'is a number less than or equal to',
-            DATE_BEFORE: 'is a date before',
-            DATE_AFTER: 'is a date after',
-            SEMVER_EQ: 'is a SemVer equal to',
-            SEMVER_GT: 'is a SemVer greater than',
-            SEMVER_LT: 'is a SemVer less than',
-        };
-        const formatConstraint = (constraint) => {
-            const val = constraint.hasOwnProperty('value')
-                ? constraint.value
-                : `(${constraint.values.join(',')})`;
-            const operator = constraintOperatorDescriptions.hasOwnProperty(
-                constraint.operator,
-            )
-                ? constraintOperatorDescriptions[constraint.operator]
-                : constraint.operator;
+    private constraintChangeText(oldConstraints, newConstraints) {
+        const formatConstraints = (constraints) => {
+            const constraintOperatorDescriptions = {
+                IN: 'is one of',
+                NOT_IN: 'is not one of',
+                STR_CONTAINS: 'is a string that contains',
+                STR_STARTS_WITH: 'is a string that starts with',
+                STR_ENDS_WITH: 'is a string that ends with',
+                NUM_EQ: 'is a number equal to',
+                NUM_GT: 'is a number greater than',
+                NUM_GTE: 'is a number greater than or equal to',
+                NUM_LT: 'is a number less than',
+                NUM_LTE: 'is a number less than or equal to',
+                DATE_BEFORE: 'is a date before',
+                DATE_AFTER: 'is a date after',
+                SEMVER_EQ: 'is a SemVer equal to',
+                SEMVER_GT: 'is a SemVer greater than',
+                SEMVER_LT: 'is a SemVer less than',
+            };
+            const formatConstraint = (constraint) => {
+                const val = constraint.hasOwnProperty('value')
+                    ? constraint.value
+                    : `(${constraint.values.join(',')})`;
+                const operator = constraintOperatorDescriptions.hasOwnProperty(
+                    constraint.operator,
+                )
+                    ? constraintOperatorDescriptions[constraint.operator]
+                    : constraint.operator;
 
-            return `${constraint.contextName} ${
-                constraint.inverted ? 'not ' : ''
-            }${operator} ${val}`;
-        };
+                return `${constraint.contextName} ${
+                    constraint.inverted ? 'not ' : ''
+                }${operator} ${val}`;
+            };
 
-        return constraints.length === 0
-            ? 'empty set of constraints'
-            : `[${constraints.map(formatConstraint).join(', ')}]`;
+            return constraints.length === 0
+                ? 'empty set of constraints'
+                : `[${constraints.map(formatConstraint).join(', ')}]`;
+        };
+        const oldConstraintText = formatConstraints(oldConstraints);
+        const newConstraintText = formatConstraints(newConstraints);
+        return oldConstraintText === newConstraintText
+            ? ''
+            : ` constraints from ${oldConstraintText} to ${newConstraintText}`;
     }
 
     generateStrategyRemoveText(event: IEvent): string {

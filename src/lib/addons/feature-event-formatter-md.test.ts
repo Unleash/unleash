@@ -264,7 +264,7 @@ const testCases: [string, IEvent, string][] = [
                     project: 'default',
                     environment: 'production',
                 },
-                `admin updated *[aaa](unleashUrl/projects/default/features/aaa)* in project *default* by updating strategy default in *production* from empty set of constraints to [appName ${display} (x,y), appName not ${display} (x)]`,
+                `admin updated *[aaa](unleashUrl/projects/default/features/aaa)* in project *default* by updating strategy default in *production* constraints from empty set of constraints to [appName ${display} (x,y), appName not ${display} (x)]`,
             ],
     ),
     ...[
@@ -316,7 +316,7 @@ const testCases: [string, IEvent, string][] = [
                     project: 'default',
                     environment: 'production',
                 },
-                `admin updated *[aaa](unleashUrl/projects/default/features/aaa)* in project *default* by updating strategy default in *production* from [appName ${display} 4] to empty set of constraints`,
+                `admin updated *[aaa](unleashUrl/projects/default/features/aaa)* in project *default* by updating strategy default in *production* constraints from [appName ${display} 4] to empty set of constraints`,
             ],
     ),
     [
@@ -357,7 +357,7 @@ const testCases: [string, IEvent, string][] = [
             project: 'my-other-project',
             environment: 'production',
         },
-        'user@company.com updated *[new-feature](unleashUrl/projects/my-other-project/features/new-feature)* in project *my-other-project* by updating strategy userWithId in *production* user ids from empty set of user ids to a,b; constraints from empty set of constraints to [appName is one of (x,y)]',
+        'user@company.com updated *[new-feature](unleashUrl/projects/my-other-project/features/new-feature)* in project *my-other-project* by updating strategy userWithId in *production* userIds from empty set of userIds to [a,b]; constraints from empty set of constraints to [appName is one of (x,y)]',
     ],
     [
         'when IPs changed',
@@ -393,7 +393,7 @@ const testCases: [string, IEvent, string][] = [
             project: 'my-other-project',
             environment: 'production',
         },
-        'user@company.com updated *[new-feature](unleashUrl/projects/my-other-project/features/new-feature)* in project *my-other-project* by updating strategy remoteAddress in *production* IPs from empty set of IPs to 127.0.0.1; constraints from empty set of constraints to [appName is one of (x,y)]',
+        'user@company.com updated *[new-feature](unleashUrl/projects/my-other-project/features/new-feature)* in project *my-other-project* by updating strategy remoteAddress in *production* IPs from empty set of IPs to [127.0.0.1]; constraints from empty set of constraints to [appName is one of (x,y)]',
     ],
     [
         'when no specific text for strategy exists yet',

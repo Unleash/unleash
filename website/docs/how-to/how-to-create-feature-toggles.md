@@ -21,7 +21,7 @@ To perform all the steps in this guide, you will need:
 - A user with an **editor** or **admin** role OR a user with the following permissions inside the target project:
   - **[project-level permissions](../reference/rbac.md#project-permissions)**
     - create feature toggles
-  - [**environment-level permissions](../reference/rbac.md#environment-permissions)**
+  - **[environment-level permissions](../reference/rbac.md#environment-permissions)**
     - create/edit variants
     - create activation strategies
     - update activation strategies

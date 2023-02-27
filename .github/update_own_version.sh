@@ -2,7 +2,7 @@
 
 set -e
 
-CURRENT_VERSION=$(npm pkg get version)
+CURRENT_VERSION=$(node -p "require('./package.json').version")
 echo $CURRENT_VERSION
 
 if [[ $CURRENT_VERSION == *beta* ]]; then

@@ -22,7 +22,7 @@ To perform all the steps in this guide, you will need:
   - **[project-level permissions](../reference/rbac.md#project-permissions)**
     - create feature toggles
   - **[environment-level permissions](../reference/rbac.md#environment-permissions)**
-    - create/edit variants
+    - create/edit variants[^1]
     - create activation strategies
     - update activation strategies
     - enable/disable toggles
@@ -30,12 +30,6 @@ To perform all the steps in this guide, you will need:
 :::info roles
 
 Refer to [the documentation on role-based access control](../reference/rbac.md) for more information about the available roles and their permissions.
-
-:::
-
-:::note variant permissions
-
-Prior to Unleash 4.21, "create/edit variants" was a project-level permission instead of an environment-level permission.
 
 :::
 
@@ -144,3 +138,5 @@ Use the [update variants endpoint](/reference/api/legacy/unleash/admin/features-
 [Variants](../reference/feature-toggle-variants.md) give you the ability to further target your users and split them into groups of your choosing, such as for A/B testing. On the toggle overview page, select the variants tab. Use the "new variant" button to add the variants that you want.
 
 ![](/img/create-toggle-add-variants.png)
+
+[^1]: Prior to Unleash 4.21, "create/edit variants" was a project-level permission instead of an environment-level permission.

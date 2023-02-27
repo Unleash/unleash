@@ -480,7 +480,6 @@ export const adminMenuRoutes: INavigationMenuItem[] = [
         path: '/admin/maintenance',
         title: 'Maintenance',
         menu: { adminSettings: true },
-        flag: 'maintenance',
     },
     {
         path: '/admin/cors',

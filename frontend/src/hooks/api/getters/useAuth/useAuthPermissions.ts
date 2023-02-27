@@ -23,7 +23,6 @@ const getPermissions = (
             permission => permission.permission === 'ADMIN'
         );
     }
-    console.log(permissions);
     return permissions;
 };
 

@@ -14,8 +14,7 @@ export const useUsersPlan = (users: IUser[]): IUsersPlanOutput => {
     const { uiConfig } = useUiConfig();
 
     const isBillingUsers = Boolean(
-        uiConfig?.flags?.proPlanAutoCharge &&
-            instanceStatus?.plan === InstancePlan.PRO
+        true && instanceStatus?.plan === InstancePlan.PRO
     );
     const seats = instanceStatus?.seats ?? 5;
 

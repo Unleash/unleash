@@ -149,8 +149,7 @@ export const BillingPlan: FC<IBillingPlanProps> = ({ instanceStatus }) => {
                 </Grid>
                 <ConditionallyRender
                     condition={Boolean(
-                        uiConfig?.flags?.proPlanAutoCharge &&
-                            instanceStatus.plan === InstancePlan.PRO
+                        true && instanceStatus.plan === InstancePlan.PRO
                     )}
                     show={
                         <>

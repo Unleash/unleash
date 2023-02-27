@@ -14,16 +14,18 @@ This guide is split into three sections:
 
 ## Prerequisites
 
-To be able to create a feature toggle in an Unleash system you will need:
+To perform all the steps in this guide, you will need:
 
 - A running Unleash instance
 - A project to hold the toggle
 - A user with an **editor** or **admin** role OR a user with the following permissions inside the target project:
-  - create feature toggles
-  - update variants (for the right environment)
-  - create activation strategies (for the right environment)
-  - update activation strategies (for the right environment)
-  - enable/disable toggles (for the right environment)
+  - **[project-level permissions](../reference/rbac.md#project-permissions)**
+    - create feature toggles
+  - **[environment-level permissions](../reference/rbac.md#environment-permissions)**
+    - create/edit variants[^1]
+    - create activation strategies
+    - update activation strategies
+    - enable/disable toggles
 
 :::info roles
 
@@ -136,3 +138,5 @@ Use the [update variants endpoint](/reference/api/legacy/unleash/admin/features-
 [Variants](../reference/feature-toggle-variants.md) give you the ability to further target your users and split them into groups of your choosing, such as for A/B testing. On the toggle overview page, select the variants tab. Use the "new variant" button to add the variants that you want.
 
 ![](/img/create-toggle-add-variants.png)
+
+[^1]: Prior to Unleash 4.21, "create/edit variants" was a project-level permission instead of an environment-level permission.

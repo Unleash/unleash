@@ -1,7 +1,7 @@
 import { Tooltip, Typography } from '@mui/material';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { VFC } from 'react';
-import { formatDateYMD, formatDateYMDHMS } from 'utils/formatDate';
+import { formatDateYMD } from 'utils/formatDate';
 import { TextCell } from '../TextCell/TextCell';
 import TimeAgo from 'react-timeago';
 
@@ -10,7 +10,7 @@ interface ITimeAgoCellProps {
     live?: boolean;
     emptyText?: string;
     title?: (date: string) => string;
-    timestamp?: boolean;
+    dateFormat?: (value: string | number | Date, locale: string) => string;
 }
 
 export const TimeAgoCell: VFC<ITimeAgoCellProps> = ({
@@ -18,15 +18,13 @@ export const TimeAgoCell: VFC<ITimeAgoCellProps> = ({
     live = false,
     emptyText,
     title,
-    timestamp,
+    dateFormat = formatDateYMD,
 }) => {
     const { locationSettings } = useLocationSettings();
 
     if (!value) return <TextCell>{emptyText}</TextCell>;
 
-    const date = timestamp
-        ? formatDateYMDHMS(value, locationSettings.locale)
-        : formatDateYMD(value, locationSettings.locale);
+    const date = dateFormat(value, locationSettings.locale);
 
     return (
         <TextCell>

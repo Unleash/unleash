@@ -22,6 +22,7 @@ import { ISignOnEvent } from 'interfaces/signOnEvent';
 import { SignOnLogActionsCell } from './SignOnLogActionsCell/SignOnLogActionsCell';
 import { SignOnLogDeleteDialog } from './SignOnLogDeleteDialog/SignOnLogDeleteDialog';
 import { useSignOnLogApi } from 'hooks/api/actions/useSignOnLogApi/useSignOnLogApi';
+import { formatDateYMDHMS } from 'utils/formatDate';
 
 export const SignOnLogTable = () => {
     const { setToastData, setToastApiError } = useToast();
@@ -56,7 +57,7 @@ export const SignOnLogTable = () => {
                 Header: 'Created',
                 accessor: 'created_at',
                 Cell: ({ value }: { value: Date }) => (
-                    <TimeAgoCell value={value} timestamp />
+                    <TimeAgoCell value={value} dateFormat={formatDateYMDHMS} />
                 ),
                 sortType: 'date',
                 maxWidth: 150,

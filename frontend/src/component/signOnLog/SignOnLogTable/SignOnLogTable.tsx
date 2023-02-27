@@ -88,7 +88,7 @@ export const SignOnLogTable = () => {
                 searchable: true,
             },
             {
-                Header: 'Successful',
+                Header: 'Success',
                 accessor: 'successful',
                 align: 'center',
                 Cell: SignOnLogSuccessfulCell,

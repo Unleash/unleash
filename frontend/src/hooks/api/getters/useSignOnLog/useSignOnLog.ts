@@ -8,12 +8,12 @@ import useUiConfig from '../useUiConfig/useUiConfig';
 export const useSignOnLog = () => {
     const { uiConfig, isEnterprise } = useUiConfig();
 
-    const { loginEventLog } = uiConfig.flags;
+    const { signOnLog } = uiConfig.flags;
 
     const { data, error, mutate } = useConditionalSWR(
-        loginEventLog && isEnterprise(),
+        signOnLog && isEnterprise(),
         [],
-        formatApiPath(`api/admin/login-event`),
+        formatApiPath(`api/admin/signons`),
         fetcher
     );
 

@@ -8,7 +8,7 @@ export const useSignOnLogApi = () => {
     const removeEvent = async (eventId: number) => {
         const requestId = 'removeEvent';
         const req = createRequest(
-            `api/admin/login-event/${eventId}`,
+            `api/admin/signons/${eventId}`,
             { method: 'DELETE' },
             requestId
         );

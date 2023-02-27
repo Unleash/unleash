@@ -41,7 +41,7 @@ jobs:
       - name: update own version
         run: .github/update_own_version.sh
       - name: push new version
-        # The new version is pushed back to master and to npm
+        # The new version is pushed back to main and to npm
         run: |
           git push origin ${{ github.ref_name }}
           git push --tags

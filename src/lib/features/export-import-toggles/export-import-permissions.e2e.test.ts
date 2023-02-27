@@ -346,7 +346,7 @@ test('validate import data', async () => {
                     'Create context fields',
                     'Create activation strategies',
                     'Delete activation strategies',
-                    'Update variants on environment',
+                    'Update variants',
                 ],
             },
         ],

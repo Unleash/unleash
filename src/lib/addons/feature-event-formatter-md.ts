@@ -13,6 +13,7 @@ import {
     FEATURE_STRATEGY_UPDATE,
     FEATURE_UPDATED,
     FEATURE_VARIANTS_UPDATED,
+    IConstraint,
     IEvent,
 } from '../types';
 
@@ -116,7 +117,7 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
     private applicationHostnameStrategyChangeText(
         preData,
         data,
-        environment: string,
+        environment: string | undefined,
     ) {
         return this.listOfValuesStrategyChangeText(
             preData,
@@ -129,7 +130,7 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
     private remoteAddressStrategyChangeText(
         preData,
         data,
-        environment: string,
+        environment: string | undefined,
     ) {
         return this.listOfValuesStrategyChangeText(
             preData,
@@ -139,7 +140,11 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
         );
     }
 
-    private userWithIdStrategyChangeText(preData, data, environment: string) {
+    private userWithIdStrategyChangeText(
+        preData,
+        data,
+        environment: string | undefined,
+    ) {
         return this.listOfValuesStrategyChangeText(
             preData,
             data,
@@ -151,7 +156,7 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
     private listOfValuesStrategyChangeText(
         preData,
         data,
-        environment: string,
+        environment: string | undefined,
         propertyName: string,
     ) {
         const userIdText = (values) =>
@@ -177,7 +182,7 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
     private flexibleRolloutStrategyChangeText(
         preData,
         data,
-        environment: string,
+        environment: string | undefined,
     ) {
         const {
             rollout: oldRollout,
@@ -212,7 +217,11 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
         return `by updating strategy ${data?.name} in *${environment}*${strategySpecificText}`;
     }
 
-    private defaultStrategyChangeText(preData, data, environment: string) {
+    private defaultStrategyChangeText(
+        preData,
+        data,
+        environment: string | undefined,
+    ) {
         return `by updating strategy ${
             data?.name
         } in *${environment}*${this.constraintChangeText(
@@ -221,8 +230,11 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
         )}`;
     }
 
-    private constraintChangeText(oldConstraints, newConstraints) {
-        const formatConstraints = (constraints) => {
+    private constraintChangeText(
+        oldConstraints: IConstraint[],
+        newConstraints: IConstraint[],
+    ) {
+        const formatConstraints = (constraints: IConstraint[]) => {
             const constraintOperatorDescriptions = {
                 IN: 'is one of',
                 NOT_IN: 'is not one of',
@@ -240,7 +252,7 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
                 SEMVER_GT: 'is a SemVer greater than',
                 SEMVER_LT: 'is a SemVer less than',
             };
-            const formatConstraint = (constraint) => {
+            const formatConstraint = (constraint: IConstraint) => {
                 const val = constraint.hasOwnProperty('value')
                     ? constraint.value
                     : `(${constraint.values.join(',')})`;

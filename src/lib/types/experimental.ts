@@ -30,10 +30,6 @@ const flags = {
         process.env.UNLEASH_EXPERIMENTAL_PROXY_RETURN_ALL_TOGGLES,
         false,
     ),
-    maintenance: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_MAINTENANCE,
-        false,
-    ),
     maintenanceMode: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_MAINTENANCE_MODE,
         false,

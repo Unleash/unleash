@@ -15,7 +15,6 @@ import {
     maintenanceSchema,
 } from '../../openapi/spec/maintenance-schema';
 import MaintenanceService from 'lib/services/maintenance-service';
-import { InvalidOperationError } from '../../error';
 
 export default class MaintenanceController extends Controller {
     private maintenanceService: MaintenanceService;
@@ -72,7 +71,6 @@ export default class MaintenanceController extends Controller {
         req: IAuthRequest<unknown, unknown, MaintenanceSchema>,
         res: Response,
     ): Promise<void> {
-        this.verifyMaintenanceEnabled();
         await this.maintenanceService.toggleMaintenanceMode(
             req.body,
             extractUsername(req),
@@ -81,7 +79,6 @@ export default class MaintenanceController extends Controller {
     }
 
     async getMaintenance(req: Request, res: Response): Promise<void> {
-        this.verifyMaintenanceEnabled();
         const settings = await this.maintenanceService.getMaintenanceSetting();
         this.openApiService.respondWithValidation(
             200,
@@ -89,12 +86,6 @@ export default class MaintenanceController extends Controller {
             maintenanceSchema.$id,
             settings,
         );
-    }
-
-    private verifyMaintenanceEnabled() {
-        if (!this.config.flagResolver.isEnabled('maintenance')) {
-            throw new InvalidOperationError('Maintenance is not enabled');
-        }
     }
 }
 module.exports = MaintenanceController;

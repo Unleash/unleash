@@ -46,6 +46,16 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
     top: 60,
 }));
 
+const StyledDotBox = styled(Box)(({ theme }) => ({
+    backgroundColor: theme.palette.primary.main,
+    borderRadius: '100%',
+    width: '7px',
+    height: '7px',
+    position: 'absolute',
+    top: 7,
+    right: 4,
+}));
+
 export const Notifications = () => {
     const [showNotifications, setShowNotifications] = useState(false);
     const { notifications, refetchNotifications } = useNotifications({
@@ -90,26 +100,18 @@ export const Notifications = () => {
         notification => notification.readAt === null
     );
 
+    const hasUnreadNotifications = Boolean(
+        unreadNotifications && unreadNotifications.length > 0
+    );
+
     return (
         <StyledPrimaryContainerBox>
             <IconButton
                 onClick={() => setShowNotifications(!showNotifications)}
             >
                 <ConditionallyRender
-                    condition={unreadNotifications?.length > 0}
-                    show={
-                        <Box
-                            sx={theme => ({
-                                backgroundColor: theme.palette.primary.main,
-                                borderRadius: '100%',
-                                width: '7px',
-                                height: '7px',
-                                position: 'absolute',
-                                top: 7,
-                                right: 4,
-                            })}
-                        />
-                    }
+                    condition={hasUnreadNotifications}
+                    show={<StyledDotBox />}
                 />
                 <NotificationsIcon />
             </IconButton>
@@ -123,7 +125,7 @@ export const Notifications = () => {
                         <StyledPaper>
                             <NotificationsHeader />
                             <ConditionallyRender
-                                condition={unreadNotifications?.length > 0}
+                                condition={hasUnreadNotifications}
                                 show={
                                     <StyledInnerContainerBox>
                                         <Button onClick={onMarkAllAsRead}>
@@ -134,13 +136,12 @@ export const Notifications = () => {
                                         </Button>
                                     </StyledInnerContainerBox>
                                 }
+                            />{' '}
+                            <ConditionallyRender
+                                condition={notifications?.length === 0}
+                                show={<EmptyNotifications />}
                             />
-
                             <NotificationsList>
-                                <ConditionallyRender
-                                    condition={notifications?.length === 0}
-                                    show={<EmptyNotifications />}
-                                />
                                 {notifications?.map(notification => (
                                     <Notification
                                         notification={notification}

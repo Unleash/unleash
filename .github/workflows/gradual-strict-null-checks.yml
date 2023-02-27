@@ -66,9 +66,10 @@ jobs:
           MAIN=$(grep "Found [0-9]* errors" .out-main | sed 's/Found \(.*\) errors in .* files./\1/')
 
           if [ $CURRENT -gt $MAIN ]; then
-            comment "After enabling strictNullChecks this PR would be increasing the number of null check errors from ${MAIN} to ${CURRENT}. Make sure your branch is up-to-date with ${MAIN_BRANCH} and check the diff in the console output to gather more details"
+            comment "After enabling \`strictNullChecks\` this PR would be **increasing** the number of null check errors from ${MAIN} to ${CURRENT}. <br /> Make sure your branch is up-to-date with ${MAIN_BRANCH} and **check the diff in the console output** to gather more details.<br /><br />**So what are strict null checks?** When strictNullChecks is \`false\`, null and undefined are effectively ignored by the language. This can lead to unexpected errors at runtime.<br/>When strictNullChecks is \`true\`, null and undefined have their own distinct types and you'll get a type error if you try to use them where a concrete value is expected.<br>[Documentation](https://www.typescriptlang.org/tsconfig#strictNullChecks)"
             diff .out-current .out-main
             exit 1
           else
             echo "The PR has $CURRENT null check errors against $MAIN in main. You're good to go!"
+            comment "After enabling \`strictNullChecks\` this PR would be **increasing** the number of null check errors from ${MAIN} to ${CURRENT}. <br /> Make sure your branch is up-to-date with ${MAIN_BRANCH} and **check the diff in the console output** to gather more details.<br /><br />**So what are strict null checks?** When strictNullChecks is \`false\`, null and undefined are effectively ignored by the language. This can lead to unexpected errors at runtime.<br/>When strictNullChecks is \`true\`, null and undefined have their own distinct types and you'll get a type error if you try to use them where a concrete value is expected.<br>[Documentation](https://www.typescriptlang.org/tsconfig#strictNullChecks)"
           fi

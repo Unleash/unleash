@@ -12,14 +12,14 @@ export const useSignOnLog = () => {
 
     const { data, error, mutate } = useConditionalSWR(
         signOnLog && isEnterprise(),
-        [],
+        { events: [] },
         formatApiPath(`api/admin/signons`),
         fetcher
     );
 
     return useMemo(
         () => ({
-            events: (data ?? []) as ISignOnEvent[],
+            events: (data?.events ?? []) as ISignOnEvent[],
             loading: !error && !data,
             refetch: () => mutate(),
             error,

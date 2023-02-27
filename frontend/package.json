@@ -38,7 +38,7 @@
     "@emotion/styled": "11.10.5",
     "@mui/icons-material": "5.11.9",
     "@mui/lab": "5.0.0-alpha.120",
-    "@mui/material": "5.11.9",
+    "@mui/material": "5.11.10",
     "@testing-library/dom": "8.20.0",
     "@testing-library/jest-dom": "5.16.5",
     "@testing-library/react": "12.1.5",

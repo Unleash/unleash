@@ -82,7 +82,7 @@ You can assign the following project permissions. The permissions will be valid 
 
 - **create/edit variants**
 
-  Lets the user create and edit variants within the project. (Deprecated with v4.21 in favor of the environment permission for variants)
+  Lets the user create and edit variants within the project. (Deprecated with v4.21 in favor of environment-specific permissions for working with variants)
 
 ### Environment permissions
 

@@ -33,6 +33,12 @@ Refer to [the documentation on role-based access control](../reference/rbac.md) 
 
 :::
 
+:::note variant permissions
+
+Prior to Unleash 4.21, "create/edit variants" was a project-level permission instead of an environment-level permission.
+
+:::
+
 ## Required steps
 
 This section takes you through the required steps to create and activate a feature toggle. It assumes that you have all the prerequisites from the previous section done.

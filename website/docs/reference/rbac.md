@@ -104,7 +104,7 @@ You can assign the following permissions on a per-environment level within the p
 
   Lets the user enable and disable toggles within the environment.
 
-- **update variants on environment**
+- **update variants**
 
   Lets the user create, edit and remove variants within the environment.
 

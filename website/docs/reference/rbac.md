@@ -104,6 +104,18 @@ You can assign the following permissions on a per-environment level within the p
 
   Lets the user enable and disable toggles within the environment.
 
+- **approve a change request**
+
+  Lets the user approve [change requests](change-requests.md) in the environment.
+
+- **apply a change request**
+
+  Lets the user apply change requests in the environment.
+
+- **skip change requests**
+
+  Lets the user ignore change request requirements. This applies **only when using the API** directly; when using the admin UI, users with this permission will still need to go through the normal change request flow. You can find more details in the section on [circumventing change requests](change-requests.md#circumventing-change-requests).
+
 ## User Groups
 
 :::info availability

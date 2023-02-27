@@ -14,7 +14,6 @@ export interface IUiConfig {
     disablePasswordAuth?: boolean;
     emailEnabled?: boolean;
     networkViewEnabled: boolean;
-
     maintenanceMode?: boolean;
     toast?: IProclamationToast;
     segmentValuesLimit?: number;
@@ -47,6 +46,8 @@ export interface IFlags {
     crOnVariants?: boolean;
     showProjectApiAccess?: boolean;
     proPlanAutoCharge?: boolean;
+    notifications?: boolean;
+    loginEventLog?: boolean;
 }
 
 export interface IVersionInfo {

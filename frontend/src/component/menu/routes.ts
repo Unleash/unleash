@@ -451,7 +451,7 @@ export const adminMenuRoutes: INavigationMenuItem[] = [
         path: '/admin/sign-on-log',
         title: 'Sign-on log',
         menu: { adminSettings: true },
-        flag: 'loginEventLog',
+        flag: 'signOnLog',
     },
     {
         path: '/admin/users',

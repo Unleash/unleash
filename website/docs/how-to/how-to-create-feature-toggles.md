@@ -20,7 +20,7 @@ To be able to create a feature toggle in an Unleash system you will need:
 - A project to hold the toggle
 - A user with an **editor** or **admin** role OR a user with the following permissions inside the target project:
   - create feature toggles
-  - create/edit variants
+  - update variants (for the right environment)
   - create activation strategies (for the right environment)
   - update activation strategies (for the right environment)
   - enable/disable toggles (for the right environment)

@@ -82,7 +82,7 @@ You can assign the following project permissions. The permissions will be valid 
 
 - **create/edit variants**
 
-  Lets the user create and edit variants within the project.
+  Lets the user create and edit variants within the project. (Deprecated with v4.21 in favor of the environment permission for variants)
 
 ### Environment permissions
 
@@ -103,6 +103,10 @@ You can assign the following permissions on a per-environment level within the p
 - **enable/disable toggles**
 
   Lets the user enable and disable toggles within the environment.
+
+- **update variants on environment**
+
+  Lets the user create, edit and remove variants within the environment.
 
 ## User Groups
 

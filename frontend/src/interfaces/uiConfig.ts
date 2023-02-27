@@ -48,6 +48,7 @@ export interface IFlags {
     showProjectApiAccess?: boolean;
     proPlanAutoCharge?: boolean;
     notifications?: boolean;
+    loginEventLog?: boolean;
 }
 
 export interface IVersionInfo {

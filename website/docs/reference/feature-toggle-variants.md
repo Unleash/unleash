@@ -1,10 +1,12 @@
 ---
 title: Feature Toggle Variants
 ---
-<div class="alert alert--info" role="alert">
-  <em>Feature toggle variants</em> were introduced in <em>Unleash v3.2.0</em>.
-</div>
-<br/>
+:::info Availability
+
+**Feature toggle variants** were first introduced in Unleash 3.2.
+In Unleash 4.21, variants were updated to be **environment-dependent**, meaning the same feature could have different variant configurations in different environments.
+
+:::
 
 Every toggle in Unleash can have something called _variants_. Where _feature toggles_ allow you to decide which users get access to a feature, _toggle variants_ allow you to further split those users into segments. Say, for instance, that you're testing out a new feature, such as an alternate sign-up form. The feature toggle would expose the form only to a select group of users. The variants could decide whether the user sees a blue or a green submit button on that form.
 
@@ -12,12 +14,12 @@ Variants facilitate A/B testing and experimentation by letting you create contro
 
 ## What are variants?
 
-Whenever you create a feature toggle, you can assign it any number of _variants_. This is commonly done in cases where you want to serve your users different versions of a feature to see which performs better.
+Whenever you create a feature toggle, you can assign it any number of _variants_. This is commonly done in cases where you want to serve your users different versions of a feature to see which performs better. A feature can have different variants in each of its environments.
 
 A variant has four components that define it:
 - a **name**:
 
-    This must be unique among the toggle's variants. When working with a toggle with variants in a client, you will typically use the variant's name to find out which variant it is.
+    This must be unique among the toggle's variants in the specified environment. When working with a feature with variants in a client, you will typically use the variant's name to find out which variant it is.
 
 - a **weight**:
 

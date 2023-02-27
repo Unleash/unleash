@@ -65,7 +65,9 @@ export const Notifications = () => {
     const { markAsRead } = useNotificationsApi();
 
     const onNotificationClick = (notification: NotificationsSchemaItem) => {
-        navigate(notification.link);
+        if (notification.link) {
+            navigate(notification.link);
+        }
         setShowNotifications(false);
 
         // Intentionally not wait for this request. We don't want to hold the user back

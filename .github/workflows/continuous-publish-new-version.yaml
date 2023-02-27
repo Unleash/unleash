@@ -35,14 +35,14 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           registry-url: 'https://registry.npmjs.org'
-      - name: update package version
         # This step always creates beta version
         # sample transition after official release: 4.20.0 -> 4.21.0-beta.0
         # sample transition after previous beta release: 4.21.0-beta.0 -> 4.21.0-beta.1
-        #
+      - name: update own version
+        run: .github/update_own_version.sh
+      - name: push new version
         # The new version is pushed back to master and to npm
         run: |
-          npm version prerelease --preid=beta --ignore-scripts
           git push origin ${{ github.ref_name }}
           git push --tags
         env:

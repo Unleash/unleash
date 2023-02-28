@@ -12,8 +12,7 @@ import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { GO_BACK } from 'constants/navigate';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { Alert } from '@mui/material';
+import { ProUserLimitWarning } from './ProUserLimitWarning/ProUserLimitWarning';
 
 const CreateUser = () => {
     const { setToastApiError } = useToast();
@@ -78,9 +77,6 @@ const CreateUser = () => {
         navigate(GO_BACK);
     };
 
-    const members = 7;
-    const planIncludedMembers = 5;
-
     return (
         <FormTemplate
             loading={loading}
@@ -91,23 +87,7 @@ const CreateUser = () => {
             documentationLinkLabel="User management documentation"
             formatApiCode={formatApiCode}
         >
-            <ConditionallyRender
-                condition={members > planIncludedMembers}
-                show={() => (
-                    <Alert
-                        severity="info"
-                        sx={{ marginBottom: theme => theme.spacing(3) }}
-                    >
-                        <p>
-                            <strong>Heads up!</strong> You are exceeding your
-                            allocated free members included in your plan (
-                            {members} of {planIncludedMembers}). Creating this
-                            user will add <strong>$15/month</strong> to your
-                            invoice, starting with your next payment.
-                        </p>
-                    </Alert>
-                )}
-            />
+            <ProUserLimitWarning />
             <UserForm
                 errors={errors}
                 handleSubmit={handleSubmit}

@@ -27,7 +27,7 @@ import { useSearchParams } from 'react-router-dom';
 import { createLocalStorage } from 'utils/createLocalStorage';
 
 export type PageQueryType = Partial<
-    Record<'sort' | 'order' | 'search' | 'favorites', string>
+    Record<'sort' | 'order' | 'search', string>
 >;
 
 const defaultSort: SortingRule<string> = { id: 'created_at' };

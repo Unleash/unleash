@@ -1,11 +1,13 @@
 import { useState, VFC } from 'react';
 import { Box, Paper, Button, styled } from '@mui/material';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { CustomEvents, usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { createLocalStorage } from 'utils/createLocalStorage';
 
 interface IFeedbackProps {
     id: string;
+    eventName: CustomEvents;
+    localStorageKey: string;
 }
 
 const StyledBox = styled(Box)(({ theme }) => ({
@@ -14,11 +16,15 @@ const StyledBox = styled(Box)(({ theme }) => ({
     marginTop: theme.spacing(0.5),
 }));
 
-export const Feedback: VFC<IFeedbackProps> = ({ id }) => {
+export const Feedback: VFC<IFeedbackProps> = ({
+    id,
+    localStorageKey,
+    eventName,
+}) => {
     const { uiConfig } = useUiConfig();
     const { value: selectedValue, setValue: setSelectedValue } =
         createLocalStorage<{ value?: 'yes' | 'no' }>(
-            `ProjectOverviewFeedback:v1:${id}`,
+            `${uiConfig.baseUriPath}:${localStorageKey}:v1:${id}`,
             {}
         );
     const [selected, setSelected] = useState<'yes' | 'no' | undefined>(
@@ -26,14 +32,14 @@ export const Feedback: VFC<IFeedbackProps> = ({ id }) => {
     );
     const { trackEvent } = usePlausibleTracker();
 
-    if (!uiConfig?.flags?.T) {
+    if (!uiConfig?.flags?.T || Boolean(selected)) {
         return null;
     }
 
     const onTrackFeedback = (value: 'yes' | 'no') => {
         setSelected(value);
         setSelectedValue({ value });
-        trackEvent('project_overview', {
+        trackEvent(eventName, {
             props: {
                 eventType: id,
                 wasHelpful: value === 'yes',

@@ -26,9 +26,11 @@ export const useUsersPlan = (users: IUser[]): IUsersPlanOutput => {
         [users, isBillingUsers, seats]
     );
 
+    const extraSeats = planUsers.filter(user => user.paid).length;
+
     return {
         seats,
-        extraSeats: planUsers.filter(user => user.paid).length,
+        extraSeats,
         planUsers,
         isBillingUsers,
     };

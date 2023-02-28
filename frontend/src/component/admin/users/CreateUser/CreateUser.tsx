@@ -12,7 +12,7 @@ import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { GO_BACK } from 'constants/navigate';
-import { ProUserLimitWarning } from './ProUserLimitWarning/ProUserLimitWarning';
+import { SeatCostWarning } from './SeatCostWarning/SeatCostWarning';
 
 const CreateUser = () => {
     const { setToastApiError } = useToast();
@@ -87,7 +87,7 @@ const CreateUser = () => {
             documentationLinkLabel="User management documentation"
             formatApiCode={formatApiCode}
         >
-            <ProUserLimitWarning />
+            <SeatCostWarning />
             <UserForm
                 errors={errors}
                 handleSubmit={handleSubmit}

@@ -3,7 +3,7 @@ import { Alert } from '@mui/material';
 import { useUsersPlan } from 'hooks/useUsersPlan';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
 
-export const ProUserLimitWarning: VFC = () => {
+export const SeatCostWarning: VFC = () => {
     const { users } = useUsers();
     const { isBillingUsers, seats, planUsers } = useUsersPlan(users);
 

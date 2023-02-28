@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useToast from 'hooks/useToast';
@@ -7,7 +7,7 @@ import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { useMediaQuery } from '@mui/material';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { useFlexLayout, useSortBy, useTable } from 'react-table';
+import { SortingRule, useFlexLayout, useSortBy, useTable } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
@@ -23,6 +23,19 @@ import { SignOnLogActionsCell } from './SignOnLogActionsCell/SignOnLogActionsCel
 import { SignOnLogDeleteDialog } from './SignOnLogDeleteDialog/SignOnLogDeleteDialog';
 import { useSignOnLogApi } from 'hooks/api/actions/useSignOnLogApi/useSignOnLogApi';
 import { formatDateYMDHMS } from 'utils/formatDate';
+import { useSearchParams } from 'react-router-dom';
+import { createLocalStorage } from 'utils/createLocalStorage';
+
+export type PageQueryType = Partial<
+    Record<'sort' | 'order' | 'search' | 'favorites', string>
+>;
+
+const defaultSort: SortingRule<string> = { id: 'created_at' };
+
+const { value: storedParams, setValue: setStoredParams } = createLocalStorage(
+    'SignOnLogTable:v1',
+    defaultSort
+);
 
 export const SignOnLogTable = () => {
     const { setToastData, setToastApiError } = useToast();
@@ -30,7 +43,21 @@ export const SignOnLogTable = () => {
     const { events, loading, refetch } = useSignOnLog();
     const { removeEvent } = useSignOnLogApi();
 
-    const [searchValue, setSearchValue] = useState('');
+    const [searchParams, setSearchParams] = useSearchParams();
+    const [initialState] = useState(() => ({
+        sortBy: [
+            {
+                id: searchParams.get('sort') || storedParams.id,
+                desc: searchParams.has('order')
+                    ? searchParams.get('order') === 'desc'
+                    : storedParams.desc,
+            },
+        ],
+        hiddenColumns: ['failure_reason'],
+        globalFilter: searchParams.get('search') || '',
+    }));
+
+    const [searchValue, setSearchValue] = useState(initialState.globalFilter);
     const [deleteOpen, setDeleteOpen] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState<ISignOnEvent>();
 
@@ -120,18 +147,19 @@ export const SignOnLogTable = () => {
         []
     );
 
-    const [initialState] = useState({
-        sortBy: [{ id: 'created_at' }],
-        hiddenColumns: ['failure_reason'],
-    });
-
     const { data, getSearchText, getSearchContext } = useSearch(
         columns,
         searchValue,
         events
     );
 
-    const { headerGroups, rows, prepareRow, setHiddenColumns } = useTable(
+    const {
+        headerGroups,
+        rows,
+        prepareRow,
+        state: { sortBy },
+        setHiddenColumns,
+    } = useTable(
         {
             columns: columns as any,
             data,
@@ -163,6 +191,25 @@ export const SignOnLogTable = () => {
         setHiddenColumns,
         columns
     );
+
+    useEffect(() => {
+        const tableState: PageQueryType = {};
+        tableState.sort = sortBy[0].id;
+        if (sortBy[0].desc) {
+            tableState.order = 'desc';
+        }
+        if (searchValue) {
+            tableState.search = searchValue;
+        }
+
+        setSearchParams(tableState, {
+            replace: true,
+        });
+        setStoredParams({
+            id: sortBy[0].id,
+            desc: sortBy[0].desc || false,
+        });
+    }, [sortBy, searchValue, setSearchParams]);
 
     return (
         <PageContent

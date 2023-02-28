@@ -22,16 +22,12 @@ const flags = {
         process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY_FRONTEND,
         true,
     ),
-    responseTimeWithAppName: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_RESPONSE_TIME_WITH_APP_NAME,
+    responseTimeWithAppNameKillSwitch: parseEnvVarBoolean(
+        process.env.UNLEASH_RESPONSE_TIME_WITH_APP_NAME_KILL_SWITCH,
         false,
     ),
     proxyReturnAllToggles: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PROXY_RETURN_ALL_TOGGLES,
-        false,
-    ),
-    maintenance: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_MAINTENANCE,
         false,
     ),
     maintenanceMode: parseEnvVarBoolean(
@@ -62,7 +58,12 @@ const flags = {
         process.env.UNLEASH_STRICT_SCHEMA_VALIDTION,
         false,
     ),
+    proPlanAutoCharge: parseEnvVarBoolean(
+        process.env.UNLEASH_PRO_PLAN_AUTO_CHARGE,
+        false,
+    ),
     notifications: parseEnvVarBoolean(process.env.NOTIFICATIONS, false),
+    signOnLog: parseEnvVarBoolean(process.env.UNLEASH_SIGN_ON_LOG, false),
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

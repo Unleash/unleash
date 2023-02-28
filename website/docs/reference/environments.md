@@ -3,10 +3,11 @@ id: environments
 title: Environments
 ---
 
-<div class="alert alert--info">
-  <em>Environments</em> are available in <i>Unleash v4.3.x</i> and later. They can also be enabled from <i>Unleash v4.2.x</i> with a feature toggle.
-</div>
-<br />
+:::info Availability
+
+Environments were released in Unleash v4.3.0.
+
+:::
 
 <div style={{position: 'relative', paddingBottom: '56.25%', height: '0'}}>
     <iframe src="https://www.loom.com/embed/95239e875bbc4e09a5c5833e1942e4b0" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style={{position: 'absolute', top: '0', left: '0', width: '100%', height: '100%'}}></iframe>
@@ -23,6 +24,20 @@ Finally, metrics have also been upgraded to record the environment. This, in tur
 Despite this being a shift in how Unleash works, everything will continue to work exactly how it did for existing users. For backwards compatibility, we have created an environment named "default" that will contain all of the existing toggles and API keys. Read more about that in [the migration section](#migration).
 
 ![A graph showing how environments work. Each project can have multiple features, and each feature can have different activation strategies in each of its environments.](/img/environments_overview.svg 'A feature toggle exists across all environments, but take different activation strategies per environment.')
+
+## Environment types
+
+All environments in Unleash have a **type**. When you create a new environment, you must also assign it a type.
+
+The built-in environment types are:
+- Development
+- Test
+- Pre-production
+- Production
+
+The **production** environment type is special: Unleash will show additional confirmation prompts when you change something that could impact users in environments of this type. The built-in "production" environment is a production-type environment.
+
+The other environment types do not currently have any functionality associated with them. This may change in the future.
 
 ## Global and project-level environments
 
@@ -60,7 +75,7 @@ In order for the SDK to download the feature toggle configuration for the correc
 
 :::note Availability
 
-Environment cloning is an upcoming feature, and is scheduled to become available in one of the next few releases.
+Environment cloning was made available in Unleash 4.19.
 
 :::
 

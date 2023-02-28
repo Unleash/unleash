@@ -12,6 +12,6 @@ declare module '@unleash/express-openapi' {
     export default function openapi(
         docsPath: string,
         document: Omit<OpenAPIV3.Document, 'paths'>,
-        options?: { coerce: boolean },
+        options?: { coerce: boolean; extendRefs: boolean },
     ): IExpressOpenApi;
 }

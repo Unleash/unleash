@@ -14,7 +14,6 @@ export interface IUiConfig {
     disablePasswordAuth?: boolean;
     emailEnabled?: boolean;
     networkViewEnabled: boolean;
-
     maintenanceMode?: boolean;
     toast?: IProclamationToast;
     segmentValuesLimit?: number;
@@ -39,7 +38,6 @@ export interface IFlags {
     UG?: boolean;
     ENABLE_DARK_MODE_SUPPORT?: boolean;
     embedProxyFrontend?: boolean;
-    maintenance?: boolean;
     maintenanceMode?: boolean;
     messageBanner?: boolean;
     featuresExportImport?: boolean;
@@ -47,6 +45,9 @@ export interface IFlags {
     caseInsensitiveInOperators?: boolean;
     crOnVariants?: boolean;
     showProjectApiAccess?: boolean;
+    proPlanAutoCharge?: boolean;
+    notifications?: boolean;
+    signOnLog?: boolean;
 }
 
 export interface IVersionInfo {

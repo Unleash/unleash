@@ -158,10 +158,7 @@ export default async function getApp(
 
     app.use(
         `${baseUriPath}/api/admin`,
-        conditionalMiddleware(
-            () => config.flagResolver.isEnabled('maintenance'),
-            maintenanceMiddleware(config, services.maintenanceService),
-        ),
+        maintenanceMiddleware(config, services.maintenanceService),
     );
 
     if (typeof config.preRouterHook === 'function') {

@@ -57,12 +57,9 @@ export const App = () => {
                             elseShow={
                                 <>
                                     <ConditionallyRender
-                                        condition={
-                                            Boolean(
-                                                uiConfig?.flags?.maintenance
-                                            ) &&
-                                            Boolean(uiConfig?.maintenanceMode)
-                                        }
+                                        condition={Boolean(
+                                            uiConfig?.maintenanceMode
+                                        )}
                                         show={<MaintenanceBanner />}
                                     />
                                     <StyledContainer>

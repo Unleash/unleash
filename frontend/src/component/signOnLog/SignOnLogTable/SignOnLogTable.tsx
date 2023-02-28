@@ -79,6 +79,7 @@ export const SignOnLogTable = () => {
                 maxWidth: 150,
                 Cell: HighlightCell,
                 searchable: true,
+                filterName: 'auth',
             },
             {
                 Header: 'IP address',
@@ -87,11 +88,11 @@ export const SignOnLogTable = () => {
                 searchable: true,
             },
             {
-                Header: 'Successful',
+                Header: 'Success',
                 accessor: 'successful',
                 align: 'center',
                 Cell: SignOnLogSuccessfulCell,
-                filterName: 'successful',
+                filterName: 'success',
                 filterParsing: (value: boolean) => value.toString(),
             },
             {

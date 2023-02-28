@@ -37,6 +37,13 @@ const { value: storedParams, setValue: setStoredParams } = createLocalStorage(
     defaultSort
 );
 
+const AUTH_TYPE_LABEL: { [key: string]: string } = {
+    simple: 'Password',
+    oidc: 'OIDC',
+    saml: 'SAML',
+    google: 'Google',
+};
+
 export const SignOnLogTable = () => {
     const { setToastData, setToastApiError } = useToast();
 
@@ -99,9 +106,7 @@ export const SignOnLogTable = () => {
             {
                 Header: 'Authentication',
                 accessor: (event: ISignOnEvent) =>
-                    event.auth_type === 'simple'
-                        ? 'Password'
-                        : event.auth_type.toUpperCase(),
+                    AUTH_TYPE_LABEL[event.auth_type] || event.auth_type,
                 width: 150,
                 maxWidth: 150,
                 Cell: HighlightCell,

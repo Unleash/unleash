@@ -9,7 +9,7 @@ import {
     Button,
 } from '@mui/material';
 import { useNotifications } from 'hooks/api/getters/useNotifications/useNotifications';
-import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { NotificationsHeader } from './NotificationsHeader';
 import { NotificationsList } from './NotificationsList';
@@ -18,6 +18,9 @@ import { EmptyNotifications } from './EmptyNotifications';
 import { NotificationsSchemaItem } from 'openapi';
 import { useNavigate } from 'react-router-dom';
 import { useNotificationsApi } from 'hooks/api/actions/useNotificationsApi/useNotificationsApi';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { Feedback } from 'component/common/Feedback/Feedback';
 
 const StyledPrimaryContainerBox = styled(Box)(() => ({
     position: 'relative',
@@ -63,11 +66,20 @@ export const Notifications = () => {
     });
     const navigate = useNavigate();
     const { markAsRead } = useNotificationsApi();
+    const { uiConfig } = useUiConfig();
+    const { trackEvent } = usePlausibleTracker();
 
     const onNotificationClick = (notification: NotificationsSchemaItem) => {
         if (notification.link) {
             navigate(notification.link);
         }
+
+        if (uiConfig?.flags?.T) {
+            trackEvent('notifications', {
+                props: { eventType: notification.notificationType },
+            });
+        }
+
         setShowNotifications(false);
 
         // Intentionally not wait for this request. We don't want to hold the user back
@@ -154,6 +166,12 @@ export const Notifications = () => {
                                     />
                                 ))}
                             </NotificationsList>
+                            <Feedback
+                                eventName="notifications"
+                                id="useful"
+                                localStorageKey="NotificationsUsefulPrompt"
+                            />
+                            <br />
                         </StyledPaper>
                     </ClickAwayListener>
                 }

@@ -8,7 +8,7 @@ import {
     ClickAwayListener,
     styled,
 } from '@mui/material';
-import { Feedback } from './Feedback';
+import { Feedback } from 'component/common/Feedback/Feedback';
 
 interface IHelpPopperProps {
     id: string;
@@ -66,7 +66,11 @@ export const HelpPopper: FC<IHelpPopperProps> = ({ children, id }) => {
                             />
                         </IconButton>
                         {children}
-                        <Feedback id={id} />
+                        <Feedback
+                            id={id}
+                            eventName="project_overview"
+                            localStorageKey="ProjectOverviewFeedback"
+                        />
                     </StyledPaper>
                 </ClickAwayListener>
             </Popper>

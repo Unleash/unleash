@@ -82,7 +82,7 @@ You can assign the following project permissions. The permissions will be valid 
 
 - **create/edit variants**
 
-  Lets the user create and edit variants within the project.
+  Lets the user create and edit variants within the project. (Deprecated with v4.21 in favor of environment-specific permissions for working with variants[^1].)
 
 ### Environment permissions
 
@@ -103,6 +103,10 @@ You can assign the following permissions on a per-environment level within the p
 - **enable/disable toggles**
 
   Lets the user enable and disable toggles within the environment.
+
+- **update variants**
+
+  Lets the user create, edit and remove variants within the environment.
 
 - **approve a change request**
 
@@ -179,3 +183,5 @@ To enable group sync, you'll need to set two fields in your SSO provider configu
   You need to set the "Group Field JSON path" to "groups".
 
 Once you've enabled group syncing and set an appropriate path, you'll need to add the SSO group names to the Unleash group. This can be done by navigating to the Unleash group you want to enable sync for and adding the SSO group names to the "SSO group ID/name" property.
+
+[^1]: The project-level permission is still required for the [**create/overwrite variants** (PUT)](/docs/reference/api/unleash/overwrite-feature-variants.api.mdx) and [**update variants** (PATCH)](/docs/reference/api/unleash/patch-feature-variants.api.mdx) API endpoints, but it is not used for anything within the admin UI. The API endpoints have been superseded by the [**create/overwrite environment variants** (PUT)](/docs/reference/api/unleash/overwrite-feature-variants-on-environments.api.mdx) and [**update environment variants** (PATCH)](/docs/reference/api/unleash/patch-environments-feature-variants.api.mdx) endpoints, respectively.

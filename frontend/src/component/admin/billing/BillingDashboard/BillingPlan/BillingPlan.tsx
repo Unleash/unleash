@@ -76,6 +76,8 @@ export const BillingPlan: FC<IBillingPlanProps> = ({ instanceStatus }) => {
     const expired = trialHasExpired(instanceStatus);
     const { uiConfig } = useUiConfig();
 
+    const eligibleUsers = users.filter((user: any) => user.email);
+
     const price = {
         [InstancePlan.PRO]: 80,
         [InstancePlan.COMPANY]: 0,
@@ -86,8 +88,8 @@ export const BillingPlan: FC<IBillingPlanProps> = ({ instanceStatus }) => {
 
     const planPrice = price[instanceStatus.plan];
     const seats = instanceStatus.seats ?? 5;
-    const freeAssigned = Math.min(users.length, seats);
-    const paidAssigned = users.length - freeAssigned;
+    const freeAssigned = Math.min(eligibleUsers.length, seats);
+    const paidAssigned = eligibleUsers.length - freeAssigned;
     const paidAssignedPrice = price.user * paidAssigned;
     const finalPrice = planPrice + paidAssignedPrice;
     const inactive = instanceStatus.state !== InstanceState.ACTIVE;

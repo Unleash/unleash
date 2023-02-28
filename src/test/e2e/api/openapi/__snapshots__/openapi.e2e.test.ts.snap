@@ -352,7 +352,19 @@ exports[`should serve the OpenAPI spec 1`] = `
           },
           "connectVia": {
             "items": {
-              "type": "string",
+              "properties": {
+                "appName": {
+                  "type": "string",
+                },
+                "instanceId": {
+                  "type": "string",
+                },
+              },
+              "required": [
+                "appName",
+                "instanceId",
+              ],
+              "type": "object",
             },
             "type": "array",
           },
@@ -369,7 +381,7 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "string",
           },
           "started": {
-            "type": "number",
+            "$ref": "#/components/schemas/dateSchema",
           },
           "strategies": {
             "items": {

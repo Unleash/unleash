@@ -164,10 +164,10 @@ export const createServices = (
 
     // TODO: this is a temporary seam to enable packaging by feature
     const exportImportService = db
-        ? createExportImportTogglesService(db, config)
+        ? createExportImportTogglesService(db, config, stores.eventStore)
         : createFakeExportImportTogglesService(config);
     const transactionalExportImportService = (txDb: Knex.Transaction) =>
-        createExportImportTogglesService(txDb, config);
+        createExportImportTogglesService(txDb, config, stores.eventStore);
     const userSplashService = new UserSplashService(stores, config);
     const openApiService = new OpenApiService(config);
     const clientSpecService = new ClientSpecService(config);

@@ -1,5 +1,5 @@
 import { Db } from '../../db/db';
-import { IUnleashConfig } from '../../types';
+import { IEventStore, IUnleashConfig } from '../../types';
 import ExportImportService from './export-import-service';
 import { ImportTogglesStore } from './import-toggles-store';
 import FeatureToggleStore from '../../db/feature-toggle-store';
@@ -9,7 +9,6 @@ import ProjectStore from '../../db/project-store';
 import FeatureTagStore from '../../db/feature-tag-store';
 import StrategyStore from '../../db/strategy-store';
 import ContextFieldStore from '../../db/context-field-store';
-import EventStore from '../../db/event-store';
 import FeatureStrategiesStore from '../../db/feature-strategy-store';
 import {
     ContextService,
@@ -112,6 +111,7 @@ export const createFakeExportImportTogglesService = (
 export const createExportImportTogglesService = (
     db: Db,
     config: IUnleashConfig,
+    eventStore: IEventStore,
 ): ExportImportService => {
     const { eventBus, getLogger, flagResolver } = config;
     const importTogglesStore = new ImportTogglesStore(db);
@@ -128,7 +128,6 @@ export const createExportImportTogglesService = (
     const featureTagStore = new FeatureTagStore(db, eventBus, getLogger);
     const strategyStore = new StrategyStore(db, getLogger);
     const contextFieldStore = new ContextFieldStore(db, getLogger);
-    const eventStore = new EventStore(db, getLogger);
     const featureStrategiesStore = new FeatureStrategiesStore(
         db,
         eventBus,
@@ -141,7 +140,11 @@ export const createExportImportTogglesService = (
         getLogger,
     );
     const accessService = createAccessService(db, config);
-    const featureToggleService = createFeatureToggleService(db, config);
+    const featureToggleService = createFeatureToggleService(
+        db,
+        config,
+        eventStore,
+    );
 
     const featureTagService = new FeatureTagService(
         {

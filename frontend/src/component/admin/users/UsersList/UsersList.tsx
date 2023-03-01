@@ -33,6 +33,7 @@ import { UsersActionsCell } from './UsersActionsCell/UsersActionsCell';
 import { Search } from 'component/common/Search/Search';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
+import { UserLimitWarning } from './UserLimitWarning/UserLimitWarning';
 
 const UsersList = () => {
     const navigate = useNavigate();
@@ -262,6 +263,7 @@ const UsersList = () => {
                 />
             }
         >
+            <UserLimitWarning />
             <SearchHighlightProvider value={globalFilter}>
                 <VirtualizedTable
                     rows={rows}

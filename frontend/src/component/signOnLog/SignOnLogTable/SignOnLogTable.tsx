@@ -5,7 +5,7 @@ import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
-import { useMediaQuery } from '@mui/material';
+import { IconButton, Tooltip, useMediaQuery } from '@mui/material';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { SortingRule, useFlexLayout, useSortBy, useTable } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
@@ -25,6 +25,8 @@ import { useSignOnLogApi } from 'hooks/api/actions/useSignOnLogApi/useSignOnLogA
 import { formatDateYMDHMS } from 'utils/formatDate';
 import { useSearchParams } from 'react-router-dom';
 import { createLocalStorage } from 'utils/createLocalStorage';
+import { Delete, Download } from '@mui/icons-material';
+import { SignOnLogDeleteAllDialog } from './SignOnLogDeleteAllDialog/SignOnLogDeleteAllDialog';
 
 export type PageQueryType = Partial<
     Record<'sort' | 'order' | 'search', string>
@@ -48,7 +50,7 @@ export const SignOnLogTable = () => {
     const { setToastData, setToastApiError } = useToast();
 
     const { events, loading, refetch } = useSignOnLog();
-    const { removeEvent } = useSignOnLogApi();
+    const { removeEvent, removeAllEvents, downloadCSV } = useSignOnLogApi();
 
     const [searchParams, setSearchParams] = useSearchParams();
     const [initialState] = useState(() => ({
@@ -65,8 +67,9 @@ export const SignOnLogTable = () => {
     }));
 
     const [searchValue, setSearchValue] = useState(initialState.globalFilter);
-    const [deleteOpen, setDeleteOpen] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState<ISignOnEvent>();
+    const [deleteOpen, setDeleteOpen] = useState(false);
+    const [deleteAllOpen, setDeleteAllOpen] = useState(false);
 
     const onDeleteConfirm = async (event: ISignOnEvent) => {
         try {
@@ -77,6 +80,20 @@ export const SignOnLogTable = () => {
             });
             refetch();
             setDeleteOpen(false);
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
+    };
+
+    const onDeleteAllConfirm = async () => {
+        try {
+            await removeAllEvents();
+            setToastData({
+                title: `Log has been cleared`,
+                type: 'success',
+            });
+            refetch();
+            setDeleteAllOpen(false);
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }
@@ -223,17 +240,50 @@ export const SignOnLogTable = () => {
                 <PageHeader
                     title={`Sign-on log (${rows.length})`}
                     actions={
-                        <ConditionallyRender
-                            condition={!isSmallScreen}
-                            show={
-                                <Search
-                                    initialValue={searchValue}
-                                    onChange={setSearchValue}
-                                    hasFilters
-                                    getSearchContext={getSearchContext}
-                                />
-                            }
-                        />
+                        <>
+                            <ConditionallyRender
+                                condition={!isSmallScreen}
+                                show={
+                                    <Search
+                                        initialValue={searchValue}
+                                        onChange={setSearchValue}
+                                        hasFilters
+                                        getSearchContext={getSearchContext}
+                                    />
+                                }
+                            />
+                            <ConditionallyRender
+                                condition={rows.length > 0}
+                                show={
+                                    <>
+                                        <ConditionallyRender
+                                            condition={!isSmallScreen}
+                                            show={<PageHeader.Divider />}
+                                        />
+                                        <Tooltip
+                                            title="Download sign-on log"
+                                            arrow
+                                        >
+                                            <IconButton onClick={downloadCSV}>
+                                                <Download />
+                                            </IconButton>
+                                        </Tooltip>
+                                        <Tooltip
+                                            title="Clear sign-on log"
+                                            arrow
+                                        >
+                                            <IconButton
+                                                onClick={() =>
+                                                    setDeleteAllOpen(true)
+                                                }
+                                            >
+                                                <Delete />
+                                            </IconButton>
+                                        </Tooltip>
+                                    </>
+                                }
+                            />
+                        </>
                     }
                 >
                     <ConditionallyRender
@@ -282,6 +332,11 @@ export const SignOnLogTable = () => {
                 open={deleteOpen}
                 setOpen={setDeleteOpen}
                 onConfirm={onDeleteConfirm}
+            />
+            <SignOnLogDeleteAllDialog
+                open={deleteAllOpen}
+                setOpen={setDeleteAllOpen}
+                onConfirm={onDeleteAllConfirm}
             />
         </PageContent>
     );

@@ -140,6 +140,7 @@ import apiVersion from '../util/version';
 import { maintenanceSchema } from './spec/maintenance-schema';
 import { bulkRegistrationSchema } from './spec/bulk-registration-schema';
 import { bulkMetricsSchema } from './spec/bulk-metrics-schema';
+import { clientMetricsEnvSchema } from './spec/client-metrics-env-schema';
 
 // All schemas in `openapi/spec` should be listed here.
 export const schemas = {
@@ -160,6 +161,7 @@ export const schemas = {
     clientFeaturesQuerySchema,
     clientFeaturesSchema,
     clientMetricsSchema,
+    clientMetricsEnvSchema,
     cloneFeatureSchema,
     constraintSchema,
     contextFieldSchema,

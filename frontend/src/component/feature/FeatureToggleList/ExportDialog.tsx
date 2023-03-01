@@ -3,10 +3,9 @@ import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { useExportApi } from 'hooks/api/actions/useExportApi/useExportApi';
 import useToast from 'hooks/useToast';
-import { IEnvironment } from 'interfaces/environments';
 import { FeatureSchema } from 'openapi';
 
-import { createRef, useState } from 'react';
+import { createRef, useEffect, useState } from 'react';
 import { formatUnknownError } from 'utils/formatUnknownError';
 
 interface IExportDialogProps {

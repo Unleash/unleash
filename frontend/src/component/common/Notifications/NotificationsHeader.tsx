@@ -1,30 +1,29 @@
 import Settings from '@mui/icons-material/Settings';
-import { Typography, Box, IconButton, styled } from '@mui/material';
+import { Typography, IconButton, styled, Box } from '@mui/material';
 import { flexRow } from 'themes/themeStyles';
 
 const StyledOuterContainerBox = styled(Box)(({ theme }) => ({
-    padding: theme.spacing(1, 3),
+    padding: theme.spacing(1.5, 3, 0.5, 3),
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
 }));
 
-const StyledSettingsContainer = styled(Box)(() => ({
-    ...flexRow,
+const StyledInnerBox = styled(Box)(({ theme }) => ({
+    boxShadow: theme.boxShadows.separator,
+    width: '100%',
+    height: '4px',
 }));
 
-export const NotificationsHeader = () => {
+export const NotificationsHeader: React.FC = ({ children }) => {
     return (
         <>
             <StyledOuterContainerBox>
                 <Typography fontWeight="bold">Notifications</Typography>
-
-                <StyledSettingsContainer>
-                    <IconButton>
-                        <Settings />
-                    </IconButton>
-                </StyledSettingsContainer>
+                {children}
             </StyledOuterContainerBox>
+
+            <StyledInnerBox />
         </>
     );
 };

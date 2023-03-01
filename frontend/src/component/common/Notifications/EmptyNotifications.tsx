@@ -16,11 +16,15 @@ const StyledNotificationsIcon = styled(NotificationsIcon)(({ theme }) => ({
     marginBottom: theme.spacing(1),
 }));
 
-export const EmptyNotifications = () => {
+interface IEmptyNotificationsProps {
+    text: string;
+}
+
+export const EmptyNotifications = ({ text }: IEmptyNotificationsProps) => {
     return (
         <StyledBox>
             <StyledNotificationsIcon />
-            <Typography color="neutral.main">No new notifications</Typography>
+            <Typography color="neutral.main">{text}</Typography>
         </StyledBox>
     );
 };

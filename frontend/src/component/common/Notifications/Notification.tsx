@@ -1,5 +1,5 @@
-import { useTheme } from '@mui/material';
-import { Box, ListItem, Typography, styled } from '@mui/material';
+import { ListItemButton, useTheme } from '@mui/material';
+import { Box, Typography, styled } from '@mui/material';
 import {
     NotificationsSchemaItem,
     NotificationsSchemaItemNotificationType,
@@ -26,7 +26,7 @@ const StyledContainerBox = styled(Box, {
     left: 7,
 }));
 
-const StyledListItem = styled(ListItem)(({ theme }) => ({
+const StyledListItemButton = styled(ListItemButton)(({ theme }) => ({
     position: 'relative',
     cursor: 'pointer',
     margin: theme.spacing(2, 0),
@@ -109,7 +109,7 @@ export const Notification = ({
     };
 
     return (
-        <StyledListItem onClick={() => onNotificationClick(notification)}>
+        <StyledListItemButton onClick={() => onNotificationClick(notification)}>
             {resolveIcon(notification.notificationType)}{' '}
             <StyledNotificationMessageBox>
                 <StyledMessageTypography readAt={Boolean(readAt)}>
@@ -121,6 +121,6 @@ export const Notification = ({
                     </StyledTimeAgoTypography>
                 </StyledSecondaryInfoBox>
             </StyledNotificationMessageBox>
-        </StyledListItem>
+        </StyledListItemButton>
     );
 };

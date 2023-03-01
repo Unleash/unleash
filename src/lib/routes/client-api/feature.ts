@@ -230,7 +230,6 @@ export default class FeatureController extends Controller {
         const featureQuery = await this.resolveQuery(req);
         const q = { ...featureQuery, namePrefix: name };
         const toggles = await this.featureToggleServiceV2.getClientFeatures(q);
-
         const toggle = toggles.find((t) => t.name === name);
         if (!toggle) {
             throw new NotFoundError(`Could not find feature toggle ${name}`);

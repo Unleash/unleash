@@ -16,6 +16,7 @@ import { OpenApiService } from '../../services/openapi-service';
 import { emptyResponse } from '../../openapi/util/standard-responses';
 import { BulkMetricsSchema } from '../../openapi/spec/bulk-metrics-schema';
 import ClientMetricsServiceV2 from '../../services/client-metrics/metrics-service-v2';
+import { clientMetricsEnvBulkSchema } from '../../services/client-metrics/schema';
 
 export default class EdgeController extends Controller {
     private readonly logger: Logger;
@@ -116,12 +117,11 @@ export default class EdgeController extends Controller {
                     this.clientInstanceService.registerClient(app, clientIp),
                 );
             }
-            if (metrics) {
-                for (const metric of metrics) {
-                    promises.push(
-                        this.metricsV2.registerClientMetrics(metric, clientIp),
-                    );
-                }
+            if (metrics && metrics.length > 0) {
+                const data = await clientMetricsEnvBulkSchema.validateAsync(
+                    metrics,
+                );
+                promises.push(this.metricsV2.registerBulkMetrics(data));
             }
             await Promise.all(promises);
             res.status(202).end();

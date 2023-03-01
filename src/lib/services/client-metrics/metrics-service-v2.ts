@@ -60,6 +60,14 @@ export default class ClientMetricsServiceV2 {
         );
     }
 
+    async registerBulkMetrics(metrics: IClientMetricsEnv[]): Promise<void> {
+        this.unsavedMetrics = collapseHourlyMetrics([
+            ...this.unsavedMetrics,
+            ...metrics,
+        ]);
+        this.lastSeenService.updateLastSeen(metrics);
+    }
+
     async registerClientMetrics(
         data: ClientMetricsSchema,
         clientIp: string,
@@ -83,12 +91,7 @@ export default class ClientMetricsServiceV2 {
             yes: value.bucket.toggles[name].yes,
             no: value.bucket.toggles[name].no,
         }));
-
-        this.unsavedMetrics = collapseHourlyMetrics([
-            ...this.unsavedMetrics,
-            ...clientMetrics,
-        ]);
-        this.lastSeenService.updateLastSeen(clientMetrics);
+        await this.registerBulkMetrics(clientMetrics);
         this.config.eventBus.emit(CLIENT_METRICS, value);
     }
 

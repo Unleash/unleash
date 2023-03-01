@@ -338,7 +338,7 @@ exports[`should serve the OpenAPI spec 1`] = `
           },
           "metrics": {
             "items": {
-              "$ref": "#/components/schemas/clientMetricsSchema",
+              "$ref": "#/components/schemas/clientMetricsEnvSchema",
             },
             "type": "array",
           },
@@ -565,6 +565,41 @@ exports[`should serve the OpenAPI spec 1`] = `
         "required": [
           "version",
           "features",
+        ],
+        "type": "object",
+      },
+      "clientMetricsEnvSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "appName": {
+            "type": "string",
+          },
+          "environment": {
+            "type": "string",
+          },
+          "featureName": {
+            "type": "string",
+          },
+          "no": {
+            "type": "number",
+          },
+          "timestamp": {
+            "$ref": "#/components/schemas/dateSchema",
+          },
+          "variants": {
+            "additionalProperties": {
+              "minimum": 0,
+              "type": "integer",
+            },
+            "type": "object",
+          },
+          "yes": {
+            "type": "number",
+          },
+        },
+        "required": [
+          "featureName",
+          "appName",
         ],
         "type": "object",
       },

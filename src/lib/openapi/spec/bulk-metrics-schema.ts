@@ -1,7 +1,7 @@
 import { FromSchema } from 'json-schema-to-ts';
 import { bulkRegistrationSchema } from './bulk-registration-schema';
-import { clientMetricsSchema } from './client-metrics-schema';
 import { dateSchema } from './date-schema';
+import { clientMetricsEnvSchema } from './client-metrics-env-schema';
 
 export const bulkMetricsSchema = {
     $id: '#/components/schemas/bulkMetricsSchema',
@@ -16,7 +16,7 @@ export const bulkMetricsSchema = {
         metrics: {
             type: 'array',
             items: {
-                $ref: '#/components/schemas/clientMetricsSchema',
+                $ref: '#/components/schemas/clientMetricsEnvSchema',
             },
         },
     },
@@ -24,9 +24,8 @@ export const bulkMetricsSchema = {
         schemas: {
             bulkRegistrationSchema,
             dateSchema,
-            clientMetricsSchema,
+            clientMetricsEnvSchema,
         },
     },
 } as const;
-
 export type BulkMetricsSchema = FromSchema<typeof bulkMetricsSchema>;

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { KeyboardEvent, useState } from 'react';
 import {
     Paper,
     Typography,
@@ -7,6 +7,7 @@ import {
     styled,
     ClickAwayListener,
     Button,
+    Switch,
 } from '@mui/material';
 import { useNotifications } from 'hooks/api/getters/useNotifications/useNotifications';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -20,6 +21,7 @@ import { useNavigate } from 'react-router-dom';
 import { useNotificationsApi } from 'hooks/api/actions/useNotificationsApi/useNotificationsApi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { flexRow } from 'themes/themeStyles';
 import { Feedback } from 'component/common/Feedback/Feedback';
 
 const StyledPrimaryContainerBox = styled(Box)(() => ({
@@ -45,7 +47,7 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
     boxShadow: theme.boxShadows.popup,
     borderRadius: `${theme.shape.borderRadiusLarge}px`,
     position: 'absolute',
-    right: -20,
+    right: -100,
     top: 60,
 }));
 
@@ -59,15 +61,24 @@ const StyledDotBox = styled(Box)(({ theme }) => ({
     right: 4,
 }));
 
+const StyledHeaderBox = styled(Box)(({ theme }) => ({
+    ...flexRow,
+}));
+
+const StyledHeaderTypography = styled(Typography)(({ theme }) => ({
+    fontSize: theme.fontSizes.smallerBody,
+}));
+
 export const Notifications = () => {
     const [showNotifications, setShowNotifications] = useState(false);
     const { notifications, refetchNotifications } = useNotifications({
-        refreshInterval: 15,
+        refreshInterval: 15000,
     });
     const navigate = useNavigate();
     const { markAsRead } = useNotificationsApi();
     const { uiConfig } = useUiConfig();
     const { trackEvent } = usePlausibleTracker();
+    const [showUnread, setShowUnread] = useState(false);
 
     const onNotificationClick = (notification: NotificationsSchemaItem) => {
         if (notification.link) {
@@ -110,6 +121,12 @@ export const Notifications = () => {
         }
     };
 
+    const onKeyDown = (event: KeyboardEvent) => {
+        if (event.key === 'Escape') {
+            setShowNotifications(false);
+        }
+    };
+
     const unreadNotifications = notifications?.filter(
         notification => notification.readAt === null
     );
@@ -117,6 +134,24 @@ export const Notifications = () => {
     const hasUnreadNotifications = Boolean(
         unreadNotifications && unreadNotifications.length > 0
     );
+
+    const filterUnread = (notification: NotificationsSchemaItem) => {
+        if (showUnread) {
+            return !Boolean(notification.readAt);
+        }
+
+        return true;
+    };
+
+    const notificationComponents = notifications
+        ?.filter(filterUnread)
+        .map(notification => (
+            <Notification
+                notification={notification}
+                key={notification.id}
+                onNotificationClick={onNotificationClick}
+            />
+        ));
 
     return (
         <StyledPrimaryContainerBox>
@@ -136,8 +171,19 @@ export const Notifications = () => {
                     <ClickAwayListener
                         onClickAway={() => setShowNotifications(false)}
                     >
-                        <StyledPaper>
-                            <NotificationsHeader />
+                        <StyledPaper onKeyDown={onKeyDown}>
+                            <NotificationsHeader>
+                                <StyledHeaderBox>
+                                    <StyledHeaderTypography>
+                                        Show only unread
+                                    </StyledHeaderTypography>
+                                    <Switch
+                                        onClick={() =>
+                                            setShowUnread(!showUnread)
+                                        }
+                                    />
+                                </StyledHeaderBox>
+                            </NotificationsHeader>
                             <ConditionallyRender
                                 condition={hasUnreadNotifications}
                                 show={
@@ -152,26 +198,37 @@ export const Notifications = () => {
                                 }
                             />{' '}
                             <ConditionallyRender
-                                condition={notifications?.length === 0}
-                                show={<EmptyNotifications />}
-                            />
-                            <NotificationsList>
-                                {notifications?.map(notification => (
-                                    <Notification
-                                        notification={notification}
-                                        key={notification.id}
-                                        onNotificationClick={
-                                            onNotificationClick
+                                condition={notificationComponents?.length === 0}
+                                show={
+                                    <EmptyNotifications
+                                        text={
+                                            showUnread
+                                                ? 'No unread notifications'
+                                                : 'No new notifications'
                                         }
                                     />
-                                ))}
-                            </NotificationsList>
-                            <Feedback
-                                eventName="notifications"
-                                id="useful"
-                                localStorageKey="NotificationsUsefulPrompt"
+                                }
                             />
-                            <br />
+                            <NotificationsList>
+                                {notificationComponents}
+                            </NotificationsList>
+                            <ConditionallyRender
+                                condition={Boolean(
+                                    notifications &&
+                                        notifications.length > 0 &&
+                                        !showUnread
+                                )}
+                                show={
+                                    <>
+                                        <Feedback
+                                            eventName="notifications"
+                                            id="useful"
+                                            localStorageKey="NotificationsUsefulPrompt"
+                                        />
+                                        <br />
+                                    </>
+                                }
+                            />
                         </StyledPaper>
                     </ClickAwayListener>
                 }

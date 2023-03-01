@@ -28,6 +28,7 @@ declare module '@mui/material/styles' {
             elevated: string;
             popup: string;
             primaryHeader: string;
+            separator: string;
         };
     }
 

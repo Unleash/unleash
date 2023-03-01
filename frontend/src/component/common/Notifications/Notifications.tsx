@@ -63,7 +63,7 @@ const StyledDotBox = styled(Box)(({ theme }) => ({
     right: 4,
 }));
 
-const StyledHeaderBox = styled(Box)(({ theme }) => ({
+const StyledHeaderBox = styled(Box)(() => ({
     ...flexRow,
 }));
 

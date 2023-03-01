@@ -50,7 +50,7 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
     right: -100,
     top: 60,
     maxHeight: '80vh',
-    overflow: 'scroll',
+    overflowY: 'auto',
 }));
 
 const StyledDotBox = styled(Box)(({ theme }) => ({

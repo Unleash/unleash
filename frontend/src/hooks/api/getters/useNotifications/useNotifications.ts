@@ -21,6 +21,7 @@ export const useNotifications = (options: SWRConfiguration = {}) => {
         error,
         loading: !error && !data,
         refetchNotifications,
+        mutateNotifications: mutate,
     };
 };
 

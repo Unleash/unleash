@@ -1,5 +1,11 @@
-import { ListItemButton, useTheme } from '@mui/material';
-import { Box, Typography, styled } from '@mui/material';
+import {
+    Box,
+    Typography,
+    styled,
+    Avatar,
+    ListItemButton,
+    useTheme,
+} from '@mui/material';
 import {
     NotificationsSchemaItem,
     NotificationsSchemaItemNotificationType,
@@ -7,6 +13,7 @@ import {
 import { ReactComponent as ChangesAppliedIcon } from 'assets/icons/merge.svg';
 import TimeAgo from 'react-timeago';
 import { ToggleOffOutlined } from '@mui/icons-material';
+import { flexRow } from 'themes/themeStyles';
 
 const StyledContainerBox = styled(Box, {
     shouldForwardProp: prop => prop !== 'readAt',
@@ -45,8 +52,9 @@ const StyledNotificationMessageBox = styled(Box)(({ theme }) => ({
 
 const StyledSecondaryInfoBox = styled(Box)(({ theme }) => ({
     display: 'flex',
-    justifyContent: 'flex-end',
-    margin: theme.spacing(1, 0, 1, 0),
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    margin: theme.spacing(1.5, 0, 1.5, 0),
 }));
 
 const StyledMessageTypography = styled(Typography, {
@@ -61,6 +69,21 @@ const StyledMessageTypography = styled(Typography, {
 const StyledTimeAgoTypography = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,
     color: theme.palette.neutral.main,
+}));
+
+const StyledUserContainer = styled(Box)(({ theme }) => ({
+    ...flexRow,
+}));
+
+const StyledAvatar = styled(Avatar)(({ theme }) => ({
+    width: '18px',
+    height: '18px',
+}));
+
+const StyledCreatedBy = styled(Typography)(({ theme }) => ({
+    fontSize: theme.fontSizes.smallerBody,
+    color: theme.palette.neutral.main,
+    marginLeft: theme.spacing(1),
 }));
 
 interface INotificationProps {
@@ -116,6 +139,15 @@ export const Notification = ({
                     {notification.message}
                 </StyledMessageTypography>
                 <StyledSecondaryInfoBox>
+                    <StyledUserContainer>
+                        <StyledAvatar
+                            src={notification.createdBy.imageUrl || ''}
+                        />
+                        <StyledCreatedBy>
+                            Created by {notification.createdBy.username}
+                        </StyledCreatedBy>
+                    </StyledUserContainer>
+
                     <StyledTimeAgoTypography>
                         <TimeAgo date={new Date(notification.createdAt)} />
                     </StyledTimeAgoTypography>

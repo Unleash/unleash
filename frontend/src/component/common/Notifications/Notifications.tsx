@@ -82,7 +82,9 @@ export const Notifications = () => {
     const { trackEvent } = usePlausibleTracker();
     const [showUnread, setShowUnread] = useState(false);
 
-    const onNotificationClick = (notification: NotificationsSchemaItem) => {
+    const onNotificationClick = async (
+        notification: NotificationsSchemaItem
+    ) => {
         if (notification.link) {
             navigate(notification.link);
         }
@@ -95,22 +97,21 @@ export const Notifications = () => {
 
         setShowNotifications(false);
 
-        // Intentionally not wait for this request. We don't want to hold the user back
-        // only to mark a notification as read.
         try {
-            markAsRead({
+            await markAsRead({
                 notifications: [notification.id],
             });
+            refetchNotifications();
         } catch (e) {
             // No need to display this in the UI. Minor inconvinence if this call fails.
             console.error('Error marking notification as read: ', e);
         }
     };
 
-    const onMarkAllAsRead = () => {
+    const onMarkAllAsRead = async () => {
         try {
             if (notifications && notifications.length > 0) {
-                markAsRead({
+                await markAsRead({
                     notifications: notifications.map(
                         notification => notification.id
                     ),
@@ -154,6 +155,10 @@ export const Notifications = () => {
                 onNotificationClick={onNotificationClick}
             />
         ));
+
+    const shouldShowFeedback = Boolean(
+        notifications && notifications.length > 0 && !showUnread
+    );
 
     return (
         <StyledPrimaryContainerBox>
@@ -215,11 +220,7 @@ export const Notifications = () => {
                                 {notificationComponents}
                             </NotificationsList>
                             <ConditionallyRender
-                                condition={Boolean(
-                                    notifications &&
-                                        notifications.length > 0 &&
-                                        !showUnread
-                                )}
+                                condition={shouldShowFeedback}
                                 show={
                                     <>
                                         <Feedback

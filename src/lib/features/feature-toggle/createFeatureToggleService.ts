@@ -4,7 +4,6 @@ import {
     GroupService,
     SegmentService,
 } from '../../services';
-import EventStore from '../../db/event-store';
 import FeatureStrategiesStore from '../../db/feature-strategy-store';
 import FeatureToggleStore from '../../db/feature-toggle-store';
 import FeatureToggleClientStore from '../../db/feature-toggle-client-store';
@@ -19,7 +18,7 @@ import { AccessStore } from '../../db/access-store';
 import RoleStore from '../../db/role-store';
 import EnvironmentStore from '../../db/environment-store';
 import { Db } from '../../db/db';
-import { IUnleashConfig } from '../../types';
+import { IEventStore, IUnleashConfig } from '../../types';
 import FakeEventStore from '../../../test/fixtures/fake-event-store';
 import FakeFeatureStrategiesStore from '../../../test/fixtures/fake-feature-strategies-store';
 import FakeFeatureToggleStore from '../../../test/fixtures/fake-feature-toggle-store';
@@ -38,9 +37,9 @@ import FakeEnvironmentStore from '../../../test/fixtures/fake-environment-store'
 export const createFeatureToggleService = (
     db: Db,
     config: IUnleashConfig,
+    eventStore: IEventStore,
 ): FeatureToggleService => {
     const { getLogger, eventBus, flagResolver } = config;
-    const eventStore = new EventStore(db, getLogger);
     const featureStrategiesStore = new FeatureStrategiesStore(
         db,
         eventBus,

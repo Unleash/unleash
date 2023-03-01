@@ -71,9 +71,7 @@ export const ProjectStats = ({ stats }: IProjectStatsProps) => {
                     title="Total changes"
                     boxText={String(projectActivityCurrentWindow)}
                     change={
-                        projectActivityCurrentWindow -
-                        projectActivityPastWindow -
-                        20
+                        projectActivityCurrentWindow - projectActivityPastWindow
                     }
                 >
                     <HelpPopper id="total-changes">

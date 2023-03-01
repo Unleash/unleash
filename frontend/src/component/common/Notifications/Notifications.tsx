@@ -49,6 +49,8 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
     position: 'absolute',
     right: -100,
     top: 60,
+    maxHeight: '80vh',
+    overflow: 'scroll',
 }));
 
 const StyledDotBox = styled(Box)(({ theme }) => ({

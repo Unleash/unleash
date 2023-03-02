@@ -164,6 +164,7 @@ export const Notifications = () => {
         <StyledPrimaryContainerBox>
             <IconButton
                 onClick={() => setShowNotifications(!showNotifications)}
+                data-testid="NOTIFICATIONS_BUTTON"
             >
                 <ConditionallyRender
                     condition={hasUnreadNotifications}

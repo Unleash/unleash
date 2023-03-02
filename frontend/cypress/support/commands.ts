@@ -44,5 +44,6 @@ Cypress.Commands.add('login', (user = AUTH_USER, password = AUTH_PASSWORD) =>
     })
 );
 
-Cypress.Commands.add('logout', () => {});
-Cypress.Commands.add('loginAsEditor', () => {});
+Cypress.Commands.add('logout', () => {
+    cy.visit('/logout');
+});

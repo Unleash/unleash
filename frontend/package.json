@@ -78,7 +78,7 @@
     "jsdom": "21.1.0",
     "lodash.clonedeep": "4.5.0",
     "lodash.omit": "4.5.0",
-    "mermaid": "^9.3.0",
+    "mermaid": "^10.0.0",
     "millify": "^5.0.1",
     "msw": "0.49.3",
     "pkginfo": "0.4.1",

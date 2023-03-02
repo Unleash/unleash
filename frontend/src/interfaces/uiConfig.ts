@@ -38,7 +38,6 @@ export interface IFlags {
     UG?: boolean;
     ENABLE_DARK_MODE_SUPPORT?: boolean;
     embedProxyFrontend?: boolean;
-    maintenance?: boolean;
     maintenanceMode?: boolean;
     messageBanner?: boolean;
     featuresExportImport?: boolean;
@@ -48,6 +47,7 @@ export interface IFlags {
     showProjectApiAccess?: boolean;
     proPlanAutoCharge?: boolean;
     notifications?: boolean;
+    signOnLog?: boolean;
 }
 
 export interface IVersionInfo {

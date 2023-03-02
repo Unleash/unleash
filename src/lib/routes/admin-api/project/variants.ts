@@ -65,6 +65,10 @@ export default class VariantsController extends Controller {
             handler: this.getVariants,
             middleware: [
                 openApiService.validPath({
+                    summary: 'Retrieve variants for a feature (deprecated) ',
+                    description:
+                        '(deprecated from 4.21) Retrieve the variants for the specified feature. From Unleash 4.21 onwards, this endpoint will attempt to choose a [production-type environment](https://docs.getunleash.io/reference/environments) as the source of truth. If more than one production environment is found, the first one will be used.',
+                    deprecated: true,
                     tags: ['Features'],
                     operationId: 'getFeatureVariants',
                     responses: {
@@ -80,6 +84,11 @@ export default class VariantsController extends Controller {
             handler: this.patchVariants,
             middleware: [
                 openApiService.validPath({
+                    summary:
+                        "Apply a patch to a feature's variants (in all environments).",
+                    description: `Apply a list of patches patch to the specified feature's variants. The patch objects should conform to the [JSON-patch format (RFC 6902)](https://www.rfc-editor.org/rfc/rfc6902).
+                        
+                        ⚠️ **Warning**: This method is not atomic. If something fails in the middle of applying the patch, you can be left with a half-applied patch. We recommend that you instead [patch variants on a per-environment basis](/docs/reference/api/unleash/patch-environments-feature-variants.api.mdx), which **is** an atomic operation.`,
                     tags: ['Features'],
                     operationId: 'patchFeatureVariants',
                     requestBody: createRequestSchema('patchesSchema'),
@@ -96,6 +105,16 @@ export default class VariantsController extends Controller {
             handler: this.overwriteVariants,
             middleware: [
                 openApiService.validPath({
+                    summary:
+                        'Create (overwrite) variants for a feature toggle in all environments',
+                    description: `This overwrites the current variants for the feature specified in the :featureName parameter in all environments.
+
+                    The backend will validate the input for the following invariants
+
+                    * If there are variants, there needs to be at least one variant with \`weightType: variable\`
+                    * The sum of the weights of variants with \`weightType: fix\` must be strictly less than 1000 (< 1000)
+
+                    The backend will also distribute remaining weight up to 1000 after adding the variants with \`weightType: fix\` together amongst the variants of \`weightType: variable\``,
                     tags: ['Features'],
                     operationId: 'overwriteFeatureVariants',
                     requestBody: createRequestSchema('variantsSchema'),
@@ -112,6 +131,8 @@ export default class VariantsController extends Controller {
             handler: this.getVariantsOnEnv,
             middleware: [
                 openApiService.validPath({
+                    summary: 'Get variants for a feature in an environment',
+                    description: `Returns the variants for a feature in a specific environment. If the feature has no variants it will return an empty array of variants`,
                     tags: ['Features'],
                     operationId: 'getEnvironmentFeatureVariants',
                     responses: {
@@ -127,6 +148,8 @@ export default class VariantsController extends Controller {
             handler: this.patchVariantsOnEnv,
             middleware: [
                 openApiService.validPath({
+                    summary: "Patch a feature's variants in an environment",
+                    description: `Apply a list of patches to the features environments in the specified environment. The patch objects should conform to the [JSON-patch format (RFC 6902)](https://www.rfc-editor.org/rfc/rfc6902).`,
                     tags: ['Features'],
                     operationId: 'patchEnvironmentsFeatureVariants',
                     requestBody: createRequestSchema('patchesSchema'),
@@ -143,6 +166,16 @@ export default class VariantsController extends Controller {
             handler: this.overwriteVariantsOnEnv,
             middleware: [
                 openApiService.validPath({
+                    summary:
+                        'Create (overwrite) variants for a feature in an environment',
+                    description: `This overwrites the current variants for the feature toggle in the :featureName parameter for the :environment parameter.
+                        
+                        The backend will validate the input for the following invariants:
+                        
+                    * If there are variants, there needs to be at least one variant with \`weightType: variable\`
+                    * The sum of the weights of variants with \`weightType: fix\` must be strictly less than 1000 (< 1000)
+
+                    The backend will also distribute remaining weight up to 1000 after adding the variants with \`weightType: fix\` together amongst the variants of \`weightType: variable\``,
                     tags: ['Features'],
                     operationId: 'overwriteEnvironmentFeatureVariants',
                     requestBody: createRequestSchema('variantsSchema'),

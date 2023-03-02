@@ -30,10 +30,6 @@ const flags = {
         process.env.UNLEASH_EXPERIMENTAL_PROXY_RETURN_ALL_TOGGLES,
         false,
     ),
-    maintenance: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_MAINTENANCE,
-        false,
-    ),
     maintenanceMode: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_MAINTENANCE_MODE,
         false,
@@ -67,10 +63,7 @@ const flags = {
         false,
     ),
     notifications: parseEnvVarBoolean(process.env.NOTIFICATIONS, false),
-    loginEventLog: parseEnvVarBoolean(
-        process.env.UNLEASH_LOGIN_EVENT_LOG,
-        false,
-    ),
+    signOnLog: parseEnvVarBoolean(process.env.UNLEASH_SIGN_ON_LOG, false),
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

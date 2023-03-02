@@ -43,6 +43,7 @@ import { LazyFeatureView } from 'component/feature/FeatureView/LazyFeatureView';
 import { LazyAdmin } from 'component/admin/LazyAdmin';
 import { LazyProject } from 'component/project/Project/LazyProject';
 import { AdminRedirect } from 'component/admin/AdminRedirect';
+import { SignOnLog } from 'component/signOnLog/SignOnLog';
 
 export const routes: IRoute[] = [
     // Splash
@@ -355,6 +356,14 @@ export const routes: IRoute[] = [
         menu: { adminSettings: true },
     },
 
+    {
+        path: '/admin/signons',
+        title: 'Sign on log',
+        component: SignOnLog,
+        type: 'protected',
+        menu: { adminSettings: true },
+    },
+
     // Archive
     {
         path: '/archive',
@@ -439,6 +448,12 @@ export const adminMenuRoutes: INavigationMenuItem[] = [
         menu: { adminSettings: true },
     },
     {
+        path: '/admin/signons',
+        title: 'Sign-on log',
+        menu: { adminSettings: true },
+        flag: 'signOnLog',
+    },
+    {
         path: '/admin/users',
         title: 'Users',
         menu: { adminSettings: true },
@@ -480,7 +495,6 @@ export const adminMenuRoutes: INavigationMenuItem[] = [
         path: '/admin/maintenance',
         title: 'Maintenance',
         menu: { adminSettings: true },
-        flag: 'maintenance',
     },
     {
         path: '/admin/cors',

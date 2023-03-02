@@ -16,12 +16,12 @@ export const useNotifications = (options: SWRConfiguration = {}) => {
         mutate().catch(console.warn);
     }, [mutate]);
 
-    console.log(data);
     return {
         notifications: data,
         error,
         loading: !error && !data,
         refetchNotifications,
+        mutateNotifications: mutate,
     };
 };
 

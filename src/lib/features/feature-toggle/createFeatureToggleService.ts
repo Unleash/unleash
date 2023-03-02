@@ -4,7 +4,6 @@ import {
     GroupService,
     SegmentService,
 } from '../../services';
-import EventStore from '../../db/event-store';
 import FeatureStrategiesStore from '../../db/feature-strategy-store';
 import FeatureToggleStore from '../../db/feature-toggle-store';
 import FeatureToggleClientStore from '../../db/feature-toggle-client-store';
@@ -34,13 +33,13 @@ import { FakeAccountStore } from '../../../test/fixtures/fake-account-store';
 import FakeAccessStore from '../../../test/fixtures/fake-access-store';
 import FakeRoleStore from '../../../test/fixtures/fake-role-store';
 import FakeEnvironmentStore from '../../../test/fixtures/fake-environment-store';
+import EventStore from '../../db/event-store';
 
 export const createFeatureToggleService = (
     db: Db,
     config: IUnleashConfig,
 ): FeatureToggleService => {
     const { getLogger, eventBus, flagResolver } = config;
-    const eventStore = new EventStore(db, getLogger);
     const featureStrategiesStore = new FeatureStrategiesStore(
         db,
         eventBus,
@@ -74,6 +73,7 @@ export const createFeatureToggleService = (
     const accessStore = new AccessStore(db, eventBus, getLogger);
     const roleStore = new RoleStore(db, eventBus, getLogger);
     const environmentStore = new EnvironmentStore(db, eventBus, getLogger);
+    const eventStore = new EventStore(db, getLogger);
     const groupService = new GroupService(
         { groupStore, eventStore, accountStore },
         { getLogger },

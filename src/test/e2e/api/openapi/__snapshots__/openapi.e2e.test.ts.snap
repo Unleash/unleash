@@ -338,7 +338,7 @@ exports[`should serve the OpenAPI spec 1`] = `
           },
           "metrics": {
             "items": {
-              "$ref": "#/components/schemas/clientMetricsSchema",
+              "$ref": "#/components/schemas/clientMetricsEnvSchema",
             },
             "type": "array",
           },
@@ -352,7 +352,19 @@ exports[`should serve the OpenAPI spec 1`] = `
           },
           "connectVia": {
             "items": {
-              "type": "string",
+              "properties": {
+                "appName": {
+                  "type": "string",
+                },
+                "instanceId": {
+                  "type": "string",
+                },
+              },
+              "required": [
+                "appName",
+                "instanceId",
+              ],
+              "type": "object",
             },
             "type": "array",
           },
@@ -369,7 +381,7 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "string",
           },
           "started": {
-            "type": "number",
+            "$ref": "#/components/schemas/dateSchema",
           },
           "strategies": {
             "items": {
@@ -553,6 +565,41 @@ exports[`should serve the OpenAPI spec 1`] = `
         "required": [
           "version",
           "features",
+        ],
+        "type": "object",
+      },
+      "clientMetricsEnvSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "appName": {
+            "type": "string",
+          },
+          "environment": {
+            "type": "string",
+          },
+          "featureName": {
+            "type": "string",
+          },
+          "no": {
+            "type": "number",
+          },
+          "timestamp": {
+            "$ref": "#/components/schemas/dateSchema",
+          },
+          "variants": {
+            "additionalProperties": {
+              "minimum": 0,
+              "type": "integer",
+            },
+            "type": "object",
+          },
+          "yes": {
+            "type": "number",
+          },
+        },
+        "required": [
+          "featureName",
+          "appName",
         ],
         "type": "object",
       },
@@ -6815,6 +6862,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/projects/{projectId}/features/{featureName}/environments/{environment}/variants": {
       "get": {
+        "description": "Returns the variants for a feature in a specific environment. If the feature has no variants it will return an empty array of variants",
         "operationId": "getEnvironmentFeatureVariants",
         "parameters": [
           {
@@ -6854,11 +6902,13 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "featureVariantsSchema",
           },
         },
+        "summary": "Get variants for a feature in an environment",
         "tags": [
           "Features",
         ],
       },
       "patch": {
+        "description": "Apply a list of patches to the features environments in the specified environment. The patch objects should conform to the [JSON-patch format (RFC 6902)](https://www.rfc-editor.org/rfc/rfc6902).",
         "operationId": "patchEnvironmentsFeatureVariants",
         "parameters": [
           {
@@ -6909,11 +6959,20 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "featureVariantsSchema",
           },
         },
+        "summary": "Patch a feature's variants in an environment",
         "tags": [
           "Features",
         ],
       },
       "put": {
+        "description": "This overwrites the current variants for the feature toggle in the :featureName parameter for the :environment parameter.
+                        
+                        The backend will validate the input for the following invariants:
+                        
+                    * If there are variants, there needs to be at least one variant with \`weightType: variable\`
+                    * The sum of the weights of variants with \`weightType: fix\` must be strictly less than 1000 (< 1000)
+
+                    The backend will also distribute remaining weight up to 1000 after adding the variants with \`weightType: fix\` together amongst the variants of \`weightType: variable\`",
         "operationId": "overwriteEnvironmentFeatureVariants",
         "parameters": [
           {
@@ -6964,6 +7023,7 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "featureVariantsSchema",
           },
         },
+        "summary": "Create (overwrite) variants for a feature in an environment",
         "tags": [
           "Features",
         ],
@@ -7031,6 +7091,8 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/projects/{projectId}/features/{featureName}/variants": {
       "get": {
+        "deprecated": true,
+        "description": "(deprecated from 4.21) Retrieve the variants for the specified feature. From Unleash 4.21 onwards, this endpoint will attempt to choose a [production-type environment](https://docs.getunleash.io/reference/environments) as the source of truth. If more than one production environment is found, the first one will be used.",
         "operationId": "getFeatureVariants",
         "parameters": [
           {
@@ -7062,11 +7124,15 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "featureVariantsSchema",
           },
         },
+        "summary": "Retrieve variants for a feature (deprecated) ",
         "tags": [
           "Features",
         ],
       },
       "patch": {
+        "description": "Apply a list of patches patch to the specified feature's variants. The patch objects should conform to the [JSON-patch format (RFC 6902)](https://www.rfc-editor.org/rfc/rfc6902).
+                        
+                        ⚠️ **Warning**: This method is not atomic. If something fails in the middle of applying the patch, you can be left with a half-applied patch. We recommend that you instead [patch variants on a per-environment basis](/docs/reference/api/unleash/patch-environments-feature-variants.api.mdx), which **is** an atomic operation.",
         "operationId": "patchFeatureVariants",
         "parameters": [
           {
@@ -7109,11 +7175,20 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "featureVariantsSchema",
           },
         },
+        "summary": "Apply a patch to a feature's variants (in all environments).",
         "tags": [
           "Features",
         ],
       },
       "put": {
+        "description": "This overwrites the current variants for the feature specified in the :featureName parameter in all environments.
+
+                    The backend will validate the input for the following invariants
+
+                    * If there are variants, there needs to be at least one variant with \`weightType: variable\`
+                    * The sum of the weights of variants with \`weightType: fix\` must be strictly less than 1000 (< 1000)
+
+                    The backend will also distribute remaining weight up to 1000 after adding the variants with \`weightType: fix\` together amongst the variants of \`weightType: variable\`",
         "operationId": "overwriteFeatureVariants",
         "parameters": [
           {
@@ -7156,6 +7231,7 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "featureVariantsSchema",
           },
         },
+        "summary": "Create (overwrite) variants for a feature toggle in all environments",
         "tags": [
           "Features",
         ],

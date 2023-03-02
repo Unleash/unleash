@@ -12,6 +12,8 @@ export type NotificationsSchemaItem = {
     id: number;
     /** The actual notification message */
     message: string;
+    /** The link to change request or feature toggle the notification refers to */
+    link?: string;
     /** The type of the notification used e.g. for the graphical hints */
     notificationType: NotificationsSchemaItemNotificationType;
     createdBy: NotificationsSchemaItemCreatedBy;

@@ -1,7 +1,7 @@
 import { Alert } from '@mui/material';
 import { useSegmentLimits } from 'hooks/api/getters/useSegmentLimits/useSegmentLimits';
 
-export const SegmentDocsValuesWarning = () => {
+export const SegmentDocsValuesInfo = () => {
     const { segmentValuesLimit } = useSegmentLimits();
 
     if (typeof segmentValuesLimit === 'undefined') {
@@ -9,9 +9,16 @@ export const SegmentDocsValuesWarning = () => {
     }
 
     return (
-        <Alert severity="warning">
-            Segments is an experimental feature, currently limited to at most{' '}
-            {segmentValuesLimit} values. <SegmentLimitsLink />
+        <Alert severity="info">
+            A segment can have{' '}
+            <a
+                href="https://docs.getunleash.io/reference/segments#segment-limits"
+                target="_blank"
+                rel="noreferrer"
+            >
+                at most {segmentValuesLimit} across all of its contraints
+            </a>
+            . <SegmentLimitsLink />
         </Alert>
     );
 };
@@ -25,8 +32,15 @@ export const SegmentDocsValuesError = (props: { values: number }) => {
 
     return (
         <Alert severity="error">
-            Segments are limited to at most {segmentValuesLimit} values. This
-            segment currently has {props.values}{' '}
+            A segment can have{' '}
+            <a
+                href="https://docs.getunleash.io/reference/segments#segment-limits"
+                target="_blank"
+                rel="noreferrer"
+            >
+                at most {segmentValuesLimit} across all of its contraints
+            </a>
+            . This segment has {props.values}{' '}
             {props.values === 1 ? 'value' : 'values'}.
         </Alert>
     );
@@ -41,8 +55,8 @@ export const SegmentDocsStrategyWarning = () => {
 
     return (
         <Alert severity="warning">
-            Strategies are limited to {strategySegmentsLimit} segments.{' '}
-            <SegmentLimitsLink />
+            You can't apply more than {strategySegmentsLimit} segments to a
+            strategy. <SegmentLimitsLink />
         </Alert>
     );
 };
@@ -50,16 +64,14 @@ export const SegmentDocsStrategyWarning = () => {
 const SegmentLimitsLink = () => {
     return (
         <>
-            Please{' '}
             <a
                 href="https://slack.unleash.run"
                 target="_blank"
                 rel="noreferrer"
-                style={{ color: 'inherit' }}
             >
-                get in touch
+                Get in touch
             </a>{' '}
-            if you would like this limit increased.
+            if you'd like to increase this limit.
         </>
     );
 };

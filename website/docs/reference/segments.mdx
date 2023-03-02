@@ -44,7 +44,7 @@ In theory, you could you create segments with a thousand constraints, each with 
 
 1. A segment can have **at most 100 values** specified across all of its constraints. That means that if you add a constraint that uses 10 values, you will have 90 more values to use for any other constraints you add to the same segment.
 
-2. You can apply at most `strategySegmentsLimit` segments to a single strategy. Different strategies (even on the same feature) do not affect each other.
+2. You can apply **at most 5 segments to any one strategy**. Separate strategies (even on the same feature) do not count towards the same total, so you can have two strategies with 5 segments each.
 
 ### A note on large segments {#large-segments}
 

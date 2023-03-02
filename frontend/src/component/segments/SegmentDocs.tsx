@@ -12,7 +12,7 @@ export const SegmentDocsValuesWarning = () => {
         <Alert severity="info">
             A segment can have{' '}
             <a
-                href="https://docs.getunleash.io/reference/segments#large-segments"
+                href="https://docs.getunleash.io/reference/segments#segment-limits"
                 target="_blank"
                 rel="noreferrer"
             >
@@ -34,7 +34,7 @@ export const SegmentDocsValuesError = (props: { values: number }) => {
         <Alert severity="error">
             A segment can have{' '}
             <a
-                href="https://docs.getunleash.io/reference/segments#large-segments"
+                href="https://docs.getunleash.io/reference/segments#segment-limits"
                 target="_blank"
                 rel="noreferrer"
             >

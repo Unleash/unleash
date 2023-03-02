@@ -184,7 +184,7 @@ start();
 
 :::caution
 
-Changing segment limits could have adverse impacts on the performance of Unleash SDKs and cause network congestion. Think twice before changing these values.
+Changing segment limits could have a negative impact on the performance of Unleash SDKs and cause network congestion. Think twice before changing these values.
 
 :::
 

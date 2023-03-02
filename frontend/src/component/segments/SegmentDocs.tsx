@@ -9,9 +9,12 @@ export const SegmentDocsValuesWarning = () => {
     }
 
     return (
-        <Alert severity="warning">
-            Segments is an experimental feature, currently limited to at most{' '}
-            {segmentValuesLimit} values. <SegmentLimitsLink />
+        <Alert severity="info">
+            A segment can have{' '}
+            <a href="https://docs.getunleash.io" target="_blank">
+                at most {segmentValuesLimit} across all of its contraints
+            </a>
+            . <SegmentLimitsLink />
         </Alert>
     );
 };
@@ -50,16 +53,15 @@ export const SegmentDocsStrategyWarning = () => {
 const SegmentLimitsLink = () => {
     return (
         <>
-            Please{' '}
             <a
                 href="https://slack.unleash.run"
                 target="_blank"
                 rel="noreferrer"
                 style={{ color: 'inherit' }}
             >
-                get in touch
+                Get in touch
             </a>{' '}
-            if you would like this limit increased.
+            if you'd like to increase this limit.
         </>
     );
 };

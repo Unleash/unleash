@@ -117,18 +117,14 @@ describe('notifications', () => {
         cy.wait('@createFeature');
     };
 
-    it('should not show own notifications', () => {
+    it('should create a notification when a feature is created in a project', () => {
         createFeature();
 
         //Should not show own notificaitons
         cy.get("[data-testid='NOTIFICATIONS_BUTTON']").click();
 
         //then
-        cy.contains('Mark all as read ()').should('exist');
-    });
-
-    it('should create a notification when a feature is created in a project', () => {
-        createFeature();
+        cy.contains('Mark all as read ()').should('not.exist');
 
         const userCredentials = userEmails[0];
 

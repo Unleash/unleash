@@ -337,8 +337,8 @@ class EventStore implements IEventStore {
         };
     }
 
-    setMaxListeners(n: number): EventEmitter {
-        return this.eventEmitter.setMaxListeners(n);
+    setMaxListeners(number: number): EventEmitter {
+        return this.eventEmitter.setMaxListeners(number);
     }
 
     on(

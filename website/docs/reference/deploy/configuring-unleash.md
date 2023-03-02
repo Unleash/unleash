@@ -180,6 +180,20 @@ const start = async () => {
 start();
 ```
 
+### Segment limits {#segments}
+
+:::caution
+
+Changing segment limits could have adverse impacts on the performance of Unleash SDKs and cause network congestion. Think twice before changing these values.
+
+:::
+
+Some facets of the [segments feature](../segments.mdx) can be customized via environment variables. This lets you change the [segment limits](../segments.mdx#segment-limits) that Unleash uses.
+
+`UNLEASH_STRATEGY_SEGMENTS_LIMIT` controls the maximum number of segments that can be applied to a single strategy. The default is 5.
+
+`UNLEASH_SEGMENT_VALUES_LIMIT` controls the maximum number of values that you can assign across a segment's constraints. The default is 100.
+
 ## Securing Unleash {#securing-unleash}
 
 You can integrate Unleash with your authentication provider (OAuth 2.0). Read more about [securing unleash](./securing-unleash.md).

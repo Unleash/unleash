@@ -40,7 +40,7 @@ If an activation strategy has a segment _and_ additional constraints applied, th
 
 ## Segment limits
 
-In theory, you could you create segments with a thousand constraints, each with a million values. But this wouldn't scale well, so there are limitations in place to stop you from doing this. Unleash enforces the following limits on use of segments:
+In theory, you could create segments with a thousand constraints, each with a million values. But this wouldn't scale well, so there are limitations in place to stop you from doing this. Unleash enforces the following limits on use of segments:
 
 1. By default, a segment can have **at most 100 values** specified across all of its constraints. That means that if you add a constraint that uses 10 values, you will have 90 more values to use for any other constraints you add to the same segment.
 

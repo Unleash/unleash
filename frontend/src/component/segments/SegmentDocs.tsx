@@ -11,7 +11,11 @@ export const SegmentDocsValuesWarning = () => {
     return (
         <Alert severity="info">
             A segment can have{' '}
-            <a href="https://docs.getunleash.io" target="_blank">
+            <a
+                href="https://docs.getunleash.io/reference/segments#large-segments"
+                target="_blank"
+                rel="noreferrer"
+            >
                 at most {segmentValuesLimit} across all of its contraints
             </a>
             . <SegmentLimitsLink />

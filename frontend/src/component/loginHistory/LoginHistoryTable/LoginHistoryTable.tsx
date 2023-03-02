@@ -16,17 +16,17 @@ import { Search } from 'component/common/Search/Search';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { useSearch } from 'hooks/useSearch';
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
-import { useSignOnLog } from 'hooks/api/getters/useSignOnLog/useSignOnLog';
-import { SignOnLogSuccessfulCell } from './SignOnLogSuccessfulCell/SignOnLogSuccessfulCell';
-import { ISignOnEvent } from 'interfaces/signOnEvent';
-import { SignOnLogActionsCell } from './SignOnLogActionsCell/SignOnLogActionsCell';
-import { SignOnLogDeleteDialog } from './SignOnLogDeleteDialog/SignOnLogDeleteDialog';
-import { useSignOnLogApi } from 'hooks/api/actions/useSignOnLogApi/useSignOnLogApi';
+import { useLoginHistory } from 'hooks/api/getters/useLoginHistory/useLoginHistory';
+import { LoginHistorySuccessfulCell } from './LoginHistorySuccessfulCell/LoginHistorySuccessfulCell';
+import { ILoginEvent } from 'interfaces/loginEvent';
+import { LoginHistoryActionsCell } from './LoginHistoryActionsCell/LoginHistoryActionsCell';
+import { LoginHistoryDeleteDialog } from './LoginHistoryDeleteDialog/LoginHistoryDeleteDialog';
+import { useLoginHistoryApi } from 'hooks/api/actions/useLoginHistoryApi/useLoginHistoryApi';
 import { formatDateYMDHMS } from 'utils/formatDate';
 import { useSearchParams } from 'react-router-dom';
 import { createLocalStorage } from 'utils/createLocalStorage';
 import { Delete, Download } from '@mui/icons-material';
-import { SignOnLogDeleteAllDialog } from './SignOnLogDeleteAllDialog/SignOnLogDeleteAllDialog';
+import { LoginHistoryDeleteAllDialog } from './LoginHistoryDeleteAllDialog/LoginHistoryDeleteAllDialog';
 
 export type PageQueryType = Partial<
     Record<'sort' | 'order' | 'search', string>
@@ -35,7 +35,7 @@ export type PageQueryType = Partial<
 const defaultSort: SortingRule<string> = { id: 'created_at' };
 
 const { value: storedParams, setValue: setStoredParams } = createLocalStorage(
-    'SignOnLogTable:v1',
+    'LoginHistoryTable:v1',
     defaultSort
 );
 
@@ -46,11 +46,11 @@ const AUTH_TYPE_LABEL: { [key: string]: string } = {
     google: 'Google',
 };
 
-export const SignOnLogTable = () => {
+export const LoginHistoryTable = () => {
     const { setToastData, setToastApiError } = useToast();
 
-    const { events, loading, refetch } = useSignOnLog();
-    const { removeEvent, removeAllEvents, downloadCSV } = useSignOnLogApi();
+    const { events, loading, refetch } = useLoginHistory();
+    const { removeEvent, removeAllEvents, downloadCSV } = useLoginHistoryApi();
 
     const [searchParams, setSearchParams] = useSearchParams();
     const [initialState] = useState(() => ({
@@ -67,11 +67,11 @@ export const SignOnLogTable = () => {
     }));
 
     const [searchValue, setSearchValue] = useState(initialState.globalFilter);
-    const [selectedEvent, setSelectedEvent] = useState<ISignOnEvent>();
+    const [selectedEvent, setSelectedEvent] = useState<ILoginEvent>();
     const [deleteOpen, setDeleteOpen] = useState(false);
     const [deleteAllOpen, setDeleteAllOpen] = useState(false);
 
-    const onDeleteConfirm = async (event: ISignOnEvent) => {
+    const onDeleteConfirm = async (event: ILoginEvent) => {
         try {
             await removeEvent(event.id);
             setToastData({
@@ -89,7 +89,7 @@ export const SignOnLogTable = () => {
         try {
             await removeAllEvents();
             setToastData({
-                title: `Log has been cleared`,
+                title: `History has been cleared`,
                 type: 'success',
             });
             refetch();
@@ -122,7 +122,7 @@ export const SignOnLogTable = () => {
             },
             {
                 Header: 'Authentication',
-                accessor: (event: ISignOnEvent) =>
+                accessor: (event: ILoginEvent) =>
                     AUTH_TYPE_LABEL[event.auth_type] || event.auth_type,
                 width: 150,
                 maxWidth: 150,
@@ -140,7 +140,7 @@ export const SignOnLogTable = () => {
                 Header: 'Success',
                 accessor: 'successful',
                 align: 'center',
-                Cell: SignOnLogSuccessfulCell,
+                Cell: LoginHistorySuccessfulCell,
                 filterName: 'success',
                 filterParsing: (value: boolean) => value.toString(),
             },
@@ -149,7 +149,7 @@ export const SignOnLogTable = () => {
                 id: 'Actions',
                 align: 'center',
                 Cell: ({ row: { original: event } }: any) => (
-                    <SignOnLogActionsCell
+                    <LoginHistoryActionsCell
                         onDelete={() => {
                             setSelectedEvent(event);
                             setDeleteOpen(true);
@@ -238,7 +238,7 @@ export const SignOnLogTable = () => {
             isLoading={loading}
             header={
                 <PageHeader
-                    title={`Sign-on log (${rows.length})`}
+                    title={`Login history (${rows.length})`}
                     actions={
                         <>
                             <ConditionallyRender
@@ -261,7 +261,7 @@ export const SignOnLogTable = () => {
                                             show={<PageHeader.Divider />}
                                         />
                                         <Tooltip
-                                            title="Download sign-on log"
+                                            title="Download login history"
                                             arrow
                                         >
                                             <IconButton onClick={downloadCSV}>
@@ -269,7 +269,7 @@ export const SignOnLogTable = () => {
                                             </IconButton>
                                         </Tooltip>
                                         <Tooltip
-                                            title="Clear sign-on log"
+                                            title="Clear login history"
                                             arrow
                                         >
                                             <IconButton
@@ -314,26 +314,26 @@ export const SignOnLogTable = () => {
                         condition={searchValue?.length > 0}
                         show={
                             <TablePlaceholder>
-                                No sign-on events found matching &ldquo;
+                                No login events found matching &ldquo;
                                 {searchValue}
                                 &rdquo;
                             </TablePlaceholder>
                         }
                         elseShow={
                             <TablePlaceholder>
-                                No sign-on events available.
+                                No login events available.
                             </TablePlaceholder>
                         }
                     />
                 }
             />
-            <SignOnLogDeleteDialog
+            <LoginHistoryDeleteDialog
                 event={selectedEvent}
                 open={deleteOpen}
                 setOpen={setDeleteOpen}
                 onConfirm={onDeleteConfirm}
             />
-            <SignOnLogDeleteAllDialog
+            <LoginHistoryDeleteAllDialog
                 open={deleteAllOpen}
                 setOpen={setDeleteAllOpen}
                 onConfirm={onDeleteAllConfirm}

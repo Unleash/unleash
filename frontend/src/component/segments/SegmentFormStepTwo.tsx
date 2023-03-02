@@ -23,7 +23,7 @@ import {
     IAutocompleteBoxOption,
 } from 'component/common/AutocompleteBox/AutocompleteBox';
 import {
-    SegmentDocsValuesWarning,
+    SegmentDocsValuesInfo,
     SegmentDocsValuesError,
 } from 'component/segments/SegmentDocs';
 import { useSegmentValuesCount } from 'component/segments/hooks/useSegmentValuesCount';
@@ -43,7 +43,7 @@ const StyledForm = styled('div')(({ theme }) => ({
     height: '100%',
 }));
 
-const StyledWarning = styled('div')(({ theme }) => ({
+const StyledInfo = styled('div')(({ theme }) => ({
     marginBottom: '1.5rem',
 }));
 
@@ -130,9 +130,9 @@ export const SegmentFormStepTwo: React.FC<ISegmentFormPartTwoProps> = ({
     return (
         <>
             <StyledForm>
-                <StyledWarning>
-                    <SegmentDocsValuesWarning />
-                </StyledWarning>
+                <StyledInfo>
+                    <SegmentDocsValuesInfo />
+                </StyledInfo>
                 <div>
                     <StyledInputDescription>
                         Select the context fields you want to include in the

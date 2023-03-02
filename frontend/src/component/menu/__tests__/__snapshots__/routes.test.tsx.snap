@@ -352,8 +352,8 @@ exports[`returns all baseRoutes 1`] = `
     "menu": {
       "adminSettings": true,
     },
-    "path": "/admin/signons",
-    "title": "Sign on log",
+    "path": "/admin/logins",
+    "title": "Login history",
     "type": "protected",
   },
   {

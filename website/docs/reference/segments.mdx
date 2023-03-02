@@ -39,7 +39,6 @@ Segments are collections of strategy constraints. To satisfy a segment, _all_ th
 If an activation strategy has a segment _and_ additional constraints applied, the segment _and_ the strategies must all be satisfied. Similarly, if an activation strategy has multiple segments, then they must _must all be satisfied_.
 
 ## Segment limits
-<div id="large-segments"><!-- Redirect old anchor links here --></div>
 
 In theory, you could you create segments with a thousand constraints, each with a million values. But this wouldn't scale well, so there are limitations in place to stop you from doing this. Unleash enforces the following limits on use of segments:
 
@@ -47,7 +46,9 @@ In theory, you could you create segments with a thousand constraints, each with 
 
 2. You can apply at most `strategySegmentsLimit` segments to a single strategy. Different strategies (even on the same feature) do not affect each other.
 
-Furthermore, segments are just constraints, so any limitations that apply to constraints also apply to segments.
+### A note on large segments {#large-segments}
+
+Segments are just constraints, so any limitations that apply to constraints also apply to segments.
 
 This means that if you want to add a hundred different user IDs to one of your constraints, you are most likely better off thinking about finding another way to solve this problem. That may be using a different abstraction or finding another pattern that you can use instead. Refer to the section on [constraint limitations](../reference/strategy-constraints.md#limitations) for a more thorough explanation.
 

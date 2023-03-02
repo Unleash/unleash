@@ -32,8 +32,15 @@ export const SegmentDocsValuesError = (props: { values: number }) => {
 
     return (
         <Alert severity="error">
-            Segments are limited to at most {segmentValuesLimit} values. This
-            segment currently has {props.values}{' '}
+            A segment can have{' '}
+            <a
+                href="https://docs.getunleash.io/reference/segments#large-segments"
+                target="_blank"
+                rel="noreferrer"
+            >
+                at most {segmentValuesLimit} across all of its contraints
+            </a>
+            . This segment has {props.values}{' '}
             {props.values === 1 ? 'value' : 'values'}.
         </Alert>
     );
@@ -48,8 +55,8 @@ export const SegmentDocsStrategyWarning = () => {
 
     return (
         <Alert severity="warning">
-            Strategies are limited to {strategySegmentsLimit} segments.{' '}
-            <SegmentLimitsLink />
+            You can't apply more than {strategySegmentsLimit} segments to a
+            strategy. <SegmentLimitsLink />
         </Alert>
     );
 };
@@ -61,7 +68,6 @@ const SegmentLimitsLink = () => {
                 href="https://slack.unleash.run"
                 target="_blank"
                 rel="noreferrer"
-                style={{ color: 'inherit' }}
             >
                 Get in touch
             </a>{' '}

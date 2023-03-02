@@ -14,7 +14,6 @@ import {
     IStrategyConfig,
 } from '../../../../lib/types';
 import { ProxyRepository } from '../../../../lib/proxy';
-import * as process from 'process';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -1002,6 +1001,7 @@ test('should return all features when specified', async () => {
                 ],
             });
         });
+    process.env.RETURN_ALL_TOGGLES = 'false';
 });
 
 test('should return all features when env var is set only', async () => {

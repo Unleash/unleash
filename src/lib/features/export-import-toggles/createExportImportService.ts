@@ -1,5 +1,5 @@
 import { Db } from '../../db/db';
-import { IEventStore, IUnleashConfig } from '../../types';
+import { IUnleashConfig } from '../../types';
 import ExportImportService from './export-import-service';
 import { ImportTogglesStore } from './import-toggles-store';
 import FeatureToggleStore from '../../db/feature-toggle-store';
@@ -37,6 +37,7 @@ import FakeEventStore from '../../../test/fixtures/fake-event-store';
 import FakeFeatureStrategiesStore from '../../../test/fixtures/fake-feature-strategies-store';
 import FakeFeatureEnvironmentStore from '../../../test/fixtures/fake-feature-environment-store';
 import FakeStrategiesStore from '../../../test/fixtures/fake-strategies-store';
+import EventStore from '../../db/event-store';
 
 export const createFakeExportImportTogglesService = (
     config: IUnleashConfig,
@@ -111,7 +112,6 @@ export const createFakeExportImportTogglesService = (
 export const createExportImportTogglesService = (
     db: Db,
     config: IUnleashConfig,
-    eventStore: IEventStore,
 ): ExportImportService => {
     const { eventBus, getLogger, flagResolver } = config;
     const importTogglesStore = new ImportTogglesStore(db);
@@ -139,12 +139,9 @@ export const createExportImportTogglesService = (
         eventBus,
         getLogger,
     );
+    const eventStore = new EventStore(db, getLogger);
     const accessService = createAccessService(db, config);
-    const featureToggleService = createFeatureToggleService(
-        db,
-        config,
-        eventStore,
-    );
+    const featureToggleService = createFeatureToggleService(db, config);
 
     const featureTagService = new FeatureTagService(
         {

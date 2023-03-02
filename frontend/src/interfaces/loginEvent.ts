@@ -1,4 +1,4 @@
-export interface ISignOnEvent {
+export interface ILoginEvent {
     id: number;
     username: string;
     auth_type: string;

@@ -1,28 +1,28 @@
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 
-interface IServiceAccountDeleteAllDialogProps {
+interface ILoginHistoryDeleteAllDialogProps {
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     onConfirm: () => void;
 }
 
-export const SignOnLogDeleteAllDialog = ({
+export const LoginHistoryDeleteAllDialog = ({
     open,
     setOpen,
     onConfirm,
-}: IServiceAccountDeleteAllDialogProps) => (
+}: ILoginHistoryDeleteAllDialogProps) => (
     <Dialogue
-        title="Clear sign-on log?"
+        title="Clear login history?"
         open={open}
-        primaryButtonText="Clear sign-on log"
+        primaryButtonText="Clear login history"
         secondaryButtonText="Cancel"
         onClick={onConfirm}
         onClose={() => {
             setOpen(false);
         }}
     >
-        You are about to clear the sign-on log.
+        You are about to clear the login history.
         <br />
-        This will delete all the sign-on events.
+        This will delete all the login events.
     </Dialogue>
 );

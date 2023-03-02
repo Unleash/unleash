@@ -86,7 +86,7 @@ export class ProxyService {
 
         return definitions.map((feature) => ({
             name: feature.name,
-            enabled: Boolean(feature.enabled),
+            enabled: Boolean(client.isEnabled(feature.name)),
             variant: client.forceGetVariant(feature.name, context),
             impressionData: Boolean(feature.impressionData),
         }));

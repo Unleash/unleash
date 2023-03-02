@@ -934,8 +934,8 @@ test('Should not recursively set off timers on events', async () => {
 });
 
 test('should return all features when specified', async () => {
+    app.config.experimental.flags.proxyReturnAllTogglesKillSwitch = true;
     app.config.experimental.flags.proxyReturnAllToggles = true;
-    process.env.RETURN_ALL_TOGGLES = 'true';
     const frontendToken = await createApiToken(ApiTokenType.FRONTEND);
     await createFeatureToggle({
         name: 'enabledFeature1',
@@ -972,6 +972,7 @@ test('should return all features when specified', async () => {
             },
         ],
     });
+
     await app.request
         .get('/api/frontend')
         .set('Authorization', frontendToken.secret)
@@ -1001,11 +1002,11 @@ test('should return all features when specified', async () => {
                 ],
             });
         });
-    process.env.RETURN_ALL_TOGGLES = 'false';
 });
 
-test('should return all features when env var is set only', async () => {
-    app.config.experimental.flags.proxyReturnAllToggles = true;
+test('should return all features when both feature flags are set only', async () => {
+    app.config.experimental.flags.proxyReturnAllTogglesKillSwitch = true;
+    app.config.experimental.flags.proxyReturnAllToggles = false;
     const frontendToken = await createApiToken(ApiTokenType.FRONTEND);
     await createFeatureToggle({
         name: 'enabledFeature1',

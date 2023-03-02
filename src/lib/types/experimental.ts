@@ -26,8 +26,12 @@ const flags = {
         process.env.UNLEASH_RESPONSE_TIME_WITH_APP_NAME_KILL_SWITCH,
         false,
     ),
+    proxyReturnAllTogglesKillSwitch: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_PROXY_RETURN_ALL_TOGGLES_KILL_SWITCH,
+        false,
+    ),
     proxyReturnAllToggles: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_PROXY_RETURN_ALL_TOGGLES,
+        process.env.UNLEASH_PROXY_RETURN_ALL_TOGGLES,
         false,
     ),
     maintenanceMode: parseEnvVarBoolean(

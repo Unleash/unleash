@@ -20,7 +20,6 @@ import {
 import { Context } from 'unleash-client';
 import { enrichContextWithIp } from '../../proxy';
 import { corsOriginMiddleware } from '../../middleware';
-import * as process from 'process';
 
 interface ApiUserRequest<
     PARAM = any,
@@ -146,10 +145,13 @@ export default class ProxyController extends Controller {
         res: Response<ProxyFeaturesSchema>,
     ) {
         let toggles;
-        if (
-            this.flagResolver.isEnabled('proxyReturnAllToggles') &&
-            Boolean(process.env.RETURN_ALL_TOGGLES)
-        ) {
+        const releaseFlag = this.flagResolver.isEnabled(
+            'proxyReturnAllTogglesKillSwitch',
+        );
+        const featureflag = this.flagResolver.isEnabled(
+            'proxyReturnAllToggles',
+        );
+        if (releaseFlag && featureflag) {
             toggles = await this.services.proxyService.getAllProxyFeatures(
                 req.user,
                 ProxyController.createContext(req),

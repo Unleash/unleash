@@ -1,19 +1,19 @@
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import { ISignOnEvent } from 'interfaces/signOnEvent';
+import { ILoginEvent } from 'interfaces/loginEvent';
 
-interface IServiceAccountDeleteDialogProps {
-    event?: ISignOnEvent;
+interface ILoginHistoryDeleteDialogProps {
+    event?: ILoginEvent;
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    onConfirm: (event: ISignOnEvent) => void;
+    onConfirm: (event: ILoginEvent) => void;
 }
 
-export const SignOnLogDeleteDialog = ({
+export const LoginHistoryDeleteDialog = ({
     event,
     open,
     setOpen,
     onConfirm,
-}: IServiceAccountDeleteDialogProps) => (
+}: ILoginHistoryDeleteDialogProps) => (
     <Dialogue
         title="Delete event?"
         open={open}

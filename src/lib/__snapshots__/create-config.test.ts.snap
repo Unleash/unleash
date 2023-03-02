@@ -83,7 +83,7 @@ exports[`should create default config 1`] = `
       "proxyReturnAllToggles": false,
       "responseTimeWithAppNameKillSwitch": false,
       "showProjectApiAccess": false,
-      "signOnLog": false,
+      "loginHistory": false,
       "strictSchemaValidation": false,
     },
   },
@@ -105,7 +105,7 @@ exports[`should create default config 1`] = `
       "proxyReturnAllToggles": false,
       "responseTimeWithAppNameKillSwitch": false,
       "showProjectApiAccess": false,
-      "signOnLog": false,
+      "loginHistory": false,
       "strictSchemaValidation": false,
     },
     "externalResolver": {

@@ -1,6 +1,6 @@
 import useAPI from '../useApi/useApi';
 
-export const useSignOnLogApi = () => {
+export const useLoginHistoryApi = () => {
     const { loading, makeRequest, createRequest, errors } = useAPI({
         propagateErrors: true,
     });
@@ -8,7 +8,7 @@ export const useSignOnLogApi = () => {
     const downloadCSV = async () => {
         const requestId = 'downloadCSV';
         const req = createRequest(
-            'api/admin/signons',
+            'api/admin/logins',
             {
                 method: 'GET',
                 responseType: 'blob',
@@ -25,7 +25,7 @@ export const useSignOnLogApi = () => {
     const removeEvent = async (eventId: number) => {
         const requestId = 'removeEvent';
         const req = createRequest(
-            `api/admin/signons/${eventId}`,
+            `api/admin/logins/${eventId}`,
             { method: 'DELETE' },
             requestId
         );
@@ -36,7 +36,7 @@ export const useSignOnLogApi = () => {
     const removeAllEvents = async () => {
         const requestId = 'removeAllEvents';
         const req = createRequest(
-            'api/admin/signons',
+            'api/admin/logins',
             { method: 'DELETE' },
             requestId
         );

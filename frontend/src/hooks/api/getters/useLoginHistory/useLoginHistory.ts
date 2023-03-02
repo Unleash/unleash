@@ -1,25 +1,25 @@
-import { ISignOnEvent } from 'interfaces/signOnEvent';
+import { ILoginEvent } from 'interfaces/loginEvent';
 import { useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
 import useUiConfig from '../useUiConfig/useUiConfig';
 
-export const useSignOnLog = () => {
+export const useLoginHistory = () => {
     const { uiConfig, isEnterprise } = useUiConfig();
 
-    const { signOnLog } = uiConfig.flags;
+    const { loginHistory } = uiConfig.flags;
 
     const { data, error, mutate } = useConditionalSWR(
-        signOnLog && isEnterprise(),
+        loginHistory && isEnterprise(),
         { events: [] },
-        formatApiPath(`api/admin/signons`),
+        formatApiPath(`api/admin/logins`),
         fetcher
     );
 
     return useMemo(
         () => ({
-            events: (data?.events ?? []) as ISignOnEvent[],
+            events: (data?.events ?? []) as ILoginEvent[],
             loading: !error && !data,
             refetch: () => mutate(),
             error,
@@ -30,6 +30,6 @@ export const useSignOnLog = () => {
 
 const fetcher = (path: string) => {
     return fetch(path)
-        .then(handleErrorResponses('Sign-On Log'))
+        .then(handleErrorResponses('Login History'))
         .then(res => res.json());
 };

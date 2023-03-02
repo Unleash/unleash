@@ -1,7 +1,7 @@
 import { Alert } from '@mui/material';
 import { useSegmentLimits } from 'hooks/api/getters/useSegmentLimits/useSegmentLimits';
 
-export const SegmentDocsValuesWarning = () => {
+export const SegmentDocsValuesInfo = () => {
     const { segmentValuesLimit } = useSegmentLimits();
 
     if (typeof segmentValuesLimit === 'undefined') {

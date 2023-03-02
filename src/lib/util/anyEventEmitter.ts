@@ -10,3 +10,5 @@ export class AnyEventEmitter extends EventEmitter {
         return super.emit(type, ...args) || super.emit('', ...args);
     }
 }
+
+export const sharedEventEmitter = new AnyEventEmitter();

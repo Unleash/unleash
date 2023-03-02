@@ -3,9 +3,10 @@ import { LogProvider, Logger } from '../logger';
 import { IEventStore } from '../types/stores/event-store';
 import { ITag } from '../types/model';
 import { SearchEventsSchema } from '../openapi/spec/search-events-schema';
-import { AnyEventEmitter } from '../util/anyEventEmitter';
+import { sharedEventEmitter } from '../util/anyEventEmitter';
 import { Db } from './db';
 import { Knex } from 'knex';
+import EventEmitter from 'events';
 
 const EVENT_COLUMNS = [
     'id',
@@ -76,13 +77,16 @@ export interface IEventTable {
 
 const TABLE = 'events';
 
-class EventStore extends AnyEventEmitter implements IEventStore {
+class EventStore implements IEventStore {
     private db: Db;
+
+    // only one shared event emitter should exist across all event store instances
+    private eventEmitter: EventEmitter = sharedEventEmitter;
 
     private logger: Logger;
 
+    // a new DB has to be injected per transaction
     constructor(db: Db, getLogger: LogProvider) {
-        super();
         this.db = db;
         this.logger = getLogger('lib/db/event-store.ts');
     }
@@ -93,7 +97,9 @@ class EventStore extends AnyEventEmitter implements IEventStore {
                 .insert(this.eventToDbRow(event))
                 .returning(EVENT_COLUMNS);
             const savedEvent = this.rowToEvent(rows[0]);
-            process.nextTick(() => this.emit(event.type, savedEvent));
+            process.nextTick(() =>
+                this.eventEmitter.emit(event.type, savedEvent),
+            );
         } catch (error: unknown) {
             this.logger.warn(`Failed to store "${event.type}" event: ${error}`);
         }
@@ -136,7 +142,7 @@ class EventStore extends AnyEventEmitter implements IEventStore {
                 .returning(EVENT_COLUMNS);
             const savedEvents = savedRows.map(this.rowToEvent);
             process.nextTick(() =>
-                savedEvents.forEach((e) => this.emit(e.type, e)),
+                savedEvents.forEach((e) => this.eventEmitter.emit(e.type, e)),
             );
         } catch (error: unknown) {
             this.logger.warn(`Failed to store events: ${error}`);
@@ -329,6 +335,28 @@ class EventStore extends AnyEventEmitter implements IEventStore {
             project: e.project,
             environment: e.environment,
         };
+    }
+
+    setMaxListeners(n: number): EventEmitter {
+        return this.eventEmitter.setMaxListeners(n);
+    }
+
+    on(
+        eventName: string | symbol,
+        listener: (...args: any[]) => void,
+    ): EventEmitter {
+        return this.eventEmitter.on(eventName, listener);
+    }
+
+    emit(eventName: string | symbol, ...args: any[]): boolean {
+        return this.eventEmitter.emit(eventName, ...args);
+    }
+
+    off(
+        eventName: string | symbol,
+        listener: (...args: any[]) => void,
+    ): EventEmitter {
+        return this.eventEmitter.off(eventName, listener);
     }
 }
 

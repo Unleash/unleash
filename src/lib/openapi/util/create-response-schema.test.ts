@@ -1,6 +1,8 @@
 import {
     createResponseSchema,
     createResponseSchemas,
+    schemaNamed,
+    schemaTyped,
 } from './create-response-schema';
 
 test('createResponseSchema', () => {
@@ -21,16 +23,8 @@ test('createResponseSchema', () => {
 test('createResponseSchemaWithDifferentMedia', () => {
     expect(
         createResponseSchemas('my-schema', {
-            'application/json': {
-                schema: {
-                    $ref: `#/components/schemas/schemaName`,
-                },
-            },
-            'text/css': {
-                schema: {
-                    type: `string`,
-                },
-            },
+            'application/json': schemaNamed('schemaName'),
+            'text/css': schemaTyped('string'),
         }),
     ).toMatchInlineSnapshot(`
       {

@@ -10,15 +10,29 @@ export const createResponseSchemas = (
     };
 };
 
+export const schemaNamed = (schemaName: string): OpenAPIV3.MediaTypeObject => {
+    return {
+        schema: {
+            $ref: `#/components/schemas/${schemaName}`,
+        },
+    };
+};
+
+export const schemaTyped = (
+    type: OpenAPIV3.NonArraySchemaObjectType,
+): OpenAPIV3.MediaTypeObject => {
+    return {
+        schema: {
+            type,
+        },
+    };
+};
+
 export const createResponseSchema = (
     schemaName: string,
 ): OpenAPIV3.ResponseObject => {
     return createResponseSchemas(schemaName, {
-        'application/json': {
-            schema: {
-                $ref: `#/components/schemas/${schemaName}`,
-            },
-        },
+        'application/json': schemaNamed(schemaName),
     });
 };
 

@@ -40,11 +40,9 @@ const columns = [
         Header: 'Created date',
         accessor: 'created',
         Cell: ({ value }: { value: number }) => {
-            if (!value) {
-                return <TextCell></TextCell>;
-            }
-            const date = new Date(value * 1000);
-            return <DateCell value={date} />;
+            return (
+                <DateCell value={value ? new Date(value * 1000) : undefined} />
+            );
         },
         sortType: 'date',
         disableGlobalFilter: true,

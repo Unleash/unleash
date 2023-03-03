@@ -39,9 +39,7 @@ const StyledTimelineContent = styled(TimelineContent, {
     shouldForwardProp: prop => prop !== 'active',
 })<{ active: boolean }>(({ theme, active }) => ({
     marginBottom: theme.spacing(6),
-    color: active
-        ? theme.palette.common.white
-        : theme.palette.neutral.border,
+    color: active ? theme.palette.common.white : theme.palette.neutral.border,
     marginTop: theme.spacing(2),
 }));
 

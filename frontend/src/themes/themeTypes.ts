@@ -42,12 +42,12 @@ declare module '@mui/material/styles' {
          * Table colors.
          */
         table: {
-            headerColor: string,
-            headerBackground: string,
-            headerHover: string,
-            divider: string,
-            rowHover: string,
-        }
+            headerColor: string;
+            headerBackground: string;
+            headerHover: string;
+            divider: string;
+            rowHover: string;
+        };
 
         /**
          * Colors for event log output.
@@ -79,18 +79,16 @@ declare module '@mui/material/styles' {
         /**
          * Gradient for the login page
          */
-        loginGradient: { 
+        loginGradient: {
             from: string;
             to: string;
         };
-    
+
         /**
          * Text highlight effect color. Used when filtering/searching over content.
          */
         highlight: string;
-      
     }
-
 
     interface Theme extends CustomTheme {}
     interface ThemeOptions extends CustomTheme {}
@@ -100,7 +98,6 @@ declare module '@mui/material/styles' {
 
     interface TypeBackground extends CustomTypeBackground {}
 
-
     /* Extend the background object from MUI */
     interface CustomTypeBackground {
         application: string;
@@ -108,7 +105,6 @@ declare module '@mui/material/styles' {
         elevation1: string;
         elevation2: string;
     }
-
 
     interface PaletteColor {
         light: string;

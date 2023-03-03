@@ -101,7 +101,8 @@ const FeatureOverviewMetaData = () => {
                                     >
                                         <Edit
                                             sx={theme => ({
-                                                color: theme.palette.primary.contrastText,
+                                                color: theme.palette.primary
+                                                    .contrastText,
                                             })}
                                         />
                                     </PermissionIconButton>
@@ -123,7 +124,8 @@ const FeatureOverviewMetaData = () => {
                                     >
                                         <Edit
                                             sx={theme => ({
-                                                color: theme.palette.primary.contrastText,
+                                                color: theme.palette.primary
+                                                    .contrastText,
                                             })}
                                         />
                                     </PermissionIconButton>

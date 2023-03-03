@@ -135,7 +135,7 @@ export default createTheme({
             elevation2: colors.grey[200],
         },
 
-        action: { 
+        action: {
             // Colors used for Icons and Buttons -> this comes from MUI and we overwriting it with our colors
             active: colors.action[0.54],
             hover: colors.action[0.05],
@@ -397,7 +397,7 @@ export default createTheme({
         },
 
         // Overwiteing the action.disabledOpacity from MU
-        MuiMenuItem: { 
+        MuiMenuItem: {
             styleOverrides: {
                 root: {
                     '&.Mui-disabled': {
@@ -415,7 +415,6 @@ export default createTheme({
                 }),
             },
         },
-
 
         // Top menu text color
         MuiAppBar: {

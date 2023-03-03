@@ -10,7 +10,9 @@ const PremiumFeatureWrapper = styled(Box, {
     flexDirection: 'column',
     alignItems: tooltip ? 'start' : 'center',
     textAlign: tooltip ? 'left' : 'center',
-    backgroundColor: tooltip ? 'transparent' : theme.palette.background.elevation2,
+    backgroundColor: tooltip
+        ? 'transparent'
+        : theme.palette.background.elevation2,
     borderRadius: tooltip ? 0 : theme.shape.borderRadiusLarge,
     padding: tooltip ? theme.spacing(1, 0.5) : theme.spacing(7.5, 1),
 }));

@@ -9,13 +9,13 @@ import {
 import { Logger } from '../../logger';
 import ApiUser from '../../types/api-user';
 import {
+    ClientMetricsSchema,
     createRequestSchema,
     createResponseSchema,
     emptyResponse,
     ProxyClientSchema,
     proxyFeaturesSchema,
     ProxyFeaturesSchema,
-    ProxyMetricsSchema,
 } from '../../openapi';
 import { Context } from 'unleash-client';
 import { enrichContextWithIp } from '../../proxy';
@@ -95,7 +95,7 @@ export default class ProxyController extends Controller {
                 this.services.openApiService.validPath({
                     tags: ['Frontend API'],
                     operationId: 'registerFrontendMetrics',
-                    requestBody: createRequestSchema('proxyMetricsSchema'),
+                    requestBody: createRequestSchema('clientMetricsSchema'),
                     responses: { 200: emptyResponse },
                 }),
             ],
@@ -168,7 +168,7 @@ export default class ProxyController extends Controller {
     }
 
     private async registerProxyMetrics(
-        req: ApiUserRequest<unknown, unknown, ProxyMetricsSchema>,
+        req: ApiUserRequest<unknown, unknown, ClientMetricsSchema>,
         res: Response,
     ) {
         await this.services.proxyService.registerProxyMetrics(

@@ -26,7 +26,6 @@ export function createTestConfig(config?: IUnleashOptions): IUnleashConfig {
             flags: {
                 embedProxy: true,
                 embedProxyFrontend: true,
-                variantsPerEnvironment: true,
             },
         },
     };

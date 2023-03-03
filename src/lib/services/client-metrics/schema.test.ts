@@ -12,6 +12,17 @@ test('clientRegisterSchema should allow empty ("") instanceId', () => {
     expect(value.instanceId).toBe('default');
 });
 
+test('clientRegisterSchema should allow string dates', () => {
+    const date = new Date();
+    const { value } = clientRegisterSchema.validate({
+        appName: 'test',
+        strategies: ['default'],
+        started: date.toISOString(),
+        interval: 100,
+    });
+    expect(value.started).toStrictEqual(date);
+});
+
 test('clientRegisterSchema should allow undefined instanceId', () => {
     const { value } = clientRegisterSchema.validate({
         appName: 'test',

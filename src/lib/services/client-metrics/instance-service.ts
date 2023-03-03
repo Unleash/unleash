@@ -2,7 +2,7 @@ import { applicationSchema } from './schema';
 import { APPLICATION_CREATED, CLIENT_REGISTER } from '../../types/events';
 import { IApplication } from './models';
 import { IUnleashStores } from '../../types/stores';
-import { IServerOption, IUnleashConfig } from '../../types/option';
+import { IUnleashConfig } from '../../types/option';
 import { IEventStore } from '../../types/stores/event-store';
 import {
     IClientApplication,
@@ -19,7 +19,6 @@ import { minutesToMilliseconds, secondsToMilliseconds } from 'date-fns';
 import { IClientMetricsStoreV2 } from '../../types/stores/client-metrics-store-v2';
 import { clientMetricsSchema } from './schema';
 import { PartialSome } from '../../types/partial';
-import fetch from 'make-fetch-happen';
 
 export default class ClientInstanceService {
     apps = {};
@@ -46,10 +45,6 @@ export default class ClientInstanceService {
 
     private announcementInterval: number;
 
-    private serverOption: IServerOption;
-
-    readonly prometheusApi;
-
     constructor(
         {
             clientMetricsStoreV2,
@@ -67,11 +62,7 @@ export default class ClientInstanceService {
             | 'clientInstanceStore'
             | 'eventStore'
         >,
-        {
-            getLogger,
-            prometheusApi,
-            server,
-        }: Pick<IUnleashConfig, 'getLogger' | 'prometheusApi' | 'server'>,
+        { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
         bulkInterval = secondsToMilliseconds(5),
         announcementInterval = minutesToMilliseconds(5),
     ) {
@@ -81,8 +72,6 @@ export default class ClientInstanceService {
         this.clientApplicationsStore = clientApplicationsStore;
         this.clientInstanceStore = clientInstanceStore;
         this.eventStore = eventStore;
-        this.prometheusApi = prometheusApi;
-        this.serverOption = server;
         this.logger = getLogger(
             '/services/client-metrics/client-instance-service.ts',
         );
@@ -218,39 +207,6 @@ export default class ClientInstanceService {
     async createApplication(input: IApplication): Promise<void> {
         const applicationData = await applicationSchema.validateAsync(input);
         await this.clientApplicationsStore.upsert(applicationData);
-    }
-
-    private toEpoch(d: Date) {
-        return (d.getTime() - d.getMilliseconds()) / 1000;
-    }
-
-    async getRPS(hoursToQuery: number, limit = 10): Promise<any> {
-        if (!this.prometheusApi) {
-            this.logger.warn('Prometheus not configured');
-            return;
-        }
-        const timeoutSeconds = 5;
-        const basePath = this.serverOption.baseUriPath.replace(/\/$/, '');
-        const pathQuery = `${basePath}/api/.*`;
-        const step = '5m';
-        const rpsQuery = `topk(${limit}, irate (http_request_duration_milliseconds_count{path=~"${pathQuery}"} [${step}]))`;
-        const query = `sum by(appName, endpoint) (label_replace(${rpsQuery}, "endpoint", "$1", "path", "${basePath}(/api/(?:client/)?[^/\*]*).*"))`;
-        const end = new Date();
-        const start = new Date();
-        start.setHours(end.getHours() - hoursToQuery);
-
-        const params = `timeout=${timeoutSeconds}s&start=${this.toEpoch(
-            start,
-        )}&end=${this.toEpoch(end)}&step=${step}&query=${encodeURI(query)}`;
-        const url = `${this.prometheusApi}/api/v1/query_range?${params}`;
-        let metrics;
-        const response = await fetch(url);
-        if (response.ok) {
-            metrics = await response.json();
-        } else {
-            throw new Error(response.statusText);
-        }
-        return metrics;
     }
 
     async removeInstancesOlderThanTwoDays(): Promise<void> {

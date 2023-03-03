@@ -68,15 +68,20 @@ From here, if you have the correct permissions, you can approve and apply the ch
 
 ## Change request permissions
 
-As a result of adding change requests, we have added three new environment specific permissions:
-* Approve change request
-* Apply change request
-* Skip change request
+Change requests have their own set of environment-specific permissions that can be applied to [custom project roles](rbac.md#custom-project-roles). These permissions let users
 
-These permisssions can be used to compose [project roles](../how-to/how-to-create-and-assign-custom-project-roles.md).
+- approve change requests
+- apply change requests
+- skip the change request flow **when using the API directly**
 
-Once you have created a custom project role that has the correct permissions, you can assign it to a user or group of users in the project settings access section. These users will then assume permissions according to the role they have been assigned.
+None of the standard roles have any change request permissions, so you must create your own project roles to take advantage of change requests. In other words, even a user with the project "owner" role can not approve or apply change requests.
+
+There is no permission to create change requests: **Anyone can create change requests**, even Unleash users with the [global viewer role](rbac.md#standard-roles). Change requests don't cause any changes until approved and applied by someone with the correct permissions.
 
 ### Circumventing change requests
 
-In the event that you need API access to directly turn something off without going through the change request procedure, you can leverage the skip change request permission. The holder of this permission can bypass the change request procedure and directly change the feature toggle configuration, depending on the other permissions they have. The skip change request permission is only valid for circumventing the change request flow, you still need to explicitly grant the user the permissions for the actions you'd like to perform. IE: Changing a toggle status in an environment, or adding a strategy to a toggle in an environment.
+The **skip change requests** permission allows users to bypass the change request flow when calling the API directly. Users with this permission can change feature toggles directly (they are of course still limited by any other permissions they have). This permission does **not** allow users to bypass the change request flow in the admin UI.
+
+The skip change requests permission was designed specifically to allow automation of Unleash. Specifically, we wanted to make it possible to quickly and automatically turn something off in the event that a feature release didn't go as expected or was causing issues.
+
+The skip change requests permission does **not** grant any other permissions, so to be allowed to do things as enabling/disabling a toggle, the user will still need the explicit permissions to do that too.

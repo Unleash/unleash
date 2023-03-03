@@ -1,5 +1,6 @@
 import { Box, styled, Typography } from '@mui/material';
 import { ProjectStatsSchema } from 'openapi/models';
+import { HelpPopper } from './HelpPopper';
 import { StatusBox } from './StatusBox';
 
 const StyledBox = styled(Box)(({ theme }) => ({
@@ -20,6 +21,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
 }));
 
 const StyledWidget = styled(Box)(({ theme }) => ({
+    position: 'relative',
     padding: theme.spacing(3),
     backgroundColor: theme.palette.background.paper,
     flex: 1,
@@ -69,11 +71,14 @@ export const ProjectStats = ({ stats }: IProjectStatsProps) => {
                     title="Total changes"
                     boxText={String(projectActivityCurrentWindow)}
                     change={
-                        projectActivityCurrentWindow -
-                        projectActivityPastWindow -
-                        20
+                        projectActivityCurrentWindow - projectActivityPastWindow
                     }
-                />
+                >
+                    <HelpPopper id="total-changes">
+                        Sum of all configuration and state modifications in the
+                        project.
+                    </HelpPopper>
+                </StatusBox>
             </StyledWidget>
             <StyledWidget>
                 <StatusBox
@@ -95,7 +100,13 @@ export const ProjectStats = ({ stats }: IProjectStatsProps) => {
                         avgTimeToProdPastWindow
                     )}
                     percentage
-                />
+                >
+                    <HelpPopper id="avg-time-to-prod">
+                        How long did it take on average from a feature toggle
+                        was created until it was enabled in an environment of
+                        type production.
+                    </HelpPopper>
+                </StatusBox>
             </StyledWidget>
             <StyledWidget>
                 <StatusBox

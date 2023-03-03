@@ -13,7 +13,7 @@ export interface IUiConfig {
     links: ILinks[];
     disablePasswordAuth?: boolean;
     emailEnabled?: boolean;
-
+    networkViewEnabled: boolean;
     maintenanceMode?: boolean;
     toast?: IProclamationToast;
     segmentValuesLimit?: number;
@@ -38,9 +38,6 @@ export interface IFlags {
     UG?: boolean;
     ENABLE_DARK_MODE_SUPPORT?: boolean;
     embedProxyFrontend?: boolean;
-    variantsPerEnvironment?: boolean;
-    networkView?: boolean;
-    maintenance?: boolean;
     maintenanceMode?: boolean;
     messageBanner?: boolean;
     featuresExportImport?: boolean;
@@ -48,6 +45,9 @@ export interface IFlags {
     caseInsensitiveInOperators?: boolean;
     crOnVariants?: boolean;
     showProjectApiAccess?: boolean;
+    proPlanAutoCharge?: boolean;
+    notifications?: boolean;
+    loginHistory?: boolean;
 }
 
 export interface IVersionInfo {

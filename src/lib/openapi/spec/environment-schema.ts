@@ -5,33 +5,51 @@ export const environmentSchema = {
     type: 'object',
     additionalProperties: false,
     required: ['name', 'type', 'enabled'],
+    description: 'A definition of the project environment',
     properties: {
         name: {
             type: 'string',
+            example: 'my-dev-env',
+            description: 'The name of the environment',
         },
         type: {
             type: 'string',
+            example: 'development',
+            description: 'The type of the environment',
         },
         enabled: {
             type: 'boolean',
+            example: true,
+            description:
+                '`true` if the environment is enabled for the project, otherwise `false`.',
         },
         protected: {
             type: 'boolean',
         },
         sortOrder: {
             type: 'number',
+            example: 3,
+            description:
+                'The sort order of the environment in the environments list',
         },
         projectCount: {
             type: 'number',
             nullable: true,
+            example: 10,
+            description: 'The number of projects with this environment',
         },
         apiTokenCount: {
             type: 'number',
             nullable: true,
+            example: 6,
+            description: 'The number of API tokens for the project environment',
         },
         enabledToggleCount: {
             type: 'number',
             nullable: true,
+            example: 10,
+            description:
+                'The number of enabled toggles for the project environment',
         },
     },
     components: {},

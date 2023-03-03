@@ -8,6 +8,7 @@ export interface ImportQuerySchema {
 export interface IValidationSchema {
     errors: Array<{ message: string; affectedItems: Array<string> }>;
     warnings: Array<{ message: string; affectedItems: Array<string> }>;
+    permissions: Array<{ message: string; affectedItems: Array<string> }>;
 }
 
 export const useValidateImportApi = () => {
@@ -18,7 +19,7 @@ export const useValidateImportApi = () => {
     const validateImport = async (
         payload: ImportQuerySchema
     ): Promise<IValidationSchema> => {
-        const path = `api/admin/features-batch/full-validate`;
+        const path = `api/admin/features-batch/validate`;
         const req = createRequest(path, {
             method: 'POST',
             body: JSON.stringify(payload),

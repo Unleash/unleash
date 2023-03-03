@@ -318,6 +318,7 @@ export const FeatureEnvironmentVariants = () => {
                                 )}
                                 show={
                                     <PermissionIconButton
+                                        data-testid="EDIT_VARIANTS_BUTTON"
                                         onClick={() =>
                                             editVariants(environment)
                                         }
@@ -326,12 +327,16 @@ export const FeatureEnvironmentVariants = () => {
                                         }
                                         projectId={projectId}
                                         environmentId={environment.name}
+                                        tooltipProps={{
+                                            title: 'Edit variants',
+                                        }}
                                     >
                                         <Edit />
                                     </PermissionIconButton>
                                 }
                                 elseShow={
                                     <PermissionButton
+                                        data-testid="ADD_VARIANT_BUTTON"
                                         onClick={() =>
                                             editVariants(environment)
                                         }

@@ -28,4 +28,5 @@ export const defaultValue: IUiConfig = {
             title: 'Source code on GitHub',
         },
     ],
+    networkViewEnabled: false,
 };

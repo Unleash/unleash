@@ -1331,7 +1331,7 @@ class FeatureToggleService {
         featureName: string,
         environment: string,
         newVariants: IVariant[],
-        createdBy: string,
+        user: User,
         oldVariants?: IVariant[],
     ): Promise<IVariant[]> {
         await variantsArraySchema.validateAsync(newVariants);
@@ -1350,7 +1350,7 @@ class FeatureToggleService {
                 featureName,
                 environment,
                 project: projectId,
-                createdBy,
+                createdBy: user,
                 oldVariants: theOldVariants,
                 newVariants: fixedVariants,
             }),
@@ -1383,7 +1383,7 @@ class FeatureToggleService {
             featureName,
             environment,
             newVariants,
-            user.username,
+            user,
             oldVariants,
         );
     }
@@ -1405,7 +1405,7 @@ class FeatureToggleService {
             featureName,
             environments,
             newVariants,
-            user.username,
+            user,
         );
     }
 
@@ -1414,7 +1414,7 @@ class FeatureToggleService {
         featureName: string,
         environments: string[],
         newVariants: IVariant[],
-        createdBy: string,
+        user: User,
     ): Promise<IVariant[]> {
         await variantsArraySchema.validateAsync(newVariants);
         const fixedVariants = this.fixVariantWeights(newVariants);
@@ -1436,7 +1436,7 @@ class FeatureToggleService {
                         featureName,
                         environment,
                         project: projectId,
-                        createdBy,
+                        createdBy: user,
                         oldVariants: oldVariants[environment],
                         newVariants: fixedVariants,
                     }),

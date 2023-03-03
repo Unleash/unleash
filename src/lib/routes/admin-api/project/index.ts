@@ -17,10 +17,11 @@ import { serializeDates } from '../../../types/serialize-dates';
 import { createResponseSchema } from '../../../openapi/util/create-response-schema';
 import { IAuthRequest } from '../../unleash-types';
 import {
-    HealthOverviewSchema,
-    healthOverviewSchema,
+    ProjectOverviewSchema,
+    projectOverviewSchema,
 } from '../../../../lib/openapi';
 import { IArchivedQuery, IProjectParam } from '../../../types/model';
+import { ProjectApiTokenController } from './api-token';
 
 export default class ProjectApi extends Controller {
     private projectService: ProjectService;
@@ -68,6 +69,7 @@ export default class ProjectApi extends Controller {
         this.use('/', new EnvironmentsController(config, services).router);
         this.use('/', new ProjectHealthReport(config, services).router);
         this.use('/', new VariantsController(config, services).router);
+        this.use('/', new ProjectApiTokenController(config, services).router);
     }
 
     async getProjects(
@@ -92,7 +94,7 @@ export default class ProjectApi extends Controller {
 
     async getProjectOverview(
         req: IAuthRequest<IProjectParam, unknown, unknown, IArchivedQuery>,
-        res: Response<HealthOverviewSchema>,
+        res: Response<ProjectOverviewSchema>,
     ): Promise<void> {
         const { projectId } = req.params;
         const { archived } = req.query;
@@ -105,7 +107,7 @@ export default class ProjectApi extends Controller {
         this.openApiService.respondWithValidation(
             200,
             res,
-            healthOverviewSchema.$id,
+            projectOverviewSchema.$id,
             serializeDates(overview),
         );
     }

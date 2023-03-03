@@ -8,7 +8,7 @@ import { EventOptions, PlausibleOptions } from 'plausible-tracker';
  * @see https://plausible.io/docs/custom-event-goals#2-create-a-custom-event-goal-in-your-plausible-analytics-account
  * @example `'download | 'invite' | 'signup'`
  **/
-type CustomEvents =
+export type CustomEvents =
     | 'invite'
     | 'upgrade_plan_clicked'
     | 'change_request'
@@ -16,7 +16,12 @@ type CustomEvents =
     | 'maintenance'
     | 'message_banner'
     | 'hidden_environment'
-    | 'unknown_ui_error';
+    | 'project_overview'
+    | 'suggest_tags'
+    | 'unknown_ui_error'
+    | 'export_import'
+    | 'project_api_tokens'
+    | 'notifications';
 
 export const usePlausibleTracker = () => {
     const plausible = useContext(PlausibleContext);

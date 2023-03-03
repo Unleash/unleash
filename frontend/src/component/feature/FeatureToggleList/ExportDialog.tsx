@@ -3,17 +3,16 @@ import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { useExportApi } from 'hooks/api/actions/useExportApi/useExportApi';
 import useToast from 'hooks/useToast';
-import { IEnvironment } from 'interfaces/environments';
 import { FeatureSchema } from 'openapi';
 
-import { createRef, useState } from 'react';
+import { createRef, useEffect, useState } from 'react';
 import { formatUnknownError } from 'utils/formatUnknownError';
 
 interface IExportDialogProps {
     showExportDialog: boolean;
     data: FeatureSchema[];
     onClose: () => void;
-    environments: IEnvironment[];
+    environments: string[];
 }
 
 const StyledSelect = styled(GeneralSelect)(({ theme }) => ({
@@ -27,15 +26,15 @@ export const ExportDialog = ({
     onClose,
     environments,
 }: IExportDialogProps) => {
-    const [selected, setSelected] = useState(environments[0].name);
+    const [selected, setSelected] = useState(environments[0]);
     const { createExport } = useExportApi();
     const ref = createRef<HTMLDivElement>();
     const { setToastApiError } = useToast();
 
     const getOptions = () =>
         environments.map(env => ({
-            key: env.name,
-            label: env.name,
+            key: env,
+            label: env,
         }));
 
     const getPayload = () => {

@@ -37,9 +37,10 @@ import { LastSeenService } from '../services/client-metrics/last-seen-service';
 import { InstanceStatsService } from '../services/instance-stats-service';
 import { FavoritesService } from '../services/favorites-service';
 import MaintenanceService from '../services/maintenance-service';
-import ExportImportService from 'lib/services/export-import-service';
 import { AccountService } from '../services/account-service';
 import { SchedulerService } from '../services/scheduler-service';
+import { Knex } from 'knex';
+import ExportImportService from '../features/export-import-toggles/export-import-service';
 
 export interface IUnleashServices {
     accessService: AccessService;
@@ -85,4 +86,7 @@ export interface IUnleashServices {
     maintenanceService: MaintenanceService;
     exportImportService: ExportImportService;
     schedulerService: SchedulerService;
+    transactionalExportImportService: (
+        db: Knex.Transaction,
+    ) => ExportImportService;
 }

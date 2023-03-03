@@ -33,6 +33,7 @@ import { UsersActionsCell } from './UsersActionsCell/UsersActionsCell';
 import { Search } from 'component/common/Search/Search';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
+import { UserLimitWarning } from './UserLimitWarning/UserLimitWarning';
 
 const UsersList = () => {
     const navigate = useNavigate();
@@ -96,16 +97,6 @@ const UsersList = () => {
     const columns = useMemo(
         () => [
             {
-                id: 'type',
-                Header: 'Type',
-                accessor: 'paid',
-                Cell: ({ row: { original: user } }: any) => (
-                    <UserTypeCell value={isBillingUsers && user.paid} />
-                ),
-                disableGlobalFilter: true,
-                sortType: 'boolean',
-            },
-            {
                 Header: 'Avatar',
                 accessor: 'imageUrl',
                 Cell: ({ row: { original: user } }: any) => (
@@ -161,6 +152,17 @@ const UsersList = () => {
                 disableGlobalFilter: true,
                 sortType: 'date',
                 maxWidth: 150,
+            },
+            {
+                id: 'type',
+                Header: 'Type',
+                accessor: 'paid',
+                maxWidth: 100,
+                Cell: ({ row: { original: user } }: any) => (
+                    <UserTypeCell value={isBillingUsers && user.paid} />
+                ),
+                disableGlobalFilter: true,
+                sortType: 'boolean',
             },
             {
                 Header: 'Actions',
@@ -262,6 +264,7 @@ const UsersList = () => {
                 />
             }
         >
+            <UserLimitWarning />
             <SearchHighlightProvider value={globalFilter}>
                 <VirtualizedTable
                     rows={rows}

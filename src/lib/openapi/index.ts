@@ -128,6 +128,9 @@ import {
     variantsSchema,
     versionSchema,
     projectOverviewSchema,
+    importTogglesSchema,
+    importTogglesValidateSchema,
+    importTogglesValidateItemSchema,
 } from './spec';
 import { IServerOption } from '../types';
 import { mapValues, omitKeys } from '../util';
@@ -135,6 +138,9 @@ import { openApiTags } from './util';
 import { URL } from 'url';
 import apiVersion from '../util/version';
 import { maintenanceSchema } from './spec/maintenance-schema';
+import { bulkRegistrationSchema } from './spec/bulk-registration-schema';
+import { bulkMetricsSchema } from './spec/bulk-metrics-schema';
+import { clientMetricsEnvSchema } from './spec/client-metrics-env-schema';
 
 // All schemas in `openapi/spec` should be listed here.
 export const schemas = {
@@ -147,12 +153,15 @@ export const schemas = {
     apiTokensSchema,
     applicationSchema,
     applicationsSchema,
+    bulkRegistrationSchema,
+    bulkMetricsSchema,
     changePasswordSchema,
     clientApplicationSchema,
     clientFeatureSchema,
     clientFeaturesQuerySchema,
     clientFeaturesSchema,
     clientMetricsSchema,
+    clientMetricsEnvSchema,
     cloneFeatureSchema,
     constraintSchema,
     contextFieldSchema,
@@ -267,6 +276,9 @@ export const schemas = {
     variantsSchema,
     versionSchema,
     projectOverviewSchema,
+    importTogglesSchema,
+    importTogglesValidateSchema,
+    importTogglesValidateItemSchema,
 };
 
 // Schemas must have an $id property on the form "#/components/schemas/mySchema".

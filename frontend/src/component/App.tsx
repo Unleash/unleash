@@ -1,4 +1,4 @@
-import { Suspense } from 'react';
+import { Suspense, useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Error } from 'component/layout/Error/Error';
@@ -29,6 +29,8 @@ const StyledContainer = styled('div')(() => ({
 
 export const App = () => {
     const { authDetails } = useAuthDetails();
+    const { refetch: refetchUiConfig } = useUiConfig();
+
     const { user } = useAuthUser();
     const hasFetchedAuth = Boolean(authDetails || user);
 
@@ -37,6 +39,12 @@ export const App = () => {
     const availableRoutes = isOss()
         ? routes.filter(route => !route.enterprise)
         : routes;
+
+    useEffect(() => {
+        if (hasFetchedAuth && Boolean(user?.id)) {
+            refetchUiConfig();
+        }
+    }, [authDetails, user]);
 
     return (
         <ErrorBoundary FallbackComponent={Error}>
@@ -49,12 +57,9 @@ export const App = () => {
                             elseShow={
                                 <>
                                     <ConditionallyRender
-                                        condition={
-                                            Boolean(
-                                                uiConfig?.flags?.maintenance
-                                            ) &&
-                                            Boolean(uiConfig?.maintenanceMode)
-                                        }
+                                        condition={Boolean(
+                                            uiConfig?.maintenanceMode
+                                        )}
                                         show={<MaintenanceBanner />}
                                     />
                                     <StyledContainer>

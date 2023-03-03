@@ -18,7 +18,7 @@ import {
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import FeatureLog from './FeatureLog/FeatureLog';
 import FeatureOverview from './FeatureOverview/FeatureOverview';
-import FeatureVariants from './FeatureVariants/FeatureVariants';
+import { FeatureEnvironmentVariants } from './FeatureVariants/FeatureEnvironmentVariants/FeatureEnvironmentVariants';
 import { FeatureMetrics } from './FeatureMetrics/FeatureMetrics';
 import { FeatureSettings } from './FeatureSettings/FeatureSettings';
 import useLoading from 'hooks/useLoading';
@@ -233,7 +233,10 @@ export const FeatureView = () => {
             <Routes>
                 <Route path="metrics" element={<FeatureMetrics />} />
                 <Route path="logs" element={<FeatureLog />} />
-                <Route path="variants" element={<FeatureVariants />} />
+                <Route
+                    path="variants"
+                    element={<FeatureEnvironmentVariants />}
+                />
                 <Route path="settings" element={<FeatureSettings />} />
                 <Route path="*" element={<FeatureOverview />} />
             </Routes>

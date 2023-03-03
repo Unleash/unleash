@@ -15,7 +15,7 @@ function AdminMenu() {
     const { uiConfig, isEnterprise } = useUiConfig();
     const { pathname } = useLocation();
     const { isBilling } = useInstanceStatus();
-    const { flags } = uiConfig;
+    const { flags, networkViewEnabled } = uiConfig;
 
     const activeTab = pathname.split('/')[2];
 
@@ -99,7 +99,7 @@ function AdminMenu() {
                         </CenteredNavLink>
                     }
                 />
-                {flags.networkView && (
+                {networkViewEnabled && (
                     <Tab
                         value="network"
                         label={
@@ -109,16 +109,15 @@ function AdminMenu() {
                         }
                     />
                 )}
-                {flags.maintenance && (
-                    <Tab
-                        value="maintenance"
-                        label={
-                            <CenteredNavLink to="/admin/maintenance">
-                                Maintenance
-                            </CenteredNavLink>
-                        }
-                    />
-                )}
+
+                <Tab
+                    value="maintenance"
+                    label={
+                        <CenteredNavLink to="/admin/maintenance">
+                            Maintenance
+                        </CenteredNavLink>
+                    }
+                />
 
                 {isBilling && (
                     <Tab

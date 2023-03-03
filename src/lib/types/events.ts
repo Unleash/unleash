@@ -1,5 +1,7 @@
+import { extractUsernameFromUser } from '../util';
 import { FeatureToggle, IStrategyConfig, ITag, IVariant } from './model';
 import { IApiToken } from './models/api-token';
+import { IUser } from './user';
 
 export const APPLICATION_CREATED = 'application-created';
 
@@ -104,8 +106,8 @@ export const FEATURE_FAVORITED = 'feature-favorited';
 export const FEATURE_UNFAVORITED = 'feature-unfavorited';
 export const PROJECT_FAVORITED = 'project-favorited';
 export const PROJECT_UNFAVORITED = 'project-unfavorited';
-
 export const FEATURES_EXPORTED = 'features-exported';
+export const FEATURES_IMPORTED = 'features-imported';
 
 export interface IBaseEvent {
     type: string;
@@ -135,9 +137,15 @@ class BaseEvent implements IBaseEvent {
 
     readonly tags: ITag[];
 
-    constructor(type: string, createdBy: string, tags: ITag[] = []) {
+    /**
+     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
+     */
+    constructor(type: string, createdBy: string | IUser, tags: ITag[] = []) {
         this.type = type;
-        this.createdBy = createdBy;
+        this.createdBy =
+            typeof createdBy === 'string'
+                ? createdBy
+                : extractUsernameFromUser(createdBy);
         this.tags = tags;
     }
 }
@@ -147,11 +155,14 @@ export class FeatureStaleEvent extends BaseEvent {
 
     readonly featureName: string;
 
+    /**
+     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
+     */
     constructor(p: {
         stale: boolean;
         project: string;
         featureName: string;
-        createdBy: string;
+        createdBy: string | IUser;
         tags: ITag[];
     }) {
         super(
@@ -171,12 +182,15 @@ export class FeatureEnvironmentEvent extends BaseEvent {
 
     readonly environment: string;
 
+    /**
+     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
+     */
     constructor(p: {
         enabled: boolean;
         project: string;
         featureName: string;
         environment: string;
-        createdBy: string;
+        createdBy: string | IUser;
         tags: ITag[];
     }) {
         super(
@@ -201,10 +215,13 @@ export class FeatureVariantEvent extends BaseEvent {
 
     readonly preData: { variants: IVariant[] };
 
+    /**
+     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
+     */
     constructor(p: {
         project: string;
         featureName: string;
-        createdBy: string;
+        createdBy: string | IUser;
         tags: ITag[];
         newVariants: IVariant[];
         oldVariants: IVariant[];
@@ -228,11 +245,14 @@ export class EnvironmentVariantEvent extends BaseEvent {
 
     readonly preData: { variants: IVariant[] };
 
+    /**
+     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
+     */
     constructor(p: {
         featureName: string;
         environment: string;
         project: string;
-        createdBy: string;
+        createdBy: string | IUser;
         newVariants: IVariant[];
         oldVariants: IVariant[];
     }) {
@@ -255,11 +275,14 @@ export class FeatureChangeProjectEvent extends BaseEvent {
         newProject: string;
     };
 
+    /**
+     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
+     */
     constructor(p: {
         oldProject: string;
         newProject: string;
         featureName: string;
-        createdBy: string;
+        createdBy: string | IUser;
         tags: ITag[];
     }) {
         super(FEATURE_PROJECT_CHANGE, p.createdBy, p.tags);
@@ -277,10 +300,13 @@ export class FeatureCreatedEvent extends BaseEvent {
 
     readonly data: FeatureToggle;
 
+    /**
+     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
+     */
     constructor(p: {
         project: string;
         featureName: string;
-        createdBy: string;
+        createdBy: string | IUser;
         data: FeatureToggle;
         tags: ITag[];
     }) {
@@ -297,10 +323,13 @@ export class FeatureArchivedEvent extends BaseEvent {
 
     readonly featureName: string;
 
+    /**
+     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
+     */
     constructor(p: {
         project: string;
         featureName: string;
-        createdBy: string;
+        createdBy: string | IUser;
         tags: ITag[];
     }) {
         super(FEATURE_ARCHIVED, p.createdBy, p.tags);
@@ -315,10 +344,13 @@ export class FeatureRevivedEvent extends BaseEvent {
 
     readonly featureName: string;
 
+    /**
+     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
+     */
     constructor(p: {
         project: string;
         featureName: string;
-        createdBy: string;
+        createdBy: string | IUser;
         tags: ITag[];
     }) {
         super(FEATURE_REVIVED, p.createdBy, p.tags);
@@ -335,11 +367,14 @@ export class FeatureDeletedEvent extends BaseEvent {
 
     readonly preData: FeatureToggle;
 
+    /**
+     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
+     */
     constructor(p: {
         project: string;
         featureName: string;
         preData: FeatureToggle;
-        createdBy: string;
+        createdBy: string | IUser;
         tags: ITag[];
     }) {
         super(FEATURE_DELETED, p.createdBy, p.tags);
@@ -359,9 +394,12 @@ export class FeatureMetadataUpdateEvent extends BaseEvent {
 
     readonly preData: FeatureToggle;
 
+    /**
+     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
+     */
     constructor(p: {
         featureName: string;
-        createdBy: string;
+        createdBy: string | IUser;
         project: string;
         data: FeatureToggle;
         preData: FeatureToggle;
@@ -385,11 +423,14 @@ export class FeatureStrategyAddEvent extends BaseEvent {
 
     readonly data: IStrategyConfig;
 
+    /**
+     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
+     */
     constructor(p: {
         project: string;
         featureName: string;
         environment: string;
-        createdBy: string;
+        createdBy: string | IUser;
         data: IStrategyConfig;
         tags: ITag[];
     }) {
@@ -413,11 +454,14 @@ export class FeatureStrategyUpdateEvent extends BaseEvent {
 
     readonly preData: IStrategyConfig;
 
+    /**
+     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
+     */
     constructor(p: {
         project: string;
         featureName: string;
         environment: string;
-        createdBy: string;
+        createdBy: string | IUser;
         data: IStrategyConfig;
         preData: IStrategyConfig;
         tags: ITag[];
@@ -441,11 +485,14 @@ export class FeatureStrategyRemoveEvent extends BaseEvent {
 
     readonly preData: IStrategyConfig;
 
+    /**
+     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
+     */
     constructor(p: {
         project: string;
         featureName: string;
         environment: string;
-        createdBy: string;
+        createdBy: string | IUser;
         preData: IStrategyConfig;
         tags: ITag[];
     }) {
@@ -465,7 +512,10 @@ export class ProjectUserAddedEvent extends BaseEvent {
 
     readonly preData: any;
 
-    constructor(p: { project: string; createdBy: string; data: any }) {
+    /**
+     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
+     */
+    constructor(p: { project: string; createdBy: string | IUser; data: any }) {
         super(PROJECT_USER_ADDED, p.createdBy);
         const { project, data } = p;
         this.project = project;
@@ -481,7 +531,14 @@ export class ProjectUserRemovedEvent extends BaseEvent {
 
     readonly preData: any;
 
-    constructor(p: { project: string; createdBy: string; preData: any }) {
+    /**
+     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
+     */
+    constructor(p: {
+        project: string;
+        createdBy: string | IUser;
+        preData: any;
+    }) {
         super(PROJECT_USER_REMOVED, p.createdBy);
         const { project, preData } = p;
         this.project = project;
@@ -497,9 +554,12 @@ export class ProjectUserUpdateRoleEvent extends BaseEvent {
 
     readonly preData: any;
 
+    /**
+     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
+     */
     constructor(eventData: {
         project: string;
-        createdBy: string;
+        createdBy: string | IUser;
         data: any;
         preData: any;
     }) {
@@ -518,7 +578,10 @@ export class ProjectGroupAddedEvent extends BaseEvent {
 
     readonly preData: any;
 
-    constructor(p: { project: string; createdBy: string; data: any }) {
+    /**
+     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
+     */
+    constructor(p: { project: string; createdBy: string | IUser; data: any }) {
         super(PROJECT_GROUP_ADDED, p.createdBy);
         const { project, data } = p;
         this.project = project;
@@ -534,7 +597,14 @@ export class ProjectGroupRemovedEvent extends BaseEvent {
 
     readonly preData: any;
 
-    constructor(p: { project: string; createdBy: string; preData: any }) {
+    /**
+     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
+     */
+    constructor(p: {
+        project: string;
+        createdBy: string | IUser;
+        preData: any;
+    }) {
         super(PROJECT_GROUP_REMOVED, p.createdBy);
         const { project, preData } = p;
         this.project = project;
@@ -550,9 +620,12 @@ export class ProjectGroupUpdateRoleEvent extends BaseEvent {
 
     readonly preData: any;
 
+    /**
+     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
+     */
     constructor(eventData: {
         project: string;
-        createdBy: string;
+        createdBy: string | IUser;
         data: any;
         preData: any;
     }) {
@@ -567,7 +640,10 @@ export class ProjectGroupUpdateRoleEvent extends BaseEvent {
 export class SettingCreatedEvent extends BaseEvent {
     readonly data: any;
 
-    constructor(eventData: { createdBy: string; data: any }) {
+    /**
+     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
+     */
+    constructor(eventData: { createdBy: string | IUser; data: any }) {
         super(SETTING_CREATED, eventData.createdBy);
         this.data = eventData.data;
     }
@@ -576,7 +652,10 @@ export class SettingCreatedEvent extends BaseEvent {
 export class SettingDeletedEvent extends BaseEvent {
     readonly data: any;
 
-    constructor(eventData: { createdBy: string; data: any }) {
+    /**
+     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
+     */
+    constructor(eventData: { createdBy: string | IUser; data: any }) {
         super(SETTING_DELETED, eventData.createdBy);
         this.data = eventData.data;
     }
@@ -585,7 +664,10 @@ export class SettingDeletedEvent extends BaseEvent {
 export class SettingUpdatedEvent extends BaseEvent {
     readonly data: any;
 
-    constructor(eventData: { createdBy: string; data: any }) {
+    /**
+     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
+     */
+    constructor(eventData: { createdBy: string | IUser; data: any }) {
         super(SETTING_UPDATED, eventData.createdBy);
         this.data = eventData.data;
     }
@@ -594,7 +676,10 @@ export class SettingUpdatedEvent extends BaseEvent {
 export class PublicSignupTokenCreatedEvent extends BaseEvent {
     readonly data: any;
 
-    constructor(eventData: { createdBy: string; data: any }) {
+    /**
+     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
+     */
+    constructor(eventData: { createdBy: string | IUser; data: any }) {
         super(PUBLIC_SIGNUP_TOKEN_CREATED, eventData.createdBy);
         this.data = eventData.data;
     }
@@ -603,7 +688,10 @@ export class PublicSignupTokenCreatedEvent extends BaseEvent {
 export class PublicSignupTokenUpdatedEvent extends BaseEvent {
     readonly data: any;
 
-    constructor(eventData: { createdBy: string; data: any }) {
+    /**
+     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
+     */
+    constructor(eventData: { createdBy: string | IUser; data: any }) {
         super(PUBLIC_SIGNUP_TOKEN_TOKEN_UPDATED, eventData.createdBy);
         this.data = eventData.data;
     }
@@ -612,7 +700,10 @@ export class PublicSignupTokenUpdatedEvent extends BaseEvent {
 export class PublicSignupTokenUserAddedEvent extends BaseEvent {
     readonly data: any;
 
-    constructor(eventData: { createdBy: string; data: any }) {
+    /**
+     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
+     */
+    constructor(eventData: { createdBy: string | IUser; data: any }) {
         super(PUBLIC_SIGNUP_TOKEN_USER_ADDED, eventData.createdBy);
         this.data = eventData.data;
     }
@@ -625,8 +716,11 @@ export class ApiTokenCreatedEvent extends BaseEvent {
 
     readonly project: string;
 
+    /**
+     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
+     */
     constructor(eventData: {
-        createdBy: string;
+        createdBy: string | IUser;
         apiToken: Omit<IApiToken, 'secret'>;
     }) {
         super(API_TOKEN_CREATED, eventData.createdBy);
@@ -643,8 +737,11 @@ export class ApiTokenDeletedEvent extends BaseEvent {
 
     readonly project: string;
 
+    /**
+     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
+     */
     constructor(eventData: {
-        createdBy: string;
+        createdBy: string | IUser;
         apiToken: Omit<IApiToken, 'secret'>;
     }) {
         super(API_TOKEN_DELETED, eventData.createdBy);
@@ -663,8 +760,11 @@ export class ApiTokenUpdatedEvent extends BaseEvent {
 
     readonly project: string;
 
+    /**
+     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
+     */
     constructor(eventData: {
-        createdBy: string;
+        createdBy: string | IUser;
         previousToken: Omit<IApiToken, 'secret'>;
         apiToken: Omit<IApiToken, 'secret'>;
     }) {

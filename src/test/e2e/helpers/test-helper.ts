@@ -9,6 +9,7 @@ import { createServices } from '../../../lib/services';
 import sessionDb from '../../../lib/middleware/session-db';
 import { IUnleashStores } from '../../../lib/types';
 import { IUnleashServices } from '../../../lib/types/services';
+import { Db } from '../../../lib/db/db';
 
 process.env.NODE_ENV = 'test';
 
@@ -24,6 +25,7 @@ async function createApp(
     adminAuthentication = IAuthType.NONE,
     preHook?: Function,
     customOptions?: any,
+    db?: Db,
 ): Promise<IUnleashTest> {
     const config = createTestConfig({
         authentication: {
@@ -35,11 +37,11 @@ async function createApp(
         },
         ...customOptions,
     });
-    const services = createServices(stores, config);
+    const services = createServices(stores, config, db);
     const unleashSession = sessionDb(config, undefined);
     const emitter = new EventEmitter();
     emitter.setMaxListeners(0);
-    const app = await getApp(config, stores, services, unleashSession);
+    const app = await getApp(config, stores, services, unleashSession, db);
     const request = supertest.agent(app);
 
     const destroy = async () => {
@@ -60,15 +62,17 @@ export async function setupApp(stores: IUnleashStores): Promise<IUnleashTest> {
 export async function setupAppWithCustomConfig(
     stores: IUnleashStores,
     customOptions: any,
+    db?: Db,
 ): Promise<IUnleashTest> {
-    return createApp(stores, undefined, undefined, customOptions);
+    return createApp(stores, undefined, undefined, customOptions, db);
 }
 
 export async function setupAppWithAuth(
     stores: IUnleashStores,
     customOptions?: any,
+    db?: Db,
 ): Promise<IUnleashTest> {
-    return createApp(stores, IAuthType.DEMO, undefined, customOptions);
+    return createApp(stores, IAuthType.DEMO, undefined, customOptions, db);
 }
 
 export async function setupAppWithCustomAuth(

@@ -107,6 +107,13 @@ main :is(p, figure) > img:not([src^="https://img.shields.io/" i], [src*="badge.s
     margin: auto;
 }
 
+/* mermaid diagrams */
+.docusaurus-mermaid-container {
+    display: flex;
+    justify-content: center;
+    margin-block: calc(1.5 * var(--ifm-spacing-vertical));
+}
+
 [class^='docTitle'] {
     font-size: 2.5rem !important;
 }

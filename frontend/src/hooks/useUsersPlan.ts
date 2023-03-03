@@ -1,18 +1,24 @@
 import { IUser } from 'interfaces/user';
 import { useMemo } from 'react';
 import { useInstanceStatus } from './api/getters/useInstanceStatus/useInstanceStatus';
-import { STRIPE } from 'component/admin/billing/flags';
 import { InstancePlan } from 'interfaces/instance';
+import useUiConfig from './api/getters/useUiConfig/useUiConfig';
 
 export interface IUsersPlanOutput {
     planUsers: IUser[];
     isBillingUsers: boolean;
+    seats: number;
+    extraSeats: number;
 }
 
 export const useUsersPlan = (users: IUser[]): IUsersPlanOutput => {
     const { instanceStatus } = useInstanceStatus();
+    const { uiConfig } = useUiConfig();
 
-    const isBillingUsers = STRIPE && instanceStatus?.plan === InstancePlan.PRO;
+    const isBillingUsers = Boolean(
+        uiConfig?.flags?.proPlanAutoCharge &&
+            instanceStatus?.plan === InstancePlan.PRO
+    );
     const seats = instanceStatus?.seats ?? 5;
 
     const planUsers = useMemo(
@@ -20,7 +26,11 @@ export const useUsersPlan = (users: IUser[]): IUsersPlanOutput => {
         [users, isBillingUsers, seats]
     );
 
+    const extraSeats = planUsers.filter(user => user.paid).length;
+
     return {
+        seats,
+        extraSeats,
         planUsers,
         isBillingUsers,
     };

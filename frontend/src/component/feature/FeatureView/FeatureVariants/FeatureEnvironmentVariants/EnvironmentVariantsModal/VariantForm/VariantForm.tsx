@@ -304,6 +304,7 @@ export const VariantForm = ({
             >
                 <div>
                     <IconButton
+                        data-testid={`VARIANT_DELETE_BUTTON_${variant.name}`}
                         onClick={() => removeVariant(variant.id)}
                         disabled={isProtectedVariant(variant)}
                     >
@@ -318,6 +319,7 @@ export const VariantForm = ({
                         This will be used to identify the variant in your code
                     </StyledSubLabel>
                     <StyledInput
+                        data-testid="VARIANT_NAME_INPUT"
                         autoFocus
                         label="Variant name"
                         error={Boolean(errors.name)}
@@ -336,6 +338,7 @@ export const VariantForm = ({
                                 label="Custom percentage"
                                 control={
                                     <Switch
+                                        data-testid="VARIANT_WEIGHT_CHECK"
                                         checked={customPercentage}
                                         onChange={e =>
                                             setCustomPercentage(
@@ -346,6 +349,7 @@ export const VariantForm = ({
                                 }
                             />
                             <StyledWeightInput
+                                data-testid="VARIANT_WEIGHT_INPUT"
                                 type="number"
                                 label="Variant weight"
                                 error={Boolean(errors.percentage)}

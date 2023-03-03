@@ -1,4 +1,5 @@
 import joi from 'joi';
+import { IMetricsBucket } from 'lib/types';
 
 const countSchema = joi
     .object()
@@ -9,8 +10,16 @@ const countSchema = joi
         variants: joi.object().pattern(joi.string(), joi.number().min(0)),
     });
 
+// validated type from client-metrics-schema.ts with default values
+export type ValidatedClientMetrics = {
+    environment?: string;
+    appName: string;
+    instanceId: string;
+    bucket: IMetricsBucket;
+};
+
 export const clientMetricsSchema = joi
-    .object()
+    .object<ValidatedClientMetrics>()
     .options({ stripUnknown: true })
     .keys({
         environment: joi.string().optional(),
@@ -25,6 +34,23 @@ export const clientMetricsSchema = joi
                 toggles: joi.object().pattern(/.*/, countSchema),
             }),
     });
+
+export const clientMetricsEnvSchema = joi
+    .object()
+    .options({ stripUnknown: true })
+    .keys({
+        featureName: joi.string().required(),
+        environment: joi.string().required(),
+        appName: joi.string().required(),
+        yes: joi.number().default(0),
+        no: joi.number().default(0),
+        timestamp: joi.date(),
+        variants: joi.object().pattern(joi.string(), joi.number().min(0)),
+    });
+export const clientMetricsEnvBulkSchema = joi
+    .array()
+    .items(clientMetricsEnvSchema)
+    .empty();
 
 export const applicationSchema = joi
     .object()
@@ -41,6 +67,14 @@ export const applicationSchema = joi
         color: joi.string().allow('').optional(),
         icon: joi.string().allow('').optional(),
         announced: joi.boolean().optional().default(false),
+    });
+
+export const batchMetricsSchema = joi
+    .object()
+    .options({ stripUnknown: true })
+    .keys({
+        applications: joi.array().items(applicationSchema),
+        metrics: joi.array().items(clientMetricsEnvSchema),
     });
 
 export const clientRegisterSchema = joi

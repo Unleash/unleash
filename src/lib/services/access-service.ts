@@ -105,7 +105,7 @@ export class AccessService {
      * @param projectId
      */
     async hasPermission(
-        user: User,
+        user: Pick<IUser, 'id' | 'permissions' | 'isAPI'>,
         permission: string,
         projectId?: string,
         environment?: string,
@@ -143,7 +143,9 @@ export class AccessService {
         }
     }
 
-    async getPermissionsForUser(user: IUser): Promise<IUserPermission[]> {
+    async getPermissionsForUser(
+        user: Pick<IUser, 'id' | 'isAPI' | 'permissions'>,
+    ): Promise<IUserPermission[]> {
         if (user.isAPI) {
             return user.permissions?.map((p) => ({
                 permission: p,

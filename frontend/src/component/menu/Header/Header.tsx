@@ -11,6 +11,7 @@ import {
     Switch,
     styled,
     Theme,
+    Box,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -38,6 +39,7 @@ import { useId } from 'hooks/useId';
 import { INavigationMenuItem } from 'interfaces/route';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { useThemeMode } from 'hooks/useThemeMode';
+import { Notifications } from 'component/common/Notifications/Notifications';
 
 const StyledHeader = styled(AppBar)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -209,6 +211,7 @@ const Header: VFC = () => {
                         }
                     />
                 </StyledLink>
+
                 <StyledNav>
                     <StyledLinks>
                         <StyledLink to="/projects">Projects</StyledLink>
@@ -246,6 +249,10 @@ const Header: VFC = () => {
                                     label="darkmode"
                                 />
                             }
+                        />
+                        <ConditionallyRender
+                            condition={Boolean(uiConfig?.flags?.notifications)}
+                            show={<Notifications />}
                         />
                         <Tooltip title="Documentation" arrow>
                             <IconButton

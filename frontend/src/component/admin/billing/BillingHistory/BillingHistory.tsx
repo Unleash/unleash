@@ -37,9 +37,12 @@ const columns = [
         disableGlobalFilter: true,
     },
     {
-        Header: 'Due date',
-        accessor: 'dueDate',
-        Cell: DateCell,
+        Header: 'Created date',
+        accessor: 'created',
+        Cell: ({ value }: { value: number }) => {
+            const date = new Date(value * 1000);
+            return <DateCell value={date} />;
+        },
         sortType: 'date',
         disableGlobalFilter: true,
     },
@@ -69,7 +72,7 @@ export const BillingHistory: VFC<IBillingHistoryProps> = ({
 }) => {
     const initialState = useMemo(
         () => ({
-            sortBy: [{ id: 'dueDate' }],
+            sortBy: [{ id: 'created' }],
         }),
         []
     );

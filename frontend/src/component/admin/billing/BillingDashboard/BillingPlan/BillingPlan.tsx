@@ -162,16 +162,19 @@ export const BillingPlan: FC<IBillingPlanProps> = ({ instanceStatus }) => {
                                         marginBottom: theme.spacing(1.5),
                                     })}
                                 >
-                                    <GridCol>
+                                    <GridCol vertical>
                                         <Typography>
-                                            <strong>{seats}</strong> team
-                                            members
+                                            <strong>Included members</strong>
                                             <GridColLink>
                                                 <Link to="/admin/users">
-                                                    {freeAssigned} assigned
+                                                    {freeAssigned} of 5 assigned
                                                 </Link>
                                             </GridColLink>
                                         </Typography>
+                                        <StyledInfoLabel>
+                                            You have 5 team members included in
+                                            your PRO plan
+                                        </StyledInfoLabel>
                                     </GridCol>
                                     <GridCol>
                                         <StyledCheckIcon />
@@ -183,7 +186,7 @@ export const BillingPlan: FC<IBillingPlanProps> = ({ instanceStatus }) => {
                                 <GridRow>
                                     <GridCol vertical>
                                         <Typography>
-                                            Paid members
+                                            <strong>Paid members</strong>
                                             <GridColLink>
                                                 <Link to="/admin/users">
                                                     {paidAssigned} assigned
@@ -191,9 +194,7 @@ export const BillingPlan: FC<IBillingPlanProps> = ({ instanceStatus }) => {
                                             </GridColLink>
                                         </Typography>
                                         <StyledInfoLabel>
-                                            Add up to 15 extra paid members - $
-                                            {price.user}
-                                            /month per member
+                                            $15/month per paid member
                                         </StyledInfoLabel>
                                     </GridCol>
                                     <GridCol>

@@ -3028,79 +3028,11 @@ Stats are divided into current and previous **windows**.
         "type": "object",
       },
       "proxyMetricsSchema": {
-        "properties": {
-          "appName": {
-            "type": "string",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/clientMetricsSchema",
           },
-          "bucket": {
-            "properties": {
-              "start": {
-                "format": "date-time",
-                "type": "string",
-              },
-              "stop": {
-                "format": "date-time",
-                "type": "string",
-              },
-              "toggles": {
-                "additionalProperties": {
-                  "properties": {
-                    "no": {
-                      "minimum": 0,
-                      "type": "integer",
-                    },
-                    "variants": {
-                      "additionalProperties": {
-                        "minimum": 0,
-                        "type": "integer",
-                      },
-                      "type": "object",
-                    },
-                    "yes": {
-                      "minimum": 0,
-                      "type": "integer",
-                    },
-                  },
-                  "type": "object",
-                },
-                "example": {
-                  "myCoolToggle": {
-                    "no": 42,
-                    "variants": {
-                      "blue": 6,
-                      "green": 15,
-                      "red": 46,
-                    },
-                    "yes": 25,
-                  },
-                  "myOtherToggle": {
-                    "no": 100,
-                    "yes": 0,
-                  },
-                },
-                "type": "object",
-              },
-            },
-            "required": [
-              "start",
-              "stop",
-              "toggles",
-            ],
-            "type": "object",
-          },
-          "environment": {
-            "type": "string",
-          },
-          "instanceId": {
-            "type": "string",
-          },
-        },
-        "required": [
-          "appName",
-          "instanceId",
-          "bucket",
         ],
-        "type": "object",
       },
       "publicSignupTokenCreateSchema": {
         "additionalProperties": false,

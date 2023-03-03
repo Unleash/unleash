@@ -3027,13 +3027,6 @@ Stats are divided into current and previous **windows**.
         ],
         "type": "object",
       },
-      "proxyMetricsSchema": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/clientMetricsSchema",
-          },
-        ],
-      },
       "publicSignupTokenCreateSchema": {
         "additionalProperties": false,
         "properties": {

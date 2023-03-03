@@ -66,7 +66,6 @@ export * from './feature-types-schema';
 export * from './feature-usage-schema';
 export * from './health-report-schema';
 export * from './proxy-feature-schema';
-export * from './proxy-metrics-schema';
 export * from './search-events-schema';
 export * from './set-ui-config-schema';
 export * from './client-feature-schema';

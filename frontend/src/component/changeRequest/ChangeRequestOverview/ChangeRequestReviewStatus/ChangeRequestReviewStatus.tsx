@@ -117,8 +117,8 @@ const Approved = () => {
             <StyledFlexAlignCenterBox>
                 <StyledSuccessIcon />
                 <Box>
-                    <StyledReviewTitle color={theme.palette.success.main}>
-                        Changed approved
+                    <StyledReviewTitle color={theme.palette.success.dark}>
+                        Changes approved
                     </StyledReviewTitle>
                     <Typography>
                         One approving review from requested approvers
@@ -131,7 +131,7 @@ const Approved = () => {
             <StyledFlexAlignCenterBox>
                 <StyledSuccessIcon />
                 <Box>
-                    <StyledReviewTitle color={theme.palette.success.main}>
+                    <StyledReviewTitle color={theme.palette.success.dark}>
                         Changes are ready to be applied
                     </StyledReviewTitle>
                 </Box>
@@ -152,7 +152,7 @@ const ReviewRequired = ({ minApprovals }: IReviewRequiredProps) => {
             <StyledFlexAlignCenterBox>
                 <StyledWarningIcon />
                 <Box>
-                    <StyledReviewTitle color={theme.palette.warning.main}>
+                    <StyledReviewTitle color={theme.palette.warning.dark}>
                         Review required
                     </StyledReviewTitle>
                     <Typography>
@@ -166,7 +166,7 @@ const ReviewRequired = ({ minApprovals }: IReviewRequiredProps) => {
 
             <StyledFlexAlignCenterBox>
                 <StyledWarningIcon />
-                <StyledReviewTitle color={theme.palette.warning.main}>
+                <StyledReviewTitle color={theme.palette.warning.dark}>
                     Apply changes is blocked
                 </StyledReviewTitle>
             </StyledFlexAlignCenterBox>

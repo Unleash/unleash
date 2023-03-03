@@ -40,7 +40,7 @@ const StyledIcon = styled('div', {
     paddingLeft: 6,
     borderTopLeftRadius: '40px',
     borderBottomLeftRadius: '40px',
-    color: theme.palette.primary.main,
+    color: theme.palette.primary.contrastText,
 }));
 
 const StyledAutocomplete = styled(Autocomplete)({

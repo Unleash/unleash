@@ -117,43 +117,43 @@ export default createTheme({
         },
 
         /**
-         * Generic neutral palette color.
+         *  Used for grey badges, hover elements, and grey light elements
          */
         neutral: {
-            // Used for grey badges and grey light elements
             light: colors.grey[100],
             main: colors.grey[700],
             dark: colors.grey[800],
-            border: colors.grey[500],
+            border: colors.grey[400],
         },
 
         background: {
             paper: colors.grey[50],
-            default: colors.grey[50], // Defined value from MUI - Not used
+            default: colors.grey[50],
             application: colors.grey[300],
             sidebar: colors.purple[800],
             elevation1: colors.grey[100],
             elevation2: colors.grey[200],
         },
 
-        action: {
-            // Check if transparacy works, i used them
-            active: colors.grey[700],
-            hover: colors.grey[100],
-            hoverOpacity: 0.04,
-            selected: colors.grey[200],
+        action: { 
+            // Colors used for Icons and Buttons -> this comes from MUI and we overwriting it with our colors
+            active: colors.action[0.54],
+            hover: colors.action[0.05],
+            hoverOpacity: 0.05,
+            selected: colors.action[0.08],
             selectedOpacity: 0.08,
-            disabled: colors.grey[600],
+            disabled: colors.action[0.32],
+            disabledBackground: colors.action[0.12],
             disabledOpacity: 0.38,
-            disabledBackground: colors.grey[400],
-            focus: colors.grey[400],
+            focus: colors.action[0.12],
             focusOpacity: 0.12,
             activatedOpacity: 0.12,
         },
 
+        /**
+         * General divider
+         */
         divider: colors.grey[400],
-        // dividerAlternative: colors.grey[500],
-        // grey: colors.grey, //###CHECK what can be this?
 
         /**
          * Table colors.
@@ -174,7 +174,7 @@ export default createTheme({
         /**
          * Background color used for the API command in the sidebar
          */
-        codebox: colors.grey[900.2], //###CHECK if we should use rgba colors
+        codebox: colors.action[0.12],
 
         /**
          * Gradient for the login page
@@ -235,9 +235,7 @@ export default createTheme({
             },
         },
 
-        // Table
-        // ############################################# CHECK THIS
-        // Is enough to have it here only? or we need it also on SortableTableHeader.tsx
+        // Tables
         MuiTableHead: {
             styleOverrides: {
                 root: ({ theme }) => ({
@@ -347,7 +345,7 @@ export default createTheme({
                     lineHeight: '1',
                     minHeight: '62px',
                     '&:hover': {
-                        backgroundColor: theme.palette.background.elevation2, //try to use action.hover
+                        backgroundColor: theme.palette.background.elevation2,
                     },
                     '&.Mui-selected': {
                         color: theme.palette.text.primary,
@@ -386,7 +384,7 @@ export default createTheme({
             },
         },
 
-        // Project overview, switch disabled focus effect color
+        // Project overview, improve toggle/switch disabled focus effect color
         MuiSwitch: {
             styleOverrides: {
                 root: ({ theme }) => ({
@@ -398,17 +396,8 @@ export default createTheme({
             },
         },
 
-        //###CHECK is this used? i can't find it -> if yes update color
-        //###CHECK maybe on PRO/ENT?
-        // MuiIcon: {
-        //     styleOverrides: {
-        //         colorDisabled: {
-        //             color: colors.grey[600],
-        //         },
-        //     },
-        // },
-
-        MuiMenuItem: {
+        // Overwiteing the action.disabledOpacity from MU
+        MuiMenuItem: { 
             styleOverrides: {
                 root: {
                     '&.Mui-disabled': {
@@ -418,43 +407,7 @@ export default createTheme({
             },
         },
 
-        // Chips customization - used on constraint cards/ Envrionments cards
-        // are these used in other places?
-        // Maybe we should use the badges from Nuno
-        // Nuno: I think we can now safely delete this
-        MuiChip: {
-            styleOverrides: {
-                root: ({ ownerState, theme }) => ({
-                    ...(ownerState.variant === 'outlined' &&
-                        ownerState.size === 'small' && {
-                            borderRadius: theme.shape.borderRadius,
-                            margin: 0,
-                            borderWidth: 1,
-                            borderStyle: 'solid',
-                            fontWeight: theme.typography.fontWeightBold,
-                            fontSize: theme.typography.caption.fontSize,
-                            ...(ownerState.color === 'success' && {
-                                // constraint cards
-                                backgroundColor: 'red',
-                                borderColor: theme.palette.success.border,
-                                color: theme.palette.success.dark,
-                            }),
-                            ...(ownerState.color === 'default' && {
-                                // environment cards
-                                color: 'blue',
-                            }),
-                            ...(ownerState.color === 'error' && {
-                                // dont know???
-                                color: 'green',
-                                background: theme.palette.error.light,
-                                borderColor: theme.palette.error.border,
-                            }),
-                        }),
-                }),
-            },
-        },
-
-        // Inputs background - see if this is needed
+        // Inputs background - This is used when we have inputs on a grey background (e.g. edit contstraints, playground)
         MuiInputBase: {
             styleOverrides: {
                 root: ({ theme }) => ({
@@ -463,14 +416,6 @@ export default createTheme({
             },
         },
 
-        // overwrite for background.paper??? - We don't need it
-        // MuiPaper: {
-        //     styleOverrides: {
-        //         root: {
-        //             backgroundColor: '#fff',
-        //         },
-        //     },
-        // },
 
         // Top menu text color
         MuiAppBar: {

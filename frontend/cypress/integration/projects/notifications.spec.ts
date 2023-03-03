@@ -1,23 +1,16 @@
 /// <reference types="cypress" />
-
+type UserCredentials = { email: string; password: string };
 const ENTERPRISE = Boolean(Cypress.env('ENTERPRISE'));
 const randomId = String(Math.random()).split('.')[1];
 const featureToggleName = `unleash-e2e-${randomId}`;
 const baseUrl = Cypress.config().baseUrl;
 let strategyId = '';
-const userIds: any[] = [];
-const userEmails: any[] = [];
+const userIds: number[] = [];
+const userCredentials: UserCredentials[] = [];
 const userName = `user-e2e-${randomId}`;
 const projectName = `project-e2e-${randomId}`;
-const password = 'unleash4All';
-
-// Disable the prod guard modal by marking it as seen.
-const disableFeatureStrategiesProdGuard = () => {
-    localStorage.setItem(
-        'useFeatureStrategyProdGuardSettings:v2',
-        JSON.stringify({ hide: true })
-    );
-};
+const password = 'unleash4all';
+const PROJECT_MEMBER_ROLE = 5;
 
 // Disable all active splash pages by visiting them.
 const disableActiveSplashScreens = () => {
@@ -40,7 +33,7 @@ const createUsers = () => {
             .then(response => {
                 const id = response.body.id;
                 userIds.push(id);
-                userEmails.push({ email, password });
+                userCredentials.push({ email, password });
             });
     }
 };
@@ -48,7 +41,7 @@ const createUsers = () => {
 const addMembersToProject = () => {
     cy.request(
         'POST',
-        `${baseUrl}/api/admin/projects/${projectName}/role/5/access`,
+        `${baseUrl}/api/admin/projects/${projectName}/role/${PROJECT_MEMBER_ROLE}/access`,
         {
             groups: [],
             users: userIds.map(id => {
@@ -70,7 +63,6 @@ const createProject = () => {
 describe('notifications', () => {
     before(() => {
         disableActiveSplashScreens();
-        disableFeatureStrategiesProdGuard();
         cy.login();
         createUsers();
         createProject();
@@ -120,17 +112,18 @@ describe('notifications', () => {
     it('should create a notification when a feature is created in a project', () => {
         createFeature();
 
-        //Should not show own notificaitons
+        //Should not show own notifications
         cy.get("[data-testid='NOTIFICATIONS_BUTTON']").click();
 
         //then
-        cy.contains('Mark all as read ()').should('not.exist');
+        cy.get("[data-testid='NOTIFICATIONS_MODAL']").should('exist');
+        cy.get("[data-testid='NOTIFICATIONS_LIST']").should('have.length', 0);
 
-        const userCredentials = userEmails[0];
+        const credentials = userCredentials[0];
 
         //Sign in as a different user
         cy.logout();
-        cy.login(userCredentials.email, userCredentials.password);
+        cy.login(credentials.email, credentials.password);
         cy.get("[data-testid='NOTIFICATIONS_BUTTON']").click();
 
         //then

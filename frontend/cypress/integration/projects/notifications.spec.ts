@@ -9,8 +9,9 @@ const userIds: number[] = [];
 const userCredentials: UserCredentials[] = [];
 const userName = `user-e2e-${randomId}`;
 const projectName = `project-e2e-${randomId}`;
-const password = 'unleash4all';
-const PROJECT_MEMBER_ROLE = 5;
+const password = Cypress.env('AUTH_PASSWORD');
+const PROJECT_MEMBER = 5;
+const EDITOR = 2;
 
 // Disable all active splash pages by visiting them.
 const disableActiveSplashScreens = () => {
@@ -27,7 +28,7 @@ const createUsers = () => {
             username: `${name}@test.com`,
             sendEmail: false,
             password: password,
-            rootRole: i + 1,
+            rootRole: EDITOR,
         })
             .as(name)
             .then(response => {
@@ -41,7 +42,7 @@ const createUsers = () => {
 const addMembersToProject = () => {
     cy.request(
         'POST',
-        `${baseUrl}/api/admin/projects/${projectName}/role/${PROJECT_MEMBER_ROLE}/access`,
+        `${baseUrl}/api/admin/projects/${projectName}/role/${PROJECT_MEMBER}/access`,
         {
             groups: [],
             users: userIds.map(id => {
@@ -122,11 +123,11 @@ describe('notifications', () => {
         const credentials = userCredentials[0];
 
         //Sign in as a different user
-        cy.logout();
         cy.login(credentials.email, credentials.password);
         cy.get("[data-testid='NOTIFICATIONS_BUTTON']").click();
 
         //then
         cy.contains('Mark all as read (1)').should('exist');
+        cy.get("[data-testid='NOTIFICATIONS_LIST']").should('have.length', 1);
     });
 });

@@ -19,7 +19,7 @@ export const StyledProjectCard = styled(Card)(({ theme }) => ({
     },
     '&:hover': {
         transition: 'background-color 0.2s ease-in-out',
-        backgroundColor: theme.palette.action.hover,
+        backgroundColor: theme.palette.neutral.light,
     },
 }));
 

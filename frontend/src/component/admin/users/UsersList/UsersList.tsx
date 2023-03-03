@@ -97,16 +97,6 @@ const UsersList = () => {
     const columns = useMemo(
         () => [
             {
-                id: 'type',
-                Header: 'Type',
-                accessor: 'paid',
-                Cell: ({ row: { original: user } }: any) => (
-                    <UserTypeCell value={isBillingUsers && user.paid} />
-                ),
-                disableGlobalFilter: true,
-                sortType: 'boolean',
-            },
-            {
                 Header: 'Avatar',
                 accessor: 'imageUrl',
                 Cell: ({ row: { original: user } }: any) => (
@@ -162,6 +152,17 @@ const UsersList = () => {
                 disableGlobalFilter: true,
                 sortType: 'date',
                 maxWidth: 150,
+            },
+            {
+                id: 'type',
+                Header: 'Type',
+                accessor: 'paid',
+                maxWidth: 100,
+                Cell: ({ row: { original: user } }: any) => (
+                    <UserTypeCell value={isBillingUsers && user.paid} />
+                ),
+                disableGlobalFilter: true,
+                sortType: 'boolean',
             },
             {
                 Header: 'Actions',

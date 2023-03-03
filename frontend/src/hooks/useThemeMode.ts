@@ -2,7 +2,7 @@ import UIContext, { themeMode } from 'contexts/UIContext';
 import { useContext } from 'react';
 import { setLocalStorageItem } from 'utils/storage';
 import mainTheme from 'themes/theme';
-import darkTheme from 'themes/dark-theme';
+// import darkTheme from 'themes/dark-theme';
 import { Theme } from '@emotion/react';
 import useUiConfig from './api/getters/useUiConfig/useUiConfig';
 
@@ -18,11 +18,12 @@ export const useThemeMode = (): IUseThemeModeOutput => {
     const key = `${uiConfig.baseUriPath}:unleash-theme`;
 
     const resolveTheme = () => {
-        if (themeMode === 'light') {
-            return mainTheme;
-        }
+        // if (themeMode === 'light') {
+        //     return mainTheme;
+        // }
 
-        return darkTheme;
+        // return darkTheme;
+        return mainTheme;
     };
 
     const onSetThemeMode = () => {

@@ -933,7 +933,7 @@ test('Should not recursively set off timers on events', async () => {
     jest.useRealTimers();
 });
 
-test('should return all features when specified', async () => {
+test('should return all features when the release flag and feature flag are true', async () => {
     if (app.config.experimental != null) {
         app.config.experimental.flags.proxyReturnAllTogglesKillSwitch = true;
         app.config.experimental.flags.proxyReturnAllToggles = true;
@@ -1006,7 +1006,68 @@ test('should return all features when specified', async () => {
         });
 });
 
-test('should return all features when both feature flags are set only', async () => {
+test('should evaluate strategies when returning all toggles', async () => {
+    if (app.config.experimental != null) {
+        app.config.experimental.flags.proxyReturnAllTogglesKillSwitch = true;
+        app.config.experimental.flags.proxyReturnAllToggles = true;
+    }
+    const frontendToken = await createApiToken(ApiTokenType.FRONTEND);
+    await createFeatureToggle({
+        name: 'enabledFeature',
+        enabled: true,
+        strategies: [
+            {
+                name: 'flexibleRollout',
+                constraints: [],
+                parameters: {
+                    rollout: '100',
+                    stickiness: 'default',
+                    groupId: 'some-new',
+                },
+            },
+        ],
+    });
+    await createFeatureToggle({
+        name: 'disabledFeature',
+        enabled: true,
+        strategies: [
+            {
+                name: 'flexibleRollout',
+                constraints: [],
+                parameters: {
+                    rollout: '0',
+                    stickiness: 'default',
+                    groupId: 'some-new',
+                },
+            },
+        ],
+    });
+
+    await app.request
+        .get('/api/frontend')
+        .set('Authorization', frontendToken.secret)
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect((res) => {
+            expect(res.body).toEqual({
+                toggles: [
+                    {
+                        name: 'enabledFeature',
+                        enabled: true,
+                        impressionData: false,
+                        variant: { enabled: false, name: 'disabled' },
+                    },
+                    {
+                        name: 'disabledFeature',
+                        enabled: false,
+                        impressionData: false,
+                        variant: { enabled: false, name: 'disabled' },
+                    },
+                ],
+            });
+        });
+});
+test('should not return all features if both feature flags are not true', async () => {
     if (app.config.experimental != null) {
         app.config.experimental.flags.proxyReturnAllTogglesKillSwitch = true;
         app.config.experimental.flags.proxyReturnAllToggles = false;

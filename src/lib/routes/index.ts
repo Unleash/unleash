@@ -14,7 +14,7 @@ import { conditionalMiddleware } from '../middleware';
 import EdgeController from './edge-api';
 import { PublicInviteController } from './public-invite';
 import { Db } from '../db/db';
-import { secondsToMilliseconds } from 'date-fns';
+import { minutesToMilliseconds } from 'date-fns';
 
 class IndexRouter extends Controller {
     constructor(config: IUnleashConfig, services: IUnleashServices, db: Db) {
@@ -31,8 +31,8 @@ class IndexRouter extends Controller {
             '/auth/simple',
             new SimplePasswordProvider(config, services).router,
             rateLimit({
-                windowMs: secondsToMilliseconds(1),
-                max: 5,
+                windowMs: minutesToMilliseconds(1),
+                max: 10,
                 standardHeaders: true,
                 legacyHeaders: false,
             }),

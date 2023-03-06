@@ -15,7 +15,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
 const StyledGroupCard = styled('aside')(({ theme }) => ({
     padding: theme.spacing(2.5),
     height: '100%',
-    border: `1px solid ${theme.palette.dividerAlternative}`,
+    border: `1px solid ${theme.palette.divider}`,
     borderRadius: theme.shape.borderRadiusLarge,
     boxShadow: theme.boxShadows.card,
     display: 'flex',

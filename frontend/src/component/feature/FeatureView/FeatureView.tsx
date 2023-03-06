@@ -68,7 +68,7 @@ const StyledToolbarContainer = styled('div')({
 
 const StyledSeparator = styled('div')(({ theme }) => ({
     width: '100%',
-    backgroundColor: theme.palette.tertiary.light,
+    backgroundColor: theme.palette.background.elevation2,
     height: '1px',
 }));
 

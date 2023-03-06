@@ -18,10 +18,10 @@ const EventDiff = ({ entry }: IEventDiffProps) => {
     const theme = useTheme();
 
     const styles: Record<string, CSSProperties> = {
-        A: { color: theme.palette.code.edited }, // array edited
-        E: { color: theme.palette.code.edited }, // edited
-        D: { color: theme.palette.code.diffSub }, // deleted
-        N: { color: theme.palette.code.diffAdd }, // added
+        A: { color: theme.palette.eventLog.edited }, // array edited
+        E: { color: theme.palette.eventLog.edited }, // edited
+        D: { color: theme.palette.eventLog.diffSub }, // deleted
+        N: { color: theme.palette.eventLog.diffAdd }, // added
     };
 
     const diffs =

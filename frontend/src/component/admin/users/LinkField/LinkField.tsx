@@ -37,7 +37,7 @@ export const LinkField = ({ inviteLink, small }: ILinkFieldProps) => {
     return (
         <Box
             sx={{
-                backgroundColor: theme => theme.palette.secondaryContainer,
+                backgroundColor: theme => theme.palette.background.elevation2,
                 py: 4,
                 px: 4,
                 borderRadius: theme => `${theme.shape.borderRadius}px`,

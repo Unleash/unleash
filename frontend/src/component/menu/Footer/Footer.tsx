@@ -11,7 +11,7 @@ const StyledFooter = styled('footer')(({ theme }) => ({
     width: '100%',
     flexGrow: 1,
     zIndex: 100,
-    backgroundColor: theme.palette.footerBackground,
+    backgroundColor: theme.palette.background.paper,
 }));
 
 const StyledList = styled(List)({

@@ -15,7 +15,7 @@ import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const ImportInfoContainer = styled(Box)(({ theme }) => ({
-    backgroundColor: theme.palette.secondaryContainer,
+    backgroundColor: theme.palette.background.elevation2,
     borderRadius: theme.shape.borderRadiusLarge,
     padding: theme.spacing(3),
 }));

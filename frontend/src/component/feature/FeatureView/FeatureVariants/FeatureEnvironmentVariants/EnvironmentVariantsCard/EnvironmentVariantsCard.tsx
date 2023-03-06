@@ -8,7 +8,7 @@ import { Badge } from 'component/common/Badge/Badge';
 const StyledCard = styled('div')(({ theme }) => ({
     padding: theme.spacing(3),
     borderRadius: theme.shape.borderRadiusLarge,
-    border: `1px solid ${theme.palette.dividerAlternative}`,
+    border: `1px solid ${theme.palette.divider}`,
     '&:not(:last-child)': {
         marginBottom: theme.spacing(3),
     },

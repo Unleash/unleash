@@ -42,7 +42,7 @@ import { useThemeMode } from 'hooks/useThemeMode';
 import { Notifications } from 'component/common/Notifications/Notifications';
 
 const StyledHeader = styled(AppBar)(({ theme }) => ({
-    backgroundColor: theme.palette.headerBackground,
+    backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(1),
     boxShadow: 'none',
     position: 'relative',

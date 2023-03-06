@@ -16,7 +16,7 @@ const StyledDivContainer = styled('div', {
     width: '100%',
     padding: theme.spacing(2, 3),
     borderRadius: theme.shape.borderRadiusMedium,
-    border: `1px solid ${theme.palette.dividerAlternative}`,
+    border: `1px solid ${theme.palette.divider}`,
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',

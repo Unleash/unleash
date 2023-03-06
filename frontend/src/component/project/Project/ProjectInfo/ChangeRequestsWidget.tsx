@@ -38,14 +38,14 @@ const StyledChangeRequestStatusInfo = styled(Box)(({ theme }) => ({
 }));
 
 const StyledApprovedCount = styled(StyledCount)(({ theme }) => ({
-    background: theme.palette.activityIndicators.recent,
+    background: theme.palette.seen.recent,
     padding: theme.spacing(0, 1),
     marginRight: theme.spacing(0.5),
     borderRadius: theme.shape.borderRadius,
 }));
 
 const StyledInReviewCount = styled(StyledCount)(({ theme }) => ({
-    background: theme.palette.activityIndicators.primary,
+    background: theme.palette.seen.primary,
     padding: theme.spacing(0, 1),
     marginRight: theme.spacing(0.5),
     borderRadius: theme.shape.borderRadius,

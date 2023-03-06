@@ -1,0 +1,38 @@
+---
+title: Login history
+---
+
+:::info
+
+Login history is an enterprise feature available from Unleash 4.22 onwards.
+
+:::
+
+Login history lets you track login events in your Unleash instance, and whether the attempts were successful in logging in or not. 
+
+For each login event, it lists:
+
+ - **Created**: When it happened
+ - **Username**: The username that was used
+ - **Authentication**: The authentication type that was used
+ - **IP address**: The IP address that made the attempt
+ - **Success**: Whether the attempt was successful or not
+ - **Failure reason**: If the attempt was not successful, the reason why
+
+You can see the failure reason by hovering over the "False" badge in the "Success" column.
+
+![Login history table](/img/login-history-table.png)
+
+Use login history to:
+
+- Audit login events in your Unleash instance
+- Identify failed login attempts and investigate the cause
+- Debug misconfigured authentication providers
+
+## Retention
+
+Events in the login history are retained for 336 hours (14 days) by default. This setting can be found under the key `login_history_retention` in the `settings` table.
+
+Events older than the retention period are automatically deleted, and you won't be able to recover them. If you would like to collect login event information past the retention period, we suggest periodically downloading the login history.
+
+In order to access and download the existing login history in your Unleash instance, you can follow the [how to download login history](../how-to/how-to-download-login-history.mdx) guide.

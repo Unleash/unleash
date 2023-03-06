@@ -3642,6 +3642,26 @@ Stats are divided into current and previous **windows**.
         ],
         "type": "object",
       },
+      "tagsBulkAddSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "features": {
+            "items": {
+              "minLength": 1,
+              "type": "string",
+            },
+            "type": "array",
+          },
+          "tag": {
+            "$ref": "#/components/schemas/tagSchema",
+          },
+        },
+        "required": [
+          "features",
+          "tag",
+        ],
+        "type": "object",
+      },
       "tagsSchema": {
         "additionalProperties": false,
         "properties": {
@@ -7849,6 +7869,46 @@ If the provided project does not exist, the list of events will be empty.",
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/tagWithVersionSchema",
+                },
+              },
+            },
+            "description": "The resource was successfully created.",
+            "headers": {
+              "location": {
+                "description": "The location of the newly created resource.",
+                "schema": {
+                  "format": "uri",
+                  "type": "string",
+                },
+              },
+            },
+          },
+        },
+        "tags": [
+          "Tags",
+        ],
+      },
+    },
+    "/api/admin/tags/features": {
+      "post": {
+        "operationId": "addTagToFeatures",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/tagsBulkAddSchema",
+              },
+            },
+          },
+          "description": "tagsBulkAddSchema",
+          "required": true,
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/tagSchema",
                 },
               },
             },

@@ -91,6 +91,16 @@ export default class FakeFeatureTagStore implements IFeatureTagStore {
             ),
         );
     }
+
+    async tagFeatures(featureNames: string[], tag: ITag): Promise<ITag> {
+        const featureTags = featureNames.map((featureName) => ({
+            featureName,
+            tagType: tag.type,
+            tagValue: tag.value,
+        }));
+        this.featureTags.push(...featureTags);
+        return Promise.resolve(tag);
+    }
 }
 
 module.exports = FakeFeatureTagStore;

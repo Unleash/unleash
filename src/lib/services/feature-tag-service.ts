@@ -64,6 +64,32 @@ class FeatureTagService {
         return validatedTag;
     }
 
+    async addTags(
+        featureNames: string[],
+        tag: ITag,
+        userName: string,
+    ): Promise<ITag> {
+        const featureToggles = await this.featureToggleStore.getAllByNames(
+            featureNames,
+        );
+        const validatedTag = await tagSchema.validateAsync(tag);
+        await this.createTagIfNeeded(validatedTag, userName);
+        await this.featureTagStore.tagFeatures(featureNames, validatedTag);
+
+        await Promise.all(
+            featureToggles.map((featureToggle) =>
+                this.eventStore.store({
+                    type: FEATURE_TAGGED,
+                    createdBy: userName,
+                    featureName: featureToggle.name,
+                    project: featureToggle.project,
+                    data: validatedTag,
+                }),
+            ),
+        );
+        return validatedTag;
+    }
+
     async createTagIfNeeded(tag: ITag, userName: string): Promise<void> {
         try {
             await this.tagStore.getTag(tag.type, tag.value);

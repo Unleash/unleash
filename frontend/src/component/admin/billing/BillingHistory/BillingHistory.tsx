@@ -39,11 +39,14 @@ const columns = [
     {
         Header: 'Created date',
         accessor: 'created',
-        Cell: ({ value }: { value: number }) => {
-            return (
-                <DateCell value={value ? new Date(value * 1000) : undefined} />
-            );
-        },
+        Cell: DateCell,
+        sortType: 'date',
+        disableGlobalFilter: true,
+    },
+    {
+        Header: 'Due date',
+        accessor: 'dueDate',
+        Cell: DateCell,
         sortType: 'date',
         disableGlobalFilter: true,
     },

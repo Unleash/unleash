@@ -1,3 +1,5 @@
+import { useCallback, useMemo } from 'react';
+
 interface IUseSearchOutput {
     getSearchText: (input: string) => string;
     data: any[];
@@ -15,15 +17,18 @@ export const useSearch = (
     searchValue: string,
     data: any[]
 ): IUseSearchOutput => {
-    const getSearchText = getSearchTextGenerator(columns);
+    const getSearchText = useCallback(
+        (value: string) => getSearchTextGenerator(columns)(value),
+        [columns]
+    );
 
-    const getSearchContext = () => {
+    const getSearchContext = useCallback(() => {
         return { data, searchValue, columns };
-    };
+    }, [data, searchValue, columns]);
 
-    if (!searchValue) return { data, getSearchText, getSearchContext };
+    const search = useMemo(() => {
+        if (!searchValue) return data;
 
-    const search = () => {
         const filteredData = filter(columns, searchValue, data);
         const searchedData = searchInFilteredData(
             columns,
@@ -32,9 +37,9 @@ export const useSearch = (
         );
 
         return searchedData;
-    };
+    }, [columns, searchValue, data, getSearchText]);
 
-    return { data: search(), getSearchText, getSearchContext };
+    return { data: search, getSearchText, getSearchContext };
 };
 
 export const filter = (columns: any[], searchValue: string, data: any[]) => {

@@ -11,6 +11,7 @@ import {
     IVariant,
 } from '../../../../lib/types/model';
 import { randomId } from '../../../../lib/util/random-id';
+import { UpdateTagsSchema } from '../../../../lib/openapi/spec/update-tags-schema';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -841,4 +842,30 @@ test('should have access to the get all features endpoint even if api is disable
     await appWithDisabledLegacyFeatures.request
         .get('/api/admin/features')
         .expect(200);
+});
+
+test('Can add and remove tags at the same time', async () => {
+    const tag = { type: 'simple', value: 'addremove-first-tag' };
+    const secondTag = { type: 'simple', value: 'addremove-second-tag' };
+    await db.stores.tagStore.createTag(tag);
+    await db.stores.tagStore.createTag(secondTag);
+    const taggedWithFirst = await db.stores.featureToggleStore.create(
+        'default',
+        {
+            name: 'tagged-with-first-tag-1',
+        },
+    );
+
+    const data: UpdateTagsSchema = {
+        addedTags: [secondTag],
+        removedTags: [tag],
+    };
+
+    await db.stores.featureTagStore.tagFeature(taggedWithFirst.name, tag);
+    await app.request
+        .put(`/api/admin/features/${taggedWithFirst.name}/tags`)
+        .send(data)
+        .expect((res) => {
+            expect(res.body.tags).toHaveLength(1);
+        });
 });

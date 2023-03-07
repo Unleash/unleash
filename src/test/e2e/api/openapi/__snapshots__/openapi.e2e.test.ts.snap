@@ -3853,6 +3853,28 @@ Stats are divided into current and previous **windows**.
         },
         "type": "object",
       },
+      "updateTagsSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "addedTags": {
+            "items": {
+              "$ref": "#/components/schemas/tagSchema",
+            },
+            "type": "array",
+          },
+          "removedTags": {
+            "items": {
+              "$ref": "#/components/schemas/tagSchema",
+            },
+            "type": "array",
+          },
+        },
+        "required": [
+          "addedTags",
+          "removedTags",
+        ],
+        "type": "object",
+      },
       "updateUserSchema": {
         "additionalProperties": true,
         "properties": {
@@ -5231,6 +5253,54 @@ If the provided project does not exist, the list of events will be empty.",
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/tagSchema",
+                },
+              },
+            },
+            "description": "The resource was successfully created.",
+            "headers": {
+              "location": {
+                "description": "The location of the newly created resource.",
+                "schema": {
+                  "format": "uri",
+                  "type": "string",
+                },
+              },
+            },
+          },
+        },
+        "tags": [
+          "Features",
+        ],
+      },
+      "put": {
+        "operationId": "updateTags",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "featureName",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/updateTagsSchema",
+              },
+            },
+          },
+          "description": "updateTagsSchema",
+          "required": true,
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/tagsSchema",
                 },
               },
             },

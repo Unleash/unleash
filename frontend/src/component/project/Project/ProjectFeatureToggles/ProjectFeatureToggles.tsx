@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
+    Checkbox,
     IconButton,
     styled,
     Tooltip,
@@ -8,7 +9,13 @@ import {
 } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { SortingRule, useFlexLayout, useSortBy, useTable } from 'react-table';
+import {
+    SortingRule,
+    useFlexLayout,
+    useSortBy,
+    useRowSelect,
+    useTable,
+} from 'react-table';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { PageContent } from 'component/common/PageContent/PageContent';
@@ -55,6 +62,7 @@ import VariantsWarningTooltip from 'component/feature/FeatureView/FeatureVariant
 import FileDownload from '@mui/icons-material/FileDownload';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ExportDialog } from 'component/feature/FeatureToggleList/ExportDialog';
+import { RowSelectCell } from './RowSelectCell/RowSelectCell';
 
 const StyledResponsiveButton = styled(ResponsiveButton)(() => ({
     whiteSpace: 'nowrap',
@@ -95,7 +103,7 @@ type ListItemType = Pick<
     someEnabledEnvironmentHasVariants: boolean;
 };
 
-const staticColumns = ['Actions', 'name', 'favorite'];
+const staticColumns = ['Select', 'Actions', 'name', 'favorite'];
 
 const defaultSort: SortingRule<string> & {
     columns?: string[];
@@ -230,6 +238,18 @@ export const ProjectFeatureToggles = ({
     const columns = useMemo(
         () => [
             {
+                id: 'Select',
+                Header: ({ getToggleAllRowsSelectedProps }: any) => (
+                    <Checkbox {...getToggleAllRowsSelectedProps()} />
+                ),
+                Cell: ({ row }: any) => (
+                    <RowSelectCell {...row?.getToggleRowSelectedProps?.()} />
+                ),
+                maxWidth: 50,
+                disableSortBy: true,
+                hideInMenu: true,
+            },
+            {
                 id: 'favorite',
                 Header: (
                     <FavoriteIconHeader
@@ -354,7 +374,7 @@ export const ProjectFeatureToggles = ({
                 hideInMenu: true,
             },
         ],
-        [projectId, showTagsColumn, environments, loading, onToggle]
+        [projectId, environments, loading, onToggle]
     );
 
     const [searchValue, setSearchValue] = useState(
@@ -447,6 +467,7 @@ export const ProjectFeatureToggles = ({
                     },
                 ],
                 hiddenColumns,
+                selectedRowIds: {},
             };
         },
         [environments] // eslint-disable-line react-hooks/exhaustive-deps
@@ -473,7 +494,8 @@ export const ProjectFeatureToggles = ({
             getRowId,
         },
         useFlexLayout,
-        useSortBy
+        useSortBy,
+        useRowSelect
     );
 
     useEffect(() => {

@@ -50,7 +50,6 @@ import { usePinnedFavorites } from 'hooks/usePinnedFavorites';
 import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';
 import { FeatureTagCell } from 'component/common/Table/cells/FeatureTagCell/FeatureTagCell';
 import { useGlobalLocalStorage } from 'hooks/useGlobalLocalStorage';
-import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { flexRow } from 'themes/themeStyles';
 import VariantsWarningTooltip from 'component/feature/FeatureView/FeatureVariants/VariantsTooltipWarning';
 import FileDownload from '@mui/icons-material/FileDownload';
@@ -223,6 +222,11 @@ export const ProjectFeatureToggles = ({
         [projectId, refetch]
     );
 
+    const showTagsColumn = useMemo(
+        () => features.some(feature => feature?.tags?.length),
+        [features]
+    );
+
     const columns = useMemo(
         () => [
             {
@@ -242,6 +246,7 @@ export const ProjectFeatureToggles = ({
                 ),
                 maxWidth: 50,
                 disableSortBy: true,
+                hideInMenu: true,
             },
             {
                 Header: 'Seen',
@@ -271,18 +276,21 @@ export const ProjectFeatureToggles = ({
                 sortType: 'alphanumeric',
                 searchable: true,
             },
-            {
-                id: 'tags',
-                Header: 'Tags',
-                accessor: (row: IFeatureToggleListItem) =>
-                    row.tags
-                        ?.map(({ type, value }) => `${type}:${value}`)
-                        .join('\n') || '',
-                Cell: FeatureTagCell,
-                width: 80,
-                hideInMenu: true,
-                searchable: true,
-            },
+            ...(showTagsColumn
+                ? [
+                      {
+                          id: 'tags',
+                          Header: 'Tags',
+                          accessor: (row: IFeatureToggleListItem) =>
+                              row.tags
+                                  ?.map(({ type, value }) => `${type}:${value}`)
+                                  .join('\n') || '',
+                          Cell: FeatureTagCell,
+                          width: 80,
+                          searchable: true,
+                      },
+                  ]
+                : []),
             {
                 Header: 'Created',
                 accessor: 'createdAt',
@@ -343,9 +351,10 @@ export const ProjectFeatureToggles = ({
                     />
                 ),
                 disableSortBy: true,
+                hideInMenu: true,
             },
         ],
-        [projectId, environments, loading, onToggle]
+        [projectId, showTagsColumn, environments, loading, onToggle]
     );
 
     const [searchValue, setSearchValue] = useState(
@@ -465,17 +474,6 @@ export const ProjectFeatureToggles = ({
         },
         useFlexLayout,
         useSortBy
-    );
-
-    useConditionallyHiddenColumns(
-        [
-            {
-                condition: !features.some(({ tags }) => tags?.length),
-                columns: ['tags'],
-            },
-        ],
-        setHiddenColumns,
-        columns
     );
 
     useEffect(() => {

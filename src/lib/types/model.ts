@@ -384,6 +384,7 @@ export interface ISegment {
     id: number;
     name: string;
     description?: string;
+    project?: string;
     constraints: IConstraint[];
     createdBy?: string;
     createdAt: Date;

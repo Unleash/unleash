@@ -8,7 +8,7 @@ Login history is an enterprise feature available from Unleash 4.22 onwards.
 
 :::
 
-Login history lets you track login events in your Unleash instance, and whether the attempts were successful in logging in or not. 
+Unleash's login history lets you track login events in your Unleash instance, and whether the attempts were successful in logging in or not. 
 
 ![Login history table](/img/login-history-table.png)
 

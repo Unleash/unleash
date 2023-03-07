@@ -220,7 +220,7 @@ export const Notifications = () => {
                                     />
                                 }
                             />
-                            <NotificationsList data-testid="NOTIFICATIONS_LIST">
+                            <NotificationsList>
                                 {notificationComponents}
                             </NotificationsList>
                             <ConditionallyRender

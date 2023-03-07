@@ -25,7 +25,7 @@ test('should be able to fetch client toggles', async () => {
         .post('/api/admin/state/import?drop=true')
         .attach('file', 'src/test/examples/exported-segments.json');
 
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(202);
 
     const clientToggles = await featureToggleClientStore.getClient();
     expect(clientToggles).toHaveLength(4);

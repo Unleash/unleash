@@ -17,7 +17,7 @@ const COLUMNS = [
     'id',
     'name',
     'description',
-    'segment_project_id',
+    'project',
     'created_by',
     'created_at',
     'constraints',
@@ -27,7 +27,7 @@ interface ISegmentRow {
     id: number;
     name: string;
     description?: string;
-    segment_project_id?: string;
+    project?: string;
     created_by?: string;
     created_at?: Date;
     constraints: IConstraint[];
@@ -68,7 +68,7 @@ export default class SegmentStore implements ISegmentStore {
                 id: segment.id,
                 name: segment.name,
                 description: segment.description,
-                segment_project_id: segment.project,
+                project: segment.project,
                 constraints: JSON.stringify(segment.constraints),
                 created_by: user.username || user.email,
             })
@@ -83,7 +83,7 @@ export default class SegmentStore implements ISegmentStore {
             .update({
                 name: segment.name,
                 description: segment.description,
-                segment_project_id: segment.project,
+                project: segment.project,
                 constraints: JSON.stringify(segment.constraints),
             })
             .returning(COLUMNS);
@@ -203,7 +203,7 @@ export default class SegmentStore implements ISegmentStore {
             id: row.id,
             name: row.name,
             description: row.description,
-            project: row.segment_project_id,
+            project: row.project,
             constraints: row.constraints,
             createdBy: row.created_by,
             createdAt: row.created_at,

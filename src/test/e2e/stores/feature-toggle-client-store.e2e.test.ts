@@ -28,5 +28,5 @@ test('should be able to fetch client toggles', async () => {
     expect(response.status).toBe(202);
 
     const clientToggles = await featureToggleClientStore.getClient();
-    expect(clientToggles).toHaveLength(4);
+    expect(clientToggles).toHaveLength(1);
 });

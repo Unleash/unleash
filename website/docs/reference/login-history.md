@@ -31,10 +31,12 @@ Use the login history to:
 - Identify failed login attempts and investigate the cause
 - Debug misconfigured authentication providers
 
+You're able to download the current login history at any time. If you'd like, you can also delete single login events, or clear the login history by deleting all the events.
+
+In order to access and download the existing login history in your Unleash instance, you can follow the [how to download login history](../how-to/how-to-download-login-history.mdx) guide.
+
 ## Retention
 
 Events in the login history are retained for 336 hours (14 days) by default. This setting can be found under the key `login_history_retention` in the `settings` table.
 
 Events older than the retention period are automatically deleted, and you won't be able to recover them. If you would like to collect login event information past the retention period, we suggest periodically downloading the login history.
-
-In order to access and download the existing login history in your Unleash instance, you can follow the [how to download login history](../how-to/how-to-download-login-history.mdx) guide.

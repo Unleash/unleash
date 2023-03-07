@@ -1,3 +1,5 @@
+'use strict';
+
 exports.up = function (db, cb) {
     db.runSql(
         `INSERT INTO settings(name, content) VALUES ('notifications_retention', '{"hours": 720}')`,

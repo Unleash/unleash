@@ -30,6 +30,7 @@ import {
     resourceCreatedResponseSchema,
 } from '../../openapi/util/create-response-schema';
 import { emptyResponse } from '../../openapi/util/standard-responses';
+import { UpdateTagsSchema } from '../../openapi/spec/update-tags-schema';
 
 const version = 1;
 
@@ -134,6 +135,23 @@ class FeatureController extends Controller {
         });
 
         this.route({
+            method: 'put',
+            path: '/:featureName/tags',
+            permission: UPDATE_FEATURE,
+            handler: this.updateTags,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['Features'],
+                    operationId: 'updateTags',
+                    requestBody: createRequestSchema('updateTagsSchema'),
+                    responses: {
+                        200: resourceCreatedResponseSchema('tagsSchema'),
+                    },
+                }),
+            ],
+        });
+
+        this.route({
             method: 'delete',
             path: '/:featureName/tags/:type/:value',
             permission: UPDATE_FEATURE,
@@ -228,6 +246,35 @@ class FeatureController extends Controller {
             userName,
         );
         res.status(201).header('location', `${featureName}/tags`).json(tag);
+    }
+
+    async updateTags(
+        req: IAuthRequest<
+            { featureName: string },
+            Response<TagsSchema>,
+            UpdateTagsSchema,
+            any
+        >,
+        res: Response<TagsSchema>,
+    ): Promise<void> {
+        const { featureName } = req.params;
+        const { addedTags, removedTags } = req.body;
+        const userName = extractUsername(req);
+
+        await Promise.all(
+            addedTags.map((addedTag) =>
+                this.tagService.addTag(featureName, addedTag, userName),
+            ),
+        );
+
+        await Promise.all(
+            removedTags.map((removedTag) =>
+                this.tagService.removeTag(featureName, removedTag, userName),
+            ),
+        );
+
+        const tags = await this.tagService.listTags(featureName);
+        res.json({ version, tags });
     }
 
     // TODO

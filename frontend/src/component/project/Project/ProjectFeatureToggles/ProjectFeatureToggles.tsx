@@ -382,7 +382,7 @@ export const ProjectFeatureToggles = ({
                 hideInMenu: true,
             },
         ],
-        [projectId, showTagsColumn, environments, loading, onToggle]
+        [projectId, environments, loading, onToggle]
     );
 
     const [searchValue, setSearchValue] = useState(

@@ -25,7 +25,7 @@ You can see the failure reason by hovering over the "False" badge in the "Succes
 
 ![Login history table failure reason](/img/login-history-table-fail.png)
 
-Use login history to:
+Use the login history to:
 
 - Audit login events in your Unleash instance
 - Identify failed login attempts and investigate the cause

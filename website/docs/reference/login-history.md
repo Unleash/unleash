@@ -10,6 +10,8 @@ Login history is an enterprise feature available from Unleash 4.22 onwards.
 
 Login history lets you track login events in your Unleash instance, and whether the attempts were successful in logging in or not. 
 
+![Login history table](/img/login-history-table.png)
+
 For each login event, it lists:
 
  - **Created**: When it happened
@@ -21,7 +23,7 @@ For each login event, it lists:
 
 You can see the failure reason by hovering over the "False" badge in the "Success" column.
 
-![Login history table](/img/login-history-table.png)
+![Login history table failure reason](/img/login-history-table-fail.png)
 
 Use login history to:
 

@@ -63,6 +63,7 @@ import FileDownload from '@mui/icons-material/FileDownload';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ExportDialog } from 'component/feature/FeatureToggleList/ExportDialog';
 import { RowSelectCell } from './RowSelectCell/RowSelectCell';
+import { SelectionActionsBar } from './SelectionActionsBar/SelectionActionsBar';
 
 const StyledResponsiveButton = styled(ResponsiveButton)(() => ({
     whiteSpace: 'nowrap',
@@ -479,7 +480,7 @@ export const ProjectFeatureToggles = ({
         allColumns,
         headerGroups,
         rows,
-        state: { sortBy, hiddenColumns },
+        state: { selectedRowIds, sortBy, hiddenColumns },
         prepareRow,
         setHiddenColumns,
     } = useTable(
@@ -706,6 +707,7 @@ export const ProjectFeatureToggles = ({
                     />
                 }
             />
+            <SelectionActionsBar selectedIds={Object.keys(selectedRowIds)} />
         </PageContent>
     );
 };

@@ -2,7 +2,7 @@ import { Response } from 'express';
 import Controller from '../../controller';
 import { IUnleashConfig } from '../../../types/option';
 import { IUnleashServices } from '../../../types/services';
-import ProjectFeaturesController from './features';
+import ProjectFeaturesController from './project-features';
 import EnvironmentsController from './environments';
 import ProjectHealthReport from './health-report';
 import ProjectService from '../../../services/project-service';

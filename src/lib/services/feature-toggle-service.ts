@@ -81,7 +81,7 @@ import {
     SKIP_CHANGE_REQUEST,
 } from '../types/permissions';
 import NoAccessError from '../error/no-access-error';
-import { IFeatureProjectUserParams } from '../routes/admin-api/project/features';
+import { IFeatureProjectUserParams } from '../routes/admin-api/project/project-features';
 
 interface IFeatureContext {
     featureName: string;

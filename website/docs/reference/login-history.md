@@ -37,6 +37,6 @@ Finally, the login history can be downloaded ([how do I download my Unleash logi
 
 ## Retention
 
-Events in the login history are retained for 336 hours (14 days) by default. This setting can be found under the key `login_history_retention` in the `settings` table.
+Events in the login history are retained for 336 hours (14 days).
 
 Events older than the retention period are automatically deleted, and you won't be able to recover them. If you would like to collect login event information past the retention period, we suggest periodically downloading the login history.

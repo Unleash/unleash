@@ -47,13 +47,10 @@ jobs:
               --data "{ \"body\": \"${1}\" }"
           }
 
-          sed -i 's/\/\/\s*"strictNullChecks":\s*true,/"strictNullChecks": true,/' "current/tsconfig.json"
-          sed -i 's/\/\/\s*"strictNullChecks":\s*true,/"strictNullChecks": true,/' "main/tsconfig.json"
-
-          yarn --mutex network --cwd ./current 2> .stderr-current > .out-current &
+          yarn --mutex network --cwd ./current install --strictNullChecks true 2> .stderr-current > .out-current &
           pid1=$!
           
-          yarn --mutex network --cwd ./main 2> .stderr-main  > .out-main &
+          yarn --mutex network --cwd ./main install --strictNullChecks true 2> .stderr-main  > .out-main &
           pid2=$!
 
           # wait for the processes that are expected to fail

@@ -7,6 +7,7 @@
 import useSwr from 'swr';
 import type { SWRConfiguration, Key } from 'swr';
 import type {
+    RequestsPerSecondSegmentedSchema,
     ApplicationSchema,
     ApplicationsSchema,
     FeatureMetricsSchema,
@@ -14,6 +15,46 @@ import type {
 } from '../models';
 import { fetcher } from '../fetcher';
 import type { ErrorType, BodyType } from '../fetcher';
+
+export const getRequestsPerSecond = () => {
+    return fetcher<RequestsPerSecondSegmentedSchema>({
+        url: `/api/admin/metrics/rps`,
+        method: 'get',
+    });
+};
+
+export const getGetRequestsPerSecondKey = () => [`/api/admin/metrics/rps`];
+
+export type GetRequestsPerSecondQueryResult = NonNullable<
+    Awaited<ReturnType<typeof getRequestsPerSecond>>
+>;
+export type GetRequestsPerSecondQueryError = ErrorType<unknown>;
+
+export const useGetRequestsPerSecond = <TError = ErrorType<unknown>>(options?: {
+    swr?: SWRConfiguration<
+        Awaited<ReturnType<typeof getRequestsPerSecond>>,
+        TError
+    > & { swrKey?: Key; enabled?: boolean };
+}) => {
+    const { swr: swrOptions } = options ?? {};
+
+    const isEnabled = swrOptions?.enabled !== false;
+    const swrKey =
+        swrOptions?.swrKey ??
+        (() => (isEnabled ? getGetRequestsPerSecondKey() : null));
+    const swrFn = () => getRequestsPerSecond();
+
+    const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+        swrKey,
+        swrFn,
+        swrOptions
+    );
+
+    return {
+        swrKey,
+        ...query,
+    };
+};
 
 export const createApplication = (
     appName: string,

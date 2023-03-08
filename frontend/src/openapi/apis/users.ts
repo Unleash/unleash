@@ -7,6 +7,12 @@
 import useSwr from 'swr';
 import type { SWRConfiguration, Key } from 'swr';
 import type {
+    GroupsSchema,
+    GroupSchema,
+    RolesWithVersionSchema,
+    RoleWithVersionSchema,
+    CreateRoleWithPermissionsSchema,
+    RoleWithPermissionsSchema,
     MeSchema,
     ProfileSchema,
     PasswordSchema,
@@ -20,6 +26,240 @@ import type {
 } from '../models';
 import { fetcher } from '../fetcher';
 import type { ErrorType, BodyType } from '../fetcher';
+
+export const getGroups = () => {
+    return fetcher<GroupsSchema>({ url: `/api/admin/groups`, method: 'get' });
+};
+
+export const getGetGroupsKey = () => [`/api/admin/groups`];
+
+export type GetGroupsQueryResult = NonNullable<
+    Awaited<ReturnType<typeof getGroups>>
+>;
+export type GetGroupsQueryError = ErrorType<unknown>;
+
+export const useGetGroups = <TError = ErrorType<unknown>>(options?: {
+    swr?: SWRConfiguration<Awaited<ReturnType<typeof getGroups>>, TError> & {
+        swrKey?: Key;
+        enabled?: boolean;
+    };
+}) => {
+    const { swr: swrOptions } = options ?? {};
+
+    const isEnabled = swrOptions?.enabled !== false;
+    const swrKey =
+        swrOptions?.swrKey ?? (() => (isEnabled ? getGetGroupsKey() : null));
+    const swrFn = () => getGroups();
+
+    const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+        swrKey,
+        swrFn,
+        swrOptions
+    );
+
+    return {
+        swrKey,
+        ...query,
+    };
+};
+
+export const createGroup = (groupSchema: BodyType<GroupSchema>) => {
+    return fetcher<GroupSchema>({
+        url: `/api/admin/groups`,
+        method: 'post',
+        headers: { 'Content-Type': 'application/json' },
+        data: groupSchema,
+    });
+};
+
+export const getGroup = (groupId: string) => {
+    return fetcher<GroupSchema>({
+        url: `/api/admin/groups/${groupId}`,
+        method: 'get',
+    });
+};
+
+export const getGetGroupKey = (groupId: string) => [
+    `/api/admin/groups/${groupId}`,
+];
+
+export type GetGroupQueryResult = NonNullable<
+    Awaited<ReturnType<typeof getGroup>>
+>;
+export type GetGroupQueryError = ErrorType<unknown>;
+
+export const useGetGroup = <TError = ErrorType<unknown>>(
+    groupId: string,
+    options?: {
+        swr?: SWRConfiguration<Awaited<ReturnType<typeof getGroup>>, TError> & {
+            swrKey?: Key;
+            enabled?: boolean;
+        };
+    }
+) => {
+    const { swr: swrOptions } = options ?? {};
+
+    const isEnabled = swrOptions?.enabled !== false && !!groupId;
+    const swrKey =
+        swrOptions?.swrKey ??
+        (() => (isEnabled ? getGetGroupKey(groupId) : null));
+    const swrFn = () => getGroup(groupId);
+
+    const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+        swrKey,
+        swrFn,
+        swrOptions
+    );
+
+    return {
+        swrKey,
+        ...query,
+    };
+};
+
+export const updateGroup = (
+    groupId: string,
+    groupSchema: BodyType<GroupSchema>
+) => {
+    return fetcher<GroupSchema>({
+        url: `/api/admin/groups/${groupId}`,
+        method: 'put',
+        headers: { 'Content-Type': 'application/json' },
+        data: groupSchema,
+    });
+};
+
+export const deleteGroup = (groupId: string) => {
+    return fetcher<void>({
+        url: `/api/admin/groups/${groupId}`,
+        method: 'delete',
+    });
+};
+
+export const getRoles = () => {
+    return fetcher<RolesWithVersionSchema>({
+        url: `/api/admin/roles`,
+        method: 'get',
+    });
+};
+
+export const getGetRolesKey = () => [`/api/admin/roles`];
+
+export type GetRolesQueryResult = NonNullable<
+    Awaited<ReturnType<typeof getRoles>>
+>;
+export type GetRolesQueryError = ErrorType<unknown>;
+
+export const useGetRoles = <TError = ErrorType<unknown>>(options?: {
+    swr?: SWRConfiguration<Awaited<ReturnType<typeof getRoles>>, TError> & {
+        swrKey?: Key;
+        enabled?: boolean;
+    };
+}) => {
+    const { swr: swrOptions } = options ?? {};
+
+    const isEnabled = swrOptions?.enabled !== false;
+    const swrKey =
+        swrOptions?.swrKey ?? (() => (isEnabled ? getGetRolesKey() : null));
+    const swrFn = () => getRoles();
+
+    const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+        swrKey,
+        swrFn,
+        swrOptions
+    );
+
+    return {
+        swrKey,
+        ...query,
+    };
+};
+
+export const createRole = (
+    createRoleWithPermissionsSchema: BodyType<CreateRoleWithPermissionsSchema>
+) => {
+    return fetcher<RoleWithVersionSchema>({
+        url: `/api/admin/roles`,
+        method: 'post',
+        headers: { 'Content-Type': 'application/json' },
+        data: createRoleWithPermissionsSchema,
+    });
+};
+
+export const getRoleById = (roleId: string) => {
+    return fetcher<RoleWithPermissionsSchema>({
+        url: `/api/admin/roles/${roleId}`,
+        method: 'get',
+    });
+};
+
+export const getGetRoleByIdKey = (roleId: string) => [
+    `/api/admin/roles/${roleId}`,
+];
+
+export type GetRoleByIdQueryResult = NonNullable<
+    Awaited<ReturnType<typeof getRoleById>>
+>;
+export type GetRoleByIdQueryError = ErrorType<unknown>;
+
+export const useGetRoleById = <TError = ErrorType<unknown>>(
+    roleId: string,
+    options?: {
+        swr?: SWRConfiguration<
+            Awaited<ReturnType<typeof getRoleById>>,
+            TError
+        > & { swrKey?: Key; enabled?: boolean };
+    }
+) => {
+    const { swr: swrOptions } = options ?? {};
+
+    const isEnabled = swrOptions?.enabled !== false && !!roleId;
+    const swrKey =
+        swrOptions?.swrKey ??
+        (() => (isEnabled ? getGetRoleByIdKey(roleId) : null));
+    const swrFn = () => getRoleById(roleId);
+
+    const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+        swrKey,
+        swrFn,
+        swrOptions
+    );
+
+    return {
+        swrKey,
+        ...query,
+    };
+};
+
+export const updateRole = (
+    roleId: string,
+    createRoleWithPermissionsSchema: BodyType<CreateRoleWithPermissionsSchema>
+) => {
+    return fetcher<RoleWithVersionSchema>({
+        url: `/api/admin/roles/${roleId}`,
+        method: 'put',
+        headers: { 'Content-Type': 'application/json' },
+        data: createRoleWithPermissionsSchema,
+    });
+};
+
+export const deleteRole = (roleId: string) => {
+    return fetcher<void>({
+        url: `/api/admin/roles/${roleId}`,
+        method: 'delete',
+    });
+};
+
+export const validateRole = (
+    createRoleWithPermissionsSchema: BodyType<CreateRoleWithPermissionsSchema>
+) => {
+    return fetcher<void>({
+        url: `/api/admin/roles/validate`,
+        method: 'post',
+        headers: { 'Content-Type': 'application/json' },
+        data: createRoleWithPermissionsSchema,
+    });
+};
 
 export const getMe = () => {
     return fetcher<MeSchema>({ url: `/api/admin/user`, method: 'get' });

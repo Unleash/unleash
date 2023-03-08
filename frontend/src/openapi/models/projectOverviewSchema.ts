@@ -4,29 +4,10 @@
  * Unleash API
  * OpenAPI spec version: 4.22.0-beta.45
  */
-import type { ProjectStatsSchema } from './projectStatsSchema';
-import type { FeatureSchema } from './featureSchema';
+import type { ProjectSchema } from './projectSchema';
 
-/**
- * A high-level overview of a project. It contains information such as project statistics, the name of the project, what members and what features it contains, etc.
- */
 export interface ProjectOverviewSchema {
-    /** Project statistics */
-    stats?: ProjectStatsSchema;
-    version: number;
-    /** The name of this project */
-    name: string;
-    /** Additional information about the project */
-    description?: string | null;
-    /** The number of members this project has */
-    members?: number;
-    /** An indicator of the [project's health](https://docs.getunleash.io/reference/technical-debt#health-rating) on a scale from 0 to 100 */
-    health?: number;
-    /** The environments that are enabled for this project */
-    environments?: string[];
-    /** The full list of features in this project (excluding archived features) */
-    features?: FeatureSchema[];
-    updatedAt?: string | null;
-    /** `true` if the project was favorited, otherwise `false`. */
-    favorite?: boolean;
+    featureCount: number;
+    memberCount: number;
+    projects: ProjectSchema[];
 }

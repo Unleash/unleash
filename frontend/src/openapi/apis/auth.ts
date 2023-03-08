@@ -9,6 +9,11 @@ import type { SWRConfiguration, Key } from 'swr';
 import type {
     UserSchema,
     LoginSchema,
+    GoogleSettingsSchema,
+    SamlSettingsSchema,
+    OidcSettingsSchema,
+    PasswordAuthSchema,
+    AdminPermissionsSchema,
     TokenUserSchema,
     ChangePasswordSchema,
     ValidatePasswordSchema,
@@ -24,6 +29,254 @@ export const login = (loginSchema: BodyType<LoginSchema>) => {
         headers: { 'Content-Type': 'application/json' },
         data: loginSchema,
     });
+};
+
+export const getGoogleSettings = () => {
+    return fetcher<GoogleSettingsSchema>({
+        url: `/api/admin/auth/google/settings`,
+        method: 'get',
+    });
+};
+
+export const getGetGoogleSettingsKey = () => [
+    `/api/admin/auth/google/settings`,
+];
+
+export type GetGoogleSettingsQueryResult = NonNullable<
+    Awaited<ReturnType<typeof getGoogleSettings>>
+>;
+export type GetGoogleSettingsQueryError = ErrorType<void>;
+
+export const useGetGoogleSettings = <TError = ErrorType<void>>(options?: {
+    swr?: SWRConfiguration<
+        Awaited<ReturnType<typeof getGoogleSettings>>,
+        TError
+    > & { swrKey?: Key; enabled?: boolean };
+}) => {
+    const { swr: swrOptions } = options ?? {};
+
+    const isEnabled = swrOptions?.enabled !== false;
+    const swrKey =
+        swrOptions?.swrKey ??
+        (() => (isEnabled ? getGetGoogleSettingsKey() : null));
+    const swrFn = () => getGoogleSettings();
+
+    const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+        swrKey,
+        swrFn,
+        swrOptions
+    );
+
+    return {
+        swrKey,
+        ...query,
+    };
+};
+
+export const setGoogleSettings = (
+    googleSettingsSchema: BodyType<GoogleSettingsSchema>
+) => {
+    return fetcher<GoogleSettingsSchema>({
+        url: `/api/admin/auth/google/settings`,
+        method: 'post',
+        headers: { 'Content-Type': 'application/json' },
+        data: googleSettingsSchema,
+    });
+};
+
+export const getSamlSettings = () => {
+    return fetcher<SamlSettingsSchema>({
+        url: `/api/admin/auth/saml/settings`,
+        method: 'get',
+    });
+};
+
+export const getGetSamlSettingsKey = () => [`/api/admin/auth/saml/settings`];
+
+export type GetSamlSettingsQueryResult = NonNullable<
+    Awaited<ReturnType<typeof getSamlSettings>>
+>;
+export type GetSamlSettingsQueryError = ErrorType<void>;
+
+export const useGetSamlSettings = <TError = ErrorType<void>>(options?: {
+    swr?: SWRConfiguration<
+        Awaited<ReturnType<typeof getSamlSettings>>,
+        TError
+    > & { swrKey?: Key; enabled?: boolean };
+}) => {
+    const { swr: swrOptions } = options ?? {};
+
+    const isEnabled = swrOptions?.enabled !== false;
+    const swrKey =
+        swrOptions?.swrKey ??
+        (() => (isEnabled ? getGetSamlSettingsKey() : null));
+    const swrFn = () => getSamlSettings();
+
+    const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+        swrKey,
+        swrFn,
+        swrOptions
+    );
+
+    return {
+        swrKey,
+        ...query,
+    };
+};
+
+export const setSamlSettings = (
+    samlSettingsSchema: BodyType<SamlSettingsSchema>
+) => {
+    return fetcher<SamlSettingsSchema>({
+        url: `/api/admin/auth/saml/settings`,
+        method: 'post',
+        headers: { 'Content-Type': 'application/json' },
+        data: samlSettingsSchema,
+    });
+};
+
+export const getOidcSettings = () => {
+    return fetcher<OidcSettingsSchema>({
+        url: `/api/admin/auth/oidc/settings`,
+        method: 'get',
+    });
+};
+
+export const getGetOidcSettingsKey = () => [`/api/admin/auth/oidc/settings`];
+
+export type GetOidcSettingsQueryResult = NonNullable<
+    Awaited<ReturnType<typeof getOidcSettings>>
+>;
+export type GetOidcSettingsQueryError = ErrorType<void>;
+
+export const useGetOidcSettings = <TError = ErrorType<void>>(options?: {
+    swr?: SWRConfiguration<
+        Awaited<ReturnType<typeof getOidcSettings>>,
+        TError
+    > & { swrKey?: Key; enabled?: boolean };
+}) => {
+    const { swr: swrOptions } = options ?? {};
+
+    const isEnabled = swrOptions?.enabled !== false;
+    const swrKey =
+        swrOptions?.swrKey ??
+        (() => (isEnabled ? getGetOidcSettingsKey() : null));
+    const swrFn = () => getOidcSettings();
+
+    const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+        swrKey,
+        swrFn,
+        swrOptions
+    );
+
+    return {
+        swrKey,
+        ...query,
+    };
+};
+
+export const setOidcSettings = (
+    oidcSettingsSchema: BodyType<OidcSettingsSchema>
+) => {
+    return fetcher<OidcSettingsSchema>({
+        url: `/api/admin/auth/oidc/settings`,
+        method: 'post',
+        headers: { 'Content-Type': 'application/json' },
+        data: oidcSettingsSchema,
+    });
+};
+
+export const getSimpleSettings = () => {
+    return fetcher<PasswordAuthSchema>({
+        url: `/api/admin/auth/simple/settings`,
+        method: 'get',
+    });
+};
+
+export const getGetSimpleSettingsKey = () => [
+    `/api/admin/auth/simple/settings`,
+];
+
+export type GetSimpleSettingsQueryResult = NonNullable<
+    Awaited<ReturnType<typeof getSimpleSettings>>
+>;
+export type GetSimpleSettingsQueryError = ErrorType<void>;
+
+export const useGetSimpleSettings = <TError = ErrorType<void>>(options?: {
+    swr?: SWRConfiguration<
+        Awaited<ReturnType<typeof getSimpleSettings>>,
+        TError
+    > & { swrKey?: Key; enabled?: boolean };
+}) => {
+    const { swr: swrOptions } = options ?? {};
+
+    const isEnabled = swrOptions?.enabled !== false;
+    const swrKey =
+        swrOptions?.swrKey ??
+        (() => (isEnabled ? getGetSimpleSettingsKey() : null));
+    const swrFn = () => getSimpleSettings();
+
+    const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+        swrKey,
+        swrFn,
+        swrOptions
+    );
+
+    return {
+        swrKey,
+        ...query,
+    };
+};
+
+export const setSimpleSettings = (
+    passwordAuthSchema: BodyType<PasswordAuthSchema>
+) => {
+    return fetcher<PasswordAuthSchema>({
+        url: `/api/admin/auth/simple/settings`,
+        method: 'post',
+        headers: { 'Content-Type': 'application/json' },
+        data: passwordAuthSchema,
+    });
+};
+
+export const getPermissions = () => {
+    return fetcher<AdminPermissionsSchema>({
+        url: `/api/admin/permissions`,
+        method: 'get',
+    });
+};
+
+export const getGetPermissionsKey = () => [`/api/admin/permissions`];
+
+export type GetPermissionsQueryResult = NonNullable<
+    Awaited<ReturnType<typeof getPermissions>>
+>;
+export type GetPermissionsQueryError = ErrorType<unknown>;
+
+export const useGetPermissions = <TError = ErrorType<unknown>>(options?: {
+    swr?: SWRConfiguration<
+        Awaited<ReturnType<typeof getPermissions>>,
+        TError
+    > & { swrKey?: Key; enabled?: boolean };
+}) => {
+    const { swr: swrOptions } = options ?? {};
+
+    const isEnabled = swrOptions?.enabled !== false;
+    const swrKey =
+        swrOptions?.swrKey ??
+        (() => (isEnabled ? getGetPermissionsKey() : null));
+    const swrFn = () => getPermissions();
+
+    const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+        swrKey,
+        swrFn,
+        swrOptions
+    );
+
+    return {
+        swrKey,
+        ...query,
+    };
 };
 
 export const validateToken = () => {

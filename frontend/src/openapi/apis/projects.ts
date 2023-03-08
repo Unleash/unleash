@@ -8,7 +8,13 @@ import useSwr from 'swr';
 import type { SWRConfiguration, Key } from 'swr';
 import type {
     ProjectsSchema,
+    ProjectCreatedSchema,
+    CreateProjectSchema,
+    ValidateProjectSchema,
+    UpdateProjectSchema,
     ProjectOverviewSchema,
+    ProjectUsers,
+    ProjectAccessSchema,
     ProjectEnvironmentSchema,
     HealthReportSchema,
     ApiTokensSchema,
@@ -57,6 +63,47 @@ export const useGetProjects = <TError = ErrorType<unknown>>(options?: {
     };
 };
 
+export const createProject = (
+    createProjectSchema: BodyType<CreateProjectSchema>
+) => {
+    return fetcher<ProjectCreatedSchema>({
+        url: `/api/admin/projects`,
+        method: 'post',
+        headers: { 'Content-Type': 'application/json' },
+        data: createProjectSchema,
+    });
+};
+
+export const validateProject = (
+    validateProjectSchema: BodyType<ValidateProjectSchema>
+) => {
+    return fetcher<void>({
+        url: `/api/admin/projects/validate`,
+        method: 'post',
+        headers: { 'Content-Type': 'application/json' },
+        data: validateProjectSchema,
+    });
+};
+
+export const updateProject = (
+    projectId: string,
+    updateProjectSchema: BodyType<UpdateProjectSchema>
+) => {
+    return fetcher<void>({
+        url: `/api/admin/projects/${projectId}`,
+        method: 'put',
+        headers: { 'Content-Type': 'application/json' },
+        data: updateProjectSchema,
+    });
+};
+
+export const deleteProject = (projectId: string) => {
+    return fetcher<void>({
+        url: `/api/admin/projects/${projectId}`,
+        method: 'delete',
+    });
+};
+
 export const getProjectOverview = (projectId: string) => {
     return fetcher<ProjectOverviewSchema>({
         url: `/api/admin/projects/${projectId}`,
@@ -100,6 +147,161 @@ export const useGetProjectOverview = <TError = ErrorType<unknown>>(
         swrKey,
         ...query,
     };
+};
+
+/**
+ * @deprecated
+ */
+export const getProjectUsers = (projectId: string) => {
+    return fetcher<ProjectUsers>({
+        url: `/api/admin/projects/${projectId}/users`,
+        method: 'get',
+    });
+};
+
+export const getGetProjectUsersKey = (projectId: string) => [
+    `/api/admin/projects/${projectId}/users`,
+];
+
+export type GetProjectUsersQueryResult = NonNullable<
+    Awaited<ReturnType<typeof getProjectUsers>>
+>;
+export type GetProjectUsersQueryError = ErrorType<unknown>;
+
+export const useGetProjectUsers = <TError = ErrorType<unknown>>(
+    projectId: string,
+    options?: {
+        swr?: SWRConfiguration<
+            Awaited<ReturnType<typeof getProjectUsers>>,
+            TError
+        > & { swrKey?: Key; enabled?: boolean };
+    }
+) => {
+    const { swr: swrOptions } = options ?? {};
+
+    const isEnabled = swrOptions?.enabled !== false && !!projectId;
+    const swrKey =
+        swrOptions?.swrKey ??
+        (() => (isEnabled ? getGetProjectUsersKey(projectId) : null));
+    const swrFn = () => getProjectUsers(projectId);
+
+    const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+        swrKey,
+        swrFn,
+        swrOptions
+    );
+
+    return {
+        swrKey,
+        ...query,
+    };
+};
+
+export const getProjectAccess = (projectId: string) => {
+    return fetcher<ProjectAccessSchema>({
+        url: `/api/admin/projects/${projectId}/access`,
+        method: 'get',
+    });
+};
+
+export const getGetProjectAccessKey = (projectId: string) => [
+    `/api/admin/projects/${projectId}/access`,
+];
+
+export type GetProjectAccessQueryResult = NonNullable<
+    Awaited<ReturnType<typeof getProjectAccess>>
+>;
+export type GetProjectAccessQueryError = ErrorType<unknown>;
+
+export const useGetProjectAccess = <TError = ErrorType<unknown>>(
+    projectId: string,
+    options?: {
+        swr?: SWRConfiguration<
+            Awaited<ReturnType<typeof getProjectAccess>>,
+            TError
+        > & { swrKey?: Key; enabled?: boolean };
+    }
+) => {
+    const { swr: swrOptions } = options ?? {};
+
+    const isEnabled = swrOptions?.enabled !== false && !!projectId;
+    const swrKey =
+        swrOptions?.swrKey ??
+        (() => (isEnabled ? getGetProjectAccessKey(projectId) : null));
+    const swrFn = () => getProjectAccess(projectId);
+
+    const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+        swrKey,
+        swrFn,
+        swrOptions
+    );
+
+    return {
+        swrKey,
+        ...query,
+    };
+};
+
+export const addRoleToUser = (
+    projectId: string,
+    userId: string,
+    roleId: string
+) => {
+    return fetcher<void>({
+        url: `/api/admin/projects/${projectId}/users/${userId}/roles/${roleId}`,
+        method: 'post',
+    });
+};
+
+export const removeRoleForUser = (
+    projectId: string,
+    userId: string,
+    roleId: string
+) => {
+    return fetcher<void>({
+        url: `/api/admin/projects/${projectId}/users/${userId}/roles/${roleId}`,
+        method: 'delete',
+    });
+};
+
+export const changeRoleForUser = (
+    projectId: string,
+    userId: string,
+    roleId: string
+) => {
+    return fetcher<void>({
+        url: `/api/admin/projects/${projectId}/users/${userId}/roles/${roleId}`,
+        method: 'put',
+    });
+};
+
+export const changeRoleForGroup = (
+    projectId: string,
+    groupId: string,
+    roleId: string
+) => {
+    return fetcher<void>({
+        url: `/api/admin/projects/${projectId}/groups/${groupId}/roles/${roleId}`,
+        method: 'put',
+    });
+};
+
+export const removeRoleFromGroup = (
+    projectId: string,
+    groupId: string,
+    roleId: string
+) => {
+    return fetcher<void>({
+        url: `/api/admin/projects/${projectId}/groups/${groupId}/roles/${roleId}`,
+        method: 'delete',
+    });
+};
+
+export const addAccessToProject = (projectId: string, roleId: string) => {
+    return fetcher<void>({
+        url: `/api/admin/projects/${projectId}/role/${roleId}/access`,
+        method: 'post',
+    });
 };
 
 export const addEnvironmentToProject = (

@@ -7,12 +7,256 @@
 import useSwr from 'swr';
 import type { SWRConfiguration, Key } from 'swr';
 import type {
+    NameSchema,
+    SegmentsSchema,
+    UpdateFeatureStrategySegmentsSchema,
+    AdminSegmentSchema,
+    UpsertSegmentSchema,
     StrategiesSchema,
     StrategySchema,
     UpsertStrategySchema,
 } from '../models';
 import { fetcher } from '../fetcher';
 import type { ErrorType, BodyType } from '../fetcher';
+
+/**
+ * Uses the name provided in the body of the request to validate if the given name exists or not
+ * @summary Validates if a segment name exists
+ */
+export const validateSegment = (nameSchema: BodyType<NameSchema>) => {
+    return fetcher<void>({
+        url: `/api/admin/segments/validate`,
+        method: 'post',
+        headers: { 'Content-Type': 'application/json' },
+        data: nameSchema,
+    });
+};
+
+export const getSegmentsByStrategyId = (strategyId: string) => {
+    return fetcher<SegmentsSchema>({
+        url: `/api/admin/segments/strategies/${strategyId}`,
+        method: 'get',
+    });
+};
+
+export const getGetSegmentsByStrategyIdKey = (strategyId: string) => [
+    `/api/admin/segments/strategies/${strategyId}`,
+];
+
+export type GetSegmentsByStrategyIdQueryResult = NonNullable<
+    Awaited<ReturnType<typeof getSegmentsByStrategyId>>
+>;
+export type GetSegmentsByStrategyIdQueryError = ErrorType<unknown>;
+
+export const useGetSegmentsByStrategyId = <TError = ErrorType<unknown>>(
+    strategyId: string,
+    options?: {
+        swr?: SWRConfiguration<
+            Awaited<ReturnType<typeof getSegmentsByStrategyId>>,
+            TError
+        > & { swrKey?: Key; enabled?: boolean };
+    }
+) => {
+    const { swr: swrOptions } = options ?? {};
+
+    const isEnabled = swrOptions?.enabled !== false && !!strategyId;
+    const swrKey =
+        swrOptions?.swrKey ??
+        (() => (isEnabled ? getGetSegmentsByStrategyIdKey(strategyId) : null));
+    const swrFn = () => getSegmentsByStrategyId(strategyId);
+
+    const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+        swrKey,
+        swrFn,
+        swrOptions
+    );
+
+    return {
+        swrKey,
+        ...query,
+    };
+};
+
+/**
+ * Sets the segments of the strategy to be exactly the ones passed in the payload
+ * @summary Updates the segments of a strategy by id
+ */
+export const updateFeatureStrategySegments = (
+    updateFeatureStrategySegmentsSchema: BodyType<UpdateFeatureStrategySegmentsSchema>
+) => {
+    return fetcher<UpdateFeatureStrategySegmentsSchema>({
+        url: `/api/admin/segments/strategies`,
+        method: 'post',
+        headers: { 'Content-Type': 'application/json' },
+        data: updateFeatureStrategySegmentsSchema,
+    });
+};
+
+export const getStrategiesBySegmentId = (id: string) => {
+    return fetcher<SegmentsSchema>({
+        url: `/api/admin/segments/${id}/strategies`,
+        method: 'get',
+    });
+};
+
+export const getGetStrategiesBySegmentIdKey = (id: string) => [
+    `/api/admin/segments/${id}/strategies`,
+];
+
+export type GetStrategiesBySegmentIdQueryResult = NonNullable<
+    Awaited<ReturnType<typeof getStrategiesBySegmentId>>
+>;
+export type GetStrategiesBySegmentIdQueryError = ErrorType<unknown>;
+
+export const useGetStrategiesBySegmentId = <TError = ErrorType<unknown>>(
+    id: string,
+    options?: {
+        swr?: SWRConfiguration<
+            Awaited<ReturnType<typeof getStrategiesBySegmentId>>,
+            TError
+        > & { swrKey?: Key; enabled?: boolean };
+    }
+) => {
+    const { swr: swrOptions } = options ?? {};
+
+    const isEnabled = swrOptions?.enabled !== false && !!id;
+    const swrKey =
+        swrOptions?.swrKey ??
+        (() => (isEnabled ? getGetStrategiesBySegmentIdKey(id) : null));
+    const swrFn = () => getStrategiesBySegmentId(id);
+
+    const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+        swrKey,
+        swrFn,
+        swrOptions
+    );
+
+    return {
+        swrKey,
+        ...query,
+    };
+};
+
+/**
+ * Deletes a segment by its id, if not found returns a 409 error
+ * @summary Deletes a segment by id
+ */
+export const removeSegment = (id: string) => {
+    return fetcher<void>({
+        url: `/api/admin/segments/${id}`,
+        method: 'delete',
+    });
+};
+
+/**
+ * Updates the content of the segment with the provided payload
+ * @summary Update segment by id
+ */
+export const updateSegment = (id: string) => {
+    return fetcher<void>({ url: `/api/admin/segments/${id}`, method: 'put' });
+};
+
+/**
+ * @summary Get a segment by id
+ */
+export const getSegment = (id: string) => {
+    return fetcher<AdminSegmentSchema>({
+        url: `/api/admin/segments/${id}`,
+        method: 'get',
+    });
+};
+
+export const getGetSegmentKey = (id: string) => [`/api/admin/segments/${id}`];
+
+export type GetSegmentQueryResult = NonNullable<
+    Awaited<ReturnType<typeof getSegment>>
+>;
+export type GetSegmentQueryError = ErrorType<void>;
+
+export const useGetSegment = <TError = ErrorType<void>>(
+    id: string,
+    options?: {
+        swr?: SWRConfiguration<
+            Awaited<ReturnType<typeof getSegment>>,
+            TError
+        > & { swrKey?: Key; enabled?: boolean };
+    }
+) => {
+    const { swr: swrOptions } = options ?? {};
+
+    const isEnabled = swrOptions?.enabled !== false && !!id;
+    const swrKey =
+        swrOptions?.swrKey ?? (() => (isEnabled ? getGetSegmentKey(id) : null));
+    const swrFn = () => getSegment(id);
+
+    const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+        swrKey,
+        swrFn,
+        swrOptions
+    );
+
+    return {
+        swrKey,
+        ...query,
+    };
+};
+
+/**
+ * Creates a new segment using the payload provided
+ * @summary Create a new segment
+ */
+export const createSegment = (
+    upsertSegmentSchema: BodyType<UpsertSegmentSchema>
+) => {
+    return fetcher<AdminSegmentSchema>({
+        url: `/api/admin/segments`,
+        method: 'post',
+        headers: { 'Content-Type': 'application/json' },
+        data: upsertSegmentSchema,
+    });
+};
+
+/**
+ * @summary Get all segments
+ */
+export const getSegments = () => {
+    return fetcher<SegmentsSchema>({
+        url: `/api/admin/segments`,
+        method: 'get',
+    });
+};
+
+export const getGetSegmentsKey = () => [`/api/admin/segments`];
+
+export type GetSegmentsQueryResult = NonNullable<
+    Awaited<ReturnType<typeof getSegments>>
+>;
+export type GetSegmentsQueryError = ErrorType<unknown>;
+
+export const useGetSegments = <TError = ErrorType<unknown>>(options?: {
+    swr?: SWRConfiguration<Awaited<ReturnType<typeof getSegments>>, TError> & {
+        swrKey?: Key;
+        enabled?: boolean;
+    };
+}) => {
+    const { swr: swrOptions } = options ?? {};
+
+    const isEnabled = swrOptions?.enabled !== false;
+    const swrKey =
+        swrOptions?.swrKey ?? (() => (isEnabled ? getGetSegmentsKey() : null));
+    const swrFn = () => getSegments();
+
+    const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+        swrKey,
+        swrFn,
+        swrOptions
+    );
+
+    return {
+        swrKey,
+        ...query,
+    };
+};
 
 export const getAllStrategies = () => {
     return fetcher<StrategiesSchema>({

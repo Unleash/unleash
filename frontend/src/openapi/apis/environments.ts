@@ -8,11 +8,29 @@ import useSwr from 'swr';
 import type { SWRConfiguration, Key } from 'swr';
 import type {
     EnvironmentSchema,
+    CreateEnvironmentSchema,
+    NameSchema,
+    UpdateEnvironmentSchema,
     EnvironmentsProjectSchema,
     SortOrderSchema,
 } from '../models';
 import { fetcher } from '../fetcher';
 import type { ErrorType, BodyType } from '../fetcher';
+
+/**
+ * Uses the details provided in the payload to create a new environment
+ * @summary Creates a new environment
+ */
+export const createEnvironment = (
+    createEnvironmentSchema: BodyType<CreateEnvironmentSchema>
+) => {
+    return fetcher<EnvironmentSchema>({
+        url: `/api/admin/environments`,
+        method: 'post',
+        headers: { 'Content-Type': 'application/json' },
+        data: createEnvironmentSchema,
+    });
+};
 
 export const getAllEnvironments = () => {
     return fetcher<void>({ url: `/api/admin/environments`, method: 'get' });
@@ -49,6 +67,46 @@ export const useGetAllEnvironments = <TError = ErrorType<unknown>>(options?: {
         swrKey,
         ...query,
     };
+};
+
+/**
+ * Uses the name provided in the body of the request to validate if the given name exists or not
+ * @summary Validates if an environment name exists
+ */
+export const validateEnvironmentName = (nameSchema: BodyType<NameSchema>) => {
+    return fetcher<void>({
+        url: `/api/admin/environments/validate`,
+        method: 'post',
+        headers: { 'Content-Type': 'application/json' },
+        data: nameSchema,
+    });
+};
+
+/**
+ * Given an environment by name updates the environment with the given payload. Note that `name`, `enabled` and `protected` cannot be changed by this API
+ * @summary Updates an environment by name
+ */
+export const updateEnvironment = (
+    name: string,
+    updateEnvironmentSchema: BodyType<UpdateEnvironmentSchema>
+) => {
+    return fetcher<EnvironmentSchema>({
+        url: `/api/admin/environments/update/${name}`,
+        method: 'put',
+        headers: { 'Content-Type': 'application/json' },
+        data: updateEnvironmentSchema,
+    });
+};
+
+/**
+ * Given an existing environment by name, this endpoint will attempt to delete it
+ * @summary Deletes an environment by name
+ */
+export const removeEnvironment = (name: string) => {
+    return fetcher<void>({
+        url: `/api/admin/environments/${name}`,
+        method: 'delete',
+    });
 };
 
 export const getEnvironment = (name: string) => {
@@ -94,6 +152,17 @@ export const useGetEnvironment = <TError = ErrorType<unknown>>(
         swrKey,
         ...query,
     };
+};
+
+/**
+ * Given an existing environment name and a set of options, this will create a copy of that environment
+ * @summary Clones an environment
+ */
+export const cloneEnvironment = (name: string) => {
+    return fetcher<void>({
+        url: `/api/admin/environments/${name}/clone`,
+        method: 'post',
+    });
 };
 
 export const getProjectEnvironments = (projectId: string) => {

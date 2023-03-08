@@ -7,6 +7,7 @@
 import useSwr from 'swr';
 import type { SWRConfiguration, Key } from 'swr';
 import type {
+    ChangeProjectSchema,
     FeaturesSchema,
     TagsSchema,
     TagSchema,
@@ -29,6 +30,19 @@ import type {
 } from '../models';
 import { fetcher } from '../fetcher';
 import type { ErrorType, BodyType } from '../fetcher';
+
+export const changeProject = (
+    projectId: string,
+    featureName: string,
+    changeProjectSchema: BodyType<ChangeProjectSchema>
+) => {
+    return fetcher<void>({
+        url: `/api/admin/projects/${projectId}/features/${featureName}/changeProject`,
+        method: 'post',
+        headers: { 'Content-Type': 'application/json' },
+        data: changeProjectSchema,
+    });
+};
 
 /**
  * @deprecated

@@ -23,3 +23,4 @@ export * from './apis/instance-admin';
 export * from './apis/maintenance';
 export * from './apis/client';
 export * from './apis/edge';
+export * from './apis/service-accounts';

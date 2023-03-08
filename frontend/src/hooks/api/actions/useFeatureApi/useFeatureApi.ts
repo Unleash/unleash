@@ -5,7 +5,6 @@ import { IConstraint } from 'interfaces/strategy';
 import { CreateFeatureSchema, UpdateTagsSchema } from 'openapi';
 import useAPI from '../useApi/useApi';
 import { IFeatureVariant } from 'interfaces/featureToggle';
-import tag from '@server/routes/admin-api/tag';
 
 const useFeatureApi = () => {
     const { makeRequest, createRequest, errors, loading } = useAPI({

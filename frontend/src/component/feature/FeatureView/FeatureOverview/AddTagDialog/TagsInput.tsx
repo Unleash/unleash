@@ -19,8 +19,7 @@ export type TagOption = {
 };
 interface ITagsInputProps {
     options: TagOption[];
-    featureTags: ITag[];
-    tagType: string;
+    selectedOptions: TagOption[];
     onChange: AutocompleteProps<TagOption | string, true, any, any>['onChange'];
 }
 
@@ -28,18 +27,11 @@ const filter = createFilterOptions<TagOption>();
 
 export const TagsInput = ({
     options,
-    featureTags,
-    tagType,
+    selectedOptions,
     onChange,
 }: ITagsInputProps) => {
     const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
     const checkedIcon = <CheckBoxIcon fontSize="small" />;
-
-    const getOptionDisabled = (option: TagOption) => {
-        return featureTags.some(
-            tag => tag.type === tagType && tag.value === option.title
-        );
-    };
 
     const getOptionLabel = (option: TagOption) => {
         // Add "xxx" option created dynamically
@@ -57,9 +49,6 @@ export const TagsInput = ({
         option: TagOption,
         { selected }: { selected: boolean }
     ) => {
-        const exists = featureTags.some(
-            tag => tag.type === tagType && tag.value === option.title
-        );
         return (
             <li {...props}>
                 <ConditionallyRender
@@ -70,7 +59,7 @@ export const TagsInput = ({
                             icon={icon}
                             checkedIcon={checkedIcon}
                             sx={{ mr: theme => theme.spacing(0.5) }}
-                            checked={selected || exists}
+                            checked={selected}
                         />
                     }
                 />
@@ -106,6 +95,7 @@ export const TagsInput = ({
             disableCloseOnSelect
             placeholder="Select Values"
             options={options}
+            defaultValue={selectedOptions}
             isOptionEqualToValue={(option, value) => {
                 if (value.inputValue && value.inputValue !== '') {
                     return option.title === value.inputValue;
@@ -113,7 +103,6 @@ export const TagsInput = ({
                     return option.title === value.title;
                 }
             }}
-            getOptionDisabled={getOptionDisabled}
             getOptionLabel={getOptionLabel}
             renderOption={renderOption}
             filterOptions={filterOptions}

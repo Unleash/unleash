@@ -1,12 +1,12 @@
 import { AutocompleteValue, styled, Typography } from '@mui/material';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import useFeatureTags from 'hooks/api/getters/useFeatureTags/useFeatureTags';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { ITagType } from 'interfaces/tags';
+import { ITag, ITagType } from 'interfaces/tags';
 import { TagOption, TagsInput } from './TagsInput';
 import TagTypeSelect from './TagTypeSelect';
 import useTagApi from 'hooks/api/actions/useTagApi/useTagApi';
@@ -26,10 +26,27 @@ const StyledDialogFormContent = styled('section')(({ theme }) => ({
     },
 }));
 
+const tagsToOptions = (tags: ITag[]): TagOption[] => {
+    return tags.map(tag => {
+        return {
+            title: tag.value,
+        };
+    });
+};
+
+const optionsToTags = (options: TagOption[], type: ITagType): ITag[] => {
+    return options.map(option => {
+        return {
+            value: option.title,
+            type: type.name,
+        };
+    });
+};
+
 const AddTagDialog = ({ open, setOpen }: IAddTagDialogProps) => {
     const featureId = useRequiredPathParam('featureId');
     const { createTag } = useTagApi();
-    const { addTagToFeature, loading } = useFeatureApi();
+    const { updateFeatureTags, loading } = useFeatureApi();
     const { tags, refetch } = useFeatureTags(featureId);
     const { setToastData } = useToast();
     const [tagType, setTagType] = useState<ITagType>({
@@ -47,65 +64,85 @@ const AddTagDialog = ({ open, setOpen }: IAddTagDialogProps) => {
     const { tags: allTags, refetch: refetchAllTags } = useTags(tagType.name);
 
     const tagTypeOptions: TagOption[] = useMemo(() => {
-        return allTags.map(tag => {
-            return {
-                title: tag.value,
-            };
-        });
+        return tagsToOptions(allTags);
     }, [allTags]);
+
+    useEffect(() => {
+        if (tags) {
+            setSelectedTagOptions(tagsToOptions(tags));
+        }
+    }, [tags]);
 
     const onCancel = () => {
         setOpen(false);
         setSelectedTagOptions([]);
     };
 
+    function difference(array1: ITag[], array2: ITag[]) {
+        const added = array1.filter(
+            element =>
+                !array2.find(
+                    e2 => element.value === e2.value && element.type === e2.type
+                )
+        );
+        const removed = array2.filter(
+            element =>
+                !array1.find(
+                    e2 => element.value === e2.value && element.type === e2.type
+                )
+        );
+
+        return { added, removed };
+    }
+
+    const updateTags = async (added: ITag[], removed: ITag[]) => {
+        try {
+            await updateFeatureTags(featureId, {
+                addedTags: added,
+                removedTags: removed,
+            });
+            await refetch();
+        } catch (error: unknown) {
+            const message = formatUnknownError(error);
+            setToastData({
+                type: 'error',
+                title: `Failed to add tag`,
+                text: message,
+                confetti: false,
+            });
+        }
+    };
+
     const onSubmit = async (evt: React.SyntheticEvent) => {
         evt.preventDefault();
-        let added = 0;
         if (selectedTagOptions.length !== 0) {
-            for (const tagOption of selectedTagOptions) {
-                if (
-                    !tags.includes({
-                        type: tagType.name,
-                        value: tagOption.title,
-                    })
-                ) {
-                    try {
-                        if (!tagOption.title.startsWith('Create')) {
-                            await addTagToFeature(featureId, {
-                                type: tagType.name,
-                                value: tagOption.title,
-                            });
-                            added++;
-                            await refetch();
-                        }
-                    } catch (error: unknown) {
-                        const message = formatUnknownError(error);
-                        setToastData({
-                            type: 'error',
-                            title: `Failed to add tag`,
-                            text: message,
-                            confetti: false,
-                        });
-                    }
-                }
-            }
-            added > 1 &&
+            const realOptions = selectedTagOptions.filter(
+                tagOption => !tagOption.title.startsWith('Create')
+            );
+            const selectedTags = optionsToTags(realOptions, tagType);
+
+            const { added, removed } = difference(selectedTags, tags);
+            await updateTags(added, removed);
+            added.length > 1 &&
                 trackEvent('suggest_tags', {
                     props: { eventType: 'multiple_tags_added' },
                 });
-            added > 0 &&
+            added.length > 0 &&
                 setToastData({
                     type: 'success',
-                    title: `Added tag${added > 1 ? 's' : ''} to toggle`,
-                    text: `We successfully added ${added} new tag${
-                        added > 1 ? 's' : ''
-                    } to your toggle`,
+                    title: `Updated tag${
+                        added.length > 1 ? 's' : ''
+                    } to toggle`,
+                    text: `We successfully added ${added.length} new tag${
+                        added.length > 1 ? 's' : ''
+                    } and removed ${removed.length} tag${
+                        removed.length > 1 ? 's' : ''
+                    } from your toggle`,
                     confetti: true,
                 });
-            setOpen(false);
-            setSelectedTagOptions([]);
         }
+        setOpen(false);
+        setSelectedTagOptions([]);
     };
 
     const handleTagTypeChange = (
@@ -128,8 +165,8 @@ const AddTagDialog = ({ open, setOpen }: IAddTagDialogProps) => {
         >,
         reason: AutocompleteChangeReason
     ) => {
+        const clone = cloneDeep(newValue) as TagOption[];
         if (reason === 'selectOption') {
-            const clone = cloneDeep(newValue) as TagOption[];
             newValue.forEach((value, index) => {
                 if (
                     typeof value !== 'string' &&
@@ -151,8 +188,8 @@ const AddTagDialog = ({ open, setOpen }: IAddTagDialogProps) => {
                     clone[index] = value;
                 }
             });
-            setSelectedTagOptions(clone);
         }
+        setSelectedTagOptions(clone);
     };
 
     const hasSelectedValues = selectedTagOptions.length !== 0;
@@ -187,8 +224,7 @@ const AddTagDialog = ({ open, setOpen }: IAddTagDialogProps) => {
                             />
                             <TagsInput
                                 options={tagTypeOptions}
-                                tagType={tagType.name}
-                                featureTags={tags}
+                                selectedOptions={selectedTagOptions}
                                 onChange={handleInputChange}
                             />
                         </StyledDialogFormContent>

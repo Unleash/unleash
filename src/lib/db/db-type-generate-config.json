@@ -1,0 +1,4 @@
+{
+  "conn": "postgres://unleash_user:passord@localhost:5432/unleash",
+  "output": "./src/lib/db/db-types.ts"
+}

@@ -1,4 +1,7 @@
-import { IUnleashTest, setupApp } from '../../helpers/test-helper';
+import {
+    IUnleashTest,
+    setupAppWithCustomConfig,
+} from '../../helpers/test-helper';
 import dbInit, { ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import { DEFAULT_ENV } from '../../../../lib/util/constants';
@@ -8,7 +11,13 @@ let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('feature_api_client', getLogger);
-    app = await setupApp(db.stores);
+    app = await setupAppWithCustomConfig(db.stores, {
+        experimental: {
+            flags: {
+                strictSchemaValidation: true,
+            },
+        },
+    });
     await app.services.featureToggleServiceV2.createFeatureToggle(
         'default',
         {

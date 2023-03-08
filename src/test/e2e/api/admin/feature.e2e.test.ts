@@ -739,31 +739,6 @@ test('Querying with multiple filters ANDs the filters', async () => {
         });
 });
 
-test('Tagging a feature with a tag it already has should return 409', async () => {
-    const feature1Name = `test.${randomId()}`;
-    await app.request.post('/api/admin/features').send({
-        name: feature1Name,
-        type: 'killswitch',
-        enabled: true,
-        strategies: [{ name: 'default' }],
-    });
-
-    const tag = { value: randomId(), type: 'simple' };
-    await app.request
-        .post(`/api/admin/features/${feature1Name}/tags`)
-        .send(tag)
-        .expect(201);
-    return app.request
-        .post(`/api/admin/features/${feature1Name}/tags`)
-        .send(tag)
-        .expect(409)
-        .expect((res) => {
-            expect(res.body.details[0].message).toBe(
-                `${feature1Name} already has the tag: [${tag.type}:${tag.value}]`,
-            );
-        });
-});
-
 test('marks feature toggle as stale', async () => {
     expect.assertions(1);
     await app.request

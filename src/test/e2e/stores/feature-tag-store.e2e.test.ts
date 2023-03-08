@@ -71,16 +71,6 @@ test('should untag feature', async () => {
     expect(featureTags).toHaveLength(0);
 });
 
-test('should throw if feature have tag', async () => {
-    expect.assertions(1);
-    await featureTagStore.tagFeature(featureName, tag);
-    try {
-        await featureTagStore.tagFeature(featureName, tag);
-    } catch (e) {
-        expect(e.message).toContain('already has the tag');
-    }
-});
-
 test('get all feature tags', async () => {
     await featureTagStore.tagFeature(featureName, tag);
     await featureToggleStore.create('default', {

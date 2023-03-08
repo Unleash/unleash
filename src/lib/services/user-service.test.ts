@@ -94,6 +94,7 @@ test('Should create default user', async () => {
     await service.initAdminUser();
 
     const user = await service.loginUser('admin', 'unleash4all');
+    console.log('kicks the build server');
     expect(user.username).toBe('admin');
 });
 

@@ -14,6 +14,7 @@ import { AutocompleteChangeReason } from '@mui/base/AutocompleteUnstyled/useAuto
 import useTags from 'hooks/api/getters/useTags/useTags';
 import cloneDeep from 'lodash.clonedeep';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { ConditionallyRender } from '../../../../common/ConditionallyRender/ConditionallyRender';
 
 interface IAddTagDialogProps {
     open: boolean;
@@ -34,11 +35,11 @@ const tagsToOptions = (tags: ITag[]): TagOption[] => {
     });
 };
 
-const optionsToTags = (options: TagOption[], type: ITagType): ITag[] => {
+const optionsToTags = (options: TagOption[], type: string): ITag[] => {
     return options.map(option => {
         return {
             value: option.title,
-            type: type.name,
+            type: type,
         };
     });
 };
@@ -68,10 +69,12 @@ const AddTagDialog = ({ open, setOpen }: IAddTagDialogProps) => {
     }, [allTags]);
 
     useEffect(() => {
-        if (tags) {
-            setSelectedTagOptions(tagsToOptions(tags));
+        if (tags && tagType) {
+            setSelectedTagOptions(
+                tagsToOptions(tags.filter(tag => tag.type === tagType.name))
+            );
         }
-    }, [tags]);
+    }, [tags, tagType]);
 
     const onCancel = () => {
         setOpen(false);
@@ -95,6 +98,12 @@ const AddTagDialog = ({ open, setOpen }: IAddTagDialogProps) => {
         return { added, removed };
     }
 
+    const realOptions = (allOptions: TagOption[]) => {
+        return allOptions.filter(
+            tagOption => !tagOption.title.startsWith('Create')
+        );
+    };
+
     const updateTags = async (added: ITag[], removed: ITag[]) => {
         try {
             await updateFeatureTags(featureId, {
@@ -116,10 +125,10 @@ const AddTagDialog = ({ open, setOpen }: IAddTagDialogProps) => {
     const onSubmit = async (evt: React.SyntheticEvent) => {
         evt.preventDefault();
         if (selectedTagOptions.length !== 0) {
-            const realOptions = selectedTagOptions.filter(
-                tagOption => !tagOption.title.startsWith('Create')
+            const selectedTags: ITag[] = optionsToTags(
+                realOptions(selectedTagOptions),
+                tagType.name
             );
-            const selectedTags = optionsToTags(realOptions, tagType);
 
             const { added, removed } = difference(selectedTags, tags);
             await updateTags(added, removed);
@@ -201,8 +210,8 @@ const AddTagDialog = ({ open, setOpen }: IAddTagDialogProps) => {
             <Dialogue
                 open={open}
                 secondaryButtonText="Cancel"
-                primaryButtonText={`Add tag (${selectedTagOptions.length})`}
-                title="Add tags to feature toggle"
+                primaryButtonText={`Save tags`}
+                title="Update tags to feature toggle"
                 onClick={onSubmit}
                 disabledPrimaryButton={loading || !hasSelectedValues}
                 onClose={onCancel}
@@ -224,6 +233,8 @@ const AddTagDialog = ({ open, setOpen }: IAddTagDialogProps) => {
                             />
                             <TagsInput
                                 options={tagTypeOptions}
+                                existingTags={tags}
+                                tagType={tagType}
                                 selectedOptions={selectedTagOptions}
                                 onChange={handleInputChange}
                             />

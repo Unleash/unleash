@@ -5,9 +5,10 @@ import {
 } from '../../lib/types/model';
 import { IFeatureToggleClientStore } from '../../lib/types/stores/feature-toggle-client-store';
 import { IGetAdminFeatures } from '../../lib/db/feature-toggle-client-store';
+import { IFeatureToggleLegacyAdminStore } from '../../lib/types/stores/feature-toggle-legacy-admin-store';
 
 export default class FakeFeatureToggleClientStore
-    implements IFeatureToggleClientStore
+    implements IFeatureToggleClientStore, IFeatureToggleLegacyAdminStore
 {
     featureToggles: FeatureToggle[] = [];
 

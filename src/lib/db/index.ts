@@ -37,6 +37,7 @@ import { AccountStore } from './account-store';
 import ProjectStatsStore from './project-stats-store';
 import { Db } from './db';
 import { ImportTogglesStore } from '../features/export-import-toggles/import-toggles-store';
+import FeatureToggleLegacyAdminStore from './feature-toggle-legacy-admin-store';
 
 export const createStores = (
     config: IUnleashConfig,
@@ -82,6 +83,11 @@ export const createStores = (
             config.flagResolver,
         ),
         featureToggleClientStore: new FeatureToggleClientStore(
+            db,
+            eventBus,
+            getLogger,
+        ),
+        featureToggleLegacyAdminStore: new FeatureToggleLegacyAdminStore(
             db,
             eventBus,
             getLogger,

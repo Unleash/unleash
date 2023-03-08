@@ -82,6 +82,7 @@ import {
 } from '../types/permissions';
 import NoAccessError from '../error/no-access-error';
 import { IFeatureProjectUserParams } from '../routes/admin-api/project/project-features';
+import { IFeatureToggleLegacyAdminStore } from '../types/stores/feature-toggle-legacy-admin-store';
 
 interface IFeatureContext {
     featureName: string;
@@ -113,6 +114,8 @@ class FeatureToggleService {
 
     private featureToggleClientStore: IFeatureToggleClientStore;
 
+    private featureToggleLegacyAdminStore: IFeatureToggleLegacyAdminStore;
+
     private tagStore: IFeatureTagStore;
 
     private featureEnvironmentStore: IFeatureEnvironmentStore;
@@ -134,6 +137,7 @@ class FeatureToggleService {
             featureStrategiesStore,
             featureToggleStore,
             featureToggleClientStore,
+            featureToggleLegacyAdminStore,
             projectStore,
             eventStore,
             featureTagStore,
@@ -144,6 +148,7 @@ class FeatureToggleService {
             | 'featureStrategiesStore'
             | 'featureToggleStore'
             | 'featureToggleClientStore'
+            | 'featureToggleLegacyAdminStore'
             | 'projectStore'
             | 'eventStore'
             | 'featureTagStore'
@@ -161,6 +166,7 @@ class FeatureToggleService {
         this.featureStrategiesStore = featureStrategiesStore;
         this.featureToggleStore = featureToggleStore;
         this.featureToggleClientStore = featureToggleClientStore;
+        this.featureToggleLegacyAdminStore = featureToggleLegacyAdminStore;
         this.tagStore = featureTagStore;
         this.projectStore = projectStore;
         this.eventStore = eventStore;
@@ -704,7 +710,7 @@ class FeatureToggleService {
         userId?: number,
         archived: boolean = false,
     ): Promise<FeatureToggle[]> {
-        return this.featureToggleClientStore.getAdmin({
+        return this.featureToggleLegacyAdminStore.getAdmin({
             featureQuery: query,
             userId,
             archived,

@@ -20,7 +20,7 @@ import Raw = Knex.Raw;
 export interface IGetAllFeatures {
     featureQuery?: IFeatureToggleQuery;
     archived: boolean;
-    includeStrategyIds?: boolean;
+    userId?: number;
 }
 
 export interface IGetAdminFeatures {
@@ -29,7 +29,9 @@ export interface IGetAdminFeatures {
     userId?: number;
 }
 
-export default class FeatureToggleClientStore {
+// This is extracted from the feature-toggle-client-store that was mixing
+// client and admin concerns
+export default class FeatureToggleLegacyAdminStore {
     private db: Db;
 
     private logger: Logger;
@@ -38,10 +40,10 @@ export default class FeatureToggleClientStore {
 
     constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
-        this.logger = getLogger('feature-toggle-client-store.ts');
+        this.logger = getLogger('feature-toggle-legacy-admin-store.ts');
         this.timer = (action) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
-                store: 'feature-toggle',
+                store: 'admin-feature-toggle',
                 action,
             });
     }
@@ -49,7 +51,7 @@ export default class FeatureToggleClientStore {
     private async getAll({
         featureQuery,
         archived,
-        includeStrategyIds,
+        userId,
     }: IGetAllFeatures): Promise<IFeatureToggleClient[]> {
         const environment = featureQuery?.environment || DEFAULT_ENV;
         const stopTimer = this.timer('getFeatureAdmin');
@@ -104,6 +106,33 @@ export default class FeatureToggleClientStore {
             )
             .leftJoin('segments', `segments.id`, `fss.segment_id`);
 
+        query = query.leftJoin(
+            'feature_tag as ft',
+            'ft.feature_name',
+            'features.name',
+        );
+        selectColumns = [
+            ...selectColumns,
+            'ft.tag_value as tag_value',
+            'ft.tag_type as tag_type',
+        ];
+
+        if (userId) {
+            query = query.leftJoin(`favorite_features`, function () {
+                this.on('favorite_features.feature', 'features.name').andOnVal(
+                    'favorite_features.user_id',
+                    '=',
+                    userId,
+                );
+            });
+            selectColumns = [
+                ...selectColumns,
+                this.db.raw(
+                    'favorite_features.feature is not null as favorite',
+                ),
+            ];
+        }
+
         query = query.select(selectColumns);
 
         if (featureQuery) {
@@ -135,7 +164,7 @@ export default class FeatureToggleClientStore {
             };
             if (this.isUnseenStrategyRow(feature, r)) {
                 feature.strategies.push(
-                    FeatureToggleClientStore.rowToStrategy(r),
+                    FeatureToggleLegacyAdminStore.rowToStrategy(r),
                 );
             }
             if (this.isNewTag(feature, r)) {
@@ -158,17 +187,14 @@ export default class FeatureToggleClientStore {
             feature.type = r.type;
             feature.variants = r.variants || [];
             feature.project = r.project;
+            feature.favorite = r.favorite;
+            feature.lastSeenAt = r.last_seen_at;
+            feature.createdAt = r.created_at;
             acc[r.name] = feature;
             return acc;
         }, {});
 
         const features: IFeatureToggleClient[] = Object.values(featureToggles);
-
-        if (!includeStrategyIds) {
-            // We should not send strategy IDs from the client API,
-            // as this breaks old versions of the Go SDK (at least).
-            FeatureToggleClientStore.removeIdsFromStrategies(features);
-        }
 
         return features;
     }
@@ -189,14 +215,6 @@ export default class FeatureToggleClientStore {
         };
     }
 
-    private static removeIdsFromStrategies(features: IFeatureToggleClient[]) {
-        features.forEach((feature) => {
-            feature.strategies.forEach((strategy) => {
-                delete strategy.id;
-            });
-        });
-    }
-
     private isUnseenStrategyRow(
         feature: PartialDeep<IFeatureToggleClient>,
         row: Record<string, any>,
@@ -212,7 +230,7 @@ export default class FeatureToggleClientStore {
         row: Record<string, any>,
     ): void {
         const tags = feature.tags || [];
-        const newTag = FeatureToggleClientStore.rowToTag(row);
+        const newTag = FeatureToggleLegacyAdminStore.rowToTag(row);
         feature.tags = [...tags, newTag];
     }
 
@@ -255,14 +273,11 @@ export default class FeatureToggleClientStore {
         strategy.segments.push(row.segment_id);
     }
 
-    async getClient(
-        featureQuery?: IFeatureToggleQuery,
-        includeStrategyIds?: boolean,
-    ): Promise<IFeatureToggleClient[]> {
-        return this.getAll({
-            featureQuery,
-            archived: false,
-            includeStrategyIds,
-        });
+    async getAdmin({
+        featureQuery,
+        userId,
+        archived,
+    }: IGetAdminFeatures): Promise<IFeatureToggleClient[]> {
+        return this.getAll({ featureQuery, archived, userId });
     }
 }

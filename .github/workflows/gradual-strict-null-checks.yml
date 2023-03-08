@@ -66,7 +66,7 @@ jobs:
           MAIN=$(grep "Found [0-9]* errors" .out-main | sed 's/Found \(.*\) errors in .* files./\1/')
 
           if [ $CURRENT -gt $MAIN ]; then
-            comment "After enabling [\`strictNullChecks\`](https://www.typescriptlang.org/tsconfig#strictNullChecks) this PR would be **increasing** the number of null check errors from ${MAIN} to ${CURRENT}. <br /> Make sure your branch is up-to-date with ${MAIN_BRANCH} and **check the diff in the console output** to gather more details."
+            comment "After enabling [\`strictNullChecks\`](https://www.typescriptlang.org/tsconfig#strictNullChecks) this PR would be **increasing** the number of null check errors from ${MAIN} to ${CURRENT}. <br /> You can enable strictNullChecks in your tsconfig.json file to get the compiler error<br />Also, make sure your branch is up-to-date with ${MAIN_BRANCH} and **check the diff in the console output** to pinpoint the offending files."
             diff .out-current .out-main
             exit 1
           else

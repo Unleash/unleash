@@ -22,9 +22,7 @@ jobs:
           cache: 'yarn'
       - run: |
           yarn install --frozen-lockfile
-          cd frontend
-          yarn install --frozen-lockfile
-          cd ..
+          yarn --cwd ./frontend install --frozen-lockfile
       - run: |
           LATEST=$(npm show unleash-server version)
           TAG=$(node scripts/npm-tag.js $LATEST)

@@ -38,7 +38,7 @@ jobs:
         with:
           annotations: none
           package-manager: yarn
-          test-script: yarn run build:frontend && yarn run test:coverage:jest
+          test-script: yarn --cwd ./frontend && yarn run test:coverage:jest
           base-coverage-file: ./coverage/report.json
           output: report-markdown
         env:

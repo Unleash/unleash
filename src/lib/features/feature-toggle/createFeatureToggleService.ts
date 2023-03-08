@@ -34,6 +34,7 @@ import FakeAccessStore from '../../../test/fixtures/fake-access-store';
 import FakeRoleStore from '../../../test/fixtures/fake-role-store';
 import FakeEnvironmentStore from '../../../test/fixtures/fake-environment-store';
 import EventStore from '../../db/event-store';
+import FeatureToggleLegacyAdminStore from '../../db/feature-toggle-legacy-admin-store';
 
 export const createFeatureToggleService = (
     db: Db,
@@ -48,6 +49,11 @@ export const createFeatureToggleService = (
     );
     const featureToggleStore = new FeatureToggleStore(db, eventBus, getLogger);
     const featureToggleClientStore = new FeatureToggleClientStore(
+        db,
+        eventBus,
+        getLogger,
+    );
+    const featureToggleLegacyAdminStore = new FeatureToggleLegacyAdminStore(
         db,
         eventBus,
         getLogger,
@@ -90,6 +96,7 @@ export const createFeatureToggleService = (
             featureStrategiesStore,
             featureToggleStore,
             featureToggleClientStore,
+            featureToggleLegacyAdminStore,
             projectStore,
             eventStore,
             featureTagStore,
@@ -111,6 +118,7 @@ export const createFakeFeatureToggleService = (
     const featureStrategiesStore = new FakeFeatureStrategiesStore();
     const featureToggleStore = new FakeFeatureToggleStore();
     const featureToggleClientStore = new FakeFeatureToggleClientStore();
+    const featureToggleLegacyAdminStore = new FakeFeatureToggleClientStore();
     const projectStore = new FakeProjectStore();
     const featureTagStore = new FakeFeatureTagStore();
     const featureEnvironmentStore = new FakeFeatureEnvironmentStore();
@@ -139,6 +147,7 @@ export const createFakeFeatureToggleService = (
             featureStrategiesStore,
             featureToggleStore,
             featureToggleClientStore,
+            featureToggleLegacyAdminStore,
             projectStore,
             eventStore,
             featureTagStore,

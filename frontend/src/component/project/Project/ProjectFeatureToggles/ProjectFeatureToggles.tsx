@@ -673,7 +673,9 @@ export const ProjectFeatureToggles = ({
                 }
             />
             <ConditionallyRender
-                condition={Boolean(uiConfig?.flags?.featuresExportImport)}
+                condition={
+                    Boolean(uiConfig?.flags?.featuresExportImport) && !loading
+                }
                 show={
                     <ExportDialog
                         showExportDialog={showExportDialog}

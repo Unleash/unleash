@@ -9,7 +9,7 @@ export function parseEnvVarNumber(envVar: string, defaultVal: number): number {
 }
 
 export function parseEnvVarBoolean(
-    envVar: string | undefined,
+    envVar: string,
     defaultVal: boolean,
 ): boolean {
     if (envVar) {

@@ -1,7 +1,6 @@
 import {
     Addons,
     ApiTokenProject,
-    ApiTokens,
     ChangeRequestApprovals,
     ChangeRequestComments,
     ChangeRequestEvents,
@@ -10,17 +9,11 @@ import {
     ClientApplications,
     ClientInstances,
     ClientMetricsEnv,
-    ContextFields,
     Environments,
-    Events,
     FavoriteFeatures,
     FavoriteProjects,
-    FeatureEnvironments,
-    FeatureStrategies,
     FeatureStrategySegment,
-    FeatureTag,
     FeatureTypes,
-    Features,
     GroupRole,
     GroupUser,
     Groups,
@@ -29,7 +22,6 @@ import {
     ProjectEnvironments,
     ProjectStats,
     Projects,
-    PublicSignupTokens,
     PublicSignupTokensUser,
     ResetTokens,
     RolePermission,
@@ -37,7 +29,6 @@ import {
     Roles,
     Segments,
     Settings,
-    Strategies,
     TagTypes,
     Tags,
     UnleashSession,
@@ -51,7 +42,7 @@ declare module 'knex/types/tables' {
         // This is same as specifying `knex<User>('users')`
         addons: Addons;
         api_token_project: ApiTokenProject;
-        api_tokens: ApiTokens;
+        // api_tokens: ApiTokens;
         change_request_approvals: ChangeRequestApprovals;
         change_request_comments: ChangeRequestComments;
         change_request_events: ChangeRequestEvents;
@@ -60,17 +51,17 @@ declare module 'knex/types/tables' {
         client_applications: ClientApplications;
         client_instances: ClientInstances;
         client_metrics_env: ClientMetricsEnv;
-        context_fields: ContextFields;
+        // context_fields: ContextFields;
         environments: Environments;
-        events: Events;
+        // events: Events;
         favorite_features: FavoriteFeatures;
         favorite_projects: FavoriteProjects;
-        feature_environments: FeatureEnvironments;
-        feature_strategies: FeatureStrategies;
+        // feature_environments: FeatureEnvironments;
+        // feature_strategies: FeatureStrategies;
         feature_strategy_segment: FeatureStrategySegment;
-        feature_tag: FeatureTag;
+        // feature_tag: FeatureTag;
         feature_types: FeatureTypes;
-        features: Features;
+        // features: Features;
         group_role: GroupRole;
         group_user: GroupUser;
         groups: Groups;
@@ -79,7 +70,7 @@ declare module 'knex/types/tables' {
         project_environments: ProjectEnvironments;
         project_stats: ProjectStats;
         projects: Projects;
-        public_signup_tokens: PublicSignupTokens;
+        // public_signup_tokens: PublicSignupTokens;
         public_signup_tokens_user: PublicSignupTokensUser;
         reset_tokens: ResetTokens;
         role_permissions: RolePermission;
@@ -87,7 +78,7 @@ declare module 'knex/types/tables' {
         roles: Roles;
         segments: Segments;
         settings: Settings;
-        strategies: Strategies;
+        // strategies: Strategies;
         tag_types: TagTypes;
         tag: Tags;
         unleash_session: UnleashSession;

@@ -20,7 +20,6 @@ import {
     Permissions,
     PersonalAccessTokens,
     ProjectEnvironments,
-    ProjectStats,
     Projects,
     PublicSignupTokensUser,
     ResetTokens,
@@ -68,7 +67,7 @@ declare module 'knex/types/tables' {
         permissions: Permissions;
         personal_access_tokens: PersonalAccessTokens;
         project_environments: ProjectEnvironments;
-        project_stats: ProjectStats;
+        // project_stats: ProjectStats;
         projects: Projects;
         // public_signup_tokens: PublicSignupTokens;
         public_signup_tokens_user: PublicSignupTokensUser;

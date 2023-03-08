@@ -136,6 +136,23 @@ class FeatureTagStore implements IFeatureTagStore {
         return tag;
     }
 
+    async tagFeatures(featureNames: string[], tag: ITag): Promise<ITag> {
+        const stopTimer = this.timer('tagFeatures');
+        await this.db<FeatureTagTable>(TABLE)
+            .insert(this.featuresAndTagToRow(featureNames, tag))
+            .catch((err) => {
+                if (err.code === UNIQUE_CONSTRAINT_VIOLATION) {
+                    throw new FeatureHasTagError(
+                        `Some of the features already have the tag: [${tag.type}:${tag.value}]`,
+                    );
+                } else {
+                    throw err;
+                }
+            });
+        stopTimer();
+        return tag;
+    }
+
     /**
      * Only gets tags for active feature toggles.
      */
@@ -226,6 +243,17 @@ class FeatureTagStore implements IFeatureTagStore {
             tag_type: type,
             tag_value: value,
         };
+    }
+
+    featuresAndTagToRow(
+        featureNames: string[],
+        { type, value }: ITag,
+    ): FeatureTagTable[] {
+        return featureNames.map((featureName) => ({
+            feature_name: featureName,
+            tag_type: type,
+            tag_value: value,
+        }));
     }
 }
 

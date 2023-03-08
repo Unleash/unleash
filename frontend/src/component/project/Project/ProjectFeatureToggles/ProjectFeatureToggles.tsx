@@ -583,6 +583,7 @@ export const ProjectFeatureToggles = ({
                                 Icon={Add}
                                 projectId={projectId}
                                 permission={CREATE_FEATURE}
+                                data-testid="NAVIGATE_TO_CREATE_FEATURE"
                             >
                                 New feature toggle
                             </StyledResponsiveButton>
@@ -673,7 +674,9 @@ export const ProjectFeatureToggles = ({
                 }
             />
             <ConditionallyRender
-                condition={Boolean(uiConfig?.flags?.featuresExportImport)}
+                condition={
+                    Boolean(uiConfig?.flags?.featuresExportImport) && !loading
+                }
                 show={
                     <ExportDialog
                         showExportDialog={showExportDialog}

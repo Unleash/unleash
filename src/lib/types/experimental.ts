@@ -64,6 +64,10 @@ const flags = {
     ),
     notifications: parseEnvVarBoolean(process.env.NOTIFICATIONS, false),
     loginHistory: parseEnvVarBoolean(process.env.UNLEASH_LOGIN_HISTORY, false),
+    projectScopedSegments: parseEnvVarBoolean(
+        process.env.PROJECT_SCOPED_SEGMENTS,
+        false,
+    ),
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

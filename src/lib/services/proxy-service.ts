@@ -150,6 +150,7 @@ export class ProxyService {
     }
 
     deleteClientForProxyToken(secret: string): void {
+        this.clients.get(secret)?.destroy();
         this.clients.delete(secret);
     }
 

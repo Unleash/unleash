@@ -31,7 +31,7 @@ Use the login history to:
 - Identify failed login attempts and investigate the cause
 - Debug misconfigured authentication providers
 
-The login history is mutable: You can [remove individual login attempts or clear the entire history](../how-to/how-to-download-login-history.mdx#deleting-login-history-events) by deleting all of them.
+The login history is mutable: You can remove individual login events or clear the entire history by deleting all of them.
 
 Finally, the login history can be downloaded ([how do I download my Unleash login history](../how-to/how-to-download-login-history.mdx)) for external backups, audits, and the like.
 

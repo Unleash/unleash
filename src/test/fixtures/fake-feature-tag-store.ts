@@ -57,9 +57,7 @@ export default class FakeFeatureTagStore implements IFeatureTagStore {
         return Promise.resolve();
     }
 
-    async importFeatureTags(
-        featureTags: IFeatureTag[],
-    ): Promise<IFeatureAndTag[]> {
+    async tagFeatures(featureTags: IFeatureTag[]): Promise<IFeatureAndTag[]> {
         return Promise.all(
             featureTags.map(async (fT) => {
                 const saved = await this.tagFeature(fT.featureName, {
@@ -92,14 +90,9 @@ export default class FakeFeatureTagStore implements IFeatureTagStore {
         );
     }
 
-    async tagFeatures(featureNames: string[], tag: ITag): Promise<ITag> {
-        const featureTags = featureNames.map((featureName) => ({
-            featureName,
-            tagType: tag.type,
-            tagValue: tag.value,
-        }));
-        this.featureTags.push(...featureTags);
-        return Promise.resolve(tag);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    untagFeatures(featureTags: IFeatureTag[]): Promise<void> {
+        throw new Error('Method not implemented.');
     }
 }
 

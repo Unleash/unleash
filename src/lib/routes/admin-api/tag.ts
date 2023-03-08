@@ -24,6 +24,8 @@ import {
 import { emptyResponse } from '../../openapi/util/standard-responses';
 import FeatureTagService from 'lib/services/feature-tag-service';
 import { TagsBulkAddSchema } from '../../openapi/spec/tags-bulk-add-schema';
+import NotFoundError from '../../error/notfound-error';
+import { IFlagResolver } from '../../types';
 
 const version = 1;
 
@@ -35,6 +37,8 @@ class TagController extends Controller {
     private featureTagService: FeatureTagService;
 
     private openApiService: OpenApiService;
+
+    private flagResolver: IFlagResolver;
 
     constructor(
         config: IUnleashConfig,
@@ -52,6 +56,7 @@ class TagController extends Controller {
         this.openApiService = openApiService;
         this.featureTagService = featureTagService;
         this.logger = config.getLogger('/admin-api/tag.js');
+        this.flagResolver = config.flagResolver;
 
         this.route({
             method: 'get',
@@ -85,18 +90,16 @@ class TagController extends Controller {
             ],
         });
         this.route({
-            method: 'post',
+            method: 'put',
             path: '/features',
-            handler: this.addTagToFeatures,
+            handler: this.updateFeaturesTags,
             permission: UPDATE_FEATURE,
             middleware: [
                 openApiService.validPath({
                     tags: ['Tags'],
                     operationId: 'addTagToFeatures',
                     requestBody: createRequestSchema('tagsBulkAddSchema'),
-                    responses: {
-                        201: resourceCreatedResponseSchema('tagSchema'),
-                    },
+                    responses: { 200: emptyResponse },
                 }),
             ],
         });
@@ -207,18 +210,22 @@ class TagController extends Controller {
         res.status(200).end();
     }
 
-    async addTagToFeatures(
+    async updateFeaturesTags(
         req: IAuthRequest<void, void, TagsBulkAddSchema>,
         res: Response<TagSchema>,
     ): Promise<void> {
-        const { features, tag } = req.body;
+        if (!this.flagResolver.isEnabled('bulkOperations')) {
+            throw new NotFoundError('Bulk operations are not enabled');
+        }
+        const { features, tags } = req.body;
         const userName = extractUsername(req);
-        const addedTag = await this.featureTagService.addTags(
+        await this.featureTagService.updateTags(
             features,
-            tag,
+            tags.addedTags,
+            tags.removedTags,
             userName,
         );
-        res.status(201).json(addedTag);
+        res.status(200).end();
     }
 }
 export default TagController;

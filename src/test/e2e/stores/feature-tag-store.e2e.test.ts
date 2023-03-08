@@ -95,7 +95,7 @@ test('should import feature tags', async () => {
     await featureToggleStore.create('default', {
         name: 'some-other-toggle-import',
     });
-    await featureTagStore.importFeatureTags([
+    await featureTagStore.tagFeatures([
         { featureName, tagType: tag.type, tagValue: tag.value },
         {
             featureName: 'some-other-toggle-import',

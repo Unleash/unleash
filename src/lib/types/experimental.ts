@@ -64,6 +64,7 @@ const flags = {
     ),
     notifications: parseEnvVarBoolean(process.env.NOTIFICATIONS, false),
     loginHistory: parseEnvVarBoolean(process.env.UNLEASH_LOGIN_HISTORY, false),
+    bulkOperations: parseEnvVarBoolean(process.env.BULK_OPERATIONS, false),
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

@@ -48,6 +48,7 @@ export interface IFlags {
     proPlanAutoCharge?: boolean;
     notifications?: boolean;
     loginHistory?: boolean;
+    bulkOperations?: boolean;
 }
 
 export interface IVersionInfo {

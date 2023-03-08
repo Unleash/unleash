@@ -42,6 +42,7 @@ process.nextTick(async () => {
                         newProjectOverview: true,
                         projectStatusApi: true,
                         showProjectApiAccess: true,
+                        projectScopedSegments: true,
                     },
                 },
                 authentication: {

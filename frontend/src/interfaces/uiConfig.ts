@@ -49,6 +49,7 @@ export interface IFlags {
     notifications?: boolean;
     loginHistory?: boolean;
     bulkOperations?: boolean;
+    projectScopedSegments?: boolean;
 }
 
 export interface IVersionInfo {

@@ -164,6 +164,7 @@ export const Notifications = () => {
         <StyledPrimaryContainerBox>
             <IconButton
                 onClick={() => setShowNotifications(!showNotifications)}
+                data-testid="NOTIFICATIONS_BUTTON"
             >
                 <ConditionallyRender
                     condition={hasUnreadNotifications}
@@ -178,7 +179,10 @@ export const Notifications = () => {
                     <ClickAwayListener
                         onClickAway={() => setShowNotifications(false)}
                     >
-                        <StyledPaper onKeyDown={onKeyDown}>
+                        <StyledPaper
+                            onKeyDown={onKeyDown}
+                            data-testid="NOTIFICATIONS_MODAL"
+                        >
                             <NotificationsHeader>
                                 <StyledHeaderBox>
                                     <StyledHeaderTypography>
@@ -194,7 +198,7 @@ export const Notifications = () => {
                             <ConditionallyRender
                                 condition={hasUnreadNotifications}
                                 show={
-                                    <StyledInnerContainerBox>
+                                    <StyledInnerContainerBox data-testid="UNREAD_NOTIFICATIONS">
                                         <Button onClick={onMarkAllAsRead}>
                                             <StyledTypography>
                                                 Mark all as read (

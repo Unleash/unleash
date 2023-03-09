@@ -50,7 +50,6 @@ export interface IFlags {
     loginHistory?: boolean;
     bulkOperations?: boolean;
     projectScopedSegments?: boolean;
-    cleanClientApi: boolean;
 }
 
 export interface IVersionInfo {

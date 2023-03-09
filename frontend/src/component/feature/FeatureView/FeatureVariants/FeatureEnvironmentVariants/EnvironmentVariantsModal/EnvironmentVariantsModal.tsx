@@ -18,7 +18,7 @@ import { WeightType } from 'constants/variantTypes';
 import { v4 as uuidv4 } from 'uuid';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import { updateWeightEdit } from 'component/common/util';
-import { StickinessSelect } from '../../../../StrategyTypes/FlexibleStrategy/StickinessSelect/StickinessSelect';
+import { StickinessSelect } from 'component/feature/StrategyTypes/FlexibleStrategy/StickinessSelect/StickinessSelect';
 
 const StyledFormSubtitle = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -83,7 +83,7 @@ const StyledDescription = styled('p')(({ theme }) => ({
     marginBottom: theme.spacing(1.5),
 }));
 
-const StyledGeneralSelect = styled(StickinessSelect)(({ theme }) => ({
+const StyledStickinessSelect = styled(StickinessSelect)(({ theme }) => ({
     minWidth: theme.spacing(20),
     width: '100%',
 }));
@@ -163,7 +163,7 @@ export const EnvironmentVariantsModal = ({
                           stickiness:
                               variantsEdit?.length > 0
                                   ? variantsEdit[0].stickiness
-                                  : 'default',
+                                  : defaultStickiness,
                           new: true,
                           isValid: false,
                           id: uuidv4(),
@@ -270,7 +270,6 @@ export const EnvironmentVariantsModal = ({
             setError(apiPayload.error);
         }
     }, [apiPayload.error]);
-
     return (
         <SidebarModal
             open={open}
@@ -390,9 +389,9 @@ export const EnvironmentVariantsModal = ({
                                     </a>
                                 </StyledDescription>
                                 <div>
-                                    <StyledGeneralSelect
+                                    <StyledStickinessSelect
                                         value={stickiness}
-                                        label={'Stickiness'}
+                                        label={''}
                                         editable
                                         onChange={e =>
                                             onStickinessChange(e.target.value)

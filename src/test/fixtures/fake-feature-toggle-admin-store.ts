@@ -1,0 +1,63 @@
+import { FeatureToggle, IFeatureToggleQuery } from '../../lib/types/model';
+import { IGetAdminFeatures } from '../../lib/db/feature-toggle-client-store';
+import { IFeatureToggleAdminStore } from '../../lib/types/stores/feature-toggle-admin-store';
+
+export default class FakeFeatureToggleAdminStore
+    implements IFeatureToggleAdminStore
+{
+    featureToggles: FeatureToggle[] = [];
+
+    async getFeatures(
+        featureQuery?: IFeatureToggleQuery,
+        archived: boolean = false,
+    ): Promise<FeatureToggle[]> {
+        const rows = this.featureToggles.filter((toggle) => {
+            if (featureQuery.namePrefix) {
+                if (featureQuery.project) {
+                    return (
+                        toggle.name.startsWith(featureQuery.namePrefix) &&
+                        featureQuery.project.some((project) =>
+                            project.includes(toggle.project),
+                        )
+                    );
+                }
+                return toggle.name.startsWith(featureQuery.namePrefix);
+            }
+            if (featureQuery.project) {
+                return featureQuery.project.some((project) =>
+                    project.includes(toggle.project),
+                );
+            }
+            return toggle.archived === archived;
+        });
+        const clientRows: FeatureToggle[] = rows.map((t) => ({
+            ...t,
+            enabled: true,
+            strategies: [],
+            description: t.description || '',
+            type: t.type || 'Release',
+            stale: t.stale || false,
+            variants: [],
+            tags: [],
+        }));
+        return Promise.resolve(clientRows);
+    }
+
+    async getAdmin({
+        featureQuery: query,
+        archived,
+    }: IGetAdminFeatures): Promise<FeatureToggle[]> {
+        return this.getFeatures(query, archived);
+    }
+
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    async createFeature(feature: any): Promise<void> {
+        this.featureToggles.push({
+            project: feature.project || 'default',
+            createdAt: new Date(),
+            archived: false,
+            ...feature,
+        });
+        return Promise.resolve();
+    }
+}

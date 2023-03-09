@@ -46,7 +46,7 @@ export const SegmentTable = () => {
                 description: 'Segment descripton',
                 createdAt: new Date().toISOString(),
                 createdBy: 'user',
-                projectId: 'Project'
+                projectId: 'Project',
             })
         );
     }, [segments]);
@@ -186,15 +186,9 @@ const COLUMNS = [
         accessor: 'project',
         Cell: ({ value }: { value: string }) => (
             <ConditionallyRender
-                condition={
-                    (value) ? true : false
-                }
-                show={
-                    <LinkCell title={value} to={`/projects/${value}`} />
-                }
-                elseShow={
-                    <TextCell>Global</TextCell>
-                }
+                condition={value ? true : false}
+                show={<LinkCell title={value} to={`/projects/${value}`} />}
+                elseShow={<TextCell>Global</TextCell>}
             />
         ),
         sortType: 'alphanumeric',

@@ -72,6 +72,7 @@ const flags = {
         process.env.PROJECT_SCOPED_SEGMENTS,
         false,
     ),
+    cleanClientApi: parseEnvVarBoolean(process.env.CLEAN_CLIENT_API, false),
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

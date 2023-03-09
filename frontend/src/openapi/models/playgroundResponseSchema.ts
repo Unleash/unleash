@@ -4,8 +4,8 @@
  * Unleash API
  * OpenAPI spec version: 4.22.0-beta.45
  */
-import type { PlaygroundRequestSchema } from './playgroundRequestSchema';
 import type { PlaygroundFeatureSchema } from './playgroundFeatureSchema';
+import type { PlaygroundRequestSchema } from './playgroundRequestSchema';
 
 /**
  * The state of all features given the provided input.

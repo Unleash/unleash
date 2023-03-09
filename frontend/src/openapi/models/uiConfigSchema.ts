@@ -4,9 +4,9 @@
  * Unleash API
  * OpenAPI spec version: 4.22.0-beta.45
  */
+import type { UiConfigSchemaAuthenticationType } from './uiConfigSchemaAuthenticationType';
 import type { UiConfigSchemaFlags } from './uiConfigSchemaFlags';
 import type { UiConfigSchemaLinksItem } from './uiConfigSchemaLinksItem';
-import type { UiConfigSchemaAuthenticationType } from './uiConfigSchemaAuthenticationType';
 import type { VersionSchema } from './versionSchema';
 
 export interface UiConfigSchema {

@@ -5,9 +5,9 @@
  * OpenAPI spec version: 4.22.0-beta.45
  */
 import type { FeatureEnvironmentSchema } from './featureEnvironmentSchema';
-import type { VariantSchema } from './variantSchema';
 import type { FeatureSchemaStrategiesItem } from './featureSchemaStrategiesItem';
 import type { TagSchema } from './tagSchema';
+import type { VariantSchema } from './variantSchema';
 
 export interface FeatureSchema {
     /** Unique feature name */

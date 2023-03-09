@@ -5,8 +5,8 @@
  * OpenAPI spec version: 4.22.0-beta.45
  */
 import type { ClientFeatureSchema } from './clientFeatureSchema';
-import type { SegmentSchema } from './segmentSchema';
 import type { ClientFeaturesQuerySchema } from './clientFeaturesQuerySchema';
+import type { SegmentSchema } from './segmentSchema';
 
 export interface ClientFeaturesSchema {
     version: number;

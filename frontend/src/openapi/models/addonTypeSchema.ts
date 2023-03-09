@@ -4,8 +4,8 @@
  * Unleash API
  * OpenAPI spec version: 4.22.0-beta.45
  */
-import type { TagTypeSchema } from './tagTypeSchema';
 import type { AddonParameterSchema } from './addonParameterSchema';
+import type { TagTypeSchema } from './tagTypeSchema';
 
 export interface AddonTypeSchema {
     name: string;

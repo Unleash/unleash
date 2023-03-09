@@ -4,8 +4,8 @@
  * Unleash API
  * OpenAPI spec version: 4.22.0-beta.45
  */
-import type { UserSchema } from './userSchema';
 import type { RoleSchema } from './roleSchema';
+import type { UserSchema } from './userSchema';
 
 export interface PublicSignupTokenSchema {
     secret: string;

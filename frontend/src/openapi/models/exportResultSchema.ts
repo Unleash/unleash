@@ -4,12 +4,12 @@
  * Unleash API
  * OpenAPI spec version: 4.22.0-beta.45
  */
+import type { ContextFieldSchema } from './contextFieldSchema';
+import type { ExportResultSchemaSegmentsItem } from './exportResultSchemaSegmentsItem';
+import type { FeatureEnvironmentSchema } from './featureEnvironmentSchema';
 import type { FeatureSchema } from './featureSchema';
 import type { FeatureStrategySchema } from './featureStrategySchema';
-import type { FeatureEnvironmentSchema } from './featureEnvironmentSchema';
-import type { ContextFieldSchema } from './contextFieldSchema';
 import type { FeatureTagSchema } from './featureTagSchema';
-import type { ExportResultSchemaSegmentsItem } from './exportResultSchemaSegmentsItem';
 import type { TagTypeSchema } from './tagTypeSchema';
 
 export interface ExportResultSchema {

@@ -4,8 +4,8 @@
  * Unleash API
  * OpenAPI spec version: 4.22.0-beta.45
  */
-import type { RoleSchema } from './roleSchema';
 import type { FeatureSchema } from './featureSchema';
+import type { RoleSchema } from './roleSchema';
 
 export interface ProfileSchema {
     rootRole: RoleSchema;

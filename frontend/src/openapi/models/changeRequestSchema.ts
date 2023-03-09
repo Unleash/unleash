@@ -4,11 +4,11 @@
  * Unleash API
  * OpenAPI spec version: 4.22.0-beta.45
  */
-import type { ChangeRequestSchemaState } from './changeRequestSchemaState';
-import type { ChangeRequestFeatureSchema } from './changeRequestFeatureSchema';
 import type { ChangeRequestApprovalSchema } from './changeRequestApprovalSchema';
 import type { ChangeRequestCommentSchema } from './changeRequestCommentSchema';
+import type { ChangeRequestFeatureSchema } from './changeRequestFeatureSchema';
 import type { ChangeRequestSchemaCreatedBy } from './changeRequestSchemaCreatedBy';
+import type { ChangeRequestSchemaState } from './changeRequestSchemaState';
 
 export interface ChangeRequestSchema {
     id: number;

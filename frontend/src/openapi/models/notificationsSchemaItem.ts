@@ -4,8 +4,8 @@
  * Unleash API
  * OpenAPI spec version: 4.22.0-beta.45
  */
-import type { NotificationsSchemaItemNotificationType } from './notificationsSchemaItemNotificationType';
 import type { NotificationsSchemaItemCreatedBy } from './notificationsSchemaItemCreatedBy';
+import type { NotificationsSchemaItemNotificationType } from './notificationsSchemaItemNotificationType';
 
 export type NotificationsSchemaItem = {
     /** The id of this notification */

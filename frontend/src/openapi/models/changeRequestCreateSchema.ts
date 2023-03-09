@@ -5,10 +5,10 @@
  * OpenAPI spec version: 4.22.0-beta.45
  */
 import type { ChangeRequestCreateSchemaOneOf } from './changeRequestCreateSchemaOneOf';
-import type { ChangeRequestCreateSchemaOneOfFour } from './changeRequestCreateSchemaOneOfFour';
-import type { ChangeRequestCreateSchemaOneOfSix } from './changeRequestCreateSchemaOneOfSix';
 import type { ChangeRequestCreateSchemaOneOfEight } from './changeRequestCreateSchemaOneOfEight';
+import type { ChangeRequestCreateSchemaOneOfFour } from './changeRequestCreateSchemaOneOfFour';
 import type { ChangeRequestCreateSchemaOneOfOneone } from './changeRequestCreateSchemaOneOfOneone';
+import type { ChangeRequestCreateSchemaOneOfSix } from './changeRequestCreateSchemaOneOfSix';
 
 export type ChangeRequestCreateSchema =
     | (ChangeRequestCreateSchemaOneOf & {

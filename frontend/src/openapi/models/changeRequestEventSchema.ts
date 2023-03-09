@@ -4,8 +4,8 @@
  * Unleash API
  * OpenAPI spec version: 4.22.0-beta.45
  */
-import type { ChangeRequestEventSchemaPayload } from './changeRequestEventSchemaPayload';
 import type { ChangeRequestEventSchemaCreatedBy } from './changeRequestEventSchemaCreatedBy';
+import type { ChangeRequestEventSchemaPayload } from './changeRequestEventSchemaPayload';
 
 export interface ChangeRequestEventSchema {
     id: number;

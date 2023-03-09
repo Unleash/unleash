@@ -4,17 +4,17 @@
  * Unleash API
  * OpenAPI spec version: 4.22.0-beta.45
  */
+import type { EnvironmentSchema } from './environmentSchema';
+import type { FeatureEnvironmentSchema } from './featureEnvironmentSchema';
 import type { FeatureSchema } from './featureSchema';
+import type { FeatureStrategySchema } from './featureStrategySchema';
+import type { FeatureStrategySegmentSchema } from './featureStrategySegmentSchema';
+import type { FeatureTagSchema } from './featureTagSchema';
+import type { ProjectSchema } from './projectSchema';
+import type { SegmentSchema } from './segmentSchema';
 import type { StrategySchema } from './strategySchema';
 import type { TagSchema } from './tagSchema';
 import type { TagTypeSchema } from './tagTypeSchema';
-import type { FeatureTagSchema } from './featureTagSchema';
-import type { ProjectSchema } from './projectSchema';
-import type { FeatureStrategySchema } from './featureStrategySchema';
-import type { FeatureEnvironmentSchema } from './featureEnvironmentSchema';
-import type { EnvironmentSchema } from './environmentSchema';
-import type { SegmentSchema } from './segmentSchema';
-import type { FeatureStrategySegmentSchema } from './featureStrategySegmentSchema';
 
 export interface StateSchema {
     version: number;

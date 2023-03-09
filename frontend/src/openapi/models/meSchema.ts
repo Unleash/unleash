@@ -4,10 +4,10 @@
  * Unleash API
  * OpenAPI spec version: 4.22.0-beta.45
  */
-import type { UserSchema } from './userSchema';
-import type { PermissionSchema } from './permissionSchema';
 import type { FeedbackSchema } from './feedbackSchema';
 import type { MeSchemaSplash } from './meSchemaSplash';
+import type { PermissionSchema } from './permissionSchema';
+import type { UserSchema } from './userSchema';
 
 export interface MeSchema {
     user: UserSchema;

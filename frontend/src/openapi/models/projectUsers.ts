@@ -4,8 +4,8 @@
  * Unleash API
  * OpenAPI spec version: 4.22.0-beta.45
  */
-import type { UserWithProjectRoleSchema } from './userWithProjectRoleSchema';
 import type { RoleSchema } from './roleSchema';
+import type { UserWithProjectRoleSchema } from './userWithProjectRoleSchema';
 
 export interface ProjectUsers {
     users: UserWithProjectRoleSchema[];

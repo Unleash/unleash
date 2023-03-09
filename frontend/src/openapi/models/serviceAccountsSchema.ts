@@ -4,8 +4,8 @@
  * Unleash API
  * OpenAPI spec version: 4.22.0-beta.45
  */
-import type { ServiceAccountSchema } from './serviceAccountSchema';
 import type { RoleSchema } from './roleSchema';
+import type { ServiceAccountSchema } from './serviceAccountSchema';
 
 export interface ServiceAccountsSchema {
     serviceAccounts: ServiceAccountSchema[];

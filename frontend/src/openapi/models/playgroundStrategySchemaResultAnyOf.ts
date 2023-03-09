@@ -4,8 +4,8 @@
  * Unleash API
  * OpenAPI spec version: 4.22.0-beta.45
  */
-import type { PlaygroundStrategySchemaResultAnyOfEvaluationStatus } from './playgroundStrategySchemaResultAnyOfEvaluationStatus';
 import type { PlaygroundStrategySchemaResultAnyOfEnabled } from './playgroundStrategySchemaResultAnyOfEnabled';
+import type { PlaygroundStrategySchemaResultAnyOfEvaluationStatus } from './playgroundStrategySchemaResultAnyOfEvaluationStatus';
 
 export type PlaygroundStrategySchemaResultAnyOf = {
     /** Signals that this strategy could not be evaluated. This is most likely because you're using a custom strategy that Unleash doesn't know about. */

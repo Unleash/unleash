@@ -4,8 +4,8 @@
  * Unleash API
  * OpenAPI spec version: 4.22.0-beta.45
  */
-import type { VariantSchemaPayload } from './variantSchemaPayload';
 import type { OverrideSchema } from './overrideSchema';
+import type { VariantSchemaPayload } from './variantSchemaPayload';
 
 export interface VariantSchema {
     name: string;

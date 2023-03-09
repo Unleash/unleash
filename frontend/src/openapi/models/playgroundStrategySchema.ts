@@ -4,10 +4,10 @@
  * Unleash API
  * OpenAPI spec version: 4.22.0-beta.45
  */
-import type { PlaygroundStrategySchemaResult } from './playgroundStrategySchemaResult';
-import type { PlaygroundSegmentSchema } from './playgroundSegmentSchema';
-import type { PlaygroundConstraintSchema } from './playgroundConstraintSchema';
 import type { ParametersSchema } from './parametersSchema';
+import type { PlaygroundConstraintSchema } from './playgroundConstraintSchema';
+import type { PlaygroundSegmentSchema } from './playgroundSegmentSchema';
+import type { PlaygroundStrategySchemaResult } from './playgroundStrategySchemaResult';
 
 export interface PlaygroundStrategySchema {
     /** The strategy's name. */

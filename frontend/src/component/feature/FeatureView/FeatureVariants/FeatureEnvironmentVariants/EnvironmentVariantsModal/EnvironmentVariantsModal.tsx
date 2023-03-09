@@ -231,11 +231,10 @@ export const EnvironmentVariantsModal = ({
         `defaultStickiness.${projectId}`
     );
 
-    const defaultStickiness = Boolean(projectScopedStickiness)
-        ? projectStickiness != null
+    const defaultStickiness =
+        Boolean(projectScopedStickiness) && projectStickiness != null
             ? projectStickiness
-            : 'default'
-        : 'default';
+            : 'default';
 
     const stickiness = variants[0]?.stickiness || defaultStickiness;
     const stickinessOptions = useMemo(

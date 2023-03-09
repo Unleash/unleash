@@ -53,7 +53,7 @@ export const createFeatureToggleService = (
         eventBus,
         getLogger,
     );
-    const featureToggleLegacyAdminStore = new FeatureToggleAdminStore(
+    const featureToggleAdminStore = new FeatureToggleAdminStore(
         db,
         eventBus,
         getLogger,
@@ -96,7 +96,7 @@ export const createFeatureToggleService = (
             featureStrategiesStore,
             featureToggleStore,
             featureToggleClientStore,
-            featureToggleAdminStore: featureToggleLegacyAdminStore,
+            featureToggleAdminStore: featureToggleAdminStore,
             projectStore,
             eventStore,
             featureTagStore,
@@ -118,7 +118,7 @@ export const createFakeFeatureToggleService = (
     const featureStrategiesStore = new FakeFeatureStrategiesStore();
     const featureToggleStore = new FakeFeatureToggleStore();
     const featureToggleClientStore = new FakeFeatureToggleClientStore();
-    const featureToggleLegacyAdminStore = new FakeFeatureToggleClientStore();
+    const featureToggleAdminStore = new FakeFeatureToggleClientStore();
     const projectStore = new FakeProjectStore();
     const featureTagStore = new FakeFeatureTagStore();
     const featureEnvironmentStore = new FakeFeatureEnvironmentStore();
@@ -147,7 +147,7 @@ export const createFakeFeatureToggleService = (
             featureStrategiesStore,
             featureToggleStore,
             featureToggleClientStore,
-            featureToggleAdminStore: featureToggleLegacyAdminStore,
+            featureToggleAdminStore,
             projectStore,
             eventStore,
             featureTagStore,

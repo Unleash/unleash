@@ -186,7 +186,7 @@ const COLUMNS = [
         accessor: 'project',
         Cell: ({ value }: { value: string }) => (
             <ConditionallyRender
-                condition={value ? true : false}
+                condition={Boolean(value)}
                 show={<LinkCell title={value} to={`/projects/${value}`} />}
                 elseShow={<TextCell>Global</TextCell>}
             />

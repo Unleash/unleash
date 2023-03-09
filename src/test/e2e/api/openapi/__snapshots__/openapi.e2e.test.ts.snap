@@ -489,6 +489,7 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "boolean",
           },
           "strategies": {
+            "deprecated": true,
             "items": {
               "$ref": "#/components/schemas/featureStrategySchema",
             },
@@ -498,6 +499,7 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "string",
           },
           "variants": {
+            "deprecated": true,
             "items": {
               "$ref": "#/components/schemas/variantSchema",
             },
@@ -8583,11 +8585,11 @@ If the provided project does not exist, the list of events will be empty.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/clientFeaturesSchema",
+                  "$ref": "#/components/schemas/clientFeatureSchema",
                 },
               },
             },
-            "description": "clientFeaturesSchema",
+            "description": "clientFeatureSchema",
           },
         },
         "tags": [

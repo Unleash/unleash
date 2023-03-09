@@ -12,8 +12,8 @@ import {
     parseParameterString,
 } from 'utils/parseParameter';
 import { StickinessSelect } from './StickinessSelect/StickinessSelect';
-import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
-import { useOptionalPathParam } from '../../../../hooks/useOptionalPathParam';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 
 export const builtInStickinessOptions = [
     { key: 'default', label: 'default' },

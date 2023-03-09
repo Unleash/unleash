@@ -1,6 +1,7 @@
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ITab, VerticalTabs } from 'component/common/VerticalTabs/VerticalTabs';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
+import useAuthSettings from 'hooks/api/getters/useAuthSettings/useAuthSettings';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { PasswordTab } from './PasswordTab/PasswordTab';
@@ -11,10 +12,16 @@ export const Profile = () => {
     const { user } = useAuthUser();
     const location = useLocation();
     const navigate = useNavigate();
+    const { config } = useAuthSettings('simple');
 
     const tabs = [
         { id: 'profile', label: 'Profile' },
-        { id: 'password', label: 'Change password', path: 'change-password' },
+        {
+            id: 'password',
+            label: 'Change password',
+            path: 'change-password',
+            hidden: config.disabled,
+        },
         {
             id: 'pat',
             label: 'Personal API tokens',

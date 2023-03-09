@@ -15,13 +15,6 @@ import { StickinessSelect } from './StickinessSelect/StickinessSelect';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 
-export const builtInStickinessOptions = [
-    { key: 'default', label: 'default' },
-    { key: 'userId', label: 'userId' },
-    { key: 'sessionId', label: 'sessionId' },
-    { key: 'random', label: 'random' },
-];
-
 interface IFlexibleStrategyProps {
     parameters: IFeatureStrategyParameters;
     updateParameter: (field: string, value: string) => void;

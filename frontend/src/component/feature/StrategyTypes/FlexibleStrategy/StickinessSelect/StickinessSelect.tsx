@@ -1,7 +1,12 @@
 import Select from 'component/common/select';
 import { SelectChangeEvent } from '@mui/material';
-import { builtInStickinessOptions } from '../FlexibleStrategy';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
+const builtInStickinessOptions = [
+    { key: 'default', label: 'default' },
+    { key: 'userId', label: 'userId' },
+    { key: 'sessionId', label: 'sessionId' },
+    { key: 'random', label: 'random' },
+];
 
 interface IStickinessSelectProps {
     label: string;

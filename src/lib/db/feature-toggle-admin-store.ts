@@ -2,19 +2,11 @@ import { Knex } from 'knex';
 import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
 import { Logger, LogProvider } from '../logger';
-import {
-    FeatureToggle,
-    IFeatureToggleClient,
-    IFeatureToggleQuery,
-    IStrategyConfig,
-    ITag,
-} from '../types/model';
+import { FeatureToggle, IFeatureToggleQuery } from '../types/model';
 import { DEFAULT_ENV } from '../util/constants';
 import { PartialDeep } from '../types/partial';
 import EventEmitter from 'events';
 import FeatureToggleStore from './feature-toggle-store';
-import { ensureStringValue } from '../util/ensureStringValue';
-import { mapValues } from '../util/map-values';
 import { Db } from './db';
 import Raw = Knex.Raw;
 
@@ -160,20 +152,8 @@ export default class FeatureToggleAdminStore {
         stopTimer();
 
         const featureToggles = rows.reduce((acc, r) => {
-            let feature: PartialDeep<FeatureToggle> = acc[r.name] ?? {
-                strategies: [],
-            };
-            if (this.isNewTag(feature, r)) {
-                this.addTag(feature, r);
-            }
-            if (featureQuery?.inlineSegmentConstraints && r.segment_id) {
-                this.addSegmentToStrategy(feature, r);
-            } else if (
-                !featureQuery?.inlineSegmentConstraints &&
-                r.segment_id
-            ) {
-                this.addSegmentIdsToStrategy(feature, r);
-            }
+            let feature: PartialDeep<FeatureToggle> = acc[r.name] ?? {};
+
             feature.impressionData = r.impression_data;
             feature.name = r.name;
             feature.description = r.description;
@@ -194,85 +174,11 @@ export default class FeatureToggleAdminStore {
         return features;
     }
 
-    private static rowToStrategy(row: Record<string, any>): IStrategyConfig {
-        return {
-            id: row.strategy_id,
-            name: row.strategy_name,
-            constraints: row.constraints || [],
-            parameters: mapValues(row.parameters || {}, ensureStringValue),
-        };
-    }
-
-    private static rowToTag(row: Record<string, any>): ITag {
-        return {
-            value: row.tag_value,
-            type: row.tag_type,
-        };
-    }
-
-    private isUnseenStrategyRow(
-        feature: PartialDeep<IFeatureToggleClient>,
-        row: Record<string, any>,
-    ): boolean {
-        return (
-            row.strategy_id &&
-            !feature.strategies.find((s) => s.id === row.strategy_id)
-        );
-    }
-
-    private addTag(
-        feature: Record<string, any>,
-        row: Record<string, any>,
-    ): void {
-        const tags = feature.tags || [];
-        const newTag = FeatureToggleAdminStore.rowToTag(row);
-        feature.tags = [...tags, newTag];
-    }
-
-    private isNewTag(
-        feature: PartialDeep<IFeatureToggleClient>,
-        row: Record<string, any>,
-    ): boolean {
-        return (
-            row.tag_type &&
-            row.tag_value &&
-            !feature.tags?.some(
-                (tag) =>
-                    tag.type === row.tag_type && tag.value === row.tag_value,
-            )
-        );
-    }
-
-    private addSegmentToStrategy(
-        feature: PartialDeep<IFeatureToggleClient>,
-        row: Record<string, any>,
-    ) {
-        feature.strategies
-            .find((s) => s.id === row.strategy_id)
-            ?.constraints.push(...row.segment_constraints);
-    }
-
-    private addSegmentIdsToStrategy(
-        feature: PartialDeep<IFeatureToggleClient>,
-        row: Record<string, any>,
-    ) {
-        const strategy = feature.strategies.find(
-            (s) => s.id === row.strategy_id,
-        );
-        if (!strategy) {
-            return;
-        }
-        if (!strategy.segments) {
-            strategy.segments = [];
-        }
-        strategy.segments.push(row.segment_id);
-    }
-
     async getAdmin({
         featureQuery,
         userId,
         archived,
-    }: IGetAdminFeatures): Promise<IFeatureToggleClient[]> {
+    }: IGetAdminFeatures): Promise<FeatureToggle[]> {
         return this.getAll({ featureQuery, archived, userId });
     }
 }

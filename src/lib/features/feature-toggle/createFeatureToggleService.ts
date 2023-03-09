@@ -34,7 +34,7 @@ import FakeAccessStore from '../../../test/fixtures/fake-access-store';
 import FakeRoleStore from '../../../test/fixtures/fake-role-store';
 import FakeEnvironmentStore from '../../../test/fixtures/fake-environment-store';
 import EventStore from '../../db/event-store';
-import FeatureToggleLegacyAdminStore from '../../db/feature-toggle-legacy-admin-store';
+import FeatureToggleAdminStore from '../../db/feature-toggle-admin-store';
 
 export const createFeatureToggleService = (
     db: Db,
@@ -53,7 +53,7 @@ export const createFeatureToggleService = (
         eventBus,
         getLogger,
     );
-    const featureToggleLegacyAdminStore = new FeatureToggleLegacyAdminStore(
+    const featureToggleLegacyAdminStore = new FeatureToggleAdminStore(
         db,
         eventBus,
         getLogger,

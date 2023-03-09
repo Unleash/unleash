@@ -57,6 +57,7 @@ export interface FeatureToggle extends FeatureToggleDTO {
     project: string;
     lastSeenAt?: Date;
     createdAt?: Date;
+    favorite?: boolean;
 }
 
 export interface IFeatureToggleClient {
@@ -72,7 +73,6 @@ export interface IFeatureToggleClient {
     lastSeenAt?: Date;
     createdAt?: Date;
     tags?: ITag[];
-    favorite?: boolean;
 }
 
 export interface IFeatureEnvironmentInfo {

@@ -82,7 +82,7 @@ import {
 } from '../types/permissions';
 import NoAccessError from '../error/no-access-error';
 import { IFeatureProjectUserParams } from '../routes/admin-api/project/project-features';
-import { IFeatureToggleLegacyAdminStore } from '../types/stores/feature-toggle-legacy-admin-store';
+import { IFeatureToggleAdminStore } from '../types/stores/feature-toggle-admin-store';
 
 interface IFeatureContext {
     featureName: string;
@@ -114,7 +114,7 @@ class FeatureToggleService {
 
     private featureToggleClientStore: IFeatureToggleClientStore;
 
-    private featureToggleLegacyAdminStore: IFeatureToggleLegacyAdminStore;
+    private featureToggleLegacyAdminStore: IFeatureToggleAdminStore;
 
     private tagStore: IFeatureTagStore;
 

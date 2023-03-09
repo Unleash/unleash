@@ -33,7 +33,7 @@ import { IFavoriteProjectsStore } from './stores/favorite-projects';
 import { IAccountStore } from './stores/account-store';
 import { IProjectStatsStore } from './stores/project-stats-store-type';
 import { IImportTogglesStore } from '../features/export-import-toggles/import-toggles-store-type';
-import { IFeatureToggleLegacyAdminStore } from './stores/feature-toggle-legacy-admin-store';
+import { IFeatureToggleAdminStore } from './stores/feature-toggle-admin-store';
 
 export interface IUnleashStores {
     accessStore: IAccessStore;
@@ -51,7 +51,7 @@ export interface IUnleashStores {
     featureTagStore: IFeatureTagStore;
     featureToggleStore: IFeatureToggleStore;
     featureToggleClientStore: IFeatureToggleClientStore;
-    featureToggleLegacyAdminStore: IFeatureToggleLegacyAdminStore;
+    featureToggleLegacyAdminStore: IFeatureToggleAdminStore;
     featureTypeStore: IFeatureTypeStore;
     groupStore: IGroupStore;
     projectStore: IProjectStore;

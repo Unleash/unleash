@@ -3,6 +3,7 @@ import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
 import { Logger, LogProvider } from '../logger';
 import {
+    FeatureToggle,
     IFeatureToggleClient,
     IFeatureToggleQuery,
     IStrategyConfig,
@@ -31,7 +32,7 @@ export interface IGetAdminFeatures {
 
 // This is extracted from the feature-toggle-client-store that was mixing
 // client and admin concerns
-export default class FeatureToggleLegacyAdminStore {
+export default class FeatureToggleAdminStore {
     private db: Db;
 
     private logger: Logger;
@@ -40,7 +41,7 @@ export default class FeatureToggleLegacyAdminStore {
 
     constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
-        this.logger = getLogger('feature-toggle-legacy-admin-store.ts');
+        this.logger = getLogger('feature-toggle-admin-store.ts');
         this.timer = (action) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
                 store: 'admin-feature-toggle',
@@ -52,7 +53,7 @@ export default class FeatureToggleLegacyAdminStore {
         featureQuery,
         archived,
         userId,
-    }: IGetAllFeatures): Promise<IFeatureToggleClient[]> {
+    }: IGetAllFeatures): Promise<FeatureToggle[]> {
         const environment = featureQuery?.environment || DEFAULT_ENV;
         const stopTimer = this.timer('getFeatureAdmin');
 
@@ -159,14 +160,9 @@ export default class FeatureToggleLegacyAdminStore {
         stopTimer();
 
         const featureToggles = rows.reduce((acc, r) => {
-            let feature: PartialDeep<IFeatureToggleClient> = acc[r.name] ?? {
+            let feature: PartialDeep<FeatureToggle> = acc[r.name] ?? {
                 strategies: [],
             };
-            if (this.isUnseenStrategyRow(feature, r)) {
-                feature.strategies.push(
-                    FeatureToggleLegacyAdminStore.rowToStrategy(r),
-                );
-            }
             if (this.isNewTag(feature, r)) {
                 this.addTag(feature, r);
             }
@@ -179,7 +175,6 @@ export default class FeatureToggleLegacyAdminStore {
                 this.addSegmentIdsToStrategy(feature, r);
             }
             feature.impressionData = r.impression_data;
-            feature.enabled = !!r.enabled;
             feature.name = r.name;
             feature.description = r.description;
             feature.project = r.project;
@@ -194,7 +189,7 @@ export default class FeatureToggleLegacyAdminStore {
             return acc;
         }, {});
 
-        const features: IFeatureToggleClient[] = Object.values(featureToggles);
+        const features: FeatureToggle[] = Object.values(featureToggles);
 
         return features;
     }
@@ -230,7 +225,7 @@ export default class FeatureToggleLegacyAdminStore {
         row: Record<string, any>,
     ): void {
         const tags = feature.tags || [];
-        const newTag = FeatureToggleLegacyAdminStore.rowToTag(row);
+        const newTag = FeatureToggleAdminStore.rowToTag(row);
         feature.tags = [...tags, newTag];
     }
 

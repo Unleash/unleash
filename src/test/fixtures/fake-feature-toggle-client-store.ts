@@ -5,10 +5,10 @@ import {
 } from '../../lib/types/model';
 import { IFeatureToggleClientStore } from '../../lib/types/stores/feature-toggle-client-store';
 import { IGetAdminFeatures } from '../../lib/db/feature-toggle-client-store';
-import { IFeatureToggleLegacyAdminStore } from '../../lib/types/stores/feature-toggle-legacy-admin-store';
+import { IFeatureToggleAdminStore } from '../../lib/types/stores/feature-toggle-admin-store';
 
 export default class FakeFeatureToggleClientStore
-    implements IFeatureToggleClientStore, IFeatureToggleLegacyAdminStore
+    implements IFeatureToggleClientStore, IFeatureToggleAdminStore
 {
     featureToggles: FeatureToggle[] = [];
 
@@ -57,7 +57,7 @@ export default class FakeFeatureToggleClientStore
     async getAdmin({
         featureQuery: query,
         archived,
-    }: IGetAdminFeatures): Promise<IFeatureToggleClient[]> {
+    }: IGetAdminFeatures): Promise<FeatureToggle[]> {
         return this.getFeatures(query, archived);
     }
 

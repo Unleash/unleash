@@ -15,10 +15,10 @@ import useProjects from 'hooks/api/getters/useProjects/useProjects';
 interface ISegmentFormPartOneProps {
     name: string;
     description: string;
-    project: string;
+    project: string | null;
     setName: React.Dispatch<React.SetStateAction<string>>;
     setDescription: React.Dispatch<React.SetStateAction<string>>;
-    setProject: React.Dispatch<React.SetStateAction<string>>;
+    setProject: React.Dispatch<React.SetStateAction<string | null>>;
     errors: { [key: string]: string };
     clearErrors: () => void;
     setCurrentStep: React.Dispatch<React.SetStateAction<SegmentFormStep>>;
@@ -115,7 +115,7 @@ export const SegmentFormStepOne: React.FC<ISegmentFormPartOneProps> = ({
                                 size="small"
                                 value={selectedProject}
                                 onChange={(_, newValue) => {
-                                    setProject(newValue?.id ?? '');
+                                    setProject(newValue?.id ?? null);
                                 }}
                                 options={projects}
                                 getOptionLabel={option => option.name}

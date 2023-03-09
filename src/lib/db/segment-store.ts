@@ -135,6 +135,16 @@ export default class SegmentStore implements ISegmentStore {
         return rows.map(this.mapRow);
     }
 
+    async getProjectSpecificSegments(project: string): Promise<ISegment[]> {
+        const rows: ISegmentRow[] = await this.db
+            .select(this.prefixColumns())
+            .from(T.segments)
+            .where({ segment_project_id: project })
+            .orderBy('name', 'asc');
+
+        return rows.map(this.mapRow);
+    }
+
     deleteAll(): Promise<void> {
         return this.db(T.segments).del();
     }

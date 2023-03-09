@@ -58,5 +58,10 @@ export default class FakeSegmentStore implements ISegmentStore {
         throw new Error('Method not implemented.');
     }
 
+    /*eslint-disable @typescript-eslint/no-unused-vars*/
+    getProjectSpecificSegments(projectId: string): Promise<ISegment[]> {
+        throw new Error('Method not implemented.');
+    }
+
     destroy(): void {}
 }

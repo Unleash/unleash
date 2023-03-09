@@ -1,6 +1,6 @@
 import { IUnleashConfig } from '../types/option';
 import { IEventStore } from '../types/stores/event-store';
-import { IUnleashStores } from '../types';
+import { IProjectStore, IUnleashStores } from '../types';
 import { Logger } from '../logger';
 import NameExistsError from '../error/name-exists-error';
 import { ISegmentStore } from '../types/stores/segment-store';
@@ -14,6 +14,7 @@ import {
 import User from '../types/user';
 import { IFeatureStrategiesStore } from '../types/stores/feature-strategies-store';
 import BadDataError from '../error/bad-data-error';
+import NotFoundError from '../error/notfound-error';
 
 export class SegmentService {
     private logger: Logger;
@@ -24,22 +25,29 @@ export class SegmentService {
 
     private eventStore: IEventStore;
 
+    private projectStore: IProjectStore;
+
     private config: IUnleashConfig;
 
     constructor(
         {
             segmentStore,
             featureStrategiesStore,
+            projectStore,
             eventStore,
         }: Pick<
             IUnleashStores,
-            'segmentStore' | 'featureStrategiesStore' | 'eventStore'
+            | 'segmentStore'
+            | 'featureStrategiesStore'
+            | 'eventStore'
+            | 'projectStore'
         >,
         config: IUnleashConfig,
     ) {
         this.segmentStore = segmentStore;
         this.featureStrategiesStore = featureStrategiesStore;
         this.eventStore = eventStore;
+        this.projectStore = projectStore;
         this.logger = config.getLogger('services/segment-service.ts');
         this.config = config;
     }
@@ -64,6 +72,13 @@ export class SegmentService {
     // Used by unleash-enterprise.
     async getStrategies(id: number): Promise<IFeatureStrategy[]> {
         return this.featureStrategiesStore.getStrategiesBySegment(id);
+    }
+
+    async getProjectSpecificSegments(projectId: string): Promise<ISegment[]> {
+        if (!this.projectStore.hasProject(projectId)) {
+            throw new NotFoundError(`Project "${projectId}" does not exist`);
+        }
+        return this.segmentStore.getProjectSpecificSegments(projectId);
     }
 
     async create(

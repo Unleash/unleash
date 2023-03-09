@@ -82,7 +82,7 @@ export const createFeatureToggleService = (
         groupService,
     );
     const segmentService = new SegmentService(
-        { segmentStore, featureStrategiesStore, eventStore },
+        { segmentStore, featureStrategiesStore, eventStore, projectStore },
         config,
     );
     const featureToggleService = new FeatureToggleService(
@@ -131,7 +131,7 @@ export const createFakeFeatureToggleService = (
         groupService,
     );
     const segmentService = new SegmentService(
-        { segmentStore, featureStrategiesStore, eventStore },
+        { segmentStore, featureStrategiesStore, eventStore, projectStore },
         config,
     );
     const featureToggleService = new FeatureToggleService(

@@ -9,6 +9,8 @@ export interface ISegmentStore extends Store<ISegment, number> {
 
     getByStrategy(strategyId: string): Promise<ISegment[]>;
 
+    getProjectSpecificSegments(projectId: string): Promise<ISegment[]>;
+
     create(
         segment: Omit<ISegment, 'id'>,
         user: Partial<Pick<User, 'username' | 'email'>>,

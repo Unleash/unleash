@@ -46,12 +46,22 @@ const FlexibleStrategy = ({
     const projectStickiness = localStorage.getItem(
         `defaultStickiness.${projectId}`
     );
-    const stickiness =
-        Boolean(projectScopedStickiness) && parameters.stickiness === ''
-            ? projectStickiness != null
-                ? projectStickiness
-                : 'default'
-            : parseParameterString(parameters.stickiness);
+
+    const resolveStickiness = () => {
+        if (parameters.stickiness === '') {
+            if (Boolean(projectScopedStickiness)) {
+                if (projectStickiness != null) {
+                    return projectStickiness;
+                }
+            }
+
+            return 'default';
+        }
+
+        return parseParameterString(parameters.stickiness);
+    };
+
+    const stickiness = resolveStickiness();
 
     if (parameters.stickiness === '') {
         onUpdate('stickiness')(stickiness);

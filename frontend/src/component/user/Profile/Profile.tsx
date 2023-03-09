@@ -12,7 +12,7 @@ export const Profile = () => {
     const { user } = useAuthUser();
     const location = useLocation();
     const navigate = useNavigate();
-    const { config } = useAuthSettings('simple');
+    const { config: simpleAuthConfig } = useAuthSettings('simple');
 
     const tabs = [
         { id: 'profile', label: 'Profile' },
@@ -20,7 +20,7 @@ export const Profile = () => {
             id: 'password',
             label: 'Change password',
             path: 'change-password',
-            hidden: config.disabled,
+            hidden: simpleAuthConfig.disabled,
         },
         {
             id: 'pat',

@@ -87,7 +87,7 @@ const FlexibleStrategy = ({
                     label="Stickiness"
                     value={stickiness}
                     editable={editable}
-                    data-testid={FLEXIBLE_STRATEGY_STICKINESS_ID}
+                    dataTestId={FLEXIBLE_STRATEGY_STICKINESS_ID}
                     onChange={e => onUpdate('stickiness')(e.target.value)}
                 />
                 &nbsp;

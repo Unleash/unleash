@@ -17,8 +17,8 @@ import { UPDATE_FEATURE_ENVIRONMENT_VARIANTS } from 'component/providers/AccessP
 import { WeightType } from 'constants/variantTypes';
 import { v4 as uuidv4 } from 'uuid';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
-import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { updateWeightEdit } from 'component/common/util';
+import { StickinessSelect } from '../../../../StrategyTypes/FlexibleStrategy/StickinessSelect/StickinessSelect';
 
 const StyledFormSubtitle = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -65,10 +65,10 @@ const StyledAlert = styled(Alert)(({ theme }) => ({
     marginTop: theme.spacing(4),
 }));
 
-const StyledVariantForms = styled('div')(({ theme }) => ({
+const StyledVariantForms = styled('div')({
     display: 'flex',
     flexDirection: 'column-reverse',
-}));
+});
 
 const StyledStickinessContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -83,7 +83,7 @@ const StyledDescription = styled('p')(({ theme }) => ({
     marginBottom: theme.spacing(1.5),
 }));
 
-const StyledGeneralSelect = styled(GeneralSelect)(({ theme }) => ({
+const StyledGeneralSelect = styled(StickinessSelect)(({ theme }) => ({
     minWidth: theme.spacing(20),
     width: '100%',
 }));
@@ -134,6 +134,8 @@ export const EnvironmentVariantsModal = ({
 
     const { uiConfig } = useUiConfig();
     const { context } = useUnleashContext();
+
+    const { projectScopedStickiness } = uiConfig.flags;
 
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const { data } = usePendingChangeRequests(projectId);
@@ -225,7 +227,17 @@ export const EnvironmentVariantsModal = ({
         isChangeRequestConfigured(environment?.name || '') &&
         uiConfig.flags.crOnVariants;
 
-    const stickiness = variants[0]?.stickiness || 'default';
+    const projectStickiness = localStorage.getItem(
+        `defaultStickiness.${projectId}`
+    );
+
+    const defaultStickiness = Boolean(projectScopedStickiness)
+        ? projectStickiness != null
+            ? projectStickiness
+            : 'default'
+        : 'default';
+
+    const stickiness = variants[0]?.stickiness || defaultStickiness;
     const stickinessOptions = useMemo(
         () => [
             'default',
@@ -379,9 +391,12 @@ export const EnvironmentVariantsModal = ({
                                 </StyledDescription>
                                 <div>
                                     <StyledGeneralSelect
-                                        options={options}
                                         value={stickiness}
-                                        onChange={onStickinessChange}
+                                        label={'Stickiness'}
+                                        editable
+                                        onChange={e =>
+                                            onStickinessChange(e.target.value)
+                                        }
                                     />
                                 </div>
                             </>

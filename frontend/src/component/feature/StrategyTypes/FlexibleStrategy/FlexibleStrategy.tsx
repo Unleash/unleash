@@ -1,7 +1,6 @@
 import { Typography } from '@mui/material';
 import { IFeatureStrategyParameters } from 'interfaces/strategy';
 import RolloutSlider from '../RolloutSlider/RolloutSlider';
-import Select from 'component/common/select';
 import Input from 'component/common/Input/Input';
 import {
     FLEXIBLE_STRATEGY_GROUP_ID,
@@ -12,8 +11,11 @@ import {
     parseParameterNumber,
     parseParameterString,
 } from 'utils/parseParameter';
+import { StickinessSelect } from './StickinessSelect/StickinessSelect';
+import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
+import { useOptionalPathParam } from '../../../../hooks/useOptionalPathParam';
 
-const builtInStickinessOptions = [
+export const builtInStickinessOptions = [
     { key: 'default', label: 'default' },
     { key: 'userId', label: 'userId' },
     { key: 'sessionId', label: 'sessionId' },
@@ -30,9 +32,11 @@ interface IFlexibleStrategyProps {
 const FlexibleStrategy = ({
     updateParameter,
     parameters,
-    context,
     editable = true,
 }: IFlexibleStrategyProps) => {
+    const { uiConfig } = useUiConfig();
+    const { projectScopedStickiness } = uiConfig.flags;
+    const projectId = useOptionalPathParam('projectId');
     const onUpdate = (field: string) => (newValue: string) => {
         updateParameter(field, newValue);
     };
@@ -41,25 +45,20 @@ const FlexibleStrategy = ({
         updateParameter('rollout', value.toString());
     };
 
-    const resolveStickiness = () =>
-        builtInStickinessOptions.concat(
-            context
-                // @ts-expect-error
-                .filter(c => c.stickiness)
-                .filter(
-                    // @ts-expect-error
-                    c => !builtInStickinessOptions.find(s => s.key === c.name)
-                )
-                // @ts-expect-error
-                .map(c => ({ key: c.name, label: c.name }))
-        );
-
-    const stickinessOptions = resolveStickiness();
-
     const rollout =
         parameters.rollout !== undefined
             ? parseParameterNumber(parameters.rollout)
             : 100;
+
+    const projectStickiness = localStorage.getItem(
+        `defaultStickiness.${projectId}`
+    );
+    const stickiness =
+        Boolean(projectScopedStickiness) && parameters.stickiness === ''
+            ? projectStickiness != null
+                ? projectStickiness
+                : 'default'
+            : parseParameterString(parameters.stickiness);
 
     return (
         <div>
@@ -84,13 +83,10 @@ const FlexibleStrategy = ({
                     Stickiness
                     <HelpIcon tooltip="Stickiness defines what parameter should be used to ensure that your users get consistency in features. By default unleash will use the first value present in the context in the order of userId, sessionId and random." />
                 </Typography>
-                <Select
-                    id="stickiness-select"
-                    name="stickiness"
+                <StickinessSelect
                     label="Stickiness"
-                    options={stickinessOptions}
-                    value={parseParameterString(parameters.stickiness)}
-                    disabled={!editable}
+                    value={stickiness}
+                    editable={editable}
                     data-testid={FLEXIBLE_STRATEGY_STICKINESS_ID}
                     onChange={e => onUpdate('stickiness')(e.target.value)}
                 />

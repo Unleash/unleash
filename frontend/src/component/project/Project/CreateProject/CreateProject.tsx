@@ -15,6 +15,7 @@ const CreateProject = () => {
     const { setToastData, setToastApiError } = useToast();
     const { refetchUser } = useAuthUser();
     const { uiConfig } = useUiConfig();
+    const { projectScopedStickiness } = uiConfig.flags;
     const navigate = useNavigate();
     const {
         projectId,
@@ -27,6 +28,8 @@ const CreateProject = () => {
         clearErrors,
         validateProjectId,
         validateName,
+        setProjectStickiness,
+        projectStickiness,
         errors,
     } = useProjectForm();
 
@@ -53,6 +56,11 @@ const CreateProject = () => {
             } catch (error: unknown) {
                 setToastApiError(formatUnknownError(error));
             }
+        }
+
+        if (Boolean(projectScopedStickiness) && projectStickiness !== '') {
+            const key = `defaultStickiness.${projectId}`;
+            localStorage.setItem(key, projectStickiness);
         }
     };
 
@@ -85,6 +93,8 @@ const CreateProject = () => {
                 projectId={projectId}
                 setProjectId={setProjectId}
                 projectName={projectName}
+                projectStickiness={projectStickiness}
+                setProjectStickiness={setProjectStickiness}
                 setProjectName={setProjectName}
                 projectDesc={projectDesc}
                 setProjectDesc={setProjectDesc}

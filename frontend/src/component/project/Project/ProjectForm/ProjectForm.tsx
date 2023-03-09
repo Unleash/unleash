@@ -9,10 +9,15 @@ import {
     StyledButtonContainer,
     StyledButton,
 } from './ProjectForm.styles';
+import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
+import { StickinessSelect } from '../../../feature/StrategyTypes/FlexibleStrategy/StickinessSelect/StickinessSelect';
+import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender';
 interface IProjectForm {
     projectId: string;
     projectName: string;
     projectDesc: string;
+    projectStickiness?: string;
+    setProjectStickiness?: React.Dispatch<React.SetStateAction<string>>;
     setProjectId: React.Dispatch<React.SetStateAction<string>>;
     setProjectName: React.Dispatch<React.SetStateAction<string>>;
     setProjectDesc: React.Dispatch<React.SetStateAction<string>>;
@@ -31,14 +36,19 @@ const ProjectForm: React.FC<IProjectForm> = ({
     projectId,
     projectName,
     projectDesc,
+    projectStickiness,
     setProjectId,
     setProjectName,
     setProjectDesc,
+    setProjectStickiness,
     errors,
     mode,
     validateProjectId,
     clearErrors,
 }) => {
+    const { uiConfig } = useUiConfig();
+    const { projectScopedStickiness } = uiConfig.flags;
+
     return (
         <StyledForm onSubmit={handleSubmit}>
             <StyledContainer>
@@ -79,6 +89,29 @@ const ProjectForm: React.FC<IProjectForm> = ({
                     maxRows={4}
                     value={projectDesc}
                     onChange={e => setProjectDesc(e.target.value)}
+                />
+
+                <ConditionallyRender
+                    condition={
+                        Boolean(projectScopedStickiness) &&
+                        setProjectStickiness != null
+                    }
+                    show={
+                        <div style={{ width: '100%' }}>
+                            <StyledDescription>
+                                What is the default stickiness for the project?
+                            </StyledDescription>
+                            <StickinessSelect
+                                label="Default Stickiness"
+                                value={projectStickiness}
+                                onChange={e =>
+                                    setProjectStickiness &&
+                                    setProjectStickiness(e.target.value)
+                                }
+                                editable
+                            />
+                        </div>
+                    }
                 />
             </StyledContainer>
 

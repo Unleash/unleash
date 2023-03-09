@@ -5,11 +5,15 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 const useProjectForm = (
     initialProjectId = '',
     initialProjectName = '',
-    initialProjectDesc = ''
+    initialProjectDesc = '',
+    initialProjectStickiness = 'default'
 ) => {
     const [projectId, setProjectId] = useState(initialProjectId);
     const [projectName, setProjectName] = useState(initialProjectName);
     const [projectDesc, setProjectDesc] = useState(initialProjectDesc);
+    const [projectStickiness, setProjectStickiness] = useState(
+        initialProjectStickiness
+    );
     const [errors, setErrors] = useState({});
     const { validateId } = useProjectApi();
 
@@ -64,9 +68,11 @@ const useProjectForm = (
         projectId,
         projectName,
         projectDesc,
+        projectStickiness,
         setProjectId,
         setProjectName,
         setProjectDesc,
+        setProjectStickiness,
         getProjectPayload,
         validateName,
         validateProjectId,

@@ -17,25 +17,35 @@ import { GO_BACK } from 'constants/navigate';
 
 const EditProject = () => {
     const { uiConfig } = useUiConfig();
+    const { projectScopedStickiness } = uiConfig.flags;
     const { setToastData, setToastApiError } = useToast();
     const { hasAccess } = useContext(AccessContext);
     const id = useRequiredPathParam('projectId');
     const { project } = useProject(id);
     const navigate = useNavigate();
 
+    const storedStickiness = localStorage.getItem(`defaultStickiness.${id}`);
+
     const {
         projectId,
         projectName,
         projectDesc,
+        projectStickiness,
         setProjectId,
         setProjectName,
         setProjectDesc,
+        setProjectStickiness,
         getProjectPayload,
         clearErrors,
         validateProjectId,
         validateName,
         errors,
-    } = useProjectForm(id, project.name, project.description);
+    } = useProjectForm(
+        id,
+        project.name,
+        project.description,
+        storedStickiness != null ? storedStickiness : undefined
+    );
 
     const formatApiCode = () => {
         return `curl --location --request PUT '${
@@ -68,6 +78,11 @@ const EditProject = () => {
                 setToastApiError(formatUnknownError(error));
             }
         }
+
+        if (Boolean(projectScopedStickiness) && projectStickiness !== '') {
+            const key = `defaultStickiness.${projectId}`;
+            localStorage.setItem(key, projectStickiness);
+        }
     };
 
     const handleCancel = () => {
@@ -98,6 +113,8 @@ const EditProject = () => {
                 setProjectId={setProjectId}
                 projectName={projectName}
                 setProjectName={setProjectName}
+                projectStickiness={projectStickiness}
+                setProjectStickiness={setProjectStickiness}
                 projectDesc={projectDesc}
                 setProjectDesc={setProjectDesc}
                 mode="Edit"

@@ -1,6 +1,6 @@
-import { Button, styled } from '@mui/material';
+import { Autocomplete, Button, styled, TextField } from '@mui/material';
 import Input from 'component/common/Input/Input';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SegmentFormStep } from './SegmentForm';
 import {
@@ -8,12 +8,17 @@ import {
     SEGMENT_DESC_ID,
     SEGMENT_NEXT_BTN_ID,
 } from 'utils/testIds';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import useProjects from 'hooks/api/getters/useProjects/useProjects';
 
 interface ISegmentFormPartOneProps {
     name: string;
     description: string;
+    project: string;
     setName: React.Dispatch<React.SetStateAction<string>>;
     setDescription: React.Dispatch<React.SetStateAction<string>>;
+    setProject: React.Dispatch<React.SetStateAction<string>>;
     errors: { [key: string]: string };
     clearErrors: () => void;
     setCurrentStep: React.Dispatch<React.SetStateAction<SegmentFormStep>>;
@@ -52,13 +57,25 @@ export const SegmentFormStepOne: React.FC<ISegmentFormPartOneProps> = ({
     children,
     name,
     description,
+    project,
     setName,
     setDescription,
+    setProject,
     errors,
     clearErrors,
     setCurrentStep,
 }) => {
+    const { uiConfig } = useUiConfig();
     const navigate = useNavigate();
+    const { projects } = useProjects();
+
+    const [selectedProject, setSelectedProject] = React.useState(
+        projects.find(({ id }) => id === project) ?? null
+    );
+
+    useEffect(() => {
+        setSelectedProject(projects.find(({ id }) => id === project) ?? null);
+    }, [project, projects]);
 
     return (
         <StyledForm>
@@ -86,6 +103,28 @@ export const SegmentFormStepOne: React.FC<ISegmentFormPartOneProps> = ({
                     error={Boolean(errors.description)}
                     errorText={errors.description}
                     data-testid={SEGMENT_DESC_ID}
+                />
+                <ConditionallyRender
+                    condition={Boolean(uiConfig.flags.projectScopedSegments)}
+                    show={
+                        <>
+                            <StyledInputDescription>
+                                Is this segment tied to a specific project?
+                            </StyledInputDescription>
+                            <Autocomplete
+                                size="small"
+                                value={selectedProject}
+                                onChange={(_, newValue) => {
+                                    setProject(newValue?.id ?? '');
+                                }}
+                                options={projects}
+                                getOptionLabel={option => option.name}
+                                renderInput={params => (
+                                    <TextField {...params} label="Project" />
+                                )}
+                            />
+                        </>
+                    }
                 />
             </StyledContainer>
             <StyledButtonContainer>

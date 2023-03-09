@@ -9,9 +9,9 @@ import {
     StyledButtonContainer,
     StyledButton,
 } from './ProjectForm.styles';
-import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
-import { StickinessSelect } from '../../../feature/StrategyTypes/FlexibleStrategy/StickinessSelect/StickinessSelect';
-import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { StickinessSelect } from 'component/feature/StrategyTypes/FlexibleStrategy/StickinessSelect/StickinessSelect';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 interface IProjectForm {
     projectId: string;
     projectName: string;

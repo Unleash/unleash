@@ -19,6 +19,7 @@ import { extractUsername } from '../../../util';
 import { IAuthRequest } from '../../unleash-types';
 import {
     AdminFeaturesQuerySchema,
+    ArchiveFeaturesSchema,
     CreateFeatureSchema,
     CreateFeatureStrategySchema,
     createRequestSchema,
@@ -389,13 +390,31 @@ export default class ProjectFeaturesController extends Controller {
                         'This endpoint archives the specified feature if the feature belongs to the specified project.',
                     summary: 'Archive a feature.',
                     responses: {
-                        200: emptyResponse,
+                        202: emptyResponse,
                         403: {
                             description:
                                 'You either do not have the required permissions or used an invalid URL.',
                         },
                         ...getStandardResponses(401, 404),
                     },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'delete',
+            path: PATH,
+            handler: this.archiveFeatures,
+            permission: DELETE_FEATURE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['Features'],
+                    operationId: 'archiveFeatures',
+                    description:
+                        'This endpoint archives the specified features.',
+                    summary: 'Archive a list of features',
+                    requestBody: createRequestSchema('archiveFeaturesSchema'),
+                    responses: { 202: emptyResponse },
                 }),
             ],
         });
@@ -575,6 +594,18 @@ export default class ProjectFeaturesController extends Controller {
             projectId,
         );
         res.status(202).send();
+    }
+
+    async archiveFeatures(
+        req: IAuthRequest<{ projectId: string }, void, ArchiveFeaturesSchema>,
+        res: Response,
+    ): Promise<void> {
+        const { features } = req.body;
+        const { projectId } = req.params;
+        const userName = extractUsername(req);
+
+        await this.featureService.archiveToggles(features, userName, projectId);
+        res.status(202).end();
     }
 
     async getFeatureEnvironment(

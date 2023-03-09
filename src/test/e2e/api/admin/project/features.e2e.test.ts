@@ -25,6 +25,7 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 import supertest from 'supertest';
 import { randomId } from '../../../../../lib/util/random-id';
+import { DEFAULT_PROJECT } from '../../../../../lib/types';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -32,7 +33,10 @@ const sortOrderFirst = 0;
 const sortOrderSecond = 10;
 const sortOrderDefault = 9999;
 
-const createFeatureToggle = (featureName: string, project = 'default') => {
+const createFeatureToggle = (
+    featureName: string,
+    project = DEFAULT_PROJECT,
+) => {
     return app.request.post(`/api/admin/projects/${project}/features`).send({
         name: featureName,
     });
@@ -2817,4 +2821,26 @@ test('Can query for two tags at the same time. Tags are ORed together', async ()
         .expect((res) => {
             expect(res.body.features).toHaveLength(3);
         });
+});
+
+test('Should be able to bulk archive features', async () => {
+    const featureName1 = 'archivedFeature1';
+    const featureName2 = 'archivedFeature2';
+
+    await createFeatureToggle(featureName1);
+    await createFeatureToggle(featureName2);
+
+    await app.request
+        .delete(`/api/admin/projects/${DEFAULT_PROJECT}/features`)
+        .send({
+            features: [featureName1, featureName2],
+        })
+        .expect(202);
+
+    const { body } = await app.request
+        .get(`/api/admin/archive/features/${DEFAULT_PROJECT}`)
+        .expect(200);
+    expect(body).toMatchObject({
+        features: [{ name: featureName1 }, { name: featureName2 }],
+    });
 });

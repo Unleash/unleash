@@ -16,6 +16,7 @@ import { ensureStringValue } from '../util/ensureStringValue';
 import { mapValues } from '../util/map-values';
 import { Db } from './db';
 import Raw = Knex.Raw;
+import { IFeatureToggleClientStore } from '../types';
 
 export interface IGetAllFeatures {
     featureQuery?: IFeatureToggleQuery;
@@ -29,7 +30,9 @@ export interface IGetAdminFeatures {
     userId?: number;
 }
 
-export default class FeatureToggleClientStore {
+export default class FeatureToggleClientStore
+    implements IFeatureToggleClientStore
+{
     private db: Db;
 
     private logger: Logger;

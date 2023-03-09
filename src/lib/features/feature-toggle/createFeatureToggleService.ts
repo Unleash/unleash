@@ -97,7 +97,7 @@ export const createFeatureToggleService = (
             featureStrategiesStore,
             featureToggleStore,
             featureToggleClientStore,
-            featureToggleAdminStore: featureToggleAdminStore,
+            featureToggleAdminStore,
             projectStore,
             eventStore,
             featureTagStore,

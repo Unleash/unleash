@@ -704,6 +704,7 @@ class FeatureToggleService {
                 description,
                 createdAt,
                 lastSeenAt,
+                impressionData,
             }) => ({
                 name,
                 type,
@@ -715,6 +716,7 @@ class FeatureToggleService {
                 description,
                 createdAt,
                 lastSeenAt,
+                impressionData,
             }),
         );
     }

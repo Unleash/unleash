@@ -97,7 +97,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
                         setProjectStickiness != null
                     }
                     show={
-                        <div style={{ width: '100%' }}>
+                        <>
                             <StyledDescription>
                                 What is the default stickiness for the project?
                             </StyledDescription>
@@ -110,7 +110,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
                                 }
                                 editable
                             />
-                        </div>
+                        </>
                     }
                 />
             </StyledContainer>

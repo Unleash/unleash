@@ -182,7 +182,7 @@ const COLUMNS = [
         ),
     },
     {
-        Header: 'Project ID',
+        Header: 'Project',
         accessor: 'project',
         Cell: ({ value }: { value: string }) => (
             <ConditionallyRender

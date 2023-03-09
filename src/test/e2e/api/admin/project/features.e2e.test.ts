@@ -2831,7 +2831,7 @@ test('Should be able to bulk archive features', async () => {
     await createFeatureToggle(featureName2);
 
     await app.request
-        .delete(`/api/admin/projects/${DEFAULT_PROJECT}/features`)
+        .post(`/api/admin/projects/${DEFAULT_PROJECT}/archive`)
         .send({
             features: [featureName1, featureName2],
         })
@@ -2841,6 +2841,6 @@ test('Should be able to bulk archive features', async () => {
         .get(`/api/admin/archive/features/${DEFAULT_PROJECT}`)
         .expect(200);
     expect(body).toMatchObject({
-        features: [{ name: featureName1 }, { name: featureName2 }],
+        features: [{}, { name: featureName1 }, { name: featureName2 }],
     });
 });

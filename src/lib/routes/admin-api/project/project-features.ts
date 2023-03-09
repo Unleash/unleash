@@ -73,6 +73,7 @@ export interface IFeatureProjectUserParams extends ProjectParam {
 }
 
 const PATH = '/:projectId/features';
+const PATH_ARCHIVE = '/:projectId/archive';
 const PATH_FEATURE = `${PATH}/:featureName`;
 const PATH_FEATURE_CLONE = `${PATH_FEATURE}/clone`;
 const PATH_ENV = `${PATH_FEATURE}/environments/:environment`;
@@ -402,8 +403,8 @@ export default class ProjectFeaturesController extends Controller {
         });
 
         this.route({
-            method: 'delete',
-            path: PATH,
+            method: 'post',
+            path: PATH_ARCHIVE,
             handler: this.archiveFeatures,
             permission: DELETE_FEATURE,
             middleware: [

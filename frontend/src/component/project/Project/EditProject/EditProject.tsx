@@ -14,6 +14,7 @@ import { useContext } from 'react';
 import AccessContext from 'contexts/AccessContext';
 import { Alert } from '@mui/material';
 import { GO_BACK } from 'constants/navigate';
+import { usePlausibleTracker } from '../../../../hooks/usePlausibleTracker';
 
 const EditProject = () => {
     const { uiConfig } = useUiConfig();
@@ -23,6 +24,7 @@ const EditProject = () => {
     const id = useRequiredPathParam('projectId');
     const { project } = useProject(id);
     const navigate = useNavigate();
+    const { trackEvent } = usePlausibleTracker();
 
     const storedStickiness = localStorage.getItem(`defaultStickiness.${id}`);
 
@@ -82,6 +84,7 @@ const EditProject = () => {
         if (Boolean(projectScopedStickiness) && projectStickiness !== '') {
             const key = `defaultStickiness.${projectId}`;
             localStorage.setItem(key, projectStickiness);
+            trackEvent('project_stickiness_set');
         }
     };
 

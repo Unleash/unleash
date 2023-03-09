@@ -10,6 +10,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { GO_BACK } from 'constants/navigate';
+import { usePlausibleTracker } from '../../../../hooks/usePlausibleTracker';
 
 const CreateProject = () => {
     const { setToastData, setToastApiError } = useToast();
@@ -34,6 +35,7 @@ const CreateProject = () => {
     } = useProjectForm();
 
     const { createProject, loading } = useProjectApi();
+    const { trackEvent } = usePlausibleTracker();
 
     const handleSubmit = async (e: Event) => {
         e.preventDefault();
@@ -61,6 +63,7 @@ const CreateProject = () => {
         if (Boolean(projectScopedStickiness) && projectStickiness !== '') {
             const key = `defaultStickiness.${projectId}`;
             localStorage.setItem(key, projectStickiness);
+            trackEvent('project_stickiness_set');
         }
     };
 

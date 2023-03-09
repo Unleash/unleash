@@ -53,6 +53,10 @@ const FlexibleStrategy = ({
                 : 'default'
             : parseParameterString(parameters.stickiness);
 
+    if (parameters.stickiness === '') {
+        onUpdate('stickiness')(stickiness);
+    }
+
     return (
         <div>
             <RolloutSlider

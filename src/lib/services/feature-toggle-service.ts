@@ -114,7 +114,7 @@ class FeatureToggleService {
 
     private featureToggleClientStore: IFeatureToggleClientStore;
 
-    private featureToggleLegacyAdminStore: IFeatureToggleAdminStore;
+    private featureToggleAdminStore: IFeatureToggleAdminStore;
 
     private tagStore: IFeatureTagStore;
 
@@ -137,7 +137,7 @@ class FeatureToggleService {
             featureStrategiesStore,
             featureToggleStore,
             featureToggleClientStore,
-            featureToggleLegacyAdminStore,
+            featureToggleAdminStore,
             projectStore,
             eventStore,
             featureTagStore,
@@ -148,7 +148,7 @@ class FeatureToggleService {
             | 'featureStrategiesStore'
             | 'featureToggleStore'
             | 'featureToggleClientStore'
-            | 'featureToggleLegacyAdminStore'
+            | 'featureToggleAdminStore'
             | 'projectStore'
             | 'eventStore'
             | 'featureTagStore'
@@ -166,7 +166,7 @@ class FeatureToggleService {
         this.featureStrategiesStore = featureStrategiesStore;
         this.featureToggleStore = featureToggleStore;
         this.featureToggleClientStore = featureToggleClientStore;
-        this.featureToggleLegacyAdminStore = featureToggleLegacyAdminStore;
+        this.featureToggleAdminStore = featureToggleAdminStore;
         this.tagStore = featureTagStore;
         this.projectStore = projectStore;
         this.eventStore = eventStore;
@@ -710,7 +710,7 @@ class FeatureToggleService {
         userId?: number,
         archived: boolean = false,
     ): Promise<FeatureToggle[]> {
-        return this.featureToggleLegacyAdminStore.getAdmin({
+        return this.featureToggleAdminStore.getAdmin({
             featureQuery: query,
             userId,
             archived,

@@ -87,7 +87,7 @@ export const createStores = (
             eventBus,
             getLogger,
         ),
-        featureToggleLegacyAdminStore: new FeatureToggleAdminStore(
+        featureToggleAdminStore: new FeatureToggleAdminStore(
             db,
             eventBus,
             getLogger,

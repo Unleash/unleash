@@ -4,11 +4,9 @@ import {
     IFeatureToggleQuery,
 } from '../../lib/types/model';
 import { IFeatureToggleClientStore } from '../../lib/types/stores/feature-toggle-client-store';
-import { IGetAdminFeatures } from '../../lib/db/feature-toggle-client-store';
-import { IFeatureToggleAdminStore } from '../../lib/types/stores/feature-toggle-admin-store';
 
 export default class FakeFeatureToggleClientStore
-    implements IFeatureToggleClientStore, IFeatureToggleAdminStore
+    implements IFeatureToggleClientStore
 {
     featureToggles: FeatureToggle[] = [];
 
@@ -52,13 +50,6 @@ export default class FakeFeatureToggleClientStore
         query?: IFeatureToggleQuery,
     ): Promise<IFeatureToggleClient[]> {
         return this.getFeatures(query);
-    }
-
-    async getAdmin({
-        featureQuery: query,
-        archived,
-    }: IGetAdminFeatures): Promise<FeatureToggle[]> {
-        return this.getFeatures(query, archived);
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types

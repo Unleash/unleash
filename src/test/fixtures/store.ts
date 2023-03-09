@@ -33,6 +33,7 @@ import FakeFavoriteFeaturesStore from './fake-favorite-features-store';
 import FakeFavoriteProjectsStore from './fake-favorite-projects-store';
 import { FakeAccountStore } from './fake-account-store';
 import FakeProjectStatsStore from './fake-project-stats-store';
+import FakeFeatureToggleAdminStore from './fake-feature-toggle-admin-store';
 
 const db = {
     select: () => ({
@@ -48,7 +49,7 @@ const createStores: () => IUnleashStores = () => {
         clientInstanceStore: new FakeClientInstanceStore(),
         featureToggleStore: new FakeFeatureToggleStore(),
         featureToggleClientStore: new FakeFeatureToggleClientStore(),
-        featureToggleAdminStore: new FakeFeatureToggleClientStore(),
+        featureToggleAdminStore: new FakeFeatureToggleAdminStore(),
         tagStore: new FakeTagStore(),
         tagTypeStore: new FakeTagTypeStore(),
         eventStore: new FakeEventStore(),

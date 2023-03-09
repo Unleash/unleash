@@ -27,9 +27,11 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { Search } from 'component/common/Search/Search';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 export const SegmentTable = () => {
     const { segments, loading } = useSegments();
+    const { uiConfig } = useUiConfig();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [initialState] = useState({
         sortBy: [{ id: 'createdAt' }],
@@ -81,6 +83,10 @@ export const SegmentTable = () => {
             {
                 condition: isSmallScreen,
                 columns: ['createdAt', 'createdBy'],
+            },
+            {
+                condition: !Boolean(uiConfig.flags.projectScopedSegments),
+                columns: ['project'],
             },
         ],
         setHiddenColumns,

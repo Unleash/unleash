@@ -19,6 +19,7 @@ import { v4 as uuidv4 } from 'uuid';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import { updateWeightEdit } from 'component/common/util';
 import { StickinessSelect } from 'component/feature/StrategyTypes/FlexibleStrategy/StickinessSelect/StickinessSelect';
+import { useDefaultProjectStickiness } from '../../../../../../hooks/useDefaultProjectStickiness';
 
 const StyledFormSubtitle = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -134,8 +135,7 @@ export const EnvironmentVariantsModal = ({
 
     const { uiConfig } = useUiConfig();
     const { context } = useUnleashContext();
-
-    const { projectScopedStickiness } = uiConfig.flags;
+    const { defaultStickiness } = useDefaultProjectStickiness(projectId);
 
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const { data } = usePendingChangeRequests(projectId);
@@ -226,15 +226,6 @@ export const EnvironmentVariantsModal = ({
     const isChangeRequest =
         isChangeRequestConfigured(environment?.name || '') &&
         uiConfig.flags.crOnVariants;
-
-    const projectStickiness = localStorage.getItem(
-        `defaultStickiness.${projectId}`
-    );
-
-    const defaultStickiness =
-        Boolean(projectScopedStickiness) && projectStickiness != null
-            ? projectStickiness
-            : 'default';
 
     const stickiness = variants[0]?.stickiness || defaultStickiness;
     const stickinessOptions = useMemo(

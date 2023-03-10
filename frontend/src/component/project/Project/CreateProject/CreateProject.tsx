@@ -10,13 +10,12 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { GO_BACK } from 'constants/navigate';
-import { usePlausibleTracker } from '../../../../hooks/usePlausibleTracker';
+import { useDefaultProjectStickiness } from 'hooks/useDefaultProjectStickiness';
 
 const CreateProject = () => {
     const { setToastData, setToastApiError } = useToast();
     const { refetchUser } = useAuthUser();
     const { uiConfig } = useUiConfig();
-    const { projectScopedStickiness } = uiConfig.flags;
     const navigate = useNavigate();
     const {
         projectId,
@@ -35,7 +34,9 @@ const CreateProject = () => {
     } = useProjectForm();
 
     const { createProject, loading } = useProjectApi();
-    const { trackEvent } = usePlausibleTracker();
+
+    const { setDefaultProjectStickiness } =
+        useDefaultProjectStickiness(projectId);
 
     const handleSubmit = async (e: Event) => {
         e.preventDefault();
@@ -47,6 +48,7 @@ const CreateProject = () => {
             const payload = getProjectPayload();
             try {
                 await createProject(payload);
+                setDefaultProjectStickiness(payload.projectStickiness);
                 refetchUser();
                 navigate(`/projects/${projectId}`);
                 setToastData({
@@ -58,12 +60,6 @@ const CreateProject = () => {
             } catch (error: unknown) {
                 setToastApiError(formatUnknownError(error));
             }
-        }
-
-        if (Boolean(projectScopedStickiness) && projectStickiness !== '') {
-            const key = `defaultStickiness.${projectId}`;
-            localStorage.setItem(key, projectStickiness);
-            trackEvent('project_stickiness_set');
         }
     };
 

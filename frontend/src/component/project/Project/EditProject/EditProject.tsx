@@ -14,17 +14,16 @@ import { useContext } from 'react';
 import AccessContext from 'contexts/AccessContext';
 import { Alert } from '@mui/material';
 import { GO_BACK } from 'constants/navigate';
-import { usePlausibleTracker } from '../../../../hooks/usePlausibleTracker';
+import { useDefaultProjectStickiness } from 'hooks/useDefaultProjectStickiness';
 
 const EditProject = () => {
     const { uiConfig } = useUiConfig();
-    const { projectScopedStickiness } = uiConfig.flags;
     const { setToastData, setToastApiError } = useToast();
     const { hasAccess } = useContext(AccessContext);
     const id = useRequiredPathParam('projectId');
     const { project } = useProject(id);
+    const { setDefaultProjectStickiness } = useDefaultProjectStickiness(id);
     const navigate = useNavigate();
-    const { trackEvent } = usePlausibleTracker();
 
     const storedStickiness = localStorage.getItem(`defaultStickiness.${id}`);
 
@@ -70,6 +69,7 @@ const EditProject = () => {
         if (validName) {
             try {
                 await editProject(id, payload);
+                setDefaultProjectStickiness(payload.projectStickiness);
                 refetch();
                 navigate(`/projects/${id}`);
                 setToastData({
@@ -79,12 +79,6 @@ const EditProject = () => {
             } catch (error: unknown) {
                 setToastApiError(formatUnknownError(error));
             }
-        }
-
-        if (Boolean(projectScopedStickiness) && projectStickiness !== '') {
-            const key = `defaultStickiness.${projectId}`;
-            localStorage.setItem(key, projectStickiness);
-            trackEvent('project_stickiness_set');
         }
     };
 

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { useDefaultProjectStickiness } from '../../../../hooks/useDefaultProjectStickiness';
 
 const useProjectForm = (
     initialProjectId = '',
@@ -9,12 +10,15 @@ const useProjectForm = (
     initialProjectStickiness = 'default'
 ) => {
     const [projectId, setProjectId] = useState(initialProjectId);
+    const { defaultStickiness } = useDefaultProjectStickiness(projectId);
+
     const [projectName, setProjectName] = useState(initialProjectName);
     const [projectDesc, setProjectDesc] = useState(initialProjectDesc);
     const [projectStickiness, setProjectStickiness] = useState(
-        initialProjectStickiness
+        defaultStickiness || initialProjectStickiness
     );
     const [errors, setErrors] = useState({});
+
     const { validateId } = useProjectApi();
 
     useEffect(() => {
@@ -34,6 +38,7 @@ const useProjectForm = (
             id: projectId,
             name: projectName,
             description: projectDesc,
+            projectStickiness,
         };
     };
 

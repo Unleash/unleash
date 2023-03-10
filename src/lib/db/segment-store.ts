@@ -68,7 +68,7 @@ export default class SegmentStore implements ISegmentStore {
                 id: segment.id,
                 name: segment.name,
                 description: segment.description,
-                segment_project_id: segment.project,
+                segment_project_id: segment.project || null,
                 constraints: JSON.stringify(segment.constraints),
                 created_by: user.username || user.email,
             })
@@ -83,7 +83,7 @@ export default class SegmentStore implements ISegmentStore {
             .update({
                 name: segment.name,
                 description: segment.description,
-                segment_project_id: segment.project,
+                segment_project_id: segment.project || null,
                 constraints: JSON.stringify(segment.constraints),
             })
             .returning(COLUMNS);

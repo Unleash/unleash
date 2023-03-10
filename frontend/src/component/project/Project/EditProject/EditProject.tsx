@@ -14,6 +14,7 @@ import { useContext } from 'react';
 import AccessContext from 'contexts/AccessContext';
 import { Alert } from '@mui/material';
 import { GO_BACK } from 'constants/navigate';
+import { useDefaultProjectStickiness } from 'hooks/useDefaultProjectStickiness';
 
 const EditProject = () => {
     const { uiConfig } = useUiConfig();
@@ -21,21 +22,30 @@ const EditProject = () => {
     const { hasAccess } = useContext(AccessContext);
     const id = useRequiredPathParam('projectId');
     const { project } = useProject(id);
+    const { defaultStickiness, setDefaultProjectStickiness } =
+        useDefaultProjectStickiness(id);
     const navigate = useNavigate();
 
     const {
         projectId,
         projectName,
         projectDesc,
+        projectStickiness,
         setProjectId,
         setProjectName,
         setProjectDesc,
+        setProjectStickiness,
         getProjectPayload,
         clearErrors,
         validateProjectId,
         validateName,
         errors,
-    } = useProjectForm(id, project.name, project.description);
+    } = useProjectForm(
+        id,
+        project.name,
+        project.description,
+        defaultStickiness
+    );
 
     const formatApiCode = () => {
         return `curl --location --request PUT '${
@@ -58,6 +68,7 @@ const EditProject = () => {
         if (validName) {
             try {
                 await editProject(id, payload);
+                setDefaultProjectStickiness(payload.projectStickiness);
                 refetch();
                 navigate(`/projects/${id}`);
                 setToastData({
@@ -98,6 +109,8 @@ const EditProject = () => {
                 setProjectId={setProjectId}
                 projectName={projectName}
                 setProjectName={setProjectName}
+                projectStickiness={projectStickiness}
+                setProjectStickiness={setProjectStickiness}
                 projectDesc={projectDesc}
                 setProjectDesc={setProjectDesc}
                 mode="Edit"

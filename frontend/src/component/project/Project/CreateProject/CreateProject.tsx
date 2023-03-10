@@ -10,6 +10,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { GO_BACK } from 'constants/navigate';
+import { useDefaultProjectStickiness } from 'hooks/useDefaultProjectStickiness';
 
 const CreateProject = () => {
     const { setToastData, setToastApiError } = useToast();
@@ -27,10 +28,15 @@ const CreateProject = () => {
         clearErrors,
         validateProjectId,
         validateName,
+        setProjectStickiness,
+        projectStickiness,
         errors,
     } = useProjectForm();
 
     const { createProject, loading } = useProjectApi();
+
+    const { setDefaultProjectStickiness } =
+        useDefaultProjectStickiness(projectId);
 
     const handleSubmit = async (e: Event) => {
         e.preventDefault();
@@ -42,6 +48,7 @@ const CreateProject = () => {
             const payload = getProjectPayload();
             try {
                 await createProject(payload);
+                setDefaultProjectStickiness(payload.projectStickiness);
                 refetchUser();
                 navigate(`/projects/${projectId}`);
                 setToastData({
@@ -85,6 +92,8 @@ const CreateProject = () => {
                 projectId={projectId}
                 setProjectId={setProjectId}
                 projectName={projectName}
+                projectStickiness={projectStickiness}
+                setProjectStickiness={setProjectStickiness}
                 setProjectName={setProjectName}
                 projectDesc={projectDesc}
                 setProjectDesc={setProjectDesc}

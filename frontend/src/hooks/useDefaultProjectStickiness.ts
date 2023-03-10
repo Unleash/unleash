@@ -1,4 +1,3 @@
-import { getLocalStorageItem } from 'utils/storage';
 import useUiConfig from './api/getters/useUiConfig/useUiConfig';
 import { usePlausibleTracker } from './usePlausibleTracker';
 
@@ -9,7 +8,7 @@ export const useDefaultProjectStickiness = (projectId?: string) => {
 
     const key = `defaultStickiness.${projectId}`;
     const { projectScopedStickiness } = uiConfig.flags;
-    const projectStickiness = getLocalStorageItem<string>(key);
+    const projectStickiness = localStorage.getItem(key);
 
     const defaultStickiness =
         Boolean(projectScopedStickiness) &&
@@ -24,7 +23,6 @@ export const useDefaultProjectStickiness = (projectId?: string) => {
             projectId &&
             stickiness !== ''
         ) {
-            const key = `defaultStickiness.${projectId}`;
             localStorage.setItem(key, stickiness);
             trackEvent('project_stickiness_set');
         }

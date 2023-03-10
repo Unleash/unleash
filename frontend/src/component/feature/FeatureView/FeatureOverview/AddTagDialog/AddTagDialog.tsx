@@ -82,18 +82,26 @@ const AddTagDialog = ({ open, setOpen }: IAddTagDialogProps) => {
     };
 
     function difference(array1: ITag[], array2: ITag[]) {
-        const added = array1.filter(
-            element =>
-                !array2.find(
-                    e2 => element.value === e2.value && element.type === e2.type
-                )
-        );
-        const removed = array2.filter(
-            element =>
-                !array1.find(
-                    e2 => element.value === e2.value && element.type === e2.type
-                )
-        );
+        const added = array1
+            .filter(tag => tag.type === tagType.name)
+            .filter(
+                element =>
+                    !array2.find(
+                        e2 =>
+                            element.value === e2.value &&
+                            element.type === e2.type
+                    )
+            );
+        const removed = array2
+            .filter(tag => tag.type === tagType.name)
+            .filter(
+                element =>
+                    !array1.find(
+                        e2 =>
+                            element.value === e2.value &&
+                            element.type === e2.type
+                    )
+            );
         setDifferenceCount(added.length + removed.length);
         return { added, removed };
     }
@@ -164,8 +172,9 @@ const AddTagDialog = ({ open, setOpen }: IAddTagDialogProps) => {
                     confetti: true,
                 });
         }
-        setOpen(false);
+        setDifferenceCount(0);
         setSelectedTagOptions([]);
+        setOpen(false);
     };
 
     const handleTagTypeChange = (
@@ -175,6 +184,8 @@ const AddTagDialog = ({ open, setOpen }: IAddTagDialogProps) => {
         if (value != null && typeof value !== 'string') {
             event.preventDefault();
             setTagType(value);
+            setSelectedTagOptions([]);
+            setDifferenceCount(0);
         }
     };
 

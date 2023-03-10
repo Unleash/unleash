@@ -119,6 +119,7 @@ export const TagsInput = ({
             placeholder="Select Values"
             options={options}
             value={selectedOptions}
+            defaultValue={selectedOptions}
             renderTags={renderTags}
             isOptionEqualToValue={(option, value) => {
                 if (value.inputValue && value.inputValue !== '') {

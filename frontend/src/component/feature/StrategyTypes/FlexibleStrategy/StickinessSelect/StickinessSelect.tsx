@@ -24,7 +24,7 @@ export const StickinessSelect = ({
 }: IStickinessSelectProps) => {
     const { context } = useUnleashContext();
 
-    const resolveStickiness = () =>
+    const resolveStickinessOptions = () =>
         builtInStickinessOptions.concat(
             context
                 .filter(contextDefinision => contextDefinision.stickiness)
@@ -39,7 +39,7 @@ export const StickinessSelect = ({
                 .map(c => ({ key: c.name, label: c.name }))
         );
 
-    const stickinessOptions = resolveStickiness();
+    const stickinessOptions = resolveStickinessOptions();
 
     return (
         <Select

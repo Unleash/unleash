@@ -27,13 +27,13 @@ export const StickinessSelect = ({
     const resolveStickinessOptions = () =>
         builtInStickinessOptions.concat(
             context
-                .filter(contextDefinision => contextDefinision.stickiness)
+                .filter(contextDefinition => contextDefinition.stickiness)
                 .filter(
-                    contextDefinision =>
+                    contextDefinition =>
                         !builtInStickinessOptions.find(
                             builtInStickinessOption =>
                                 builtInStickinessOption.key ===
-                                contextDefinision.name
+                                contextDefinition.name
                         )
                 )
                 .map(c => ({ key: c.name, label: c.name }))

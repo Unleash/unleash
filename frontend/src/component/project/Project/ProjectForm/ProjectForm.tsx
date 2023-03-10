@@ -102,7 +102,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
                                 What is the default stickiness for the project?
                             </StyledDescription>
                             <StickinessSelect
-                                label=""
+                                label="Stickiness"
                                 value={projectStickiness}
                                 onChange={e =>
                                     setProjectStickiness &&

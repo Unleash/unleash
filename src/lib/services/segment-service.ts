@@ -73,7 +73,13 @@ export class SegmentService {
         const input = await segmentSchema.validateAsync(data);
         this.validateSegmentValuesLimit(input);
         await this.validateName(input.name);
-        const segment = await this.segmentStore.create(input, user);
+        const segment = await this.segmentStore.create(
+            {
+                ...input,
+                project: input.project || null,
+            },
+            user,
+        );
 
         await this.eventStore.store({
             type: SEGMENT_CREATED,
@@ -97,7 +103,10 @@ export class SegmentService {
             await this.validateName(input.name);
         }
 
-        const segment = await this.segmentStore.update(id, input);
+        const segment = await this.segmentStore.update(id, {
+            ...input,
+            project: input.project || null,
+        });
 
         await this.eventStore.store({
             type: SEGMENT_UPDATED,

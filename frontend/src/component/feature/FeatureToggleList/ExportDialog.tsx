@@ -1,16 +1,16 @@
+import { createRef, useState } from 'react';
 import { styled, Typography, Box } from '@mui/material';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { useExportApi } from 'hooks/api/actions/useExportApi/useExportApi';
 import useToast from 'hooks/useToast';
-import { FeatureSchema } from 'openapi';
+import type { FeatureSchema } from 'openapi';
 
-import { createRef, useEffect, useState } from 'react';
 import { formatUnknownError } from 'utils/formatUnknownError';
 
 interface IExportDialogProps {
     showExportDialog: boolean;
-    data: FeatureSchema[];
+    data: Pick<FeatureSchema, 'name'>[];
     onClose: () => void;
     environments: string[];
 }
@@ -37,13 +37,6 @@ export const ExportDialog = ({
             label: env,
         }));
 
-    const getPayload = () => {
-        return {
-            features: data.map(feature => feature.name),
-            environment: selected,
-        };
-    };
-
     const downloadFile = (json: any) => {
         const link = document.createElement('a');
         ref.current?.appendChild(link);
@@ -65,7 +58,10 @@ export const ExportDialog = ({
 
     const onClick = async () => {
         try {
-            const payload = getPayload();
+            const payload = {
+                features: data.map(feature => feature.name),
+                environment: selected,
+            };
             const res = await createExport(payload);
             const body = await res.json();
             downloadFile(body);

@@ -59,7 +59,7 @@ const AddTagDialog = ({ open, setOpen }: IAddTagDialogProps) => {
     const { trackEvent } = usePlausibleTracker();
 
     const [selectedTagOptions, setSelectedTagOptions] = useState<TagOption[]>(
-        []
+        tagsToOptions(tags.filter(tag => tag.type === tagType.name))
     );
 
     const { tags: allTags, refetch: refetchAllTags } = useTags(tagType.name);

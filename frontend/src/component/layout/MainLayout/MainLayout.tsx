@@ -13,6 +13,7 @@ import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { DraftBanner } from './DraftBanner/DraftBanner';
+import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 
 interface IMainLayoutProps {
     children: ReactNode;
@@ -97,7 +98,15 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                                 {children}
                             </MainLayoutContentContainer>
                         </MainLayoutContent>
-                        <StyledImg src={formatAssetPath(textureImage)} alt="" />
+                        <ThemeMode
+                            darkmode={
+                                <StyledImg style={{ opacity: 0.06 }} src={formatAssetPath(textureImage)} alt="" />
+                            }
+                            lightmode={
+                                <StyledImg src={formatAssetPath(textureImage)} alt="" />
+                            }
+                        />
+                        
                     </MainLayoutContentWrapper>
                     <Footer />
                 </MainLayoutContainer>

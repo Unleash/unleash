@@ -42,7 +42,6 @@ declare module '@mui/material/styles' {
          * Table colors.
          */
         table: {
-            headerColor: string;
             headerBackground: string;
             headerHover: string;
             divider: string;
@@ -68,8 +67,6 @@ declare module '@mui/material/styles' {
             abandoned: string;
             primary: string;
         };
-
-        // dividerAlternative: string;
 
         /**
          * Background color for the API command in the sidebar

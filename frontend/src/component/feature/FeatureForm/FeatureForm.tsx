@@ -52,7 +52,6 @@ const StyledContainer = styled('div')({
 
 const StyledInputDescription = styled('p')(({ theme }) => ({
     marginBottom: theme.spacing(1),
-    color: theme.palette.text.secondary,
 }));
 
 const StyledInput = styled(Input)(({ theme }) => ({

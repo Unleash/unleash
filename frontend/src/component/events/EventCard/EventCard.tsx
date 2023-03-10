@@ -41,7 +41,7 @@ const StyledContainerListItem = styled('li')(({ theme }) => ({
 }));
 
 export const StyledCodeSection = styled('div')(({ theme }) => ({
-    backgroundColor: 'white',
+    backgroundColor: theme.palette.background.paper,
     overflowX: 'auto',
     padding: theme.spacing(2),
     borderBottomLeftRadius: theme.shape.borderRadiusLarge,

@@ -16,6 +16,7 @@ import {
     useRowSelect,
     useTable,
 } from 'react-table';
+import type { FeatureSchema } from 'openapi';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { PageContent } from 'component/common/PageContent/PageContent';
@@ -433,7 +434,7 @@ export const ProjectFeatureToggles = ({
                 environments: {
                     production: { name: 'production', enabled: false },
                 },
-            }) as object[];
+            }) as FeatureSchema[];
         }
         return searchedData;
     }, [loading, searchedData]);
@@ -586,7 +587,7 @@ export const ProjectFeatureToggles = ({
                                 )}
                                 show={
                                     <Tooltip
-                                        title="Export current selection"
+                                        title="Export toggles visible in the table below"
                                         arrow
                                     >
                                         <IconButton
@@ -713,7 +714,10 @@ export const ProjectFeatureToggles = ({
                     />
                 }
             />
-            <SelectionActionsBar selectedIds={Object.keys(selectedRowIds)} />
+            <SelectionActionsBar
+                selectedIds={Object.keys(selectedRowIds)}
+                data={features}
+            />
         </PageContent>
     );
 };

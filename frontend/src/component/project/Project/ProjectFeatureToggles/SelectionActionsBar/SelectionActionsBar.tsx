@@ -1,9 +1,14 @@
-import { VFC } from 'react';
+import { useMemo, useState, VFC } from 'react';
 import { Box, Button, Paper, styled, Typography } from '@mui/material';
 import { Archive, FileDownload, Label, WatchLater } from '@mui/icons-material';
+import type { FeatureSchema } from 'openapi';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { ExportDialog } from 'component/feature/FeatureToggleList/ExportDialog';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface ISelectionActionsBarProps {
     selectedIds: string[];
+    data: FeatureSchema[];
 }
 
 const StyledContainer = styled(Box)(() => ({
@@ -39,7 +44,22 @@ const StyledText = styled(Typography)(({ theme }) => ({
 
 export const SelectionActionsBar: VFC<ISelectionActionsBarProps> = ({
     selectedIds,
+    data,
 }) => {
+    const { uiConfig } = useUiConfig();
+    const [showExportDialog, setShowExportDialog] = useState(false);
+    const selectedData = useMemo(
+        () => data.filter(d => selectedIds.includes(d.name)),
+        [data, selectedIds]
+    );
+    const environments = useMemo(() => {
+        const envs = selectedData
+            .flatMap(d => d.environments)
+            .map(env => env?.name)
+            .filter(env => env !== undefined) as string[];
+        return Array.from(new Set(envs));
+    }, [selectedData]);
+
     if (selectedIds.length === 0) {
         return null;
     }
@@ -51,10 +71,16 @@ export const SelectionActionsBar: VFC<ISelectionActionsBarProps> = ({
                     <StyledCount>{selectedIds.length}</StyledCount>
                     &ensp;selected
                 </StyledText>
-                <Button startIcon={<Archive />} variant="outlined" size="small">
+                <Button
+                    disabled
+                    startIcon={<Archive />}
+                    variant="outlined"
+                    size="small"
+                >
                     Archive
                 </Button>
                 <Button
+                    disabled
                     startIcon={<WatchLater />}
                     variant="outlined"
                     size="small"
@@ -65,13 +91,30 @@ export const SelectionActionsBar: VFC<ISelectionActionsBarProps> = ({
                     startIcon={<FileDownload />}
                     variant="outlined"
                     size="small"
+                    onClick={() => setShowExportDialog(true)}
                 >
                     Export
                 </Button>
-                <Button startIcon={<Label />} variant="outlined" size="small">
+                <Button
+                    disabled
+                    startIcon={<Label />}
+                    variant="outlined"
+                    size="small"
+                >
                     Tags
                 </Button>
             </StyledBar>
+            <ConditionallyRender
+                condition={Boolean(uiConfig?.flags?.featuresExportImport)}
+                show={
+                    <ExportDialog
+                        showExportDialog={showExportDialog}
+                        data={selectedData}
+                        onClose={() => setShowExportDialog(false)}
+                        environments={environments}
+                    />
+                }
+            />
         </StyledContainer>
     );
 };

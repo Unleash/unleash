@@ -13,6 +13,7 @@ import {
     UPDATE_FEATURE,
     UPDATE_FEATURE_ENVIRONMENT,
     UPDATE_FEATURE_STRATEGY,
+    IFlagResolver,
 } from '../../../types';
 import { Logger } from '../../../logger';
 import { extractUsername } from '../../../util';
@@ -44,6 +45,7 @@ import {
     FeatureToggleService,
 } from '../../../services';
 import { querySchema } from '../../../schema/feature-schema';
+import NotFoundError from '../../../error/notfound-error';
 
 interface FeatureStrategyParams {
     projectId: string;
@@ -95,6 +97,8 @@ export default class ProjectFeaturesController extends Controller {
 
     private segmentService: SegmentService;
 
+    private flagResolver: IFlagResolver;
+
     private readonly logger: Logger;
 
     constructor(
@@ -109,6 +113,7 @@ export default class ProjectFeaturesController extends Controller {
         this.featureService = featureToggleServiceV2;
         this.openApiService = openApiService;
         this.segmentService = segmentService;
+        this.flagResolver = config.flagResolver;
         this.logger = config.getLogger('/admin-api/project/features.ts');
 
         this.route({
@@ -601,6 +606,10 @@ export default class ProjectFeaturesController extends Controller {
         req: IAuthRequest<{ projectId: string }, void, ArchiveFeaturesSchema>,
         res: Response,
     ): Promise<void> {
+        if (!this.flagResolver.isEnabled('bulkOperations')) {
+            throw new NotFoundError('Bulk operations are not enabled');
+        }
+
         const { features } = req.body;
         const { projectId } = req.params;
         const userName = extractUsername(req);

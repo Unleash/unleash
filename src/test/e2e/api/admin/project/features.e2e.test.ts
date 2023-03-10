@@ -96,6 +96,7 @@ beforeAll(async () => {
         experimental: {
             flags: {
                 strictSchemaValidation: true,
+                bulkOperations: true,
             },
         },
     });

@@ -159,7 +159,6 @@ export default createTheme({
          * Table colors.
          */
         table: {
-            headerColor: colors.grey[900], //New - Is needed? ###CHECK
             headerBackground: colors.grey[200],
             headerHover: colors.grey[300],
             divider: colors.grey[300],
@@ -396,7 +395,7 @@ export default createTheme({
             },
         },
 
-        // Overwiteing the action.disabledOpacity from MU
+        // Overwiteing the action.disabledOpacity from MUI
         MuiMenuItem: {
             styleOverrides: {
                 root: {

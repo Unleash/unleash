@@ -20,7 +20,7 @@ const StyledBoxChangeContainer = styled(Box)(({ theme }) => ({
 }));
 
 const StyledTypographySubtext = styled(Typography)(({ theme }) => ({
-    color: theme.palette.neutral.main,
+    color: theme.palette.text.secondary,
     fontSize: theme.typography.body2.fontSize,
 }));
 

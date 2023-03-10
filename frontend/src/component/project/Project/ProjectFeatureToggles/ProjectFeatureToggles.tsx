@@ -238,18 +238,24 @@ export const ProjectFeatureToggles = ({
 
     const columns = useMemo(
         () => [
-            {
-                id: 'Select',
-                Header: ({ getToggleAllRowsSelectedProps }: any) => (
-                    <Checkbox {...getToggleAllRowsSelectedProps()} />
-                ),
-                Cell: ({ row }: any) => (
-                    <RowSelectCell {...row?.getToggleRowSelectedProps?.()} />
-                ),
-                maxWidth: 50,
-                disableSortBy: true,
-                hideInMenu: true,
-            },
+            ...(uiConfig?.flags?.bulkOperations
+                ? [
+                      {
+                          id: 'Select',
+                          Header: ({ getToggleAllRowsSelectedProps }: any) => (
+                              <Checkbox {...getToggleAllRowsSelectedProps()} />
+                          ),
+                          Cell: ({ row }: any) => (
+                              <RowSelectCell
+                                  {...row?.getToggleRowSelectedProps?.()}
+                              />
+                          ),
+                          maxWidth: 50,
+                          disableSortBy: true,
+                          hideInMenu: true,
+                      },
+                  ]
+                : []),
             {
                 id: 'favorite',
                 Header: (

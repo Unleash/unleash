@@ -46,7 +46,7 @@ export class ProxyService {
 
     private cachedFrontendSettings?: FrontendSettings;
 
-    private timer: NodeJS.Timeout;
+    private timer: NodeJS.Timeout | null;
 
     constructor(config: Config, stores: Stores, services: Services) {
         this.config = config;
@@ -201,7 +201,9 @@ export class ProxyService {
     }
 
     destroy(): void {
-        clearInterval(this.timer);
-        this.timer = null;
+        if (this.timer) {
+            clearInterval(this.timer);
+            this.timer = null;
+        }
     }
 }

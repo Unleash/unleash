@@ -22,10 +22,9 @@ const EditProject = () => {
     const { hasAccess } = useContext(AccessContext);
     const id = useRequiredPathParam('projectId');
     const { project } = useProject(id);
-    const { setDefaultProjectStickiness } = useDefaultProjectStickiness(id);
+    const { defaultStickiness, setDefaultProjectStickiness } =
+        useDefaultProjectStickiness(id);
     const navigate = useNavigate();
-
-    const storedStickiness = localStorage.getItem(`defaultStickiness.${id}`);
 
     const {
         projectId,
@@ -45,7 +44,7 @@ const EditProject = () => {
         id,
         project.name,
         project.description,
-        storedStickiness != null ? storedStickiness : undefined
+        defaultStickiness
     );
 
     const formatApiCode = () => {

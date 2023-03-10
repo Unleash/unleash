@@ -54,6 +54,7 @@ const AddTagDialog = ({ open, setOpen }: IAddTagDialogProps) => {
         description: 'Simple tag to get you started',
         icon: '',
     });
+    const [differenceCount, setDifferenceCount] = useState(0);
 
     const { trackEvent } = usePlausibleTracker();
 
@@ -93,7 +94,7 @@ const AddTagDialog = ({ open, setOpen }: IAddTagDialogProps) => {
                     e2 => element.value === e2.value && element.type === e2.type
                 )
         );
-
+        setDifferenceCount(added.length + removed.length);
         return { added, removed };
     }
 
@@ -121,31 +122,45 @@ const AddTagDialog = ({ open, setOpen }: IAddTagDialogProps) => {
         }
     };
 
-    const onSubmit = async (evt: React.SyntheticEvent) => {
-        evt.preventDefault();
-        if (selectedTagOptions.length !== 0) {
-            const selectedTags: ITag[] = optionsToTags(
-                realOptions(selectedTagOptions),
-                tagType.name
+    const getToastText = (addedCount: number, removedCount: number) => {
+        let result = 'We successfully';
+        if (addedCount > 0)
+            result = result.concat(
+                ` added ${addedCount} new tag${addedCount > 1 ? 's' : ''}`
             );
 
-            const { added, removed } = difference(selectedTags, tags);
+        if (addedCount > 0 && removedCount > 0) {
+            result = result.concat(' and ');
+        }
+
+        if (removedCount > 0) {
+            result = result.concat(
+                ` removed ${removedCount} tag${removedCount > 1 ? 's' : ''}`
+            );
+        }
+        return result;
+    };
+
+    const onSubmit = async (evt: React.SyntheticEvent) => {
+        evt.preventDefault();
+        const selectedTags: ITag[] = optionsToTags(
+            realOptions(selectedTagOptions),
+            tagType.name
+        );
+        const { added, removed } = difference(selectedTags, tags);
+        if (differenceCount > 0) {
             await updateTags(added, removed);
-            added.length > 1 &&
+            differenceCount > 1 &&
                 trackEvent('suggest_tags', {
                     props: { eventType: 'multiple_tags_added' },
                 });
-            added.length > 0 &&
+            differenceCount > 0 &&
                 setToastData({
                     type: 'success',
                     title: `Updated tag${
                         added.length > 1 ? 's' : ''
                     } to toggle`,
-                    text: `We successfully added ${added.length} new tag${
-                        added.length > 1 ? 's' : ''
-                    } and removed ${removed.length} tag${
-                        removed.length > 1 ? 's' : ''
-                    } from your toggle`,
+                    text: getToastText(added.length, removed.length),
                     confetti: true,
                 });
         }
@@ -197,10 +212,14 @@ const AddTagDialog = ({ open, setOpen }: IAddTagDialogProps) => {
                 }
             });
         }
+        const selectedTags: ITag[] = optionsToTags(
+            realOptions(clone),
+            tagType.name
+        );
+
+        difference(selectedTags, tags);
         setSelectedTagOptions(clone);
     };
-
-    const hasSelectedValues = selectedTagOptions.length !== 0;
 
     const formId = 'add-tag-form';
 
@@ -212,7 +231,7 @@ const AddTagDialog = ({ open, setOpen }: IAddTagDialogProps) => {
                 primaryButtonText={`Save tags`}
                 title="Update tags to feature toggle"
                 onClick={onSubmit}
-                disabledPrimaryButton={loading || !hasSelectedValues}
+                disabledPrimaryButton={loading || differenceCount === 0}
                 onClose={onCancel}
                 formId={formId}
             >

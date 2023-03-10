@@ -692,33 +692,37 @@ class FeatureToggleService {
             query,
             includeIds,
         );
-        return result.map(
-            ({
-                name,
-                type,
-                enabled,
-                project,
-                stale,
-                strategies,
-                variants,
-                description,
-                createdAt,
-                lastSeenAt,
-                impressionData,
-            }) => ({
-                name,
-                type,
-                enabled,
-                project,
-                stale,
-                strategies,
-                variants,
-                description,
-                createdAt,
-                lastSeenAt,
-                impressionData,
-            }),
-        );
+        if (this.flagResolver.isEnabled('cleanClientApi')) {
+            return result.map(
+                ({
+                    name,
+                    type,
+                    enabled,
+                    project,
+                    stale,
+                    strategies,
+                    variants,
+                    description,
+                    createdAt,
+                    lastSeenAt,
+                    impressionData,
+                }) => ({
+                    name,
+                    type,
+                    enabled,
+                    project,
+                    stale,
+                    strategies,
+                    variants,
+                    description,
+                    createdAt,
+                    lastSeenAt,
+                    impressionData,
+                }),
+            );
+        } else {
+            return result;
+        }
     }
 
     /**

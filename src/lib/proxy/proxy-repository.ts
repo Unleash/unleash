@@ -42,7 +42,9 @@ export class ProxyRepository
 
     private interval: number;
 
-    private timer: NodeJS.Timer;
+    private timer: NodeJS.Timer | null;
+
+    private running: boolean;
 
     constructor(
         config: Config,
@@ -73,6 +75,7 @@ export class ProxyRepository
     }
 
     async start(): Promise<void> {
+        this.running = true;
         await this.dataPolling();
 
         // Reload cached token data whenever something relevant has changed.
@@ -85,11 +88,19 @@ export class ProxyRepository
 
     stop(): void {
         this.stores.eventStore.off(ANY_EVENT, this.onAnyEvent);
-        clearTimeout(this.timer);
+        this.running = false;
     }
 
     private async dataPolling() {
         this.timer = setTimeout(async () => {
+            if (!this.running) {
+                clearTimeout(this.timer!);
+                this.timer = null;
+                this.logger.debug(
+                    'Shutting down data polling for proxy repository',
+                );
+                return;
+            }
             await this.dataPolling();
         }, this.randomizeDelay(this.interval, this.interval * 2)).unref();
 

@@ -1,22 +1,20 @@
 import { useCallback, useMemo } from 'react';
 
-interface IUseSearchOutput {
+type IUseSearchOutput<T extends any> = {
     getSearchText: (input: string) => string;
-    data: any[];
-    getSearchContext: () => IGetSearchContextOutput;
-}
+    data: T[];
+    getSearchContext: () => {
+        data: T[];
+        columns: any[];
+        searchValue: string;
+    };
+};
 
-export interface IGetSearchContextOutput {
-    data: any[];
-    columns: any[];
-    searchValue: string;
-}
-
-export const useSearch = (
+export const useSearch = <T extends any>(
     columns: any[],
     searchValue: string,
-    data: any[]
-): IUseSearchOutput => {
+    data: T[]
+): IUseSearchOutput<T> => {
     const getSearchText = useCallback(
         (value: string) => getSearchTextGenerator(columns)(value),
         [columns]
@@ -62,10 +60,10 @@ export const filter = (columns: any[], searchValue: string, data: any[]) => {
     return filteredDataSet;
 };
 
-export const searchInFilteredData = (
+export const searchInFilteredData = <T extends any>(
     columns: any[],
     searchValue: string,
-    filteredData: any[]
+    filteredData: T[]
 ) => {
     const searchableColumns = columns.filter(
         column => column.searchable && column.accessor

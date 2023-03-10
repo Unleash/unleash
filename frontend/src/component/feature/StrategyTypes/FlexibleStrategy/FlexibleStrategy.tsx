@@ -14,6 +14,7 @@ import {
 import { StickinessSelect } from './StickinessSelect/StickinessSelect';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
+import { useDefaultProjectStickiness } from '../../../../hooks/useDefaultProjectStickiness';
 
 interface IFlexibleStrategyProps {
     parameters: IFeatureStrategyParameters;
@@ -27,9 +28,9 @@ const FlexibleStrategy = ({
     parameters,
     editable = true,
 }: IFlexibleStrategyProps) => {
-    const { uiConfig } = useUiConfig();
-    const { projectScopedStickiness } = uiConfig.flags;
     const projectId = useOptionalPathParam('projectId');
+    const { defaultStickiness } = useDefaultProjectStickiness(projectId);
+
     const onUpdate = (field: string) => (newValue: string) => {
         updateParameter(field, newValue);
     };
@@ -43,19 +44,9 @@ const FlexibleStrategy = ({
             ? parseParameterNumber(parameters.rollout)
             : 100;
 
-    const projectStickiness = localStorage.getItem(
-        `defaultStickiness.${projectId}`
-    );
-
     const resolveStickiness = () => {
         if (parameters.stickiness === '') {
-            if (Boolean(projectScopedStickiness)) {
-                if (projectStickiness != null) {
-                    return projectStickiness;
-                }
-            }
-
-            return 'default';
+            return defaultStickiness;
         }
 
         return parseParameterString(parameters.stickiness);

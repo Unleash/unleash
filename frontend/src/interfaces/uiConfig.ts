@@ -50,6 +50,7 @@ export interface IFlags {
     loginHistory?: boolean;
     bulkOperations?: boolean;
     projectScopedSegments?: boolean;
+    projectScopedStickiness?: boolean;
 }
 
 export interface IVersionInfo {

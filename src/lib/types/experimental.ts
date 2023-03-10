@@ -72,6 +72,10 @@ const flags = {
         process.env.PROJECT_SCOPED_SEGMENTS,
         false,
     ),
+    projectScopedStickiness: parseEnvVarBoolean(
+        process.env.PROJECT_SCOPED_STICKINESS,
+        false,
+    ),
     cleanClientApi: parseEnvVarBoolean(process.env.CLEAN_CLIENT_API, false),
 };
 

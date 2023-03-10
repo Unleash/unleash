@@ -14,6 +14,7 @@ import {
     IStrategyConfig,
 } from '../../../../lib/types';
 import { ProxyRepository } from '../../../../lib/proxy';
+import { Logger } from '../../../../lib/logger';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -27,6 +28,7 @@ beforeAll(async () => {
 
 afterEach(() => {
     app.services.proxyService.stopAll();
+    jest.clearAllMocks();
 });
 
 afterAll(async () => {
@@ -853,6 +855,7 @@ test('Should sync proxy for keys on an interval', async () => {
         ProxyRepository.prototype as any,
         'featuresForToken',
     );
+    expect(user).not.toBeNull();
     const proxyRepository = new ProxyRepository(
         {
             getLogger,
@@ -860,7 +863,7 @@ test('Should sync proxy for keys on an interval', async () => {
         },
         db.stores,
         app.services,
-        user,
+        user!,
     );
 
     await proxyRepository.start();
@@ -891,7 +894,7 @@ test('Should change fetch interval', async () => {
         },
         db.stores,
         app.services,
-        user,
+        user!,
     );
 
     await proxyRepository.start();
@@ -919,7 +922,7 @@ test('Should not recursively set off timers on events', async () => {
         },
         db.stores,
         app.services,
-        user,
+        user!,
     );
 
     await proxyRepository.start();
@@ -934,7 +937,7 @@ test('Should not recursively set off timers on events', async () => {
 });
 
 test('should return all features when specified', async () => {
-    app.config.experimental.flags.proxyReturnAllToggles = true;
+    app.config.experimental!.flags.proxyReturnAllToggles = true;
     const frontendToken = await createApiToken(ApiTokenType.FRONTEND);
     await createFeatureToggle({
         name: 'enabledFeature1',
@@ -990,4 +993,48 @@ test('should return maxAge header on options call', async () => {
         .expect((res) => {
             expect(res.headers['access-control-max-age']).toBe('86400');
         });
+});
+
+test('should terminate data polling when stop is called', async () => {
+    const frontendToken = await createApiToken(ApiTokenType.FRONTEND);
+    const user = await app.services.apiTokenService.getUserForToken(
+        frontendToken.secret,
+    );
+
+    const logTrap = [];
+    const getDebugLogger = (): Logger => {
+        return {
+            /* eslint-disable-next-line */
+            debug: (message: any, ...args: any[]) => {
+                logTrap.push(message);
+            },
+            /* eslint-disable-next-line */
+            info: (...args: any[]) => {},
+            /* eslint-disable-next-line */
+            warn: (...args: any[]) => {},
+            /* eslint-disable-next-line */
+            error: (...args: any[]) => {},
+            /* eslint-disable-next-line */
+            fatal: (...args: any[]) => {},
+        };
+    };
+
+    /* eslint-disable-next-line */
+    const proxyRepository = new ProxyRepository(
+        {
+            getLogger: getDebugLogger,
+            frontendApi: { refreshIntervalInMs: 1 },
+        },
+        db.stores,
+        app.services,
+        user,
+    );
+
+    await proxyRepository.start();
+    proxyRepository.stop();
+    // Polling here is an async recursive call, so we gotta give it a bit of time
+    await new Promise((r) => setTimeout(r, 10));
+    expect(logTrap).toContain(
+        'Shutting down data polling for proxy repository',
+    );
 });

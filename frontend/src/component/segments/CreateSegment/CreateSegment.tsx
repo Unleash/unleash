@@ -30,6 +30,8 @@ export const CreateSegment = () => {
         setName,
         description,
         setDescription,
+        project,
+        setProject,
         constraints,
         setConstraints,
         getSegmentPayload,
@@ -91,6 +93,8 @@ export const CreateSegment = () => {
                 setName={setName}
                 description={description}
                 setDescription={setDescription}
+                project={project}
+                setProject={setProject}
                 constraints={constraints}
                 setConstraints={setConstraints}
                 errors={errors}

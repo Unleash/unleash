@@ -42,6 +42,7 @@ test('Should store and retrieve default project stickiness', async () => {
         experimental: {
             flags: {
                 projectScopedStickiness: true,
+                strictSchemaValidation: true,
             },
         },
     });

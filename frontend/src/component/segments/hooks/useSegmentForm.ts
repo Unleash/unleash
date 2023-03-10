@@ -5,10 +5,12 @@ import { useSegmentValidation } from 'hooks/api/getters/useSegmentValidation/use
 export const useSegmentForm = (
     initialName = '',
     initialDescription = '',
+    initialProject: string | null = null,
     initialConstraints: IConstraint[] = []
 ) => {
     const [name, setName] = useState(initialName);
     const [description, setDescription] = useState(initialDescription);
+    const [project, setProject] = useState<string | null>(initialProject);
     const [constraints, setConstraints] =
         useState<IConstraint[]>(initialConstraints);
     const [errors, setErrors] = useState({});
@@ -21,6 +23,10 @@ export const useSegmentForm = (
     useEffect(() => {
         setDescription(initialDescription);
     }, [initialDescription]);
+
+    useEffect(() => {
+        setProject(initialProject);
+    }, [initialProject]);
 
     useEffect(() => {
         setConstraints(initialConstraints);
@@ -38,6 +44,7 @@ export const useSegmentForm = (
         return {
             name,
             description,
+            project,
             constraints,
         };
     };
@@ -51,6 +58,8 @@ export const useSegmentForm = (
         setName,
         description,
         setDescription,
+        project,
+        setProject,
         constraints,
         setConstraints,
         getSegmentPayload,

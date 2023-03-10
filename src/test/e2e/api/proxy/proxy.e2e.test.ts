@@ -14,6 +14,7 @@ import {
     IStrategyConfig,
 } from '../../../../lib/types';
 import { ProxyRepository } from '../../../../lib/proxy';
+import { Logger } from '../../../../lib/logger';
 
 let app: IUnleashTest;
 let db: ITestDb;

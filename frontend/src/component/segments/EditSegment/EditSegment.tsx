@@ -33,6 +33,8 @@ export const EditSegment = () => {
         setName,
         description,
         setDescription,
+        project,
+        setProject,
         constraints,
         setConstraints,
         getSegmentPayload,
@@ -41,6 +43,7 @@ export const EditSegment = () => {
     } = useSegmentForm(
         segment?.name,
         segment?.description,
+        segment?.project,
         segment?.constraints
     );
 
@@ -94,6 +97,8 @@ export const EditSegment = () => {
                 setName={setName}
                 description={description}
                 setDescription={setDescription}
+                project={project}
+                setProject={setProject}
                 constraints={constraints}
                 setConstraints={setConstraints}
                 errors={errors}

@@ -1,7 +1,7 @@
 {
   "name": "unleash-server",
   "description": "Unleash is an enterprise ready feature toggles service. It provides different strategies for handling feature toggles.",
-  "version": "4.22.0-beta.49",
+  "version": "4.22.0-beta.57",
   "keywords": [
     "unleash",
     "feature toggle",
@@ -35,9 +35,9 @@
     "lint": "eslint ./src",
     "local:package": "del-cli --force build && mkdir build && cp -r dist docs CHANGELOG.md LICENSE README.md package.json build",
     "prebuild:watch": "yarn run clean",
-    "build:watch": "tsc -w",
+    "build:watch": "tsc -w --strictNullChecks false",
     "prebuild": "yarn run clean",
-    "build": "yarn run copy-templates && tsc --pretty",
+    "build": "yarn run copy-templates && tsc --pretty --strictNullChecks false",
     "prepare": "node scripts/husky-install && cd frontend && yarn && cd .. && yarn run build",
     "test": "NODE_ENV=test PORT=4243 jest",
     "test:unit": "NODE_ENV=test PORT=4243 jest --testPathIgnorePatterns=src/test/e2e --testPathIgnorePatterns=dist",
@@ -140,7 +140,7 @@
   "devDependencies": {
     "@apidevtools/swagger-parser": "10.1.0",
     "@babel/core": "7.21.0",
-    "@swc/core": "1.3.36",
+    "@swc/core": "1.3.37",
     "@swc/jest": "0.2.24",
     "@types/bcryptjs": "2.4.2",
     "@types/cors": "2.8.13",
@@ -152,7 +152,7 @@
     "@types/make-fetch-happen": "10.0.1",
     "@types/memoizee": "0.4.8",
     "@types/mime": "3.0.1",
-    "@types/node": "16.18.12",
+    "@types/node": "16.18.14",
     "@types/nodemailer": "6.4.7",
     "@types/owasp-password-strength-test": "1.3.0",
     "@types/semver": "7.3.13",

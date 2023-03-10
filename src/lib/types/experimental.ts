@@ -64,10 +64,15 @@ const flags = {
     ),
     notifications: parseEnvVarBoolean(process.env.NOTIFICATIONS, false),
     loginHistory: parseEnvVarBoolean(process.env.UNLEASH_LOGIN_HISTORY, false),
+    bulkOperations: parseEnvVarBoolean(
+        process.env.UNLEASH_BULK_OPERATIONS,
+        false,
+    ),
     projectScopedSegments: parseEnvVarBoolean(
         process.env.PROJECT_SCOPED_SEGMENTS,
         false,
     ),
+    cleanClientApi: parseEnvVarBoolean(process.env.CLEAN_CLIENT_API, false),
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

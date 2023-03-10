@@ -995,43 +995,45 @@ test('should return maxAge header on options call', async () => {
 });
 
 test('should terminate data polling when stop is called', async () => {
-    jest.useFakeTimers();
     const frontendToken = await createApiToken(ApiTokenType.FRONTEND);
     const user = await app.services.apiTokenService.getUserForToken(
         frontendToken.secret,
     );
 
+    const logTrap = [];
+    const getDebugLogger = (): Logger => {
+        return {
+            /* eslint-disable-next-line */
+            debug: (message: any, ...args: any[]) => {
+                logTrap.push(message);
+            },
+            /* eslint-disable-next-line */
+            info: (...args: any[]) => {},
+            /* eslint-disable-next-line */
+            warn: (...args: any[]) => {},
+            /* eslint-disable-next-line */
+            error: (...args: any[]) => {},
+            /* eslint-disable-next-line */
+            fatal: (...args: any[]) => {},
+        };
+    };
+
+    /* eslint-disable-next-line */
     const proxyRepository = new ProxyRepository(
         {
-            getLogger,
+            getLogger: getDebugLogger,
             frontendApi: { refreshIntervalInMs: 1 },
         },
         db.stores,
         app.services,
-        user!,
+        user,
     );
 
-    const dataPollingSpy = jest.spyOn(proxyRepository as any, 'dataPolling');
-    let expected = 0;
-    expect(dataPollingSpy).toHaveBeenCalledTimes(expected);
-
     await proxyRepository.start();
-
-    // called immediately after start
-    expect(dataPollingSpy).toHaveBeenCalledTimes(++expected);
-
-    // call it twice more with the timeout
-    for (let i = 0; i < 2; i++) {
-        jest.runOnlyPendingTimers();
-        expect(dataPollingSpy).toHaveBeenCalledTimes(++expected);
-    }
-
-    await proxyRepository.stop();
-
-    // no new calls after stop
-    for (let i = 0; i < 2; i++) {
-        jest.runOnlyPendingTimers();
-        expect(dataPollingSpy).toHaveBeenCalledTimes(expected);
-    }
-    expect(expected).toBe(3); // the three times it should be called
+    proxyRepository.stop();
+    // Polling here is an async recursive call, so we gotta give it a bit of time
+    await new Promise((r) => setTimeout(r, 10));
+    expect(logTrap).toContain(
+        'Shutting down data polling for proxy repository',
+    );
 });

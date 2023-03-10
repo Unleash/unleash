@@ -93,8 +93,8 @@ export class ProxyRepository
 
     private async dataPolling() {
         this.timer = setTimeout(async () => {
-            if (!this.running && this.timer) {
-                clearTimeout(this.timer);
+            if (!this.running) {
+                clearTimeout(this.timer!);
                 this.timer = null;
                 this.logger.debug(
                     'Shutting down data polling for proxy repository',

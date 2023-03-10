@@ -101,7 +101,7 @@ export const Search = ({
                 <SearchIcon
                     sx={{
                         mr: 1,
-                        color: theme => theme.palette.inactiveIcon,
+                        color: theme => theme.palette.action.disabled,
                     }}
                 />
                 <StyledInputBase

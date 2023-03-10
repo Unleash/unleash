@@ -1,5 +1,5 @@
 import { VFC } from 'react';
-import { styled, TableHead, TableRow } from '@mui/material';
+import { TableHead, TableRow } from '@mui/material';
 import { HeaderGroup } from 'react-table';
 import { CellSortable } from './CellSortable/CellSortable';
 
@@ -9,23 +9,6 @@ interface ISortableTableHeaderProps {
     flex?: boolean;
 }
 
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    '& > th': {
-        height: theme.shape.tableRowHeightCompact,
-        border: 0,
-        backgroundColor: theme.palette.tableHeaderBackground,
-        color: theme.palette.tableHeaderColor,
-        '&:first-of-type': {
-            borderTopLeftRadius: theme.shape.borderRadiusMedium,
-            borderBottomLeftRadius: theme.shape.borderRadiusMedium,
-        },
-        '&:last-of-type': {
-            borderTopRightRadius: theme.shape.borderRadiusMedium,
-            borderBottomRightRadius: theme.shape.borderRadiusMedium,
-        },
-    },
-}));
-
 export const SortableTableHeader: VFC<ISortableTableHeaderProps> = ({
     headerGroups,
     className,
@@ -33,7 +16,7 @@ export const SortableTableHeader: VFC<ISortableTableHeaderProps> = ({
 }) => (
     <TableHead className={className}>
         {headerGroups.map(headerGroup => (
-            <StyledTableRow {...headerGroup.getHeaderGroupProps()}>
+            <TableRow {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map((column: HeaderGroup) => {
                     const content = column.render('Header');
 
@@ -64,7 +47,7 @@ export const SortableTableHeader: VFC<ISortableTableHeaderProps> = ({
                         </CellSortable>
                     );
                 })}
-            </StyledTableRow>
+            </TableRow>
         ))}
     </TableHead>
 );

@@ -2,12 +2,13 @@ import {
     parseParameterNumber,
     parseParameterStrings,
 } from 'utils/parseParameter';
-import { Box, Chip } from '@mui/material';
+import { Box } from '@mui/material';
 import PercentageCircle from 'component/common/PercentageCircle/PercentageCircle';
 import { PlaygroundParameterItem } from '../PlaygroundParameterItem/PlaygroundParameterItem';
 import { StyledBoxSummary } from '../StrategyExecution.styles';
 import { PlaygroundConstraintSchema, PlaygroundRequestSchema } from 'openapi';
 import { getMappedParam } from '../helpers';
+import { Badge } from 'component/common/Badge/Badge';
 
 export interface PlaygroundResultStrategyExecutionParametersProps {
     parameters: { [key: string]: string };
@@ -41,12 +42,7 @@ export const PlaygroundResultStrategyExecutionParameters = ({
                                     />
                                 </Box>
                                 <div>
-                                    <Chip
-                                        color="success"
-                                        variant="outlined"
-                                        size="small"
-                                        label={`${percentage}%`}
-                                    />{' '}
+                                    <Badge color="success">{percentage}%</Badge>{' '}
                                     of your base{' '}
                                     {constraints.length > 0
                                         ? 'who match constraints'

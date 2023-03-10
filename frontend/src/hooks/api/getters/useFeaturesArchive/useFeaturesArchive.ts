@@ -23,7 +23,7 @@ export const useFeaturesArchive = (
         formatApiPath(
             projectId
                 ? `/api/admin/archive/features/${projectId}`
-                : 'api/admin/features'
+                : 'api/admin/archive/features'
         ),
         fetcher,
         {

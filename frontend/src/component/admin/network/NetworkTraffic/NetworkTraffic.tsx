@@ -62,7 +62,7 @@ const createInstanceChartOptions = (
         tooltip: {
             backgroundColor: theme.palette.background.paper,
             bodyColor: theme.palette.text.primary,
-            titleColor: theme.palette.grey[700],
+            titleColor: theme.palette.action.active,
             borderColor: theme.palette.primary.main,
             borderWidth: 1,
             padding: 10,

@@ -51,8 +51,6 @@ export const createFeatureToggleService = (
         db,
         eventBus,
         getLogger,
-        config.inlineSegmentConstraints,
-        flagResolver,
     );
     const projectStore = new ProjectStore(
         db,

@@ -31,6 +31,9 @@ const StyledItem = styled('li')(({ theme }) => ({
         backgroundColor: theme.palette.primary.main,
         color: theme.palette.primary.contrastText,
     },
+    '& > [aria-pressed=true]:hover': {
+        backgroundColor: theme.palette.primary.light,
+    },
 }));
 
 export const FeatureMetricsChips = ({

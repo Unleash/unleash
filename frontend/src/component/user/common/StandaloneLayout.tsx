@@ -9,7 +9,7 @@ interface IStandaloneLayout {
 
 const StyledContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(11),
-    background: theme.palette.standaloneBackground,
+    background: theme.palette.background.application,
     display: 'flex',
     [theme.breakpoints.down('md')]: {
         flexDirection: 'column',

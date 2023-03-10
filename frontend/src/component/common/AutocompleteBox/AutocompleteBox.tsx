@@ -31,7 +31,7 @@ const StyledIcon = styled('div', {
 })<{ $disabled: boolean }>(({ theme, $disabled }) => ({
     background: $disabled
         ? theme.palette.primary.light
-        : theme.palette.featureSegmentSearchBackground,
+        : theme.palette.primary.main,
     height: '48px',
     width: '48px',
     display: 'flex',
@@ -40,7 +40,7 @@ const StyledIcon = styled('div', {
     paddingLeft: 6,
     borderTopLeftRadius: '40px',
     borderBottomLeftRadius: '40px',
-    color: theme.palette.text.tertiaryContrast,
+    color: theme.palette.primary.contrastText,
 }));
 
 const StyledAutocomplete = styled(Autocomplete)({

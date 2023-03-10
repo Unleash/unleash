@@ -22,7 +22,7 @@ export const createChartOptions = (
             tooltip: {
                 backgroundColor: 'white',
                 bodyColor: theme.palette.text.primary,
-                titleColor: theme.palette.grey[700],
+                titleColor: theme.palette.action.active,
                 borderColor: theme.palette.primary.main,
                 borderWidth: 1,
                 padding: 10,

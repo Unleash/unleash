@@ -38,7 +38,7 @@ const StyledListItemButton = styled(ListItemButton)(({ theme }) => ({
     cursor: 'pointer',
     margin: theme.spacing(2, 0),
     '&:not(:last-child)': {
-        borderBottom: `2px solid ${theme.palette.tertiary.contrast}`,
+        borderBottom: `2px solid ${theme.palette.divider}`,
     },
     width: '100%',
 }));

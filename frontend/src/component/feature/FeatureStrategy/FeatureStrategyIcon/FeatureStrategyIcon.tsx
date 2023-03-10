@@ -26,7 +26,7 @@ const StyledIcon = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    color: theme.palette.inactiveIcon,
+    color: theme.palette.action.disabled,
 
     '& svg': {
         width: theme.spacing(2.5),

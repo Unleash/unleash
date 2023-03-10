@@ -16,7 +16,7 @@ interface IMetaWidgetProps {
 const StyledIDContainer = styled('div')(({ theme }) => ({
     textAlign: 'left',
     borderRadius: `${theme.shape.borderRadius}px`,
-    backgroundColor: `${theme.palette.secondaryContainer}`,
+    backgroundColor: `${theme.palette.background.elevation2}`,
     padding: theme.spacing(0.5, 2),
     fontSize: theme.typography.body2.fontSize,
 }));

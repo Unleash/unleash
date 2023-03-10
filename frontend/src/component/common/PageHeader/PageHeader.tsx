@@ -15,7 +15,7 @@ import { usePageTitle } from 'hooks/usePageTitle';
 
 const StyledDivider = styled(Divider)(({ theme }) => ({
     height: '100%',
-    borderColor: theme.palette.dividerAlternative,
+    borderColor: theme.palette.divider,
     width: '1px',
     display: 'inline-block',
     marginLeft: theme.spacing(2),

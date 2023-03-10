@@ -18,7 +18,7 @@ const PercentageCircle = ({
         transform: 'rotate(-90deg)',
         height: size,
         width: size,
-        background: theme.palette.grey[200],
+        background: theme.palette.background.elevation2,
     };
 
     // The percentage circle used to be drawn by CSS with a conic-gradient,

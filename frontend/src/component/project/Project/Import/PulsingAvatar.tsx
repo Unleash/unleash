@@ -6,7 +6,7 @@ export const PulsingAvatar = styled(Avatar, {
     transition: 'background-color 0.5s ease',
     backgroundColor: active
         ? theme.palette.primary.main
-        : theme.palette.tertiary.main,
+        : theme.palette.divider,
     '@keyframes pulse': {
         '0%': {
             boxShadow: `0 0 0 0px ${alpha(theme.palette.primary.main, 0.7)}`,

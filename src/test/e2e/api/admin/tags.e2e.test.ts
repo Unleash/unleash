@@ -108,3 +108,39 @@ test('Can delete a tag', async () => {
             ).toBe(-1);
         });
 });
+
+test('Can tag features', async () => {
+    const featureName = 'test.feature';
+    const featureName2 = 'test.feature2';
+    const tag = {
+        value: 'TeamRed',
+        type: 'simple',
+    };
+    await app.request.post('/api/admin/features').send({
+        name: featureName,
+        type: 'killswitch',
+        enabled: true,
+        strategies: [{ name: 'default' }],
+    });
+    await app.request.post('/api/admin/features').send({
+        name: featureName2,
+        type: 'killswitch',
+        enabled: true,
+        strategies: [{ name: 'default' }],
+    });
+
+    await app.request.post('/api/admin/tags/features').send({
+        features: [featureName, featureName2],
+        tag: tag,
+    });
+    const res = await app.request.get(
+        `/api/admin/features/${featureName}/tags`,
+    );
+
+    const res2 = await app.request.get(
+        `/api/admin/features/${featureName2}/tags`,
+    );
+
+    expect(res.body).toMatchObject({ tags: [tag] });
+    expect(res2.body).toMatchObject({ tags: [tag] });
+});

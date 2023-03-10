@@ -9,7 +9,7 @@ interface IContextBannerProps {
 }
 
 const StyledContextFieldList = styled('ul')(({ theme }) => ({
-    color: colors.black,
+    color: theme.palette.text.primary,
     listStyleType: 'none',
     padding: theme.spacing(2),
 }));

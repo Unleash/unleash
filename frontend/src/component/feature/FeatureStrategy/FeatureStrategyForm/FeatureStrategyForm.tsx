@@ -57,7 +57,7 @@ const StyledHr = styled('hr')(({ theme }) => ({
     height: '1px',
     margin: theme.spacing(2, 0),
     border: 'none',
-    background: theme.palette.tertiary.light,
+    background: theme.palette.background.elevation2,
 }));
 
 const StyledButtons = styled('div')(({ theme }) => ({

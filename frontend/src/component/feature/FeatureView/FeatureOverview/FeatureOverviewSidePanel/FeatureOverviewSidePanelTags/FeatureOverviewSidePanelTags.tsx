@@ -27,9 +27,6 @@ const StyledTagContainer = styled('div')(({ theme }) => ({
 
 const StyledChip = styled(Chip)(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
-    '.MuiChip-deleteIcon': {
-        color: theme.palette.neutral.main,
-    },
 }));
 
 const StyledDivider = styled(Divider)(({ theme }) => ({

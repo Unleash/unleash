@@ -1,6 +1,6 @@
 import { IUnleashConfig, IUnleashServices, IUnleashStores } from '../types';
 import { Logger } from '../logger';
-import { ProxyFeatureSchema, ProxyMetricsSchema } from '../openapi';
+import { ClientMetricsSchema, ProxyFeatureSchema } from '../openapi';
 import ApiUser from '../types/api-user';
 import {
     Context,
@@ -94,7 +94,7 @@ export class ProxyService {
 
     async registerProxyMetrics(
         token: ApiUser,
-        metrics: ProxyMetricsSchema,
+        metrics: ClientMetricsSchema,
         ip: string,
     ): Promise<void> {
         ProxyService.assertExpectedTokenType(token);

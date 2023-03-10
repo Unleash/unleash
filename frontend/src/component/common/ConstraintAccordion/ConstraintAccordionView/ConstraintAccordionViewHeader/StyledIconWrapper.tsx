@@ -5,7 +5,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 export const StyledIconWrapperBase = styled('div')<{
     prefix?: boolean;
 }>(({ theme }) => ({
-    backgroundColor: theme.palette.grey[200],
+    backgroundColor: theme.palette.background.elevation2,
     width: 24,
     display: 'flex',
     alignItems: 'center',

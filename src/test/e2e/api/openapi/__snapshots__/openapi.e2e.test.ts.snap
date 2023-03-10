@@ -3644,26 +3644,7 @@ Stats are divided into current and previous **windows**.
         ],
         "type": "object",
       },
-      "tagsBulkAddSchema": {
-        "additionalProperties": false,
-        "properties": {
-          "features": {
-            "items": {
-              "minLength": 1,
-              "type": "string",
-            },
-            "type": "array",
-          },
-          "tags": {
-            "$ref": "#/components/schemas/updateTagsSchema",
-          },
-        },
-        "required": [
-          "features",
-          "tags",
-        ],
-        "type": "object",
-      },
+      "tagsBulkAddSchema": {},
       "tagsSchema": {
         "additionalProperties": false,
         "properties": {

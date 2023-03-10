@@ -27,9 +27,14 @@ export const StickinessSelect = ({
     const resolveStickiness = () =>
         builtInStickinessOptions.concat(
             context
-                .filter(c => c.stickiness)
+                .filter(contextDefinision => contextDefinision.stickiness)
                 .filter(
-                    c => !builtInStickinessOptions.find(s => s.key === c.name)
+                    contextDefinision =>
+                        !builtInStickinessOptions.find(
+                            builtInStickinessOption =>
+                                builtInStickinessOption.key ===
+                                contextDefinision.name
+                        )
                 )
                 .map(c => ({ key: c.name, label: c.name }))
         );

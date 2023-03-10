@@ -69,7 +69,9 @@ exports[`should create default config 1`] = `
     "flags": {
       "ENABLE_DARK_MODE_SUPPORT": false,
       "anonymiseEventLog": false,
+      "bulkOperations": false,
       "caseInsensitiveInOperators": false,
+      "cleanClientApi": false,
       "crOnVariants": false,
       "embedProxy": true,
       "embedProxyFrontend": true,
@@ -92,7 +94,9 @@ exports[`should create default config 1`] = `
     "experiments": {
       "ENABLE_DARK_MODE_SUPPORT": false,
       "anonymiseEventLog": false,
+      "bulkOperations": false,
       "caseInsensitiveInOperators": false,
+      "cleanClientApi": false,
       "crOnVariants": false,
       "embedProxy": true,
       "embedProxyFrontend": true,

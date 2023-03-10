@@ -600,10 +600,9 @@ export default class StateService {
                 : true,
         );
         if (featureTagsToInsert.length > 0) {
-            const importedFeatureTags =
-                await this.featureTagStore.importFeatureTags(
-                    featureTagsToInsert,
-                );
+            const importedFeatureTags = await this.featureTagStore.tagFeatures(
+                featureTagsToInsert,
+            );
             const importedFeatureTagEvents = importedFeatureTags.map((tag) => ({
                 type: FEATURE_TAG_IMPORT,
                 createdBy: userName,

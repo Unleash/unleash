@@ -11,6 +11,7 @@ beforeAll(async () => {
         experimental: {
             flags: {
                 strictSchemaValidation: true,
+                bulkOperations: true,
             },
         },
     });
@@ -112,8 +113,12 @@ test('Can delete a tag', async () => {
 test('Can tag features', async () => {
     const featureName = 'test.feature';
     const featureName2 = 'test.feature2';
-    const tag = {
+    const addedTag = {
         value: 'TeamRed',
+        type: 'simple',
+    };
+    const removedTag = {
+        value: 'remove_me',
         type: 'simple',
     };
     await app.request.post('/api/admin/features').send({
@@ -122,6 +127,16 @@ test('Can tag features', async () => {
         enabled: true,
         strategies: [{ name: 'default' }],
     });
+
+    await db.stores.tagStore.createTag(removedTag);
+    await db.stores.featureTagStore.tagFeature(featureName, removedTag);
+
+    const initialTagState = await app.request.get(
+        `/api/admin/features/${featureName}/tags`,
+    );
+
+    expect(initialTagState.body).toMatchObject({ tags: [removedTag] });
+
     await app.request.post('/api/admin/features').send({
         name: featureName2,
         type: 'killswitch',
@@ -129,9 +144,12 @@ test('Can tag features', async () => {
         strategies: [{ name: 'default' }],
     });
 
-    await app.request.post('/api/admin/tags/features').send({
+    await app.request.put('/api/admin/tags/features').send({
         features: [featureName, featureName2],
-        tag: tag,
+        tags: {
+            addedTags: [addedTag],
+            removedTags: [removedTag],
+        },
     });
     const res = await app.request.get(
         `/api/admin/features/${featureName}/tags`,
@@ -141,6 +159,6 @@ test('Can tag features', async () => {
         `/api/admin/features/${featureName2}/tags`,
     );
 
-    expect(res.body).toMatchObject({ tags: [tag] });
-    expect(res2.body).toMatchObject({ tags: [tag] });
+    expect(res.body).toMatchObject({ tags: [addedTag] });
+    expect(res2.body).toMatchObject({ tags: [addedTag] });
 });

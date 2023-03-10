@@ -4,9 +4,19 @@ import { TagsBulkAddSchema } from './tags-bulk-add-schema';
 test('tagsBulkAddSchema', () => {
     const data: TagsBulkAddSchema = {
         features: ['my-feature'],
-        tag: {
-            type: 'simple',
-            value: 'besttag',
+        tags: {
+            addedTags: [
+                {
+                    type: 'simple',
+                    value: 'besttag',
+                },
+            ],
+            removedTags: [
+                {
+                    type: 'simple2',
+                    value: 'besttag2',
+                },
+            ],
         },
     };
 

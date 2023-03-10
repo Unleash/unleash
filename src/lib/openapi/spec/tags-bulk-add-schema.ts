@@ -1,11 +1,12 @@
 import { FromSchema } from 'json-schema-to-ts';
+import { updateTagsSchema } from './update-tags-schema';
 import { tagSchema } from './tag-schema';
 
 export const tagsBulkAddSchema = {
     $id: '#/components/schemas/tagsBulkAddSchema',
     type: 'object',
     additionalProperties: false,
-    required: ['features', 'tag'],
+    required: ['features', 'tags'],
     properties: {
         features: {
             type: 'array',
@@ -14,12 +15,13 @@ export const tagsBulkAddSchema = {
                 minLength: 1,
             },
         },
-        tag: {
-            $ref: '#/components/schemas/tagSchema',
+        tags: {
+            $ref: '#/components/schemas/updateTagsSchema',
         },
     },
     components: {
         schemas: {
+            updateTagsSchema,
             tagSchema,
         },
     },

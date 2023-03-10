@@ -489,6 +489,7 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "boolean",
           },
           "strategies": {
+            "deprecated": true,
             "items": {
               "$ref": "#/components/schemas/featureStrategySchema",
             },
@@ -498,6 +499,7 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "string",
           },
           "variants": {
+            "deprecated": true,
             "items": {
               "$ref": "#/components/schemas/variantSchema",
             },
@@ -3652,13 +3654,13 @@ Stats are divided into current and previous **windows**.
             },
             "type": "array",
           },
-          "tag": {
-            "$ref": "#/components/schemas/tagSchema",
+          "tags": {
+            "$ref": "#/components/schemas/updateTagsSchema",
           },
         },
         "required": [
           "features",
-          "tag",
+          "tags",
         ],
         "type": "object",
       },
@@ -7960,7 +7962,7 @@ If the provided project does not exist, the list of events will be empty.",
       },
     },
     "/api/admin/tags/features": {
-      "post": {
+      "put": {
         "operationId": "addTagToFeatures",
         "requestBody": {
           "content": {
@@ -7974,24 +7976,8 @@ If the provided project does not exist, the list of events will be empty.",
           "required": true,
         },
         "responses": {
-          "201": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/tagSchema",
-                },
-              },
-            },
-            "description": "The resource was successfully created.",
-            "headers": {
-              "location": {
-                "description": "The location of the newly created resource.",
-                "schema": {
-                  "format": "uri",
-                  "type": "string",
-                },
-              },
-            },
+          "200": {
+            "description": "This response has no body.",
           },
         },
         "tags": [
@@ -8583,11 +8569,11 @@ If the provided project does not exist, the list of events will be empty.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/clientFeaturesSchema",
+                  "$ref": "#/components/schemas/clientFeatureSchema",
                 },
               },
             },
-            "description": "clientFeaturesSchema",
+            "description": "clientFeatureSchema",
           },
         },
         "tags": [

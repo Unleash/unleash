@@ -12,9 +12,8 @@ import {
     parseParameterString,
 } from 'utils/parseParameter';
 import { StickinessSelect } from './StickinessSelect/StickinessSelect';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
-import { useDefaultProjectStickiness } from '../../../../hooks/useDefaultProjectStickiness';
+import { useDefaultProjectStickiness } from 'hooks/useDefaultProjectStickiness';
 
 interface IFlexibleStrategyProps {
     parameters: IFeatureStrategyParameters;

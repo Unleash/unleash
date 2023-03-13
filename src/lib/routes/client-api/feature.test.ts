@@ -43,12 +43,19 @@ let request;
 let destroy;
 let featureToggleClientStore;
 
+let flagResolver;
+
 beforeEach(async () => {
     const setup = await getSetup();
     base = setup.base;
     request = setup.request;
     featureToggleClientStore = setup.featureToggleClientStore;
     destroy = setup.destroy;
+    flagResolver = {
+        isEnabled: () => {
+            return false;
+        },
+    };
 });
 
 afterEach(() => {
@@ -92,6 +99,7 @@ test('if caching is enabled should memoize', async () => {
                 enabled: true,
                 maxAge: secondsToMilliseconds(10),
             },
+            flagResolver,
         },
     );
 
@@ -126,6 +134,7 @@ test('if caching is not enabled all calls goes to service', async () => {
                 enabled: false,
                 maxAge: secondsToMilliseconds(10),
             },
+            flagResolver,
         },
     );
 

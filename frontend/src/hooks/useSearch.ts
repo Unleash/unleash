@@ -1,13 +1,15 @@
 import { useCallback, useMemo } from 'react';
 
+export type IGetSearchContextOutput<T extends any = any> = {
+    data: T[];
+    columns: any[];
+    searchValue: string;
+};
+
 type IUseSearchOutput<T extends any> = {
     getSearchText: (input: string) => string;
     data: T[];
-    getSearchContext: () => {
-        data: T[];
-        columns: any[];
-        searchValue: string;
-    };
+    getSearchContext: () => IGetSearchContextOutput<T>;
 };
 
 export const useSearch = <T extends any>(

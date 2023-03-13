@@ -1,14 +1,16 @@
 import { useMemo, useState, VFC } from 'react';
 import { Box, Button, Paper, styled, Typography } from '@mui/material';
-import { Archive, FileDownload, Label, WatchLater } from '@mui/icons-material';
+import { FileDownload, Label, WatchLater } from '@mui/icons-material';
 import type { FeatureSchema } from 'openapi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ExportDialog } from 'component/feature/FeatureToggleList/ExportDialog';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { ArchiveButton } from './ArchiveButton/ArchiveButton';
 
 interface ISelectionActionsBarProps {
     selectedIds: string[];
     data: FeatureSchema[];
+    projectId: string;
 }
 
 const StyledContainer = styled(Box)(() => ({
@@ -45,6 +47,7 @@ const StyledText = styled(Typography)(({ theme }) => ({
 export const SelectionActionsBar: VFC<ISelectionActionsBarProps> = ({
     selectedIds,
     data,
+    projectId,
 }) => {
     const { uiConfig } = useUiConfig();
     const [showExportDialog, setShowExportDialog] = useState(false);
@@ -71,14 +74,7 @@ export const SelectionActionsBar: VFC<ISelectionActionsBarProps> = ({
                     <StyledCount>{selectedIds.length}</StyledCount>
                     &ensp;selected
                 </StyledText>
-                <Button
-                    disabled
-                    startIcon={<Archive />}
-                    variant="outlined"
-                    size="small"
-                >
-                    Archive
-                </Button>
+                <ArchiveButton projectId={projectId} features={selectedIds} />
                 <Button
                     disabled
                     startIcon={<WatchLater />}

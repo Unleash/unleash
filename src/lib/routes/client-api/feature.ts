@@ -130,21 +130,20 @@ export default class FeatureController extends Controller {
                     },
                 },
             );
-
-            this.cachedFeatures2 = memoizee(
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                (query: IFeatureToggleQuery, etag: string) =>
-                    this.resolveFeaturesAndSegments(query),
-                {
-                    promise: true,
-                    maxAge: hoursToMilliseconds(1),
-                    normalizer(args) {
-                        // args is arguments object as accessible in memoized function
-                        return args[1];
-                    },
-                },
-            );
         }
+        this.cachedFeatures2 = memoizee(
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            (query: IFeatureToggleQuery, etag: string) =>
+                this.resolveFeaturesAndSegments(query),
+            {
+                promise: true,
+                maxAge: hoursToMilliseconds(1),
+                normalizer(args) {
+                    // args is arguments object as accessible in memoized function
+                    return args[1];
+                },
+            },
+        );
     }
 
     private async resolveFeaturesAndSegments(
@@ -204,7 +203,7 @@ export default class FeatureController extends Controller {
             !environment &&
             !inlineSegmentConstraints
         ) {
-            return null;
+            return {};
         }
 
         const tagQuery = this.paramToArray(tag);

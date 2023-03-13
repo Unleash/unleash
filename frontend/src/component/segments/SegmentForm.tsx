@@ -12,11 +12,11 @@ export type SegmentFormMode = 'create' | 'edit';
 interface ISegmentProps {
     name: string;
     description: string;
-    project: string | null;
+    project?: string;
     constraints: IConstraint[];
     setName: React.Dispatch<React.SetStateAction<string>>;
     setDescription: React.Dispatch<React.SetStateAction<string>>;
-    setProject: React.Dispatch<React.SetStateAction<string | null>>;
+    setProject: React.Dispatch<React.SetStateAction<string | undefined>>;
     setConstraints: React.Dispatch<React.SetStateAction<IConstraint[]>>;
     handleSubmit: (e: any) => void;
     errors: { [key: string]: string };

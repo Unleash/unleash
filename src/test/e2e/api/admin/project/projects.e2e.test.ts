@@ -36,3 +36,27 @@ test('Should ONLY return default project', async () => {
     expect(body.projects).toHaveLength(1);
     expect(body.projects[0].id).toBe('default');
 });
+
+test('Should store and retrieve default project stickiness', async () => {
+    const appWithDefaultStickiness = await setupAppWithCustomConfig(db.stores, {
+        experimental: {
+            flags: {
+                projectScopedStickiness: true,
+                strictSchemaValidation: true,
+            },
+        },
+    });
+    const reqBody = { stickiness: 'userId' };
+
+    await appWithDefaultStickiness.request
+        .post('/api/admin/projects/default/stickiness')
+        .send(reqBody)
+        .expect(200);
+
+    const { body } = await appWithDefaultStickiness.request
+        .get('/api/admin/projects/default/stickiness')
+        .expect(200)
+        .expect('Content-Type', /json/);
+
+    expect(body).toStrictEqual(reqBody);
+});

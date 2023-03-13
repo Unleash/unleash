@@ -129,4 +129,5 @@ export * from './project-overview-schema';
 export * from './import-toggles-validate-item-schema';
 export * from './import-toggles-validate-schema';
 export * from './import-toggles-schema';
+export * from './stickiness-schema';
 export * from './tags-bulk-add-schema';

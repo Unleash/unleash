@@ -3504,6 +3504,19 @@ Stats are divided into current and previous **windows**.
         ],
         "type": "object",
       },
+      "stickinessSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "stickiness": {
+            "example": "userId",
+            "type": "string",
+          },
+        },
+        "required": [
+          "stickiness",
+        ],
+        "type": "object",
+      },
       "strategiesSchema": {
         "additionalProperties": false,
         "properties": {
@@ -3644,7 +3657,26 @@ Stats are divided into current and previous **windows**.
         ],
         "type": "object",
       },
-      "tagsBulkAddSchema": {},
+      "tagsBulkAddSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "features": {
+            "items": {
+              "minLength": 1,
+              "type": "string",
+            },
+            "type": "array",
+          },
+          "tags": {
+            "$ref": "#/components/schemas/updateTagsSchema",
+          },
+        },
+        "required": [
+          "features",
+          "tags",
+        ],
+        "type": "object",
+      },
       "tagsSchema": {
         "additionalProperties": false,
         "properties": {
@@ -7307,6 +7339,70 @@ If the provided project does not exist, the list of events will be empty.",
               },
             },
             "description": "healthReportSchema",
+          },
+        },
+        "tags": [
+          "Projects",
+        ],
+      },
+    },
+    "/api/admin/projects/{projectId}/stickiness": {
+      "get": {
+        "operationId": "getProjectDefaultStickiness",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/stickinessSchema",
+                },
+              },
+            },
+            "description": "stickinessSchema",
+          },
+          "404": {
+            "description": "This response has no body.",
+          },
+        },
+        "tags": [
+          "Projects",
+        ],
+      },
+      "post": {
+        "operationId": "setProjectDefaultStickiness",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/stickinessSchema",
+                },
+              },
+            },
+            "description": "stickinessSchema",
+          },
+          "404": {
+            "description": "This response has no body.",
           },
         },
         "tags": [

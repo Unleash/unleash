@@ -203,7 +203,7 @@ export default class SegmentStore implements ISegmentStore {
             id: row.id,
             name: row.name,
             description: row.description,
-            project: row.segment_project_id,
+            project: row.segment_project_id || undefined,
             constraints: row.constraints,
             createdBy: row.created_by,
             createdAt: row.created_at,

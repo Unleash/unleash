@@ -95,7 +95,7 @@ export const SelectionActionsBar: VFC<ISelectionActionsBarProps> = ({
                 >
                     Tags
                 </Button>
-                <MoreActions projectId={projectId} />
+                <MoreActions projectId={projectId} data={selectedData} />
             </StyledBar>
             <ConditionallyRender
                 condition={Boolean(uiConfig?.flags?.featuresExportImport)}

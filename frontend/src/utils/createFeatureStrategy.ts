@@ -40,7 +40,7 @@ const createFeatureStrategyParameterValue = (
     }
 
     if (parameter.name === 'stickiness') {
-        return 'default';
+        return '';
     }
 
     if (parameter.name === 'groupId') {

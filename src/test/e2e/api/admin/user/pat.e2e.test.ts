@@ -15,6 +15,7 @@ let firstId;
 tomorrow.setDate(tomorrow.getDate() + 1);
 
 beforeAll(async () => {
+    getLogger.setMuteError(true);
     db = await dbInit('user_pat', getLogger);
     patStore = db.stores.patStore;
     app = await setupAppWithAuth(db.stores);
@@ -28,6 +29,7 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
+    getLogger.setMuteError(false);
     await app.destroy();
 });
 

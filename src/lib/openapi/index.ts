@@ -132,6 +132,7 @@ import {
     importTogglesSchema,
     importTogglesValidateSchema,
     importTogglesValidateItemSchema,
+    stickinessSchema,
 } from './spec';
 import { IServerOption } from '../types';
 import { mapValues, omitKeys } from '../util';
@@ -253,6 +254,7 @@ export const schemas = {
     stateSchema,
     strategiesSchema,
     strategySchema,
+    stickinessSchema,
     tagsBulkAddSchema,
     tagSchema,
     tagsSchema,

@@ -7,7 +7,7 @@ import EnvironmentsController from './environments';
 import ProjectHealthReport from './health-report';
 import ProjectService from '../../../services/project-service';
 import VariantsController from './variants';
-import { NONE } from '../../../types/permissions';
+import { NONE, UPDATE_PROJECT } from '../../../types/permissions';
 import {
     projectsSchema,
     ProjectsSchema,
@@ -17,14 +17,23 @@ import { serializeDates } from '../../../types/serialize-dates';
 import { createResponseSchema } from '../../../openapi/util/create-response-schema';
 import { IAuthRequest } from '../../unleash-types';
 import {
+    emptyResponse,
     ProjectOverviewSchema,
     projectOverviewSchema,
+    stickinessSchema,
+    StickinessSchema,
 } from '../../../../lib/openapi';
 import { IArchivedQuery, IProjectParam } from '../../../types/model';
 import { ProjectApiTokenController } from './api-token';
+import { SettingService } from '../../../services';
+
+const STICKINESS_KEY = 'stickiness';
+const DEFAULT_STICKINESS = 'default';
 
 export default class ProjectApi extends Controller {
     private projectService: ProjectService;
+
+    private settingService: SettingService;
 
     private openApiService: OpenApiService;
 
@@ -32,6 +41,7 @@ export default class ProjectApi extends Controller {
         super(config);
         this.projectService = services.projectService;
         this.openApiService = services.openApiService;
+        this.settingService = services.settingService;
 
         this.route({
             path: '',
@@ -60,6 +70,40 @@ export default class ProjectApi extends Controller {
                     operationId: 'getProjectOverview',
                     responses: {
                         200: createResponseSchema('projectOverviewSchema'),
+                    },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'get',
+            path: '/:projectId/stickiness',
+            handler: this.getProjectDefaultStickiness,
+            permission: NONE,
+            middleware: [
+                services.openApiService.validPath({
+                    tags: ['Projects'],
+                    operationId: 'getProjectDefaultStickiness',
+                    responses: {
+                        200: createResponseSchema('stickinessSchema'),
+                        404: emptyResponse,
+                    },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'post',
+            path: '/:projectId/stickiness',
+            handler: this.setProjectDefaultStickiness,
+            permission: UPDATE_PROJECT,
+            middleware: [
+                services.openApiService.validPath({
+                    tags: ['Projects'],
+                    operationId: 'setProjectDefaultStickiness',
+                    responses: {
+                        200: createResponseSchema('stickinessSchema'),
+                        404: emptyResponse,
                     },
                 }),
             ],
@@ -109,6 +153,65 @@ export default class ProjectApi extends Controller {
             res,
             projectOverviewSchema.$id,
             serializeDates(overview),
+        );
+    }
+
+    async getProjectDefaultStickiness(
+        req: IAuthRequest<IProjectParam, unknown, unknown, unknown>,
+        res: Response<StickinessSchema>,
+    ): Promise<void> {
+        if (!this.config.flagResolver.isEnabled('projectScopedStickiness')) {
+            res.status(404);
+            return Promise.resolve();
+        }
+        const { projectId } = req.params;
+        const stickinessSettings = await this.settingService.get<object>(
+            STICKINESS_KEY,
+            {
+                [projectId]: 'default',
+            },
+        );
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            stickinessSchema.$id,
+            { stickiness: stickinessSettings[projectId] },
+        );
+    }
+
+    async setProjectDefaultStickiness(
+        req: IAuthRequest<
+            IProjectParam,
+            StickinessSchema,
+            StickinessSchema,
+            unknown
+        >,
+        res: Response<StickinessSchema>,
+    ): Promise<void> {
+        if (!this.config.flagResolver.isEnabled('projectScopedStickiness')) {
+            res.status(404);
+            return Promise.resolve();
+        }
+        const { projectId } = req.params;
+        const { stickiness } = req.body;
+        const stickinessSettings = await this.settingService.get<{}>(
+            STICKINESS_KEY,
+            {
+                [projectId]: DEFAULT_STICKINESS,
+            },
+        );
+        stickinessSettings[projectId] = stickiness;
+        await this.settingService.insert(
+            STICKINESS_KEY,
+            stickinessSettings,
+            req.user.name,
+        );
+
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            stickinessSchema.$id,
+            { stickiness: stickiness },
         );
     }
 }

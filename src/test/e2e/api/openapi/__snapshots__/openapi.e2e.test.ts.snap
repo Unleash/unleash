@@ -503,6 +503,7 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "boolean",
           },
           "strategies": {
+            "deprecated": true,
             "items": {
               "$ref": "#/components/schemas/featureStrategySchema",
             },
@@ -512,6 +513,7 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "string",
           },
           "variants": {
+            "deprecated": true,
             "items": {
               "$ref": "#/components/schemas/variantSchema",
             },
@@ -3513,6 +3515,19 @@ Stats are divided into current and previous **windows**.
         },
         "required": [
           "version",
+        ],
+        "type": "object",
+      },
+      "stickinessSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "stickiness": {
+            "example": "userId",
+            "type": "string",
+          },
+        },
+        "required": [
+          "stickiness",
         ],
         "type": "object",
       },
@@ -7381,6 +7396,70 @@ If the provided project does not exist, the list of events will be empty.",
         ],
       },
     },
+    "/api/admin/projects/{projectId}/stickiness": {
+      "get": {
+        "operationId": "getProjectDefaultStickiness",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/stickinessSchema",
+                },
+              },
+            },
+            "description": "stickinessSchema",
+          },
+          "404": {
+            "description": "This response has no body.",
+          },
+        },
+        "tags": [
+          "Projects",
+        ],
+      },
+      "post": {
+        "operationId": "setProjectDefaultStickiness",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/stickinessSchema",
+                },
+              },
+            },
+            "description": "stickinessSchema",
+          },
+          "404": {
+            "description": "This response has no body.",
+          },
+        },
+        "tags": [
+          "Projects",
+        ],
+      },
+    },
     "/api/admin/splash/{id}": {
       "post": {
         "operationId": "updateSplashSettings",
@@ -8617,11 +8696,11 @@ If the provided project does not exist, the list of events will be empty.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/clientFeaturesSchema",
+                  "$ref": "#/components/schemas/clientFeatureSchema",
                 },
               },
             },
-            "description": "clientFeaturesSchema",
+            "description": "clientFeatureSchema",
           },
         },
         "tags": [

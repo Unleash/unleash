@@ -1,7 +1,7 @@
 {
   "name": "unleash-server",
   "description": "Unleash is an enterprise ready feature toggles service. It provides different strategies for handling feature toggles.",
-  "version": "4.22.0-beta.50",
+  "version": "4.22.0-beta.65",
   "keywords": [
     "unleash",
     "feature toggle",
@@ -29,15 +29,15 @@
   "scripts": {
     "start": "node ./dist/server.js",
     "prestart:dev": "yarn run clean",
-    "start:dev": "NODE_ENV=development tsc-watch --onSuccess \"node dist/server-dev.js\"",
+    "start:dev": "NODE_ENV=development tsc-watch --strictNullChecks false --onSuccess \"node dist/server-dev.js\"",
     "copy-templates": "copyfiles -u 1 src/mailtemplates/**/*.mustache dist/",
     "db-migrate": "db-migrate --migrations-dir ./src/migrations",
     "lint": "eslint ./src",
     "local:package": "del-cli --force build && mkdir build && cp -r dist docs CHANGELOG.md LICENSE README.md package.json build",
     "prebuild:watch": "yarn run clean",
-    "build:watch": "tsc -w",
+    "build:watch": "tsc -w --strictNullChecks false",
     "prebuild": "yarn run clean",
-    "build": "yarn run copy-templates && tsc --pretty",
+    "build": "yarn run copy-templates && tsc --pretty --strictNullChecks false",
     "prepare": "node scripts/husky-install && cd frontend && yarn && cd .. && yarn run build",
     "test": "NODE_ENV=test PORT=4243 jest",
     "test:unit": "NODE_ENV=test PORT=4243 jest --testPathIgnorePatterns=src/test/e2e --testPathIgnorePatterns=dist",

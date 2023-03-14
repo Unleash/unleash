@@ -16,6 +16,7 @@ beforeEach(() => {
 test('should not set user if unknown token', async () => {
     const accountService = {
         getAccountByPersonalAccessToken: jest.fn(),
+        addPATSeen: jest.fn(),
     };
 
     const func = patMiddleware(config, { accountService });
@@ -65,6 +66,7 @@ test('should add user if known token', async () => {
     });
     const accountService = {
         getAccountByPersonalAccessToken: jest.fn().mockReturnValue(apiUser),
+        addPATSeen: jest.fn(),
     };
 
     const func = patMiddleware(config, { accountService });

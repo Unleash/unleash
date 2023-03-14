@@ -382,7 +382,7 @@ export class AccessService {
             const userIdList = userRoleList.map((u) => u.userId);
             const users = await this.accountStore.getAllWithId(userIdList);
             return users.map((user) => {
-                const role = userRoleList.find((role) => role.userId == user.id)!;
+                const role = userRoleList.find((r) => r.userId == user.id)!;
                 return {
                     ...user,
                     addedAt: role.addedAt!,

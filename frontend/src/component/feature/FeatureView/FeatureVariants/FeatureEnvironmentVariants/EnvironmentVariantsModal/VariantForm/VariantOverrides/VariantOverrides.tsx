@@ -24,8 +24,10 @@ const StyledRow = styled('div')(({ theme }) => ({
 }));
 
 const StyledSelectMenu = styled(SelectMenu)(({ theme }) => ({
-    minWidth: theme.spacing(20),
     marginRight: theme.spacing(10),
+    [theme.breakpoints.up('sm')]: {
+        minWidth: theme.spacing(20),
+    },
 }));
 
 const StyledFieldColumn = styled('div')(({ theme }) => ({

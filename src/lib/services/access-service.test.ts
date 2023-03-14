@@ -2,6 +2,7 @@ import NameExistsError from '../error/name-exists-error';
 import getLogger from '../../test/fixtures/no-logger';
 import createStores from '../../test/fixtures/store';
 import { AccessService, IRoleValidation } from './access-service';
+import { GroupService } from './group-service';
 
 function getSetup(withNameInUse: boolean) {
     const stores = createStores();
@@ -18,7 +19,7 @@ function getSetup(withNameInUse: boolean) {
             {
                 getLogger,
             },
-            undefined, // GroupService
+            {} as GroupService,
         ),
         stores,
     };

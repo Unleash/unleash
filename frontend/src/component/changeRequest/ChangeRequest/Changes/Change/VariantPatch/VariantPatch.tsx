@@ -17,15 +17,12 @@ const StyledChangeHeader = styled(Box)(({ theme }) => ({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginBottom: theme.spacing(2),
     lineHeight: theme.spacing(3),
 }));
 
-const StyledTableContainer = styled(Box)(({ theme }) => ({
-    margin: theme.spacing(2, 0),
-}));
-
 const StyledStickinessContainer = styled('div')(({ theme }) => ({
-    marginTop: theme.spacing(-0.5),
+    marginTop: theme.spacing(1.5),
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(1.5),
@@ -69,9 +66,7 @@ export const VariantPatch = ({
                 </TooltipLink>
                 {discard}
             </StyledChangeHeader>
-            <StyledTableContainer>
-                <EnvironmentVariantsTable variants={change.payload.variants} />
-            </StyledTableContainer>
+            <EnvironmentVariantsTable variants={change.payload.variants} />
             <ConditionallyRender
                 condition={change.payload.variants.length > 1}
                 show={

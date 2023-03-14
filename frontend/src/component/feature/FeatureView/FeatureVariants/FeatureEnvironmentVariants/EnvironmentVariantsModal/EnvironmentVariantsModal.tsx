@@ -1,4 +1,4 @@
-import { Alert, Button, styled } from '@mui/material';
+import { Alert, Button, Divider, styled } from '@mui/material';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -29,8 +29,14 @@ const StyledFormSubtitle = styled('div')(({ theme }) => ({
         display: 'flex',
         alignItems: 'center',
     },
-    marginTop: theme.spacing(-1.5),
-    marginBottom: theme.spacing(4),
+    marginTop: theme.spacing(-3.5),
+    marginBottom: theme.spacing(2),
+    backgroundColor: theme.palette.background.default,
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
+    position: 'sticky',
+    top: 0,
+    zIndex: 2,
 }));
 
 const StyledCloudCircle = styled(CloudCircle, {
@@ -68,7 +74,7 @@ const StyledAlert = styled(Alert)(({ theme }) => ({
 
 const StyledVariantForms = styled('div')({
     display: 'flex',
-    flexDirection: 'column-reverse',
+    flexDirection: 'column',
 });
 
 const StyledStickinessContainer = styled('div')(({ theme }) => ({
@@ -82,6 +88,10 @@ const StyledDescription = styled('p')(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
     color: theme.palette.text.secondary,
     marginBottom: theme.spacing(1.5),
+}));
+
+const StyledDivider = styled(Divider)(({ theme }) => ({
+    margin: theme.spacing(4, 0),
 }));
 
 const StyledStickinessSelect = styled(StickinessSelect)(({ theme }) => ({
@@ -181,6 +191,25 @@ export const EnvironmentVariantsModal = ({
                 1000
             )
         );
+    };
+
+    const addVariant = () => {
+        setVariantsEdit(variantsEdit => [
+            ...variantsEdit,
+            {
+                name: '',
+                weightType: WeightType.VARIABLE,
+                weight: 0,
+                overrides: [],
+                stickiness:
+                    variantsEdit?.length > 0
+                        ? variantsEdit[0].stickiness
+                        : 'default',
+                new: true,
+                isValid: false,
+                id: uuidv4(),
+            },
+        ]);
     };
 
     const variants = variantsEdit.map(
@@ -286,24 +315,7 @@ export const EnvironmentVariantsModal = ({
                     </div>
                     <PermissionButton
                         data-testid="MODAL_ADD_VARIANT_BUTTON"
-                        onClick={() =>
-                            setVariantsEdit(variantsEdit => [
-                                ...variantsEdit,
-                                {
-                                    name: '',
-                                    weightType: WeightType.VARIABLE,
-                                    weight: 0,
-                                    overrides: [],
-                                    stickiness:
-                                        variantsEdit?.length > 0
-                                            ? variantsEdit[0].stickiness
-                                            : 'default',
-                                    new: true,
-                                    isValid: false,
-                                    id: uuidv4(),
-                                },
-                            ])
-                        }
+                        onClick={addVariant}
                         variant="outlined"
                         permission={UPDATE_FEATURE_ENVIRONMENT_VARIANTS}
                         projectId={projectId}
@@ -359,6 +371,16 @@ export const EnvironmentVariantsModal = ({
                             />
                         ))}
                     </StyledVariantForms>
+                    <PermissionButton
+                        onClick={addVariant}
+                        variant="outlined"
+                        permission={UPDATE_FEATURE_ENVIRONMENT_VARIANTS}
+                        projectId={projectId}
+                        environmentId={environment?.name}
+                    >
+                        Add variant
+                    </PermissionButton>
+                    <StyledDivider />
                     <ConditionallyRender
                         condition={variantsEdit.length > 0}
                         show={

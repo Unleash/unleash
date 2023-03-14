@@ -1,23 +1,20 @@
-import { VFC } from 'react';
 import { TableHead, TableRow } from '@mui/material';
 import { HeaderGroup } from 'react-table';
 import { CellSortable } from './CellSortable/CellSortable';
 
-interface ISortableTableHeaderProps {
-    headerGroups: HeaderGroup<object>[];
-    className?: string;
-    flex?: boolean;
-}
-
-export const SortableTableHeader: VFC<ISortableTableHeaderProps> = ({
+export const SortableTableHeader = <T extends object>({
     headerGroups,
     className,
     flex,
+}: {
+    headerGroups: HeaderGroup<T>[];
+    className?: string;
+    flex?: boolean;
 }) => (
     <TableHead className={className}>
         {headerGroups.map(headerGroup => (
             <TableRow {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column: HeaderGroup) => {
+                {headerGroup.headers.map((column: HeaderGroup<T>) => {
                     const content = column.render('Header');
 
                     return (

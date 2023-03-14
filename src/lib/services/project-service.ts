@@ -270,7 +270,6 @@ export default class ProjectService {
             throw new IncompatibleProjectError(newProjectId);
         }
         const createdBy = getCreatedBy(user);
-        if (!createdBy) return;
         const updatedFeature = await this.featureToggleService.changeProject(
             featureName,
             newProjectId,
@@ -414,7 +413,7 @@ export default class ProjectService {
         const role = await this.accessService.getRole(roleId);
         const group = await this.groupService.getGroup(groupId);
         const project = await this.getProject(projectId);
-        if (!group.id) return;
+        if (group.id == null) throw new TypeError('Unexpected empty group id');
 
         await this.accessService.addGroupToRole(
             group.id,
@@ -445,7 +444,7 @@ export default class ProjectService {
         const group = await this.groupService.getGroup(groupId);
         const role = await this.accessService.getRole(roleId);
         const project = await this.getProject(projectId);
-        if (!group.id) return;
+        if (group.id == null) throw new TypeError('Unexpected empty group id');
 
         await this.accessService.removeGroupFromRole(
             group.id,
@@ -534,11 +533,12 @@ export default class ProjectService {
     ): Promise<void> {
         const usersWithRoles = await this.getAccessToProject(projectId);
         const user = usersWithRoles.users.find((u) => u.id === userId);
-        if (!user) return;
+        if (!user) throw new TypeError('Unexpected empty user');
+
         const currentRole = usersWithRoles.roles.find(
             (r) => r.id === user.roleId,
         );
-        if (!currentRole) return;
+        if (!currentRole) throw new TypeError('Unexpected empty current role');
 
         if (currentRole.id === roleId) {
             // Nothing to do....
@@ -582,11 +582,11 @@ export default class ProjectService {
     ): Promise<void> {
         const usersWithRoles = await this.getAccessToProject(projectId);
         const user = usersWithRoles.groups.find((u) => u.id === userId);
-        if (!user) return;
+        if (!user) throw new TypeError('Unexpected empty user');
         const currentRole = usersWithRoles.roles.find(
             (r) => r.id === user.roleId,
         );
-        if (!currentRole) return;
+        if (!currentRole) throw new TypeError('Unexpected empty current role');
 
         if (currentRole.id === roleId) {
             // Nothing to do....

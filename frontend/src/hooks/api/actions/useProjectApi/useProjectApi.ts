@@ -202,6 +202,16 @@ const useProjectApi = () => {
         return makeRequest(req.caller, req.id);
     };
 
+    const archiveFeatures = async (projectId: string, featureIds: string[]) => {
+        const path = `api/admin/projects/${projectId}/archive`;
+        const req = createRequest(path, {
+            method: 'POST',
+            body: JSON.stringify({ features: featureIds }),
+        });
+
+        return makeRequest(req.caller, req.id);
+    };
+
     return {
         createProject,
         validateId,
@@ -214,6 +224,7 @@ const useProjectApi = () => {
         removeGroupFromRole,
         changeUserRole,
         changeGroupRole,
+        archiveFeatures,
         errors,
         loading,
         searchProjectUser,

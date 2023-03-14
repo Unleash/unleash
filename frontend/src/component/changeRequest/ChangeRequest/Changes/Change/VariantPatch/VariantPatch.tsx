@@ -61,6 +61,10 @@ export const VariantPatch = ({
                             data={change.payload.variants}
                         />
                     }
+                    tooltipProps={{
+                        maxWidth: 500,
+                        maxHeight: 600,
+                    }}
                 >
                     Updating variants:
                 </TooltipLink>

@@ -330,8 +330,8 @@ export const VariantForm = ({
                         This will be used to identify the variant in your code
                     </StyledSubLabel>
                     <StyledInput
+                        id={`variant-name-input-${variant.id}`}
                         data-testid="VARIANT_NAME_INPUT"
-                        autoFocus
                         label="Variant name"
                         error={Boolean(errors.name)}
                         errorText={errors.name}

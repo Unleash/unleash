@@ -154,6 +154,7 @@ export const EnvironmentVariantsModal = ({
 
     const oldVariants = environment?.variants || [];
     const [variantsEdit, setVariantsEdit] = useState<IFeatureVariantEdit[]>([]);
+    const [newVariant, setNewVariant] = useState<string>();
 
     useEffect(() => {
         setVariantsEdit(
@@ -194,6 +195,7 @@ export const EnvironmentVariantsModal = ({
     };
 
     const addVariant = () => {
+        const id = uuidv4();
         setVariantsEdit(variantsEdit => [
             ...variantsEdit,
             {
@@ -207,10 +209,22 @@ export const EnvironmentVariantsModal = ({
                         : 'default',
                 new: true,
                 isValid: false,
-                id: uuidv4(),
+                id,
             },
         ]);
+        setNewVariant(id);
     };
+
+    useEffect(() => {
+        if (newVariant) {
+            const element = document.getElementById(
+                `variant-name-input-${newVariant}`
+            );
+            element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            element?.focus({ preventScroll: true });
+            setNewVariant(undefined);
+        }
+    }, [newVariant]);
 
     const variants = variantsEdit.map(
         ({ new: _, isValid: __, id: ___, ...rest }) => rest

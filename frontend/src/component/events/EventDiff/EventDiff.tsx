@@ -12,9 +12,13 @@ const DIFF_PREFIXES: Record<string, string> = {
 
 interface IEventDiffProps {
     entry: Partial<IEvent>;
+    sort?: (a: any, b: any) => number;
 }
 
-const EventDiff = ({ entry }: IEventDiffProps) => {
+const EventDiff = ({
+    entry,
+    sort = (a, b) => a.key.localeCompare(b.key),
+}: IEventDiffProps) => {
     const theme = useTheme();
 
     const styles: Record<string, CSSProperties> = {
@@ -48,7 +52,7 @@ const EventDiff = ({ entry }: IEventDiffProps) => {
         return change;
     };
 
-    const buildDiff = (diff: any, idx: number) => {
+    const buildDiff = (diff: any, index: number) => {
         let change;
         const key = diff.path?.join('.') ?? diff.index;
 
@@ -66,15 +70,20 @@ const EventDiff = ({ entry }: IEventDiffProps) => {
                 </div>
             );
         } else {
+            const changeValue = JSON.stringify(diff.rhs || diff.item);
             change = (
                 <div style={styles[diff.kind]}>
-                    {DIFF_PREFIXES[diff.kind]} {key}:{' '}
-                    {JSON.stringify(diff.rhs || diff.item)}
+                    {DIFF_PREFIXES[diff.kind]} {key}
+                    {changeValue ? `: ${changeValue}` : ''}
                 </div>
             );
         }
 
-        return { key: key.toString(), value: <div key={idx}>{change}</div> };
+        return {
+            key: key.toString(),
+            value: <div key={index}>{change}</div>,
+            index,
+        };
     };
 
     let changes;
@@ -82,7 +91,7 @@ const EventDiff = ({ entry }: IEventDiffProps) => {
     if (diffs) {
         changes = diffs
             .map(buildDiff)
-            .sort((a, b) => a.key.localeCompare(b.key))
+            .sort(sort)
             .map(({ value }) => value);
     } else {
         // Just show the data if there is no diff yet.

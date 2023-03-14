@@ -31,6 +31,7 @@ import InvalidOperationError from '../error/invalid-operation-error';
 import BadDataError from '../error/bad-data-error';
 import { IGroupModelWithProjectRole } from '../types/group';
 import { GroupService } from './group-service';
+import { uniqueByKey } from '../util/unique';
 
 const { ADMIN } = permissions;
 
@@ -381,10 +382,10 @@ export class AccessService {
             const userIdList = userRoleList.map((u) => u.userId);
             const users = await this.accountStore.getAllWithId(userIdList);
             return users.map((user) => {
-                const role = userRoleList.find((r) => r.userId == user.id);
+                const role = userRoleList.find((r) => r.userId == user.id)!;
                 return {
                     ...user,
-                    addedAt: role.addedAt,
+                    addedAt: role.addedAt!,
                 };
             });
         }
@@ -407,6 +408,31 @@ export class AccessService {
         );
         const groups = await this.groupService.getProjectGroups(projectId);
         return [roles, users.flat(), groups];
+    }
+
+    async getProjectMembers(
+        projectId: string,
+    ): Promise<Array<Pick<IUser, 'id' | 'email' | 'username'>>> {
+        const [, users, groups] = await this.getProjectRoleAccess(projectId);
+        const actualUsers = users.map((user) => ({
+            id: user.id,
+            email: user.email,
+            username: user.username,
+        }));
+        const actualGroupUsers = groups
+            .flatMap((group) => group.users)
+            .map((user) => user.user)
+            .map((user) => ({
+                id: user.id,
+                email: user.email,
+                username: user.username,
+            }));
+        return uniqueByKey([...actualUsers, ...actualGroupUsers], 'id');
+    }
+
+    async isProjectMember(userId: number, projectId: string): Promise<boolean> {
+        const users = await this.getProjectMembers(projectId);
+        return Boolean(users.find((user) => user.id === userId));
     }
 
     async createDefaultProjectRoles(
@@ -444,9 +470,11 @@ export class AccessService {
         return this.roleStore.getRootRoles();
     }
 
-    public async resolveRootRole(rootRole: number | RoleName): Promise<IRole> {
+    public async resolveRootRole(
+        rootRole: number | RoleName,
+    ): Promise<IRole | undefined> {
         const rootRoles = await this.getRootRoles();
-        let role: IRole;
+        let role: IRole | undefined;
         if (typeof rootRole === 'number') {
             role = rootRoles.find((r) => r.id === rootRole);
         } else {
@@ -455,7 +483,7 @@ export class AccessService {
         return role;
     }
 
-    async getRootRole(roleName: RoleName): Promise<IRole> {
+    async getRootRole(roleName: RoleName): Promise<IRole | undefined> {
         const roles = await this.roleStore.getRootRoles();
         return roles.find((r) => r.name === roleName);
     }

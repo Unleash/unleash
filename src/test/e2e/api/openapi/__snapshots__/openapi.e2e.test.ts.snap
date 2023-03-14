@@ -328,7 +328,7 @@ exports[`should serve the OpenAPI spec 1`] = `
         },
         "type": "object",
       },
-      "archiveFeaturesSchema": {
+      "batchFeaturesSchema": {
         "properties": {
           "features": {
             "items": {
@@ -339,6 +339,24 @@ exports[`should serve the OpenAPI spec 1`] = `
         },
         "required": [
           "features",
+        ],
+        "type": "object",
+      },
+      "batchStaleSchema": {
+        "properties": {
+          "features": {
+            "items": {
+              "type": "string",
+            },
+            "type": "array",
+          },
+          "stale": {
+            "type": "boolean",
+          },
+        },
+        "required": [
+          "features",
+          "stale",
         ],
         "type": "object",
       },
@@ -5998,11 +6016,11 @@ If the provided project does not exist, the list of events will be empty.",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/archiveFeaturesSchema",
+                "$ref": "#/components/schemas/batchFeaturesSchema",
               },
             },
           },
-          "description": "archiveFeaturesSchema",
+          "description": "batchFeaturesSchema",
           "required": true,
         },
         "responses": {
@@ -6010,7 +6028,7 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "This response has no body.",
           },
         },
-        "summary": "Archive a list of features",
+        "summary": "Archives a list of features",
         "tags": [
           "Features",
         ],
@@ -7393,6 +7411,42 @@ If the provided project does not exist, the list of events will be empty.",
         },
         "tags": [
           "Projects",
+        ],
+      },
+    },
+    "/api/admin/projects/{projectId}/stale": {
+      "post": {
+        "description": "This endpoint stales the specified features.",
+        "operationId": "staleFeatures",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/batchStaleSchema",
+              },
+            },
+          },
+          "description": "batchStaleSchema",
+          "required": true,
+        },
+        "responses": {
+          "202": {
+            "description": "This response has no body.",
+          },
+        },
+        "summary": "Stales a list of features",
+        "tags": [
+          "Features",
         ],
       },
     },

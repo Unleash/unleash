@@ -20,7 +20,7 @@ import { extractUsername } from '../../../util';
 import { IAuthRequest } from '../../unleash-types';
 import {
     AdminFeaturesQuerySchema,
-    ArchiveFeaturesSchema,
+    BatchFeaturesSchema,
     CreateFeatureSchema,
     CreateFeatureStrategySchema,
     createRequestSchema,
@@ -46,6 +46,7 @@ import {
 } from '../../../services';
 import { querySchema } from '../../../schema/feature-schema';
 import NotFoundError from '../../../error/notfound-error';
+import { BatchStaleSchema } from '../../../openapi/spec/batch-stale-schema';
 
 interface FeatureStrategyParams {
     projectId: string;
@@ -76,6 +77,7 @@ export interface IFeatureProjectUserParams extends ProjectParam {
 
 const PATH = '/:projectId/features';
 const PATH_ARCHIVE = '/:projectId/archive';
+const PATH_STALE = '/:projectId/stale';
 const PATH_FEATURE = `${PATH}/:featureName`;
 const PATH_FEATURE_CLONE = `${PATH_FEATURE}/clone`;
 const PATH_ENV = `${PATH_FEATURE}/environments/:environment`;
@@ -418,8 +420,24 @@ export default class ProjectFeaturesController extends Controller {
                     operationId: 'archiveFeatures',
                     description:
                         'This endpoint archives the specified features.',
-                    summary: 'Archive a list of features',
-                    requestBody: createRequestSchema('archiveFeaturesSchema'),
+                    summary: 'Archives a list of features',
+                    requestBody: createRequestSchema('batchFeaturesSchema'),
+                    responses: { 202: emptyResponse },
+                }),
+            ],
+        });
+        this.route({
+            method: 'post',
+            path: PATH_STALE,
+            handler: this.staleFeatures,
+            permission: UPDATE_FEATURE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['Features'],
+                    operationId: 'staleFeatures',
+                    description: 'This endpoint stales the specified features.',
+                    summary: 'Stales a list of features',
+                    requestBody: createRequestSchema('batchStaleSchema'),
                     responses: { 202: emptyResponse },
                 }),
             ],
@@ -603,7 +621,7 @@ export default class ProjectFeaturesController extends Controller {
     }
 
     async archiveFeatures(
-        req: IAuthRequest<{ projectId: string }, void, ArchiveFeaturesSchema>,
+        req: IAuthRequest<{ projectId: string }, void, BatchFeaturesSchema>,
         res: Response,
     ): Promise<void> {
         if (!this.flagResolver.isEnabled('bulkOperations')) {
@@ -615,6 +633,27 @@ export default class ProjectFeaturesController extends Controller {
         const userName = extractUsername(req);
 
         await this.featureService.archiveToggles(features, userName, projectId);
+        res.status(202).end();
+    }
+
+    async staleFeatures(
+        req: IAuthRequest<{ projectId: string }, void, BatchStaleSchema>,
+        res: Response,
+    ): Promise<void> {
+        if (!this.flagResolver.isEnabled('bulkOperations')) {
+            throw new NotFoundError('Bulk operations are not enabled');
+        }
+
+        const { features, stale } = req.body;
+        const { projectId } = req.params;
+        const userName = extractUsername(req);
+
+        await this.featureService.setToggleStaleness(
+            features,
+            stale,
+            userName,
+            projectId,
+        );
         res.status(202).end();
     }
 

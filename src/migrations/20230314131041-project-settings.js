@@ -4,9 +4,9 @@ exports.up = function (db, callback) {
     db.runSql(
         `
             CREATE TABLE IF NOT EXISTS project_settings (
-               project varchar(255) REFERENCES projects(id) ON DELETE CASCADE,
-               default_stickiness varchar(100),
-               project_mode varchar(100),
+               project VARCHAR(255) REFERENCES projects(id) ON DELETE CASCADE,
+               default_stickiness VARCHAR(100),
+               project_mode VARCHAR(100),
                PRIMARY KEY(project)
             );
         `,

@@ -4,6 +4,7 @@ import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
+import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 
 interface IFeatureArchiveDialogProps {
     isOpen: boolean;
@@ -21,6 +22,7 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
     featureIds,
 }) => {
     const { archiveFeatureToggle } = useFeatureApi();
+    const { archiveFeatures } = useProjectApi();
     const { setToastData, setToastApiError } = useToast();
     const isBulkArchive = featureIds?.length > 1;
 
@@ -42,12 +44,7 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
 
     const archiveToggles = async () => {
         try {
-            // TODO: bulk archive
-            await Promise.allSettled(
-                featureIds.map(id => {
-                    archiveFeatureToggle(projectId, id);
-                })
-            );
+            await archiveFeatures(projectId, featureIds);
             setToastData({
                 text: 'Selected feature toggles have been archived',
                 type: 'success',

@@ -87,7 +87,13 @@ export const StrategyTooltipLink: FC<IStrategyTooltipLinkProps> = ({
 }) => (
     <>
         <GetFeatureStrategyIcon strategyName={change.payload.name} />
-        <TooltipLink tooltip={children}>
+        <TooltipLink
+            tooltip={children}
+            tooltipProps={{
+                maxWidth: 500,
+                maxHeight: 600,
+            }}
+        >
             {formatStrategyName(change.payload.name)}
         </TooltipLink>
     </>

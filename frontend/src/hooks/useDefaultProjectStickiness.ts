@@ -14,7 +14,7 @@ export const useDefaultProjectStickiness = (
 ) => {
     const { uiConfig } = useUiConfig();
 
-    const PATH = `api/admin/projects/${projectId}/stickiness`;
+    const PATH = `/api/admin/projects/${projectId}/stickiness`;
     const { projectScopedStickiness } = uiConfig.flags;
 
     const { data, error, mutate } = useSWR<IStickinessResponse>(
@@ -31,7 +31,6 @@ export const useDefaultProjectStickiness = (
     const refetch = useCallback(() => {
         mutate().catch(console.warn);
     }, [mutate]);
-
     return {
         defaultStickiness,
         refetch,

@@ -48,6 +48,10 @@ const StyledDescription = styled('p')(({ theme }) => ({
     marginBottom: theme.spacing(1.5),
 }));
 
+const StyledTableContainer = styled('div')(({ theme }) => ({
+    margin: theme.spacing(3, 0),
+}));
+
 const StyledStickinessContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
@@ -84,10 +88,12 @@ export const EnvironmentVariantsCard = ({
                 condition={variants.length > 0}
                 show={
                     <>
-                        <EnvironmentVariantsTable
-                            environment={environment}
-                            searchValue={searchValue}
-                        />
+                        <StyledTableContainer>
+                            <EnvironmentVariantsTable
+                                variants={variants}
+                                searchValue={searchValue}
+                            />
+                        </StyledTableContainer>
                         <ConditionallyRender
                             condition={variants.length > 1}
                             show={

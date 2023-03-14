@@ -330,7 +330,7 @@ export class FeatureArchivedEvent extends BaseEvent {
         project: string;
         featureName: string;
         createdBy: string | IUser;
-        tags: ITag[];
+        tags?: ITag[];
     }) {
         super(FEATURE_ARCHIVED, p.createdBy, p.tags);
         const { project, featureName } = p;

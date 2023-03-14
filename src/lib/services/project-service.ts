@@ -7,18 +7,18 @@ import { nameType } from '../routes/util';
 import { projectSchema } from './project-schema';
 import NotFoundError from '../error/notfound-error';
 import {
+    FEATURE_ENVIRONMENT_ENABLED,
     PROJECT_CREATED,
     PROJECT_DELETED,
     PROJECT_UPDATED,
-    ProjectUserAddedEvent,
-    ProjectUserRemovedEvent,
-    ProjectUserUpdateRoleEvent,
     ProjectGroupAddedEvent,
     ProjectGroupRemovedEvent,
     ProjectGroupUpdateRoleEvent,
-    FEATURE_ENVIRONMENT_ENABLED,
+    ProjectUserAddedEvent,
+    ProjectUserRemovedEvent,
+    ProjectUserUpdateRoleEvent,
 } from '../types/events';
-import { IUnleashStores, IUnleashConfig, IAccountStore } from '../types';
+import { IAccountStore, IUnleashConfig, IUnleashStores } from '../types';
 import {
     FeatureToggle,
     IProject,
@@ -269,11 +269,10 @@ export default class ProjectService {
         if (!isCompatibleWithTargetProject) {
             throw new IncompatibleProjectError(newProjectId);
         }
-        const createdBy = getCreatedBy(user);
         const updatedFeature = await this.featureToggleService.changeProject(
             featureName,
             newProjectId,
-            createdBy,
+            getCreatedBy(user),
         );
         await this.featureToggleService.updateFeatureStrategyProject(
             featureName,

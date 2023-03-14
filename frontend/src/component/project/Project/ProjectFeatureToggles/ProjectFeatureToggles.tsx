@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
+    Checkbox,
     IconButton,
     styled,
     Tooltip,
@@ -8,7 +9,14 @@ import {
 } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { SortingRule, useFlexLayout, useSortBy, useTable } from 'react-table';
+import {
+    SortingRule,
+    useFlexLayout,
+    useSortBy,
+    useRowSelect,
+    useTable,
+} from 'react-table';
+import type { FeatureSchema } from 'openapi';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { PageContent } from 'component/common/PageContent/PageContent';
@@ -50,12 +58,13 @@ import { usePinnedFavorites } from 'hooks/usePinnedFavorites';
 import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';
 import { FeatureTagCell } from 'component/common/Table/cells/FeatureTagCell/FeatureTagCell';
 import { useGlobalLocalStorage } from 'hooks/useGlobalLocalStorage';
-import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { flexRow } from 'themes/themeStyles';
 import VariantsWarningTooltip from 'component/feature/FeatureView/FeatureVariants/VariantsTooltipWarning';
 import FileDownload from '@mui/icons-material/FileDownload';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ExportDialog } from 'component/feature/FeatureToggleList/ExportDialog';
+import { RowSelectCell } from './RowSelectCell/RowSelectCell';
+import { SelectionActionsBar } from './SelectionActionsBar/SelectionActionsBar';
 
 const StyledResponsiveButton = styled(ResponsiveButton)(() => ({
     whiteSpace: 'nowrap',
@@ -96,7 +105,7 @@ type ListItemType = Pick<
     someEnabledEnvironmentHasVariants: boolean;
 };
 
-const staticColumns = ['Actions', 'name', 'favorite'];
+const staticColumns = ['Select', 'Actions', 'name', 'favorite'];
 
 const defaultSort: SortingRule<string> & {
     columns?: string[];
@@ -223,8 +232,31 @@ export const ProjectFeatureToggles = ({
         [projectId, refetch]
     );
 
+    const showTagsColumn = useMemo(
+        () => features.some(feature => feature?.tags?.length),
+        [features]
+    );
+
     const columns = useMemo(
         () => [
+            ...(uiConfig?.flags?.bulkOperations
+                ? [
+                      {
+                          id: 'Select',
+                          Header: ({ getToggleAllRowsSelectedProps }: any) => (
+                              <Checkbox {...getToggleAllRowsSelectedProps()} />
+                          ),
+                          Cell: ({ row }: any) => (
+                              <RowSelectCell
+                                  {...row?.getToggleRowSelectedProps?.()}
+                              />
+                          ),
+                          maxWidth: 50,
+                          disableSortBy: true,
+                          hideInMenu: true,
+                      },
+                  ]
+                : []),
             {
                 id: 'favorite',
                 Header: (
@@ -242,6 +274,7 @@ export const ProjectFeatureToggles = ({
                 ),
                 maxWidth: 50,
                 disableSortBy: true,
+                hideInMenu: true,
             },
             {
                 Header: 'Seen',
@@ -271,18 +304,21 @@ export const ProjectFeatureToggles = ({
                 sortType: 'alphanumeric',
                 searchable: true,
             },
-            {
-                id: 'tags',
-                Header: 'Tags',
-                accessor: (row: IFeatureToggleListItem) =>
-                    row.tags
-                        ?.map(({ type, value }) => `${type}:${value}`)
-                        .join('\n') || '',
-                Cell: FeatureTagCell,
-                width: 80,
-                hideInMenu: true,
-                searchable: true,
-            },
+            ...(showTagsColumn
+                ? [
+                      {
+                          id: 'tags',
+                          Header: 'Tags',
+                          accessor: (row: IFeatureToggleListItem) =>
+                              row.tags
+                                  ?.map(({ type, value }) => `${type}:${value}`)
+                                  .join('\n') || '',
+                          Cell: FeatureTagCell,
+                          width: 80,
+                          searchable: true,
+                      },
+                  ]
+                : []),
             {
                 Header: 'Created',
                 accessor: 'createdAt',
@@ -343,6 +379,7 @@ export const ProjectFeatureToggles = ({
                     />
                 ),
                 disableSortBy: true,
+                hideInMenu: true,
             },
         ],
         [projectId, environments, loading, onToggle]
@@ -397,7 +434,7 @@ export const ProjectFeatureToggles = ({
                 environments: {
                     production: { name: 'production', enabled: false },
                 },
-            }) as object[];
+            }) as FeatureSchema[];
         }
         return searchedData;
     }, [loading, searchedData]);
@@ -438,6 +475,7 @@ export const ProjectFeatureToggles = ({
                     },
                 ],
                 hiddenColumns,
+                selectedRowIds: {},
             };
         },
         [environments] // eslint-disable-line react-hooks/exhaustive-deps
@@ -449,7 +487,7 @@ export const ProjectFeatureToggles = ({
         allColumns,
         headerGroups,
         rows,
-        state: { sortBy, hiddenColumns },
+        state: { selectedRowIds, sortBy, hiddenColumns },
         prepareRow,
         setHiddenColumns,
     } = useTable(
@@ -464,18 +502,8 @@ export const ProjectFeatureToggles = ({
             getRowId,
         },
         useFlexLayout,
-        useSortBy
-    );
-
-    useConditionallyHiddenColumns(
-        [
-            {
-                condition: !features.some(({ tags }) => tags?.length),
-                columns: ['tags'],
-            },
-        ],
-        setHiddenColumns,
-        columns
+        useSortBy,
+        useRowSelect
     );
 
     useEffect(() => {
@@ -559,7 +587,7 @@ export const ProjectFeatureToggles = ({
                                 )}
                                 show={
                                     <Tooltip
-                                        title="Export current selection"
+                                        title="Export toggles visible in the table below"
                                         arrow
                                     >
                                         <IconButton
@@ -685,6 +713,10 @@ export const ProjectFeatureToggles = ({
                         environments={environments}
                     />
                 }
+            />
+            <SelectionActionsBar
+                selectedIds={Object.keys(selectedRowIds)}
+                data={features}
             />
         </PageContent>
     );

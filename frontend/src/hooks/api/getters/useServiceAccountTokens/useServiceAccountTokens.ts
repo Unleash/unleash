@@ -1,4 +1,5 @@
 import { IPersonalAPIToken } from 'interfaces/personalAPIToken';
+import { PatsSchema } from 'openapi';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
@@ -11,18 +12,21 @@ export interface IUseServiceAccountTokensOutput {
     error?: Error;
 }
 
-export const useServiceAccountTokens = (id: number) => {
+export const useServiceAccountTokens = (
+    id: number
+): IUseServiceAccountTokensOutput => {
     const { isEnterprise } = useUiConfig();
 
-    const { data, error, mutate } = useConditionalSWR(
+    const { data, error, mutate } = useConditionalSWR<PatsSchema>(
         isEnterprise(),
-        { tokens: [] },
+        { pats: [] },
         formatApiPath(`api/admin/service-account/${id}/token`),
         fetcher
     );
 
     return {
-        tokens: data ? data.pats : undefined,
+        // FIXME: schema issue
+        tokens: data ? (data.pats as any) : undefined,
         loading: !error && !data,
         refetchTokens: () => mutate(),
         error,

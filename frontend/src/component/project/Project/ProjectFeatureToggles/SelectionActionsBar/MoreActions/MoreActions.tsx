@@ -12,14 +12,17 @@ import {
 import { PermissionHOC } from 'component/common/PermissionHOC/PermissionHOC';
 import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { MoreVert, WatchLater } from '@mui/icons-material';
+import type { FeatureSchema } from 'openapi';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface IMoreActionsProps {
     projectId: string;
+    data: FeatureSchema[];
 }
 
 const menuId = 'selection-actions-menu';
 
-export const MoreActions: VFC<IMoreActionsProps> = ({ projectId }) => {
+export const MoreActions: VFC<IMoreActionsProps> = ({ projectId, data }) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -27,6 +30,21 @@ export const MoreActions: VFC<IMoreActionsProps> = ({ projectId }) => {
     };
     const handleClose = () => {
         setAnchorEl(null);
+    };
+
+    const hasStale = data.some(({ stale }) => stale === true);
+    const hasUnstale = data.some(({ stale }) => stale === false);
+
+    const onMarkAsStale = () => {
+        console.log('Mark as stale');
+        // TODO: Implement
+        handleClose();
+    };
+
+    const onUnmarkAsStale = () => {
+        console.log('Un-mark as stale');
+        // TODO: Implement
+        handleClose();
     };
 
     return (
@@ -53,7 +71,7 @@ export const MoreActions: VFC<IMoreActionsProps> = ({ projectId }) => {
                 disableScrollLock={true}
                 PaperProps={{
                     sx: theme => ({
-                        borderRadius: theme.shape.borderRadius,
+                        borderRadius: `${theme.shape.borderRadius}px`,
                         padding: theme.spacing(1, 1.5),
                     }),
                 }}
@@ -65,46 +83,45 @@ export const MoreActions: VFC<IMoreActionsProps> = ({ projectId }) => {
                     >
                         {({ hasAccess }) => (
                             <>
-                                <MenuItem
-                                    // sx={defaultBorderRadius}
-                                    // onClick={() => {
-                                    //     handleClose();
-                                    //     onOpenStaleDialog({
-                                    //         featureId,
-                                    //         stale: stale === true,
-                                    //     });
-                                    // }}
-                                    disabled={!hasAccess}
-                                >
-                                    <ListItemIcon>
-                                        <WatchLater />
-                                    </ListItemIcon>
-                                    <ListItemText>
-                                        <Typography variant="body2">
-                                            Mark as stale
-                                        </Typography>
-                                    </ListItemText>
-                                </MenuItem>
-                                <MenuItem
-                                    // sx={defaultBorderRadius}
-                                    // onClick={() => {
-                                    //     handleClose();
-                                    //     onOpenStaleDialog({
-                                    //         featureId,
-                                    //         stale: stale === true,
-                                    //     });
-                                    // }}
-                                    disabled={!hasAccess}
-                                >
-                                    <ListItemIcon>
-                                        <WatchLater />
-                                    </ListItemIcon>
-                                    <ListItemText>
-                                        <Typography variant="body2">
-                                            Un-mark as stale
-                                        </Typography>
-                                    </ListItemText>
-                                </MenuItem>
+                                <ConditionallyRender
+                                    condition={hasUnstale}
+                                    show={() => (
+                                        <MenuItem
+                                            onClick={onMarkAsStale}
+                                            disabled={!hasAccess}
+                                            sx={{ borderRadius: theme => `${theme.shape.borderRadius}px` }}
+
+                                        >
+                                            <ListItemIcon>
+                                                <WatchLater />
+                                            </ListItemIcon>
+                                            <ListItemText>
+                                                <Typography variant="body2">
+                                                    Mark as stale
+                                                </Typography>
+                                            </ListItemText>
+                                        </MenuItem>
+                                    )}
+                                />
+                                <ConditionallyRender
+                                    condition={hasStale}
+                                    show={() => (
+                                        <MenuItem
+                                            onClick={onUnmarkAsStale}
+                                            disabled={!hasAccess}
+                                            sx={{ borderRadius: theme => `${theme.shape.borderRadius}px` }}
+                                        >
+                                            <ListItemIcon>
+                                                <WatchLater />
+                                            </ListItemIcon>
+                                            <ListItemText>
+                                                <Typography variant="body2">
+                                                    Un-mark as stale
+                                                </Typography>
+                                            </ListItemText>
+                                        </MenuItem>
+                                    )}
+                                />
                             </>
                         )}
                     </PermissionHOC>

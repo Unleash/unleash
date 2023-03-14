@@ -51,7 +51,7 @@ import { FavoritesService } from './favorites-service';
 import { TimeToProduction } from '../read-models/time-to-production/time-to-production';
 import { IProjectStatsStore } from 'lib/types/stores/project-stats-store-type';
 
-const getCreatedBy = (user: IUser) => user.email || user.username;
+const getCreatedBy = (user: IUser) => user.email || user.username || 'unknown';
 
 export interface AccessWithRoles {
     users: IUserWithRole[];
@@ -269,10 +269,12 @@ export default class ProjectService {
         if (!isCompatibleWithTargetProject) {
             throw new IncompatibleProjectError(newProjectId);
         }
+        const createdBy = getCreatedBy(user);
+        if (!createdBy) return;
         const updatedFeature = await this.featureToggleService.changeProject(
             featureName,
             newProjectId,
-            getCreatedBy(user),
+            createdBy,
         );
         await this.featureToggleService.updateFeatureStrategyProject(
             featureName,
@@ -412,6 +414,7 @@ export default class ProjectService {
         const role = await this.accessService.getRole(roleId);
         const group = await this.groupService.getGroup(groupId);
         const project = await this.getProject(projectId);
+        if (!group.id) return;
 
         await this.accessService.addGroupToRole(
             group.id,
@@ -442,6 +445,7 @@ export default class ProjectService {
         const group = await this.groupService.getGroup(groupId);
         const role = await this.accessService.getRole(roleId);
         const project = await this.getProject(projectId);
+        if (!group.id) return;
 
         await this.accessService.removeGroupFromRole(
             group.id,
@@ -530,9 +534,11 @@ export default class ProjectService {
     ): Promise<void> {
         const usersWithRoles = await this.getAccessToProject(projectId);
         const user = usersWithRoles.users.find((u) => u.id === userId);
+        if (!user) return;
         const currentRole = usersWithRoles.roles.find(
             (r) => r.id === user.roleId,
         );
+        if (!currentRole) return;
 
         if (currentRole.id === roleId) {
             // Nothing to do....
@@ -576,9 +582,11 @@ export default class ProjectService {
     ): Promise<void> {
         const usersWithRoles = await this.getAccessToProject(projectId);
         const user = usersWithRoles.groups.find((u) => u.id === userId);
+        if (!user) return;
         const currentRole = usersWithRoles.roles.find(
             (r) => r.id === user.roleId,
         );
+        if (!currentRole) return;
 
         if (currentRole.id === roleId) {
             // Nothing to do....
@@ -805,10 +813,12 @@ export default class ProjectService {
                 userId,
             }),
             this.store.getMembersCountByProject(projectId),
-            this.favoritesService.isFavoriteProject({
-                project: projectId,
-                userId,
-            }),
+            userId
+                ? this.favoritesService.isFavoriteProject({
+                      project: projectId,
+                      userId,
+                  })
+                : Promise.resolve(false),
             this.projectStatsStore.getProjectStats(projectId),
         ]);
 
@@ -816,7 +826,7 @@ export default class ProjectService {
             stats: projectStats,
             name: project.name,
             description: project.description,
-            health: project.health,
+            health: project.health || 0,
             favorite: favorite,
             updatedAt: project.updatedAt,
             environments,

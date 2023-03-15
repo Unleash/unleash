@@ -46,7 +46,7 @@ export default class ProjectArchiveController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Archive'],
-                    operationId: 'deleteFeature',
+                    operationId: 'deleteFeatures',
                     requestBody: createRequestSchema('batchFeaturesSchema'),
                     responses: { 200: emptyResponse },
                 }),

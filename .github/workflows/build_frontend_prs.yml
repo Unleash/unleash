@@ -21,7 +21,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: yarn --frozen-lockfile
-      - run: yarn build:frontend
       - run: yarn run test
       - run: yarn run fmt:check
       - run: yarn run lint:check

@@ -1,5 +1,6 @@
 import { styled } from '@mui/material';
 import EventDiff from 'component/events/EventDiff/EventDiff';
+import { IFeatureVariant } from 'interfaces/featureToggle';
 
 const StyledCodeSection = styled('div')(({ theme }) => ({
     overflowX: 'auto',
@@ -13,17 +14,24 @@ const StyledCodeSection = styled('div')(({ theme }) => ({
 }));
 
 interface IDiffProps {
-    preData: any;
-    data: any;
+    preData: IFeatureVariant[];
+    data: IFeatureVariant[];
 }
+
+const variantsArrayToObject = (variants: IFeatureVariant[]) =>
+    variants.reduce(
+        (object, { name, ...variant }) => ({ ...object, [name]: variant }),
+        {}
+    );
 
 export const Diff = ({ preData, data }: IDiffProps) => (
     <StyledCodeSection>
         <EventDiff
             entry={{
-                preData,
-                data,
+                preData: variantsArrayToObject(preData),
+                data: variantsArrayToObject(data),
             }}
+            sort={(a, b) => a.index - b.index}
         />
     </StyledCodeSection>
 );

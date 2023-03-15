@@ -66,7 +66,7 @@ export const VariantPatch = ({
                         maxHeight: 600,
                     }}
                 >
-                    Updating variants:
+                    Updating variants to:
                 </TooltipLink>
                 {discard}
             </StyledChangeHeader>

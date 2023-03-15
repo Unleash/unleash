@@ -11,7 +11,7 @@ import {
     TableCell,
     TablePlaceholder,
 } from 'component/common/Table';
-import { Box, Table, TableBody, TableRow, useMediaQuery } from '@mui/material';
+import { Box, Table, TableBody, TableRow, useMediaQuery, Link } from '@mui/material';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { ApiTokenDocs } from 'component/admin/apiToken/ApiTokenDocs/ApiTokenDocs';
 
@@ -117,13 +117,13 @@ export const ApiTokenTable = ({
                             <TablePlaceholder>
                                 <span>
                                     {'No tokens available. Read '}
-                                    <a
+                                    <Link
                                         href="https://docs.getunleash.io/how-to/api"
                                         target="_blank"
                                         rel="noreferrer"
                                     >
                                         API How-to guides
-                                    </a>{' '}
+                                    </Link>{' '}
                                     {' to learn more.'}
                                 </span>
                             </TablePlaceholder>

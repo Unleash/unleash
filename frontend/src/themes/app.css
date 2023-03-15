@@ -131,7 +131,7 @@ p {
 
 a {
     cursor: pointer;
-    color: #615bc2;
+    color: red;
 }
 
 a:hover {

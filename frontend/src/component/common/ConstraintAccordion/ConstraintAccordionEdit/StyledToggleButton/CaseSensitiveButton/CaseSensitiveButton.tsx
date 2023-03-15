@@ -39,6 +39,7 @@ export const CaseSensitiveButton = ({
                 }
                 elseShow={
                     <StyledToggleButtonOn
+                        className = "operator-is-active"
                         onClick={setCaseInsensitive}
                         disableRipple
                     >

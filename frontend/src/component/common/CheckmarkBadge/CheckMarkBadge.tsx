@@ -7,7 +7,7 @@ interface ICheckMarkBadgeProps {
 }
 
 const StyledBatch = styled('div')(({ theme }) => ({
-    backgroundColor: theme.palette.primary.main,
+    backgroundColor: theme.palette.background.alternative,
     width: '75px',
     height: '75px',
     borderRadius: '50px',
@@ -21,12 +21,12 @@ const StyledBatch = styled('div')(({ theme }) => ({
 }));
 
 const StyledClose = styled(Close)(({ theme }) => ({
-    color: theme.palette.background.paper,
+    color: theme.palette.common.white,
     width: '35px',
     height: '35px',
 }));
 const StyledCheck = styled(Check)(({ theme }) => ({
-    color: theme.palette.background.paper,
+    color: theme.palette.common.white,
     width: '35px',
     height: '35px',
 }));

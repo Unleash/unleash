@@ -1,4 +1,4 @@
-import { IconButton, Tooltip } from '@mui/material';
+import { Box, IconButton, Tooltip } from '@mui/material';
 import CopyIcon from '@mui/icons-material/FileCopy';
 import copy from 'copy-to-clipboard';
 import useToast from 'hooks/useToast';
@@ -24,18 +24,19 @@ export const UserToken = ({ token }: IUserTokenProps) => {
     };
 
     return (
-        <div
-            style={{
-                backgroundColor: '#efefef',
-                padding: '2rem',
-                borderRadius: '3px',
-                margin: '0',
-                marginTop: '1rem',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                wordBreak: 'break-all',
-            }}
+        <Box
+            sx={
+                theme => ({
+                    backgroundColor: theme.palette.background.elevation2,
+                    padding: theme.spacing(4),
+                    borderRadius: `${theme.shape.borderRadius}px`,
+                    marginTop: theme.spacing(2),
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    wordBreak: 'break-all',
+                })
+            }
         >
             {token}
             <Tooltip title="Copy token" arrow>
@@ -43,6 +44,6 @@ export const UserToken = ({ token }: IUserTokenProps) => {
                     <CopyIcon />
                 </IconButton>
             </Tooltip>
-        </div>
+        </Box>
     );
 };

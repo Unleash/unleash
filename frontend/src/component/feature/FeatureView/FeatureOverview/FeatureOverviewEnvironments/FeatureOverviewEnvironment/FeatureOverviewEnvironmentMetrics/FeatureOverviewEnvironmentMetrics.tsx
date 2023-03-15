@@ -40,7 +40,7 @@ const StyledInfoParagraph = styled('p')(({ theme }) => ({
 }));
 
 const StyledIcon = styled(FiberManualRecord)(({ theme }) => ({
-    fill: theme.palette.background.application,
+    fill: theme.palette.background.elevation2,
     height: '75px',
     width: '75px',
     [theme.breakpoints.down(500)]: {

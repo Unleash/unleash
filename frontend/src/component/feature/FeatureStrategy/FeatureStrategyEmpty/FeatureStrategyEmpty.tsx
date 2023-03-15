@@ -42,6 +42,10 @@ const StyledDescription = styled('p')(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
     textAlign: 'center',
     marginBottom: theme.spacing(3),
+
+    'a': {
+        color: theme.palette.links,
+    }
 }));
 
 export const FeatureStrategyEmpty = ({

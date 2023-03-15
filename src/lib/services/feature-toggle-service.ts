@@ -1089,6 +1089,7 @@ class FeatureToggleService {
             featureNames,
         );
         await this.featureToggleStore.batchArchive(featureNames);
+        const tags = await this.tagStore.getAllByFeatures(featureNames);
         await this.eventStore.batchStore(
             features.map(
                 (feature) =>
@@ -1096,6 +1097,12 @@ class FeatureToggleService {
                         featureName: feature.name,
                         createdBy,
                         project: feature.project,
+                        tags: tags
+                            .filter((tag) => tag.featureName === feature.name)
+                            .map((tag) => ({
+                                value: tag.tagValue,
+                                type: tag.tagType,
+                            })),
                     }),
             ),
         );
@@ -1115,10 +1122,11 @@ class FeatureToggleService {
         const relevantFeatures = features.filter(
             (feature) => feature.stale !== stale,
         );
-        await this.featureToggleStore.batchStale(
-            relevantFeatures.map((feature) => feature.name),
-            stale,
+        const relevantFeatureNames = relevantFeatures.map(
+            (feature) => feature.name,
         );
+        await this.featureToggleStore.batchStale(relevantFeatureNames, stale);
+        const tags = await this.tagStore.getAllByFeatures(relevantFeatureNames);
         await this.eventStore.batchStore(
             relevantFeatures.map(
                 (feature) =>
@@ -1127,6 +1135,12 @@ class FeatureToggleService {
                         project: projectId,
                         featureName: feature.name,
                         createdBy,
+                        tags: tags
+                            .filter((tag) => tag.featureName === feature.name)
+                            .map((tag) => ({
+                                value: tag.tagValue,
+                                type: tag.tagType,
+                            })),
                     }),
             ),
         );
@@ -1317,6 +1331,40 @@ class FeatureToggleService {
                 preData: toggle,
                 tags,
             }),
+        );
+    }
+
+    async deleteFeatures(
+        featureNames: string[],
+        createdBy: string,
+    ): Promise<void> {
+        const features = await this.featureToggleStore.getAllByNames(
+            featureNames,
+        );
+        const eligibleFeatures = features.filter(
+            (toggle) => toggle.archivedAt !== null,
+        );
+        const eligibleFeatureNames = eligibleFeatures.map(
+            (toggle) => toggle.name,
+        );
+        const tags = await this.tagStore.getAllByFeatures(eligibleFeatureNames);
+        await this.featureToggleStore.batchDelete(eligibleFeatureNames);
+        await this.eventStore.batchStore(
+            eligibleFeatures.map(
+                (feature) =>
+                    new FeatureDeletedEvent({
+                        featureName: feature.name,
+                        createdBy,
+                        project: feature.project,
+                        preData: feature,
+                        tags: tags
+                            .filter((tag) => tag.featureName === feature.name)
+                            .map((tag) => ({
+                                value: tag.tagValue,
+                                type: tag.tagType,
+                            })),
+                    }),
+            ),
         );
     }
 

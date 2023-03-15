@@ -47,6 +47,13 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         return features;
     }
 
+    async batchDelete(featureNames: string[]): Promise<void> {
+        this.features = this.features.filter(
+            (feature) => !featureNames.includes(feature.name),
+        );
+        return Promise.resolve();
+    }
+
     async count(query: Partial<IFeatureToggleQuery>): Promise<number> {
         return this.features.filter(this.getFilterQuery(query)).length;
     }

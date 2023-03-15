@@ -301,6 +301,13 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             .del();
     }
 
+    async batchDelete(names: string[]): Promise<void> {
+        await this.db(TABLE)
+            .whereIn('name', names) // Feature toggle must be archived to allow deletion
+            .whereNotNull('archived_at')
+            .del();
+    }
+
     async revive(name: string): Promise<FeatureToggle> {
         const row = await this.db(TABLE)
             .where({ name })

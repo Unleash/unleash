@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { IUnleashConfig } from '../../types/option';
-import { IUnleashServices } from '../../types';
+import { IFlagResolver, IUnleashServices } from '../../types';
 import { Logger } from '../../logger';
 import Controller from '../controller';
 import { extractUsername } from '../../util/extract-user';
@@ -15,6 +15,8 @@ import { serializeDates } from '../../types/serialize-dates';
 import { OpenApiService } from '../../services/openapi-service';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import { emptyResponse } from '../../openapi/util/standard-responses';
+import { BatchFeaturesSchema, createRequestSchema } from '../../openapi';
+import NotFoundError from '../../error/notfound-error';
 
 export default class ArchiveController extends Controller {
     private readonly logger: Logger;
@@ -22,6 +24,8 @@ export default class ArchiveController extends Controller {
     private featureService: FeatureToggleService;
 
     private openApiService: OpenApiService;
+
+    private flagResolver: IFlagResolver;
 
     constructor(
         config: IUnleashConfig,
@@ -34,6 +38,7 @@ export default class ArchiveController extends Controller {
         this.logger = config.getLogger('/admin-api/archive.js');
         this.featureService = featureToggleServiceV2;
         this.openApiService = openApiService;
+        this.flagResolver = config.flagResolver;
 
         this.route({
             method: 'get',
@@ -74,7 +79,23 @@ export default class ArchiveController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Archive'],
+                    operationId: 'deleteFeatures',
+                    responses: { 200: emptyResponse },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'post',
+            path: '/delete',
+            acceptAnyContentType: true,
+            handler: this.deleteFeatures,
+            permission: DELETE_FEATURE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['Archive'],
                     operationId: 'deleteFeature',
+                    requestBody: createRequestSchema('batchFeaturesSchema'),
                     responses: { 200: emptyResponse },
                 }),
             ],
@@ -136,6 +157,20 @@ export default class ArchiveController extends Controller {
         const { featureName } = req.params;
         const user = extractUsername(req);
         await this.featureService.deleteFeature(featureName, user);
+        res.status(200).end();
+    }
+
+    async deleteFeatures(
+        req: IAuthRequest<any, any, BatchFeaturesSchema>,
+        res: Response<void>,
+    ): Promise<void> {
+        if (!this.flagResolver.isEnabled('bulkOperations')) {
+            throw new NotFoundError('Bulk operations are not enabled');
+        }
+
+        const { features } = req.body;
+        const user = extractUsername(req);
+        await this.featureService.deleteFeatures(features, user);
         res.status(200).end();
     }
 

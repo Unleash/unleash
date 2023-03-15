@@ -283,6 +283,17 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         return rows.map((row) => this.rowToFeature(row));
     }
 
+    async batchStale(
+        names: string[],
+        stale: boolean,
+    ): Promise<FeatureToggle[]> {
+        const rows = await this.db(TABLE)
+            .whereIn('name', names)
+            .update({ stale })
+            .returning(FEATURE_COLUMNS);
+        return rows.map((row) => this.rowToFeature(row));
+    }
+
     async delete(name: string): Promise<void> {
         await this.db(TABLE)
             .where({ name }) // Feature toggle must be archived to allow deletion

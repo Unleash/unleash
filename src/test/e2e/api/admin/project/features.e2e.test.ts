@@ -2845,3 +2845,26 @@ test('Should be able to bulk archive features', async () => {
         features: [{}, { name: featureName1 }, { name: featureName2 }],
     });
 });
+
+test('Should batch stale features', async () => {
+    const staledFeatureName1 = 'staledFeature1';
+    const staledFeatureName2 = 'staledFeature2';
+
+    await createFeatureToggle(staledFeatureName1);
+    await createFeatureToggle(staledFeatureName2);
+
+    await app.request
+        .post(`/api/admin/projects/${DEFAULT_PROJECT}/stale`)
+        .send({
+            features: [staledFeatureName1, staledFeatureName2],
+            stale: true,
+        })
+        .expect(202);
+
+    const { body } = await app.request
+        .get(
+            `/api/admin/projects/${DEFAULT_PROJECT}/features/${staledFeatureName1}`,
+        )
+        .expect(200);
+    expect(body.stale).toBeTruthy();
+});

@@ -2863,6 +2863,29 @@ exports[`should serve the OpenAPI spec 1`] = `
         ],
         "type": "object",
       },
+      "projectSettingsSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "defaultStickiness": {
+            "example": "userId",
+            "nullable": true,
+            "type": "string",
+          },
+          "mode": {
+            "enum": [
+              "open",
+              "protected",
+              "private",
+            ],
+            "nullable": true,
+            "type": "string",
+          },
+        },
+        "required": [
+          "defaultStickiness",
+        ],
+        "type": "object",
+      },
       "projectStatsSchema": {
         "additionalProperties": false,
         "description": "Statistics for a project, including the average time to production, number of features created, the project activity and more.
@@ -3543,19 +3566,6 @@ Stats are divided into current and previous **windows**.
         },
         "required": [
           "version",
-        ],
-        "type": "object",
-      },
-      "stickinessSchema": {
-        "additionalProperties": false,
-        "properties": {
-          "stickiness": {
-            "example": "userId",
-            "type": "string",
-          },
-        },
-        "required": [
-          "stickiness",
         ],
         "type": "object",
       },
@@ -7484,6 +7494,70 @@ If the provided project does not exist, the list of events will be empty.",
         ],
       },
     },
+    "/api/admin/projects/{projectId}/settings": {
+      "get": {
+        "operationId": "getProjectSettings",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/projectSettingsSchema",
+                },
+              },
+            },
+            "description": "projectSettingsSchema",
+          },
+          "404": {
+            "description": "This response has no body.",
+          },
+        },
+        "tags": [
+          "Projects",
+        ],
+      },
+      "post": {
+        "operationId": "setProjectSettings",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/projectSettingsSchema",
+                },
+              },
+            },
+            "description": "projectSettingsSchema",
+          },
+          "404": {
+            "description": "This response has no body.",
+          },
+        },
+        "tags": [
+          "Projects",
+        ],
+      },
+    },
     "/api/admin/projects/{projectId}/stale": {
       "post": {
         "description": "This endpoint stales the specified features.",
@@ -7517,70 +7591,6 @@ If the provided project does not exist, the list of events will be empty.",
         "summary": "Stales a list of features",
         "tags": [
           "Features",
-        ],
-      },
-    },
-    "/api/admin/projects/{projectId}/stickiness": {
-      "get": {
-        "operationId": "getProjectDefaultStickiness",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "projectId",
-            "required": true,
-            "schema": {
-              "type": "string",
-            },
-          },
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/stickinessSchema",
-                },
-              },
-            },
-            "description": "stickinessSchema",
-          },
-          "404": {
-            "description": "This response has no body.",
-          },
-        },
-        "tags": [
-          "Projects",
-        ],
-      },
-      "post": {
-        "operationId": "setProjectDefaultStickiness",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "projectId",
-            "required": true,
-            "schema": {
-              "type": "string",
-            },
-          },
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/stickinessSchema",
-                },
-              },
-            },
-            "description": "stickinessSchema",
-          },
-          "404": {
-            "description": "This response has no body.",
-          },
-        },
-        "tags": [
-          "Projects",
         ],
       },
     },

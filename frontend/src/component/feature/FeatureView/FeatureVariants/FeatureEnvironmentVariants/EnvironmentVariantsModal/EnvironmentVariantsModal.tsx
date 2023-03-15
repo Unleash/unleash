@@ -19,7 +19,7 @@ import { v4 as uuidv4 } from 'uuid';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import { updateWeightEdit } from 'component/common/util';
 import { StickinessSelect } from 'component/feature/StrategyTypes/FlexibleStrategy/StickinessSelect/StickinessSelect';
-import { useDefaultProjectStickiness } from 'hooks/useDefaultProjectStickiness';
+import { useDefaultProjectSettings } from 'hooks/useDefaultProjectSettings';
 
 const StyledFormSubtitle = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -145,7 +145,7 @@ export const EnvironmentVariantsModal = ({
 
     const { uiConfig } = useUiConfig();
     const { context } = useUnleashContext();
-    const { defaultStickiness } = useDefaultProjectStickiness(projectId);
+    const { defaultStickiness } = useDefaultProjectSettings(projectId);
 
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const { data } = usePendingChangeRequests(projectId);

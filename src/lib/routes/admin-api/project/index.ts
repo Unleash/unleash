@@ -79,7 +79,7 @@ export default class ProjectApi extends Controller {
 
         this.route({
             method: 'get',
-            path: '/:projectId/stickiness',
+            path: '/:projectId/settings',
             handler: this.getProjectSettings,
             permission: NONE,
             middleware: [

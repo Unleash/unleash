@@ -264,9 +264,15 @@ class FeatureToggleService {
             contextDefinition.legalValues &&
             contextDefinition.legalValues.length > 0
         ) {
+            const valuesToValidate = oneOf(
+                [...DATE_OPERATORS, ...SEMVER_OPERATORS, ...NUM_OPERATORS],
+                operator,
+            )
+                ? constraint.value
+                : constraint.values;
             validateLegalValues(
                 contextDefinition.legalValues,
-                constraint.value,
+                valuesToValidate,
             );
         }
 

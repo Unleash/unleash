@@ -19,4 +19,11 @@ export interface ISegmentService {
         data: UpsertSegmentSchema,
         user: Partial<Pick<IUser, 'username' | 'email'>>,
     ): Promise<ISegment>;
+
+    delete(id: number, user: IUser): Promise<void>;
+
+    cloneStrategySegments(
+        sourceStrategyId: string,
+        targetStrategyId: string,
+    ): Promise<void>;
 }

@@ -20,7 +20,6 @@ function getSetup() {
     return {
         stateService: new StateService(stores, {
             getLogger,
-            flagResolver: { isEnabled: () => true, getAll: () => ({}) },
         }),
         stores,
     };
@@ -65,10 +64,6 @@ async function setupV3VariantsCompatibilityScenario(
     return {
         stateService: new StateService(stores, {
             getLogger,
-            flagResolver: {
-                isEnabled: () => true,
-                getAll: () => ({}),
-            },
         }),
         stores,
     };
@@ -579,7 +574,6 @@ test('exporting to new format works', async () => {
     const stores = createStores();
     const stateService = new StateService(stores, {
         getLogger,
-        flagResolver: { isEnabled: () => true, getAll: () => ({}) },
     });
     await stores.projectStore.create({
         id: 'fancy',

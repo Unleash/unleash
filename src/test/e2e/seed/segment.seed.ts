@@ -9,6 +9,7 @@ import {
     ISegment,
 } from '../../../lib/types/model';
 import { IUnleashTest, setupApp } from '../helpers/test-helper';
+import { UpsertSegmentSchema } from 'lib/openapi';
 
 interface ISeedSegmentSpec {
     featuresCount: number;
@@ -41,7 +42,7 @@ const fetchFeatures = (app: IUnleashTest): Promise<IFeatureToggleClient[]> => {
 
 const createSegment = (
     app: IUnleashTest,
-    postData: object,
+    postData: UpsertSegmentSchema,
 ): Promise<unknown> => {
     const user = { email: 'test@example.com' } as User;
     // TODO coupled with an enterprise feature

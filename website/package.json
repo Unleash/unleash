@@ -54,7 +54,8 @@
     "trim-newlines": "^4.0.0",
     "minimatch": "^5.0.0",
     "decode-uri-component": "^0.4.0",
-    "qs": "^6.9.7"
+    "qs": "^6.9.7",
+    "eta": "^2.0.0"
   },
   "browserslist": {
     "production": [

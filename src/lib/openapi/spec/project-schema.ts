@@ -55,6 +55,12 @@ export const projectSchema = {
             description:
                 '`true` if the project was favorited, otherwise `false`.',
         },
+        mode: {
+            type: 'string',
+            enum: ['open', 'protected'],
+            example: 'open',
+            nullable: true,
+        },
     },
     components: {},
 } as const;

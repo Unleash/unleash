@@ -81,6 +81,7 @@ import {
 } from '../types/permissions';
 import NoAccessError from '../error/no-access-error';
 import { IFeatureProjectUserParams } from '../routes/admin-api/project/project-features';
+import { unique } from '../util/unique';
 import { ISegmentService } from 'lib/segments/segment-service-interface';
 
 interface IFeatureContext {
@@ -169,6 +170,28 @@ class FeatureToggleService {
         this.segmentService = segmentService;
         this.accessService = accessService;
         this.flagResolver = flagResolver;
+    }
+
+    async validateFeaturesContext(
+        featureNames: string[],
+        projectId: string,
+    ): Promise<void> {
+        const features = await this.featureToggleStore.getAllByNames(
+            featureNames,
+        );
+
+        const invalidProjects = unique(
+            features
+                .map((feature) => feature.project)
+                .filter((project) => project !== projectId),
+        );
+        if (invalidProjects.length > 0) {
+            throw new InvalidOperationError(
+                `The operation could not be completed. The features exist, but the provided project ids ("${invalidProjects.join(
+                    ',',
+                )}") does not match the project provided in request URL ("${projectId}").`,
+            );
+        }
     }
 
     async validateFeatureContext({
@@ -1055,6 +1078,60 @@ class FeatureToggleService {
                 project: feature.project,
                 tags,
             }),
+        );
+    }
+
+    async archiveToggles(
+        featureNames: string[],
+        createdBy: string,
+        projectId: string,
+    ): Promise<void> {
+        await this.validateFeaturesContext(featureNames, projectId);
+
+        const features = await this.featureToggleStore.getAllByNames(
+            featureNames,
+        );
+        await this.featureToggleStore.batchArchive(featureNames);
+        await this.eventStore.batchStore(
+            features.map(
+                (feature) =>
+                    new FeatureArchivedEvent({
+                        featureName: feature.name,
+                        createdBy,
+                        project: feature.project,
+                    }),
+            ),
+        );
+    }
+
+    async setToggleStaleness(
+        featureNames: string[],
+        stale: boolean,
+        createdBy: string,
+        projectId: string,
+    ): Promise<void> {
+        await this.validateFeaturesContext(featureNames, projectId);
+
+        const features = await this.featureToggleStore.getAllByNames(
+            featureNames,
+        );
+        const relevantFeatures = features.filter(
+            (feature) => feature.stale !== stale,
+        );
+        await this.featureToggleStore.batchStale(
+            relevantFeatures.map((feature) => feature.name),
+            stale,
+        );
+        await this.eventStore.batchStore(
+            relevantFeatures.map(
+                (feature) =>
+                    new FeatureStaleEvent({
+                        stale: stale,
+                        project: projectId,
+                        featureName: feature.name,
+                        createdBy,
+                    }),
+            ),
         );
     }
 

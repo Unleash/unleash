@@ -1,4 +1,4 @@
-import { useMemo, VFC } from 'react';
+import { useMemo } from 'react';
 import { useTheme } from '@mui/material';
 import {
     SortableTableHeader,
@@ -10,13 +10,6 @@ import {
 import { useVirtualizedRange } from 'hooks/useVirtualizedRange';
 import { HeaderGroup, Row } from 'react-table';
 
-interface IVirtualizedTableProps {
-    rowHeight?: number;
-    headerGroups: HeaderGroup<object>[];
-    rows: Row<object>[];
-    prepareRow: (row: Row) => void;
-}
-
 /**
  * READ BEFORE USE
  *
@@ -27,11 +20,16 @@ interface IVirtualizedTableProps {
  * Remember to add `useFlexLayout` to `useTable`
  * (more at: https://react-table-v7.tanstack.com/docs/api/useFlexLayout)
  */
-export const VirtualizedTable: VFC<IVirtualizedTableProps> = ({
+export const VirtualizedTable = <T extends object>({
     rowHeight: rowHeightOverride,
     headerGroups,
     rows,
     prepareRow,
+}: {
+    rowHeight?: number;
+    headerGroups: HeaderGroup<T>[];
+    rows: Row<T>[];
+    prepareRow: (row: Row<T>) => void;
 }) => {
     const theme = useTheme();
     const rowHeight = useMemo(

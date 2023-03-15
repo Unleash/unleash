@@ -10,9 +10,15 @@ const DIFF_PREFIXES: Record<string, string> = {
     N: '+',
 };
 
+interface IEventDiffResult {
+    key: string;
+    value: JSX.Element;
+    index: number;
+}
+
 interface IEventDiffProps {
     entry: Partial<IEvent>;
-    sort?: (a: any, b: any) => number;
+    sort?: (a: IEventDiffResult, b: IEventDiffResult) => number;
 }
 
 const EventDiff = ({
@@ -52,7 +58,7 @@ const EventDiff = ({
         return change;
     };
 
-    const buildDiff = (diff: any, index: number) => {
+    const buildDiff = (diff: any, index: number): IEventDiffResult => {
         let change;
         const key = diff.path?.join('.') ?? diff.index;
 

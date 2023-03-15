@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import { ITag } from 'interfaces/tags';
 import { Operation } from 'fast-json-patch';
 import { IConstraint } from 'interfaces/strategy';
-import { CreateFeatureSchema } from 'openapi';
+import { CreateFeatureSchema, UpdateTagsSchema } from 'openapi';
 import useAPI from '../useApi/useApi';
 import { IFeatureVariant } from 'interfaces/featureToggle';
 
@@ -147,6 +147,26 @@ const useFeatureApi = () => {
         }
     };
 
+    const updateFeatureTags = async (
+        featureId: string,
+        update: UpdateTagsSchema
+    ) => {
+        // TODO: Change this path to the new API when moved.
+        const path = `api/admin/features/${featureId}/tags`;
+        const req = createRequest(path, {
+            method: 'PUT',
+            body: JSON.stringify({ ...update }),
+        });
+
+        try {
+            const res = await makeRequest(req.caller, req.id);
+
+            return res;
+        } catch (e) {
+            throw e;
+        }
+    };
+
     const archiveFeatureToggle = async (
         projectId: string,
         featureId: string
@@ -274,6 +294,7 @@ const useFeatureApi = () => {
         toggleFeatureEnvironmentOff,
         addTagToFeature,
         deleteTagFromFeature,
+        updateFeatureTags,
         archiveFeatureToggle,
         patchFeatureToggle,
         patchFeatureVariants,

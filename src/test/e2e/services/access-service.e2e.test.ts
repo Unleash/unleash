@@ -6,7 +6,7 @@ import { AccessService } from '../../../lib/services/access-service';
 
 import * as permissions from '../../../lib/types/permissions';
 import { RoleName } from '../../../lib/types/model';
-import { IUnleashStores } from '../../../lib/types';
+import { IUnleashStores, IUser } from '../../../lib/types';
 import FeatureToggleService from '../../../lib/services/feature-toggle-service';
 import ProjectService from '../../../lib/services/project-service';
 import { createTestConfig } from '../../config/test-config';
@@ -18,7 +18,7 @@ import { FavoritesService } from '../../../lib/services';
 
 let db: ITestDb;
 let stores: IUnleashStores;
-let accessService;
+let accessService: AccessService;
 let groupService;
 let featureToggleService;
 let favoritesService;
@@ -41,6 +41,16 @@ const createUserViewerAccess = async (name, email) => {
     const user = await userStore.insert({ name, email });
     await accessService.addUserToRole(user.id, readRole.id, ALL_PROJECTS);
     return user;
+};
+
+const isProjectMember = async (
+    user: Pick<IUser, 'id' | 'permissions' | 'isAPI'>,
+    projectName: string,
+    condition: boolean,
+) => {
+    expect(await accessService.isProjectMember(user.id, projectName)).toBe(
+        condition,
+    );
 };
 
 const hasCommonProjectAccess = async (user, projectName, condition) => {
@@ -385,6 +395,7 @@ test('should create default roles to project', async () => {
 
 test('should require name when create default roles to project', async () => {
     await expect(async () => {
+        // @ts-ignore
         await accessService.createDefaultProjectRoles(editorUser);
     }).rejects.toThrow(new Error('ProjectId cannot be empty'));
 });
@@ -404,6 +415,13 @@ test('should grant user access to project', async () => {
 
     // // Should be able to update feature toggles inside the project
     await hasCommonProjectAccess(sUser, project, true);
+    await isProjectMember(sUser, project, true);
+    await isProjectMember(user, project, true);
+    // should list project members
+    expect(await accessService.getProjectMembers(project)).toStrictEqual([
+        { email: user.email, id: user.id, username: user.username },
+        { email: sUser.email, id: sUser.id, username: sUser.username },
+    ]);
 
     // Should not be able to admin the project itself.
     expect(
@@ -701,14 +719,14 @@ test('Should be denied access to delete a role that is in use', async () => {
             {
                 id: 2,
                 name: 'CREATE_FEATURE',
-                environment: null,
+                environment: undefined,
                 displayName: 'Create Feature Toggles',
                 type: 'project',
             },
             {
                 id: 8,
                 name: 'DELETE_FEATURE',
-                environment: null,
+                environment: undefined,
                 displayName: 'Delete Feature Toggles',
                 type: 'project',
             },
@@ -886,7 +904,7 @@ test('Should be allowed move feature toggle to project when given access through
     });
 
     await groupStore.addUsersToGroup(
-        groupWithProjectAccess.id,
+        groupWithProjectAccess.id!,
         [{ user: viewerUser }],
         'Admin',
     );
@@ -894,15 +912,17 @@ test('Should be allowed move feature toggle to project when given access through
     const projectRole = await accessService.getRoleByName(RoleName.MEMBER);
 
     await hasCommonProjectAccess(viewerUser, project.id, false);
+    await isProjectMember(viewerUser, project.id, false);
 
     await accessService.addGroupToRole(
-        groupWithProjectAccess.id,
+        groupWithProjectAccess.id!,
         projectRole.id,
         'SomeAdminUser',
         project.id,
     );
 
     await hasCommonProjectAccess(viewerUser, project.id, true);
+    await isProjectMember(viewerUser, project.id, true);
 });
 
 test('Should not lose user role access when given permissions from a group', async () => {
@@ -923,7 +943,7 @@ test('Should not lose user role access when given permissions from a group', asy
     });
 
     await groupStore.addUsersToGroup(
-        groupWithNoAccess.id,
+        groupWithNoAccess.id!,
         [{ user: user }],
         'Admin',
     );
@@ -931,7 +951,7 @@ test('Should not lose user role access when given permissions from a group', asy
     const viewerRole = await accessService.getRoleByName(RoleName.VIEWER);
 
     await accessService.addGroupToRole(
-        groupWithNoAccess.id,
+        groupWithNoAccess.id!,
         viewerRole.id,
         'SomeAdminUser',
         project.id,
@@ -972,13 +992,13 @@ test('Should allow user to take multiple group roles and have expected permissio
     });
 
     await groupStore.addUsersToGroup(
-        groupWithCreateAccess.id,
+        groupWithCreateAccess.id!,
         [{ user: viewerUser }],
         'Admin',
     );
 
     await groupStore.addUsersToGroup(
-        groupWithDeleteAccess.id,
+        groupWithDeleteAccess.id!,
         [{ user: viewerUser }],
         'Admin',
     );
@@ -990,7 +1010,7 @@ test('Should allow user to take multiple group roles and have expected permissio
             {
                 id: 2,
                 name: 'CREATE_FEATURE',
-                environment: null,
+                environment: undefined,
                 displayName: 'Create Feature Toggles',
                 type: 'project',
             },
@@ -1004,7 +1024,7 @@ test('Should allow user to take multiple group roles and have expected permissio
             {
                 id: 8,
                 name: 'DELETE_FEATURE',
-                environment: null,
+                environment: undefined,
                 displayName: 'Delete Feature Toggles',
                 type: 'project',
             },
@@ -1012,14 +1032,14 @@ test('Should allow user to take multiple group roles and have expected permissio
     });
 
     await accessService.addGroupToRole(
-        groupWithCreateAccess.id,
+        groupWithCreateAccess.id!,
         deleteFeatureRole.id,
         'SomeAdminUser',
         projectForDelete.id,
     );
 
     await accessService.addGroupToRole(
-        groupWithDeleteAccess.id,
+        groupWithDeleteAccess.id!,
         createFeatureRole.id,
         'SomeAdminUser',
         projectForCreate.id,

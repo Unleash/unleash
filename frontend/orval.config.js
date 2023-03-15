@@ -30,8 +30,5 @@ module.exports = {
                 process.env.UNLEASH_OPENAPI_URL ||
                 'http://localhost:4242/docs/openapi.json',
         },
-        hooks: {
-            afterAllFilesWrite: 'yarn fmt',
-        },
     },
 };

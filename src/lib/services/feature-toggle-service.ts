@@ -1101,6 +1101,37 @@ class FeatureToggleService {
         );
     }
 
+    async setToggleStaleness(
+        featureNames: string[],
+        stale: boolean,
+        createdBy: string,
+        projectId: string,
+    ): Promise<void> {
+        await this.validateFeaturesContext(featureNames, projectId);
+
+        const features = await this.featureToggleStore.getAllByNames(
+            featureNames,
+        );
+        const relevantFeatures = features.filter(
+            (feature) => feature.stale !== stale,
+        );
+        await this.featureToggleStore.batchStale(
+            relevantFeatures.map((feature) => feature.name),
+            stale,
+        );
+        await this.eventStore.batchStore(
+            relevantFeatures.map(
+                (feature) =>
+                    new FeatureStaleEvent({
+                        stale: stale,
+                        project: projectId,
+                        featureName: feature.name,
+                        createdBy,
+                    }),
+            ),
+        );
+    }
+
     async updateEnabled(
         project: string,
         featureName: string,

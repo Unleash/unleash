@@ -1,7 +1,7 @@
 import { FromSchema } from 'json-schema-to-ts';
 
-export const archiveFeaturesSchema = {
-    $id: '#/components/schemas/archiveFeaturesSchema',
+export const batchFeaturesSchema = {
+    $id: '#/components/schemas/batchFeaturesSchema',
     type: 'object',
     required: ['features'],
     properties: {
@@ -17,4 +17,4 @@ export const archiveFeaturesSchema = {
     },
 } as const;
 
-export type ArchiveFeaturesSchema = FromSchema<typeof archiveFeaturesSchema>;
+export type BatchFeaturesSchema = FromSchema<typeof batchFeaturesSchema>;

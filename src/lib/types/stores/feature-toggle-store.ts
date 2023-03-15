@@ -16,6 +16,10 @@ export interface IFeatureToggleStore extends Store<FeatureToggle, string> {
     update(project: string, data: FeatureToggleDTO): Promise<FeatureToggle>;
     archive(featureName: string): Promise<FeatureToggle>;
     batchArchive(featureNames: string[]): Promise<FeatureToggle[]>;
+    batchStale(
+        featureNames: string[],
+        stale: boolean,
+    ): Promise<FeatureToggle[]>;
     revive(featureName: string): Promise<FeatureToggle>;
     getAll(query?: Partial<IFeatureToggleQuery>): Promise<FeatureToggle[]>;
     getAllByNames(names: string[]): Promise<FeatureToggle[]>;

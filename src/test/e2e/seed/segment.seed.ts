@@ -45,7 +45,6 @@ const createSegment = (
     postData: UpsertSegmentSchema,
 ): Promise<unknown> => {
     const user = { email: 'test@example.com' } as User;
-    // TODO coupled with an enterprise feature
     return app.services.segmentService.create(postData, user);
 };
 
@@ -88,7 +87,7 @@ const seedConstraints = (spec: ISeedSegmentSpec): IConstraint[] => {
     }));
 };
 
-const seedSegments = (spec: ISeedSegmentSpec): Partial<ISegment>[] => {
+const seedSegments = (spec: ISeedSegmentSpec): UpsertSegmentSchema[] => {
     return Array.from({ length: spec.segmentsPerFeature }).map((v, i) => {
         return {
             name: `${seedSchema}_segment_${i}`,

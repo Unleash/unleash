@@ -6078,6 +6078,40 @@ If the provided project does not exist, the list of events will be empty.",
         ],
       },
     },
+    "/api/admin/projects/{projectId}/archive/revive": {
+      "post": {
+        "operationId": "reviveFeatures",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/batchFeaturesSchema",
+              },
+            },
+          },
+          "description": "batchFeaturesSchema",
+          "required": true,
+        },
+        "responses": {
+          "200": {
+            "description": "This response has no body.",
+          },
+        },
+        "tags": [
+          "Archive",
+        ],
+      },
+    },
     "/api/admin/projects/{projectId}/environments": {
       "post": {
         "operationId": "addEnvironmentToProject",

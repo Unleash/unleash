@@ -21,6 +21,7 @@ export interface IFeatureToggleStore extends Store<FeatureToggle, string> {
         stale: boolean,
     ): Promise<FeatureToggle[]>;
     batchDelete(featureNames: string[]): Promise<void>;
+    batchRevive(featureNames: string[]): Promise<FeatureToggle[]>;
     revive(featureName: string): Promise<FeatureToggle>;
     getAll(query?: Partial<IFeatureToggleQuery>): Promise<FeatureToggle[]>;
     getAllByNames(names: string[]): Promise<FeatureToggle[]>;

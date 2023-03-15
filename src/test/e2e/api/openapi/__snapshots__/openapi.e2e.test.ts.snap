@@ -328,6 +328,38 @@ exports[`should serve the OpenAPI spec 1`] = `
         },
         "type": "object",
       },
+      "batchFeaturesSchema": {
+        "properties": {
+          "features": {
+            "items": {
+              "type": "string",
+            },
+            "type": "array",
+          },
+        },
+        "required": [
+          "features",
+        ],
+        "type": "object",
+      },
+      "batchStaleSchema": {
+        "properties": {
+          "features": {
+            "items": {
+              "type": "string",
+            },
+            "type": "array",
+          },
+          "stale": {
+            "type": "boolean",
+          },
+        },
+        "required": [
+          "features",
+          "stale",
+        ],
+        "type": "object",
+      },
       "bulkMetricsSchema": {
         "properties": {
           "applications": {
@@ -5966,6 +5998,42 @@ If the provided project does not exist, the list of events will be empty.",
         ],
       },
     },
+    "/api/admin/projects/{projectId}/archive": {
+      "post": {
+        "description": "This endpoint archives the specified features.",
+        "operationId": "archiveFeatures",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/batchFeaturesSchema",
+              },
+            },
+          },
+          "description": "batchFeaturesSchema",
+          "required": true,
+        },
+        "responses": {
+          "202": {
+            "description": "This response has no body.",
+          },
+        },
+        "summary": "Archives a list of features",
+        "tags": [
+          "Features",
+        ],
+      },
+    },
     "/api/admin/projects/{projectId}/environments": {
       "post": {
         "operationId": "addEnvironmentToProject",
@@ -6167,7 +6235,7 @@ If the provided project does not exist, the list of events will be empty.",
           },
         ],
         "responses": {
-          "200": {
+          "202": {
             "description": "This response has no body.",
           },
           "401": {
@@ -7343,6 +7411,42 @@ If the provided project does not exist, the list of events will be empty.",
         },
         "tags": [
           "Projects",
+        ],
+      },
+    },
+    "/api/admin/projects/{projectId}/stale": {
+      "post": {
+        "description": "This endpoint stales the specified features.",
+        "operationId": "staleFeatures",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/batchStaleSchema",
+              },
+            },
+          },
+          "description": "batchStaleSchema",
+          "required": true,
+        },
+        "responses": {
+          "202": {
+            "description": "This response has no body.",
+          },
+        },
+        "summary": "Stales a list of features",
+        "tags": [
+          "Features",
         ],
       },
     },

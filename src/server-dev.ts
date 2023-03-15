@@ -40,6 +40,7 @@ process.nextTick(async () => {
                         responseTimeWithAppNameKillSwitch: false,
                         featuresExportImport: true,
                         newProjectOverview: true,
+                        bulkOperations: true,
                         projectStatusApi: true,
                         showProjectApiAccess: true,
                         projectScopedSegments: true,

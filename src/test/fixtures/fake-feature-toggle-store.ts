@@ -24,6 +24,29 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         );
     }
 
+    async batchArchive(featureNames: string[]): Promise<FeatureToggle[]> {
+        const features = this.features.filter((feature) =>
+            featureNames.includes(feature.name),
+        );
+        for (const feature of features) {
+            feature.archived = true;
+        }
+        return features;
+    }
+
+    async batchStale(
+        featureNames: string[],
+        stale: boolean,
+    ): Promise<FeatureToggle[]> {
+        const features = this.features.filter((feature) =>
+            featureNames.includes(feature.name),
+        );
+        for (const feature of features) {
+            feature.stale = stale;
+        }
+        return features;
+    }
+
     async count(query: Partial<IFeatureToggleQuery>): Promise<number> {
         return this.features.filter(this.getFilterQuery(query)).length;
     }

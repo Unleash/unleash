@@ -3,10 +3,6 @@ import { PageContent } from 'component/common/PageContent/PageContent';
 import { Alert } from '@mui/material';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import AccessContext from 'contexts/AccessContext';
-import {
-    CREATE_API_TOKEN,
-    READ_PROJECT_API_TOKEN,
-} from 'component/providers/AccessProvider/permissions';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { useProjectNameOrId } from 'hooks/api/getters/useProject/useProject';
@@ -20,6 +16,7 @@ import { Search } from 'component/common/Search/Search';
 import {
     CREATE_PROJECT_API_TOKEN,
     DELETE_PROJECT_API_TOKEN,
+    READ_PROJECT_API_TOKEN,
 } from '@server/types/permissions';
 import { CopyApiTokenButton } from 'component/common/ApiTokenTable/CopyApiTokenButton/CopyApiTokenButton';
 import { RemoveApiTokenButton } from 'component/common/ApiTokenTable/RemoveApiTokenButton/RemoveApiTokenButton';

@@ -80,7 +80,11 @@ const EventDiff = ({
             change = (
                 <div style={styles[diff.kind]}>
                     {DIFF_PREFIXES[diff.kind]} {key}
-                    {changeValue ? `: ${changeValue}` : ''}
+                    {changeValue
+                        ? `: ${changeValue}`
+                        : diff.kind === 'D'
+                        ? ' (deleted)'
+                        : ''}
                 </div>
             );
         }

@@ -15,8 +15,6 @@ import { serializeDates } from '../../types/serialize-dates';
 import { OpenApiService } from '../../services/openapi-service';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import { emptyResponse } from '../../openapi/util/standard-responses';
-import { BatchFeaturesSchema, createRequestSchema } from '../../openapi';
-import NotFoundError from '../../error/notfound-error';
 
 export default class ArchiveController extends Controller {
     private readonly logger: Logger;
@@ -87,22 +85,6 @@ export default class ArchiveController extends Controller {
 
         this.route({
             method: 'post',
-            path: '/delete',
-            acceptAnyContentType: true,
-            handler: this.deleteFeatures,
-            permission: DELETE_FEATURE,
-            middleware: [
-                openApiService.validPath({
-                    tags: ['Archive'],
-                    operationId: 'deleteFeature',
-                    requestBody: createRequestSchema('batchFeaturesSchema'),
-                    responses: { 200: emptyResponse },
-                }),
-            ],
-        });
-
-        this.route({
-            method: 'post',
             path: '/revive/:featureName',
             acceptAnyContentType: true,
             handler: this.reviveFeature,
@@ -157,20 +139,6 @@ export default class ArchiveController extends Controller {
         const { featureName } = req.params;
         const user = extractUsername(req);
         await this.featureService.deleteFeature(featureName, user);
-        res.status(200).end();
-    }
-
-    async deleteFeatures(
-        req: IAuthRequest<any, any, BatchFeaturesSchema>,
-        res: Response<void>,
-    ): Promise<void> {
-        if (!this.flagResolver.isEnabled('bulkOperations')) {
-            throw new NotFoundError('Bulk operations are not enabled');
-        }
-
-        const { features } = req.body;
-        const user = extractUsername(req);
-        await this.featureService.deleteFeatures(features, user);
         res.status(200).end();
     }
 

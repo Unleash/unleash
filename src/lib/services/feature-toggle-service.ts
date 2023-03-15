@@ -1336,8 +1336,11 @@ class FeatureToggleService {
 
     async deleteFeatures(
         featureNames: string[],
+        projectId: string,
         createdBy: string,
     ): Promise<void> {
+        await this.validateFeaturesContext(featureNames, projectId);
+
         const features = await this.featureToggleStore.getAllByNames(
             featureNames,
         );

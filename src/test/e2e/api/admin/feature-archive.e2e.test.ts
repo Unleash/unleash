@@ -206,7 +206,7 @@ test('can bulk delete features and recreate after', async () => {
         await app.request.delete(`/api/admin/features/${feature}`).expect(200);
     }
     await app.request
-        .post('/api/admin/archive/delete')
+        .post('/api/admin/projects/default/archive/delete')
         .send({ features })
         .expect(200);
     for (const feature of features) {

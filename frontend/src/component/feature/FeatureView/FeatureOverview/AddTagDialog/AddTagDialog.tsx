@@ -46,14 +46,17 @@ const optionsToTags = (options: TagOption[], type: string): ITag[] => {
 const AddTagDialog = ({ open, setOpen }: IAddTagDialogProps) => {
     const featureId = useRequiredPathParam('featureId');
     const { createTag } = useTagApi();
-    const { updateFeatureTags, loading } = useFeatureApi();
-    const { tags, refetch } = useFeatureTags(featureId);
+    const { updateFeatureTags, loading: featureLoading } = useFeatureApi();
+    const { tags, refetch, loading: tagsLoading } = useFeatureTags(featureId);
     const { setToastData } = useToast();
     const [tagType, setTagType] = useState<ITagType>({
         name: 'simple',
         description: 'Simple tag to get you started',
         icon: '',
     });
+
+    const loading = featureLoading || tagsLoading;
+
     const [differenceCount, setDifferenceCount] = useState(0);
 
     const { trackEvent } = usePlausibleTracker();
@@ -74,7 +77,7 @@ const AddTagDialog = ({ open, setOpen }: IAddTagDialogProps) => {
                 tagsToOptions(tags.filter(tag => tag.type === tagType.name))
             );
         }
-    }, [tags, tagType]);
+    }, [JSON.stringify(tags), tagType]);
 
     const onCancel = () => {
         setOpen(false);

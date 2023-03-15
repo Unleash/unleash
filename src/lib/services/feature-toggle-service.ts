@@ -260,24 +260,14 @@ class FeatureToggleService {
         }
 
         if (
-            oneOf(
-                [...DATE_OPERATORS, ...SEMVER_OPERATORS, ...NUM_OPERATORS],
-                operator,
-            )
+            contextDefinition &&
+            contextDefinition.legalValues &&
+            contextDefinition.legalValues.length > 0
         ) {
-            if (contextDefinition?.legalValues?.length > 0) {
-                validateLegalValues(
-                    contextDefinition.legalValues,
-                    constraint.value,
-                );
-            }
-        } else {
-            if (contextDefinition?.legalValues?.length > 0) {
-                validateLegalValues(
-                    contextDefinition.legalValues,
-                    constraint.values,
-                );
-            }
+            validateLegalValues(
+                contextDefinition.legalValues,
+                constraint.value,
+            );
         }
 
         return constraint;
@@ -388,8 +378,8 @@ class FeatureToggleService {
             const newFeatureStrategy =
                 await this.featureStrategiesStore.createStrategyFeatureEnv({
                     strategyName: strategyConfig.name,
-                    constraints: strategyConfig.constraints,
-                    parameters: strategyConfig.parameters,
+                    constraints: strategyConfig.constraints || [],
+                    parameters: strategyConfig.parameters || {},
                     sortOrder: strategyConfig.sortOrder,
                     projectId,
                     featureName,
@@ -631,7 +621,7 @@ class FeatureToggleService {
                     featureName,
                     environment,
                 );
-            const result = [];
+            const result: Saved<IStrategyConfig>[] = [];
             for (const strat of featureStrategies) {
                 const segments =
                     (await this.segmentService.getByStrategy(strat.id)).map(
@@ -715,7 +705,7 @@ class FeatureToggleService {
         includeIds?: boolean,
     ): Promise<FeatureConfigurationClient[]> {
         const result = await this.featureToggleClientStore.getClient(
-            query,
+            query || {},
             includeIds,
         );
         if (this.flagResolver.isEnabled('cleanClientApi')) {
@@ -879,7 +869,11 @@ class FeatureToggleService {
 
         const strategyTasks = newToggle.environments.flatMap((e) =>
             e.strategies.map((s) => {
-                if (replaceGroupId && s.parameters.hasOwnProperty('groupId')) {
+                if (
+                    replaceGroupId &&
+                    s.parameters &&
+                    s.parameters.hasOwnProperty('groupId')
+                ) {
                     s.parameters.groupId = newFeatureName;
                 }
                 const context = {
@@ -1508,7 +1502,8 @@ class FeatureToggleService {
                     featureName,
                     environment,
                 })
-            ).variants;
+            ).variants ||
+            [];
 
         await this.eventStore.store(
             new EnvironmentVariantEvent({

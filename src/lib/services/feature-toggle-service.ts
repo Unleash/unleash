@@ -405,7 +405,7 @@ class FeatureToggleService {
             const tags = await this.tagStore.getAllTagsForFeature(featureName);
             const segments = await this.segmentService.getByStrategy(
                 newFeatureStrategy.id,
-            ); // TODO coupled with enterprise feature
+            );
             const strategy = this.featureStrategyToPublic(
                 newFeatureStrategy,
                 segments,
@@ -487,7 +487,7 @@ class FeatureToggleService {
 
             const segments = await this.segmentService.getByStrategy(
                 strategy.id,
-            ); // TODO coupled with enterprise feature
+            );
 
             // Store event!
             const tags = await this.tagStore.getAllTagsForFeature(featureName);
@@ -533,7 +533,7 @@ class FeatureToggleService {
             const tags = await this.tagStore.getAllTagsForFeature(featureName);
             const segments = await this.segmentService.getByStrategy(
                 strategy.id,
-            ); // TODO coupled with enterprise feature
+            );
             const data = this.featureStrategyToPublic(strategy, segments);
             const preData = this.featureStrategyToPublic(
                 existingStrategy,
@@ -632,7 +632,7 @@ class FeatureToggleService {
                 const segments =
                     (await this.segmentService.getByStrategy(strat.id)).map(
                         (segment) => segment.id,
-                    ) ?? []; // TODO coupled with enterprise feature
+                    ) ?? [];
                 result.push({
                     id: strat.id,
                     name: strat.strategyName,
@@ -953,7 +953,7 @@ class FeatureToggleService {
             strategyId,
         );
 
-        const segments = await this.segmentService.getByStrategy(strategyId); // TODO coupled with enterprise feature
+        const segments = await this.segmentService.getByStrategy(strategyId);
         let result: Saved<IStrategyConfig> = {
             id: strategy.id,
             name: strategy.strategyName,

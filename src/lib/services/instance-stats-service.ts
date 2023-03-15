@@ -193,7 +193,7 @@ export class InstanceStatsService {
             this.groupStore.count(),
             this.roleStore.count(),
             this.environmentStore.count(),
-            this.segmentStore.count(), // TODO coupled with enterprise feature
+            this.segmentStore.count(),
             this.strategyStore.count(),
             this.hasSAML(),
             this.hasOIDC(),

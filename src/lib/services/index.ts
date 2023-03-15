@@ -138,7 +138,7 @@ export const createServices = (
     const versionService = new VersionService(stores, config);
     const healthService = new HealthService(stores, config);
     const userFeedbackService = new UserFeedbackService(stores, config);
-    const segmentService = new SegmentService(stores, config); // TODO coupled with enterprise feature
+    const segmentService = new SegmentService(stores, config);
     const featureToggleServiceV2 = new FeatureToggleService(
         stores,
         config,

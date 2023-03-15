@@ -47,9 +47,9 @@ export const VariantPatch = ({
 }: IVariantPatchProps) => {
     const { feature: featureData } = useFeature(project, feature);
 
-    const preData = featureData.environments.find(
-        ({ name }) => environment === name
-    )?.variants;
+    const preData =
+        featureData.environments.find(({ name }) => environment === name)
+            ?.variants ?? [];
 
     return (
         <ChangeItemInfo>

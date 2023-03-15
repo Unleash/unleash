@@ -1,11 +1,12 @@
 import { useMemo, useState, VFC } from 'react';
 import { Box, Button, Paper, styled, Typography } from '@mui/material';
-import { FileDownload, Label, WatchLater } from '@mui/icons-material';
+import { FileDownload, Label } from '@mui/icons-material';
 import type { FeatureSchema } from 'openapi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ExportDialog } from 'component/feature/FeatureToggleList/ExportDialog';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ArchiveButton } from './ArchiveButton/ArchiveButton';
+import { MarkAsStaleButtons } from './MarkAsStaleButtons/MarkAsStaleButtons';
 
 interface ISelectionActionsBarProps {
     selectedIds: string[];
@@ -17,12 +18,13 @@ const StyledContainer = styled(Box)(() => ({
     display: 'flex',
     justifyContent: 'center',
     width: '100%',
+    flexWrap: 'wrap',
 }));
 
 const StyledBar = styled(Paper)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
     marginTop: theme.spacing(2),
     marginLeft: 'auto',
     marginRight: 'auto',
@@ -30,7 +32,8 @@ const StyledBar = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
     border: `1px solid ${theme.palette.secondary.main}`,
     borderRadius: theme.shape.borderRadiusLarge,
-    columnGap: theme.spacing(1),
+    gap: theme.spacing(1),
+    flexWrap: 'wrap',
 }));
 
 const StyledCount = styled('span')(({ theme }) => ({
@@ -41,7 +44,8 @@ const StyledCount = styled('span')(({ theme }) => ({
 }));
 
 const StyledText = styled(Typography)(({ theme }) => ({
-    marginRight: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+    marginRight: 'auto',
 }));
 
 export const SelectionActionsBar: VFC<ISelectionActionsBarProps> = ({
@@ -75,14 +79,7 @@ export const SelectionActionsBar: VFC<ISelectionActionsBarProps> = ({
                     &ensp;selected
                 </StyledText>
                 <ArchiveButton projectId={projectId} features={selectedIds} />
-                <Button
-                    disabled
-                    startIcon={<WatchLater />}
-                    variant="outlined"
-                    size="small"
-                >
-                    Mark as stale
-                </Button>
+                <MarkAsStaleButtons projectId={projectId} data={selectedData} />
                 <Button
                     startIcon={<FileDownload />}
                     variant="outlined"

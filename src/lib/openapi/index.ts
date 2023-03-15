@@ -256,7 +256,7 @@ export const schemas = {
     stateSchema,
     strategiesSchema,
     strategySchema,
-    stickinessSchema: projectSettingsSchema,
+    projectSettingsSchema,
     tagsBulkAddSchema,
     tagSchema,
     tagsSchema,

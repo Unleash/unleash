@@ -7,7 +7,7 @@ export interface IStickinessResponse {
     status: number;
 
     body?: {
-        defaultStickiness?: string;
+        defaultStickiness: string;
         mode?: string;
     };
 }

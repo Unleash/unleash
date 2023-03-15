@@ -1,4 +1,4 @@
-import { setupApp } from '../../helpers/test-helper';
+import { setupAppWithCustomConfig } from '../../helpers/test-helper';
 import dbInit from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 
@@ -7,7 +7,14 @@ let db;
 
 beforeAll(async () => {
     db = await dbInit('archive_serial', getLogger);
-    app = await setupApp(db.stores);
+    app = await setupAppWithCustomConfig(db.stores, {
+        experimental: {
+            flags: {
+                strictSchemaValidation: true,
+                bulkOperations: true,
+            },
+        },
+    });
     await app.services.featureToggleServiceV2.createFeatureToggle(
         'default',
         {
@@ -182,4 +189,31 @@ test('Deleting an unarchived toggle should not take effect', async () => {
         .send({ name: 'really.delete.feature' })
         .set('Content-Type', 'application/json')
         .expect(409); // because it still exists
+});
+
+test('can bulk delete features and recreate after', async () => {
+    const features = ['first.bulk.issue', 'second.bulk.issue'];
+    for (const feature of features) {
+        await app.request
+            .post('/api/admin/features')
+            .send({
+                name: feature,
+                enabled: false,
+                strategies: [{ name: 'default' }],
+            })
+            .set('Content-Type', 'application/json')
+            .expect(201);
+        await app.request.delete(`/api/admin/features/${feature}`).expect(200);
+    }
+    await app.request
+        .post('/api/admin/projects/default/archive/delete')
+        .send({ features })
+        .expect(200);
+    for (const feature of features) {
+        await app.request
+            .post('/api/admin/features/validate')
+            .send({ name: feature })
+            .set('Content-Type', 'application/json')
+            .expect(200);
+    }
 });

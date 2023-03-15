@@ -26,6 +26,7 @@ import {
 import { IArchivedQuery, IProjectParam } from '../../../types/model';
 import { ProjectApiTokenController } from './api-token';
 import { SettingService } from '../../../services';
+import ProjectArchiveController from './project-archive';
 
 const STICKINESS_KEY = 'stickiness';
 const DEFAULT_STICKINESS = 'default';
@@ -114,6 +115,7 @@ export default class ProjectApi extends Controller {
         this.use('/', new ProjectHealthReport(config, services).router);
         this.use('/', new VariantsController(config, services).router);
         this.use('/', new ProjectApiTokenController(config, services).router);
+        this.use('/', new ProjectArchiveController(config, services).router);
     }
 
     async getProjects(

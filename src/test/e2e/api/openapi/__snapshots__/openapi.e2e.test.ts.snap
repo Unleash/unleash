@@ -2863,6 +2863,29 @@ exports[`should serve the OpenAPI spec 1`] = `
         ],
         "type": "object",
       },
+      "projectSettingsSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "defaultStickiness": {
+            "example": "userId",
+            "nullable": true,
+            "type": "string",
+          },
+          "mode": {
+            "enum": [
+              "open",
+              "protected",
+              "private",
+            ],
+            "nullable": true,
+            "type": "string",
+          },
+        },
+        "required": [
+          "defaultStickiness",
+        ],
+        "type": "object",
+      },
       "projectStatsSchema": {
         "additionalProperties": false,
         "description": "Statistics for a project, including the average time to production, number of features created, the project activity and more.
@@ -3543,29 +3566,6 @@ Stats are divided into current and previous **windows**.
         },
         "required": [
           "version",
-        ],
-        "type": "object",
-      },
-      "stickinessSchema": {
-        "additionalProperties": false,
-        "properties": {
-          "defaultStickiness": {
-            "example": "userId",
-            "nullable": true,
-            "type": "string",
-          },
-          "mode": {
-            "enum": [
-              "open",
-              "protected",
-              "private",
-            ],
-            "nullable": true,
-            "type": "string",
-          },
-        },
-        "required": [
-          "defaultStickiness",
         ],
         "type": "object",
       },

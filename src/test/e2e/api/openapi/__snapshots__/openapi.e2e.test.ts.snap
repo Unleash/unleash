@@ -2836,6 +2836,16 @@ exports[`should serve the OpenAPI spec 1`] = `
             "example": 4,
             "type": "number",
           },
+          "mode": {
+            "description": "A mode of the project affecting what actions are possible in this project.",
+            "enum": [
+              "open",
+              "protected",
+            ],
+            "example": "open",
+            "nullable": true,
+            "type": "string",
+          },
           "name": {
             "description": "The name of this project",
             "example": "DX-Squad",

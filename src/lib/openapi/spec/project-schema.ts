@@ -60,6 +60,8 @@ export const projectSchema = {
             enum: ['open', 'protected'],
             example: 'open',
             nullable: true,
+            description:
+                'A mode of the project affecting what actions are possible in this project.',
         },
     },
     components: {},

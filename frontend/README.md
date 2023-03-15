@@ -8,7 +8,7 @@ First, start the unleash-api backend on port 4242.
 Then, start the frontend dev server:
 
 ```
-cd ~/frontend
+cd ./frontend
 yarn install
 yarn run start
 ```
@@ -18,7 +18,7 @@ yarn run start
 Alternatively, instead of running unleash-api on localhost, you can use a remote instance:
 
 ```
-cd ~/frontend
+cd ./frontend
 yarn install
 yarn run start:sandbox
 ```

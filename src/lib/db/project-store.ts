@@ -133,8 +133,11 @@ class ProjectStore implements IProjectStore {
         const memberMap = new Map<string, number>(
             memberCount.map((c) => [c.project, Number(c.count)]),
         );
-        return projectsWithFeatureCount.map((r) => {
-            return { ...r, memberCount: memberMap.get(r.id) || 0 };
+        return projectsWithFeatureCount.map((projectWithCount) => {
+            return {
+                ...projectWithCount,
+                memberCount: memberMap.get(projectWithCount.id) || 0,
+            };
         });
     }
 
@@ -225,8 +228,8 @@ class ProjectStore implements IProjectStore {
     }
 
     async addDefaultEnvironment(projects: any[]): Promise<void> {
-        const environments = projects.map((p) => ({
-            project_id: p.id,
+        const environments = projects.map((project) => ({
+            project_id: project.id,
             environment_name: DEFAULT_ENV,
         }));
         await this.db('project_environments')

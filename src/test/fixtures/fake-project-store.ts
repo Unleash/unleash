@@ -42,8 +42,8 @@ export default class FakeProjectStore implements IProjectStore {
     }
 
     async getProjectsWithCounts(): Promise<IProjectWithCount[]> {
-        return this.projects.map((p) => {
-            return { ...p, memberCount: 0, featureCount: 0 };
+        return this.projects.map((project) => {
+            return { ...project, memberCount: 0, featureCount: 0 };
         });
     }
 
@@ -64,7 +64,7 @@ export default class FakeProjectStore implements IProjectStore {
 
     async delete(key: string): Promise<void> {
         this.projects.splice(
-            this.projects.findIndex((p) => p.id === key),
+            this.projects.findIndex((project) => project.id === key),
             1,
         );
     }
@@ -91,7 +91,7 @@ export default class FakeProjectStore implements IProjectStore {
     }
 
     async exists(key: string): Promise<boolean> {
-        return this.projects.some((p) => p.id === key);
+        return this.projects.some((project) => project.id === key);
     }
 
     async get(key: string): Promise<IProject> {
@@ -121,7 +121,7 @@ export default class FakeProjectStore implements IProjectStore {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         environments?: IEnvironment[],
     ): Promise<IProject[]> {
-        return projects.map((p) => this.createInternal(p));
+        return projects.map((project) => this.createInternal(project));
     }
 
     async update(update: IProjectInsert): Promise<void> {
@@ -130,8 +130,9 @@ export default class FakeProjectStore implements IProjectStore {
     }
 
     async updateHealth(healthUpdate: IProjectHealthUpdate): Promise<void> {
-        this.projects.find((p) => p.id === healthUpdate.id)!.health =
-            healthUpdate.health;
+        this.projects.find(
+            (project) => project.id === healthUpdate.id,
+        )!.health = healthUpdate.health;
     }
 
     getMembersCount(): Promise<IProjectMembersCount[]> {

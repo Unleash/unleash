@@ -25,13 +25,12 @@ import NameExistsError from '../error/name-exists-error';
 import { IEnvironmentStore } from 'lib/types/stores/environment-store';
 import RoleInUseError from '../error/role-in-use-error';
 import { roleSchema } from '../schema/role-schema';
-import { CUSTOM_ROLE_TYPE, ALL_PROJECTS, ALL_ENVS } from '../util/constants';
+import { ALL_ENVS, ALL_PROJECTS, CUSTOM_ROLE_TYPE } from '../util/constants';
 import { DEFAULT_PROJECT } from '../types/project';
 import InvalidOperationError from '../error/invalid-operation-error';
 import BadDataError from '../error/bad-data-error';
 import { IGroupModelWithProjectRole } from '../types/group';
 import { GroupService } from './group-service';
-import { uniqueByKey } from '../util/unique';
 
 const { ADMIN } = permissions;
 
@@ -408,31 +407,6 @@ export class AccessService {
         );
         const groups = await this.groupService.getProjectGroups(projectId);
         return [roles, users.flat(), groups];
-    }
-
-    async getProjectMembers(
-        projectId: string,
-    ): Promise<Array<Pick<IUser, 'id' | 'email' | 'username'>>> {
-        const [, users, groups] = await this.getProjectRoleAccess(projectId);
-        const actualUsers = users.map((user) => ({
-            id: user.id,
-            email: user.email,
-            username: user.username,
-        }));
-        const actualGroupUsers = groups
-            .flatMap((group) => group.users)
-            .map((user) => user.user)
-            .map((user) => ({
-                id: user.id,
-                email: user.email,
-                username: user.username,
-            }));
-        return uniqueByKey([...actualUsers, ...actualGroupUsers], 'id');
-    }
-
-    async isProjectMember(userId: number, projectId: string): Promise<boolean> {
-        const users = await this.getProjectMembers(projectId);
-        return Boolean(users.find((user) => user.id === userId));
     }
 
     async createDefaultProjectRoles(

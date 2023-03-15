@@ -17,20 +17,30 @@ import { IGroup } from 'interfaces/group';
 
 export const EditGroupContainer = () => {
     const groupId = Number(useRequiredPathParam('groupId'));
-    const { group } = useGroup(groupId);
+    const { group, refetchGroup } = useGroup(groupId);
 
     if (!group) return null;
 
-    return <EditGroup group={group} groupId={groupId} />;
+    return (
+        <EditGroup
+            group={group}
+            groupId={groupId}
+            refetchGroup={refetchGroup}
+        />
+    );
 };
 
 interface IEditGroupProps {
     group: IGroup;
     groupId: number;
+    refetchGroup: () => void;
 }
 
-export const EditGroup = ({ group, groupId }: IEditGroupProps) => {
-    const { refetchGroup } = useGroup(groupId);
+export const EditGroup = ({
+    group,
+    groupId,
+    refetchGroup,
+}: IEditGroupProps) => {
     const { refetchGroups } = useGroups();
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();

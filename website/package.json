@@ -52,7 +52,7 @@
     "nth-check": "^2.0.1",
     "shelljs": "^0.8.5",
     "trim-newlines": "^4.0.0",
-    "minimatch": "^5.0.0",
+    "minimatch": "^7.0.0",
     "decode-uri-component": "^0.4.0",
     "qs": "^6.9.7"
   },

@@ -44,7 +44,7 @@ const StyledHeaderValuesContainer = styled('div')(({ theme }) => ({
 const StyledHeaderValuesExpand = styled('p')(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
     marginTop: theme.spacing(0.5),
-    color: theme.palette.primary.dark,
+    color: theme.palette.links,
     [theme.breakpoints.down('sm')]: {
         textAlign: 'center',
     },

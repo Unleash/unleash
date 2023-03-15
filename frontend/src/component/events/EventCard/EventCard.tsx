@@ -38,6 +38,10 @@ const StyledContainerListItem = styled('li')(({ theme }) => ({
             padding: theme.spacing(4),
         },
     },
+
+    'a': {
+        color: theme.palette.links,
+    }
 }));
 
 export const StyledCodeSection = styled('div')(({ theme }) => ({

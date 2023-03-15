@@ -19,7 +19,6 @@ interface IConstraintAccordionBody {
 
 const StyledInputContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(2),
-    backgroundColor: theme.palette.neutral.light,
 }));
 
 const StyledButtonContainer = styled('div')(({ theme }) => ({

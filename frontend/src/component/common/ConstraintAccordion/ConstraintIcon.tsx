@@ -18,12 +18,14 @@ export const ConstraintIcon: VFC<IConstraintIconProps> = ({ compact }) => (
         }}
     >
         <TrackChanges
-            sx={{
-                fill: 'white',
-                display: 'block',
-                width: compact ? '16px' : '20px',
-                height: compact ? '16px' : '20px',
-            }}
+            sx={
+                theme => ({
+                    fill: theme.palette.common.white,
+                    display: 'block',
+                    width: compact ? '16px' : '20px',
+                    height: compact ? '16px' : '20px',
+                })
+            }
         />
     </Box>
 );

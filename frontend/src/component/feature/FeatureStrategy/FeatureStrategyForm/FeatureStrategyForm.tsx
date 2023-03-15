@@ -253,7 +253,7 @@ export const FeatureStrategyForm = ({
                 </PermissionButton>
                 <Button
                     type="button"
-                    color="secondary"
+                    color="primary"
                     onClick={onCancel}
                     disabled={loading}
                 >

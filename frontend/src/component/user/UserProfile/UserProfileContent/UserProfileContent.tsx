@@ -45,7 +45,7 @@ const StyledLink = styled(Link<typeof RouterLink | 'a'>)(({ theme }) => ({
     alignItems: 'center',
     gap: theme.spacing(1),
     padding: 0,
-    color: theme.palette.primary.dark,
+    color: theme.palette.links,
     fontWeight: theme.fontWeight.medium,
     '&:hover, &:focus': {
         textDecoration: 'underline',

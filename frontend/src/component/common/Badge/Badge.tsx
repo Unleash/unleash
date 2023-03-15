@@ -37,7 +37,7 @@ const StyledBadge = styled('div')<IBadgeProps>(
         fontWeight: theme.fontWeight.bold,
         lineHeight: 1,
         backgroundColor: theme.palette[color].light,
-        color: theme.palette[color].dark,
+        color: theme.palette[color].contrastText,
         border: `1px solid ${theme.palette[color].border}`,
     })
 );

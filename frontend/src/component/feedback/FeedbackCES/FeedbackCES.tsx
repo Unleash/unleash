@@ -27,7 +27,7 @@ const StyledModal = styled('div')(({ theme }) => ({
     position: 'relative',
     padding: theme.spacing(8),
     background: theme.palette.background.paper,
-    boxShadow: '0 0 1rem rgba(0, 0, 0, 0.25)',
+    boxShadow: theme.boxShadows.popup,
     borderRadius: theme.spacing(2),
     [theme.breakpoints.down('md')]: {
         padding: theme.spacing(4),
@@ -43,7 +43,7 @@ const StyledClose = styled('div')({
 
 const StyledCloseIcon = styled(CloseOutlined)(({ theme }) => ({
     fontSize: '1.5rem',
-    color: theme.palette.action.disabled,
+    color: theme.palette.action.active,
 }));
 
 export const FeedbackCES = ({ state }: IFeedbackCESProps) => {

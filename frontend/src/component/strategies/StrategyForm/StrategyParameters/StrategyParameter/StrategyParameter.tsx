@@ -5,6 +5,7 @@ import {
     IconButton,
     styled,
     Tooltip,
+    Link
 } from '@mui/material';
 import { Delete } from '@mui/icons-material';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
@@ -109,13 +110,13 @@ export const StrategyParameter = ({
                     <StyledParagraph>
                         Parameters let you provide arguments to your strategy
                         that it can access for evaluation. Read more in the{' '}
-                        <a
+                        <Link
                             href="https://docs.getunleash.io/reference/custom-activation-strategies#parameter-types"
                             target="_blank"
                             rel="noreferrer"
                         >
                             parameter types documentation
-                        </a>
+                        </Link>
                         .
                     </StyledParagraph>
                 }

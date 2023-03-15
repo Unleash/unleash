@@ -25,6 +25,9 @@ const StyledListItem = styled(ListItem)(({ theme }) => ({
     '& a': {
         textDecoration: 'none',
         color: theme.palette.text.primary,
+        '&:hover': {
+            textDecoration: 'underline',
+        },
     },
 }));
 

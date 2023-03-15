@@ -35,7 +35,7 @@ export const InviteLinkBar: VFC = () => {
         <Typography
             component="span"
             variant="body2"
-            color={willExpireSoon ? 'warning.main' : 'inherit'}
+            color={willExpireSoon ? 'warning.dark' : 'inherit'}
             fontWeight="bold"
         >
             {expiresIn}
@@ -56,17 +56,19 @@ export const InviteLinkBar: VFC = () => {
 
     return (
         <Box
-            sx={{
-                backgroundColor: 'background.paper',
-                py: 2,
-                px: 4,
-                mb: 2,
-                borderRadius: theme => `${theme.shape.borderRadiusLarge}px`,
-                display: 'flex',
-                flexDirection: { xs: 'column', md: 'row' },
-                border: '2px solid',
-                borderColor: 'primary.main',
-            }}
+            sx={
+                theme => ({
+                    backgroundColor: theme.palette.background.paper,
+                    py: 2,
+                    px: 4,
+                    mb: 2,
+                    borderRadius: `${theme.shape.borderRadiusLarge}px`,
+                    display: 'flex',
+                    flexDirection: { xs: 'column', md: 'row' },
+                    border: '2px solid',
+                    borderColor: theme.palette.background.alternative,
+                })
+            }
             ref={ref}
         >
             <Box

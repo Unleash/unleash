@@ -1,5 +1,5 @@
 import { CloudCircle } from '@mui/icons-material';
-import { styled } from '@mui/material';
+import { styled, Link } from '@mui/material';
 import { IFeatureEnvironment } from 'interfaces/featureToggle';
 import { EnvironmentVariantsTable } from './EnvironmentVariantsTable/EnvironmentVariantsTable';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -101,13 +101,13 @@ export const EnvironmentVariantsCard = ({
                                         control which parameter is used to
                                         ensure consistent traffic allocation
                                         across variants.{' '}
-                                        <a
+                                        <Link
                                             href="https://docs.getunleash.io/reference/feature-toggle-variants"
                                             target="_blank"
                                             rel="noreferrer"
                                         >
                                             Read more
-                                        </a>
+                                        </Link>
                                     </StyledDescription>
                                 </>
                             }

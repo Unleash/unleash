@@ -26,6 +26,7 @@ import { RemoveApiTokenButton } from 'component/common/ApiTokenTable/RemoveApiTo
 import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import useProjectApiTokensApi from 'hooks/api/actions/useProjectApiTokensApi/useProjectApiTokensApi';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 export const ProjectApiAccess = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -81,17 +82,6 @@ export const ProjectApiAccess = () => {
         </ActionCell>
     ));
 
-    if (!hasAccess(READ_PROJECT_API_TOKEN, projectId)) {
-        return (
-            <PageContent header={<PageHeader title="Api access" />}>
-                <Alert severity="error">
-                    You need to be a member of the project or admin to access
-                    this section.
-                </Alert>
-            </PageContent>
-        );
-    }
-
     return (
         <div style={{ width: '100%', overflow: 'hidden' }}>
             <PageContent
@@ -108,23 +98,35 @@ export const ProjectApiAccess = () => {
                                 <CreateApiTokenButton
                                     permission={CREATE_PROJECT_API_TOKEN}
                                     path="create"
+                                    project={projectId}
                                 />
                             </>
                         }
                     />
                 }
             >
-                <ApiTokenTable
-                    compact
-                    loading={loading}
-                    headerGroups={headerGroups}
-                    setHiddenColumns={setHiddenColumns}
-                    prepareRow={prepareRow}
-                    getTableBodyProps={getTableBodyProps}
-                    getTableProps={getTableProps}
-                    rows={rows}
-                    columns={columns}
-                    globalFilter={globalFilter}
+                <ConditionallyRender
+                    condition={!hasAccess(READ_PROJECT_API_TOKEN, projectId)}
+                    show={
+                        <Alert severity="warning">
+                            You need to have the correct permissions to read API
+                            tokens
+                        </Alert>
+                    }
+                    elseShow={
+                        <ApiTokenTable
+                            compact
+                            loading={loading}
+                            headerGroups={headerGroups}
+                            setHiddenColumns={setHiddenColumns}
+                            prepareRow={prepareRow}
+                            getTableBodyProps={getTableBodyProps}
+                            getTableProps={getTableProps}
+                            rows={rows}
+                            columns={columns}
+                            globalFilter={globalFilter}
+                        />
+                    }
                 />
             </PageContent>
 

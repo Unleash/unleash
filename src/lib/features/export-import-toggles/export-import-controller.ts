@@ -1,5 +1,4 @@
 import { Response } from 'express';
-import { Knex } from 'knex';
 import Controller from '../../routes/controller';
 import { Logger } from '../../logger';
 import ExportImportService from './export-import-service';
@@ -30,7 +29,7 @@ class ExportImportController extends Controller {
     private exportImportService: ExportImportService;
 
     private transactionalExportImportService: (
-        db: Knex.Transaction,
+        db: UnleashTransaction,
     ) => ExportImportService;
 
     private openApiService: OpenApiService;

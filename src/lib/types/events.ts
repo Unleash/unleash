@@ -163,7 +163,7 @@ export class FeatureStaleEvent extends BaseEvent {
         project: string;
         featureName: string;
         createdBy: string | IUser;
-        tags?: ITag[];
+        tags: ITag[];
     }) {
         super(
             p.stale ? FEATURE_STALE_ON : FEATURE_STALE_OFF,
@@ -330,7 +330,7 @@ export class FeatureArchivedEvent extends BaseEvent {
         project: string;
         featureName: string;
         createdBy: string | IUser;
-        tags?: ITag[];
+        tags: ITag[];
     }) {
         super(FEATURE_ARCHIVED, p.createdBy, p.tags);
         const { project, featureName } = p;

@@ -685,7 +685,7 @@ export const ProjectFeatureToggles = ({
                 onClose={() => {
                     setFeatureArchiveState(undefined);
                 }}
-                featureId={featureArchiveState || ''}
+                featureIds={[featureArchiveState || '']}
                 projectId={projectId}
             />{' '}
             <ChangeRequestDialogue
@@ -717,6 +717,7 @@ export const ProjectFeatureToggles = ({
             <SelectionActionsBar
                 selectedIds={Object.keys(selectedRowIds)}
                 data={features}
+                projectId={projectId}
             />
         </PageContent>
     );

@@ -2,6 +2,7 @@ import {
     Autocomplete,
     AutocompleteProps,
     Checkbox,
+    Chip,
     createFilterOptions,
     FilterOptionsState,
     TextField,
@@ -9,9 +10,10 @@ import {
 import React from 'react';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import { ITag } from 'interfaces/tags';
+import { ITag, ITagType } from 'interfaces/tags';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Add } from '@mui/icons-material';
+import { AutocompleteRenderGetTagProps } from '@mui/material/Autocomplete/Autocomplete';
 
 export type TagOption = {
     title: string;
@@ -19,8 +21,9 @@ export type TagOption = {
 };
 interface ITagsInputProps {
     options: TagOption[];
-    featureTags: ITag[];
-    tagType: string;
+    existingTags: ITag[];
+    tagType: ITagType;
+    selectedOptions: TagOption[];
     onChange: AutocompleteProps<TagOption | string, true, any, any>['onChange'];
 }
 
@@ -28,18 +31,13 @@ const filter = createFilterOptions<TagOption>();
 
 export const TagsInput = ({
     options,
-    featureTags,
+    selectedOptions,
     tagType,
+    existingTags,
     onChange,
 }: ITagsInputProps) => {
     const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
     const checkedIcon = <CheckBoxIcon fontSize="small" />;
-
-    const getOptionDisabled = (option: TagOption) => {
-        return featureTags.some(
-            tag => tag.type === tagType && tag.value === option.title
-        );
-    };
 
     const getOptionLabel = (option: TagOption) => {
         // Add "xxx" option created dynamically
@@ -57,9 +55,6 @@ export const TagsInput = ({
         option: TagOption,
         { selected }: { selected: boolean }
     ) => {
-        const exists = featureTags.some(
-            tag => tag.type === tagType && tag.value === option.title
-        );
         return (
             <li {...props}>
                 <ConditionallyRender
@@ -70,13 +65,30 @@ export const TagsInput = ({
                             icon={icon}
                             checkedIcon={checkedIcon}
                             sx={{ mr: theme => theme.spacing(0.5) }}
-                            checked={selected || exists}
+                            checked={selected}
                         />
                     }
                 />
                 {option.title}
             </li>
         );
+    };
+
+    const renderTags = (
+        tagValue: TagOption[],
+        getTagProps: AutocompleteRenderGetTagProps
+    ) => {
+        return tagValue.map((option, index) => {
+            const exists = existingTags.some(
+                existingTag =>
+                    existingTag.value === option.title &&
+                    existingTag.type === tagType.name
+            );
+            if (exists) {
+                return null;
+            }
+            return <Chip {...getTagProps({ index })} label={option.title} />;
+        });
     };
 
     const filterOptions = (
@@ -101,11 +113,13 @@ export const TagsInput = ({
     return (
         <Autocomplete
             multiple
-            id="checkboxes-tags-demo"
+            id="checkboxes-tag"
             sx={{ marginTop: theme => theme.spacing(2), width: 500 }}
             disableCloseOnSelect
             placeholder="Select Values"
             options={options}
+            value={selectedOptions}
+            renderTags={renderTags}
             isOptionEqualToValue={(option, value) => {
                 if (value.inputValue && value.inputValue !== '') {
                     return option.title === value.inputValue;
@@ -113,7 +127,6 @@ export const TagsInput = ({
                     return option.title === value.title;
                 }
             }}
-            getOptionDisabled={getOptionDisabled}
             getOptionLabel={getOptionLabel}
             renderOption={renderOption}
             filterOptions={filterOptions}

@@ -52,6 +52,7 @@ export default class FakeProjectStore implements IProjectStore {
             ...project,
             health: 100,
             createdAt: new Date(),
+            mode: 'open',
         };
         this.projects.push(newProj);
         return newProj;
@@ -129,7 +130,7 @@ export default class FakeProjectStore implements IProjectStore {
     }
 
     async updateHealth(healthUpdate: IProjectHealthUpdate): Promise<void> {
-        this.projects.find((p) => p.id === healthUpdate.id).health =
+        this.projects.find((p) => p.id === healthUpdate.id)!.health =
             healthUpdate.health;
     }
 

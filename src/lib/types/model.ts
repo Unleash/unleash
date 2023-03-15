@@ -366,7 +366,10 @@ export interface IProject {
     createdAt?: Date;
     updatedAt?: Date;
     changeRequestsEnabled?: boolean;
+    mode: ProjectMode;
 }
+export type ProjectMode = 'open' | 'protected';
+
 export interface ICustomRole {
     id: number;
     name: string;

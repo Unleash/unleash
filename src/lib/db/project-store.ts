@@ -134,7 +134,7 @@ class ProjectStore implements IProjectStore {
             memberCount.map((c) => [c.project, Number(c.count)]),
         );
         return projectsWithFeatureCount.map((r) => {
-            return { ...r, memberCount: memberMap.get(r.id) };
+            return { ...r, memberCount: memberMap.get(r.id) || 0 };
         });
     }
 
@@ -149,6 +149,7 @@ class ProjectStore implements IProjectStore {
             featureCount: Number(row.number_of_features) || 0,
             memberCount: Number(row.number_of_users) || 0,
             updatedAt: row.updated_at,
+            mode: 'open',
         };
     }
 
@@ -456,6 +457,7 @@ class ProjectStore implements IProjectStore {
             createdAt: row.created_at,
             health: row.health ?? 100,
             updatedAt: row.updated_at || new Date(),
+            mode: 'open',
         };
     }
 }

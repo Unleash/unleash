@@ -5,27 +5,31 @@ import handleErrorResponses from './api/getters/httpErrorResponseHandler';
 
 export interface IStickinessResponse {
     status: number;
-    body?: { stickiness: string };
+
+    body?: {
+        defaultStickiness?: string;
+        mode?: string;
+    };
 }
 const DEFAULT_STICKINESS = 'default';
-export const useDefaultProjectStickiness = (
+export const useDefaultProjectSettings = (
     projectId?: string,
     options?: SWRConfiguration
 ) => {
     const { uiConfig } = useUiConfig();
 
-    const PATH = `/api/admin/projects/${projectId}/stickiness`;
+    const PATH = `/api/admin/projects/${projectId}/settings`;
     const { projectScopedStickiness } = uiConfig.flags;
 
     const { data, error, mutate } = useSWR<IStickinessResponse>(
-        ['useDefaultProjectStickiness', PATH],
+        ['useDefaultProjectSettings', PATH],
         () => fetcher(PATH),
         options
     );
 
     const defaultStickiness =
         Boolean(projectScopedStickiness) && data?.body != null && projectId
-            ? data.body.stickiness
+            ? data.body.defaultStickiness
             : DEFAULT_STICKINESS;
 
     const refetch = useCallback(() => {

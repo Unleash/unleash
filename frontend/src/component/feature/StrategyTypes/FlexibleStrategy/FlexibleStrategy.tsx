@@ -13,7 +13,7 @@ import {
 } from 'utils/parseParameter';
 import { StickinessSelect } from './StickinessSelect/StickinessSelect';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
-import { useDefaultProjectStickiness } from 'hooks/useDefaultProjectStickiness';
+import { useDefaultProjectSettings } from 'hooks/useDefaultProjectSettings';
 import Loader from '../../../common/Loader/Loader';
 
 interface IFlexibleStrategyProps {
@@ -29,8 +29,7 @@ const FlexibleStrategy = ({
     editable = true,
 }: IFlexibleStrategyProps) => {
     const projectId = useOptionalPathParam('projectId');
-    const { defaultStickiness, loading } =
-        useDefaultProjectStickiness(projectId);
+    const { defaultStickiness, loading } = useDefaultProjectSettings(projectId);
     const onUpdate = (field: string) => (newValue: string) => {
         updateParameter(field, newValue);
     };

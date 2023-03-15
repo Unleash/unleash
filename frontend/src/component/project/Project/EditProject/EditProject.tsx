@@ -14,7 +14,7 @@ import { useContext } from 'react';
 import AccessContext from 'contexts/AccessContext';
 import { Alert } from '@mui/material';
 import { GO_BACK } from 'constants/navigate';
-import { useDefaultProjectStickiness } from 'hooks/useDefaultProjectStickiness';
+import { useDefaultProjectSettings } from 'hooks/useDefaultProjectSettings';
 
 const EditProject = () => {
     const { uiConfig } = useUiConfig();
@@ -23,7 +23,7 @@ const EditProject = () => {
     const id = useRequiredPathParam('projectId');
     const { project } = useProject(id);
     const { setDefaultProjectStickiness } = useProjectApi();
-    const { defaultStickiness } = useDefaultProjectStickiness(id);
+    const { defaultStickiness } = useDefaultProjectSettings(id);
     const navigate = useNavigate();
 
     const {

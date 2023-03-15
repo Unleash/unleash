@@ -14,6 +14,10 @@ import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { MoreVert, WatchLater } from '@mui/icons-material';
 import type { FeatureSchema } from 'openapi';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
+import useProject from 'hooks/api/getters/useProject/useProject';
+import useToast from 'hooks/useToast';
+import { formatUnknownError } from 'utils/formatUnknownError';
 
 interface IMoreActionsProps {
     projectId: string;
@@ -23,11 +27,17 @@ interface IMoreActionsProps {
 const menuId = 'selection-actions-menu';
 
 export const MoreActions: VFC<IMoreActionsProps> = ({ projectId, data }) => {
+    const { refetch } = useProject(projectId);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const { staleFeatures } = useProjectApi();
+    const { setToastData, setToastApiError } = useToast();
+
     const open = Boolean(anchorEl);
+    const selectedIds = data.map(({ name }) => name);
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
     };
+
     const handleClose = () => {
         setAnchorEl(null);
     };
@@ -35,16 +45,34 @@ export const MoreActions: VFC<IMoreActionsProps> = ({ projectId, data }) => {
     const hasStale = data.some(({ stale }) => stale === true);
     const hasUnstale = data.some(({ stale }) => stale === false);
 
-    const onMarkAsStale = () => {
-        console.log('Mark as stale');
-        // TODO: Implement
-        handleClose();
+    const onMarkAsStale = async () => {
+        try {
+            handleClose();
+            await staleFeatures(projectId, selectedIds);
+            await refetch();
+            setToastData({
+                title: 'State updated',
+                text: 'Feature toggles marked as stale',
+                type: 'success',
+            });
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
     };
 
-    const onUnmarkAsStale = () => {
-        console.log('Un-mark as stale');
-        // TODO: Implement
-        handleClose();
+    const onUnmarkAsStale = async () => {
+        try {
+            handleClose();
+            await staleFeatures(projectId, selectedIds, false);
+            await refetch();
+            setToastData({
+                title: 'State updated',
+                text: 'Feature toggles unmarked as stale',
+                type: 'success',
+            });
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
     };
 
     return (
@@ -89,8 +117,10 @@ export const MoreActions: VFC<IMoreActionsProps> = ({ projectId, data }) => {
                                         <MenuItem
                                             onClick={onMarkAsStale}
                                             disabled={!hasAccess}
-                                            sx={{ borderRadius: theme => `${theme.shape.borderRadius}px` }}
-
+                                            sx={{
+                                                borderRadius: theme =>
+                                                    `${theme.shape.borderRadius}px`,
+                                            }}
                                         >
                                             <ListItemIcon>
                                                 <WatchLater />
@@ -109,7 +139,10 @@ export const MoreActions: VFC<IMoreActionsProps> = ({ projectId, data }) => {
                                         <MenuItem
                                             onClick={onUnmarkAsStale}
                                             disabled={!hasAccess}
-                                            sx={{ borderRadius: theme => `${theme.shape.borderRadius}px` }}
+                                            sx={{
+                                                borderRadius: theme =>
+                                                    `${theme.shape.borderRadius}px`,
+                                            }}
                                         >
                                             <ListItemIcon>
                                                 <WatchLater />

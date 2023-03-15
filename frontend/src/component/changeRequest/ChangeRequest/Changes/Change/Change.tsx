@@ -10,9 +10,9 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { Alert, Box, styled } from '@mui/material';
 
 import {
-    CodeSnippetPopover,
-    PopoverDiff,
-} from '../../CodeSnippetPopover/CodeSnippetPopover';
+    StrategyTooltipLink,
+    StrategyDiff,
+} from 'component/changeRequest/ChangeRequest/StrategyTooltipLink/StrategyTooltipLink';
 import { StrategyExecution } from '../../../../feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyExecution/StrategyExecution';
 import { ToggleStatusChange } from './ToggleStatusChange';
 import {
@@ -98,14 +98,14 @@ export const Change: FC<{
                 {change.action === 'addStrategy' && (
                     <>
                         <StrategyAddedChange discard={discard}>
-                            <CodeSnippetPopover change={change}>
-                                <PopoverDiff
+                            <StrategyTooltipLink change={change}>
+                                <StrategyDiff
                                     change={change}
                                     feature={feature.name}
                                     environmentName={changeRequest.environment}
                                     project={changeRequest.project}
                                 />
-                            </CodeSnippetPopover>
+                            </StrategyTooltipLink>
                         </StrategyAddedChange>
                         <StrategyExecution strategy={change.payload} />
                     </>
@@ -113,28 +113,28 @@ export const Change: FC<{
                 {change.action === 'deleteStrategy' && (
                     <StrategyDeletedChange discard={discard}>
                         {hasNameField(change.payload) && (
-                            <CodeSnippetPopover change={change}>
-                                <PopoverDiff
+                            <StrategyTooltipLink change={change}>
+                                <StrategyDiff
                                     change={change}
                                     feature={feature.name}
                                     environmentName={changeRequest.environment}
                                     project={changeRequest.project}
                                 />
-                            </CodeSnippetPopover>
+                            </StrategyTooltipLink>
                         )}
                     </StrategyDeletedChange>
                 )}
                 {change.action === 'updateStrategy' && (
                     <>
                         <StrategyEditedChange discard={discard}>
-                            <CodeSnippetPopover change={change}>
-                                <PopoverDiff
+                            <StrategyTooltipLink change={change}>
+                                <StrategyDiff
                                     change={change}
                                     feature={feature.name}
                                     environmentName={changeRequest.environment}
                                     project={changeRequest.project}
                                 />
-                            </CodeSnippetPopover>
+                            </StrategyTooltipLink>
                         </StrategyEditedChange>
                         <StrategyExecution strategy={change.payload} />
                     </>

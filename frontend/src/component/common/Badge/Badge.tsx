@@ -80,6 +80,7 @@ export const Badge: FC<IBadgeProps> = forwardRef(
         ref: ForwardedRef<HTMLDivElement>
     ) => (
         <StyledBadge
+            tabIndex={0}
             color={color}
             icon={icon}
             className={className}

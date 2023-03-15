@@ -44,6 +44,7 @@ const createSegment = (
     postData: object,
 ): Promise<unknown> => {
     const user = { email: 'test@example.com' } as User;
+    // TODO coupled with an enterprise feature
     return app.services.segmentService.create(postData, user);
 };
 

@@ -20,12 +20,13 @@ import { playgroundStrategyEvaluation } from '../../../lib/openapi/spec/playgrou
 import { PlaygroundSegmentSchema } from 'lib/openapi/spec/playground-segment-schema';
 import { GroupService } from '../../../lib/services/group-service';
 import { AccessService } from '../../../lib/services/access-service';
+import { ISegmentService } from '../../../lib/segments/segment-service-interface';
 
 let stores: IUnleashStores;
 let db: ITestDb;
 let service: PlaygroundService;
 let featureToggleService: FeatureToggleService;
-let segmentService: SegmentService;
+let segmentService: ISegmentService;
 
 beforeAll(async () => {
     const config = createTestConfig();
@@ -51,11 +52,11 @@ afterAll(async () => {
 });
 
 const cleanup = async () => {
-    await stores.segmentStore.deleteAll();
+    await stores.segmentStore.deleteAll(); // TODO coupled with an enterprise feature
     await stores.featureToggleStore.deleteAll();
     await stores.eventStore.deleteAll();
     await stores.featureStrategiesStore.deleteAll();
-    await stores.segmentStore.deleteAll();
+    await stores.segmentStore.deleteAll(); // TODO coupled with an enterprise feature
 };
 
 afterEach(cleanup);
@@ -82,11 +83,12 @@ export const seedDatabaseForPlaygroundTest = async (
 ): Promise<FeatureToggle[]> => {
     if (segments) {
         await Promise.all(
-            segments.map(async (segment, index) =>
-                database.stores.segmentStore.create(
-                    mapSegmentSchemaToISegment(segment, index),
-                    { username: 'test' },
-                ),
+            segments.map(
+                async (segment, index) =>
+                    database.stores.segmentStore.create(
+                        mapSegmentSchemaToISegment(segment, index),
+                        { username: 'test' },
+                    ), // TODO coupled with an enterprise feature
             ),
         );
     }
@@ -147,16 +149,17 @@ export const seedDatabaseForPlaygroundTest = async (
                                 featureName: feature.name,
                                 environment,
                                 strategyName: strategy.name,
-                                projectId: feature.project,
+                                projectId: feature.project!,
                             },
                         );
 
                         if (strategySegments) {
+                            // TODO coupled with an enterprise feature
                             await Promise.all(
                                 strategySegments.map((segmentId) =>
                                     database.stores.segmentStore.addToStrategy(
                                         segmentId,
-                                        strategy.id,
+                                        strategy.id!,
                                     ),
                                 ),
                             );

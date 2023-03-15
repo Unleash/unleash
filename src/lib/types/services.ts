@@ -24,7 +24,6 @@ import FeatureTagService from '../services/feature-tag-service';
 import ProjectHealthService from '../services/project-health-service';
 import ClientMetricsServiceV2 from '../services/client-metrics/metrics-service-v2';
 import UserSplashService from '../services/user-splash-service';
-import { SegmentService } from '../services/segment-service';
 import { OpenApiService } from '../services/openapi-service';
 import { ClientSpecService } from '../services/client-spec-service';
 import { PlaygroundService } from 'lib/services/playground-service';
@@ -41,6 +40,7 @@ import { AccountService } from '../services/account-service';
 import { SchedulerService } from '../services/scheduler-service';
 import { Knex } from 'knex';
 import ExportImportService from '../features/export-import-toggles/export-import-service';
+import { ISegmentService } from 'lib/segments/segment-service-interface';
 
 export interface IUnleashServices {
     accessService: AccessService;
@@ -76,7 +76,7 @@ export interface IUnleashServices {
     userService: UserService;
     versionService: VersionService;
     userSplashService: UserSplashService;
-    segmentService: SegmentService;
+    segmentService: ISegmentService;
     openApiService: OpenApiService;
     clientSpecService: ClientSpecService;
     patService: PatService;

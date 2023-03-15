@@ -139,7 +139,7 @@ export class ProxyRepository
 
     private async segmentsForToken(): Promise<Segment[]> {
         return mapSegmentsForClient(
-            await this.services.segmentService.getAll(),
+            await this.services.segmentService.getAll(), // TODO coupled with enterprise feature
         );
     }
 

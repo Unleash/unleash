@@ -39,6 +39,7 @@ const createFeatureToggle = (featureName: string, project = 'default') => {
 };
 
 const createSegment = async (segmentName: string) => {
+    // TODO coupled with an enterprise feature
     const segment = await app.services.segmentService.create(
         {
             name: segmentName,

@@ -50,7 +50,6 @@ import { DEFAULT_ENV } from '../util/constants';
 import { GLOBAL_ENV } from '../types/environment';
 import { ISegmentStore } from '../types/stores/segment-store';
 import { PartialSome } from '../types/partial';
-import { IFlagResolver } from 'lib/types';
 
 export interface IBackupOption {
     includeFeatureToggles: boolean;
@@ -93,14 +92,9 @@ export default class StateService {
 
     private segmentStore: ISegmentStore;
 
-    private flagResolver: IFlagResolver;
-
     constructor(
         stores: IUnleashStores,
-        {
-            getLogger,
-            flagResolver,
-        }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>,
+        { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
     ) {
         this.eventStore = stores.eventStore;
         this.toggleStore = stores.featureToggleStore;
@@ -113,7 +107,6 @@ export default class StateService {
         this.featureTagStore = stores.featureTagStore;
         this.environmentStore = stores.environmentStore;
         this.segmentStore = stores.segmentStore;
-        this.flagResolver = flagResolver;
         this.logger = getLogger('services/state-service.js');
     }
 
@@ -667,14 +660,14 @@ export default class StateService {
         dropBeforeImport: boolean,
     ): Promise<void> {
         if (dropBeforeImport) {
-            await this.segmentStore.deleteAll();
+            await this.segmentStore.deleteAll(); // TODO coupled with an enterprise feature
         }
 
         await Promise.all(
             segments.map((segment) =>
                 this.segmentStore.create(segment, { username: userName }),
             ),
-        );
+        ); // TODO coupled with an enterprise feature
     }
 
     async importFeatureStrategySegments(
@@ -687,7 +680,7 @@ export default class StateService {
             featureStrategySegments.map(({ featureStrategyId, segmentId }) =>
                 this.segmentStore.addToStrategy(segmentId, featureStrategyId),
             ),
-        );
+        ); // TODO coupled with an enterprise feature
     }
 
     async export(opts: IExportIncludeOptions): Promise<{
@@ -748,10 +741,10 @@ export default class StateService {
             includeFeatureToggles
                 ? this.featureEnvironmentStore.getAll()
                 : Promise.resolve([]),
-            includeSegments ? this.segmentStore.getAll() : Promise.resolve([]),
+            includeSegments ? this.segmentStore.getAll() : Promise.resolve([]), // TODO coupled with an enterprise feature
             includeSegments
                 ? this.segmentStore.getAllFeatureStrategySegments()
-                : Promise.resolve([]),
+                : Promise.resolve([]), // TODO coupled with an enterprise feature
         ]).then(
             ([
                 features,

@@ -133,7 +133,7 @@ export const createFakeFeatureToggleService = (
     const segmentService = new SegmentService(
         { segmentStore, featureStrategiesStore, eventStore },
         config,
-    );
+    ); // TODO coupled with an enterprise feature
     const featureToggleService = new FeatureToggleService(
         {
             featureStrategiesStore,

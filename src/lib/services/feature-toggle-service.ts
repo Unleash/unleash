@@ -71,7 +71,6 @@ import {
 } from '../util/validators/constraint-types';
 import { IContextFieldStore } from 'lib/types/stores/context-field-store';
 import { Saved, Unsaved } from '../types/saved';
-import { SegmentService } from './segment-service';
 import { SetStrategySortOrderSchema } from 'lib/openapi/spec/set-strategy-sort-order-schema';
 import { getDefaultStrategy } from '../util/feature-evaluator/helpers';
 import { AccessService } from './access-service';
@@ -82,6 +81,7 @@ import {
 } from '../types/permissions';
 import NoAccessError from '../error/no-access-error';
 import { IFeatureProjectUserParams } from '../routes/admin-api/project/project-features';
+import { ISegmentService } from 'lib/segments/segment-service-interface';
 
 interface IFeatureContext {
     featureName: string;
@@ -123,7 +123,7 @@ class FeatureToggleService {
 
     private contextFieldStore: IContextFieldStore;
 
-    private segmentService: SegmentService;
+    private segmentService: ISegmentService;
 
     private accessService: AccessService;
 
@@ -154,7 +154,7 @@ class FeatureToggleService {
             getLogger,
             flagResolver,
         }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>,
-        segmentService: SegmentService,
+        segmentService: ISegmentService,
         accessService: AccessService,
     ) {
         this.logger = getLogger('services/feature-toggle-service.ts');
@@ -352,7 +352,10 @@ class FeatureToggleService {
         const { featureName, projectId, environment } = context;
         await this.validateFeatureContext(context);
 
-        if (strategyConfig.constraints?.length > 0) {
+        if (
+            strategyConfig.constraints &&
+            strategyConfig.constraints.length > 0
+        ) {
             strategyConfig.constraints = await this.validateConstraints(
                 strategyConfig.constraints,
             );
@@ -383,7 +386,7 @@ class FeatureToggleService {
             const tags = await this.tagStore.getAllTagsForFeature(featureName);
             const segments = await this.segmentService.getByStrategy(
                 newFeatureStrategy.id,
-            );
+            ); // TODO coupled with enterprise feature
             const strategy = this.featureStrategyToPublic(
                 newFeatureStrategy,
                 segments,
@@ -445,7 +448,7 @@ class FeatureToggleService {
         this.validateFeatureStrategyContext(existingStrategy, context);
 
         if (existingStrategy.id === id) {
-            if (updates.constraints?.length > 0) {
+            if (updates.constraints && updates.constraints.length > 0) {
                 updates.constraints = await this.validateConstraints(
                     updates.constraints,
                 );
@@ -465,7 +468,7 @@ class FeatureToggleService {
 
             const segments = await this.segmentService.getByStrategy(
                 strategy.id,
-            );
+            ); // TODO coupled with enterprise feature
 
             // Store event!
             const tags = await this.tagStore.getAllTagsForFeature(featureName);
@@ -511,7 +514,7 @@ class FeatureToggleService {
             const tags = await this.tagStore.getAllTagsForFeature(featureName);
             const segments = await this.segmentService.getByStrategy(
                 strategy.id,
-            );
+            ); // TODO coupled with enterprise feature
             const data = this.featureStrategyToPublic(strategy, segments);
             const preData = this.featureStrategyToPublic(
                 existingStrategy,
@@ -610,7 +613,7 @@ class FeatureToggleService {
                 const segments =
                     (await this.segmentService.getByStrategy(strat.id)).map(
                         (segment) => segment.id,
-                    ) ?? [];
+                    ) ?? []; // TODO coupled with enterprise feature
                 result.push({
                     id: strat.id,
                     name: strat.strategyName,
@@ -927,7 +930,7 @@ class FeatureToggleService {
             strategyId,
         );
 
-        const segments = await this.segmentService.getByStrategy(strategyId);
+        const segments = await this.segmentService.getByStrategy(strategyId); // TODO coupled with enterprise feature
         let result: Saved<IStrategyConfig> = {
             id: strategy.id,
             name: strategy.strategyName,

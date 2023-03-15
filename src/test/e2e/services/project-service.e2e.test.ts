@@ -26,6 +26,16 @@ let featureToggleService: FeatureToggleService;
 let favoritesService: FavoritesService;
 let user;
 
+const isProjectUser = async (
+    userId: number,
+    projectName: string,
+    condition: boolean,
+) => {
+    expect(await projectService.isProjectUser(userId, projectName)).toBe(
+        condition,
+    );
+};
+
 beforeAll(async () => {
     db = await dbInit('project_service_serial', getLogger);
     stores = db.stores;
@@ -243,6 +253,8 @@ test('should get list of users with access to project', async () => {
     expect(users[0].name).toBe(user.name);
     expect(users[0].roleId).toBe(owner.id);
     expect(member).toBeTruthy();
+
+    await isProjectUser(users[0].id, project.id, true);
 });
 
 test('should add a member user to the project', async () => {
@@ -285,6 +297,19 @@ test('should add a member user to the project', async () => {
     expect(memberUsers[0].name).toBe(projectMember1.name);
     expect(memberUsers[1].id).toBe(projectMember2.id);
     expect(memberUsers[1].name).toBe(projectMember2.name);
+    expect(await projectService.getProjectUsers(project.id)).toStrictEqual([
+        { email: user.email, id: user.id, username: user.username },
+        {
+            email: projectMember1.email,
+            id: projectMember1.id,
+            username: projectMember1.username,
+        },
+        {
+            email: projectMember2.email,
+            id: projectMember2.id,
+            username: projectMember2.username,
+        },
+    ]);
 });
 
 test('should add admin users to the project', async () => {
@@ -328,6 +353,9 @@ test('should add admin users to the project', async () => {
     expect(adminUsers[1].name).toBe(projectAdmin1.name);
     expect(adminUsers[2].id).toBe(projectAdmin2.id);
     expect(adminUsers[2].name).toBe(projectAdmin2.name);
+    await isProjectUser(adminUsers[0].id, project.id, true);
+    await isProjectUser(adminUsers[1].id, project.id, true);
+    await isProjectUser(adminUsers[2].id, project.id, true);
 });
 
 test('add user should fail if user already have access', async () => {

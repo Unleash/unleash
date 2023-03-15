@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { IUnleashConfig } from '../../types/option';
-import { IFlagResolver, IUnleashServices } from '../../types';
+import { IUnleashServices } from '../../types';
 import { Logger } from '../../logger';
 import Controller from '../controller';
 import { extractUsername } from '../../util/extract-user';
@@ -23,8 +23,6 @@ export default class ArchiveController extends Controller {
 
     private openApiService: OpenApiService;
 
-    private flagResolver: IFlagResolver;
-
     constructor(
         config: IUnleashConfig,
         {
@@ -36,7 +34,6 @@ export default class ArchiveController extends Controller {
         this.logger = config.getLogger('/admin-api/archive.js');
         this.featureService = featureToggleServiceV2;
         this.openApiService = openApiService;
-        this.flagResolver = config.flagResolver;
 
         this.route({
             method: 'get',
@@ -77,7 +74,7 @@ export default class ArchiveController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Archive'],
-                    operationId: 'deleteFeatures',
+                    operationId: 'deleteFeature',
                     responses: { 200: emptyResponse },
                 }),
             ],

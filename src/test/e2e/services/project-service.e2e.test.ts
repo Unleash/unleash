@@ -206,6 +206,7 @@ test('should update project', async () => {
         id: 'test-update',
         name: 'New name',
         description: 'Blah longer desc',
+        mode: 'open' as const,
     };
 
     await projectService.createProject(project, user);
@@ -655,14 +656,14 @@ test('should add a user to the project with a custom role', async () => {
             {
                 id: 2,
                 name: 'CREATE_FEATURE',
-                environment: null,
+                environment: undefined,
                 displayName: 'Create Feature Toggles',
                 type: 'project',
             },
             {
                 id: 8,
                 name: 'DELETE_FEATURE',
-                environment: null,
+                environment: undefined,
                 displayName: 'Delete Feature Toggles',
                 type: 'project',
             },
@@ -711,14 +712,14 @@ test('should delete role entries when deleting project', async () => {
             {
                 id: 2,
                 name: 'CREATE_FEATURE',
-                environment: null,
+                environment: undefined,
                 displayName: 'Create Feature Toggles',
                 type: 'project',
             },
             {
                 id: 8,
                 name: 'DELETE_FEATURE',
-                environment: null,
+                environment: undefined,
                 displayName: 'Delete Feature Toggles',
                 type: 'project',
             },
@@ -757,14 +758,14 @@ test('should change a users role in the project', async () => {
             {
                 id: 2,
                 name: 'CREATE_FEATURE',
-                environment: null,
+                environment: undefined,
                 displayName: 'Create Feature Toggles',
                 type: 'project',
             },
             {
                 id: 8,
                 name: 'DELETE_FEATURE',
-                environment: null,
+                environment: undefined,
                 displayName: 'Delete Feature Toggles',
                 type: 'project',
             },
@@ -940,7 +941,7 @@ test('Should allow bulk update of group permissions', async () => {
             {
                 id: 2,
                 name: 'CREATE_FEATURE',
-                environment: null,
+                environment: undefined,
                 displayName: 'Create Feature Toggles',
                 type: 'project',
             },
@@ -973,7 +974,7 @@ test('Should bulk update of only users', async () => {
             {
                 id: 2,
                 name: 'CREATE_FEATURE',
-                environment: null,
+                environment: undefined,
                 displayName: 'Create Feature Toggles',
                 type: 'project',
             },
@@ -1012,7 +1013,7 @@ test('Should allow bulk update of only groups', async () => {
             {
                 id: 2,
                 name: 'CREATE_FEATURE',
-                environment: null,
+                environment: undefined,
                 displayName: 'Create Feature Toggles',
                 type: 'project',
             },

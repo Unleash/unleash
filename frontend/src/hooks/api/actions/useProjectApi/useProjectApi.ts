@@ -202,6 +202,19 @@ const useProjectApi = () => {
         return makeRequest(req.caller, req.id);
     };
 
+    const setDefaultProjectStickiness = (
+        projectId: string,
+        stickiness: string
+    ) => {
+        const path = `api/admin/projects/${projectId}/stickiness`;
+        const req = createRequest(path, {
+            method: 'POST',
+            body: JSON.stringify({ stickiness }),
+        });
+
+        return makeRequest(req.caller, req.id);
+    };
+
     return {
         createProject,
         validateId,
@@ -217,6 +230,7 @@ const useProjectApi = () => {
         errors,
         loading,
         searchProjectUser,
+        setDefaultProjectStickiness,
     };
 };
 

@@ -46,15 +46,15 @@ test('Should store and retrieve default project stickiness', async () => {
             },
         },
     });
-    const reqBody = { stickiness: 'userId' };
+    const reqBody = { defaultStickiness: 'userId' };
 
     await appWithDefaultStickiness.request
-        .post('/api/admin/projects/default/stickiness')
+        .post('/api/admin/projects/default/settings')
         .send(reqBody)
         .expect(200);
 
     const { body } = await appWithDefaultStickiness.request
-        .get('/api/admin/projects/default/stickiness')
+        .get('/api/admin/projects/default/settings')
         .expect(200)
         .expect('Content-Type', /json/);
 

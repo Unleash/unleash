@@ -7469,6 +7469,37 @@ If the provided project does not exist, the list of events will be empty.",
       },
     },
     "/api/admin/projects/{projectId}/settings": {
+      "get": {
+        "operationId": "getProjectSettings",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/projectSettingsSchema",
+                },
+              },
+            },
+            "description": "projectSettingsSchema",
+          },
+          "404": {
+            "description": "This response has no body.",
+          },
+        },
+        "tags": [
+          "Projects",
+        ],
+      },
       "post": {
         "operationId": "setProjectSettings",
         "parameters": [
@@ -7534,39 +7565,6 @@ If the provided project does not exist, the list of events will be empty.",
         "summary": "Stales a list of features",
         "tags": [
           "Features",
-        ],
-      },
-    },
-    "/api/admin/projects/{projectId}/stickiness": {
-      "get": {
-        "operationId": "getProjectSettings",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "projectId",
-            "required": true,
-            "schema": {
-              "type": "string",
-            },
-          },
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/projectSettingsSchema",
-                },
-              },
-            },
-            "description": "projectSettingsSchema",
-          },
-          "404": {
-            "description": "This response has no body.",
-          },
-        },
-        "tags": [
-          "Projects",
         ],
       },
     },

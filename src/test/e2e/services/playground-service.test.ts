@@ -52,11 +52,11 @@ afterAll(async () => {
 });
 
 const cleanup = async () => {
-    await stores.segmentStore.deleteAll(); // TODO coupled with an enterprise feature
+    await stores.segmentStore.deleteAll();
     await stores.featureToggleStore.deleteAll();
     await stores.eventStore.deleteAll();
     await stores.featureStrategiesStore.deleteAll();
-    await stores.segmentStore.deleteAll(); // TODO coupled with an enterprise feature
+    await stores.segmentStore.deleteAll();
 };
 
 afterEach(cleanup);
@@ -83,12 +83,11 @@ export const seedDatabaseForPlaygroundTest = async (
 ): Promise<FeatureToggle[]> => {
     if (segments) {
         await Promise.all(
-            segments.map(
-                async (segment, index) =>
-                    database.stores.segmentStore.create(
-                        mapSegmentSchemaToISegment(segment, index),
-                        { username: 'test' },
-                    ), // TODO coupled with an enterprise feature
+            segments.map(async (segment, index) =>
+                database.stores.segmentStore.create(
+                    mapSegmentSchemaToISegment(segment, index),
+                    { username: 'test' },
+                ),
             ),
         );
     }
@@ -154,7 +153,6 @@ export const seedDatabaseForPlaygroundTest = async (
                         );
 
                         if (strategySegments) {
-                            // TODO coupled with an enterprise feature
                             await Promise.all(
                                 strategySegments.map((segmentId) =>
                                     database.stores.segmentStore.addToStrategy(

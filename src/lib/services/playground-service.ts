@@ -42,7 +42,7 @@ export class PlaygroundService {
                 },
                 true,
             ),
-            this.segmentService.getActive(), // TODO coupled with an enterprise feature
+            this.segmentService.getActive(),
         ]);
 
         const [head, ...rest] = features;

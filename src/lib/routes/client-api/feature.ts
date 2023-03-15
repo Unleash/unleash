@@ -124,7 +124,7 @@ export default class FeatureController extends Controller {
     ): Promise<[FeatureConfigurationClient[], ISegment[]]> {
         return Promise.all([
             this.featureToggleServiceV2.getClientFeatures(query),
-            this.segmentService.getActive(), // TODO coupled with an enterprise feature
+            this.segmentService.getActive(),
         ]);
     }
 

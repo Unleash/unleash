@@ -11,11 +11,12 @@ import { GroupService } from '../../../lib/services/group-service';
 import EnvironmentService from '../../../lib/services/environment-service';
 import { NoAccessError } from '../../../lib/error';
 import { SKIP_CHANGE_REQUEST } from '../../../lib/types';
+import { ISegmentService } from '../../../lib/segments/segment-service-interface';
 
 let stores;
 let db;
 let service: FeatureToggleService;
-let segmentService: SegmentService;
+let segmentService: ISegmentService;
 let environmentService: EnvironmentService;
 let unleashConfig;
 

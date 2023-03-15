@@ -20,6 +20,7 @@ import { DEFAULT_ENV } from '../../util';
 import {
     ContextFieldSchema,
     ImportTogglesSchema,
+    UpsertSegmentSchema,
     VariantsSchema,
 } from '../../openapi';
 import User from '../../types/user';
@@ -117,7 +118,7 @@ const createProject = async () => {
         .expect(200);
 };
 
-const createSegment = (postData: object): Promise<ISegment> => {
+const createSegment = (postData: UpsertSegmentSchema): Promise<ISegment> => {
     return app.services.segmentService.create(postData, {
         email: 'test@example.com',
     });

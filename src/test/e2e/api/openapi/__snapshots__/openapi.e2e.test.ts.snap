@@ -3993,6 +3993,32 @@ Stats are divided into current and previous **windows**.
         ],
         "type": "object",
       },
+      "upsertSegmentSchema": {
+        "properties": {
+          "constraints": {
+            "items": {
+              "$ref": "#/components/schemas/constraintSchema",
+            },
+            "type": "array",
+          },
+          "description": {
+            "nullable": true,
+            "type": "string",
+          },
+          "name": {
+            "type": "string",
+          },
+          "project": {
+            "nullable": true,
+            "type": "string",
+          },
+        },
+        "required": [
+          "name",
+          "constraints",
+        ],
+        "type": "object",
+      },
       "upsertStrategySchema": {
         "properties": {
           "description": {

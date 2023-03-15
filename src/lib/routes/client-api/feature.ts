@@ -10,7 +10,6 @@ import NotFoundError from '../../error/notfound-error';
 import { IAuthRequest } from '../unleash-types';
 import ApiUser from '../../types/api-user';
 import { ALL, isAllProjects } from '../../types/models/api-token';
-import { SegmentService } from '../../services/segment-service';
 import { FeatureConfigurationClient } from '../../types/stores/feature-strategies-store';
 import { ClientSpecService } from '../../services/client-spec-service';
 import { OpenApiService } from '../../services/openapi-service';
@@ -25,6 +24,7 @@ import {
     clientFeaturesSchema,
     ClientFeaturesSchema,
 } from '../../openapi/spec/client-features-schema';
+import { ISegmentService } from 'lib/segments/segment-service-interface';
 
 const version = 2;
 
@@ -38,7 +38,7 @@ export default class FeatureController extends Controller {
 
     private featureToggleServiceV2: FeatureToggleService;
 
-    private segmentService: SegmentService;
+    private segmentService: ISegmentService;
 
     private clientSpecService: ClientSpecService;
 

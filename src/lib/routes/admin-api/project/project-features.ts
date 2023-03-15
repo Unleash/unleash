@@ -39,11 +39,7 @@ import {
     UpdateFeatureSchema,
     UpdateFeatureStrategySchema,
 } from '../../../openapi';
-import {
-    OpenApiService,
-    SegmentService,
-    FeatureToggleService,
-} from '../../../services';
+import { OpenApiService, FeatureToggleService } from '../../../services';
 import { querySchema } from '../../../schema/feature-schema';
 import NotFoundError from '../../../error/notfound-error';
 import { BatchStaleSchema } from '../../../openapi/spec/batch-stale-schema';
@@ -97,24 +93,17 @@ export default class ProjectFeaturesController extends Controller {
 
     private openApiService: OpenApiService;
 
-    private segmentService: SegmentService;
-
     private flagResolver: IFlagResolver;
 
     private readonly logger: Logger;
 
     constructor(
         config: IUnleashConfig,
-        {
-            featureToggleServiceV2,
-            openApiService,
-            segmentService,
-        }: ProjectFeaturesServices,
+        { featureToggleServiceV2, openApiService }: ProjectFeaturesServices,
     ) {
         super(config);
         this.featureService = featureToggleServiceV2;
         this.openApiService = openApiService;
-        this.segmentService = segmentService;
         this.flagResolver = config.flagResolver;
         this.logger = config.getLogger('/admin-api/project/features.ts');
 

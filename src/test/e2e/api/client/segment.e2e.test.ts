@@ -14,6 +14,7 @@ import {
 } from '../../../../lib/util/segments';
 import { collectIds } from '../../../../lib/util/collect-ids';
 import { arraysHaveSameItems } from '../../../../lib/util/arraysHaveSameItems';
+import { UpsertSegmentSchema } from 'lib/openapi';
 
 let db: ITestDb;
 let app: IUnleashTest;
@@ -39,7 +40,7 @@ const fetchClientFeatures = (): Promise<IFeatureToggleClient[]> => {
         .then((res) => res.body.features);
 };
 
-const createSegment = (postData: object): Promise<unknown> => {
+const createSegment = (postData: UpsertSegmentSchema): Promise<unknown> => {
     return app.services.segmentService.create(postData, {
         email: 'test@example.com',
     });

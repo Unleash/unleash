@@ -61,7 +61,7 @@ export const projectSchema = {
             example: 'open',
             nullable: true,
             description:
-                'A mode of the project affecting what actions are possible in this project.',
+                'A mode of the project affecting what actions are possible in this project. During a rollout of project modes this feature can be optional or `null`',
         },
     },
     components: {},

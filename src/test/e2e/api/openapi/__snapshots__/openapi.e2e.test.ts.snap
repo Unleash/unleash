@@ -2837,7 +2837,7 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "number",
           },
           "mode": {
-            "description": "A mode of the project affecting what actions are possible in this project.",
+            "description": "A mode of the project affecting what actions are possible in this project. During a rollout of project modes this feature can be optional or \`null\`",
             "enum": [
               "open",
               "protected",

@@ -36,6 +36,7 @@ test('should return instance statistics with correct number of projects', async 
         id: 'test',
         name: 'Test',
         description: 'lorem',
+        mode: 'open' as const,
     });
 
     return app.request

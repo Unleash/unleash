@@ -154,6 +154,7 @@ test('Can roundtrip. I.e. export and then import', async () => {
         name: projectId,
         id: projectId,
         description: 'Project for export',
+        mode: 'open' as const,
     });
     await app.services.environmentService.addEnvironmentToProject(
         environment,
@@ -201,6 +202,7 @@ test('Roundtrip with tags works', async () => {
         name: projectId,
         id: projectId,
         description: 'Project for export',
+        mode: 'open' as const,
     });
     await app.services.environmentService.addEnvironmentToProject(
         environment,
@@ -265,6 +267,7 @@ test('Roundtrip with strategies in multiple environments works', async () => {
         name: projectId,
         id: projectId,
         description: 'Project for export',
+        mode: 'open' as const,
     });
 
     await app.services.featureToggleServiceV2.createFeatureToggle(
@@ -364,6 +367,7 @@ test(`should not delete api_tokens on import when drop-flag is set`, async () =>
         name: projectId,
         id: projectId,
         description: 'Project for export',
+        mode: 'open' as const,
     });
     await app.services.environmentService.addEnvironmentToProject(
         environment,

@@ -31,10 +31,12 @@ const EditProject = () => {
         projectName,
         projectDesc,
         projectStickiness,
+        projectMode,
         setProjectId,
         setProjectName,
         setProjectDesc,
         setProjectStickiness,
+        setProjectMode,
         getProjectPayload,
         clearErrors,
         validateProjectId,
@@ -44,7 +46,8 @@ const EditProject = () => {
         id,
         project.name,
         project.description,
-        defaultStickiness
+        defaultStickiness,
+        project.mode
     );
 
     const formatApiCode = () => {
@@ -111,9 +114,11 @@ const EditProject = () => {
                 projectId={projectId}
                 setProjectId={setProjectId}
                 projectName={projectName}
+                projectMode={projectMode}
                 setProjectName={setProjectName}
                 projectStickiness={projectStickiness}
                 setProjectStickiness={setProjectStickiness}
+                setProjectMode={setProjectMode}
                 projectDesc={projectDesc}
                 setProjectDesc={setProjectDesc}
                 mode="Edit"

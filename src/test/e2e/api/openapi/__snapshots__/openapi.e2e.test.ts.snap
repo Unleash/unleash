@@ -1859,6 +1859,16 @@ exports[`should serve the OpenAPI spec 1`] = `
           "members": {
             "type": "number",
           },
+          "mode": {
+            "description": "A mode of the project affecting what actions are possible in this project. During a rollout of project modes this feature can be optional or \`null\`",
+            "enum": [
+              "open",
+              "protected",
+            ],
+            "example": "open",
+            "nullable": true,
+            "type": "string",
+          },
           "name": {
             "type": "string",
           },
@@ -1911,6 +1921,16 @@ exports[`should serve the OpenAPI spec 1`] = `
           },
           "members": {
             "type": "number",
+          },
+          "mode": {
+            "description": "A mode of the project affecting what actions are possible in this project. During a rollout of project modes this feature can be optional or \`null\`",
+            "enum": [
+              "open",
+              "protected",
+            ],
+            "example": "open",
+            "nullable": true,
+            "type": "string",
           },
           "name": {
             "type": "string",
@@ -2771,6 +2791,15 @@ exports[`should serve the OpenAPI spec 1`] = `
             "example": 4,
             "type": "number",
           },
+          "mode": {
+            "description": "A mode of the project affecting what actions are possible in this project",
+            "enum": [
+              "open",
+              "protected",
+            ],
+            "example": "open",
+            "type": "string",
+          },
           "name": {
             "description": "The name of this project",
             "example": "dx-squad",
@@ -2837,13 +2866,12 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "number",
           },
           "mode": {
-            "description": "A mode of the project affecting what actions are possible in this project. During a rollout of project modes this feature can be optional or \`null\`",
+            "description": "A mode of the project affecting what actions are possible in this project",
             "enum": [
               "open",
               "protected",
             ],
             "example": "open",
-            "nullable": true,
             "type": "string",
           },
           "name": {
@@ -2909,11 +2937,6 @@ Stats are divided into current and previous **windows**.
             "example": 10,
             "type": "number",
           },
-          "avgTimeToProdPastWindow": {
-            "description": "The average time from when a feature was created to when it was enabled in the "production" environment during the previous window",
-            "example": 10,
-            "type": "number",
-          },
           "createdCurrentWindow": {
             "description": "The number of feature toggles created during the current window",
             "example": 15,
@@ -2942,7 +2965,6 @@ Stats are divided into current and previous **windows**.
         },
         "required": [
           "avgTimeToProdCurrentWindow",
-          "avgTimeToProdPastWindow",
           "createdCurrentWindow",
           "createdPastWindow",
           "archivedCurrentWindow",

@@ -87,7 +87,7 @@ export const ActionsCell: VFC<IActionsCellProps> = ({
                 disableScrollLock={true}
                 PaperProps={{
                     sx: theme => ({
-                        borderRadius: theme.shape.borderRadius,
+                        borderRadius: `${theme.shape.borderRadius}px`,
                         padding: theme.spacing(1, 1.5),
                     }),
                 }}

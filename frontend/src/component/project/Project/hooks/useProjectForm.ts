@@ -7,7 +7,8 @@ const useProjectForm = (
     initialProjectId = '',
     initialProjectName = '',
     initialProjectDesc = '',
-    initialProjectStickiness = 'default'
+    initialProjectStickiness = 'default',
+    initialProjectMode = 'open'
 ) => {
     const [projectId, setProjectId] = useState(initialProjectId);
     const { defaultStickiness } = useDefaultProjectSettings(projectId);
@@ -17,6 +18,7 @@ const useProjectForm = (
     const [projectStickiness, setProjectStickiness] = useState(
         defaultStickiness || initialProjectStickiness
     );
+    const [projectMode, setProjectMode] = useState(initialProjectMode);
     const [errors, setErrors] = useState({});
 
     const { validateId } = useProjectApi();
@@ -33,12 +35,17 @@ const useProjectForm = (
         setProjectDesc(initialProjectDesc);
     }, [initialProjectDesc]);
 
+    useEffect(() => {
+        setProjectMode(initialProjectMode);
+    }, [initialProjectMode]);
+
     const getProjectPayload = () => {
         return {
             id: projectId,
             name: projectName,
             description: projectDesc,
             projectStickiness,
+            mode: projectMode,
         };
     };
 
@@ -74,10 +81,12 @@ const useProjectForm = (
         projectName,
         projectDesc,
         projectStickiness,
+        projectMode,
         setProjectId,
         setProjectName,
         setProjectDesc,
         setProjectStickiness,
+        setProjectMode,
         getProjectPayload,
         validateName,
         validateProjectId,

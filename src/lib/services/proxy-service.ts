@@ -77,21 +77,6 @@ export class ProxyService {
             }));
     }
 
-    async getAllProxyFeatures(
-        token: ApiUser,
-        context: Context,
-    ): Promise<ProxyFeatureSchema[]> {
-        const client = await this.clientForProxyToken(token);
-        const definitions = client.getFeatureToggleDefinitions() || [];
-
-        return definitions.map((feature) => ({
-            name: feature.name,
-            enabled: Boolean(feature.enabled),
-            variant: client.forceGetVariant(feature.name, context),
-            impressionData: Boolean(feature.impressionData),
-        }));
-    }
-
     async registerProxyMetrics(
         token: ApiUser,
         metrics: ClientMetricsSchema,

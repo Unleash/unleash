@@ -65,7 +65,6 @@ type Count = number;
 
 export interface IProjectStats {
     avgTimeToProdCurrentWindow: Days;
-    avgTimeToProdPastWindow: Days;
     createdCurrentWindow: Count;
     createdPastWindow: Count;
     archivedCurrentWindow: Count;
@@ -166,7 +165,7 @@ export default class ProjectService {
     }
 
     async createProject(
-        newProject: Pick<IProject, 'id' | 'name'>,
+        newProject: Pick<IProject, 'id' | 'name' | 'mode'>,
         user: IUser,
     ): Promise<IProject> {
         const data = await projectSchema.validateAsync(newProject);
@@ -679,6 +678,12 @@ export default class ProjectService {
             project: projectId,
         });
 
+        const archivedFeatures = await this.featureToggleStore.getAll({
+            archived: true,
+            type: 'release',
+            project: projectId,
+        });
+
         const dateMinusThirtyDays = subDays(new Date(), 30).toISOString();
         const dateMinusSixtyDays = subDays(new Date(), 60).toISOString();
 
@@ -743,54 +748,24 @@ export default class ProjectService {
         // Get all events for features that correspond to feature toggle environment ON
         // Filter out events that are not a production evironment
 
-        const eventsCurrentWindow = await this.eventStore.query([
-            {
-                op: 'forFeatures',
-                parameters: {
-                    features: features.map((feature) => feature.name),
-                    environments: productionEnvironments.map((env) => env.name),
-                    type: FEATURE_ENVIRONMENT_ENABLED,
-                    projectId,
-                },
-            },
-            {
-                op: 'beforeDate',
-                parameters: {
-                    dateAccessor: 'created_at',
-                    date: dateMinusThirtyDays,
-                },
-            },
-        ]);
+        const allFeatures = [...features, ...archivedFeatures];
 
-        const eventsPastWindow = await this.eventStore.query([
+        const eventsData = await this.eventStore.query([
             {
                 op: 'forFeatures',
                 parameters: {
-                    features: features.map((feature) => feature.name),
+                    features: allFeatures.map((feature) => feature.name),
                     environments: productionEnvironments.map((env) => env.name),
                     type: FEATURE_ENVIRONMENT_ENABLED,
                     projectId,
-                },
-            },
-            {
-                op: 'betweenDate',
-                parameters: {
-                    dateAccessor: 'created_at',
-                    range: [dateMinusSixtyDays, dateMinusThirtyDays],
                 },
             },
         ]);
 
         const currentWindowTimeToProdReadModel = new TimeToProduction(
-            features,
+            allFeatures,
             productionEnvironments,
-            eventsCurrentWindow,
-        );
-
-        const pastWindowTimeToProdReadModel = new TimeToProduction(
-            features,
-            productionEnvironments,
-            eventsPastWindow,
+            eventsData,
         );
 
         const projectMembersAddedCurrentWindow =
@@ -804,8 +779,6 @@ export default class ProjectService {
             updates: {
                 avgTimeToProdCurrentWindow:
                     currentWindowTimeToProdReadModel.calculateAverageTimeToProd(),
-                avgTimeToProdPastWindow:
-                    pastWindowTimeToProdReadModel.calculateAverageTimeToProd(),
                 createdCurrentWindow: createdCurrentWindow.length,
                 createdPastWindow: createdPastWindow.length,
                 archivedCurrentWindow: archivedCurrentWindow.length,
@@ -853,6 +826,7 @@ export default class ProjectService {
             stats: projectStats,
             name: project.name,
             description: project.description,
+            mode: project.mode,
             health: project.health || 0,
             favorite: favorite,
             updatedAt: project.updatedAt,

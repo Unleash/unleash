@@ -3,7 +3,7 @@ import { useContext, useState } from 'react';
 import { Button, Chip, Divider, styled } from '@mui/material';
 import useFeatureTags from 'hooks/api/getters/useFeatureTags/useFeatureTags';
 import { Add, Cancel } from '@mui/icons-material';
-import { ManageTagDialog } from 'component/feature/FeatureView/FeatureOverview/AddTagDialog/AddTagDialog';
+import { ManageTagsDialog } from 'component/feature/FeatureView/FeatureOverview/ManageTagsDialog/ManageTagsDialog';
 import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import AccessContext from 'contexts/AccessContext';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
@@ -120,7 +120,7 @@ export const FeatureOverviewSidePanelTags = ({
                     </>
                 }
             />
-            <ManageTagDialog open={openTagDialog} setOpen={setOpenTagDialog} />
+            <ManageTagsDialog open={openTagDialog} setOpen={setOpenTagDialog} />
             <Dialogue
                 open={showDelDialog}
                 primaryButtonText="Delete tag"

@@ -173,6 +173,8 @@ export interface IFeatureOverview {
     environments: IEnvironmentOverview[];
 }
 
+export type ProjectMode = 'open' | 'protected';
+
 export interface IProjectOverview {
     name: string;
     description: string;
@@ -184,7 +186,7 @@ export interface IProjectOverview {
     favorite?: boolean;
     updatedAt?: Date;
     stats?: IProjectStats;
-    mode: 'open' | 'protected';
+    mode: ProjectMode;
 }
 
 export interface IProjectHealthReport extends IProjectOverview {
@@ -369,7 +371,6 @@ export interface IProject {
     changeRequestsEnabled?: boolean;
     mode: ProjectMode;
 }
-export type ProjectMode = 'open' | 'protected';
 
 export interface ICustomRole {
     id: number;

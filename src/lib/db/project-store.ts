@@ -2,7 +2,12 @@ import { Knex } from 'knex';
 import { Logger, LogProvider } from '../logger';
 
 import NotFoundError from '../error/notfound-error';
-import { IEnvironment, IProject, IProjectWithCount } from '../types/model';
+import {
+    IEnvironment,
+    IProject,
+    IProjectWithCount,
+    ProjectMode,
+} from '../types/model';
 import {
     IProjectHealthUpdate,
     IProjectInsert,
@@ -197,7 +202,7 @@ class ProjectStore implements IProjectStore {
     }
 
     async create(
-        project: IProjectInsert & { mode: 'open' | 'protected' },
+        project: IProjectInsert & { mode: ProjectMode },
     ): Promise<IProject> {
         const row = await this.db(TABLE)
             .insert(this.fieldToRow(project))

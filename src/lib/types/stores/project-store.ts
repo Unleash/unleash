@@ -2,7 +2,12 @@ import {
     IEnvironmentProjectLink,
     IProjectMembersCount,
 } from '../../db/project-store';
-import { IEnvironment, IProject, IProjectWithCount } from '../model';
+import {
+    IEnvironment,
+    IProject,
+    IProjectWithCount,
+    ProjectMode,
+} from '../model';
 import { Store } from './store';
 
 export interface IProjectInsert {
@@ -11,7 +16,7 @@ export interface IProjectInsert {
     description: string;
     updatedAt?: Date;
     changeRequestsEnabled?: boolean;
-    mode: 'open' | 'protected';
+    mode: ProjectMode;
 }
 
 export interface IProjectArchived {

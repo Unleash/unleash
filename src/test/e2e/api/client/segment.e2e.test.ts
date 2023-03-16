@@ -14,12 +14,15 @@ import {
 } from '../../../../lib/util/segments';
 import { collectIds } from '../../../../lib/util/collect-ids';
 import { arraysHaveSameItems } from '../../../../lib/util/arraysHaveSameItems';
-import { UpsertSegmentSchema } from 'lib/openapi';
+import {
+    CreateFeatureSchema,
+    CreateFeatureStrategySchema,
+    UpsertSegmentSchema,
+} from 'lib/openapi';
 
 let db: ITestDb;
 let app: IUnleashTest;
 
-const FEATURES_ADMIN_BASE_PATH = '/api/admin/features';
 const FEATURES_CLIENT_BASE_PATH = '/api/client/features';
 
 const fetchSegments = (): Promise<ISegment[]> => {
@@ -28,7 +31,7 @@ const fetchSegments = (): Promise<ISegment[]> => {
 
 const fetchFeatures = (): Promise<IFeatureToggleClient[]> => {
     return app.request
-        .get(FEATURES_ADMIN_BASE_PATH)
+        .get(`/api/admin/features`)
         .expect(200)
         .then((res) => res.body.features);
 };
@@ -46,14 +49,33 @@ const createSegment = (postData: UpsertSegmentSchema): Promise<unknown> => {
     });
 };
 
-const createFeatureToggle = (
-    postData: object,
+const mockStrategy = () => {
+    return {
+        name: randomId(),
+        parameters: {},
+        constraints: [],
+    };
+};
+
+const createFeatureToggle = async (
+    feature: CreateFeatureSchema,
+    strategies: CreateFeatureStrategySchema[] = [mockStrategy()],
+    environment = 'default',
     expectStatusCode = 201,
-): Promise<unknown> => {
-    return app.request
-        .post(FEATURES_ADMIN_BASE_PATH)
-        .send(postData)
+    project = 'default',
+): Promise<void> => {
+    await app.request
+        .post(`/api/admin/projects/${project}/features`)
+        .send(feature)
         .expect(expectStatusCode);
+    for (const strategy of strategies) {
+        await app.request
+            .post(
+                `/api/admin/projects/${project}/features/${feature.name}/environments/${environment}/strategies`,
+            )
+            .send(strategy)
+            .expect(200);
+    }
 };
 
 const addSegmentToStrategy = (
@@ -63,10 +85,9 @@ const addSegmentToStrategy = (
     return app.services.segmentService.addToStrategy(segmentId, strategyId);
 };
 
-const mockFeatureToggle = (): object => {
+const mockFeatureToggle = () => {
     return {
         name: randomId(),
-        strategies: [{ name: randomId(), constraints: [], parameters: {} }],
     };
 };
 

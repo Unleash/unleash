@@ -67,7 +67,7 @@ export default createTheme({
 
     palette: {
         common: {
-            white: colors.grey[50],  // Tooltips text color // Switch base (OFF) // Text color
+            white: colors.grey[50], // Tooltips text color // Switch base (OFF) // Text color
             black: colors.grey[900], // Switch track (OFF)
         },
         text: {
@@ -111,7 +111,7 @@ export default createTheme({
             contrastText: colors.grey[900], // Color used for text inside alert
         },
         error: {
-            main: colors.red[700],  // used on error buttons // used on icons on these elements
+            main: colors.red[700], // used on error buttons // used on icons on these elements
             light: colors.red[50],
             dark: colors.red[800], // Color used for text
             border: colors.red[300],
@@ -212,10 +212,10 @@ export default createTheme({
             primary: colors.purple[100],
         },
 
-         /**
+        /**
          * For Environment Accordion.
          */
-         envAccordion: {
+        envAccordion: {
             disabled: colors.grey[100],
             expanded: colors.grey[200],
         },
@@ -232,16 +232,24 @@ export default createTheme({
             // 500: '#A6000E',
             600: colors.grey[800], // slider tooltip background
             700: colors.grey[800], // Dark tooltip background
-            // 800: '#A6000E', 
+            // 800: '#A6000E',
             // 900: '#A6000E',
             // A100: '#A6000E',
             // A200: '#A6000E',
             // A400: '#A6000E',
             // A700: '#A6000E',
-        }
+        },
     },
 
     components: {
+        MuiCssBaseline: {
+            styleOverrides: {
+                '.skeleton::before': {
+                    backgroundColor: '#e2e8f0',
+                },
+            },
+        },
+
         // Links
         MuiLink: {
             styleOverrides: {
@@ -411,8 +419,14 @@ export default createTheme({
                         borderRadius: theme.shape.borderRadiusLarge,
                     },
                     '&.environment-accordion.Mui-expanded': {
-                        outline: `2px solid ${alpha(theme.palette.background.alternative, 0.6)}`,
-                        boxShadow: `0px 2px 8px ${alpha(theme.palette.primary.main, 0.2)}`,
+                        outline: `2px solid ${alpha(
+                            theme.palette.background.alternative,
+                            0.6
+                        )}`,
+                        boxShadow: `0px 2px 8px ${alpha(
+                            theme.palette.primary.main,
+                            0.2
+                        )}`,
                     },
                 }),
             },
@@ -435,9 +449,10 @@ export default createTheme({
             styleOverrides: {
                 root: ({ theme }) => ({
                     zIndex: 1,
-                    '.MuiSwitch-switchBase:not(.Mui-checked) .MuiTouchRipple-child': {
-                        color: theme.palette.action.disabled,
-                    },
+                    '.MuiSwitch-switchBase:not(.Mui-checked) .MuiTouchRipple-child':
+                        {
+                            color: theme.palette.action.disabled,
+                        },
                 }),
             },
         },

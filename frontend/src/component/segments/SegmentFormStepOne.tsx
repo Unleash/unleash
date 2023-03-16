@@ -11,6 +11,8 @@ import {
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
+import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
+import { GO_BACK } from 'constants/navigate';
 
 interface ISegmentFormPartOneProps {
     name: string;
@@ -65,6 +67,7 @@ export const SegmentFormStepOne: React.FC<ISegmentFormPartOneProps> = ({
     clearErrors,
     setCurrentStep,
 }) => {
+    const projectId = useOptionalPathParam('projectId');
     const { uiConfig } = useUiConfig();
     const navigate = useNavigate();
     const { projects } = useProjects();
@@ -105,7 +108,10 @@ export const SegmentFormStepOne: React.FC<ISegmentFormPartOneProps> = ({
                     data-testid={SEGMENT_DESC_ID}
                 />
                 <ConditionallyRender
-                    condition={Boolean(uiConfig.flags.projectScopedSegments)}
+                    condition={
+                        Boolean(uiConfig.flags.projectScopedSegments) &&
+                        !projectId
+                    }
                     show={
                         <>
                             <StyledInputDescription>
@@ -141,7 +147,7 @@ export const SegmentFormStepOne: React.FC<ISegmentFormPartOneProps> = ({
                 <StyledCancelButton
                     type="button"
                     onClick={() => {
-                        navigate('/segments');
+                        navigate(GO_BACK);
                     }}
                 >
                     Cancel

@@ -18,8 +18,10 @@ import { segmentsDocsLink } from 'component/segments/SegmentDocs';
 import { useSegmentValuesCount } from 'component/segments/hooks/useSegmentValuesCount';
 import { SEGMENT_SAVE_BTN_ID } from 'utils/testIds';
 import { useSegmentLimits } from 'hooks/api/getters/useSegmentLimits/useSegmentLimits';
+import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 
 export const EditSegment = () => {
+    const projectId = useOptionalPathParam('projectId');
     const segmentId = useRequiredPathParam('segmentId');
     const { segment } = useSegment(Number(segmentId));
     const { uiConfig } = useUiConfig();
@@ -71,7 +73,11 @@ export const EditSegment = () => {
             try {
                 await updateSegment(segment.id, getSegmentPayload());
                 await refetchSegments();
-                navigate('/segments/');
+                if (projectId) {
+                    navigate(`/projects/${projectId}/settings/segments/`);
+                } else {
+                    navigate('/segments/');
+                }
                 setToastData({
                     title: 'Segment updated',
                     type: 'success',

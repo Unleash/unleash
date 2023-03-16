@@ -34,6 +34,7 @@ const StyledContainer = styled('section', {
     minHeight: modal ? '100vh' : '80vh',
     borderRadius: modal ? 0 : theme.spacing(2),
     width: '100%',
+    height: '100%',
     display: 'flex',
     margin: '0 auto',
     [theme.breakpoints.down(1100)]: {

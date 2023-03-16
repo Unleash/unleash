@@ -6,6 +6,15 @@ import { DEFAULT_PROJECT } from '../../../../lib/types';
 let app;
 let db;
 
+const createFeatureToggle = (
+    featureName: string,
+    project = DEFAULT_PROJECT,
+) => {
+    return app.request.post(`/api/admin/projects/${project}/features`).send({
+        name: featureName,
+    });
+};
+
 beforeAll(async () => {
     db = await dbInit('archive_serial', getLogger);
     app = await setupAppWithCustomConfig(db.stores, {
@@ -252,4 +261,29 @@ test('can bulk revive features', async () => {
             .get(`/api/admin/projects/default/features/${feature}`)
             .expect(200);
     }
+});
+
+test('Should be able to bulk archive features', async () => {
+    const featureName1 = 'archivedFeature1';
+    const featureName2 = 'archivedFeature2';
+
+    await createFeatureToggle(featureName1);
+    await createFeatureToggle(featureName2);
+
+    await app.request
+        .post(`/api/admin/projects/${DEFAULT_PROJECT}/archive`)
+        .send({
+            features: [featureName1, featureName2],
+        })
+        .expect(202);
+
+    const { body } = await app.request
+        .get(`/api/admin/archive/features/${DEFAULT_PROJECT}`)
+        .expect(200);
+
+    const archivedFeatures = body.features.filter(
+        (feature) =>
+            feature.name === featureName1 || feature.name === featureName2,
+    );
+    expect(archivedFeatures).toHaveLength(2);
 });

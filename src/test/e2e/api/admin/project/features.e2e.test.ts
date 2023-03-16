@@ -2824,28 +2824,6 @@ test('Can query for two tags at the same time. Tags are ORed together', async ()
         });
 });
 
-test('Should be able to bulk archive features', async () => {
-    const featureName1 = 'archivedFeature1';
-    const featureName2 = 'archivedFeature2';
-
-    await createFeatureToggle(featureName1);
-    await createFeatureToggle(featureName2);
-
-    await app.request
-        .post(`/api/admin/projects/${DEFAULT_PROJECT}/archive`)
-        .send({
-            features: [featureName1, featureName2],
-        })
-        .expect(202);
-
-    const { body } = await app.request
-        .get(`/api/admin/archive/features/${DEFAULT_PROJECT}`)
-        .expect(200);
-    expect(body).toMatchObject({
-        features: [{}, { name: featureName1 }, { name: featureName2 }],
-    });
-});
-
 test('Should batch stale features', async () => {
     const staledFeatureName1 = 'staledFeature1';
     const staledFeatureName2 = 'staledFeature2';

@@ -164,7 +164,7 @@ export default class ProjectApi extends Controller {
         res: Response<ProjectSettingsSchema>,
     ): Promise<void> {
         if (!this.config.flagResolver.isEnabled('projectScopedStickiness')) {
-            res.status(404);
+            res.status(404).end();
             return Promise.resolve();
         }
         const { projectId } = req.params;
@@ -192,7 +192,7 @@ export default class ProjectApi extends Controller {
         res: Response<ProjectSettingsSchema>,
     ): Promise<void> {
         if (!this.config.flagResolver.isEnabled('projectScopedStickiness')) {
-            res.status(404);
+            res.status(404).end();
             return Promise.resolve();
         }
         const { projectId } = req.params;

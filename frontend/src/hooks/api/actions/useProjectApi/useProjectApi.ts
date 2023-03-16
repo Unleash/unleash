@@ -1,3 +1,4 @@
+import type { BatchStaleSchema } from 'openapi';
 import useAPI from '../useApi/useApi';
 
 interface ICreatePayload {
@@ -215,6 +216,35 @@ const useProjectApi = () => {
         return makeRequest(req.caller, req.id);
     };
 
+    const archiveFeatures = async (projectId: string, featureIds: string[]) => {
+        const path = `api/admin/projects/${projectId}/archive`;
+        const req = createRequest(path, {
+            method: 'POST',
+            body: JSON.stringify({ features: featureIds }),
+        });
+
+        return makeRequest(req.caller, req.id);
+    };
+
+    const staleFeatures = async (
+        projectId: string,
+        featureIds: string[],
+        stale = true
+    ) => {
+        const payload: BatchStaleSchema = {
+            features: featureIds,
+            stale,
+        };
+
+        const path = `api/admin/projects/${projectId}/stale`;
+        const req = createRequest(path, {
+            method: 'POST',
+            body: JSON.stringify(payload),
+        });
+
+        return makeRequest(req.caller, req.id);
+    };
+
     return {
         createProject,
         validateId,
@@ -227,10 +257,12 @@ const useProjectApi = () => {
         removeGroupFromRole,
         changeUserRole,
         changeGroupRole,
-        errors,
-        loading,
+        archiveFeatures,
+        staleFeatures,
         searchProjectUser,
         setDefaultProjectStickiness,
+        errors,
+        loading,
     };
 };
 

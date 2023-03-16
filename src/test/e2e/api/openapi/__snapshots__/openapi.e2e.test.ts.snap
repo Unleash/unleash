@@ -6082,6 +6082,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/projects/{projectId}/archive/delete": {
       "post": {
+        "description": "This endpoint deletes the specified features, that are in archive.",
         "operationId": "deleteFeatures",
         "parameters": [
           {
@@ -6109,6 +6110,7 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "This response has no body.",
           },
         },
+        "summary": "Deletes a list of features",
         "tags": [
           "Archive",
         ],
@@ -6116,6 +6118,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/projects/{projectId}/archive/revive": {
       "post": {
+        "description": "This endpoint revives the specified features.",
         "operationId": "reviveFeatures",
         "parameters": [
           {
@@ -6143,6 +6146,7 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "This response has no body.",
           },
         },
+        "summary": "Revives a list of features",
         "tags": [
           "Archive",
         ],

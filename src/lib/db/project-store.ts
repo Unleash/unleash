@@ -2,7 +2,12 @@ import { Knex } from 'knex';
 import { Logger, LogProvider } from '../logger';
 
 import NotFoundError from '../error/notfound-error';
-import { IEnvironment, IProject, IProjectWithCount } from '../types/model';
+import {
+    IEnvironment,
+    IProject,
+    IProjectWithCount,
+    ProjectMode,
+} from '../types/model';
 import {
     IProjectHealthUpdate,
     IProjectInsert,
@@ -26,6 +31,8 @@ const COLUMNS = [
     'updated_at',
 ];
 const TABLE = 'projects';
+const SETTINGS_COLUMNS = ['project_mode'];
+const SETTINGS_TABLE = 'project_settings';
 
 export interface IEnvironmentProjectLink {
     environmentName: string;
@@ -63,7 +70,7 @@ class ProjectStore implements IProjectStore {
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    fieldToRow(data): IProjectInsert {
+    fieldToRow(data): Omit<IProjectInsert, 'mode'> {
         return {
             id: data.id,
             name: data.name,
@@ -168,8 +175,13 @@ class ProjectStore implements IProjectStore {
 
     async get(id: string): Promise<IProject> {
         return this.db
-            .first(COLUMNS)
+            .first([...COLUMNS, ...SETTINGS_COLUMNS])
             .from(TABLE)
+            .leftJoin(
+                SETTINGS_TABLE,
+                `${SETTINGS_TABLE}.project`,
+                `${TABLE}.id`,
+            )
             .where({ id })
             .then(this.mapRow);
     }
@@ -189,11 +201,19 @@ class ProjectStore implements IProjectStore {
             .update({ health: healthUpdate.health, updated_at: new Date() });
     }
 
-    async create(project: IProjectInsert): Promise<IProject> {
+    async create(
+        project: IProjectInsert & { mode: ProjectMode },
+    ): Promise<IProject> {
         const row = await this.db(TABLE)
             .insert(this.fieldToRow(project))
             .returning('*');
-        return this.mapRow(row[0]);
+        const settingsRow = await this.db(SETTINGS_TABLE)
+            .insert({
+                project: project.id,
+                project_mode: project.mode,
+            })
+            .returning('*');
+        return this.mapRow({ ...row[0], ...settingsRow[0] });
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -202,6 +222,12 @@ class ProjectStore implements IProjectStore {
             await this.db(TABLE)
                 .where({ id: data.id })
                 .update(this.fieldToRow(data));
+            await this.db(SETTINGS_TABLE)
+                .where({ project: data.id })
+                .update({
+                    project_mode: data.mode,
+                })
+                .returning('*');
         } catch (err) {
             this.logger.error('Could not update project, error: ', err);
         }
@@ -460,7 +486,7 @@ class ProjectStore implements IProjectStore {
             createdAt: row.created_at,
             health: row.health ?? 100,
             updatedAt: row.updated_at || new Date(),
-            mode: 'open',
+            mode: row.project_mode || 'open',
         };
     }
 }

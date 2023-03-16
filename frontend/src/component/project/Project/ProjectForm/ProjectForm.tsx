@@ -1,23 +1,27 @@
 import React from 'react';
 import { trim } from 'component/common/util';
 import {
-    StyledForm,
+    StyledButton,
+    StyledButtonContainer,
     StyledContainer,
     StyledDescription,
+    StyledForm,
     StyledInput,
     StyledTextField,
-    StyledButtonContainer,
-    StyledButton,
 } from './ProjectForm.styles';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { StickinessSelect } from 'component/feature/StrategyTypes/FlexibleStrategy/StickinessSelect/StickinessSelect';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import Select from 'component/common/select';
+
 interface IProjectForm {
     projectId: string;
     projectName: string;
     projectDesc: string;
     projectStickiness?: string;
+    projectMode?: string;
     setProjectStickiness?: React.Dispatch<React.SetStateAction<string>>;
+    setProjectMode?: React.Dispatch<React.SetStateAction<string>>;
     setProjectId: React.Dispatch<React.SetStateAction<string>>;
     setProjectName: React.Dispatch<React.SetStateAction<string>>;
     setProjectDesc: React.Dispatch<React.SetStateAction<string>>;
@@ -42,17 +46,20 @@ const ProjectForm: React.FC<IProjectForm> = ({
     projectName,
     projectDesc,
     projectStickiness,
+    projectMode,
     setProjectId,
     setProjectName,
     setProjectDesc,
     setProjectStickiness,
+    setProjectMode,
     errors,
     mode,
     validateProjectId,
     clearErrors,
 }) => {
     const { uiConfig } = useUiConfig();
-    const { projectScopedStickiness } = uiConfig.flags;
+    const { projectScopedStickiness, projectMode: projectModeFlag } =
+        uiConfig.flags;
 
     return (
         <StyledForm onSubmit={handleSubmit}>
@@ -119,6 +126,30 @@ const ProjectForm: React.FC<IProjectForm> = ({
                                 }
                                 editable
                             />
+                        </>
+                    }
+                />
+                <ConditionallyRender
+                    condition={Boolean(projectModeFlag)}
+                    show={
+                        <>
+                            <StyledDescription>
+                                What is your project mode?
+                            </StyledDescription>
+                            <Select
+                                id="project-mode"
+                                value={projectMode}
+                                label="Project mode"
+                                name="Project mode"
+                                onChange={e => {
+                                    setProjectMode?.(e.target.value);
+                                }}
+                                options={[
+                                    { key: 'open', label: 'open' },
+                                    { key: 'protected', label: 'protected' },
+                                ]}
+                                style={{ minWidth: '150px' }}
+                            ></Select>
                         </>
                     }
                 />

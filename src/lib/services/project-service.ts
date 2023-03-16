@@ -166,7 +166,7 @@ export default class ProjectService {
     }
 
     async createProject(
-        newProject: Pick<IProject, 'id' | 'name'>,
+        newProject: Pick<IProject, 'id' | 'name' | 'mode'>,
         user: IUser,
     ): Promise<IProject> {
         const data = await projectSchema.validateAsync(newProject);
@@ -853,6 +853,7 @@ export default class ProjectService {
             stats: projectStats,
             name: project.name,
             description: project.description,
+            mode: project.mode,
             health: project.health || 0,
             favorite: favorite,
             updatedAt: project.updatedAt,

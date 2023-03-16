@@ -26,7 +26,12 @@ afterAll(async () => {
 });
 
 test('Should ONLY return default project', async () => {
-    projectStore.create({ id: 'test2', name: 'test', description: '' });
+    projectStore.create({
+        id: 'test2',
+        name: 'test',
+        description: '',
+        mode: 'open',
+    });
 
     const { body } = await app.request
         .get('/api/admin/projects')

@@ -28,7 +28,7 @@ import { OpenApiService, SettingService } from '../../../services';
 import { IAuthRequest } from '../../unleash-types';
 import { ProjectApiTokenController } from './api-token';
 import ProjectArchiveController from './project-archive';
-import NotFoundError from 'lib/error/notfound-error';
+import NotFoundError from '../../../error/notfound-error';
 
 const STICKINESS_KEY = 'stickiness';
 const DEFAULT_STICKINESS = 'default';

@@ -156,7 +156,7 @@ class EventStore implements IEventStore {
             .orWhere('type', 'segment-update')
             .andWhere('id', '>=', largerThan)
             .first();
-        return row.max;
+        return row ? row.max : -1;
     }
 
     async delete(key: number): Promise<void> {

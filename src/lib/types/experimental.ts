@@ -76,6 +76,7 @@ const flags = {
         process.env.PROJECT_SCOPED_STICKINESS,
         false,
     ),
+    projectMode: parseEnvVarBoolean(process.env.PROJECT_MODE, false),
     cleanClientApi: parseEnvVarBoolean(process.env.CLEAN_CLIENT_API, false),
 };
 

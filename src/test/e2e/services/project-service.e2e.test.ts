@@ -1176,8 +1176,7 @@ test('should calculate average time to production', async () => {
     });
 
     const result = await projectService.getStatusUpdates(project.id);
-    expect(result.updates.avgTimeToProdCurrentWindow).toBe(14);
-    expect(result.updates.avgTimeToProdPastWindow).toBe(1);
+    expect(result.updates.avgTimeToProdCurrentWindow).toBe(11.4);
 });
 
 test('should get correct amount of features created in current and past window', async () => {

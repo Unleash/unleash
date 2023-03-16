@@ -22,7 +22,9 @@ import { Search } from 'component/common/Search/Search';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
 import { ITooltipResolverProps } from 'component/common/TooltipResolver/TooltipResolver';
 import { ReactComponent as ProPlanIcon } from 'assets/icons/pro-enterprise-feature-badge.svg';
+import { ReactComponent as ProPlanIconLight } from 'assets/icons/pro-enterprise-feature-badge-light.svg';
 import { safeRegExp } from '@server/util/escape-regex';
+import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 
 const StyledDivContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -73,7 +75,12 @@ function resolveCreateButtonData(
                 sx: { maxWidth: '320px' },
                 variant: 'custom',
             },
-            endIcon: <ProPlanIcon />,
+            endIcon: (
+                <ThemeMode
+                    darkmode={<ProPlanIconLight />}
+                    lightmode={<ProPlanIcon />}
+                />
+            ),
         };
     } else if (!hasAccess) {
         return {

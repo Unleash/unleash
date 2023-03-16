@@ -1,7 +1,9 @@
 import { ReactComponent as ProPlanIcon } from 'assets/icons/pro-enterprise-feature-badge.svg';
+import { ReactComponent as ProPlanIconLight } from 'assets/icons/pro-enterprise-feature-badge-light.svg';
 import { Box, Button, Link, styled, Typography } from '@mui/material';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
+import { ThemeMode } from '../ThemeMode/ThemeMode';
 
 const PremiumFeatureWrapper = styled(Box, {
     shouldForwardProp: prop => prop !== 'tooltip',
@@ -106,7 +108,10 @@ export const PremiumFeature = ({ feature, tooltip }: PremiumFeatureProps) => {
     return (
         <PremiumFeatureWrapper tooltip={tooltip}>
             <StyledTitle>
-                <ProPlanIcon />
+                <ThemeMode
+                    darkmode={<ProPlanIconLight />}
+                    lightmode={<ProPlanIcon />}
+                />
                 {`${plan} feature`}
             </StyledTitle>
             <ConditionallyRender

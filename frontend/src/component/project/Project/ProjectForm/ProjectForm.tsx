@@ -124,7 +124,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
                     condition={Boolean(projectModeFlag)}
                     show={
                         <>
-                            <StyledDescription sx={{ mt: 2 }}>
+                            <StyledDescription>
                                 What is your project mode?
                             </StyledDescription>
                             <Select

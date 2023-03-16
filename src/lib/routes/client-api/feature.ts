@@ -2,6 +2,8 @@ import memoizee from 'memoizee';
 import { Response } from 'express';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import hasSum from 'hash-sum';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { diff } from 'deep-object-diff';
 import Controller from '../controller';
 import { IFlagResolver, IUnleashConfig, IUnleashServices } from '../../types';
 import FeatureToggleService from '../../services/feature-toggle-service';
@@ -29,12 +31,19 @@ import {
 import { ISegmentService } from 'lib/segments/segment-service-interface';
 import { EventService } from 'lib/services';
 import { hoursToMilliseconds } from 'date-fns';
+import { isEmpty } from '../../util/isEmpty';
 
 const version = 2;
 
 interface QueryOverride {
     project?: string[];
     environment?: string;
+}
+
+interface IMeta {
+    revisionId: number;
+    etag: string;
+    queryHash: string;
 }
 
 export default class FeatureController extends Controller {
@@ -237,6 +246,18 @@ export default class FeatureController extends Controller {
             ? await this.cachedFeatures(query)
             : await this.resolveFeaturesAndSegments(query);
 
+        if (this.flagResolver.isEnabled('optimal304Differ')) {
+            const { etag } = await this.calculateMeta(query);
+            const [featuresNew] = await this.cachedFeatures2(query, etag);
+            const theDiffedObject = diff(features, featuresNew);
+
+            const message = isEmpty(theDiffedObject)
+                ? 'The diff is: <Empty>'
+                : `The diff is: ${JSON.stringify(theDiffedObject)}`;
+
+            this.logger.warn(message);
+        }
+
         if (this.clientSpecService.requestSupportsSpec(req, 'segments')) {
             this.openApiService.respondWithValidation(
                 200,
@@ -254,19 +275,25 @@ export default class FeatureController extends Controller {
         }
     }
 
+    async calculateMeta(query: IFeatureToggleQuery): Promise<IMeta> {
+        // TODO: We will need to standardize this to be able to implement this a cross languages (Edge in Rust?).
+        const revisionId = await this.eventService.getMaxRevisionId();
+
+        // TODO: We will need to standardize this to be able to implement this a cross languages (Edge in Rust?).
+        const queryHash = hasSum(query);
+        const etag = `${queryHash}:${revisionId}`;
+        return { revisionId, etag, queryHash };
+    }
+
     async optimal304(
         req: IAuthRequest,
         res: Response<ClientFeaturesSchema>,
     ): Promise<void> {
         const query = await this.resolveQuery(req);
 
-        const revisionId = await this.eventService.getMaxRevisionId();
-
-        // TODO: We will need to standardize this to be able to implement this a cross languages (Edge in Rust?).
-        const queryHash = hasSum(query);
-        const etag = `${queryHash}:${revisionId}`;
         const userVersion = req.headers['if-none-match'];
-        const meta = { revisionId, etag, queryHash };
+        const meta = await this.calculateMeta(query);
+        const { etag } = meta;
 
         res.setHeader('etag', etag);
 

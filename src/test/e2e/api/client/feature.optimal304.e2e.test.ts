@@ -143,15 +143,6 @@ test('returns 200 when content updates and hash does not match anymore', async (
         'test',
     );
     await app.services.eventService.updateMaxRevisionId();
-    /*
-    await app.services.featureToggleServiceV2.updateEnabled(
-        'default',
-        'featureNew304',
-        'default',
-        true,
-        'test',
-    );
-    */
 
     const res = await app.request
         .get('/api/client/features')

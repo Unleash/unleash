@@ -78,6 +78,10 @@ const flags = {
         process.env.UNLEASH_EXPERIMENTAL_OPTIMAL_304,
         false,
     ),
+    optimal304Differ: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_OPTIMAL_304_DIFFER,
+        false,
+    ),
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

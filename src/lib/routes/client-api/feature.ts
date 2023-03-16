@@ -32,6 +32,7 @@ import { ISegmentService } from 'lib/segments/segment-service-interface';
 import { EventService } from 'lib/services';
 import { hoursToMilliseconds } from 'date-fns';
 import { isEmpty } from '../../util/isEmpty';
+import EventEmitter from 'events';
 
 const version = 2;
 
@@ -48,6 +49,8 @@ interface IMeta {
 
 export default class FeatureController extends Controller {
     private readonly logger: Logger;
+
+    private eventBus: EventEmitter;
 
     private featureToggleServiceV2: FeatureToggleService;
 
@@ -85,7 +88,7 @@ export default class FeatureController extends Controller {
         config: IUnleashConfig,
     ) {
         super(config);
-        const { clientFeatureCaching, flagResolver } = config;
+        const { clientFeatureCaching, flagResolver, eventBus } = config;
         this.featureToggleServiceV2 = featureToggleServiceV2;
         this.segmentService = segmentService;
         this.clientSpecService = clientSpecService;
@@ -93,6 +96,7 @@ export default class FeatureController extends Controller {
         this.flagResolver = flagResolver;
         this.eventService = eventService;
         this.logger = config.getLogger('client-api/feature.js');
+        this.eventBus = eventBus;
 
         this.route({
             method: 'get',
@@ -247,19 +251,9 @@ export default class FeatureController extends Controller {
             : await this.resolveFeaturesAndSegments(query);
 
         if (this.flagResolver.isEnabled('optimal304Differ')) {
-            try {
-                const { etag } = await this.calculateMeta(query);
-                const [featuresNew] = await this.cachedFeatures2(query, etag);
-                const theDiffedObject = diff(features, featuresNew);
-
-                const message = isEmpty(theDiffedObject)
-                    ? 'The diff is: <Empty>'
-                    : `The diff is: ${JSON.stringify(theDiffedObject)}`;
-
-                this.logger.warn(message);
-            } catch (e) {
-                this.logger.error('The diff checker crashed', e);
-            }
+            process.nextTick(async () =>
+                this.doOptimal304Diffing(features, query),
+            );
         }
 
         if (this.clientSpecService.requestSupportsSpec(req, 'segments')) {
@@ -276,6 +270,46 @@ export default class FeatureController extends Controller {
                 clientFeaturesSchema.$id,
                 { version, features, query },
             );
+        }
+    }
+
+    /**
+     * This helper method is used to validate that the new way of calculating
+     * cache-key based on query hash and revision id, with an internal memoization
+     * of 1hr still ends up producing the same result.
+     *
+     * It's worth to note that it is expected that a diff will occur immediately after
+     * a toggle changes due to the nature of two individual caches and how fast they
+     * detect the change. The diffs should however go away as soon as they both have
+     * the latest feature toggle configuration, which will happen within 600ms on the
+     * default configurations.
+     *
+     * This method is experimental and will only be used to validate our internal state
+     * to make sure our new way of caching is correct and stable.
+     *
+     * @deprecated
+     */
+    async doOptimal304Diffing(
+        features: FeatureConfigurationClient[],
+        query: IFeatureToggleQuery,
+    ): Promise<void> {
+        try {
+            const { etag } = await this.calculateMeta(query);
+            const [featuresNew] = await this.cachedFeatures2(query, etag);
+            const theDiffedObject = diff(features, featuresNew);
+
+            if (isEmpty(theDiffedObject)) {
+                this.logger.warn('The diff is: <Empty>');
+                this.eventBus.emit('optimal304Differ', { status: 'equal' });
+            } else {
+                this.logger.warn(
+                    `The diff is: ${JSON.stringify(theDiffedObject)}`,
+                );
+                this.eventBus.emit('optimal304Differ', { status: 'diff' });
+            }
+        } catch (e) {
+            this.logger.error('The diff checker crashed', e);
+            this.eventBus.emit('optimal304Differ', { status: 'crash' });
         }
     }
 

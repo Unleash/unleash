@@ -42,15 +42,15 @@ export default class EventService {
         if (this.revisionId) {
             return this.revisionId;
         } else {
-            this.revisionId = await this.eventStore.getMaxRevisionId();
-            return this.revisionId;
+            return this.updateMaxRevisionId();
         }
     }
 
-    async updateMaxRevisionId(): Promise<void> {
+    async updateMaxRevisionId(): Promise<number> {
         this.revisionId = await this.eventStore.getMaxRevisionId(
             this.revisionId,
         );
+        return this.revisionId;
     }
 }
 

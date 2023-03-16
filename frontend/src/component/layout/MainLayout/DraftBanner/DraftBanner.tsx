@@ -17,7 +17,7 @@ const DraftBannerContentWrapper = styled(Box)(({ theme }) => ({
     [theme.breakpoints.down('lg')]: {
         padding: theme.spacing(1, 2),
     },
-    color: theme.palette.warning.main,
+    color: theme.palette.warning.contrastText,
 }));
 
 const StyledBox = styled(Box)(({ theme }) => ({

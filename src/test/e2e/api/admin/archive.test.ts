@@ -75,11 +75,13 @@ test('Should get archived toggles via project', async () => {
         id: 'proj-1',
         name: 'proj-1',
         description: '',
+        mode: 'open' as const,
     });
     await db.stores.projectStore.create({
         id: 'proj-2',
         name: 'proj-2',
         description: '',
+        mode: 'open' as const,
     });
 
     await db.stores.featureToggleStore.create('proj-1', {

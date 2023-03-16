@@ -100,7 +100,10 @@ const createProject = async (id: string, name: string): Promise<void> => {
         name: randomId(),
         email: `${randomId()}@example.com`,
     });
-    await app.services.projectService.createProject({ id, name }, user);
+    await app.services.projectService.createProject(
+        { id, name, mode: 'open' },
+        user,
+    );
 };
 
 test('should require a frontend token or an admin token', async () => {
@@ -188,14 +191,14 @@ test('should allow requests with a token secret alias', async () => {
         .expect((res) => expect(res.body.toggles[0].name).toEqual(featureB));
     await app.request
         .get('/api/frontend')
-        .set('Authorization', tokenA.alias)
+        .set('Authorization', tokenA.alias!)
         .expect('Content-Type', /json/)
         .expect(200)
         .expect((res) => expect(res.body.toggles).toHaveLength(1))
         .expect((res) => expect(res.body.toggles[0].name).toEqual(featureA));
     await app.request
         .get('/api/frontend')
-        .set('Authorization', tokenB.alias)
+        .set('Authorization', tokenB.alias!)
         .expect('Content-Type', /json/)
         .expect(200)
         .expect((res) => expect(res.body.toggles).toHaveLength(1))
@@ -952,7 +955,7 @@ test('should terminate data polling when stop is called', async () => {
         frontendToken.secret,
     );
 
-    const logTrap = [];
+    const logTrap: any[] = [];
     const getDebugLogger = (): Logger => {
         return {
             /* eslint-disable-next-line */
@@ -978,7 +981,7 @@ test('should terminate data polling when stop is called', async () => {
         },
         db.stores,
         app.services,
-        user,
+        user!,
     );
 
     await proxyRepository.start();

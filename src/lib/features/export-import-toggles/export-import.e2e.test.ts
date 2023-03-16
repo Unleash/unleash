@@ -109,6 +109,7 @@ const createProject = async () => {
         name: DEFAULT_PROJECT,
         description: '',
         id: DEFAULT_PROJECT,
+        mode: 'open' as const,
     });
     await app.request
         .post(`/api/admin/projects/${DEFAULT_PROJECT}/environments`)

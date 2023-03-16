@@ -44,6 +44,8 @@ import { useFavoriteProjectsApi } from 'hooks/api/actions/useFavoriteProjectsApi
 import { ImportModal } from './Import/ImportModal';
 import { IMPORT_BUTTON } from 'utils/testIds';
 
+const NAVIGATE_TO_EDIT_PROJECT = 'NAVIGATE_TO_EDIT_PROJECT';
+
 export const Project = () => {
     const projectId = useRequiredPathParam('projectId');
     const params = useQueryParams();
@@ -167,6 +169,7 @@ export const Project = () => {
                                         }
                                         tooltipProps={{ title: 'Edit project' }}
                                         data-loading
+                                        data-testid={NAVIGATE_TO_EDIT_PROJECT}
                                     >
                                         <Edit />
                                     </PermissionIconButton>

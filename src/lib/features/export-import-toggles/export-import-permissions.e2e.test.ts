@@ -87,6 +87,7 @@ const createProject = async () => {
         name: DEFAULT_PROJECT,
         description: '',
         id: DEFAULT_PROJECT,
+        mode: 'open' as const,
     });
 };
 

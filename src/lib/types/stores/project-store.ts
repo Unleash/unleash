@@ -11,6 +11,7 @@ export interface IProjectInsert {
     description: string;
     updatedAt?: Date;
     changeRequestsEnabled?: boolean;
+    mode: 'open' | 'protected';
 }
 
 export interface IProjectArchived {

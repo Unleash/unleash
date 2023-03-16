@@ -7,5 +7,6 @@ export const projectSchema = joi
         id: nameType,
         name: joi.string().required(),
         description: joi.string().allow(null).allow('').optional(),
+        mode: joi.string().valid('open', 'protected').default('open'),
     })
     .options({ allowUnknown: false, stripUnknown: true });

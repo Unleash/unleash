@@ -36,6 +36,13 @@ export const projectOverviewSchema = {
             example: 'DX squad feature release',
             description: 'Additional information about the project',
         },
+        mode: {
+            type: 'string',
+            enum: ['open', 'protected'],
+            example: 'open',
+            description:
+                'A mode of the project affecting what actions are possible in this project',
+        },
         members: {
             type: 'number',
             example: 4,

@@ -184,6 +184,7 @@ export interface IProjectOverview {
     favorite?: boolean;
     updatedAt?: Date;
     stats?: IProjectStats;
+    mode: 'open' | 'protected';
 }
 
 export interface IProjectHealthReport extends IProjectOverview {

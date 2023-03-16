@@ -19,6 +19,7 @@ const CreateProject = () => {
     const {
         projectId,
         projectName,
+        projectMode,
         projectDesc,
         setProjectId,
         setProjectName,
@@ -28,6 +29,7 @@ const CreateProject = () => {
         validateProjectId,
         validateName,
         setProjectStickiness,
+        setProjectMode,
         projectStickiness,
         errors,
     } = useProjectForm();
@@ -92,8 +94,10 @@ const CreateProject = () => {
                 projectId={projectId}
                 setProjectId={setProjectId}
                 projectName={projectName}
+                projectMode={projectMode}
                 projectStickiness={projectStickiness}
                 setProjectStickiness={setProjectStickiness}
+                setProjectMode={setProjectMode}
                 setProjectName={setProjectName}
                 projectDesc={projectDesc}
                 setProjectDesc={setProjectDesc}

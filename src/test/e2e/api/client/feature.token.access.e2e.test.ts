@@ -35,6 +35,7 @@ beforeAll(async () => {
         id: project2,
         name: 'Test Project 2',
         description: '',
+        mode: 'open' as const,
     });
 
     await environmentService.addEnvironmentToProject(environment, project);

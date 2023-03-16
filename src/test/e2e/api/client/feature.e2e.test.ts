@@ -289,6 +289,7 @@ test('returns a feature toggles impression data for a different project', async 
         id: 'impression-data-client',
         name: 'ImpressionData',
         description: '',
+        mode: 'open' as const,
     };
 
     await db.stores.projectStore.create(project);

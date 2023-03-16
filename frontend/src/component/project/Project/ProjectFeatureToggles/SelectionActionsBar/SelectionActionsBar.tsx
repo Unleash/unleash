@@ -1,12 +1,13 @@
 import { useMemo, useState, VFC } from 'react';
 import { Box, Button, Paper, styled, Typography } from '@mui/material';
-import { FileDownload, Label, WatchLater } from '@mui/icons-material';
+import { FileDownload } from '@mui/icons-material';
 import type { FeatureSchema } from 'openapi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ExportDialog } from 'component/feature/FeatureToggleList/ExportDialog';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { ArchiveButton } from './ArchiveButton/ArchiveButton';
-import { MoreActions } from './MoreActions/MoreActions';
+import { ArchiveButton } from './ArchiveButton';
+import { MoreActions } from './MoreActions';
+import { ManageTags } from './ManageTags';
 
 interface ISelectionActionsBarProps {
     selectedIds: string[];
@@ -87,14 +88,7 @@ export const SelectionActionsBar: VFC<ISelectionActionsBarProps> = ({
                 >
                     Export
                 </Button>
-                <Button
-                    disabled
-                    startIcon={<Label />}
-                    variant="outlined"
-                    size="small"
-                >
-                    Tags
-                </Button>
+                <ManageTags />
                 <MoreActions projectId={projectId} data={selectedData} />
             </StyledBar>
             <ConditionallyRender

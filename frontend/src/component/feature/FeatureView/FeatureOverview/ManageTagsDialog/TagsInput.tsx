@@ -24,6 +24,8 @@ interface ITagsInputProps {
     existingTags: ITag[];
     tagType: ITagType;
     selectedOptions: TagOption[];
+    indeterminateOptions?: TagOption[];
+    disabled?: boolean;
     onChange: AutocompleteProps<TagOption | string, true, any, any>['onChange'];
 }
 
@@ -32,8 +34,10 @@ const filter = createFilterOptions<TagOption>();
 export const TagsInput = ({
     options,
     selectedOptions,
+    indeterminateOptions,
     tagType,
     existingTags,
+    disabled = false,
     onChange,
 }: ITagsInputProps) => {
     const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
@@ -54,31 +58,35 @@ export const TagsInput = ({
             React.LiHTMLAttributes<HTMLLIElement>,
         option: TagOption,
         { selected }: { selected: boolean }
-    ) => {
-        return (
-            <li {...props}>
-                <ConditionallyRender
-                    condition={Boolean(option.inputValue)}
-                    show={<Add sx={{ mr: theme => theme.spacing(0.5) }} />}
-                    elseShow={
-                        <Checkbox
-                            icon={icon}
-                            checkedIcon={checkedIcon}
-                            sx={{ mr: theme => theme.spacing(0.5) }}
-                            checked={selected}
-                        />
-                    }
-                />
-                {option.title}
-            </li>
-        );
-    };
+    ) => (
+        <li {...props}>
+            <ConditionallyRender
+                condition={Boolean(option.inputValue)}
+                show={<Add sx={{ mr: theme => theme.spacing(0.5) }} />}
+                elseShow={
+                    <Checkbox
+                        icon={icon}
+                        checkedIcon={checkedIcon}
+                        sx={{ mr: theme => theme.spacing(0.5) }}
+                        checked={selected}
+                        indeterminate={
+                            indeterminateOptions?.some(
+                                indeterminateOption =>
+                                    indeterminateOption.title === option.title
+                            ) ?? false
+                        }
+                    />
+                }
+            />
+            {option.title}
+        </li>
+    );
 
     const renderTags = (
         tagValue: TagOption[],
         getTagProps: AutocompleteRenderGetTagProps
-    ) => {
-        return tagValue.map((option, index) => {
+    ) =>
+        tagValue.map((option, index) => {
             const exists = existingTags.some(
                 existingTag =>
                     existingTag.value === option.title &&
@@ -89,7 +97,6 @@ export const TagsInput = ({
             }
             return <Chip {...getTagProps({ index })} label={option.title} />;
         });
-    };
 
     const filterOptions = (
         options: TagOption[],
@@ -139,6 +146,7 @@ export const TagsInput = ({
                     placeholder="Select values"
                 />
             )}
+            disabled={disabled}
         />
     );
 };

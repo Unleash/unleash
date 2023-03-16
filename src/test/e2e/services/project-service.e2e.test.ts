@@ -114,7 +114,7 @@ test('should create new project', async () => {
         id: 'test',
         name: 'New project',
         description: 'Blah',
-        mode: 'open' as const,
+        mode: 'protected' as const,
     };
 
     await projectService.createProject(project, user);
@@ -123,6 +123,7 @@ test('should create new project', async () => {
     expect(project.name).toEqual(ret.name);
     expect(project.description).toEqual(ret.description);
     expect(ret.createdAt).toBeTruthy();
+    expect(ret.mode).toEqual('protected');
 });
 
 test('should delete project', async () => {
@@ -222,7 +223,7 @@ test('should update project', async () => {
         id: 'test-update',
         name: 'New name',
         description: 'Blah longer desc',
-        mode: 'open' as const,
+        mode: 'protected' as const,
     };
 
     await projectService.createProject(project, user);
@@ -232,6 +233,7 @@ test('should update project', async () => {
 
     expect(updatedProject.name).toBe(readProject.name);
     expect(updatedProject.description).toBe(readProject.description);
+    expect(updatedProject.mode).toBe('protected');
 });
 
 test('should give error when getting unknown project', async () => {

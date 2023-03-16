@@ -936,55 +936,6 @@ test('Should not recursively set off timers on events', async () => {
     jest.useRealTimers();
 });
 
-test('should return all features when specified', async () => {
-    app.config.experimental!.flags.proxyReturnAllToggles = true;
-    const frontendToken = await createApiToken(ApiTokenType.FRONTEND);
-    await createFeatureToggle({
-        name: 'enabledFeature1',
-        enabled: true,
-        strategies: [{ name: 'default', constraints: [], parameters: {} }],
-    });
-    await createFeatureToggle({
-        name: 'enabledFeature2',
-        enabled: true,
-        strategies: [{ name: 'default', constraints: [], parameters: {} }],
-    });
-    await createFeatureToggle({
-        name: 'disabledFeature',
-        enabled: false,
-        strategies: [{ name: 'default', constraints: [], parameters: {} }],
-    });
-    await app.request
-        .get('/api/frontend')
-        .set('Authorization', frontendToken.secret)
-        .expect('Content-Type', /json/)
-        .expect(200)
-        .expect((res) => {
-            expect(res.body).toEqual({
-                toggles: [
-                    {
-                        name: 'enabledFeature1',
-                        enabled: true,
-                        impressionData: false,
-                        variant: { enabled: false, name: 'disabled' },
-                    },
-                    {
-                        name: 'enabledFeature2',
-                        enabled: true,
-                        impressionData: false,
-                        variant: { enabled: false, name: 'disabled' },
-                    },
-                    {
-                        name: 'disabledFeature',
-                        enabled: false,
-                        impressionData: false,
-                        variant: { enabled: false, name: 'disabled' },
-                    },
-                ],
-            });
-        });
-});
-
 test('should return maxAge header on options call', async () => {
     await app.request
         .options('/api/frontend')

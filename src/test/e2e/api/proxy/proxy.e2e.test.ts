@@ -1037,12 +1037,6 @@ test('should evaluate strategies when returning toggles', async () => {
                         impressionData: false,
                         variant: { enabled: false, name: 'disabled' },
                     },
-                    {
-                        name: 'disabledFeature',
-                        enabled: false,
-                        impressionData: false,
-                        variant: { enabled: false, name: 'disabled' },
-                    },
                 ],
             });
         });

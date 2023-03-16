@@ -1374,6 +1374,42 @@ class FeatureToggleService {
         );
     }
 
+    async reviveFeatures(
+        featureNames: string[],
+        projectId: string,
+        createdBy: string,
+    ): Promise<void> {
+        await this.validateFeaturesContext(featureNames, projectId);
+
+        const features = await this.featureToggleStore.getAllByNames(
+            featureNames,
+        );
+        const eligibleFeatures = features.filter(
+            (toggle) => toggle.archivedAt !== null,
+        );
+        const eligibleFeatureNames = eligibleFeatures.map(
+            (toggle) => toggle.name,
+        );
+        const tags = await this.tagStore.getAllByFeatures(eligibleFeatureNames);
+        await this.featureToggleStore.batchRevive(eligibleFeatureNames);
+        await this.eventStore.batchStore(
+            eligibleFeatures.map(
+                (feature) =>
+                    new FeatureRevivedEvent({
+                        featureName: feature.name,
+                        createdBy,
+                        project: feature.project,
+                        tags: tags
+                            .filter((tag) => tag.featureName === feature.name)
+                            .map((tag) => ({
+                                value: tag.tagValue,
+                                type: tag.tagType,
+                            })),
+                    }),
+            ),
+        );
+    }
+
     // TODO: add project id.
     async reviveToggle(featureName: string, createdBy: string): Promise<void> {
         const toggle = await this.featureToggleStore.revive(featureName);

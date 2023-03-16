@@ -1,6 +1,7 @@
 import { setupAppWithCustomConfig } from '../../helpers/test-helper';
 import dbInit from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
+import { DEFAULT_PROJECT } from '../../../../lib/types';
 
 let app;
 let db;
@@ -203,8 +204,13 @@ test('can bulk delete features and recreate after', async () => {
             })
             .set('Content-Type', 'application/json')
             .expect(201);
-        await app.request.delete(`/api/admin/features/${feature}`).expect(200);
     }
+    await app.request
+        .post(`/api/admin/projects/${DEFAULT_PROJECT}/archive`)
+        .send({
+            features,
+        })
+        .expect(202);
     await app.request
         .post('/api/admin/projects/default/archive/delete')
         .send({ features })
@@ -214,6 +220,36 @@ test('can bulk delete features and recreate after', async () => {
             .post('/api/admin/features/validate')
             .send({ name: feature })
             .set('Content-Type', 'application/json')
+            .expect(200);
+    }
+});
+
+test('can bulk revive features', async () => {
+    const features = ['first.revive.issue', 'second.revive.issue'];
+    for (const feature of features) {
+        await app.request
+            .post('/api/admin/features')
+            .send({
+                name: feature,
+                enabled: false,
+                strategies: [{ name: 'default' }],
+            })
+            .set('Content-Type', 'application/json')
+            .expect(201);
+    }
+    await app.request
+        .post(`/api/admin/projects/${DEFAULT_PROJECT}/archive`)
+        .send({
+            features,
+        })
+        .expect(202);
+    await app.request
+        .post('/api/admin/projects/default/archive/revive')
+        .send({ features })
+        .expect(200);
+    for (const feature of features) {
+        await app.request
+            .get(`/api/admin/projects/default/features/${feature}`)
             .expect(200);
     }
 });

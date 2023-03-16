@@ -316,6 +316,14 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         return this.rowToFeature(row[0]);
     }
 
+    async batchRevive(names: string[]): Promise<FeatureToggle[]> {
+        const rows = await this.db(TABLE)
+            .whereIn('name', names)
+            .update({ archived_at: null })
+            .returning(FEATURE_COLUMNS);
+        return rows.map((row) => this.rowToFeature(row));
+    }
+
     async getVariants(featureName: string): Promise<IVariant[]> {
         if (!(await this.exists(featureName))) {
             throw new NotFoundError('No feature toggle found');

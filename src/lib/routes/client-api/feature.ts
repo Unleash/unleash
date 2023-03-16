@@ -247,15 +247,19 @@ export default class FeatureController extends Controller {
             : await this.resolveFeaturesAndSegments(query);
 
         if (this.flagResolver.isEnabled('optimal304Differ')) {
-            const { etag } = await this.calculateMeta(query);
-            const [featuresNew] = await this.cachedFeatures2(query, etag);
-            const theDiffedObject = diff(features, featuresNew);
+            try {
+                const { etag } = await this.calculateMeta(query);
+                const [featuresNew] = await this.cachedFeatures2(query, etag);
+                const theDiffedObject = diff(features, featuresNew);
 
-            const message = isEmpty(theDiffedObject)
-                ? 'The diff is: <Empty>'
-                : `The diff is: ${JSON.stringify(theDiffedObject)}`;
+                const message = isEmpty(theDiffedObject)
+                    ? 'The diff is: <Empty>'
+                    : `The diff is: ${JSON.stringify(theDiffedObject)}`;
 
-            this.logger.warn(message);
+                this.logger.warn(message);
+            } catch (e) {
+                this.logger.error('The diff checker crashed', e);
+            }
         }
 
         if (this.clientSpecService.requestSupportsSpec(req, 'segments')) {

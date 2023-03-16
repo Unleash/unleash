@@ -29,6 +29,11 @@ interface IProjectForm {
     validateProjectId: () => void;
 }
 
+const PROJECT_STICKINESS_SELECT = 'PROJECT_STICKINESS_SELECT';
+const PROJECT_ID_INPUT = 'PROJECT_ID_INPUT';
+const PROJECT_NAME_INPUT = 'PROJECT_NAME_INPUT';
+const PROJECT_DESCRIPTION_INPUT = 'PROJECT_DESCRIPTION_INPUT';
+
 const ProjectForm: React.FC<IProjectForm> = ({
     children,
     handleSubmit,
@@ -62,6 +67,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
                     onFocus={() => clearErrors()}
                     onBlur={validateProjectId}
                     disabled={mode === 'Edit'}
+                    data-testid={PROJECT_ID_INPUT}
                     autoFocus
                     required
                 />
@@ -76,6 +82,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
                     error={Boolean(errors.name)}
                     errorText={errors.name}
                     onFocus={() => clearErrors()}
+                    data-testid={PROJECT_NAME_INPUT}
                     required
                 />
 
@@ -89,6 +96,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
                     maxRows={4}
                     value={projectDesc}
                     onChange={e => setProjectDesc(e.target.value)}
+                    data-testid={PROJECT_DESCRIPTION_INPUT}
                 />
 
                 <ConditionallyRender
@@ -104,6 +112,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
                             <StickinessSelect
                                 label="Stickiness"
                                 value={projectStickiness}
+                                data-testid={PROJECT_STICKINESS_SELECT}
                                 onChange={e =>
                                     setProjectStickiness &&
                                     setProjectStickiness(e.target.value)

@@ -16,6 +16,8 @@ import { Alert } from '@mui/material';
 import { GO_BACK } from 'constants/navigate';
 import { useDefaultProjectSettings } from 'hooks/useDefaultProjectSettings';
 
+const EDIT_PROJECT_BTN = 'EDIT_PROJECT_BTN';
+
 const EditProject = () => {
     const { uiConfig } = useUiConfig();
     const { setToastData, setToastApiError } = useToast();
@@ -123,6 +125,7 @@ const EditProject = () => {
                 <UpdateButton
                     permission={UPDATE_PROJECT}
                     projectId={projectId}
+                    data-testid={EDIT_PROJECT_BTN}
                 />
             </ProjectForm>
         </FormTemplate>

@@ -144,18 +144,10 @@ export default class ProxyController extends Controller {
         req: ApiUserRequest,
         res: Response<ProxyFeaturesSchema>,
     ) {
-        let toggles;
-        if (this.flagResolver.isEnabled('proxyReturnAllToggles')) {
-            toggles = await this.services.proxyService.getAllProxyFeatures(
-                req.user,
-                ProxyController.createContext(req),
-            );
-        } else {
-            toggles = await this.services.proxyService.getProxyFeatures(
-                req.user,
-                ProxyController.createContext(req),
-            );
-        }
+        const toggles = await this.services.proxyService.getProxyFeatures(
+            req.user,
+            ProxyController.createContext(req),
+        );
 
         res.set('Cache-control', 'public, max-age=2');
 

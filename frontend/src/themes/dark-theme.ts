@@ -2,15 +2,15 @@ import { createTheme } from '@mui/material/styles';
 import { alpha } from '@mui/material';
 
 const actionColors = {
-        0.54: 'rgba(223, 222, 255, 0.54)',
-        0.32: 'rgba(223, 222, 255, 0.32)',
-        0.12: 'rgba(223, 222, 255, 0.12)',
-        0.08: 'rgba(223, 222, 255, 0.08)',
-        0.05: 'rgba(223, 222, 255, 0.05)',
-}
+    0.54: 'rgba(223, 222, 255, 0.54)',
+    0.32: 'rgba(223, 222, 255, 0.32)',
+    0.12: 'rgba(223, 222, 255, 0.12)',
+    0.08: 'rgba(223, 222, 255, 0.08)',
+    0.05: 'rgba(223, 222, 255, 0.05)',
+};
 const purpleColor = {
-        0.5: 'rgba(151, 146, 237, 0.5))',
-}
+    0.5: 'rgba(151, 146, 237, 0.5))',
+};
 
 export default createTheme({
     breakpoints: {
@@ -77,8 +77,8 @@ export default createTheme({
 
     palette: {
         common: {
-            white: '#EEEEFC',  // Switch base (OFF) // Tooltips text color // Text color
-            black: '#A0A0B1',  // Switch track (OFF)
+            white: '#EEEEFC', // Switch base (OFF) // Tooltips text color // Text color
+            black: '#A0A0B1', // Switch track (OFF)
         },
         text: {
             primary: '#EEEEFC',
@@ -87,49 +87,49 @@ export default createTheme({
         },
         primary: {
             main: '#9792ED',
-            light: '#4C4992', 
+            light: '#4C4992',
             // Maybe to move links color to another variable????
             dark: '#9792ED', // Color used for links and on hover for primary buttons
             contrastText: '#EEEEFC', // Color used for content when primary.main is used as a background
         },
         secondary: {
             // Used for purple badges and puple light elements
-            main: '#57549C',  // used on icons on these elements
+            main: '#57549C', // used on icons on these elements
             light: '#34325E', // used as a bakground on these elements
-            dark: '#EEEEFC',  // used for text on these elements
+            dark: '#EEEEFC', // used for text on these elements
             border: '#4C4992',
             contrastText: '#EEEEFC', // Color used for content when info.main is used as a background
         },
         info: {
             // main: '#5483C9',  // used on icons on these elements
-            main: '#a2bbe2',  // used on icons on these elements
+            main: '#a2bbe2', // used on icons on these elements
             light: '#1A2641', // used as a bakground on these elements
-            dark: '#a2bbe2',  // used for text on these elements
+            dark: '#a2bbe2', // used for text on these elements
             border: '#1B407A',
             contrastText: '#EEEEFC', // Color used for content when info.main is used as a background
         },
         success: {
             // main: '#62872F',  // used on icons on these elements
-            main: '#94ae6f',  // used on icons on these elements
+            main: '#94ae6f', // used on icons on these elements
             light: '#333D30', // used as a bakground on these elements
-            dark: '#94ae6f',  // used for text on these elements
+            dark: '#94ae6f', // used for text on these elements
             border: '#3D600C',
             contrastText: '#EEEEFC', // Color used for content when success.main is used as a background
         },
         warning: {
             // main: '#9E691C',  // used on icons on these elements
-            main: '#bc7d21',  // used on icons on these elements
+            main: '#bc7d21', // used on icons on these elements
             light: '#3B302C', // used as a bakground on these elements
-            dark: '#bc7d21',  // used for text on these elements
+            dark: '#bc7d21', // used for text on these elements
             contrastText: '#EEEEFC', // Color used for content when warning.main is used as a background
             border: '#6C4A19',
         },
         error: {
             // main: '#B93F4A',  // used on error buttons // used on icons on these elements
-            main: '#ff6472',  // used on error buttons // used on icons on these elements
+            main: '#ff6472', // used on error buttons // used on icons on these elements
             light: '#3F2835', // used as a bakground on these elements
             // dark: '#F15260',  // used for text on these elements
-            dark: '#ff6472',  // used for text on these elements
+            dark: '#ff6472', // used for text on these elements
             border: '#8A3E45',
             contrastText: '#EEEEFC', // Color used for content when error.main is used as a background
         },
@@ -138,9 +138,9 @@ export default createTheme({
          *  Used for grey badges, hover elements, and grey light elements
          */
         neutral: {
-            main: '#858699',  // used on icons on these elements
+            main: '#858699', // used on icons on these elements
             light: '#2B2A3C', // used as a bakground on these elements
-            dark: '#EEEEFC',  // used for text on these elements
+            dark: '#EEEEFC', // used for text on these elements
             border: '#454360',
             contrastText: '#EEEEFC', // Color used for text inside badge
         },
@@ -148,10 +148,10 @@ export default createTheme({
         background: {
             paper: '#222130', // Background color for all containers
             default: '#222130',
-            application: '#1A1924', 
+            application: '#1A1924',
             sidebar: '#4C4992',
             alternative: '#4C4992', // used on the dark theme to shwitch primary main to a darker shade
-            elevation1: '#2B2A3C', 
+            elevation1: '#2B2A3C',
             elevation2: '#2B2A3C',
             // elevation2: '#302E42',
         },
@@ -249,16 +249,24 @@ export default createTheme({
             // 500: '#A6000E',
             600: '#343348', // slider tooltip background
             700: '#343348', // Dark tooltip background
-            // 800: '#A6000E', 
+            // 800: '#A6000E',
             // 900: '#A6000E',
             // A100: '#A6000E',
             // A200: '#A6000E',
             // A400: '#A6000E',
             // A700: '#A6000E',
-        }
+        },
     },
 
     components: {
+        MuiCssBaseline: {
+            styleOverrides: {
+                '.skeleton::before': {
+                    backgroundColor: '#2B2A3C',
+                },
+            },
+        },
+
         // Links
         MuiLink: {
             styleOverrides: {
@@ -429,16 +437,23 @@ export default createTheme({
                         borderRadius: theme.shape.borderRadiusLarge,
                     },
                     '&.environment-accordion.Mui-expanded': {
-                        outline: `2px solid ${alpha(theme.palette.background.alternative, 0.6)}`,
-                        boxShadow: `0px 2px 8px ${alpha(theme.palette.primary.main, 0.2)}`,
+                        outline: `2px solid ${alpha(
+                            theme.palette.background.alternative,
+                            0.6
+                        )}`,
+                        boxShadow: `0px 2px 8px ${alpha(
+                            theme.palette.primary.main,
+                            0.2
+                        )}`,
                     },
                     '&.accordion-disabled': {
                         outline: `1px solid ${alpha('#39384C', 0.5)}`,
                         backgroundColor: theme.palette.background.application,
                     },
-                    '&.accordion-disabled.Mui-expanded .MuiAccordionSummary-root': {
-                        borderBottom: `1px solid ${theme.palette.divider}`,
-                    },
+                    '&.accordion-disabled.Mui-expanded .MuiAccordionSummary-root':
+                        {
+                            borderBottom: `1px solid ${theme.palette.divider}`,
+                        },
                 }),
             },
         },
@@ -460,10 +475,10 @@ export default createTheme({
             styleOverrides: {
                 root: ({ theme }) => ({
                     zIndex: 1,
-                    '&&& > .Mui-checked:hover': { 
+                    '&&& > .Mui-checked:hover': {
                         backgroundColor: actionColors[0.08],
                     },
-                    '&&& > .Mui-checked.Mui-disabled': { 
+                    '&&& > .Mui-checked.Mui-disabled': {
                         color: '#423F6E',
                     },
                 }),
@@ -475,7 +490,7 @@ export default createTheme({
             styleOverrides: {
                 root: {
                     '&.Mui-disabled': {
-                        opacity: 0.40,
+                        opacity: 0.4,
                     },
                 },
             },
@@ -528,7 +543,7 @@ export default createTheme({
         MuiOutlinedInput: {
             styleOverrides: {
                 root: ({ theme }) => ({
-                    'fieldset': {
+                    fieldset: {
                         borderColor: '#646382',
                     },
 
@@ -539,7 +554,7 @@ export default createTheme({
                     '&&&.Mui-focused fieldset': {
                         borderColor: '#9792ED',
                     },
-                    
+
                     '&&&.Mui-disabled fieldset': {
                         borderColor: '#47475D',
                     },

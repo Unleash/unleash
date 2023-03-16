@@ -41,7 +41,6 @@ button {
 }
 
 .skeleton::before {
-    background-color: #e2e8f0;
     content: '';
     position: absolute;
     top: 0px;

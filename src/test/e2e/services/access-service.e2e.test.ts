@@ -6,7 +6,7 @@ import { AccessService } from '../../../lib/services/access-service';
 
 import * as permissions from '../../../lib/types/permissions';
 import { RoleName } from '../../../lib/types/model';
-import { IUnleashStores, IUser } from '../../../lib/types';
+import { IUnleashStores } from '../../../lib/types';
 import FeatureToggleService from '../../../lib/services/feature-toggle-service';
 import ProjectService from '../../../lib/services/project-service';
 import { createTestConfig } from '../../config/test-config';
@@ -41,16 +41,6 @@ const createUserViewerAccess = async (name, email) => {
     const user = await userStore.insert({ name, email });
     await accessService.addUserToRole(user.id, readRole.id, ALL_PROJECTS);
     return user;
-};
-
-const isProjectMember = async (
-    user: Pick<IUser, 'id' | 'permissions' | 'isAPI'>,
-    projectName: string,
-    condition: boolean,
-) => {
-    expect(await accessService.isProjectMember(user.id, projectName)).toBe(
-        condition,
-    );
 };
 
 const hasCommonProjectAccess = async (user, projectName, condition) => {
@@ -415,13 +405,6 @@ test('should grant user access to project', async () => {
 
     // // Should be able to update feature toggles inside the project
     await hasCommonProjectAccess(sUser, project, true);
-    await isProjectMember(sUser, project, true);
-    await isProjectMember(user, project, true);
-    // should list project members
-    expect(await accessService.getProjectMembers(project)).toStrictEqual([
-        { email: user.email, id: user.id, username: user.username },
-        { email: sUser.email, id: sUser.id, username: sUser.username },
-    ]);
 
     // Should not be able to admin the project itself.
     expect(
@@ -912,7 +895,6 @@ test('Should be allowed move feature toggle to project when given access through
     const projectRole = await accessService.getRoleByName(RoleName.MEMBER);
 
     await hasCommonProjectAccess(viewerUser, project.id, false);
-    await isProjectMember(viewerUser, project.id, false);
 
     await accessService.addGroupToRole(
         groupWithProjectAccess.id!,
@@ -922,7 +904,6 @@ test('Should be allowed move feature toggle to project when given access through
     );
 
     await hasCommonProjectAccess(viewerUser, project.id, true);
-    await isProjectMember(viewerUser, project.id, true);
 });
 
 test('Should not lose user role access when given permissions from a group', async () => {

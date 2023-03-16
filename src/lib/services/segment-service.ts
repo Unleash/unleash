@@ -14,8 +14,9 @@ import {
 import User from '../types/user';
 import { IFeatureStrategiesStore } from '../types/stores/feature-strategies-store';
 import BadDataError from '../error/bad-data-error';
+import { ISegmentService } from '../segments/segment-service-interface';
 
-export class SegmentService {
+export class SegmentService implements ISegmentService {
     private logger: Logger;
 
     private segmentStore: ISegmentStore;

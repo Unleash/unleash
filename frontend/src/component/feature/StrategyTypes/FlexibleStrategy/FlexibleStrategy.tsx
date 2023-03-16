@@ -12,9 +12,9 @@ import {
     parseParameterString,
 } from 'utils/parseParameter';
 import { StickinessSelect } from './StickinessSelect/StickinessSelect';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
-import { useDefaultProjectStickiness } from '../../../../hooks/useDefaultProjectStickiness';
+import { useDefaultProjectSettings } from 'hooks/useDefaultProjectSettings';
+import Loader from '../../../common/Loader/Loader';
 
 interface IFlexibleStrategyProps {
     parameters: IFeatureStrategyParameters;
@@ -29,8 +29,7 @@ const FlexibleStrategy = ({
     editable = true,
 }: IFlexibleStrategyProps) => {
     const projectId = useOptionalPathParam('projectId');
-    const { defaultStickiness } = useDefaultProjectStickiness(projectId);
-
+    const { defaultStickiness, loading } = useDefaultProjectSettings(projectId);
     const onUpdate = (field: string) => (newValue: string) => {
         updateParameter(field, newValue);
     };
@@ -56,6 +55,10 @@ const FlexibleStrategy = ({
 
     if (parameters.stickiness === '') {
         onUpdate('stickiness')(stickiness);
+    }
+
+    if (loading) {
+        return <Loader />;
     }
 
     return (

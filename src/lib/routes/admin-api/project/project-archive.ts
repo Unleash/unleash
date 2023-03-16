@@ -1,6 +1,11 @@
 import { Response } from 'express';
 import { IUnleashConfig } from '../../../types/option';
-import { IFlagResolver, IProjectParam, IUnleashServices } from '../../../types';
+import {
+    IFlagResolver,
+    IProjectParam,
+    IUnleashServices,
+    UPDATE_FEATURE,
+} from '../../../types';
 import { Logger } from '../../../logger';
 import { extractUsername } from '../../../util/extract-user';
 import { DELETE_FEATURE } from '../../../types/permissions';
@@ -14,6 +19,7 @@ import Controller from '../../controller';
 
 const PATH = '/:projectId/archive';
 const PATH_DELETE = `${PATH}/delete`;
+const PATH_REVIVE = `${PATH}/revive`;
 
 export default class ProjectArchiveController extends Controller {
     private readonly logger: Logger;
@@ -47,8 +53,48 @@ export default class ProjectArchiveController extends Controller {
                 openApiService.validPath({
                     tags: ['Archive'],
                     operationId: 'deleteFeatures',
+                    description:
+                        'This endpoint deletes the specified features, that are in archive.',
+                    summary: 'Deletes a list of features',
                     requestBody: createRequestSchema('batchFeaturesSchema'),
                     responses: { 200: emptyResponse },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'post',
+            path: PATH_REVIVE,
+            acceptAnyContentType: true,
+            handler: this.reviveFeatures,
+            permission: UPDATE_FEATURE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['Archive'],
+                    operationId: 'reviveFeatures',
+                    description:
+                        'This endpoint revives the specified features.',
+                    summary: 'Revives a list of features',
+                    requestBody: createRequestSchema('batchFeaturesSchema'),
+                    responses: { 200: emptyResponse },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'post',
+            path: PATH,
+            handler: this.archiveFeatures,
+            permission: DELETE_FEATURE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['Features'],
+                    operationId: 'archiveFeatures',
+                    description:
+                        'This endpoint archives the specified features.',
+                    summary: 'Archives a list of features',
+                    requestBody: createRequestSchema('batchFeaturesSchema'),
+                    responses: { 202: emptyResponse },
                 }),
             ],
         });
@@ -66,6 +112,36 @@ export default class ProjectArchiveController extends Controller {
         const user = extractUsername(req);
         await this.featureService.deleteFeatures(features, projectId, user);
         res.status(200).end();
+    }
+
+    async reviveFeatures(
+        req: IAuthRequest<IProjectParam, any, BatchFeaturesSchema>,
+        res: Response<void>,
+    ): Promise<void> {
+        if (!this.flagResolver.isEnabled('bulkOperations')) {
+            throw new NotFoundError('Bulk operations are not enabled');
+        }
+        const { projectId } = req.params;
+        const { features } = req.body;
+        const user = extractUsername(req);
+        await this.featureService.reviveFeatures(features, projectId, user);
+        res.status(200).end();
+    }
+
+    async archiveFeatures(
+        req: IAuthRequest<IProjectParam, void, BatchFeaturesSchema>,
+        res: Response,
+    ): Promise<void> {
+        if (!this.flagResolver.isEnabled('bulkOperations')) {
+            throw new NotFoundError('Bulk operations are not enabled');
+        }
+
+        const { features } = req.body;
+        const { projectId } = req.params;
+        const userName = extractUsername(req);
+
+        await this.featureService.archiveToggles(features, userName, projectId);
+        res.status(202).end();
     }
 }
 

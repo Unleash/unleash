@@ -20,7 +20,6 @@ import { extractUsername } from '../../../util';
 import { IAuthRequest } from '../../unleash-types';
 import {
     AdminFeaturesQuerySchema,
-    BatchFeaturesSchema,
     CreateFeatureSchema,
     CreateFeatureStrategySchema,
     createRequestSchema,
@@ -39,11 +38,7 @@ import {
     UpdateFeatureSchema,
     UpdateFeatureStrategySchema,
 } from '../../../openapi';
-import {
-    OpenApiService,
-    SegmentService,
-    FeatureToggleService,
-} from '../../../services';
+import { OpenApiService, FeatureToggleService } from '../../../services';
 import { querySchema } from '../../../schema/feature-schema';
 import NotFoundError from '../../../error/notfound-error';
 import { BatchStaleSchema } from '../../../openapi/spec/batch-stale-schema';
@@ -76,7 +71,6 @@ export interface IFeatureProjectUserParams extends ProjectParam {
 }
 
 const PATH = '/:projectId/features';
-const PATH_ARCHIVE = '/:projectId/archive';
 const PATH_STALE = '/:projectId/stale';
 const PATH_FEATURE = `${PATH}/:featureName`;
 const PATH_FEATURE_CLONE = `${PATH_FEATURE}/clone`;
@@ -97,24 +91,17 @@ export default class ProjectFeaturesController extends Controller {
 
     private openApiService: OpenApiService;
 
-    private segmentService: SegmentService;
-
     private flagResolver: IFlagResolver;
 
     private readonly logger: Logger;
 
     constructor(
         config: IUnleashConfig,
-        {
-            featureToggleServiceV2,
-            openApiService,
-            segmentService,
-        }: ProjectFeaturesServices,
+        { featureToggleServiceV2, openApiService }: ProjectFeaturesServices,
     ) {
         super(config);
         this.featureService = featureToggleServiceV2;
         this.openApiService = openApiService;
-        this.segmentService = segmentService;
         this.flagResolver = config.flagResolver;
         this.logger = config.getLogger('/admin-api/project/features.ts');
 
@@ -411,23 +398,6 @@ export default class ProjectFeaturesController extends Controller {
 
         this.route({
             method: 'post',
-            path: PATH_ARCHIVE,
-            handler: this.archiveFeatures,
-            permission: DELETE_FEATURE,
-            middleware: [
-                openApiService.validPath({
-                    tags: ['Features'],
-                    operationId: 'archiveFeatures',
-                    description:
-                        'This endpoint archives the specified features.',
-                    summary: 'Archives a list of features',
-                    requestBody: createRequestSchema('batchFeaturesSchema'),
-                    responses: { 202: emptyResponse },
-                }),
-            ],
-        });
-        this.route({
-            method: 'post',
             path: PATH_STALE,
             handler: this.staleFeatures,
             permission: UPDATE_FEATURE,
@@ -618,22 +588,6 @@ export default class ProjectFeaturesController extends Controller {
             projectId,
         );
         res.status(202).send();
-    }
-
-    async archiveFeatures(
-        req: IAuthRequest<{ projectId: string }, void, BatchFeaturesSchema>,
-        res: Response,
-    ): Promise<void> {
-        if (!this.flagResolver.isEnabled('bulkOperations')) {
-            throw new NotFoundError('Bulk operations are not enabled');
-        }
-
-        const { features } = req.body;
-        const { projectId } = req.params;
-        const userName = extractUsername(req);
-
-        await this.featureService.archiveToggles(features, userName, projectId);
-        res.status(202).end();
     }
 
     async staleFeatures(

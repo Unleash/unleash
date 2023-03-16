@@ -50,6 +50,7 @@ import { IGroupModelWithProjectRole, IGroupRole } from 'lib/types/group';
 import { FavoritesService } from './favorites-service';
 import { TimeToProduction } from '../read-models/time-to-production/time-to-production';
 import { IProjectStatsStore } from 'lib/types/stores/project-stats-store-type';
+import { uniqueByKey } from '../util/unique';
 
 const getCreatedBy = (user: IUser) => user.email || user.username || 'unknown';
 
@@ -621,6 +622,33 @@ export default class ProjectService {
 
     async getMembers(projectId: string): Promise<number> {
         return this.store.getMembersCountByProject(projectId);
+    }
+
+    async getProjectUsers(
+        projectId: string,
+    ): Promise<Array<Pick<IUser, 'id' | 'email' | 'username'>>> {
+        const [, users, groups] = await this.accessService.getProjectRoleAccess(
+            projectId,
+        );
+        const actualUsers = users.map((user) => ({
+            id: user.id,
+            email: user.email,
+            username: user.username,
+        }));
+        const actualGroupUsers = groups
+            .flatMap((group) => group.users)
+            .map((user) => user.user)
+            .map((user) => ({
+                id: user.id,
+                email: user.email,
+                username: user.username,
+            }));
+        return uniqueByKey([...actualUsers, ...actualGroupUsers], 'id');
+    }
+
+    async isProjectUser(userId: number, projectId: string): Promise<boolean> {
+        const users = await this.getProjectUsers(projectId);
+        return Boolean(users.find((user) => user.id === userId));
     }
 
     async getProjectsByUser(userId: number): Promise<string[]> {

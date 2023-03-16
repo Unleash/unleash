@@ -50,7 +50,6 @@ import { DEFAULT_ENV } from '../util/constants';
 import { GLOBAL_ENV } from '../types/environment';
 import { ISegmentStore } from '../types/stores/segment-store';
 import { PartialSome } from '../types/partial';
-import { IFlagResolver } from 'lib/types';
 
 export interface IBackupOption {
     includeFeatureToggles: boolean;
@@ -93,14 +92,9 @@ export default class StateService {
 
     private segmentStore: ISegmentStore;
 
-    private flagResolver: IFlagResolver;
-
     constructor(
         stores: IUnleashStores,
-        {
-            getLogger,
-            flagResolver,
-        }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>,
+        { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
     ) {
         this.eventStore = stores.eventStore;
         this.toggleStore = stores.featureToggleStore;
@@ -113,7 +107,6 @@ export default class StateService {
         this.featureTagStore = stores.featureTagStore;
         this.environmentStore = stores.environmentStore;
         this.segmentStore = stores.segmentStore;
-        this.flagResolver = flagResolver;
         this.logger = getLogger('services/state-service.js');
     }
 

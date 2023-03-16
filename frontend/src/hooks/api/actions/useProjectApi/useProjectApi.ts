@@ -203,6 +203,19 @@ const useProjectApi = () => {
         return makeRequest(req.caller, req.id);
     };
 
+    const setDefaultProjectStickiness = (
+        projectId: string,
+        stickiness: string
+    ) => {
+        const path = `api/admin/projects/${projectId}/stickiness`;
+        const req = createRequest(path, {
+            method: 'POST',
+            body: JSON.stringify({ stickiness }),
+        });
+
+        return makeRequest(req.caller, req.id);
+    };
+
     const archiveFeatures = async (projectId: string, featureIds: string[]) => {
         const path = `api/admin/projects/${projectId}/archive`;
         const req = createRequest(path, {
@@ -246,9 +259,10 @@ const useProjectApi = () => {
         changeGroupRole,
         archiveFeatures,
         staleFeatures,
+        searchProjectUser,
+        setDefaultProjectStickiness,
         errors,
         loading,
-        searchProjectUser,
     };
 };
 

@@ -28,6 +28,7 @@ import { OpenApiService, SettingService } from '../../../services';
 import { IAuthRequest } from '../../unleash-types';
 import { ProjectApiTokenController } from './api-token';
 import ProjectArchiveController from './project-archive';
+import NotFoundError from '../../../error/notfound-error';
 
 const STICKINESS_KEY = 'stickiness';
 const DEFAULT_STICKINESS = 'default';
@@ -164,8 +165,7 @@ export default class ProjectApi extends Controller {
         res: Response<ProjectSettingsSchema>,
     ): Promise<void> {
         if (!this.config.flagResolver.isEnabled('projectScopedStickiness')) {
-            res.status(404);
-            return Promise.resolve();
+            throw new NotFoundError('Project scoped stickiness is not enabled');
         }
         const { projectId } = req.params;
         const stickinessSettings = await this.settingService.get<object>(
@@ -192,8 +192,7 @@ export default class ProjectApi extends Controller {
         res: Response<ProjectSettingsSchema>,
     ): Promise<void> {
         if (!this.config.flagResolver.isEnabled('projectScopedStickiness')) {
-            res.status(404);
-            return Promise.resolve();
+            throw new NotFoundError('Project scoped stickiness is not enabled');
         }
         const { projectId } = req.params;
         const { defaultStickiness } = req.body;

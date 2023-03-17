@@ -86,7 +86,9 @@ describe('notifications', () => {
         cy.get("[data-testid='NAVIGATE_TO_EDIT_PROJECT']").click();
 
         //then
-        cy.get("[id='stickiness-select']").should('have.value', 'userId');
+        cy.get("[id='stickiness-select']")
+            .first()
+            .should('have.text', 'userId');
     });
 
     it('should respect the default project stickiness when creating a Gradual Rollout Strategy', () => {
@@ -97,10 +99,9 @@ describe('notifications', () => {
         );
 
         //then
-        cy.get("[data-testid='FLEXIBLE_STRATEGY_STICKINESS_ID']").should(
-            'have.value',
-            'userId'
-        );
+        cy.get("[id='stickiness-select']")
+            .first()
+            .should('have.text', 'userId');
     });
 
     it('should respect the default project stickiness when creating a variant', () => {
@@ -111,6 +112,6 @@ describe('notifications', () => {
 
         cy.get("[data-testid='EDIT_VARIANTS_BUTTON']").click();
         //then
-        cy.get('#menu-stickiness').should('have.value', 'userId');
+        cy.get('#menu-stickiness').first().should('have.text', 'userId');
     });
 });

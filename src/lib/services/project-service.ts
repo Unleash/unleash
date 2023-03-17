@@ -7,36 +7,35 @@ import { nameType } from '../routes/util';
 import { projectSchema } from './project-schema';
 import NotFoundError from '../error/notfound-error';
 import {
+    DEFAULT_PROJECT,
+    DefaultStickiness,
     FEATURE_ENVIRONMENT_ENABLED,
+    FeatureToggle,
+    IAccountStore,
+    IEnvironmentStore,
+    IEventStore,
+    IFeatureEnvironmentStore,
+    IFeatureToggleStore,
+    IFeatureTypeStore,
+    IProject,
+    IProjectOverview,
+    IProjectWithCount,
+    IUnleashConfig,
+    IUnleashStores,
+    IUserWithRole,
+    MOVE_FEATURE_TOGGLE,
     PROJECT_CREATED,
     PROJECT_DELETED,
     PROJECT_UPDATED,
     ProjectGroupAddedEvent,
     ProjectGroupRemovedEvent,
     ProjectGroupUpdateRoleEvent,
+    ProjectMode,
     ProjectUserAddedEvent,
     ProjectUserRemovedEvent,
     ProjectUserUpdateRoleEvent,
-} from '../types/events';
-import {
-    DefaultStickiness,
-    IAccountStore,
-    IUnleashConfig,
-    IUnleashStores,
-    ProjectMode,
-} from '../types';
-import {
-    FeatureToggle,
-    IProject,
-    IProjectOverview,
-    IProjectWithCount,
-    IUserWithRole,
     RoleName,
-} from '../types/model';
-import { IEnvironmentStore } from '../types/stores/environment-store';
-import { IFeatureTypeStore } from '../types/stores/feature-type-store';
-import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
-import { IFeatureEnvironmentStore } from '../types/stores/feature-environment-store';
+} from '../types';
 import {
     IProjectQuery,
     IProjectSettings,
@@ -46,15 +45,12 @@ import {
     IProjectAccessModel,
     IRoleDescriptor,
 } from '../types/stores/access-store';
-import { IEventStore } from '../types/stores/event-store';
 import FeatureToggleService from './feature-toggle-service';
-import { MOVE_FEATURE_TOGGLE } from '../types/permissions';
 import NoAccessError from '../error/no-access-error';
 import IncompatibleProjectError from '../error/incompatible-project-error';
-import { DEFAULT_PROJECT } from '../types/project';
 import { IFeatureTagStore } from 'lib/types/stores/feature-tag-store';
 import ProjectWithoutOwnerError from '../error/project-without-owner-error';
-import { arraysHaveSameItems } from '../util/arraysHaveSameItems';
+import { arraysHaveSameItems } from '../util';
 import { GroupService } from './group-service';
 import { IGroupModelWithProjectRole, IGroupRole } from 'lib/types/group';
 import { FavoritesService } from './favorites-service';
@@ -175,7 +171,10 @@ export default class ProjectService {
     }
 
     async createProject(
-        newProject: Pick<IProject, 'id' | 'name' | 'mode'>,
+        newProject: Pick<
+            IProject,
+            'id' | 'name' | 'mode' | 'defaultStickiness'
+        >,
         user: IUser,
     ): Promise<IProject> {
         const data = await projectSchema.validateAsync(newProject);

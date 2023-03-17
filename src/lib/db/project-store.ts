@@ -5,10 +5,11 @@ import NotFoundError from '../error/notfound-error';
 import {
     DefaultStickiness,
     IEnvironment,
+    IFlagResolver,
     IProject,
     IProjectWithCount,
     ProjectMode,
-} from '../types/model';
+} from '../types';
 import {
     IProjectHealthUpdate,
     IProjectInsert,
@@ -17,13 +18,12 @@ import {
     IProjectSettingsRow,
     IProjectStore,
 } from '../types/stores/project-store';
-import { DEFAULT_ENV } from '../util/constants';
+import { DEFAULT_ENV } from '../util';
 import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
 import EventEmitter from 'events';
-import { IFlagResolver } from '../types';
-import Raw = Knex.Raw;
 import { Db } from './db';
+import Raw = Knex.Raw;
 
 const COLUMNS = [
     'id',
@@ -489,10 +489,10 @@ class ProjectStore implements IProjectStore {
             .then((res) => Number(res[0].count));
     }
 
-    mapSettingsRow(row: IProjectSettingsRow): IProjectSettings {
+    mapSettingsRow(row?: IProjectSettingsRow): IProjectSettings {
         return {
-            defaultStickiness: row.default_stickiness,
-            mode: row.project_mode,
+            defaultStickiness: row?.default_stickiness || 'default',
+            mode: row?.project_mode || 'open',
         };
     }
 

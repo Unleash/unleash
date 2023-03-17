@@ -6,7 +6,7 @@ interface ICreatePayload {
     name: string;
     description: string;
     mode: 'open' | 'protected';
-    stickiness: 'default' | 'userId' | 'sessionId' | 'random';
+    defaultStickiness: 'default' | 'userId' | 'sessionId' | 'random';
 }
 
 interface IAccessesPayload {

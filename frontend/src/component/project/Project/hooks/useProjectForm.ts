@@ -5,12 +5,13 @@ import { useDefaultProjectSettings } from 'hooks/useDefaultProjectSettings';
 
 export type ProjectMode = 'open' | 'protected';
 export type DefaultStickiness = 'default' | 'userId' | 'sessionId' | 'random';
+
 const useProjectForm = (
     initialProjectId = '',
     initialProjectName = '',
     initialProjectDesc = '',
     initialProjectStickiness: DefaultStickiness = 'default',
-    initialProjectMode = 'open'
+    initialProjectMode: ProjectMode = 'open'
 ) => {
     const [projectId, setProjectId] = useState(initialProjectId);
     const { defaultStickiness } = useDefaultProjectSettings(projectId);
@@ -21,7 +22,8 @@ const useProjectForm = (
         useState<DefaultStickiness>(
             defaultStickiness || initialProjectStickiness
         );
-    const [projectMode, setProjectMode] = useState(initialProjectMode);
+    const [projectMode, setProjectMode] =
+        useState<ProjectMode>(initialProjectMode);
     const [errors, setErrors] = useState({});
 
     const { validateId } = useProjectApi();

@@ -75,7 +75,7 @@ const EditProject = () => {
                 await editProject(id, payload);
                 await setDefaultProjectStickiness(
                     projectId,
-                    payload.stickiness
+                    payload.defaultStickiness
                 );
                 refetch();
                 navigate(`/projects/${id}`);

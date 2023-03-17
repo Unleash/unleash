@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import supertest from 'supertest';
 
 import EventEmitter from 'events';
@@ -7,9 +6,10 @@ import { createTestConfig } from '../../config/test-config';
 import { IAuthType, IUnleashConfig } from '../../../lib/types/option';
 import { createServices } from '../../../lib/services';
 import sessionDb from '../../../lib/middleware/session-db';
-import { IUnleashStores } from '../../../lib/types';
+import { DEFAULT_PROJECT, IUnleashStores } from '../../../lib/types';
 import { IUnleashServices } from '../../../lib/types/services';
 import { Db } from '../../../lib/db/db';
+import { IContextFieldDto } from 'lib/types/stores/context-field-store';
 
 process.env.NODE_ENV = 'test';
 
@@ -18,6 +18,53 @@ export interface IUnleashTest {
     destroy: () => Promise<void>;
     services: IUnleashServices;
     config: IUnleashConfig;
+    api: IUnleashHttpAPI;
+}
+
+export interface IUnleashHttpAPI {
+    createFeature(name: string, project?: string): supertest.Test;
+    archiveFeature(name: string, project?: string): supertest.Test;
+    createContextField(contextField: IContextFieldDto): supertest.Test;
+}
+
+export class UnleashHttpAPI implements IUnleashHttpAPI {
+    private request: supertest.SuperAgentTest;
+
+    private base: string;
+
+    constructor(request: supertest.SuperAgentTest, config: IUnleashConfig) {
+        this.request = request;
+        this.base = config.server.baseUriPath || '';
+    }
+
+    createFeature(
+        name: string,
+        project: string = DEFAULT_PROJECT,
+    ): supertest.Test {
+        return this.request
+            .post(`${this.base}/api/admin/projects/${project}/features`)
+            .send({
+                name,
+            })
+            .set('Content-Type', 'application/json');
+    }
+
+    archiveFeature(
+        name: string,
+        project: string = DEFAULT_PROJECT,
+    ): supertest.Test {
+        return this.request
+            .delete(
+                `${this.base}/api/admin/projects/${project}/features/${name}`,
+            )
+            .set('Content-Type', 'application/json');
+    }
+
+    createContextField(contextField: IContextFieldDto): supertest.Test {
+        return this.request
+            .post(`${this.base}/api/admin/context`)
+            .send(contextField);
+    }
 }
 
 async function createApp(
@@ -51,8 +98,9 @@ async function createApp(
         services.proxyService.destroy();
     };
 
+    const api = new UnleashHttpAPI(request, config);
     // TODO: use create from server-impl instead?
-    return { request, destroy, services, config };
+    return { request, destroy, services, config, api };
 }
 
 export async function setupApp(stores: IUnleashStores): Promise<IUnleashTest> {
@@ -61,6 +109,7 @@ export async function setupApp(stores: IUnleashStores): Promise<IUnleashTest> {
 
 export async function setupAppWithCustomConfig(
     stores: IUnleashStores,
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     customOptions: any,
     db?: Db,
 ): Promise<IUnleashTest> {
@@ -69,6 +118,7 @@ export async function setupAppWithCustomConfig(
 
 export async function setupAppWithAuth(
     stores: IUnleashStores,
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     customOptions?: any,
     db?: Db,
 ): Promise<IUnleashTest> {

@@ -3,11 +3,13 @@ import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useDefaultProjectSettings } from 'hooks/useDefaultProjectSettings';
 
+export type ProjectMode = 'open' | 'protected';
+export type DefaultStickiness = 'default' | 'userId' | 'sessionId' | 'random';
 const useProjectForm = (
     initialProjectId = '',
     initialProjectName = '',
     initialProjectDesc = '',
-    initialProjectStickiness = 'default',
+    initialProjectStickiness: DefaultStickiness = 'default',
     initialProjectMode = 'open'
 ) => {
     const [projectId, setProjectId] = useState(initialProjectId);
@@ -15,9 +17,10 @@ const useProjectForm = (
 
     const [projectName, setProjectName] = useState(initialProjectName);
     const [projectDesc, setProjectDesc] = useState(initialProjectDesc);
-    const [projectStickiness, setProjectStickiness] = useState(
-        defaultStickiness || initialProjectStickiness
-    );
+    const [projectStickiness, setProjectStickiness] =
+        useState<DefaultStickiness>(
+            defaultStickiness || initialProjectStickiness
+        );
     const [projectMode, setProjectMode] = useState(initialProjectMode);
     const [errors, setErrors] = useState({});
 
@@ -48,7 +51,7 @@ const useProjectForm = (
             id: projectId,
             name: projectName,
             description: projectDesc,
-            stickiness: projectStickiness,
+            defaultStickiness: projectStickiness,
             mode: projectMode,
         };
     };

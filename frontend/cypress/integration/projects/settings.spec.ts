@@ -3,11 +3,11 @@
 type UserCredentials = { email: string; password: string };
 const ENTERPRISE = Boolean(Cypress.env('ENTERPRISE'));
 const randomId = String(Math.random()).split('.')[1];
-const featureToggleName = `notifications_test-${randomId}`;
+const featureToggleName = `settings-${randomId}`;
 const baseUrl = Cypress.config().baseUrl;
 let strategyId = '';
 const userName = `settings-user-${randomId}`;
-const projectName = `stickiness-project`;
+const projectName = `stickiness-project-${randomId}`;
 
 // Disable all active splash pages by visiting them.
 const disableActiveSplashScreens = () => {
@@ -46,7 +46,7 @@ describe('notifications', () => {
     });
 
     afterEach(() => {
-        cy.logout();
+        cy.request('DELETE', `${baseUrl}/api/admin/projects/${projectName}`);
     });
 
     const createFeature = () => {
@@ -65,18 +65,6 @@ describe('notifications', () => {
     const createProject = () => {
         cy.get('[data-testid=NAVIGATE_TO_CREATE_PROJECT').click();
 
-        cy.intercept('POST', `/api/admin/projects/${projectName}/validate`).as(
-            'validateId'
-        );
-
-        cy.intercept('POST', `/api/admin/projects/${projectName}`).as(
-            'createProject'
-        );
-
-        cy.intercept('POST', `/api/admin/projects/${projectName}/settings`).as(
-            'setProjectSettings'
-        );
-
         cy.get("[data-testid='PROJECT_ID_INPUT']").type(projectName);
         cy.get("[data-testid='PROJECT_NAME_INPUT']").type(projectName);
         cy.get("[id='stickiness-select']")
@@ -86,7 +74,6 @@ describe('notifications', () => {
             .first()
             .click();
         cy.get("[data-testid='CREATE_PROJECT_BTN']").click();
-        cy.wait('@createProject');
     };
 
     it('should store default project stickiness when creating, retrieve it when editing a project', () => {

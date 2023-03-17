@@ -6,7 +6,6 @@ export const projectStatsSchema = {
     additionalProperties: false,
     required: [
         'avgTimeToProdCurrentWindow',
-        'avgTimeToProdPastWindow',
         'createdCurrentWindow',
         'createdPastWindow',
         'archivedCurrentWindow',
@@ -26,12 +25,6 @@ Stats are divided into current and previous **windows**.
             example: 10,
             description:
                 'The average time from when a feature was created to when it was enabled in the "production" environment during the current window',
-        },
-        avgTimeToProdPastWindow: {
-            type: 'number',
-            example: 10,
-            description:
-                'The average time from when a feature was created to when it was enabled in the "production" environment during the previous window',
         },
         createdCurrentWindow: {
             type: 'number',

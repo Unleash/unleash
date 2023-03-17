@@ -11,7 +11,6 @@ const TABLE = 'project_stats';
 
 const PROJECT_STATS_COLUMNS = [
     'avg_time_to_prod_current_window',
-    'avg_time_to_prod_past_window',
     'project',
     'features_created_current_window',
     'features_created_past_window',
@@ -24,7 +23,6 @@ const PROJECT_STATS_COLUMNS = [
 
 interface IProjectStatsRow {
     avg_time_to_prod_current_window: number;
-    avg_time_to_prod_past_window: number;
     features_created_current_window: number;
     features_created_past_window: number;
     features_archived_current_window: number;
@@ -59,7 +57,6 @@ class ProjectStatsStore implements IProjectStatsStore {
             .insert({
                 avg_time_to_prod_current_window:
                     status.avgTimeToProdCurrentWindow,
-                avg_time_to_prod_past_window: status.avgTimeToProdPastWindow,
                 project: projectId,
                 features_created_current_window: status.createdCurrentWindow,
                 features_created_past_window: status.createdPastWindow,
@@ -88,7 +85,6 @@ class ProjectStatsStore implements IProjectStatsStore {
         if (!row) {
             return {
                 avgTimeToProdCurrentWindow: 0,
-                avgTimeToProdPastWindow: 0,
                 createdCurrentWindow: 0,
                 createdPastWindow: 0,
                 archivedCurrentWindow: 0,
@@ -101,7 +97,6 @@ class ProjectStatsStore implements IProjectStatsStore {
 
         return {
             avgTimeToProdCurrentWindow: row.avg_time_to_prod_current_window,
-            avgTimeToProdPastWindow: row.avg_time_to_prod_past_window,
             createdCurrentWindow: row.features_created_current_window,
             createdPastWindow: row.features_created_past_window,
             archivedCurrentWindow: row.features_archived_current_window,

@@ -1,15 +1,12 @@
 import useUiConfig from './api/getters/useUiConfig/useUiConfig';
-import useSWR, { SWRConfiguration } from 'swr';
+import { SWRConfiguration } from 'swr';
 import { useCallback } from 'react';
 import handleErrorResponses from './api/getters/httpErrorResponseHandler';
+import { useConditionalSWR } from './api/getters/useConditionalSWR/useConditionalSWR';
 
 export interface IStickinessResponse {
-    status: number;
-
-    body?: {
-        defaultStickiness: string;
-        mode?: string;
-    };
+    defaultStickiness?: string;
+    mode?: string;
 }
 const DEFAULT_STICKINESS = 'default';
 export const useDefaultProjectSettings = (
@@ -21,16 +18,15 @@ export const useDefaultProjectSettings = (
     const PATH = `/api/admin/projects/${projectId}/settings`;
     const { projectScopedStickiness } = uiConfig.flags;
 
-    const { data, error, mutate } = useSWR<IStickinessResponse>(
+    const { data, error, mutate } = useConditionalSWR<IStickinessResponse>(
+        Boolean(projectId) && Boolean(projectScopedStickiness),
+        {},
         ['useDefaultProjectSettings', PATH],
         () => fetcher(PATH),
         options
     );
 
-    const defaultStickiness =
-        Boolean(projectScopedStickiness) && data?.body != null && projectId
-            ? data.body.defaultStickiness
-            : DEFAULT_STICKINESS;
+    const defaultStickiness = data?.defaultStickiness ?? DEFAULT_STICKINESS;
 
     const refetch = useCallback(() => {
         mutate().catch(console.warn);
@@ -39,24 +35,12 @@ export const useDefaultProjectSettings = (
         defaultStickiness,
         refetch,
         loading: !error && !data,
-        status: data?.status,
         error,
     };
 };
 
-export const fetcher = async (path: string): Promise<IStickinessResponse> => {
-    const res = await fetch(path);
-
-    if (res.status === 404) {
-        return { status: 404 };
-    }
-
-    if (!res.ok) {
-        await handleErrorResponses('Project stickiness data')(res);
-    }
-
-    return {
-        status: res.status,
-        body: await res.json(),
-    };
+const fetcher = (path: string) => {
+    return fetch(path)
+        .then(handleErrorResponses('Project stickiness data'))
+        .then(res => res.json());
 };

@@ -51,7 +51,11 @@ export const StickinessSelect = ({
             disabled={!editable}
             data-testid={dataTestId}
             onChange={onChange}
-            style={{ width: 'inherit', minWidth: '100%' }}
+            style={{
+                width: 'inherit',
+                minWidth: '100%',
+                marginBottom: '16px',
+            }}
         />
     );
 };

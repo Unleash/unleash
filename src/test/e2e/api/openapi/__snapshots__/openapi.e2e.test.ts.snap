@@ -2937,11 +2937,6 @@ Stats are divided into current and previous **windows**.
             "example": 10,
             "type": "number",
           },
-          "avgTimeToProdPastWindow": {
-            "description": "The average time from when a feature was created to when it was enabled in the "production" environment during the previous window",
-            "example": 10,
-            "type": "number",
-          },
           "createdCurrentWindow": {
             "description": "The number of feature toggles created during the current window",
             "example": 15,
@@ -2970,7 +2965,6 @@ Stats are divided into current and previous **windows**.
         },
         "required": [
           "avgTimeToProdCurrentWindow",
-          "avgTimeToProdPastWindow",
           "createdCurrentWindow",
           "createdPastWindow",
           "archivedCurrentWindow",

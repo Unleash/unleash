@@ -1,8 +1,9 @@
 import { createTheme } from '@mui/material/styles';
 import { colors } from './colors';
 import { alpha } from '@mui/material';
+import { focusable } from 'themes/themeStyles';
 
-export default createTheme({
+const theme = {
     breakpoints: {
         values: {
             xs: 0,
@@ -18,7 +19,7 @@ export default createTheme({
         elevated: '0px 1px 20px rgba(45, 42, 89, 0.1)',
         popup: '0px 2px 6px rgba(0, 0, 0, 0.25)',
         primaryHeader: '0px 8px 24px rgba(97, 91, 194, 0.2)',
-        separator: '0px 2px 3px hsl(0deg 0% 78% / 50%)',
+        separator: '0px 2px 4px rgba(32, 32, 33, 0.12)', // Notifications header
     },
     typography: {
         fontFamily: 'Sen, Roboto, sans-serif',
@@ -87,35 +88,35 @@ export default createTheme({
             light: colors.purple[50],
             dark: colors.purple[900], // Color used for text
             border: colors.purple[300],
-            contrastText: colors.grey[900], // Color used for text inside badge
+            contrastText: colors.purple[900], // Color used for text inside badge
         },
         info: {
             main: colors.blue[500],
             light: colors.blue[50],
             dark: colors.blue[800], // Color used for text
             border: colors.blue[200],
-            contrastText: colors.grey[900], // Color used for text inside alert
+            contrastText: colors.blue[800], // Color used for text inside alert
         },
         success: {
             main: colors.green[600],
             light: colors.green[50],
             dark: colors.green[800], // Color used for text
             border: colors.green[300],
-            contrastText: colors.grey[900], // Color used for text inside alert
+            contrastText: colors.green[800], // Color used for text inside alert
         },
         warning: {
             main: colors.orange[800],
             light: colors.orange[100],
             dark: colors.orange[900], // Color used for text
             border: colors.orange[500],
-            contrastText: colors.grey[900], // Color used for text inside alert
+            contrastText: colors.orange[900], // Color used for text inside alert
         },
         error: {
             main: colors.red[700], // used on error buttons // used on icons on these elements
             light: colors.red[50],
             dark: colors.red[800], // Color used for text
             border: colors.red[300],
-            contrastText: colors.grey[900], // Color used for text inside alert
+            contrastText: colors.red[800], // Color used for text inside alert
         },
 
         /**
@@ -126,7 +127,7 @@ export default createTheme({
             light: colors.grey[100],
             dark: colors.grey[800],
             border: colors.grey[400],
-            contrastText: colors.grey[900], // Color used for text inside badge
+            contrastText: colors.grey[800], // Color used for text inside badge
         },
 
         background: {
@@ -170,7 +171,7 @@ export default createTheme({
         },
 
         /**
-         * Text highlight effect color. Used when filtering/searching over content.
+         * Text highlight effect color. Used when filtering/searching over content
          */
         highlight: colors.orange[200],
 
@@ -193,7 +194,7 @@ export default createTheme({
         },
 
         /**
-         * Colors for event log output.
+         * Colors for event log output
          */
         eventLog: {
             diffAdd: colors.green[800],
@@ -202,7 +203,7 @@ export default createTheme({
         },
 
         /**
-         * For 'Seen' column on feature toggles list and other.
+         * For 'Seen' column on feature toggles list and other
          */
         seen: {
             unknown: colors.grey[100],
@@ -223,7 +224,7 @@ export default createTheme({
         /**
          * MUI grey colors
          */
-        grey: {
+        grey: { // This was to see were these colors are used from MUI
             // 50: '#A6000E',
             100: colors.grey[100], // Disabled Switch base (OFF)
             // 200: '#A6000E',
@@ -241,12 +242,26 @@ export default createTheme({
         },
     },
 
+}
+
+export default createTheme({
+    ...theme,
     components: {
+        // Skeleton
         MuiCssBaseline: {
             styleOverrides: {
-                '.skeleton::before': {
-                    backgroundColor: '#e2e8f0',
+                '.skeleton': {
+                    '&::before': {
+                        backgroundColor: theme.palette.background.elevation1,
+                    },
+                    '&::after': {
+                        background: 'linear-gradient(90deg, rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, 0.2) 100%, rgba(255, 255, 255, 0.5) 100%, rgba(255, 255, 255, 0))',
+                    },
                 },
+
+                'a': {
+                    color: theme.palette.links,                
+                }
             },
         },
 
@@ -254,6 +269,7 @@ export default createTheme({
         MuiLink: {
             styleOverrides: {
                 root: ({ theme }) => ({
+                    ...focusable(theme),
                     color: theme.palette.links,
                     '&:hover': {
                         textDecoration: 'none',
@@ -327,17 +343,19 @@ export default createTheme({
                     padding: theme.spacing(2, 3),
                     borderRadius: theme.shape.borderRadiusMedium,
                     a: {
-                        color: theme.palette.links,
+                        color: 'inherit',
                     },
                     '> .MuiAlert-icon': {
                         padding: 0,
+                        opacity: 1,
+                        fontSize: '24px',
                     },
                     '> .MuiAlert-message': {
-                        padding: 0,
+                        padding: '3px 0 0 0',
                     },
                     '&.MuiAlert-standardInfo': {
                         backgroundColor: theme.palette.info.light,
-                        color: theme.palette.info.contrastText,
+                        color: theme.palette.info.dark,
                         border: `1px solid ${theme.palette.info.border}`,
                         '& .MuiAlert-icon': {
                             color: theme.palette.info.main,
@@ -345,7 +363,7 @@ export default createTheme({
                     },
                     '&.MuiAlert-standardSuccess': {
                         backgroundColor: theme.palette.success.light,
-                        color: theme.palette.success.contrastText,
+                        color: theme.palette.success.dark,
                         border: `1px solid ${theme.palette.success.border}`,
                         '& .MuiAlert-icon': {
                             color: theme.palette.success.main,
@@ -353,7 +371,7 @@ export default createTheme({
                     },
                     '&.MuiAlert-standardWarning': {
                         backgroundColor: theme.palette.warning.light,
-                        color: theme.palette.warning.contrastText,
+                        color: theme.palette.warning.dark,
                         border: `1px solid ${theme.palette.warning.border}`,
                         '& .MuiAlert-icon': {
                             color: theme.palette.warning.main,
@@ -361,7 +379,7 @@ export default createTheme({
                     },
                     '&.MuiAlert-standardError': {
                         backgroundColor: theme.palette.error.light,
-                        color: theme.palette.error.contrastText,
+                        color: theme.palette.error.dark,
                         border: `1px solid ${theme.palette.error.border}`,
                         '& .MuiAlert-icon': {
                             color: theme.palette.error.main,

@@ -102,7 +102,7 @@ export const SearchSuggestions: VFC<SearchSuggestionsProps> = ({
             : 'example-search-text';
 
     return (
-        <StyledPaper>
+        <StyledPaper className='dropdown-outline'>
             <StyledBox>
                 <StyledFilterList />
                 <Box>

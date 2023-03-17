@@ -22,6 +22,13 @@ export const createFeatureStrategySchema = {
         parameters: {
             $ref: '#/components/schemas/parametersSchema',
         },
+        segments: {
+            type: 'array',
+            description: 'Ids of segments to use for this strategy',
+            items: {
+                type: 'number',
+            },
+        },
     },
     components: {
         schemas: {

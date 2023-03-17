@@ -889,6 +889,13 @@ exports[`should serve the OpenAPI spec 1`] = `
           "parameters": {
             "$ref": "#/components/schemas/parametersSchema",
           },
+          "segments": {
+            "description": "Ids of segments to use for this strategy",
+            "items": {
+              "type": "number",
+            },
+            "type": "array",
+          },
           "sortOrder": {
             "type": "number",
           },

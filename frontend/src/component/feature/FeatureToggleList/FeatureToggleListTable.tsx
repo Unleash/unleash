@@ -307,9 +307,7 @@ export const FeatureToggleListTable: VFC = () => {
                                 component={RouterLink}
                                 to="/archive"
                                 underline="always"
-                                sx={{ marginRight: 2,
-                                    ...focusable(theme)
-                                }}
+                                sx={{ marginRight: 2, ...focusable(theme) }}
                             >
                                 View archive
                             </Link>

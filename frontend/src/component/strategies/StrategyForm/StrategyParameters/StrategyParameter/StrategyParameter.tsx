@@ -5,7 +5,7 @@ import {
     IconButton,
     styled,
     Tooltip,
-    Link
+    Link,
 } from '@mui/material';
 import { Delete } from '@mui/icons-material';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';

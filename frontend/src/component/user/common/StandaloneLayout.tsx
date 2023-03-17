@@ -47,7 +47,7 @@ const StyledMain = styled('main')(({ theme }) => ({
     },
     [theme.breakpoints.down('sm')]: {
         borderRadius: '0',
-    }
+    },
 }));
 
 const StyledInnerRightContainer = styled('div')(({ theme }) => ({

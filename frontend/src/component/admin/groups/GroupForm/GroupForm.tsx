@@ -58,7 +58,7 @@ const StyledDescriptionBlock = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusMedium,
     marginBottom: theme.spacing(2),
 
-    'a': {
+    a: {
         color: theme.palette.links,
     },
 }));

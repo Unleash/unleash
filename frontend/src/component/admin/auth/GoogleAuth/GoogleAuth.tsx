@@ -240,7 +240,7 @@ export const GoogleAuth = () => {
                             Save
                         </Button>{' '}
                         <p>
-                            <small style={{ color: 'error.dark' }} > 
+                            <small style={{ color: 'error.dark' }}>
                                 {errors?.message}
                             </small>
                         </p>

@@ -56,19 +56,17 @@ export const InviteLinkBar: VFC = () => {
 
     return (
         <Box
-            sx={
-                theme => ({
-                    backgroundColor: theme.palette.background.paper,
-                    py: 2,
-                    px: 4,
-                    mb: 2,
-                    borderRadius: `${theme.shape.borderRadiusLarge}px`,
-                    display: 'flex',
-                    flexDirection: { xs: 'column', md: 'row' },
-                    border: '2px solid',
-                    borderColor: theme.palette.background.alternative,
-                })
-            }
+            sx={theme => ({
+                backgroundColor: theme.palette.background.paper,
+                py: 2,
+                px: 4,
+                mb: 2,
+                borderRadius: `${theme.shape.borderRadiusLarge}px`,
+                display: 'flex',
+                flexDirection: { xs: 'column', md: 'row' },
+                border: '2px solid',
+                borderColor: theme.palette.background.alternative,
+            })}
             ref={ref}
         >
             <Box

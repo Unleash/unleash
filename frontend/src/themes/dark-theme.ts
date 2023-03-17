@@ -241,7 +241,8 @@ const theme = {
         /**
          * MUI grey colors
          */
-        grey: { // This was to see were these colors are used from MUI
+        grey: {
+            // This was to see were these colors are used from MUI
             // 50: '#A6000E',
             100: '#888799', // Disabled Switch base (OFF)
             // 200: '#A6000E',
@@ -258,7 +259,7 @@ const theme = {
             // A700: '#A6000E',
         },
     },
-}
+};
 
 export default createTheme({
     ...theme,
@@ -271,17 +272,19 @@ export default createTheme({
                         backgroundColor: theme.palette.background.elevation1,
                     },
                     '&::after': {
-                        background: 'linear-gradient(90deg, rgba(223, 222, 255, 0) 0, rgba(223, 222, 255, 0.2) 100%, rgba(223, 222, 255, 0.5) 100%, rgba(223, 222, 255, 0))',
+                        background:
+                            'linear-gradient(90deg, rgba(223, 222, 255, 0) 0, rgba(223, 222, 255, 0.2) 100%, rgba(223, 222, 255, 0.5) 100%, rgba(223, 222, 255, 0))',
                     },
                 },
-                'a': {
-                    color: theme.palette.links,                
+                a: {
+                    color: theme.palette.links,
                 },
-                '.dropdown-outline, .MuiAutocomplete-popper': { // used for user dropdown, autocomplete, and change request primary button dropdown, notifications dropdown
-                    outline: `1px solid ${theme.palette.divider}`, 
+                '.dropdown-outline, .MuiAutocomplete-popper': {
+                    // used for user dropdown, autocomplete, and change request primary button dropdown, notifications dropdown
+                    outline: `1px solid ${theme.palette.divider}`,
                 },
             },
-        }, 
+        },
 
         // Links
         MuiLink: {

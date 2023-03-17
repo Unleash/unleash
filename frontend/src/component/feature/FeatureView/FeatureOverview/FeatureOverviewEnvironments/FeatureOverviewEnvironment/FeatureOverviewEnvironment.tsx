@@ -140,7 +140,9 @@ const FeatureOverviewEnvironment = ({
                 <StyledFeatureOverviewEnvironment enabled={env.enabled}>
                     <StyledAccordion
                         data-testid={`${FEATURE_ENVIRONMENT_ACCORDION}_${env.name}`}
-                        className={`environment-accordion ${env.enabled ? '' : 'accordion-disabled'}`}
+                        className={`environment-accordion ${
+                            env.enabled ? '' : 'accordion-disabled'
+                        }`}
                     >
                         <StyledAccordionSummary
                             expandIcon={<ExpandMore titleAccess="Toggle" />}

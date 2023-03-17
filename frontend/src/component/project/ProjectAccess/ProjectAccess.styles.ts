@@ -12,8 +12,8 @@ export const useStyles = makeStyles()(theme => ({
         backgroundColor: theme.palette.divider,
         margin: theme.spacing(4, -4, 3),
     },
-    inputLabel: { 
-        backgroundColor: theme.palette.background.paper, 
+    inputLabel: {
+        backgroundColor: theme.palette.background.paper,
     },
     roleName: {
         fontWeight: 'bold',

@@ -87,17 +87,17 @@ declare module '@mui/material/styles' {
         highlight: string;
 
         /**
-        * For Links
-        */
+         * For Links
+         */
         links: string;
 
         /**
-        * For Environment Accordion
-        */
+         * For Environment Accordion
+         */
         envAccordion: {
             disabled: string;
             expanded: string;
-        }
+        };
     }
 
     interface Theme extends CustomTheme {}

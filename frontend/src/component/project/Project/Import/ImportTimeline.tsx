@@ -22,16 +22,22 @@ const StyledTimelineConnector = styled(TimelineConnector, {
     shouldForwardProp: prop => prop !== 'active',
 })<{ active: boolean }>(({ theme, active }) => ({
     width: '1px',
-    backgroundColor: active ? theme.palette.common.white : `${alpha(theme.palette.common.white, 0.5)}`,
+    backgroundColor: active
+        ? theme.palette.common.white
+        : `${alpha(theme.palette.common.white, 0.5)}`,
 }));
 
 const StyledTimelineDot = styled(TimelineDot, {
     shouldForwardProp: prop => prop !== 'active',
 })<{ active: boolean }>(({ theme, active }) => ({
-    color: active ? theme.palette.background.sidebar : `${alpha(theme.palette.common.white, 0.8)}`,
+    color: active
+        ? theme.palette.background.sidebar
+        : `${alpha(theme.palette.common.white, 0.8)}`,
     backgroundColor: active ? theme.palette.common.white : 'initial',
     fontWeight: active ? theme.fontWeight.bold : 'normal',
-    borderColor: active ? theme.palette.common.white : `${alpha(theme.palette.common.white, 0.8)}`,
+    borderColor: active
+        ? theme.palette.common.white
+        : `${alpha(theme.palette.common.white, 0.8)}`,
     width: '40px',
     height: '40px',
     lineHeight: '40px',
@@ -46,13 +52,15 @@ const StyledTimelineContent = styled(TimelineContent, {
     shouldForwardProp: prop => prop !== 'active',
 })<{ active: boolean }>(({ theme, active }) => ({
     padding: theme.spacing(2, 2, 6, 2),
-    color: active ? theme.palette.common.white : `${alpha(theme.palette.common.white, 0.8)}`,
+    color: active
+        ? theme.palette.common.white
+        : `${alpha(theme.palette.common.white, 0.8)}`,
 }));
 
 const TimelineItemTitle = styled(Box, {
     shouldForwardProp: prop => prop !== 'active',
 })<{ active: boolean }>(({ theme, active }) => ({
-    fontWeight: active ? theme.fontWeight.bold: 'normal',
+    fontWeight: active ? theme.fontWeight.bold : 'normal',
     fontSize: theme.fontSizes.bodySize,
 }));
 
@@ -73,10 +81,12 @@ export const ImportTimeline: FC<{
                     >
                         1
                     </StyledTimelineDot>
-                    <StyledTimelineConnector active={stage === 'configure'}/>
+                    <StyledTimelineConnector active={stage === 'configure'} />
                 </TimelineSeparator>
                 <StyledTimelineContent active={stage === 'configure'}>
-                    <TimelineItemTitle active={stage === 'configure'}>Import file</TimelineItemTitle>
+                    <TimelineItemTitle active={stage === 'configure'}>
+                        Import file
+                    </TimelineItemTitle>
                     <TimelineItemDescription>
                         Import previously exported toggle configuration from
                         another Unleash instance as a JSON file
@@ -91,7 +101,7 @@ export const ImportTimeline: FC<{
                     >
                         2
                     </StyledTimelineDot>
-                    <StyledTimelineConnector active={stage === 'validate'}/>
+                    <StyledTimelineConnector active={stage === 'validate'} />
                 </TimelineSeparator>
                 <StyledTimelineContent active={stage === 'validate'}>
                     <TimelineItemTitle active={stage === 'validate'}>
@@ -112,7 +122,9 @@ export const ImportTimeline: FC<{
                     </StyledTimelineDot>
                 </TimelineSeparator>
                 <StyledTimelineContent active={stage === 'import'}>
-                    <TimelineItemTitle active={stage === 'import'}>Finish import</TimelineItemTitle>
+                    <TimelineItemTitle active={stage === 'import'}>
+                        Finish import
+                    </TimelineItemTitle>
                     <TimelineItemDescription>
                         Feature toggle configuration will be imported to your
                         new Unleash instance

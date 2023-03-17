@@ -100,13 +100,19 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                         </MainLayoutContent>
                         <ThemeMode
                             darkmode={
-                                <StyledImg style={{ opacity: 0.06 }} src={formatAssetPath(textureImage)} alt="" />
+                                <StyledImg
+                                    style={{ opacity: 0.06 }}
+                                    src={formatAssetPath(textureImage)}
+                                    alt=""
+                                />
                             }
                             lightmode={
-                                <StyledImg src={formatAssetPath(textureImage)} alt="" />
+                                <StyledImg
+                                    src={formatAssetPath(textureImage)}
+                                    alt=""
+                                />
                             }
                         />
-                        
                     </MainLayoutContentWrapper>
                     <Footer />
                 </MainLayoutContainer>

@@ -108,7 +108,7 @@ export const ReviewButton: FC<{ disabled: boolean }> = ({ disabled }) => {
                                     : 'center bottom',
                         }}
                     >
-                        <Paper className='dropdown-outline'>
+                        <Paper className="dropdown-outline">
                             <ClickAwayListener onClickAway={onClose}>
                                 <MenuList
                                     id="review-options-menu"

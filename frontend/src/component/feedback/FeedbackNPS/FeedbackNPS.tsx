@@ -103,7 +103,8 @@ export const FeedbackNPS = ({ openUrl }: IFeedbackNPSProps) => {
                                 backgroundColor: theme.palette.background.paper,
                                 boxShadow: theme.boxShadows.elevated,
                                 '&:hover': {
-                                    backgroundColor: theme.palette.background.paper,
+                                    backgroundColor:
+                                        theme.palette.background.paper,
                                 },
                             }}
                             onClick={() => setShowFeedback(false)}

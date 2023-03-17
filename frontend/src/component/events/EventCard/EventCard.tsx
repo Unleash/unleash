@@ -39,9 +39,9 @@ const StyledContainerListItem = styled('li')(({ theme }) => ({
         },
     },
 
-    'a': {
+    a: {
         color: theme.palette.links,
-    }
+    },
 }));
 
 export const StyledCodeSection = styled('div')(({ theme }) => ({

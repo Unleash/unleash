@@ -27,7 +27,7 @@ export const GuidanceIndicator: FC<IGuidanceIndicatorProps> = ({
 }) => {
     const theme = useTheme();
 
-    const defaults = { 
+    const defaults = {
         backgroundColor: theme.palette.background.alternative,
         color: theme.palette.common.white,
     };

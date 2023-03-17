@@ -17,12 +17,10 @@ const StyledGradient = styled(Gradient)(({ theme }) => ({
     [theme.breakpoints.down('md')]: {
         borderTopLeftRadius: theme.shape.borderRadiusLarge,
         borderTopRightRadius: theme.shape.borderRadiusLarge,
-
     },
     [theme.breakpoints.down('sm')]: {
         borderTopLeftRadius: '0',
         borderTopRightRadius: '0',
-
     },
 }));
 

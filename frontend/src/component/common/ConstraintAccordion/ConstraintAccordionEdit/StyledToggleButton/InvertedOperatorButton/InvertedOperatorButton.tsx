@@ -34,11 +34,11 @@ export const InvertedOperatorButton = ({
                     condition={Boolean(localConstraint.inverted)}
                     show={
                         <StyledToggleButtonOn
-                            className = "operator-is-active"
+                            className="operator-is-active"
                             onClick={setInvertedOperator}
                             disableRipple
                         >
-                        <NegatedIcon />
+                            <NegatedIcon />
                         </StyledToggleButtonOn>
                     }
                     elseShow={
@@ -46,7 +46,7 @@ export const InvertedOperatorButton = ({
                             onClick={setInvertedOperator}
                             disableRipple
                         >
-                        <NegatedIconOff />
+                            <NegatedIconOff />
                         </StyledToggleButtonOff>
                     }
                 />

@@ -25,18 +25,16 @@ export const UserToken = ({ token }: IUserTokenProps) => {
 
     return (
         <Box
-            sx={
-                theme => ({
-                    backgroundColor: theme.palette.background.elevation2,
-                    padding: theme.spacing(4),
-                    borderRadius: `${theme.shape.borderRadius}px`,
-                    marginTop: theme.spacing(2),
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    wordBreak: 'break-all',
-                })
-            }
+            sx={theme => ({
+                backgroundColor: theme.palette.background.elevation2,
+                padding: theme.spacing(4),
+                borderRadius: `${theme.shape.borderRadius}px`,
+                marginTop: theme.spacing(2),
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                wordBreak: 'break-all',
+            })}
         >
             {token}
             <Tooltip title="Copy token" arrow>

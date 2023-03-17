@@ -87,7 +87,9 @@ const StyledStatusBar = styled('div', {
     width: '50px',
     borderRadius: theme.shape.borderRadius,
     height: '6px',
-    backgroundColor: error ? theme.palette.error.main : theme.palette.primary.main,
+    backgroundColor: error
+        ? theme.palette.error.main
+        : theme.palette.primary.main,
 }));
 
 const PasswordChecker = ({

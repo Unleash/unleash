@@ -227,6 +227,16 @@ const useProjectApi = () => {
         return makeRequest(req.caller, req.id);
     };
 
+    const reviveFeatures = async (projectId: string, featureIds: string[]) => {
+        const path = `api/admin/projects/${projectId}/revive`;
+        const req = createRequest(path, {
+            method: 'POST',
+            body: JSON.stringify({ features: featureIds }),
+        });
+
+        return makeRequest(req.caller, req.id);
+    };
+
     const staleFeatures = async (
         projectId: string,
         featureIds: string[],
@@ -259,6 +269,7 @@ const useProjectApi = () => {
         changeUserRole,
         changeGroupRole,
         archiveFeatures,
+        reviveFeatures,
         staleFeatures,
         searchProjectUser,
         setDefaultProjectStickiness,

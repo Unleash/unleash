@@ -1,6 +1,6 @@
 import PermissionButton, {
     IPermissionButtonProps,
-} from '../PermissionButton/PermissionButton';
+} from 'component/common/PermissionButton/PermissionButton';
 
 interface ICreateButtonProps extends IPermissionButtonProps {
     name: string;

@@ -1,6 +1,6 @@
 import PermissionButton, {
     IPermissionButtonProps,
-} from '../PermissionButton/PermissionButton';
+} from 'component/common/PermissionButton/PermissionButton';
 
 export const UpdateButton = ({ ...rest }: IPermissionButtonProps) => {
     return (

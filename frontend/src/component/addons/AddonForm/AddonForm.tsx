@@ -16,12 +16,12 @@ import { useNavigate } from 'react-router-dom';
 import useAddonsApi from 'hooks/api/actions/useAddonsApi/useAddonsApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import useProjects from '../../../hooks/api/getters/useProjects/useProjects';
-import { useEnvironments } from '../../../hooks/api/getters/useEnvironments/useEnvironments';
+import useProjects from 'hooks/api/getters/useProjects/useProjects';
+import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import { AddonMultiSelector } from './AddonMultiSelector/AddonMultiSelector';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
-import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
-import PermissionButton from '../../common/PermissionButton/PermissionButton';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import {
     CREATE_ADDON,
     UPDATE_ADDON,

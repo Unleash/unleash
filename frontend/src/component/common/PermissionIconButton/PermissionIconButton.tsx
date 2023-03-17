@@ -13,7 +13,7 @@ import {
 } from 'hooks/useHasAccess';
 
 interface IPermissionIconButtonProps {
-    permission: string;
+    permission: string | string[];
     projectId?: string;
     environmentId?: string;
     className?: string;

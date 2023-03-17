@@ -70,22 +70,12 @@ const checkPermission = (
     if (
         p.permission === permission &&
         (p.project === project || p.project === '*') &&
-        (p.environment === environment || p.environment === '*')
+        (!p.environment ||
+            p.environment === environment ||
+            p.environment === '*')
     ) {
         return true;
     }
 
-    if (
-        p.permission === permission &&
-        (p.project === project || p.project === '*') &&
-        !Boolean(p.environment)
-    ) {
-        return true;
-    }
-
-    return (
-        p.permission === permission &&
-        p.project === undefined &&
-        p.environment === null
-    );
+    return p.permission === permission && !p.project && !p.environment;
 };

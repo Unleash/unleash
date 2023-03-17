@@ -74,6 +74,14 @@ const flags = {
     ),
     projectMode: parseEnvVarBoolean(process.env.PROJECT_MODE, false),
     cleanClientApi: parseEnvVarBoolean(process.env.CLEAN_CLIENT_API, false),
+    optimal304: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_OPTIMAL_304,
+        false,
+    ),
+    optimal304Differ: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_OPTIMAL_304_DIFFER,
+        false,
+    ),
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

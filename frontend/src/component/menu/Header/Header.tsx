@@ -237,8 +237,7 @@ const Header: VFC = () => {
                     <StyledUserContainer>
                         <ConditionallyRender
                             condition={Boolean(
-                                // uiConfig.flags.ENABLE_DARK_MODE_SUPPORT
-                                true
+                                uiConfig.flags.ENABLE_DARK_MODE_SUPPORT
                             )}
                             show={
                                 <FormControlLabel

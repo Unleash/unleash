@@ -59,6 +59,8 @@ interface ICreateButtonData {
     endIcon?: React.ReactNode;
 }
 
+const NAVIGATE_TO_CREATE_PROJECT = 'NAVIGATE_TO_CREATE_PROJECT';
+
 function resolveCreateButtonData(
     isOss: boolean,
     hasAccess: boolean
@@ -185,6 +187,7 @@ export const ProjectListNew = () => {
                                 permission={CREATE_PROJECT}
                                 disabled={createButtonData.disabled}
                                 tooltipProps={createButtonData.tooltip}
+                                data-testid={NAVIGATE_TO_CREATE_PROJECT}
                             >
                                 New project
                             </ResponsiveButton>

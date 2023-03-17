@@ -1841,6 +1841,17 @@ exports[`should serve the OpenAPI spec 1`] = `
       "healthOverviewSchema": {
         "additionalProperties": false,
         "properties": {
+          "defaultStickiness": {
+            "description": "A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy",
+            "enum": [
+              "default",
+              "userId",
+              "sessionId",
+              "random",
+            ],
+            "example": "userId",
+            "type": "string",
+          },
           "description": {
             "nullable": true,
             "type": "string",
@@ -1903,6 +1914,17 @@ exports[`should serve the OpenAPI spec 1`] = `
         "properties": {
           "activeCount": {
             "type": "number",
+          },
+          "defaultStickiness": {
+            "description": "A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy",
+            "enum": [
+              "default",
+              "userId",
+              "sessionId",
+              "random",
+            ],
+            "example": "userId",
+            "type": "string",
           },
           "description": {
             "nullable": true,
@@ -2759,6 +2781,17 @@ exports[`should serve the OpenAPI spec 1`] = `
         "additionalProperties": false,
         "description": "A high-level overview of a project. It contains information such as project statistics, the name of the project, what members and what features it contains, etc.",
         "properties": {
+          "defaultStickiness": {
+            "description": "A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy",
+            "enum": [
+              "default",
+              "userId",
+              "sessionId",
+              "random",
+            ],
+            "example": "userId",
+            "type": "string",
+          },
           "description": {
             "description": "Additional information about the project",
             "example": "DX squad feature release",
@@ -2841,6 +2874,17 @@ exports[`should serve the OpenAPI spec 1`] = `
             "format": "date-time",
             "type": "string",
           },
+          "defaultStickiness": {
+            "description": "A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy",
+            "enum": [
+              "default",
+              "userId",
+              "sessionId",
+              "random",
+            ],
+            "example": "userId",
+            "type": "string",
+          },
           "description": {
             "description": "Additional information about the project",
             "example": "DX squad feature release",
@@ -2895,29 +2939,6 @@ exports[`should serve the OpenAPI spec 1`] = `
         "required": [
           "id",
           "name",
-        ],
-        "type": "object",
-      },
-      "projectSettingsSchema": {
-        "additionalProperties": false,
-        "properties": {
-          "defaultStickiness": {
-            "example": "userId",
-            "nullable": true,
-            "type": "string",
-          },
-          "mode": {
-            "enum": [
-              "open",
-              "protected",
-              "private",
-            ],
-            "nullable": true,
-            "type": "string",
-          },
-        },
-        "required": [
-          "defaultStickiness",
         ],
         "type": "object",
       },
@@ -7554,70 +7575,6 @@ If the provided project does not exist, the list of events will be empty.",
               },
             },
             "description": "healthReportSchema",
-          },
-        },
-        "tags": [
-          "Projects",
-        ],
-      },
-    },
-    "/api/admin/projects/{projectId}/settings": {
-      "get": {
-        "operationId": "getProjectSettings",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "projectId",
-            "required": true,
-            "schema": {
-              "type": "string",
-            },
-          },
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/projectSettingsSchema",
-                },
-              },
-            },
-            "description": "projectSettingsSchema",
-          },
-          "404": {
-            "description": "This response has no body.",
-          },
-        },
-        "tags": [
-          "Projects",
-        ],
-      },
-      "post": {
-        "operationId": "setProjectSettings",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "projectId",
-            "required": true,
-            "schema": {
-              "type": "string",
-            },
-          },
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/projectSettingsSchema",
-                },
-              },
-            },
-            "description": "projectSettingsSchema",
-          },
-          "404": {
-            "description": "This response has no body.",
           },
         },
         "tags": [

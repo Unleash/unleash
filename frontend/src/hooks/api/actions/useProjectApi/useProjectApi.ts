@@ -5,6 +5,8 @@ interface ICreatePayload {
     id: string;
     name: string;
     description: string;
+    mode: 'open' | 'protected';
+    defaultStickiness: 'default' | 'userId' | 'sessionId' | 'random';
 }
 
 interface IAccessesPayload {
@@ -33,13 +35,12 @@ const useProjectApi = () => {
         }
     };
 
-    const validateId = async (payload: ICreatePayload) => {
+    const validateId = async (id: ICreatePayload['id']) => {
         const path = `api/admin/projects/validate`;
         const req = createRequest(path, {
             method: 'POST',
-            body: JSON.stringify(payload),
+            body: JSON.stringify({ id }),
         });
-
         try {
             const res = await makeRequest(req.caller, req.id);
 
@@ -207,10 +208,10 @@ const useProjectApi = () => {
         projectId: string,
         stickiness: string
     ) => {
-        const path = `api/admin/projects/${projectId}/stickiness`;
+        const path = `api/admin/projects/${projectId}/settings`;
         const req = createRequest(path, {
             method: 'POST',
-            body: JSON.stringify({ stickiness }),
+            body: JSON.stringify({ defaultStickiness: stickiness }),
         });
 
         return makeRequest(req.caller, req.id);

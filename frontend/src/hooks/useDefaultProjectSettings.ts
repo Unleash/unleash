@@ -3,10 +3,14 @@ import { SWRConfiguration } from 'swr';
 import { useCallback } from 'react';
 import handleErrorResponses from './api/getters/httpErrorResponseHandler';
 import { useConditionalSWR } from './api/getters/useConditionalSWR/useConditionalSWR';
+import {
+    DefaultStickiness,
+    ProjectMode,
+} from 'component/project/Project/hooks/useProjectForm';
 
-export interface IStickinessResponse {
-    defaultStickiness?: string;
-    mode?: string;
+export interface ISettingsResponse {
+    defaultStickiness?: DefaultStickiness;
+    mode?: ProjectMode;
 }
 const DEFAULT_STICKINESS = 'default';
 export const useDefaultProjectSettings = (
@@ -18,7 +22,7 @@ export const useDefaultProjectSettings = (
     const PATH = `/api/admin/projects/${projectId}/settings`;
     const { projectScopedStickiness } = uiConfig.flags;
 
-    const { data, error, mutate } = useConditionalSWR<IStickinessResponse>(
+    const { data, error, mutate } = useConditionalSWR<ISettingsResponse>(
         Boolean(projectId) && Boolean(projectScopedStickiness),
         {},
         ['useDefaultProjectSettings', PATH],
@@ -26,7 +30,8 @@ export const useDefaultProjectSettings = (
         options
     );
 
-    const defaultStickiness = data?.defaultStickiness ?? DEFAULT_STICKINESS;
+    const defaultStickiness: DefaultStickiness =
+        data?.defaultStickiness ?? DEFAULT_STICKINESS;
 
     const refetch = useCallback(() => {
         mutate().catch(console.warn);

@@ -1,12 +1,15 @@
 import {
     IProjectHealthUpdate,
     IProjectInsert,
+    IProjectSettings,
     IProjectStore,
 } from '../../lib/types/stores/project-store';
 import {
+    DefaultStickiness,
     IEnvironment,
     IProject,
     IProjectWithCount,
+    ProjectMode,
 } from '../../lib/types/model';
 import NotFoundError from '../../lib/error/notfound-error';
 import {
@@ -160,5 +163,21 @@ export default class FakeProjectStore implements IProjectStore {
         date: string,
     ): Promise<number> {
         throw new Error('Method not implemented');
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    getProjectSettings(projectId: string): Promise<IProjectSettings> {
+        throw new Error('Method not implemented.');
+    }
+
+    setProjectSettings(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        projectId: string,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        defaultStickiness: DefaultStickiness,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        mode: ProjectMode,
+    ): Promise<void> {
+        throw new Error('Method not implemented.');
     }
 }

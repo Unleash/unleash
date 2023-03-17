@@ -1,12 +1,5 @@
-import { FC, useMemo, useState, VFC } from 'react';
-import { Box, Button, Paper, styled, Typography } from '@mui/material';
-import { FileDownload, Label, WatchLater } from '@mui/icons-material';
-import type { FeatureSchema } from '../../../openapi';
-import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
-import { ExportDialog } from '../../feature/FeatureToggleList/ExportDialog';
-import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
-import { ArchiveButton } from '../../project/Project/ProjectFeatureToggles/SelectionActionsBar/ArchiveButton/ArchiveButton';
-import { MoreActions } from '../../project/Project/ProjectFeatureToggles/SelectionActionsBar/MoreActions/MoreActions';
+import { FC } from 'react';
+import { Box, Paper, styled, Typography } from '@mui/material';
 
 interface IBatchSelectionActionsBarProps {
     selectedIds: string[];

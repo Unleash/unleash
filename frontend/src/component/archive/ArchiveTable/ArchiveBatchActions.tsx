@@ -1,28 +1,13 @@
-import { FC, MouseEventHandler, useMemo, useState, VFC } from 'react';
-import { Box, Button, Paper, styled, Typography } from '@mui/material';
-import {
-    Archive,
-    FileDownload,
-    Label,
-    Undo,
-    WatchLater,
-} from '@mui/icons-material';
+import { FC } from 'react';
+import { Button } from '@mui/material';
+import { Undo } from '@mui/icons-material';
 import type { FeatureSchema } from 'openapi';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { ExportDialog } from 'component/feature/FeatureToggleList/ExportDialog';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import PermissionIconButton from '../../common/PermissionIconButton/PermissionIconButton';
-import {
-    CREATE_ADDON,
-    DELETE_FEATURE,
-    UPDATE_FEATURE,
-} from '../../providers/AccessProvider/permissions';
-import PermissionButton from '../../common/PermissionButton/PermissionButton';
+import { UPDATE_FEATURE } from '../../providers/AccessProvider/permissions';
 import { PermissionHOC } from '../../common/PermissionHOC/PermissionHOC';
-import useProjectApi from '../../../hooks/api/actions/useProjectApi/useProjectApi';
+import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import { formatUnknownError } from '../../../utils/formatUnknownError';
-import { useFeaturesArchive } from '../../../hooks/api/getters/useFeaturesArchive/useFeaturesArchive';
-import useToast from '../../../hooks/useToast';
+import { useFeaturesArchive } from 'hooks/api/getters/useFeaturesArchive/useFeaturesArchive';
+import useToast from 'hooks/useToast';
 
 interface IArchiveBatchActionsProps {
     selectedIds: string[];

@@ -11,13 +11,11 @@ import useToast from 'hooks/useToast';
 
 interface IArchiveBatchActionsProps {
     selectedIds: string[];
-    data: FeatureSchema[];
     projectId: string;
 }
 
 export const ArchiveBatchActions: FC<IArchiveBatchActionsProps> = ({
     selectedIds,
-    data,
     projectId,
 }) => {
     const { reviveFeatures } = useProjectApi();

@@ -354,7 +354,6 @@ export const ArchiveTable = ({
                     >
                         <ArchiveBatchActions
                             selectedIds={Object.keys(selectedRowIds)}
-                            data={archivedFeatures}
                             projectId={projectId!}
                         />
                     </BatchSelectionActionsBar>

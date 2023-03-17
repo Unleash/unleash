@@ -221,7 +221,7 @@ test('can bulk delete features and recreate after', async () => {
         })
         .expect(202);
     await app.request
-        .post('/api/admin/projects/default/archive/delete')
+        .post('/api/admin/projects/default/delete')
         .send({ features })
         .expect(200);
     for (const feature of features) {
@@ -253,7 +253,7 @@ test('can bulk revive features', async () => {
         })
         .expect(202);
     await app.request
-        .post('/api/admin/projects/default/archive/revive')
+        .post('/api/admin/projects/default/revive')
         .send({ features })
         .expect(200);
     for (const feature of features) {

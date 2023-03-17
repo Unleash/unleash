@@ -17,7 +17,8 @@ import { BatchFeaturesSchema, createRequestSchema } from '../../../openapi';
 import NotFoundError from '../../../error/notfound-error';
 import Controller from '../../controller';
 
-const PATH = '/:projectId/archive';
+const PATH = '/:projectId';
+const PATH_ARCHIVE = `${PATH}/archive`;
 const PATH_DELETE = `${PATH}/delete`;
 const PATH_REVIVE = `${PATH}/revive`;
 
@@ -83,7 +84,7 @@ export default class ProjectArchiveController extends Controller {
 
         this.route({
             method: 'post',
-            path: PATH,
+            path: PATH_ARCHIVE,
             handler: this.archiveFeatures,
             permission: DELETE_FEATURE,
             middleware: [

@@ -11,6 +11,8 @@ export interface ISegmentService {
 
     getByStrategy(strategyId: string): Promise<ISegment[]>;
 
+    get(id: number): Promise<ISegment>;
+
     getActive(): Promise<ISegment[]>;
 
     getAll(): Promise<ISegment[]>;

@@ -18,7 +18,11 @@ import { SEGMENT_CREATE_BTN_ID } from 'utils/testIds';
 import { useSegmentLimits } from 'hooks/api/getters/useSegmentLimits/useSegmentLimits';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 
-export const CreateSegment = () => {
+interface ICreateSegmentProps {
+    modal?: boolean;
+}
+
+export const CreateSegment = ({ modal }: ICreateSegmentProps) => {
     const projectId = useOptionalPathParam('projectId');
     const { uiConfig } = useUiConfig();
     const { setToastData, setToastApiError } = useToast();
@@ -87,6 +91,7 @@ export const CreateSegment = () => {
     return (
         <FormTemplate
             loading={loading}
+            modal={modal}
             title="Create segment"
             description={segmentsFormDescription}
             documentationLink={segmentsDocsLink}

@@ -194,7 +194,7 @@ class FeatureToggleService {
         }
     }
 
-    async validateFeatureContext({
+    async validateFeatureBelongsToProject({
         featureName,
         projectId,
     }: IFeatureContext): Promise<void> {
@@ -207,9 +207,9 @@ class FeatureToggleService {
         }
     }
 
-    validateFeatureStrategyContext(
+    validateUpdatedProperties(
+        { featureName, projectId }: IFeatureContext,
         strategy: IFeatureStrategy,
-        { featureName, projectId }: IFeatureStrategyContext,
     ): void {
         if (strategy.projectId !== projectId) {
             throw new InvalidOperationError(
@@ -220,6 +220,27 @@ class FeatureToggleService {
         if (strategy.featureName !== featureName) {
             throw new InvalidOperationError(
                 'You can not change the featureName for an activation strategy.',
+            );
+        }
+    }
+
+    async validateProjectCanAccessSegments(
+        projectId: string,
+        segmentIds?: number[],
+    ): Promise<void> {
+        if (segmentIds && segmentIds.length > 0) {
+            await Promise.all(
+                segmentIds.map((segmentId) =>
+                    this.segmentService.get(segmentId),
+                ),
+            ).then((segments) =>
+                segments.map((segment) => {
+                    if (segment.project && segment.project !== projectId) {
+                        throw new BadDataError(
+                            `The segment "${segment.name}" with id ${segment.id} does not belong to project "${projectId}".`,
+                        );
+                    }
+                }),
             );
         }
     }
@@ -373,7 +394,12 @@ class FeatureToggleService {
         createdBy: string,
     ): Promise<Saved<IStrategyConfig>> {
         const { featureName, projectId, environment } = context;
-        await this.validateFeatureContext(context);
+        await this.validateFeatureBelongsToProject(context);
+
+        await this.validateProjectCanAccessSegments(
+            projectId,
+            strategyConfig.segments,
+        );
 
         if (
             strategyConfig.constraints &&
@@ -468,7 +494,11 @@ class FeatureToggleService {
     ): Promise<Saved<IStrategyConfig>> {
         const { projectId, environment, featureName } = context;
         const existingStrategy = await this.featureStrategiesStore.get(id);
-        this.validateFeatureStrategyContext(existingStrategy, context);
+        this.validateUpdatedProperties(context, existingStrategy);
+        await this.validateProjectCanAccessSegments(
+            projectId,
+            updates.segments,
+        );
 
         if (existingStrategy.id === id) {
             if (updates.constraints && updates.constraints.length > 0) {
@@ -526,7 +556,7 @@ class FeatureToggleService {
         const { projectId, environment, featureName } = context;
 
         const existingStrategy = await this.featureStrategiesStore.get(id);
-        this.validateFeatureStrategyContext(existingStrategy, context);
+        this.validateUpdatedProperties(context, existingStrategy);
 
         if (existingStrategy.id === id) {
             existingStrategy.parameters[name] = String(value);
@@ -589,7 +619,7 @@ class FeatureToggleService {
     ): Promise<void> {
         const existingStrategy = await this.featureStrategiesStore.get(id);
         const { featureName, projectId, environment } = context;
-        this.validateFeatureStrategyContext(existingStrategy, context);
+        this.validateUpdatedProperties(context, existingStrategy);
 
         await this.featureStrategiesStore.delete(id);
 
@@ -667,7 +697,10 @@ class FeatureToggleService {
         userId,
     }: IGetFeatureParams): Promise<FeatureToggleWithEnvironment> {
         if (projectId) {
-            await this.validateFeatureContext({ featureName, projectId });
+            await this.validateFeatureBelongsToProject({
+                featureName,
+                projectId,
+            });
         }
 
         if (environmentVariants) {
@@ -901,7 +934,7 @@ class FeatureToggleService {
         userName: string,
         featureName: string,
     ): Promise<FeatureToggle> {
-        await this.validateFeatureContext({ featureName, projectId });
+        await this.validateFeatureBelongsToProject({ featureName, projectId });
 
         this.logger.info(`${userName} updates feature toggle ${featureName}`);
 
@@ -1066,7 +1099,10 @@ class FeatureToggleService {
         const feature = await this.featureToggleStore.get(featureName);
 
         if (projectId) {
-            await this.validateFeatureContext({ featureName, projectId });
+            await this.validateFeatureBelongsToProject({
+                featureName,
+                projectId,
+            });
         }
 
         await this.featureToggleStore.archive(featureName);

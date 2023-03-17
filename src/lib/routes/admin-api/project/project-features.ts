@@ -80,10 +80,7 @@ const PATH_STRATEGY = `${PATH_STRATEGIES}/:strategyId`;
 
 type ProjectFeaturesServices = Pick<
     IUnleashServices,
-    | 'featureToggleServiceV2'
-    | 'projectHealthService'
-    | 'openApiService'
-    | 'segmentService'
+    'featureToggleServiceV2' | 'projectHealthService' | 'openApiService'
 >;
 
 export default class ProjectFeaturesController extends Controller {

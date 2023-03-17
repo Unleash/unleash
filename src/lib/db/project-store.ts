@@ -3,24 +3,27 @@ import { Logger, LogProvider } from '../logger';
 
 import NotFoundError from '../error/notfound-error';
 import {
+    DefaultStickiness,
     IEnvironment,
+    IFlagResolver,
     IProject,
     IProjectWithCount,
     ProjectMode,
-} from '../types/model';
+} from '../types';
 import {
     IProjectHealthUpdate,
     IProjectInsert,
     IProjectQuery,
+    IProjectSettings,
+    IProjectSettingsRow,
     IProjectStore,
 } from '../types/stores/project-store';
-import { DEFAULT_ENV } from '../util/constants';
+import { DEFAULT_ENV } from '../util';
 import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
 import EventEmitter from 'events';
-import { IFlagResolver } from '../types';
-import Raw = Knex.Raw;
 import { Db } from './db';
+import Raw = Knex.Raw;
 
 const COLUMNS = [
     'id',
@@ -160,6 +163,7 @@ class ProjectStore implements IProjectStore {
             memberCount: Number(row.number_of_users) || 0,
             updatedAt: row.updated_at,
             mode: 'open',
+            defaultStickiness: 'default',
         };
     }
 
@@ -202,7 +206,7 @@ class ProjectStore implements IProjectStore {
     }
 
     async create(
-        project: IProjectInsert & { mode: ProjectMode },
+        project: IProjectInsert & IProjectSettings,
     ): Promise<IProject> {
         const row = await this.db(TABLE)
             .insert(this.fieldToRow(project))
@@ -211,6 +215,7 @@ class ProjectStore implements IProjectStore {
             .insert({
                 project: project.id,
                 project_mode: project.mode,
+                default_stickiness: project.defaultStickiness,
             })
             .returning('*');
         return this.mapRow({ ...row[0], ...settingsRow[0] });
@@ -226,6 +231,7 @@ class ProjectStore implements IProjectStore {
                 .where({ project: data.id })
                 .update({
                     project_mode: data.mode,
+                    default_stickiness: data.defaultStickiness,
                 })
                 .returning('*');
         } catch (err) {
@@ -458,11 +464,36 @@ class ProjectStore implements IProjectStore {
         return Number(members.count);
     }
 
+    async getProjectSettings(projectId: string): Promise<IProjectSettings> {
+        const row = await this.db(SETTINGS_TABLE).where({ project: projectId });
+        return this.mapSettingsRow(row[0]);
+    }
+
+    async setProjectSettings(
+        projectId: string,
+        defaultStickiness: DefaultStickiness,
+        mode: ProjectMode,
+    ): Promise<void> {
+        await this.db(SETTINGS_TABLE)
+            .update({
+                default_stickiness: defaultStickiness,
+                project_mode: mode,
+            })
+            .where({ project: projectId });
+    }
+
     async count(): Promise<number> {
         return this.db
             .from(TABLE)
             .count('*')
             .then((res) => Number(res[0].count));
+    }
+
+    mapSettingsRow(row?: IProjectSettingsRow): IProjectSettings {
+        return {
+            defaultStickiness: row?.default_stickiness || 'default',
+            mode: row?.project_mode || 'open',
+        };
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types

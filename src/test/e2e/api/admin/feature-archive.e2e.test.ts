@@ -1,13 +1,30 @@
-import { setupApp } from '../../helpers/test-helper';
+import { setupAppWithCustomConfig } from '../../helpers/test-helper';
 import dbInit from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
+import { DEFAULT_PROJECT } from '../../../../lib/types';
 
 let app;
 let db;
 
+const createFeatureToggle = (
+    featureName: string,
+    project = DEFAULT_PROJECT,
+) => {
+    return app.request.post(`/api/admin/projects/${project}/features`).send({
+        name: featureName,
+    });
+};
+
 beforeAll(async () => {
     db = await dbInit('archive_serial', getLogger);
-    app = await setupApp(db.stores);
+    app = await setupAppWithCustomConfig(db.stores, {
+        experimental: {
+            flags: {
+                strictSchemaValidation: true,
+                bulkOperations: true,
+            },
+        },
+    });
     await app.services.featureToggleServiceV2.createFeatureToggle(
         'default',
         {
@@ -182,4 +199,91 @@ test('Deleting an unarchived toggle should not take effect', async () => {
         .send({ name: 'really.delete.feature' })
         .set('Content-Type', 'application/json')
         .expect(409); // because it still exists
+});
+
+test('can bulk delete features and recreate after', async () => {
+    const features = ['first.bulk.issue', 'second.bulk.issue'];
+    for (const feature of features) {
+        await app.request
+            .post('/api/admin/features')
+            .send({
+                name: feature,
+                enabled: false,
+                strategies: [{ name: 'default' }],
+            })
+            .set('Content-Type', 'application/json')
+            .expect(201);
+    }
+    await app.request
+        .post(`/api/admin/projects/${DEFAULT_PROJECT}/archive`)
+        .send({
+            features,
+        })
+        .expect(202);
+    await app.request
+        .post('/api/admin/projects/default/archive/delete')
+        .send({ features })
+        .expect(200);
+    for (const feature of features) {
+        await app.request
+            .post('/api/admin/features/validate')
+            .send({ name: feature })
+            .set('Content-Type', 'application/json')
+            .expect(200);
+    }
+});
+
+test('can bulk revive features', async () => {
+    const features = ['first.revive.issue', 'second.revive.issue'];
+    for (const feature of features) {
+        await app.request
+            .post('/api/admin/features')
+            .send({
+                name: feature,
+                enabled: false,
+                strategies: [{ name: 'default' }],
+            })
+            .set('Content-Type', 'application/json')
+            .expect(201);
+    }
+    await app.request
+        .post(`/api/admin/projects/${DEFAULT_PROJECT}/archive`)
+        .send({
+            features,
+        })
+        .expect(202);
+    await app.request
+        .post('/api/admin/projects/default/archive/revive')
+        .send({ features })
+        .expect(200);
+    for (const feature of features) {
+        await app.request
+            .get(`/api/admin/projects/default/features/${feature}`)
+            .expect(200);
+    }
+});
+
+test('Should be able to bulk archive features', async () => {
+    const featureName1 = 'archivedFeature1';
+    const featureName2 = 'archivedFeature2';
+
+    await createFeatureToggle(featureName1);
+    await createFeatureToggle(featureName2);
+
+    await app.request
+        .post(`/api/admin/projects/${DEFAULT_PROJECT}/archive`)
+        .send({
+            features: [featureName1, featureName2],
+        })
+        .expect(202);
+
+    const { body } = await app.request
+        .get(`/api/admin/archive/features/${DEFAULT_PROJECT}`)
+        .expect(200);
+
+    const archivedFeatures = body.features.filter(
+        (feature) =>
+            feature.name === featureName1 || feature.name === featureName2,
+    );
+    expect(archivedFeatures).toHaveLength(2);
 });

@@ -46,7 +46,7 @@ export class ProxyService {
 
     private cachedFrontendSettings?: FrontendSettings;
 
-    private timer: NodeJS.Timeout;
+    private timer: NodeJS.Timeout | null;
 
     constructor(config: Config, stores: Stores, services: Services) {
         this.config = config;
@@ -75,21 +75,6 @@ export class ProxyService {
                 variant: client.forceGetVariant(feature.name, context),
                 impressionData: Boolean(feature.impressionData),
             }));
-    }
-
-    async getAllProxyFeatures(
-        token: ApiUser,
-        context: Context,
-    ): Promise<ProxyFeatureSchema[]> {
-        const client = await this.clientForProxyToken(token);
-        const definitions = client.getFeatureToggleDefinitions() || [];
-
-        return definitions.map((feature) => ({
-            name: feature.name,
-            enabled: Boolean(feature.enabled),
-            variant: client.forceGetVariant(feature.name, context),
-            impressionData: Boolean(feature.impressionData),
-        }));
     }
 
     async registerProxyMetrics(
@@ -150,6 +135,7 @@ export class ProxyService {
     }
 
     deleteClientForProxyToken(secret: string): void {
+        this.clients.get(secret)?.destroy();
         this.clients.delete(secret);
     }
 
@@ -200,7 +186,9 @@ export class ProxyService {
     }
 
     destroy(): void {
-        clearInterval(this.timer);
-        this.timer = null;
+        if (this.timer) {
+            clearInterval(this.timer);
+            this.timer = null;
+        }
     }
 }

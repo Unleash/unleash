@@ -13,6 +13,7 @@ import {
     UPDATE_FEATURE,
     UPDATE_FEATURE_ENVIRONMENT,
     UPDATE_FEATURE_STRATEGY,
+    IFlagResolver,
 } from '../../../types';
 import { Logger } from '../../../logger';
 import { extractUsername } from '../../../util';
@@ -37,12 +38,10 @@ import {
     UpdateFeatureSchema,
     UpdateFeatureStrategySchema,
 } from '../../../openapi';
-import {
-    OpenApiService,
-    SegmentService,
-    FeatureToggleService,
-} from '../../../services';
+import { OpenApiService, FeatureToggleService } from '../../../services';
 import { querySchema } from '../../../schema/feature-schema';
+import NotFoundError from '../../../error/notfound-error';
+import { BatchStaleSchema } from '../../../openapi/spec/batch-stale-schema';
 
 interface FeatureStrategyParams {
     projectId: string;
@@ -72,6 +71,7 @@ export interface IFeatureProjectUserParams extends ProjectParam {
 }
 
 const PATH = '/:projectId/features';
+const PATH_STALE = '/:projectId/stale';
 const PATH_FEATURE = `${PATH}/:featureName`;
 const PATH_FEATURE_CLONE = `${PATH_FEATURE}/clone`;
 const PATH_ENV = `${PATH_FEATURE}/environments/:environment`;
@@ -80,10 +80,7 @@ const PATH_STRATEGY = `${PATH_STRATEGIES}/:strategyId`;
 
 type ProjectFeaturesServices = Pick<
     IUnleashServices,
-    | 'featureToggleServiceV2'
-    | 'projectHealthService'
-    | 'openApiService'
-    | 'segmentService'
+    'featureToggleServiceV2' | 'projectHealthService' | 'openApiService'
 >;
 
 export default class ProjectFeaturesController extends Controller {
@@ -91,22 +88,18 @@ export default class ProjectFeaturesController extends Controller {
 
     private openApiService: OpenApiService;
 
-    private segmentService: SegmentService;
+    private flagResolver: IFlagResolver;
 
     private readonly logger: Logger;
 
     constructor(
         config: IUnleashConfig,
-        {
-            featureToggleServiceV2,
-            openApiService,
-            segmentService,
-        }: ProjectFeaturesServices,
+        { featureToggleServiceV2, openApiService }: ProjectFeaturesServices,
     ) {
         super(config);
         this.featureService = featureToggleServiceV2;
         this.openApiService = openApiService;
-        this.segmentService = segmentService;
+        this.flagResolver = config.flagResolver;
         this.logger = config.getLogger('/admin-api/project/features.ts');
 
         this.route({
@@ -389,13 +382,30 @@ export default class ProjectFeaturesController extends Controller {
                         'This endpoint archives the specified feature if the feature belongs to the specified project.',
                     summary: 'Archive a feature.',
                     responses: {
-                        200: emptyResponse,
+                        202: emptyResponse,
                         403: {
                             description:
                                 'You either do not have the required permissions or used an invalid URL.',
                         },
                         ...getStandardResponses(401, 404),
                     },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'post',
+            path: PATH_STALE,
+            handler: this.staleFeatures,
+            permission: UPDATE_FEATURE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['Features'],
+                    operationId: 'staleFeatures',
+                    description: 'This endpoint stales the specified features.',
+                    summary: 'Stales a list of features',
+                    requestBody: createRequestSchema('batchStaleSchema'),
+                    responses: { 202: emptyResponse },
                 }),
             ],
         });
@@ -575,6 +585,27 @@ export default class ProjectFeaturesController extends Controller {
             projectId,
         );
         res.status(202).send();
+    }
+
+    async staleFeatures(
+        req: IAuthRequest<{ projectId: string }, void, BatchStaleSchema>,
+        res: Response,
+    ): Promise<void> {
+        if (!this.flagResolver.isEnabled('bulkOperations')) {
+            throw new NotFoundError('Bulk operations are not enabled');
+        }
+
+        const { features, stale } = req.body;
+        const { projectId } = req.params;
+        const userName = extractUsername(req);
+
+        await this.featureService.setToggleStaleness(
+            features,
+            stale,
+            userName,
+            projectId,
+        );
+        res.status(202).end();
     }
 
     async getFeatureEnvironment(

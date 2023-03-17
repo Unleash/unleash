@@ -25,6 +25,7 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 import supertest from 'supertest';
 import { randomId } from '../../../../../lib/util/random-id';
+import { DEFAULT_PROJECT } from '../../../../../lib/types';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -32,7 +33,10 @@ const sortOrderFirst = 0;
 const sortOrderSecond = 10;
 const sortOrderDefault = 9999;
 
-const createFeatureToggle = (featureName: string, project = 'default') => {
+const createFeatureToggle = (
+    featureName: string,
+    project = DEFAULT_PROJECT,
+) => {
     return app.request.post(`/api/admin/projects/${project}/features`).send({
         name: featureName,
     });
@@ -92,6 +96,7 @@ beforeAll(async () => {
         experimental: {
             flags: {
                 strictSchemaValidation: true,
+                bulkOperations: true,
             },
         },
     });
@@ -539,7 +544,7 @@ describe('Interacting with features using project IDs that belong to other proje
             rootRole: RoleName.ADMIN,
         });
         await app.services.projectService.createProject(
-            { name: otherProject, id: otherProject },
+            { name: otherProject, id: otherProject, mode: 'open' },
             dummyAdmin,
         );
 
@@ -696,8 +701,8 @@ test('Should patch feature toggle', async () => {
     });
     const updateForOurToggle = events.find((e) => e.data.name === name);
     expect(updateForOurToggle).toBeTruthy();
-    expect(updateForOurToggle.data.description).toBe('New desc');
-    expect(updateForOurToggle.data.type).toBe('kill-switch');
+    expect(updateForOurToggle?.data.description).toBe('New desc');
+    expect(updateForOurToggle?.data.type).toBe('kill-switch');
 });
 
 test('Should patch feature toggle and not remove variants', async () => {
@@ -1951,6 +1956,7 @@ test('Should not allow changing project to target project without the same enabl
         name: 'Project to be moved to',
         id: targetProject,
         description: '',
+        mode: 'open',
     });
 
     await db.stores.environmentStore.create({
@@ -2037,6 +2043,7 @@ test('Should allow changing project to target project with the same enabled envi
         name: 'Project to be moved to',
         id: targetProject,
         description: '',
+        mode: 'open',
     });
 
     await db.stores.environmentStore.create({
@@ -2279,6 +2286,7 @@ test('Can create toggle with impression data on different project', async () => 
         id: 'impression-data',
         name: 'ImpressionData',
         description: '',
+        mode: 'open',
     });
 
     const toggle = {
@@ -2308,6 +2316,7 @@ test('should reject invalid constraint values for multi-valued constraints', asy
         id: uuidv4(),
         name: uuidv4(),
         description: '',
+        mode: 'open',
     });
 
     const toggle = await db.stores.featureToggleStore.create(project.id, {
@@ -2354,6 +2363,7 @@ test('should add default constraint values for single-valued constraints', async
         id: uuidv4(),
         name: uuidv4(),
         description: '',
+        mode: 'open',
     });
 
     const toggle = await db.stores.featureToggleStore.create(project.id, {
@@ -2413,6 +2423,7 @@ test('should allow long parameter values', async () => {
         id: uuidv4(),
         name: uuidv4(),
         description: uuidv4(),
+        mode: 'open',
     });
 
     const toggle = await db.stores.featureToggleStore.create(project.id, {
@@ -2817,4 +2828,27 @@ test('Can query for two tags at the same time. Tags are ORed together', async ()
         .expect((res) => {
             expect(res.body.features).toHaveLength(3);
         });
+});
+
+test('Should batch stale features', async () => {
+    const staledFeatureName1 = 'staledFeature1';
+    const staledFeatureName2 = 'staledFeature2';
+
+    await createFeatureToggle(staledFeatureName1);
+    await createFeatureToggle(staledFeatureName2);
+
+    await app.request
+        .post(`/api/admin/projects/${DEFAULT_PROJECT}/stale`)
+        .send({
+            features: [staledFeatureName1, staledFeatureName2],
+            stale: true,
+        })
+        .expect(202);
+
+    const { body } = await app.request
+        .get(
+            `/api/admin/projects/${DEFAULT_PROJECT}/features/${staledFeatureName1}`,
+        )
+        .expect(200);
+    expect(body.stale).toBeTruthy();
 });

@@ -43,3 +43,7 @@ Cypress.Commands.add('login', (user = AUTH_USER, password = AUTH_PASSWORD) =>
         cy.get("[data-testid='HEADER_USER_AVATAR']");
     })
 );
+
+Cypress.Commands.add('logout', () => {
+    cy.visit('/logout');
+});

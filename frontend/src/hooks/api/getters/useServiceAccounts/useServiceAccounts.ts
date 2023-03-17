@@ -7,7 +7,7 @@ import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
 import useUiConfig from '../useUiConfig/useUiConfig';
 
 export const useServiceAccounts = () => {
-    const { uiConfig, isEnterprise } = useUiConfig();
+    const { isEnterprise } = useUiConfig();
 
     const { data, error, mutate } = useConditionalSWR(
         isEnterprise(),

@@ -213,6 +213,7 @@ export const FeatureStrategyForm = ({
                     <FeatureStrategySegment
                         segments={segments}
                         setSegments={setSegments}
+                        projectId={projectId}
                     />
                 }
             />

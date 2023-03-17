@@ -1,4 +1,4 @@
-import { Alert, Button, styled, Link } from '@mui/material';
+import { Alert, Button, Divider, Link, styled } from '@mui/material';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -17,8 +17,9 @@ import { UPDATE_FEATURE_ENVIRONMENT_VARIANTS } from 'component/providers/AccessP
 import { WeightType } from 'constants/variantTypes';
 import { v4 as uuidv4 } from 'uuid';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
-import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { updateWeightEdit } from 'component/common/util';
+import { StickinessSelect } from 'component/feature/StrategyTypes/FlexibleStrategy/StickinessSelect/StickinessSelect';
+import { useDefaultProjectSettings } from 'hooks/useDefaultProjectSettings';
 
 const StyledFormSubtitle = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -28,8 +29,14 @@ const StyledFormSubtitle = styled('div')(({ theme }) => ({
         display: 'flex',
         alignItems: 'center',
     },
-    marginTop: theme.spacing(-1.5),
-    marginBottom: theme.spacing(4),
+    marginTop: theme.spacing(-3.5),
+    marginBottom: theme.spacing(2),
+    backgroundColor: theme.palette.background.default,
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
+    position: 'sticky',
+    top: 0,
+    zIndex: 2,
 }));
 
 const StyledCloudCircle = styled(CloudCircle, {
@@ -65,10 +72,10 @@ const StyledAlert = styled(Alert)(({ theme }) => ({
     marginTop: theme.spacing(4),
 }));
 
-const StyledVariantForms = styled('div')(({ theme }) => ({
+const StyledVariantForms = styled('div')({
     display: 'flex',
-    flexDirection: 'column-reverse',
-}));
+    flexDirection: 'column',
+});
 
 const StyledStickinessContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -83,7 +90,11 @@ const StyledDescription = styled('p')(({ theme }) => ({
     marginBottom: theme.spacing(1.5),
 }));
 
-const StyledGeneralSelect = styled(GeneralSelect)(({ theme }) => ({
+const StyledDivider = styled(Divider)(({ theme }) => ({
+    margin: theme.spacing(4, 0),
+}));
+
+const StyledStickinessSelect = styled(StickinessSelect)(({ theme }) => ({
     minWidth: theme.spacing(20),
     width: '100%',
 }));
@@ -134,6 +145,7 @@ export const EnvironmentVariantsModal = ({
 
     const { uiConfig } = useUiConfig();
     const { context } = useUnleashContext();
+    const { defaultStickiness } = useDefaultProjectSettings(projectId);
 
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const { data } = usePendingChangeRequests(projectId);
@@ -142,6 +154,7 @@ export const EnvironmentVariantsModal = ({
 
     const oldVariants = environment?.variants || [];
     const [variantsEdit, setVariantsEdit] = useState<IFeatureVariantEdit[]>([]);
+    const [newVariant, setNewVariant] = useState<string>();
 
     useEffect(() => {
         setVariantsEdit(
@@ -161,7 +174,7 @@ export const EnvironmentVariantsModal = ({
                           stickiness:
                               variantsEdit?.length > 0
                                   ? variantsEdit[0].stickiness
-                                  : 'default',
+                                  : defaultStickiness,
                           new: true,
                           isValid: false,
                           id: uuidv4(),
@@ -180,6 +193,38 @@ export const EnvironmentVariantsModal = ({
             )
         );
     };
+
+    const addVariant = () => {
+        const id = uuidv4();
+        setVariantsEdit(variantsEdit => [
+            ...variantsEdit,
+            {
+                name: '',
+                weightType: WeightType.VARIABLE,
+                weight: 0,
+                overrides: [],
+                stickiness:
+                    variantsEdit?.length > 0
+                        ? variantsEdit[0].stickiness
+                        : 'default',
+                new: true,
+                isValid: false,
+                id,
+            },
+        ]);
+        setNewVariant(id);
+    };
+
+    useEffect(() => {
+        if (newVariant) {
+            const element = document.getElementById(
+                `variant-name-input-${newVariant}`
+            );
+            element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            element?.focus({ preventScroll: true });
+            setNewVariant(undefined);
+        }
+    }, [newVariant]);
 
     const variants = variantsEdit.map(
         ({ new: _, isValid: __, id: ___, ...rest }) => rest
@@ -225,7 +270,7 @@ export const EnvironmentVariantsModal = ({
         isChangeRequestConfigured(environment?.name || '') &&
         uiConfig.flags.crOnVariants;
 
-    const stickiness = variants[0]?.stickiness || 'default';
+    const stickiness = variants[0]?.stickiness || defaultStickiness;
     const stickinessOptions = useMemo(
         () => [
             'default',
@@ -258,7 +303,6 @@ export const EnvironmentVariantsModal = ({
             setError(apiPayload.error);
         }
     }, [apiPayload.error]);
-
     return (
         <SidebarModal
             open={open}
@@ -285,24 +329,7 @@ export const EnvironmentVariantsModal = ({
                     </div>
                     <PermissionButton
                         data-testid="MODAL_ADD_VARIANT_BUTTON"
-                        onClick={() =>
-                            setVariantsEdit(variantsEdit => [
-                                ...variantsEdit,
-                                {
-                                    name: '',
-                                    weightType: WeightType.VARIABLE,
-                                    weight: 0,
-                                    overrides: [],
-                                    stickiness:
-                                        variantsEdit?.length > 0
-                                            ? variantsEdit[0].stickiness
-                                            : 'default',
-                                    new: true,
-                                    isValid: false,
-                                    id: uuidv4(),
-                                },
-                            ])
-                        }
+                        onClick={addVariant}
                         variant="outlined"
                         permission={UPDATE_FEATURE_ENVIRONMENT_VARIANTS}
                         projectId={projectId}
@@ -358,6 +385,16 @@ export const EnvironmentVariantsModal = ({
                             />
                         ))}
                     </StyledVariantForms>
+                    <PermissionButton
+                        onClick={addVariant}
+                        variant="outlined"
+                        permission={UPDATE_FEATURE_ENVIRONMENT_VARIANTS}
+                        projectId={projectId}
+                        environmentId={environment?.name}
+                    >
+                        Add variant
+                    </PermissionButton>
+                    <StyledDivider />
                     <ConditionallyRender
                         condition={variantsEdit.length > 0}
                         show={
@@ -378,10 +415,13 @@ export const EnvironmentVariantsModal = ({
                                     </Link>
                                 </StyledDescription>
                                 <div>
-                                    <StyledGeneralSelect
-                                        options={options}
+                                    <StyledStickinessSelect
                                         value={stickiness}
-                                        onChange={onStickinessChange}
+                                        label={''}
+                                        editable
+                                        onChange={e =>
+                                            onStickinessChange(e.target.value)
+                                        }
                                     />
                                 </div>
                             </>

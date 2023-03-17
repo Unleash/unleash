@@ -149,6 +149,16 @@ class EventStore implements IEventStore {
         }
     }
 
+    async getMaxRevisionId(largerThan: number = 0): Promise<number> {
+        const row = await this.db(TABLE)
+            .max('id')
+            .whereNotNull('feature_name')
+            .orWhere('type', 'segment-update')
+            .andWhere('id', '>=', largerThan)
+            .first();
+        return row ? row.max : -1;
+    }
+
     async delete(key: number): Promise<void> {
         await this.db(TABLE).where({ id: key }).del();
     }

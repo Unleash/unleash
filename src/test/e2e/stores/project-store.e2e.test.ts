@@ -31,6 +31,7 @@ test('should create new project', async () => {
         id: 'test',
         name: 'New project',
         description: 'Blah',
+        mode: 'open' as const,
     };
     await projectStore.create(project);
     const ret = await projectStore.get('test');
@@ -48,6 +49,7 @@ test('should delete project', async () => {
         id: 'test-delete',
         name: 'New project',
         description: 'Blah',
+        mode: 'open' as const,
     };
     await projectStore.create(project);
     await projectStore.delete(project.id);
@@ -64,12 +66,14 @@ test('should update project', async () => {
         id: 'test-update',
         name: 'New project',
         description: 'Blah',
+        mode: 'open' as const,
     };
 
     const updatedProject = {
         id: 'test-update',
         name: 'New name',
         description: 'Blah longer desc',
+        mode: 'open' as const,
     };
 
     await projectStore.create(project);
@@ -93,11 +97,17 @@ test('should import projects', async () => {
     const projectsCount = (await projectStore.getAll()).length;
 
     const projectsToImport: IProjectInsert[] = [
-        { description: 'some project desc', name: 'some name', id: 'someId' },
+        {
+            description: 'some project desc',
+            name: 'some name',
+            id: 'someId',
+            mode: 'open' as const,
+        },
         {
             description: 'another project',
             name: 'another name',
             id: 'anotherId',
+            mode: 'open' as const,
         },
     ];
 
@@ -110,8 +120,8 @@ test('should import projects', async () => {
 
     expect(projects.length - projectsCount).toBe(2);
     expect(someId).toBeDefined();
-    expect(someId.name).toBe('some name');
-    expect(someId.description).toBe('some project desc');
+    expect(someId?.name).toBe('some name');
+    expect(someId?.description).toBe('some project desc');
     expect(anotherId).toBeDefined();
 });
 
@@ -120,6 +130,7 @@ test('should add environment to project', async () => {
         id: 'test-env',
         name: 'New project with env',
         description: 'Blah',
+        mode: 'open' as const,
     };
 
     await environmentStore.create({

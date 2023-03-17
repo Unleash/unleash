@@ -248,7 +248,7 @@ export const FeatureView = () => {
                 }}
                 onClose={() => setShowDelDialog(false)}
                 projectId={projectId}
-                featureId={featureId}
+                featureIds={[featureId]}
             />
             <FeatureStaleDialog
                 isStale={feature.stale}

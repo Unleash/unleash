@@ -25,7 +25,7 @@ import NameExistsError from '../error/name-exists-error';
 import { IEnvironmentStore } from 'lib/types/stores/environment-store';
 import RoleInUseError from '../error/role-in-use-error';
 import { roleSchema } from '../schema/role-schema';
-import { CUSTOM_ROLE_TYPE, ALL_PROJECTS, ALL_ENVS } from '../util/constants';
+import { ALL_ENVS, ALL_PROJECTS, CUSTOM_ROLE_TYPE } from '../util/constants';
 import { DEFAULT_PROJECT } from '../types/project';
 import InvalidOperationError from '../error/invalid-operation-error';
 import BadDataError from '../error/bad-data-error';
@@ -381,10 +381,10 @@ export class AccessService {
             const userIdList = userRoleList.map((u) => u.userId);
             const users = await this.accountStore.getAllWithId(userIdList);
             return users.map((user) => {
-                const role = userRoleList.find((r) => r.userId == user.id);
+                const role = userRoleList.find((r) => r.userId == user.id)!;
                 return {
                     ...user,
-                    addedAt: role.addedAt,
+                    addedAt: role.addedAt!,
                 };
             });
         }
@@ -444,9 +444,11 @@ export class AccessService {
         return this.roleStore.getRootRoles();
     }
 
-    public async resolveRootRole(rootRole: number | RoleName): Promise<IRole> {
+    public async resolveRootRole(
+        rootRole: number | RoleName,
+    ): Promise<IRole | undefined> {
         const rootRoles = await this.getRootRoles();
-        let role: IRole;
+        let role: IRole | undefined;
         if (typeof rootRole === 'number') {
             role = rootRoles.find((r) => r.id === rootRole);
         } else {
@@ -455,7 +457,7 @@ export class AccessService {
         return role;
     }
 
-    async getRootRole(roleName: RoleName): Promise<IRole> {
+    async getRootRole(roleName: RoleName): Promise<IRole | undefined> {
         const roles = await this.roleStore.getRootRoles();
         return roles.find((r) => r.name === roleName);
     }

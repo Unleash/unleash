@@ -14,6 +14,9 @@ import { useContext } from 'react';
 import AccessContext from 'contexts/AccessContext';
 import { Alert } from '@mui/material';
 import { GO_BACK } from 'constants/navigate';
+import { useDefaultProjectSettings } from 'hooks/useDefaultProjectSettings';
+
+const EDIT_PROJECT_BTN = 'EDIT_PROJECT_BTN';
 
 const EditProject = () => {
     const { uiConfig } = useUiConfig();
@@ -21,21 +24,33 @@ const EditProject = () => {
     const { hasAccess } = useContext(AccessContext);
     const id = useRequiredPathParam('projectId');
     const { project } = useProject(id);
+    const { setDefaultProjectStickiness } = useProjectApi();
+    const { defaultStickiness } = useDefaultProjectSettings(id);
     const navigate = useNavigate();
 
     const {
         projectId,
         projectName,
         projectDesc,
+        projectStickiness,
+        projectMode,
         setProjectId,
         setProjectName,
         setProjectDesc,
+        setProjectStickiness,
+        setProjectMode,
         getProjectPayload,
         clearErrors,
         validateProjectId,
         validateName,
         errors,
-    } = useProjectForm(id, project.name, project.description);
+    } = useProjectForm(
+        id,
+        project.name,
+        project.description,
+        defaultStickiness,
+        project.mode
+    );
 
     const formatApiCode = () => {
         return `curl --location --request PUT '${
@@ -58,6 +73,10 @@ const EditProject = () => {
         if (validName) {
             try {
                 await editProject(id, payload);
+                await setDefaultProjectStickiness(
+                    projectId,
+                    payload.defaultStickiness
+                );
                 refetch();
                 navigate(`/projects/${id}`);
                 setToastData({
@@ -97,7 +116,11 @@ const EditProject = () => {
                 projectId={projectId}
                 setProjectId={setProjectId}
                 projectName={projectName}
+                projectMode={projectMode}
                 setProjectName={setProjectName}
+                projectStickiness={projectStickiness}
+                setProjectStickiness={setProjectStickiness}
+                setProjectMode={setProjectMode}
                 projectDesc={projectDesc}
                 setProjectDesc={setProjectDesc}
                 mode="Edit"
@@ -107,6 +130,7 @@ const EditProject = () => {
                 <UpdateButton
                     permission={UPDATE_PROJECT}
                     projectId={projectId}
+                    data-testid={EDIT_PROJECT_BTN}
                 />
             </ProjectForm>
         </FormTemplate>

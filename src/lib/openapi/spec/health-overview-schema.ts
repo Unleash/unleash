@@ -25,6 +25,21 @@ export const healthOverviewSchema = {
             type: 'string',
             nullable: true,
         },
+        defaultStickiness: {
+            type: 'string',
+            enum: ['default', 'userId', 'sessionId', 'random'],
+            example: 'userId',
+            description:
+                'A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy',
+        },
+        mode: {
+            type: 'string',
+            enum: ['open', 'protected'],
+            example: 'open',
+            nullable: true,
+            description:
+                'A mode of the project affecting what actions are possible in this project. During a rollout of project modes this feature can be optional or `null`',
+        },
         members: {
             type: 'number',
         },

@@ -36,6 +36,20 @@ export const projectOverviewSchema = {
             example: 'DX squad feature release',
             description: 'Additional information about the project',
         },
+        defaultStickiness: {
+            type: 'string',
+            enum: ['default', 'userId', 'sessionId', 'random'],
+            example: 'userId',
+            description:
+                'A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy',
+        },
+        mode: {
+            type: 'string',
+            enum: ['open', 'protected'],
+            example: 'open',
+            description:
+                'A mode of the project affecting what actions are possible in this project',
+        },
         members: {
             type: 'number',
             example: 4,

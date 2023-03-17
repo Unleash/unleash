@@ -21,7 +21,7 @@ import FeatureToggleStore from './feature-toggle-store';
 import { ensureStringValue } from '../util/ensureStringValue';
 import { mapValues } from '../util/map-values';
 import { IFlagResolver } from '../types/experimental';
-import { IFeatureProjectUserParams } from '../routes/admin-api/project/features';
+import { IFeatureProjectUserParams } from '../routes/admin-api/project/project-features';
 import Raw = Knex.Raw;
 import { Db } from './db';
 

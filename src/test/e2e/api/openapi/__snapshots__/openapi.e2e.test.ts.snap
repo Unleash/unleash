@@ -328,6 +328,38 @@ exports[`should serve the OpenAPI spec 1`] = `
         },
         "type": "object",
       },
+      "batchFeaturesSchema": {
+        "properties": {
+          "features": {
+            "items": {
+              "type": "string",
+            },
+            "type": "array",
+          },
+        },
+        "required": [
+          "features",
+        ],
+        "type": "object",
+      },
+      "batchStaleSchema": {
+        "properties": {
+          "features": {
+            "items": {
+              "type": "string",
+            },
+            "type": "array",
+          },
+          "stale": {
+            "type": "boolean",
+          },
+        },
+        "required": [
+          "features",
+          "stale",
+        ],
+        "type": "object",
+      },
       "bulkMetricsSchema": {
         "properties": {
           "applications": {
@@ -489,6 +521,7 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "boolean",
           },
           "strategies": {
+            "deprecated": true,
             "items": {
               "$ref": "#/components/schemas/featureStrategySchema",
             },
@@ -498,6 +531,7 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "string",
           },
           "variants": {
+            "deprecated": true,
             "items": {
               "$ref": "#/components/schemas/variantSchema",
             },
@@ -854,6 +888,13 @@ exports[`should serve the OpenAPI spec 1`] = `
           },
           "parameters": {
             "$ref": "#/components/schemas/parametersSchema",
+          },
+          "segments": {
+            "description": "Ids of segments to use for this strategy",
+            "items": {
+              "type": "number",
+            },
+            "type": "array",
           },
           "sortOrder": {
             "type": "number",
@@ -1800,6 +1841,17 @@ exports[`should serve the OpenAPI spec 1`] = `
       "healthOverviewSchema": {
         "additionalProperties": false,
         "properties": {
+          "defaultStickiness": {
+            "description": "A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy",
+            "enum": [
+              "default",
+              "userId",
+              "sessionId",
+              "random",
+            ],
+            "example": "userId",
+            "type": "string",
+          },
           "description": {
             "nullable": true,
             "type": "string",
@@ -1824,6 +1876,16 @@ exports[`should serve the OpenAPI spec 1`] = `
           },
           "members": {
             "type": "number",
+          },
+          "mode": {
+            "description": "A mode of the project affecting what actions are possible in this project. During a rollout of project modes this feature can be optional or \`null\`",
+            "enum": [
+              "open",
+              "protected",
+            ],
+            "example": "open",
+            "nullable": true,
+            "type": "string",
           },
           "name": {
             "type": "string",
@@ -1853,6 +1915,17 @@ exports[`should serve the OpenAPI spec 1`] = `
           "activeCount": {
             "type": "number",
           },
+          "defaultStickiness": {
+            "description": "A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy",
+            "enum": [
+              "default",
+              "userId",
+              "sessionId",
+              "random",
+            ],
+            "example": "userId",
+            "type": "string",
+          },
           "description": {
             "nullable": true,
             "type": "string",
@@ -1877,6 +1950,16 @@ exports[`should serve the OpenAPI spec 1`] = `
           },
           "members": {
             "type": "number",
+          },
+          "mode": {
+            "description": "A mode of the project affecting what actions are possible in this project. During a rollout of project modes this feature can be optional or \`null\`",
+            "enum": [
+              "open",
+              "protected",
+            ],
+            "example": "open",
+            "nullable": true,
+            "type": "string",
           },
           "name": {
             "type": "string",
@@ -2698,6 +2781,17 @@ exports[`should serve the OpenAPI spec 1`] = `
         "additionalProperties": false,
         "description": "A high-level overview of a project. It contains information such as project statistics, the name of the project, what members and what features it contains, etc.",
         "properties": {
+          "defaultStickiness": {
+            "description": "A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy",
+            "enum": [
+              "default",
+              "userId",
+              "sessionId",
+              "random",
+            ],
+            "example": "userId",
+            "type": "string",
+          },
           "description": {
             "description": "Additional information about the project",
             "example": "DX squad feature release",
@@ -2737,6 +2831,15 @@ exports[`should serve the OpenAPI spec 1`] = `
             "example": 4,
             "type": "number",
           },
+          "mode": {
+            "description": "A mode of the project affecting what actions are possible in this project",
+            "enum": [
+              "open",
+              "protected",
+            ],
+            "example": "open",
+            "type": "string",
+          },
           "name": {
             "description": "The name of this project",
             "example": "dx-squad",
@@ -2771,6 +2874,17 @@ exports[`should serve the OpenAPI spec 1`] = `
             "format": "date-time",
             "type": "string",
           },
+          "defaultStickiness": {
+            "description": "A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy",
+            "enum": [
+              "default",
+              "userId",
+              "sessionId",
+              "random",
+            ],
+            "example": "userId",
+            "type": "string",
+          },
           "description": {
             "description": "Additional information about the project",
             "example": "DX squad feature release",
@@ -2801,6 +2915,15 @@ exports[`should serve the OpenAPI spec 1`] = `
             "description": "The number of members this project has",
             "example": 4,
             "type": "number",
+          },
+          "mode": {
+            "description": "A mode of the project affecting what actions are possible in this project",
+            "enum": [
+              "open",
+              "protected",
+            ],
+            "example": "open",
+            "type": "string",
           },
           "name": {
             "description": "The name of this project",
@@ -2842,11 +2965,6 @@ Stats are divided into current and previous **windows**.
             "example": 10,
             "type": "number",
           },
-          "avgTimeToProdPastWindow": {
-            "description": "The average time from when a feature was created to when it was enabled in the "production" environment during the previous window",
-            "example": 10,
-            "type": "number",
-          },
           "createdCurrentWindow": {
             "description": "The number of feature toggles created during the current window",
             "example": 15,
@@ -2875,7 +2993,6 @@ Stats are divided into current and previous **windows**.
         },
         "required": [
           "avgTimeToProdCurrentWindow",
-          "avgTimeToProdPastWindow",
           "createdCurrentWindow",
           "createdPastWindow",
           "archivedCurrentWindow",
@@ -3642,6 +3759,26 @@ Stats are divided into current and previous **windows**.
         ],
         "type": "object",
       },
+      "tagsBulkAddSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "features": {
+            "items": {
+              "minLength": 1,
+              "type": "string",
+            },
+            "type": "array",
+          },
+          "tags": {
+            "$ref": "#/components/schemas/updateTagsSchema",
+          },
+        },
+        "required": [
+          "features",
+          "tags",
+        ],
+        "type": "object",
+      },
       "tagsSchema": {
         "additionalProperties": false,
         "properties": {
@@ -3853,6 +3990,28 @@ Stats are divided into current and previous **windows**.
         },
         "type": "object",
       },
+      "updateTagsSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "addedTags": {
+            "items": {
+              "$ref": "#/components/schemas/tagSchema",
+            },
+            "type": "array",
+          },
+          "removedTags": {
+            "items": {
+              "$ref": "#/components/schemas/tagSchema",
+            },
+            "type": "array",
+          },
+        },
+        "required": [
+          "addedTags",
+          "removedTags",
+        ],
+        "type": "object",
+      },
       "updateUserSchema": {
         "additionalProperties": true,
         "properties": {
@@ -3891,6 +4050,32 @@ Stats are divided into current and previous **windows**.
         },
         "required": [
           "name",
+        ],
+        "type": "object",
+      },
+      "upsertSegmentSchema": {
+        "properties": {
+          "constraints": {
+            "items": {
+              "$ref": "#/components/schemas/constraintSchema",
+            },
+            "type": "array",
+          },
+          "description": {
+            "nullable": true,
+            "type": "string",
+          },
+          "name": {
+            "type": "string",
+          },
+          "project": {
+            "nullable": true,
+            "type": "string",
+          },
+        },
+        "required": [
+          "name",
+          "constraints",
         ],
         "type": "object",
       },
@@ -5250,6 +5435,54 @@ If the provided project does not exist, the list of events will be empty.",
           "Features",
         ],
       },
+      "put": {
+        "operationId": "updateTags",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "featureName",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/updateTagsSchema",
+              },
+            },
+          },
+          "description": "updateTagsSchema",
+          "required": true,
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/tagsSchema",
+                },
+              },
+            },
+            "description": "The resource was successfully created.",
+            "headers": {
+              "location": {
+                "description": "The location of the newly created resource.",
+                "schema": {
+                  "format": "uri",
+                  "type": "string",
+                },
+              },
+            },
+          },
+        },
+        "tags": [
+          "Features",
+        ],
+      },
     },
     "/api/admin/features/{featureName}/tags/{type}/{value}": {
       "delete": {
@@ -5861,6 +6094,114 @@ If the provided project does not exist, the list of events will be empty.",
         ],
       },
     },
+    "/api/admin/projects/{projectId}/archive": {
+      "post": {
+        "description": "This endpoint archives the specified features.",
+        "operationId": "archiveFeatures",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/batchFeaturesSchema",
+              },
+            },
+          },
+          "description": "batchFeaturesSchema",
+          "required": true,
+        },
+        "responses": {
+          "202": {
+            "description": "This response has no body.",
+          },
+        },
+        "summary": "Archives a list of features",
+        "tags": [
+          "Features",
+        ],
+      },
+    },
+    "/api/admin/projects/{projectId}/archive/delete": {
+      "post": {
+        "description": "This endpoint deletes the specified features, that are in archive.",
+        "operationId": "deleteFeatures",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/batchFeaturesSchema",
+              },
+            },
+          },
+          "description": "batchFeaturesSchema",
+          "required": true,
+        },
+        "responses": {
+          "200": {
+            "description": "This response has no body.",
+          },
+        },
+        "summary": "Deletes a list of features",
+        "tags": [
+          "Archive",
+        ],
+      },
+    },
+    "/api/admin/projects/{projectId}/archive/revive": {
+      "post": {
+        "description": "This endpoint revives the specified features.",
+        "operationId": "reviveFeatures",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/batchFeaturesSchema",
+              },
+            },
+          },
+          "description": "batchFeaturesSchema",
+          "required": true,
+        },
+        "responses": {
+          "200": {
+            "description": "This response has no body.",
+          },
+        },
+        "summary": "Revives a list of features",
+        "tags": [
+          "Archive",
+        ],
+      },
+    },
     "/api/admin/projects/{projectId}/environments": {
       "post": {
         "operationId": "addEnvironmentToProject",
@@ -6062,7 +6403,7 @@ If the provided project does not exist, the list of events will be empty.",
           },
         ],
         "responses": {
-          "200": {
+          "202": {
             "description": "This response has no body.",
           },
           "401": {
@@ -7241,6 +7582,42 @@ If the provided project does not exist, the list of events will be empty.",
         ],
       },
     },
+    "/api/admin/projects/{projectId}/stale": {
+      "post": {
+        "description": "This endpoint stales the specified features.",
+        "operationId": "staleFeatures",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/batchStaleSchema",
+              },
+            },
+          },
+          "description": "batchStaleSchema",
+          "required": true,
+        },
+        "responses": {
+          "202": {
+            "description": "This response has no body.",
+          },
+        },
+        "summary": "Stales a list of features",
+        "tags": [
+          "Features",
+        ],
+      },
+    },
     "/api/admin/splash/{id}": {
       "post": {
         "operationId": "updateSplashSettings",
@@ -7869,6 +8246,30 @@ If the provided project does not exist, the list of events will be empty.",
         ],
       },
     },
+    "/api/admin/tags/features": {
+      "put": {
+        "operationId": "addTagToFeatures",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/tagsBulkAddSchema",
+              },
+            },
+          },
+          "description": "tagsBulkAddSchema",
+          "required": true,
+        },
+        "responses": {
+          "200": {
+            "description": "This response has no body.",
+          },
+        },
+        "tags": [
+          "Tags",
+        ],
+      },
+    },
     "/api/admin/tags/{type}": {
       "get": {
         "operationId": "getTagsByType",
@@ -8453,11 +8854,11 @@ If the provided project does not exist, the list of events will be empty.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/clientFeaturesSchema",
+                  "$ref": "#/components/schemas/clientFeatureSchema",
                 },
               },
             },
-            "description": "clientFeaturesSchema",
+            "description": "clientFeatureSchema",
           },
         },
         "tags": [

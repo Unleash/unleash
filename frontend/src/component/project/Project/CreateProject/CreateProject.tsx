@@ -11,6 +11,8 @@ import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { GO_BACK } from 'constants/navigate';
 
+const CREATE_PROJECT_BTN = 'CREATE_PROJECT_BTN';
+
 const CreateProject = () => {
     const { setToastData, setToastApiError } = useToast();
     const { refetchUser } = useAuthUser();
@@ -19,6 +21,7 @@ const CreateProject = () => {
     const {
         projectId,
         projectName,
+        projectMode,
         projectDesc,
         setProjectId,
         setProjectName,
@@ -27,6 +30,9 @@ const CreateProject = () => {
         clearErrors,
         validateProjectId,
         validateName,
+        setProjectStickiness,
+        setProjectMode,
+        projectStickiness,
         errors,
     } = useProjectForm();
 
@@ -85,6 +91,10 @@ const CreateProject = () => {
                 projectId={projectId}
                 setProjectId={setProjectId}
                 projectName={projectName}
+                projectMode={projectMode}
+                projectStickiness={projectStickiness}
+                setProjectStickiness={setProjectStickiness}
+                setProjectMode={setProjectMode}
                 setProjectName={setProjectName}
                 projectDesc={projectDesc}
                 setProjectDesc={setProjectDesc}
@@ -92,7 +102,11 @@ const CreateProject = () => {
                 clearErrors={clearErrors}
                 validateProjectId={validateProjectId}
             >
-                <CreateButton name="project" permission={CREATE_PROJECT} />
+                <CreateButton
+                    name="project"
+                    permission={CREATE_PROJECT}
+                    data-testid={CREATE_PROJECT_BTN}
+                />
             </ProjectForm>
         </FormTemplate>
     );

@@ -40,8 +40,13 @@ process.nextTick(async () => {
                         responseTimeWithAppNameKillSwitch: false,
                         featuresExportImport: true,
                         newProjectOverview: true,
+                        bulkOperations: true,
                         projectStatusApi: true,
                         showProjectApiAccess: true,
+                        projectScopedSegments: true,
+                        projectScopedStickiness: true,
+                        optimal304: true,
+                        optimal304Differ: false,
                     },
                 },
                 authentication: {
@@ -55,6 +60,12 @@ process.nextTick(async () => {
                         },
                     ],
                 },
+                /* can be tweaked to control configuration caching for /api/client/features
+                clientFeatureCaching: {
+                    enabled: true,
+                    maxAge: 4000,
+                },
+                */
             }),
         );
     } catch (error) {

@@ -23,7 +23,13 @@ import {
     IPersonalAPIToken,
 } from 'interfaces/personalAPIToken';
 import { useMemo, useState } from 'react';
-import { useTable, SortingRule, useSortBy, useFlexLayout } from 'react-table';
+import {
+    useTable,
+    SortingRule,
+    useSortBy,
+    useFlexLayout,
+    Column,
+} from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
 import { ServiceAccountCreateTokenDialog } from './ServiceAccountCreateTokenDialog/ServiceAccountCreateTokenDialog';
 import { ServiceAccountTokenDialog } from 'component/admin/serviceAccounts/ServiceAccountsTable/ServiceAccountTokenDialog/ServiceAccountTokenDialog';
@@ -151,65 +157,69 @@ export const ServiceAccountTokens = ({
     };
 
     const columns = useMemo(
-        () => [
-            {
-                Header: 'Description',
-                accessor: 'description',
-                Cell: HighlightCell,
-                minWidth: 100,
-                searchable: true,
-            },
-            {
-                Header: 'Expires',
-                accessor: 'expiresAt',
-                Cell: ({ value }: { value: string }) => {
-                    const date = new Date(value);
-                    if (date.getFullYear() > new Date().getFullYear() + 100) {
-                        return <TextCell>Never</TextCell>;
-                    }
-                    return <DateCell value={value} />;
+        () =>
+            [
+                {
+                    Header: 'Description',
+                    accessor: 'description',
+                    Cell: HighlightCell,
+                    minWidth: 100,
+                    searchable: true,
                 },
-                sortType: 'date',
-                maxWidth: 150,
-            },
-            {
-                Header: 'Created',
-                accessor: 'createdAt',
-                Cell: DateCell,
-                sortType: 'date',
-                maxWidth: 150,
-            },
-            {
-                Header: 'Last seen',
-                accessor: 'seenAt',
-                Cell: TimeAgoCell,
-                sortType: 'date',
-                maxWidth: 150,
-            },
-            {
-                Header: 'Actions',
-                id: 'Actions',
-                align: 'center',
-                Cell: ({ row: { original: rowToken } }: any) => (
-                    <ActionCell>
-                        <Tooltip title="Delete token" arrow describeChild>
-                            <span>
-                                <IconButton
-                                    onClick={() => {
-                                        setSelectedToken(rowToken);
-                                        setDeleteOpen(true);
-                                    }}
-                                >
-                                    <Delete />
-                                </IconButton>
-                            </span>
-                        </Tooltip>
-                    </ActionCell>
-                ),
-                maxWidth: 100,
-                disableSortBy: true,
-            },
-        ],
+                {
+                    Header: 'Expires',
+                    accessor: 'expiresAt',
+                    Cell: ({ value }: { value: string }) => {
+                        const date = new Date(value);
+                        if (
+                            date.getFullYear() >
+                            new Date().getFullYear() + 100
+                        ) {
+                            return <TextCell>Never</TextCell>;
+                        }
+                        return <DateCell value={value} />;
+                    },
+                    sortType: 'date',
+                    maxWidth: 150,
+                },
+                {
+                    Header: 'Created',
+                    accessor: 'createdAt',
+                    Cell: DateCell,
+                    sortType: 'date',
+                    maxWidth: 150,
+                },
+                {
+                    Header: 'Last seen',
+                    accessor: 'seenAt',
+                    Cell: TimeAgoCell,
+                    sortType: 'date',
+                    maxWidth: 150,
+                },
+                {
+                    Header: 'Actions',
+                    id: 'Actions',
+                    align: 'center',
+                    Cell: ({ row: { original: rowToken } }: any) => (
+                        <ActionCell>
+                            <Tooltip title="Delete token" arrow describeChild>
+                                <span>
+                                    <IconButton
+                                        onClick={() => {
+                                            setSelectedToken(rowToken);
+                                            setDeleteOpen(true);
+                                        }}
+                                    >
+                                        <Delete />
+                                    </IconButton>
+                                </span>
+                            </Tooltip>
+                        </ActionCell>
+                    ),
+                    maxWidth: 100,
+                    disableSortBy: true,
+                },
+            ] as Column<IPersonalAPIToken>[],
         [setSelectedToken, setDeleteOpen]
     );
 

@@ -18,7 +18,7 @@ export default class FakeRoleStore implements IRoleStore {
         throw new Error('Method not implemented.');
     }
 
-    nameInUse(name: string, existingId: number): Promise<boolean> {
+    nameInUse(name: string, existingId?: number): Promise<boolean> {
         throw new Error('Method not implemented.');
     }
 

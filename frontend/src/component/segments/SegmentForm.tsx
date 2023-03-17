@@ -12,9 +12,11 @@ export type SegmentFormMode = 'create' | 'edit';
 interface ISegmentProps {
     name: string;
     description: string;
+    project?: string;
     constraints: IConstraint[];
     setName: React.Dispatch<React.SetStateAction<string>>;
     setDescription: React.Dispatch<React.SetStateAction<string>>;
+    setProject: React.Dispatch<React.SetStateAction<string | undefined>>;
     setConstraints: React.Dispatch<React.SetStateAction<IConstraint[]>>;
     handleSubmit: (e: any) => void;
     errors: { [key: string]: string };
@@ -32,9 +34,11 @@ export const SegmentForm: React.FC<ISegmentProps> = ({
     children,
     name,
     description,
+    project,
     constraints,
     setName,
     setDescription,
+    setProject,
     setConstraints,
     handleSubmit,
     errors,
@@ -54,8 +58,10 @@ export const SegmentForm: React.FC<ISegmentProps> = ({
                         <SegmentFormStepOne
                             name={name}
                             description={description}
+                            project={project}
                             setName={setName}
                             setDescription={setDescription}
+                            setProject={setProject}
                             errors={errors}
                             clearErrors={clearErrors}
                             setCurrentStep={setCurrentStep}

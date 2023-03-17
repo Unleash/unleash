@@ -55,6 +55,20 @@ export const projectSchema = {
             description:
                 '`true` if the project was favorited, otherwise `false`.',
         },
+        mode: {
+            type: 'string',
+            enum: ['open', 'protected'],
+            example: 'open',
+            description:
+                'A mode of the project affecting what actions are possible in this project',
+        },
+        defaultStickiness: {
+            type: 'string',
+            enum: ['default', 'userId', 'sessionId', 'random'],
+            example: 'userId',
+            description:
+                'A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy',
+        },
     },
     components: {},
 } as const;

@@ -7,51 +7,58 @@ import { nameType } from '../routes/util';
 import { projectSchema } from './project-schema';
 import NotFoundError from '../error/notfound-error';
 import {
-    PROJECT_CREATED,
-    PROJECT_DELETED,
-    PROJECT_UPDATED,
-    ProjectUserAddedEvent,
-    ProjectUserRemovedEvent,
-    ProjectUserUpdateRoleEvent,
-    ProjectGroupAddedEvent,
-    ProjectGroupRemovedEvent,
-    ProjectGroupUpdateRoleEvent,
+    DEFAULT_PROJECT,
+    DefaultStickiness,
     FEATURE_ENVIRONMENT_ENABLED,
-} from '../types/events';
-import { IUnleashStores, IUnleashConfig, IAccountStore } from '../types';
-import {
     FeatureToggle,
+    IAccountStore,
+    IEnvironmentStore,
+    IEventStore,
+    IFeatureEnvironmentStore,
+    IFeatureToggleStore,
+    IFeatureTypeStore,
     IProject,
     IProjectOverview,
     IProjectWithCount,
+    IUnleashConfig,
+    IUnleashStores,
     IUserWithRole,
+    MOVE_FEATURE_TOGGLE,
+    PROJECT_CREATED,
+    PROJECT_DELETED,
+    PROJECT_UPDATED,
+    ProjectGroupAddedEvent,
+    ProjectGroupRemovedEvent,
+    ProjectGroupUpdateRoleEvent,
+    ProjectMode,
+    ProjectUserAddedEvent,
+    ProjectUserRemovedEvent,
+    ProjectUserUpdateRoleEvent,
     RoleName,
-} from '../types/model';
-import { IEnvironmentStore } from '../types/stores/environment-store';
-import { IFeatureTypeStore } from '../types/stores/feature-type-store';
-import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
-import { IFeatureEnvironmentStore } from '../types/stores/feature-environment-store';
-import { IProjectQuery, IProjectStore } from '../types/stores/project-store';
+} from '../types';
+import {
+    IProjectQuery,
+    IProjectSettings,
+    IProjectStore,
+} from '../types/stores/project-store';
 import {
     IProjectAccessModel,
     IRoleDescriptor,
 } from '../types/stores/access-store';
-import { IEventStore } from '../types/stores/event-store';
 import FeatureToggleService from './feature-toggle-service';
-import { MOVE_FEATURE_TOGGLE } from '../types/permissions';
 import NoAccessError from '../error/no-access-error';
 import IncompatibleProjectError from '../error/incompatible-project-error';
-import { DEFAULT_PROJECT } from '../types/project';
 import { IFeatureTagStore } from 'lib/types/stores/feature-tag-store';
 import ProjectWithoutOwnerError from '../error/project-without-owner-error';
-import { arraysHaveSameItems } from '../util/arraysHaveSameItems';
+import { arraysHaveSameItems } from '../util';
 import { GroupService } from './group-service';
 import { IGroupModelWithProjectRole, IGroupRole } from 'lib/types/group';
 import { FavoritesService } from './favorites-service';
 import { TimeToProduction } from '../read-models/time-to-production/time-to-production';
 import { IProjectStatsStore } from 'lib/types/stores/project-stats-store-type';
+import { uniqueByKey } from '../util/unique';
 
-const getCreatedBy = (user: IUser) => user.email || user.username;
+const getCreatedBy = (user: IUser) => user.email || user.username || 'unknown';
 
 export interface AccessWithRoles {
     users: IUserWithRole[];
@@ -64,7 +71,6 @@ type Count = number;
 
 export interface IProjectStats {
     avgTimeToProdCurrentWindow: Days;
-    avgTimeToProdPastWindow: Days;
     createdCurrentWindow: Count;
     createdPastWindow: Count;
     archivedCurrentWindow: Count;
@@ -165,7 +171,10 @@ export default class ProjectService {
     }
 
     async createProject(
-        newProject: Pick<IProject, 'id' | 'name'>,
+        newProject: Pick<
+            IProject,
+            'id' | 'name' | 'mode' | 'defaultStickiness'
+        >,
         user: IUser,
     ): Promise<IProject> {
         const data = await projectSchema.validateAsync(newProject);
@@ -412,6 +421,7 @@ export default class ProjectService {
         const role = await this.accessService.getRole(roleId);
         const group = await this.groupService.getGroup(groupId);
         const project = await this.getProject(projectId);
+        if (group.id == null) throw new TypeError('Unexpected empty group id');
 
         await this.accessService.addGroupToRole(
             group.id,
@@ -442,6 +452,7 @@ export default class ProjectService {
         const group = await this.groupService.getGroup(groupId);
         const role = await this.accessService.getRole(roleId);
         const project = await this.getProject(projectId);
+        if (group.id == null) throw new TypeError('Unexpected empty group id');
 
         await this.accessService.removeGroupFromRole(
             group.id,
@@ -530,9 +541,12 @@ export default class ProjectService {
     ): Promise<void> {
         const usersWithRoles = await this.getAccessToProject(projectId);
         const user = usersWithRoles.users.find((u) => u.id === userId);
+        if (!user) throw new TypeError('Unexpected empty user');
+
         const currentRole = usersWithRoles.roles.find(
             (r) => r.id === user.roleId,
         );
+        if (!currentRole) throw new TypeError('Unexpected empty current role');
 
         if (currentRole.id === roleId) {
             // Nothing to do....
@@ -576,9 +590,11 @@ export default class ProjectService {
     ): Promise<void> {
         const usersWithRoles = await this.getAccessToProject(projectId);
         const user = usersWithRoles.groups.find((u) => u.id === userId);
+        if (!user) throw new TypeError('Unexpected empty user');
         const currentRole = usersWithRoles.roles.find(
             (r) => r.id === user.roleId,
         );
+        if (!currentRole) throw new TypeError('Unexpected empty current role');
 
         if (currentRole.id === roleId) {
             // Nothing to do....
@@ -616,6 +632,33 @@ export default class ProjectService {
         return this.store.getMembersCountByProject(projectId);
     }
 
+    async getProjectUsers(
+        projectId: string,
+    ): Promise<Array<Pick<IUser, 'id' | 'email' | 'username'>>> {
+        const [, users, groups] = await this.accessService.getProjectRoleAccess(
+            projectId,
+        );
+        const actualUsers = users.map((user) => ({
+            id: user.id,
+            email: user.email,
+            username: user.username,
+        }));
+        const actualGroupUsers = groups
+            .flatMap((group) => group.users)
+            .map((user) => user.user)
+            .map((user) => ({
+                id: user.id,
+                email: user.email,
+                username: user.username,
+            }));
+        return uniqueByKey([...actualUsers, ...actualGroupUsers], 'id');
+    }
+
+    async isProjectUser(userId: number, projectId: string): Promise<boolean> {
+        const users = await this.getProjectUsers(projectId);
+        return Boolean(users.find((user) => user.id === userId));
+    }
+
     async getProjectsByUser(userId: number): Promise<string[]> {
         return this.store.getProjectsByUser(userId);
     }
@@ -640,6 +683,12 @@ export default class ProjectService {
     async getStatusUpdates(projectId: string): Promise<ICalculateStatus> {
         // Get all features for project with type release
         const features = await this.featureToggleStore.getAll({
+            type: 'release',
+            project: projectId,
+        });
+
+        const archivedFeatures = await this.featureToggleStore.getAll({
+            archived: true,
             type: 'release',
             project: projectId,
         });
@@ -708,54 +757,24 @@ export default class ProjectService {
         // Get all events for features that correspond to feature toggle environment ON
         // Filter out events that are not a production evironment
 
-        const eventsCurrentWindow = await this.eventStore.query([
-            {
-                op: 'forFeatures',
-                parameters: {
-                    features: features.map((feature) => feature.name),
-                    environments: productionEnvironments.map((env) => env.name),
-                    type: FEATURE_ENVIRONMENT_ENABLED,
-                    projectId,
-                },
-            },
-            {
-                op: 'beforeDate',
-                parameters: {
-                    dateAccessor: 'created_at',
-                    date: dateMinusThirtyDays,
-                },
-            },
-        ]);
+        const allFeatures = [...features, ...archivedFeatures];
 
-        const eventsPastWindow = await this.eventStore.query([
+        const eventsData = await this.eventStore.query([
             {
                 op: 'forFeatures',
                 parameters: {
-                    features: features.map((feature) => feature.name),
+                    features: allFeatures.map((feature) => feature.name),
                     environments: productionEnvironments.map((env) => env.name),
                     type: FEATURE_ENVIRONMENT_ENABLED,
                     projectId,
-                },
-            },
-            {
-                op: 'betweenDate',
-                parameters: {
-                    dateAccessor: 'created_at',
-                    range: [dateMinusSixtyDays, dateMinusThirtyDays],
                 },
             },
         ]);
 
         const currentWindowTimeToProdReadModel = new TimeToProduction(
-            features,
+            allFeatures,
             productionEnvironments,
-            eventsCurrentWindow,
-        );
-
-        const pastWindowTimeToProdReadModel = new TimeToProduction(
-            features,
-            productionEnvironments,
-            eventsPastWindow,
+            eventsData,
         );
 
         const projectMembersAddedCurrentWindow =
@@ -769,8 +788,6 @@ export default class ProjectService {
             updates: {
                 avgTimeToProdCurrentWindow:
                     currentWindowTimeToProdReadModel.calculateAverageTimeToProd(),
-                avgTimeToProdPastWindow:
-                    pastWindowTimeToProdReadModel.calculateAverageTimeToProd(),
                 createdCurrentWindow: createdCurrentWindow.length,
                 createdPastWindow: createdPastWindow.length,
                 archivedCurrentWindow: archivedCurrentWindow.length,
@@ -805,10 +822,12 @@ export default class ProjectService {
                 userId,
             }),
             this.store.getMembersCountByProject(projectId),
-            this.favoritesService.isFavoriteProject({
-                project: projectId,
-                userId,
-            }),
+            userId
+                ? this.favoritesService.isFavoriteProject({
+                      project: projectId,
+                      userId,
+                  })
+                : Promise.resolve(false),
             this.projectStatsStore.getProjectStats(projectId),
         ]);
 
@@ -816,7 +835,9 @@ export default class ProjectService {
             stats: projectStats,
             name: project.name,
             description: project.description,
-            health: project.health,
+            mode: project.mode,
+            defaultStickiness: project.defaultStickiness || 'default',
+            health: project.health || 0,
             favorite: favorite,
             updatedAt: project.updatedAt,
             environments,
@@ -824,5 +845,21 @@ export default class ProjectService {
             members,
             version: 1,
         };
+    }
+
+    async getProjectSettings(projectId: string): Promise<IProjectSettings> {
+        return this.store.getProjectSettings(projectId);
+    }
+
+    async setProjectSettings(
+        projectId: string,
+        defaultStickiness: DefaultStickiness,
+        mode: ProjectMode,
+    ): Promise<void> {
+        return this.store.setProjectSettings(
+            projectId,
+            defaultStickiness,
+            mode,
+        );
     }
 }

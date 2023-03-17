@@ -1,0 +1,51 @@
+import { useState, VFC } from 'react';
+import { Button } from '@mui/material';
+import { Archive } from '@mui/icons-material';
+import { PermissionHOC } from 'component/common/PermissionHOC/PermissionHOC';
+import { DELETE_FEATURE } from 'component/providers/AccessProvider/permissions';
+import useProject from 'hooks/api/getters/useProject/useProject';
+import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
+
+interface IArchiveButtonProps {
+    projectId: string;
+    features: string[];
+}
+
+export const ArchiveButton: VFC<IArchiveButtonProps> = ({
+    projectId,
+    features,
+}) => {
+    const { refetch } = useProject(projectId);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+    const onConfirm = async () => {
+        setIsDialogOpen(false);
+        await refetch();
+        // TODO: toast
+    };
+
+    return (
+        <>
+            <PermissionHOC projectId={projectId} permission={DELETE_FEATURE}>
+                {({ hasAccess }) => (
+                    <Button
+                        disabled={!hasAccess || isDialogOpen}
+                        startIcon={<Archive />}
+                        variant="outlined"
+                        size="small"
+                        onClick={() => setIsDialogOpen(true)}
+                    >
+                        Archive
+                    </Button>
+                )}
+            </PermissionHOC>
+            <FeatureArchiveDialog
+                projectId={projectId}
+                featureIds={features}
+                onConfirm={onConfirm}
+                isOpen={isDialogOpen}
+                onClose={() => setIsDialogOpen(false)}
+            />
+        </>
+    );
+};

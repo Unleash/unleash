@@ -48,6 +48,10 @@ export interface IFlags {
     proPlanAutoCharge?: boolean;
     notifications?: boolean;
     loginHistory?: boolean;
+    bulkOperations?: boolean;
+    projectScopedSegments?: boolean;
+    projectScopedStickiness?: boolean;
+    projectMode?: boolean;
 }
 
 export interface IVersionInfo {

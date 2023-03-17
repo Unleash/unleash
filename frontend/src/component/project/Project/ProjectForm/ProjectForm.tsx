@@ -1,18 +1,30 @@
 import React from 'react';
 import { trim } from 'component/common/util';
 import {
-    StyledForm,
+    StyledButton,
+    StyledButtonContainer,
     StyledContainer,
     StyledDescription,
+    StyledForm,
     StyledInput,
     StyledTextField,
-    StyledButtonContainer,
-    StyledButton,
 } from './ProjectForm.styles';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { StickinessSelect } from 'component/feature/StrategyTypes/FlexibleStrategy/StickinessSelect/StickinessSelect';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import Select from 'component/common/select';
+import { DefaultStickiness, ProjectMode } from '../hooks/useProjectForm';
+
 interface IProjectForm {
     projectId: string;
     projectName: string;
     projectDesc: string;
+    projectStickiness?: string;
+    projectMode?: string;
+    setProjectStickiness?: React.Dispatch<
+        React.SetStateAction<DefaultStickiness>
+    >;
+    setProjectMode?: React.Dispatch<React.SetStateAction<ProjectMode>>;
     setProjectId: React.Dispatch<React.SetStateAction<string>>;
     setProjectName: React.Dispatch<React.SetStateAction<string>>;
     setProjectDesc: React.Dispatch<React.SetStateAction<string>>;
@@ -24,6 +36,11 @@ interface IProjectForm {
     validateProjectId: () => void;
 }
 
+const PROJECT_STICKINESS_SELECT = 'PROJECT_STICKINESS_SELECT';
+const PROJECT_ID_INPUT = 'PROJECT_ID_INPUT';
+const PROJECT_NAME_INPUT = 'PROJECT_NAME_INPUT';
+const PROJECT_DESCRIPTION_INPUT = 'PROJECT_DESCRIPTION_INPUT';
+
 const ProjectForm: React.FC<IProjectForm> = ({
     children,
     handleSubmit,
@@ -31,14 +48,22 @@ const ProjectForm: React.FC<IProjectForm> = ({
     projectId,
     projectName,
     projectDesc,
+    projectStickiness,
+    projectMode,
     setProjectId,
     setProjectName,
     setProjectDesc,
+    setProjectStickiness,
+    setProjectMode,
     errors,
     mode,
     validateProjectId,
     clearErrors,
 }) => {
+    const { uiConfig } = useUiConfig();
+    const { projectScopedStickiness, projectMode: projectModeFlag } =
+        uiConfig.flags;
+
     return (
         <StyledForm onSubmit={handleSubmit}>
             <StyledContainer>
@@ -52,6 +77,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
                     onFocus={() => clearErrors()}
                     onBlur={validateProjectId}
                     disabled={mode === 'Edit'}
+                    data-testid={PROJECT_ID_INPUT}
                     autoFocus
                     required
                 />
@@ -66,6 +92,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
                     error={Boolean(errors.name)}
                     errorText={errors.name}
                     onFocus={() => clearErrors()}
+                    data-testid={PROJECT_NAME_INPUT}
                     required
                 />
 
@@ -79,6 +106,59 @@ const ProjectForm: React.FC<IProjectForm> = ({
                     maxRows={4}
                     value={projectDesc}
                     onChange={e => setProjectDesc(e.target.value)}
+                    data-testid={PROJECT_DESCRIPTION_INPUT}
+                />
+
+                <ConditionallyRender
+                    condition={
+                        Boolean(projectScopedStickiness) &&
+                        setProjectStickiness != null
+                    }
+                    show={
+                        <>
+                            <StyledDescription>
+                                What is the default stickiness for the project?
+                            </StyledDescription>
+                            <StickinessSelect
+                                label="Stickiness"
+                                value={projectStickiness}
+                                data-testid={PROJECT_STICKINESS_SELECT}
+                                onChange={e =>
+                                    setProjectStickiness &&
+                                    setProjectStickiness(
+                                        e.target.value as DefaultStickiness
+                                    )
+                                }
+                                editable
+                            />
+                        </>
+                    }
+                />
+                <ConditionallyRender
+                    condition={Boolean(projectModeFlag)}
+                    show={
+                        <>
+                            <StyledDescription>
+                                What is your project mode?
+                            </StyledDescription>
+                            <Select
+                                id="project-mode"
+                                value={projectMode}
+                                label="Project mode"
+                                name="Project mode"
+                                onChange={e => {
+                                    setProjectMode?.(
+                                        e.target.value as ProjectMode
+                                    );
+                                }}
+                                options={[
+                                    { key: 'open', label: 'open' },
+                                    { key: 'protected', label: 'protected' },
+                                ]}
+                                style={{ minWidth: '150px' }}
+                            ></Select>
+                        </>
+                    }
                 />
             </StyledContainer>
 

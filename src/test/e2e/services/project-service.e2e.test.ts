@@ -26,6 +26,16 @@ let featureToggleService: FeatureToggleService;
 let favoritesService: FavoritesService;
 let user;
 
+const isProjectUser = async (
+    userId: number,
+    projectName: string,
+    condition: boolean,
+) => {
+    expect(await projectService.isProjectUser(userId, projectName)).toBe(
+        condition,
+    );
+};
+
 beforeAll(async () => {
     db = await dbInit('project_service_serial', getLogger);
     stores = db.stores;
@@ -90,6 +100,7 @@ test('should list all projects', async () => {
         id: 'test-list',
         name: 'New project',
         description: 'Blah',
+        mode: 'open' as const,
     };
 
     await projectService.createProject(project, user);
@@ -103,6 +114,7 @@ test('should create new project', async () => {
         id: 'test',
         name: 'New project',
         description: 'Blah',
+        mode: 'protected' as const,
     };
 
     await projectService.createProject(project, user);
@@ -111,6 +123,7 @@ test('should create new project', async () => {
     expect(project.name).toEqual(ret.name);
     expect(project.description).toEqual(ret.description);
     expect(ret.createdAt).toBeTruthy();
+    expect(ret.mode).toEqual('protected');
 });
 
 test('should delete project', async () => {
@@ -118,6 +131,7 @@ test('should delete project', async () => {
         id: 'test-delete',
         name: 'New project',
         description: 'Blah',
+        mode: 'open' as const,
     };
 
     await projectService.createProject(project, user);
@@ -135,6 +149,7 @@ test('should not be able to delete project with toggles', async () => {
         id: 'test-delete-with-toggles',
         name: 'New project',
         description: 'Blah',
+        mode: 'open' as const,
     };
     await projectService.createProject(project, user);
     await stores.featureToggleStore.create(project.id, {
@@ -170,6 +185,7 @@ test('should not be able to create existing project', async () => {
         id: 'test-delete',
         name: 'New project',
         description: 'Blah',
+        mode: 'open' as const,
     };
     try {
         await projectService.createProject(project, user);
@@ -200,12 +216,14 @@ test('should update project', async () => {
         id: 'test-update',
         name: 'New project',
         description: 'Blah',
+        mode: 'open' as const,
     };
 
     const updatedProject = {
         id: 'test-update',
         name: 'New name',
         description: 'Blah longer desc',
+        mode: 'protected' as const,
     };
 
     await projectService.createProject(project, user);
@@ -215,6 +233,7 @@ test('should update project', async () => {
 
     expect(updatedProject.name).toBe(readProject.name);
     expect(updatedProject.description).toBe(readProject.description);
+    expect(updatedProject.mode).toBe('protected');
 });
 
 test('should give error when getting unknown project', async () => {
@@ -230,6 +249,7 @@ test('should get list of users with access to project', async () => {
         id: 'test-roles-access',
         name: 'New project',
         description: 'Blah',
+        mode: 'open' as const,
     };
     await projectService.createProject(project, user);
     const { users } = await projectService.getAccessToProject(project.id);
@@ -242,6 +262,8 @@ test('should get list of users with access to project', async () => {
     expect(users[0].name).toBe(user.name);
     expect(users[0].roleId).toBe(owner.id);
     expect(member).toBeTruthy();
+
+    await isProjectUser(users[0].id, project.id, true);
 });
 
 test('should add a member user to the project', async () => {
@@ -249,6 +271,7 @@ test('should add a member user to the project', async () => {
         id: 'add-users',
         name: 'New project',
         description: 'Blah',
+        mode: 'open' as const,
     };
     await projectService.createProject(project, user);
 
@@ -284,6 +307,19 @@ test('should add a member user to the project', async () => {
     expect(memberUsers[0].name).toBe(projectMember1.name);
     expect(memberUsers[1].id).toBe(projectMember2.id);
     expect(memberUsers[1].name).toBe(projectMember2.name);
+    expect(await projectService.getProjectUsers(project.id)).toStrictEqual([
+        { email: user.email, id: user.id, username: user.username },
+        {
+            email: projectMember1.email,
+            id: projectMember1.id,
+            username: projectMember1.username,
+        },
+        {
+            email: projectMember2.email,
+            id: projectMember2.id,
+            username: projectMember2.username,
+        },
+    ]);
 });
 
 test('should add admin users to the project', async () => {
@@ -291,6 +327,7 @@ test('should add admin users to the project', async () => {
         id: 'add-admin-users',
         name: 'New project',
         description: 'Blah',
+        mode: 'open' as const,
     };
     await projectService.createProject(project, user);
 
@@ -327,6 +364,9 @@ test('should add admin users to the project', async () => {
     expect(adminUsers[1].name).toBe(projectAdmin1.name);
     expect(adminUsers[2].id).toBe(projectAdmin2.id);
     expect(adminUsers[2].name).toBe(projectAdmin2.name);
+    await isProjectUser(adminUsers[0].id, project.id, true);
+    await isProjectUser(adminUsers[1].id, project.id, true);
+    await isProjectUser(adminUsers[2].id, project.id, true);
 });
 
 test('add user should fail if user already have access', async () => {
@@ -334,6 +374,7 @@ test('add user should fail if user already have access', async () => {
         id: 'add-users-twice',
         name: 'New project',
         description: 'Blah',
+        mode: 'open' as const,
     };
     await projectService.createProject(project, user);
 
@@ -368,6 +409,7 @@ test('should remove user from the project', async () => {
         id: 'remove-users',
         name: 'New project',
         description: 'Blah',
+        mode: 'open' as const,
     };
     await projectService.createProject(project, user);
 
@@ -402,6 +444,7 @@ test('should not remove user from the project', async () => {
         id: 'remove-users-not-allowed',
         name: 'New project',
         description: 'Blah',
+        mode: 'open' as const,
     };
     await projectService.createProject(project, user);
 
@@ -425,6 +468,7 @@ test('should not change project if feature toggle project does not match current
         id: 'test-change-project',
         name: 'New project',
         description: 'Blah',
+        mode: 'open' as const,
     };
 
     const toggle = { name: 'test-toggle' };
@@ -451,6 +495,7 @@ test('should return 404 if no project is found with the project id', async () =>
         id: 'test-change-project-2',
         name: 'New project',
         description: 'Blah',
+        mode: 'open' as const,
     };
 
     const toggle = { name: 'test-toggle-2' };
@@ -475,12 +520,14 @@ test('should fail if user is not authorized', async () => {
         id: 'test-change-project-3',
         name: 'New project',
         description: 'Blah',
+        mode: 'open' as const,
     };
 
     const projectDestination = {
         id: 'test-change-project-dest',
         name: 'New project 2',
         description: 'Blah',
+        mode: 'open' as const,
     };
 
     const toggle = { name: 'test-toggle-3' };
@@ -508,8 +555,16 @@ test('should fail if user is not authorized', async () => {
 });
 
 test('should change project when checks pass', async () => {
-    const projectA = { id: randomId(), name: randomId() };
-    const projectB = { id: randomId(), name: randomId() };
+    const projectA = {
+        id: randomId(),
+        name: randomId(),
+        mode: 'open' as const,
+    };
+    const projectB = {
+        id: randomId(),
+        name: randomId(),
+        mode: 'open' as const,
+    };
     const toggle = { name: randomId() };
 
     await projectService.createProject(projectA, user);
@@ -529,8 +584,16 @@ test('should change project when checks pass', async () => {
 });
 
 test('changing project should emit event even if user does not have a username set', async () => {
-    const projectA = { id: randomId(), name: randomId() };
-    const projectB = { id: randomId(), name: randomId() };
+    const projectA = {
+        id: randomId(),
+        name: randomId(),
+        mode: 'open' as const,
+    };
+    const projectB = {
+        id: randomId(),
+        name: randomId(),
+        mode: 'open' as const,
+    };
     const toggle = { name: randomId() };
     await projectService.createProject(projectA, user);
     await projectService.createProject(projectB, user);
@@ -547,8 +610,16 @@ test('changing project should emit event even if user does not have a username s
 }, 10000);
 
 test('should require equal project environments to move features', async () => {
-    const projectA = { id: randomId(), name: randomId() };
-    const projectB = { id: randomId(), name: randomId() };
+    const projectA = {
+        id: randomId(),
+        name: randomId(),
+        mode: 'open' as const,
+    };
+    const projectB = {
+        id: randomId(),
+        name: randomId(),
+        mode: 'open' as const,
+    };
     const environment = { name: randomId(), type: 'production' };
     const toggle = { name: randomId() };
 
@@ -576,6 +647,7 @@ test('A newly created project only gets connected to enabled environments', asyn
         id: 'environment-test',
         name: 'New environment project',
         description: 'Blah',
+        mode: 'open' as const,
     };
     const enabledEnv = 'connection_test';
     await db.stores.environmentStore.create({
@@ -602,6 +674,7 @@ test('should have environments sorted in order', async () => {
         id: 'environment-order-test',
         name: 'Environment testing project',
         description: '',
+        mode: 'open' as const,
     };
     const first = 'test';
     const second = 'abc';
@@ -640,6 +713,7 @@ test('should add a user to the project with a custom role', async () => {
         id: 'add-users-custom-role',
         name: 'New project',
         description: 'Blah',
+        mode: 'open' as const,
     };
     await projectService.createProject(project, user);
 
@@ -655,14 +729,14 @@ test('should add a user to the project with a custom role', async () => {
             {
                 id: 2,
                 name: 'CREATE_FEATURE',
-                environment: null,
+                environment: undefined,
                 displayName: 'Create Feature Toggles',
                 type: 'project',
             },
             {
                 id: 8,
                 name: 'DELETE_FEATURE',
-                environment: null,
+                environment: undefined,
                 displayName: 'Delete Feature Toggles',
                 type: 'project',
             },
@@ -690,6 +764,7 @@ test('should delete role entries when deleting project', async () => {
         id: 'test-delete-users-1',
         name: 'New project',
         description: 'Blah',
+        mode: 'open' as const,
     };
 
     await projectService.createProject(project, user);
@@ -711,14 +786,14 @@ test('should delete role entries when deleting project', async () => {
             {
                 id: 2,
                 name: 'CREATE_FEATURE',
-                environment: null,
+                environment: undefined,
                 displayName: 'Create Feature Toggles',
                 type: 'project',
             },
             {
                 id: 8,
                 name: 'DELETE_FEATURE',
-                environment: null,
+                environment: undefined,
                 displayName: 'Delete Feature Toggles',
                 type: 'project',
             },
@@ -741,6 +816,7 @@ test('should change a users role in the project', async () => {
         id: 'test-change-user-role',
         name: 'New project',
         description: 'Blah',
+        mode: 'open' as const,
     };
 
     await projectService.createProject(project, user);
@@ -757,14 +833,14 @@ test('should change a users role in the project', async () => {
             {
                 id: 2,
                 name: 'CREATE_FEATURE',
-                environment: null,
+                environment: undefined,
                 displayName: 'Create Feature Toggles',
                 type: 'project',
             },
             {
                 id: 8,
                 name: 'DELETE_FEATURE',
-                environment: null,
+                environment: undefined,
                 displayName: 'Delete Feature Toggles',
                 type: 'project',
             },
@@ -807,6 +883,7 @@ test('should update role for user on project', async () => {
         id: 'update-users',
         name: 'New project',
         description: 'Blah',
+        mode: 'open' as const,
     };
     await projectService.createProject(project, user);
 
@@ -844,6 +921,7 @@ test('should able to assign role without existing members', async () => {
         id: 'update-users-test',
         name: 'New project',
         description: 'Blah',
+        mode: 'open' as const,
     };
     await projectService.createProject(project, user);
 
@@ -886,6 +964,7 @@ test('should not update role for user on project when she is the owner', async (
         id: 'update-users-not-allowed',
         name: 'New project',
         description: 'Blah',
+        mode: 'open' as const,
     };
     await projectService.createProject(project, user);
 
@@ -919,6 +998,7 @@ test('Should allow bulk update of group permissions', async () => {
     const project = {
         id: 'bulk-update-project',
         name: 'bulk-update-project',
+        mode: 'open' as const,
     };
     await projectService.createProject(project, user.id);
     const groupStore = stores.groupStore;
@@ -940,7 +1020,7 @@ test('Should allow bulk update of group permissions', async () => {
             {
                 id: 2,
                 name: 'CREATE_FEATURE',
-                environment: null,
+                environment: undefined,
                 displayName: 'Create Feature Toggles',
                 type: 'project',
             },
@@ -973,7 +1053,7 @@ test('Should bulk update of only users', async () => {
             {
                 id: 2,
                 name: 'CREATE_FEATURE',
-                environment: null,
+                environment: undefined,
                 displayName: 'Create Feature Toggles',
                 type: 'project',
             },
@@ -995,6 +1075,7 @@ test('Should allow bulk update of only groups', async () => {
     const project = {
         id: 'bulk-update-project-only',
         name: 'bulk-update-project-only',
+        mode: 'open' as const,
     };
     const groupStore = stores.groupStore;
 
@@ -1012,7 +1093,7 @@ test('Should allow bulk update of only groups', async () => {
             {
                 id: 2,
                 name: 'CREATE_FEATURE',
-                environment: null,
+                environment: undefined,
                 displayName: 'Create Feature Toggles',
                 type: 'project',
             },
@@ -1035,6 +1116,7 @@ test('should only count active feature toggles for project', async () => {
         id: 'only-active',
         name: 'New project',
         description: 'Blah',
+        mode: 'open' as const,
     };
 
     await projectService.createProject(project, user);
@@ -1062,6 +1144,7 @@ test('should list projects with all features archived', async () => {
         id: 'only-archived',
         name: 'Listed project',
         description: 'Blah',
+        mode: 'open' as const,
     };
 
     await projectService.createProject(project, user);
@@ -1097,6 +1180,7 @@ test('should calculate average time to production', async () => {
     const project = {
         id: 'average-time-to-prod',
         name: 'average-time-to-prod',
+        mode: 'open' as const,
     };
 
     await projectService.createProject(project, user.id);
@@ -1147,14 +1231,14 @@ test('should calculate average time to production', async () => {
     });
 
     const result = await projectService.getStatusUpdates(project.id);
-    expect(result.updates.avgTimeToProdCurrentWindow).toBe(14);
-    expect(result.updates.avgTimeToProdPastWindow).toBe(1);
+    expect(result.updates.avgTimeToProdCurrentWindow).toBe(11.4);
 });
 
 test('should get correct amount of features created in current and past window', async () => {
     const project = {
         id: 'features-created',
         name: 'features-created',
+        mode: 'open' as const,
     };
 
     await projectService.createProject(project, user.id);
@@ -1190,6 +1274,7 @@ test('should get correct amount of features archived in current and past window'
     const project = {
         id: 'features-archived',
         name: 'features-archived',
+        mode: 'open' as const,
     };
 
     await projectService.createProject(project, user.id);
@@ -1239,6 +1324,7 @@ test('should get correct amount of project members for current and past window',
     const project = {
         id: 'features-members',
         name: 'features-members',
+        mode: 'open' as const,
     };
 
     await projectService.createProject(project, user.id);

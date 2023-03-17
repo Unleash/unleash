@@ -9,6 +9,7 @@ import {
     apiTokensSchema,
     applicationSchema,
     applicationsSchema,
+    batchFeaturesSchema,
     changePasswordSchema,
     clientApplicationSchema,
     clientFeatureSchema,
@@ -102,6 +103,7 @@ import {
     stateSchema,
     strategiesSchema,
     strategySchema,
+    tagsBulkAddSchema,
     tagSchema,
     tagsSchema,
     tagTypeSchema,
@@ -115,6 +117,7 @@ import {
     updateTagTypeSchema,
     updateUserSchema,
     upsertContextFieldSchema,
+    upsertSegmentSchema,
     upsertStrategySchema,
     userSchema,
     usersGroupsBaseSchema,
@@ -140,6 +143,8 @@ import { maintenanceSchema } from './spec/maintenance-schema';
 import { bulkRegistrationSchema } from './spec/bulk-registration-schema';
 import { bulkMetricsSchema } from './spec/bulk-metrics-schema';
 import { clientMetricsEnvSchema } from './spec/client-metrics-env-schema';
+import { updateTagsSchema } from './spec/update-tags-schema';
+import { batchStaleSchema } from './spec/batch-stale-schema';
 
 // All schemas in `openapi/spec` should be listed here.
 export const schemas = {
@@ -152,6 +157,8 @@ export const schemas = {
     apiTokensSchema,
     applicationSchema,
     applicationsSchema,
+    batchFeaturesSchema,
+    batchStaleSchema,
     bulkRegistrationSchema,
     bulkMetricsSchema,
     changePasswordSchema,
@@ -249,6 +256,7 @@ export const schemas = {
     stateSchema,
     strategiesSchema,
     strategySchema,
+    tagsBulkAddSchema,
     tagSchema,
     tagsSchema,
     tagTypeSchema,
@@ -261,7 +269,9 @@ export const schemas = {
     updateFeatureStrategySchema,
     updateTagTypeSchema,
     updateUserSchema,
+    updateTagsSchema,
     upsertContextFieldSchema,
+    upsertSegmentSchema,
     upsertStrategySchema,
     userSchema,
     usersGroupsBaseSchema,

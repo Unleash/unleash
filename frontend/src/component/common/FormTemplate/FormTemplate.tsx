@@ -36,7 +36,6 @@ const StyledContainer = styled('section', {
     width: '100%',
     display: 'flex',
     margin: '0 auto',
-    overflow: 'hidden',
     [theme.breakpoints.down(1100)]: {
         flexDirection: 'column',
         minHeight: 0,

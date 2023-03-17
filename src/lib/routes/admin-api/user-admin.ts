@@ -362,7 +362,8 @@ export default class UserAdminController extends Controller {
         req: IAuthRequest<unknown, unknown, CreateUserSchema>,
         res: Response<UserSchema>,
     ): Promise<void> {
-        const { username, email, name, rootRole, sendEmail } = req.body;
+        const { username, email, name, rootRole, sendEmail, password } =
+            req.body;
         const { user } = req;
 
         const createdUser = await this.userService.createUser(
@@ -370,6 +371,7 @@ export default class UserAdminController extends Controller {
                 username,
                 email,
                 name,
+                password,
                 rootRole,
             },
             user,

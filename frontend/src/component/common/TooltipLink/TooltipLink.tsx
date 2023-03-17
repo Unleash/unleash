@@ -27,7 +27,7 @@ export const TooltipLink = ({
     ...props
 }: ITooltipLinkProps) => (
     <HtmlTooltip title={tooltip} {...tooltipProps} arrow>
-        <StyledLink highlighted={highlighted} {...props}>
+        <StyledLink tabIndex={0} highlighted={highlighted} {...props}>
             {children}
         </StyledLink>
     </HtmlTooltip>

@@ -1,6 +1,7 @@
 import useSWR from 'swr';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
+import { PatsSchema } from 'openapi';
 import { IPersonalAPIToken } from 'interfaces/personalAPIToken';
 
 export interface IUsePersonalAPITokensOutput {
@@ -10,20 +11,15 @@ export interface IUsePersonalAPITokensOutput {
     error?: Error;
 }
 
-export const usePersonalAPITokens = (
-    userId?: number
-): IUsePersonalAPITokensOutput => {
-    const { data, error, mutate } = useSWR(
-        formatApiPath(
-            userId
-                ? `api/admin/user-admin/${userId}/pat`
-                : 'api/admin/user/tokens'
-        ),
+export const usePersonalAPITokens = (): IUsePersonalAPITokensOutput => {
+    const { data, error, mutate } = useSWR<PatsSchema>(
+        formatApiPath('api/admin/user/tokens'),
         fetcher
     );
 
     return {
-        tokens: data ? data.pats : undefined,
+        // FIXME: schema issue
+        tokens: data ? (data.pats as any) : undefined,
         loading: !error && !data,
         refetchTokens: () => mutate(),
         error,

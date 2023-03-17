@@ -4,7 +4,10 @@ import { FEATURE_TAGGED, FEATURE_UNTAGGED, TAG_CREATED } from '../types/events';
 import { IUnleashConfig } from '../types/option';
 import { IFeatureToggleStore, IUnleashStores } from '../types/stores';
 import { tagSchema } from './tag-schema';
-import { IFeatureTagStore } from '../types/stores/feature-tag-store';
+import {
+    IFeatureTag,
+    IFeatureTagStore,
+} from '../types/stores/feature-tag-store';
 import { IEventStore } from '../types/stores/event-store';
 import { ITagStore } from '../types/stores/tag-store';
 import { ITag } from '../types/model';
@@ -62,6 +65,63 @@ class FeatureTagService {
             data: validatedTag,
         });
         return validatedTag;
+    }
+
+    async updateTags(
+        featureNames: string[],
+        addedTags: ITag[],
+        removedTags: ITag[],
+        userName: string,
+    ): Promise<void> {
+        const featureToggles = await this.featureToggleStore.getAllByNames(
+            featureNames,
+        );
+        await Promise.all(
+            addedTags.map((tag) => this.createTagIfNeeded(tag, userName)),
+        );
+        const createdFeatureTags: IFeatureTag[] = featureNames.flatMap(
+            (featureName) =>
+                addedTags.map((addedTag) => ({
+                    featureName,
+                    tagType: addedTag.type,
+                    tagValue: addedTag.value,
+                })),
+        );
+
+        await this.featureTagStore.tagFeatures(createdFeatureTags);
+
+        const removedFeatureTags: IFeatureTag[] = featureNames.flatMap(
+            (featureName) =>
+                removedTags.map((addedTag) => ({
+                    featureName,
+                    tagType: addedTag.type,
+                    tagValue: addedTag.value,
+                })),
+        );
+
+        await this.featureTagStore.untagFeatures(removedFeatureTags);
+
+        const creationEvents = featureToggles.flatMap((featureToggle) =>
+            addedTags.map((addedTag) => ({
+                type: FEATURE_TAGGED,
+                createdBy: userName,
+                featureName: featureToggle.name,
+                project: featureToggle.project,
+                data: addedTag,
+            })),
+        );
+
+        const removalEvents = featureToggles.flatMap((featureToggle) =>
+            removedTags.map((removedTag) => ({
+                type: FEATURE_UNTAGGED,
+                createdBy: userName,
+                featureName: featureToggle.name,
+                project: featureToggle.project,
+                data: removedTag,
+            })),
+        );
+
+        await this.eventStore.batchStore([...creationEvents, ...removalEvents]);
     }
 
     async createTagIfNeeded(tag: ITag, userName: string): Promise<void> {

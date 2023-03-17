@@ -65,6 +65,11 @@ const PremiumFeatures = {
         url: 'https://docs.getunleash.io/reference/change-requests',
         label: 'Change Requests',
     },
+    segments: {
+        plan: FeaturePlan.PRO,
+        url: 'https://docs.getunleash.io/reference/segments',
+        label: 'Segments',
+    },
 };
 
 type PremiumFeatureType = keyof typeof PremiumFeatures;

@@ -1,10 +1,8 @@
-import { EventEmitter } from 'stream';
 import { Logger, LogProvider } from '../logger';
-import { ITag } from '../types/model';
+import { ITag } from '../types';
+import EventEmitter from 'events';
 import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
-import { UNIQUE_CONSTRAINT_VIOLATION } from '../error/db-error';
-import FeatureHasTagError from '../error/feature-has-tag-error';
 import {
     IFeatureAndTag,
     IFeatureTag,
@@ -123,17 +121,22 @@ class FeatureTagStore implements IFeatureTagStore {
         const stopTimer = this.timer('tagFeature');
         await this.db<FeatureTagTable>(TABLE)
             .insert(this.featureAndTagToRow(featureName, tag))
-            .catch((err) => {
-                if (err.code === UNIQUE_CONSTRAINT_VIOLATION) {
-                    throw new FeatureHasTagError(
-                        `${featureName} already has the tag: [${tag.type}:${tag.value}]`,
-                    );
-                } else {
-                    throw err;
-                }
-            });
+            .onConflict(COLUMNS)
+            .merge();
         stopTimer();
         return tag;
+    }
+
+    async untagFeatures(featureTags: IFeatureTag[]): Promise<void> {
+        const stopTimer = this.timer('untagFeatures');
+        try {
+            await this.db(TABLE)
+                .whereIn(COLUMNS, featureTags.map(this.featureTagArray))
+                .delete();
+        } catch (err) {
+            this.logger.error(err);
+        }
+        stopTimer();
     }
 
     /**
@@ -159,11 +162,9 @@ class FeatureTagStore implements IFeatureTagStore {
         stopTimer();
     }
 
-    async importFeatureTags(
-        featureTags: IFeatureTag[],
-    ): Promise<IFeatureAndTag[]> {
+    async tagFeatures(featureTags: IFeatureTag[]): Promise<IFeatureAndTag[]> {
         const rows = await this.db(TABLE)
-            .insert(featureTags.map(this.importToRow))
+            .insert(featureTags.map(this.featureTagToRow))
             .returning(COLUMNS)
             .onConflict(COLUMNS)
             .ignore();
@@ -205,7 +206,7 @@ class FeatureTagStore implements IFeatureTagStore {
         };
     }
 
-    importToRow({
+    featureTagToRow({
         featureName,
         tagType,
         tagValue,
@@ -215,6 +216,10 @@ class FeatureTagStore implements IFeatureTagStore {
             tag_type: tagType,
             tag_value: tagValue,
         };
+    }
+
+    featureTagArray({ featureName, tagType, tagValue }: IFeatureTag): string[] {
+        return [featureName, tagType, tagValue];
     }
 
     featureAndTagToRow(

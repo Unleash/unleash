@@ -26,10 +26,6 @@ const flags = {
         process.env.UNLEASH_RESPONSE_TIME_WITH_APP_NAME_KILL_SWITCH,
         false,
     ),
-    proxyReturnAllToggles: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_PROXY_RETURN_ALL_TOGGLES,
-        false,
-    ),
     maintenanceMode: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_MAINTENANCE_MODE,
         false,
@@ -64,6 +60,28 @@ const flags = {
     ),
     notifications: parseEnvVarBoolean(process.env.NOTIFICATIONS, false),
     loginHistory: parseEnvVarBoolean(process.env.UNLEASH_LOGIN_HISTORY, false),
+    bulkOperations: parseEnvVarBoolean(
+        process.env.UNLEASH_BULK_OPERATIONS,
+        false,
+    ),
+    projectScopedSegments: parseEnvVarBoolean(
+        process.env.PROJECT_SCOPED_SEGMENTS,
+        false,
+    ),
+    projectScopedStickiness: parseEnvVarBoolean(
+        process.env.PROJECT_SCOPED_STICKINESS,
+        false,
+    ),
+    projectMode: parseEnvVarBoolean(process.env.PROJECT_MODE, false),
+    cleanClientApi: parseEnvVarBoolean(process.env.CLEAN_CLIENT_API, false),
+    optimal304: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_OPTIMAL_304,
+        false,
+    ),
+    optimal304Differ: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_OPTIMAL_304_DIFFER,
+        false,
+    ),
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

@@ -88,6 +88,7 @@ module.exports = {
             ],
         },
         prism: {
+            theme: require('prism-react-renderer/themes/oceanicNext'),
             additionalLanguages: [
                 'csharp',
                 'dart',

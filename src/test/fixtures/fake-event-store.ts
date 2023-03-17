@@ -15,6 +15,10 @@ class FakeEventStore implements IEventStore {
         this.events = [];
     }
 
+    getMaxRevisionId(): Promise<number> {
+        throw new Error('Method not implemented.');
+    }
+
     store(event: IEvent): Promise<void> {
         this.events.push(event);
         this.eventEmitter.emit(event.type, event);

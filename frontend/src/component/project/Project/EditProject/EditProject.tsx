@@ -73,9 +73,9 @@ const EditProject = () => {
         if (validName) {
             try {
                 await editProject(id, payload);
-                setDefaultProjectStickiness(
+                await setDefaultProjectStickiness(
                     projectId,
-                    payload.projectStickiness
+                    payload.stickiness
                 );
                 refetch();
                 navigate(`/projects/${id}`);

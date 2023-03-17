@@ -3,6 +3,7 @@ import {
     IProjectMembersCount,
 } from '../../db/project-store';
 import {
+    DefaultStickiness,
     IEnvironment,
     IProject,
     IProjectWithCount,
@@ -17,6 +18,16 @@ export interface IProjectInsert {
     updatedAt?: Date;
     changeRequestsEnabled?: boolean;
     mode: ProjectMode;
+}
+
+export interface IProjectSettings {
+    mode: ProjectMode;
+    defaultStickiness: DefaultStickiness;
+}
+
+export interface IProjectSettingsRow {
+    project_mode: ProjectMode;
+    default_stickiness: DefaultStickiness;
 }
 
 export interface IProjectArchived {
@@ -85,5 +96,12 @@ export interface IProjectStore extends Store<IProject, string> {
     addEnvironmentToProjects(
         environment: string,
         projects: string[],
+    ): Promise<void>;
+
+    getProjectSettings(projectId: string): Promise<IProjectSettings>;
+    setProjectSettings(
+        projectId: string,
+        defaultStickiness: DefaultStickiness,
+        mode: ProjectMode,
     ): Promise<void>;
 }

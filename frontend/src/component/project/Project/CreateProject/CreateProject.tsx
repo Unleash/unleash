@@ -36,8 +36,7 @@ const CreateProject = () => {
         errors,
     } = useProjectForm();
 
-    const { createProject, setDefaultProjectStickiness, loading } =
-        useProjectApi();
+    const { createProject, loading } = useProjectApi();
 
     const handleSubmit = async (e: Event) => {
         e.preventDefault();
@@ -49,10 +48,6 @@ const CreateProject = () => {
             const payload = getProjectPayload();
             try {
                 await createProject(payload);
-                setDefaultProjectStickiness(
-                    projectId,
-                    payload.projectStickiness
-                );
                 refetchUser();
                 navigate(`/projects/${projectId}`);
                 setToastData({

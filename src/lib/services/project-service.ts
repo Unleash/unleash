@@ -18,7 +18,13 @@ import {
     ProjectUserRemovedEvent,
     ProjectUserUpdateRoleEvent,
 } from '../types/events';
-import { IAccountStore, IUnleashConfig, IUnleashStores } from '../types';
+import {
+    DefaultStickiness,
+    IAccountStore,
+    IUnleashConfig,
+    IUnleashStores,
+    ProjectMode,
+} from '../types';
 import {
     FeatureToggle,
     IProject,
@@ -31,7 +37,11 @@ import { IEnvironmentStore } from '../types/stores/environment-store';
 import { IFeatureTypeStore } from '../types/stores/feature-type-store';
 import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
 import { IFeatureEnvironmentStore } from '../types/stores/feature-environment-store';
-import { IProjectQuery, IProjectStore } from '../types/stores/project-store';
+import {
+    IProjectQuery,
+    IProjectSettings,
+    IProjectStore,
+} from '../types/stores/project-store';
 import {
     IProjectAccessModel,
     IRoleDescriptor,
@@ -827,6 +837,7 @@ export default class ProjectService {
             name: project.name,
             description: project.description,
             mode: project.mode,
+            defaultStickiness: project.defaultStickiness || 'default',
             health: project.health || 0,
             favorite: favorite,
             updatedAt: project.updatedAt,
@@ -835,5 +846,21 @@ export default class ProjectService {
             members,
             version: 1,
         };
+    }
+
+    async getProjectSettings(projectId: string): Promise<IProjectSettings> {
+        return this.store.getProjectSettings(projectId);
+    }
+
+    async setProjectSettings(
+        projectId: string,
+        defaultStickiness: DefaultStickiness,
+        mode: ProjectMode,
+    ): Promise<void> {
+        return this.store.setProjectSettings(
+            projectId,
+            defaultStickiness,
+            mode,
+        );
     }
 }

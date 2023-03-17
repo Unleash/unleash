@@ -175,6 +175,8 @@ export interface IFeatureOverview {
 
 export type ProjectMode = 'open' | 'protected';
 
+export type DefaultStickiness = 'default' | 'sessionId' | 'userId' | 'random';
+
 export interface IProjectOverview {
     name: string;
     description: string;
@@ -187,6 +189,8 @@ export interface IProjectOverview {
     updatedAt?: Date;
     stats?: IProjectStats;
     mode: ProjectMode;
+
+    defaultStickiness: DefaultStickiness;
 }
 
 export interface IProjectHealthReport extends IProjectOverview {
@@ -370,6 +374,7 @@ export interface IProject {
     updatedAt?: Date;
     changeRequestsEnabled?: boolean;
     mode: ProjectMode;
+    defaultStickiness?: DefaultStickiness;
 }
 
 export interface ICustomRole {

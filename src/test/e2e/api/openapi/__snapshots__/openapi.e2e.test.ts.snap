@@ -2891,29 +2891,6 @@ exports[`should serve the OpenAPI spec 1`] = `
         ],
         "type": "object",
       },
-      "projectSettingsSchema": {
-        "additionalProperties": false,
-        "properties": {
-          "defaultStickiness": {
-            "example": "userId",
-            "nullable": true,
-            "type": "string",
-          },
-          "mode": {
-            "enum": [
-              "open",
-              "protected",
-              "private",
-            ],
-            "nullable": true,
-            "type": "string",
-          },
-        },
-        "required": [
-          "defaultStickiness",
-        ],
-        "type": "object",
-      },
       "projectStatsSchema": {
         "additionalProperties": false,
         "description": "Statistics for a project, including the average time to production, number of features created, the project activity and more.
@@ -7547,70 +7524,6 @@ If the provided project does not exist, the list of events will be empty.",
               },
             },
             "description": "healthReportSchema",
-          },
-        },
-        "tags": [
-          "Projects",
-        ],
-      },
-    },
-    "/api/admin/projects/{projectId}/settings": {
-      "get": {
-        "operationId": "getProjectSettings",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "projectId",
-            "required": true,
-            "schema": {
-              "type": "string",
-            },
-          },
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/projectSettingsSchema",
-                },
-              },
-            },
-            "description": "projectSettingsSchema",
-          },
-          "404": {
-            "description": "This response has no body.",
-          },
-        },
-        "tags": [
-          "Projects",
-        ],
-      },
-      "post": {
-        "operationId": "setProjectSettings",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "projectId",
-            "required": true,
-            "schema": {
-              "type": "string",
-            },
-          },
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/projectSettingsSchema",
-                },
-              },
-            },
-            "description": "projectSettingsSchema",
-          },
-          "404": {
-            "description": "This response has no body.",
           },
         },
         "tags": [

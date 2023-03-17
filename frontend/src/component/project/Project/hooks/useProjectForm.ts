@@ -39,12 +39,16 @@ const useProjectForm = (
         setProjectMode(initialProjectMode);
     }, [initialProjectMode]);
 
+    useEffect(() => {
+        setProjectStickiness(initialProjectStickiness);
+    }, [initialProjectStickiness]);
+
     const getProjectPayload = () => {
         return {
             id: projectId,
             name: projectName,
             description: projectDesc,
-            projectStickiness,
+            stickiness: projectStickiness,
             mode: projectMode,
         };
     };
@@ -55,7 +59,7 @@ const useProjectForm = (
             return false;
         }
         try {
-            await validateId(getProjectPayload());
+            await validateId(getProjectPayload().id);
             return true;
         } catch (error: unknown) {
             setErrors(prev => ({ ...prev, id: formatUnknownError(error) }));

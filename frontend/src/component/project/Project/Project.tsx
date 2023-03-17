@@ -249,6 +249,7 @@ export const Project = () => {
                                 label={tab.title}
                                 value={tab.path}
                                 onClick={() => navigate(tab.path)}
+                                data-testid={`TAB_${tab.title}`}
                             />
                         ))}
                     </Tabs>

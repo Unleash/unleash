@@ -14,8 +14,16 @@ const disableActiveSplashScreens = () => {
     cy.visit(`/splash/operators`);
 };
 
+const disableFeatureStrategiesProdGuard = () => {
+    localStorage.setItem(
+        'useFeatureStrategyProdGuardSettings:v2',
+        JSON.stringify({ hide: true })
+    );
+};
+
 describe('notifications', () => {
     before(() => {
+        disableFeatureStrategiesProdGuard();
         disableActiveSplashScreens();
         cy.login();
     });
@@ -25,11 +33,13 @@ describe('notifications', () => {
             'DELETE',
             `${baseUrl}/api/admin/features/${featureToggleName}`
         );
+
+        cy.request('DELETE', `${baseUrl}/api/admin/projects/${projectName}`);
     });
 
     beforeEach(() => {
         cy.login();
-        cy.visit(`/projects/${projectName}`);
+        cy.visit(`/projects`);
         if (document.querySelector("[data-testid='CLOSE_SPLASH']")) {
             cy.get("[data-testid='CLOSE_SPLASH']").click();
         }
@@ -55,53 +65,65 @@ describe('notifications', () => {
     const createProject = () => {
         cy.get('[data-testid=NAVIGATE_TO_CREATE_PROJECT').click();
 
+        cy.intercept('POST', `/api/admin/projects/${projectName}/validate`).as(
+            'validateId'
+        );
+
         cy.intercept('POST', `/api/admin/projects/${projectName}`).as(
             'createProject'
         );
 
-        cy.get("[data-testid='PROJECT_ID_INPUT'").type(projectName);
-        cy.get("[data-testid='PROJECT_NAME_INPUT'").type(projectName);
-        cy.get("[data-testid='PROJECT_STICKINESS_SELECT']").select('userId');
-        cy.get("[data-testid='SAVE_PROJECT_BUTTON']").click();
+        cy.intercept('POST', `/api/admin/projects/${projectName}/settings`).as(
+            'setProjectSettings'
+        );
+
+        cy.get("[data-testid='PROJECT_ID_INPUT']").type(projectName);
+        cy.get("[data-testid='PROJECT_NAME_INPUT']").type(projectName);
+        cy.get("[id='stickiness-select']")
+            .first()
+            .click()
+            .get('[data-testid=SELECT_ITEM_ID-userId')
+            .first()
+            .click();
+        cy.get("[data-testid='CREATE_PROJECT_BTN']").click();
         cy.wait('@createProject');
     };
 
-    it('should store default project stickiness when creating/editing a project', () => {
+    it('should store default project stickiness when creating, retrieve it when editing a project', () => {
         createProject();
 
-        //Should not show own notifications
+        cy.visit(`/projects/${projectName}`);
+        if (document.querySelector("[data-testid='CLOSE_SPLASH']")) {
+            cy.get("[data-testid='CLOSE_SPLASH']").click();
+        }
         cy.get("[data-testid='NAVIGATE_TO_EDIT_PROJECT']").click();
 
         //then
-        cy.get("[data-testid='PROJECT_STICKINESS_SELECT']").should(
-            'have.value',
-            'userId'
-        );
+        cy.get("[id='stickiness-select']").should('have.value', 'userId');
     });
 
-    it('should get the default project stickiness when creating a Gradual Rollout Strategy', () => {
-        createProject();
-
-        //Should not show own notifications
-        cy.get("[data-testid='NAVIGATE_TO_EDIT_PROJECT']").click();
-
-        //then
-        cy.get("[data-testid='PROJECT_STICKINESS_SELECT']").should(
-            'have.value',
-            'userId'
-        );
-    });
-
-    it('should get the default project stickiness when creating a variant', () => {
+    it('should respect the default project stickiness when creating a Gradual Rollout Strategy', () => {
         createProject();
         createFeature();
-        //Should not show own notifications
-        cy.get("[data-testid='NAVIGATE_TO_EDIT_PROJECT']").click();
+        cy.visit(
+            `/projects/default/features/${featureToggleName}/strategies/create?environmentId=development&strategyName=flexibleRollout`
+        );
 
         //then
-        cy.get("[data-testid='PROJECT_STICKINESS_SELECT']").should(
+        cy.get("[data-testid='FLEXIBLE_STRATEGY_STICKINESS_ID']").should(
             'have.value',
             'userId'
         );
+    });
+
+    it('should respect the default project stickiness when creating a variant', () => {
+        createProject();
+        createFeature();
+
+        cy.visit(`/projects/default/features/${featureToggleName}/variants`);
+
+        cy.get("[data-testid='EDIT_VARIANTS_BUTTON']").click();
+        //then
+        cy.get('#menu-stickiness').should('have.value', 'userId');
     });
 });

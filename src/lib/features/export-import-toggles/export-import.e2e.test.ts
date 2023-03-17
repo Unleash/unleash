@@ -252,6 +252,7 @@ describe('import-export for project-specific segments', () => {
             ],
             segments: [
                 {
+                    id: segment.id,
                     name: segmentName,
                 },
             ],
@@ -315,6 +316,7 @@ test('exports features', async () => {
         ],
         segments: [
             {
+                id: segment.id,
                 name: segmentName,
             },
         ],

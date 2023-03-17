@@ -435,12 +435,5 @@ describe('project-specific segments', () => {
             201,
             [{ status: 400 }],
         );
-        // await createToggle(
-        //     {
-        //         name: 'second_feature',
-        //         description: 'the #1 feature',
-        //     },
-        //     strategy,
-        // );
     });
 });

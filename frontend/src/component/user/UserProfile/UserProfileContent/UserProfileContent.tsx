@@ -87,7 +87,7 @@ export const UserProfileContent = ({
     <ConditionallyRender
         condition={showProfile}
         show={
-            <StyledPaper id={id}>
+            <StyledPaper className='dropdown-outline' id={id}>
                 <StyledProfileInfo>
                     <StyledUserAvatar user={profile} />
                     <div>

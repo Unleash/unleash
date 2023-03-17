@@ -33,7 +33,6 @@ button {
 .skeleton {
     position: relative;
     overflow: hidden;
-    background-color: #e2e8f0;
     z-index: 9999;
     box-shadow: none;
     fill: none;
@@ -58,13 +57,13 @@ button {
     bottom: 0;
     left: 0;
     transform: translateX(-100%);
-    background-image: linear-gradient(
+    /* background-image: linear-gradient(
         90deg,
         rgba(255, 255, 255, 0) 0,
         rgba(255, 255, 255, 0.2) 100%,
         rgba(255, 255, 255, 0.5) 100%,
         rgba(255, 255, 255, 0)
-    );
+    ); */
     animation: shimmer 3s infinite;
     content: '';
     z-index: 5001;
@@ -130,7 +129,6 @@ p {
 
 a {
     cursor: pointer;
-    color: red;
 }
 
 a:hover {

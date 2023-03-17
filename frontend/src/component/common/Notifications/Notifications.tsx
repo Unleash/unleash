@@ -29,8 +29,7 @@ const StyledPrimaryContainerBox = styled(Box)(() => ({
 }));
 
 const StyledInnerContainerBox = styled(Box)(({ theme }) => ({
-    backgroundColor: theme.palette.neutral.light,
-    padding: theme.spacing(1, 3),
+    backgroundColor: theme.palette.background.elevation1,
     display: 'flex',
     justifyContent: 'center',
 }));
@@ -43,7 +42,7 @@ const StyledTypography = styled(Typography)(({ theme }) => ({
 }));
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
-    minWidth: '400px',
+    minWidth: '420px',
     boxShadow: theme.boxShadows.popup,
     borderRadius: `${theme.shape.borderRadiusLarge}px`,
     position: 'absolute',
@@ -68,7 +67,7 @@ const StyledHeaderBox = styled(Box)(() => ({
 }));
 
 const StyledHeaderTypography = styled(Typography)(({ theme }) => ({
-    fontSize: theme.fontSizes.smallerBody,
+    fontSize: theme.fontSizes.smallBody,
 }));
 
 export const Notifications = () => {
@@ -178,7 +177,7 @@ export const Notifications = () => {
                     <ClickAwayListener
                         onClickAway={() => setShowNotifications(false)}
                     >
-                        <StyledPaper onKeyDown={onKeyDown}>
+                        <StyledPaper className='dropdown-outline' onKeyDown={onKeyDown}>
                             <NotificationsHeader>
                                 <StyledHeaderBox>
                                     <StyledHeaderTypography>

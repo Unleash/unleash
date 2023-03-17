@@ -9,6 +9,7 @@ export const focusable = (theme: Theme) => ({
         outlineWidth: 2,
         outlineOffset: 2,
         outlineColor: theme.palette.primary.main,
+        borderRadius: '2px',
     },
 });
 

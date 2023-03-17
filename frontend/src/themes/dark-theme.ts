@@ -1,5 +1,6 @@
 import { createTheme } from '@mui/material/styles';
 import { alpha } from '@mui/material';
+import { focusable } from 'themes/themeStyles';
 
 const actionColors = {
     0.54: 'rgba(223, 222, 255, 0.54)',
@@ -12,7 +13,7 @@ const purpleColor = {
     0.5: 'rgba(151, 146, 237, 0.5))',
 };
 
-export default createTheme({
+const theme = {
     breakpoints: {
         values: {
             xs: 0,
@@ -28,7 +29,7 @@ export default createTheme({
         elevated: '0px 1px 20px rgba(45, 42, 89, 0.1)',
         popup: '0px 2px 6px rgba(0, 0, 0, 0.25)',
         primaryHeader: '0px 8px 24px rgba(97, 91, 194, 0.2)',
-        separator: '0px 2px 3px hsl(0deg 0% 78% / 50%)',
+        separator: '0px 2px 4px rgba(32, 32, 33, 0.12)', // Notifications header
     },
     typography: {
         fontFamily: 'Sen, Roboto, sans-serif',
@@ -187,7 +188,7 @@ export default createTheme({
         },
 
         /**
-         * Text highlight effect color. Used when filtering/searching over content.
+         * Text highlight effect color. Used when filtering/searching over content
          */
         highlight: 'rgba(255, 234, 204, 0.7)',
 
@@ -210,7 +211,7 @@ export default createTheme({
         },
 
         /**
-         * Colors for event log output.
+         * Colors for event log output
          */
         eventLog: {
             diffAdd: '#77AB2E',
@@ -219,7 +220,7 @@ export default createTheme({
         },
 
         /**
-         * For 'Seen' column on feature toggles list and other.
+         * For 'Seen' column on feature toggles list and other
          */
         seen: {
             unknown: '#2B2A3C',
@@ -230,7 +231,7 @@ export default createTheme({
         },
 
         /**
-         * For Environment Accordion.
+         * For Environment Accordion
          */
         envAccordion: {
             disabled: '#2B2A3C',
@@ -240,7 +241,7 @@ export default createTheme({
         /**
          * MUI grey colors
          */
-        grey: {
+        grey: { // This was to see were these colors are used from MUI
             // 50: '#A6000E',
             100: '#888799', // Disabled Switch base (OFF)
             // 200: '#A6000E',
@@ -257,20 +258,36 @@ export default createTheme({
             // A700: '#A6000E',
         },
     },
+}
 
+export default createTheme({
+    ...theme,
     components: {
+        // Skeleton
         MuiCssBaseline: {
             styleOverrides: {
-                '.skeleton::before': {
-                    backgroundColor: '#2B2A3C',
+                '.skeleton': {
+                    '&::before': {
+                        backgroundColor: theme.palette.background.elevation1,
+                    },
+                    '&::after': {
+                        background: 'linear-gradient(90deg, rgba(223, 222, 255, 0) 0, rgba(223, 222, 255, 0.2) 100%, rgba(223, 222, 255, 0.5) 100%, rgba(223, 222, 255, 0))',
+                    },
+                },
+                'a': {
+                    color: theme.palette.links,                
+                },
+                '.dropdown-outline, .MuiAutocomplete-popper': { // used for user dropdown, autocomplete, and change request primary button dropdown, notifications dropdown
+                    outline: `1px solid ${theme.palette.divider}`, 
                 },
             },
-        },
+        }, 
 
         // Links
         MuiLink: {
             styleOverrides: {
                 root: ({ theme }) => ({
+                    ...focusable(theme),
                     color: theme.palette.links,
                     '&:hover': {
                         textDecoration: 'none',
@@ -344,13 +361,15 @@ export default createTheme({
                     padding: theme.spacing(2, 3),
                     borderRadius: theme.shape.borderRadiusMedium,
                     a: {
-                        color: theme.palette.links,
+                        color: 'inherit',
                     },
                     '> .MuiAlert-icon': {
                         padding: 0,
+                        opacity: 1,
+                        fontSize: '24px',
                     },
                     '> .MuiAlert-message': {
-                        padding: 0,
+                        padding: '3px 0 0 0',
                     },
                     '&.MuiAlert-standardInfo': {
                         backgroundColor: theme.palette.info.light,
@@ -557,6 +576,17 @@ export default createTheme({
 
                     '&&&.Mui-disabled fieldset': {
                         borderColor: '#47475D',
+                    },
+                }),
+            },
+        },
+
+        // Popovers
+        MuiPopover: {
+            styleOverrides: {
+                root: ({ theme }) => ({
+                    '.MuiPopover-paper': {
+                        outline: `1px solid ${theme.palette.divider}`,
                     },
                 }),
             },

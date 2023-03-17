@@ -88,6 +88,7 @@ const StyledLinks = styled('div')(({ theme }) => ({
 }));
 
 const StyledAdvancedNavButton = styled('button')(({ theme }) => ({
+    ...focusable(theme),
     border: 'none',
     background: 'transparent',
     height: '100%',
@@ -236,7 +237,8 @@ const Header: VFC = () => {
                     <StyledUserContainer>
                         <ConditionallyRender
                             condition={Boolean(
-                                uiConfig.flags.ENABLE_DARK_MODE_SUPPORT
+                                // uiConfig.flags.ENABLE_DARK_MODE_SUPPORT
+                                true
                             )}
                             show={
                                 <FormControlLabel

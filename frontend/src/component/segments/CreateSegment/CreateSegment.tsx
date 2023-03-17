@@ -16,8 +16,10 @@ import { segmentsDocsLink } from 'component/segments/SegmentDocs';
 import { useSegmentValuesCount } from 'component/segments/hooks/useSegmentValuesCount';
 import { SEGMENT_CREATE_BTN_ID } from 'utils/testIds';
 import { useSegmentLimits } from 'hooks/api/getters/useSegmentLimits/useSegmentLimits';
+import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 
 export const CreateSegment = () => {
+    const projectId = useOptionalPathParam('projectId');
     const { uiConfig } = useUiConfig();
     const { setToastData, setToastApiError } = useToast();
     const { showFeedbackCES } = useContext(feedbackCESContext);
@@ -37,7 +39,7 @@ export const CreateSegment = () => {
         getSegmentPayload,
         errors,
         clearErrors,
-    } = useSegmentForm();
+    } = useSegmentForm('', '', projectId);
 
     const hasValidConstraints = useConstraintsValidation(constraints);
     const { segmentValuesLimit } = useSegmentLimits();
@@ -62,7 +64,11 @@ export const CreateSegment = () => {
         try {
             await createSegment(getSegmentPayload());
             await refetchSegments();
-            navigate('/segments/');
+            if (projectId) {
+                navigate(`/projects/${projectId}/settings/segments/`);
+            } else {
+                navigate('/segments/');
+            }
             setToastData({
                 title: 'Segment created',
                 confetti: true,

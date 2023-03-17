@@ -23,7 +23,7 @@ exports[`renders an empty list correctly 1`] = `
               data-loading={true}
             >
               <h1
-                className="MuiTypography-root MuiTypography-h1  css-1pr8obe-MuiTypography-root"
+                className="MuiTypography-root MuiTypography-h1  css-1jqnoga-MuiTypography-root"
               >
                 Tag types (5)
               </h1>

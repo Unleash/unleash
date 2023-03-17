@@ -29,6 +29,7 @@ import {
 import { useSegmentValuesCount } from 'component/segments/hooks/useSegmentValuesCount';
 import AccessContext from 'contexts/AccessContext';
 import { useSegmentLimits } from 'hooks/api/getters/useSegmentLimits/useSegmentLimits';
+import { GO_BACK } from 'constants/navigate';
 
 interface ISegmentFormPartTwoProps {
     constraints: IConstraint[];
@@ -214,7 +215,7 @@ export const SegmentFormStepTwo: React.FC<ISegmentFormPartTwoProps> = ({
                 <StyledCancelButton
                     type="button"
                     onClick={() => {
-                        navigate('/segments');
+                        navigate(GO_BACK);
                     }}
                 >
                     Cancel

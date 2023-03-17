@@ -2,10 +2,10 @@ import { FC } from 'react';
 import { Button } from '@mui/material';
 import { Undo } from '@mui/icons-material';
 import type { FeatureSchema } from 'openapi';
-import { UPDATE_FEATURE } from '../../providers/AccessProvider/permissions';
-import { PermissionHOC } from '../../common/PermissionHOC/PermissionHOC';
+import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
+import { PermissionHOC } from 'component/common/PermissionHOC/PermissionHOC';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
-import { formatUnknownError } from '../../../utils/formatUnknownError';
+import { formatUnknownError } from 'utils/formatUnknownError';
 import { useFeaturesArchive } from 'hooks/api/getters/useFeaturesArchive/useFeaturesArchive';
 import useToast from 'hooks/useToast';
 

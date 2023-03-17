@@ -21,7 +21,7 @@ import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironmen
 import { AddonMultiSelector } from './AddonMultiSelector/AddonMultiSelector';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import PermissionButton from '../../common/PermissionButton/PermissionButton';
+import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import {
     CREATE_ADDON,
     UPDATE_ADDON,

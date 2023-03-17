@@ -1,4 +1,4 @@
-import { AttachMoneyRounded, MonetizationOn } from '@mui/icons-material';
+import { AttachMoneyRounded } from '@mui/icons-material';
 import { styled, Tooltip } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';

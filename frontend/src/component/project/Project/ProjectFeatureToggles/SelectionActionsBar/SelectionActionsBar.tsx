@@ -1,6 +1,6 @@
 import { useMemo, useState, VFC } from 'react';
 import { Box, Button, Paper, styled, Typography } from '@mui/material';
-import { FileDownload, Label, WatchLater } from '@mui/icons-material';
+import { FileDownload, Label } from '@mui/icons-material';
 import type { FeatureSchema } from 'openapi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ExportDialog } from 'component/feature/FeatureToggleList/ExportDialog';

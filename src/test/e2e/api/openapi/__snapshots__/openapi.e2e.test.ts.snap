@@ -6102,7 +6102,7 @@ If the provided project does not exist, the list of events will be empty.",
         ],
       },
     },
-    "/api/admin/projects/{projectId}/archive/delete": {
+    "/api/admin/projects/{projectId}/delete": {
       "post": {
         "description": "This endpoint deletes the specified features, that are in archive.",
         "operationId": "deleteFeatures",
@@ -6133,42 +6133,6 @@ If the provided project does not exist, the list of events will be empty.",
           },
         },
         "summary": "Deletes a list of features",
-        "tags": [
-          "Archive",
-        ],
-      },
-    },
-    "/api/admin/projects/{projectId}/archive/revive": {
-      "post": {
-        "description": "This endpoint revives the specified features.",
-        "operationId": "reviveFeatures",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "projectId",
-            "required": true,
-            "schema": {
-              "type": "string",
-            },
-          },
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/batchFeaturesSchema",
-              },
-            },
-          },
-          "description": "batchFeaturesSchema",
-          "required": true,
-        },
-        "responses": {
-          "200": {
-            "description": "This response has no body.",
-          },
-        },
-        "summary": "Revives a list of features",
         "tags": [
           "Archive",
         ],
@@ -7551,6 +7515,42 @@ If the provided project does not exist, the list of events will be empty.",
         },
         "tags": [
           "Projects",
+        ],
+      },
+    },
+    "/api/admin/projects/{projectId}/revive": {
+      "post": {
+        "description": "This endpoint revives the specified features.",
+        "operationId": "reviveFeatures",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/batchFeaturesSchema",
+              },
+            },
+          },
+          "description": "batchFeaturesSchema",
+          "required": true,
+        },
+        "responses": {
+          "200": {
+            "description": "This response has no body.",
+          },
+        },
+        "summary": "Revives a list of features",
+        "tags": [
+          "Archive",
         ],
       },
     },

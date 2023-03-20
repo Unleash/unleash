@@ -1,7 +1,7 @@
 import { useMemo, useState, VFC } from 'react';
 import { Label } from '@mui/icons-material';
 import { Button } from '@mui/material';
-import { DialogUI } from 'component/feature/FeatureView/FeatureOverview/ManageTagsDialog/DialogUI';
+import { ManageBulkTagsDialog } from 'component/feature/FeatureView/FeatureOverview/ManageTagsDialog/ManageBulkTagsDialog';
 import type { FeatureSchema } from 'openapi';
 import { ITag } from 'interfaces/tags';
 
@@ -38,6 +38,17 @@ export const ManageTags: VFC<IManageTagsProps> = ({ data }) => {
         return [uniqueTags, tagsNotPresentInEveryFeature];
     }, [data]);
 
+    const onSubmit = ({
+        addedTags,
+        removedTags,
+    }: {
+        addedTags: ITag[];
+        removedTags: ITag[];
+    }) => {
+        console.log({ addedTags, removedTags });
+        setIsOpen(false);
+    };
+
     return (
         // FIXME: permissions UPDATE_FEATURE
         <>
@@ -49,11 +60,11 @@ export const ManageTags: VFC<IManageTagsProps> = ({ data }) => {
             >
                 Tags
             </Button>
-            <DialogUI
+            <ManageBulkTagsDialog
                 key={data.length}
                 open={isOpen}
                 onCancel={() => setIsOpen(false)}
-                onSubmit={() => {}}
+                onSubmit={onSubmit}
                 initialValues={initialValues}
                 initialIndeterminateValues={indeterminateValues}
             />

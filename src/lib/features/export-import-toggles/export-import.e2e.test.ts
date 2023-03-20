@@ -128,15 +128,15 @@ const createSegment = (postData: UpsertSegmentSchema): Promise<ISegment> => {
 };
 
 const createContextField = async (contextField: IContextFieldDto) => {
-    await app.createContextField(contextField).expect(201);
+    await app.createContextField(contextField);
 };
 
 const createFeature = async (featureName: string) => {
-    await app.createFeature(featureName).expect(201);
+    await app.createFeature(featureName);
 };
 
 const archiveFeature = async (featureName: string) => {
-    await app.archiveFeature(featureName).expect(202);
+    await app.archiveFeature(featureName);
 };
 
 const unArchiveFeature = async (featureName: string) => {

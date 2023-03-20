@@ -21,9 +21,20 @@ export interface IUnleashTest extends IUnleashHttpAPI {
 }
 
 export interface IUnleashHttpAPI {
-    createFeature(name: string, project?: string): supertest.Test;
-    archiveFeature(name: string, project?: string): supertest.Test;
-    createContextField(contextField: IContextFieldDto): supertest.Test;
+    createFeature(
+        name: string,
+        project?: string,
+        expectedResponseCode?: number,
+    ): supertest.Test;
+    archiveFeature(
+        name: string,
+        project?: string,
+        expectedResponseCode?: number,
+    ): supertest.Test;
+    createContextField(
+        contextField: IContextFieldDto,
+        expectedResponseCode?: number,
+    ): supertest.Test;
 }
 
 function httpApis(
@@ -33,28 +44,41 @@ function httpApis(
     const base = config.server.baseUriPath || '';
 
     return {
-        createFeature: (name: string, project: string = DEFAULT_PROJECT) => {
+        createFeature: (
+            name: string,
+            project: string = DEFAULT_PROJECT,
+            expectedResponseCode: number = 201,
+        ) => {
             return request
                 .post(`${base}/api/admin/projects/${project}/features`)
                 .send({
                     name,
                 })
-                .set('Content-Type', 'application/json');
+                .set('Content-Type', 'application/json')
+                .expect(expectedResponseCode);
         },
 
         archiveFeature(
             name: string,
             project: string = DEFAULT_PROJECT,
+            expectedResponseCode: number = 202,
         ): supertest.Test {
             return request
                 .delete(
                     `${base}/api/admin/projects/${project}/features/${name}`,
                 )
-                .set('Content-Type', 'application/json');
+                .set('Content-Type', 'application/json')
+                .expect(expectedResponseCode);
         },
 
-        createContextField(contextField: IContextFieldDto): supertest.Test {
-            return request.post(`${base}/api/admin/context`).send(contextField);
+        createContextField(
+            contextField: IContextFieldDto,
+            expectedResponseCode: number = 201,
+        ): supertest.Test {
+            return request
+                .post(`${base}/api/admin/context`)
+                .send(contextField)
+                .expect(expectedResponseCode);
         },
     };
 }

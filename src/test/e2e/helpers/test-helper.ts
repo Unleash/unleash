@@ -27,44 +27,37 @@ export interface IUnleashHttpAPI {
     createContextField(contextField: IContextFieldDto): supertest.Test;
 }
 
-export class UnleashHttpAPI implements IUnleashHttpAPI {
-    private request: supertest.SuperAgentTest;
+function httpApis(
+    request: supertest.SuperAgentTest,
+    config: IUnleashConfig,
+): IUnleashHttpAPI {
+    const base = config.server.baseUriPath || '';
 
-    private base: string;
+    return {
+        createFeature: (name: string, project?: string) => {
+            return request
+                .post(`${base}/api/admin/projects/${project}/features`)
+                .send({
+                    name,
+                })
+                .set('Content-Type', 'application/json');
+        },
 
-    constructor(request: supertest.SuperAgentTest, config: IUnleashConfig) {
-        this.request = request;
-        this.base = config.server.baseUriPath || '';
-    }
+        archiveFeature(
+            name: string,
+            project: string = DEFAULT_PROJECT,
+        ): supertest.Test {
+            return request
+                .delete(
+                    `${base}/api/admin/projects/${project}/features/${name}`,
+                )
+                .set('Content-Type', 'application/json');
+        },
 
-    createFeature(
-        name: string,
-        project: string = DEFAULT_PROJECT,
-    ): supertest.Test {
-        return this.request
-            .post(`${this.base}/api/admin/projects/${project}/features`)
-            .send({
-                name,
-            })
-            .set('Content-Type', 'application/json');
-    }
-
-    archiveFeature(
-        name: string,
-        project: string = DEFAULT_PROJECT,
-    ): supertest.Test {
-        return this.request
-            .delete(
-                `${this.base}/api/admin/projects/${project}/features/${name}`,
-            )
-            .set('Content-Type', 'application/json');
-    }
-
-    createContextField(contextField: IContextFieldDto): supertest.Test {
-        return this.request
-            .post(`${this.base}/api/admin/context`)
-            .send(contextField);
-    }
+        createContextField(contextField: IContextFieldDto): supertest.Test {
+            return request.post(`${base}/api/admin/context`).send(contextField);
+        },
+    };
 }
 
 async function createApp(
@@ -98,9 +91,14 @@ async function createApp(
         services.proxyService.destroy();
     };
 
-    const api = new UnleashHttpAPI(request, config);
     // TODO: use create from server-impl instead?
-    return { request, destroy, services, config, api };
+    return {
+        request,
+        destroy,
+        services,
+        config,
+        api: httpApis(request, config),
+    };
 }
 
 export async function setupApp(stores: IUnleashStores): Promise<IUnleashTest> {

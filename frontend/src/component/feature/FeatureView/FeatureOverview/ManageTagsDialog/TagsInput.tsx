@@ -10,6 +10,7 @@ import {
 import React from 'react';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox';
 import { ITag, ITagType } from 'interfaces/tags';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Add } from '@mui/icons-material';
@@ -19,6 +20,7 @@ export type TagOption = {
     title: string;
     inputValue?: string;
 };
+
 interface ITagsInputProps {
     options: TagOption[];
     existingTags: ITag[];
@@ -26,7 +28,7 @@ interface ITagsInputProps {
     selectedOptions: TagOption[];
     indeterminateOptions?: TagOption[];
     disabled?: boolean;
-    onChange: AutocompleteProps<TagOption | string, true, any, any>['onChange'];
+    onChange: AutocompleteProps<TagOption, true, false, false>['onChange'];
 }
 
 const filter = createFilterOptions<TagOption>();
@@ -40,8 +42,8 @@ export const TagsInput = ({
     disabled = false,
     onChange,
 }: ITagsInputProps) => {
+    console.log(existingTags);
     const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
-    const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
     const getOptionLabel = (option: TagOption) => {
         // Add "xxx" option created dynamically
@@ -58,29 +60,34 @@ export const TagsInput = ({
             React.LiHTMLAttributes<HTMLLIElement>,
         option: TagOption,
         { selected }: { selected: boolean }
-    ) => (
-        <li {...props}>
-            <ConditionallyRender
-                condition={Boolean(option.inputValue)}
-                show={<Add sx={{ mr: theme => theme.spacing(0.5) }} />}
-                elseShow={
-                    <Checkbox
-                        icon={icon}
-                        checkedIcon={checkedIcon}
-                        sx={{ mr: theme => theme.spacing(0.5) }}
-                        checked={selected}
-                        indeterminate={
-                            indeterminateOptions?.some(
-                                indeterminateOption =>
-                                    indeterminateOption.title === option.title
-                            ) ?? false
-                        }
-                    />
-                }
-            />
-            {option.title}
-        </li>
-    );
+    ) => {
+        const isIndeterminate =
+            indeterminateOptions?.some(
+                indeterminateOption =>
+                    indeterminateOption.title === option.title
+            ) ?? false;
+        return (
+            <li {...props}>
+                <ConditionallyRender
+                    condition={Boolean(option.inputValue)}
+                    show={<Add sx={{ mr: theme => theme.spacing(0.5) }} />}
+                    elseShow={
+                        <Checkbox
+                            icon={icon}
+                            checkedIcon={<CheckBoxIcon fontSize="small" />}
+                            indeterminateIcon={
+                                <IndeterminateCheckBoxIcon fontSize="small" />
+                            }
+                            sx={{ mr: theme => theme.spacing(0.5) }}
+                            checked={selected && !isIndeterminate}
+                            indeterminate={isIndeterminate}
+                        />
+                    }
+                />
+                {option.title}
+            </li>
+        );
+    };
 
     const renderTags = (
         tagValue: TagOption[],

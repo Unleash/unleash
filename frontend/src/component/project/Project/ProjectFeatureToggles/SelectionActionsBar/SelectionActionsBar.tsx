@@ -88,7 +88,7 @@ export const SelectionActionsBar: VFC<ISelectionActionsBarProps> = ({
                 >
                     Export
                 </Button>
-                <ManageTags />
+                <ManageTags data={selectedData} />
                 <MoreActions projectId={projectId} data={selectedData} />
             </StyledBar>
             <ConditionallyRender

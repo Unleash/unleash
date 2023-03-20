@@ -6,11 +6,14 @@ import { TagTypeSelect } from './TagTypeSelect';
 import { TagOption, TagsInput } from './TagsInput';
 import useTags from 'hooks/api/getters/useTags/useTags';
 import useTagTypes from 'hooks/api/getters/useTagTypes/useTagTypes';
-import { ITagType } from 'interfaces/tags';
+import { ITag, ITagType } from 'interfaces/tags';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import useTagApi from 'hooks/api/actions/useTagApi/useTagApi';
 
 interface IDialogUIProps {
     open: boolean;
+    initialValues: ITag[];
+    initialIndeterminateValues: ITag[];
     onCancel: () => void;
     onSubmit: () => void;
 }
@@ -25,6 +28,8 @@ const formId = 'manage-tags-form';
 
 export const DialogUI: VFC<IDialogUIProps> = ({
     open,
+    initialValues,
+    initialIndeterminateValues,
     onCancel,
     onSubmit,
 }) => {
@@ -34,12 +39,34 @@ export const DialogUI: VFC<IDialogUIProps> = ({
         description: '',
         icon: '',
     });
-    const { tags } = useTags(tagType.name);
+    const [selectedTags, setSelectedTags] = useState<TagOption[]>([]);
+    const [indeterminateTags, setIndeterminateTags] = useState<TagOption[]>([]);
+    const { tags, refetch: refetchTags } = useTags(tagType.name);
+    const { createTag } = useTagApi();
     const tagsOptions = tags.map(({ value }) => ({ title: value }));
+
+    const changeTagType = (tagType: ITagType) => {
+        setTagType(tagType);
+        setSelectedTags(
+            initialValues
+                .filter(({ type }) => type === tagType.name)
+                .map(({ value }) => ({
+                    title: value,
+                }))
+        );
+        setIndeterminateTags(
+            initialIndeterminateValues
+
+                .filter(({ type }) => type === tagType.name)
+                .map(({ value }) => ({
+                    title: value,
+                }))
+        );
+    };
 
     useEffect(() => {
         if (tagTypes.length > 0) {
-            setTagType(tagTypes[0]);
+            changeTagType(tagTypes[0]);
         }
     }, [tagTypesLoading]);
 
@@ -51,18 +78,42 @@ export const DialogUI: VFC<IDialogUIProps> = ({
     >['onChange'] = (event, value) => {
         if (value != null && typeof value !== 'string') {
             event.preventDefault();
-            setTagType(value);
+            changeTagType(value);
         }
     };
 
     const handleInputChange: AutocompleteProps<
-        TagOption | string,
+        TagOption,
         true,
-        any,
-        any
-    >['onChange'] = (...props) => {
-        console.log('handleInputChange', props);
-        // FIXME: change value
+        false,
+        false
+    >['onChange'] = (_event, newValue, reason) => {
+        if (reason === 'selectOption') {
+            newValue.forEach(value => {
+                if (
+                    typeof value !== 'string' &&
+                    value.inputValue &&
+                    value.title.startsWith('Create new value')
+                ) {
+                    createTag({
+                        value: value.inputValue,
+                        type: tagType.name,
+                    }).then(async () => {
+                        await refetchTags();
+                        setSelectedTags(prev => [
+                            ...prev,
+                            { title: value.inputValue as string },
+                        ]);
+                    });
+                } else {
+                    setSelectedTags(newValue as TagOption[]);
+                }
+            });
+        } else if (reason === 'clear') {
+            setSelectedTags([]);
+        } else if (reason === 'removeOption') {
+            setSelectedTags(newValue as TagOption[]);
+        }
     };
 
     return (
@@ -87,7 +138,7 @@ export const DialogUI: VFC<IDialogUIProps> = ({
                 <form id={formId} onSubmit={onSubmit}>
                     <StyledDialogFormContent>
                         <TagTypeSelect
-                            key={tagTypesLoading ? 'loading' : 'loaded'}
+                            key={tagTypesLoading ? 'loading' : tagTypes.length}
                             options={tagTypes}
                             disabled={tagTypesLoading || tagTypes.length === 0}
                             value={tagType}
@@ -110,16 +161,15 @@ export const DialogUI: VFC<IDialogUIProps> = ({
                                 </Typography>
                             }
                             elseShow={
-                                <>
-                                    <TagsInput
-                                        disabled={tagTypesLoading}
-                                        options={tagsOptions}
-                                        existingTags={tags}
-                                        tagType={tagType}
-                                        selectedOptions={[]}
-                                        onChange={handleInputChange}
-                                    />
-                                </>
+                                <TagsInput
+                                    disabled={tagTypesLoading}
+                                    options={tagsOptions}
+                                    existingTags={initialValues}
+                                    indeterminateOptions={indeterminateTags}
+                                    tagType={tagType}
+                                    selectedOptions={selectedTags}
+                                    onChange={handleInputChange}
+                                />
                             }
                         />
                     </StyledDialogFormContent>

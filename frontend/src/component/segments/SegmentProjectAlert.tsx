@@ -72,7 +72,7 @@ export const SegmentProjectAlert = ({
             <StyledAlert severity="info">
                 You can't specify a project other than{' '}
                 <strong>{availableProjects[0].name}</strong> for this segment
-                because it is used in that project:
+                because it is used here:
                 {projectList}
             </StyledAlert>
         );

@@ -9,6 +9,7 @@ import { UIProviderContainer } from '../providers/UIProvider/UIProviderContainer
 import { FC } from 'react';
 import { IPermission } from '../../interfaces/user';
 import { ProjectMode } from '../project/Project/hooks/useProjectForm';
+import { SWRConfig } from 'swr';
 
 const server = testServerSetup();
 
@@ -173,19 +174,21 @@ const UnleashUiSetup: FC<{ path: string; pathTemplate: string }> = ({
     path,
     pathTemplate,
 }) => (
-    <UIProviderContainer>
-        <AccessProvider>
-            <MemoryRouter initialEntries={[path]}>
-                <ThemeProvider>
-                    <AnnouncerProvider>
-                        <Routes>
-                            <Route path={pathTemplate} element={children} />
-                        </Routes>
-                    </AnnouncerProvider>
-                </ThemeProvider>
-            </MemoryRouter>
-        </AccessProvider>
-    </UIProviderContainer>
+    <SWRConfig value={{ provider: () => new Map() }}>
+        <UIProviderContainer>
+            <AccessProvider>
+                <MemoryRouter initialEntries={[path]}>
+                    <ThemeProvider>
+                        <AnnouncerProvider>
+                            <Routes>
+                                <Route path={pathTemplate} element={children} />
+                            </Routes>
+                        </AnnouncerProvider>
+                    </ThemeProvider>
+                </MemoryRouter>
+            </AccessProvider>
+        </UIProviderContainer>
+    </SWRConfig>
 );
 
 const strategiesAreDisplayed = async (

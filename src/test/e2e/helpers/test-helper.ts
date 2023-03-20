@@ -13,12 +13,11 @@ import { IContextFieldDto } from 'lib/types/stores/context-field-store';
 
 process.env.NODE_ENV = 'test';
 
-export interface IUnleashTest {
+export interface IUnleashTest extends IUnleashHttpAPI {
     request: supertest.SuperAgentTest;
     destroy: () => Promise<void>;
     services: IUnleashServices;
     config: IUnleashConfig;
-    api: IUnleashHttpAPI;
 }
 
 export interface IUnleashHttpAPI {
@@ -97,7 +96,7 @@ async function createApp(
         destroy,
         services,
         config,
-        api: httpApis(request, config),
+        ...httpApis(request, config),
     };
 }
 

@@ -308,6 +308,7 @@ test('Disconnecting environment from project, removes environment from features 
 test('Can enable/disable environment for feature with strategies', async () => {
     const envName = 'enable-feature-environment';
     const featureName = 'com.test.enable.environment';
+    const project = 'default';
     // Create environment
     await db.stores.environmentStore.create({
         name: envName,
@@ -315,7 +316,7 @@ test('Can enable/disable environment for feature with strategies', async () => {
     });
     // Connect environment to project
     await app.request
-        .post('/api/admin/projects/default/environments')
+        .post(`/api/admin/projects/${project}/environments`)
         .send({
             environment: envName,
         })
@@ -330,7 +331,7 @@ test('Can enable/disable environment for feature with strategies', async () => {
     // Add strategy to it
     await app.request
         .post(
-            `/api/admin/projects/default/features/${featureName}/environments/${envName}/strategies`,
+            `/api/admin/projects/${project}/features/${featureName}/environments/${envName}/strategies`,
         )
         .send({
             name: 'default',
@@ -341,11 +342,11 @@ test('Can enable/disable environment for feature with strategies', async () => {
         .expect(200);
     await app.request
         .post(
-            `/api/admin/projects/default/features/${featureName}/environments/${envName}/on`,
+            `/api/admin/projects/${project}/features/${featureName}/environments/${envName}/on`,
         )
         .set('Content-Type', 'application/json')
         .expect(200);
-    await app.getFeatures(featureName).expect((res) => {
+    await app.getFeatures(featureName, project).expect((res) => {
         const enabledFeatureEnv = res.body.environments.find(
             (e) => e.name === 'enable-feature-environment',
         );
@@ -354,11 +355,11 @@ test('Can enable/disable environment for feature with strategies', async () => {
     });
     await app.request
         .post(
-            `/api/admin/projects/default/features/${featureName}/environments/${envName}/off`,
+            `/api/admin/projects/${project}/features/${featureName}/environments/${envName}/off`,
         )
         .send({})
         .expect(200);
-    await app.getFeatures(featureName).expect((res) => {
+    await app.getFeatures(featureName, project).expect((res) => {
         const disabledFeatureEnv = res.body.environments.find(
             (e) => e.name === 'enable-feature-environment',
         );

@@ -33,7 +33,11 @@ export interface IUnleashHttpAPI {
         expectedResponseCode?: number,
     ): supertest.Test;
 
-    getFeatures(name?: string, expectedResponseCode?: number): supertest.Test;
+    getFeatures(
+        name?: string,
+        project?: string,
+        expectedResponseCode?: number,
+    ): supertest.Test;
 
     archiveFeature(
         name: string,
@@ -74,10 +78,14 @@ function httpApis(
 
         getFeatures(
             name?: string,
+            project?: string,
             expectedResponseCode: number = 200,
         ): supertest.Test {
+            const projectSubPath = project ? `projects/${project}/` : '';
+            const featureSubPath = name ? `/${name}` : '';
+            const featuresUrl = `/api/admin/${projectSubPath}features${featureSubPath}`;
             return request
-                .get(`/api/admin/features${name ? '/' + name : ''}`)
+                .get(featuresUrl)
                 .set('Content-Type', 'application/json')
                 .expect(expectedResponseCode);
         },

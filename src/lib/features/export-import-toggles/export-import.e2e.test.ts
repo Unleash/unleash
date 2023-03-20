@@ -128,26 +128,15 @@ const createSegment = (postData: UpsertSegmentSchema): Promise<ISegment> => {
 };
 
 const createContextField = async (contextField: IContextFieldDto) => {
-    await app.request.post(`/api/admin/context`).send(contextField).expect(201);
+    await app.createContextField(contextField);
 };
 
 const createFeature = async (featureName: string) => {
-    await app.request
-        .post(`/api/admin/projects/${DEFAULT_PROJECT}/features`)
-        .send({
-            name: featureName,
-        })
-        .set('Content-Type', 'application/json')
-        .expect(201);
+    await app.createFeature(featureName);
 };
 
 const archiveFeature = async (featureName: string) => {
-    await app.request
-        .delete(
-            `/api/admin/projects/${DEFAULT_PROJECT}/features/${featureName}`,
-        )
-        .set('Content-Type', 'application/json')
-        .expect(202);
+    await app.archiveFeature(featureName);
 };
 
 const unArchiveFeature = async (featureName: string) => {

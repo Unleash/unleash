@@ -34,7 +34,7 @@ function httpApis(
     const base = config.server.baseUriPath || '';
 
     return {
-        createFeature: (name: string, project?: string) => {
+        createFeature: (name: string, project: string = DEFAULT_PROJECT) => {
             return request
                 .post(`${base}/api/admin/projects/${project}/features`)
                 .send({

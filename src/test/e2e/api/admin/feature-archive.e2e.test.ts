@@ -96,7 +96,8 @@ test('revives a feature by name', async () => {
 test('archived feature is not accessible via /features/:featureName', async () => {
     expect.assertions(0);
 
-    return app.getFeatures('featureArchivedZ', 404);
+    await app.getFeatures('featureArchivedZ', 404);
+    await app.getProjectFeatures('default', 'featureArchivedZ', 404);
 });
 
 test('must set name when reviving toggle', async () => {

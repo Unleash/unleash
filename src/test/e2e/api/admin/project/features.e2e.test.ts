@@ -346,7 +346,7 @@ test('Can enable/disable environment for feature with strategies', async () => {
         )
         .set('Content-Type', 'application/json')
         .expect(200);
-    await app.getFeatures(featureName, project).expect((res) => {
+    await app.getProjectFeatures(project, featureName).expect((res) => {
         const enabledFeatureEnv = res.body.environments.find(
             (e) => e.name === 'enable-feature-environment',
         );
@@ -359,7 +359,7 @@ test('Can enable/disable environment for feature with strategies', async () => {
         )
         .send({})
         .expect(200);
-    await app.getFeatures(featureName, project).expect((res) => {
+    await app.getProjectFeatures(project, featureName).expect((res) => {
         const disabledFeatureEnv = res.body.environments.find(
             (e) => e.name === 'enable-feature-environment',
         );

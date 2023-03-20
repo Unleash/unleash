@@ -64,9 +64,13 @@ afterAll(async () => {
 
 test('returns three archived toggles', async () => {
     expect.assertions(1);
-    return app.getFeatures().expect((res) => {
-        expect(res.body.features.length === 3).toBe(true);
-    });
+    return app.request
+        .get('/api/admin/archive/features')
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.features.length === 3).toBe(true);
+        });
 });
 
 test('returns three archived toggles with archivedAt', async () => {

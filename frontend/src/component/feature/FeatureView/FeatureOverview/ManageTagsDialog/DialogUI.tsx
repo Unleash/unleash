@@ -47,20 +47,26 @@ export const DialogUI: VFC<IDialogUIProps> = ({
 
     const changeTagType = (tagType: ITagType) => {
         setTagType(tagType);
+        const newIndeterminateValues = initialIndeterminateValues.filter(
+            ({ type }) => type === tagType.name
+        );
         setSelectedTags(
             initialValues
                 .filter(({ type }) => type === tagType.name)
+                .filter(
+                    ({ type, value }) =>
+                        !newIndeterminateValues.some(
+                            tag => tag.value === value && tag.type === type
+                        )
+                )
                 .map(({ value }) => ({
                     title: value,
                 }))
         );
         setIndeterminateTags(
-            initialIndeterminateValues
-
-                .filter(({ type }) => type === tagType.name)
-                .map(({ value }) => ({
-                    title: value,
-                }))
+            newIndeterminateValues.map(({ value }) => ({
+                title: value,
+            }))
         );
     };
 
@@ -107,6 +113,9 @@ export const DialogUI: VFC<IDialogUIProps> = ({
                     });
                 } else {
                     setSelectedTags(newValue as TagOption[]);
+                    setIndeterminateTags((prev: TagOption[]) =>
+                        prev.filter(({ title }) => title !== value.title)
+                    );
                 }
             });
         } else if (reason === 'clear') {

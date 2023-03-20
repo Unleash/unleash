@@ -42,7 +42,6 @@ export const TagsInput = ({
     disabled = false,
     onChange,
 }: ITagsInputProps) => {
-    console.log(existingTags);
     const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 
     const getOptionLabel = (option: TagOption) => {
@@ -99,7 +98,7 @@ export const TagsInput = ({
                     existingTag.value === option.title &&
                     existingTag.type === tagType.name
             );
-            if (exists) {
+            if (exists && indeterminateOptions === undefined) {
                 return null;
             }
             return <Chip {...getTagProps({ index })} label={option.title} />;

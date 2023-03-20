@@ -88,11 +88,7 @@ const createFeatureToggle = async (
         { status: 200 },
     ],
 ): Promise<void> => {
-    await app.request
-        .post(`/api/admin/projects/${project}/features`)
-        .send(feature)
-        .expect(expectStatusCode);
-
+    await app.createFeature(feature, project, expectStatusCode);
     let processed = 0;
     for (const strategy of strategies) {
         const { body, status } = await app.request

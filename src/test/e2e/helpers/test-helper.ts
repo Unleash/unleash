@@ -10,6 +10,7 @@ import { DEFAULT_PROJECT, IUnleashStores } from '../../../lib/types';
 import { IUnleashServices } from '../../../lib/types/services';
 import { Db } from '../../../lib/db/db';
 import { IContextFieldDto } from 'lib/types/stores/context-field-store';
+import { CreateFeatureSchema } from 'lib/openapi';
 
 process.env.NODE_ENV = 'test';
 
@@ -20,17 +21,26 @@ export interface IUnleashTest extends IUnleashHttpAPI {
     config: IUnleashConfig;
 }
 
+/**
+ * This is a collection of API helpers. The response code is optional, and should default to the success code for the request.
+ *
+ * All functions return a supertest.Test object, which can be used to compose more assertions on the response.
+ */
 export interface IUnleashHttpAPI {
     createFeature(
-        name: string,
+        feature: string | CreateFeatureSchema,
         project?: string,
         expectedResponseCode?: number,
     ): supertest.Test;
+
+    getFeatures(name?: string, expectedResponseCode?: number): supertest.Test;
+
     archiveFeature(
         name: string,
         project?: string,
         expectedResponseCode?: number,
     ): supertest.Test;
+
     createContextField(
         contextField: IContextFieldDto,
         expectedResponseCode?: number,
@@ -45,15 +55,29 @@ function httpApis(
 
     return {
         createFeature: (
-            name: string,
+            feature: string | CreateFeatureSchema,
             project: string = DEFAULT_PROJECT,
             expectedResponseCode: number = 201,
         ) => {
+            let body = feature;
+            if (typeof feature === 'string') {
+                body = {
+                    name: feature,
+                };
+            }
             return request
                 .post(`${base}/api/admin/projects/${project}/features`)
-                .send({
-                    name,
-                })
+                .send(body)
+                .set('Content-Type', 'application/json')
+                .expect(expectedResponseCode);
+        },
+
+        getFeatures(
+            name?: string,
+            expectedResponseCode: number = 200,
+        ): supertest.Test {
+            return request
+                .get(`/api/admin/features${name ? '/' + name : ''}`)
                 .set('Content-Type', 'application/json')
                 .expect(expectedResponseCode);
         },

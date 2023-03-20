@@ -253,7 +253,7 @@ const Header: VFC = () => {
                         <ConditionallyRender
                             condition={
                                 Boolean(uiConfig?.flags?.notifications) &&
-                                !isOss
+                                !isOss()
                             }
                             show={<Notifications />}
                         />

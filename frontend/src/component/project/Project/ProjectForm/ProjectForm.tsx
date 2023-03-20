@@ -14,9 +14,7 @@ import { StickinessSelect } from 'component/feature/StrategyTypes/FlexibleStrate
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import Select from 'component/common/select';
 import { DefaultStickiness, ProjectMode } from '../hooks/useProjectForm';
-import { HelpOutline } from '@mui/icons-material';
-import { Box, Typography } from '@mui/material';
-import { HtmlTooltip } from '../../../common/HtmlTooltip/HtmlTooltip';
+import { Box } from '@mui/material';
 import { CollaborationModeTooltip } from './CollaborationModeTooltip';
 
 interface IProjectForm {

@@ -341,7 +341,8 @@ export const ArchiveTable = ({
                 )}
             />
             <ArchivedFeatureDeleteConfirm
-                deletedFeature={deletedFeature}
+                deletedFeatures={[deletedFeature?.name!]}
+                projectId={projectId!}
                 open={deleteModalOpen}
                 setOpen={setDeleteModalOpen}
                 refetch={refetch}

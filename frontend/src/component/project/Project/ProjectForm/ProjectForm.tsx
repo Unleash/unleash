@@ -14,6 +14,10 @@ import { StickinessSelect } from 'component/feature/StrategyTypes/FlexibleStrate
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import Select from 'component/common/select';
 import { DefaultStickiness, ProjectMode } from '../hooks/useProjectForm';
+import { HelpOutline } from '@mui/icons-material';
+import { Box, Typography } from '@mui/material';
+import { HtmlTooltip } from '../../../common/HtmlTooltip/HtmlTooltip';
+import { CollaborationModeTooltip } from './CollaborationModeTooltip';
 
 interface IProjectForm {
     projectId: string;
@@ -138,14 +142,17 @@ const ProjectForm: React.FC<IProjectForm> = ({
                     condition={Boolean(projectModeFlag)}
                     show={
                         <>
-                            <StyledDescription>
-                                What is your project mode?
-                            </StyledDescription>
+                            <Box sx={{ display: 'flex' }}>
+                                <StyledDescription>
+                                    What is your project collaboration mode?
+                                </StyledDescription>
+                                <CollaborationModeTooltip />
+                            </Box>
                             <Select
                                 id="project-mode"
                                 value={projectMode}
-                                label="Project mode"
-                                name="Project mode"
+                                label="Project collaboration mode"
+                                name="Project collaboration mode"
                                 onChange={e => {
                                     setProjectMode?.(
                                         e.target.value as ProjectMode
@@ -155,7 +162,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
                                     { key: 'open', label: 'open' },
                                     { key: 'protected', label: 'protected' },
                                 ]}
-                                style={{ minWidth: '150px' }}
+                                style={{ minWidth: '200px' }}
                             ></Select>
                         </>
                     }

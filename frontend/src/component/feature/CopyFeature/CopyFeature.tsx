@@ -12,7 +12,6 @@ import {
 import { FileCopy } from '@mui/icons-material';
 import { styles as themeStyles } from 'component/common';
 import { formatUnknownError } from 'utils/formatUnknownError';
-// import styles from './CopyFeature.module.scss';
 import { trim } from 'component/common/util';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { getTogglePath } from 'utils/routePathHelpers';
@@ -20,9 +19,40 @@ import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
-const StyledDiv = styled('div')(({ theme }) => ({
+const StyledPage = styled(Paper)(({ theme }) => ({
+    overflow: 'visible',
+    borderRadius: theme.shape.borderRadiusLarge,
+}));
+
+const StyledHeader = styled('div')(({ theme }) => ({
     padding: theme.spacing(3, 4),
     borderBottom: `1px solid ${theme.palette.divider}`,
+}));
+
+const StyledTitle = styled('h1')(({ theme }) => ({
+    fontSize: theme.fontSizes.mainHeader,
+    fontWeight: theme.fontWeight.medium,
+}));
+
+const StyledSection = styled('section')(({ theme }) => ({
+    padding: theme.spacing(4),
+}));
+
+const StyledDescription = styled('p')(({ theme }) => ({
+    marginTop: 0,
+    marginBottom: theme.spacing(4),
+}));
+
+const StyledForm = styled('form')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    marginBottom: theme.spacing(3),
+    maxWidth: theme.spacing(50),
+}));
+
+const StyledFormControlLabel = styled(FormControlLabel)(({ theme }) => ({
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(4),
 }));
 
 export const CopyFeatureToggle = () => {
@@ -79,38 +109,16 @@ export const CopyFeatureToggle = () => {
     if (!feature || !feature.name) return <span>Toggle not found</span>;
 
     return (
-        <Paper
-            className={themeStyles.fullwidth}
-            style={{
-                overflow: 'visible',
-                borderRadius: '12px',
-            }}
-        >
-            <StyledDiv>
-                <h1
-                    style={{
-                        fontSize: '20px',
-                        fontWeight: 'normal',
-                    }}
-                >
-                    Copy&nbsp;{featureId}
-                </h1>
-            </StyledDiv>
+        <StyledPage className={themeStyles.fullwidth}>
+            <StyledHeader>
+                <StyledTitle>Copy&nbsp;{featureId}</StyledTitle>
+            </StyledHeader>
             <ConditionallyRender
                 condition={Boolean(apiError)}
                 show={<Alert severity="error">{apiError}</Alert>}
             />
-            <section
-                style={{
-                    padding: '32px',
-                }}
-            >
-                <p
-                    style={{
-                        marginTop: 0,
-                        marginBottom: '32px',
-                    }}
-                >
+            <StyledSection>
+                <StyledDescription>
                     You are about to create a new feature toggle by cloning the
                     configuration of feature toggle&nbsp;
                     <Link to={getTogglePath(projectId, featureId)}>
@@ -118,16 +126,8 @@ export const CopyFeatureToggle = () => {
                     </Link>
                     . You must give the new feature toggle a unique name before
                     you can proceed.
-                </p>
-                <form
-                    onSubmit={onSubmit}
-                    style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        marginBottom: '24px',
-                        maxWidth: '400px',
-                    }}
-                >
+                </StyledDescription>
+                <StyledForm onSubmit={onSubmit}>
                     <TextField
                         label="Name"
                         name="name"
@@ -141,11 +141,7 @@ export const CopyFeatureToggle = () => {
                         aria-required
                         autoFocus
                     />
-                    <FormControlLabel
-                        style={{
-                            marginTop: '16px',
-                            marginBottom: '32px',
-                        }}
+                    <StyledFormControlLabel
                         control={
                             <Switch
                                 value={replaceGroupId}
@@ -160,8 +156,8 @@ export const CopyFeatureToggle = () => {
                         <FileCopy />
                         &nbsp;&nbsp;&nbsp; Create from copy
                     </Button>
-                </form>
-            </section>
-        </Paper>
+                </StyledForm>
+            </StyledSection>
+        </StyledPage>
     );
 };

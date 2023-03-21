@@ -10,6 +10,7 @@ import {
 import React from 'react';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox';
 import { ITag, ITagType } from 'interfaces/tags';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Add } from '@mui/icons-material';
@@ -19,12 +20,15 @@ export type TagOption = {
     title: string;
     inputValue?: string;
 };
+
 interface ITagsInputProps {
     options: TagOption[];
     existingTags: ITag[];
     tagType: ITagType;
     selectedOptions: TagOption[];
-    onChange: AutocompleteProps<TagOption | string, true, any, any>['onChange'];
+    indeterminateOptions?: TagOption[];
+    disabled?: boolean;
+    onChange: AutocompleteProps<TagOption, true, false, false>['onChange'];
 }
 
 const filter = createFilterOptions<TagOption>();
@@ -32,12 +36,13 @@ const filter = createFilterOptions<TagOption>();
 export const TagsInput = ({
     options,
     selectedOptions,
+    indeterminateOptions,
     tagType,
     existingTags,
+    disabled = false,
     onChange,
 }: ITagsInputProps) => {
     const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
-    const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
     const getOptionLabel = (option: TagOption) => {
         // Add "xxx" option created dynamically
@@ -55,6 +60,11 @@ export const TagsInput = ({
         option: TagOption,
         { selected }: { selected: boolean }
     ) => {
+        const isIndeterminate =
+            indeterminateOptions?.some(
+                indeterminateOption =>
+                    indeterminateOption.title === option.title
+            ) ?? false;
         return (
             <li {...props}>
                 <ConditionallyRender
@@ -63,9 +73,13 @@ export const TagsInput = ({
                     elseShow={
                         <Checkbox
                             icon={icon}
-                            checkedIcon={checkedIcon}
+                            checkedIcon={<CheckBoxIcon fontSize="small" />}
+                            indeterminateIcon={
+                                <IndeterminateCheckBoxIcon fontSize="small" />
+                            }
                             sx={{ mr: theme => theme.spacing(0.5) }}
-                            checked={selected}
+                            checked={selected && !isIndeterminate}
+                            indeterminate={isIndeterminate}
                         />
                     }
                 />
@@ -77,19 +91,18 @@ export const TagsInput = ({
     const renderTags = (
         tagValue: TagOption[],
         getTagProps: AutocompleteRenderGetTagProps
-    ) => {
-        return tagValue.map((option, index) => {
+    ) =>
+        tagValue.map((option, index) => {
             const exists = existingTags.some(
                 existingTag =>
                     existingTag.value === option.title &&
                     existingTag.type === tagType.name
             );
-            if (exists) {
+            if (exists && indeterminateOptions === undefined) {
                 return null;
             }
             return <Chip {...getTagProps({ index })} label={option.title} />;
         });
-    };
 
     const filterOptions = (
         options: TagOption[],
@@ -139,6 +152,7 @@ export const TagsInput = ({
                     placeholder="Select values"
                 />
             )}
+            disabled={disabled}
         />
     );
 };

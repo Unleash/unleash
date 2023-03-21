@@ -1,6 +1,5 @@
-import Settings from '@mui/icons-material/Settings';
-import { Typography, IconButton, styled, Box } from '@mui/material';
-import { flexRow } from 'themes/themeStyles';
+import { Typography, styled, Box } from '@mui/material';
+import { FC } from 'react';
 
 const StyledOuterContainerBox = styled(Box)(({ theme }) => ({
     padding: theme.spacing(1.5, 3, 0.5, 3),
@@ -15,7 +14,7 @@ const StyledInnerBox = styled(Box)(({ theme }) => ({
     height: '4px',
 }));
 
-export const NotificationsHeader: React.FC = ({ children }) => {
+export const NotificationsHeader: FC = ({ children }) => {
     return (
         <>
             <StyledOuterContainerBox>

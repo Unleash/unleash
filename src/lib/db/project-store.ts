@@ -221,19 +221,35 @@ class ProjectStore implements IProjectStore {
         return this.mapRow({ ...row[0], ...settingsRow[0] });
     }
 
+    private async hasProjectSettings(projectId: string): Promise<boolean> {
+        const result = await this.db.raw(
+            `SELECT EXISTS(SELECT 1 FROM ${SETTINGS_TABLE} WHERE project = ?) AS present`,
+            [projectId],
+        );
+        const { present } = result.rows[0];
+        return present;
+    }
+
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async update(data): Promise<void> {
         try {
             await this.db(TABLE)
                 .where({ id: data.id })
                 .update(this.fieldToRow(data));
-            await this.db(SETTINGS_TABLE)
-                .where({ project: data.id })
-                .update({
+            if (await this.hasProjectSettings(data.id)) {
+                await this.db(SETTINGS_TABLE)
+                    .where({ project: data.id })
+                    .update({
+                        project_mode: data.mode,
+                        default_stickiness: data.defaultStickiness,
+                    });
+            } else {
+                await this.db(SETTINGS_TABLE).insert({
+                    project: data.id,
                     project_mode: data.mode,
                     default_stickiness: data.defaultStickiness,
-                })
-                .returning('*');
+                });
+            }
         } catch (err) {
             this.logger.error('Could not update project, error: ', err);
         }

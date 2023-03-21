@@ -11,7 +11,6 @@ import {
     Switch,
     styled,
     Theme,
-    Box,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -251,7 +250,10 @@ const Header: VFC = () => {
                             }
                         />
                         <ConditionallyRender
-                            condition={Boolean(uiConfig?.flags?.notifications)}
+                            condition={
+                                Boolean(uiConfig?.flags?.notifications) &&
+                                !isOss()
+                            }
                             show={<Notifications />}
                         />
                         <Tooltip title="Documentation" arrow>

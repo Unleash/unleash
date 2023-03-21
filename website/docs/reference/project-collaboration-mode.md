@@ -18,5 +18,5 @@ Project collaboration mode is controlled from the "Create Project" and "Edit Pro
 
 ![Create project with collaboration mode](/img/collaboration-mode.png)
 
-When project collaboration mode is protected all viewers who are not the project members will have all the
+When project collaboration mode is protected all users who are not project members or admins will have all the
 change request operations disabled.

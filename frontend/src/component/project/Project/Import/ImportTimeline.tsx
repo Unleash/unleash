@@ -39,7 +39,7 @@ const StyledTimelineDot = styled(TimelineDot, {
         ? theme.palette.common.white
         : `${alpha(theme.palette.common.white, 0.8)}`,
     width: theme.spacing(5),
-    height: '40px',
+    height: theme.spacing(5),
     lineHeight: '40px',
     borderWidth: '1px',
     display: 'flex',

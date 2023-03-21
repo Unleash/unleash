@@ -5,6 +5,11 @@ import { IFeatureStrategy } from 'interfaces/strategy';
 import { Link } from 'react-router-dom';
 import { formatStrategyName } from 'utils/strategyNames';
 
+const StyledUl = styled('ul')(({ theme }) => ({
+    listStyle: 'none',
+    paddingLeft: 0,
+}));
+
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginTop: theme.spacing(1),
 }));
@@ -23,7 +28,7 @@ export const SegmentProjectAlert = ({
     availableProjects,
 }: ISegmentProjectAlertProps) => {
     const projectList = (
-        <ul>
+        <StyledUl>
             {Array.from(projectsUsed).map(projectId => (
                 <li key={projectId}>
                     <Link to={`/projects/${projectId}`} target="_blank">
@@ -54,7 +59,7 @@ export const SegmentProjectAlert = ({
                     </ul>
                 </li>
             ))}
-        </ul>
+        </StyledUl>
     );
 
     if (projectsUsed.length > 1) {

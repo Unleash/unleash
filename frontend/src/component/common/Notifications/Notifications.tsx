@@ -192,6 +192,7 @@ export const Notifications = () => {
                                         onClick={() =>
                                             setShowUnread(!showUnread)
                                         }
+                                        checked={showUnread}
                                     />
                                 </StyledHeaderBox>
                             </NotificationsHeader>

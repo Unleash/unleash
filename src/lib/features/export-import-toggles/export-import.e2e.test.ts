@@ -112,12 +112,7 @@ const createProjects = async (projects: string[] = [DEFAULT_PROJECT]) => {
             id: project,
             mode: 'open' as const,
         });
-        await app.request
-            .post(`/api/admin/projects/${project}/environments`)
-            .send({
-                environment: DEFAULT_ENV,
-            })
-            .expect(200);
+        await app.linkProjectToEnvironment(project, DEFAULT_ENV);
     }
 };
 
@@ -125,18 +120,6 @@ const createSegment = (postData: UpsertSegmentSchema): Promise<ISegment> => {
     return app.services.segmentService.create(postData, {
         email: 'test@example.com',
     });
-};
-
-const createContextField = async (contextField: IContextFieldDto) => {
-    await app.createContextField(contextField);
-};
-
-const createFeature = async (featureName: string) => {
-    await app.createFeature(featureName);
-};
-
-const archiveFeature = async (featureName: string) => {
-    await app.archiveFeature(featureName);
 };
 
 const unArchiveFeature = async (featureName: string) => {
@@ -176,7 +159,7 @@ beforeEach(async () => {
     await environmentStore.deleteAll();
 
     await contextFieldStore.deleteAll();
-    await createContextField({ name: 'appName' });
+    await app.createContextField({ name: 'appName' });
 });
 
 afterAll(async () => {
@@ -475,18 +458,6 @@ test('returns no features, when no feature was requested', async () => {
     expect(body.features).toHaveLength(0);
 });
 
-const importToggles = (
-    importPayload: ImportTogglesSchema,
-    status = 200,
-    expect: (response) => void = () => {},
-) =>
-    app.request
-        .post('/api/admin/features-batch/import')
-        .send(importPayload)
-        .set('Content-Type', 'application/json')
-        .expect(status)
-        .expect(expect);
-
 const defaultFeature = 'first_feature';
 
 const variants: VariantsSchema = [
@@ -610,7 +581,7 @@ const validateImport = (importPayload: ImportTogglesSchema, status = 200) =>
 test('import features to existing project and environment', async () => {
     await createProjects();
 
-    await importToggles(defaultImportPayload);
+    await app.importToggles(defaultImportPayload);
 
     const { body: importedFeature } = await getFeature(defaultFeature);
     expect(importedFeature).toMatchObject({
@@ -645,8 +616,8 @@ test('import features to existing project and environment', async () => {
 
 test('importing same JSON should work multiple times in a row', async () => {
     await createProjects();
-    await importToggles(defaultImportPayload);
-    await importToggles(defaultImportPayload);
+    await app.importToggles(defaultImportPayload);
+    await app.importToggles(defaultImportPayload);
 
     const { body: importedFeature } = await getFeature(defaultFeature);
     expect(importedFeature).toMatchObject({
@@ -681,7 +652,7 @@ test('reject import with unknown context fields', async () => {
         name: 'ContextField1',
         legalValues: [{ value: 'Value1', description: '' }],
     };
-    await createContextField(contextField);
+    await app.createContextField(contextField);
     const importPayloadWithContextFields: ImportTogglesSchema = {
         ...defaultImportPayload,
         data: {
@@ -695,7 +666,10 @@ test('reject import with unknown context fields', async () => {
         },
     };
 
-    const { body } = await importToggles(importPayloadWithContextFields, 400);
+    const { body } = await app.importToggles(
+        importPayloadWithContextFields,
+        400,
+    );
 
     expect(body).toMatchObject({
         details: [
@@ -718,7 +692,10 @@ test('reject import with unsupported strategies', async () => {
         },
     };
 
-    const { body } = await importToggles(importPayloadWithContextFields, 400);
+    const { body } = await app.importToggles(
+        importPayloadWithContextFields,
+        400,
+    );
 
     expect(body).toMatchObject({
         details: [
@@ -741,10 +718,10 @@ test('validate import data', async () => {
         legalValues: [{ value: 'new_value' }],
     };
 
-    await createFeature(defaultFeature);
-    await archiveFeature(defaultFeature);
+    await app.createFeature(defaultFeature);
+    await app.archiveFeature(defaultFeature);
 
-    await createContextField(contextField);
+    await app.createContextField(contextField);
     const importPayloadWithContextFields: ImportTogglesSchema = {
         ...defaultImportPayload,
         data: {
@@ -801,7 +778,7 @@ test('should create new context', async () => {
         },
     };
 
-    await importToggles(importPayloadWithContextFields, 200);
+    await app.importToggles(importPayloadWithContextFields);
 
     const { body } = await getContextField(context.name);
     expect(body).toMatchObject(context);
@@ -809,11 +786,11 @@ test('should create new context', async () => {
 
 test('should not import archived features tags', async () => {
     await createProjects();
-    await importToggles(defaultImportPayload);
+    await app.importToggles(defaultImportPayload);
 
-    await archiveFeature(defaultFeature);
+    await app.archiveFeature(defaultFeature);
 
-    await importToggles({
+    await app.importToggles({
         ...defaultImportPayload,
         data: {
             ...defaultImportPayload.data,

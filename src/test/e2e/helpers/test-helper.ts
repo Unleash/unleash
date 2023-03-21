@@ -10,7 +10,8 @@ import { DEFAULT_PROJECT, IUnleashStores } from '../../../lib/types';
 import { IUnleashServices } from '../../../lib/types/services';
 import { Db } from '../../../lib/db/db';
 import { IContextFieldDto } from 'lib/types/stores/context-field-store';
-import { CreateFeatureSchema } from 'lib/openapi';
+import { DEFAULT_ENV } from '../../../lib/util';
+import { CreateFeatureSchema, ImportTogglesSchema } from '../../../lib/openapi';
 
 process.env.NODE_ENV = 'test';
 
@@ -49,6 +50,17 @@ export interface IUnleashHttpAPI {
 
     createContextField(
         contextField: IContextFieldDto,
+        expectedResponseCode?: number,
+    ): supertest.Test;
+
+    linkProjectToEnvironment(
+        project: string,
+        environment: string,
+        expectedResponseCode?: number,
+    ): supertest.Test;
+
+    importToggles(
+        importPayload: ImportTogglesSchema,
         expectedResponseCode?: number,
     ): supertest.Test;
 }
@@ -123,6 +135,30 @@ function httpApis(
             return request
                 .post(`${base}/api/admin/context`)
                 .send(contextField)
+                .expect(expectedResponseCode);
+        },
+
+        linkProjectToEnvironment(
+            project: string,
+            environment: string = DEFAULT_ENV,
+            expectedResponseCode: number = 200,
+        ): supertest.Test {
+            return request
+                .post(`${base}/api/admin/projects/${project}/environments`)
+                .send({
+                    environment,
+                })
+                .expect(expectedResponseCode);
+        },
+
+        importToggles(
+            importPayload: ImportTogglesSchema,
+            expectedResponseCode: number = 200,
+        ): supertest.Test {
+            return request
+                .post('/api/admin/features-batch/import')
+                .send(importPayload)
+                .set('Content-Type', 'application/json')
                 .expect(expectedResponseCode);
         },
     };

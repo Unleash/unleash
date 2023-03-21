@@ -41,7 +41,7 @@ export const ProjectSegments = () => {
                         onClose={() => navigate(GO_BACK)}
                         label="Create segment"
                     >
-                        <CreateSegment />
+                        <CreateSegment modal />
                     </SidebarModal>
                 }
             />
@@ -53,7 +53,7 @@ export const ProjectSegments = () => {
                         onClose={() => navigate(GO_BACK)}
                         label="Edit segment"
                     >
-                        <EditSegment />
+                        <EditSegment modal />
                     </SidebarModal>
                 }
             />

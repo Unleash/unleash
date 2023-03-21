@@ -1,9 +1,15 @@
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
-import { SortingRule, useFlexLayout, useSortBy, useTable } from 'react-table';
+import {
+    SortingRule,
+    useFlexLayout,
+    useRowSelect,
+    useSortBy,
+    useTable,
+} from 'react-table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { useMediaQuery } from '@mui/material';
+import { Checkbox, useMediaQuery } from '@mui/material';
 import { sortTypes } from 'utils/sortTypes';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
@@ -27,6 +33,10 @@ import { useSearchParams } from 'react-router-dom';
 import { ArchivedFeatureDeleteConfirm } from './ArchivedFeatureActionCell/ArchivedFeatureDeleteConfirm/ArchivedFeatureDeleteConfirm';
 import { IFeatureToggle } from 'interfaces/featureToggle';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
+import { RowSelectCell } from '../../project/Project/ProjectFeatureToggles/RowSelectCell/RowSelectCell';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { BatchSelectionActionsBar } from '../../common/BatchSelectionActionsBar/BatchSelectionActionsBar';
+import { ArchiveBatchActions } from './ArchiveBatchActions';
 
 export interface IFeaturesArchiveTableProps {
     archivedFeatures: FeatureSchema[];
@@ -54,6 +64,7 @@ export const ArchiveTable = ({
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const isMediumScreen = useMediaQuery(theme.breakpoints.down('lg'));
     const { setToastData, setToastApiError } = useToast();
+    const { uiConfig } = useUiConfig();
 
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [deletedFeature, setDeletedFeature] = useState<IFeatureToggle>();
@@ -84,6 +95,24 @@ export const ArchiveTable = ({
 
     const columns = useMemo(
         () => [
+            ...(uiConfig?.flags?.bulkOperations
+                ? [
+                      {
+                          id: 'Select',
+                          Header: ({ getToggleAllRowsSelectedProps }: any) => (
+                              <Checkbox {...getToggleAllRowsSelectedProps()} />
+                          ),
+                          Cell: ({ row }: any) => (
+                              <RowSelectCell
+                                  {...row?.getToggleRowSelectedProps?.()}
+                              />
+                          ),
+                          maxWidth: 50,
+                          disableSortBy: true,
+                          hideInMenu: true,
+                      },
+                  ]
+                : []),
             {
                 Header: 'Seen',
                 width: 85,
@@ -203,12 +232,15 @@ export const ArchiveTable = ({
             },
         ],
         hiddenColumns: ['description'],
+        selectedRowIds: {},
     }));
+
+    const getRowId = useCallback((row: any) => row.name, []);
 
     const {
         headerGroups,
         rows,
-        state: { sortBy },
+        state: { sortBy, selectedRowIds },
         prepareRow,
         setHiddenColumns,
     } = useTable(
@@ -220,9 +252,11 @@ export const ArchiveTable = ({
             autoResetHiddenColumns: false,
             disableSortRemove: true,
             autoResetSortBy: false,
+            getRowId,
         },
         useFlexLayout,
-        useSortBy
+        useSortBy,
+        useRowSelect
     );
 
     useConditionallyHiddenColumns(
@@ -311,6 +345,19 @@ export const ArchiveTable = ({
                 open={deleteModalOpen}
                 setOpen={setDeleteModalOpen}
                 refetch={refetch}
+            />
+            <ConditionallyRender
+                condition={Boolean(projectId)}
+                show={
+                    <BatchSelectionActionsBar
+                        selectedIds={Object.keys(selectedRowIds)}
+                    >
+                        <ArchiveBatchActions
+                            selectedIds={Object.keys(selectedRowIds)}
+                            projectId={projectId!}
+                        />
+                    </BatchSelectionActionsBar>
+                }
             />
         </PageContent>
     );

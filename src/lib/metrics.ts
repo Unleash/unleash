@@ -141,6 +141,12 @@ export default class MetricsMonitor {
             labelNames: ['sdk_name', 'sdk_version'],
         });
 
+        const optimal304DiffingCounter = new client.Counter({
+            name: 'optimal_304_diffing',
+            help: 'Count the Optimal 304 diffing with status',
+            labelNames: ['status'],
+        });
+
         async function collectStaticCounters() {
             try {
                 const stats = await instanceStatsService.getStats();
@@ -203,6 +209,10 @@ export default class MetricsMonitor {
                     .observe(time);
             },
         );
+
+        eventBus.on('optimal304Differ', ({ status }) => {
+            optimal304DiffingCounter.labels(status).inc();
+        });
 
         eventBus.on(events.DB_TIME, ({ store, action, time }) => {
             dbDuration.labels(store, action).observe(time);

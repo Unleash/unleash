@@ -4,7 +4,7 @@ title: Project collaboration mode
 
 :::info Availability
 
-The change requests feature is an enterprise-only feature that was introduced in **Unleash 4.22.0**.
+The project collaboration mode is an enterprise-only feature that was introduced in **Unleash 4.22.0**.
 
 :::
 

@@ -8,24 +8,23 @@ Notifications were introduced in Unleash 4.22.0 for pro and enteprise customers.
 
 :::
 
-Notifications give your project members hints about interesting events happening in their projects.
-To see your notifications, click on the ring bell icon in the top-right corner of the screen.
-You will only see the notifications from the other project members without the events triggered by yourself.
+Unleash's notifications give you updates when certain events occur in projects that you are part of. The notifications are accessible from the notifications button in the navigation section of the admin UI.
+
+Your notifications will only contain updates from other members; you will not get notifications about actions you perform yourself.
 
 ![Notifications](/img/notifications.png)
 
-From notifications dropdown you can:
-* navigate to the features or change requests the notification is for
+From within the notifications list, you can:
+* navigate to the features or change request that the notification is for
 * mark all notifications as read
-* filter our unread notifications
+* filter out unread notifications
 
 ## Notification events
 
-The following events are supported in notifications:
-* Feature created
-* Feature enabled
-* Feature archived
-* Feature enabled in environment
-* Change request sent to review (sent only to project members who can approve the change request)
-* Change request approved
-* Change request applied
+The following actions in your projects will trigger notifications:
+* Creating a feature
+* Archiving a feature
+* Enabling a feature in an environment
+* Submitting a change request (sent only to project members who can approve the change request)
+* Approving change request
+* Applying change request

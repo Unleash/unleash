@@ -21,7 +21,6 @@ export const ArchiveButton: VFC<IArchiveButtonProps> = ({
     const onConfirm = async () => {
         setIsDialogOpen(false);
         await refetch();
-        // TODO: toast
     };
 
     return (

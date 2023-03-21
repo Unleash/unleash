@@ -65,7 +65,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ExportDialog } from 'component/feature/FeatureToggleList/ExportDialog';
 import { RowSelectCell } from './RowSelectCell/RowSelectCell';
 import { BatchSelectionActionsBar } from '../../../common/BatchSelectionActionsBar/BatchSelectionActionsBar';
-import { ProjectFeaturesBatchActions } from './SelectionActionsBar/ProjectFeaturesBatchActions';
+import { ProjectFeaturesBatchActions } from './ProjectFeaturesBatchActions/ProjectFeaturesBatchActions';
 
 const StyledResponsiveButton = styled(ResponsiveButton)(() => ({
     whiteSpace: 'nowrap',

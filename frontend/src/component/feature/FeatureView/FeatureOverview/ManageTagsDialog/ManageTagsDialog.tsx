@@ -8,14 +8,15 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { ITag, ITagType } from 'interfaces/tags';
 import { TagOption, TagsInput } from './TagsInput';
-import TagTypeSelect from './TagTypeSelect';
+import { TagTypeSelect } from './TagTypeSelect';
 import useTagApi from 'hooks/api/actions/useTagApi/useTagApi';
 import { AutocompleteChangeReason } from '@mui/base/AutocompleteUnstyled/useAutocomplete';
 import useTags from 'hooks/api/getters/useTags/useTags';
 import cloneDeep from 'lodash.clonedeep';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import useTagTypes from 'hooks/api/getters/useTagTypes/useTagTypes';
 
-interface IAddTagDialogProps {
+interface IManageTagsProps {
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -43,7 +44,8 @@ const optionsToTags = (options: TagOption[], type: string): ITag[] => {
     });
 };
 
-const AddTagDialog = ({ open, setOpen }: IAddTagDialogProps) => {
+export const ManageTagsDialog = ({ open, setOpen }: IManageTagsProps) => {
+    const { tagTypes } = useTagTypes();
     const featureId = useRequiredPathParam('featureId');
     const { createTag } = useTagApi();
     const { updateFeatureTags, loading: featureLoading } = useFeatureApi();
@@ -238,44 +240,40 @@ const AddTagDialog = ({ open, setOpen }: IAddTagDialogProps) => {
     const formId = 'add-tag-form';
 
     return (
-        <>
-            <Dialogue
-                open={open}
-                secondaryButtonText="Cancel"
-                primaryButtonText={`Save tags`}
-                title="Update tags to feature toggle"
-                onClick={onSubmit}
-                disabledPrimaryButton={loading || differenceCount === 0}
-                onClose={onCancel}
-                formId={formId}
-            >
-                <>
-                    <Typography
-                        paragraph
-                        sx={{ marginBottom: theme => theme.spacing(2.5) }}
-                    >
-                        Tags allow you to group features together
-                    </Typography>
-                    <form id={formId} onSubmit={onSubmit}>
-                        <StyledDialogFormContent>
-                            <TagTypeSelect
-                                autoFocus
-                                value={tagType}
-                                onChange={handleTagTypeChange}
-                            />
-                            <TagsInput
-                                options={tagTypeOptions}
-                                existingTags={tags}
-                                tagType={tagType}
-                                selectedOptions={selectedTagOptions}
-                                onChange={handleInputChange}
-                            />
-                        </StyledDialogFormContent>
-                    </form>
-                </>
-            </Dialogue>
-        </>
+        <Dialogue
+            open={open}
+            secondaryButtonText="Cancel"
+            primaryButtonText="Save tags"
+            title="Update tags to feature toggle"
+            onClick={onSubmit}
+            disabledPrimaryButton={loading || differenceCount === 0}
+            onClose={onCancel}
+            formId={formId}
+        >
+            <>
+                <Typography
+                    paragraph
+                    sx={{ marginBottom: theme => theme.spacing(2.5) }}
+                >
+                    Tags allow you to group features together
+                </Typography>
+                <form id={formId} onSubmit={onSubmit}>
+                    <StyledDialogFormContent>
+                        <TagTypeSelect
+                            options={tagTypes}
+                            value={tagType}
+                            onChange={handleTagTypeChange}
+                        />
+                        <TagsInput
+                            options={tagTypeOptions}
+                            existingTags={tags}
+                            tagType={tagType}
+                            selectedOptions={selectedTagOptions}
+                            onChange={handleInputChange}
+                        />
+                    </StyledDialogFormContent>
+                </form>
+            </>
+        </Dialogue>
     );
 };
-
-export default AddTagDialog;

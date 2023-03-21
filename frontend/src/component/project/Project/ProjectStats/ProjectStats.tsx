@@ -52,7 +52,6 @@ export const ProjectStats = ({ stats }: IProjectStatsProps) => {
 
     const {
         avgTimeToProdCurrentWindow,
-        avgTimeToProdPastWindow,
         projectActivityCurrentWindow,
         projectActivityPastWindow,
         createdCurrentWindow,
@@ -60,15 +59,6 @@ export const ProjectStats = ({ stats }: IProjectStatsProps) => {
         archivedCurrentWindow,
         archivedPastWindow,
     } = stats;
-
-    const calculatePercentage = (partial: number, total: number) => {
-        const percentage = (partial * 100) / total;
-
-        if (Number.isInteger(percentage)) {
-            return percentage;
-        }
-        return 0;
-    };
 
     return (
         <StyledBox>

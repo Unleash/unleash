@@ -10,7 +10,7 @@ The change requests feature is an enterprise-only feature that was introduced in
 
 Unleash project collaboration mode is a feature that allows to specify who can submit [change requests](change-requests.md). Currently, there are two modes:
 - **open** where everyone can submit change requests. This is a default setting for the existing and new Unleash projects.
-- **protected** where admins, editors and project members can submit change requests. Viewers who are not added to projects will not be able to submit change requests.
+- **protected** where [admins, editors, project members and owners](rbac.md#standard-roles) can submit change requests. Viewers who are not added to projects will not be able to submit change requests.
 
 ## Project collaboration mode setting
 

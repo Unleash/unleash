@@ -38,7 +38,7 @@ const StyledTimelineDot = styled(TimelineDot, {
     borderColor: active
         ? theme.palette.common.white
         : `${alpha(theme.palette.common.white, 0.8)}`,
-    width: '40px',
+    width: theme.spacing(5),
     height: '40px',
     lineHeight: '40px',
     borderWidth: '1px',

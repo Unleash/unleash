@@ -26,7 +26,6 @@ const StyledEditorHeader = styled('aside')(({ theme }) => ({
     justifyContent: 'space-between',
     alignItems: 'center',
     border: `1px solid ${theme.palette.divider}`,
-    // borderBottom: 'none',
 }));
 
 const StyledEditorStatusContainer = styled('div')(({ theme, style }) => ({

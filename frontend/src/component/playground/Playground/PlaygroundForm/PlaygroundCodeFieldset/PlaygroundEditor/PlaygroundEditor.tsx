@@ -54,7 +54,7 @@ const EditorStatusOk = () => {
                 backgroundColor: theme.palette.success.main,
             }}
         >
-            <Check sx={{ width: '16px', height: '16px' }} />
+            <Check sx={theme => ({ width: theme.spacing(2), height: theme.spacing(2) })} />
         </StyledEditorStatusContainer>
     );
 };

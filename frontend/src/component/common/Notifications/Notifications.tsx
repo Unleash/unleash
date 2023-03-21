@@ -43,7 +43,7 @@ const StyledTypography = styled(Typography)(({ theme }) => ({
 }));
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
-    minWidth: '400px',
+    width: '400px',
     boxShadow: theme.boxShadows.popup,
     borderRadius: `${theme.shape.borderRadiusLarge}px`,
     position: 'absolute',

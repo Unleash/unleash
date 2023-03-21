@@ -21,7 +21,7 @@ export const ConstraintIcon: VFC<IConstraintIconProps> = ({ compact }) => (
             sx={theme => ({
                 fill: theme.palette.common.white,
                 display: 'block',
-                width: compact ? '16px' : '20px',
+                width: compact ? theme.spacing(2) : theme.spacing(2.5),
                 height: compact ? '16px' : '20px',
             })}
         />

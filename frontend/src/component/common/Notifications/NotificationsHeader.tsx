@@ -17,8 +17,6 @@ export const NotificationsHeader: FC = ({ children }) => {
                 <Typography fontWeight="bold">Notifications</Typography>
                 {children}
             </StyledOuterContainerBox>
-
-            <StyledInnerBox />
         </>
     );
 };

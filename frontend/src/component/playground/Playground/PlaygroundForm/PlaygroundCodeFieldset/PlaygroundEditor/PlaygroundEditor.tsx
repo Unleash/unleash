@@ -31,7 +31,7 @@ const StyledEditorHeader = styled('aside')(({ theme }) => ({
 
 const StyledEditorStatusContainer = styled('div')(({ theme, style }) => ({
     width: '24px',
-    height: '24px',
+    height: theme.spacing(3),
     display: 'flex',
     alignItems: 'center',
     color: theme.palette.background.paper,

@@ -22,6 +22,12 @@ export interface ISegmentService {
         user: Partial<Pick<IUser, 'username' | 'email'>>,
     ): Promise<ISegment>;
 
+    update(
+        id: number,
+        data: UpsertSegmentSchema,
+        user: Partial<Pick<IUser, 'username' | 'email'>>,
+    ): Promise<void>;
+
     delete(id: number, user: IUser): Promise<void>;
 
     cloneStrategySegments(

@@ -258,7 +258,6 @@ const useProjectApi = () => {
         reviveFeatures,
         staleFeatures,
         searchProjectUser,
-        setDefaultProjectStickiness,
         errors,
         loading,
     };

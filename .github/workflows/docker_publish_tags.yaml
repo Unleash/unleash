@@ -8,6 +8,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        version: [16-alpine, 18-alpine, 20-alpine]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -37,4 +40,4 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          build-args: NODE_VERSION=16-alpine
+          build-args: NODE_VERSION=${{ matrix.version }}

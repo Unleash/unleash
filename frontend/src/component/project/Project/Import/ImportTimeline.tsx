@@ -40,7 +40,7 @@ const StyledTimelineDot = styled(TimelineDot, {
         : `${alpha(theme.palette.common.white, 0.8)}`,
     width: theme.spacing(5),
     height: theme.spacing(5),
-    lineHeight: '40px',
+    lineHeight: theme.spacing(5),
     borderWidth: '1px',
     display: 'flex',
     alignItems: 'center',

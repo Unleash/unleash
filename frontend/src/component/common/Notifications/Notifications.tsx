@@ -71,6 +71,15 @@ const StyledHeaderTypography = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,
 }));
 
+const StyledIconButton = styled(IconButton)(({ theme }) => ({
+    '&:focus-visible': {
+        outlineStyle: 'solid',
+        outlineWidth: 2,
+        outlineColor: theme.palette.primary.main,
+        borderRadius: '100%',
+    },
+}));
+
 export const Notifications = () => {
     const [showNotifications, setShowNotifications] = useState(false);
     const { notifications, refetchNotifications } = useNotifications({
@@ -162,16 +171,17 @@ export const Notifications = () => {
 
     return (
         <StyledPrimaryContainerBox>
-            <IconButton
+            <StyledIconButton
                 onClick={() => setShowNotifications(!showNotifications)}
                 data-testid="NOTIFICATIONS_BUTTON"
+                disableFocusRipple
             >
                 <ConditionallyRender
                     condition={hasUnreadNotifications}
                     show={<StyledDotBox />}
                 />
                 <NotificationsIcon />
-            </IconButton>
+            </StyledIconButton>
 
             <ConditionallyRender
                 condition={showNotifications}

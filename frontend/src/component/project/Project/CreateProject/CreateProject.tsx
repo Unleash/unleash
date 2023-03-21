@@ -1,6 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import ProjectForm from '../ProjectForm/ProjectForm';
-import useProjectForm from '../hooks/useProjectForm';
+import useProjectForm, {
+    DEFAULT_PROJECT_STICKINESS,
+} from '../hooks/useProjectForm';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { CREATE_PROJECT } from 'component/providers/AccessProvider/permissions';
@@ -10,6 +12,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { GO_BACK } from 'constants/navigate';
+import { usePlausibleTracker } from '../../../../hooks/usePlausibleTracker';
 
 const CREATE_PROJECT_BTN = 'CREATE_PROJECT_BTN';
 
@@ -18,6 +21,7 @@ const CreateProject = () => {
     const { refetchUser } = useAuthUser();
     const { uiConfig } = useUiConfig();
     const navigate = useNavigate();
+    const { trackEvent } = usePlausibleTracker();
     const {
         projectId,
         projectName,
@@ -56,6 +60,10 @@ const CreateProject = () => {
                     confetti: true,
                     type: 'success',
                 });
+
+                if (projectStickiness !== DEFAULT_PROJECT_STICKINESS) {
+                    trackEvent('default_project_stickiness_changed');
+                }
             } catch (error: unknown) {
                 setToastApiError(formatUnknownError(error));
             }

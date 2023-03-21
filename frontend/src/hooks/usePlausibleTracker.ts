@@ -21,7 +21,7 @@ export type CustomEvents =
     | 'unknown_ui_error'
     | 'export_import'
     | 'project_api_tokens'
-    | 'project_stickiness_set'
+    | 'default_project_stickiness_changed'
     | 'notifications';
 
 export const usePlausibleTracker = () => {

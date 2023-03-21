@@ -4,12 +4,17 @@ import { Button } from '@mui/material';
 import { ManageBulkTagsDialog } from 'component/feature/FeatureView/FeatureOverview/ManageTagsDialog/ManageBulkTagsDialog';
 import type { FeatureSchema } from 'openapi';
 import { ITag } from 'interfaces/tags';
+import useTagApi from 'hooks/api/actions/useTagApi/useTagApi';
+import useToast from 'hooks/useToast';
+import { formatUnknownError } from 'utils/formatUnknownError';
 
 interface IManageTagsProps {
     data: FeatureSchema[];
 }
 
 export const ManageTags: VFC<IManageTagsProps> = ({ data }) => {
+    const { bulkUpdateTags } = useTagApi();
+    const { setToastData, setToastApiError } = useToast();
     const [isOpen, setIsOpen] = useState(false);
     const [initialValues, indeterminateValues] = useMemo(() => {
         const uniqueTags = data
@@ -45,7 +50,21 @@ export const ManageTags: VFC<IManageTagsProps> = ({ data }) => {
         addedTags: ITag[];
         removedTags: ITag[];
     }) => {
-        console.log({ addedTags, removedTags });
+        const features = data.map(({ name }) => name);
+        const payload = { features, tags: { addedTags, removedTags } };
+        try {
+            bulkUpdateTags(payload);
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
+        //     handleClose();
+        //     await staleFeatures(projectId, selectedIds);
+        //     await refetch();
+        //     setToastData({
+        //         title: 'State updated',
+        //         text: 'Feature toggles marked as stale',
+        //         type: 'success',
+        //     });
         setIsOpen(false);
     };
 

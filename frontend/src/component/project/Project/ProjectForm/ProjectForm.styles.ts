@@ -13,6 +13,7 @@ export const StyledContainer = styled('div')(() => ({
 
 export const StyledDescription = styled('p')(({ theme }) => ({
     marginBottom: theme.spacing(1),
+    marginRight: theme.spacing(1),
 }));
 
 export const StyledInput = styled(Input)(({ theme }) => ({

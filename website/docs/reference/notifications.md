@@ -10,6 +10,7 @@ Notifications were introduced in Unleash 4.22.0 for pro and enteprise customers.
 
 Notifications give your project members hints about interesting events happening in their projects.
 To see your notifications, click on the ring bell icon in the top-right corner of the screen.
+You will only see the notifications from the other project members without the events triggered by yourself.
 
 ![Notifications](/img/notifications.png)
 

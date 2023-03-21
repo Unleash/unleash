@@ -7,6 +7,7 @@ import { ExportDialog } from 'component/feature/FeatureToggleList/ExportDialog';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ArchiveButton } from './ArchiveButton';
 import { MoreActions } from './MoreActions';
+import { ManageTags } from './ManageTags';
 
 interface IProjectFeaturesBatchActionsProps {
     selectedIds: string[];
@@ -43,14 +44,7 @@ export const ProjectFeaturesBatchActions: FC<
             >
                 Export
             </Button>
-            <Button
-                disabled
-                startIcon={<Label />}
-                variant="outlined"
-                size="small"
-            >
-                Tags
-            </Button>
+            <ManageTags projectId={projectId} data={selectedData} />
             <MoreActions projectId={projectId} data={selectedData} />
             <ConditionallyRender
                 condition={Boolean(uiConfig?.flags?.featuresExportImport)}

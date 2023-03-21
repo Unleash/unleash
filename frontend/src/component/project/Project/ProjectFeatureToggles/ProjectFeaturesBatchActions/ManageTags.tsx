@@ -7,13 +7,18 @@ import { ITag } from 'interfaces/tags';
 import useTagApi from 'hooks/api/actions/useTagApi/useTagApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import useProject from 'hooks/api/getters/useProject/useProject';
+import { PermissionHOC } from 'component/common/PermissionHOC/PermissionHOC';
+import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 
 interface IManageTagsProps {
     data: FeatureSchema[];
+    projectId: string;
 }
 
-export const ManageTags: VFC<IManageTagsProps> = ({ data }) => {
+export const ManageTags: VFC<IManageTagsProps> = ({ projectId, data }) => {
     const { bulkUpdateTags } = useTagApi();
+    const { refetch } = useProject(projectId);
     const { setToastData, setToastApiError } = useToast();
     const [isOpen, setIsOpen] = useState(false);
     const [initialValues, indeterminateValues] = useMemo(() => {
@@ -43,7 +48,7 @@ export const ManageTags: VFC<IManageTagsProps> = ({ data }) => {
         return [uniqueTags, tagsNotPresentInEveryFeature];
     }, [data]);
 
-    const onSubmit = ({
+    const onSubmit = async ({
         addedTags,
         removedTags,
     }: {
@@ -53,32 +58,46 @@ export const ManageTags: VFC<IManageTagsProps> = ({ data }) => {
         const features = data.map(({ name }) => name);
         const payload = { features, tags: { addedTags, removedTags } };
         try {
-            bulkUpdateTags(payload);
+            await bulkUpdateTags(payload);
+            refetch();
+            const added = addedTags.length
+                ? `Added tags: ${addedTags
+                      .map(({ type, value }) => `${type}:${value}`)
+                      .join(', ')}.`
+                : '';
+            const removed = removedTags.length
+                ? `Removed tags: ${removedTags
+                      .map(({ type, value }) => `${type}:${value}`)
+                      .join(', ')}.`
+                : '';
+
+            setToastData({
+                title: 'Tags updated',
+                text: `${features.length} feature toggles updated. ${added} ${removed}`,
+                type: 'success',
+                autoHideDuration: 12000,
+            });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }
-        //     handleClose();
-        //     await staleFeatures(projectId, selectedIds);
-        //     await refetch();
-        //     setToastData({
-        //         title: 'State updated',
-        //         text: 'Feature toggles marked as stale',
-        //         type: 'success',
-        //     });
         setIsOpen(false);
     };
 
     return (
-        // FIXME: permissions UPDATE_FEATURE
         <>
-            <Button
-                startIcon={<Label />}
-                variant="outlined"
-                size="small"
-                onClick={() => setIsOpen(true)}
-            >
-                Tags
-            </Button>
+            <PermissionHOC projectId={projectId} permission={UPDATE_FEATURE}>
+                {({ hasAccess }) => (
+                    <Button
+                        disabled={!hasAccess || isOpen}
+                        startIcon={<Label />}
+                        variant="outlined"
+                        size="small"
+                        onClick={() => setIsOpen(true)}
+                    >
+                        Tags
+                    </Button>
+                )}
+            </PermissionHOC>
             <ManageBulkTagsDialog
                 key={data.length}
                 open={isOpen}

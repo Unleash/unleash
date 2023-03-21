@@ -4,6 +4,7 @@
  * See `gen:api` script in package.json
  */
 import type { ProjectSchemaMode } from './projectSchemaMode';
+import type { ProjectSchemaDefaultStickiness } from './projectSchemaDefaultStickiness';
 
 /**
  * A definition of the project used for projects listing purposes
@@ -25,6 +26,8 @@ export interface ProjectSchema {
     updatedAt?: string | null;
     /** `true` if the project was favorited, otherwise `false`. */
     favorite?: boolean;
-    /** A mode of the project affecting what actions are possible in this project. During a rollout of project modes this feature can be optional or `null` */
+    /** A mode of the project affecting what actions are possible in this project */
     mode?: ProjectSchemaMode;
+    /** A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy */
+    defaultStickiness?: ProjectSchemaDefaultStickiness;
 }

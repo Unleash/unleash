@@ -11,4 +11,6 @@ export interface CreateFeatureStrategySchema {
     sortOrder?: number;
     constraints?: ConstraintSchema[];
     parameters?: ParametersSchema;
+    /** Ids of segments to use for this strategy */
+    segments?: number[];
 }

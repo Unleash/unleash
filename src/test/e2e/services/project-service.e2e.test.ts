@@ -236,6 +236,35 @@ test('should update project', async () => {
     expect(updatedProject.mode).toBe('protected');
 });
 
+test('should update project without existing settings', async () => {
+    const project = {
+        id: 'test-update-legacy',
+        name: 'New project',
+        description: 'Blah',
+        mode: 'open' as const,
+    };
+
+    const updatedProject = {
+        id: 'test-update-legacy',
+        name: 'New name',
+        description: 'Blah longer desc',
+        mode: 'protected' as const,
+    };
+
+    await projectService.createProject(project, user);
+    await db
+        .rawDatabase('project_settings')
+        .del()
+        .where({ project: project.id });
+    await projectService.updateProject(updatedProject, user);
+
+    const readProject = await projectService.getProject(project.id);
+
+    expect(updatedProject.name).toBe(readProject.name);
+    expect(updatedProject.description).toBe(readProject.description);
+    expect(updatedProject.mode).toBe('protected');
+});
+
 test('should give error when getting unknown project', async () => {
     try {
         await projectService.getProject('unknown');

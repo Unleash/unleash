@@ -24,7 +24,6 @@ const EditProject = () => {
     const { hasAccess } = useContext(AccessContext);
     const id = useRequiredPathParam('projectId');
     const { project } = useProject(id);
-    const { setDefaultProjectStickiness } = useProjectApi();
     const { defaultStickiness } = useDefaultProjectSettings(id);
     const navigate = useNavigate();
 
@@ -73,12 +72,6 @@ const EditProject = () => {
         if (validName) {
             try {
                 await editProject(id, payload);
-                if (uiConfig?.flags?.projectScopedStickiness) {
-                    await setDefaultProjectStickiness(
-                        projectId,
-                        payload.defaultStickiness
-                    );
-                }
                 refetch();
                 navigate(`/projects/${id}`);
                 setToastData({

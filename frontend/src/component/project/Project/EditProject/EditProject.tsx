@@ -17,7 +17,7 @@ import AccessContext from 'contexts/AccessContext';
 import { Alert } from '@mui/material';
 import { GO_BACK } from 'constants/navigate';
 import { useDefaultProjectSettings } from 'hooks/useDefaultProjectSettings';
-import { usePlausibleTracker } from '../../../../hooks/usePlausibleTracker';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const EDIT_PROJECT_BTN = 'EDIT_PROJECT_BTN';
 

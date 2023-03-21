@@ -73,10 +73,12 @@ const EditProject = () => {
         if (validName) {
             try {
                 await editProject(id, payload);
-                await setDefaultProjectStickiness(
-                    projectId,
-                    payload.defaultStickiness
-                );
+                if (uiConfig?.flags?.projectScopedStickiness) {
+                    await setDefaultProjectStickiness(
+                        projectId,
+                        payload.defaultStickiness
+                    );
+                }
                 refetch();
                 navigate(`/projects/${id}`);
                 setToastData({

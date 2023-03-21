@@ -1878,7 +1878,7 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "number",
           },
           "mode": {
-            "description": "A collaboration mode of the project affecting if non-project members can submit change requests",
+            "description": "The project's [collaboration mode](https://docs.getunleash.io/reference/project-collaboration-mode). Determines whether non-project members can submit change requests or not.",
             "enum": [
               "open",
               "protected",
@@ -1951,7 +1951,7 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "number",
           },
           "mode": {
-            "description": "A collaboration mode of the project affecting if non-project members can submit change requests",
+            "description": "The project's [collaboration mode](https://docs.getunleash.io/reference/project-collaboration-mode). Determines whether non-project members can submit change requests or not.",
             "enum": [
               "open",
               "protected",
@@ -2830,7 +2830,7 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "number",
           },
           "mode": {
-            "description": "A collaboration mode of the project affecting if non-project members can submit change requests",
+            "description": "The project's [collaboration mode](https://docs.getunleash.io/reference/project-collaboration-mode). Determines whether non-project members can submit change requests or not.",
             "enum": [
               "open",
               "protected",
@@ -2915,7 +2915,7 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "number",
           },
           "mode": {
-            "description": "A collaboration mode of the project affecting if non-project members can submit change requests",
+            "description": "The project's [collaboration mode](https://docs.getunleash.io/reference/project-collaboration-mode). Determines whether non-project members can submit change requests or not.",
             "enum": [
               "open",
               "protected",

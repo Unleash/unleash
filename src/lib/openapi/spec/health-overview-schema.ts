@@ -37,7 +37,7 @@ export const healthOverviewSchema = {
             enum: ['open', 'protected'],
             example: 'open',
             description:
-                'A collaboration mode of the project affecting if non-project members can submit change requests',
+                "The project's [collaboration mode](https://docs.getunleash.io/reference/project-collaboration-mode). Determines whether non-project members can submit change requests or not.",
         },
         members: {
             type: 'number',

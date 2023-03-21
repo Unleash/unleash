@@ -36,9 +36,8 @@ export const healthOverviewSchema = {
             type: 'string',
             enum: ['open', 'protected'],
             example: 'open',
-            nullable: true,
             description:
-                'A mode of the project affecting what actions are possible in this project. During a rollout of project modes this feature can be optional or `null`',
+                'A collaboration mode of the project affecting if non-project members can submit change requests',
         },
         members: {
             type: 'number',

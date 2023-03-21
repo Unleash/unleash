@@ -48,7 +48,7 @@ export const projectOverviewSchema = {
             enum: ['open', 'protected'],
             example: 'open',
             description:
-                'A mode of the project affecting what actions are possible in this project',
+                'A collaboration mode of the project affecting if non-project members can submit change requests',
         },
         members: {
             type: 'number',

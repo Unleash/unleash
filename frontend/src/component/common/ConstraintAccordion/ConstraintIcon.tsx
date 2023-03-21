@@ -22,7 +22,7 @@ export const ConstraintIcon: VFC<IConstraintIconProps> = ({ compact }) => (
                 fill: theme.palette.common.white,
                 display: 'block',
                 width: compact ? theme.spacing(2) : theme.spacing(2.5),
-                height: compact ? '16px' : '20px',
+                height: compact ? theme.spacing(2) : theme.spacing(2.5),
             })}
         />
     </Box>

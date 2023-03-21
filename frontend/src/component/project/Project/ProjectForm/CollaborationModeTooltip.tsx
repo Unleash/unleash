@@ -25,8 +25,8 @@ export const CollaborationModeTooltip: FC = () => (
                 <Box sx={{ mt: 2 }}>
                     <StyledTitle>protected: </StyledTitle>
                     <StyledDescription>
-                        only admins, editors and project members can submit
-                        change requests
+                        viewers who are not project members cannot submit change
+                        requests
                     </StyledDescription>
                 </Box>
             </>

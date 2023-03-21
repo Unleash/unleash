@@ -5,8 +5,8 @@ import type { FeatureSchema } from 'openapi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ExportDialog } from 'component/feature/FeatureToggleList/ExportDialog';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { ArchiveButton } from './ArchiveButton/ArchiveButton';
-import { MoreActions } from './MoreActions/MoreActions';
+import { ArchiveButton } from './ArchiveButton';
+import { MoreActions } from './MoreActions';
 
 interface IProjectFeaturesBatchActionsProps {
     selectedIds: string[];

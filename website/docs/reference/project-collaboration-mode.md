@@ -43,4 +43,3 @@ Projects that were created in earlier versions of Unleash (before the release of
 
 To change the project collaboration mode for an existing project you have to edit the project.
 
-![Edit project](/img/edit-project.png)

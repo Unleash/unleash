@@ -22,9 +22,7 @@ export const FeatureStrategyEnabled: FC<IFeatureStrategyEnabledProps> = ({
     const { feature } = useFeature(projectId, featureId);
 
     const featurePageLink = (
-        <Link to={featurePagePath} style={{ color: 'inherit' }}>
-            feature toggle page
-        </Link>
+        <Link to={featurePagePath}>feature toggle page</Link>
     );
 
     return (

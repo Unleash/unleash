@@ -1,12 +1,14 @@
 import { FC, useMemo, useState } from 'react';
 import { Button } from '@mui/material';
-import { FileDownload, Label } from '@mui/icons-material';
+import { FileDownload } from '@mui/icons-material';
 import type { FeatureSchema } from 'openapi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ExportDialog } from 'component/feature/FeatureToggleList/ExportDialog';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { ArchiveButton } from './ArchiveButton/ArchiveButton';
-import { MoreActions } from './MoreActions/MoreActions';
+import { ArchiveButton } from './ArchiveButton';
+import { MoreActions } from './MoreActions';
+import { ManageTags } from './ManageTags';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 interface IProjectFeaturesBatchActionsProps {
     selectedIds: string[];
@@ -19,6 +21,7 @@ export const ProjectFeaturesBatchActions: FC<
 > = ({ selectedIds, data, projectId }) => {
     const { uiConfig } = useUiConfig();
     const [showExportDialog, setShowExportDialog] = useState(false);
+    const { trackEvent } = usePlausibleTracker();
     const selectedData = useMemo(
         () => data.filter(d => selectedIds.includes(d.name)),
         [data, selectedIds]
@@ -32,6 +35,14 @@ export const ProjectFeaturesBatchActions: FC<
         return Array.from(new Set(envs));
     }, [selectedData]);
 
+    const trackExport = () => {
+        trackEvent('batch_operations', {
+            props: {
+                eventType: 'features exported',
+            },
+        });
+    };
+
     return (
         <>
             <ArchiveButton projectId={projectId} features={selectedIds} />
@@ -43,14 +54,7 @@ export const ProjectFeaturesBatchActions: FC<
             >
                 Export
             </Button>
-            <Button
-                disabled
-                startIcon={<Label />}
-                variant="outlined"
-                size="small"
-            >
-                Tags
-            </Button>
+            <ManageTags projectId={projectId} data={selectedData} />
             <MoreActions projectId={projectId} data={selectedData} />
             <ConditionallyRender
                 condition={Boolean(uiConfig?.flags?.featuresExportImport)}
@@ -60,6 +64,7 @@ export const ProjectFeaturesBatchActions: FC<
                         data={selectedData}
                         onClose={() => setShowExportDialog(false)}
                         environments={environments}
+                        onConfirm={trackExport}
                     />
                 }
             />

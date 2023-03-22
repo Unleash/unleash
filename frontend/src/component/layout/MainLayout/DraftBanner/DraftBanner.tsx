@@ -17,7 +17,6 @@ const DraftBannerContentWrapper = styled(Box)(({ theme }) => ({
     [theme.breakpoints.down('lg')]: {
         padding: theme.spacing(1, 2),
     },
-    color: theme.palette.warning.main,
 }));
 
 const StyledBox = styled(Box)(({ theme }) => ({
@@ -87,6 +86,7 @@ const StickyBanner = styled(Box)(({ theme }) => ({
     zIndex: 250 /* has to lower than header.zIndex and higher than body.zIndex */,
     borderTop: `1px solid ${theme.palette.warning.border}`,
     borderBottom: `1px solid ${theme.palette.warning.border}`,
+    color: theme.palette.warning.contrastText,
     backgroundColor: theme.palette.warning.light,
 }));
 

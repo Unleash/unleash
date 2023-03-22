@@ -14,8 +14,6 @@ Stats are divided into current and previous **windows**.
 export interface ProjectStatsSchema {
     /** The average time from when a feature was created to when it was enabled in the "production" environment during the current window */
     avgTimeToProdCurrentWindow: number;
-    /** The average time from when a feature was created to when it was enabled in the "production" environment during the previous window */
-    avgTimeToProdPastWindow: number;
     /** The number of feature toggles created during the current window */
     createdCurrentWindow: number;
     /** The number of feature toggles created during the previous window */

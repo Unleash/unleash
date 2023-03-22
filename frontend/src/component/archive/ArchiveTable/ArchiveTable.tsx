@@ -294,63 +294,67 @@ export const ArchiveTable = ({
     }, [loading, sortBy, searchValue]); // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
-        <PageContent
-            isLoading={loading}
-            header={
-                <PageHeader
-                    titleElement={`${title} (${
-                        rows.length < data.length
-                            ? `${rows.length} of ${data.length}`
-                            : data.length
-                    })`}
-                    actions={
-                        <Search
-                            initialValue={searchValue}
-                            onChange={setSearchValue}
-                            hasFilters
-                            getSearchContext={getSearchContext}
-                        />
-                    }
-                />
-            }
-        >
-            <SearchHighlightProvider value={getSearchText(searchValue)}>
-                <VirtualizedTable
-                    rows={rows}
-                    headerGroups={headerGroups}
-                    prepareRow={prepareRow}
-                />
-            </SearchHighlightProvider>
-            <ConditionallyRender
-                condition={rows.length === 0}
-                show={() => (
-                    <ConditionallyRender
-                        condition={searchValue?.length > 0}
-                        show={
-                            <TablePlaceholder>
-                                No feature toggles found matching &ldquo;
-                                {searchValue}&rdquo;
-                            </TablePlaceholder>
-                        }
-                        elseShow={
-                            <TablePlaceholder>
-                                None of the feature toggles were archived yet.
-                            </TablePlaceholder>
+        <>
+            <PageContent
+                isLoading={loading}
+                header={
+                    <PageHeader
+                        titleElement={`${title} (${
+                            rows.length < data.length
+                                ? `${rows.length} of ${data.length}`
+                                : data.length
+                        })`}
+                        actions={
+                            <Search
+                                initialValue={searchValue}
+                                onChange={setSearchValue}
+                                hasFilters
+                                getSearchContext={getSearchContext}
+                            />
                         }
                     />
-                )}
-            />
-            <ArchivedFeatureDeleteConfirm
-                deletedFeature={deletedFeature}
-                open={deleteModalOpen}
-                setOpen={setDeleteModalOpen}
-                refetch={refetch}
-            />
+                }
+            >
+                <SearchHighlightProvider value={getSearchText(searchValue)}>
+                    <VirtualizedTable
+                        rows={rows}
+                        headerGroups={headerGroups}
+                        prepareRow={prepareRow}
+                    />
+                </SearchHighlightProvider>
+                <ConditionallyRender
+                    condition={rows.length === 0}
+                    show={() => (
+                        <ConditionallyRender
+                            condition={searchValue?.length > 0}
+                            show={
+                                <TablePlaceholder>
+                                    No feature toggles found matching &ldquo;
+                                    {searchValue}&rdquo;
+                                </TablePlaceholder>
+                            }
+                            elseShow={
+                                <TablePlaceholder>
+                                    None of the feature toggles were archived
+                                    yet.
+                                </TablePlaceholder>
+                            }
+                        />
+                    )}
+                />
+                <ArchivedFeatureDeleteConfirm
+                    deletedFeatures={[deletedFeature?.name!]}
+                    projectId={projectId!}
+                    open={deleteModalOpen}
+                    setOpen={setDeleteModalOpen}
+                    refetch={refetch}
+                />
+            </PageContent>
             <ConditionallyRender
                 condition={Boolean(projectId)}
                 show={
                     <BatchSelectionActionsBar
-                        selectedIds={Object.keys(selectedRowIds)}
+                        count={Object.keys(selectedRowIds).length}
                     >
                         <ArchiveBatchActions
                             selectedIds={Object.keys(selectedRowIds)}
@@ -359,6 +363,6 @@ export const ArchiveTable = ({
                     </BatchSelectionActionsBar>
                 }
             />
-        </PageContent>
+        </>
     );
 };

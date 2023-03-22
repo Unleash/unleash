@@ -19,6 +19,7 @@ const StyledContainerBox = styled(Box, {
     shouldForwardProp: prop => prop !== 'readAt',
 })<{ readAt: boolean }>(({ theme, readAt }) => ({
     padding: theme.spacing(0.5),
+    marginRight: theme.spacing(1.5),
     backgroundColor: readAt
         ? theme.palette.neutral.light
         : theme.palette.secondary.light,
@@ -28,7 +29,6 @@ const StyledContainerBox = styled(Box, {
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: `${theme.shape.borderRadius}px`,
-    position: 'absolute',
     top: 3,
     left: 7,
 }));
@@ -36,15 +36,20 @@ const StyledContainerBox = styled(Box, {
 const StyledListItemButton = styled(ListItemButton)(({ theme }) => ({
     position: 'relative',
     cursor: 'pointer',
-    margin: theme.spacing(2, 0),
-    '&:not(:last-child)': {
-        borderBottom: `2px solid ${theme.palette.divider}`,
-    },
+    padding: theme.spacing(2.5, 2, 3, 2),
+    borderRadius: theme.shape.borderRadiusMedium,
     width: '100%',
+    '&:after': {
+        content: '""',
+        width: `calc(100% - ${theme.spacing(4)})`,
+        height: '1px',
+        position: 'absolute',
+        bottom: 0,
+        backgroundColor: theme.palette.divider,
+    },
 }));
 
 const StyledNotificationMessageBox = styled(Box)(({ theme }) => ({
-    marginLeft: theme.spacing(4),
     display: 'flex',
     flexDirection: 'column',
     width: '100%',
@@ -54,12 +59,14 @@ const StyledSecondaryInfoBox = styled(Box)(({ theme }) => ({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    margin: theme.spacing(1.5, 0, 1.5, 0),
+    margin: theme.spacing(1, 0, 0, 5.25),
 }));
 
 const StyledMessageTypography = styled(Typography, {
     shouldForwardProp: prop => prop !== 'readAt',
 })<{ readAt: boolean }>(({ theme, readAt }) => ({
+    display: 'flex',
+    alignItems: 'center',
     fontSize: theme.fontSizes.smallBody,
     fontWeight: readAt ? 'normal' : 'bold',
     textDecoration: 'none',
@@ -81,7 +88,7 @@ const StyledAvatar = styled(Avatar)(({ theme }) => ({
 }));
 
 const StyledCreatedBy = styled(Typography)(({ theme }) => ({
-    fontSize: theme.fontSizes.smallerBody,
+    fontSize: theme.fontSizes.smallBody,
     color: theme.palette.neutral.main,
     marginLeft: theme.spacing(1),
 }));
@@ -133,9 +140,9 @@ export const Notification = ({
 
     return (
         <StyledListItemButton onClick={() => onNotificationClick(notification)}>
-            {resolveIcon(notification.notificationType)}{' '}
             <StyledNotificationMessageBox>
                 <StyledMessageTypography readAt={Boolean(readAt)}>
+                    {resolveIcon(notification.notificationType)}{' '}
                     {notification.message}
                 </StyledMessageTypography>
                 <StyledSecondaryInfoBox>

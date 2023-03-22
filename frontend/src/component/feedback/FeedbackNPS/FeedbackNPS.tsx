@@ -78,10 +78,10 @@ export const FeedbackNPS = ({ openUrl }: IFeedbackNPSProps) => {
         >
             <Box
                 sx={{
-                    borderRadius: '12.5px',
+                    borderRadius: `${theme.shape.borderRadiusLarge}px`,
                     backgroundColor: theme.palette.background.paper,
                     zIndex: 9999,
-                    boxShadow: '2px 2px 4px 4px rgba(143,143,143, 0.25)',
+                    boxShadow: theme.boxShadows.elevated,
                     padding: theme.spacing(3),
                     maxWidth: '400px',
                 }}
@@ -101,10 +101,10 @@ export const FeedbackNPS = ({ openUrl }: IFeedbackNPSProps) => {
                                 right: '-38px',
                                 top: '-47px',
                                 backgroundColor: theme.palette.background.paper,
-                                boxShadow:
-                                    '2px 2px 4px 4px rgba(143,143,143, 0.25)',
+                                boxShadow: theme.boxShadows.elevated,
                                 '&:hover': {
-                                    backgroundColor: '#fff',
+                                    backgroundColor:
+                                        theme.palette.background.paper,
                                 },
                             }}
                             onClick={() => setShowFeedback(false)}

@@ -13,18 +13,21 @@ interface IStandaloneBannerProps {
 const StyledGradient = styled(Gradient)(({ theme }) => ({
     display: 'flex',
     justifyContent: 'center',
-    [theme.breakpoints.up('sm')]: {
-        borderBottomLeftRadius: '3px',
-        borderTopLeftRadius: '3px',
+    borderTopLeftRadius: theme.shape.borderRadiusLarge,
+    [theme.breakpoints.down('md')]: {
+        borderTopLeftRadius: theme.shape.borderRadiusLarge,
+        borderTopRightRadius: theme.shape.borderRadiusLarge,
+    },
+    [theme.breakpoints.down('sm')]: {
+        borderTopLeftRadius: '0',
+        borderTopRightRadius: '0',
     },
 }));
 
 const StyledContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(12, 8),
-    color: '#fff',
+    color: theme.palette.common.white,
     position: 'relative',
-    borderTopLeftRadius: '3px',
-    borderBottomLeftRadius: '3px',
     textAlign: 'right',
     [theme.breakpoints.down('md')]: {
         padding: theme.spacing(6, 4),
@@ -35,7 +38,7 @@ const StyledContainer = styled('div')(({ theme }) => ({
 }));
 
 const StyledTitle = styled(Typography)(({ theme }) => ({
-    color: '#fff',
+    color: theme.palette.common.white,
     marginBottom: theme.spacing(2),
     fontSize: theme.spacing(4),
     marginTop: theme.spacing(10),
@@ -48,9 +51,6 @@ const StyledSubtitle = styled(Typography)(({ theme }) => ({
     [theme.breakpoints.down('md')]: {
         display: 'none',
     },
-    [theme.breakpoints.down('sm')]: {
-        display: 'none',
-    },
     fontSize: theme.spacing(4),
     fontWeight: 'normal',
 }));
@@ -61,6 +61,9 @@ const StyledLogoContainer = styled('div')(({ theme }) => ({
         left: '-50px',
         display: 'flex',
         flexDirection: 'column',
+    },
+    [theme.breakpoints.down('md')]: {
+        top: '9px',
     },
 }));
 

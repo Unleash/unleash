@@ -16,7 +16,7 @@ const StyledContainer = styled('span')(({ theme }) => ({
     },
     '& svg': {
         fontSize: theme.fontSizes.mainHeader,
-        color: theme.palette.neutral.main,
+        color: theme.palette.action.active,
         marginLeft: theme.spacing(0.5),
     },
 }));

@@ -13,6 +13,7 @@ import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { DraftBanner } from './DraftBanner/DraftBanner';
+import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 
 interface IMainLayoutProps {
     children: ReactNode;
@@ -21,12 +22,15 @@ interface IMainLayoutProps {
 const MainLayoutContainer = styled(Grid)(() => ({
     height: '100%',
     justifyContent: 'space-between',
+    display: 'flex',
+    flexDirection: 'column',
+    flexGrow: 1,
+    position: 'relative',
 }));
 
 const MainLayoutContentWrapper = styled('main')(({ theme }) => ({
     margin: theme.spacing(0, 'auto'),
-    overflow: 'auto', // prevent margin collapsing
-    flex: 1,
+    flexGrow: 1,
     width: '100%',
     backgroundColor: theme.palette.background.application,
     position: 'relative',
@@ -97,7 +101,21 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                                 {children}
                             </MainLayoutContentContainer>
                         </MainLayoutContent>
-                        <StyledImg src={formatAssetPath(textureImage)} alt="" />
+                        <ThemeMode
+                            darkmode={
+                                <StyledImg
+                                    style={{ opacity: 0.06 }}
+                                    src={formatAssetPath(textureImage)}
+                                    alt=""
+                                />
+                            }
+                            lightmode={
+                                <StyledImg
+                                    src={formatAssetPath(textureImage)}
+                                    alt=""
+                                />
+                            }
+                        />
                     </MainLayoutContentWrapper>
                     <Footer />
                 </MainLayoutContainer>

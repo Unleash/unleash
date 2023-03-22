@@ -1,4 +1,3 @@
-import { NotificationsSchemaItem } from 'openapi';
 import useAPI from '../useApi/useApi';
 
 export const useNotificationsApi = () => {

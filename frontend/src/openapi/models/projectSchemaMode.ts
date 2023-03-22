@@ -5,7 +5,7 @@
  */
 
 /**
- * A mode of the project affecting what actions are possible in this project. During a rollout of project modes this feature can be optional or `null`
+ * A mode of the project affecting what actions are possible in this project
  */
 export type ProjectSchemaMode =
     typeof ProjectSchemaMode[keyof typeof ProjectSchemaMode];
@@ -14,5 +14,4 @@ export type ProjectSchemaMode =
 export const ProjectSchemaMode = {
     open: 'open',
     protected: 'protected',
-    null: null,
 } as const;

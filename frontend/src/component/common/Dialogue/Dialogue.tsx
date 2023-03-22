@@ -20,7 +20,7 @@ const StyledDialog = styled(Dialog)(({ theme, maxWidth }) => ({
 }));
 
 const StyledDialogTitle = styled(DialogTitle)(({ theme }) => ({
-    backgroundColor: theme.palette.primary.main,
+    backgroundColor: theme.palette.background.alternative,
     color: theme.palette.primary.contrastText,
     padding: theme.spacing(3.5, 6),
     fontWeight: theme.fontWeight.medium,

@@ -223,6 +223,16 @@ const useProjectApi = () => {
         return makeRequest(req.caller, req.id);
     };
 
+    const deleteFeatures = async (projectId: string, featureIds: string[]) => {
+        const path = `api/admin/projects/${projectId}/delete`;
+        const req = createRequest(path, {
+            method: 'POST',
+            body: JSON.stringify({ features: featureIds }),
+        });
+
+        return makeRequest(req.caller, req.id);
+    };
+
     const staleFeatures = async (
         projectId: string,
         featureIds: string[],
@@ -257,6 +267,7 @@ const useProjectApi = () => {
         archiveFeatures,
         reviveFeatures,
         staleFeatures,
+        deleteFeatures,
         searchProjectUser,
         errors,
         loading,

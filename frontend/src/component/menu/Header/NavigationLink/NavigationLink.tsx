@@ -23,7 +23,7 @@ const StyledLink = styled(RouterLink)(({ theme }) => ({
     width: '100%',
     '&&': {
         // Override MenuItem's built-in padding.
-        color: 'black',
+        color: theme.palette.text.primary,
         padding: theme.spacing(1, 2),
     },
 }));

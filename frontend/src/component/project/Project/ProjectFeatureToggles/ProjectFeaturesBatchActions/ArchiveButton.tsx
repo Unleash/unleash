@@ -5,6 +5,7 @@ import { PermissionHOC } from 'component/common/PermissionHOC/PermissionHOC';
 import { DELETE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import useProject from 'hooks/api/getters/useProject/useProject';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 interface IArchiveButtonProps {
     projectId: string;
@@ -17,11 +18,16 @@ export const ArchiveButton: VFC<IArchiveButtonProps> = ({
 }) => {
     const { refetch } = useProject(projectId);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const { trackEvent } = usePlausibleTracker();
 
     const onConfirm = async () => {
         setIsDialogOpen(false);
         await refetch();
-        // TODO: toast
+        trackEvent('batch_operations', {
+            props: {
+                eventType: 'features archived',
+            },
+        });
     };
 
     return (

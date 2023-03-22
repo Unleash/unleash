@@ -13,6 +13,8 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 import { GO_BACK } from 'constants/navigate';
+import { useStrategiesBySegment } from 'hooks/api/getters/useStrategiesBySegment/useStrategiesBySegment';
+import { SegmentProjectAlert } from './SegmentProjectAlert';
 
 interface ISegmentFormPartOneProps {
     name: string;
@@ -67,10 +69,24 @@ export const SegmentFormStepOne: React.FC<ISegmentFormPartOneProps> = ({
     clearErrors,
     setCurrentStep,
 }) => {
+    const segmentId = useOptionalPathParam('segmentId');
     const projectId = useOptionalPathParam('projectId');
     const { uiConfig } = useUiConfig();
     const navigate = useNavigate();
-    const { projects } = useProjects();
+    const { projects, loading: loadingProjects } = useProjects();
+
+    const { strategies, loading: loadingStrategies } =
+        useStrategiesBySegment(segmentId);
+
+    const projectsUsed = new Set<string>(
+        strategies.map(({ projectId }) => projectId!).filter(Boolean)
+    );
+
+    const availableProjects = projects.filter(
+        ({ id }) =>
+            !projectsUsed.size ||
+            (projectsUsed.size === 1 && projectsUsed.has(id))
+    );
 
     const [selectedProject, setSelectedProject] = React.useState(
         projects.find(({ id }) => id === project) ?? null
@@ -79,6 +95,8 @@ export const SegmentFormStepOne: React.FC<ISegmentFormPartOneProps> = ({
     useEffect(() => {
         setSelectedProject(projects.find(({ id }) => id === project) ?? null);
     }, [project, projects]);
+
+    const loading = loadingProjects && loadingStrategies;
 
     return (
         <StyledForm>
@@ -110,7 +128,8 @@ export const SegmentFormStepOne: React.FC<ISegmentFormPartOneProps> = ({
                 <ConditionallyRender
                     condition={
                         Boolean(uiConfig.flags.projectScopedSegments) &&
-                        !projectId
+                        !projectId &&
+                        !loading
                     }
                     show={
                         <>
@@ -123,11 +142,18 @@ export const SegmentFormStepOne: React.FC<ISegmentFormPartOneProps> = ({
                                 onChange={(_, newValue) => {
                                     setProject(newValue?.id);
                                 }}
-                                options={projects}
+                                options={availableProjects}
                                 getOptionLabel={option => option.name}
                                 renderInput={params => (
                                     <TextField {...params} label="Project" />
                                 )}
+                                disabled={projectsUsed.size > 1}
+                            />
+                            <SegmentProjectAlert
+                                projects={projects}
+                                strategies={strategies}
+                                projectsUsed={Array.from(projectsUsed)}
+                                availableProjects={availableProjects}
                             />
                         </>
                     }

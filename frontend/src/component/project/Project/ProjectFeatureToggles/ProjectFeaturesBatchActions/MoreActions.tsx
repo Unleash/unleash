@@ -18,7 +18,7 @@ import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import useProject from 'hooks/api/getters/useProject/useProject';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { usePlausibleTracker } from '../../../../../hooks/usePlausibleTracker';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 interface IMoreActionsProps {
     projectId: string;

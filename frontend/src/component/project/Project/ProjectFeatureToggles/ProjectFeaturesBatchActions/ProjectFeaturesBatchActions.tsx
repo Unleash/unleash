@@ -8,7 +8,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { ArchiveButton } from './ArchiveButton';
 import { MoreActions } from './MoreActions';
 import { ManageTags } from './ManageTags';
-import { usePlausibleTracker } from '../../../../../hooks/usePlausibleTracker';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 interface IProjectFeaturesBatchActionsProps {
     selectedIds: string[];

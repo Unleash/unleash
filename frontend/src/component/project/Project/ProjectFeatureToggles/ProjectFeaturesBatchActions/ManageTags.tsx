@@ -10,7 +10,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import useProject from 'hooks/api/getters/useProject/useProject';
 import { PermissionHOC } from 'component/common/PermissionHOC/PermissionHOC';
 import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
-import { usePlausibleTracker } from '../../../../../hooks/usePlausibleTracker';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 interface IManageTagsProps {
     data: FeatureSchema[];

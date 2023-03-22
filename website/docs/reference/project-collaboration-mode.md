@@ -26,7 +26,7 @@ Only admins and project members can submit change requests in a **protected** pr
 
 When you change a project's collaboration mode from open to protected, users who do not have the right permissions will lose the ability to create new change requests.
 
-However, existing change requests created by these users will not be deleted. Any users with open change requests will still be able to cancel the change request.
+However, existing change requests created by these users will not be deleted. Any users with open change requests will still be able to cancel the change request, but they will **not** be able to update the change request.
 
 ## Project collaboration mode setting
 

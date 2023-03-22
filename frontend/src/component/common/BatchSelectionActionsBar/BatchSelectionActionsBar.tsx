@@ -36,7 +36,7 @@ const StyledBar = styled(Paper)(({ theme }) => ({
 
 const StyledCount = styled('span')(({ theme }) => ({
     background: theme.palette.secondary.main,
-    color: theme.palette.background.paper,
+    color: theme.palette.common.white,
     padding: theme.spacing(0.5, 1),
     borderRadius: theme.shape.borderRadius,
 }));

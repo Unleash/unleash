@@ -39,7 +39,7 @@ Import is a 3 stage process designed to be efficient and error-resistant.
 * **upload** - you can upload exported file or copy-paste export data into the code editor
 * **validation** - you will get feedback on any errors or warnings before you do the actual import. This makes sure your feature flags configurations
 are compatible with your target environment.
-* **import** - the actual import that creates a new configuration in the target environment or creates a [change request](change-requests.md) when the environment has change requests enabled
+* **import** - the actual import that creates a new configuration in the target environment or creates a [change request](../change-requests.md) when the environment has change requests enabled
 
 ![Three-staged import process](/img/import.png)
 

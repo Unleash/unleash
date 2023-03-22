@@ -10,7 +10,7 @@ const StyledTab = styled(Button)<{ selected: boolean }>(
                 ? theme.palette.background.paper
                 : 'transparent',
             borderLeft: `${theme.spacing(1)} solid ${
-                selected ? theme.palette.primary.main : 'transparent'
+                selected ? theme.palette.background.alternative : 'transparent'
             }`,
             borderRadius: theme.shape.borderRadiusMedium,
             justifyContent: 'start',

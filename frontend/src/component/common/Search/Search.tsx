@@ -35,20 +35,21 @@ const StyledContainer = styled('div')(({ theme }) => ({
 const StyledSearch = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
-    backgroundColor: theme.palette.background.paper,
+    backgroundColor: theme.palette.background.elevation1,
     border: `1px solid ${theme.palette.neutral.border}`,
     borderRadius: theme.shape.borderRadiusExtraLarge,
     padding: '3px 5px 3px 12px',
     width: '100%',
     zIndex: 3,
     '&:focus-within': {
-        borderColor: theme.palette.primary.light,
+        borderColor: theme.palette.primary.main,
         boxShadow: theme.boxShadows.main,
     },
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
     width: '100%',
+    backgroundColor: theme.palette.background.elevation1,
 }));
 
 const StyledClose = styled(Close)(({ theme }) => ({

@@ -33,15 +33,20 @@ const StyledHeader = styled('header')(({ theme }) => ({
 const StyledMain = styled('main')(({ theme }) => ({
     width: '60%',
     flex: '1',
-    borderTopRightRadius: '3px',
-    borderBottomRightRadius: '3px',
+    borderTopRightRadius: theme.shape.borderRadiusLarge,
+    borderBottomRightRadius: theme.shape.borderRadiusLarge,
     backgroundColor: theme.palette.background.paper,
     position: 'relative',
     [theme.breakpoints.down('md')]: {
-        borderRadius: '0',
+        borderTopRightRadius: '0',
+        borderBottomLeftRadius: theme.shape.borderRadiusLarge,
+        borderBottomRightRadius: theme.shape.borderRadiusLarge,
         width: '100%',
         position: 'static',
         minHeight: 'auto',
+    },
+    [theme.breakpoints.down('sm')]: {
+        borderRadius: '0',
     },
 }));
 

@@ -1,4 +1,4 @@
-import { Alert, Button, Divider, styled } from '@mui/material';
+import { Alert, Button, Divider, Link, styled } from '@mui/material';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -406,13 +406,13 @@ export const EnvironmentVariantsModal = ({
                                     By overriding the stickiness you can control
                                     which parameter is used to ensure consistent
                                     traffic allocation across variants.{' '}
-                                    <a
+                                    <Link
                                         href="https://docs.getunleash.io/reference/feature-toggle-variants"
                                         target="_blank"
                                         rel="noreferrer"
                                     >
                                         Read more
-                                    </a>
+                                    </Link>
                                 </StyledDescription>
                                 <div>
                                     <StyledStickinessSelect

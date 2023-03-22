@@ -5,6 +5,7 @@ import { List, ListItem, ListItemText, Grid, styled } from '@mui/material';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ApiDetails } from './ApiDetails/ApiDetails';
 import { FooterTitle } from './FooterTitle';
+import { focusable } from 'themes/themeStyles';
 
 const StyledFooter = styled('footer')(({ theme }) => ({
     padding: theme.spacing(4, 8),
@@ -23,8 +24,12 @@ const StyledListItem = styled(ListItem)(({ theme }) => ({
     padding: 0,
     margin: 0,
     '& a': {
+        ...focusable(theme),
         textDecoration: 'none',
         color: theme.palette.text.primary,
+        '&:hover': {
+            textDecoration: 'underline',
+        },
     },
 }));
 

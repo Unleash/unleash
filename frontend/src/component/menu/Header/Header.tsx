@@ -87,6 +87,7 @@ const StyledLinks = styled('div')(({ theme }) => ({
 }));
 
 const StyledAdvancedNavButton = styled('button')(({ theme }) => ({
+    ...focusable(theme),
     border: 'none',
     background: 'transparent',
     height: '100%',

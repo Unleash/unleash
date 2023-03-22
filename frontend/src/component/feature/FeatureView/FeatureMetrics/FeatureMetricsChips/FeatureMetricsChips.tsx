@@ -28,7 +28,7 @@ const StyledList = styled('ul')(({ theme }) => ({
 
 const StyledItem = styled('li')(({ theme }) => ({
     '& > [aria-pressed=true]': {
-        backgroundColor: theme.palette.primary.main,
+        backgroundColor: theme.palette.background.alternative,
         color: theme.palette.primary.contrastText,
     },
     '& > [aria-pressed=true]:hover': {

@@ -26,7 +26,7 @@ const StyledHeader = styled('div')(({ theme }) => ({
     alignItems: 'center',
     padding: theme.spacing(6),
     borderRadius: theme.shape.borderRadiusLarge,
-    backgroundColor: theme.palette.primary.main,
+    backgroundColor: theme.palette.background.alternative,
     color: theme.palette.primary.contrastText,
     marginBottom: theme.spacing(3),
     boxShadow: theme.boxShadows.primaryHeader,

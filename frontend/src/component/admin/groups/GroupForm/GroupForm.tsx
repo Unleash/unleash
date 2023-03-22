@@ -57,6 +57,10 @@ const StyledDescriptionBlock = styled('div')(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
     borderRadius: theme.shape.borderRadiusMedium,
     marginBottom: theme.spacing(2),
+
+    a: {
+        color: theme.palette.links,
+    },
 }));
 
 interface IGroupForm {

@@ -5,7 +5,7 @@ const StyledIndicator = styled('div')(({ style, theme }) => ({
     width: '25px',
     height: '25px',
     borderRadius: '50%',
-    color: theme.palette.primary.contrastText,
+    color: theme.palette.common.white,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -27,9 +27,13 @@ export const GuidanceIndicator: FC<IGuidanceIndicatorProps> = ({
 }) => {
     const theme = useTheme();
 
-    const defaults = { backgroundColor: theme.palette.primary.main };
+    const defaults = {
+        backgroundColor: theme.palette.background.alternative,
+        color: theme.palette.common.white,
+    };
     if (type === 'secondary') {
-        defaults.backgroundColor = theme.palette.text.disabled;
+        defaults.backgroundColor = theme.palette.background.paper;
+        defaults.color = theme.palette.text.secondary;
     }
 
     return (

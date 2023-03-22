@@ -12,7 +12,9 @@ export const useStyles = makeStyles()(theme => ({
         backgroundColor: theme.palette.divider,
         margin: theme.spacing(4, -4, 3),
     },
-    inputLabel: { backgroundColor: '#fff' },
+    inputLabel: {
+        backgroundColor: theme.palette.background.paper,
+    },
     roleName: {
         fontWeight: 'bold',
         padding: '5px 0px',

@@ -94,7 +94,10 @@ export const NetworkOverview = () => {
             ${apps
                 .map(
                     ({ label, reqs, type }, i) =>
-                        `app-${i}(${label}) -- ${reqs} req/s<br>${type} --> Unleash`
+                        `app-${i}("${label.replaceAll(
+                            '"',
+                            '&quot;'
+                        )}") -- ${reqs} req/s<br>${type} --> Unleash`
                 )
                 .join('\n')}
         end

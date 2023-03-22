@@ -21,12 +21,15 @@ interface IMainLayoutProps {
 const MainLayoutContainer = styled(Grid)(() => ({
     height: '100%',
     justifyContent: 'space-between',
+    display: 'flex',
+    flexDirection: 'column',
+    flexGrow: 1,
+    position: 'relative',
 }));
 
 const MainLayoutContentWrapper = styled('main')(({ theme }) => ({
     margin: theme.spacing(0, 'auto'),
-    overflow: 'auto', // prevent margin collapsing
-    flex: 1,
+    flexGrow: 1,
     width: '100%',
     backgroundColor: theme.palette.background.application,
     position: 'relative',

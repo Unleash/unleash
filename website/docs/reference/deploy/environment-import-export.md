@@ -1,0 +1,82 @@
+---
+title: Environment Import & Export
+---
+
+:::info Availability
+
+The environment import and export first appeared in Unleash 4.22.0.
+
+:::
+
+The environment export/import functionality in Unleash simplifies the process of moving feature flags between multiple instances. 
+It also makes it easier to move feature flags within a single instance between environments.
+When exporting you always select the toggles and environment to export from. When importing you always select a project and an environment to import to.
+
+## Import & Export items
+
+The following items will be exported and imported:
+* feature toggles
+* activation strategies
+* variants
+* enabled/disabled statuses
+* context fields
+* feature tags
+* feature tag types
+* segments
+
+## Export
+
+Export is search-driven based on the results you see in the project toggle search or a global toggle search.
+
+![Search-driven export screen with WYSIWYG mode](/img/export.png)
+
+## Import
+
+Import is a 3 stage process designed to be efficient and error-resistant.
+
+### Import stages
+
+* **upload** - you can upload exported file or copy-paste export data into the code editor
+* **validation** - you will get feedback on any errors or warnings before you do the actual import. This makes sure your feature flags configurations
+are compatible with your target environment.
+* **import** - the actual import that creates a new configuration in the target environment or creates a [change request](change-requests.md) when the environment has change requests enabled
+
+![Three-staged import process](/img/import.png)
+
+### Import rejection
+
+Import can be rejected when:
+* the exported and imported context fields have conflicting context fields values. If the context fields don't exist in the target environment they will be created.
+* the target Unleash instance doesn't have a matching segment. The actual constraints in the segment can be different. The matching is done by the segment name.
+* the exported strategies include custom strategies that don't exist in the target Unleash instance. The matching is done by the strategy name.
+* the exported feature already exists in another project in the target environment that is not a project that you import the toggle to.
+* the target project and environment have a pending change request (applies to enterprise customers with change requests enabled for a given project and environment).
+
+### Import warnings
+
+Import validation will warn you when:
+* the features you are trying to import are already archived in the target instance. Those features won't be imported again.
+* the strategies you are trying to import are custom and may have different configuration parameters. Those strategies will be imported anyway.
+
+### Required permissions
+
+Import requires those permissions:
+* Update feature toggles (always)
+* Create feature toggles when import will be creating new features
+* Update tag types when import will be introducing new tag types
+* Create context fields when import will be creating new context fields
+* Create activation strategies when import will be creating new activation strategies and change requests are disabled
+* Delete activation strategies when import will be deleting existing activation strategies and change requests are disabled
+* Update variants when import will be updating variants and change requests are disabled
+
+### Import and change requests
+
+When the target project and environment have change requests enabled the import will not be applied instantly. Instead, it will 
+create a change request, send it to review and await for the approval.
+
+## Environment Import & Export vs Old Import & Export
+
+The new Environment Import & Export differs from the old [Import & Export](import-export.md).
+The most important difference is a strong focus on a single project and environment in the target environment.
+Also, the new Import & Export has a UI and extra safety mechanisms preventing corrupted data imports.
+

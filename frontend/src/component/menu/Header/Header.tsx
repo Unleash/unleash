@@ -31,7 +31,11 @@ import {
     adminMenuRoutes,
     getCondensedRoutes,
 } from 'component/menu/routes';
-import { KeyboardArrowDown } from '@mui/icons-material';
+import {
+    DarkModeOutlined,
+    KeyboardArrowDown,
+    LightModeOutlined,
+} from '@mui/icons-material';
 import { filterByConfig } from 'component/common/util';
 import { useAuthPermissions } from 'hooks/api/getters/useAuth/useAuthPermissions';
 import { useId } from 'hooks/useId';
@@ -238,15 +242,25 @@ const Header: VFC = () => {
                                 uiConfig.flags.ENABLE_DARK_MODE_SUPPORT
                             )}
                             show={
-                                <FormControlLabel
-                                    control={
-                                        <Switch
-                                            onChange={onSetThemeMode}
-                                            checked={themeMode === 'dark'}
-                                        />
+                                <Tooltip
+                                    title={
+                                        themeMode === 'dark'
+                                            ? 'Switch to light theme'
+                                            : 'Switch to dark theme'
                                     }
-                                    label="darkmode"
-                                />
+                                    arrow
+                                >
+                                    <IconButton
+                                        onClick={onSetThemeMode}
+                                        sx={focusable}
+                                    >
+                                        {themeMode === 'dark' ? (
+                                            <DarkModeOutlined />
+                                        ) : (
+                                            <LightModeOutlined />
+                                        )}
+                                    </IconButton>
+                                </Tooltip>
                             }
                         />
                         <ConditionallyRender

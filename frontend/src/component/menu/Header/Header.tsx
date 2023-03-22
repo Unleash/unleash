@@ -5,10 +5,8 @@ import { Link } from 'react-router-dom';
 import {
     AppBar,
     Container,
-    FormControlLabel,
     IconButton,
     Tooltip,
-    Switch,
     styled,
     Theme,
 } from '@mui/material';

@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
 import { Button } from '@mui/material';
-import { Undo } from '@mui/icons-material';
+import { Delete, Undo } from '@mui/icons-material';
 import {
     DELETE_FEATURE,
     UPDATE_FEATURE,
@@ -62,7 +62,7 @@ export const ArchiveBatchActions: FC<IArchiveBatchActionsProps> = ({
                 {({ hasAccess }) => (
                     <Button
                         disabled={!hasAccess}
-                        startIcon={<Undo />}
+                        startIcon={<Delete />}
                         variant="outlined"
                         size="small"
                         onClick={onDelete}

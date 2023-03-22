@@ -12,6 +12,7 @@ interface IExportDialogProps {
     showExportDialog: boolean;
     data: Pick<FeatureSchema, 'name'>[];
     onClose: () => void;
+    onConfirm: () => void;
     environments: string[];
 }
 
@@ -24,6 +25,7 @@ export const ExportDialog = ({
     showExportDialog,
     data,
     onClose,
+    onConfirm,
     environments,
 }: IExportDialogProps) => {
     const [selected, setSelected] = useState(environments[0]);
@@ -66,6 +68,7 @@ export const ExportDialog = ({
             const body = await res.json();
             downloadFile(body);
             onClose();
+            onConfirm();
         } catch (e: unknown) {
             setToastApiError(formatUnknownError(e));
         }

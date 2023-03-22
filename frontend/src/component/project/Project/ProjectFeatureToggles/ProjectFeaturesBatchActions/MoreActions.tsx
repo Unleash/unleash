@@ -18,6 +18,7 @@ import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import useProject from 'hooks/api/getters/useProject/useProject';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { usePlausibleTracker } from '../../../../../hooks/usePlausibleTracker';
 
 interface IMoreActionsProps {
     projectId: string;
@@ -31,6 +32,7 @@ export const MoreActions: VFC<IMoreActionsProps> = ({ projectId, data }) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const { staleFeatures } = useProjectApi();
     const { setToastData, setToastApiError } = useToast();
+    const { trackEvent } = usePlausibleTracker();
 
     const open = Boolean(anchorEl);
     const selectedIds = data.map(({ name }) => name);
@@ -55,6 +57,11 @@ export const MoreActions: VFC<IMoreActionsProps> = ({ projectId, data }) => {
                 text: 'Feature toggles marked as stale',
                 type: 'success',
             });
+            trackEvent('batch_operations', {
+                props: {
+                    eventType: 'features staled',
+                },
+            });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }
@@ -69,6 +76,11 @@ export const MoreActions: VFC<IMoreActionsProps> = ({ projectId, data }) => {
                 title: 'State updated',
                 text: 'Feature toggles unmarked as stale',
                 type: 'success',
+            });
+            trackEvent('batch_operations', {
+                props: {
+                    eventType: 'features unstaled',
+                },
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));

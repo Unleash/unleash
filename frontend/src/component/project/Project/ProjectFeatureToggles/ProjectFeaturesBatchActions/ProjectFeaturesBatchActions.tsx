@@ -8,6 +8,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { ArchiveButton } from './ArchiveButton';
 import { MoreActions } from './MoreActions';
 import { ManageTags } from './ManageTags';
+import { usePlausibleTracker } from '../../../../../hooks/usePlausibleTracker';
 
 interface IProjectFeaturesBatchActionsProps {
     selectedIds: string[];
@@ -20,6 +21,7 @@ export const ProjectFeaturesBatchActions: FC<
 > = ({ selectedIds, data, projectId }) => {
     const { uiConfig } = useUiConfig();
     const [showExportDialog, setShowExportDialog] = useState(false);
+    const { trackEvent } = usePlausibleTracker();
     const selectedData = useMemo(
         () => data.filter(d => selectedIds.includes(d.name)),
         [data, selectedIds]
@@ -32,6 +34,14 @@ export const ProjectFeaturesBatchActions: FC<
             .filter(env => env !== undefined) as string[];
         return Array.from(new Set(envs));
     }, [selectedData]);
+
+    const trackExport = () => {
+        trackEvent('batch_operations', {
+            props: {
+                eventType: 'features exported',
+            },
+        });
+    };
 
     return (
         <>
@@ -54,6 +64,7 @@ export const ProjectFeaturesBatchActions: FC<
                         data={selectedData}
                         onClose={() => setShowExportDialog(false)}
                         environments={environments}
+                        onConfirm={trackExport}
                     />
                 }
             />

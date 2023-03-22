@@ -10,6 +10,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import useProject from 'hooks/api/getters/useProject/useProject';
 import { PermissionHOC } from 'component/common/PermissionHOC/PermissionHOC';
 import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
+import { usePlausibleTracker } from '../../../../../hooks/usePlausibleTracker';
 
 interface IManageTagsProps {
     data: FeatureSchema[];
@@ -20,6 +21,7 @@ export const ManageTags: VFC<IManageTagsProps> = ({ projectId, data }) => {
     const { bulkUpdateTags } = useTagApi();
     const { refetch } = useProject(projectId);
     const { setToastData, setToastApiError } = useToast();
+    const { trackEvent } = usePlausibleTracker();
     const [isOpen, setIsOpen] = useState(false);
     const [initialValues, indeterminateValues] = useMemo(() => {
         const uniqueTags = data
@@ -76,6 +78,11 @@ export const ManageTags: VFC<IManageTagsProps> = ({ projectId, data }) => {
                 text: `${features.length} feature toggles updated. ${added} ${removed}`,
                 type: 'success',
                 autoHideDuration: 12000,
+            });
+            trackEvent('batch_operations', {
+                props: {
+                    eventType: 'tags updated',
+                },
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));

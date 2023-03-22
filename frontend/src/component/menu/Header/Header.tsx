@@ -254,11 +254,11 @@ const Header: VFC = () => {
                                         onClick={onSetThemeMode}
                                         sx={focusable}
                                     >
-                                        {themeMode === 'dark' ? (
-                                            <DarkModeOutlined />
-                                        ) : (
-                                            <LightModeOutlined />
-                                        )}
+                                        <ConditionallyRender
+                                            condition={themeMode === 'dark'}
+                                            show={<DarkModeOutlined />}
+                                            elseShow={<LightModeOutlined />}
+                                        />
                                     </IconButton>
                                 </Tooltip>
                             }

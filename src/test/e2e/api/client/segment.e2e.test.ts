@@ -52,6 +52,15 @@ const createSegment = (postData: UpsertSegmentSchema): Promise<ISegment> => {
     });
 };
 
+const updateSegment = (
+    id: number,
+    postData: UpsertSegmentSchema,
+): Promise<void> => {
+    return app.services.segmentService.update(id, postData, {
+        email: 'test@example.com',
+    });
+};
+
 const mockStrategy = (segments: number[] = []) => {
     return {
         name: randomId(),
@@ -434,6 +443,120 @@ describe('project-specific segments', () => {
             DEFAULT_ENV,
             201,
             [{ status: 400 }],
+        );
+    });
+
+    test(`can't set a different segment project when being used by another project`, async () => {
+        const segmentName = 'my-segment';
+        const project1 = randomId();
+        const project2 = randomId();
+        await createProjects([project1, project2]);
+        const segment = await createSegment({
+            name: segmentName,
+            project: project1,
+            constraints: [],
+        });
+        const strategy = {
+            name: 'default',
+            parameters: {},
+            constraints: [],
+            segments: [segment.id],
+        };
+        await createFeatureToggle(
+            {
+                name: 'first_feature',
+                description: 'the #1 feature',
+            },
+            [strategy],
+            project1,
+        );
+        await expect(() =>
+            updateSegment(segment.id, {
+                ...segment,
+                project: project2,
+            }),
+        ).rejects.toThrow(
+            `Invalid project. Segment is being used by strategies in other projects: ${project1}`,
+        );
+    });
+
+    test('can promote a segment project to global even when being used by a specific project', async () => {
+        const segmentName = 'my-segment';
+        const project1 = randomId();
+        const project2 = randomId();
+        await createProjects([project1, project2]);
+        const segment = await createSegment({
+            name: segmentName,
+            project: project1,
+            constraints: [],
+        });
+        const strategy = {
+            name: 'default',
+            parameters: {},
+            constraints: [],
+            segments: [segment.id],
+        };
+        await createFeatureToggle(
+            {
+                name: 'first_feature',
+                description: 'the #1 feature',
+            },
+            [strategy],
+            project1,
+        );
+        await expect(() =>
+            updateSegment(segment.id, {
+                ...segment,
+                project: '',
+            }),
+        ).resolves;
+    });
+
+    test(`can't set a specific segment project when being used by multiple projects (global)`, async () => {
+        const segmentName = 'my-segment';
+        const project1 = randomId();
+        const project2 = randomId();
+        await createProjects([project1, project2]);
+        const segment = await createSegment({
+            name: segmentName,
+            project: '',
+            constraints: [],
+        });
+        const strategy = {
+            name: 'default',
+            parameters: {},
+            constraints: [],
+            segments: [segment.id],
+        };
+        const strategy2 = {
+            name: 'default',
+            parameters: {},
+            constraints: [],
+            segments: [segment.id],
+        };
+        await createFeatureToggle(
+            {
+                name: 'first_feature',
+                description: 'the #1 feature',
+            },
+            [strategy],
+            project1,
+        );
+        await createFeatureToggle(
+            {
+                name: 'second_feature',
+                description: 'the #2 feature',
+            },
+            [strategy2],
+            project2,
+        );
+        await expect(() =>
+            updateSegment(segment.id, {
+                ...segment,
+                project: project1,
+            }),
+        ).rejects.toThrow(
+            `Invalid project. Segment is being used by strategies in other projects: ${project1}, ${project2}`,
         );
     });
 });

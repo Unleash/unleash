@@ -2,14 +2,21 @@ import { FC } from 'react';
 import { Box, Paper, styled, Typography } from '@mui/material';
 
 interface IBatchSelectionActionsBarProps {
-    selectedIds: string[];
+    count: number;
 }
 
-const StyledContainer = styled(Box)(() => ({
+const StyledStickyContainer = styled('div')(() => ({
+    position: 'sticky',
+    marginTop: 'auto',
+    bottom: 0,
+}));
+
+const StyledContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
     justifyContent: 'center',
     width: '100%',
     flexWrap: 'wrap',
+    paddingBottom: theme.spacing(2),
 }));
 
 const StyledBar = styled(Paper)(({ theme }) => ({
@@ -40,22 +47,24 @@ const StyledText = styled(Typography)(({ theme }) => ({
 }));
 
 export const BatchSelectionActionsBar: FC<IBatchSelectionActionsBarProps> = ({
-    selectedIds,
+    count,
     children,
 }) => {
-    if (selectedIds.length === 0) {
+    if (count === 0) {
         return null;
     }
 
     return (
-        <StyledContainer>
-            <StyledBar elevation={4}>
-                <StyledText>
-                    <StyledCount>{selectedIds.length}</StyledCount>
-                    &ensp;selected
-                </StyledText>
-                {children}
-            </StyledBar>
-        </StyledContainer>
+        <StyledStickyContainer>
+            <StyledContainer>
+                <StyledBar elevation={4}>
+                    <StyledText>
+                        <StyledCount>{count}</StyledCount>
+                        &ensp;selected
+                    </StyledText>
+                    {children}
+                </StyledBar>
+            </StyledContainer>
+        </StyledStickyContainer>
     );
 };

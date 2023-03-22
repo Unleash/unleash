@@ -62,7 +62,7 @@ const CreateProject = () => {
                 });
 
                 if (projectStickiness !== DEFAULT_PROJECT_STICKINESS) {
-                    trackEvent('default_project_stickiness_changed');
+                    trackEvent('project_stickiness_set');
                 }
             } catch (error: unknown) {
                 setToastApiError(formatUnknownError(error));

@@ -101,15 +101,6 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                             </MainLayoutContentContainer>
                         </MainLayoutContent>
                         <StyledImg src={formatAssetPath(textureImage)} alt="" />
-                        <div
-                            style={{
-                                position: 'sticky',
-                                marginTop: 'auto',
-                                bottom: 0,
-                            }}
-                        >
-                            STICKY
-                        </div>
                     </MainLayoutContentWrapper>
                     <Footer />
                 </MainLayoutContainer>

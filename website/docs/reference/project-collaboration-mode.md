@@ -33,6 +33,9 @@ However, existing change requests created by these users will not be deleted. An
 You can set a project's collaboration mode when you create a project and at any point after creation.
 
 ![Project creation form with a collaboration mode field and corresponding explanation.](/img/collaboration-mode.png)
+Because the project's collaboration mode is a core part of the project, the controls to change it are available on the "edit project" page.
+
+![The project-level header section with the "edit project" button highlighted.](/img/edit-project.png)
 
 ## Pre-existing projects
 

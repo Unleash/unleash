@@ -8,9 +8,11 @@ The environment import and export first appeared in Unleash 4.22.0.
 
 :::
 
-The environment export/import functionality in Unleash simplifies the process of moving feature flags between multiple instances. 
-It also makes it easier to move feature flags within a single instance between environments.
-When exporting you always select the toggles and environment to export from. When importing you always select a project and an environment to import to.
+Environment export and import lets you copy feature configurations from one environment to another and even copy features from one Unleash instance to another.
+
+When exporting, you select a set of features and **one** environment to export the configuration from. The environment must be the same for all features.
+
+Then, when you import, you must select **one** environment and **one** project to import into. All features are imported into that project in that environment. If Unleash is unable to import the configuration safely, it will tell you why the import failed and what you need to do fix it (read more about [import rejection](#import-rejection).
 
 ## Import & Export items
 

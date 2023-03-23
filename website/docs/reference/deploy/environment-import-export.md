@@ -28,7 +28,7 @@ The following items will be exported and imported:
 
 ## Export
 
-Export is search-driven based on the results you see in the project toggle search or a global toggle search.
+You can export features either from a project search or the global feature search. Use the search functionality to narrow the results to the list of features you want to export and use the export button to select environment. All features included in your search results will be included in the export.
 
 ![Search-driven export screen with WYSIWYG mode](/img/export.png)
 

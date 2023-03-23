@@ -22,6 +22,11 @@ export const EnvironmentSelector = ({
     setEnvironment,
     environments,
 }: IEnvironmentSelectorProps) => {
+    const isProjectEnv = (
+        environment: IEnvironment | IProjectEnvironment
+    ): environment is IProjectEnvironment => {
+        return 'projectVisible' in environment;
+    };
     const selectableEnvs =
         type === TokenType.ADMIN
             ? [{ key: '*', label: 'ALL' }]
@@ -29,7 +34,9 @@ export const EnvironmentSelector = ({
                   key: environment.name,
                   label: environment.name,
                   title: environment.name,
-                  disabled: !environment.enabled,
+                  disabled: isProjectEnv(environment)
+                      ? !environment.projectVisible
+                      : !environment.enabled,
               }));
 
     return (

@@ -5,11 +5,11 @@ interface IBatchSelectionActionsBarProps {
     count: number;
 }
 
-const StyledStickyContainer = styled('div')(() => ({
+const StyledStickyContainer = styled('div')(({ theme }) => ({
     position: 'sticky',
     marginTop: 'auto',
     bottom: 0,
-    zIndex: 1,
+    zIndex: theme.zIndex.mobileStepper,
 }));
 
 const StyledContainer = styled(Box)(({ theme }) => ({

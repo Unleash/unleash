@@ -56,7 +56,7 @@ are compatible with your target environment.
 
 ### Import rejection
 
-Import can be rejected when:
+An import will be rejected if:
 * the exported and imported context fields have conflicting context fields values. If the context fields don't exist in the target environment they will be created.
 * the target Unleash instance doesn't have a matching segment. The actual constraints in the segment can be different. The matching is done by the segment name.
 * the exported strategies include custom strategies that don't exist in the target Unleash instance. The matching is done by the strategy name.

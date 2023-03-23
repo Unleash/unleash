@@ -56,7 +56,7 @@ Import is a 3 stage process designed to be efficient and error-resistant.
 ### Import rejection
 
 An import will be rejected if:
-* the exported and imported context fields have conflicting context fields values. If the context fields don't exist in the target environment they will be created.
+* the exported and imported context fields have the same name but the target environment doesn't support some of the source environment context field values. If the context fields don't exist in the target environment they will be created.
 * the target Unleash instance doesn't have a matching segment. The actual constraints in the segment can be different. The matching is done by the segment name.
 * the exported strategies include custom strategies that don't exist in the target Unleash instance. The matching is done by the strategy name.
 * the exported feature already exists in another project in the target environment that is not a project that you import the toggle to.

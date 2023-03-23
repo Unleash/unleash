@@ -9,6 +9,7 @@ const StyledStickyContainer = styled('div')(() => ({
     position: 'sticky',
     marginTop: 'auto',
     bottom: 0,
+    zIndex: 1,
 }));
 
 const StyledContainer = styled(Box)(({ theme }) => ({

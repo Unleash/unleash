@@ -30,7 +30,7 @@ On the environment-level, these items are exported for the chosen environment:
 * enabled/disabled
 
 Additionally, these global configuration items are exported:
-* [custom context fields](../unleash-context.md#context-fields) 
+* [custom context fields](../unleash-context.md#context-fields)
 * [feature tag types](../tags.md#tag-types)
 
 Importantly, while references to [segments](../segments.mdx)) are exported, the segments themselves are **not** exported. Consult the [import rejection](#import-rejection) section for more information.
@@ -39,7 +39,7 @@ Importantly, while references to [segments](../segments.mdx)) are exported, the 
 
 You can export features either from a project search or the global feature search. Use the search functionality to narrow the results to the list of features you want to export and use the export button to select environment. All features included in your search results will be included in the export.
 
-![Search-driven export screen with WYSIWYG mode](/img/export.png)
+<Figure caption="Search-driven export screen with WYSIWYG mode."  img="/img/export.png"/>
 
 ## Import
 
@@ -47,7 +47,7 @@ Import is a 3 stage process designed to be efficient and error-resistant.
 
 ### Import stages
 
-* **upload** - you can upload exported file or copy-paste export data into the code editor
+* **upload** - you can upload previously exported JSON file or copy-paste export data from the exported JSON file into the code editor
 * **validation** - you will get feedback on any errors or warnings before you do the actual import. This makes sure your feature flags configurations
 are compatible with your target environment.
 * **import** - the actual import that creates a new configuration in the target environment or creates a [change request](../change-requests.md) when the environment has change requests enabled
@@ -82,7 +82,7 @@ Import requires those permissions:
 
 ### Import and change requests
 
-When the target project and environment have change requests enabled the import will not be applied instantly. Instead, it will 
+When the target project and environment have change requests enabled the import will not be applied instantly. Instead, it will
 create a change request, send it to review and await for the approval.
 
 ## Environment Import & Export vs Old Import & Export

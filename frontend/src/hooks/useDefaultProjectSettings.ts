@@ -7,6 +7,7 @@ import {
     DefaultStickiness,
     ProjectMode,
 } from 'component/project/Project/hooks/useProjectForm';
+import { formatApiPath } from '../utils/formatPath';
 
 export interface ISettingsResponse {
     defaultStickiness?: DefaultStickiness;
@@ -19,14 +20,14 @@ export const useDefaultProjectSettings = (
 ) => {
     const { uiConfig } = useUiConfig();
 
-    const PATH = `/api/admin/projects/${projectId}/settings`;
+    const PATH = `api/admin/projects/${projectId}/settings`;
     const { projectScopedStickiness } = uiConfig.flags;
 
     const { data, error, mutate } = useConditionalSWR<ISettingsResponse>(
         Boolean(projectId) && Boolean(projectScopedStickiness),
         {},
         ['useDefaultProjectSettings', PATH],
-        () => fetcher(PATH),
+        () => fetcher(formatApiPath(PATH)),
         options
     );
 

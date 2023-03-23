@@ -333,6 +333,7 @@ module.exports = {
                         'reference/unleash-context',
                         'reference/change-requests',
                         'reference/maintenance-mode',
+                        'reference/notifications',
                     ],
                 },
                 'generated/unleash-edge',

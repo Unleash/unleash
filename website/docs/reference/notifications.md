@@ -12,7 +12,7 @@ Unleash's notifications give you updates when certain events occur in projects t
 
 Your notifications will only contain updates from other members; you will not get notifications about actions you perform yourself.
 
-![Notifications](/img/notifications.png)
+![The notifications overview. It's telling the user about a feature that was enabled in production and that there is a change request ready for review.](/img/notifications.png)
 
 From within the notifications list, you can:
 * navigate to the features or change request that the notification is for

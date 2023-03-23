@@ -91,7 +91,6 @@ export const InstanceStatus: FC = ({ children }) => {
         useInstanceStatus();
     const { extendTrial } = useInstanceStatusApi();
     const { setToastApiError } = useToast();
-    const theme = useTheme();
 
     const onExtendTrial = async () => {
         try {
@@ -103,12 +102,7 @@ export const InstanceStatus: FC = ({ children }) => {
     };
 
     return (
-        <div
-            style={{
-                height: '100%',
-                backgroundColor: theme.palette.background.paper,
-            }}
-        >
+        <>
             <ConditionallyRender
                 condition={isBilling && Boolean(instanceStatus)}
                 show={() => (
@@ -124,7 +118,7 @@ export const InstanceStatus: FC = ({ children }) => {
                 )}
             />
             {children}
-        </div>
+        </>
     );
 };
 

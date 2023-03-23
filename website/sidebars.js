@@ -322,6 +322,7 @@ module.exports = {
                         'reference/playground',
                         'reference/public-signup',
                         'reference/projects',
+                        'reference/project-collaboration-mode',
                         'reference/rbac',
                         'reference/segments',
                         'reference/service-accounts',

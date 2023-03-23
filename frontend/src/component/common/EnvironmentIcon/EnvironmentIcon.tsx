@@ -26,7 +26,7 @@ const EnvironmentIcon = ({ enabled, className }: IEnvironmentIcon) => {
     };
 
     const icon = {
-        fill: '#fff',
+        fill: theme.palette.common.white,
         width: '16px',
         height: '16px',
     };

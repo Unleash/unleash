@@ -1,7 +1,9 @@
 import { createTheme } from '@mui/material/styles';
 import { colors } from './colors';
+import { alpha } from '@mui/material';
+import { focusable } from 'themes/themeStyles';
 
-export default createTheme({
+const theme = {
     breakpoints: {
         values: {
             xs: 0,
@@ -17,7 +19,7 @@ export default createTheme({
         elevated: '0px 1px 20px rgba(45, 42, 89, 0.1)',
         popup: '0px 2px 6px rgba(0, 0, 0, 0.25)',
         primaryHeader: '0px 8px 24px rgba(97, 91, 194, 0.2)',
-        separator: '0px 2px 3px hsl(0deg 0% 78% / 50%)',
+        separator: '0px 2px 4px rgba(32, 32, 33, 0.12)', // Notifications header
     },
     typography: {
         fontFamily: 'Sen, Roboto, sans-serif',
@@ -66,8 +68,8 @@ export default createTheme({
 
     palette: {
         common: {
-            // Used for text color
-            white: colors.grey[50],
+            white: colors.grey[50], // Tooltips text color // Switch base (OFF) // Text color
+            black: colors.grey[900], // Switch track (OFF)
         },
         text: {
             primary: colors.grey[900],
@@ -82,48 +84,50 @@ export default createTheme({
         },
         secondary: {
             // Used for purple badges and puple light elements
-            light: colors.purple[50],
             main: colors.purple[800],
-            dark: colors.purple[900],
+            light: colors.purple[50],
+            dark: colors.purple[900], // Color used for text
             border: colors.purple[300],
+            contrastText: colors.purple[900], // Color used for text inside badge
         },
         info: {
-            light: colors.blue[50],
             main: colors.blue[500],
-            dark: colors.blue[700],
-            contrastText: colors.grey[50], // Color used for content when info.main is used as a background
+            light: colors.blue[50],
+            dark: colors.blue[800], // Color used for text
             border: colors.blue[200],
+            contrastText: colors.blue[800], // Color used for text inside alert
         },
         success: {
-            light: colors.green[50],
             main: colors.green[600],
-            dark: colors.green[800],
-            contrastText: colors.grey[50], // Color used for content when success.main is used as a background
+            light: colors.green[50],
+            dark: colors.green[800], // Color used for text
             border: colors.green[300],
+            contrastText: colors.green[800], // Color used for text inside alert
         },
         warning: {
-            light: colors.orange[100],
             main: colors.orange[800],
-            dark: colors.orange[900],
-            contrastText: colors.grey[50], // Color used for content when warning.main is used as a background
+            light: colors.orange[100],
+            dark: colors.orange[900], // Color used for text
             border: colors.orange[500],
+            contrastText: colors.orange[900], // Color used for text inside alert
         },
         error: {
+            main: colors.red[700], // used on error buttons // used on icons on these elements
             light: colors.red[50],
-            main: colors.red[700],
-            dark: colors.red[800],
-            contrastText: colors.grey[50], // Color used for content when error.main is used as a background
+            dark: colors.red[800], // Color used for text
             border: colors.red[300],
+            contrastText: colors.red[800], // Color used for text inside alert
         },
 
         /**
          *  Used for grey badges, hover elements, and grey light elements
          */
         neutral: {
-            light: colors.grey[100],
             main: colors.grey[700],
+            light: colors.grey[100],
             dark: colors.grey[800],
             border: colors.grey[400],
+            contrastText: colors.grey[800], // Color used for text inside badge
         },
 
         background: {
@@ -131,6 +135,7 @@ export default createTheme({
             default: colors.grey[50],
             application: colors.grey[300],
             sidebar: colors.purple[800],
+            alternative: colors.purple[800], // used on the dark theme to shwitch primary main to a darker shade
             elevation1: colors.grey[100],
             elevation2: colors.grey[200],
         },
@@ -159,7 +164,6 @@ export default createTheme({
          * Table colors.
          */
         table: {
-            headerColor: colors.grey[900], //New - Is needed? ###CHECK
             headerBackground: colors.grey[200],
             headerHover: colors.grey[300],
             divider: colors.grey[300],
@@ -167,7 +171,7 @@ export default createTheme({
         },
 
         /**
-         * Text highlight effect color. Used when filtering/searching over content.
+         * Text highlight effect color. Used when filtering/searching over content
          */
         highlight: colors.orange[200],
 
@@ -175,6 +179,11 @@ export default createTheme({
          * Background color used for the API command in the sidebar
          */
         codebox: colors.action[0.12],
+
+        /**
+         * Links color
+         */
+        links: colors.purple[900],
 
         /**
          * Gradient for the login page
@@ -185,7 +194,7 @@ export default createTheme({
         },
 
         /**
-         * Colors for event log output.
+         * Colors for event log output
          */
         eventLog: {
             diffAdd: colors.green[800],
@@ -194,7 +203,7 @@ export default createTheme({
         },
 
         /**
-         * For 'Seen' column on feature toggles list and other.
+         * For 'Seen' column on feature toggles list and other
          */
         seen: {
             unknown: colors.grey[100],
@@ -203,14 +212,66 @@ export default createTheme({
             abandoned: colors.red[200],
             primary: colors.purple[100],
         },
-    },
 
+        /**
+         * For Environment Accordion.
+         */
+        envAccordion: {
+            disabled: colors.grey[100],
+            expanded: colors.grey[200],
+        },
+
+        /**
+         * MUI grey colors
+         */
+        grey: {
+            // This was to see were these colors are used from MUI
+            // 50: '#A6000E',
+            100: colors.grey[100], // Disabled Switch base (OFF)
+            // 200: '#A6000E',
+            // 300: '#A6000E',
+            // 400: '#A6000E',
+            // 500: '#A6000E',
+            600: colors.grey[800], // slider tooltip background
+            700: colors.grey[800], // Dark tooltip background
+            // 800: '#A6000E',
+            // 900: '#A6000E',
+            // A100: '#A6000E',
+            // A200: '#A6000E',
+            // A400: '#A6000E',
+            // A700: '#A6000E',
+        },
+    },
+};
+
+export default createTheme({
+    ...theme,
     components: {
+        // Skeleton
+        MuiCssBaseline: {
+            styleOverrides: {
+                '.skeleton': {
+                    '&::before': {
+                        backgroundColor: theme.palette.background.elevation1,
+                    },
+                    '&::after': {
+                        background:
+                            'linear-gradient(90deg, rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, 0.2) 100%, rgba(255, 255, 255, 0.5) 100%, rgba(255, 255, 255, 0))',
+                    },
+                },
+
+                a: {
+                    color: theme.palette.links,
+                },
+            },
+        },
+
         // Links
         MuiLink: {
             styleOverrides: {
                 root: ({ theme }) => ({
-                    color: theme.palette.primary.dark,
+                    ...focusable(theme),
+                    color: theme.palette.links,
                     '&:hover': {
                         textDecoration: 'none',
                     },
@@ -225,7 +286,7 @@ export default createTheme({
                     color: theme.palette.text.primary,
                     fontSize: '0.875rem',
                     '& a': {
-                        color: theme.palette.primary.dark,
+                        color: theme.palette.links,
                         textDecoration: 'none',
                         '&:hover': {
                             textDecoration: 'underline',
@@ -239,7 +300,6 @@ export default createTheme({
         MuiTableHead: {
             styleOverrides: {
                 root: ({ theme }) => ({
-                    // background: 'transparent',
                     '& th': {
                         height: theme.shape.tableRowHeightCompact,
                         backgroundColor: theme.palette.table.headerBackground,
@@ -281,9 +341,18 @@ export default createTheme({
         MuiAlert: {
             styleOverrides: {
                 root: ({ theme }) => ({
+                    padding: theme.spacing(2, 3),
                     borderRadius: theme.shape.borderRadiusMedium,
                     a: {
                         color: 'inherit',
+                    },
+                    '> .MuiAlert-icon': {
+                        padding: 0,
+                        opacity: 1,
+                        fontSize: '24px',
+                    },
+                    '> .MuiAlert-message': {
+                        padding: '3px 0 0 0',
                     },
                     '&.MuiAlert-standardInfo': {
                         backgroundColor: theme.palette.info.light,
@@ -345,7 +414,7 @@ export default createTheme({
                     lineHeight: '1',
                     minHeight: '62px',
                     '&:hover': {
-                        backgroundColor: theme.palette.background.elevation2,
+                        backgroundColor: theme.palette.action.hover,
                     },
                     '&.Mui-selected': {
                         color: theme.palette.text.primary,
@@ -361,12 +430,22 @@ export default createTheme({
             },
         },
 
-        // Constraint accordion / cards
+        // Environment accordion
         MuiAccordion: {
             styleOverrides: {
                 root: ({ theme }) => ({
                     '&:first-of-type, &:last-of-type': {
-                        borderRadius: theme.shape.borderRadiusMedium,
+                        borderRadius: theme.shape.borderRadiusLarge,
+                    },
+                    '&.environment-accordion.Mui-expanded': {
+                        outline: `2px solid ${alpha(
+                            theme.palette.background.alternative,
+                            0.6
+                        )}`,
+                        boxShadow: `0px 2px 8px ${alpha(
+                            theme.palette.primary.main,
+                            0.2
+                        )}`,
                     },
                 }),
             },
@@ -384,19 +463,20 @@ export default createTheme({
             },
         },
 
-        // Project overview, improve toggle/switch disabled focus effect color
+        // Project overview, improve switch (OFF - state) focus effect color
         MuiSwitch: {
             styleOverrides: {
                 root: ({ theme }) => ({
                     zIndex: 1,
-                    '&:not(.Mui-checked) .MuiTouchRipple-child': {
-                        color: theme.palette.neutral.border,
-                    },
+                    '.MuiSwitch-switchBase:not(.Mui-checked) .MuiTouchRipple-child':
+                        {
+                            color: theme.palette.action.disabled,
+                        },
                 }),
             },
         },
 
-        // Overwiteing the action.disabledOpacity from MU
+        // Overwiteing the action.disabledOpacity from MUI
         MuiMenuItem: {
             styleOverrides: {
                 root: {

@@ -32,11 +32,8 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
     boxShadow: 'none',
     margin: 0,
-
-    '& .root': {
-        '&:before': {
-            opacity: '0 !important',
-        },
+    '&:before': {
+        opacity: '0',
     },
 }));
 

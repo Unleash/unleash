@@ -6,6 +6,7 @@ import {
     Typography,
     styled,
     Theme,
+    Link,
 } from '@mui/material';
 import React, { useState, useEffect } from 'react';
 import { Add } from '@mui/icons-material';
@@ -246,13 +247,13 @@ export const ContextForm: React.FC<IContextForm> = ({
                     guarantee a consistent behavior for specific values of this
                     context field. PS! Not all client SDK's support this feature
                     yet!{' '}
-                    <a
+                    <Link
                         href="https://docs.getunleash.io/reference/stickiness"
                         target="_blank"
                         rel="noreferrer"
                     >
                         Read more
-                    </a>
+                    </Link>
                 </p>
                 <StyledSwitchContainer>
                     <Switch

@@ -5,8 +5,9 @@ import { useSearchHighlightContext } from 'component/common/Table/SearchHighligh
 import { Fragment, VFC } from 'react';
 import { Link } from 'react-router-dom';
 
-const StyledLink = styled(Link)(() => ({
+const StyledLink = styled(Link)(({ theme }) => ({
     textDecoration: 'none',
+    color: theme.palette.links,
     '&:hover, &:focus': {
         textDecoration: 'underline',
     },

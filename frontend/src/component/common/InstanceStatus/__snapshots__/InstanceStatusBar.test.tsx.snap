@@ -2,7 +2,7 @@
 
 exports[`InstanceStatusBar should warn when the trial has churned 1`] = `
 <aside
-  class="css-jmsogz"
+  class="css-163g6kh"
   data-testid="INSTANCE_STATUS_BAR_ID"
 >
   <svg
@@ -42,7 +42,7 @@ exports[`InstanceStatusBar should warn when the trial has churned 1`] = `
 
 exports[`InstanceStatusBar should warn when the trial has expired 1`] = `
 <aside
-  class="css-jmsogz"
+  class="css-163g6kh"
   data-testid="INSTANCE_STATUS_BAR_ID"
 >
   <svg
@@ -82,7 +82,7 @@ exports[`InstanceStatusBar should warn when the trial has expired 1`] = `
 
 exports[`InstanceStatusBar should warn when the trial is about to expire 1`] = `
 <aside
-  class="css-yx2rkt"
+  class="css-f22srx"
   data-testid="INSTANCE_STATUS_BAR_ID"
 >
   <svg
@@ -117,7 +117,7 @@ exports[`InstanceStatusBar should warn when the trial is about to expire 1`] = `
 
 exports[`InstanceStatusBar should warn when the trial is far from expired 1`] = `
 <aside
-  class="css-yx2rkt"
+  class="css-f22srx"
   data-testid="INSTANCE_STATUS_BAR_ID"
 >
   <svg
@@ -147,7 +147,7 @@ exports[`InstanceStatusBar should warn when the trial is far from expired 1`] = 
 
 exports[`InstanceStatusBar should warn when trialExpiry has passed 1`] = `
 <aside
-  class="css-jmsogz"
+  class="css-163g6kh"
   data-testid="INSTANCE_STATUS_BAR_ID"
 >
   <svg

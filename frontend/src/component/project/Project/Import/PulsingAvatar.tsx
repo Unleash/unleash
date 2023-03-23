@@ -4,6 +4,7 @@ export const PulsingAvatar = styled(Avatar, {
     shouldForwardProp: prop => prop !== 'active',
 })<{ active: boolean }>(({ theme, active }) => ({
     transition: 'background-color 0.5s ease',
+    color: theme.palette.common.white,
     backgroundColor: active
         ? theme.palette.primary.main
         : theme.palette.divider,

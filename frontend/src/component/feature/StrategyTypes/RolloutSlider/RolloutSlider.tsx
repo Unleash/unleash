@@ -10,7 +10,7 @@ const StyledSlider = withStyles(Slider, theme => ({
     thumb: {
         height: 24,
         width: 24,
-        backgroundColor: '#fff',
+        backgroundColor: theme.palette.background.paper,
         border: '2px solid currentColor',
     },
     active: {},

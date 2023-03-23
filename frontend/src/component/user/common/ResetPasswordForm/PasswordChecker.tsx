@@ -44,11 +44,12 @@ const StyledTitle = styled(Typography)(({ theme }) => ({
 }));
 
 const StyledContainer = styled('div')(({ theme }) => ({
-    border: '1px solid #f1f1f1',
+    backgroundColor: theme.palette.background.elevation2,
     borderRadius: theme.shape.borderRadius,
     position: 'relative',
     maxWidth: '350px',
-    color: '#44606e',
+    color: theme.palette.text.secondary,
+    padding: theme.spacing(0.5, 0, 1.5),
 }));
 
 const StyledHeaderContainer = styled('div')(({ theme }) => ({
@@ -86,7 +87,9 @@ const StyledStatusBar = styled('div', {
     width: '50px',
     borderRadius: theme.shape.borderRadius,
     height: '6px',
-    backgroundColor: error ? 'red' : theme.palette.primary.main,
+    backgroundColor: error
+        ? theme.palette.error.main
+        : theme.palette.primary.main,
 }));
 
 const PasswordChecker = ({

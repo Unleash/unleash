@@ -7,7 +7,7 @@ import {
     DefaultStickiness,
     ProjectMode,
 } from 'component/project/Project/hooks/useProjectForm';
-import { formatApiPath } from '../utils/formatPath';
+import { formatApiPath } from 'utils/formatPath';
 
 export interface ISettingsResponse {
     defaultStickiness?: DefaultStickiness;

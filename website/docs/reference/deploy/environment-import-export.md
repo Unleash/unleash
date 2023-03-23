@@ -16,15 +16,24 @@ Then, when you import, you must select **one** environment and **one** project t
 
 ## Import & Export items
 
-The following items will be exported and imported:
-* feature toggles
-* activation strategies
-* variants
-* enabled/disabled statuses
-* context fields
+When you export features, the export will contain both feature-specific configuration and global configuration.
+
+On the project-level these  items are exported:
+
+* the feature itself
 * feature tags
+
+On the environment-level, these items are exported for the chosen environment:
+
+* activation strategies including constraints and references to segments
+* variants
+* enabled/disabled
+
+Additionally, these global configuration items are exported:
+* custom context fields 
 * feature tag types
-* segments
+
+Importantly, while references to segments are exported, the segments themselves are **not** exported. Consult the [import rejection](#import-rejection) section for more information.
 
 ## Export
 

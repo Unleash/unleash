@@ -20,20 +20,20 @@ When you export features, the export will contain both feature-specific configur
 
 On the project-level these  items are exported:
 
-* the feature itself
-* feature tags
+* [the feature itself](../feature-toggles.mdx)
+* [feature tags](../tags.md)
 
 On the environment-level, these items are exported for the chosen environment:
 
-* activation strategies including constraints and references to segments
-* variants
+* [activation strategies](../activation-strategies.md) including [constraints](../strategy-constraints.md) and references to [segments](../segments.mdx)
+* [variants](../feature-toggle-variants.md)
 * enabled/disabled
 
 Additionally, these global configuration items are exported:
-* custom context fields 
-* feature tag types
+* [custom context fields](../unleash-context.md#context-fields) 
+* [feature tag types](../tags.md#tag-types)
 
-Importantly, while references to segments are exported, the segments themselves are **not** exported. Consult the [import rejection](#import-rejection) section for more information.
+Importantly, while references to [segments](../segments.mdx)) are exported, the segments themselves are **not** exported. Consult the [import rejection](#import-rejection) section for more information.
 
 ## Export
 

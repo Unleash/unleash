@@ -85,19 +85,22 @@ Import validation will warn you when:
 
 ### Required permissions
 
-Import requires those permissions:
-* Update feature toggles (always)
-* Create feature toggles when import will be creating new features
-* Update tag types when import will be introducing new tag types
-* Create context fields when import will be creating new context fields
-* Create activation strategies when import will be creating new activation strategies and change requests are disabled
-* Delete activation strategies when import will be deleting existing activation strategies and change requests are disabled
-* Update variants when import will be updating variants and change requests are disabled
+To import features, you will **always** require the **update feature toggles** permission.
+Additionally, depending on how the actions your import job would trigger, you may also require any of the following permissions:
+* **Create feature toggles**: When the import would create new features
+* **Update tag types**: when the import would create new tag types
+* **Create context fields**: when the import would create new context fields
+* **Create activation strategies**: when the import would add (or is this "create custom activation strategies"? custom or standard?) activation strategies to a feature and change requests are disabled
+* **Delete activation strategies**: when import would remove existing activation strategies from a feature and change requests are disabled
+* **Update variants**: when the import would update variants and change requests are disabled
+
 
 ### Import and change requests
 
 When the target project and environment have change requests enabled the import will not be applied instantly. Instead, it will
 create a change request, send it to review and await for the approval.
+
+If change requests are enabled, any permissions for  **Create activation strategies**, **Delete activation strategies** and **Update variants** are not required.
 
 ## Environment Import & Export vs Old Import & Export
 

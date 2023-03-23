@@ -21,6 +21,7 @@ import { TokenTypeSelector } from 'component/admin/apiToken/ApiTokenForm/TokenTy
 import { ConfirmToken } from 'component/admin/apiToken/ConfirmToken/ConfirmToken';
 import { useProjectApiTokens } from 'hooks/api/getters/useProjectApiTokens/useProjectApiTokens';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useProjectEnvironments } from '../../../../../hooks/api/getters/useProjectEnvironments/useProjectEnvironments';
 
 const pageTitle = 'Create project API token';
 
@@ -49,6 +50,7 @@ export const CreateProjectApiTokenForm = () => {
         useProjectApiTokensApi();
     const { refetch: refetchProjectTokens } = useProjectApiTokens(project);
     const { trackEvent } = usePlausibleTracker();
+    const { environments } = useProjectEnvironments(project);
 
     usePageTitle(pageTitle);
 
@@ -131,6 +133,7 @@ export const CreateProjectApiTokenForm = () => {
                     type={type}
                     environment={environment}
                     setEnvironment={setEnvironment}
+                    environments={environments}
                 />
             </ApiTokenForm>
             <ConfirmToken

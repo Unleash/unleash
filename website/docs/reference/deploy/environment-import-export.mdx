@@ -55,7 +55,9 @@ Import is a 3 stage process designed to be efficient and error-resistant.
 
 ### Import requirements
 
-An import will be rejected when there's a possibility of data corruption.
+Unleash will reject an import if it discovers conflicts between the data to be imported and what already exists on the Unleash instance. The import tool will tell you about why an import is rejected in these cases. 
+
+The following sections describe requirements that must be met for Unleash not to stop the import job.
 
 #### Context fields
 
@@ -63,7 +65,7 @@ The exported and imported context fields have the same name but the target envir
 
 #### Segments
 
-The target Unleash instance doesn't have a matching segment. The actual constraints in the segment can be different. The matching is done by the segment name.
+If your import has segments, then a segment with the same name must already exist in the Unleash instance you are trying to import into. Only the name must be the same: the constraints in the segment can be different.
 
 #### Custom strategies
 
@@ -71,7 +73,7 @@ If your import contains custom strategies, then custom strategies with the same 
 
 #### Existing features
 
-You're trying to import a feature that already exists in a different project on the target instance.
+If any of the features you import already exist in the target Unleash instance, then they must exist within the project you're importing into. If any features you are attempting to import exist in a **different** project on the target instance, the import will be rejected.
 
 #### Pending change requests
 

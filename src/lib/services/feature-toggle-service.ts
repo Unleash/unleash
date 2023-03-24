@@ -882,6 +882,15 @@ class FeatureToggleService {
         replaceGroupId: boolean = true, // eslint-disable-line
         userName: string,
     ): Promise<FeatureToggle> {
+        const changeRequestEnabled =
+            await this.changeRequestAccessReadModel.isChangeRequestsEnabledForProject(
+                projectId,
+            );
+        if (changeRequestEnabled) {
+            throw new NoAccessError(
+                `Cloning not allowed. Project ${projectId} has change requests enabled.`,
+            );
+        }
         this.logger.info(
             `${userName} clones feature toggle ${featureName} to ${newFeatureName}`,
         );

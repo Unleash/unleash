@@ -41,7 +41,7 @@ beforeAll(async () => {
     const groupService = new GroupService(stores, config);
     const accessService = new AccessService(stores, config, groupService);
     const changeRequestAccessReadModel = new ChangeRequestAccessReadModel(
-        db,
+        db.rawDatabase,
         accessService,
     );
     service = new FeatureToggleService(
@@ -391,7 +391,7 @@ test('If change requests are enabled, cannot change variants without going via C
         groupService,
     );
     const changeRequestAccessReadModel = new ChangeRequestAccessReadModel(
-        db,
+        db.rawDatabase,
         accessService,
     );
     // Force all feature flags on to make sure we have Change requests on
@@ -474,7 +474,7 @@ test('If CRs are protected for any environment in the project stops bulk update 
         groupService,
     );
     const changeRequestAccessReadModel = new ChangeRequestAccessReadModel(
-        db,
+        db.rawDatabase,
         accessService,
     );
     // Force all feature flags on to make sure we have Change requests on

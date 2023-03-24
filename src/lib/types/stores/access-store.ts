@@ -138,9 +138,4 @@ export interface IAccessStore extends Store<IRole, number> {
         sourceEnvironment: string,
         destinationEnvironment: string,
     ): Promise<void>;
-
-    isChangeRequestsEnabled(
-        project: string,
-        environment: string,
-    ): Promise<boolean>;
 }

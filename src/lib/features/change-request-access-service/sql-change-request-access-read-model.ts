@@ -30,7 +30,7 @@ export class ChangeRequestAccessReadModel
                       environment,
                   )
                 : Promise.resolve(false),
-            this.accessService.isChangeRequestsEnabled(project, environment),
+            this.isChangeRequestsEnabled(project, environment),
         ]);
         return !(changeRequestEnabled && !canSkipChangeRequest);
     }
@@ -41,7 +41,7 @@ export class ChangeRequestAccessReadModel
     ): Promise<boolean> {
         const result = await this.db.raw(
             `SELECT EXISTS(SELECT 1
-                           FROM 'change_request_settings'
+                           FROM change_request_settings
                            WHERE environment = ?
                              and project = ?) AS present`,
             [environment, project],

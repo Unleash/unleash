@@ -281,24 +281,20 @@ class FeatureToggleService {
         }
 
         if (
-            oneOf(
+            contextDefinition &&
+            contextDefinition.legalValues &&
+            contextDefinition.legalValues.length > 0
+        ) {
+            const valuesToValidate = oneOf(
                 [...DATE_OPERATORS, ...SEMVER_OPERATORS, ...NUM_OPERATORS],
                 operator,
             )
-        ) {
-            if (contextDefinition?.legalValues?.length > 0) {
-                validateLegalValues(
-                    contextDefinition.legalValues,
-                    constraint.value,
-                );
-            }
-        } else {
-            if (contextDefinition?.legalValues?.length > 0) {
-                validateLegalValues(
-                    contextDefinition.legalValues,
-                    constraint.values,
-                );
-            }
+                ? constraint.value
+                : constraint.values;
+            validateLegalValues(
+                contextDefinition.legalValues,
+                valuesToValidate,
+            );
         }
 
         return constraint;
@@ -414,8 +410,8 @@ class FeatureToggleService {
             const newFeatureStrategy =
                 await this.featureStrategiesStore.createStrategyFeatureEnv({
                     strategyName: strategyConfig.name,
-                    constraints: strategyConfig.constraints,
-                    parameters: strategyConfig.parameters,
+                    constraints: strategyConfig.constraints || [],
+                    parameters: strategyConfig.parameters || {},
                     sortOrder: strategyConfig.sortOrder,
                     projectId,
                     featureName,
@@ -435,7 +431,7 @@ class FeatureToggleService {
             const tags = await this.tagStore.getAllTagsForFeature(featureName);
             const segments = await this.segmentService.getByStrategy(
                 newFeatureStrategy.id,
-            ); // TODO coupled with enterprise feature
+            );
             const strategy = this.featureStrategyToPublic(
                 newFeatureStrategy,
                 segments,
@@ -521,7 +517,7 @@ class FeatureToggleService {
 
             const segments = await this.segmentService.getByStrategy(
                 strategy.id,
-            ); // TODO coupled with enterprise feature
+            );
 
             // Store event!
             const tags = await this.tagStore.getAllTagsForFeature(featureName);
@@ -567,7 +563,7 @@ class FeatureToggleService {
             const tags = await this.tagStore.getAllTagsForFeature(featureName);
             const segments = await this.segmentService.getByStrategy(
                 strategy.id,
-            ); // TODO coupled with enterprise feature
+            );
             const data = this.featureStrategyToPublic(strategy, segments);
             const preData = this.featureStrategyToPublic(
                 existingStrategy,
@@ -661,12 +657,12 @@ class FeatureToggleService {
                     featureName,
                     environment,
                 );
-            const result = [];
+            const result: Saved<IStrategyConfig>[] = [];
             for (const strat of featureStrategies) {
                 const segments =
                     (await this.segmentService.getByStrategy(strat.id)).map(
                         (segment) => segment.id,
-                    ) ?? []; // TODO coupled with enterprise feature
+                    ) ?? [];
                 result.push({
                     id: strat.id,
                     name: strat.strategyName,
@@ -748,7 +744,7 @@ class FeatureToggleService {
         includeIds?: boolean,
     ): Promise<FeatureConfigurationClient[]> {
         const result = await this.featureToggleClientStore.getClient(
-            query,
+            query || {},
             includeIds,
         );
         if (this.flagResolver.isEnabled('cleanClientApi')) {
@@ -912,7 +908,11 @@ class FeatureToggleService {
 
         const strategyTasks = newToggle.environments.flatMap((e) =>
             e.strategies.map((s) => {
-                if (replaceGroupId && s.parameters.hasOwnProperty('groupId')) {
+                if (
+                    replaceGroupId &&
+                    s.parameters &&
+                    s.parameters.hasOwnProperty('groupId')
+                ) {
                     s.parameters.groupId = newFeatureName;
                 }
                 const context = {
@@ -986,7 +986,7 @@ class FeatureToggleService {
             strategyId,
         );
 
-        const segments = await this.segmentService.getByStrategy(strategyId); // TODO coupled with enterprise feature
+        const segments = await this.segmentService.getByStrategy(strategyId);
         let result: Saved<IStrategyConfig> = {
             id: strategy.id,
             name: strategy.strategyName,
@@ -1580,7 +1580,8 @@ class FeatureToggleService {
                     featureName,
                     environment,
                 })
-            ).variants;
+            ).variants ||
+            [];
 
         await this.eventStore.store(
             new EnvironmentVariantEvent({

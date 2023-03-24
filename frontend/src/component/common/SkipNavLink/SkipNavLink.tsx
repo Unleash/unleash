@@ -1,5 +1,6 @@
 import { SKIP_NAV_TARGET_ID } from 'component/common/SkipNavLink/SkipNavTarget';
 import { styled } from '@mui/material';
+import { focusable } from 'themes/themeStyles';
 
 const StyledLink = styled('a')(({ theme }) => ({
     position: 'fixed',
@@ -10,10 +11,11 @@ const StyledLink = styled('a')(({ theme }) => ({
     padding: theme.spacing(1, 2),
     whiteSpace: 'nowrap',
     textDecoration: 'none',
-    background: theme.palette.primary.dark,
-    color: theme.palette.primary.contrastText,
+    background: theme.palette.background.alternative,
+    color: theme.palette.common.white,
     borderRadius: theme.shape.borderRadius,
     fontSize: theme.fontSizes.smallBody,
+    ...focusable(theme),
 
     [theme.breakpoints.down(960)]: {
         top: '0.8rem',

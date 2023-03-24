@@ -54,9 +54,7 @@ const StyledContainer = styled(Container)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     maxWidth: 1280,
-    [theme.breakpoints.down('md')]: {
-        padding: '0',
-    },
+    '&&&': { padding: 0 },
 }));
 
 const StyledUserContainer = styled('div')({

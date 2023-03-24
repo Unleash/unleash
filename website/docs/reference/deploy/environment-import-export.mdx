@@ -97,8 +97,7 @@ Additionally, depending on how the actions your import job would trigger, you ma
 
 ### Import and change requests
 
-When the target project and environment have change requests enabled the import will not be applied instantly. Instead, it will
-create a change request, send it to review and await for the approval.
+If change requests are enabled for the target project and environment, the import will not be fully applied. Any new features will be created, but all feature configuration will be added to a new change request.
 
 If change requests are enabled, any permissions for  **Create activation strategies**, **Delete activation strategies** and **Update variants** are not required.
 

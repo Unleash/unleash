@@ -15,5 +15,5 @@ export const createChangeRequestAccessReadModel = (
 
 export const createFakeChangeRequestAccessService =
     (): IChangeRequestAccessReadModel => {
-        return new FakeChangeRequestAccessReadModel(true);
+        return new FakeChangeRequestAccessReadModel();
     };

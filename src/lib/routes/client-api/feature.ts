@@ -319,7 +319,7 @@ export default class FeatureController extends Controller {
 
         // TODO: We will need to standardize this to be able to implement this a cross languages (Edge in Rust?).
         const queryHash = hasSum(query);
-        const etag = `${queryHash}:${revisionId}`;
+        const etag = `"${queryHash}:${revisionId}"`;
         return { revisionId, etag, queryHash };
     }
 

@@ -30,7 +30,7 @@ export class ChangeRequestAccessReadModel
                       environment,
                   )
                 : Promise.resolve(false),
-            this.accessService.isChangeRequestsEnabled(project, environment),
+            this.isChangeRequestsEnabled(project, environment),
         ]);
         return !(changeRequestEnabled && !canSkipChangeRequest);
     }

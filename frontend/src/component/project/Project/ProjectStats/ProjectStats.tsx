@@ -35,6 +35,12 @@ const StyledWidget = styled(Box)(({ theme }) => ({
     },
 }));
 
+const StyledTimeToProductionDescription = styled(Typography)(({ theme }) => ({
+    color: theme.palette.text.secondary,
+    fontSize: theme.typography.body2.fontSize,
+    lineHeight: theme.typography.body2.lineHeight,
+}));
+
 interface IProjectStatsProps {
     stats: ProjectStatsSchema;
 }
@@ -46,7 +52,6 @@ export const ProjectStats = ({ stats }: IProjectStatsProps) => {
 
     const {
         avgTimeToProdCurrentWindow,
-        avgTimeToProdPastWindow,
         projectActivityCurrentWindow,
         projectActivityPastWindow,
         createdCurrentWindow,
@@ -54,15 +59,6 @@ export const ProjectStats = ({ stats }: IProjectStatsProps) => {
         archivedCurrentWindow,
         archivedPastWindow,
     } = stats;
-
-    const calculatePercentage = (partial: number, total: number) => {
-        const percentage = (partial * 100) / total;
-
-        if (Number.isInteger(percentage)) {
-            return percentage;
-        }
-        return 0;
-    };
 
     return (
         <StyledBox>
@@ -95,16 +91,18 @@ export const ProjectStats = ({ stats }: IProjectStatsProps) => {
                             <Typography component="span">days</Typography>
                         </Box>
                     }
-                    change={calculatePercentage(
-                        avgTimeToProdCurrentWindow,
-                        avgTimeToProdPastWindow
-                    )}
+                    customChangeElement={
+                        <StyledTimeToProductionDescription>
+                            In project life
+                        </StyledTimeToProductionDescription>
+                    }
                     percentage
                 >
                     <HelpPopper id="avg-time-to-prod">
                         How long did it take on average from a feature toggle
                         was created until it was enabled in an environment of
-                        type production.
+                        type production. This is calculated only from feature
+                        toggles with the type of "release".
                     </HelpPopper>
                 </StatusBox>
             </StyledWidget>

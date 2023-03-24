@@ -33,15 +33,6 @@ const sortOrderFirst = 0;
 const sortOrderSecond = 10;
 const sortOrderDefault = 9999;
 
-const createFeatureToggle = (
-    featureName: string,
-    project = DEFAULT_PROJECT,
-) => {
-    return app.request.post(`/api/admin/projects/${project}/features`).send({
-        name: featureName,
-    });
-};
-
 const createSegment = async (segmentName: string) => {
     const segment = await app.services.segmentService.create(
         {
@@ -317,6 +308,7 @@ test('Disconnecting environment from project, removes environment from features 
 test('Can enable/disable environment for feature with strategies', async () => {
     const envName = 'enable-feature-environment';
     const featureName = 'com.test.enable.environment';
+    const project = 'default';
     // Create environment
     await db.stores.environmentStore.create({
         name: envName,
@@ -324,29 +316,22 @@ test('Can enable/disable environment for feature with strategies', async () => {
     });
     // Connect environment to project
     await app.request
-        .post('/api/admin/projects/default/environments')
+        .post(`/api/admin/projects/${project}/environments`)
         .send({
             environment: envName,
         })
         .expect(200);
 
     // Create feature
-    await app.request
-        .post('/api/admin/projects/default/features')
-        .send({
-            name: featureName,
-        })
-        .set('Content-Type', 'application/json')
-        .expect(201)
-        .expect((res) => {
-            expect(res.body.name).toBe(featureName);
-            expect(res.body.createdAt).toBeTruthy();
-        });
+    await app.createFeature(featureName).expect((res) => {
+        expect(res.body.name).toBe(featureName);
+        expect(res.body.createdAt).toBeTruthy();
+    });
 
     // Add strategy to it
     await app.request
         .post(
-            `/api/admin/projects/default/features/${featureName}/environments/${envName}/strategies`,
+            `/api/admin/projects/${project}/features/${featureName}/environments/${envName}/strategies`,
         )
         .send({
             name: 'default',
@@ -357,38 +342,30 @@ test('Can enable/disable environment for feature with strategies', async () => {
         .expect(200);
     await app.request
         .post(
-            `/api/admin/projects/default/features/${featureName}/environments/${envName}/on`,
+            `/api/admin/projects/${project}/features/${featureName}/environments/${envName}/on`,
         )
         .set('Content-Type', 'application/json')
         .expect(200);
-    await app.request
-        .get(`/api/admin/projects/default/features/${featureName}`)
-        .expect(200)
-        .expect('Content-Type', /json/)
-        .expect((res) => {
-            const enabledFeatureEnv = res.body.environments.find(
-                (e) => e.name === 'enable-feature-environment',
-            );
-            expect(enabledFeatureEnv).toBeTruthy();
-            expect(enabledFeatureEnv.enabled).toBe(true);
-        });
+    await app.getProjectFeatures(project, featureName).expect((res) => {
+        const enabledFeatureEnv = res.body.environments.find(
+            (e) => e.name === 'enable-feature-environment',
+        );
+        expect(enabledFeatureEnv).toBeTruthy();
+        expect(enabledFeatureEnv.enabled).toBe(true);
+    });
     await app.request
         .post(
-            `/api/admin/projects/default/features/${featureName}/environments/${envName}/off`,
+            `/api/admin/projects/${project}/features/${featureName}/environments/${envName}/off`,
         )
         .send({})
         .expect(200);
-    await app.request
-        .get(`/api/admin/projects/default/features/${featureName}`)
-        .expect(200)
-        .expect('Content-Type', /json/)
-        .expect((res) => {
-            const disabledFeatureEnv = res.body.environments.find(
-                (e) => e.name === 'enable-feature-environment',
-            );
-            expect(disabledFeatureEnv).toBeTruthy();
-            expect(disabledFeatureEnv.enabled).toBe(false);
-        });
+    await app.getProjectFeatures(project, featureName).expect((res) => {
+        const disabledFeatureEnv = res.body.environments.find(
+            (e) => e.name === 'enable-feature-environment',
+        );
+        expect(disabledFeatureEnv).toBeTruthy();
+        expect(disabledFeatureEnv.enabled).toBe(false);
+    });
 });
 
 test("Trying to get a project that doesn't exist yields 404", async () => {
@@ -544,7 +521,7 @@ describe('Interacting with features using project IDs that belong to other proje
             rootRole: RoleName.ADMIN,
         });
         await app.services.projectService.createProject(
-            { name: otherProject, id: otherProject },
+            { name: otherProject, id: otherProject, mode: 'open' },
             dummyAdmin,
         );
 
@@ -701,8 +678,8 @@ test('Should patch feature toggle', async () => {
     });
     const updateForOurToggle = events.find((e) => e.data.name === name);
     expect(updateForOurToggle).toBeTruthy();
-    expect(updateForOurToggle.data.description).toBe('New desc');
-    expect(updateForOurToggle.data.type).toBe('kill-switch');
+    expect(updateForOurToggle?.data.description).toBe('New desc');
+    expect(updateForOurToggle?.data.type).toBe('kill-switch');
 });
 
 test('Should patch feature toggle and not remove variants', async () => {
@@ -1956,6 +1933,7 @@ test('Should not allow changing project to target project without the same enabl
         name: 'Project to be moved to',
         id: targetProject,
         description: '',
+        mode: 'open',
     });
 
     await db.stores.environmentStore.create({
@@ -1974,12 +1952,7 @@ test('Should not allow changing project to target project without the same enabl
         'default',
     );
 
-    await app.request
-        .post(`/api/admin/projects/${project}/features`)
-        .send({
-            name: featureName,
-        })
-        .expect(201);
+    await app.createFeature(featureName, project);
     await app.request
         .post(
             `/api/admin/projects/${project}/features/${featureName}/environments/default/strategies`,
@@ -2042,6 +2015,7 @@ test('Should allow changing project to target project with the same enabled envi
         name: 'Project to be moved to',
         id: targetProject,
         description: '',
+        mode: 'open',
     });
 
     await db.stores.environmentStore.create({
@@ -2058,12 +2032,7 @@ test('Should allow changing project to target project with the same enabled envi
     );
     await db.stores.projectStore.addEnvironmentToProject(targetProject, inBoth);
 
-    await app.request
-        .post(`/api/admin/projects/${project}/features`)
-        .send({
-            name: featureName,
-        })
-        .expect(201);
+    await app.createFeature(featureName, project);
     await app.request
         .post(
             `/api/admin/projects/${project}/features/${featureName}/environments/default/strategies`,
@@ -2120,12 +2089,7 @@ test('Should allow changing project to target project with the same enabled envi
 test(`a feature's variants should be sorted by name in increasing order`, async () => {
     const featureName = 'variants.are.sorted';
     const project = 'default';
-    await app.request
-        .post(`/api/admin/projects/${project}/features`)
-        .send({
-            name: featureName,
-        })
-        .expect(201);
+    await app.createFeature(featureName, project);
 
     const newVariants: IVariant[] = [
         {
@@ -2284,6 +2248,7 @@ test('Can create toggle with impression data on different project', async () => 
         id: 'impression-data',
         name: 'ImpressionData',
         description: '',
+        mode: 'open',
     });
 
     const toggle = {
@@ -2313,6 +2278,7 @@ test('should reject invalid constraint values for multi-valued constraints', asy
         id: uuidv4(),
         name: uuidv4(),
         description: '',
+        mode: 'open',
     });
 
     const toggle = await db.stores.featureToggleStore.create(project.id, {
@@ -2359,6 +2325,7 @@ test('should add default constraint values for single-valued constraints', async
         id: uuidv4(),
         name: uuidv4(),
         description: '',
+        mode: 'open',
     });
 
     const toggle = await db.stores.featureToggleStore.create(project.id, {
@@ -2418,6 +2385,7 @@ test('should allow long parameter values', async () => {
         id: uuidv4(),
         name: uuidv4(),
         description: uuidv4(),
+        mode: 'open',
     });
 
     const toggle = await db.stores.featureToggleStore.create(project.id, {
@@ -2646,7 +2614,7 @@ test('should return strategies in correct order when new strategies are added', 
 
 test('should create a strategy with segments', async () => {
     const feature = { name: uuidv4(), impressionData: false };
-    await createFeatureToggle(feature.name);
+    await app.createFeature(feature.name);
     const segment = await createSegment('segmentOne');
     const { body: strategyOne } = await createStrategy(feature.name, {
         name: 'default',
@@ -2694,7 +2662,7 @@ test('should create a strategy with segments', async () => {
 
 test('should add multiple segments to a strategy', async () => {
     const feature = { name: uuidv4(), impressionData: false };
-    await createFeatureToggle(feature.name);
+    await app.createFeature(feature.name);
     const segment = await createSegment('seg1');
     const segmentTwo = await createSegment('seg2');
     const segmentThree = await createSegment('seg3');
@@ -2824,34 +2792,12 @@ test('Can query for two tags at the same time. Tags are ORed together', async ()
         });
 });
 
-test('Should be able to bulk archive features', async () => {
-    const featureName1 = 'archivedFeature1';
-    const featureName2 = 'archivedFeature2';
-
-    await createFeatureToggle(featureName1);
-    await createFeatureToggle(featureName2);
-
-    await app.request
-        .post(`/api/admin/projects/${DEFAULT_PROJECT}/archive`)
-        .send({
-            features: [featureName1, featureName2],
-        })
-        .expect(202);
-
-    const { body } = await app.request
-        .get(`/api/admin/archive/features/${DEFAULT_PROJECT}`)
-        .expect(200);
-    expect(body).toMatchObject({
-        features: [{}, { name: featureName1 }, { name: featureName2 }],
-    });
-});
-
 test('Should batch stale features', async () => {
     const staledFeatureName1 = 'staledFeature1';
     const staledFeatureName2 = 'staledFeature2';
 
-    await createFeatureToggle(staledFeatureName1);
-    await createFeatureToggle(staledFeatureName2);
+    await app.createFeature(staledFeatureName1);
+    await app.createFeature(staledFeatureName2);
 
     await app.request
         .post(`/api/admin/projects/${DEFAULT_PROJECT}/stale`)

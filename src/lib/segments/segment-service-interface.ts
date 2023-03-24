@@ -11,6 +11,8 @@ export interface ISegmentService {
 
     getByStrategy(strategyId: string): Promise<ISegment[]>;
 
+    get(id: number): Promise<ISegment>;
+
     getActive(): Promise<ISegment[]>;
 
     getAll(): Promise<ISegment[]>;
@@ -19,6 +21,12 @@ export interface ISegmentService {
         data: UpsertSegmentSchema,
         user: Partial<Pick<IUser, 'username' | 'email'>>,
     ): Promise<ISegment>;
+
+    update(
+        id: number,
+        data: UpsertSegmentSchema,
+        user: Partial<Pick<IUser, 'username' | 'email'>>,
+    ): Promise<void>;
 
     delete(id: number, user: IUser): Promise<void>;
 

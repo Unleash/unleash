@@ -34,15 +34,14 @@ declare module '@mui/material/styles' {
 
     interface CustomPalette {
         /**
-         * Generic neutral palette color.
+         * Generic neutral palette color
          */
         neutral: PaletteColorOptions;
 
         /**
-         * Table colors.
+         * Table colors
          */
         table: {
-            headerColor: string;
             headerBackground: string;
             headerHover: string;
             divider: string;
@@ -50,7 +49,7 @@ declare module '@mui/material/styles' {
         };
 
         /**
-         * Colors for event log output.
+         * Colors for event log output
          */
         eventLog: {
             diffAdd: string;
@@ -59,7 +58,7 @@ declare module '@mui/material/styles' {
         };
 
         /**
-         * For 'Seen' column on feature toggles list and other.
+         * For 'Seen' column on feature toggles list and other
          */
         seen: {
             unknown: string;
@@ -68,8 +67,6 @@ declare module '@mui/material/styles' {
             abandoned: string;
             primary: string;
         };
-
-        // dividerAlternative: string;
 
         /**
          * Background color for the API command in the sidebar
@@ -85,9 +82,22 @@ declare module '@mui/material/styles' {
         };
 
         /**
-         * Text highlight effect color. Used when filtering/searching over content.
+         * Text highlight effect color. Used when filtering/searching over content
          */
         highlight: string;
+
+        /**
+         * For Links
+         */
+        links: string;
+
+        /**
+         * For Environment Accordion
+         */
+        envAccordion: {
+            disabled: string;
+            expanded: string;
+        };
     }
 
     interface Theme extends CustomTheme {}
@@ -102,23 +112,24 @@ declare module '@mui/material/styles' {
     interface CustomTypeBackground {
         application: string;
         sidebar: string;
+        alternative: string;
         elevation1: string;
         elevation2: string;
     }
 
     interface PaletteColor {
-        light: string;
         main: string;
+        light: string;
         dark: string;
-        contrastText: string;
         border?: string;
+        contrastText: string;
     }
     interface PaletteColorOptions {
-        light?: string;
         main?: string;
+        light?: string;
         dark?: string;
-        contrastText?: string;
         border?: string;
+        contrastText?: string;
     }
 }
 

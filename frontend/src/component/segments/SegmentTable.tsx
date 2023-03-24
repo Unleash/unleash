@@ -28,8 +28,10 @@ import { Search } from 'component/common/Search/Search';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 
 export const SegmentTable = () => {
+    const projectId = useOptionalPathParam('projectId');
     const { segments, loading } = useSegments();
     const { uiConfig } = useUiConfig();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -39,17 +41,22 @@ export const SegmentTable = () => {
     });
 
     const data = useMemo(() => {
-        return (
-            segments ??
-            Array(5).fill({
+        if (!segments) {
+            return Array(5).fill({
                 name: 'Segment name',
                 description: 'Segment descripton',
                 createdAt: new Date().toISOString(),
                 createdBy: 'user',
                 projectId: 'Project',
-            })
-        );
-    }, [segments]);
+            });
+        }
+
+        if (projectId) {
+            return segments.filter(({ project }) => project === projectId);
+        }
+
+        return segments;
+    }, [segments, projectId]);
 
     const {
         getTableProps,
@@ -85,7 +92,9 @@ export const SegmentTable = () => {
                 columns: ['createdAt', 'createdBy'],
             },
             {
-                condition: !Boolean(uiConfig.flags.projectScopedSegments),
+                condition:
+                    Boolean(projectId) ||
+                    !Boolean(uiConfig.flags.projectScopedSegments),
                 columns: ['project'],
             },
         ],

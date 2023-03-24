@@ -20,7 +20,6 @@ import { extractUsername } from '../../../util';
 import { IAuthRequest } from '../../unleash-types';
 import {
     AdminFeaturesQuerySchema,
-    BatchFeaturesSchema,
     CreateFeatureSchema,
     CreateFeatureStrategySchema,
     createRequestSchema,
@@ -72,7 +71,6 @@ export interface IFeatureProjectUserParams extends ProjectParam {
 }
 
 const PATH = '/:projectId/features';
-const PATH_ARCHIVE = '/:projectId/archive';
 const PATH_STALE = '/:projectId/stale';
 const PATH_FEATURE = `${PATH}/:featureName`;
 const PATH_FEATURE_CLONE = `${PATH_FEATURE}/clone`;
@@ -82,10 +80,7 @@ const PATH_STRATEGY = `${PATH_STRATEGIES}/:strategyId`;
 
 type ProjectFeaturesServices = Pick<
     IUnleashServices,
-    | 'featureToggleServiceV2'
-    | 'projectHealthService'
-    | 'openApiService'
-    | 'segmentService'
+    'featureToggleServiceV2' | 'projectHealthService' | 'openApiService'
 >;
 
 export default class ProjectFeaturesController extends Controller {
@@ -400,23 +395,6 @@ export default class ProjectFeaturesController extends Controller {
 
         this.route({
             method: 'post',
-            path: PATH_ARCHIVE,
-            handler: this.archiveFeatures,
-            permission: DELETE_FEATURE,
-            middleware: [
-                openApiService.validPath({
-                    tags: ['Features'],
-                    operationId: 'archiveFeatures',
-                    description:
-                        'This endpoint archives the specified features.',
-                    summary: 'Archives a list of features',
-                    requestBody: createRequestSchema('batchFeaturesSchema'),
-                    responses: { 202: emptyResponse },
-                }),
-            ],
-        });
-        this.route({
-            method: 'post',
             path: PATH_STALE,
             handler: this.staleFeatures,
             permission: UPDATE_FEATURE,
@@ -607,22 +585,6 @@ export default class ProjectFeaturesController extends Controller {
             projectId,
         );
         res.status(202).send();
-    }
-
-    async archiveFeatures(
-        req: IAuthRequest<{ projectId: string }, void, BatchFeaturesSchema>,
-        res: Response,
-    ): Promise<void> {
-        if (!this.flagResolver.isEnabled('bulkOperations')) {
-            throw new NotFoundError('Bulk operations are not enabled');
-        }
-
-        const { features } = req.body;
-        const { projectId } = req.params;
-        const userName = extractUsername(req);
-
-        await this.featureService.archiveToggles(features, userName, projectId);
-        res.status(202).end();
     }
 
     async staleFeatures(

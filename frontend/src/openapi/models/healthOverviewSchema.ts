@@ -3,6 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
+import type { HealthOverviewSchemaDefaultStickiness } from './healthOverviewSchemaDefaultStickiness';
+import type { HealthOverviewSchemaMode } from './healthOverviewSchemaMode';
 import type { FeatureSchema } from './featureSchema';
 import type { ProjectStatsSchema } from './projectStatsSchema';
 
@@ -10,6 +12,10 @@ export interface HealthOverviewSchema {
     version: number;
     name: string;
     description?: string | null;
+    /** A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy */
+    defaultStickiness?: HealthOverviewSchemaDefaultStickiness;
+    /** A mode of the project affecting what actions are possible in this project. During a rollout of project modes this feature can be optional or `null` */
+    mode?: HealthOverviewSchemaMode;
     members?: number;
     health?: number;
     environments?: string[];

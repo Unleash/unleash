@@ -22,7 +22,8 @@ export type CustomEvents =
     | 'export_import'
     | 'project_api_tokens'
     | 'project_stickiness_set'
-    | 'notifications';
+    | 'notifications'
+    | 'batch_operations';
 
 export const usePlausibleTracker = () => {
     const plausible = useContext(PlausibleContext);

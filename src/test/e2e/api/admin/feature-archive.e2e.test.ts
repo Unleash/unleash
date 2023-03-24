@@ -1,9 +1,13 @@
-import { setupAppWithCustomConfig } from '../../helpers/test-helper';
-import dbInit from '../../helpers/database-init';
+import {
+    IUnleashTest,
+    setupAppWithCustomConfig,
+} from '../../helpers/test-helper';
+import dbInit, { ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
+import { DEFAULT_PROJECT } from '../../../../lib/types';
 
-let app;
-let db;
+let app: IUnleashTest;
+let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('archive_serial', getLogger);
@@ -15,78 +19,42 @@ beforeAll(async () => {
             },
         },
     });
-    await app.services.featureToggleServiceV2.createFeatureToggle(
-        'default',
-        {
-            name: 'featureX',
-            description: 'the #1 feature',
-        },
-        'test',
-    );
-    await app.services.featureToggleServiceV2.createFeatureToggle(
-        'default',
-        {
-            name: 'featureY',
-            description: 'soon to be the #1 feature',
-        },
-        'test',
-    );
-    await app.services.featureToggleServiceV2.createFeatureToggle(
-        'default',
-        {
-            name: 'featureZ',
-            description: 'terrible feature',
-        },
-        'test',
-    );
-    await app.services.featureToggleServiceV2.createFeatureToggle(
-        'default',
-        {
-            name: 'featureArchivedX',
-            description: 'the #1 feature',
-        },
-        'test',
-    );
-    await app.services.featureToggleServiceV2.archiveToggle(
-        'featureArchivedX',
-        'test',
-    );
-    await app.services.featureToggleServiceV2.createFeatureToggle(
-        'default',
-        {
-            name: 'featureArchivedY',
-            description: 'soon to be the #1 feature',
-        },
-        'test',
-    );
-    await app.services.featureToggleServiceV2.archiveToggle(
-        'featureArchivedY',
-        'test',
-    );
-    await app.services.featureToggleServiceV2.createFeatureToggle(
-        'default',
-        {
-            name: 'featureArchivedZ',
-            description: 'terrible feature',
-        },
-        'test',
-    );
-    await app.services.featureToggleServiceV2.archiveToggle(
-        'featureArchivedZ',
-        'test',
-    );
-    await app.services.featureToggleServiceV2.createFeatureToggle(
-        'default',
-        {
-            name: 'feature.with.variants',
-            description: 'A feature toggle with variants',
-            variants: [
-                { name: 'control', weight: 50 },
-                { name: 'new', weight: 50 },
-            ],
-        },
-        'test',
-    );
+    await app.createFeature({
+        name: 'featureX',
+        description: 'the #1 feature',
+    });
+    await app.createFeature({
+        name: 'featureY',
+        description: 'soon to be the #1 feature',
+    });
+    await app.createFeature({
+        name: 'featureZ',
+        description: 'terrible feature',
+    });
+    await app.createFeature({
+        name: 'featureArchivedX',
+        description: 'the #1 feature',
+    });
+    await app.archiveFeature('featureArchivedX');
+
+    await app.createFeature({
+        name: 'featureArchivedY',
+        description: 'soon to be the #1 feature',
+    });
+    await app.archiveFeature('featureArchivedY');
+    await app.createFeature({
+        name: 'featureArchivedZ',
+        description: 'terrible feature',
+    });
+    await app.archiveFeature('featureArchivedZ');
+    await app.createFeature({
+        name: 'feature.with.variants',
+        description: 'A feature toggle with variants',
+        variants: [
+            { name: 'control', weight: 50 },
+            { name: 'new', weight: 50 },
+        ],
+    });
 });
 
 afterAll(async () => {
@@ -128,10 +96,8 @@ test('revives a feature by name', async () => {
 test('archived feature is not accessible via /features/:featureName', async () => {
     expect.assertions(0);
 
-    return app.request
-        .get('/api/admin/features/featureArchivedZ')
-        .set('Content-Type', 'application/json')
-        .expect(404);
+    await app.getFeatures('featureArchivedZ', 404);
+    await app.getProjectFeatures('default', 'featureArchivedZ', 404);
 });
 
 test('must set name when reviving toggle', async () => {
@@ -203,10 +169,15 @@ test('can bulk delete features and recreate after', async () => {
             })
             .set('Content-Type', 'application/json')
             .expect(201);
-        await app.request.delete(`/api/admin/features/${feature}`).expect(200);
     }
     await app.request
-        .post('/api/admin/projects/default/archive/delete')
+        .post(`/api/admin/projects/${DEFAULT_PROJECT}/archive`)
+        .send({
+            features,
+        })
+        .expect(202);
+    await app.request
+        .post('/api/admin/projects/default/delete')
         .send({ features })
         .expect(200);
     for (const feature of features) {
@@ -216,4 +187,59 @@ test('can bulk delete features and recreate after', async () => {
             .set('Content-Type', 'application/json')
             .expect(200);
     }
+});
+
+test('can bulk revive features', async () => {
+    const features = ['first.revive.issue', 'second.revive.issue'];
+    for (const feature of features) {
+        await app.request
+            .post('/api/admin/features')
+            .send({
+                name: feature,
+                enabled: false,
+                strategies: [{ name: 'default' }],
+            })
+            .set('Content-Type', 'application/json')
+            .expect(201);
+    }
+    await app.request
+        .post(`/api/admin/projects/${DEFAULT_PROJECT}/archive`)
+        .send({
+            features,
+        })
+        .expect(202);
+    await app.request
+        .post('/api/admin/projects/default/revive')
+        .send({ features })
+        .expect(200);
+    for (const feature of features) {
+        await app.request
+            .get(`/api/admin/projects/default/features/${feature}`)
+            .expect(200);
+    }
+});
+
+test('Should be able to bulk archive features', async () => {
+    const featureName1 = 'archivedFeature1';
+    const featureName2 = 'archivedFeature2';
+
+    await app.createFeature(featureName1);
+    await app.createFeature(featureName2);
+
+    await app.request
+        .post(`/api/admin/projects/${DEFAULT_PROJECT}/archive`)
+        .send({
+            features: [featureName1, featureName2],
+        })
+        .expect(202);
+
+    const { body } = await app.request
+        .get(`/api/admin/archive/features/${DEFAULT_PROJECT}`)
+        .expect(200);
+
+    const archivedFeatures = body.features.filter(
+        (feature) =>
+            feature.name === featureName1 || feature.name === featureName2,
+    );
+    expect(archivedFeatures).toHaveLength(2);
 });

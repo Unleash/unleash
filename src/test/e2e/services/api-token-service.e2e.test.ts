@@ -36,6 +36,7 @@ beforeAll(async () => {
         id: 'test-project',
         name: 'Test Project',
         description: 'Fancy',
+        mode: 'open' as const,
     };
     const user = await stores.userStore.insert({
         name: 'Some Name',
@@ -219,11 +220,11 @@ test('should return user with multiple projects', async () => {
         tokens[1].secret,
     );
 
-    expect(multiProjectUser.projects).toStrictEqual([
+    expect(multiProjectUser!.projects).toStrictEqual([
         'test-project',
         'default',
     ]);
-    expect(singleProjectUser.projects).toStrictEqual(['test-project']);
+    expect(singleProjectUser!.projects).toStrictEqual(['test-project']);
 });
 
 test('should not partially create token if projects are invalid', async () => {

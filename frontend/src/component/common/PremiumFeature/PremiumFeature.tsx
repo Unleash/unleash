@@ -1,7 +1,9 @@
 import { ReactComponent as ProPlanIcon } from 'assets/icons/pro-enterprise-feature-badge.svg';
+import { ReactComponent as ProPlanIconLight } from 'assets/icons/pro-enterprise-feature-badge-light.svg';
 import { Box, Button, Link, styled, Typography } from '@mui/material';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
+import { ThemeMode } from '../ThemeMode/ThemeMode';
 
 const PremiumFeatureWrapper = styled(Box, {
     shouldForwardProp: prop => prop !== 'tooltip',
@@ -63,6 +65,11 @@ const PremiumFeatures = {
         url: 'https://docs.getunleash.io/reference/change-requests',
         label: 'Change Requests',
     },
+    segments: {
+        plan: FeaturePlan.PRO,
+        url: 'https://docs.getunleash.io/reference/segments',
+        label: 'Segments',
+    },
 };
 
 type PremiumFeatureType = keyof typeof PremiumFeatures;
@@ -106,7 +113,10 @@ export const PremiumFeature = ({ feature, tooltip }: PremiumFeatureProps) => {
     return (
         <PremiumFeatureWrapper tooltip={tooltip}>
             <StyledTitle>
-                <ProPlanIcon />
+                <ThemeMode
+                    darkmode={<ProPlanIconLight />}
+                    lightmode={<ProPlanIcon />}
+                />
                 {`${plan} feature`}
             </StyledTitle>
             <ConditionallyRender

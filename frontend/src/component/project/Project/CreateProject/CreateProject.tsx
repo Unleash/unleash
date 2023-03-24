@@ -1,6 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import ProjectForm from '../ProjectForm/ProjectForm';
-import useProjectForm from '../hooks/useProjectForm';
+import useProjectForm, {
+    DEFAULT_PROJECT_STICKINESS,
+} from '../hooks/useProjectForm';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { CREATE_PROJECT } from 'component/providers/AccessProvider/permissions';
@@ -10,15 +12,20 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { GO_BACK } from 'constants/navigate';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+
+const CREATE_PROJECT_BTN = 'CREATE_PROJECT_BTN';
 
 const CreateProject = () => {
     const { setToastData, setToastApiError } = useToast();
     const { refetchUser } = useAuthUser();
     const { uiConfig } = useUiConfig();
     const navigate = useNavigate();
+    const { trackEvent } = usePlausibleTracker();
     const {
         projectId,
         projectName,
+        projectMode,
         projectDesc,
         setProjectId,
         setProjectName,
@@ -28,12 +35,12 @@ const CreateProject = () => {
         validateProjectId,
         validateName,
         setProjectStickiness,
+        setProjectMode,
         projectStickiness,
         errors,
     } = useProjectForm();
 
-    const { createProject, setDefaultProjectStickiness, loading } =
-        useProjectApi();
+    const { createProject, loading } = useProjectApi();
 
     const handleSubmit = async (e: Event) => {
         e.preventDefault();
@@ -45,10 +52,6 @@ const CreateProject = () => {
             const payload = getProjectPayload();
             try {
                 await createProject(payload);
-                setDefaultProjectStickiness(
-                    projectId,
-                    payload.projectStickiness
-                );
                 refetchUser();
                 navigate(`/projects/${projectId}`);
                 setToastData({
@@ -57,6 +60,10 @@ const CreateProject = () => {
                     confetti: true,
                     type: 'success',
                 });
+
+                if (projectStickiness !== DEFAULT_PROJECT_STICKINESS) {
+                    trackEvent('project_stickiness_set');
+                }
             } catch (error: unknown) {
                 setToastApiError(formatUnknownError(error));
             }
@@ -92,8 +99,10 @@ const CreateProject = () => {
                 projectId={projectId}
                 setProjectId={setProjectId}
                 projectName={projectName}
+                projectMode={projectMode}
                 projectStickiness={projectStickiness}
                 setProjectStickiness={setProjectStickiness}
+                setProjectMode={setProjectMode}
                 setProjectName={setProjectName}
                 projectDesc={projectDesc}
                 setProjectDesc={setProjectDesc}
@@ -101,7 +110,11 @@ const CreateProject = () => {
                 clearErrors={clearErrors}
                 validateProjectId={validateProjectId}
             >
-                <CreateButton name="project" permission={CREATE_PROJECT} />
+                <CreateButton
+                    name="project"
+                    permission={CREATE_PROJECT}
+                    data-testid={CREATE_PROJECT_BTN}
+                />
             </ProjectForm>
         </FormTemplate>
     );

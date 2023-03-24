@@ -69,7 +69,7 @@ const InvoiceList = () => {
                                         style={{
                                             backgroundColor:
                                                 item.status === 'past-due'
-                                                    ? '#ff9194'
+                                                    ? 'error.dark'
                                                     : 'inherit',
                                         }}
                                     >

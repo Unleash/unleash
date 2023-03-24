@@ -4,7 +4,7 @@ export const useStyles = makeStyles()(theme => ({
     container: {
         maxWidth: '450px',
         background: theme.palette.background.paper,
-        boxShadow: '2px 2px 4px rgba(0,0,0,0.4)',
+        boxShadow: theme.boxShadows.popup,
         zIndex: 500,
         margin: '0 0.8rem',
         borderRadius: '12.5px',

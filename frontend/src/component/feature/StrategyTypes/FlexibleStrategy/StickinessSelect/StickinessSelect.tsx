@@ -1,5 +1,5 @@
 import Select from 'component/common/select';
-import { SelectChangeEvent } from '@mui/material';
+import { SelectChangeEvent, useTheme } from '@mui/material';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 const builtInStickinessOptions = [
     { key: 'default', label: 'default' },
@@ -23,6 +23,7 @@ export const StickinessSelect = ({
     dataTestId,
 }: IStickinessSelectProps) => {
     const { context } = useUnleashContext();
+    const theme = useTheme();
 
     const resolveStickinessOptions = () =>
         builtInStickinessOptions.concat(
@@ -51,7 +52,11 @@ export const StickinessSelect = ({
             disabled={!editable}
             data-testid={dataTestId}
             onChange={onChange}
-            style={{ width: 'inherit', minWidth: '100%' }}
+            style={{
+                width: 'inherit',
+                minWidth: '100%',
+                marginBottom: theme.spacing(2),
+            }}
         />
     );
 };

@@ -20,7 +20,7 @@ export const FeatureStatusChip = ({
 
     return (
         <div data-loading style={{ marginLeft: '8px' }}>
-            <Badge color={stale ? 'neutral' : 'secondary'} title={title}>
+            <Badge color={stale ? 'error' : 'success'} title={title}>
                 {value}
             </Badge>
         </div>

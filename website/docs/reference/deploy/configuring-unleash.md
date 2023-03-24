@@ -243,11 +243,11 @@ The available options are listed in the table below. Options can be specified ei
 | `applicationName` | `DATABASE_APPLICATION_NAME` | `unleash` | The name of the application that created this Client instance. |
 | `schema` | `DATABASE_SCHEMA` | `public` | The schema to use in the database. |
 
-Alternatively, you can use a [libpq connection string](https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING) to connect to the database. You can provide it directly or from a file by using one of the below options. In JavaScript, these are top-level properties of the root configuration object, _not_ the `db` object.
+Alternatively, you can use a single-host [libpq connection string](https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING) to connect to the database. You can provide it directly or from a file by using one of the below options. In JavaScript, these are top-level properties of the root configuration object, _not_ the `db` object.
 
 | Property name | Environment variable | Default value | Description |
 | --- | --- | --- | --- |
-| `databaseUrl` | `DATABASE_URL` | N/A | A string that matches the [libpq connection string](https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING), such as `postgres://USER:PASSWORD@HOST:PORT/DATABASE`. |
+| `databaseUrl` | `DATABASE_URL` | N/A | A string that matches a single-host [libpq connection string](https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING), such as `postgres://USER:PASSWORD@HOST:PORT/DATABASE`. Unleash does **not** support using multiple hosts. |
 | `databaseUrlFile` | `DATABASE_URL_FILE` | N/A | The path to a file that contains a [libpq connection string](https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING). |
 
 Below is an example JavaScript configuration object.

@@ -11,7 +11,7 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 const StyledContainer = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
     color: theme.palette.primary.contrastText,
-    backgroundColor: theme.palette.background.sidebar,
+    backgroundColor: theme.palette.background.alternative,
     display: 'flex',
     flexDirection: 'column',
     maxWidth: '350px',

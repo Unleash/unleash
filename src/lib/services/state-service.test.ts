@@ -518,6 +518,7 @@ test('Should not import an existing project', async () => {
                 id: 'default',
                 name: 'default',
                 description: 'Some fancy description for project',
+                mode: 'open' as const,
             },
         ],
     };
@@ -546,6 +547,7 @@ test('Should drop projects before import if specified', async () => {
         id: 'fancy',
         name: 'extra',
         description: 'Not expected to be seen after import',
+        mode: 'open' as const,
     });
     await stateService.import({ data, dropBeforeImport: true });
     const hasProject = await stores.projectStore.hasProject('fancy');
@@ -558,6 +560,7 @@ test('Should export projects', async () => {
         id: 'fancy',
         name: 'extra',
         description: 'No surprises here',
+        mode: 'open' as const,
     });
     const exported = await stateService.export({
         includeFeatureToggles: false,
@@ -579,6 +582,7 @@ test('exporting to new format works', async () => {
         id: 'fancy',
         name: 'extra',
         description: 'No surprises here',
+        mode: 'open' as const,
     });
     await stores.environmentStore.create({
         name: 'dev',
@@ -622,7 +626,7 @@ test('exporting variants to v4 format should not include variants in features', 
 
     exported.featureEnvironments.forEach((fe) => {
         expect(fe.variants).toHaveLength(1);
-        expect(fe.variants[0].name).toBe(`${fe.environment}-variant`);
+        expect(fe.variants?.[0].name).toBe(`${fe.environment}-variant`);
     });
     expect(exported.environments).toHaveLength(3);
 });
@@ -633,6 +637,7 @@ test('featureStrategies can keep existing', async () => {
         id: 'fancy',
         name: 'extra',
         description: 'No surprises here',
+        mode: 'open' as const,
     });
     await stores.environmentStore.create({
         name: 'dev',
@@ -679,6 +684,7 @@ test('featureStrategies should not keep existing if dropBeforeImport', async () 
         id: 'fancy',
         name: 'extra',
         description: 'No surprises here',
+        mode: 'open' as const,
     });
     await stores.environmentStore.create({
         name: 'dev',

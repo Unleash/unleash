@@ -17,7 +17,7 @@ interface IPlaygroundEditorProps {
 
 const StyledEditorHeader = styled('aside')(({ theme }) => ({
     height: '50px',
-    backgroundColor: theme.palette.neutral.light,
+    backgroundColor: theme.palette.background.paper,
     borderTopRightRadius: theme.shape.borderRadiusMedium,
     borderTopLeftRadius: theme.shape.borderRadiusMedium,
     padding: theme.spacing(1, 2),
@@ -26,24 +26,23 @@ const StyledEditorHeader = styled('aside')(({ theme }) => ({
     justifyContent: 'space-between',
     alignItems: 'center',
     border: `1px solid ${theme.palette.divider}`,
-    borderBottom: 'none',
 }));
 
 const StyledEditorStatusContainer = styled('div')(({ theme, style }) => ({
-    width: '28px',
-    height: '28px',
+    width: theme.spacing(3),
+    height: theme.spacing(3),
     display: 'flex',
     alignItems: 'center',
+    color: theme.palette.background.paper,
     justifyContent: 'center',
     transition: `background-color 0.5s ease-in-out`,
     borderRadius: '50%',
-    opacity: 0.8,
     ...style,
 }));
 
 const StyledErrorSpan = styled('div')(({ theme }) => ({
-    fontSize: '0.9rem',
-    color: theme.palette.error.main,
+    fontSize: theme.fontSizes.smallBody,
+    color: theme.palette.error.dark,
     marginRight: theme.spacing(1),
 }));
 
@@ -52,11 +51,15 @@ const EditorStatusOk = () => {
     return (
         <StyledEditorStatusContainer
             style={{
-                color: theme.palette.success.contrastText,
                 backgroundColor: theme.palette.success.main,
             }}
         >
-            <Check sx={{ width: '20px', height: '20px' }} />
+            <Check
+                sx={theme => ({
+                    width: theme.spacing(2),
+                    height: theme.spacing(2),
+                })}
+            />
         </StyledEditorStatusContainer>
     );
 };
@@ -67,7 +70,6 @@ const EditorStatusError = () => {
     return (
         <StyledEditorStatusContainer
             style={{
-                color: theme.palette.error.contrastText,
                 backgroundColor: theme.palette.error.main,
             }}
         >
@@ -119,8 +121,6 @@ export const PlaygroundEditor: VFC<IPlaygroundEditorProps> = ({
                 style={{
                     border: `1px solid ${theme.palette.divider}`,
                     borderTop: 'none',
-                    borderBottomLeftRadius: theme.shape.borderRadiusMedium,
-                    borderBottomRightRadius: theme.shape.borderRadiusMedium,
                 }}
                 placeholder={JSON.stringify(
                     {

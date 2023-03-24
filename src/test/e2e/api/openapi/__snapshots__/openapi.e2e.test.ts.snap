@@ -889,6 +889,13 @@ exports[`should serve the OpenAPI spec 1`] = `
           "parameters": {
             "$ref": "#/components/schemas/parametersSchema",
           },
+          "segments": {
+            "description": "Ids of segments to use for this strategy",
+            "items": {
+              "type": "number",
+            },
+            "type": "array",
+          },
           "sortOrder": {
             "type": "number",
           },
@@ -1834,6 +1841,17 @@ exports[`should serve the OpenAPI spec 1`] = `
       "healthOverviewSchema": {
         "additionalProperties": false,
         "properties": {
+          "defaultStickiness": {
+            "description": "A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy",
+            "enum": [
+              "default",
+              "userId",
+              "sessionId",
+              "random",
+            ],
+            "example": "userId",
+            "type": "string",
+          },
           "description": {
             "nullable": true,
             "type": "string",
@@ -1858,6 +1876,15 @@ exports[`should serve the OpenAPI spec 1`] = `
           },
           "members": {
             "type": "number",
+          },
+          "mode": {
+            "description": "The project's [collaboration mode](https://docs.getunleash.io/reference/project-collaboration-mode). Determines whether non-project members can submit change requests or not.",
+            "enum": [
+              "open",
+              "protected",
+            ],
+            "example": "open",
+            "type": "string",
           },
           "name": {
             "type": "string",
@@ -1887,6 +1914,17 @@ exports[`should serve the OpenAPI spec 1`] = `
           "activeCount": {
             "type": "number",
           },
+          "defaultStickiness": {
+            "description": "A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy",
+            "enum": [
+              "default",
+              "userId",
+              "sessionId",
+              "random",
+            ],
+            "example": "userId",
+            "type": "string",
+          },
           "description": {
             "nullable": true,
             "type": "string",
@@ -1911,6 +1949,15 @@ exports[`should serve the OpenAPI spec 1`] = `
           },
           "members": {
             "type": "number",
+          },
+          "mode": {
+            "description": "The project's [collaboration mode](https://docs.getunleash.io/reference/project-collaboration-mode). Determines whether non-project members can submit change requests or not.",
+            "enum": [
+              "open",
+              "protected",
+            ],
+            "example": "open",
+            "type": "string",
           },
           "name": {
             "type": "string",
@@ -2732,6 +2779,17 @@ exports[`should serve the OpenAPI spec 1`] = `
         "additionalProperties": false,
         "description": "A high-level overview of a project. It contains information such as project statistics, the name of the project, what members and what features it contains, etc.",
         "properties": {
+          "defaultStickiness": {
+            "description": "A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy",
+            "enum": [
+              "default",
+              "userId",
+              "sessionId",
+              "random",
+            ],
+            "example": "userId",
+            "type": "string",
+          },
           "description": {
             "description": "Additional information about the project",
             "example": "DX squad feature release",
@@ -2771,6 +2829,15 @@ exports[`should serve the OpenAPI spec 1`] = `
             "example": 4,
             "type": "number",
           },
+          "mode": {
+            "description": "The project's [collaboration mode](https://docs.getunleash.io/reference/project-collaboration-mode). Determines whether non-project members can submit change requests or not.",
+            "enum": [
+              "open",
+              "protected",
+            ],
+            "example": "open",
+            "type": "string",
+          },
           "name": {
             "description": "The name of this project",
             "example": "dx-squad",
@@ -2805,6 +2872,17 @@ exports[`should serve the OpenAPI spec 1`] = `
             "format": "date-time",
             "type": "string",
           },
+          "defaultStickiness": {
+            "description": "A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy",
+            "enum": [
+              "default",
+              "userId",
+              "sessionId",
+              "random",
+            ],
+            "example": "userId",
+            "type": "string",
+          },
           "description": {
             "description": "Additional information about the project",
             "example": "DX squad feature release",
@@ -2837,13 +2915,12 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "number",
           },
           "mode": {
-            "description": "A mode of the project affecting what actions are possible in this project. During a rollout of project modes this feature can be optional or \`null\`",
+            "description": "The project's [collaboration mode](https://docs.getunleash.io/reference/project-collaboration-mode). Determines whether non-project members can submit change requests or not.",
             "enum": [
               "open",
               "protected",
             ],
             "example": "open",
-            "nullable": true,
             "type": "string",
           },
           "name": {
@@ -2860,29 +2937,6 @@ exports[`should serve the OpenAPI spec 1`] = `
         "required": [
           "id",
           "name",
-        ],
-        "type": "object",
-      },
-      "projectSettingsSchema": {
-        "additionalProperties": false,
-        "properties": {
-          "defaultStickiness": {
-            "example": "userId",
-            "nullable": true,
-            "type": "string",
-          },
-          "mode": {
-            "enum": [
-              "open",
-              "protected",
-              "private",
-            ],
-            "nullable": true,
-            "type": "string",
-          },
-        },
-        "required": [
-          "defaultStickiness",
         ],
         "type": "object",
       },
@@ -2906,11 +2960,6 @@ Stats are divided into current and previous **windows**.
           },
           "avgTimeToProdCurrentWindow": {
             "description": "The average time from when a feature was created to when it was enabled in the "production" environment during the current window",
-            "example": 10,
-            "type": "number",
-          },
-          "avgTimeToProdPastWindow": {
-            "description": "The average time from when a feature was created to when it was enabled in the "production" environment during the previous window",
             "example": 10,
             "type": "number",
           },
@@ -2942,7 +2991,6 @@ Stats are divided into current and previous **windows**.
         },
         "required": [
           "avgTimeToProdCurrentWindow",
-          "avgTimeToProdPastWindow",
           "createdCurrentWindow",
           "createdPastWindow",
           "archivedCurrentWindow",
@@ -6080,8 +6128,9 @@ If the provided project does not exist, the list of events will be empty.",
         ],
       },
     },
-    "/api/admin/projects/{projectId}/archive/delete": {
+    "/api/admin/projects/{projectId}/delete": {
       "post": {
+        "description": "This endpoint deletes the specified features, that are in archive.",
         "operationId": "deleteFeatures",
         "parameters": [
           {
@@ -6109,6 +6158,7 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "This response has no body.",
           },
         },
+        "summary": "Deletes a list of features",
         "tags": [
           "Archive",
         ],
@@ -7494,40 +7544,10 @@ If the provided project does not exist, the list of events will be empty.",
         ],
       },
     },
-    "/api/admin/projects/{projectId}/settings": {
-      "get": {
-        "operationId": "getProjectSettings",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "projectId",
-            "required": true,
-            "schema": {
-              "type": "string",
-            },
-          },
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/projectSettingsSchema",
-                },
-              },
-            },
-            "description": "projectSettingsSchema",
-          },
-          "404": {
-            "description": "This response has no body.",
-          },
-        },
-        "tags": [
-          "Projects",
-        ],
-      },
+    "/api/admin/projects/{projectId}/revive": {
       "post": {
-        "operationId": "setProjectSettings",
+        "description": "This endpoint revives the specified features.",
+        "operationId": "reviveFeatures",
         "parameters": [
           {
             "in": "path",
@@ -7538,23 +7558,25 @@ If the provided project does not exist, the list of events will be empty.",
             },
           },
         ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/projectSettingsSchema",
-                },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/batchFeaturesSchema",
               },
             },
-            "description": "projectSettingsSchema",
           },
-          "404": {
+          "description": "batchFeaturesSchema",
+          "required": true,
+        },
+        "responses": {
+          "200": {
             "description": "This response has no body.",
           },
         },
+        "summary": "Revives a list of features",
         "tags": [
-          "Projects",
+          "Archive",
         ],
       },
     },

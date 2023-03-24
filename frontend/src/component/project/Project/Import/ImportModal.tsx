@@ -21,18 +21,17 @@ const ModalContentContainer = styled('div')(({ theme }) => ({
 }));
 
 const TimelineContainer = styled('div')(({ theme }) => ({
-    backgroundColor: theme.palette.primary.main,
-    padding: theme.spacing(6, 8, 3, 4),
+    backgroundColor: theme.palette.background.sidebar,
+    padding: theme.spacing(8),
     flexBasis: '30%',
 }));
 
 const TimelineHeader = styled('div')(({ theme }) => ({
     textTransform: 'uppercase',
     fontSize: theme.fontSizes.smallBody,
-    color: theme.palette.primary.contrastText,
+    color: theme.palette.common.white,
     fontWeight: theme.typography.fontWeightBold,
-    paddingLeft: theme.spacing(2),
-    marginBottom: theme.spacing(4),
+    marginBottom: theme.spacing(3),
 }));
 
 const isValidJSON = (json: string) => {

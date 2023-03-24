@@ -213,6 +213,7 @@ export const FeatureStrategyForm = ({
                     <FeatureStrategySegment
                         segments={segments}
                         setSegments={setSegments}
+                        projectId={projectId}
                     />
                 }
             />
@@ -253,7 +254,7 @@ export const FeatureStrategyForm = ({
                 </PermissionButton>
                 <Button
                     type="button"
-                    color="secondary"
+                    color="primary"
                     onClick={onCancel}
                     disabled={loading}
                 >

@@ -2,20 +2,28 @@ import { Knex } from 'knex';
 import { Logger, LogProvider } from '../logger';
 
 import NotFoundError from '../error/notfound-error';
-import { IEnvironment, IProject, IProjectWithCount } from '../types/model';
+import {
+    DefaultStickiness,
+    IEnvironment,
+    IFlagResolver,
+    IProject,
+    IProjectWithCount,
+    ProjectMode,
+} from '../types';
 import {
     IProjectHealthUpdate,
     IProjectInsert,
     IProjectQuery,
+    IProjectSettings,
+    IProjectSettingsRow,
     IProjectStore,
 } from '../types/stores/project-store';
-import { DEFAULT_ENV } from '../util/constants';
+import { DEFAULT_ENV } from '../util';
 import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
 import EventEmitter from 'events';
-import { IFlagResolver } from '../types';
-import Raw = Knex.Raw;
 import { Db } from './db';
+import Raw = Knex.Raw;
 
 const COLUMNS = [
     'id',
@@ -26,6 +34,8 @@ const COLUMNS = [
     'updated_at',
 ];
 const TABLE = 'projects';
+const SETTINGS_COLUMNS = ['project_mode'];
+const SETTINGS_TABLE = 'project_settings';
 
 export interface IEnvironmentProjectLink {
     environmentName: string;
@@ -63,7 +73,7 @@ class ProjectStore implements IProjectStore {
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    fieldToRow(data): IProjectInsert {
+    fieldToRow(data): Omit<IProjectInsert, 'mode'> {
         return {
             id: data.id,
             name: data.name,
@@ -153,6 +163,7 @@ class ProjectStore implements IProjectStore {
             memberCount: Number(row.number_of_users) || 0,
             updatedAt: row.updated_at,
             mode: 'open',
+            defaultStickiness: 'default',
         };
     }
 
@@ -168,8 +179,13 @@ class ProjectStore implements IProjectStore {
 
     async get(id: string): Promise<IProject> {
         return this.db
-            .first(COLUMNS)
+            .first([...COLUMNS, ...SETTINGS_COLUMNS])
             .from(TABLE)
+            .leftJoin(
+                SETTINGS_TABLE,
+                `${SETTINGS_TABLE}.project`,
+                `${TABLE}.id`,
+            )
             .where({ id })
             .then(this.mapRow);
     }
@@ -189,11 +205,29 @@ class ProjectStore implements IProjectStore {
             .update({ health: healthUpdate.health, updated_at: new Date() });
     }
 
-    async create(project: IProjectInsert): Promise<IProject> {
+    async create(
+        project: IProjectInsert & IProjectSettings,
+    ): Promise<IProject> {
         const row = await this.db(TABLE)
             .insert(this.fieldToRow(project))
             .returning('*');
-        return this.mapRow(row[0]);
+        const settingsRow = await this.db(SETTINGS_TABLE)
+            .insert({
+                project: project.id,
+                project_mode: project.mode,
+                default_stickiness: project.defaultStickiness,
+            })
+            .returning('*');
+        return this.mapRow({ ...row[0], ...settingsRow[0] });
+    }
+
+    private async hasProjectSettings(projectId: string): Promise<boolean> {
+        const result = await this.db.raw(
+            `SELECT EXISTS(SELECT 1 FROM ${SETTINGS_TABLE} WHERE project = ?) AS present`,
+            [projectId],
+        );
+        const { present } = result.rows[0];
+        return present;
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -202,6 +236,20 @@ class ProjectStore implements IProjectStore {
             await this.db(TABLE)
                 .where({ id: data.id })
                 .update(this.fieldToRow(data));
+            if (await this.hasProjectSettings(data.id)) {
+                await this.db(SETTINGS_TABLE)
+                    .where({ project: data.id })
+                    .update({
+                        project_mode: data.mode,
+                        default_stickiness: data.defaultStickiness,
+                    });
+            } else {
+                await this.db(SETTINGS_TABLE).insert({
+                    project: data.id,
+                    project_mode: data.mode,
+                    default_stickiness: data.defaultStickiness,
+                });
+            }
         } catch (err) {
             this.logger.error('Could not update project, error: ', err);
         }
@@ -432,11 +480,36 @@ class ProjectStore implements IProjectStore {
         return Number(members.count);
     }
 
+    async getProjectSettings(projectId: string): Promise<IProjectSettings> {
+        const row = await this.db(SETTINGS_TABLE).where({ project: projectId });
+        return this.mapSettingsRow(row[0]);
+    }
+
+    async setProjectSettings(
+        projectId: string,
+        defaultStickiness: DefaultStickiness,
+        mode: ProjectMode,
+    ): Promise<void> {
+        await this.db(SETTINGS_TABLE)
+            .update({
+                default_stickiness: defaultStickiness,
+                project_mode: mode,
+            })
+            .where({ project: projectId });
+    }
+
     async count(): Promise<number> {
         return this.db
             .from(TABLE)
             .count('*')
             .then((res) => Number(res[0].count));
+    }
+
+    mapSettingsRow(row?: IProjectSettingsRow): IProjectSettings {
+        return {
+            defaultStickiness: row?.default_stickiness || 'default',
+            mode: row?.project_mode || 'open',
+        };
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -460,7 +533,7 @@ class ProjectStore implements IProjectStore {
             createdAt: row.created_at,
             health: row.health ?? 100,
             updatedAt: row.updated_at || new Date(),
-            mode: 'open',
+            mode: row.project_mode || 'open',
         };
     }
 }

@@ -11,12 +11,13 @@ import ProjectEnvironmentList from 'component/project/ProjectEnvironment/Project
 import { ChangeRequestConfiguration } from './ChangeRequestConfiguration/ChangeRequestConfiguration';
 import { ProjectApiAccess } from 'component/project/Project/ProjectSettings/ProjectApiAccess/ProjectApiAccess';
 import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
+import { ProjectSegments } from './ProjectSegments/ProjectSegments';
 
 export const ProjectSettings = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const { uiConfig } = useUiConfig();
-    const { showProjectApiAccess } = uiConfig.flags;
+    const { showProjectApiAccess, projectScopedSegments } = uiConfig.flags;
 
     const tabs: ITab[] = [
         {
@@ -26,6 +27,11 @@ export const ProjectSettings = () => {
         {
             id: 'access',
             label: 'Access',
+        },
+        {
+            id: 'segments',
+            label: 'Segments',
+            hidden: !Boolean(projectScopedSegments),
         },
         {
             id: 'change-requests',
@@ -60,6 +66,7 @@ export const ProjectSettings = () => {
                     element={<ProjectEnvironmentList />}
                 />
                 <Route path="access/*" element={<ProjectAccess />} />
+                <Route path="segments/*" element={<ProjectSegments />} />
                 <Route
                     path="change-requests/*"
                     element={<ChangeRequestConfiguration />}

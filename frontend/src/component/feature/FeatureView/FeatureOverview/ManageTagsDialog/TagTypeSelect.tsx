@@ -1,5 +1,3 @@
-import React from 'react';
-import useTagTypes from 'hooks/api/getters/useTagTypes/useTagTypes';
 import {
     Autocomplete,
     AutocompleteProps,
@@ -11,24 +9,31 @@ import {
 import { ITagType } from 'interfaces/tags';
 
 interface ITagSelect {
+    options: ITagType[];
     value: ITagType;
+    disabled?: boolean;
     onChange: AutocompleteProps<ITagType, false, any, any>['onChange'];
-    autoFocus?: boolean;
 }
 
 const ListItem = styled('li')({
     flexDirection: 'column',
 });
-const TagTypeSelect = ({ value, onChange }: ITagSelect) => {
-    const { tagTypes } = useTagTypes();
+
+export const TagTypeSelect = ({
+    options,
+    value,
+    disabled = false,
+    onChange,
+}: ITagSelect) => {
     const theme = useTheme();
 
     return (
         <Autocomplete
             disablePortal
+            disabled={disabled}
             id="tag-type-select"
             sx={{ marginTop: theme => theme.spacing(2), width: 500 }}
-            options={tagTypes}
+            options={options}
             disableClearable
             value={value}
             getOptionLabel={option => option.name}
@@ -54,5 +59,3 @@ const TagTypeSelect = ({ value, onChange }: ITagSelect) => {
         />
     );
 };
-
-export default TagTypeSelect;

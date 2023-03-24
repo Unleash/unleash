@@ -63,7 +63,10 @@ const rbacMiddleware = (
 
             // Temporary workaround to figure out projectId for feature toggle updates.
             // will be removed in Unleash v5.0
-            if ([DELETE_FEATURE, UPDATE_FEATURE].includes(permission)) {
+            if (
+                !projectId &&
+                [DELETE_FEATURE, UPDATE_FEATURE].includes(permission)
+            ) {
                 const { featureName } = params;
                 projectId = await featureToggleStore.getProjectId(featureName);
             } else if (

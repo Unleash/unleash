@@ -332,3 +332,36 @@ test('DELETE_TAG_TYPE does not need projectId', async () => {
         undefined,
     );
 });
+
+test('should not expect featureName for UPDATE_FEATURE when projectId specified', async () => {
+    const projectId = 'some-project-33';
+
+    const accessService = {
+        hasPermission: jest.fn(),
+    };
+
+    const func = rbacMiddleware(config, { featureToggleStore }, accessService);
+
+    const cb = jest.fn();
+    const req: any = {
+        user: new User({
+            username: 'user',
+            id: 1,
+        }),
+        params: {},
+        body: {
+            project: projectId,
+        },
+    };
+
+    func(req, undefined, cb);
+
+    await req.checkRbac(perms.UPDATE_FEATURE);
+
+    expect(accessService.hasPermission).toHaveBeenCalledWith(
+        req.user,
+        perms.UPDATE_FEATURE,
+        projectId,
+        undefined,
+    );
+});

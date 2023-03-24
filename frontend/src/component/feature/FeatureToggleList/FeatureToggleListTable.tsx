@@ -36,6 +36,7 @@ import FileDownload from '@mui/icons-material/FileDownload';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import { ExportDialog } from './ExportDialog';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { focusable } from 'themes/themeStyles';
 
 export const featuresPlaceholder: FeatureSchema[] = Array(15).fill({
     name: 'Name of the feature',
@@ -306,7 +307,7 @@ export const FeatureToggleListTable: VFC = () => {
                                 component={RouterLink}
                                 to="/archive"
                                 underline="always"
-                                sx={{ marginRight: 2 }}
+                                sx={{ marginRight: 2, ...focusable(theme) }}
                             >
                                 View archive
                             </Link>

@@ -40,7 +40,7 @@ As an example: You've created a custom field called `groupId`. You know group ID
 
 
 
-## Custom context fields {#context-fields}
+## Custom context fields
 
 :::info Availability
 

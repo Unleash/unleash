@@ -18,6 +18,7 @@ From within the notifications list, you can:
 * navigate to the features or change request that the notification is for
 * mark all notifications as read
 * filter out unread notifications
+Notifications can not be disabled.
 
 ## Notification events
 

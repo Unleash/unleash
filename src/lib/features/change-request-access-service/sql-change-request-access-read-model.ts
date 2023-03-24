@@ -35,7 +35,7 @@ export class ChangeRequestAccessReadModel
         return !(changeRequestEnabled && !canSkipChangeRequest);
     }
 
-    async isChangeRequestsEnabled(
+    public async isChangeRequestsEnabled(
         project: string,
         environment: string,
     ): Promise<boolean> {

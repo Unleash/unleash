@@ -207,6 +207,35 @@ class EventStore implements IEventStore {
         }
     }
 
+    async queryCount(operations: IQueryOperations[]): Promise<number> {
+        try {
+            let query: Knex.QueryBuilder = this.db.count().from(TABLE);
+
+            operations.forEach((operation) => {
+                if (operation.op === 'where') {
+                    query = this.where(query, operation.parameters);
+                }
+
+                if (operation.op === 'forFeatures') {
+                    query = this.forFeatures(query, operation.parameters);
+                }
+
+                if (operation.op === 'beforeDate') {
+                    query = this.beforeDate(query, operation.parameters);
+                }
+
+                if (operation.op === 'betweenDate') {
+                    query = this.betweenDate(query, operation.parameters);
+                }
+            });
+
+            const queryResult = await query.first();
+            return parseInt(queryResult.count || 0);
+        } catch (e) {
+            return 0;
+        }
+    }
+
     where(
         query: Knex.QueryBuilder,
         parameters: { [key: string]: string },

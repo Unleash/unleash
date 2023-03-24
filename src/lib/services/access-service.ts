@@ -550,11 +550,4 @@ export class AccessService {
         await this.validateRoleIsUnique(role.name, existingId);
         return cleanedRole;
     }
-
-    async isChangeRequestsEnabled(
-        project: string,
-        environment: string,
-    ): Promise<boolean> {
-        return this.store.isChangeRequestsEnabled(project, environment);
-    }
 }

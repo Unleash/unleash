@@ -83,6 +83,7 @@ import NoAccessError from '../error/no-access-error';
 import { IFeatureProjectUserParams } from '../routes/admin-api/project/project-features';
 import { unique } from '../util/unique';
 import { ISegmentService } from 'lib/segments/segment-service-interface';
+import { IChangeRequestAccessReadModel } from '../features/change-request-access-service/change-request-access-read-model';
 
 interface IFeatureContext {
     featureName: string;
@@ -130,6 +131,8 @@ class FeatureToggleService {
 
     private flagResolver: IFlagResolver;
 
+    private changeRequestAccessReadModel: IChangeRequestAccessReadModel;
+
     constructor(
         {
             featureStrategiesStore,
@@ -157,6 +160,7 @@ class FeatureToggleService {
         }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>,
         segmentService: ISegmentService,
         accessService: AccessService,
+        changeRequestAccessReadModel: IChangeRequestAccessReadModel,
     ) {
         this.logger = getLogger('services/feature-toggle-service.ts');
         this.featureStrategiesStore = featureStrategiesStore;
@@ -170,6 +174,7 @@ class FeatureToggleService {
         this.segmentService = segmentService;
         this.accessService = accessService;
         this.flagResolver = flagResolver;
+        this.changeRequestAccessReadModel = changeRequestAccessReadModel;
     }
 
     async validateFeaturesContext(
@@ -1734,18 +1739,13 @@ class FeatureToggleService {
         environment: string,
         user?: User,
     ) {
-        const [canSkipChangeRequest, changeRequestEnabled] = await Promise.all([
-            user
-                ? this.accessService.hasPermission(
-                      user,
-                      SKIP_CHANGE_REQUEST,
-                      project,
-                      environment,
-                  )
-                : Promise.resolve(false),
-            this.accessService.isChangeRequestsEnabled(project, environment),
-        ]);
-        if (changeRequestEnabled && !canSkipChangeRequest) {
+        const canBypass =
+            await this.changeRequestAccessReadModel.canBypassChangeRequest(
+                project,
+                environment,
+                user,
+            );
+        if (!canBypass) {
             throw new NoAccessError(SKIP_CHANGE_REQUEST);
         }
     }

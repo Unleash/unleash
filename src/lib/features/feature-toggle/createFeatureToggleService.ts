@@ -34,6 +34,10 @@ import FakeAccessStore from '../../../test/fixtures/fake-access-store';
 import FakeRoleStore from '../../../test/fixtures/fake-role-store';
 import FakeEnvironmentStore from '../../../test/fixtures/fake-environment-store';
 import EventStore from '../../db/event-store';
+import {
+    createChangeRequestAccessReadModel,
+    createFakeChangeRequestAccessService,
+} from '../change-request-access-service/createChangeRequestAccessReadModel';
 
 export const createFeatureToggleService = (
     db: Db,
@@ -85,6 +89,10 @@ export const createFeatureToggleService = (
         { segmentStore, featureStrategiesStore, eventStore },
         config,
     );
+    const changeRequestAccessReadMode = createChangeRequestAccessReadModel(
+        db,
+        config,
+    );
     const featureToggleService = new FeatureToggleService(
         {
             featureStrategiesStore,
@@ -99,6 +107,7 @@ export const createFeatureToggleService = (
         { getLogger, flagResolver },
         segmentService,
         accessService,
+        changeRequestAccessReadMode,
     );
     return featureToggleService;
 };
@@ -134,6 +143,7 @@ export const createFakeFeatureToggleService = (
         { segmentStore, featureStrategiesStore, eventStore },
         config,
     );
+    const changeRequestAccessReadMode = createFakeChangeRequestAccessService();
     const featureToggleService = new FeatureToggleService(
         {
             featureStrategiesStore,
@@ -148,6 +158,7 @@ export const createFakeFeatureToggleService = (
         { getLogger, flagResolver },
         segmentService,
         accessService,
+        changeRequestAccessReadMode,
     );
     return featureToggleService;
 };

@@ -12,6 +12,7 @@ import EnvironmentService from '../../../lib/services/environment-service';
 import { NoAccessError } from '../../../lib/error';
 import { SKIP_CHANGE_REQUEST } from '../../../lib/types';
 import { ISegmentService } from '../../../lib/segments/segment-service-interface';
+import { ChangeRequestAccessReadModel } from '../../../lib/features/change-request-access-service/sql-change-request-access-read-model';
 
 let stores;
 let db;
@@ -39,11 +40,16 @@ beforeAll(async () => {
     segmentService = new SegmentService(stores, config);
     const groupService = new GroupService(stores, config);
     const accessService = new AccessService(stores, config, groupService);
+    const changeRequestAccessReadModel = new ChangeRequestAccessReadModel(
+        db.rawDatabase,
+        accessService,
+    );
     service = new FeatureToggleService(
         stores,
         config,
         segmentService,
         accessService,
+        changeRequestAccessReadModel,
     );
 });
 
@@ -384,6 +390,10 @@ test('If change requests are enabled, cannot change variants without going via C
         unleashConfig,
         groupService,
     );
+    const changeRequestAccessReadModel = new ChangeRequestAccessReadModel(
+        db.rawDatabase,
+        accessService,
+    );
     // Force all feature flags on to make sure we have Change requests on
     const customFeatureService = new FeatureToggleService(
         stores,
@@ -395,6 +405,7 @@ test('If change requests are enabled, cannot change variants without going via C
         },
         segmentService,
         accessService,
+        changeRequestAccessReadModel,
     );
 
     const newVariant: IVariant = {
@@ -462,6 +473,10 @@ test('If CRs are protected for any environment in the project stops bulk update 
         unleashConfig,
         groupService,
     );
+    const changeRequestAccessReadModel = new ChangeRequestAccessReadModel(
+        db.rawDatabase,
+        accessService,
+    );
     // Force all feature flags on to make sure we have Change requests on
     const customFeatureService = new FeatureToggleService(
         stores,
@@ -473,6 +488,7 @@ test('If CRs are protected for any environment in the project stops bulk update 
         },
         segmentService,
         accessService,
+        changeRequestAccessReadModel,
     );
 
     const toggle = await service.createFeatureToggle(

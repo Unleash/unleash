@@ -14,6 +14,7 @@ import { GroupService } from '../../../lib/services/group-service';
 import { FavoritesService } from '../../../lib/services';
 import { FeatureEnvironmentEvent } from '../../../lib/types/events';
 import { subDays } from 'date-fns';
+import { ChangeRequestAccessReadModel } from '../../../lib/features/change-request-access-service/sql-change-request-access-read-model';
 
 let stores;
 let db: ITestDb;
@@ -50,11 +51,16 @@ beforeAll(async () => {
     });
     groupService = new GroupService(stores, config);
     accessService = new AccessService(stores, config, groupService);
+    const changeRequestAccessReadModel = new ChangeRequestAccessReadModel(
+        db.rawDatabase,
+        accessService,
+    );
     featureToggleService = new FeatureToggleService(
         stores,
         config,
         new SegmentService(stores, config),
         accessService,
+        changeRequestAccessReadModel,
     );
 
     favoritesService = new FavoritesService(stores, config);

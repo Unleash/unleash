@@ -1,7 +1,7 @@
 import memoizee from 'memoizee';
 import { Response } from 'express';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import hasSum from 'hash-sum';
+import hashSum from 'hash-sum';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { diff } from 'deep-object-diff';
 import Controller from '../controller';
@@ -318,8 +318,8 @@ export default class FeatureController extends Controller {
         const revisionId = await this.eventService.getMaxRevisionId();
 
         // TODO: We will need to standardize this to be able to implement this a cross languages (Edge in Rust?).
-        const queryHash = hasSum(query);
-        const etag = `${queryHash}:${revisionId}`;
+        const queryHash = hashSum(query);
+        const etag = `"${queryHash}:${revisionId}"`;
         return { revisionId, etag, queryHash };
     }
 

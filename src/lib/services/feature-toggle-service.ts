@@ -1763,7 +1763,7 @@ class FeatureToggleService {
         project: string,
         environment: string,
         featureName: string,
-        user: User,
+        user?: User,
     ) {
         const hasEnvironment =
             await this.featureEnvironmentStore.featureHasEnvironment(

@@ -18,6 +18,7 @@ import { getTogglePath } from 'utils/routePathHelpers';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import { useChangeRequestsEnabled } from '../../../hooks/useChangeRequestsEnabled';
 
 const StyledPage = styled(Paper)(({ theme }) => ({
     overflow: 'visible',
@@ -65,6 +66,8 @@ export const CopyFeatureToggle = () => {
     const projectId = useRequiredPathParam('projectId');
     const { feature } = useFeature(projectId, featureId);
     const navigate = useNavigate();
+    const { isChangeRequestConfiguredInAnyEnv } =
+        useChangeRequestsEnabled(projectId);
 
     const setValue: ChangeEventHandler<HTMLInputElement> = event => {
         const value = trim(event.target.value);
@@ -152,7 +155,12 @@ export const CopyFeatureToggle = () => {
                         label="Replace groupId"
                     />
 
-                    <Button type="submit" color="primary" variant="contained">
+                    <Button
+                        type="submit"
+                        color="primary"
+                        variant="contained"
+                        disabled={isChangeRequestConfiguredInAnyEnv()}
+                    >
                         <FileCopy />
                         &nbsp;&nbsp;&nbsp; Create from copy
                     </Button>

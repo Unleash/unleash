@@ -56,6 +56,7 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
+    await db.rawDatabase('change_request_settings').del();
     await db.destroy();
 });
 

@@ -49,4 +49,18 @@ export class ChangeRequestAccessReadModel
         const { present } = result.rows[0];
         return present;
     }
+
+    public async isChangeRequestsEnabledForProject(
+        project: string,
+    ): Promise<boolean> {
+        const result = await this.db.raw(
+            `SELECT EXISTS(SELECT 1
+                           FROM change_request_settings
+                           WHERE project = ?
+                           ) AS present`,
+            [project],
+        );
+        const { present } = result.rows[0];
+        return present;
+    }
 }

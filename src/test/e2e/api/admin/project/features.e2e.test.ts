@@ -83,14 +83,18 @@ const updateStrategy = async (
 
 beforeAll(async () => {
     db = await dbInit('feature_strategy_api_serial', getLogger);
-    app = await setupAppWithCustomConfig(db.stores, {
-        experimental: {
-            flags: {
-                strictSchemaValidation: true,
-                bulkOperations: true,
+    app = await setupAppWithCustomConfig(
+        db.stores,
+        {
+            experimental: {
+                flags: {
+                    strictSchemaValidation: true,
+                    bulkOperations: true,
+                },
             },
         },
-    });
+        db.rawDatabase,
+    );
 });
 
 afterEach(async () => {

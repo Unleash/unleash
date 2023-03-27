@@ -38,7 +38,6 @@ process.nextTick(async () => {
                         embedProxyFrontend: true,
                         anonymiseEventLog: false,
                         responseTimeWithAppNameKillSwitch: false,
-                        featuresExportImport: true,
                         newProjectOverview: true,
                         bulkOperations: true,
                         projectStatusApi: true,

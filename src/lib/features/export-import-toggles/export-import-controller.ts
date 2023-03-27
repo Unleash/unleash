@@ -21,7 +21,6 @@ import {
 } from '../../openapi';
 import { IAuthRequest } from '../../routes/unleash-types';
 import { extractUsername } from '../../util';
-import { InvalidOperationError } from '../../error';
 
 class ExportImportController extends Controller {
     private logger: Logger;
@@ -119,7 +118,6 @@ class ExportImportController extends Controller {
         req: IAuthRequest<unknown, unknown, ExportQuerySchema, unknown>,
         res: Response,
     ): Promise<void> {
-        this.verifyExportImportEnabled();
         const query = req.body;
         const userName = extractUsername(req);
         const data = await this.exportImportService.export(query, userName);
@@ -136,7 +134,6 @@ class ExportImportController extends Controller {
         req: IAuthRequest<unknown, unknown, ImportTogglesSchema, unknown>,
         res: Response,
     ): Promise<void> {
-        this.verifyExportImportEnabled();
         const dto = req.body;
         const { user } = req;
         const validation = await this.startTransaction(async (tx) =>
@@ -155,7 +152,6 @@ class ExportImportController extends Controller {
         req: IAuthRequest<unknown, unknown, ImportTogglesSchema, unknown>,
         res: Response,
     ): Promise<void> {
-        this.verifyExportImportEnabled();
         const dto = req.body;
         const { user } = req;
         await this.startTransaction(async (tx) =>
@@ -163,14 +159,6 @@ class ExportImportController extends Controller {
         );
 
         res.status(200).end();
-    }
-
-    private verifyExportImportEnabled() {
-        if (!this.config.flagResolver.isEnabled('featuresExportImport')) {
-            throw new InvalidOperationError(
-                'Feature export/import is not enabled',
-            );
-        }
     }
 }
 export default ExportImportController;

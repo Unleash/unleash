@@ -1350,6 +1350,15 @@ class FeatureToggleService {
         newProject: string,
         createdBy: string,
     ): Promise<void> {
+        const changeRequestEnabled =
+            await this.changeRequestAccessReadModel.isChangeRequestsEnabledForProject(
+                newProject,
+            );
+        if (changeRequestEnabled) {
+            throw new NoAccessError(
+                `Changing project not allowed. Project ${newProject} has change requests enabled.`,
+            );
+        }
         const feature = await this.featureToggleStore.get(featureName);
         const oldProject = feature.project;
         feature.project = newProject;

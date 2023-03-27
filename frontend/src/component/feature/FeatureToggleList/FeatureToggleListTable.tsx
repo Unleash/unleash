@@ -67,7 +67,6 @@ export const FeatureToggleListTable: VFC = () => {
     const [showExportDialog, setShowExportDialog] = useState(false);
     const { features = [], loading, refetchFeatures } = useFeatures();
     const [searchParams, setSearchParams] = useSearchParams();
-    const { uiConfig } = useUiConfig();
     const [initialState] = useState(() => ({
         sortBy: [
             {

@@ -18,7 +18,6 @@ interface IProjectFeaturesBatchActionsProps {
 export const ProjectFeaturesBatchActions: FC<
     IProjectFeaturesBatchActionsProps
 > = ({ selectedIds, data, projectId }) => {
-    const { uiConfig } = useUiConfig();
     const [showExportDialog, setShowExportDialog] = useState(false);
     const { trackEvent } = usePlausibleTracker();
     const selectedData = useMemo(

@@ -56,11 +56,13 @@ export const BatchSelectionActionsBar: FC<IBatchSelectionActionsBarProps> = ({
     }
 
     return (
-        <StyledStickyContainer>
+        <StyledStickyContainer data-testid="BATCH_ACTIONS_BAR">
             <StyledContainer>
                 <StyledBar elevation={4}>
                     <StyledText>
-                        <StyledCount>{count}</StyledCount>
+                        <StyledCount data-testid="BATCH_SELECTED_COUNT">
+                            {count}
+                        </StyledCount>
                         &ensp;selected
                     </StyledText>
                     {children}

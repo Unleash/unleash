@@ -108,7 +108,10 @@ export const Search = ({
                 <StyledInputBase
                     inputRef={ref}
                     placeholder={placeholder}
-                    inputProps={{ 'aria-label': placeholder }}
+                    inputProps={{
+                        'aria-label': placeholder,
+                        'data-testid': 'SEARCH_INPUT',
+                    }}
                     value={value}
                     onChange={e => onSearchChange(e.target.value)}
                     onFocus={() => setShowSuggestions(true)}

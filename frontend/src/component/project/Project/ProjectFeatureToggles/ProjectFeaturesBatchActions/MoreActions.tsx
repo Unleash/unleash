@@ -89,7 +89,7 @@ export const MoreActions: VFC<IMoreActionsProps> = ({ projectId, data }) => {
 
     return (
         <>
-            <Tooltip title="Feature toggle actions" arrow describeChild>
+            <Tooltip title="More bulk actions" arrow describeChild>
                 <IconButton
                     id={menuId}
                     aria-controls={open ? menuId : undefined}
@@ -97,6 +97,7 @@ export const MoreActions: VFC<IMoreActionsProps> = ({ projectId, data }) => {
                     aria-expanded={open ? 'true' : undefined}
                     onClick={handleClick}
                     type="button"
+                    data-testid="MORE_BATCH_ACTIONS"
                 >
                     <MoreVert />
                 </IconButton>

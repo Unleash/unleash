@@ -261,10 +261,7 @@ const Header: VFC = () => {
                             }
                         />
                         <ConditionallyRender
-                            condition={
-                                Boolean(uiConfig?.flags?.notifications) &&
-                                !isOss()
-                            }
+                            condition={!isOss()}
                             show={<Notifications />}
                         />
                         <Tooltip title="Documentation" arrow>

@@ -333,7 +333,7 @@ export default class FeatureController extends Controller {
         const meta = await this.calculateMeta(query);
         const { etag } = meta;
 
-        res.setHeader('etag', etag);
+        res.setHeader('ETag', etag);
 
         if (etag === userVersion) {
             res.status(304);

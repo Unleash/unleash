@@ -1390,4 +1390,6 @@ test('should get correct amount of project members for current and past window',
 
     const result = await projectService.getStatusUpdates(project.id);
     expect(result.updates.projectMembersAddedCurrentWindow).toBe(5);
+    expect(result.updates.projectActivityCurrentWindow).toBe(6);
+    expect(result.updates.projectActivityPastWindow).toBe(0);
 });

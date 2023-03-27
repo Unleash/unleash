@@ -95,6 +95,11 @@ class FakeEventStore implements IEventStore {
         return [];
     }
 
+    async queryCount(operations: IQueryOperations[]): Promise<number> {
+        if (operations) return 0;
+        return 0;
+    }
+
     setMaxListeners(number: number): EventEmitter {
         return this.eventEmitter.setMaxListeners(number);
     }

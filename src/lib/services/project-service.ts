@@ -35,6 +35,7 @@ import {
     ProjectUserRemovedEvent,
     ProjectUserUpdateRoleEvent,
     RoleName,
+    IFlagResolver,
 } from '../types';
 import {
     IProjectQuery,
@@ -114,6 +115,8 @@ export default class ProjectService {
 
     private projectStatsStore: IProjectStatsStore;
 
+    private flagResolver: IFlagResolver;
+
     constructor(
         {
             projectStore,
@@ -157,6 +160,7 @@ export default class ProjectService {
         this.groupService = groupService;
         this.projectStatsStore = projectStatsStore;
         this.logger = config.getLogger('services/project-service.js');
+        this.flagResolver = config.flagResolver;
     }
 
     async getProjects(
@@ -664,20 +668,24 @@ export default class ProjectService {
     }
 
     async statusJob(): Promise<void> {
-        const projects = await this.store.getAll();
+        if (this.flagResolver.isEnabled('projectStatusApi')) {
+            const projects = await this.store.getAll();
 
-        const statusUpdates = await Promise.all(
-            projects.map((project) => this.getStatusUpdates(project.id)),
-        );
+            const statusUpdates = await Promise.all(
+                projects.map((project) => this.getStatusUpdates(project.id)),
+            );
 
-        await Promise.all(
-            statusUpdates.map((statusUpdate) => {
-                return this.projectStatsStore.updateProjectStats(
-                    statusUpdate.projectId,
-                    statusUpdate.updates,
-                );
-            }),
-        );
+            await Promise.all(
+                statusUpdates.map((statusUpdate) => {
+                    return this.projectStatsStore.updateProjectStats(
+                        statusUpdate.projectId,
+                        statusUpdate.updates,
+                    );
+                }),
+            );
+        } else {
+            this.logger.info('Project status API is disabled');
+        }
     }
 
     async getStatusUpdates(projectId: string): Promise<ICalculateStatus> {
@@ -726,7 +734,7 @@ export default class ProjectService {
 
         const [projectActivityCurrentWindow, projectActivityPastWindow] =
             await Promise.all([
-                this.eventStore.query([
+                this.eventStore.queryCount([
                     { op: 'where', parameters: { project: projectId } },
                     {
                         op: 'beforeDate',
@@ -736,7 +744,7 @@ export default class ProjectService {
                         },
                     },
                 ]),
-                this.eventStore.query([
+                this.eventStore.queryCount([
                     { op: 'where', parameters: { project: projectId } },
                     {
                         op: 'betweenDate',
@@ -792,9 +800,8 @@ export default class ProjectService {
                 createdPastWindow: createdPastWindow.length,
                 archivedCurrentWindow: archivedCurrentWindow.length,
                 archivedPastWindow: archivedPastWindow.length,
-                projectActivityCurrentWindow:
-                    projectActivityCurrentWindow.length,
-                projectActivityPastWindow: projectActivityPastWindow.length,
+                projectActivityCurrentWindow: projectActivityCurrentWindow,
+                projectActivityPastWindow: projectActivityPastWindow,
                 projectMembersAddedCurrentWindow:
                     projectMembersAddedCurrentWindow,
             },

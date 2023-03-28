@@ -141,20 +141,12 @@ const Header: VFC = () => {
     const routes = getRoutes();
 
     const filterByMode = (route: INavigationMenuItem): boolean => {
-        if (
-            route.menu.mode?.includes('pro') &&
-            route.menu.mode?.includes('enterprise')
-        ) {
-            return isPro() || isEnterprise();
-        }
-        if (route.menu.mode?.includes('pro')) {
-            return isPro();
-        }
-        if (route.menu.mode?.includes('enterprise')) {
-            return isEnterprise();
-        }
-
-        return true;
+        const { mode } = route.menu;
+        return (
+            !mode ||
+            (mode.includes('pro') && isPro()) ||
+            (mode.includes('enterprise') && isEnterprise())
+        );
     };
 
     const filteredMainRoutes = {

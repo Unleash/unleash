@@ -41,7 +41,7 @@ const createUser = () => {
         });
 };
 
-const updateUserPassword = async (id: number) => {
+const updateUserPassword = (id: number) =>
     cy.request(
         'POST',
         `${baseUrl}/api/admin/user-admin/${id}/change-password`,
@@ -49,7 +49,6 @@ const updateUserPassword = async (id: number) => {
             password,
         }
     );
-};
 
 const addUserToProject = async (id: number) => {
     cy.request(

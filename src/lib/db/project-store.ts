@@ -3,7 +3,6 @@ import { Logger, LogProvider } from '../logger';
 
 import NotFoundError from '../error/notfound-error';
 import {
-    DefaultStickiness,
     IEnvironment,
     IFlagResolver,
     IProject,
@@ -487,7 +486,7 @@ class ProjectStore implements IProjectStore {
 
     async setProjectSettings(
         projectId: string,
-        defaultStickiness: DefaultStickiness,
+        defaultStickiness: string,
         mode: ProjectMode,
     ): Promise<void> {
         await this.db(SETTINGS_TABLE)

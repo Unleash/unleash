@@ -42,10 +42,6 @@ const flags = {
         process.env.UNLEASH_EXPERIMENTAL_CR_ON_VARIANTS,
         false,
     ),
-    showProjectApiAccess: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_PROJECT_API_ACCESS,
-        false,
-    ),
     strictSchemaValidation: parseEnvVarBoolean(
         process.env.UNLEASH_STRICT_SCHEMA_VALIDTION,
         false,

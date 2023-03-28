@@ -43,7 +43,6 @@ export interface IFlags {
     newProjectOverview?: boolean;
     caseInsensitiveInOperators?: boolean;
     crOnVariants?: boolean;
-    showProjectApiAccess?: boolean;
     proPlanAutoCharge?: boolean;
     notifications?: boolean;
     loginHistory?: boolean;

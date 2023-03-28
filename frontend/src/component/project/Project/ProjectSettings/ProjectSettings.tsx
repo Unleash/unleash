@@ -17,7 +17,7 @@ export const ProjectSettings = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const { uiConfig } = useUiConfig();
-    const { showProjectApiAccess, projectScopedSegments } = uiConfig.flags;
+    const { projectScopedSegments } = uiConfig.flags;
 
     const tabs: ITab[] = [
         {
@@ -37,14 +37,11 @@ export const ProjectSettings = () => {
             id: 'change-requests',
             label: 'Change request configuration',
         },
-    ];
-
-    if (Boolean(showProjectApiAccess)) {
-        tabs.push({
+        {
             id: 'api-access',
             label: 'API access',
-        });
-    }
+        },
+    ];
 
     const onChange = (tab: ITab) => {
         navigate(tab.id);
@@ -71,9 +68,7 @@ export const ProjectSettings = () => {
                     path="change-requests/*"
                     element={<ChangeRequestConfiguration />}
                 />
-                {Boolean(showProjectApiAccess) && (
-                    <Route path="api-access/*" element={<ProjectApiAccess />} />
-                )}
+                <Route path="api-access/*" element={<ProjectApiAccess />} />
                 <Route
                     path="*"
                     element={<Navigate replace to={tabs[0].id} />}

@@ -5,38 +5,29 @@ import {
     StyledInputDescription,
     StyledSelectInput,
 } from '../ApiTokenForm.styles';
-import {
-    IEnvironment,
-    IProjectEnvironment,
-} from '../../../../../interfaces/environments';
+import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 
 interface IEnvironmentSelectorProps {
     type: string;
     environment?: string;
-    environments: IProjectEnvironment[] | IEnvironment[];
     setEnvironment: React.Dispatch<React.SetStateAction<string | undefined>>;
 }
 export const EnvironmentSelector = ({
     type,
     environment,
     setEnvironment,
-    environments,
 }: IEnvironmentSelectorProps) => {
-    const isProjectEnv = (
-        environment: IEnvironment | IProjectEnvironment
-    ): environment is IProjectEnvironment => {
-        return 'projectVisible' in environment;
-    };
+    const { environments } = useEnvironments();
     const selectableEnvs =
         type === TokenType.ADMIN
             ? [{ key: '*', label: 'ALL' }]
             : environments.map(environment => ({
                   key: environment.name,
-                  label: environment.name,
+                  label: `${environment.name.concat(
+                      !environment.enabled ? ' - deprecated' : ''
+                  )}`,
                   title: environment.name,
-                  disabled: isProjectEnv(environment)
-                      ? !environment.projectVisible
-                      : !environment.enabled,
+                  disabled: false,
               }));
 
     return (

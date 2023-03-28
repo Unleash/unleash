@@ -29,7 +29,7 @@ export interface IApiTokenCreate {
     expiresAt?: Date;
 }
 
-export interface IApiToken extends IApiTokenCreate {
+export interface IApiToken extends Omit<IApiTokenCreate, 'alias'> {
     createdAt: Date;
     seenAt?: Date;
     environment: string;
@@ -127,11 +127,5 @@ export const validateApiTokenEnvironment = (
 
     if (!selectedEnvironment) {
         throw new BadDataError(`Environment=${environment} does not exist`);
-    }
-
-    if (!selectedEnvironment.enabled) {
-        throw new BadDataError(
-            'Client token cannot be scoped to disabled environments',
-        );
     }
 };

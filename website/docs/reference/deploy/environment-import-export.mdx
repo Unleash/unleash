@@ -61,7 +61,13 @@ The following sections describe requirements that must be met for Unleash not to
 
 #### Context fields
 
-The exported and imported context fields have the same name but the target environment doesn't support some of the source environment context field values. If the context fields don't exist in the target environment they will be created.
+When you import a custom context field **with legal values defined**:
+
+If a custom context field with the same name already exists in the target instance, then the pre-existing context field must have **at least** those legal values defined. In other words, the imported context field legal values must be a subset of the already existing context field's legal values.
+
+When you import custom context fields without legal values or custom context fields that don't already exist in the target instance, then there are no requirements. 
+
+Custom context fields that don't already exist in the target instance will be created upon import.
 
 #### Segments
 
@@ -81,9 +87,19 @@ The project and environment you are importing into must **not have any pending [
 
 ### Import warnings
 
-Import validation will warn you when:
-* the features you are trying to import are already archived in the target instance in any project. Those features won't be imported again.
-* the strategies you are trying to import are custom and may have different [configuration parameters](../custom-activation-strategies.md#parameters). Those strategies will be imported anyway.
+The import validation system will warn you about potential problems it finds in the import data. These warnings do not prevent you from importing the data, but you should read them carefully to ensure that Unleash does as you intend.
+
+The following sections list things that the import tool will warn you about.
+
+#### Archived features
+
+The import tool will not import any features that have already been archived on the target Unleash instance. Because features are identified by their name, that means that if a feature called `feature-a` has been created and archived on the target Unleash instance, then a feature with the same name (`feature-a`) will not be imported.
+
+If you permanently delete the archived `feature-a` from the target instance, then the new `feature-a` (in the import data) **will** be imported. 
+
+#### Custom strategies
+
+Unleash will verify that any custom strategies you are trying to import have already been defined on the target instance. However, it only does this verification by name. It does **not** validate that the definitions are otherwise the same or that they have the same [configuration parameters](../custom-activation-strategies.md#parameters). 
 
 ### Required permissions
 
@@ -103,9 +119,13 @@ If change requests are enabled for the target project and environment, the impor
 
 If change requests are enabled, any permissions for  **Create activation strategies**, **Delete activation strategies** and **Update variants** are not required.
 
-## Environment Import & Export vs Old Import & Export
+## Environment import/export vs the [instance import/export API](import-export.md)
 
-The new Environment Import & Export differs from the old [Import & Export](import-export.md).
-The most important difference is a strong focus on a single project and environment in the target environment.
-Also, the new Import & Export has a UI and extra safety mechanisms preventing corrupted data imports.
+Environment import/export has some similarities to the [instance import/export API](import-export.md), but they serve different purposes. 
+
+The instance import/export API was designed to export all feature toggles (optionally with strategies and projects) from one Unleash instance to another. When it was developed, Unleash had much fewer features than it does now. As such, the API lacks support for some of the more recent features in Unleash.
+
+On the other hand, the environment import/export feature was designed to export a selection of features based on search criteria. It can only export data from a single environment and only import it to a single environment. It also only supports importing into a single project (although it can export features from multiple projects).
+
+Further, the environment import/export comes with a much more stringent validation and will attempt to stop any corrupted data imports.
 

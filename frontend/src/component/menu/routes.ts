@@ -450,7 +450,7 @@ export const adminMenuRoutes: INavigationMenuItem[] = [
     {
         path: '/admin/logins',
         title: 'Login history',
-        menu: { adminSettings: true },
+        menu: { adminSettings: true, mode: ['enterprise'] },
         flag: 'loginHistory',
     },
     {
@@ -468,7 +468,7 @@ export const adminMenuRoutes: INavigationMenuItem[] = [
         path: '/admin/roles',
         title: 'Project roles',
         flag: RE,
-        menu: { adminSettings: true },
+        menu: { adminSettings: true, mode: ['enterprise'] },
     },
     {
         path: '/admin/auth',

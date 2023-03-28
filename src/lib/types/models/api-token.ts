@@ -29,7 +29,7 @@ export interface IApiTokenCreate {
     expiresAt?: Date;
 }
 
-export interface IApiToken extends IApiTokenCreate {
+export interface IApiToken extends Omit<IApiTokenCreate, 'alias'> {
     createdAt: Date;
     seenAt?: Date;
     environment: string;

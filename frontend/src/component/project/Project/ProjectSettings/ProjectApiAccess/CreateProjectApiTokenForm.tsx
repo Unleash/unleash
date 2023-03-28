@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 
@@ -21,11 +21,14 @@ import { TokenTypeSelector } from 'component/admin/apiToken/ApiTokenForm/TokenTy
 import { ConfirmToken } from 'component/admin/apiToken/ConfirmToken/ConfirmToken';
 import { useProjectApiTokens } from 'hooks/api/getters/useProjectApiTokens/useProjectApiTokens';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useProjectEnvironments } from '../../../../../hooks/api/getters/useProjectEnvironments/useProjectEnvironments';
+import { IProjectEnvironment } from '../../../../../interfaces/environments';
+import useProject from '../../../../../hooks/api/getters/useProject/useProject';
 
 const pageTitle = 'Create project API token';
 
 export const CreateProjectApiTokenForm = () => {
-    const project = useRequiredPathParam('projectId');
+    const projectId = useRequiredPathParam('projectId');
     const { setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
     const navigate = useNavigate();
@@ -43,16 +46,28 @@ export const CreateProjectApiTokenForm = () => {
         isValid,
         errors,
         clearErrors,
-    } = useApiTokenForm(project);
+    } = useApiTokenForm(projectId);
 
     const { createToken: createProjectToken, loading } =
         useProjectApiTokensApi();
-    const { refetch: refetchProjectTokens } = useProjectApiTokens(project);
+    const { refetch: refetchProjectTokens } = useProjectApiTokens(projectId);
     const { trackEvent } = usePlausibleTracker();
+    const { environments } = useProjectEnvironments(projectId);
+    const { project } = useProject(projectId);
 
+    const projectEnvironments = useMemo<IProjectEnvironment[]>(
+        () =>
+            environments.map(environment => ({
+                ...environment,
+                projectVisible: project?.environments.includes(
+                    environment.name
+                ),
+            })),
+        [environments, project?.environments]
+    );
     usePageTitle(pageTitle);
 
-    const PATH = `api/admin/project/${project}/api-tokens`;
+    const PATH = `api/admin/project/${projectId}/api-tokens`;
     const permission = CREATE_PROJECT_API_TOKEN;
 
     const handleSubmit = async (e: Event) => {
@@ -63,7 +78,7 @@ export const CreateProjectApiTokenForm = () => {
         try {
             const payload = getApiTokenPayload();
 
-            await createProjectToken(payload, project)
+            await createProjectToken(payload, projectId)
                 .then(res => res.json())
                 .then(api => {
                     scrollToTop();
@@ -116,7 +131,7 @@ export const CreateProjectApiTokenForm = () => {
                     <CreateButton
                         name="token"
                         permission={permission}
-                        projectId={project}
+                        projectId={projectId}
                     />
                 }
             >
@@ -131,6 +146,7 @@ export const CreateProjectApiTokenForm = () => {
                     type={type}
                     environment={environment}
                     setEnvironment={setEnvironment}
+                    environments={projectEnvironments}
                 />
             </ApiTokenForm>
             <ConfirmToken

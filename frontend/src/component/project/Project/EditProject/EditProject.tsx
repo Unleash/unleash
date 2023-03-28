@@ -1,6 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import ProjectForm from '../ProjectForm/ProjectForm';
-import useProjectForm from '../hooks/useProjectForm';
+import useProjectForm, {
+    DEFAULT_PROJECT_STICKINESS,
+} from '../hooks/useProjectForm';
 import { UpdateButton } from 'component/common/UpdateButton/UpdateButton';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
@@ -15,6 +17,7 @@ import AccessContext from 'contexts/AccessContext';
 import { Alert } from '@mui/material';
 import { GO_BACK } from 'constants/navigate';
 import { useDefaultProjectSettings } from 'hooks/useDefaultProjectSettings';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const EDIT_PROJECT_BTN = 'EDIT_PROJECT_BTN';
 
@@ -24,9 +27,9 @@ const EditProject = () => {
     const { hasAccess } = useContext(AccessContext);
     const id = useRequiredPathParam('projectId');
     const { project } = useProject(id);
-    const { setDefaultProjectStickiness } = useProjectApi();
     const { defaultStickiness } = useDefaultProjectSettings(id);
     const navigate = useNavigate();
+    const { trackEvent } = usePlausibleTracker();
 
     const {
         projectId,
@@ -73,16 +76,15 @@ const EditProject = () => {
         if (validName) {
             try {
                 await editProject(id, payload);
-                await setDefaultProjectStickiness(
-                    projectId,
-                    payload.defaultStickiness
-                );
                 refetch();
                 navigate(`/projects/${id}`);
                 setToastData({
                     title: 'Project information updated',
                     type: 'success',
                 });
+                if (projectStickiness !== DEFAULT_PROJECT_STICKINESS) {
+                    trackEvent('project_stickiness_set');
+                }
             } catch (error: unknown) {
                 setToastApiError(formatUnknownError(error));
             }

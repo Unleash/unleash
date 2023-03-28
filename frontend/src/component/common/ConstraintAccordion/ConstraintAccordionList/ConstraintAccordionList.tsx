@@ -170,7 +170,10 @@ export const ConstraintAccordionList = forwardRef<
                         <div>
                             <StyledAddCustomLabel>
                                 <p>Add any number of constraints</p>
-                                <StyledHelpWrapper title="Help" arrow>
+                                <StyledHelpWrapper
+                                    title="View constraints documentation"
+                                    arrow
+                                >
                                     <a
                                         href={
                                             'https://docs.getunleash.io/reference/strategy-constraints'
@@ -186,7 +189,7 @@ export const ConstraintAccordionList = forwardRef<
                                 type="button"
                                 onClick={onAdd}
                                 variant="outlined"
-                                color="secondary"
+                                color="primary"
                             >
                                 Add constraint
                             </Button>

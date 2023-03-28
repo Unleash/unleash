@@ -43,7 +43,7 @@ async function createApp(
     const db = createDb(config);
     const stores = createStores(config, db);
     const services = createServices(stores, config, db);
-    scheduleServices(services, config);
+    scheduleServices(services);
 
     const metricsMonitor = createMetricsMonitor();
     const unleashSession = sessionDb(config, db);

@@ -21,7 +21,7 @@ const StyledContent = styled('div')(({ theme }) => ({
     padding: theme.spacing(4),
     borderRadius: theme.spacing(1),
     backgroundColor: theme.palette.primary.main,
-    color: 'white',
+    color: theme.palette.common.white,
     [theme.breakpoints.up('md')]: {
         padding: theme.spacing(8),
     },

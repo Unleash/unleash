@@ -20,7 +20,11 @@ import { SEGMENT_SAVE_BTN_ID } from 'utils/testIds';
 import { useSegmentLimits } from 'hooks/api/getters/useSegmentLimits/useSegmentLimits';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 
-export const EditSegment = () => {
+interface IEditSegmentProps {
+    modal?: boolean;
+}
+
+export const EditSegment = ({ modal }: IEditSegmentProps) => {
     const projectId = useOptionalPathParam('projectId');
     const segmentId = useRequiredPathParam('segmentId');
     const { segment } = useSegment(Number(segmentId));
@@ -91,6 +95,7 @@ export const EditSegment = () => {
     return (
         <FormTemplate
             loading={loading}
+            modal={modal}
             title="Edit segment"
             description={segmentsFormDescription}
             documentationLink={segmentsDocsLink}

@@ -34,10 +34,6 @@ const flags = {
         process.env.UNLEASH_EXPERIMENTAL_MESSAGE_BANNER,
         false,
     ),
-    featuresExportImport: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_FEATURES_EXPORT_IMPORT,
-        false,
-    ),
     caseInsensitiveInOperators: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_CASE_INSENSITIVE_IN_OPERATORS,
         false,
@@ -58,7 +54,6 @@ const flags = {
         process.env.UNLEASH_PRO_PLAN_AUTO_CHARGE,
         false,
     ),
-    notifications: parseEnvVarBoolean(process.env.NOTIFICATIONS, false),
     loginHistory: parseEnvVarBoolean(process.env.UNLEASH_LOGIN_HISTORY, false),
     bulkOperations: parseEnvVarBoolean(
         process.env.UNLEASH_BULK_OPERATIONS,

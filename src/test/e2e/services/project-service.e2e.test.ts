@@ -14,6 +14,7 @@ import { GroupService } from '../../../lib/services/group-service';
 import { FavoritesService } from '../../../lib/services';
 import { FeatureEnvironmentEvent } from '../../../lib/types/events';
 import { subDays } from 'date-fns';
+import { ChangeRequestAccessReadModel } from '../../../lib/features/change-request-access-service/sql-change-request-access-read-model';
 
 let stores;
 let db: ITestDb;
@@ -50,11 +51,16 @@ beforeAll(async () => {
     });
     groupService = new GroupService(stores, config);
     accessService = new AccessService(stores, config, groupService);
+    const changeRequestAccessReadModel = new ChangeRequestAccessReadModel(
+        db.rawDatabase,
+        accessService,
+    );
     featureToggleService = new FeatureToggleService(
         stores,
         config,
         new SegmentService(stores, config),
         accessService,
+        changeRequestAccessReadModel,
     );
 
     favoritesService = new FavoritesService(stores, config);
@@ -227,6 +233,35 @@ test('should update project', async () => {
     };
 
     await projectService.createProject(project, user);
+    await projectService.updateProject(updatedProject, user);
+
+    const readProject = await projectService.getProject(project.id);
+
+    expect(updatedProject.name).toBe(readProject.name);
+    expect(updatedProject.description).toBe(readProject.description);
+    expect(updatedProject.mode).toBe('protected');
+});
+
+test('should update project without existing settings', async () => {
+    const project = {
+        id: 'test-update-legacy',
+        name: 'New project',
+        description: 'Blah',
+        mode: 'open' as const,
+    };
+
+    const updatedProject = {
+        id: 'test-update-legacy',
+        name: 'New name',
+        description: 'Blah longer desc',
+        mode: 'protected' as const,
+    };
+
+    await projectService.createProject(project, user);
+    await db
+        .rawDatabase('project_settings')
+        .del()
+        .where({ project: project.id });
     await projectService.updateProject(updatedProject, user);
 
     const readProject = await projectService.getProject(project.id);
@@ -1355,4 +1390,6 @@ test('should get correct amount of project members for current and past window',
 
     const result = await projectService.getStatusUpdates(project.id);
     expect(result.updates.projectMembersAddedCurrentWindow).toBe(5);
+    expect(result.updates.projectActivityCurrentWindow).toBe(6);
+    expect(result.updates.projectActivityPastWindow).toBe(0);
 });

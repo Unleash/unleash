@@ -29,8 +29,7 @@ const StyledPrimaryContainerBox = styled(Box)(() => ({
 }));
 
 const StyledInnerContainerBox = styled(Box)(({ theme }) => ({
-    backgroundColor: theme.palette.neutral.light,
-    padding: theme.spacing(1, 3),
+    backgroundColor: theme.palette.background.elevation1,
     display: 'flex',
     justifyContent: 'center',
 }));
@@ -43,7 +42,7 @@ const StyledTypography = styled(Typography)(({ theme }) => ({
 }));
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
-    minWidth: '400px',
+    width: '420px',
     boxShadow: theme.boxShadows.popup,
     borderRadius: `${theme.shape.borderRadiusLarge}px`,
     position: 'absolute',
@@ -68,7 +67,16 @@ const StyledHeaderBox = styled(Box)(() => ({
 }));
 
 const StyledHeaderTypography = styled(Typography)(({ theme }) => ({
-    fontSize: theme.fontSizes.smallerBody,
+    fontSize: theme.fontSizes.smallBody,
+}));
+
+const StyledIconButton = styled(IconButton)(({ theme }) => ({
+    '&:focus-visible': {
+        outlineStyle: 'solid',
+        outlineWidth: 2,
+        outlineColor: theme.palette.primary.main,
+        borderRadius: '100%',
+    },
 }));
 
 export const Notifications = () => {
@@ -162,16 +170,17 @@ export const Notifications = () => {
 
     return (
         <StyledPrimaryContainerBox>
-            <IconButton
+            <StyledIconButton
                 onClick={() => setShowNotifications(!showNotifications)}
                 data-testid="NOTIFICATIONS_BUTTON"
+                disableFocusRipple
             >
                 <ConditionallyRender
                     condition={hasUnreadNotifications}
                     show={<StyledDotBox />}
                 />
                 <NotificationsIcon />
-            </IconButton>
+            </StyledIconButton>
 
             <ConditionallyRender
                 condition={showNotifications}
@@ -180,6 +189,7 @@ export const Notifications = () => {
                         onClickAway={() => setShowNotifications(false)}
                     >
                         <StyledPaper
+                            className="dropdown-outline"
                             onKeyDown={onKeyDown}
                             data-testid="NOTIFICATIONS_MODAL"
                         >
@@ -192,6 +202,7 @@ export const Notifications = () => {
                                         onClick={() =>
                                             setShowUnread(!showUnread)
                                         }
+                                        checked={showUnread}
                                     />
                                 </StyledHeaderBox>
                             </NotificationsHeader>

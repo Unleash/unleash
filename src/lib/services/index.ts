@@ -52,12 +52,13 @@ import {
     createFakeExportImportTogglesService,
 } from '../features/export-import-toggles/createExportImportService';
 import { Db } from '../db/db';
+import {
+    createChangeRequestAccessReadModel,
+    createFakeChangeRequestAccessService,
+} from '../features/change-request-access-service/createChangeRequestAccessReadModel';
 
 // TODO: will be moved to scheduler feature directory
-export const scheduleServices = (
-    services: IUnleashServices,
-    config: IUnleashConfig,
-): void => {
+export const scheduleServices = (services: IUnleashServices): void => {
     const {
         schedulerService,
         apiTokenService,
@@ -90,12 +91,10 @@ export const scheduleServices = (
         hoursToMilliseconds(24),
     );
 
-    if (config.flagResolver.isEnabled('projectStatusApi')) {
-        schedulerService.schedule(
-            projectService.statusJob.bind(projectService),
-            hoursToMilliseconds(24),
-        );
-    }
+    schedulerService.schedule(
+        projectService.statusJob.bind(projectService),
+        hoursToMilliseconds(24),
+    );
 
     schedulerService.schedule(
         projectHealthService.setHealthRating.bind(projectHealthService),
@@ -148,12 +147,16 @@ export const createServices = (
     const versionService = new VersionService(stores, config);
     const healthService = new HealthService(stores, config);
     const userFeedbackService = new UserFeedbackService(stores, config);
-    const segmentService = new SegmentService(stores, config); // TODO coupled with enterprise feature
+    const segmentService = new SegmentService(stores, config);
+    const changeRequestAccessReadModel = db
+        ? createChangeRequestAccessReadModel(db, config)
+        : createFakeChangeRequestAccessService();
     const featureToggleServiceV2 = new FeatureToggleService(
         stores,
         config,
         segmentService,
         accessService,
+        changeRequestAccessReadModel,
     );
     const environmentService = new EnvironmentService(stores, config);
     const featureTagService = new FeatureTagService(stores, config);

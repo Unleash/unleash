@@ -11,6 +11,7 @@ import { AccessService } from '../../../lib/services/access-service';
 import { SegmentService } from '../../../lib/services/segment-service';
 import { GroupService } from '../../../lib/services/group-service';
 import { FavoritesService } from '../../../lib/services';
+import { ChangeRequestAccessReadModel } from '../../../lib/features/change-request-access-service/sql-change-request-access-read-model';
 
 let db;
 let stores;
@@ -26,11 +27,16 @@ beforeAll(async () => {
     stores = db.stores;
     const groupService = new GroupService(stores, config);
     const accessService = new AccessService(stores, config, groupService);
+    const changeRequestAccessReadModel = new ChangeRequestAccessReadModel(
+        db.rawDatabase,
+        accessService,
+    );
     const featureToggleService = new FeatureToggleService(
         stores,
         config,
         new SegmentService(stores, config),
         accessService,
+        changeRequestAccessReadModel,
     );
     const project = {
         id: 'test-project',

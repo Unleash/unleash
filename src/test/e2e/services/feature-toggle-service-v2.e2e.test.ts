@@ -12,6 +12,7 @@ import EnvironmentService from '../../../lib/services/environment-service';
 import { NoAccessError } from '../../../lib/error';
 import { SKIP_CHANGE_REQUEST } from '../../../lib/types';
 import { ISegmentService } from '../../../lib/segments/segment-service-interface';
+import { ChangeRequestAccessReadModel } from '../../../lib/features/change-request-access-service/sql-change-request-access-read-model';
 
 let stores;
 let db;
@@ -28,6 +29,8 @@ const mockConstraints = (): IConstraint[] => {
     }));
 };
 
+const irrelevantDate = new Date();
+
 beforeAll(async () => {
     const config = createTestConfig();
     db = await dbInit(
@@ -39,16 +42,26 @@ beforeAll(async () => {
     segmentService = new SegmentService(stores, config);
     const groupService = new GroupService(stores, config);
     const accessService = new AccessService(stores, config, groupService);
+    const changeRequestAccessReadModel = new ChangeRequestAccessReadModel(
+        db.rawDatabase,
+        accessService,
+    );
     service = new FeatureToggleService(
         stores,
         config,
         segmentService,
         accessService,
+        changeRequestAccessReadModel,
     );
 });
 
 afterAll(async () => {
+    await db.rawDatabase('change_request_settings').del();
     await db.destroy();
+});
+
+beforeEach(async () => {
+    await db.rawDatabase('change_request_settings').del();
 });
 
 test('Should create feature toggle strategy configuration', async () => {
@@ -257,7 +270,7 @@ test('adding and removing an environment preserves variants when variants per en
 
     const toggle = await service.getFeature({
         featureName,
-        projectId: null,
+        projectId: undefined,
         environmentVariants: false,
     });
     expect(toggle.variants).toHaveLength(1);
@@ -321,6 +334,26 @@ test('cloning a feature toggle copies variant environments correctly', async () 
     expect(newEnv.variants).toHaveLength(1);
 });
 
+test('cloning a feature toggle not allowed for change requests enabled', async () => {
+    await db.rawDatabase('change_request_settings').insert({
+        project: 'default',
+        environment: 'default',
+    });
+    await expect(
+        service.cloneFeatureToggle(
+            'newToggleName',
+            'default',
+            'clonedToggleName',
+            true,
+            'test-user',
+        ),
+    ).rejects.toEqual(
+        new NoAccessError(
+            `Cloning not allowed. Project default has change requests enabled.`,
+        ),
+    );
+});
+
 test('Cloning a feature toggle also clones segments correctly', async () => {
     const featureName = 'ToggleWithSegments';
     const clonedFeatureName = 'AWholeNewFeatureToggle';
@@ -366,7 +399,7 @@ test('Cloning a feature toggle also clones segments correctly', async () => {
 
     let feature = await service.getFeature({ featureName: clonedFeatureName });
     expect(
-        feature.environments.find((x) => x.name === 'default').strategies[0]
+        feature.environments.find((x) => x.name === 'default')?.strategies[0]
             .segments,
     ).toHaveLength(1);
 });
@@ -384,6 +417,10 @@ test('If change requests are enabled, cannot change variants without going via C
         unleashConfig,
         groupService,
     );
+    const changeRequestAccessReadModel = new ChangeRequestAccessReadModel(
+        db.rawDatabase,
+        accessService,
+    );
     // Force all feature flags on to make sure we have Change requests on
     const customFeatureService = new FeatureToggleService(
         stores,
@@ -395,6 +432,7 @@ test('If change requests are enabled, cannot change variants without going via C
         },
         segmentService,
         accessService,
+        changeRequestAccessReadModel,
     );
 
     const newVariant: IVariant = {
@@ -414,14 +452,14 @@ test('If change requests are enabled, cannot change variants without going via C
             'default',
             [newVariant],
             {
-                createdAt: undefined,
+                createdAt: irrelevantDate,
                 email: '',
                 id: 0,
                 imageUrl: '',
                 loginAttempts: 0,
                 name: '',
                 permissions: [],
-                seenAt: undefined,
+                seenAt: irrelevantDate,
                 username: '',
                 generateImageUrl(): string {
                     return '';
@@ -462,6 +500,10 @@ test('If CRs are protected for any environment in the project stops bulk update 
         unleashConfig,
         groupService,
     );
+    const changeRequestAccessReadModel = new ChangeRequestAccessReadModel(
+        db.rawDatabase,
+        accessService,
+    );
     // Force all feature flags on to make sure we have Change requests on
     const customFeatureService = new FeatureToggleService(
         stores,
@@ -473,6 +515,7 @@ test('If CRs are protected for any environment in the project stops bulk update 
         },
         segmentService,
         accessService,
+        changeRequestAccessReadModel,
     );
 
     const toggle = await service.createFeatureToggle(
@@ -516,14 +559,14 @@ test('If CRs are protected for any environment in the project stops bulk update 
             [enabledEnv.name, disabledEnv.name],
             newVariants,
             {
-                createdAt: undefined,
+                createdAt: irrelevantDate,
                 email: '',
                 id: 0,
                 imageUrl: '',
                 loginAttempts: 0,
                 name: '',
                 permissions: [],
-                seenAt: undefined,
+                seenAt: irrelevantDate,
                 username: '',
                 generateImageUrl(): string {
                     return '';

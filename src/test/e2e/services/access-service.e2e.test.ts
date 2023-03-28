@@ -15,6 +15,7 @@ import { ALL_PROJECTS } from '../../../lib/util/constants';
 import { SegmentService } from '../../../lib/services/segment-service';
 import { GroupService } from '../../../lib/services/group-service';
 import { FavoritesService } from '../../../lib/services';
+import { ChangeRequestAccessReadModel } from '../../../lib/features/change-request-access-service/sql-change-request-access-read-model';
 
 let db: ITestDb;
 let stores: IUnleashStores;
@@ -216,11 +217,16 @@ beforeAll(async () => {
     editorRole = roles.find((r) => r.name === RoleName.EDITOR);
     adminRole = roles.find((r) => r.name === RoleName.ADMIN);
     readRole = roles.find((r) => r.name === RoleName.VIEWER);
+    const changeRequestAccessReadModel = new ChangeRequestAccessReadModel(
+        db.rawDatabase,
+        accessService,
+    );
     featureToggleService = new FeatureToggleService(
         stores,
         config,
         new SegmentService(stores, config),
         accessService,
+        changeRequestAccessReadModel,
     );
     favoritesService = new FavoritesService(stores, config);
     projectService = new ProjectService(

@@ -20,9 +20,9 @@ export const createChartOptions = (
         },
         plugins: {
             tooltip: {
-                backgroundColor: 'white',
+                backgroundColor: theme.palette.background.paper,
                 bodyColor: theme.palette.text.primary,
-                titleColor: theme.palette.action.active,
+                titleColor: theme.palette.text.secondary,
                 borderColor: theme.palette.primary.main,
                 borderWidth: 1,
                 padding: 10,

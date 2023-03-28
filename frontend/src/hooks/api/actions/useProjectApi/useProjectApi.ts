@@ -203,22 +203,28 @@ const useProjectApi = () => {
 
         return makeRequest(req.caller, req.id);
     };
-
-    const setDefaultProjectStickiness = (
-        projectId: string,
-        stickiness: string
-    ) => {
-        const path = `api/admin/projects/${projectId}/settings`;
+    const archiveFeatures = async (projectId: string, featureIds: string[]) => {
+        const path = `api/admin/projects/${projectId}/archive`;
         const req = createRequest(path, {
             method: 'POST',
-            body: JSON.stringify({ defaultStickiness: stickiness }),
+            body: JSON.stringify({ features: featureIds }),
         });
 
         return makeRequest(req.caller, req.id);
     };
 
-    const archiveFeatures = async (projectId: string, featureIds: string[]) => {
-        const path = `api/admin/projects/${projectId}/archive`;
+    const reviveFeatures = async (projectId: string, featureIds: string[]) => {
+        const path = `api/admin/projects/${projectId}/revive`;
+        const req = createRequest(path, {
+            method: 'POST',
+            body: JSON.stringify({ features: featureIds }),
+        });
+
+        return makeRequest(req.caller, req.id);
+    };
+
+    const deleteFeatures = async (projectId: string, featureIds: string[]) => {
+        const path = `api/admin/projects/${projectId}/delete`;
         const req = createRequest(path, {
             method: 'POST',
             body: JSON.stringify({ features: featureIds }),
@@ -259,9 +265,10 @@ const useProjectApi = () => {
         changeUserRole,
         changeGroupRole,
         archiveFeatures,
+        reviveFeatures,
         staleFeatures,
+        deleteFeatures,
         searchProjectUser,
-        setDefaultProjectStickiness,
         errors,
         loading,
     };

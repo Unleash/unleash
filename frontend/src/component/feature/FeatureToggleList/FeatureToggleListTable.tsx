@@ -36,6 +36,7 @@ import FileDownload from '@mui/icons-material/FileDownload';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import { ExportDialog } from './ExportDialog';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { focusable } from 'themes/themeStyles';
 
 export const featuresPlaceholder: FeatureSchema[] = Array(15).fill({
     name: 'Name of the feature',
@@ -67,7 +68,6 @@ export const FeatureToggleListTable: VFC = () => {
     const [showExportDialog, setShowExportDialog] = useState(false);
     const { features = [], loading, refetchFeatures } = useFeatures();
     const [searchParams, setSearchParams] = useSearchParams();
-    const { uiConfig } = useUiConfig();
     const [initialState] = useState(() => ({
         sortBy: [
             {
@@ -306,32 +306,20 @@ export const FeatureToggleListTable: VFC = () => {
                                 component={RouterLink}
                                 to="/archive"
                                 underline="always"
-                                sx={{ marginRight: 2 }}
+                                sx={{ marginRight: 2, ...focusable(theme) }}
                             >
                                 View archive
                             </Link>
-                            <ConditionallyRender
-                                condition={Boolean(
-                                    uiConfig?.flags?.featuresExportImport
-                                )}
-                                show={
-                                    <Tooltip
-                                        title="Export current selection"
-                                        arrow
-                                    >
-                                        <IconButton
-                                            onClick={() =>
-                                                setShowExportDialog(true)
-                                            }
-                                            sx={theme => ({
-                                                marginRight: theme.spacing(2),
-                                            })}
-                                        >
-                                            <FileDownload />
-                                        </IconButton>
-                                    </Tooltip>
-                                }
-                            />
+                            <Tooltip title="Export current selection" arrow>
+                                <IconButton
+                                    onClick={() => setShowExportDialog(true)}
+                                    sx={theme => ({
+                                        marginRight: theme.spacing(2),
+                                    })}
+                                >
+                                    <FileDownload />
+                                </IconButton>
+                            </Tooltip>
 
                             <CreateFeatureButton
                                 loading={false}
@@ -382,16 +370,11 @@ export const FeatureToggleListTable: VFC = () => {
                     />
                 }
             />
-            <ConditionallyRender
-                condition={Boolean(uiConfig?.flags?.featuresExportImport)}
-                show={
-                    <ExportDialog
-                        showExportDialog={showExportDialog}
-                        data={data}
-                        onClose={() => setShowExportDialog(false)}
-                        environments={enabledEnvironments}
-                    />
-                }
+            <ExportDialog
+                showExportDialog={showExportDialog}
+                data={data}
+                onClose={() => setShowExportDialog(false)}
+                environments={enabledEnvironments}
             />
         </PageContent>
     );

@@ -1,5 +1,6 @@
 import { Box, Checkbox, styled } from '@mui/material';
 import { FC } from 'react';
+import { BATCH_SELECT } from 'utils/testIds';
 
 interface IRowSelectCellProps {
     onChange: () => void;
@@ -18,7 +19,7 @@ export const RowSelectCell: FC<IRowSelectCellProps> = ({
     checked,
     title,
 }) => (
-    <StyledBoxCell data-testid="BATCH_SELECT">
+    <StyledBoxCell data-testid={BATCH_SELECT}>
         <Checkbox onChange={onChange} title={title} checked={checked} />
     </StyledBoxCell>
 );

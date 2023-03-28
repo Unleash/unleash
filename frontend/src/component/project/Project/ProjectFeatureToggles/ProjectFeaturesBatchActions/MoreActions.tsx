@@ -19,6 +19,7 @@ import useProject from 'hooks/api/getters/useProject/useProject';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { MORE_BATCH_ACTIONS } from 'utils/testIds';
 
 interface IMoreActionsProps {
     projectId: string;
@@ -97,7 +98,7 @@ export const MoreActions: VFC<IMoreActionsProps> = ({ projectId, data }) => {
                     aria-expanded={open ? 'true' : undefined}
                     onClick={handleClick}
                     type="button"
-                    data-testid="MORE_BATCH_ACTIONS"
+                    data-testid={MORE_BATCH_ACTIONS}
                 >
                     <MoreVert />
                 </IconButton>

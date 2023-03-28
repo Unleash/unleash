@@ -64,7 +64,6 @@ export const projectSchema = {
         },
         defaultStickiness: {
             type: 'string',
-            enum: ['default', 'userId', 'sessionId', 'random'],
             example: 'userId',
             description:
                 'A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy',

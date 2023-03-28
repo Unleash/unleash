@@ -274,6 +274,7 @@ module.exports = {
                         'reference/deploy/email-service',
                         'reference/deploy/google-auth-hook',
                         'reference/deploy/import-export',
+                        'reference/deploy/environment-import-export',
                         'reference/deploy/migration-guide',
                         'reference/deploy/securing-unleash',
                     ],

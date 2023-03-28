@@ -50,7 +50,7 @@ const updateUserPassword = (id: number) =>
         }
     );
 
-const addUserToProject = async (id: number) => {
+const addUserToProject = (id: number) =>
     cy.request(
         'POST',
         `${baseUrl}/api/admin/projects/${projectName}/role/${PROJECT_MEMBER}/access`,
@@ -59,7 +59,6 @@ const addUserToProject = async (id: number) => {
             users: [{ id }],
         }
     );
-};
 
 describe('notifications', () => {
     before(() => {

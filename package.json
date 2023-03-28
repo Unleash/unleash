@@ -115,7 +115,7 @@
     "js-yaml": "^4.1.0",
     "json-schema-to-ts": "2.6.0",
     "json2csv": "^5.0.7",
-    "knex": "^2.0.0",
+    "knex": "^2.4.2",
     "log4js": "^6.0.0",
     "make-fetch-happen": "^11.0.0",
     "memoizee": "^0.4.15",

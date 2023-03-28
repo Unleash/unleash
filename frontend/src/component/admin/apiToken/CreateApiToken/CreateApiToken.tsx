@@ -18,7 +18,7 @@ import { TokenInfo } from '../ApiTokenForm/TokenInfo/TokenInfo';
 import { TokenTypeSelector } from '../ApiTokenForm/TokenTypeSelector/TokenTypeSelector';
 import { ProjectSelector } from '../ApiTokenForm/ProjectSelector/ProjectSelector';
 import { EnvironmentSelector } from '../ApiTokenForm/EnvironmentSelector/EnvironmentSelector';
-import { useEnvironments } from '../../../../hooks/api/getters/useEnvironments/useEnvironments';
+import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 
 const pageTitle = 'Create API token';
 interface ICreateApiTokenProps {

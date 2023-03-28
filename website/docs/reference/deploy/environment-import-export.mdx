@@ -39,7 +39,7 @@ Importantly, while references to [segments](../segments.mdx)) are exported, the 
 
 You can export features either from a project search or the global feature search. Use the search functionality to narrow the results to the list of features you want to export and use the export button to select environment. All features included in your search results will be included in the export.
 
-<Figure caption="Feature toggle lists can be filtered using the search bar. Once filtered, you can use the \"export current selection\" button to export the configuration for those features."  img="/img/export.png"/>
+<Figure caption='Feature toggle lists can be filtered using the search bar. Once filtered, you can use the "export current selection" button to export the configuration for those features.'  img="/img/export.png"/>
 
 ## Import
 
@@ -65,7 +65,7 @@ When you import a custom context field **with legal values defined**:
 
 If a custom context field with the same name already exists in the target instance, then the pre-existing context field must have **at least** those legal values defined. In other words, the imported context field legal values must be a subset of the already existing context field's legal values.
 
-When you import custom context fields without legal values or custom context fields that don't already exist in the target instance, then there are no requirements. 
+When you import custom context fields without legal values or custom context fields that don't already exist in the target instance, then there are no requirements.
 
 Custom context fields that don't already exist in the target instance will be created upon import.
 
@@ -95,11 +95,11 @@ The following sections list things that the import tool will warn you about.
 
 The import tool will not import any features that have already been archived on the target Unleash instance. Because features are identified by their name, that means that if a feature called `feature-a` has been created and archived on the target Unleash instance, then a feature with the same name (`feature-a`) will not be imported.
 
-If you permanently delete the archived `feature-a` from the target instance, then the new `feature-a` (in the import data) **will** be imported. 
+If you permanently delete the archived `feature-a` from the target instance, then the new `feature-a` (in the import data) **will** be imported.
 
 #### Custom strategies
 
-Unleash will verify that any custom strategies you are trying to import have already been defined on the target instance. However, it only does this verification by name. It does **not** validate that the definitions are otherwise the same or that they have the same [configuration parameters](../custom-activation-strategies.md#parameters). 
+Unleash will verify that any custom strategies you are trying to import have already been defined on the target instance. However, it only does this verification by name. It does **not** validate that the definitions are otherwise the same or that they have the same [configuration parameters](../custom-activation-strategies.md#parameters).
 
 ### Required permissions
 
@@ -121,7 +121,7 @@ If change requests are enabled, any permissions for  **Create activation strateg
 
 ## Environment import/export vs the [instance import/export API](import-export.md)
 
-Environment import/export has some similarities to the [instance import/export API](import-export.md), but they serve different purposes. 
+Environment import/export has some similarities to the [instance import/export API](import-export.md), but they serve different purposes.
 
 The instance import/export API was designed to export all feature toggles (optionally with strategies and projects) from one Unleash instance to another. When it was developed, Unleash had much fewer features than it does now. As such, the API lacks support for some of the more recent features in Unleash.
 

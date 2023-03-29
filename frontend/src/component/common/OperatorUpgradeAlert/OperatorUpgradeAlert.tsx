@@ -15,7 +15,6 @@ const OperatorDocsLink = () => {
             href="https://docs.getunleash.io/reference/strategy-constraints#strategy-constraint-operators"
             target="_blank"
             rel="noreferrer"
-            style={{ color: 'inherit' }}
         >
             Read more
         </a>

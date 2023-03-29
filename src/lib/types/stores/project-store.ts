@@ -2,7 +2,12 @@ import {
     IEnvironmentProjectLink,
     IProjectMembersCount,
 } from '../../db/project-store';
-import { IEnvironment, IProject, IProjectWithCount } from '../model';
+import {
+    IEnvironment,
+    IProject,
+    IProjectWithCount,
+    ProjectMode,
+} from '../model';
 import { Store } from './store';
 
 export interface IProjectInsert {
@@ -11,6 +16,17 @@ export interface IProjectInsert {
     description: string;
     updatedAt?: Date;
     changeRequestsEnabled?: boolean;
+    mode: ProjectMode;
+}
+
+export interface IProjectSettings {
+    mode: ProjectMode;
+    defaultStickiness: string;
+}
+
+export interface IProjectSettingsRow {
+    project_mode: ProjectMode;
+    default_stickiness: string;
 }
 
 export interface IProjectArchived {
@@ -79,5 +95,12 @@ export interface IProjectStore extends Store<IProject, string> {
     addEnvironmentToProjects(
         environment: string,
         projects: string[],
+    ): Promise<void>;
+
+    getProjectSettings(projectId: string): Promise<IProjectSettings>;
+    setProjectSettings(
+        projectId: string,
+        defaultStickiness: string,
+        mode: ProjectMode,
     ): Promise<void>;
 }

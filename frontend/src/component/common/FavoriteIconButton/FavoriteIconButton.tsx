@@ -37,6 +37,7 @@ export const FavoriteIconButton: VFC<IFavoriteIconButtonProps> = ({
                     }
                     elseShow={
                         <StarBorderIcon
+                            color="primary"
                             sx={{
                                 fontSize: theme =>
                                     size === 'medium'

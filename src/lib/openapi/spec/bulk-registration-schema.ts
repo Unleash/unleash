@@ -1,4 +1,5 @@
 import { FromSchema } from 'json-schema-to-ts';
+import { dateSchema } from './date-schema';
 
 export const bulkRegistrationSchema = {
     $id: '#/components/schemas/bulkRegistrationSchema',
@@ -8,7 +9,16 @@ export const bulkRegistrationSchema = {
         connectVia: {
             type: 'array',
             items: {
-                type: 'string',
+                type: 'object',
+                required: ['appName', 'instanceId'],
+                properties: {
+                    appName: {
+                        type: 'string',
+                    },
+                    instanceId: {
+                        type: 'string',
+                    },
+                },
             },
         },
         appName: {
@@ -24,7 +34,7 @@ export const bulkRegistrationSchema = {
             type: 'number',
         },
         started: {
-            type: 'number',
+            $ref: '#/components/schemas/dateSchema',
         },
         strategies: {
             type: 'array',
@@ -37,7 +47,9 @@ export const bulkRegistrationSchema = {
         },
     },
     components: {
-        schemas: {},
+        schemas: {
+            dateSchema,
+        },
     },
 } as const;
 

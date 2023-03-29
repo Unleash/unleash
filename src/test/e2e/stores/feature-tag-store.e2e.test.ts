@@ -71,16 +71,6 @@ test('should untag feature', async () => {
     expect(featureTags).toHaveLength(0);
 });
 
-test('should throw if feature have tag', async () => {
-    expect.assertions(1);
-    await featureTagStore.tagFeature(featureName, tag);
-    try {
-        await featureTagStore.tagFeature(featureName, tag);
-    } catch (e) {
-        expect(e.message).toContain('already has the tag');
-    }
-});
-
 test('get all feature tags', async () => {
     await featureTagStore.tagFeature(featureName, tag);
     await featureToggleStore.create('default', {
@@ -95,7 +85,7 @@ test('should import feature tags', async () => {
     await featureToggleStore.create('default', {
         name: 'some-other-toggle-import',
     });
-    await featureTagStore.importFeatureTags([
+    await featureTagStore.tagFeatures([
         { featureName, tagType: tag.type, tagValue: tag.value },
         {
             featureName: 'some-other-toggle-import',

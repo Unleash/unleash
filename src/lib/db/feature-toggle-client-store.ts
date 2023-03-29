@@ -15,7 +15,6 @@ import EventEmitter from 'events';
 import FeatureToggleStore from './feature-toggle-store';
 import { ensureStringValue } from '../util/ensureStringValue';
 import { mapValues } from '../util/map-values';
-import { IFlagResolver } from '../types/experimental';
 import Raw = Knex.Raw;
 import { Db } from './db';
 
@@ -51,28 +50,16 @@ export default class FeatureToggleClientStore
 
     private logger: Logger;
 
-    private inlineSegmentConstraints: boolean;
-
     private timer: Function;
 
-    private flagResolver: IFlagResolver;
-
-    constructor(
-        db: Db,
-        eventBus: EventEmitter,
-        getLogger: LogProvider,
-        inlineSegmentConstraints: boolean,
-        flagResolver: IFlagResolver,
-    ) {
+    constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
         this.logger = getLogger('feature-toggle-client-store.ts');
-        this.inlineSegmentConstraints = inlineSegmentConstraints;
         this.timer = (action) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
                 store: 'feature-toggle',
                 action,
             });
-        this.flagResolver = flagResolver;
     }
 
     private async getAll({
@@ -211,7 +198,6 @@ export default class FeatureToggleClientStore
             feature.impressionData = r.impression_data;
             feature.enabled = !!r.enabled;
             feature.name = r.name;
-            feature.favorite = r.favorite;
             feature.description = r.description;
             feature.project = r.project;
             feature.stale = r.stale;
@@ -219,6 +205,7 @@ export default class FeatureToggleClientStore
             feature.variants = r.variants || [];
             feature.project = r.project;
             if (isAdmin) {
+                feature.favorite = r.favorite;
                 feature.lastSeenAt = r.last_seen_at;
                 feature.createdAt = r.created_at;
             }

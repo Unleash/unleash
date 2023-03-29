@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
+    Checkbox,
     IconButton,
     styled,
     Tooltip,
@@ -8,7 +9,14 @@ import {
 } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { SortingRule, useFlexLayout, useSortBy, useTable } from 'react-table';
+import {
+    SortingRule,
+    useFlexLayout,
+    useSortBy,
+    useRowSelect,
+    useTable,
+} from 'react-table';
+import type { FeatureSchema } from 'openapi';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { PageContent } from 'component/common/PageContent/PageContent';
@@ -50,12 +58,14 @@ import { usePinnedFavorites } from 'hooks/usePinnedFavorites';
 import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';
 import { FeatureTagCell } from 'component/common/Table/cells/FeatureTagCell/FeatureTagCell';
 import { useGlobalLocalStorage } from 'hooks/useGlobalLocalStorage';
-import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { flexRow } from 'themes/themeStyles';
 import VariantsWarningTooltip from 'component/feature/FeatureView/FeatureVariants/VariantsTooltipWarning';
 import FileDownload from '@mui/icons-material/FileDownload';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ExportDialog } from 'component/feature/FeatureToggleList/ExportDialog';
+import { RowSelectCell } from './RowSelectCell/RowSelectCell';
+import { BatchSelectionActionsBar } from '../../../common/BatchSelectionActionsBar/BatchSelectionActionsBar';
+import { ProjectFeaturesBatchActions } from './ProjectFeaturesBatchActions/ProjectFeaturesBatchActions';
 
 const StyledResponsiveButton = styled(ResponsiveButton)(() => ({
     whiteSpace: 'nowrap',
@@ -96,7 +106,7 @@ type ListItemType = Pick<
     someEnabledEnvironmentHasVariants: boolean;
 };
 
-const staticColumns = ['Actions', 'name', 'favorite'];
+const staticColumns = ['Select', 'Actions', 'name', 'favorite'];
 
 const defaultSort: SortingRule<string> & {
     columns?: string[];
@@ -223,8 +233,31 @@ export const ProjectFeatureToggles = ({
         [projectId, refetch]
     );
 
+    const showTagsColumn = useMemo(
+        () => features.some(feature => feature?.tags?.length),
+        [features]
+    );
+
     const columns = useMemo(
         () => [
+            ...(uiConfig?.flags?.bulkOperations
+                ? [
+                      {
+                          id: 'Select',
+                          Header: ({ getToggleAllRowsSelectedProps }: any) => (
+                              <Checkbox {...getToggleAllRowsSelectedProps()} />
+                          ),
+                          Cell: ({ row }: any) => (
+                              <RowSelectCell
+                                  {...row?.getToggleRowSelectedProps?.()}
+                              />
+                          ),
+                          maxWidth: 50,
+                          disableSortBy: true,
+                          hideInMenu: true,
+                      },
+                  ]
+                : []),
             {
                 id: 'favorite',
                 Header: (
@@ -242,6 +275,7 @@ export const ProjectFeatureToggles = ({
                 ),
                 maxWidth: 50,
                 disableSortBy: true,
+                hideInMenu: true,
             },
             {
                 Header: 'Seen',
@@ -271,18 +305,21 @@ export const ProjectFeatureToggles = ({
                 sortType: 'alphanumeric',
                 searchable: true,
             },
-            {
-                id: 'tags',
-                Header: 'Tags',
-                accessor: (row: IFeatureToggleListItem) =>
-                    row.tags
-                        ?.map(({ type, value }) => `${type}:${value}`)
-                        .join('\n') || '',
-                Cell: FeatureTagCell,
-                width: 80,
-                hideInMenu: true,
-                searchable: true,
-            },
+            ...(showTagsColumn
+                ? [
+                      {
+                          id: 'tags',
+                          Header: 'Tags',
+                          accessor: (row: IFeatureToggleListItem) =>
+                              row.tags
+                                  ?.map(({ type, value }) => `${type}:${value}`)
+                                  .join('\n') || '',
+                          Cell: FeatureTagCell,
+                          width: 80,
+                          searchable: true,
+                      },
+                  ]
+                : []),
             {
                 Header: 'Created',
                 accessor: 'createdAt',
@@ -343,6 +380,7 @@ export const ProjectFeatureToggles = ({
                     />
                 ),
                 disableSortBy: true,
+                hideInMenu: true,
             },
         ],
         [projectId, environments, loading, onToggle]
@@ -397,7 +435,7 @@ export const ProjectFeatureToggles = ({
                 environments: {
                     production: { name: 'production', enabled: false },
                 },
-            }) as object[];
+            }) as FeatureSchema[];
         }
         return searchedData;
     }, [loading, searchedData]);
@@ -438,6 +476,7 @@ export const ProjectFeatureToggles = ({
                     },
                 ],
                 hiddenColumns,
+                selectedRowIds: {},
             };
         },
         [environments] // eslint-disable-line react-hooks/exhaustive-deps
@@ -449,7 +488,7 @@ export const ProjectFeatureToggles = ({
         allColumns,
         headerGroups,
         rows,
-        state: { sortBy, hiddenColumns },
+        state: { selectedRowIds, sortBy, hiddenColumns },
         prepareRow,
         setHiddenColumns,
     } = useTable(
@@ -464,18 +503,8 @@ export const ProjectFeatureToggles = ({
             getRowId,
         },
         useFlexLayout,
-        useSortBy
-    );
-
-    useConditionallyHiddenColumns(
-        [
-            {
-                condition: !features.some(({ tags }) => tags?.length),
-                columns: ['tags'],
-            },
-        ],
-        setHiddenColumns,
-        columns
+        useSortBy,
+        useRowSelect
     );
 
     useEffect(() => {
@@ -525,164 +554,187 @@ export const ProjectFeatureToggles = ({
     ]);
 
     return (
-        <PageContent
-            isLoading={loading}
-            className={styles.container}
-            header={
-                <PageHeader
-                    titleElement={`Feature toggles (${rows.length})`}
-                    actions={
-                        <>
-                            <ConditionallyRender
-                                condition={!isSmallScreen}
-                                show={
-                                    <Search
-                                        initialValue={searchValue}
-                                        onChange={setSearchValue}
-                                        hasFilters
-                                        getSearchContext={getSearchContext}
-                                    />
-                                }
-                            />
-                            <ColumnsMenu
-                                allColumns={allColumns}
-                                staticColumns={staticColumns}
-                                dividerAfter={['createdAt']}
-                                dividerBefore={['Actions']}
-                                isCustomized={Boolean(storedParams.columns)}
-                                setHiddenColumns={setHiddenColumns}
-                            />
-                            <PageHeader.Divider sx={{ marginLeft: 0 }} />
-                            <ConditionallyRender
-                                condition={Boolean(
-                                    uiConfig?.flags?.featuresExportImport
-                                )}
-                                show={
-                                    <Tooltip
-                                        title="Export current selection"
-                                        arrow
-                                    >
-                                        <IconButton
-                                            onClick={() =>
-                                                setShowExportDialog(true)
-                                            }
-                                            sx={theme => ({
-                                                marginRight: theme.spacing(2),
-                                            })}
+        <>
+            <PageContent
+                isLoading={loading}
+                className={styles.container}
+                header={
+                    <PageHeader
+                        titleElement={`Feature toggles (${rows.length})`}
+                        actions={
+                            <>
+                                <ConditionallyRender
+                                    condition={!isSmallScreen}
+                                    show={
+                                        <Search
+                                            initialValue={searchValue}
+                                            onChange={setSearchValue}
+                                            hasFilters
+                                            getSearchContext={getSearchContext}
+                                        />
+                                    }
+                                />
+                                <ColumnsMenu
+                                    allColumns={allColumns}
+                                    staticColumns={staticColumns}
+                                    dividerAfter={['createdAt']}
+                                    dividerBefore={['Actions']}
+                                    isCustomized={Boolean(storedParams.columns)}
+                                    setHiddenColumns={setHiddenColumns}
+                                />
+                                <PageHeader.Divider sx={{ marginLeft: 0 }} />
+                                <ConditionallyRender
+                                    condition={Boolean(
+                                        uiConfig?.flags?.featuresExportImport
+                                    )}
+                                    show={
+                                        <Tooltip
+                                            title="Export toggles visible in the table below"
+                                            arrow
                                         >
-                                            <FileDownload />
-                                        </IconButton>
-                                    </Tooltip>
-                                }
-                            />
-                            <StyledResponsiveButton
-                                onClick={() =>
-                                    navigate(getCreateTogglePath(projectId))
-                                }
-                                maxWidth="960px"
-                                Icon={Add}
-                                projectId={projectId}
-                                permission={CREATE_FEATURE}
-                            >
-                                New feature toggle
-                            </StyledResponsiveButton>
-                        </>
+                                            <IconButton
+                                                onClick={() =>
+                                                    setShowExportDialog(true)
+                                                }
+                                                sx={theme => ({
+                                                    marginRight:
+                                                        theme.spacing(2),
+                                                })}
+                                            >
+                                                <FileDownload />
+                                            </IconButton>
+                                        </Tooltip>
+                                    }
+                                />
+                                <StyledResponsiveButton
+                                    onClick={() =>
+                                        navigate(getCreateTogglePath(projectId))
+                                    }
+                                    maxWidth="960px"
+                                    Icon={Add}
+                                    projectId={projectId}
+                                    permission={CREATE_FEATURE}
+                                    data-testid="NAVIGATE_TO_CREATE_FEATURE"
+                                >
+                                    New feature toggle
+                                </StyledResponsiveButton>
+                            </>
+                        }
+                    >
+                        <ConditionallyRender
+                            condition={isSmallScreen}
+                            show={
+                                <Search
+                                    initialValue={searchValue}
+                                    onChange={setSearchValue}
+                                    hasFilters
+                                    getSearchContext={getSearchContext}
+                                />
+                            }
+                        />
+                    </PageHeader>
+                }
+            >
+                <SearchHighlightProvider value={getSearchText(searchValue)}>
+                    <VirtualizedTable
+                        rows={rows}
+                        headerGroups={headerGroups}
+                        prepareRow={prepareRow}
+                    />
+                </SearchHighlightProvider>
+                <ConditionallyRender
+                    condition={rows.length === 0}
+                    show={
+                        <ConditionallyRender
+                            condition={searchValue?.length > 0}
+                            show={
+                                <TablePlaceholder>
+                                    No feature toggles found matching &ldquo;
+                                    {searchValue}
+                                    &rdquo;
+                                </TablePlaceholder>
+                            }
+                            elseShow={
+                                <TablePlaceholder>
+                                    No feature toggles available. Get started by
+                                    adding a new feature toggle.
+                                </TablePlaceholder>
+                            }
+                        />
                     }
-                >
-                    <ConditionallyRender
-                        condition={isSmallScreen}
-                        show={
-                            <Search
-                                initialValue={searchValue}
-                                onChange={setSearchValue}
-                                hasFilters
-                                getSearchContext={getSearchContext}
-                            />
-                        }
-                    />
-                </PageHeader>
-            }
-        >
-            <SearchHighlightProvider value={getSearchText(searchValue)}>
-                <VirtualizedTable
-                    rows={rows}
-                    headerGroups={headerGroups}
-                    prepareRow={prepareRow}
                 />
-            </SearchHighlightProvider>
-            <ConditionallyRender
-                condition={rows.length === 0}
-                show={
-                    <ConditionallyRender
-                        condition={searchValue?.length > 0}
-                        show={
-                            <TablePlaceholder>
-                                No feature toggles found matching &ldquo;
-                                {searchValue}
-                                &rdquo;
-                            </TablePlaceholder>
-                        }
-                        elseShow={
-                            <TablePlaceholder>
-                                No feature toggles available. Get started by
-                                adding a new feature toggle.
-                            </TablePlaceholder>
-                        }
-                    />
-                }
-            />
-            <EnvironmentStrategyDialog
-                onClose={() =>
-                    setStrategiesDialogState(prev => ({ ...prev, open: false }))
-                }
-                projectId={projectId}
-                {...strategiesDialogState}
-            />
-            <FeatureStaleDialog
-                isStale={featureStaleDialogState.stale === true}
-                isOpen={Boolean(featureStaleDialogState.featureId)}
-                onClose={() => {
-                    setFeatureStaleDialogState({});
-                    refetch();
-                }}
-                featureId={featureStaleDialogState.featureId || ''}
-                projectId={projectId}
-            />
-            <FeatureArchiveDialog
-                isOpen={Boolean(featureArchiveState)}
-                onConfirm={() => {
-                    refetch();
-                }}
-                onClose={() => {
-                    setFeatureArchiveState(undefined);
-                }}
-                featureId={featureArchiveState || ''}
-                projectId={projectId}
-            />{' '}
-            <ChangeRequestDialogue
-                isOpen={changeRequestDialogDetails.isOpen}
-                onClose={onChangeRequestToggleClose}
-                environment={changeRequestDialogDetails?.environment}
-                onConfirm={onChangeRequestToggleConfirm}
-                messageComponent={
-                    <UpdateEnabledMessage
-                        featureName={changeRequestDialogDetails.featureName!}
-                        enabled={changeRequestDialogDetails.enabled!}
-                        environment={changeRequestDialogDetails?.environment!}
-                    />
-                }
-            />
-            <ConditionallyRender
-                condition={Boolean(uiConfig?.flags?.featuresExportImport)}
-                show={
-                    <ExportDialog
-                        showExportDialog={showExportDialog}
-                        data={data}
-                        onClose={() => setShowExportDialog(false)}
-                        environments={environments}
-                    />
-                }
-            />
-        </PageContent>
+                <EnvironmentStrategyDialog
+                    onClose={() =>
+                        setStrategiesDialogState(prev => ({
+                            ...prev,
+                            open: false,
+                        }))
+                    }
+                    projectId={projectId}
+                    {...strategiesDialogState}
+                />
+                <FeatureStaleDialog
+                    isStale={featureStaleDialogState.stale === true}
+                    isOpen={Boolean(featureStaleDialogState.featureId)}
+                    onClose={() => {
+                        setFeatureStaleDialogState({});
+                        refetch();
+                    }}
+                    featureId={featureStaleDialogState.featureId || ''}
+                    projectId={projectId}
+                />
+                <FeatureArchiveDialog
+                    isOpen={Boolean(featureArchiveState)}
+                    onConfirm={() => {
+                        refetch();
+                    }}
+                    onClose={() => {
+                        setFeatureArchiveState(undefined);
+                    }}
+                    featureIds={[featureArchiveState || '']}
+                    projectId={projectId}
+                />{' '}
+                <ChangeRequestDialogue
+                    isOpen={changeRequestDialogDetails.isOpen}
+                    onClose={onChangeRequestToggleClose}
+                    environment={changeRequestDialogDetails?.environment}
+                    onConfirm={onChangeRequestToggleConfirm}
+                    messageComponent={
+                        <UpdateEnabledMessage
+                            featureName={
+                                changeRequestDialogDetails.featureName!
+                            }
+                            enabled={changeRequestDialogDetails.enabled!}
+                            environment={
+                                changeRequestDialogDetails?.environment!
+                            }
+                        />
+                    }
+                />
+                <ConditionallyRender
+                    condition={
+                        Boolean(uiConfig?.flags?.featuresExportImport) &&
+                        !loading
+                    }
+                    show={
+                        <ExportDialog
+                            showExportDialog={showExportDialog}
+                            data={data}
+                            onClose={() => setShowExportDialog(false)}
+                            environments={environments}
+                        />
+                    }
+                />
+            </PageContent>
+            <BatchSelectionActionsBar
+                count={Object.keys(selectedRowIds).length}
+            >
+                <ProjectFeaturesBatchActions
+                    selectedIds={Object.keys(selectedRowIds)}
+                    data={features}
+                    projectId={projectId}
+                />
+            </BatchSelectionActionsBar>
+        </>
     );
 };

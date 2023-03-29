@@ -53,9 +53,6 @@ module.exports = {
     markdown: { mermaid: true },
     customFields: {
         // expose env vars etc here
-        unleashProxyUrl: process.env.UNLEASH_PROXY_URL,
-        unleashProxyClientKey: process.env.UNLEASH_PROXY_CLIENT_KEY,
-        unleashFeedbackTargetUrl: process.env.UNLEASH_FEEDBACK_TARGET_URL,
         environment: process.env.NODE_ENV,
     },
     themeConfig: {
@@ -88,6 +85,7 @@ module.exports = {
             ],
         },
         prism: {
+            theme: require('prism-react-renderer/themes/oceanicNext'),
             additionalLanguages: [
                 'csharp',
                 'dart',

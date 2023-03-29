@@ -25,6 +25,19 @@ export const healthOverviewSchema = {
             type: 'string',
             nullable: true,
         },
+        defaultStickiness: {
+            type: 'string',
+            example: 'userId',
+            description:
+                'A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy',
+        },
+        mode: {
+            type: 'string',
+            enum: ['open', 'protected'],
+            example: 'open',
+            description:
+                "The project's [collaboration mode](https://docs.getunleash.io/reference/project-collaboration-mode). Determines whether non-project members can submit change requests or not.",
+        },
         members: {
             type: 'number',
         },

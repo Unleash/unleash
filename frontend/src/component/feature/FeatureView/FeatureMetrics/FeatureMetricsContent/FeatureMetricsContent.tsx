@@ -39,7 +39,7 @@ export const FeatureMetricsContent = ({
                 borderTop={1}
                 pt={2}
                 mt={3}
-                borderColor={theme.palette.grey[200]}
+                borderColor={theme.palette.divider}
             >
                 <LazyFeatureMetricsChart
                     metrics={metrics}

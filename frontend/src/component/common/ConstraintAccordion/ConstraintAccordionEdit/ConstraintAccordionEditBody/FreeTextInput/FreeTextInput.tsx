@@ -111,7 +111,7 @@ export const FreeTextInput = ({
                 <Button
                     className={styles.button}
                     variant="outlined"
-                    color="secondary"
+                    color="primary"
                     onClick={() => addValues()}
                 >
                     Add values

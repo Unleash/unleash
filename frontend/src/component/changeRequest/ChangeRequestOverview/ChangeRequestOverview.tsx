@@ -25,7 +25,7 @@ import AccessContext from 'contexts/AccessContext';
 import { ChangeRequestComment } from './ChangeRequestComments/ChangeRequestComment';
 import { AddCommentField } from './ChangeRequestComments/AddCommentField';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
-import { useChangeRequestsEnabled } from '../../../hooks/useChangeRequestsEnabled';
+import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { changesCount } from '../changesCount';
 
@@ -79,7 +79,7 @@ export const ChangeRequestOverview: FC = () => {
         projectId,
         id
     );
-    const { changeState, addComment } = useChangeRequestApi();
+    const { changeState, addComment, loading } = useChangeRequestApi();
     const { refetch: refetchChangeRequestOpen } =
         usePendingChangeRequests(projectId);
     const { setToastData, setToastApiError } = useToast();
@@ -249,7 +249,10 @@ export const ChangeRequestOverview: FC = () => {
                                         environmentId={
                                             changeRequest.environment
                                         }
-                                        disabled={!allowChangeRequestActions}
+                                        disabled={
+                                            !allowChangeRequestActions ||
+                                            loading
+                                        }
                                     >
                                         Apply changes
                                     </PermissionButton>

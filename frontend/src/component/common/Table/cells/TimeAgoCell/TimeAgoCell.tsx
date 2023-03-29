@@ -10,6 +10,7 @@ interface ITimeAgoCellProps {
     live?: boolean;
     emptyText?: string;
     title?: (date: string) => string;
+    dateFormat?: (value: string | number | Date, locale: string) => string;
 }
 
 export const TimeAgoCell: VFC<ITimeAgoCellProps> = ({
@@ -17,12 +18,13 @@ export const TimeAgoCell: VFC<ITimeAgoCellProps> = ({
     live = false,
     emptyText,
     title,
+    dateFormat = formatDateYMD,
 }) => {
     const { locationSettings } = useLocationSettings();
 
     if (!value) return <TextCell>{emptyText}</TextCell>;
 
-    const date = formatDateYMD(value, locationSettings.locale);
+    const date = dateFormat(value, locationSettings.locale);
 
     return (
         <TextCell>

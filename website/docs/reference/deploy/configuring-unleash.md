@@ -180,6 +180,20 @@ const start = async () => {
 start();
 ```
 
+### Segment limits {#segments}
+
+:::caution
+
+Changing segment limits could have a negative impact on the performance of Unleash SDKs and cause network congestion. Think twice before changing these values.
+
+:::
+
+Some facets of the [segments feature](../segments.mdx) can be customized via environment variables. This lets you change the [segment limits](../segments.mdx#segment-limits) that Unleash uses.
+
+`UNLEASH_STRATEGY_SEGMENTS_LIMIT` controls the maximum number of segments that can be applied to a single strategy. The default is 5.
+
+`UNLEASH_SEGMENT_VALUES_LIMIT` controls the maximum number of values that you can assign across a segment's constraints. The default is 100.
+
 ## Securing Unleash {#securing-unleash}
 
 You can integrate Unleash with your authentication provider (OAuth 2.0). Read more about [securing unleash](./securing-unleash.md).
@@ -229,11 +243,11 @@ The available options are listed in the table below. Options can be specified ei
 | `applicationName` | `DATABASE_APPLICATION_NAME` | `unleash` | The name of the application that created this Client instance. |
 | `schema` | `DATABASE_SCHEMA` | `public` | The schema to use in the database. |
 
-Alternatively, you can use a [libpq connection string](https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING) to connect to the database. You can provide it directly or from a file by using one of the below options. In JavaScript, these are top-level properties of the root configuration object, _not_ the `db` object.
+Alternatively, you can use a single-host [libpq connection string](https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING) to connect to the database. You can provide it directly or from a file by using one of the below options. In JavaScript, these are top-level properties of the root configuration object, _not_ the `db` object.
 
 | Property name | Environment variable | Default value | Description |
 | --- | --- | --- | --- |
-| `databaseUrl` | `DATABASE_URL` | N/A | A string that matches the [libpq connection string](https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING), such as `postgres://USER:PASSWORD@HOST:PORT/DATABASE`. |
+| `databaseUrl` | `DATABASE_URL` | N/A | A string that matches a single-host [libpq connection string](https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING), such as `postgres://USER:PASSWORD@HOST:PORT/DATABASE`. Unleash does **not** support using multiple hosts. |
 | `databaseUrlFile` | `DATABASE_URL_FILE` | N/A | The path to a file that contains a [libpq connection string](https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING). |
 
 Below is an example JavaScript configuration object.

@@ -9,6 +9,7 @@ import {
     ISegment,
 } from '../../../lib/types/model';
 import { IUnleashTest, setupApp } from '../helpers/test-helper';
+import { UpsertSegmentSchema } from 'lib/openapi';
 
 interface ISeedSegmentSpec {
     featuresCount: number;
@@ -41,7 +42,7 @@ const fetchFeatures = (app: IUnleashTest): Promise<IFeatureToggleClient[]> => {
 
 const createSegment = (
     app: IUnleashTest,
-    postData: object,
+    postData: UpsertSegmentSchema,
 ): Promise<unknown> => {
     const user = { email: 'test@example.com' } as User;
     return app.services.segmentService.create(postData, user);
@@ -86,7 +87,7 @@ const seedConstraints = (spec: ISeedSegmentSpec): IConstraint[] => {
     }));
 };
 
-const seedSegments = (spec: ISeedSegmentSpec): Partial<ISegment>[] => {
+const seedSegments = (spec: ISeedSegmentSpec): UpsertSegmentSchema[] => {
     return Array.from({ length: spec.segmentsPerFeature }).map((v, i) => {
         return {
             name: `${seedSchema}_segment_${i}`,

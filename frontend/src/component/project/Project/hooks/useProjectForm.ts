@@ -1,16 +1,31 @@
 import { useEffect, useState } from 'react';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { useDefaultProjectSettings } from 'hooks/useDefaultProjectSettings';
 
+export type ProjectMode = 'open' | 'protected';
+export type DefaultStickiness = 'default' | 'userId' | 'sessionId' | 'random';
+export const DEFAULT_PROJECT_STICKINESS = 'default';
 const useProjectForm = (
     initialProjectId = '',
     initialProjectName = '',
-    initialProjectDesc = ''
+    initialProjectDesc = '',
+    initialProjectStickiness: DefaultStickiness = DEFAULT_PROJECT_STICKINESS,
+    initialProjectMode: ProjectMode = 'open'
 ) => {
     const [projectId, setProjectId] = useState(initialProjectId);
+    const { defaultStickiness } = useDefaultProjectSettings(projectId);
+
     const [projectName, setProjectName] = useState(initialProjectName);
     const [projectDesc, setProjectDesc] = useState(initialProjectDesc);
+    const [projectStickiness, setProjectStickiness] =
+        useState<DefaultStickiness>(
+            defaultStickiness || initialProjectStickiness
+        );
+    const [projectMode, setProjectMode] =
+        useState<ProjectMode>(initialProjectMode);
     const [errors, setErrors] = useState({});
+
     const { validateId } = useProjectApi();
 
     useEffect(() => {
@@ -25,11 +40,21 @@ const useProjectForm = (
         setProjectDesc(initialProjectDesc);
     }, [initialProjectDesc]);
 
+    useEffect(() => {
+        setProjectMode(initialProjectMode);
+    }, [initialProjectMode]);
+
+    useEffect(() => {
+        setProjectStickiness(initialProjectStickiness);
+    }, [initialProjectStickiness]);
+
     const getProjectPayload = () => {
         return {
             id: projectId,
             name: projectName,
             description: projectDesc,
+            defaultStickiness: projectStickiness,
+            mode: projectMode,
         };
     };
 
@@ -39,7 +64,7 @@ const useProjectForm = (
             return false;
         }
         try {
-            await validateId(getProjectPayload());
+            await validateId(getProjectPayload().id);
             return true;
         } catch (error: unknown) {
             setErrors(prev => ({ ...prev, id: formatUnknownError(error) }));
@@ -64,9 +89,13 @@ const useProjectForm = (
         projectId,
         projectName,
         projectDesc,
+        projectStickiness,
+        projectMode,
         setProjectId,
         setProjectName,
         setProjectDesc,
+        setProjectStickiness,
+        setProjectMode,
         getProjectPayload,
         validateName,
         validateProjectId,

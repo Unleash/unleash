@@ -30,7 +30,7 @@ const password = 'DtUYwi&l5I1KX4@Le';
 let userService: UserService;
 let adminUser: IUser;
 
-beforeAll(async () => {
+beforeEach(async () => {
     db = await dbInit('simple_password_provider_api_serial', getLogger);
     stores = db.stores;
     app = await setupApp(stores);
@@ -72,8 +72,8 @@ test('Can log in', async () => {
         .expect(200);
 });
 
-test('Gets rate limited after 5 tries', async () => {
-    for (let statusCode of [200, 200, 200, 200, 429]) {
+test('Gets rate limited after 10 tries', async () => {
+    for (let statusCode of [...Array(10).fill(200), 429]) {
         await app.request
             .post('/auth/simple/login')
             .send({

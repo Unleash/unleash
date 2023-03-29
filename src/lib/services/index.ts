@@ -39,7 +39,11 @@ import { LastSeenService } from './client-metrics/last-seen-service';
 import { InstanceStatsService } from './instance-stats-service';
 import { FavoritesService } from './favorites-service';
 import MaintenanceService from './maintenance-service';
-import { hoursToMilliseconds, minutesToMilliseconds } from 'date-fns';
+import {
+    hoursToMilliseconds,
+    minutesToMilliseconds,
+    secondsToMilliseconds,
+} from 'date-fns';
 import { AccountService } from './account-service';
 import { SchedulerService } from './scheduler-service';
 import { Knex } from 'knex';
@@ -48,12 +52,13 @@ import {
     createFakeExportImportTogglesService,
 } from '../features/export-import-toggles/createExportImportService';
 import { Db } from '../db/db';
+import {
+    createChangeRequestAccessReadModel,
+    createFakeChangeRequestAccessService,
+} from '../features/change-request-access-service/createChangeRequestAccessReadModel';
 
 // TODO: will be moved to scheduler feature directory
-export const scheduleServices = (
-    services: IUnleashServices,
-    config: IUnleashConfig,
-): void => {
+export const scheduleServices = (services: IUnleashServices): void => {
     const {
         schedulerService,
         apiTokenService,
@@ -61,6 +66,7 @@ export const scheduleServices = (
         clientInstanceService,
         projectService,
         projectHealthService,
+        eventService,
     } = services;
 
     schedulerService.schedule(
@@ -85,16 +91,19 @@ export const scheduleServices = (
         hoursToMilliseconds(24),
     );
 
-    if (config.flagResolver.isEnabled('projectStatusApi')) {
-        schedulerService.schedule(
-            projectService.statusJob.bind(projectService),
-            hoursToMilliseconds(24),
-        );
-    }
+    schedulerService.schedule(
+        projectService.statusJob.bind(projectService),
+        hoursToMilliseconds(24),
+    );
 
     schedulerService.schedule(
         projectHealthService.setHealthRating.bind(projectHealthService),
         hoursToMilliseconds(1),
+    );
+
+    schedulerService.schedule(
+        eventService.updateMaxRevisionId.bind(eventService),
+        secondsToMilliseconds(1),
     );
 };
 
@@ -139,11 +148,15 @@ export const createServices = (
     const healthService = new HealthService(stores, config);
     const userFeedbackService = new UserFeedbackService(stores, config);
     const segmentService = new SegmentService(stores, config);
+    const changeRequestAccessReadModel = db
+        ? createChangeRequestAccessReadModel(db, config)
+        : createFakeChangeRequestAccessService();
     const featureToggleServiceV2 = new FeatureToggleService(
         stores,
         config,
         segmentService,
         accessService,
+        changeRequestAccessReadModel,
     );
     const environmentService = new EnvironmentService(stores, config);
     const featureTagService = new FeatureTagService(stores, config);

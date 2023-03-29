@@ -15,10 +15,11 @@ import { ALL_PROJECTS } from '../../../lib/util/constants';
 import { SegmentService } from '../../../lib/services/segment-service';
 import { GroupService } from '../../../lib/services/group-service';
 import { FavoritesService } from '../../../lib/services';
+import { ChangeRequestAccessReadModel } from '../../../lib/features/change-request-access-service/sql-change-request-access-read-model';
 
 let db: ITestDb;
 let stores: IUnleashStores;
-let accessService;
+let accessService: AccessService;
 let groupService;
 let featureToggleService;
 let favoritesService;
@@ -216,11 +217,16 @@ beforeAll(async () => {
     editorRole = roles.find((r) => r.name === RoleName.EDITOR);
     adminRole = roles.find((r) => r.name === RoleName.ADMIN);
     readRole = roles.find((r) => r.name === RoleName.VIEWER);
+    const changeRequestAccessReadModel = new ChangeRequestAccessReadModel(
+        db.rawDatabase,
+        accessService,
+    );
     featureToggleService = new FeatureToggleService(
         stores,
         config,
         new SegmentService(stores, config),
         accessService,
+        changeRequestAccessReadModel,
     );
     favoritesService = new FavoritesService(stores, config);
     projectService = new ProjectService(
@@ -385,6 +391,7 @@ test('should create default roles to project', async () => {
 
 test('should require name when create default roles to project', async () => {
     await expect(async () => {
+        // @ts-ignore
         await accessService.createDefaultProjectRoles(editorUser);
     }).rejects.toThrow(new Error('ProjectId cannot be empty'));
 });
@@ -701,14 +708,14 @@ test('Should be denied access to delete a role that is in use', async () => {
             {
                 id: 2,
                 name: 'CREATE_FEATURE',
-                environment: null,
+                environment: undefined,
                 displayName: 'Create Feature Toggles',
                 type: 'project',
             },
             {
                 id: 8,
                 name: 'DELETE_FEATURE',
-                environment: null,
+                environment: undefined,
                 displayName: 'Delete Feature Toggles',
                 type: 'project',
             },
@@ -886,7 +893,7 @@ test('Should be allowed move feature toggle to project when given access through
     });
 
     await groupStore.addUsersToGroup(
-        groupWithProjectAccess.id,
+        groupWithProjectAccess.id!,
         [{ user: viewerUser }],
         'Admin',
     );
@@ -896,7 +903,7 @@ test('Should be allowed move feature toggle to project when given access through
     await hasCommonProjectAccess(viewerUser, project.id, false);
 
     await accessService.addGroupToRole(
-        groupWithProjectAccess.id,
+        groupWithProjectAccess.id!,
         projectRole.id,
         'SomeAdminUser',
         project.id,
@@ -923,7 +930,7 @@ test('Should not lose user role access when given permissions from a group', asy
     });
 
     await groupStore.addUsersToGroup(
-        groupWithNoAccess.id,
+        groupWithNoAccess.id!,
         [{ user: user }],
         'Admin',
     );
@@ -931,7 +938,7 @@ test('Should not lose user role access when given permissions from a group', asy
     const viewerRole = await accessService.getRoleByName(RoleName.VIEWER);
 
     await accessService.addGroupToRole(
-        groupWithNoAccess.id,
+        groupWithNoAccess.id!,
         viewerRole.id,
         'SomeAdminUser',
         project.id,
@@ -972,13 +979,13 @@ test('Should allow user to take multiple group roles and have expected permissio
     });
 
     await groupStore.addUsersToGroup(
-        groupWithCreateAccess.id,
+        groupWithCreateAccess.id!,
         [{ user: viewerUser }],
         'Admin',
     );
 
     await groupStore.addUsersToGroup(
-        groupWithDeleteAccess.id,
+        groupWithDeleteAccess.id!,
         [{ user: viewerUser }],
         'Admin',
     );
@@ -990,7 +997,7 @@ test('Should allow user to take multiple group roles and have expected permissio
             {
                 id: 2,
                 name: 'CREATE_FEATURE',
-                environment: null,
+                environment: undefined,
                 displayName: 'Create Feature Toggles',
                 type: 'project',
             },
@@ -1004,7 +1011,7 @@ test('Should allow user to take multiple group roles and have expected permissio
             {
                 id: 8,
                 name: 'DELETE_FEATURE',
-                environment: null,
+                environment: undefined,
                 displayName: 'Delete Feature Toggles',
                 type: 'project',
             },
@@ -1012,14 +1019,14 @@ test('Should allow user to take multiple group roles and have expected permissio
     });
 
     await accessService.addGroupToRole(
-        groupWithCreateAccess.id,
+        groupWithCreateAccess.id!,
         deleteFeatureRole.id,
         'SomeAdminUser',
         projectForDelete.id,
     );
 
     await accessService.addGroupToRole(
-        groupWithDeleteAccess.id,
+        groupWithDeleteAccess.id!,
         createFeatureRole.id,
         'SomeAdminUser',
         projectForCreate.id,

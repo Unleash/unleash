@@ -11,7 +11,7 @@ interface IConstraintOperatorProps {
 const StyledContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(0.5, 1.5),
     borderRadius: theme.shape.borderRadius,
-    backgroundColor: theme.palette.constraintAccordion.operatorBackground,
+    backgroundColor: theme.palette.background.elevation2,
     lineHeight: 1.25,
 }));
 

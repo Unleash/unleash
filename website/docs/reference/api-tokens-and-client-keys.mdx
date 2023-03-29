@@ -21,6 +21,7 @@ This section describes what API tokens are. For information on how to create the
 Use API tokens to connect to the Unleash server API. API tokens come in four distinct types:
 
 -   [Admin tokens](#admin-tokens)
+-   [Project level access tokens](#project-access-tokens)
 -   [Personal access tokens](#personal-access-tokens)
 -   [Client tokens](#client-tokens)
 -   [Front-end tokens](#front-end-tokens)
@@ -54,6 +55,18 @@ Do **not** use admin tokens for:
 -   [Client SDKs](../reference/sdks/index.md): You will _not_ be able to read toggle data from multiple environments. Use [client tokens](#client-tokens) instead.
 
 Support for scoped admin tokens with more fine-grained permissions is currently in the planning stage.
+
+
+### Project level access tokens
+
+All project members can see any `CLIENT` (server-side client token) and `FRONTEND` (client-side client token) respectively.
+
+Use personal access tokens to:
+
+- Provide more fine-grained permissions for automation than an admin token provides
+- Give access to all project members (or anyone with `READ_PROJECT_API_TOKEN` permission) to read the token
+- Give access to the project owner (or anyone with `CREATE_PROJECT_API_TOKEN` permission) to create a token,
+
 
 ### Personal access tokens
 

@@ -12,11 +12,11 @@ const fallbackProject: IProject = {
     version: '1',
     description: 'Default',
     favorite: false,
+    mode: 'open',
     stats: {
         archivedCurrentWindow: 0,
         archivedPastWindow: 0,
         avgTimeToProdCurrentWindow: 0,
-        avgTimeToProdPastWindow: 0,
         createdCurrentWindow: 0,
         createdPastWindow: 0,
         projectActivityCurrentWindow: 0,

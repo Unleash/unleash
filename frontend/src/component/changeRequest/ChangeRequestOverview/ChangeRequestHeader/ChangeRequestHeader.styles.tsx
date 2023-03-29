@@ -26,7 +26,7 @@ export const StyledHeader = styled(Typography)(({ theme }) => ({
 
 export const StyledCard = styled(Card)(({ theme }) => ({
     padding: theme.spacing(0.75, 1.5),
-    backgroundColor: theme.palette.tertiary.light,
+    backgroundColor: theme.palette.background.elevation2,
 }));
 
 export const StyledAvatar = styled(Avatar)(({ theme }) => ({

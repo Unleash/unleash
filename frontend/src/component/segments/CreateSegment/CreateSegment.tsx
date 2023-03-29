@@ -16,8 +16,14 @@ import { segmentsDocsLink } from 'component/segments/SegmentDocs';
 import { useSegmentValuesCount } from 'component/segments/hooks/useSegmentValuesCount';
 import { SEGMENT_CREATE_BTN_ID } from 'utils/testIds';
 import { useSegmentLimits } from 'hooks/api/getters/useSegmentLimits/useSegmentLimits';
+import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 
-export const CreateSegment = () => {
+interface ICreateSegmentProps {
+    modal?: boolean;
+}
+
+export const CreateSegment = ({ modal }: ICreateSegmentProps) => {
+    const projectId = useOptionalPathParam('projectId');
     const { uiConfig } = useUiConfig();
     const { setToastData, setToastApiError } = useToast();
     const { showFeedbackCES } = useContext(feedbackCESContext);
@@ -30,12 +36,14 @@ export const CreateSegment = () => {
         setName,
         description,
         setDescription,
+        project,
+        setProject,
         constraints,
         setConstraints,
         getSegmentPayload,
         errors,
         clearErrors,
-    } = useSegmentForm();
+    } = useSegmentForm('', '', projectId);
 
     const hasValidConstraints = useConstraintsValidation(constraints);
     const { segmentValuesLimit } = useSegmentLimits();
@@ -60,7 +68,11 @@ export const CreateSegment = () => {
         try {
             await createSegment(getSegmentPayload());
             await refetchSegments();
-            navigate('/segments/');
+            if (projectId) {
+                navigate(`/projects/${projectId}/settings/segments/`);
+            } else {
+                navigate('/segments/');
+            }
             setToastData({
                 title: 'Segment created',
                 confetti: true,
@@ -79,6 +91,7 @@ export const CreateSegment = () => {
     return (
         <FormTemplate
             loading={loading}
+            modal={modal}
             title="Create segment"
             description={segmentsFormDescription}
             documentationLink={segmentsDocsLink}
@@ -91,6 +104,8 @@ export const CreateSegment = () => {
                 setName={setName}
                 description={description}
                 setDescription={setDescription}
+                project={project}
+                setProject={setProject}
                 constraints={constraints}
                 setConstraints={setConstraints}
                 errors={errors}

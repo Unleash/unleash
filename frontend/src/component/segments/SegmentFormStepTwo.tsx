@@ -23,12 +23,13 @@ import {
     IAutocompleteBoxOption,
 } from 'component/common/AutocompleteBox/AutocompleteBox';
 import {
-    SegmentDocsValuesWarning,
+    SegmentDocsValuesInfo,
     SegmentDocsValuesError,
 } from 'component/segments/SegmentDocs';
 import { useSegmentValuesCount } from 'component/segments/hooks/useSegmentValuesCount';
 import AccessContext from 'contexts/AccessContext';
 import { useSegmentLimits } from 'hooks/api/getters/useSegmentLimits/useSegmentLimits';
+import { GO_BACK } from 'constants/navigate';
 
 interface ISegmentFormPartTwoProps {
     constraints: IConstraint[];
@@ -43,7 +44,7 @@ const StyledForm = styled('div')(({ theme }) => ({
     height: '100%',
 }));
 
-const StyledWarning = styled('div')(({ theme }) => ({
+const StyledInfo = styled('div')(({ theme }) => ({
     marginBottom: '1.5rem',
 }));
 
@@ -53,7 +54,7 @@ const StyledInputDescription = styled('p')(({ theme }) => ({
 
 const StyledAddContextContainer = styled('div')(({ theme }) => ({
     marginTop: '1rem',
-    borderBottom: `1px solid ${theme.palette.grey[300]}`,
+    borderBottom: `1px solid ${theme.palette.divider}`,
     paddingBottom: '2rem',
 }));
 
@@ -70,7 +71,7 @@ const StyledNoConstraintText = styled('div')(({ theme }) => ({
 
 const StyledSubtitle = styled('p')(({ theme }) => ({
     fontSize: theme.fontSizes.bodySize,
-    color: theme.palette.tertiary.dark,
+    color: theme.palette.text.disabled,
     maxWidth: 515,
     marginBottom: theme.spacing(2.5),
     wordBreak: 'break-word',
@@ -86,7 +87,7 @@ const StyledButtonContainer = styled('div')(({ theme }) => ({
     marginTop: 'auto',
     display: 'flex',
     justifyContent: 'flex-end',
-    borderTop: `1px solid ${theme.palette.tertiary.contrast}`,
+    borderTop: `1px solid ${theme.palette.divider}`,
     paddingTop: theme.spacing(2),
 }));
 
@@ -130,9 +131,9 @@ export const SegmentFormStepTwo: React.FC<ISegmentFormPartTwoProps> = ({
     return (
         <>
             <StyledForm>
-                <StyledWarning>
-                    <SegmentDocsValuesWarning />
-                </StyledWarning>
+                <StyledInfo>
+                    <SegmentDocsValuesInfo />
+                </StyledInfo>
                 <div>
                     <StyledInputDescription>
                         Select the context fields you want to include in the
@@ -214,7 +215,7 @@ export const SegmentFormStepTwo: React.FC<ISegmentFormPartTwoProps> = ({
                 <StyledCancelButton
                     type="button"
                     onClick={() => {
-                        navigate('/segments');
+                        navigate(GO_BACK);
                     }}
                 >
                     Cancel

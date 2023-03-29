@@ -475,19 +475,4 @@ export class AccessStore implements IAccessStore {
             [destinationEnvironment, sourceEnvironment],
         );
     }
-
-    async isChangeRequestsEnabled(
-        project: string,
-        environment: string,
-    ): Promise<boolean> {
-        const result = await this.db.raw(
-            `SELECT EXISTS(SELECT 1
-                           FROM ${T.CHANGE_REQUEST_SETTINGS}
-                           WHERE environment = ?
-                             and project = ?) AS present`,
-            [environment, project],
-        );
-        const { present } = result.rows[0];
-        return present;
-    }
 }

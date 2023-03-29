@@ -8,6 +8,6 @@ export const useStyles = makeStyles()(theme => ({
         alignItems: 'center',
     },
     icon: {
-        color: theme.palette.inactiveIcon,
+        color: theme.palette.action.disabled,
     },
 }));

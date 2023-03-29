@@ -8,7 +8,7 @@ export const useStyles = makeStyles()(theme => ({
         borderTopRightRadius: 50,
         borderBottomRightRadius: 50,
         '& fieldset': {
-            borderColor: theme.palette.grey[300],
+            borderColor: theme.palette.divider,
             borderLeftColor: 'transparent',
         },
         '&.Mui-focused .MuiOutlinedInput-notchedOutline': {

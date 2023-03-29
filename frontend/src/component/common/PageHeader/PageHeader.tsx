@@ -15,7 +15,7 @@ import { usePageTitle } from 'hooks/usePageTitle';
 
 const StyledDivider = styled(Divider)(({ theme }) => ({
     height: '100%',
-    borderColor: theme.palette.dividerAlternative,
+    borderColor: theme.palette.divider,
     width: '1px',
     display: 'inline-block',
     marginLeft: theme.spacing(2),
@@ -46,6 +46,7 @@ const StyledHeader = styled('div')(({ theme }) => ({
 const StyledHeaderTitle = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.mainHeader,
     fontWeight: 'normal',
+    lineHeight: theme.spacing(5),
 }));
 
 const StyledHeaderActions = styled('div')(({ theme }) => ({

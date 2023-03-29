@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import PermissionButton from '../PermissionButton/PermissionButton';
+import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { formatCreateStrategyPath } from 'component/feature/FeatureStrategy/FeatureStrategyCreate/FeatureStrategyCreate';
 import { styled } from '@mui/material';
 

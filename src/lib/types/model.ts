@@ -2,7 +2,7 @@ import { ITagType } from './stores/tag-type-store';
 import { LogProvider } from '../logger';
 import { IRole } from './stores/access-store';
 import { IUser } from './user';
-import { ALL_OPERATORS } from '../util/constants';
+import { ALL_OPERATORS } from '../util';
 import { IProjectStats } from 'lib/services/project-service';
 
 export type Operator = typeof ALL_OPERATORS[number];
@@ -173,6 +173,8 @@ export interface IFeatureOverview {
     environments: IEnvironmentOverview[];
 }
 
+export type ProjectMode = 'open' | 'protected';
+
 export interface IProjectOverview {
     name: string;
     description: string;
@@ -184,6 +186,9 @@ export interface IProjectOverview {
     favorite?: boolean;
     updatedAt?: Date;
     stats?: IProjectStats;
+    mode: ProjectMode;
+
+    defaultStickiness: string;
 }
 
 export interface IProjectHealthReport extends IProjectOverview {
@@ -366,7 +371,10 @@ export interface IProject {
     createdAt?: Date;
     updatedAt?: Date;
     changeRequestsEnabled?: boolean;
+    mode: ProjectMode;
+    defaultStickiness?: string;
 }
+
 export interface ICustomRole {
     id: number;
     name: string;
@@ -384,6 +392,7 @@ export interface ISegment {
     id: number;
     name: string;
     description?: string;
+    project?: string;
     constraints: IConstraint[];
     createdBy?: string;
     createdAt: Date;

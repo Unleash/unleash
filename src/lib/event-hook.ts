@@ -9,7 +9,7 @@ import {
 
 export const addEventHook = (
     eventHook: EventHook,
-    eventStore: EventEmitter,
+    eventStore: Pick<EventEmitter, 'on'>,
 ): void => {
     eventStore.on(FEATURE_CREATED, (data) => {
         eventHook(FEATURE_CREATED, data);

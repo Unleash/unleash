@@ -41,7 +41,7 @@ const StyledScoreValue = styled('label')(({ theme }) => ({
         display: 'grid',
         justifyContent: 'center',
         alignItems: 'center',
-        background: theme.palette.grey[300],
+        background: theme.palette.divider,
         width: '3rem',
         height: '3rem',
         borderRadius: '10rem',
@@ -53,7 +53,7 @@ const StyledScoreValue = styled('label')(({ theme }) => ({
     '& input:checked + span': {
         fontWeight: theme.fontWeight.bold,
         background: theme.palette.primary.main,
-        color: theme.palette.text.tertiaryContrast,
+        color: theme.palette.primary.contrastText,
     },
     '& input:focus-visible + span': {
         outline: '2px solid',

@@ -22,8 +22,8 @@ const StyledChip = styled('span')(({ theme }) => ({
     paddingBlockStart: theme.spacing(0.5),
     paddingBlockEnd: theme.spacing(0.5),
     borderRadius: '100rem',
-    background: theme.palette.featureStrategySegmentChipBackground,
-    color: theme.palette.text.tertiaryContrast,
+    background: theme.palette.primary.main,
+    color: theme.palette.primary.contrastText,
 }));
 
 const StyledButton = styled('button')(({ theme }) => ({

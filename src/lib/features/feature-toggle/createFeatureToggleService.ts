@@ -4,7 +4,6 @@ import {
     GroupService,
     SegmentService,
 } from '../../services';
-import EventStore from '../../db/event-store';
 import FeatureStrategiesStore from '../../db/feature-strategy-store';
 import FeatureToggleStore from '../../db/feature-toggle-store';
 import FeatureToggleClientStore from '../../db/feature-toggle-client-store';
@@ -34,13 +33,17 @@ import { FakeAccountStore } from '../../../test/fixtures/fake-account-store';
 import FakeAccessStore from '../../../test/fixtures/fake-access-store';
 import FakeRoleStore from '../../../test/fixtures/fake-role-store';
 import FakeEnvironmentStore from '../../../test/fixtures/fake-environment-store';
+import EventStore from '../../db/event-store';
+import {
+    createChangeRequestAccessReadModel,
+    createFakeChangeRequestAccessService,
+} from '../change-request-access-service/createChangeRequestAccessReadModel';
 
 export const createFeatureToggleService = (
     db: Db,
     config: IUnleashConfig,
 ): FeatureToggleService => {
     const { getLogger, eventBus, flagResolver } = config;
-    const eventStore = new EventStore(db, getLogger);
     const featureStrategiesStore = new FeatureStrategiesStore(
         db,
         eventBus,
@@ -52,8 +55,6 @@ export const createFeatureToggleService = (
         db,
         eventBus,
         getLogger,
-        config.inlineSegmentConstraints,
-        flagResolver,
     );
     const projectStore = new ProjectStore(
         db,
@@ -74,6 +75,7 @@ export const createFeatureToggleService = (
     const accessStore = new AccessStore(db, eventBus, getLogger);
     const roleStore = new RoleStore(db, eventBus, getLogger);
     const environmentStore = new EnvironmentStore(db, eventBus, getLogger);
+    const eventStore = new EventStore(db, getLogger);
     const groupService = new GroupService(
         { groupStore, eventStore, accountStore },
         { getLogger },
@@ -85,6 +87,10 @@ export const createFeatureToggleService = (
     );
     const segmentService = new SegmentService(
         { segmentStore, featureStrategiesStore, eventStore },
+        config,
+    );
+    const changeRequestAccessReadMode = createChangeRequestAccessReadModel(
+        db,
         config,
     );
     const featureToggleService = new FeatureToggleService(
@@ -101,6 +107,7 @@ export const createFeatureToggleService = (
         { getLogger, flagResolver },
         segmentService,
         accessService,
+        changeRequestAccessReadMode,
     );
     return featureToggleService;
 };
@@ -136,6 +143,7 @@ export const createFakeFeatureToggleService = (
         { segmentStore, featureStrategiesStore, eventStore },
         config,
     );
+    const changeRequestAccessReadMode = createFakeChangeRequestAccessService();
     const featureToggleService = new FeatureToggleService(
         {
             featureStrategiesStore,
@@ -150,6 +158,7 @@ export const createFakeFeatureToggleService = (
         { getLogger, flagResolver },
         segmentService,
         accessService,
+        changeRequestAccessReadMode,
     );
     return featureToggleService;
 };

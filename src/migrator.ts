@@ -11,6 +11,8 @@ export async function migrateDb({ db }: IUnleashConfig): Promise<void> {
         connectionTimeoutMillis: secondsToMilliseconds(10),
     };
 
+    // disable Intellij/WebStorm from setting verbose CLI argument to db-migrator
+    process.argv = process.argv.filter((it) => !it.includes('--verbose'));
     const dbm = getInstance(true, {
         cwd: __dirname,
         config: { custom },

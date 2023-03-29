@@ -35,6 +35,23 @@ export const clientMetricsSchema = joi
             }),
     });
 
+export const clientMetricsEnvSchema = joi
+    .object()
+    .options({ stripUnknown: true })
+    .keys({
+        featureName: joi.string().required(),
+        environment: joi.string().required(),
+        appName: joi.string().required(),
+        yes: joi.number().default(0),
+        no: joi.number().default(0),
+        timestamp: joi.date(),
+        variants: joi.object().pattern(joi.string(), joi.number().min(0)),
+    });
+export const clientMetricsEnvBulkSchema = joi
+    .array()
+    .items(clientMetricsEnvSchema)
+    .empty();
+
 export const applicationSchema = joi
     .object()
     .options({ stripUnknown: false })
@@ -50,6 +67,14 @@ export const applicationSchema = joi
         color: joi.string().allow('').optional(),
         icon: joi.string().allow('').optional(),
         announced: joi.boolean().optional().default(false),
+    });
+
+export const batchMetricsSchema = joi
+    .object()
+    .options({ stripUnknown: true })
+    .keys({
+        applications: joi.array().items(applicationSchema),
+        metrics: joi.array().items(clientMetricsEnvSchema),
     });
 
 export const clientRegisterSchema = joi

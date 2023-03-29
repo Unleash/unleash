@@ -328,6 +328,38 @@ exports[`should serve the OpenAPI spec 1`] = `
         },
         "type": "object",
       },
+      "batchFeaturesSchema": {
+        "properties": {
+          "features": {
+            "items": {
+              "type": "string",
+            },
+            "type": "array",
+          },
+        },
+        "required": [
+          "features",
+        ],
+        "type": "object",
+      },
+      "batchStaleSchema": {
+        "properties": {
+          "features": {
+            "items": {
+              "type": "string",
+            },
+            "type": "array",
+          },
+          "stale": {
+            "type": "boolean",
+          },
+        },
+        "required": [
+          "features",
+          "stale",
+        ],
+        "type": "object",
+      },
       "bulkMetricsSchema": {
         "properties": {
           "applications": {
@@ -338,7 +370,7 @@ exports[`should serve the OpenAPI spec 1`] = `
           },
           "metrics": {
             "items": {
-              "$ref": "#/components/schemas/clientMetricsSchema",
+              "$ref": "#/components/schemas/clientMetricsEnvSchema",
             },
             "type": "array",
           },
@@ -352,7 +384,19 @@ exports[`should serve the OpenAPI spec 1`] = `
           },
           "connectVia": {
             "items": {
-              "type": "string",
+              "properties": {
+                "appName": {
+                  "type": "string",
+                },
+                "instanceId": {
+                  "type": "string",
+                },
+              },
+              "required": [
+                "appName",
+                "instanceId",
+              ],
+              "type": "object",
             },
             "type": "array",
           },
@@ -369,7 +413,7 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "string",
           },
           "started": {
-            "type": "number",
+            "$ref": "#/components/schemas/dateSchema",
           },
           "strategies": {
             "items": {
@@ -477,6 +521,7 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "boolean",
           },
           "strategies": {
+            "deprecated": true,
             "items": {
               "$ref": "#/components/schemas/featureStrategySchema",
             },
@@ -486,6 +531,7 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "string",
           },
           "variants": {
+            "deprecated": true,
             "items": {
               "$ref": "#/components/schemas/variantSchema",
             },
@@ -553,6 +599,41 @@ exports[`should serve the OpenAPI spec 1`] = `
         "required": [
           "version",
           "features",
+        ],
+        "type": "object",
+      },
+      "clientMetricsEnvSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "appName": {
+            "type": "string",
+          },
+          "environment": {
+            "type": "string",
+          },
+          "featureName": {
+            "type": "string",
+          },
+          "no": {
+            "type": "number",
+          },
+          "timestamp": {
+            "$ref": "#/components/schemas/dateSchema",
+          },
+          "variants": {
+            "additionalProperties": {
+              "minimum": 0,
+              "type": "integer",
+            },
+            "type": "object",
+          },
+          "yes": {
+            "type": "number",
+          },
+        },
+        "required": [
+          "featureName",
+          "appName",
         ],
         "type": "object",
       },
@@ -807,6 +888,13 @@ exports[`should serve the OpenAPI spec 1`] = `
           },
           "parameters": {
             "$ref": "#/components/schemas/parametersSchema",
+          },
+          "segments": {
+            "description": "Ids of segments to use for this strategy",
+            "items": {
+              "type": "number",
+            },
+            "type": "array",
           },
           "sortOrder": {
             "type": "number",
@@ -1753,6 +1841,11 @@ exports[`should serve the OpenAPI spec 1`] = `
       "healthOverviewSchema": {
         "additionalProperties": false,
         "properties": {
+          "defaultStickiness": {
+            "description": "A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy",
+            "example": "userId",
+            "type": "string",
+          },
           "description": {
             "nullable": true,
             "type": "string",
@@ -1777,6 +1870,15 @@ exports[`should serve the OpenAPI spec 1`] = `
           },
           "members": {
             "type": "number",
+          },
+          "mode": {
+            "description": "The project's [collaboration mode](https://docs.getunleash.io/reference/project-collaboration-mode). Determines whether non-project members can submit change requests or not.",
+            "enum": [
+              "open",
+              "protected",
+            ],
+            "example": "open",
+            "type": "string",
           },
           "name": {
             "type": "string",
@@ -1806,6 +1908,11 @@ exports[`should serve the OpenAPI spec 1`] = `
           "activeCount": {
             "type": "number",
           },
+          "defaultStickiness": {
+            "description": "A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy",
+            "example": "userId",
+            "type": "string",
+          },
           "description": {
             "nullable": true,
             "type": "string",
@@ -1830,6 +1937,15 @@ exports[`should serve the OpenAPI spec 1`] = `
           },
           "members": {
             "type": "number",
+          },
+          "mode": {
+            "description": "The project's [collaboration mode](https://docs.getunleash.io/reference/project-collaboration-mode). Determines whether non-project members can submit change requests or not.",
+            "enum": [
+              "open",
+              "protected",
+            ],
+            "example": "open",
+            "type": "string",
           },
           "name": {
             "type": "string",
@@ -2651,6 +2767,11 @@ exports[`should serve the OpenAPI spec 1`] = `
         "additionalProperties": false,
         "description": "A high-level overview of a project. It contains information such as project statistics, the name of the project, what members and what features it contains, etc.",
         "properties": {
+          "defaultStickiness": {
+            "description": "A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy",
+            "example": "userId",
+            "type": "string",
+          },
           "description": {
             "description": "Additional information about the project",
             "example": "DX squad feature release",
@@ -2690,6 +2811,15 @@ exports[`should serve the OpenAPI spec 1`] = `
             "example": 4,
             "type": "number",
           },
+          "mode": {
+            "description": "The project's [collaboration mode](https://docs.getunleash.io/reference/project-collaboration-mode). Determines whether non-project members can submit change requests or not.",
+            "enum": [
+              "open",
+              "protected",
+            ],
+            "example": "open",
+            "type": "string",
+          },
           "name": {
             "description": "The name of this project",
             "example": "dx-squad",
@@ -2724,6 +2854,11 @@ exports[`should serve the OpenAPI spec 1`] = `
             "format": "date-time",
             "type": "string",
           },
+          "defaultStickiness": {
+            "description": "A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy",
+            "example": "userId",
+            "type": "string",
+          },
           "description": {
             "description": "Additional information about the project",
             "example": "DX squad feature release",
@@ -2754,6 +2889,15 @@ exports[`should serve the OpenAPI spec 1`] = `
             "description": "The number of members this project has",
             "example": 4,
             "type": "number",
+          },
+          "mode": {
+            "description": "The project's [collaboration mode](https://docs.getunleash.io/reference/project-collaboration-mode). Determines whether non-project members can submit change requests or not.",
+            "enum": [
+              "open",
+              "protected",
+            ],
+            "example": "open",
+            "type": "string",
           },
           "name": {
             "description": "The name of this project",
@@ -2795,11 +2939,6 @@ Stats are divided into current and previous **windows**.
             "example": 10,
             "type": "number",
           },
-          "avgTimeToProdPastWindow": {
-            "description": "The average time from when a feature was created to when it was enabled in the "production" environment during the previous window",
-            "example": 10,
-            "type": "number",
-          },
           "createdCurrentWindow": {
             "description": "The number of feature toggles created during the current window",
             "example": 15,
@@ -2828,7 +2967,6 @@ Stats are divided into current and previous **windows**.
         },
         "required": [
           "avgTimeToProdCurrentWindow",
-          "avgTimeToProdPastWindow",
           "createdCurrentWindow",
           "createdPastWindow",
           "archivedCurrentWindow",
@@ -2977,81 +3115,6 @@ Stats are divided into current and previous **windows**.
         },
         "required": [
           "toggles",
-        ],
-        "type": "object",
-      },
-      "proxyMetricsSchema": {
-        "properties": {
-          "appName": {
-            "type": "string",
-          },
-          "bucket": {
-            "properties": {
-              "start": {
-                "format": "date-time",
-                "type": "string",
-              },
-              "stop": {
-                "format": "date-time",
-                "type": "string",
-              },
-              "toggles": {
-                "additionalProperties": {
-                  "properties": {
-                    "no": {
-                      "minimum": 0,
-                      "type": "integer",
-                    },
-                    "variants": {
-                      "additionalProperties": {
-                        "minimum": 0,
-                        "type": "integer",
-                      },
-                      "type": "object",
-                    },
-                    "yes": {
-                      "minimum": 0,
-                      "type": "integer",
-                    },
-                  },
-                  "type": "object",
-                },
-                "example": {
-                  "myCoolToggle": {
-                    "no": 42,
-                    "variants": {
-                      "blue": 6,
-                      "green": 15,
-                      "red": 46,
-                    },
-                    "yes": 25,
-                  },
-                  "myOtherToggle": {
-                    "no": 100,
-                    "yes": 0,
-                  },
-                },
-                "type": "object",
-              },
-            },
-            "required": [
-              "start",
-              "stop",
-              "toggles",
-            ],
-            "type": "object",
-          },
-          "environment": {
-            "type": "string",
-          },
-          "instanceId": {
-            "type": "string",
-          },
-        },
-        "required": [
-          "appName",
-          "instanceId",
-          "bucket",
         ],
         "type": "object",
       },
@@ -3670,6 +3733,26 @@ Stats are divided into current and previous **windows**.
         ],
         "type": "object",
       },
+      "tagsBulkAddSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "features": {
+            "items": {
+              "minLength": 1,
+              "type": "string",
+            },
+            "type": "array",
+          },
+          "tags": {
+            "$ref": "#/components/schemas/updateTagsSchema",
+          },
+        },
+        "required": [
+          "features",
+          "tags",
+        ],
+        "type": "object",
+      },
       "tagsSchema": {
         "additionalProperties": false,
         "properties": {
@@ -3881,6 +3964,28 @@ Stats are divided into current and previous **windows**.
         },
         "type": "object",
       },
+      "updateTagsSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "addedTags": {
+            "items": {
+              "$ref": "#/components/schemas/tagSchema",
+            },
+            "type": "array",
+          },
+          "removedTags": {
+            "items": {
+              "$ref": "#/components/schemas/tagSchema",
+            },
+            "type": "array",
+          },
+        },
+        "required": [
+          "addedTags",
+          "removedTags",
+        ],
+        "type": "object",
+      },
       "updateUserSchema": {
         "additionalProperties": true,
         "properties": {
@@ -3919,6 +4024,32 @@ Stats are divided into current and previous **windows**.
         },
         "required": [
           "name",
+        ],
+        "type": "object",
+      },
+      "upsertSegmentSchema": {
+        "properties": {
+          "constraints": {
+            "items": {
+              "$ref": "#/components/schemas/constraintSchema",
+            },
+            "type": "array",
+          },
+          "description": {
+            "nullable": true,
+            "type": "string",
+          },
+          "name": {
+            "type": "string",
+          },
+          "project": {
+            "nullable": true,
+            "type": "string",
+          },
+        },
+        "required": [
+          "name",
+          "constraints",
         ],
         "type": "object",
       },
@@ -5278,6 +5409,54 @@ If the provided project does not exist, the list of events will be empty.",
           "Features",
         ],
       },
+      "put": {
+        "operationId": "updateTags",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "featureName",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/updateTagsSchema",
+              },
+            },
+          },
+          "description": "updateTagsSchema",
+          "required": true,
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/tagsSchema",
+                },
+              },
+            },
+            "description": "The resource was successfully created.",
+            "headers": {
+              "location": {
+                "description": "The location of the newly created resource.",
+                "schema": {
+                  "format": "uri",
+                  "type": "string",
+                },
+              },
+            },
+          },
+        },
+        "tags": [
+          "Features",
+        ],
+      },
     },
     "/api/admin/features/{featureName}/tags/{type}/{value}": {
       "delete": {
@@ -5889,6 +6068,78 @@ If the provided project does not exist, the list of events will be empty.",
         ],
       },
     },
+    "/api/admin/projects/{projectId}/archive": {
+      "post": {
+        "description": "This endpoint archives the specified features.",
+        "operationId": "archiveFeatures",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/batchFeaturesSchema",
+              },
+            },
+          },
+          "description": "batchFeaturesSchema",
+          "required": true,
+        },
+        "responses": {
+          "202": {
+            "description": "This response has no body.",
+          },
+        },
+        "summary": "Archives a list of features",
+        "tags": [
+          "Features",
+        ],
+      },
+    },
+    "/api/admin/projects/{projectId}/delete": {
+      "post": {
+        "description": "This endpoint deletes the specified features, that are in archive.",
+        "operationId": "deleteFeatures",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/batchFeaturesSchema",
+              },
+            },
+          },
+          "description": "batchFeaturesSchema",
+          "required": true,
+        },
+        "responses": {
+          "200": {
+            "description": "This response has no body.",
+          },
+        },
+        "summary": "Deletes a list of features",
+        "tags": [
+          "Archive",
+        ],
+      },
+    },
     "/api/admin/projects/{projectId}/environments": {
       "post": {
         "operationId": "addEnvironmentToProject",
@@ -6090,7 +6341,7 @@ If the provided project does not exist, the list of events will be empty.",
           },
         ],
         "responses": {
-          "200": {
+          "202": {
             "description": "This response has no body.",
           },
           "401": {
@@ -6815,6 +7066,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/projects/{projectId}/features/{featureName}/environments/{environment}/variants": {
       "get": {
+        "description": "Returns the variants for a feature in a specific environment. If the feature has no variants it will return an empty array of variants",
         "operationId": "getEnvironmentFeatureVariants",
         "parameters": [
           {
@@ -6854,11 +7106,13 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "featureVariantsSchema",
           },
         },
+        "summary": "Get variants for a feature in an environment",
         "tags": [
           "Features",
         ],
       },
       "patch": {
+        "description": "Apply a list of patches to the features environments in the specified environment. The patch objects should conform to the [JSON-patch format (RFC 6902)](https://www.rfc-editor.org/rfc/rfc6902).",
         "operationId": "patchEnvironmentsFeatureVariants",
         "parameters": [
           {
@@ -6909,11 +7163,20 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "featureVariantsSchema",
           },
         },
+        "summary": "Patch a feature's variants in an environment",
         "tags": [
           "Features",
         ],
       },
       "put": {
+        "description": "This overwrites the current variants for the feature toggle in the :featureName parameter for the :environment parameter.
+                        
+                        The backend will validate the input for the following invariants:
+                        
+                    * If there are variants, there needs to be at least one variant with \`weightType: variable\`
+                    * The sum of the weights of variants with \`weightType: fix\` must be strictly less than 1000 (< 1000)
+
+                    The backend will also distribute remaining weight up to 1000 after adding the variants with \`weightType: fix\` together amongst the variants of \`weightType: variable\`",
         "operationId": "overwriteEnvironmentFeatureVariants",
         "parameters": [
           {
@@ -6964,6 +7227,7 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "featureVariantsSchema",
           },
         },
+        "summary": "Create (overwrite) variants for a feature in an environment",
         "tags": [
           "Features",
         ],
@@ -7031,6 +7295,8 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/projects/{projectId}/features/{featureName}/variants": {
       "get": {
+        "deprecated": true,
+        "description": "(deprecated from 4.21) Retrieve the variants for the specified feature. From Unleash 4.21 onwards, this endpoint will attempt to choose a [production-type environment](https://docs.getunleash.io/reference/environments) as the source of truth. If more than one production environment is found, the first one will be used.",
         "operationId": "getFeatureVariants",
         "parameters": [
           {
@@ -7062,11 +7328,15 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "featureVariantsSchema",
           },
         },
+        "summary": "Retrieve variants for a feature (deprecated) ",
         "tags": [
           "Features",
         ],
       },
       "patch": {
+        "description": "Apply a list of patches patch to the specified feature's variants. The patch objects should conform to the [JSON-patch format (RFC 6902)](https://www.rfc-editor.org/rfc/rfc6902).
+                        
+                        ⚠️ **Warning**: This method is not atomic. If something fails in the middle of applying the patch, you can be left with a half-applied patch. We recommend that you instead [patch variants on a per-environment basis](/docs/reference/api/unleash/patch-environments-feature-variants.api.mdx), which **is** an atomic operation.",
         "operationId": "patchFeatureVariants",
         "parameters": [
           {
@@ -7109,11 +7379,20 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "featureVariantsSchema",
           },
         },
+        "summary": "Apply a patch to a feature's variants (in all environments).",
         "tags": [
           "Features",
         ],
       },
       "put": {
+        "description": "This overwrites the current variants for the feature specified in the :featureName parameter in all environments.
+
+                    The backend will validate the input for the following invariants
+
+                    * If there are variants, there needs to be at least one variant with \`weightType: variable\`
+                    * The sum of the weights of variants with \`weightType: fix\` must be strictly less than 1000 (< 1000)
+
+                    The backend will also distribute remaining weight up to 1000 after adding the variants with \`weightType: fix\` together amongst the variants of \`weightType: variable\`",
         "operationId": "overwriteFeatureVariants",
         "parameters": [
           {
@@ -7156,6 +7435,7 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "featureVariantsSchema",
           },
         },
+        "summary": "Create (overwrite) variants for a feature toggle in all environments",
         "tags": [
           "Features",
         ],
@@ -7237,6 +7517,78 @@ If the provided project does not exist, the list of events will be empty.",
         },
         "tags": [
           "Projects",
+        ],
+      },
+    },
+    "/api/admin/projects/{projectId}/revive": {
+      "post": {
+        "description": "This endpoint revives the specified features.",
+        "operationId": "reviveFeatures",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/batchFeaturesSchema",
+              },
+            },
+          },
+          "description": "batchFeaturesSchema",
+          "required": true,
+        },
+        "responses": {
+          "200": {
+            "description": "This response has no body.",
+          },
+        },
+        "summary": "Revives a list of features",
+        "tags": [
+          "Archive",
+        ],
+      },
+    },
+    "/api/admin/projects/{projectId}/stale": {
+      "post": {
+        "description": "This endpoint stales the specified features.",
+        "operationId": "staleFeatures",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/batchStaleSchema",
+              },
+            },
+          },
+          "description": "batchStaleSchema",
+          "required": true,
+        },
+        "responses": {
+          "202": {
+            "description": "This response has no body.",
+          },
+        },
+        "summary": "Stales a list of features",
+        "tags": [
+          "Features",
         ],
       },
     },
@@ -7868,6 +8220,30 @@ If the provided project does not exist, the list of events will be empty.",
         ],
       },
     },
+    "/api/admin/tags/features": {
+      "put": {
+        "operationId": "addTagToFeatures",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/tagsBulkAddSchema",
+              },
+            },
+          },
+          "description": "tagsBulkAddSchema",
+          "required": true,
+        },
+        "responses": {
+          "200": {
+            "description": "This response has no body.",
+          },
+        },
+        "tags": [
+          "Tags",
+        ],
+      },
+    },
     "/api/admin/tags/{type}": {
       "get": {
         "operationId": "getTagsByType",
@@ -8452,11 +8828,11 @@ If the provided project does not exist, the list of events will be empty.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/clientFeaturesSchema",
+                  "$ref": "#/components/schemas/clientFeatureSchema",
                 },
               },
             },
-            "description": "clientFeaturesSchema",
+            "description": "clientFeatureSchema",
           },
         },
         "tags": [

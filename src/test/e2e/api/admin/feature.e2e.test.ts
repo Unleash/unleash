@@ -11,6 +11,7 @@ import {
     IVariant,
 } from '../../../../lib/types/model';
 import { randomId } from '../../../../lib/util/random-id';
+import { UpdateTagsSchema } from '../../../../lib/openapi/spec/update-tags-schema';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -738,31 +739,6 @@ test('Querying with multiple filters ANDs the filters', async () => {
         });
 });
 
-test('Tagging a feature with a tag it already has should return 409', async () => {
-    const feature1Name = `test.${randomId()}`;
-    await app.request.post('/api/admin/features').send({
-        name: feature1Name,
-        type: 'killswitch',
-        enabled: true,
-        strategies: [{ name: 'default' }],
-    });
-
-    const tag = { value: randomId(), type: 'simple' };
-    await app.request
-        .post(`/api/admin/features/${feature1Name}/tags`)
-        .send(tag)
-        .expect(201);
-    return app.request
-        .post(`/api/admin/features/${feature1Name}/tags`)
-        .send(tag)
-        .expect(409)
-        .expect((res) => {
-            expect(res.body.details[0].message).toBe(
-                `${feature1Name} already has the tag: [${tag.type}:${tag.value}]`,
-            );
-        });
-});
-
 test('marks feature toggle as stale', async () => {
     expect.assertions(1);
     await app.request
@@ -841,4 +817,30 @@ test('should have access to the get all features endpoint even if api is disable
     await appWithDisabledLegacyFeatures.request
         .get('/api/admin/features')
         .expect(200);
+});
+
+test('Can add and remove tags at the same time', async () => {
+    const tag = { type: 'simple', value: 'addremove-first-tag' };
+    const secondTag = { type: 'simple', value: 'addremove-second-tag' };
+    await db.stores.tagStore.createTag(tag);
+    await db.stores.tagStore.createTag(secondTag);
+    const taggedWithFirst = await db.stores.featureToggleStore.create(
+        'default',
+        {
+            name: 'tagged-with-first-tag-1',
+        },
+    );
+
+    const data: UpdateTagsSchema = {
+        addedTags: [secondTag],
+        removedTags: [tag],
+    };
+
+    await db.stores.featureTagStore.tagFeature(taggedWithFirst.name, tag);
+    await app.request
+        .put(`/api/admin/features/${taggedWithFirst.name}/tags`)
+        .send(data)
+        .expect((res) => {
+            expect(res.body.tags).toHaveLength(1);
+        });
 });

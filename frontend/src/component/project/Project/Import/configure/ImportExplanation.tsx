@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { Box, styled, Typography } from '@mui/material';
 
 const ImportExplanationContainer = styled(Box)(({ theme }) => ({
-    backgroundColor: theme.palette.secondaryContainer,
+    backgroundColor: theme.palette.background.elevation2,
     borderRadius: theme.shape.borderRadiusLarge,
     padding: theme.spacing(3),
 }));

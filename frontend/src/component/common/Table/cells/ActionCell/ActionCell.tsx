@@ -9,7 +9,7 @@ const StyledContainer = styled(Box)(({ theme }) => ({
 }));
 
 const StyledDivider = styled(Divider)(({ theme }) => ({
-    borderColor: theme.palette.dividerAlternative,
+    borderColor: theme.palette.divider,
     height: theme.spacing(3),
     margin: theme.spacing(0, 2),
 }));

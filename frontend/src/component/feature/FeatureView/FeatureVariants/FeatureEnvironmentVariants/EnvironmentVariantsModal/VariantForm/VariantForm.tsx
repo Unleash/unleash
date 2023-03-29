@@ -65,6 +65,15 @@ const StyledFormControlLabel = styled(FormControlLabel)(({ theme }) => ({
     },
 }));
 
+const StyledFieldColumn = styled('div')(({ theme }) => ({
+    width: '100%',
+    gap: theme.spacing(1.5),
+    display: 'flex',
+    '& > div': {
+        width: '100%',
+    },
+}));
+
 const StyledInput = styled(Input)(() => ({
     width: '100%',
 }));
@@ -103,13 +112,15 @@ const StyledTopRow = styled(StyledRow)({
 });
 
 const StyledSelectMenu = styled(SelectMenu)(({ theme }) => ({
-    minWidth: theme.spacing(20),
     marginRight: theme.spacing(10),
+    [theme.breakpoints.up('sm')]: {
+        minWidth: theme.spacing(20),
+    },
 }));
 
 const StyledAddOverrideButton = styled(Button)(({ theme }) => ({
-    width: theme.spacing(20),
-    maxWidth: '100%',
+    marginTop: theme.spacing(-1),
+    marginLeft: theme.spacing(-1),
 }));
 
 const payloadOptions = [
@@ -319,8 +330,8 @@ export const VariantForm = ({
                         This will be used to identify the variant in your code
                     </StyledSubLabel>
                     <StyledInput
+                        id={`variant-name-input-${variant.id}`}
                         data-testid="VARIANT_NAME_INPUT"
-                        autoFocus
                         label="Variant name"
                         error={Boolean(errors.name)}
                         errorText={errors.name}
@@ -391,27 +402,31 @@ export const VariantForm = ({
                         }));
                     }}
                 />
-                <StyledInput
-                    id="variant-payload-value"
-                    name="variant-payload-value"
-                    label="Value"
-                    multiline={payload.type !== 'string'}
-                    rows={payload.type === 'string' ? 1 : 4}
-                    value={payload.value}
-                    onChange={e => {
-                        clearError(ErrorField.PAYLOAD);
-                        setPayload(payload => ({
-                            ...payload,
-                            value: e.target.value,
-                        }));
-                    }}
-                    placeholder={
-                        payload.type === 'json' ? '{ "hello": "world" }' : ''
-                    }
-                    onBlur={() => validatePayload(payload)}
-                    error={Boolean(errors.payload)}
-                    errorText={errors.payload}
-                />
+                <StyledFieldColumn>
+                    <StyledInput
+                        id="variant-payload-value"
+                        name="variant-payload-value"
+                        label="Value"
+                        multiline={payload.type !== 'string'}
+                        rows={payload.type === 'string' ? 1 : 4}
+                        value={payload.value}
+                        onChange={e => {
+                            clearError(ErrorField.PAYLOAD);
+                            setPayload(payload => ({
+                                ...payload,
+                                value: e.target.value,
+                            }));
+                        }}
+                        placeholder={
+                            payload.type === 'json'
+                                ? '{ "hello": "world" }'
+                                : ''
+                        }
+                        onBlur={() => validatePayload(payload)}
+                        error={Boolean(errors.payload)}
+                        errorText={errors.payload}
+                    />
+                </StyledFieldColumn>
             </StyledRow>
             <StyledMarginLabel>
                 Overrides
@@ -421,13 +436,15 @@ export const VariantForm = ({
                 overrides={overrides}
                 overridesDispatch={overridesDispatch}
             />
-            <StyledAddOverrideButton
-                onClick={onAddOverride}
-                variant="outlined"
-                color="primary"
-            >
-                Add override
-            </StyledAddOverrideButton>
+            <div>
+                <StyledAddOverrideButton
+                    onClick={onAddOverride}
+                    variant="text"
+                    color="primary"
+                >
+                    Add override
+                </StyledAddOverrideButton>
+            </div>
         </StyledVariantForm>
     );
 };

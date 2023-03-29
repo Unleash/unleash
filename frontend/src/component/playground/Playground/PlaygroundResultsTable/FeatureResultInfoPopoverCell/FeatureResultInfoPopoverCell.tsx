@@ -12,7 +12,7 @@ interface FeatureResultInfoPopoverCellProps {
 
 const FeatureResultPopoverWrapper = styled('div')(({ theme }) => ({
     alignItems: 'flex-end',
-    color: theme.palette.tertiary.main,
+    color: theme.palette.divider,
 }));
 
 export const FeatureResultInfoPopoverCell = ({
@@ -48,7 +48,7 @@ export const FeatureResultInfoPopoverCell = ({
                         maxWidth: '100%',
                         height: 'auto',
                         overflowY: 'auto',
-                        backgroundColor: theme.palette.tertiary.light,
+                        backgroundColor: theme.palette.background.elevation2,
                         borderRadius: theme.shape.borderRadius,
                     }),
                 }}

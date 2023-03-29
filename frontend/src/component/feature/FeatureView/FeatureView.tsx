@@ -24,7 +24,7 @@ import { FeatureSettings } from './FeatureSettings/FeatureSettings';
 import useLoading from 'hooks/useLoading';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { FeatureStaleDialog } from 'component/common/FeatureStaleDialog/FeatureStaleDialog';
-import AddTagDialog from './FeatureOverview/AddTagDialog/AddTagDialog';
+import { ManageTagsDialog } from './FeatureOverview/ManageTagsDialog/ManageTagsDialog';
 import { FeatureStatusChip } from 'component/common/FeatureStatusChip/FeatureStatusChip';
 import { FeatureNotFound } from 'component/feature/FeatureView/FeatureNotFound/FeatureNotFound';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
@@ -68,7 +68,7 @@ const StyledToolbarContainer = styled('div')({
 
 const StyledSeparator = styled('div')(({ theme }) => ({
     width: '100%',
-    backgroundColor: theme.palette.tertiary.light,
+    backgroundColor: theme.palette.divider,
     height: '1px',
 }));
 
@@ -248,7 +248,7 @@ export const FeatureView = () => {
                 }}
                 onClose={() => setShowDelDialog(false)}
                 projectId={projectId}
-                featureId={featureId}
+                featureIds={[featureId]}
             />
             <FeatureStaleDialog
                 isStale={feature.stale}
@@ -260,7 +260,7 @@ export const FeatureView = () => {
                 featureId={featureId}
                 projectId={projectId}
             />
-            <AddTagDialog open={openTagDialog} setOpen={setOpenTagDialog} />
+            <ManageTagsDialog open={openTagDialog} setOpen={setOpenTagDialog} />
         </div>
     );
 };

@@ -1,7 +1,7 @@
 import { Fragment, VFC } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
-import { Chip, styled } from '@mui/material';
+import { styled } from '@mui/material';
 import { PlaygroundRequestSchema, PlaygroundStrategySchema } from 'openapi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ConstraintExecution } from './ConstraintExecution/ConstraintExecution';
@@ -10,6 +10,7 @@ import { PlaygroundResultStrategyExecutionParameters } from './StrategyExecution
 import { CustomStrategyParams } from './CustomStrategyParams/CustomStrategyParams';
 import { formattedStrategyNames } from 'utils/strategyNames';
 import { StyledBoxSummary } from './StrategyExecution.styles';
+import { Badge } from 'component/common/Badge/Badge';
 
 interface IStrategyExecutionProps {
     strategyResult: PlaygroundStrategySchema;
@@ -60,14 +61,8 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
         ),
         name === 'default' && (
             <StyledBoxSummary sx={{ width: '100%' }}>
-                The standard strategy is{' '}
-                <Chip
-                    variant="outlined"
-                    size="small"
-                    color="success"
-                    label="ON"
-                />{' '}
-                for all users.
+                The standard strategy is <Badge color="success">ON</Badge> for
+                all users.
             </StyledBoxSummary>
         ),
     ].filter(Boolean);

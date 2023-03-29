@@ -6,7 +6,7 @@ import {
     IVariant,
 } from '../model';
 import { Store } from './store';
-import { IFeatureProjectUserParams } from '../../routes/admin-api/project/features';
+import { IFeatureProjectUserParams } from '../../routes/admin-api/project/project-features';
 
 export interface FeatureConfigurationClient {
     name: string;

@@ -22,7 +22,7 @@ afterAll(async () => {
 
 test('Should update last seen for known toggles', async () => {
     const service = new LastSeenService(stores, config);
-    const time = Date.now();
+    const time = Date.now() - 100;
     await stores.featureToggleStore.create('default', { name: 'ta1' });
 
     const metrics: IClientMetricsEnv[] = [

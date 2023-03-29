@@ -159,7 +159,7 @@ export const Playground: VFC<{}> = () => {
             >
                 <Box
                     sx={{
-                        background: theme.palette.playgroundBackground,
+                        background: theme.palette.background.elevation2,
                         borderBottomLeftRadius: theme.shape.borderRadiusMedium,
                     }}
                 >
@@ -170,7 +170,7 @@ export const Playground: VFC<{}> = () => {
                             py: 3,
                             mb: 4,
                             mt: 2,
-                            background: theme.palette.playgroundBackground,
+                            background: theme.palette.background.elevation2,
                             transition: 'width 0.4s ease',
                             minWidth: matches ? 'auto' : '500px',
                             width: formWidth,

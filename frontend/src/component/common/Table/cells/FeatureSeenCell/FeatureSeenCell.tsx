@@ -30,21 +30,21 @@ const useFeatureColor = () => {
     return (unit?: string): string => {
         switch (unit) {
             case 'second':
-                return theme.palette.activityIndicators.recent;
+                return theme.palette.seen.recent;
             case 'minute':
-                return theme.palette.activityIndicators.recent;
+                return theme.palette.seen.recent;
             case 'hour':
-                return theme.palette.activityIndicators.recent;
+                return theme.palette.seen.recent;
             case 'day':
-                return theme.palette.activityIndicators.recent;
+                return theme.palette.seen.recent;
             case 'week':
-                return theme.palette.activityIndicators.inactive;
+                return theme.palette.seen.inactive;
             case 'month':
-                return theme.palette.activityIndicators.abandoned;
+                return theme.palette.seen.abandoned;
             case 'year':
-                return theme.palette.activityIndicators.abandoned;
+                return theme.palette.seen.abandoned;
             default:
-                return theme.palette.activityIndicators.unknown;
+                return theme.palette.seen.unknown;
         }
     };
 };

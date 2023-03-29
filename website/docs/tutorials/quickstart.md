@@ -110,7 +110,7 @@ Now you can fetch the feature toggle you created and try turning it on / off in 
 
 If you want to set up your own instance for testing purposes you can easily do so by using one of our premade setup kits for Heroku or DigitalOcean.
 
-::: info Pricing
+:::info Pricing
 
 Both DigitalOcean and Heroku will charge you for running Unleash on their services. However, if you use the DigitalOcean link below and are a new user, you will receive $100 in free credits.
 

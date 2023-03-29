@@ -23,6 +23,7 @@ export interface IProject {
     stats: ProjectStatsSchema;
     favorite: boolean;
     features: IFeatureToggleListItem[];
+    mode: 'open' | 'protected';
 }
 
 export interface IProjectHealthReport extends IProject {

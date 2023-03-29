@@ -5,13 +5,14 @@ import { List, ListItem, ListItemText, Grid, styled } from '@mui/material';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ApiDetails } from './ApiDetails/ApiDetails';
 import { FooterTitle } from './FooterTitle';
+import { focusable } from 'themes/themeStyles';
 
 const StyledFooter = styled('footer')(({ theme }) => ({
     padding: theme.spacing(4, 8),
     width: '100%',
     flexGrow: 1,
     zIndex: 100,
-    backgroundColor: theme.palette.footerBackground,
+    backgroundColor: theme.palette.background.paper,
 }));
 
 const StyledList = styled(List)({
@@ -23,8 +24,12 @@ const StyledListItem = styled(ListItem)(({ theme }) => ({
     padding: 0,
     margin: 0,
     '& a': {
+        ...focusable(theme),
         textDecoration: 'none',
         color: theme.palette.text.primary,
+        '&:hover': {
+            textDecoration: 'underline',
+        },
     },
 }));
 

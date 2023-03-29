@@ -43,6 +43,7 @@ import { LazyFeatureView } from 'component/feature/FeatureView/LazyFeatureView';
 import { LazyAdmin } from 'component/admin/LazyAdmin';
 import { LazyProject } from 'component/project/Project/LazyProject';
 import { AdminRedirect } from 'component/admin/AdminRedirect';
+import { LoginHistory } from 'component/loginHistory/LoginHistory';
 
 export const routes: IRoute[] = [
     // Splash
@@ -355,6 +356,14 @@ export const routes: IRoute[] = [
         menu: { adminSettings: true },
     },
 
+    {
+        path: '/admin/logins',
+        title: 'Login history',
+        component: LoginHistory,
+        type: 'protected',
+        menu: { adminSettings: true },
+    },
+
     // Archive
     {
         path: '/archive',
@@ -439,6 +448,12 @@ export const adminMenuRoutes: INavigationMenuItem[] = [
         menu: { adminSettings: true },
     },
     {
+        path: '/admin/logins',
+        title: 'Login history',
+        menu: { adminSettings: true, mode: ['enterprise'] },
+        flag: 'loginHistory',
+    },
+    {
         path: '/admin/users',
         title: 'Users',
         menu: { adminSettings: true },
@@ -446,14 +461,14 @@ export const adminMenuRoutes: INavigationMenuItem[] = [
     {
         path: '/admin/groups',
         title: 'Groups',
-        menu: { adminSettings: true },
+        menu: { adminSettings: true, mode: ['enterprise'] },
         flag: UG,
     },
     {
         path: '/admin/roles',
         title: 'Project roles',
         flag: RE,
-        menu: { adminSettings: true },
+        menu: { adminSettings: true, mode: ['enterprise'] },
     },
     {
         path: '/admin/auth',
@@ -468,19 +483,18 @@ export const adminMenuRoutes: INavigationMenuItem[] = [
     {
         path: '/admin/service-accounts',
         title: 'Service accounts',
-        menu: { adminSettings: true, isEnterprise: true },
+        menu: { adminSettings: true, mode: ['enterprise'] },
     },
     {
         path: '/admin/network/*',
         title: 'Network',
-        menu: { adminSettings: true },
+        menu: { adminSettings: true, mode: ['pro', 'enterprise'] },
         configFlag: 'networkViewEnabled',
     },
     {
         path: '/admin/maintenance',
         title: 'Maintenance',
         menu: { adminSettings: true },
-        flag: 'maintenance',
     },
     {
         path: '/admin/cors',
@@ -491,7 +505,7 @@ export const adminMenuRoutes: INavigationMenuItem[] = [
     {
         path: '/admin/admin-invoices',
         title: 'Billing & invoices',
-        menu: { adminSettings: true, isEnterprise: true },
+        menu: { adminSettings: true, mode: ['pro'] },
     },
 ];
 

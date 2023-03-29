@@ -3,7 +3,7 @@ import React, { FC, VFC, useEffect, useState, useContext } from 'react';
 import { InstanceStatusBar } from 'component/common/InstanceStatus/InstanceStatusBar';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import { Typography, useTheme } from '@mui/material';
+import { Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { IInstanceStatus } from 'interfaces/instance';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
@@ -91,7 +91,6 @@ export const InstanceStatus: FC = ({ children }) => {
         useInstanceStatus();
     const { extendTrial } = useInstanceStatusApi();
     const { setToastApiError } = useToast();
-    const theme = useTheme();
 
     const onExtendTrial = async () => {
         try {
@@ -103,12 +102,7 @@ export const InstanceStatus: FC = ({ children }) => {
     };
 
     return (
-        <div
-            style={{
-                height: '100%',
-                backgroundColor: theme.palette.background.paper,
-            }}
-        >
+        <>
             <ConditionallyRender
                 condition={isBilling && Boolean(instanceStatus)}
                 show={() => (
@@ -124,7 +118,7 @@ export const InstanceStatus: FC = ({ children }) => {
                 )}
             />
             {children}
-        </div>
+        </>
     );
 };
 

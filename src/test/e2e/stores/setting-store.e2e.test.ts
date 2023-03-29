@@ -48,7 +48,7 @@ test('should getAll', async () => {
     await stores.settingStore.insert('unleash.custom.2', { b: 'hello' });
     await stores.settingStore.insert('unleash.custom.3', { b: 'hello' });
     const ret = await stores.settingStore.getAll();
-    expect(ret).toHaveLength(5);
+    expect(ret).toHaveLength(6);
 });
 
 test('should exists', async () => {

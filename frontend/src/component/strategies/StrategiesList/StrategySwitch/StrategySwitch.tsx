@@ -1,8 +1,9 @@
-import { VFC } from 'react';
+import { useMemo, VFC } from 'react';
 import PermissionSwitch from 'component/common/PermissionSwitch/PermissionSwitch';
 import { UPDATE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { Tooltip } from '@mui/material';
 import { useId } from 'hooks/useId';
+import { useHasRootAccess } from 'hooks/useHasAccess';
 
 interface IStrategySwitchProps {
     deprecated: boolean;
@@ -19,17 +20,24 @@ export const StrategySwitch: VFC<IStrategySwitchProps> = ({
         onToggle(deprecated);
     };
     const id = useId();
+    const access = useHasRootAccess(UPDATE_STRATEGY);
 
-    const title = deprecated
-        ? 'Excluded from strategy list'
-        : 'Included in strategy list';
+    const title = useMemo(() => {
+        if (!access) {
+            return '';
+        }
+
+        if (disabled) {
+            return 'You cannot disable default strategy';
+        }
+
+        return deprecated
+            ? 'Excluded from strategy list'
+            : 'Included in strategy list';
+    }, [deprecated, disabled, access]);
 
     return (
-        <Tooltip
-            title={disabled ? 'You cannot disable default strategy' : title}
-            describeChild
-            arrow
-        >
+        <Tooltip title={title} describeChild arrow>
             <div id={id}>
                 <PermissionSwitch
                     checked={!deprecated}

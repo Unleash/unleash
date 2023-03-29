@@ -138,7 +138,9 @@ beforeAll(async () => {
         db.stores,
         {
             experimental: {
-                flags: {},
+                flags: {
+                    featuresExportImport: true,
+                },
             },
         },
         db.rawDatabase,

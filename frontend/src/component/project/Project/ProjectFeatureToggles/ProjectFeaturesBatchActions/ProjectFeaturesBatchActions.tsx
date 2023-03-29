@@ -4,6 +4,7 @@ import { FileDownload } from '@mui/icons-material';
 import type { FeatureSchema } from 'openapi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ExportDialog } from 'component/feature/FeatureToggleList/ExportDialog';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ArchiveButton } from './ArchiveButton';
 import { MoreActions } from './MoreActions';
 import { ManageTags } from './ManageTags';
@@ -18,6 +19,7 @@ interface IProjectFeaturesBatchActionsProps {
 export const ProjectFeaturesBatchActions: FC<
     IProjectFeaturesBatchActionsProps
 > = ({ selectedIds, data, projectId }) => {
+    const { uiConfig } = useUiConfig();
     const [showExportDialog, setShowExportDialog] = useState(false);
     const { trackEvent } = usePlausibleTracker();
     const selectedData = useMemo(
@@ -54,12 +56,17 @@ export const ProjectFeaturesBatchActions: FC<
             </Button>
             <ManageTags projectId={projectId} data={selectedData} />
             <MoreActions projectId={projectId} data={selectedData} />
-            <ExportDialog
-                showExportDialog={showExportDialog}
-                data={selectedData}
-                onClose={() => setShowExportDialog(false)}
-                environments={environments}
-                onConfirm={trackExport}
+            <ConditionallyRender
+                condition={Boolean(uiConfig?.flags?.featuresExportImport)}
+                show={
+                    <ExportDialog
+                        showExportDialog={showExportDialog}
+                        data={selectedData}
+                        onClose={() => setShowExportDialog(false)}
+                        environments={environments}
+                        onConfirm={trackExport}
+                    />
+                }
             />
         </>
     );

@@ -18,7 +18,6 @@ import { TokenInfo } from '../ApiTokenForm/TokenInfo/TokenInfo';
 import { TokenTypeSelector } from '../ApiTokenForm/TokenTypeSelector/TokenTypeSelector';
 import { ProjectSelector } from '../ApiTokenForm/ProjectSelector/ProjectSelector';
 import { EnvironmentSelector } from '../ApiTokenForm/EnvironmentSelector/EnvironmentSelector';
-import { useEnvironments } from '../../../../hooks/api/getters/useEnvironments/useEnvironments';
 
 const pageTitle = 'Create API token';
 interface ICreateApiTokenProps {
@@ -30,7 +29,6 @@ export const CreateApiToken = ({ modal = false }: ICreateApiTokenProps) => {
     const navigate = useNavigate();
     const [showConfirm, setShowConfirm] = useState(false);
     const [token, setToken] = useState('');
-    const { environments } = useEnvironments();
 
     const {
         getApiTokenPayload,
@@ -127,7 +125,6 @@ export const CreateApiToken = ({ modal = false }: ICreateApiTokenProps) => {
                 />
                 <EnvironmentSelector
                     type={type}
-                    environments={environments}
                     environment={environment}
                     setEnvironment={setEnvironment}
                 />

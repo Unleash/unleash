@@ -128,10 +128,4 @@ export const validateApiTokenEnvironment = (
     if (!selectedEnvironment) {
         throw new BadDataError(`Environment=${environment} does not exist`);
     }
-
-    if (!selectedEnvironment.enabled) {
-        throw new BadDataError(
-            'Client token cannot be scoped to disabled environments',
-        );
-    }
 };

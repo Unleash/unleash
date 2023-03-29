@@ -2,6 +2,9 @@ name: Heroku Postgres Reset
 
 on:
   workflow_dispatch:
+  schedule:
+    # run every day at midnight
+    - cron: "0 0 * * *"
 
 jobs:
   reset-postgres:
@@ -15,7 +18,7 @@ jobs:
         with:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
           heroku_email: ${{ secrets.HEROKU_EMAIL }}
-
+          justlogin: true
       - name: Reset Postgres
         run: |
           heroku pg:reset DATABASE --app unleash --confirm unleash

@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { Box, Paper, styled, Typography } from '@mui/material';
+import { BATCH_ACTIONS_BAR, BATCH_SELECTED_COUNT } from 'utils/testIds';
 
 interface IBatchSelectionActionsBarProps {
     count: number;
@@ -56,11 +57,13 @@ export const BatchSelectionActionsBar: FC<IBatchSelectionActionsBarProps> = ({
     }
 
     return (
-        <StyledStickyContainer>
+        <StyledStickyContainer data-testid={BATCH_ACTIONS_BAR}>
             <StyledContainer>
                 <StyledBar elevation={4}>
                     <StyledText>
-                        <StyledCount>{count}</StyledCount>
+                        <StyledCount data-testid={BATCH_SELECTED_COUNT}>
+                            {count}
+                        </StyledCount>
                         &ensp;selected
                     </StyledText>
                     {children}

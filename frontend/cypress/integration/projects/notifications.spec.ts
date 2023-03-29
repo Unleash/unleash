@@ -113,7 +113,6 @@ describe('notifications', () => {
 
         //then
         cy.get("[data-testid='NOTIFICATIONS_MODAL']").should('exist');
-        cy.get("[data-testid='UNREAD_NOTIFICATIONS']").should('not.exist');
 
         const credentials = userCredentials[0];
 

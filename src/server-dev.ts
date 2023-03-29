@@ -41,7 +41,7 @@ process.nextTick(async () => {
                         maintenance: true,
                         featuresExportImport: true,
                         newProjectOverview: true,
-                        projectStatusApi: false,
+                        projectStatusApi: true,
                         showProjectApiAccess: true,
                     },
                 },

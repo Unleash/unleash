@@ -29,14 +29,14 @@ const StyledBar = styled(Paper)(({ theme }) => ({
     marginRight: 'auto',
     padding: theme.spacing(2, 3),
     backgroundColor: theme.palette.background.paper,
-    border: `1px solid ${theme.palette.secondary.main}`,
+    border: `1px solid ${theme.palette.background.alternative}`,
     borderRadius: theme.shape.borderRadiusLarge,
     gap: theme.spacing(1),
     flexWrap: 'wrap',
 }));
 
 const StyledCount = styled('span')(({ theme }) => ({
-    background: theme.palette.secondary.main,
+    background: theme.palette.background.alternative,
     color: theme.palette.common.white,
     padding: theme.spacing(0.5, 1),
     borderRadius: theme.shape.borderRadius,

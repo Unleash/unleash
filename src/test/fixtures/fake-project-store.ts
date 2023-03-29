@@ -5,12 +5,11 @@ import {
     IProjectStore,
 } from '../../lib/types/stores/project-store';
 import {
-    DefaultStickiness,
     IEnvironment,
     IProject,
     IProjectWithCount,
     ProjectMode,
-} from '../../lib/types/model';
+} from '../../lib/types';
 import NotFoundError from '../../lib/error/notfound-error';
 import {
     IEnvironmentProjectLink,
@@ -174,7 +173,7 @@ export default class FakeProjectStore implements IProjectStore {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         projectId: string,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        defaultStickiness: DefaultStickiness,
+        defaultStickiness: string,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         mode: ProjectMode,
     ): Promise<void> {

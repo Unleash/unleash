@@ -8,7 +8,6 @@ import { projectSchema } from './project-schema';
 import NotFoundError from '../error/notfound-error';
 import {
     DEFAULT_PROJECT,
-    DefaultStickiness,
     FEATURE_ENVIRONMENT_ENABLED,
     FeatureToggle,
     IAccountStore,
@@ -860,7 +859,7 @@ export default class ProjectService {
 
     async setProjectSettings(
         projectId: string,
-        defaultStickiness: DefaultStickiness,
+        defaultStickiness: string,
         mode: ProjectMode,
     ): Promise<void> {
         return this.store.setProjectSettings(

@@ -120,7 +120,7 @@ const Header: VFC = () => {
 
     const [admin, setAdmin] = useState(false);
     const { permissions } = useAuthPermissions();
-    const { uiConfig, isOss } = useUiConfig();
+    const { uiConfig, isOss, isPro, isEnterprise } = useUiConfig();
     const smallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [openDrawer, setOpenDrawer] = useState(false);
 
@@ -140,8 +140,13 @@ const Header: VFC = () => {
 
     const routes = getRoutes();
 
-    const filterByEnterprise = (route: INavigationMenuItem): boolean => {
-        return !route.menu.isEnterprise || !isOss();
+    const filterByMode = (route: INavigationMenuItem): boolean => {
+        const { mode } = route.menu;
+        return (
+            !mode ||
+            (mode.includes('pro') && isPro()) ||
+            (mode.includes('enterprise') && isEnterprise())
+        );
     };
 
     const filteredMainRoutes = {
@@ -159,7 +164,7 @@ const Header: VFC = () => {
         ),
         adminRoutes: adminMenuRoutes
             .filter(filterByConfig(uiConfig))
-            .filter(filterByEnterprise)
+            .filter(filterByMode)
             .map(route => ({
                 ...route,
                 path: route.path.replace('/*', ''),

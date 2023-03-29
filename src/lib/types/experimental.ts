@@ -34,6 +34,10 @@ const flags = {
         process.env.UNLEASH_EXPERIMENTAL_MESSAGE_BANNER,
         false,
     ),
+    featuresExportImport: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_FEATURES_EXPORT_IMPORT,
+        true,
+    ),
     caseInsensitiveInOperators: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_CASE_INSENSITIVE_IN_OPERATORS,
         false,
@@ -71,6 +75,10 @@ const flags = {
     ),
     optimal304Differ: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_OPTIMAL_304_DIFFER,
+        false,
+    ),
+    apiPagination: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_API_PAGINATION,
         false,
     ),
 };

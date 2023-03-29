@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 
@@ -21,9 +21,6 @@ import { TokenTypeSelector } from 'component/admin/apiToken/ApiTokenForm/TokenTy
 import { ConfirmToken } from 'component/admin/apiToken/ConfirmToken/ConfirmToken';
 import { useProjectApiTokens } from 'hooks/api/getters/useProjectApiTokens/useProjectApiTokens';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { useProjectEnvironments } from '../../../../../hooks/api/getters/useProjectEnvironments/useProjectEnvironments';
-import { IProjectEnvironment } from '../../../../../interfaces/environments';
-import useProject from '../../../../../hooks/api/getters/useProject/useProject';
 
 const pageTitle = 'Create project API token';
 
@@ -52,19 +49,7 @@ export const CreateProjectApiTokenForm = () => {
         useProjectApiTokensApi();
     const { refetch: refetchProjectTokens } = useProjectApiTokens(projectId);
     const { trackEvent } = usePlausibleTracker();
-    const { environments } = useProjectEnvironments(projectId);
-    const { project } = useProject(projectId);
 
-    const projectEnvironments = useMemo<IProjectEnvironment[]>(
-        () =>
-            environments.map(environment => ({
-                ...environment,
-                projectVisible: project?.environments.includes(
-                    environment.name
-                ),
-            })),
-        [environments, project?.environments]
-    );
     usePageTitle(pageTitle);
 
     const PATH = `api/admin/project/${projectId}/api-tokens`;
@@ -146,7 +131,6 @@ export const CreateProjectApiTokenForm = () => {
                     type={type}
                     environment={environment}
                     setEnvironment={setEnvironment}
-                    environments={projectEnvironments}
                 />
             </ApiTokenForm>
             <ConfirmToken

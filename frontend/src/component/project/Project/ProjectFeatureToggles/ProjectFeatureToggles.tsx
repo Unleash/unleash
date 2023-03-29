@@ -583,21 +583,29 @@ export const ProjectFeatureToggles = ({
                                     setHiddenColumns={setHiddenColumns}
                                 />
                                 <PageHeader.Divider sx={{ marginLeft: 0 }} />
-                                <Tooltip
-                                    title="Export toggles visible in the table below"
-                                    arrow
-                                >
-                                    <IconButton
-                                        onClick={() =>
-                                            setShowExportDialog(true)
-                                        }
-                                        sx={theme => ({
-                                            marginRight: theme.spacing(2),
-                                        })}
-                                    >
-                                        <FileDownload />
-                                    </IconButton>
-                                </Tooltip>
+                                <ConditionallyRender
+                                    condition={Boolean(
+                                        uiConfig?.flags?.featuresExportImport
+                                    )}
+                                    show={
+                                        <Tooltip
+                                            title="Export toggles visible in the table below"
+                                            arrow
+                                        >
+                                            <IconButton
+                                                onClick={() =>
+                                                    setShowExportDialog(true)
+                                                }
+                                                sx={theme => ({
+                                                    marginRight:
+                                                        theme.spacing(2),
+                                                })}
+                                            >
+                                                <FileDownload />
+                                            </IconButton>
+                                        </Tooltip>
+                                    }
+                                />
                                 <StyledResponsiveButton
                                     onClick={() =>
                                         navigate(getCreateTogglePath(projectId))
@@ -704,7 +712,10 @@ export const ProjectFeatureToggles = ({
                     }
                 />
                 <ConditionallyRender
-                    condition={!loading}
+                    condition={
+                        Boolean(uiConfig?.flags?.featuresExportImport) &&
+                        !loading
+                    }
                     show={
                         <ExportDialog
                             showExportDialog={showExportDialog}

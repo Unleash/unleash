@@ -93,7 +93,7 @@ If you see an item marked with a ❌ that you would find useful, feel free to re
 
 ### Client-side SDKs
 
-Client-side SDKs can connect to the [Unleash front-end API](../front-end-api.md), [Unleash Edge](../../generated/unleash-edge.md), or to the [Unleash Proxy](../../generated/unleash-proxy.md), but _not_ to the regular Unleash client API.
+Client-side SDKs can connect to [Unleash Edge](../../generated/unleash-edge.md), the [Unleash front-end API](../front-end-api.md), or to the [Unleash Proxy](../../generated/unleash-proxy.md), but _not_ to the regular Unleash client API.
 
 The list of official client-side SDKs is:
 
@@ -105,14 +105,14 @@ The list of official client-side SDKs is:
 - [Svelte Proxy SDK](/docs/generated/sdks/client-side/svelte.md)
 - [Vue Proxy SDK](/docs/generated/sdks/client-side/vue.md)
 
-#### Client-side SDK compatibility table
+Additionally, the [Next.js SDK](/docs/generated/sdks/client-side/next-js.md) also supports a client-side mode.
 
-Because client-side SDKs don't evaluate their features locally, some of their capabilities depend on the service that they connect to.
-For a more distinct overview, refer to the next section [UPDATE THIS BEFORE MERGE].
 
-- For strategies, refer to the proxy capabiities.
-- For constraint support, refer to the proxy capabilities
-- isEnabled calls don't support fallbacks
+#### Client-side SDK compatibility tables
+
+Because client-side SDKs don't evaluate their features locally, some of their capabilities depend on what they are connected to.
+
+One clear difference between server-side SDKs and client-side SDKs, is that client-side SDKs don't support using fallback values in `isEnabled` calls. This is because the evaluation happens upstream from them.
 
 | Capability | [Android](/docs/generated/sdks/client-side/android-proxy.md) | [Flutter](/docs/generated/sdks/client-side/flutter.md) | [iOS](/docs/generated/sdks/client-side/ios-proxy.md) | [JavaScript](/docs/generated/sdks/client-side/javascript-browser.md) | [React](/docs/generated/sdks/client-side/react.md) | [Svelte](/docs/generated/sdks/client-side/svelte.md) | [Vue](/docs/generated/sdks/client-side/vue.md) |
 | --- | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
@@ -142,7 +142,9 @@ For a more distinct overview, refer to the next section [UPDATE THIS BEFORE MERG
 | Bootstrap from file | ✅ | ✅ | ✅ | ⭕ | ✅ | ✅ | ✅ |
 | Custom Bootstrap implementation | ✅ | ✅ | ✅ | ⭕ | ✅ | ✅ | ✅ |
 
-#### Edge, proxy, front-end api capabilities
+##### Edge, proxy, front-end api capabilities
+
+Client-side SDKs connect to [Edge](/docs/generated/unleash-edge.md), the [front-end API](../front-end-api.md), or the [Unleash proxy](/docs/generated/unleash-proxy.md).
 
 | Capability | [Edge](/docs/generated/unleash-edge.md) | [Front-end API](../front-end-api.md) | [Proxy](/docs/generated/unleash-proxy.md) |
 | --- | :-: | :-: | :-: |

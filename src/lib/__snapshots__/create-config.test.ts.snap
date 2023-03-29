@@ -69,6 +69,7 @@ exports[`should create default config 1`] = `
     "flags": {
       "ENABLE_DARK_MODE_SUPPORT": false,
       "anonymiseEventLog": false,
+      "apiPagination": false,
       "bulkOperations": false,
       "caseInsensitiveInOperators": false,
       "cleanClientApi": false,
@@ -96,6 +97,7 @@ exports[`should create default config 1`] = `
     "experiments": {
       "ENABLE_DARK_MODE_SUPPORT": false,
       "anonymiseEventLog": false,
+      "apiPagination": false,
       "bulkOperations": false,
       "caseInsensitiveInOperators": false,
       "cleanClientApi": false,

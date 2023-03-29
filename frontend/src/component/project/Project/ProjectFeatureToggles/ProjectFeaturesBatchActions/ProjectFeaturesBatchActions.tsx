@@ -46,14 +46,19 @@ export const ProjectFeaturesBatchActions: FC<
     return (
         <>
             <ArchiveButton projectId={projectId} features={selectedIds} />
-            <Button
-                startIcon={<FileDownload />}
-                variant="outlined"
-                size="small"
-                onClick={() => setShowExportDialog(true)}
-            >
-                Export
-            </Button>
+            <ConditionallyRender
+                condition={Boolean(uiConfig?.flags?.featuresExportImport)}
+                show={
+                    <Button
+                        startIcon={<FileDownload />}
+                        variant="outlined"
+                        size="small"
+                        onClick={() => setShowExportDialog(true)}
+                    >
+                        Export
+                    </Button>
+                }
+            />
             <ManageTags projectId={projectId} data={selectedData} />
             <MoreActions projectId={projectId} data={selectedData} />
             <ConditionallyRender

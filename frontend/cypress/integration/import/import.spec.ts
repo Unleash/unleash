@@ -86,7 +86,7 @@ describe('imports', () => {
                 {
                     featureName: randomFeatureName,
                     tagType: 'simple',
-                    tagValue: 'rserw',
+                    tagValue: 'rserwa',
                 },
                 {
                     featureName: randomFeatureName,

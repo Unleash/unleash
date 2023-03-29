@@ -16,6 +16,7 @@ import { useLocationSettings } from 'hooks/useLocationSettings';
 import 'chartjs-adapter-date-fns';
 import { createChartData } from './createChartData';
 import { createChartOptions } from './createChartOptions';
+import { useThemeMode } from 'hooks/useThemeMode';
 
 interface IFeatureMetricsChartProps {
     metrics: IFeatureMetricsRaw[];
@@ -28,7 +29,10 @@ export const FeatureMetricsChart = ({
     hoursBack,
     statsSectionId,
 }: IFeatureMetricsChartProps) => {
+    const { resolveTheme } = useThemeMode();
     const { locationSettings } = useLocationSettings();
+
+    const theme = resolveTheme();
 
     const sortedMetrics = useMemo(() => {
         return [...metrics].sort((metricA, metricB) => {
@@ -37,12 +41,17 @@ export const FeatureMetricsChart = ({
     }, [metrics]);
 
     const options = useMemo(() => {
-        return createChartOptions(sortedMetrics, hoursBack, locationSettings);
-    }, [sortedMetrics, hoursBack, locationSettings]);
+        return createChartOptions(
+            theme,
+            sortedMetrics,
+            hoursBack,
+            locationSettings
+        );
+    }, [theme, sortedMetrics, hoursBack, locationSettings]);
 
     const data = useMemo(() => {
-        return createChartData(sortedMetrics, locationSettings);
-    }, [sortedMetrics, locationSettings]);
+        return createChartData(theme, sortedMetrics, locationSettings);
+    }, [theme, sortedMetrics, locationSettings]);
 
     return (
         <div style={{ height: 400 }}>

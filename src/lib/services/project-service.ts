@@ -18,7 +18,12 @@ import {
     ProjectGroupUpdateRoleEvent,
     FEATURE_ENVIRONMENT_ENABLED,
 } from '../types/events';
-import { IUnleashStores, IUnleashConfig, IAccountStore } from '../types';
+import {
+    IUnleashStores,
+    IUnleashConfig,
+    IAccountStore,
+    IFlagResolver,
+} from '../types';
 import {
     FeatureToggle,
     IProject,
@@ -108,6 +113,8 @@ export default class ProjectService {
 
     private projectStatsStore: IProjectStatsStore;
 
+    private flagResolver: IFlagResolver;
+
     constructor(
         {
             projectStore,
@@ -150,6 +157,7 @@ export default class ProjectService {
         this.accountStore = accountStore;
         this.groupService = groupService;
         this.projectStatsStore = projectStatsStore;
+        this.flagResolver = config.flagResolver;
         this.logger = config.getLogger('services/project-service.js');
     }
 
@@ -809,9 +817,8 @@ export default class ProjectService {
                 project: projectId,
                 userId,
             }),
-            this.projectStatsStore.getProjectStats(projectId),
+            this.getProjectStats(projectId),
         ]);
-
         return {
             stats: projectStats,
             name: project.name,
@@ -825,4 +832,24 @@ export default class ProjectService {
             version: 1,
         };
     }
+
+    getProjectStats = async (projectId: string): Promise<IProjectStats> => {
+        if (this.flagResolver.isEnabled('projectStatusApi')) {
+            const projectStats = await this.projectStatsStore.getProjectStats(
+                projectId,
+            );
+            return projectStats;
+        }
+        return {
+            archivedCurrentWindow: 0,
+            archivedPastWindow: 0,
+            avgTimeToProdCurrentWindow: 0,
+            avgTimeToProdPastWindow: 0,
+            createdCurrentWindow: 0,
+            createdPastWindow: 0,
+            projectActivityCurrentWindow: 0,
+            projectActivityPastWindow: 0,
+            projectMembersAddedCurrentWindow: 0,
+        };
+    };
 }

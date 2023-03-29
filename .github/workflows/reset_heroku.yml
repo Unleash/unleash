@@ -1,0 +1,21 @@
+name: Heroku Postgres Reset
+
+on:
+  workflow_dispatch:
+
+jobs:
+  reset-postgres:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install Heroku CLI
+        uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          email: ${{ secrets.HEROKU_EMAIL }}
+
+      - name: Reset Postgres
+        run: |
+          heroku pg:reset DATABASE --app unleash --confirm unleash

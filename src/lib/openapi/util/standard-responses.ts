@@ -25,12 +25,17 @@ const conflictResponse = {
         'The provided resource can not be created or updated because it would conflict with the current state of the resource or with an already existing resource, respectively.',
 } as const;
 
+const unsupportedMediaTypeResponse = {
+    description: `The operation does not support request payloads of the provided type. Please ensure that you're using one of the listed payload types and that you have specified the right content type in the "content-type" header.`,
+} as const;
+
 const standardResponses = {
     400: badRequestResponse,
     401: unauthorizedResponse,
     403: forbiddenResponse,
     404: notFoundResponse,
     409: conflictResponse,
+    415: unsupportedMediaTypeResponse,
 } as const;
 
 type StandardResponses = typeof standardResponses;

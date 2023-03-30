@@ -13,7 +13,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { StickinessSelect } from 'component/feature/StrategyTypes/FlexibleStrategy/StickinessSelect/StickinessSelect';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import Select from 'component/common/select';
-import { DefaultStickiness, ProjectMode } from '../hooks/useProjectForm';
+import { ProjectMode } from '../hooks/useProjectForm';
 import { Box } from '@mui/material';
 import { CollaborationModeTooltip } from './CollaborationModeTooltip';
 

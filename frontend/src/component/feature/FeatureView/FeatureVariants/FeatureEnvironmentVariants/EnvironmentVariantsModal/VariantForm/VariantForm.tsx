@@ -20,6 +20,8 @@ import { WeightType } from 'constants/variantTypes';
 import { IFeatureVariantEdit } from '../EnvironmentVariantsModal';
 import { Operation } from 'fast-json-patch';
 import { Delete } from '@mui/icons-material';
+import { useOptionalPathParam } from '../../../../../../../hooks/useOptionalPathParam';
+import { useDefaultProjectSettings } from '../../../../../../../hooks/useDefaultProjectSettings';
 
 const StyledVariantForm = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -179,6 +181,9 @@ export const VariantForm = ({
 
     const [errors, setErrors] = useState<IVariantFormErrors>({});
 
+    const projectId = useOptionalPathParam('projectId');
+    const { defaultStickiness } = useDefaultProjectSettings(projectId);
+
     const clearError = (field: ErrorField) => {
         setErrors(errors => ({ ...errors, [field]: undefined }));
     };
@@ -280,7 +285,9 @@ export const VariantForm = ({
             weight: Number(customPercentage ? percentage : 100) * 10,
             weightType: customPercentage ? WeightType.FIX : WeightType.VARIABLE,
             stickiness:
-                variants?.length > 0 ? variants[0].stickiness : 'default',
+                variants?.length > 0
+                    ? variants[0].stickiness
+                    : defaultStickiness,
             payload: payload.value ? payload : undefined,
             overrides: overrides
                 .map(o => ({

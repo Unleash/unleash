@@ -3,14 +3,11 @@ import { SWRConfiguration } from 'swr';
 import { useCallback } from 'react';
 import handleErrorResponses from './api/getters/httpErrorResponseHandler';
 import { useConditionalSWR } from './api/getters/useConditionalSWR/useConditionalSWR';
-import {
-    DefaultStickiness,
-    ProjectMode,
-} from 'component/project/Project/hooks/useProjectForm';
+import { ProjectMode } from 'component/project/Project/hooks/useProjectForm';
 import { formatApiPath } from 'utils/formatPath';
 
 export interface ISettingsResponse {
-    defaultStickiness?: DefaultStickiness;
+    defaultStickiness?: string;
     mode?: ProjectMode;
 }
 const DEFAULT_STICKINESS = 'default';
@@ -30,8 +27,7 @@ export const useDefaultProjectSettings = (
         () => fetcher(formatApiPath(PATH)),
         options
     );
-
-    const defaultStickiness: DefaultStickiness =
+    const defaultStickiness: string =
         data?.defaultStickiness ?? DEFAULT_STICKINESS;
 
     const refetch = useCallback(() => {

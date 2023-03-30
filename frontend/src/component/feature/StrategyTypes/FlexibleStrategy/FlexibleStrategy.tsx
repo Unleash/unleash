@@ -53,12 +53,12 @@ const FlexibleStrategy = ({
 
     const stickiness = resolveStickiness();
 
-    if (parameters.stickiness === '') {
-        onUpdate('stickiness')(stickiness);
-    }
-
     if (loading) {
         return <Loader />;
+    }
+
+    if (parameters.stickiness === '') {
+        onUpdate('stickiness')(stickiness);
     }
 
     return (

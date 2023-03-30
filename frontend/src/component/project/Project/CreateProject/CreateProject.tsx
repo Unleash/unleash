@@ -13,6 +13,7 @@ import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { GO_BACK } from 'constants/navigate';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useSWRConfig } from 'swr';
 
 const CREATE_PROJECT_BTN = 'CREATE_PROJECT_BTN';
 
@@ -40,6 +41,7 @@ const CreateProject = () => {
         errors,
     } = useProjectForm();
 
+    const { mutate } = useSWRConfig();
     const { createProject, loading } = useProjectApi();
 
     const handleSubmit = async (e: Event) => {
@@ -54,6 +56,7 @@ const CreateProject = () => {
                 await createProject(payload);
                 refetchUser();
                 navigate(`/projects/${projectId}`);
+                await mutate(`/projects/${projectId}`);
                 setToastData({
                     title: 'Project created',
                     text: 'Now you can add toggles to this project',

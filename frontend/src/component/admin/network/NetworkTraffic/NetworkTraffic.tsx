@@ -21,13 +21,12 @@ import {
 import { formatDateHM } from 'utils/formatDate';
 import { RequestsPerSecondSchema } from 'openapi';
 import 'chartjs-adapter-date-fns';
-import { Alert } from '@mui/material';
+import { Alert, useTheme } from '@mui/material';
 import { Box } from '@mui/system';
 import { CyclicIterator } from 'utils/cyclicIterator';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { unknownify } from 'utils/unknownify';
-import { useThemeMode } from 'hooks/useThemeMode';
 import { Theme } from '@mui/material/styles/createTheme';
 
 interface IPoint {
@@ -191,8 +190,7 @@ const toChartData = (
 export const NetworkTraffic: VFC = () => {
     const { locationSettings } = useLocationSettings();
     const { metrics } = useInstanceMetrics();
-    const { resolveTheme } = useThemeMode();
-    const theme = resolveTheme();
+    const theme = useTheme();
     const options = useMemo(() => {
         return createInstanceChartOptions(theme, locationSettings);
     }, [theme, locationSettings]);

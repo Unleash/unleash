@@ -89,7 +89,6 @@ exports[`should create default config 1`] = `
       "projectScopedStickiness": false,
       "projectStatusApi": false,
       "responseTimeWithAppNameKillSwitch": false,
-      "showProjectApiAccess": false,
       "strictSchemaValidation": false,
     },
   },
@@ -117,7 +116,6 @@ exports[`should create default config 1`] = `
       "projectScopedStickiness": false,
       "projectStatusApi": false,
       "responseTimeWithAppNameKillSwitch": false,
-      "showProjectApiAccess": false,
       "strictSchemaValidation": false,
     },
     "externalResolver": {

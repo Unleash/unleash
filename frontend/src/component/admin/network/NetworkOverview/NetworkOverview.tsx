@@ -19,6 +19,9 @@ const StyledMermaid = styled(Mermaid)(({ theme }) => ({
         fill: theme.palette.secondary.light,
         stroke: theme.palette.secondary.border,
     },
+    '#mermaid .unleash-logo': {
+        padding: theme.spacing(1),
+    },
 }));
 
 const isRecent = (value: ResultValue) => {
@@ -93,7 +96,7 @@ export const NetworkOverview = () => {
         direction BT
             Unleash(<img src='${formatAssetPath(
                 themeMode === 'dark' ? logoWhiteIcon : logoIcon
-            )}' width='60' height='60' /><br/>Unleash)
+            )}' width='72' height='72' class='unleash-logo'/><br/>Unleash)
             ${apps
                 .map(
                     ({ label, reqs, type }, i) =>

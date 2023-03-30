@@ -44,8 +44,6 @@ export const FeedbackNPS = ({ openUrl }: IFeedbackNPSProps) => {
     const theme = useTheme();
     const feedbackId = PNPS_FEEDBACK_ID;
 
-    console.log(theme);
-
     const animations = useMemo(
         () => ({
             start: { ...fadeInTopStart(theme), zIndex: theme.zIndex.tooltip },

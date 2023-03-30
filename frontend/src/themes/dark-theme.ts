@@ -9,9 +9,6 @@ const actionColors = {
     0.08: 'rgba(223, 222, 255, 0.08)',
     0.05: 'rgba(223, 222, 255, 0.05)',
 };
-const purpleColor = {
-    0.5: 'rgba(151, 146, 237, 0.5))',
-};
 
 const theme = {
     breakpoints: {
@@ -95,7 +92,7 @@ const theme = {
         },
         secondary: {
             // Used for purple badges and puple light elements
-            main: '#57549C', // used on icons on these elements
+            main: '#9792ED', // used on icons on these elements
             light: '#34325E', // used as a bakground on these elements
             dark: '#EEEEFC', // used for text on these elements
             border: '#4C4992',
@@ -543,7 +540,7 @@ export default createTheme({
                     '&:not(.Mui-disabled).MuiButton-containedPrimary': {
                         backgroundColor: theme.palette.background.alternative,
                         '&:hover': {
-                            backgroundColor: theme.palette.secondary.main,
+                            backgroundColor: theme.palette.secondary.light,
                         },
                     },
                 }),

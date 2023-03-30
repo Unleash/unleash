@@ -140,10 +140,15 @@ const ProjectForm: React.FC<IProjectForm> = ({
                     condition={Boolean(projectModeFlag)}
                     show={
                         <>
-                            <Box sx={{ display: 'flex' }}>
-                                <StyledDescription>
-                                    What is your project collaboration mode?
-                                </StyledDescription>
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    marginBottom: 1,
+                                    gap: 1,
+                                }}
+                            >
+                                <p>What is your project collaboration mode?</p>
                                 <CollaborationModeTooltip />
                             </Box>
                             <Select

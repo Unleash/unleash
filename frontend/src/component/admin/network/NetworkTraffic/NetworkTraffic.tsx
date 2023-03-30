@@ -29,6 +29,8 @@ import { usePageTitle } from 'hooks/usePageTitle';
 import { unknownify } from 'utils/unknownify';
 import { Theme } from '@mui/material/styles/createTheme';
 
+const pointStyles = ['circle', 'rect', 'rectRounded', 'rectRot', 'triangle'];
+
 interface IPoint {
     x: number;
     y: number;
@@ -162,7 +164,7 @@ const toChartData = (
             theme.palette.primary,
             theme.palette.warning,
         ]);
-        return rps.data.result.map(dataset => {
+        return rps.data.result.map((dataset, i) => {
             const endpoint = unknownify(dataset.metric?.endpoint);
             const appName = unknownify(dataset.metric?.appName);
             const color = colorPicker.pick(endpoint);
@@ -175,7 +177,7 @@ const toChartData = (
                 elements: {
                     point: {
                         radius: 4,
-                        pointStyle: 'circle',
+                        pointStyle: pointStyles[i % pointStyles.length],
                     },
                     line: {
                         borderDash: [8, 4],

@@ -23,9 +23,7 @@ interface IProjectForm {
     projectDesc: string;
     projectStickiness?: string;
     projectMode?: string;
-    setProjectStickiness?: React.Dispatch<
-        React.SetStateAction<DefaultStickiness>
-    >;
+    setProjectStickiness?: React.Dispatch<React.SetStateAction<string>>;
     setProjectMode?: React.Dispatch<React.SetStateAction<ProjectMode>>;
     setProjectId: React.Dispatch<React.SetStateAction<string>>;
     setProjectName: React.Dispatch<React.SetStateAction<string>>;
@@ -127,9 +125,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
                                 data-testid={PROJECT_STICKINESS_SELECT}
                                 onChange={e =>
                                     setProjectStickiness &&
-                                    setProjectStickiness(
-                                        e.target.value as DefaultStickiness
-                                    )
+                                    setProjectStickiness(e.target.value)
                                 }
                                 editable
                             />

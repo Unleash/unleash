@@ -177,6 +177,9 @@ module.exports = {
                 googleAnalytics: {
                     trackingID: 'UA-134882379-1',
                 },
+                googleTagManager: {
+                    containerId: 'GTM-KV5PRR2',
+                },
             },
         ],
     ],

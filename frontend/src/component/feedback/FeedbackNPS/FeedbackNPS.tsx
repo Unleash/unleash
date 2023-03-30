@@ -13,7 +13,6 @@ import { ReactComponent as UnleashLogoWhite } from 'assets/icons/logoWhiteBg.svg
 import AnimateOnMount from 'component/common/AnimateOnMount/AnimateOnMount';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
-    contentSpacingY,
     fadeInTopEnter,
     fadeInTopLeave,
     fadeInTopStart,
@@ -44,6 +43,8 @@ export const FeedbackNPS = ({ openUrl }: IFeedbackNPSProps) => {
     const [answeredNotNow, setAnsweredNotNow] = useState(false);
     const theme = useTheme();
     const feedbackId = PNPS_FEEDBACK_ID;
+
+    console.log(theme);
 
     const animations = useMemo(
         () => ({
@@ -112,11 +113,11 @@ export const FeedbackNPS = ({ openUrl }: IFeedbackNPSProps) => {
                 >
                     <Tooltip title="Close" arrow>
                         <IconButton
-                            sx={{
+                            sx={theme => ({
                                 position: 'absolute',
-                                right: '-32px',
-                                top: '-32px',
-                            }}
+                                right: theme.spacing(-4),
+                                top: theme.spacing(-4),
+                            })}
                             onClick={() => setShowFeedback(false)}
                             size="large"
                         >

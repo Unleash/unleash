@@ -9,9 +9,6 @@ const actionColors = {
     0.08: 'rgba(223, 222, 255, 0.08)',
     0.05: 'rgba(223, 222, 255, 0.05)',
 };
-const purpleColor = {
-    0.5: 'rgba(151, 146, 237, 0.5))',
-};
 
 const theme = {
     breakpoints: {

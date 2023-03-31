@@ -196,3 +196,14 @@ test('should not delete unknown addon configuration', async () => {
 
     return app.request.delete('/api/admin/addons/21231').expect(404);
 });
+
+test("should return 400 if it doesn't recognize the provider", async () => {
+    const payload = {
+        provider: 'htni',
+        enabled: true,
+        parameters: {},
+        events: [],
+    };
+
+    return app.request.post('/api/admin/addons').send(payload).expect(400);
+});

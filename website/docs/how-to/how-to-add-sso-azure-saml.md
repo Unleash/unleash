@@ -10,7 +10,7 @@ The **Single-Sign-On capability** is only available for customers on the Enterpr
 
 ## Introduction {#introduction}
 
-In this guide we will do a deep dive on the Single-Sign-On (SSO) integration with SAML 2.0 and connect it with Azure Active Directory as IdP. Unleash support other identity providers and protocols, have a look at [all available Single-Sign-On options](../reference/sso.md)
+This guides shows you how to use [Unleash's Single-Sign-On (SSO) integration](../reference/sso.md) with SAML 2.0 and how to connect it to Azure Active Directory as an ID provider (IdP).
 
 ## Basic configuration
 

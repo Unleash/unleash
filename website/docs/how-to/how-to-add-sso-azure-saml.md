@@ -40,7 +40,7 @@ Open a new tab/window in your browser and sign in to your Azure AD. Create a new
 
 **b) Select "Single sign-on" from the side bar and select the "SAML" option**
 
-![Azure: SSO Setup SAML](/img/sso-azure-saml-choice.png)
+![Azure: SSO Setup SAML](/img/sso-azure-saml-saml-choice.png)
 
 **c) Section 1: Basic SAML Configuration**
 

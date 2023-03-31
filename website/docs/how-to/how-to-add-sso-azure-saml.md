@@ -48,7 +48,7 @@ The "Identifier" is your Unleash URL (typically formatted as: https://**[region]
 The "Reply URL" is the Unleash Callback URL, which can be found on the Unleash SSO Configuration page (typically formatted as: https://**[region]**.app.unleash-hosted.com/**[instanceName]**/auth/saml/callback).
 Click save. 
 
-![Azure: SSO Setup Overview](/img/sso-azure-saml-details-overview.png)
+![Azure: SSO Setup Overview](/img/sso-azure-saml-azure-details-overview.png)
 ![Azure: SSO Setup Section 1](/img/sso-azure-saml-section-one.png)
 
 **d) Section 2: Attributes & Claims**

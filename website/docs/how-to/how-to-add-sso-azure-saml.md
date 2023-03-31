@@ -29,7 +29,7 @@ In order to configure SSO with SAML with your Unleash enterprise you should navi
 
 ### Step 3: Create an Enterprise Application within Azure AD {#step-3}
 
-Open a new tab/window in your browser and sign in to your Azure AD. Create a new Enterprise Application. 
+Sign in to your Azure AD and **create a new Enterprise Application**. 
 
 ![Azure: Create Azure AD App](/img/sso-azure-saml-add-enterprise-app.png)
 

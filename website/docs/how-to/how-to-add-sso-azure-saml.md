@@ -2,7 +2,7 @@
 title: How to add SSO with SAML 2.0 Azure
 ---
 
-:::note Availability
+:::info Availability
 
 The **Single-Sign-On capability** is only available for customers on the Enterprise subscription. Check out the [Unleash plans](https://www.getunleash.io/plans) for details.
 

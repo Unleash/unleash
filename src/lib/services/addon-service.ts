@@ -12,6 +12,7 @@ import { IAddon, IAddonDto, IAddonStore } from '../types/stores/addon-store';
 import { IUnleashStores, IUnleashConfig } from '../types';
 import { IAddonDefinition } from '../types/model';
 import { minutesToMilliseconds } from 'date-fns';
+import { BadDataError } from '../../lib/error';
 
 const SUPPORTED_EVENTS = Object.keys(events).map((k) => events[k]);
 
@@ -188,8 +189,12 @@ export default class AddonService {
 
     async createAddon(data: IAddonDto, userName: string): Promise<IAddon> {
         const addonConfig = await addonSchema.validateAsync(data);
-        await this.validateKnownProvider(addonConfig);
-        await this.validateRequiredParameters(addonConfig);
+        try {
+            await this.validateKnownProvider(addonConfig);
+            await this.validateRequiredParameters(addonConfig);
+        } catch (e) {
+            throw new BadDataError(e);
+        }
 
         const createdAddon = await this.addonStore.insert(addonConfig);
         await this.addTagTypes(createdAddon.provider);

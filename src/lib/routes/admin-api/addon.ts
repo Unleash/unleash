@@ -175,9 +175,11 @@ class AddonController extends Controller {
     }
 
     async createAddon(
-        req: IAuthRequest<AddonSchema, any, any, any>,
+        req: IAuthRequest<AddonSchema, any, any, any>, // <- this is incorrect. We do not accept a full addon schema for creation.
         res: Response<AddonSchema>,
     ): Promise<void> {
+        // returns 500 if the provider is invalid (but not empty) // add test for this
+        // returns a Joi error if the parameters object is empty
         const createdBy = extractUsername(req);
         const data = req.body;
         const addon = await this.addonService.createAddon(data, createdBy);

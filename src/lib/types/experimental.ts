@@ -77,10 +77,6 @@ const flags = {
         process.env.UNLEASH_EXPERIMENTAL_OPTIMAL_304_DIFFER,
         false,
     ),
-    apiPagination: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_API_PAGINATION,
-        false,
-    ),
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

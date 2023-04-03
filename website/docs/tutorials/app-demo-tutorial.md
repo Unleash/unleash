@@ -8,6 +8,7 @@ Resources (remove before publication)
 - [Unleash Docs GH](https://github.com/Unleash/unleash/tree/main/website/docs)
 - [Unleash QSG](https://github.com/Unleash/unleash/blob/main/website/docs/tutorials/quickstart.md?plain=1)
 -->
+import Figure from '@site/src/components/Figure/Figure.tsx'
 
 ---
 title: Demo Application Tutorial - DRAFT - WiP
@@ -102,8 +103,9 @@ Step by step:
 ### Create a Project
 
 After logging in, click on *Projects* in the top toolbar, then New project. Give it an ID and name of choice (both can be the same), and save.
+Here, we are using `Demo-Intro` as name and projectID.
 
-![Here, we are using `Demo-Intro` as name and projectID.](/img/tutorial-appdemo-create-project.png)
+![New project](/img/tutorial-appdemo-create-project.png)
 
 
 ### Create Feature Toggles
@@ -117,7 +119,9 @@ Create four feature toggles with the following names:
 - **demo-analyticsCards**
 - **demo-specialCustomer**
 
-For each toggle, use the **Kill-switch toggle type** and enable **Impression data**. <!-- Add Screenshot -->
+For each toggle, use the **Kill-switch toggle type** and enable **Impression data**.
+
+![New feature toggle](/img/tutorial-appdemo-create-feature-toggle.png)
 
 ### Assign to an Environment
 
@@ -132,9 +136,12 @@ Now we will create the needed two API tokens. In the Unleash UI, switch over to 
 Create one *Server-side SDK (CLIENT)* token type, and assign it to the project we created earlier. Select the environment of choice, if applicable.
 Finally, create the *Client-side SDK (FRONTEND)* token using the same additional parameters.
 
+<Figure img="/img/tutorial-appdemo-create-api-token.png" caption="Example of a server side SDK token"/>
+
 The UI will display the token after each creation. **Take note of this**.
 
 We're done in Unleash for now, but keep the browser tab open.
+
 
 
 ## Source Configuration
@@ -204,26 +211,45 @@ The app is setup for three client side toggles, and one server side toggle. In t
 To prepare, open the Unleash project and the application UI side-by-side. 
 As we are using the *Development* environment, these are the UI toggles for the feature flags we will be using.
 
-<!-- Add Screenshot -->
+![Project page](/img/tutorial-appdemo-projectpage.png)
 
 ## Client-side Feature Flags
 
-<!-- Add info on use-cases -->
-
 ### Banking feature
 
-Enable the toggle for feature `demo-bankingDemo`. Notice how now a new *Banking* feature has been added to the sidebar underneath Analytics!  <!-- Add Screenshot -->
+Enable the toggle for feature `demo-bankingDemo`. Notice how now a new *Banking* feature has been added to the sidebar underneath Analytics!
+
+![demo-bankingDemo](/img/tutorial-appdemo-demo-bankingDemo.png)
+
 
 Click on `Banking` in the navigation menu. Notice how the feature is populated. Disable the flag - this now switches to a *Coming Soon* message.
+
+***tip Use Case
+This shows how a feature flag can be used to expose a given feature to a specific group of users - for example, customers that have a matching profile role, users opted in for early feature access - or for internal development use, e.g. a QA team.  
+It also showcases how quickly and effortlessly a feature can be rolled back if it does not behave as expected.
+***
 
 ### Special Customer
 
 In the UI, navigate to *Management -> E-Commerce -> Shop*. Enable the toggle for feature `demo-specialCustomer` . 
 Notice how cards are updated with *Special Access Granted* and a *Premium Customer* note appears at the top. <!-- Add Screenshot -->
 
+![demo-specialCustomer](/img/tutorial-appdemo-demo-specialCustomer.png)
+
+***tip Use Case
+This shows how a feature flag can be used to show a different page experience or behavior to a specific group of users; in this case, a group of customers that we want to allow the capability to purchase a product standard users cannot.
+***
+
 ### Analytics Cards
 
-Navigate to *General -> Analytics* from the main demo app window. Enable the toggle for feature `demo-analyticsCards` . Note how a row of analytics cards now shows from above. <!-- Add Screenshot -->
+Navigate to *General -> Analytics* from the main demo app window. Enable the toggle for feature `demo-analyticsCards` . Note how a row of analytics cards now shows from above. 
+
+![demo-analyticsCards](/img/tutorial-appdemo-demo-analyticsCards.png)
+
+
+***tip Use Case
+This shows how a feature flag can be used to show a different page experience or behavior to a specific group of users; in this case, displaying a set of cards that might be used by specific user roles that need to report on analytics data for the website.
+***
 
 ## Server-side Feature Flags
 
@@ -232,11 +258,14 @@ Navigate to *General -> Analytics* from the main demo app window. Enable the tog
 Navigate to *General -> App* from the main demo app window. Enable the toggle for feature `demo-featured_app` and reload the page using the browser controls.
 
 ***tip Reload
-In contrast to the client side flags, this one requires you to reload the browser of the page to see the difference. This is because the toggle operates on the backend of the web app, therefore the client needs to retrieve the page again to see it.  <!-- Add Screenshot -->
+In contrast to the client side flags, this one requires you to reload the browser of the page to see the difference. This is because the toggle operates on the backend of the web app, therefore the client needs to retrieve the page again to see it.
 ***
 
 Notice that we now see a *Featured App* card appear on the UI.
-Disabled it again, and it will no longer show on the next reload.
+
+![demo-featured_app](/img/tutorial-appdemo-demo-featured_app.png)
+
+Disable it again, and it will no longer show on the next reload.
 
 
 # SDK Integration - A Closer Look

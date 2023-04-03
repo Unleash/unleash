@@ -27,7 +27,7 @@ export const environmentProjectSchema = {
             type: 'boolean',
             example: false,
             description:
-                '`true` if the environment is not removable, otherwise `false`',
+                '`true` if the environment is protected, otherwise `false`. A *protected* environment can not be deleted.',
         },
         sortOrder: {
             type: 'number',

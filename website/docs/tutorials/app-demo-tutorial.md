@@ -1,3 +1,6 @@
+---
+title: Demo Application
+---
 <!--
 Author(s): Mark Fulton
 Reviewer(s): Thomas, Mike Vitteglio, Sebastian Bury
@@ -10,10 +13,6 @@ Resources (remove before publication)
 -->
 import Figure from '@site/src/components/Figure/Figure.tsx'
 
----
-title: Demo Application Tutorial - DRAFT - WiP
----
-
 # Introduction
 
 This tutorial will guide you through the process of setting up a demo web application with working feature toggles provided by an Unleash instance.  
@@ -21,10 +20,10 @@ In a short period of time, it will demonstrate the power of Unleash as a runtime
 
 Specifically, you will learn:
 
-- Using Next.js, how to incorporate Unleash client (frontend) and server-side (backend) SDKs into the application source code
-- On the Unleash instance, configuring a project for the application and assign to an environment
-- Setup appropriate tokens for the application feature toggles
-- See feature toggles in action!
+- *Using Next.js, how to incorporate Unleash client (frontend) and server-side (backend) SDKs into the application source code*
+- *On the Unleash instance, configuring a project for the application and assign to an environment*
+- *Setup appropriate tokens for the application feature toggles*
+- *See feature toggles in action!*
 
 These basic principles could then be transpired to other applications to help you get up and running with Unleash.
 Please take note of the next Prerequisites section before beginning the deployment steps. *Estimated time burden is around 30 minutes* once dependencies are met.

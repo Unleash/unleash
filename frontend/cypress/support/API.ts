@@ -6,8 +6,9 @@ const password = Cypress.env(`AUTH_PASSWORD`) + '_A';
 const PROJECT_MEMBER = 5;
 export const createFeature_API = (
     featureName: string,
-    project = 'default'
+    projectName?: string
 ): Chainable<any> => {
+    const project = projectName || 'default';
     return cy.request({
         url: `/api/admin/projects/${project}/features`,
         method: 'POST',

@@ -66,7 +66,7 @@ declare namespace Cypress {
         ): Chainable;
 
         // API
-        createUser_API(name: string, role: number): Chainable;
+        createUser_API(userName: string, role: number): Chainable;
         updateUserPassword_API(id: number, pass?: string): Chainable;
         addUserToProject_API(
             id: number,
@@ -75,7 +75,7 @@ declare namespace Cypress {
         ): Chainable;
         createProject_API(name: string): Chainable;
         deleteProject_API(name: string): Chainable;
-        createFeature_API(name: string): Chainable;
+        createFeature_API(name: string, projectName: string): Chainable;
         deleteFeature_API(name: string): Chainable;
     }
 }

@@ -59,7 +59,7 @@
     "@types/semver": "7.3.13",
     "@types/uuid": "^9.0.0",
     "@uiw/codemirror-theme-duotone": "4.19.10",
-    "@uiw/react-codemirror": "4.19.9",
+    "@uiw/react-codemirror": "4.19.10",
     "@vitejs/plugin-react": "3.1.0",
     "chart.js": "3.9.1",
     "chartjs-adapter-date-fns": "3.0.0",

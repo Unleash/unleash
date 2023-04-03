@@ -15,7 +15,8 @@ export const environmentSchema = {
         type: {
             type: 'string',
             example: 'development',
-            description: 'The type of the environment',
+            description:
+                'The [type of environment](https://docs.getunleash.io/reference/environments#environment-types).',
         },
         enabled: {
             type: 'boolean',
@@ -29,26 +30,29 @@ export const environmentSchema = {
             description: '`true` if the environment is a protected environment',
         },
         sortOrder: {
-            type: 'number',
+            type: 'integer',
             example: 3,
             description:
-                'Priority of the environment in a list of environments, the lower value, the higher up in the list the environment will appear',
+                'Priority of the environment in a list of environments, the lower value, the higher up in the list the environment will appear. Needs to be an integer',
         },
         projectCount: {
-            type: 'number',
+            type: 'integer',
             nullable: true,
+            minimum: 0,
             example: 10,
             description: 'The number of projects with this environment',
         },
         apiTokenCount: {
-            type: 'number',
+            type: 'integer',
             nullable: true,
+            minimum: 0,
             example: 6,
             description: 'The number of API tokens for the project environment',
         },
         enabledToggleCount: {
-            type: 'number',
+            type: 'integer',
             nullable: true,
+            minimum: 0,
             example: 10,
             description:
                 'The number of enabled toggles for the project environment',

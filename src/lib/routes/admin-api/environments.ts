@@ -64,7 +64,7 @@ export class EnvironmentsController extends Controller {
                     description: 'Gets all environments',
                     operationId: 'getAllEnvironments',
                     responses: {
-                        200: emptyResponse,
+                        200: createResponseSchema('environmentsSchema'),
                         ...getStandardResponses(401, 403),
                     },
                 }),

@@ -1008,6 +1008,7 @@ exports[`should serve the OpenAPI spec 1`] = `
       },
       "environmentProjectSchema": {
         "additionalProperties": false,
+        "description": "Describes an environment as it's configured for the project it's connected to",
         "properties": {
           "enabled": {
             "description": "\`true\` if the environment is enabled for the project, otherwise \`false\`",
@@ -1020,26 +1021,29 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "string",
           },
           "projectApiTokenCount": {
-            "description": "How many API tokens are register",
-            "nullable": true,
-            "type": "number",
+            "description": "How many client and frontend API tokens that have access to this project",
+            "example": 5,
+            "minimum": 0,
+            "type": "integer",
           },
           "projectEnabledToggleCount": {
-            "nullable": true,
+            "description": "Number of features enabled in this environment for this project",
+            "example": 7,
+            "minimum": 0,
             "type": "number",
           },
           "protected": {
-            "description": "\`true\` if the environment is not removable, otherwise \`false\`",
+            "description": "\`true\` if the environment is protected, otherwise \`false\`. A *protected* environment can not be deleted.",
             "example": false,
             "type": "boolean",
           },
           "sortOrder": {
             "description": "Priority of the environment in a list of environments, the lower value, the higher up in the list the environment will appear",
             "example": 1,
-            "type": "number",
+            "type": "integer",
           },
           "type": {
-            "description": "The type of environment. Typically either development (non-production) or production",
+            "description": "The [type of environment](https://docs.getunleash.io/reference/environments#environment-types).",
             "example": "production",
             "type": "string",
           },
@@ -1058,8 +1062,9 @@ exports[`should serve the OpenAPI spec 1`] = `
           "apiTokenCount": {
             "description": "The number of API tokens for the project environment",
             "example": 6,
+            "minimum": 0,
             "nullable": true,
-            "type": "number",
+            "type": "integer",
           },
           "enabled": {
             "description": "\`true\` if the environment is enabled for the project, otherwise \`false\`.",
@@ -1069,8 +1074,9 @@ exports[`should serve the OpenAPI spec 1`] = `
           "enabledToggleCount": {
             "description": "The number of enabled toggles for the project environment",
             "example": 10,
+            "minimum": 0,
             "nullable": true,
-            "type": "number",
+            "type": "integer",
           },
           "name": {
             "description": "The name of the environment",
@@ -1080,8 +1086,9 @@ exports[`should serve the OpenAPI spec 1`] = `
           "projectCount": {
             "description": "The number of projects with this environment",
             "example": 10,
+            "minimum": 0,
             "nullable": true,
-            "type": "number",
+            "type": "integer",
           },
           "protected": {
             "description": "\`true\` if the environment is a protected environment",
@@ -1089,12 +1096,12 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "boolean",
           },
           "sortOrder": {
-            "description": "Priority of the environment in a list of environments, the lower value, the higher up in the list the environment will appear",
+            "description": "Priority of the environment in a list of environments, the lower value, the higher up in the list the environment will appear. Needs to be an integer",
             "example": 3,
-            "type": "number",
+            "type": "integer",
           },
           "type": {
-            "description": "The type of the environment",
+            "description": "The [type of environment](https://docs.getunleash.io/reference/environments#environment-types).",
             "example": "development",
             "type": "string",
           },
@@ -1108,6 +1115,7 @@ exports[`should serve the OpenAPI spec 1`] = `
       },
       "environmentsProjectSchema": {
         "additionalProperties": false,
+        "description": "Environments defined for the current project",
         "properties": {
           "environments": {
             "items": {
@@ -4961,7 +4969,14 @@ Stats are divided into current and previous **windows**.
         "operationId": "getAllEnvironments",
         "responses": {
           "200": {
-            "description": "This response has no body.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/environmentsSchema",
+                },
+              },
+            },
+            "description": "environmentsSchema",
           },
           "401": {
             "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",

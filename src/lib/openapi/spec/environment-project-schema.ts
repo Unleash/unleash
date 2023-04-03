@@ -5,6 +5,8 @@ export const environmentProjectSchema = {
     type: 'object',
     additionalProperties: false,
     required: ['name', 'type', 'enabled'],
+    description:
+        "Describes an environment as it's configured for the project it's connected to",
     properties: {
         name: {
             type: 'string',
@@ -30,19 +32,24 @@ export const environmentProjectSchema = {
                 '`true` if the environment is protected, otherwise `false`. A *protected* environment can not be deleted.',
         },
         sortOrder: {
-            type: 'number',
+            type: 'integer',
             example: 1,
             description:
                 'Priority of the environment in a list of environments, the lower value, the higher up in the list the environment will appear',
         },
         projectApiTokenCount: {
-            type: 'number',
-            nullable: true,
-            description: 'How many API tokens are register',
+            type: 'integer',
+            minimum: 0,
+            example: 5,
+            description:
+                'How many client and frontend API tokens that have access to this project',
         },
         projectEnabledToggleCount: {
             type: 'number',
-            nullable: true,
+            minimum: 0,
+            example: 7,
+            description:
+                'Number of features enabled in this environment for this project',
         },
     },
     components: {},

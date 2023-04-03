@@ -2,8 +2,6 @@
 Author(s): Mark Fulton
 Reviewer(s): Thomas, Mike Vitteglio, Sebastian Bury
 
-CAUTION: The application source git repo referenced herein is not distributed under an OSS license. Mike V to update this with an version of the app with OSS components prior to document publication
-
 Resources (remove before publication)
 
 - [Diataxis/](https://diataxis.fr/tutorials/)
@@ -104,7 +102,8 @@ Step by step:
 ### Create a Project
 
 After logging in, click on *Projects* in the top toolbar, then New project. Give it an ID and name of choice (both can be the same), and save.
-Here, we are using `Demo-Intro` as name and projectID. <!-- Add Screenshot -->
+
+![Here, we are using `Demo-Intro` as name and projectID.](/img/tutorial-appdemo-create-project.png)
 
 
 ### Create Feature Toggles
@@ -202,7 +201,10 @@ Although totally transparent to the end user visiting the website, we need to di
 
 The app is setup for three client side toggles, and one server side toggle. In this section we'll review the UX impact of enabling/disabling each of the flags in turn.
 
-To prepare, open the Unleash project and the application UI side-by-side.  
+To prepare, open the Unleash project and the application UI side-by-side. 
+As we are using the *Development* environment, these are the UI toggles for the feature flags we will be using.
+
+<!-- Add Screenshot -->
 
 ## Client-side Feature Flags
 

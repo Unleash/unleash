@@ -5,8 +5,25 @@ import { useRef, useEffect } from 'react';
 const StyledMermaid = styled('div')(({ theme }) => ({
     display: 'flex',
     justifyContent: 'center',
-    '#mermaid .edgeLabel': {
-        backgroundColor: theme.palette.background.paper,
+    '#mermaid': {
+        '.edgeLabel': {
+            backgroundColor: theme.palette.background.paper,
+            color: theme.palette.text.primary,
+        },
+        '.nodeLabel': {
+            color: theme.palette.secondary.dark,
+        },
+        '.edgePaths > path': {
+            stroke: theme.palette.secondary.dark,
+        },
+        '.arrowMarkerPath': {
+            fill: theme.palette.secondary.dark,
+            stroke: 'transparent',
+        },
+    },
+    '&&& #mermaid .node rect': {
+        stroke: theme.palette.secondary.border,
+        fill: theme.palette.secondary.light,
     },
 }));
 

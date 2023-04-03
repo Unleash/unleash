@@ -41,7 +41,6 @@ process.nextTick(async () => {
                         newProjectOverview: true,
                         bulkOperations: true,
                         projectStatusApi: true,
-                        showProjectApiAccess: true,
                         projectScopedSegments: true,
                         projectScopedStickiness: true,
                         optimal304: true,

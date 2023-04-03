@@ -79,7 +79,7 @@ export const ChangeRequestOverview: FC = () => {
         projectId,
         id
     );
-    const { changeState, addComment } = useChangeRequestApi();
+    const { changeState, addComment, loading } = useChangeRequestApi();
     const { refetch: refetchChangeRequestOpen } =
         usePendingChangeRequests(projectId);
     const { setToastData, setToastApiError } = useToast();
@@ -249,7 +249,10 @@ export const ChangeRequestOverview: FC = () => {
                                         environmentId={
                                             changeRequest.environment
                                         }
-                                        disabled={!allowChangeRequestActions}
+                                        disabled={
+                                            !allowChangeRequestActions ||
+                                            loading
+                                        }
                                     >
                                         Apply changes
                                     </PermissionButton>

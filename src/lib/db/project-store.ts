@@ -3,7 +3,6 @@ import { Logger, LogProvider } from '../logger';
 
 import NotFoundError from '../error/notfound-error';
 import {
-    DefaultStickiness,
     IEnvironment,
     IFlagResolver,
     IProject,
@@ -392,14 +391,12 @@ class ProjectStore implements IProjectStore {
     }
 
     async getProjectsByUser(userId: number): Promise<string[]> {
-        const members = await this.db
+        const projects = await this.db
             .from((db) => {
                 db.select('project')
                     .from('role_user')
                     .leftJoin('roles', 'role_user.role_id', 'roles.id')
-                    .where('type', 'root')
-                    .andWhere('name', 'Editor')
-                    .andWhere('user_id', userId)
+                    .where('user_id', userId)
                     .union((queryBuilder) => {
                         queryBuilder
                             .select('project')
@@ -414,7 +411,7 @@ class ProjectStore implements IProjectStore {
                     .as('query');
             })
             .pluck('project');
-        return members;
+        return projects;
     }
 
     async getMembersCountByProject(projectId: string): Promise<number> {
@@ -487,7 +484,7 @@ class ProjectStore implements IProjectStore {
 
     async setProjectSettings(
         projectId: string,
-        defaultStickiness: DefaultStickiness,
+        defaultStickiness: string,
         mode: ProjectMode,
     ): Promise<void> {
         await this.db(SETTINGS_TABLE)

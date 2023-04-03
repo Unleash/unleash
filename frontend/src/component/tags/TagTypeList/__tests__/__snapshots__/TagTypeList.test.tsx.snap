@@ -55,6 +55,7 @@ exports[`renders an empty list correctly 1`] = `
                     <input
                       aria-label="Search (Ctrl+K)"
                       className="MuiInputBase-input css-mfsqjb-MuiInputBase-input"
+                      data-testid="SEARCH_INPUT"
                       onAnimationStart={[Function]}
                       onBlur={[Function]}
                       onChange={[Function]}

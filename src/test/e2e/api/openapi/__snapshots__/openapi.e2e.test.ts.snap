@@ -1843,12 +1843,6 @@ exports[`should serve the OpenAPI spec 1`] = `
         "properties": {
           "defaultStickiness": {
             "description": "A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy",
-            "enum": [
-              "default",
-              "userId",
-              "sessionId",
-              "random",
-            ],
             "example": "userId",
             "type": "string",
           },
@@ -1916,12 +1910,6 @@ exports[`should serve the OpenAPI spec 1`] = `
           },
           "defaultStickiness": {
             "description": "A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy",
-            "enum": [
-              "default",
-              "userId",
-              "sessionId",
-              "random",
-            ],
             "example": "userId",
             "type": "string",
           },
@@ -2781,12 +2769,6 @@ exports[`should serve the OpenAPI spec 1`] = `
         "properties": {
           "defaultStickiness": {
             "description": "A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy",
-            "enum": [
-              "default",
-              "userId",
-              "sessionId",
-              "random",
-            ],
             "example": "userId",
             "type": "string",
           },
@@ -2874,12 +2856,6 @@ exports[`should serve the OpenAPI spec 1`] = `
           },
           "defaultStickiness": {
             "description": "A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy",
-            "enum": [
-              "default",
-              "userId",
-              "sessionId",
-              "random",
-            ],
             "example": "userId",
             "type": "string",
           },

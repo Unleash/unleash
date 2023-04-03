@@ -25,7 +25,7 @@ import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 const pageTitle = 'Create project API token';
 
 export const CreateProjectApiTokenForm = () => {
-    const project = useRequiredPathParam('projectId');
+    const projectId = useRequiredPathParam('projectId');
     const { setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
     const navigate = useNavigate();
@@ -43,16 +43,16 @@ export const CreateProjectApiTokenForm = () => {
         isValid,
         errors,
         clearErrors,
-    } = useApiTokenForm(project);
+    } = useApiTokenForm(projectId);
 
     const { createToken: createProjectToken, loading } =
         useProjectApiTokensApi();
-    const { refetch: refetchProjectTokens } = useProjectApiTokens(project);
+    const { refetch: refetchProjectTokens } = useProjectApiTokens(projectId);
     const { trackEvent } = usePlausibleTracker();
 
     usePageTitle(pageTitle);
 
-    const PATH = `api/admin/project/${project}/api-tokens`;
+    const PATH = `api/admin/project/${projectId}/api-tokens`;
     const permission = CREATE_PROJECT_API_TOKEN;
 
     const handleSubmit = async (e: Event) => {
@@ -63,7 +63,7 @@ export const CreateProjectApiTokenForm = () => {
         try {
             const payload = getApiTokenPayload();
 
-            await createProjectToken(payload, project)
+            await createProjectToken(payload, projectId)
                 .then(res => res.json())
                 .then(api => {
                     scrollToTop();
@@ -116,7 +116,7 @@ export const CreateProjectApiTokenForm = () => {
                     <CreateButton
                         name="token"
                         permission={permission}
-                        projectId={project}
+                        projectId={projectId}
                     />
                 }
             >

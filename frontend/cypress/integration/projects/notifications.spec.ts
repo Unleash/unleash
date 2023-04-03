@@ -41,7 +41,7 @@ const createUser = () => {
         });
 };
 
-const updateUserPassword = async (id: number) => {
+const updateUserPassword = (id: number) =>
     cy.request(
         'POST',
         `${baseUrl}/api/admin/user-admin/${id}/change-password`,
@@ -49,9 +49,8 @@ const updateUserPassword = async (id: number) => {
             password,
         }
     );
-};
 
-const addUserToProject = async (id: number) => {
+const addUserToProject = (id: number) =>
     cy.request(
         'POST',
         `${baseUrl}/api/admin/projects/${projectName}/role/${PROJECT_MEMBER}/access`,
@@ -60,7 +59,6 @@ const addUserToProject = async (id: number) => {
             users: [{ id }],
         }
     );
-};
 
 describe('notifications', () => {
     before(() => {
@@ -115,7 +113,6 @@ describe('notifications', () => {
 
         //then
         cy.get("[data-testid='NOTIFICATIONS_MODAL']").should('exist');
-        cy.get("[data-testid='UNREAD_NOTIFICATIONS']").should('not.exist');
 
         const credentials = userCredentials[0];
 

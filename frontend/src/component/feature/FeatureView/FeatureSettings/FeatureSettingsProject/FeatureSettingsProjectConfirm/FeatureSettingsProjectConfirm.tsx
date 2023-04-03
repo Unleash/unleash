@@ -8,6 +8,7 @@ import { Alert, List, ListItem, styled } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { IChangeRequest } from 'component/changeRequest/changeRequest.types';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'grid',
@@ -42,6 +43,10 @@ const FeatureSettingsProjectConfirm = ({
     const currentProjectId = useRequiredPathParam('projectId');
     const { project } = useProject(projectId);
 
+    const { isChangeRequestConfiguredInAnyEnv } =
+        useChangeRequestsEnabled(projectId);
+    const targetProjectHasChangeRequestsEnabled =
+        isChangeRequestConfiguredInAnyEnv();
     const hasSameEnvironments: boolean = useMemo(() => {
         return arraysHaveSameItems(
             feature.environments.map(env => env.name),
@@ -55,7 +60,11 @@ const FeatureSettingsProjectConfirm = ({
 
     return (
         <ConditionallyRender
-            condition={hasSameEnvironments && !hasPendingChangeRequests}
+            condition={
+                hasSameEnvironments &&
+                !hasPendingChangeRequests &&
+                !targetProjectHasChangeRequestsEnabled
+            }
             show={
                 <Dialogue
                     open={open}
@@ -82,26 +91,32 @@ const FeatureSettingsProjectConfirm = ({
                     open={open}
                     onClick={onClose}
                     title="Confirm change project"
-                    primaryButtonText="OK"
+                    primaryButtonText="Close"
                 >
                     <StyledContainer>
                         <StyledAlert severity="warning">
-                            Incompatible project environments
+                            Cannot proceed with the move
                         </StyledAlert>
-                        <p>
-                            In order to move a feature toggle between two
-                            projects, both projects must have the exact same
-                            environments enabled.
-                        </p>
+
+                        <ConditionallyRender
+                            condition={!hasSameEnvironments}
+                            show={
+                                <p>
+                                    In order to move a feature toggle between
+                                    two projects, both projects must have the
+                                    exact same environments enabled.
+                                </p>
+                            }
+                        />
                         <ConditionallyRender
                             condition={hasPendingChangeRequests}
                             show={
                                 <>
                                     <p>
-                                        In addition the feature toggle must not
-                                        have any pending change requests. This
-                                        feature toggle is currently referenced
-                                        in the following change requests:
+                                        The feature toggle must not have any
+                                        pending change requests. This feature
+                                        toggle is currently referenced in the
+                                        following change requests:
                                     </p>
                                     <StyledList>
                                         {changeRequests?.map(changeRequest => {
@@ -120,6 +135,21 @@ const FeatureSettingsProjectConfirm = ({
                                         })}
                                     </StyledList>
                                 </>
+                            }
+                        />
+                        <ConditionallyRender
+                            condition={targetProjectHasChangeRequestsEnabled}
+                            show={
+                                <p>
+                                    You're not allowed to move the feature to
+                                    project{' '}
+                                    <Link
+                                        to={`/projects/${projectId}/settings/change-requests`}
+                                    >
+                                        {projectId}
+                                    </Link>
+                                    . This project has change requests enabled.
+                                </p>
                             }
                         />
                     </StyledContainer>

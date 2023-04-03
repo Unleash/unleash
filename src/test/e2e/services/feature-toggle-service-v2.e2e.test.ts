@@ -354,6 +354,20 @@ test('cloning a feature toggle not allowed for change requests enabled', async (
     );
 });
 
+test('changing to a project with change requests enabled should not be allowed', async () => {
+    await db.rawDatabase('change_request_settings').insert({
+        project: 'default',
+        environment: 'default',
+    });
+    await expect(
+        service.changeProject('newToggleName', 'default', 'user'),
+    ).rejects.toEqual(
+        new NoAccessError(
+            `Changing project not allowed. Project default has change requests enabled.`,
+        ),
+    );
+});
+
 test('Cloning a feature toggle also clones segments correctly', async () => {
     const featureName = 'ToggleWithSegments';
     const clonedFeatureName = 'AWholeNewFeatureToggle';

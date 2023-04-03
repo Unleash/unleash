@@ -71,6 +71,7 @@ const StyledMessageTypography = styled(Typography, {
     fontWeight: readAt ? 'normal' : 'bold',
     textDecoration: 'none',
     color: 'inherit',
+    wordBreak: 'break-all',
 }));
 
 const StyledTimeAgoTypography = styled(Typography)(({ theme }) => ({

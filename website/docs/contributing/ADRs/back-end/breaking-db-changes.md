@@ -5,10 +5,10 @@ title: "ADR: Braking DB changes"
 ## Background
 
 During the evolution of a feature different clients may use different version of code e.g. behind a feature flag.
-If the code relies on breaking DB changes it may lead to errors.
+If the code relies on breaking DB changes (column delete, table rename, deleting DB entries etc.) it may lead to errors.
 
-The very same problem occurs when you apply a breaking migration just before the new version of the application starts. The code is still running 
-against the old schema as the migration takes a few seconds to apply.
+The very same problem occurs when you apply a breaking migration just before the new version of the application starts. 
+The code is still running against the old schema as the migration takes a few seconds to apply.
 
 ## Decision
 
@@ -20,6 +20,7 @@ In the "expand phase":
 * maintain old and new DB schema in parallel
 * maintain code that works with old and new DB schema
 * keep it for 2 minor releases to give all clients a chance to upgrade the code
+* with a fallback of 2 version we can also downgrade in this range without running down migrations
 
 In the "contract phase":
 * remove the old schema when you know that no client is using the old version

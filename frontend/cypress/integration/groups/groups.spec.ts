@@ -1,4 +1,4 @@
-/// <reference types="cypress" />
+///<reference path="../../global.d.ts" />
 
 const baseUrl = Cypress.config().baseUrl;
 const randomId = String(Math.random()).split('.')[1];
@@ -12,8 +12,8 @@ const disableActiveSplashScreens = () => {
 
 describe('groups', () => {
     before(() => {
-        disableActiveSplashScreens();
-        cy.login();
+        cy.runBefore();
+        cy.login_UI();
         for (let i = 1; i <= 2; i++) {
             cy.request('POST', `${baseUrl}/api/admin/user-admin`, {
                 name: `unleash-e2e-user${i}-${randomId}`,
@@ -31,7 +31,7 @@ describe('groups', () => {
     });
 
     beforeEach(() => {
-        cy.login();
+        cy.login_UI();
         cy.visit('/admin/groups');
         if (document.querySelector("[data-testid='CLOSE_SPLASH']")) {
             cy.get("[data-testid='CLOSE_SPLASH']").click();

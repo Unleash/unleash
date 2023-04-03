@@ -15,7 +15,7 @@ export const environmentProjectSchema = {
             type: 'string',
             example: 'production',
             description:
-                'The type of environment. Typically either development (non-production) or production',
+                'The [type of environment](https://docs.getunleash.io/reference/environments#environment-types).',
         },
         enabled: {
             type: 'boolean',

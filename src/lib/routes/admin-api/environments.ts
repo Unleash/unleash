@@ -17,7 +17,10 @@ import {
     EnvironmentSchema,
 } from '../../openapi/spec/environment-schema';
 import { SortOrderSchema } from '../../openapi/spec/sort-order-schema';
-import { emptyResponse } from '../../openapi/util/standard-responses';
+import {
+    emptyResponse,
+    getStandardResponses,
+} from '../../openapi/util/standard-responses';
 import {
     environmentsProjectSchema,
     EnvironmentsProjectSchema,
@@ -58,8 +61,12 @@ export class EnvironmentsController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Environments'],
+                    description: 'Gets all environments',
                     operationId: 'getAllEnvironments',
-                    responses: { 200: emptyResponse },
+                    responses: {
+                        200: emptyResponse,
+                        ...getStandardResponses(401, 403),
+                    },
                 }),
             ],
         });
@@ -73,8 +80,10 @@ export class EnvironmentsController extends Controller {
                 openApiService.validPath({
                     tags: ['Environments'],
                     operationId: 'getEnvironment',
+                    description: 'Gets the environment with `name`',
                     responses: {
                         200: createResponseSchema('environmentSchema'),
+                        ...getStandardResponses(401, 403, 404),
                     },
                 }),
             ],
@@ -89,8 +98,11 @@ export class EnvironmentsController extends Controller {
                 openApiService.validPath({
                     tags: ['Environments'],
                     operationId: 'getProjectEnvironments',
+                    description:
+                        'Gets the environments that are available for this project',
                     responses: {
                         200: createResponseSchema('environmentsProjectSchema'),
+                        ...getStandardResponses(401, 403, 404),
                     },
                 }),
             ],
@@ -104,9 +116,14 @@ export class EnvironmentsController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Environments'],
+                    description:
+                        'Updates sort orders for the named environments',
                     operationId: 'updateSortOrder',
                     requestBody: createRequestSchema('sortOrderSchema'),
-                    responses: { 200: emptyResponse },
+                    responses: {
+                        200: emptyResponse,
+                        ...getStandardResponses(401, 403, 404),
+                    },
                 }),
             ],
         });
@@ -120,8 +137,12 @@ export class EnvironmentsController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Environments'],
+                    description: 'Toggles the environment with `name` on',
                     operationId: 'toggleEnvironmentOn',
-                    responses: { 204: emptyResponse },
+                    responses: {
+                        204: emptyResponse,
+                        ...getStandardResponses(401, 403, 404),
+                    },
                 }),
             ],
         });
@@ -135,8 +156,12 @@ export class EnvironmentsController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Environments'],
+                    description: 'Toggles the environment with `name` off',
                     operationId: 'toggleEnvironmentOff',
-                    responses: { 204: emptyResponse },
+                    responses: {
+                        204: emptyResponse,
+                        ...getStandardResponses(401, 403, 404),
+                    },
                 }),
             ],
         });

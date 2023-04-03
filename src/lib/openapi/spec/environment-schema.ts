@@ -25,12 +25,14 @@ export const environmentSchema = {
         },
         protected: {
             type: 'boolean',
+            example: true,
+            description: '`true` if the environment is a protected environment',
         },
         sortOrder: {
             type: 'number',
             example: 3,
             description:
-                'The sort order of the environment in the environments list',
+                'Priority of the environment in a list of environments, the lower value, the higher up in the list the environment will appear',
         },
         projectCount: {
             type: 'number',

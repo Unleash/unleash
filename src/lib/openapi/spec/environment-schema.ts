@@ -27,7 +27,8 @@ export const environmentSchema = {
         protected: {
             type: 'boolean',
             example: true,
-            description: '`true` if the environment is a protected environment',
+            description:
+                '`true` if the environment is protected, otherwise `false`. A *protected* environment can not be deleted.',
         },
         sortOrder: {
             type: 'integer',

@@ -42,7 +42,8 @@ export class ProxyService {
 
     private readonly services: Services;
 
-    private readonly clients: Map<ApiUser['secret'], Unleash> = new Map();
+    private readonly clients: Map<ApiUser['secret'], Promise<Unleash>> =
+        new Map();
 
     private cachedFrontendSettings?: FrontendSettings;
 
@@ -99,14 +100,13 @@ export class ProxyService {
     private async clientForProxyToken(token: ApiUser): Promise<Unleash> {
         ProxyService.assertExpectedTokenType(token);
 
-        if (!this.clients.has(token.secret)) {
-            this.clients.set(
-                token.secret,
-                await this.createClientForProxyToken(token),
-            );
+        let client = this.clients.get(token.secret);
+        if (!client) {
+            client = this.createClientForProxyToken(token);
+            this.clients.set(token.secret, client);
         }
 
-        return this.clients.get(token.secret);
+        return client;
     }
 
     private async createClientForProxyToken(token: ApiUser): Promise<Unleash> {
@@ -134,13 +134,17 @@ export class ProxyService {
         return client;
     }
 
-    deleteClientForProxyToken(secret: string): void {
-        this.clients.get(secret)?.destroy();
-        this.clients.delete(secret);
+    async deleteClientForProxyToken(secret: string): Promise<void> {
+        let clientPromise = this.clients.get(secret);
+        if (clientPromise) {
+            const client = await clientPromise;
+            client.destroy();
+            this.clients.delete(secret);
+        }
     }
 
     stopAll(): void {
-        this.clients.forEach((client) => client.destroy());
+        this.clients.forEach((promise) => promise.then((c) => c.destroy()));
     }
 
     private static assertExpectedTokenType({ type }: ApiUser) {

@@ -1010,12 +1010,17 @@ exports[`should serve the OpenAPI spec 1`] = `
         "additionalProperties": false,
         "properties": {
           "enabled": {
+            "description": "\`true\` if the environment is enabled for the project, otherwise \`false\`",
+            "example": true,
             "type": "boolean",
           },
           "name": {
+            "description": "The name of the environment",
+            "example": "development",
             "type": "string",
           },
           "projectApiTokenCount": {
+            "description": "How many API tokens are register",
             "nullable": true,
             "type": "number",
           },
@@ -1024,12 +1029,18 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "number",
           },
           "protected": {
+            "description": "\`true\` if the environment is not removable, otherwise \`false\`",
+            "example": false,
             "type": "boolean",
           },
           "sortOrder": {
+            "description": "Priority of the environment in a list of environments, the lower value, the higher up in the list the environment will appear",
+            "example": 1,
             "type": "number",
           },
           "type": {
+            "description": "The type of environment. Typically either development (non-production) or production",
+            "example": "production",
             "type": "string",
           },
         },
@@ -1073,10 +1084,12 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "number",
           },
           "protected": {
+            "description": "\`true\` if the environment is a protected environment",
+            "example": true,
             "type": "boolean",
           },
           "sortOrder": {
-            "description": "The sort order of the environment in the environments list",
+            "description": "Priority of the environment in a list of environments, the lower value, the higher up in the list the environment will appear",
             "example": 3,
             "type": "number",
           },
@@ -4944,10 +4957,17 @@ Stats are divided into current and previous **windows**.
     },
     "/api/admin/environments": {
       "get": {
+        "description": "Gets all environments",
         "operationId": "getAllEnvironments",
         "responses": {
           "200": {
             "description": "This response has no body.",
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "description": "User credentials are valid but does not have enough privileges to execute this operation",
           },
         },
         "tags": [
@@ -4957,6 +4977,7 @@ Stats are divided into current and previous **windows**.
     },
     "/api/admin/environments/project/{projectId}": {
       "get": {
+        "description": "Gets the environments that are available for this project",
         "operationId": "getProjectEnvironments",
         "parameters": [
           {
@@ -4979,6 +5000,15 @@ Stats are divided into current and previous **windows**.
             },
             "description": "environmentsProjectSchema",
           },
+          "401": {
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+          },
+          "404": {
+            "description": "The requested resource was not found.",
+          },
         },
         "tags": [
           "Environments",
@@ -4987,6 +5017,7 @@ Stats are divided into current and previous **windows**.
     },
     "/api/admin/environments/sort-order": {
       "put": {
+        "description": "Updates sort orders for the named environments",
         "operationId": "updateSortOrder",
         "requestBody": {
           "content": {
@@ -5003,6 +5034,15 @@ Stats are divided into current and previous **windows**.
           "200": {
             "description": "This response has no body.",
           },
+          "401": {
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+          },
+          "404": {
+            "description": "The requested resource was not found.",
+          },
         },
         "tags": [
           "Environments",
@@ -5011,6 +5051,7 @@ Stats are divided into current and previous **windows**.
     },
     "/api/admin/environments/{name}": {
       "get": {
+        "description": "Gets the environment with \`name\`",
         "operationId": "getEnvironment",
         "parameters": [
           {
@@ -5033,6 +5074,15 @@ Stats are divided into current and previous **windows**.
             },
             "description": "environmentSchema",
           },
+          "401": {
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+          },
+          "404": {
+            "description": "The requested resource was not found.",
+          },
         },
         "tags": [
           "Environments",
@@ -5041,6 +5091,7 @@ Stats are divided into current and previous **windows**.
     },
     "/api/admin/environments/{name}/off": {
       "post": {
+        "description": "Toggles the environment with \`name\` off",
         "operationId": "toggleEnvironmentOff",
         "parameters": [
           {
@@ -5056,6 +5107,15 @@ Stats are divided into current and previous **windows**.
           "204": {
             "description": "This response has no body.",
           },
+          "401": {
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+          },
+          "404": {
+            "description": "The requested resource was not found.",
+          },
         },
         "tags": [
           "Environments",
@@ -5064,6 +5124,7 @@ Stats are divided into current and previous **windows**.
     },
     "/api/admin/environments/{name}/on": {
       "post": {
+        "description": "Toggles the environment with \`name\` on",
         "operationId": "toggleEnvironmentOn",
         "parameters": [
           {
@@ -5078,6 +5139,15 @@ Stats are divided into current and previous **windows**.
         "responses": {
           "204": {
             "description": "This response has no body.",
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+          },
+          "404": {
+            "description": "The requested resource was not found.",
           },
         },
         "tags": [

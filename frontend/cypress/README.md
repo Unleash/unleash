@@ -19,3 +19,18 @@ Suggested Format:
 -   `when`
 -   `then`
 -   `clean`
+
+#### Passing (returned) parameters around
+
+```ts
+it('can add, update and delete a gradual rollout strategy to the development environment', async () => {
+    cy.addFlexibleRolloutStrategyToFeature_UI({
+        featureToggleName,
+    }).then(value => {
+        strategyId = value;
+        cy.updateFlexibleRolloutStrategy_UI(featureToggleName, strategyId).then(
+            () => cy.deleteFeatureStrategy_UI(featureToggleName, strategyId)
+        );
+    });
+});
+```

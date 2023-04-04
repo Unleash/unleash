@@ -140,6 +140,7 @@ async function start(opts: IUnleashOptions = {}): Promise<IUnleash> {
         } else {
             logger.debug('DB migration: start');
             if (opts.flagResolver?.isEnabled('migrationLock')) {
+                console.log('Running migration with lock');
                 const lock = withDbLock(config.db);
                 await lock(migrateDb)(config);
             } else {

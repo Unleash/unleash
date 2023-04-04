@@ -50,6 +50,9 @@ class AddonController extends Controller {
             handler: this.getAddons,
             middleware: [
                 openApiService.validPath({
+                    summary: 'Get all addons and providers',
+                    description:
+                        'Retrieve all addons and providers that are defined on this Unleash instance.',
                     tags: ['Addons'],
                     operationId: 'getAddons',
                     responses: {
@@ -67,6 +70,9 @@ class AddonController extends Controller {
             permission: CREATE_ADDON,
             middleware: [
                 openApiService.validPath({
+                    summary: 'Create a new addon',
+                    description:
+                        'Create an addon instance. The addon must use one of the providers available on this Unleash instance.',
                     tags: ['Addons'],
                     operationId: 'createAddon',
                     requestBody: createRequestSchema('addonSchema'),
@@ -85,6 +91,9 @@ class AddonController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
+                    summary: 'Get a specific addon',
+                    description:
+                        'Retrieve information about the addon whose ID matches the ID in the request URL.',
                     tags: ['Addons'],
                     operationId: 'getAddon',
                     responses: {
@@ -102,6 +111,9 @@ class AddonController extends Controller {
             permission: UPDATE_ADDON,
             middleware: [
                 openApiService.validPath({
+                    summary: 'Update an addon',
+                    description:
+                        'Update a specific ID. The update object ... [TODO!]',
                     tags: ['Addons'],
                     operationId: 'updateAddon',
                     requestBody: createRequestSchema('addonSchema'),
@@ -121,6 +133,9 @@ class AddonController extends Controller {
             permission: DELETE_ADDON,
             middleware: [
                 openApiService.validPath({
+                    summary: 'Delete an addon',
+                    description:
+                        'Delete the addon specified by the ID in the request path.',
                     tags: ['Addons'],
                     operationId: 'deleteAddon',
                     responses: {

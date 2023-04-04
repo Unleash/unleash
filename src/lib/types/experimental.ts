@@ -77,6 +77,7 @@ const flags = {
         process.env.UNLEASH_EXPERIMENTAL_OPTIMAL_304_DIFFER,
         false,
     ),
+    migrationLock: parseEnvVarBoolean(process.env.MIGRATION_LOCK, false),
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

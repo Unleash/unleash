@@ -6,7 +6,7 @@ export const environmentProjectSchema = {
     additionalProperties: false,
     required: ['name', 'type', 'enabled'],
     description:
-        "Describes an environment as it's configured for the project it's connected to",
+        "Describes a project's configuration in a given environment.",
     properties: {
         name: {
             type: 'string',

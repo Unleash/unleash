@@ -36,9 +36,9 @@ test('should await other actions on lock', async () => {
     const lockedAction = lock(slowAsyncAction);
     const lockedAnotherAction = lock(fastAction);
 
-    // deliberately skipped await to simulate another server running slow operaton
+    // deliberately skipped await to simulate another server running slow operation
     lockedAction('first');
-    await ms(100);
+    await ms(100); // start fast action after slow action established DB connection
     await lockedAnotherAction('second');
 
     await expect(results).toStrictEqual(['first', 'second']);

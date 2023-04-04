@@ -61,7 +61,8 @@ export class EnvironmentsController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Environments'],
-                    description: 'Gets all environments',
+                    summary: 'Get all environments',
+                    description: 'Retrieves all environments that exist in this Unleash instance.'
                     operationId: 'getAllEnvironments',
                     responses: {
                         200: createResponseSchema('environmentsSchema'),

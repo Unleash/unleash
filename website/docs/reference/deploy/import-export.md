@@ -9,7 +9,7 @@ The import and export API first appeared in Unleash 3.3.0.
 
 :::
 
-Unleash supports import and export of feature toggles and strategies at startup and during runtime. The main purpose of the import/export feature is to bootstrap new Unleash instances with feature toggles and their configuration. If you are looking for a granular way to keep seperate Unleash instances in sync we strongly recommend that you take a look at the Unleahs Admin API's.
+Unleash supports import and export of feature toggles and strategies at startup and during runtime. The main purpose of the import/export feature is to bootstrap new Unleash instances with feature toggles and their configuration. If you are looking for a granular way to keep seperate Unleash instances in sync we strongly recommend that you take a look at the Unleash Admin APIs.
 
 The import mechanism guarantees that:
 - all imported features will be non-archived

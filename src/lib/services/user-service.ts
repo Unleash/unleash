@@ -351,6 +351,7 @@ class UserService {
         const passwordHash = await bcrypt.hash(password, saltRounds);
         await this.store.setPasswordHash(userId, passwordHash);
         await this.sessionService.deleteSessionsForUser(userId);
+        await this.resetTokenService.expireExistingTokensForUser(userId);
     }
 
     async getUserForToken(token: string): Promise<TokenUserSchema> {

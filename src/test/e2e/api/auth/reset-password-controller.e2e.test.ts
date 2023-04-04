@@ -267,3 +267,33 @@ test('Trying to change password to undefined should yield 400 without crashing t
         })
         .expect(400);
 });
+
+test('changing password should expire all active tokens', async () => {
+    const url = await resetTokenService.createResetPasswordUrl(
+        user.id,
+        adminUser.username,
+    );
+    const relative = getBackendResetUrl(url);
+
+    let token;
+    await app.request
+        .get(relative)
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .expect((res) => {
+            token = res.body.token;
+        });
+
+    await app.request
+        .post(`/api/admin/user-admin/${user.id}/change-password`)
+        .send({ password: 'simple123-_ASsad' })
+        .expect(200);
+
+    await app.request
+        .post('/auth/reset/password')
+        .send({
+            token,
+            password,
+        })
+        .expect(401);
+});

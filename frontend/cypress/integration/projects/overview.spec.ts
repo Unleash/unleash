@@ -1,10 +1,11 @@
-/// <reference types="cypress" />
+///<reference path="../../global.d.ts" />
 import {
     BATCH_ACTIONS_BAR,
     BATCH_SELECT,
     BATCH_SELECTED_COUNT,
     MORE_BATCH_ACTIONS,
     SEARCH_INPUT,
+    //@ts-ignore
 } from '../../../src/utils/testIds';
 
 const randomId = String(Math.random()).split('.')[1];
@@ -13,51 +14,9 @@ const featureToggleName = `${featureTogglePrefix}-${randomId}`;
 const baseUrl = Cypress.config().baseUrl;
 const selectAll = '[title="Toggle All Rows Selected"] input[type="checkbox"]';
 
-// Disable the prod guard modal by marking it as seen.
-const disableFeatureStrategiesProdGuard = () => {
-    localStorage.setItem(
-        'useFeatureStrategyProdGuardSettings:v2',
-        JSON.stringify({ hide: true })
-    );
-};
-
-// Disable all active splash pages by visiting them.
-const disableActiveSplashScreens = () => {
-    cy.visit(`/splash/operators`);
-};
-
 describe('project overview', () => {
     before(() => {
-        disableFeatureStrategiesProdGuard();
-        disableActiveSplashScreens();
-        cy.login();
-        cy.request({
-            url: '/api/admin/projects/default/features',
-            method: 'POST',
-            body: {
-                name: `${featureToggleName}-A`,
-                description: 'hello-world',
-                type: 'release',
-                impressionData: false,
-            },
-        });
-        cy.request({
-            url: '/api/admin/projects/default/features',
-            method: 'POST',
-            body: {
-                name: `${featureToggleName}-B`,
-                description: 'hello-world',
-                type: 'release',
-                impressionData: false,
-            },
-        });
-    });
-
-    beforeEach(() => {
-        cy.login();
-        if (document.querySelector("[data-testid='CLOSE_SPLASH']")) {
-            cy.get("[data-testid='CLOSE_SPLASH']").click();
-        }
+        cy.runBefore();
     });
 
     after(() => {
@@ -82,6 +41,9 @@ describe('project overview', () => {
     });
 
     it('loads the table', () => {
+        cy.login_UI();
+        cy.createFeature_API(`${featureToggleName}-A`);
+        cy.createFeature_API(`${featureToggleName}-B`);
         cy.visit('/projects/default');
 
         // Use search to filter feature toggles and check that the feature toggle is listed in the table.
@@ -91,6 +53,7 @@ describe('project overview', () => {
     });
 
     it('can select and deselect feature toggles', () => {
+        cy.login_UI();
         cy.visit('/projects/default');
         cy.viewport(1920, 1080);
         cy.get("[data-testid='SEARCH_INPUT']").click().type(featureToggleName);
@@ -138,9 +101,12 @@ describe('project overview', () => {
     });
 
     it('can mark selected togggles as stale', () => {
+        cy.login_UI();
         cy.visit('/projects/default');
         cy.viewport(1920, 1080);
-        cy.get(`[data-testid='${SEARCH_INPUT}']`).click().type(featureToggleName);
+        cy.get(`[data-testid='${SEARCH_INPUT}']`)
+            .click()
+            .type(featureToggleName);
         cy.get('table tbody tr').should('have.length', 2);
         cy.get(selectAll).click();
 
@@ -153,9 +119,12 @@ describe('project overview', () => {
     });
 
     it('can archive selected togggles', () => {
+        cy.login_UI();
         cy.visit('/projects/default');
         cy.viewport(1920, 1080);
-        cy.get(`[data-testid='${SEARCH_INPUT}']`).click().type(featureToggleName);
+        cy.get(`[data-testid='${SEARCH_INPUT}']`)
+            .click()
+            .type(featureToggleName);
         cy.get('table tbody tr').should('have.length', 2);
         cy.get(selectAll).click();
 

@@ -1,4 +1,4 @@
-/// <reference types="cypress" />
+///<reference path="../../global.d.ts" />
 
 import {
     PA_ASSIGN_BUTTON_ID,
@@ -8,6 +8,7 @@ import {
     PA_ROLE_ID,
     PA_USERS_GROUPS_ID,
     PA_USERS_GROUPS_TITLE_ID,
+    //@ts-ignore
 } from '../../../src/utils/testIds';
 
 const baseUrl = Cypress.config().baseUrl;
@@ -25,7 +26,7 @@ const disableActiveSplashScreens = () => {
 describe('project-access', () => {
     before(() => {
         disableActiveSplashScreens();
-        cy.login();
+        cy.login_UI();
         for (let i = 1; i <= 2; i++) {
             const name = `${i}-${userName}`;
             cy.request('POST', `${baseUrl}/api/admin/user-admin`, {
@@ -68,7 +69,7 @@ describe('project-access', () => {
     });
 
     beforeEach(() => {
-        cy.login();
+        cy.login_UI();
         cy.visit(`/projects/${groupAndProjectName}/settings/access`);
         if (document.querySelector("[data-testid='CLOSE_SPLASH']")) {
             cy.get("[data-testid='CLOSE_SPLASH']").click();

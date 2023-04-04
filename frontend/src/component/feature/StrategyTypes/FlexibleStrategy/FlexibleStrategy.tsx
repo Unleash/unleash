@@ -15,6 +15,7 @@ import { StickinessSelect } from './StickinessSelect/StickinessSelect';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 import { useDefaultProjectSettings } from 'hooks/useDefaultProjectSettings';
 import Loader from '../../../common/Loader/Loader';
+import { useMemo } from 'react';
 
 interface IFlexibleStrategyProps {
     parameters: IFeatureStrategyParameters;
@@ -30,6 +31,7 @@ const FlexibleStrategy = ({
 }: IFlexibleStrategyProps) => {
     const projectId = useOptionalPathParam('projectId');
     const { defaultStickiness, loading } = useDefaultProjectSettings(projectId);
+
     const onUpdate = (field: string) => (newValue: string) => {
         updateParameter(field, newValue);
     };
@@ -43,15 +45,13 @@ const FlexibleStrategy = ({
             ? parseParameterNumber(parameters.rollout)
             : 100;
 
-    const resolveStickiness = () => {
-        if (parameters.stickiness === '') {
+    const stickiness = useMemo(() => {
+        if (parameters.stickiness === '' && !loading) {
             return defaultStickiness;
         }
 
         return parseParameterString(parameters.stickiness);
-    };
-
-    const stickiness = resolveStickiness();
+    }, [loading, parameters.stickiness]);
 
     if (parameters.stickiness === '') {
         onUpdate('stickiness')(stickiness);

@@ -5,6 +5,8 @@ test('addonSchema', () => {
     const data: AddonSchema = {
         provider: 'some-provider',
         enabled: true,
+        description: null,
+        id: 5,
         parameters: {
             someKey: 'some-value',
         },

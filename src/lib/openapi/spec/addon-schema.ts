@@ -20,22 +20,13 @@ export const addonSchema = {
         },
         provider: {
             type: 'string',
-
-            // enum: ['webhook', 'datadog', 'slack', 'teams'], // get list of providers here
-            description: `The addon provider, such as "webhook" or "slack". The list of all providers supported can be found in the [addons reference documentation](https://docs.getunleash.io/reference/addons). This string is **case sensitive**. Supported options are:
-- \`datadog\` for [Datadog](https://docs.getunleash.io/reference/addons/datadog)
-- \`slack\` for [Slack](https://docs.getunleash.io/reference/addons/slack)
-- \`teams\` for [Microsoft Teams](https://docs.getunleash.io/reference/addons/teams)
-- \`webhook\` for [webhooks](https://docs.getunleash.io/reference/addons/webhook)
-
-The provider you choose for your addon dictates what properties the \`parameters\` object needs. Refer to the documentation for each provider for more information.
-`,
+            description: `The addon provider, such as "webhook" or "slack".`,
             example: 'webhook',
         },
         description: {
             type: 'string',
             description:
-                'A description of the addon. `null` if no description is provided on creation.',
+                'A description of the addon. `null` if no description exists.',
             example:
                 'This addon posts updates to our internal feature tracking system whenever a feature is created or updated.',
             nullable: true,
@@ -55,8 +46,7 @@ The provider you choose for your addon dictates what properties the \`parameters
         },
         events: {
             type: 'array',
-            description:
-                'The event types that will trigger this specific addon.',
+            description: 'The event types that trigger this specific addon.',
             items: {
                 type: 'string',
             },
@@ -65,7 +55,7 @@ The provider you choose for your addon dictates what properties the \`parameters
         projects: {
             type: 'array',
             description:
-                'The projects that this addon will listen to events from. An empty list means it will listen to events from **all** projects.',
+                'The projects that this addon listens to events from. An empty list means listens to events from **all** projects.',
             example: ['new-landing-project', 'signups-v2'],
             items: {
                 type: 'string',
@@ -74,7 +64,7 @@ The provider you choose for your addon dictates what properties the \`parameters
         environments: {
             type: 'array',
             description:
-                'The list of environments that this addon will listen to events from. An empty list means it will listen to events from **all** environments.',
+                'The list of environments that this addon listens to events from. An empty list means it listens to events from **all** environments.',
             example: ['development', 'production'],
             items: {
                 type: 'string',
@@ -85,6 +75,3 @@ The provider you choose for your addon dictates what properties the \`parameters
 } as const;
 
 export type AddonSchema = FromSchema<typeof addonSchema>;
-
-// "provider" and "parameters" are coupled. Can we make use of the addon service to make those hang together?
-// can we use     getProviderDefinitions(): IAddonDefinition[] {

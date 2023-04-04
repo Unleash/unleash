@@ -139,8 +139,13 @@ async function start(opts: IUnleashOptions = {}): Promise<IUnleash> {
             logger.info('DB migration: disabled');
         } else {
             logger.debug('DB migration: start');
-            const lock = withDbLock(config.db);
-            await lock(migrateDb)(config);
+            if (opts.flagResolver?.isEnabled('migrationLock')) {
+                const lock = withDbLock(config.db);
+                await lock(migrateDb)(config);
+            } else {
+                await migrateDb(config);
+            }
+
             logger.debug('DB migration: end');
         }
     } catch (err) {

@@ -43,3 +43,14 @@ test('should await other actions on lock', async () => {
 
     await expect(results).toStrictEqual(['first', 'second']);
 });
+
+test('should handle lock timeout', async () => {
+    const timeoutMs = 1;
+    const lock = withDbLock(getDbConfig() as IDBOption, timeoutMs);
+
+    const asyncAction = (input: string) => Promise.resolve(`result: ${input}`);
+
+    await expect(lock(asyncAction)('data')).rejects.toStrictEqual(
+        new Error('Query read timeout'),
+    );
+});

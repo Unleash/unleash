@@ -1,13 +1,13 @@
 import { Client } from 'pg';
 import { IDBOption } from '../types';
 
-const lockKey = 479341;
+const defaultLockKey = 479341;
 
 export const withDbLock =
-    (dbConfig: IDBOption) =>
+    (dbConfig: IDBOption, timeout = 5000, lockKey = defaultLockKey) =>
     <A extends any[], R>(fn: (...args: A) => Promise<R>) =>
     async (...args: A): Promise<R> => {
-        const client = new Client(dbConfig);
+        const client = new Client({ ...dbConfig, query_timeout: timeout });
         try {
             await client.connect();
             // wait to obtain a lock

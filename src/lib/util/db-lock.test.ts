@@ -1,6 +1,7 @@
 import { withDbLock } from './db-lock';
 import { getDbConfig } from '../../test/e2e/helpers/database-config';
 import { IDBOption } from '../types';
+import { Logger } from '../logger';
 
 test('should lock access to any action', async () => {
     const lock = withDbLock(getDbConfig() as IDBOption);
@@ -46,11 +47,23 @@ test('should await other actions on lock', async () => {
 
 test('should handle lock timeout', async () => {
     const timeoutMs = 1;
-    const lock = withDbLock(getDbConfig() as IDBOption, timeoutMs);
+    let loggedError = '';
+    const lock = withDbLock(getDbConfig() as IDBOption, {
+        lockKey: 1,
+        timeout: timeoutMs,
+        logger: {
+            error(msg: string) {
+                loggedError = msg;
+            },
+        } as unknown as Logger,
+    });
 
-    const asyncAction = (input: string) => Promise.resolve(`result: ${input}`);
+    // the query should fail because of the timeout. This one is a fallback when timeout
+    // was not triggered in the integration test
+    const asyncAction = () => Promise.reject(new Error('Query read timeout'));
 
-    await expect(lock(asyncAction)('data')).rejects.toStrictEqual(
+    await expect(lock(asyncAction)()).rejects.toStrictEqual(
         new Error('Query read timeout'),
     );
+    expect(loggedError).toBe('Locking error: Query read timeout');
 });

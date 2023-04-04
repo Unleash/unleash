@@ -32,7 +32,7 @@ import { Knex } from 'knex';
 import * as permissions from './types/permissions';
 import * as eventType from './types/events';
 import { Db } from './db/db';
-import { withDbLock } from './util/db-lock';
+import { defaultLockKey, defaultTimeout, withDbLock } from './util/db-lock';
 
 async function createApp(
     config: IUnleashConfig,
@@ -141,7 +141,11 @@ async function start(opts: IUnleashOptions = {}): Promise<IUnleash> {
             logger.debug('DB migration: start');
             if (opts.flagResolver?.isEnabled('migrationLock')) {
                 logger.info('Running migration with lock');
-                const lock = withDbLock(config.db);
+                const lock = withDbLock(config.db, {
+                    lockKey: defaultLockKey,
+                    timeout: defaultTimeout,
+                    logger,
+                });
                 await lock(migrateDb)(config);
             } else {
                 await migrateDb(config);

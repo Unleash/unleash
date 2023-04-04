@@ -6,7 +6,7 @@ export const environmentsProjectSchema = {
     type: 'object',
     additionalProperties: false,
     required: ['version', 'environments'],
-    description: 'Environments defined for the current project',
+    description: 'Environments defined for a given project',
     properties: {
         version: {
             type: 'integer',

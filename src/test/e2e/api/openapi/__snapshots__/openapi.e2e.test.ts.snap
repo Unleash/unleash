@@ -1008,28 +1008,43 @@ exports[`should serve the OpenAPI spec 1`] = `
       },
       "environmentProjectSchema": {
         "additionalProperties": false,
+        "description": "Describes a project's configuration in a given environment.",
         "properties": {
           "enabled": {
+            "description": "\`true\` if the environment is enabled for the project, otherwise \`false\`",
+            "example": true,
             "type": "boolean",
           },
           "name": {
+            "description": "The name of the environment",
+            "example": "development",
             "type": "string",
           },
           "projectApiTokenCount": {
-            "nullable": true,
-            "type": "number",
+            "description": "The number of client and front-end API tokens that have access to this project",
+            "example": 5,
+            "minimum": 0,
+            "type": "integer",
           },
           "projectEnabledToggleCount": {
-            "nullable": true,
-            "type": "number",
+            "description": "The number of features enabled in this environment for this project",
+            "example": 7,
+            "minimum": 0,
+            "type": "integer",
           },
           "protected": {
+            "description": "\`true\` if the environment is protected, otherwise \`false\`. A *protected* environment can not be deleted.",
+            "example": false,
             "type": "boolean",
           },
           "sortOrder": {
-            "type": "number",
+            "description": "Priority of the environment in a list of environments, the lower the value, the higher up in the list the environment will appear",
+            "example": 1,
+            "type": "integer",
           },
           "type": {
+            "description": "The [type of environment](https://docs.getunleash.io/reference/environments#environment-types).",
+            "example": "production",
             "type": "string",
           },
         },
@@ -1037,6 +1052,8 @@ exports[`should serve the OpenAPI spec 1`] = `
           "name",
           "type",
           "enabled",
+          "protected",
+          "sortOrder",
         ],
         "type": "object",
       },
@@ -1047,8 +1064,9 @@ exports[`should serve the OpenAPI spec 1`] = `
           "apiTokenCount": {
             "description": "The number of API tokens for the project environment",
             "example": 6,
+            "minimum": 0,
             "nullable": true,
-            "type": "number",
+            "type": "integer",
           },
           "enabled": {
             "description": "\`true\` if the environment is enabled for the project, otherwise \`false\`.",
@@ -1058,8 +1076,9 @@ exports[`should serve the OpenAPI spec 1`] = `
           "enabledToggleCount": {
             "description": "The number of enabled toggles for the project environment",
             "example": 10,
+            "minimum": 0,
             "nullable": true,
-            "type": "number",
+            "type": "integer",
           },
           "name": {
             "description": "The name of the environment",
@@ -1069,19 +1088,22 @@ exports[`should serve the OpenAPI spec 1`] = `
           "projectCount": {
             "description": "The number of projects with this environment",
             "example": 10,
+            "minimum": 0,
             "nullable": true,
-            "type": "number",
+            "type": "integer",
           },
           "protected": {
+            "description": "\`true\` if the environment is protected, otherwise \`false\`. A *protected* environment can not be deleted.",
+            "example": true,
             "type": "boolean",
           },
           "sortOrder": {
-            "description": "The sort order of the environment in the environments list",
+            "description": "Priority of the environment in a list of environments, the lower the value, the higher up in the list the environment will appear. Needs to be an integer",
             "example": 3,
-            "type": "number",
+            "type": "integer",
           },
           "type": {
-            "description": "The type of the environment",
+            "description": "The [type of environment](https://docs.getunleash.io/reference/environments#environment-types).",
             "example": "development",
             "type": "string",
           },
@@ -1090,11 +1112,14 @@ exports[`should serve the OpenAPI spec 1`] = `
           "name",
           "type",
           "enabled",
+          "protected",
+          "sortOrder",
         ],
         "type": "object",
       },
       "environmentsProjectSchema": {
         "additionalProperties": false,
+        "description": "Environments defined for a given project",
         "properties": {
           "environments": {
             "items": {
@@ -4944,12 +4969,27 @@ Stats are divided into current and previous **windows**.
     },
     "/api/admin/environments": {
       "get": {
+        "description": "Retrieves all environments that exist in this Unleash instance.",
         "operationId": "getAllEnvironments",
         "responses": {
           "200": {
-            "description": "This response has no body.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/environmentsSchema",
+                },
+              },
+            },
+            "description": "environmentsSchema",
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "description": "User credentials are valid but does not have enough privileges to execute this operation",
           },
         },
+        "summary": "Get all environments",
         "tags": [
           "Environments",
         ],
@@ -4957,6 +4997,7 @@ Stats are divided into current and previous **windows**.
     },
     "/api/admin/environments/project/{projectId}": {
       "get": {
+        "description": "Gets the environments that are available for this project. An environment is available for a project if enabled in the [project configuration](https://docs.getunleash.io/reference/environments#step-1-enable-new-environments-for-your-project)",
         "operationId": "getProjectEnvironments",
         "parameters": [
           {
@@ -4979,7 +5020,17 @@ Stats are divided into current and previous **windows**.
             },
             "description": "environmentsProjectSchema",
           },
+          "401": {
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+          },
+          "404": {
+            "description": "The requested resource was not found.",
+          },
         },
+        "summary": "Get the environments available to a project",
         "tags": [
           "Environments",
         ],
@@ -4987,6 +5038,7 @@ Stats are divided into current and previous **windows**.
     },
     "/api/admin/environments/sort-order": {
       "put": {
+        "description": "Updates sort orders for the named environments. Environments not specified are unaffected.",
         "operationId": "updateSortOrder",
         "requestBody": {
           "content": {
@@ -5003,7 +5055,17 @@ Stats are divided into current and previous **windows**.
           "200": {
             "description": "This response has no body.",
           },
+          "401": {
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+          },
+          "404": {
+            "description": "The requested resource was not found.",
+          },
         },
+        "summary": "Update environment sort orders",
         "tags": [
           "Environments",
         ],
@@ -5011,6 +5073,7 @@ Stats are divided into current and previous **windows**.
     },
     "/api/admin/environments/{name}": {
       "get": {
+        "description": "Retrieves the environment with \`name\` if it exists in this Unleash instance",
         "operationId": "getEnvironment",
         "parameters": [
           {
@@ -5033,7 +5096,17 @@ Stats are divided into current and previous **windows**.
             },
             "description": "environmentSchema",
           },
+          "401": {
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+          },
+          "404": {
+            "description": "The requested resource was not found.",
+          },
         },
+        "summary": "Get the environment with \`name\`",
         "tags": [
           "Environments",
         ],
@@ -5041,6 +5114,7 @@ Stats are divided into current and previous **windows**.
     },
     "/api/admin/environments/{name}/off": {
       "post": {
+        "description": "Removes this environment from the list of available environments for projects to use",
         "operationId": "toggleEnvironmentOff",
         "parameters": [
           {
@@ -5056,7 +5130,17 @@ Stats are divided into current and previous **windows**.
           "204": {
             "description": "This response has no body.",
           },
+          "401": {
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+          },
+          "404": {
+            "description": "The requested resource was not found.",
+          },
         },
+        "summary": "Toggle the environment with \`name\` off",
         "tags": [
           "Environments",
         ],
@@ -5064,6 +5148,7 @@ Stats are divided into current and previous **windows**.
     },
     "/api/admin/environments/{name}/on": {
       "post": {
+        "description": "Makes it possible to enable this environment for a project. An environment must first be globally enabled using this endpoint before it can be enabled for a project",
         "operationId": "toggleEnvironmentOn",
         "parameters": [
           {
@@ -5079,7 +5164,17 @@ Stats are divided into current and previous **windows**.
           "204": {
             "description": "This response has no body.",
           },
+          "401": {
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+          },
+          "404": {
+            "description": "The requested resource was not found.",
+          },
         },
+        "summary": "Toggle the environment with \`name\` on",
         "tags": [
           "Environments",
         ],

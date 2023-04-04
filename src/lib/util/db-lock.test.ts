@@ -38,7 +38,7 @@ test('should await other actions on lock', async () => {
 
     // deliberately skipped await to simulate another server running slow operaton
     lockedAction('first');
-    await ms(200);
+    await ms(100);
     await lockedAnotherAction('second');
 
     await expect(results).toStrictEqual(['first', 'second']);

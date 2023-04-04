@@ -7,7 +7,7 @@ title: "ADR: Braking DB changes"
 During the evolution of a feature different clients may use different version of code e.g. behind a feature flag.
 If the code relies on breaking DB changes (column delete, table rename, deleting DB entries etc.) it may lead to errors.
 
-The very same problem occurs when you apply a breaking migration just before the new version of the application starts. 
+The very same problem occurs when you apply a breaking migration just before the new version of the application starts e.g. during a zero-downtime deployment (whatever strategy you use).
 The code is still running against the old schema as the migration takes a few seconds to apply.
 
 ## Decision

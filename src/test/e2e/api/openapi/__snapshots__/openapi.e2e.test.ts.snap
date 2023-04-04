@@ -1008,7 +1008,7 @@ exports[`should serve the OpenAPI spec 1`] = `
       },
       "environmentProjectSchema": {
         "additionalProperties": false,
-        "description": "Describes an environment as it's configured for the project it's connected to",
+        "description": "Describes a project's configuration in a given environment.",
         "properties": {
           "enabled": {
             "description": "\`true\` if the environment is enabled for the project, otherwise \`false\`",
@@ -1021,7 +1021,7 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "string",
           },
           "projectApiTokenCount": {
-            "description": "How many client and frontend API tokens that have access to this project",
+            "description": "The number of client and front-end API tokens that have access to this project",
             "example": 5,
             "minimum": 0,
             "type": "integer",
@@ -1038,7 +1038,7 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "boolean",
           },
           "sortOrder": {
-            "description": "Priority of the environment in a list of environments, the lower value, the higher up in the list the environment will appear",
+            "description": "Priority of the environment in a list of environments, the lower the value, the higher up in the list the environment will appear",
             "example": 1,
             "type": "integer",
           },
@@ -1052,6 +1052,10 @@ exports[`should serve the OpenAPI spec 1`] = `
           "name",
           "type",
           "enabled",
+          "protected",
+          "sortOrder",
+          "projectApiTokenCount",
+          "projectEnabledToggleCount",
         ],
         "type": "object",
       },
@@ -1091,12 +1095,12 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "integer",
           },
           "protected": {
-            "description": "\`true\` if the environment is a protected environment",
+            "description": "\`true\` if the environment is protected, otherwise \`false\`. A *protected* environment can not be deleted.",
             "example": true,
             "type": "boolean",
           },
           "sortOrder": {
-            "description": "Priority of the environment in a list of environments, the lower value, the higher up in the list the environment will appear. Needs to be an integer",
+            "description": "Priority of the environment in a list of environments, the lower the value, the higher up in the list the environment will appear. Needs to be an integer",
             "example": 3,
             "type": "integer",
           },
@@ -1110,12 +1114,14 @@ exports[`should serve the OpenAPI spec 1`] = `
           "name",
           "type",
           "enabled",
+          "protected",
+          "sortOrder",
         ],
         "type": "object",
       },
       "environmentsProjectSchema": {
         "additionalProperties": false,
-        "description": "Environments defined for the current project",
+        "description": "Environments defined for a given project",
         "properties": {
           "environments": {
             "items": {
@@ -4965,7 +4971,7 @@ Stats are divided into current and previous **windows**.
     },
     "/api/admin/environments": {
       "get": {
-        "description": "Gets all environments",
+        "description": "Retrieves all environments that exist in this Unleash instance.",
         "operationId": "getAllEnvironments",
         "responses": {
           "200": {
@@ -4985,6 +4991,7 @@ Stats are divided into current and previous **windows**.
             "description": "User credentials are valid but does not have enough privileges to execute this operation",
           },
         },
+        "summary": "Get all environments",
         "tags": [
           "Environments",
         ],
@@ -4992,7 +4999,7 @@ Stats are divided into current and previous **windows**.
     },
     "/api/admin/environments/project/{projectId}": {
       "get": {
-        "description": "Gets the environments that are available for this project",
+        "description": "Gets the environments that are available for this project. An environment is available for a project if enabled in the [project configuration](https://docs.getunleash.io/reference/environments#step-1-enable-new-environments-for-your-project)",
         "operationId": "getProjectEnvironments",
         "parameters": [
           {
@@ -5025,6 +5032,7 @@ Stats are divided into current and previous **windows**.
             "description": "The requested resource was not found.",
           },
         },
+        "summary": "Get the environments available to a project",
         "tags": [
           "Environments",
         ],
@@ -5032,7 +5040,7 @@ Stats are divided into current and previous **windows**.
     },
     "/api/admin/environments/sort-order": {
       "put": {
-        "description": "Updates sort orders for the named environments",
+        "description": "Updates sort orders for the named environments. Environments not specified are unaffected.",
         "operationId": "updateSortOrder",
         "requestBody": {
           "content": {
@@ -5059,6 +5067,7 @@ Stats are divided into current and previous **windows**.
             "description": "The requested resource was not found.",
           },
         },
+        "summary": "Update environment sort orders",
         "tags": [
           "Environments",
         ],
@@ -5066,7 +5075,7 @@ Stats are divided into current and previous **windows**.
     },
     "/api/admin/environments/{name}": {
       "get": {
-        "description": "Gets the environment with \`name\`",
+        "description": "Retrieves the environment with \`name\` if it exists in this Unleash instance",
         "operationId": "getEnvironment",
         "parameters": [
           {
@@ -5099,6 +5108,7 @@ Stats are divided into current and previous **windows**.
             "description": "The requested resource was not found.",
           },
         },
+        "summary": "Get the environment with \`name\`",
         "tags": [
           "Environments",
         ],
@@ -5106,7 +5116,7 @@ Stats are divided into current and previous **windows**.
     },
     "/api/admin/environments/{name}/off": {
       "post": {
-        "description": "Toggles the environment with \`name\` off",
+        "description": "Removes this environment from the list of available environments for projects to use",
         "operationId": "toggleEnvironmentOff",
         "parameters": [
           {
@@ -5132,6 +5142,7 @@ Stats are divided into current and previous **windows**.
             "description": "The requested resource was not found.",
           },
         },
+        "summary": "Toggle the environment with \`name\` off",
         "tags": [
           "Environments",
         ],
@@ -5139,7 +5150,7 @@ Stats are divided into current and previous **windows**.
     },
     "/api/admin/environments/{name}/on": {
       "post": {
-        "description": "Toggles the environment with \`name\` on",
+        "description": "Makes it possible to enable this environment for a project. An environment must first be globally enabled using this endpoint before it can be enabled for a project",
         "operationId": "toggleEnvironmentOn",
         "parameters": [
           {
@@ -5165,6 +5176,7 @@ Stats are divided into current and previous **windows**.
             "description": "The requested resource was not found.",
           },
         },
+        "summary": "Toggle the environment with \`name\` on",
         "tags": [
           "Environments",
         ],

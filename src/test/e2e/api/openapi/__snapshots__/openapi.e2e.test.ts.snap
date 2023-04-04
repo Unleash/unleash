@@ -1027,10 +1027,10 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "integer",
           },
           "projectEnabledToggleCount": {
-            "description": "Number of features enabled in this environment for this project",
+            "description": "The number of features enabled in this environment for this project",
             "example": 7,
             "minimum": 0,
-            "type": "number",
+            "type": "integer",
           },
           "protected": {
             "description": "\`true\` if the environment is protected, otherwise \`false\`. A *protected* environment can not be deleted.",
@@ -1054,8 +1054,6 @@ exports[`should serve the OpenAPI spec 1`] = `
           "enabled",
           "protected",
           "sortOrder",
-          "projectApiTokenCount",
-          "projectEnabledToggleCount",
         ],
         "type": "object",
       },

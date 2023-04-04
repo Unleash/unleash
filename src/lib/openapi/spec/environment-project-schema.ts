@@ -4,15 +4,7 @@ export const environmentProjectSchema = {
     $id: '#/components/schemas/environmentProjectSchema',
     type: 'object',
     additionalProperties: false,
-    required: [
-        'name',
-        'type',
-        'enabled',
-        'protected',
-        'sortOrder',
-        'projectApiTokenCount',
-        'projectEnabledToggleCount',
-    ],
+    required: ['name', 'type', 'enabled', 'protected', 'sortOrder'],
     description: "Describes a project's configuration in a given environment.",
     properties: {
         name: {
@@ -52,11 +44,11 @@ export const environmentProjectSchema = {
                 'The number of client and front-end API tokens that have access to this project',
         },
         projectEnabledToggleCount: {
-            type: 'number',
+            type: 'integer',
             minimum: 0,
             example: 7,
             description:
-                'Number of features enabled in this environment for this project',
+                'The number of features enabled in this environment for this project',
         },
     },
     components: {},

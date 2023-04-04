@@ -34,7 +34,7 @@ export const environmentSchema = {
             type: 'integer',
             example: 3,
             description:
-                'Priority of the environment in a list of environments, the lower value, the higher up in the list the environment will appear. Needs to be an integer',
+                'Priority of the environment in a list of environments, the lower the value, the higher up in the list the environment will appear. Needs to be an integer',
         },
         projectCount: {
             type: 'integer',

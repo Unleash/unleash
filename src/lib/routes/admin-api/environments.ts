@@ -62,7 +62,8 @@ export class EnvironmentsController extends Controller {
                 openApiService.validPath({
                     tags: ['Environments'],
                     summary: 'Get all environments',
-                    description: 'Retrieves all environments that exist in this Unleash instance.'
+                    description:
+                        'Retrieves all environments that exist in this Unleash instance.',
                     operationId: 'getAllEnvironments',
                     responses: {
                         200: createResponseSchema('environmentsSchema'),
@@ -81,7 +82,9 @@ export class EnvironmentsController extends Controller {
                 openApiService.validPath({
                     tags: ['Environments'],
                     operationId: 'getEnvironment',
-                    description: 'Gets the environment with `name`',
+                    summary: 'Get the environment with `name`',
+                    description:
+                        'Retrieves the environment with `name` if it exists in this Unleash instance',
                     responses: {
                         200: createResponseSchema('environmentSchema'),
                         ...getStandardResponses(401, 403, 404),
@@ -99,8 +102,9 @@ export class EnvironmentsController extends Controller {
                 openApiService.validPath({
                     tags: ['Environments'],
                     operationId: 'getProjectEnvironments',
+                    summary: 'Get the environments available to a project',
                     description:
-                        'Gets the environments that are available for this project',
+                        'Gets the environments that are available for this project. An environment is available for a project if enabled in the [project configuration](https://docs.getunleash.io/reference/environments#step-1-enable-new-environments-for-your-project)',
                     responses: {
                         200: createResponseSchema('environmentsProjectSchema'),
                         ...getStandardResponses(401, 403, 404),
@@ -117,7 +121,7 @@ export class EnvironmentsController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Environments'],
-                    summary: 'Update environment sort orders'
+                    summary: 'Update environment sort orders',
                     description:
                         'Updates sort orders for the named environments. Environments not specified are unaffected.',
                     operationId: 'updateSortOrder',
@@ -139,7 +143,9 @@ export class EnvironmentsController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Environments'],
-                    description: 'Toggles the environment with `name` on',
+                    summary: 'Toggle the environment with `name` on',
+                    description:
+                        'Makes it possible to enable this environment for a project. An environment must first be globally enabled using this endpoint before it can be enabled for a project',
                     operationId: 'toggleEnvironmentOn',
                     responses: {
                         204: emptyResponse,
@@ -158,7 +164,9 @@ export class EnvironmentsController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Environments'],
-                    description: 'Toggles the environment with `name` off',
+                    summary: 'Toggle the environment with `name` off',
+                    description:
+                        'Removes this environment from the list of available environments for projects to use',
                     operationId: 'toggleEnvironmentOff',
                     responses: {
                         204: emptyResponse,

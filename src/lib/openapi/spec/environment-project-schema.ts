@@ -35,7 +35,7 @@ export const environmentProjectSchema = {
             type: 'integer',
             example: 1,
             description:
-                'Priority of the environment in a list of environments, the lower value, the higher up in the list the environment will appear',
+                'Priority of the environment in a list of environments, the lower the value, the higher up in the list the environment will appear',
         },
         projectApiTokenCount: {
             type: 'integer',

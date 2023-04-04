@@ -209,7 +209,7 @@ export const EnvironmentVariantsModal = ({
                 stickiness:
                     variantsEdit?.length > 0
                         ? variantsEdit[0].stickiness
-                        : 'default',
+                        : defaultStickiness,
                 new: true,
                 isValid: false,
                 id,
@@ -307,18 +307,17 @@ export const EnvironmentVariantsModal = ({
         }
     }, [apiPayload.error]);
 
+    const handleClose = async () => {
+        await updateStickiness(defaultStickiness);
+        setOpen(false);
+    };
+
     if (loading || stickiness === '') {
         return <Loader />;
     }
 
     return (
-        <SidebarModal
-            open={open}
-            onClose={() => {
-                setOpen(false);
-            }}
-            label=""
-        >
+        <SidebarModal open={open} onClose={handleClose} label="">
             <FormTemplate
                 modal
                 title=""

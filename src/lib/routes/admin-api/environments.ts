@@ -117,8 +117,9 @@ export class EnvironmentsController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Environments'],
+                    summary: 'Update environment sort orders'
                     description:
-                        'Updates sort orders for the named environments',
+                        'Updates sort orders for the named environments. Environments not specified are unaffected.',
                     operationId: 'updateSortOrder',
                     requestBody: createRequestSchema('sortOrderSchema'),
                     responses: {

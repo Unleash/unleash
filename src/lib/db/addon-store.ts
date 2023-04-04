@@ -16,6 +16,7 @@ const COLUMNS = [
     'events',
     'projects',
     'environments',
+    'created_at',
 ];
 const TABLE = 'addons';
 
@@ -77,12 +78,13 @@ export default class AddonStore implements IAddonStore {
     async update(id: number, addon: IAddonDto): Promise<IAddon> {
         const rows = await this.db(TABLE)
             .where({ id })
-            .update(this.addonToRow(addon));
+            .update(this.addonToRow(addon))
+            .returning(COLUMNS);
 
         if (!rows) {
             throw new NotFoundError('Could not find addon');
         }
-        return rows[0];
+        return this.rowToAddon(rows[0]);
     }
 
     async delete(id: number): Promise<void> {

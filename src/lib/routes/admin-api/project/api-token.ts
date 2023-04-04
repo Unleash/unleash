@@ -187,7 +187,7 @@ export class ProjectApiTokenController extends Controller {
                     storedToken.project[0] === projectId))
         ) {
             await this.apiTokenService.delete(token, extractUsername(req));
-            this.proxyService.deleteClientForProxyToken(token);
+            await this.proxyService.deleteClientForProxyToken(token);
             res.status(200).end();
         }
     }

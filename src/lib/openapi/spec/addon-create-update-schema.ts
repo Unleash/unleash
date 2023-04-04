@@ -1,7 +1,7 @@
 import { FromSchema } from 'json-schema-to-ts';
 
-export const addonCreateSchema = {
-    $id: '#/components/schemas/addonSchema',
+export const addonCreateUpdateSchema = {
+    $id: '#/components/schemas/addonCreateUpdateSchema',
     type: 'object',
     required: ['provider', 'enabled', 'parameters', 'events'],
     properties: {
@@ -68,4 +68,6 @@ The provider you choose for your addon dictates what properties the \`parameters
     components: {},
 } as const;
 
-export type AddonCreateSchema = FromSchema<typeof addonCreateSchema>;
+export type AddonCreateUpdateSchema = FromSchema<
+    typeof addonCreateUpdateSchema
+>;

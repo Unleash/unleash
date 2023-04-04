@@ -22,7 +22,7 @@ import {
     emptyResponse,
     getStandardResponses,
 } from '../../openapi/util/standard-responses';
-import { AddonCreateSchema } from 'lib/openapi/spec/addon-create-schema';
+import { AddonCreateUpdateSchema } from 'lib/openapi/spec/addon-create-update-schema';
 
 type AddonServices = Pick<IUnleashServices, 'addonService' | 'openApiService'>;
 
@@ -76,7 +76,7 @@ class AddonController extends Controller {
                         'Create an addon instance. The addon must use one of the providers available on this Unleash instance.',
                     tags: ['Addons'],
                     operationId: 'createAddon',
-                    requestBody: createRequestSchema('addonSchema'),
+                    requestBody: createRequestSchema('addonCreateUpdateSchema'),
                     responses: {
                         200: createResponseSchema('addonSchema'),
                         ...getStandardResponses(400, 401, 403, 415),
@@ -114,10 +114,10 @@ class AddonController extends Controller {
                 openApiService.validPath({
                     summary: 'Update an addon',
                     description:
-                        'Update a specific ID. The update object ... [TODO!]',
+                        "Update the addon with a specific ID. Any fields in the update object will be updated. Properties that are not included in the update object will not be affected. To empty a property, pass a `null` as that property's value.",
                     tags: ['Addons'],
                     operationId: 'updateAddon',
-                    requestBody: createRequestSchema('addonSchema'),
+                    requestBody: createRequestSchema('addonCreateUpdateSchema'),
                     responses: {
                         200: createResponseSchema('addonSchema'),
                         ...getStandardResponses(400, 401, 403, 415),
@@ -173,13 +173,18 @@ class AddonController extends Controller {
     }
 
     async updateAddon(
-        req: IAuthRequest<{ id: number }, any, any, any>,
+        req: IAuthRequest<{ id: number }, any, AddonCreateUpdateSchema, any>,
         res: Response<AddonSchema>,
     ): Promise<void> {
         const { id } = req.params;
         const createdBy = extractUsername(req);
+        // because `description` is optional in the request DTO but required by
+        // the update function, we need to provide a default empty string in
+        // case it's missing.
+        // const data = { description: '', ...req.body };
         const data = req.body;
 
+        // @ts-ignore-error
         const addon = await this.addonService.updateAddon(id, data, createdBy);
 
         this.openApiService.respondWithValidation(
@@ -191,7 +196,7 @@ class AddonController extends Controller {
     }
 
     async createAddon(
-        req: IAuthRequest<AddonCreateSchema, any, any, any>,
+        req: IAuthRequest<AddonCreateUpdateSchema, any, any, any>,
         res: Response<AddonSchema>,
     ): Promise<void> {
         // returns a Joi error if the parameters object is empty

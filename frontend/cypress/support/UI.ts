@@ -304,7 +304,7 @@ export const addVariantsToFeature_UI = (
     ).as('variantCreation');
 
     cy.get('[data-testid=ADD_VARIANT_BUTTON]').first().click();
-    cy.wait(300);
+    cy.wait(500);
     variants.forEach((variant, index) => {
         cy.get('[data-testid=VARIANT_NAME_INPUT]').eq(index).type(variant);
         index + 1 < variants.length &&

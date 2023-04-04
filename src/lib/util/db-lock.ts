@@ -12,7 +12,8 @@ export const withDbLock =
             await client.connect();
             // wait to obtain a lock
             await client.query('SELECT pg_advisory_lock($1)', [lockKey]);
-            return await fn(...args);
+            const result = await fn(...args);
+            return result;
         } catch (e) {
             console.error('Locking error:', e);
             throw e;

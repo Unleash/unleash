@@ -16,50 +16,52 @@ import {
 } from '../types/events';
 import { IAddonDefinition } from '../types/model';
 
+export const slackParameters = [
+    {
+        name: 'url',
+        displayName: 'Slack webhook URL',
+        description: '(Required)',
+        type: 'url',
+        required: true,
+        sensitive: true,
+    },
+    {
+        name: 'username',
+        displayName: 'Username',
+        placeholder: 'Unleash',
+        description:
+            'The username to use when posting messages to slack. Defaults to "Unleash".',
+        type: 'text',
+        required: false,
+        sensitive: false,
+    },
+    {
+        name: 'emojiIcon',
+        displayName: 'Emoji Icon',
+        placeholder: ':unleash:',
+        description:
+            'The emoji_icon to use when posting messages to slack. Defaults to ":unleash:".',
+        type: 'text',
+        required: false,
+        sensitive: false,
+    },
+    {
+        name: 'defaultChannel',
+        displayName: 'Default channel',
+        description:
+            '(Required) Default channel to post updates to if not specified in the slack-tag',
+        type: 'text',
+        required: true,
+        sensitive: false,
+    },
+] as const;
+
 const slackDefinition: IAddonDefinition = {
     name: 'slack',
     displayName: 'Slack',
     description: 'Allows Unleash to post updates to Slack.',
     documentationUrl: 'https://docs.getunleash.io/docs/addons/slack',
-    parameters: [
-        {
-            name: 'url',
-            displayName: 'Slack webhook URL',
-            description: '(Required)',
-            type: 'url',
-            required: true,
-            sensitive: true,
-        },
-        {
-            name: 'username',
-            displayName: 'Username',
-            placeholder: 'Unleash',
-            description:
-                'The username to use when posting messages to slack. Defaults to "Unleash".',
-            type: 'text',
-            required: false,
-            sensitive: false,
-        },
-        {
-            name: 'emojiIcon',
-            displayName: 'Emoji Icon',
-            placeholder: ':unleash:',
-            description:
-                'The emoji_icon to use when posting messages to slack. Defaults to ":unleash:".',
-            type: 'text',
-            required: false,
-            sensitive: false,
-        },
-        {
-            name: 'defaultChannel',
-            displayName: 'Default channel',
-            description:
-                '(Required) Default channel to post updates to if not specified in the slack-tag',
-            type: 'text',
-            required: true,
-            sensitive: false,
-        },
-    ],
+    parameters: [...slackParameters],
     events: [
         FEATURE_CREATED,
         FEATURE_UPDATED,

@@ -3,7 +3,14 @@ import { FromSchema } from 'json-schema-to-ts';
 export const addonSchema = {
     $id: '#/components/schemas/addonSchema',
     type: 'object',
-    required: ['provider', 'enabled', 'parameters', 'events'],
+    required: [
+        'id',
+        'description',
+        'provider',
+        'enabled',
+        'parameters',
+        'events',
+    ],
     properties: {
         id: {
             type: 'integer',
@@ -27,9 +34,11 @@ The provider you choose for your addon dictates what properties the \`parameters
         },
         description: {
             type: 'string',
-            description: 'A description of the addon.',
+            description:
+                'A description of the addon. `null` if no description is provided on creation.',
             example:
                 'This addon posts updates to our internal feature tracking system whenever a feature is created or updated.',
+            nullable: true,
         },
         enabled: {
             type: 'boolean',

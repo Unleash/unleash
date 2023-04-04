@@ -42,7 +42,7 @@ export const environmentProjectSchema = {
             minimum: 0,
             example: 5,
             description:
-                'How many client and frontend API tokens that have access to this project',
+                'The number of client and front-end API tokens that have access to this project',
         },
         projectEnabledToggleCount: {
             type: 'number',

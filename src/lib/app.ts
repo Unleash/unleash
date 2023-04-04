@@ -102,9 +102,7 @@ export default async function getApp(
         ),
     );
 
-    if (!config.flagResolver.isEnabled('personalAccessTokensKillSwitch')) {
-        app.use(baseUriPath, patMiddleware(config, services));
-    }
+    app.use(baseUriPath, patMiddleware(config, services));
 
     switch (config.authentication.type) {
         case IAuthType.OPEN_SOURCE: {

@@ -3,14 +3,11 @@ import { SWRConfiguration } from 'swr';
 import { useCallback } from 'react';
 import handleErrorResponses from './api/getters/httpErrorResponseHandler';
 import { useConditionalSWR } from './api/getters/useConditionalSWR/useConditionalSWR';
-import {
-    DefaultStickiness,
-    ProjectMode,
-} from 'component/project/Project/hooks/useProjectForm';
+import { ProjectMode } from 'component/project/Project/hooks/useProjectForm';
 import { formatApiPath } from 'utils/formatPath';
 
 export interface ISettingsResponse {
-    defaultStickiness?: DefaultStickiness;
+    defaultStickiness?: string;
     mode?: ProjectMode;
 }
 const DEFAULT_STICKINESS = 'default';
@@ -23,24 +20,32 @@ export const useDefaultProjectSettings = (
     const PATH = `api/admin/projects/${projectId}/settings`;
     const { projectScopedStickiness } = uiConfig.flags;
 
-    const { data, error, mutate } = useConditionalSWR<ISettingsResponse>(
-        Boolean(projectId) && Boolean(projectScopedStickiness),
-        {},
-        ['useDefaultProjectSettings', PATH],
-        () => fetcher(formatApiPath(PATH)),
-        options
-    );
+    const { data, isLoading, error, mutate } =
+        useConditionalSWR<ISettingsResponse>(
+            Boolean(projectId) && Boolean(projectScopedStickiness),
+            {},
+            ['useDefaultProjectSettings', PATH],
+            () => fetcher(formatApiPath(PATH)),
+            options
+        );
 
-    const defaultStickiness: DefaultStickiness =
-        data?.defaultStickiness ?? DEFAULT_STICKINESS;
+    const defaultStickiness = (): string => {
+        if (!isLoading) {
+            if (data?.defaultStickiness) {
+                return data?.defaultStickiness;
+            }
+            return DEFAULT_STICKINESS;
+        }
+        return '';
+    };
 
     const refetch = useCallback(() => {
         mutate().catch(console.warn);
     }, [mutate]);
     return {
-        defaultStickiness,
+        defaultStickiness: defaultStickiness(),
         refetch,
-        loading: !error && !data,
+        loading: isLoading,
         error,
     };
 };

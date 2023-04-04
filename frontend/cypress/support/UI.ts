@@ -5,7 +5,6 @@ import AddStrategyOptions = Cypress.AddFlexibleRolloutStrategyOptions;
 const AUTH_USER = Cypress.env('AUTH_USER');
 const AUTH_PASSWORD = Cypress.env('AUTH_PASSWORD');
 const ENTERPRISE = Boolean(Cypress.env('ENTERPRISE'));
-const baseUrl = Cypress.config().baseUrl;
 const disableActiveSplashScreens = () => {
     return cy.visit(`/splash/operators`);
 };
@@ -147,7 +146,7 @@ export const addFlexibleRolloutStrategyToFeature_UI = (
     cy.visit(
         `/projects/${projectName}/features/${featureToggleName}/strategies/create?environmentId=${env}&strategyName=flexibleRollout`
     );
-    cy.wait(200);
+    cy.wait(500);
     //  Takes a bit to load the screen - this will wait until it finds it or fail
     cy.get('[data-testid=FLEXIBLE_STRATEGY_STICKINESS_ID]');
     if (ENTERPRISE) {

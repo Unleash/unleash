@@ -6,18 +6,30 @@ let strategyId = '';
 const userName = `settings-user-${randomId}`;
 const projectName = `stickiness-project-${randomId}`;
 const TEST_STICKINESS = 'userId';
+const featureToggleName = `settings-${randomId}`;
+let cleanFeature = false;
+let cleanProject = false;
 
 describe('project settings', () => {
     before(() => {
         cy.runBefore();
     });
 
-    it('should store default project stickiness when creating, retrieve it when editing a project', () => {
-        //prepare
+    beforeEach(() => {
         cy.login_UI();
+        if (cleanFeature) {
+            cy.deleteFeature_API(featureToggleName);
+        }
+        if (cleanProject) {
+            cy.deleteProject_API(projectName);
+        }
         cy.visit(`/projects`);
+        cy.wait(300);
+    });
 
+    it('should store default project stickiness when creating, retrieve it when editing a project', () => {
         //when
+        cleanProject = true;
         cy.createProject_UI(projectName, TEST_STICKINESS);
         cy.visit(`/projects/${projectName}`);
         cy.get("[data-testid='NAVIGATE_TO_EDIT_PROJECT']").click();
@@ -32,12 +44,9 @@ describe('project settings', () => {
     });
 
     it('should respect the default project stickiness when creating a Gradual Rollout Strategy', () => {
-        //prepare
-        cy.login_UI();
-        cy.visit(`/projects`);
         cy.createProject_UI(projectName, TEST_STICKINESS);
-        const featureToggleName = `settings-${randomId}`;
         cy.createFeature_UI(featureToggleName, true, projectName);
+        cleanFeature = true;
 
         //when - then
         cy.addFlexibleRolloutStrategyToFeature_UI({
@@ -47,16 +56,10 @@ describe('project settings', () => {
         });
 
         //clean
-        cy.deleteFeature_API(featureToggleName);
-        cy.deleteProject_API(projectName);
     });
 
     it('should respect the default project stickiness when creating a variant', () => {
-        //prepare
-        cy.login_UI();
-        cy.visit(`/projects`);
         cy.createProject_UI(projectName, TEST_STICKINESS);
-        const featureToggleName = `settings-${randomId}-A`;
         cy.createFeature_UI(featureToggleName, true, projectName);
 
         //when

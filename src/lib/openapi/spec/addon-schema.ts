@@ -11,14 +11,6 @@ export const addonSchema = {
             example: 27,
             description: "The addon's unique identifier.",
         },
-        createdAt: {
-            type: 'string',
-            format: 'date-time',
-            description: 'The time when the addon was originally created.',
-            example: '2023-03-31T07:50:54Z',
-            // nullable: true, // <— when is this ever nullable?
-            // this is also not required? and my addons don't have that field. wut?
-        },
         provider: {
             type: 'string',
 

@@ -42,6 +42,11 @@ export class ProxyService {
 
     private readonly services: Services;
 
+    /**
+     * This is intentionally a Promise becasue we want to be able to await
+     * until the client (which might be being created by a different request) is ready
+     * Check this test that fails if we don't use a Promise: src/test/e2e/api/proxy/proxy.concurrency.e2e.test.ts
+     */
     private readonly clients: Map<ApiUser['secret'], Promise<Unleash>> =
         new Map();
 

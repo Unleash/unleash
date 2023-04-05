@@ -15,6 +15,7 @@ describe('notifications', () => {
         cy.runBefore();
     });
 
+    // This one is failing on CI: https://github.com/Unleash/unleash/actions/runs/4609305167/jobs/8160244872#step:4:193
     it.skip('should create a notification when a feature is created in a project', () => {
         cy.login_UI();
         cy.createUser_API(userName, EDITOR).then(value => {

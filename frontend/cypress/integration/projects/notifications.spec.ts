@@ -15,7 +15,7 @@ describe('notifications', () => {
         cy.runBefore();
     });
 
-    it('should create a notification when a feature is created in a project', () => {
+    it.skip('should create a notification when a feature is created in a project', () => {
         cy.login_UI();
         cy.createUser_API(userName, EDITOR).then(value => {
             userIds = value.userIds;

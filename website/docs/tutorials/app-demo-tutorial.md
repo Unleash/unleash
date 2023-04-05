@@ -3,22 +3,25 @@ title: Demo Application
 ---
 import Figure from '@site/src/components/Figure/Figure.tsx'
 
+
+*Estimated time burden is around 30 minutes* once dependencies are met.  
+
 # Introduction
 
 This tutorial will guide you through the process of setting up a demo web application with working feature toggles provided by an Unleash instance.  
 It demonstrates how you can use Unleash as a runtime control mechanism to control the state of software without needing to redeploy anything.  
 
-Specifically, you will learn:
+Specifically, we will:
 
 - *Using Next.js, how to incorporate Unleash client (frontend) and server-side (backend) SDKs into the application source code*
 - *On the Unleash instance, configuring a project for the application and assign to an environment*
-- *Setup appropriate tokens for the application feature toggles*
+- *Set up appropriate tokens for the application feature toggles*
 - *See feature toggles in action!*
 
-These basic principles could then be transpired to other applications to help you get up and running with Unleash.
-Please take note of the next Prerequisites section before beginning the deployment steps. *Estimated time burden is around 30 minutes* once dependencies are met.
+You can then use the same basic steps to set up your applications with Unleash.
+Please take note of the next Prerequisites section before beginning the deployment steps.
 
-**Note: The tutorial does not cover the deployment of a local Unleash instance.** If you don't yet have access to an Unleash instance, please consult the next topic for guidance on setting one up for free.  
+**Note: The tutorial does not cover the deployment of a local Unleash instance.** If you don't yet have access to an Unleash instance, please consult the next topic, [Prerequisites](#prerequisites) for guidance on setting one up for free.  
 
 
 # Prerequisites
@@ -85,7 +88,7 @@ If using a local instance on port 4242, these would be `http://localhost:4242/ap
 
 ## Unleash
 
-Next, we will need to switch over to our Unleash instance and create a project for the demo app, assign it to an environment (if more than one are setup) and create our feature toggles. Then, we will create two API keys - one frontend, for our *client-side* feature toggles, and one backend, for our *server-side* toggles.
+Next, we will need to switch over to our Unleash instance and create a project for the demo app, assign it to an environment (if more than one are set up) and create our feature toggles. Then, we will create two API keys - one frontend, for our *client-side* feature toggles, and one backend, for our *server-side* toggles.
 
 Step by step:
 
@@ -135,7 +138,7 @@ We're done in Unleash for now, but keep the browser tab open.
 
 ## Source Configuration
 
-At this point we have everything we need to setup our `docker-compose.yml` file. Open up the file in an editor of choice, and substitute the values accordingly.
+At this point we have everything we need to set up our `docker-compose.yml` file. Open up the file in an editor of choice, and substitute the values accordingly.
 
 Be sure tokens are pasted in the correct format and character spacing are valid.
 

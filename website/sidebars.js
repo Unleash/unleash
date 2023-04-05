@@ -26,6 +26,7 @@ module.exports = {
                 'tutorials/unleash-overview',
                 'tutorials/important-concepts',
                 'tutorials/quickstart',
+                'tutorials/app-demo-tutorial',
             ],
         },
         {

@@ -50,6 +50,7 @@ export interface IFlags {
     bulkOperations?: boolean;
     projectScopedSegments?: boolean;
     projectScopedStickiness?: boolean;
+    personalAccessTokensKillSwitch?: boolean;
 }
 
 export interface IVersionInfo {

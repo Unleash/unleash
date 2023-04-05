@@ -1,27 +1,23 @@
 import { useEffect, useState } from 'react';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { useDefaultProjectSettings } from 'hooks/useDefaultProjectSettings';
 
 export type ProjectMode = 'open' | 'protected';
-export type DefaultStickiness = 'default' | 'userId' | 'sessionId' | 'random';
 export const DEFAULT_PROJECT_STICKINESS = 'default';
 const useProjectForm = (
     initialProjectId = '',
     initialProjectName = '',
     initialProjectDesc = '',
-    initialProjectStickiness: DefaultStickiness = DEFAULT_PROJECT_STICKINESS,
+    initialProjectStickiness = DEFAULT_PROJECT_STICKINESS,
     initialProjectMode: ProjectMode = 'open'
 ) => {
     const [projectId, setProjectId] = useState(initialProjectId);
-    const { defaultStickiness } = useDefaultProjectSettings(projectId);
 
     const [projectName, setProjectName] = useState(initialProjectName);
     const [projectDesc, setProjectDesc] = useState(initialProjectDesc);
-    const [projectStickiness, setProjectStickiness] =
-        useState<DefaultStickiness>(
-            defaultStickiness || initialProjectStickiness
-        );
+    const [projectStickiness, setProjectStickiness] = useState<string>(
+        initialProjectStickiness
+    );
     const [projectMode, setProjectMode] =
         useState<ProjectMode>(initialProjectMode);
     const [errors, setErrors] = useState({});

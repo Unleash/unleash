@@ -20,6 +20,7 @@ import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashCon
 import { updateWeightEdit } from 'component/common/util';
 import { StickinessSelect } from 'component/feature/StrategyTypes/FlexibleStrategy/StickinessSelect/StickinessSelect';
 import { useDefaultProjectSettings } from 'hooks/useDefaultProjectSettings';
+import Loader from 'component/common/Loader/Loader';
 
 const StyledFormSubtitle = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -145,7 +146,7 @@ export const EnvironmentVariantsModal = ({
 
     const { uiConfig } = useUiConfig();
     const { context } = useUnleashContext();
-    const { defaultStickiness } = useDefaultProjectSettings(projectId);
+    const { defaultStickiness, loading } = useDefaultProjectSettings(projectId);
 
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const { data } = usePendingChangeRequests(projectId);
@@ -157,31 +158,33 @@ export const EnvironmentVariantsModal = ({
     const [newVariant, setNewVariant] = useState<string>();
 
     useEffect(() => {
-        setVariantsEdit(
-            oldVariants.length
-                ? oldVariants.map(oldVariant => ({
-                      ...oldVariant,
-                      isValid: true,
-                      new: false,
-                      id: uuidv4(),
-                  }))
-                : [
-                      {
-                          name: '',
-                          weightType: WeightType.VARIABLE,
-                          weight: 0,
-                          overrides: [],
-                          stickiness:
-                              variantsEdit?.length > 0
-                                  ? variantsEdit[0].stickiness
-                                  : defaultStickiness,
-                          new: true,
-                          isValid: false,
+        if (!loading) {
+            setVariantsEdit(
+                oldVariants.length
+                    ? oldVariants.map(oldVariant => ({
+                          ...oldVariant,
+                          isValid: true,
+                          new: false,
                           id: uuidv4(),
-                      },
-                  ]
-        );
-    }, [open]);
+                      }))
+                    : [
+                          {
+                              name: '',
+                              weightType: WeightType.VARIABLE,
+                              weight: 0,
+                              overrides: [],
+                              stickiness:
+                                  variantsEdit?.length > 0
+                                      ? variantsEdit[0].stickiness
+                                      : defaultStickiness,
+                              new: true,
+                              isValid: false,
+                              id: uuidv4(),
+                          },
+                      ]
+            );
+        }
+    }, [open, loading]);
 
     const updateVariant = (updatedVariant: IFeatureVariantEdit, id: string) => {
         setVariantsEdit(prevVariants =>
@@ -206,7 +209,7 @@ export const EnvironmentVariantsModal = ({
                 stickiness:
                     variantsEdit?.length > 0
                         ? variantsEdit[0].stickiness
-                        : 'default',
+                        : defaultStickiness,
                 new: true,
                 isValid: false,
                 id,
@@ -303,14 +306,18 @@ export const EnvironmentVariantsModal = ({
             setError(apiPayload.error);
         }
     }, [apiPayload.error]);
+
+    const handleClose = () => {
+        updateStickiness(defaultStickiness).catch(console.warn);
+        setOpen(false);
+    };
+
+    if (loading || stickiness === '') {
+        return <Loader />;
+    }
+
     return (
-        <SidebarModal
-            open={open}
-            onClose={() => {
-                setOpen(false);
-            }}
-            label=""
-        >
+        <SidebarModal open={open} onClose={handleClose} label="">
             <FormTemplate
                 modal
                 title=""
@@ -451,11 +458,7 @@ export const EnvironmentVariantsModal = ({
                                 ? changeRequestButtonText
                                 : 'Save variants'}
                         </Button>
-                        <StyledCancelButton
-                            onClick={() => {
-                                setOpen(false);
-                            }}
-                        >
+                        <StyledCancelButton onClick={handleClose}>
                             Cancel
                         </StyledCancelButton>
                     </StyledButtonContainer>

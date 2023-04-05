@@ -307,8 +307,8 @@ export const EnvironmentVariantsModal = ({
         }
     }, [apiPayload.error]);
 
-    const handleClose = async () => {
-        await updateStickiness(defaultStickiness);
+    const handleClose = () => {
+        updateStickiness(defaultStickiness).catch(console.warn);
         setOpen(false);
     };
 
@@ -458,11 +458,7 @@ export const EnvironmentVariantsModal = ({
                                 ? changeRequestButtonText
                                 : 'Save variants'}
                         </Button>
-                        <StyledCancelButton
-                            onClick={() => {
-                                setOpen(false);
-                            }}
-                        >
+                        <StyledCancelButton onClick={handleClose}>
                             Cancel
                         </StyledCancelButton>
                     </StyledButtonContainer>

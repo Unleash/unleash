@@ -1,10 +1,10 @@
 ///<reference path="../../global.d.ts" />
 
-const randomId = String(Math.random()).split('.')[1];
-const segmentName = `unleash-e2e-${randomId}`;
-let segmentId: string;
-
 describe('segments', () => {
+    const randomId = String(Math.random()).split('.')[1];
+    const segmentName = `unleash-e2e-${randomId}`;
+    let segmentId: string;
+
     before(() => {
         cy.runBefore();
     });

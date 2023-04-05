@@ -389,7 +389,6 @@ class UserService {
         });
         if (allowed) {
             await this.changePassword(user.id, password);
-            await this.sessionService.deleteSessionsForUser(user.id);
         } else {
             throw new InvalidTokenError();
         }

@@ -8,11 +8,11 @@ import NotFoundError from '../error/notfound-error';
 import {
     FeatureToggleWithEnvironment,
     IConstraint,
-    IEnvironmentOverview,
     IFeatureOverview,
     IFeatureStrategy,
     IFeatureToggleClient,
     IStrategyConfig,
+    IStrategyEnvironment,
     ITag,
 } from '../types/model';
 import { IFeatureStrategiesStore } from '../types/stores/feature-strategies-store';
@@ -388,7 +388,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         strategy.segments.push(row.segments);
     }
 
-    private static getEnvironment(r: any): IEnvironmentOverview {
+    private static getEnvironment(r: any): IStrategyEnvironment {
         return {
             name: r.environment,
             enabled: r.enabled,

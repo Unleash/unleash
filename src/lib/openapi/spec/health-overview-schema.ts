@@ -5,7 +5,6 @@ import { overrideSchema } from './override-schema';
 import { featureStrategySchema } from './feature-strategy-schema';
 import { featureSchema } from './feature-schema';
 import { constraintSchema } from './constraint-schema';
-import { environmentSchema } from './environment-schema';
 import { featureEnvironmentSchema } from './feature-environment-schema';
 import { projectStatsSchema } from './project-stats-schema';
 
@@ -72,7 +71,6 @@ export const healthOverviewSchema = {
     components: {
         schemas: {
             constraintSchema,
-            environmentSchema,
             featureSchema,
             featureEnvironmentSchema,
             overrideSchema,

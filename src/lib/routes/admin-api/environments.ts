@@ -223,7 +223,7 @@ export class EnvironmentsController extends Controller {
             200,
             res,
             environmentSchema.$id,
-            await this.service.get(req.params.name),
+            await this.service.getWithCounts(req.params.name),
         );
     }
 

@@ -1,7 +1,12 @@
 import { IUnleashStores } from '../types/stores';
 import { IUnleashConfig } from '../types/option';
 import { Logger } from '../logger';
-import { IEnvironment, IProjectEnvironment, ISortOrder } from '../types/model';
+import {
+    IEnvironment,
+    IEnvironmentWithCounts,
+    IProjectEnvironment,
+    ISortOrder,
+} from '../types/model';
 import { UNIQUE_CONSTRAINT_VIOLATION } from '../error/db-error';
 import NameExistsError from '../error/name-exists-error';
 import { sortOrderSchema } from './state-schema';
@@ -52,8 +57,18 @@ export default class EnvironmentService {
         this.flagResolver = flagResolver;
     }
 
-    async getAll(): Promise<IEnvironment[]> {
+    async getAll(): Promise<IEnvironmentWithCounts[]> {
         return this.environmentStore.getAllWithCounts();
+    }
+
+    async getWithCounts(name: string): Promise<IEnvironmentWithCounts> {
+        let matches = await this.environmentStore.getAllWithCounts({
+            name: name,
+        });
+        if (matches.length > 0) {
+            return matches[0];
+        }
+        throw new NotFoundError(`Could not find environment with name ${name}`);
     }
 
     async get(name: string): Promise<IEnvironment> {

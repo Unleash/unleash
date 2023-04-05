@@ -1,4 +1,8 @@
-import { IEnvironment, IProjectEnvironment } from '../../lib/types/model';
+import {
+    IEnvironment,
+    IEnvironmentWithCounts,
+    IProjectEnvironment,
+} from '../../lib/types/model';
 import NotFoundError from '../../lib/error/notfound-error';
 import { IEnvironmentStore } from '../../lib/types/stores/environment-store';
 
@@ -125,8 +129,17 @@ export default class FakeEnvironmentStore implements IEnvironmentStore {
         return this.environments.find((e) => e.name === key);
     }
 
-    async getAllWithCounts(): Promise<IEnvironment[]> {
-        return Promise.resolve(this.environments);
+    async getAllWithCounts(): Promise<IEnvironmentWithCounts[]> {
+        return Promise.resolve(
+            this.environments.map((env) => {
+                return {
+                    ...env,
+                    projectCount: 0,
+                    apiTokenCount: 0,
+                    enabledToggleCount: 0,
+                };
+            }),
+        );
     }
 
     async getProjectEnvironments(

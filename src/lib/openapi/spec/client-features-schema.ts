@@ -2,7 +2,6 @@ import { FromSchema } from 'json-schema-to-ts';
 import { clientFeaturesQuerySchema } from './client-features-query-schema';
 import { segmentSchema } from './segment-schema';
 import { constraintSchema } from './constraint-schema';
-import { environmentSchema } from './environment-schema';
 import { overrideSchema } from './override-schema';
 import { parametersSchema } from './parameters-schema';
 import { featureStrategySchema } from './feature-strategy-schema';
@@ -37,7 +36,6 @@ export const clientFeaturesSchema = {
         schemas: {
             constraintSchema,
             clientFeatureSchema,
-            environmentSchema,
             segmentSchema,
             clientFeaturesQuerySchema,
             overrideSchema,

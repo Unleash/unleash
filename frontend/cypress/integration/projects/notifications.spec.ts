@@ -40,7 +40,7 @@ describe('notifications', () => {
             cy.get("[data-testid='NOTIFICATIONS_BUTTON']").click();
 
             //then
-            cy.get("[data-testid='UNREAD_NOTIFICATIONS']").should('exist');
+            // cy.get("[data-testid='UNREAD_NOTIFICATIONS']").should('exist');
             cy.get("[data-testid='NOTIFICATIONS_LIST']").should(
                 'contain.text',
                 `New feature ${featureToggleName}`

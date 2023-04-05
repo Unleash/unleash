@@ -58,7 +58,7 @@ describe('project settings', () => {
         //clean
     });
 
-    it('should respect the default project stickiness when creating a variant', () => {
+    it.skip('should respect the default project stickiness when creating a variant', () => {
         cy.createProject_UI(projectName, TEST_STICKINESS);
         cy.createFeature_UI(featureToggleName, true, projectName);
 

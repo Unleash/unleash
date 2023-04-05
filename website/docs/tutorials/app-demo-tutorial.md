@@ -6,7 +6,7 @@ import Figure from '@site/src/components/Figure/Figure.tsx'
 # Introduction
 
 This tutorial will guide you through the process of setting up a demo web application with working feature toggles provided by an Unleash instance.  
-In a short period of time, it will demonstrate the power of Unleash as a runtime control mechanism to control the state of software while not being bound by release and deploy processes.  
+It demonstrates how you can use Unleash as a runtime control mechanism to control the state of software without needing to redeploy anything.  
 
 Specifically, you will learn:
 

@@ -35,17 +35,17 @@ Most critically, we'll need an accessible Unleash instance. In the simplest term
 ## Container Runtime
 
 The demo application will be run locally, using docker compose. Therefore, a container runtime and docker CLI tools (including docker-compose) are required.
-[Colima](https://github.com/abiosoft/colima) is an open-source container runtime with minimal setup that works on macOS and Linux.
-Docker Desktop is a non-OSS option which includes a UI.
+[Colima](https://github.com/abiosoft/colima) is an open-source container runtime with minimal setup that works on macOS and Linux. For Windows, [Container Desktop](https://container-desktop.io) is an open-source option.
+Docker Desktop is a popular closed source runtime which includes a UI for all mentioned operating systems.
 
 ## Tools
 
-Finally, be sure git tools are available on your local machines terminal.
+Finally, be sure git is available on your local machines terminal.
 
 
 # Deployment and Configuration
 
-Once the prereqs have been met, we can move forward with deployment and configuration. Get your terminal ready and let's begin!
+Once the prerequisites have been met, we can move forward with deployment and configuration. Get your terminal ready and let's begin!
 
 ## Source Cloning
 
@@ -97,7 +97,7 @@ Step by step:
 After logging in, click on *Projects* in the top toolbar, then New project. Give it an ID and name of choice (both can be the same), and save.
 Here, we are using `Demo-Intro` as name and projectID.
 
-![New project](/img/tutorial-appdemo-create-project.png)
+![Image showing example of a completed 'New project' field in Unleash](/img/tutorial-appdemo-create-project.png)
 
 
 ### Create Feature Toggles
@@ -117,9 +117,8 @@ For each toggle, use the **Kill-switch toggle type** and enable **Impression dat
 
 ### Assign to an Environment
 
-If you are using Unleash 4.3 or above, you'll have a selection of environments to choose from for the feature toggles.
+You'll have a selection of environments to choose from for the feature toggles.
 In this example, we are choosing to use the `Development` environment. Take note of this for next steps.
-If you are in Unleash 4.2 or below, this section will not apply.
 
 ### Create Tokens
 
@@ -138,11 +137,9 @@ We're done in Unleash for now, but keep the browser tab open.
 
 ## Source Configuration
 
-At this point we have everything we need to set up our `docker-compose.yml` file. Open up the file in an editor of choice, and substitute the values accordingly.
+At this point we have everything we need to set up our `docker-compose.yml` file. Open up the file in an editor of choice, and substitute the values accordingly. Take care to ensure matching character spacing and syntax with the below example.
 
-Be sure tokens are pasted in the correct format and character spacing are valid.
-
-Below is a format example of a completed `environment` section:
+Below is an example of a completed `environment` section:
 
 ```yaml
     environment:
@@ -161,7 +158,7 @@ We're now ready to deploy!
 
 ### Deploy container
 
-From a terminal, simply execute:
+From a terminal, execute:
 
 ```sh
 docker compose up
@@ -179,7 +176,7 @@ nextjs-unleash-demo-nextjs_material-1  | ready - started server on 0.0.0.0:3000,
 ```
 
 
-### Validate and Login
+### Validate and log in
 
 Open `http://localhost:3000` in a browser. Click the *Live Preview* button and sign in with the displayed credentials:  
 
@@ -216,10 +213,10 @@ Enable the toggle for feature `demo-bankingDemo`. Notice how now a new *Banking*
 
 Click on `Banking` in the navigation menu. Notice how the feature is populated. Disable the flag - this now switches to a *Coming Soon* message.
 
-***tip Use Case
+:::tip Use Case
 This shows how a feature flag can be used to expose a given feature to a specific group of users - for example, customers that have a matching profile role, users opted in for early feature access - or for internal development use, e.g. a QA team.  
 It also showcases how quickly and effortlessly a feature can be rolled back if it does not behave as expected.
-***
+:::
 
 ### Special Customer
 
@@ -260,12 +257,12 @@ Notice that we now see a *Featured App* card appear on the UI.
 Disable it again, and it will no longer show on the next reload.
 
 
-# SDK Integration - A Closer Look
+## SDK Integration - A Closer Look
 
 Now that we've seen the feature toggles and their underlying use cases in action, let's investigate how they operate behind the scenes in the source code.
 The key objective of this final topic is to help understand how you would implement this into your own application.
 
-We start with the Unleash [https://docs.getunleash.io/reference/sdks/next-js](Next.js SDK documentation) - open up this page where we'll review the Installation and Environment variables.
+We start with the Unleash [Next.js SDK documentation](/docs/generated/sdks/client-side/next-js) - open up this page where we'll review the Installation and Environment variables.
 
 First of all, to prepare the environment, the SDK will be installed from the package manager of choice (npm, yarn, pnpm).  
 
@@ -274,7 +271,7 @@ Now see the section on `Environment Variables` - observe how these match the con
 Then, there are specific steps for the Client side and Server side use cases. Let's investigate each of these.
 
 
-## Client SDK
+### Client SDK
 
 1) Read through the section on `Client side only` in the SDK doc. Now we'll see where we placed the code snippets in our example app to connect the front-end to Unleash.
 
@@ -301,7 +298,7 @@ import { FlagProvider } from '@unleash/nextjs';`
 
 We'll review `./src/components/nav-section/vertical/index.js` and `./src/pages/dashboard/banking.js`
 
-### index.js
+#### index.js
 
 In `index.js`, note the hook referenced at the top:
 
@@ -425,7 +422,7 @@ Optionally, in case you want to inspect the syntax application of the other file
 - For `demo-specialCustomer`, review `./src/pages/dashboard/e-commerce/shop.js` and `./src/sections/@dashboard/e-commerce/shop/ShopProductCard.js`
 :::
 
-## Server SDK
+### Server SDK
 
 Review the section on Server Side Rendering (SSR) in the SDK doc. Now we'll see where we placed the code snippets in our example app to connect the backend to Unleash.  
 

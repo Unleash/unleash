@@ -8,13 +8,14 @@ import {
     //@ts-ignore
 } from '../../../src/utils/testIds';
 
-const randomId = String(Math.random()).split('.')[1];
-const featureTogglePrefix = 'unleash-e2e-project-overview';
-const featureToggleName = `${featureTogglePrefix}-${randomId}`;
-const baseUrl = Cypress.config().baseUrl;
-const selectAll = '[title="Toggle All Rows Selected"] input[type="checkbox"]';
-
 describe('project overview', () => {
+    const randomId = String(Math.random()).split('.')[1];
+    const featureTogglePrefix = 'unleash-e2e-project-overview';
+    const featureToggleName = `${featureTogglePrefix}-${randomId}`;
+    const baseUrl = Cypress.config().baseUrl;
+    const selectAll =
+        '[title="Toggle All Rows Selected"] input[type="checkbox"]';
+
     before(() => {
         cy.runBefore();
     });

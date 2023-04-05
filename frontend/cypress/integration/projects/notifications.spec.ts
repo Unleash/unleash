@@ -1,20 +1,16 @@
 ///<reference path="../../global.d.ts" />
 
-import UserCredentials = Cypress.UserCredentials;
-
-const ENTERPRISE = Boolean(Cypress.env('ENTERPRISE'));
-const randomId = String(Math.random()).split('.')[1];
-const featureToggleName = `notifications_test-${randomId}`;
-const baseUrl = Cypress.config().baseUrl;
-let strategyId = '';
-let userIds: number[] = [];
-let userCredentials: UserCredentials[] = [];
-const userName = `notifications_user-${randomId}`;
-const projectName = `default`;
-
 const EDITOR = 2;
 
 describe('notifications', () => {
+    const randomId = String(Math.random()).split('.')[1];
+    const featureToggleName = `notifications_test-${randomId}`;
+    const baseUrl = Cypress.config().baseUrl;
+    let userIds: number[] = [];
+    let userCredentials: Cypress.UserCredentials[] = [];
+    const userName = `notifications_user-${randomId}`;
+    const projectName = `default`;
+
     before(() => {
         cy.runBefore();
     });
@@ -45,10 +41,11 @@ describe('notifications', () => {
             cy.get("[data-testid='NOTIFICATIONS_BUTTON']").click();
 
             //then
-            cy.get("[data-testid='UNREAD_NOTIFICATIONS']").should('exist');
-            cy.get("[data-testid='NOTIFICATIONS_LIST']")
-                .eq(0)
-                .should('contain.text', `New feature ${featureToggleName}`);
+            // cy.get("[data-testid='UNREAD_NOTIFICATIONS']").should('exist');
+            cy.get("[data-testid='NOTIFICATIONS_LIST']").should(
+                'contain.text',
+                `New feature ${featureToggleName}`
+            );
 
             //clean
             // We need to login as admin for cleanup

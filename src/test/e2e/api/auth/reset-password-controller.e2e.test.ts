@@ -168,7 +168,7 @@ test('Trying to reset password with same token twice does not work', async () =>
             token,
             password,
         })
-        .expect(403)
+        .expect(401)
         .expect((res) => {
             expect(res.body.details[0].message).toBeTruthy();
         });
@@ -191,7 +191,7 @@ test('Calling validate endpoint with already existing session should destroy ses
     await request.get('/api/admin/features').expect(200);
     const url = await resetTokenService.createResetPasswordUrl(
         user.id,
-        adminUser.username,
+        adminUser.username!,
     );
     const relative = getBackendResetUrl(url);
 
@@ -266,4 +266,32 @@ test('Trying to change password to undefined should yield 400 without crashing t
             password: undefined,
         })
         .expect(400);
+});
+
+test('changing password should expire all active tokens', async () => {
+    const url = await resetTokenService.createResetPasswordUrl(
+        user.id,
+        adminUser.username,
+    );
+    const relative = getBackendResetUrl(url);
+
+    const {
+        body: { token },
+    } = await app.request
+        .get(relative)
+        .expect(200)
+        .expect('Content-Type', /json/);
+
+    await app.request
+        .post(`/api/admin/user-admin/${user.id}/change-password`)
+        .send({ password: 'simple123-_ASsad' })
+        .expect(200);
+
+    await app.request
+        .post('/auth/reset/password')
+        .send({
+            token,
+            password,
+        })
+        .expect(401);
 });

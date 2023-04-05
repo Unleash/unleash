@@ -308,7 +308,7 @@ export const EnvironmentVariantsModal = ({
     }, [apiPayload.error]);
 
     const handleClose = () => {
-        updateStickiness(defaultStickiness).then();
+        updateStickiness(defaultStickiness).catch(console.warn);
         setOpen(false);
     };
 

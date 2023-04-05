@@ -66,6 +66,7 @@ describe('project settings', () => {
         );
 
         cy.get("[data-testid='ADD_VARIANT_BUTTON']").first().click();
+        cy.wait(300);
         //then
         cy.get("[id='stickiness-select']")
             .first()

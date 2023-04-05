@@ -42,7 +42,7 @@ module.exports = {
             items: [
                 'topics/the-anatomy-of-unleash',
                 'topics/a-b-testing',
-                'topics/large-segments',
+                'topics/large-and-complex-constraints',
                 'topics/proxy-hosting',
             ],
         },

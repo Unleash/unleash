@@ -1,16 +1,6 @@
 ---
 title: Demo Application
 ---
-<!--
-Author(s): Mark Fulton
-Reviewer(s): Thomas, Mike Vitteglio, Sebastian Bury
-
-Resources (remove before publication)
-
-- [Diataxis/](https://diataxis.fr/tutorials/)
-- [Unleash Docs GH](https://github.com/Unleash/unleash/tree/main/website/docs)
-- [Unleash QSG](https://github.com/Unleash/unleash/blob/main/website/docs/tutorials/quickstart.md?plain=1)
--->
 import Figure from '@site/src/components/Figure/Figure.tsx'
 
 # Introduction

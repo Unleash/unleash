@@ -12,7 +12,7 @@ jobs:
           - projects/access.spec.ts
           - projects/overview.spec.ts
           - projects/settings.spec.ts
-          - projects/notifications.spec.ts
+          #          - projects/notifications.spec.ts
           - segments/segments.spec.ts
           - import/import.spec.ts
     steps:

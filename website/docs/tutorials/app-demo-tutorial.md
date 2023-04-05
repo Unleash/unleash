@@ -225,9 +225,9 @@ Notice how cards are updated with *Special Access Granted* and a *Premium Custom
 
 ![demo-specialCustomer](/img/tutorial-appdemo-demo-specialCustomer.png)
 
-***tip Use Case
+:::tip Use Case
 This shows how a feature flag can be used to show a different page experience or behavior to a specific group of users; in this case, a group of customers that we want to allow the capability to purchase a product standard users cannot.
-***
+:::
 
 ### Analytics Cards
 
@@ -236,9 +236,9 @@ Navigate to *General -> Analytics* from the main demo app window. Enable the tog
 ![demo-analyticsCards](/img/tutorial-appdemo-demo-analyticsCards.png)
 
 
-***tip Use Case
+:::tip Use Case
 This shows how a feature flag can be used to show a different page experience or behavior to a specific group of users; in this case, displaying a set of cards that might be used by specific user roles that need to report on analytics data for the website.
-***
+:::
 
 ## Server-side Feature Flags
 
@@ -246,9 +246,9 @@ This shows how a feature flag can be used to show a different page experience or
 
 Navigate to *General -> App* from the main demo app window. Enable the toggle for feature `demo-featured_app` and reload the page using the browser controls.
 
-***tip Reload
+:::tip Reload
 In contrast to the client side flags, this one requires you to reload the browser of the page to see the difference. This is because the toggle operates on the backend of the web app, therefore the client needs to retrieve the page again to see it.
-***
+:::
 
 Notice that we now see a *Featured App* card appear on the UI.
 

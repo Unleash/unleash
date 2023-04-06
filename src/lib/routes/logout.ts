@@ -24,7 +24,6 @@ class LogoutController extends Controller {
         this.baseUri = config.server.baseUriPath;
         this.clearSiteDataOnLogout = config.session.clearSiteDataOnLogout;
         this.cookieName = config.session.cookieName;
-        // this.post('/', this.logout, NONE);
 
         this.route({
             method: 'post',

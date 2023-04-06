@@ -206,7 +206,7 @@ export default class UserAdminController extends Controller {
                 }),
                 rateLimit({
                     windowMs: minutesToMilliseconds(1),
-                    max: 10,
+                    max: 20,
                     standardHeaders: true,
                     legacyHeaders: false,
                 }),

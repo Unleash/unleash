@@ -6,6 +6,7 @@ import {
     Tooltip,
     useTheme,
     styled,
+    useMediaQuery,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { ReactComponent as UnleashLogo } from 'assets/icons/logoBg.svg';
@@ -43,14 +44,29 @@ export const FeedbackNPS = ({ openUrl }: IFeedbackNPSProps) => {
     const [answeredNotNow, setAnsweredNotNow] = useState(false);
     const theme = useTheme();
     const feedbackId = PNPS_FEEDBACK_ID;
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
     const animations = useMemo(
         () => ({
-            start: { ...fadeInTopStart(theme), zIndex: theme.zIndex.tooltip },
+            start: {
+                ...fadeInTopStart(theme),
+                zIndex: theme.zIndex.tooltip,
+                right: theme.spacing(4),
+                top: theme.spacing(2),
+                left: 'auto',
+                maxWidth: '400px',
+                ...(isSmallScreen && {
+                    right: theme.spacing(3),
+                    left: theme.spacing(3),
+                    top: theme.spacing(5),
+                    display: 'flex',
+                    maxWidth: '600px',
+                }),
+            },
             enter: fadeInTopEnter,
             leave: fadeInTopLeave,
         }),
-        [theme]
+        [theme, isSmallScreen]
     );
 
     const onConfirm = async () => {
@@ -98,7 +114,7 @@ export const FeedbackNPS = ({ openUrl }: IFeedbackNPSProps) => {
                     zIndex: 9999,
                     boxShadow: theme.boxShadows.elevated,
                     padding: theme.spacing(4),
-                    maxWidth: '400px',
+                    flexGrow: 1,
                 }}
             >
                 <Box

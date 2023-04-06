@@ -278,7 +278,7 @@ export const EnvironmentVariantsModal = ({
             return variants[0]?.stickiness || defaultStickiness;
         }
         return '';
-    }, [loading, defaultStickiness]);
+    }, [loading, defaultStickiness, JSON.stringify(variants[0] ?? {})]);
 
     const stickinessOptions = useMemo(
         () => [

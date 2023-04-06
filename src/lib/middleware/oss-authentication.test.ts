@@ -14,7 +14,7 @@ async function getSetup(preRouterHook) {
         server: { baseUriPath: base },
         preRouterHook: (_app) => {
             preRouterHook(_app);
-            ossAuth(_app, base);
+            ossAuth(_app, _app.getLogger, base);
             _app.get(`${base}/api/protectedResource`, (req, res) => {
                 res.status(200).json({ message: 'OK' }).end();
             });

@@ -37,6 +37,7 @@ function sessionDb(
                     : config.server.baseUriPath,
             secure: config.secureHeaders,
             maxAge: age,
+            sameSite: 'lax',
         },
     });
 }

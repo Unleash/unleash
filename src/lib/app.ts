@@ -107,7 +107,7 @@ export default async function getApp(
     switch (config.authentication.type) {
         case IAuthType.OPEN_SOURCE: {
             app.use(baseUriPath, apiTokenMiddleware(config, services));
-            ossAuthentication(app, config.server.baseUriPath);
+            ossAuthentication(app, config.getLogger, config.server.baseUriPath);
             break;
         }
         case IAuthType.ENTERPRISE: {

@@ -302,7 +302,7 @@ export const EnvironmentVariantsModal = ({
     };
 
     const onStickinessChange = (value: string) => {
-        updateStickiness(value).catch(console.warn);
+        updateStickiness(value).then();
     };
 
     const [error, setError] = useState<string | undefined>();
@@ -321,8 +321,6 @@ export const EnvironmentVariantsModal = ({
     if (loading || stickiness === '') {
         return <Loader />;
     }
-    console.log('EnvironmentVariantsModal::', defaultStickiness);
-    console.log(variants);
     return (
         <SidebarModal open={open} onClose={handleClose} label="">
             <FormTemplate

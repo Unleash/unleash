@@ -110,16 +110,16 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         return rows.map(this.rowToFeature);
     }
 
-    async getByDate(queryModifiers: {
+    async countByDate(queryModifiers: {
         archived?: boolean;
         project?: string;
         date?: string;
         range?: string[];
         dateAccessor: string;
-    }): Promise<FeatureToggle[]> {
+    }): Promise<number> {
         const { project, archived, dateAccessor } = queryModifiers;
         let query = this.db
-            .select(FEATURE_COLUMNS)
+            .count()
             .from(TABLE)
             .where({ project })
             .modify(FeatureToggleStore.filterByArchived, archived);
@@ -135,8 +135,8 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             ]);
         }
 
-        const rows = await query;
-        return rows.map(this.rowToFeature);
+        const queryResult = await query.first();
+        return parseInt(queryResult.count || 0);
     }
 
     /**

@@ -101,7 +101,7 @@ const createProject = async (id: string, name: string): Promise<void> => {
         email: `${randomId()}@example.com`,
     });
     await app.services.projectService.createProject(
-        { id, name, mode: 'open' },
+        { id, name, mode: 'open', defaultStickiness: 'default' },
         user,
     );
 };

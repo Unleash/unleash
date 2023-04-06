@@ -273,7 +273,13 @@ export const EnvironmentVariantsModal = ({
         isChangeRequestConfigured(environment?.name || '') &&
         uiConfig.flags.crOnVariants;
 
-    const stickiness = variants[0]?.stickiness || defaultStickiness;
+    const stickiness = useMemo(() => {
+        if (!loading) {
+            return variants[0]?.stickiness || defaultStickiness;
+        }
+        return '';
+    }, [loading, defaultStickiness]);
+
     const stickinessOptions = useMemo(
         () => [
             'default',
@@ -308,14 +314,15 @@ export const EnvironmentVariantsModal = ({
     }, [apiPayload.error]);
 
     const handleClose = () => {
-        updateStickiness(defaultStickiness).catch(console.warn);
+        updateStickiness(defaultStickiness).then();
         setOpen(false);
     };
 
     if (loading || stickiness === '') {
         return <Loader />;
     }
-
+    console.log('EnvironmentVariantsModal::', defaultStickiness);
+    console.log(variants);
     return (
         <SidebarModal open={open} onClose={handleClose} label="">
             <FormTemplate

@@ -56,7 +56,7 @@ describe('project settings', () => {
         //clean
     });
 
-    it.skip('should respect the default project stickiness when creating a variant', () => {
+    it('should respect the default project stickiness when creating a variant', () => {
         cy.createProject_UI(projectName, TEST_STICKINESS);
         cy.createFeature_UI(featureToggleName, true, projectName);
 
@@ -66,7 +66,6 @@ describe('project settings', () => {
         );
 
         cy.get("[data-testid='ADD_VARIANT_BUTTON']").first().click();
-        cy.wait(300);
         //then
         cy.get("[id='stickiness-select']")
             .first()

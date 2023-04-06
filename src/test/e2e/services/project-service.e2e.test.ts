@@ -280,7 +280,7 @@ test('should update project without existing settings', async () => {
     expect(updatedProject.name).toBe(readProject.name);
     expect(updatedProject.description).toBe(readProject.description);
     expect(updatedProject.mode).toBe('protected');
-    expect(updatedProject.mode).toBe('clientId');
+    expect(updatedProject.defaultStickiness).toBe('clientId');
 });
 
 test('should give error when getting unknown project', async () => {

@@ -24,17 +24,17 @@ exports[`should serve the OpenAPI UI 1`] = `
         background: #fafafa;
       }
     </style>
-    
+
       <link rel="stylesheet" type="text/css" href="./swagger-ui.css" >
-    
+
   </head>
   <body>
-    
+
       <div id="swagger-ui"></div>
       <script src="./swagger-ui-bundle.js"></script>
       <script src="./swagger-ui-standalone-preset.js"></script>
       <script src="./swagger-ui-init.js"></script>
-    
+
   </body>
 </html>
   "
@@ -1459,7 +1459,7 @@ exports[`should serve the OpenAPI spec 1`] = `
         "additionalProperties": false,
         "properties": {
           "archived": {
-            "description": "\`true\` if the feature is archived, otherwise \`false\`.",
+            "description": "\`true\` if the feature is archived",
             "example": true,
             "type": "boolean",
           },
@@ -1524,6 +1524,7 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "boolean",
           },
           "strategies": {
+            "deprecated": true,
             "description": "This is a legacy field that will be deprecated",
             "items": {
               "type": "object",
@@ -1544,6 +1545,7 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "string",
           },
           "variants": {
+            "deprecated": true,
             "description": "The list of feature variants",
             "items": {
               "$ref": "#/components/schemas/variantSchema",
@@ -7265,9 +7267,9 @@ If the provided project does not exist, the list of events will be empty.",
       },
       "put": {
         "description": "This overwrites the current variants for the feature toggle in the :featureName parameter for the :environment parameter.
-                        
+
                         The backend will validate the input for the following invariants:
-                        
+
                     * If there are variants, there needs to be at least one variant with \`weightType: variable\`
                     * The sum of the weights of variants with \`weightType: fix\` must be strictly less than 1000 (< 1000)
 
@@ -7430,7 +7432,7 @@ If the provided project does not exist, the list of events will be empty.",
       },
       "patch": {
         "description": "Apply a list of patches patch to the specified feature's variants. The patch objects should conform to the [JSON-patch format (RFC 6902)](https://www.rfc-editor.org/rfc/rfc6902).
-                        
+
                         ⚠️ **Warning**: This method is not atomic. If something fails in the middle of applying the patch, you can be left with a half-applied patch. We recommend that you instead [patch variants on a per-environment basis](/docs/reference/api/unleash/patch-environments-feature-variants.api.mdx), which **is** an atomic operation.",
         "operationId": "patchFeatureVariants",
         "parameters": [

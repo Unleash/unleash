@@ -364,6 +364,14 @@ module.exports = {
                         to: '/reference/integrations/jira-server-plugin-usage',
                     },
                     {
+                        from: '/integrations/jira_cloud_plugin_installation',
+                        to: '/reference/integrations/jira-cloud-plugin-installation',
+                    },
+                    {
+                        from: '/integrations/jira_cloud_plugin_usage',
+                        to: '/reference/integrations/jira-cloud-plugin-usage',
+                    },
+                    {
                         from: [
                             '/sdks',
                             '/user_guide/client-sdk',

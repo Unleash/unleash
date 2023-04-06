@@ -292,6 +292,10 @@ module.exports = {
                                 'reference/integrations/jira-server-plugin-installation',
                                 'reference/integrations/jira-server-plugin-usage',
                             ],
+                            'Jira Cloud': [
+                                'reference/integrations/jira-cloud-plugin-installation',
+                                'reference/integrations/jira-cloud-plugin-usage',
+                            ],
                         },
                         ,
                     ],

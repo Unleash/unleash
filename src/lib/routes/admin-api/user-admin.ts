@@ -39,6 +39,8 @@ import {
 } from '../../openapi/spec/users-groups-base-schema';
 import { IGroup } from '../../types/group';
 import { IFlagResolver } from '../../types/experimental';
+import rateLimit from 'express-rate-limit';
+import { minutesToMilliseconds } from 'date-fns';
 
 export default class UserAdminController extends Controller {
     private flagResolver: IFlagResolver;
@@ -201,6 +203,12 @@ export default class UserAdminController extends Controller {
                     operationId: 'createUser',
                     requestBody: createRequestSchema('createUserSchema'),
                     responses: { 200: createResponseSchema('userSchema') },
+                }),
+                rateLimit({
+                    windowMs: minutesToMilliseconds(1),
+                    max: 20,
+                    standardHeaders: true,
+                    legacyHeaders: false,
                 }),
             ],
         });

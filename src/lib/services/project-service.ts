@@ -704,12 +704,12 @@ export default class ProjectService {
         const dateMinusSixtyDays = subDays(new Date(), 60).toISOString();
 
         const [createdCurrentWindow, createdPastWindow] = await Promise.all([
-            await this.featureToggleStore.getByDate({
+            await this.featureToggleStore.countByDate({
                 project: projectId,
                 dateAccessor: 'created_at',
                 date: dateMinusThirtyDays,
             }),
-            await this.featureToggleStore.getByDate({
+            await this.featureToggleStore.countByDate({
                 project: projectId,
                 dateAccessor: 'created_at',
                 range: [dateMinusSixtyDays, dateMinusThirtyDays],
@@ -717,13 +717,13 @@ export default class ProjectService {
         ]);
 
         const [archivedCurrentWindow, archivedPastWindow] = await Promise.all([
-            await this.featureToggleStore.getByDate({
+            await this.featureToggleStore.countByDate({
                 project: projectId,
                 archived: true,
                 dateAccessor: 'archived_at',
                 date: dateMinusThirtyDays,
             }),
-            await this.featureToggleStore.getByDate({
+            await this.featureToggleStore.countByDate({
                 project: projectId,
                 archived: true,
                 dateAccessor: 'archived_at',
@@ -795,10 +795,10 @@ export default class ProjectService {
             updates: {
                 avgTimeToProdCurrentWindow:
                     currentWindowTimeToProdReadModel.calculateAverageTimeToProd(),
-                createdCurrentWindow: createdCurrentWindow.length,
-                createdPastWindow: createdPastWindow.length,
-                archivedCurrentWindow: archivedCurrentWindow.length,
-                archivedPastWindow: archivedPastWindow.length,
+                createdCurrentWindow: createdCurrentWindow,
+                createdPastWindow: createdPastWindow,
+                archivedCurrentWindow: archivedCurrentWindow,
+                archivedPastWindow: archivedPastWindow,
                 projectActivityCurrentWindow: projectActivityCurrentWindow,
                 projectActivityPastWindow: projectActivityPastWindow,
                 projectMembersAddedCurrentWindow:

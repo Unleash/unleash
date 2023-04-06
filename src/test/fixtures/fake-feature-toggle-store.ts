@@ -213,13 +213,13 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         return Promise.resolve(newVariants);
     }
 
-    async getByDate(queryModifiers: {
+    async countByDate(queryModifiers: {
         archived?: boolean;
         project?: string;
         date?: string;
         range?: string[];
         dateAccessor: string;
-    }): Promise<FeatureToggle[]> {
+    }): Promise<number> {
         return this.features.filter((feature) => {
             if (feature.archived === queryModifiers.archived) {
                 return true;
@@ -245,7 +245,7 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
             ) {
                 return true;
             }
-        });
+        }).length;
     }
 
     dropAllVariants(): Promise<void> {

@@ -43,6 +43,7 @@ beforeAll(async () => {
         name: 'Test Project',
         description: 'Fancy',
         mode: 'open' as const,
+        defaultStickiness: 'clientId',
     };
     const user = await stores.userStore.insert({
         name: 'Some Name',

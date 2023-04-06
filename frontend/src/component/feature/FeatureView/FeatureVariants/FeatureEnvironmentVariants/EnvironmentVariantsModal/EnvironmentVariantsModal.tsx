@@ -302,7 +302,7 @@ export const EnvironmentVariantsModal = ({
     };
 
     const onStickinessChange = (value: string) => {
-        updateStickiness(value).then();
+        updateStickiness(value);
     };
 
     const [error, setError] = useState<string | undefined>();
@@ -314,7 +314,7 @@ export const EnvironmentVariantsModal = ({
     }, [apiPayload.error]);
 
     const handleClose = () => {
-        updateStickiness(defaultStickiness).then();
+        updateStickiness(defaultStickiness);
         setOpen(false);
     };
 

@@ -7,6 +7,10 @@ import ossAuth from './oss-authentication';
 import getApp from '../app';
 import User from '../types/user';
 import sessionDb from './session-db';
+import { Knex } from 'knex';
+import { LogProvider } from '../logger';
+
+const getLogger = (() => ({ debug() {} })) as unknown as LogProvider;
 
 async function getSetup(preRouterHook) {
     const base = `/random${Math.round(Math.random() * 1000)}`;
@@ -14,7 +18,7 @@ async function getSetup(preRouterHook) {
         server: { baseUriPath: base },
         preRouterHook: (_app) => {
             preRouterHook(_app);
-            ossAuth(_app, _app.getLogger, base);
+            ossAuth(_app, getLogger, base);
             _app.get(`${base}/api/protectedResource`, (req, res) => {
                 res.status(200).json({ message: 'OK' }).end();
             });
@@ -22,7 +26,7 @@ async function getSetup(preRouterHook) {
     });
     const stores = createStores();
     const services = createServices(stores, config);
-    const unleashSession = sessionDb(config, undefined);
+    const unleashSession = sessionDb(config, {} as Knex);
     const app = await getApp(config, stores, services, unleashSession);
 
     return {

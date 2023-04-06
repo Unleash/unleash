@@ -15,7 +15,7 @@ import { StickinessSelect } from './StickinessSelect/StickinessSelect';
 import { useDefaultProjectSettings } from 'hooks/useDefaultProjectSettings';
 import Loader from '../../../common/Loader/Loader';
 import { useMemo } from 'react';
-import { useRequiredPathParam } from '../../../../hooks/useRequiredPathParam';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
 interface IFlexibleStrategyProps {
     parameters: IFeatureStrategyParameters;

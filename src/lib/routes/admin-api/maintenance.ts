@@ -42,13 +42,16 @@ export default class MaintenanceController extends Controller {
             handler: this.toggleMaintenance,
             middleware: [
                 this.openApiService.validPath({
+                    summary: 'Enabled/disabled maintenance mode',
+                    description:
+                        'Lets administrators put Unleash into a mostly read-only mode. While Unleash is in maintenance mode, users can not change any configuration settings',
                     tags: ['Maintenance'],
                     operationId: 'toggleMaintenance',
                     responses: {
                         204: emptyResponse,
                         ...getStandardResponses(400, 401, 403),
                     },
-                    requestBody: createRequestSchema('maintenanceSchema'),
+                    requestBody: createRequestSchema('toggleMaintenanceSchema'),
                 }),
             ],
         });
@@ -59,6 +62,9 @@ export default class MaintenanceController extends Controller {
             handler: this.getMaintenance,
             middleware: [
                 this.openApiService.validPath({
+                    summary: 'Get maintenance mode status',
+                    description:
+                        'Tells you whether maintenance mode is enabled or disabled',
                     tags: ['Maintenance'],
                     operationId: 'getMaintenance',
                     responses: {

@@ -29,7 +29,10 @@ import {
     createResponseSchema,
     resourceCreatedResponseSchema,
 } from '../../openapi/util/create-response-schema';
-import { emptyResponse } from '../../openapi/util/standard-responses';
+import {
+    emptyResponse,
+    getStandardResponses,
+} from '../../openapi/util/standard-responses';
 import { UpdateTagsSchema } from '../../openapi/spec/update-tags-schema';
 
 const version = 1;
@@ -98,7 +101,15 @@ class FeatureController extends Controller {
                 openApiService.validPath({
                     tags: ['Features'],
                     operationId: 'validateFeature',
-                    responses: { 200: emptyResponse },
+                    requestBody: createRequestSchema('featureValidateSchema'),
+                    responses: {
+                        200: emptyResponse,
+                        ...getStandardResponses(400, 401),
+                    },
+                    summary:
+                        'Check feature toggle name validity and availability',
+                    description:
+                        "Verify a feature toggle name for incorrect characters and make sure feature toggle with the same name doesn't already exist.",
                 }),
             ],
         });

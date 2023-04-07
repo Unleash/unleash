@@ -132,3 +132,4 @@ export * from './import-toggles-schema';
 export * from './tags-bulk-add-schema';
 export * from './upsert-segment-schema';
 export * from './batch-features-schema';
+export * from './feature-validate-schema';

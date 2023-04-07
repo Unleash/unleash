@@ -31,9 +31,15 @@ export interface FeatureSchema {
     lastSeenAt?: string | null;
     /** The list of environments where the feature can be used */
     environments?: FeatureEnvironmentSchema[];
-    /** The list of feature variants */
+    /**
+     * The list of feature variants
+     * @deprecated
+     */
     variants?: VariantSchema[];
-    /** This is a legacy field that will be deprecated */
+    /**
+     * This is a legacy field that will be deprecated
+     * @deprecated
+     */
     strategies?: FeatureSchemaStrategiesItem[];
     /** The list of feature tags */
     tags?: TagSchema[] | null;

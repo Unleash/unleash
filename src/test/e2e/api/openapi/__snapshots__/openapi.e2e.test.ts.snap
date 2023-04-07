@@ -1459,7 +1459,7 @@ exports[`should serve the OpenAPI spec 1`] = `
         "additionalProperties": false,
         "properties": {
           "archived": {
-            "description": "\`true\` if the feature is archived, otherwise \`false\`.",
+            "description": "\`true\` if the feature is archived",
             "example": true,
             "type": "boolean",
           },
@@ -1524,6 +1524,7 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "boolean",
           },
           "strategies": {
+            "deprecated": true,
             "description": "This is a legacy field that will be deprecated",
             "items": {
               "type": "object",
@@ -1544,6 +1545,7 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "string",
           },
           "variants": {
+            "deprecated": true,
             "description": "The list of feature variants",
             "items": {
               "$ref": "#/components/schemas/variantSchema",

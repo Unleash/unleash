@@ -466,10 +466,12 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
 
         let selectColumns = [
             'features.name as feature_name',
+            'features.description as description',
             'features.type as type',
             'features.created_at as created_at',
             'features.last_seen_at as last_seen_at',
             'features.stale as stale',
+            'features.impression_data as impression_data',
             'feature_environments.enabled as enabled',
             'feature_environments.environment as environment',
             'feature_environments.variants as variants',
@@ -499,28 +501,30 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         const rows = await query;
 
         if (rows.length > 0) {
-            const overview = rows.reduce((acc, r) => {
-                if (acc[r.feature_name] !== undefined) {
-                    acc[r.feature_name].environments.push(
-                        FeatureStrategiesStore.getEnvironment(r),
+            const overview = rows.reduce((acc, row) => {
+                if (acc[row.feature_name] !== undefined) {
+                    acc[row.feature_name].environments.push(
+                        FeatureStrategiesStore.getEnvironment(row),
                     );
-                    if (this.isNewTag(acc[r.feature_name], r)) {
-                        this.addTag(acc[r.feature_name], r);
+                    if (this.isNewTag(acc[row.feature_name], row)) {
+                        this.addTag(acc[row.feature_name], row);
                     }
                 } else {
-                    acc[r.feature_name] = {
-                        type: r.type,
-                        favorite: r.favorite,
-                        name: r.feature_name,
-                        createdAt: r.created_at,
-                        lastSeenAt: r.last_seen_at,
-                        stale: r.stale,
+                    acc[row.feature_name] = {
+                        type: row.type,
+                        description: row.description,
+                        favorite: row.favorite,
+                        name: row.feature_name,
+                        createdAt: row.created_at,
+                        lastSeenAt: row.last_seen_at,
+                        stale: row.stale,
+                        impressionData: row.impression_data,
                         environments: [
-                            FeatureStrategiesStore.getEnvironment(r),
+                            FeatureStrategiesStore.getEnvironment(row),
                         ],
                     };
-                    if (this.isNewTag(acc[r.feature_name], r)) {
-                        this.addTag(acc[r.feature_name], r);
+                    if (this.isNewTag(acc[row.feature_name], row)) {
+                        this.addTag(acc[row.feature_name], row);
                     }
                 }
                 return acc;

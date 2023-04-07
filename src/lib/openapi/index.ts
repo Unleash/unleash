@@ -354,4 +354,3 @@ export const createOpenApiSchema = ({
 
 export * from './util';
 export * from './spec';
-export * from './endpoint-descriptions';

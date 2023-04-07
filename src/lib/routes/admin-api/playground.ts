@@ -5,7 +5,6 @@ import { NONE } from '../../types/permissions';
 import Controller from '../controller';
 import { OpenApiService } from '../../services/openapi-service';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
-import { endpointDescriptions } from '../../openapi/endpoint-descriptions';
 import { getStandardResponses } from '../../../lib/openapi/util/standard-responses';
 import { createRequestSchema } from '../../../lib/openapi/util/create-request-schema';
 import {
@@ -45,7 +44,10 @@ export default class PlaygroundController extends Controller {
                         200: createResponseSchema('playgroundResponseSchema'),
                     },
                     requestBody: createRequestSchema('playgroundRequestSchema'),
-                    ...endpointDescriptions.admin.playground,
+                    description:
+                        'Use the provided `context`, `environment`, and `projects` to evaluate toggles on this Unleash instance. Returns a list of all toggles that match the parameters and what they evaluate to. The response also contains the input parameters that were provided.',
+                    summary:
+                        'Evaluate an Unleash context against a set of environments and projects.',
                 }),
             ],
         });

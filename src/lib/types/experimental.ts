@@ -14,6 +14,10 @@ const flags = {
         process.env.UNLEASH_EXPERIMENTAL_PROJECT_STATUS_API,
         false,
     ),
+    projectStatusApiImprovements: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_PROJECT_STATUS_API_IMPROVEMENTS,
+        false,
+    ),
     newProjectOverview: parseEnvVarBoolean(
         process.env.NEW_PROJECT_OVERVIEW,
         false,

@@ -17,5 +17,18 @@ export const endpointDescriptions = {
             summary:
                 'Evaluate an Unleash context against a set of environments and projects.',
         },
+        projects: {
+            $projectId: {
+                features: {
+                    $featureName: {
+                        changeProject: {
+                            description:
+                                'For the feature toggle in the path, move it to the project specified in the request body.',
+                            summary: 'Move feature to another project',
+                        },
+                    },
+                },
+            },
+        },
     },
 } as const;

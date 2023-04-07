@@ -1271,7 +1271,7 @@ test('should calculate average time to production', async () => {
 
 test('should calculate average time to production ignoring some items', async () => {
     const project = {
-        id: 'average-time-to-prod',
+        id: 'average-time-to-prod-corner-cases',
         name: 'average-time-to-prod',
         mode: 'open' as const,
     };

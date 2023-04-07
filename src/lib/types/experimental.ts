@@ -68,6 +68,10 @@ const flags = {
         false,
     ),
     projectMode: parseEnvVarBoolean(process.env.PROJECT_MODE, false),
+    personalAccessTokensKillSwitch: parseEnvVarBoolean(
+        process.env.UNLEASH_PAT_KILL_SWITCH,
+        false,
+    ),
     cleanClientApi: parseEnvVarBoolean(process.env.CLEAN_CLIENT_API, false),
     optimal304: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_OPTIMAL_304,

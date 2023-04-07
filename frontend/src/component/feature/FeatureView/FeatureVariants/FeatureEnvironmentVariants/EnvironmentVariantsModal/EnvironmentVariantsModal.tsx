@@ -209,7 +209,7 @@ export const EnvironmentVariantsModal = ({
                 stickiness:
                     variantsEdit?.length > 0
                         ? variantsEdit[0].stickiness
-                        : 'default',
+                        : defaultStickiness,
                 new: true,
                 isValid: false,
                 id,
@@ -307,18 +307,17 @@ export const EnvironmentVariantsModal = ({
         }
     }, [apiPayload.error]);
 
+    const handleClose = () => {
+        updateStickiness(defaultStickiness).then();
+        setOpen(false);
+    };
+
     if (loading || stickiness === '') {
         return <Loader />;
     }
 
     return (
-        <SidebarModal
-            open={open}
-            onClose={() => {
-                setOpen(false);
-            }}
-            label=""
-        >
+        <SidebarModal open={open} onClose={handleClose} label="">
             <FormTemplate
                 modal
                 title=""
@@ -459,11 +458,7 @@ export const EnvironmentVariantsModal = ({
                                 ? changeRequestButtonText
                                 : 'Save variants'}
                         </Button>
-                        <StyledCancelButton
-                            onClick={() => {
-                                setOpen(false);
-                            }}
-                        >
+                        <StyledCancelButton onClick={handleClose}>
                             Cancel
                         </StyledCancelButton>
                     </StyledButtonContainer>

@@ -27,7 +27,7 @@ test('should redirect to "/" after logout', async () => {
     const request = supertest(app);
     expect.assertions(0);
     await request
-        .get(`${baseUriPath}/logout`)
+        .post(`${baseUriPath}/logout`)
         .expect(302)
         .expect('Location', `${baseUriPath}/`);
 });
@@ -45,7 +45,7 @@ test('should redirect to "/basePath" after logout when baseUriPath is set', asyn
     const request = supertest(app);
     expect.assertions(0);
     await request
-        .get('/logout')
+        .post('/logout')
         .expect(302)
         .expect('Location', `${baseUriPath}/`);
 });
@@ -64,7 +64,7 @@ test('should set "Clear-Site-Data" header', async () => {
     const request = supertest(app);
     expect.assertions(0);
     await request
-        .get(`${baseUriPath}/logout`)
+        .post(`${baseUriPath}/logout`)
         .expect(302)
         .expect('Clear-Site-Data', '"cookies", "storage"');
 });
@@ -86,7 +86,7 @@ test('should not set "Clear-Site-Data" header', async () => {
     const request = supertest(app);
     expect.assertions(1);
     await request
-        .get(`${baseUriPath}/logout`)
+        .post(`${baseUriPath}/logout`)
         .expect(302)
         .expect((res) =>
             expect(res.headers['Clear-Site-Data']).toBeUndefined(),
@@ -108,7 +108,7 @@ test('should clear "unleash-session" cookies', async () => {
     const request = supertest(app);
     expect.assertions(0);
     await request
-        .get(`${baseUriPath}/logout`)
+        .post(`${baseUriPath}/logout`)
         .expect(302)
         .expect(
             'Set-Cookie',
@@ -134,7 +134,7 @@ test('should clear "unleash-session" cookie even when disabled clear site data',
     const request = supertest(app);
     expect.assertions(0);
     await request
-        .get(`${baseUriPath}/logout`)
+        .post(`${baseUriPath}/logout`)
         .expect(302)
         .expect(
             'Set-Cookie',
@@ -162,7 +162,7 @@ test('should call destroy on session', async () => {
     app.use('/logout', new LogoutController(config, { sessionService }).router);
 
     const request = supertest(app);
-    await request.get(`${baseUriPath}/logout`);
+    await request.post(`${baseUriPath}/logout`);
 
     expect(fakeSession.destroy.mock.calls.length).toBe(1);
 });
@@ -186,7 +186,7 @@ test('should handle req.logout with callback function', async () => {
     app.use('/logout', new LogoutController(config, { sessionService }).router);
 
     const request = supertest(app);
-    await request.get(`${baseUriPath}/logout`);
+    await request.post(`${baseUriPath}/logout`);
 
     expect(logoutFunction).toHaveBeenCalledTimes(1);
     expect(logoutFunction).toHaveBeenCalledWith(expect.anything());
@@ -211,7 +211,7 @@ test('should handle req.logout without callback function', async () => {
     app.use('/logout', new LogoutController(config, { sessionService }).router);
 
     const request = supertest(app);
-    await request.get(`${baseUriPath}/logout`);
+    await request.post(`${baseUriPath}/logout`);
 
     expect(logoutFunction).toHaveBeenCalledTimes(1);
     expect(logoutFunction).toHaveBeenCalledWith();
@@ -238,7 +238,7 @@ test('should redirect to alternative logoutUrl', async () => {
 
     const request = supertest(app);
     await request
-        .get('/logout')
+        .post('/logout')
         .expect(302)
         .expect('Location', '/some-other-path');
 });
@@ -282,7 +282,7 @@ test('Should destroy sessions for user', async () => {
     let activeSessionsBeforeLogout = await sessionStore.getSessionsForUser(1);
     expect(activeSessionsBeforeLogout).toHaveLength(2);
     app.use('/logout', new LogoutController(config, { sessionService }).router);
-    await supertest(app).get('/logout').expect(302);
+    await supertest(app).post('/logout').expect(302);
     let activeSessions = await sessionStore.getSessionsForUser(1);
     expect(activeSessions).toHaveLength(0);
 });

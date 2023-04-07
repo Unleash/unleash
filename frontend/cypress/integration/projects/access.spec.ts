@@ -11,21 +11,16 @@ import {
     //@ts-ignore
 } from '../../../src/utils/testIds';
 
-const baseUrl = Cypress.config().baseUrl;
-const randomId = String(Math.random()).split('.')[1];
-const groupAndProjectName = `group-e2e-${randomId}`;
-const userName = `user-e2e-${randomId}`;
-const groupIds: any[] = [];
-const userIds: any[] = [];
-
-// Disable all active splash pages by visiting them.
-const disableActiveSplashScreens = () => {
-    cy.visit(`/splash/operators`);
-};
-
 describe('project-access', () => {
+    const baseUrl = Cypress.config().baseUrl;
+    const randomId = String(Math.random()).split('.')[1];
+    const groupAndProjectName = `group-e2e-${randomId}`;
+    const userName = `user-e2e-${randomId}`;
+    const groupIds: any[] = [];
+    const userIds: any[] = [];
+
     before(() => {
-        disableActiveSplashScreens();
+        cy.runBefore();
         cy.login_UI();
         for (let i = 1; i <= 2; i++) {
             const name = `${i}-${userName}`;

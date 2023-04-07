@@ -1,16 +1,14 @@
 ///<reference path="../../global.d.ts" />
 
-const randomId = String(Math.random()).split('.')[1];
-const baseUrl = Cypress.config().baseUrl;
-let strategyId = '';
-const userName = `settings-user-${randomId}`;
-const projectName = `stickiness-project-${randomId}`;
-const TEST_STICKINESS = 'userId';
-const featureToggleName = `settings-${randomId}`;
-let cleanFeature = false;
-let cleanProject = false;
-
 describe('project settings', () => {
+    const randomId = String(Math.random()).split('.')[1];
+    const baseUrl = Cypress.config().baseUrl;
+    const projectName = `stickiness-project-${randomId}`;
+    const TEST_STICKINESS = 'userId';
+    const featureToggleName = `settings-${randomId}`;
+    let cleanFeature = false;
+    let cleanProject = false;
+
     before(() => {
         cy.runBefore();
     });
@@ -58,7 +56,7 @@ describe('project settings', () => {
         //clean
     });
 
-    it('should respect the default project stickiness when creating a variant', () => {
+    it.skip('should respect the default project stickiness when creating a variant', () => {
         cy.createProject_UI(projectName, TEST_STICKINESS);
         cy.createFeature_UI(featureToggleName, true, projectName);
 

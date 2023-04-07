@@ -222,7 +222,7 @@ test('should not fail creation of PAT when a description already exists for anot
 });
 
 test('should get user id 1', async () => {
-    await app.request.get('/logout').expect(302);
+    await app.request.post('/logout').expect(302);
     await app.request
         .get('/api/admin/user')
         .set('Authorization', firstSecret)

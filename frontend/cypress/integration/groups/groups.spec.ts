@@ -1,16 +1,11 @@
 ///<reference path="../../global.d.ts" />
 
-const baseUrl = Cypress.config().baseUrl;
-const randomId = String(Math.random()).split('.')[1];
-const groupName = `unleash-e2e-${randomId}`;
-const userIds: any[] = [];
-
-// Disable all active splash pages by visiting them.
-const disableActiveSplashScreens = () => {
-    cy.visit(`/splash/operators`);
-};
-
 describe('groups', () => {
+    const baseUrl = Cypress.config().baseUrl;
+    const randomId = String(Math.random()).split('.')[1];
+    const groupName = `unleash-e2e-${randomId}`;
+    const userIds: any[] = [];
+
     before(() => {
         cy.runBefore();
         cy.login_UI();

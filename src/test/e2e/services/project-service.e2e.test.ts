@@ -1300,7 +1300,7 @@ test('should calculate average time to production ignoring some items', async ()
     await stores.eventStore.store(
         new FeatureEnvironmentEvent(makeEvent(toggle.name)),
     );
-    // ignore events that added after first enabled
+    // ignore events added after first enabled
     await updateEventCreatedAt(addDays(new Date(), 1), toggle.name);
     await stores.eventStore.store(
         new FeatureEnvironmentEvent(makeEvent(toggle.name)),
@@ -1327,7 +1327,7 @@ test('should calculate average time to production ignoring some items', async ()
         new FeatureEnvironmentEvent(makeEvent(otherProjectToggle.name)),
     );
 
-    // ignore non release toggles
+    // ignore non-release toggles
     const nonReleaseToggle = { name: 'permission-toggle', type: 'permission' };
     await featureToggleService.createFeatureToggle(
         project.id,

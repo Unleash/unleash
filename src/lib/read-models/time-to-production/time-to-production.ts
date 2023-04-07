@@ -1,5 +1,6 @@
 import { differenceInDays } from 'date-fns';
 import { FeatureToggle, IEvent, IProjectEnvironment } from 'lib/types';
+import { ICreateEnabledDates } from '../../types/stores/project-stats-store-type';
 
 interface IFeatureTimeToProdCalculationMap {
     [index: string]: IFeatureTimeToProdData;
@@ -50,9 +51,7 @@ export class TimeToProduction {
         return 0;
     }
 
-    static calculateAverageTimeToProd(
-        items: { created: Date; enabled: Date }[],
-    ): number {
+    static calculateAverageTimeToProd(items: ICreateEnabledDates[]): number {
         const timeToProdPerFeature =
             TimeToProduction.calculateTimeToProdForFeatures(items);
         if (timeToProdPerFeature.length) {
@@ -116,7 +115,7 @@ export class TimeToProduction {
     }
 
     private static calculateTimeToProdForFeatures(
-        items: { created: Date; enabled: Date }[],
+        items: ICreateEnabledDates[],
     ): number[] {
         return items.map((item) =>
             differenceInDays(item.enabled, item.created),

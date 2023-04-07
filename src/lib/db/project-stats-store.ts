@@ -4,7 +4,10 @@ import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
 import EventEmitter from 'events';
 import { IProjectStats } from 'lib/services/project-service';
-import { IProjectStatsStore } from 'lib/types/stores/project-stats-store-type';
+import {
+    ICreateEnabledDates,
+    IProjectStatsStore,
+} from 'lib/types/stores/project-stats-store-type';
 import { Db } from './db';
 
 const TABLE = 'project_stats';
@@ -112,7 +115,7 @@ class ProjectStatsStore implements IProjectStatsStore {
     // time aware libraries
     async getTimeToProdDates(
         projectId: string,
-    ): Promise<{ created: Date; enabled: Date }[]> {
+    ): Promise<ICreateEnabledDates[]> {
         const result = await this.db
             .select('events.feature_name')
             // select only first enabled event, distinct works with orderBy

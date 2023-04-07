@@ -17,6 +17,7 @@ export class TimeToProduction {
 
     private events: IEvent[];
 
+    // todo: remove
     constructor(
         features: FeatureToggle[],
         productionEnvironments: IProjectEnvironment[],
@@ -27,6 +28,7 @@ export class TimeToProduction {
         this.events = events;
     }
 
+    // todo: remove
     calculateAverageTimeToProd(): number {
         const featureEvents = this.getFeatureEvents();
         const sortedFeatureEvents =
@@ -48,6 +50,24 @@ export class TimeToProduction {
         return 0;
     }
 
+    static calculateAverageTimeToProd(
+        items: { created: Date; enabled: Date }[],
+    ): number {
+        const timeToProdPerFeature =
+            TimeToProduction.calculateTimeToProdForFeatures(items);
+        if (timeToProdPerFeature.length) {
+            const sum = timeToProdPerFeature.reduce(
+                (acc, curr) => acc + curr,
+                0,
+            );
+
+            return Number((sum / Object.keys(items).length).toFixed(1));
+        }
+
+        return 0;
+    }
+
+    // todo: remove, as DB query can handle it
     getFeatureEvents(): IFeatureTimeToProdCalculationMap {
         return this.getProductionEvents(this.events).reduce((acc, event) => {
             if (acc[event.featureName]) {
@@ -64,7 +84,8 @@ export class TimeToProduction {
         }, {});
     }
 
-    getProductionEvents(events: IEvent[]): IEvent[] {
+    // todo: remove it as DB query can handle it
+    private getProductionEvents(events: IEvent[]): IEvent[] {
         return events.filter((event) => {
             const found = this.productionEnvironments.find(
                 (env) => env.name === event.environment,
@@ -78,7 +99,7 @@ export class TimeToProduction {
         });
     }
 
-    calculateTimeToProdForFeatures(
+    private calculateTimeToProdForFeatures(
         featureEvents: IFeatureTimeToProdCalculationMap,
     ): number[] {
         return Object.keys(featureEvents).map((featureName) => {
@@ -94,6 +115,15 @@ export class TimeToProduction {
         });
     }
 
+    private static calculateTimeToProdForFeatures(
+        items: { created: Date; enabled: Date }[],
+    ): number[] {
+        return items.map((item) =>
+            differenceInDays(item.enabled, item.created),
+        );
+    }
+
+    // todo: remove as DB query can handle it
     sortFeatureEventsByCreatedAt(
         featureEvents: IFeatureTimeToProdCalculationMap,
     ): IFeatureTimeToProdCalculationMap {

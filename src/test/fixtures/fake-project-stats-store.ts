@@ -13,4 +13,8 @@ export default class FakeProjectStatsStore implements IProjectStatsStore {
     getProjectStats(projectId: string): Promise<IProjectStats> {
         throw new Error('not implemented');
     }
+
+    getTimeToProdDates(): Promise<{ created: Date; enabled: Date }[]> {
+        throw new Error('not implemented');
+    }
 }

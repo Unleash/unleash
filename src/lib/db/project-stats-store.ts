@@ -107,6 +107,41 @@ class ProjectStatsStore implements IProjectStatsStore {
                 row.project_members_added_current_window,
         };
     }
+
+    // we're not calculating time difference in a DB as it requires specialized
+    // time aware libraries
+    async getTimeToProdDates(
+        projectId: string,
+    ): Promise<{ created: Date; enabled: Date }[]> {
+        const result = await this.db
+            .select('events.feature_name')
+            // select only first enabled event, distinct works with orderBy
+            .distinctOn('events.feature_name')
+            .select(
+                this.db.raw(
+                    'events.created_at as enabled, features.created_at as created',
+                ),
+            )
+            .from('events')
+            .innerJoin(
+                'environments',
+                'environments.name',
+                '=',
+                'events.environment',
+            )
+            .innerJoin('features', 'features.name', '=', 'events.feature_name')
+            .where('events.type', '=', 'feature-environment-enabled')
+            .where('environments.type', '=', 'production')
+            // kill-switch is long lived
+            .where('features.type', '<>', 'kill-switch')
+            // exclude events for features that were previously deleted
+            .where(this.db.raw('events.created_at > features.created_at'))
+            .where('features.project', '=', projectId)
+            .orderBy('events.feature_name')
+            // first enabled event
+            .orderBy('events.created_at', 'asc');
+        return result;
+    }
 }
 
 export default ProjectStatsStore;

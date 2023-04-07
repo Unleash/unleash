@@ -689,11 +689,13 @@ export default class ProjectService {
 
     async getStatusUpdates(projectId: string): Promise<ICalculateStatus> {
         // Get all features for project with type release
+        // todo: remove after release of the improved query
         const features = await this.featureToggleStore.getAll({
             type: 'release',
             project: projectId,
         });
 
+        // todo: remove after release of the improved query
         const archivedFeatures = await this.featureToggleStore.getAll({
             archived: true,
             type: 'release',
@@ -703,7 +705,12 @@ export default class ProjectService {
         const dateMinusThirtyDays = subDays(new Date(), 30).toISOString();
         const dateMinusSixtyDays = subDays(new Date(), 60).toISOString();
 
-        const [createdCurrentWindow, createdPastWindow] = await Promise.all([
+        const [
+            createdCurrentWindow,
+            createdPastWindow,
+            archivedCurrentWindow,
+            archivedPastWindow,
+        ] = await Promise.all([
             await this.featureToggleStore.countByDate({
                 project: projectId,
                 dateAccessor: 'created_at',
@@ -714,9 +721,6 @@ export default class ProjectService {
                 dateAccessor: 'created_at',
                 range: [dateMinusSixtyDays, dateMinusThirtyDays],
             }),
-        ]);
-
-        const [archivedCurrentWindow, archivedPastWindow] = await Promise.all([
             await this.featureToggleStore.countByDate({
                 project: projectId,
                 archived: true,
@@ -756,6 +760,7 @@ export default class ProjectService {
             ]);
 
         // Get all project environments with type of production
+        // todo: remove after release of the improved query
         const productionEnvironments =
             await this.environmentStore.getProjectEnvironments(projectId, {
                 type: 'production',
@@ -763,9 +768,10 @@ export default class ProjectService {
 
         // Get all events for features that correspond to feature toggle environment ON
         // Filter out events that are not a production evironment
-
+        // todo: remove after release of the improved query
         const allFeatures = [...features, ...archivedFeatures];
 
+        // todo: remove after release of the improved query
         const eventsData = await this.eventStore.query([
             {
                 op: 'forFeatures',
@@ -778,11 +784,31 @@ export default class ProjectService {
             },
         ]);
 
-        const currentWindowTimeToProdReadModel = new TimeToProduction(
+        // todo: remove after release of the improved query
+        const timeToProduction = new TimeToProduction(
             allFeatures,
             productionEnvironments,
             eventsData,
         );
+
+        const avgTimeToProdCurrentWindowFast =
+            TimeToProduction.calculateAverageTimeToProd(
+                await this.projectStatsStore.getTimeToProdDates(projectId),
+            );
+        const avgTimeToProdCurrentWindowSlow =
+            timeToProduction.calculateAverageTimeToProd();
+
+        const avgTimeToProdCurrentWindow = this.flagResolver.isEnabled(
+            'projectStatusApiImprovements',
+        )
+            ? avgTimeToProdCurrentWindowFast
+            : avgTimeToProdCurrentWindowSlow;
+
+        if (avgTimeToProdCurrentWindowFast != avgTimeToProdCurrentWindowSlow) {
+            this.logger.warn(
+                `Lead time calculation difference, old ${avgTimeToProdCurrentWindowSlow}, new ${avgTimeToProdCurrentWindowFast}`,
+            );
+        }
 
         const projectMembersAddedCurrentWindow =
             await this.store.getMembersCountByProjectAfterDate(
@@ -793,16 +819,14 @@ export default class ProjectService {
         return {
             projectId,
             updates: {
-                avgTimeToProdCurrentWindow:
-                    currentWindowTimeToProdReadModel.calculateAverageTimeToProd(),
-                createdCurrentWindow: createdCurrentWindow,
-                createdPastWindow: createdPastWindow,
-                archivedCurrentWindow: archivedCurrentWindow,
-                archivedPastWindow: archivedPastWindow,
-                projectActivityCurrentWindow: projectActivityCurrentWindow,
-                projectActivityPastWindow: projectActivityPastWindow,
-                projectMembersAddedCurrentWindow:
-                    projectMembersAddedCurrentWindow,
+                avgTimeToProdCurrentWindow,
+                createdCurrentWindow,
+                createdPastWindow,
+                archivedCurrentWindow,
+                archivedPastWindow,
+                projectActivityCurrentWindow,
+                projectActivityPastWindow,
+                projectMembersAddedCurrentWindow,
             },
         };
     }

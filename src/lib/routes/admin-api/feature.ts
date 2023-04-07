@@ -104,7 +104,7 @@ class FeatureController extends Controller {
                     requestBody: createRequestSchema('featureValidateSchema'),
                     responses: {
                         200: emptyResponse,
-                        ...getStandardResponses(400, 401),
+                        ...getStandardResponses(400, 401, 409),
                     },
                     summary:
                         'Check feature toggle name validity and availability',
@@ -123,7 +123,14 @@ class FeatureController extends Controller {
                 openApiService.validPath({
                     tags: ['Features'],
                     operationId: 'listTags',
-                    responses: { 200: createResponseSchema('tagsSchema') },
+                    responses: {
+                        200: createResponseSchema('tagsSchema'),
+                        ...getStandardResponses(401),
+                        // FIXME: this has a weird behaviour where it doesn't return a 404 if the feature doesn't exist
+                    },
+                    summary: 'List tags for a feature toggle',
+                    description:
+                        'List all tags that are currently added on a feature toggle.',
                 }),
             ],
         });

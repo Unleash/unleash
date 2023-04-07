@@ -1292,9 +1292,9 @@ test('should calculate average time to production ignoring some items', async ()
     await environmentService.addEnvironmentToProject('customEnv', project.id);
 
     // actual toggle we take for calculations
-    const toggle = { name: 'average-prod-time' };
+    const toggle = { name: 'main-toggle' };
     await featureToggleService.createFeatureToggle(project.id, toggle, user);
-    await updateFeature('average-prod-time', {
+    await updateFeature(toggle.name, {
         created_at: subDays(new Date(), 20),
     });
     await stores.eventStore.store(

@@ -136,7 +136,7 @@ class ProjectStatsStore implements IProjectStatsStore {
             .where('events.type', '=', 'feature-environment-enabled')
             .where('environments.type', '=', 'production')
             // kill-switch is long lived
-            .where('features.type', '<>', 'kill-switch')
+            .where('features.type', '=', 'release')
             // exclude events for features that were previously deleted
             .where(this.db.raw('events.created_at > features.created_at'))
             .where('features.project', '=', projectId)

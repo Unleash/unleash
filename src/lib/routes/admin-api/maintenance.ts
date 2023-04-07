@@ -6,6 +6,7 @@ import {
     createRequestSchema,
     createResponseSchema,
     emptyResponse,
+    getStandardResponses,
 } from '../../openapi';
 import { OpenApiService } from '../../services';
 import { IAuthRequest } from '../unleash-types';
@@ -45,6 +46,7 @@ export default class MaintenanceController extends Controller {
                     operationId: 'toggleMaintenance',
                     responses: {
                         204: emptyResponse,
+                        ...getStandardResponses(400, 401, 403),
                     },
                     requestBody: createRequestSchema('maintenanceSchema'),
                 }),
@@ -61,6 +63,7 @@ export default class MaintenanceController extends Controller {
                     operationId: 'getMaintenance',
                     responses: {
                         200: createResponseSchema('maintenanceSchema'),
+                        ...getStandardResponses(401, 403),
                     },
                 }),
             ],

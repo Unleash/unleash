@@ -87,14 +87,7 @@ export const fadeInBottomLeave: CSSProperties = {
 export const fadeInTopStart = (theme: Theme): CSSProperties => ({
     opacity: '0',
     position: 'fixed',
-    right: '40px',
-    top: '40px',
     transform: 'translateY(-400px)',
-    [theme.breakpoints.down('sm')]: {
-        right: 20,
-        left: 10,
-        top: 40,
-    },
 });
 export const fadeInTopEnter: CSSProperties = {
     transform: 'translateY(100px)',

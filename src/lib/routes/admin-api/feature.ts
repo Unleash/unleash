@@ -147,7 +147,10 @@ class FeatureController extends Controller {
                     requestBody: createRequestSchema('tagSchema'),
                     responses: {
                         201: resourceCreatedResponseSchema('tagSchema'),
+                        // FIXME: this can throw 500 error if tag type doesn't exist
                     },
+                    summary: 'Add a tag to a feature toggle',
+                    description: 'Add a single tag to a feature toggle.',
                 }),
             ],
         });
@@ -164,7 +167,10 @@ class FeatureController extends Controller {
                     requestBody: createRequestSchema('updateTagsSchema'),
                     responses: {
                         200: resourceCreatedResponseSchema('tagsSchema'),
+                        // FIXME: this can throw 500 error if tag type doesn't exist
                     },
+                    summary: 'Update tags for a feature toggle',
+                    description: 'Add and remove tags from a feature toggle.',
                 }),
             ],
         });
@@ -180,6 +186,8 @@ class FeatureController extends Controller {
                     tags: ['Features'],
                     operationId: 'removeTag',
                     responses: { 200: emptyResponse },
+                    summary: 'Remove a tag from a feature toggle',
+                    description: 'Remove a single tag from a feature toggle.',
                 }),
             ],
         });

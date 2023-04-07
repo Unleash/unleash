@@ -93,50 +93,38 @@ const environments = [
 const features = [
     {
         name: 'average-prod-time',
-        description: null,
         type: 'release',
         project: 'average-time-to-prod',
         stale: false,
         createdAt: new Date('2022-12-05T09:37:32.483Z'),
-        lastSeenAt: null,
         impressionData: false,
-        archivedAt: null,
         archived: false,
     },
     {
         name: 'average-prod-time-4',
-        description: null,
         type: 'release',
         project: 'average-time-to-prod',
         stale: false,
         createdAt: new Date('2023-01-19T09:37:32.484Z'),
-        lastSeenAt: null,
         impressionData: false,
-        archivedAt: null,
         archived: false,
     },
     {
         name: 'average-prod-time-2',
-        description: null,
         type: 'release',
         project: 'average-time-to-prod',
         stale: false,
         createdAt: new Date('2023-01-19T09:37:32.484Z'),
-        lastSeenAt: null,
         impressionData: false,
-        archivedAt: null,
         archived: false,
     },
     {
         name: 'average-prod-time-3',
-        description: null,
         type: 'release',
         project: 'average-time-to-prod',
         stale: false,
         createdAt: new Date('2023-01-19T09:37:32.486Z'),
-        lastSeenAt: null,
         impressionData: false,
-        archivedAt: null,
         archived: false,
     },
 ];
@@ -156,7 +144,7 @@ describe('calculate average time to production', () => {
         expect(featureEvents['average-prod-time'].events).toBeInstanceOf(Array);
     });
 
-    test('should calculate average correctly', () => {
+    test('[legacy] should calculate average correctly', () => {
         const projectStatus = new TimeToProduction(
             features,
             environments,
@@ -164,6 +152,29 @@ describe('calculate average time to production', () => {
         );
 
         const timeToProduction = projectStatus.calculateAverageTimeToProd();
+
+        expect(timeToProduction).toBe(21);
+    });
+
+    test('should calculate average correctly', () => {
+        const timeToProduction = TimeToProduction.calculateAverageTimeToProd([
+            {
+                created: new Date('2022-12-05T09:37:32.483Z'),
+                enabled: new Date('2023-01-25T09:37:32.504Z'),
+            },
+            {
+                created: new Date('2023-01-19T09:37:32.484Z'),
+                enabled: new Date('2023-01-31T09:37:32.506Z'),
+            },
+            {
+                created: new Date('2023-01-19T09:37:32.484Z'),
+                enabled: new Date('2023-02-02T09:37:32.509Z'),
+            },
+            {
+                created: new Date('2023-01-19T09:37:32.486Z'),
+                enabled: new Date('2023-01-26T09:37:32.508Z'),
+            },
+        ]);
 
         expect(timeToProduction).toBe(21);
     });

@@ -1713,6 +1713,19 @@ exports[`should serve the OpenAPI spec 1`] = `
         ],
         "type": "object",
       },
+      "featureValidateSchema": {
+        "properties": {
+          "name": {
+            "description": "Feature name to check",
+            "example": "new-feature-name",
+            "type": "string",
+          },
+        },
+        "required": [
+          "name",
+        ],
+        "type": "object",
+      },
       "featureVariantsSchema": {
         "additionalProperties": false,
         "properties": {
@@ -5418,12 +5431,34 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/features/validate": {
       "post": {
+        "description": "Verify a feature toggle name for incorrect characters and make sure feature toggle with the same name doesn't already exist.",
         "operationId": "validateFeature",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/featureValidateSchema",
+              },
+            },
+          },
+          "description": "featureValidateSchema",
+          "required": true,
+        },
         "responses": {
           "200": {
             "description": "This response has no body.",
           },
+          "400": {
+            "description": "The request data does not match what we expect.",
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "409": {
+            "description": "The provided resource can not be created or updated because it would conflict with the current state of the resource or with an already existing resource, respectively.",
+          },
         },
+        "summary": "Check feature toggle name validity and availability",
         "tags": [
           "Features",
         ],
@@ -5431,6 +5466,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/features/{featureName}/tags": {
       "get": {
+        "description": "List all tags that are currently added on a feature toggle.",
         "operationId": "listTags",
         "parameters": [
           {
@@ -5453,12 +5489,17 @@ If the provided project does not exist, the list of events will be empty.",
             },
             "description": "tagsSchema",
           },
+          "401": {
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
         },
+        "summary": "List tags for a feature toggle",
         "tags": [
           "Features",
         ],
       },
       "post": {
+        "description": "Add a single tag to a feature toggle.",
         "operationId": "addTag",
         "parameters": [
           {
@@ -5502,11 +5543,13 @@ If the provided project does not exist, the list of events will be empty.",
             },
           },
         },
+        "summary": "Add a tag to a feature toggle",
         "tags": [
           "Features",
         ],
       },
       "put": {
+        "description": "Add and remove tags from a feature toggle.",
         "operationId": "updateTags",
         "parameters": [
           {
@@ -5550,6 +5593,7 @@ If the provided project does not exist, the list of events will be empty.",
             },
           },
         },
+        "summary": "Update tags for a feature toggle",
         "tags": [
           "Features",
         ],
@@ -5557,6 +5601,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/features/{featureName}/tags/{type}/{value}": {
       "delete": {
+        "description": "Remove a single tag from a feature toggle.",
         "operationId": "removeTag",
         "parameters": [
           {
@@ -5589,6 +5634,7 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "This response has no body.",
           },
         },
+        "summary": "Remove a tag from a feature toggle",
         "tags": [
           "Features",
         ],

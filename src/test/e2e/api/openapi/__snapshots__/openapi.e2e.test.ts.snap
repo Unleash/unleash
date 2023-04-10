@@ -3234,7 +3234,7 @@ Stats are divided into current and previous **windows**.
         "properties": {
           "enabled": {
             "description": "Whether the token is active or not.",
-            "exanmple": true,
+            "example": true,
             "type": "boolean",
           },
           "expiresAt": {

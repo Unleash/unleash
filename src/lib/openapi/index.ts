@@ -140,6 +140,7 @@ import { openApiTags } from './util';
 import { URL } from 'url';
 import apiVersion from '../util/version';
 import { maintenanceSchema } from './spec/maintenance-schema';
+import { toggleMaintenanceSchema } from './spec/toggle-maintenance-schema';
 import { bulkRegistrationSchema } from './spec/bulk-registration-schema';
 import { bulkMetricsSchema } from './spec/bulk-metrics-schema';
 import { clientMetricsEnvSchema } from './spec/client-metrics-env-schema';
@@ -213,6 +214,7 @@ export const schemas = {
     legalValueSchema,
     loginSchema,
     maintenanceSchema,
+    toggleMaintenanceSchema,
     meSchema,
     nameSchema,
     overrideSchema,

@@ -2178,6 +2178,7 @@ exports[`should serve the OpenAPI spec 1`] = `
         "additionalProperties": false,
         "properties": {
           "enabled": {
+            "example": true,
             "type": "boolean",
           },
         },
@@ -3796,6 +3797,18 @@ Stats are divided into current and previous **windows**.
         "required": [
           "version",
           "tags",
+        ],
+        "type": "object",
+      },
+      "toggleMaintenanceSchema": {
+        "properties": {
+          "enabled": {
+            "example": true,
+            "type": "boolean",
+          },
+        },
+        "required": [
+          "enabled",
         ],
         "type": "object",
       },
@@ -5821,6 +5834,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/maintenance": {
       "get": {
+        "description": "Tells you whether maintenance mode is enabled or disabled",
         "operationId": "getMaintenance",
         "responses": {
           "200": {
@@ -5833,29 +5847,47 @@ If the provided project does not exist, the list of events will be empty.",
             },
             "description": "maintenanceSchema",
           },
+          "401": {
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+          },
         },
+        "summary": "Get maintenance mode status",
         "tags": [
           "Maintenance",
         ],
       },
       "post": {
+        "description": "Lets administrators put Unleash into a mostly read-only mode. While Unleash is in maintenance mode, users can not change any configuration settings",
         "operationId": "toggleMaintenance",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/maintenanceSchema",
+                "$ref": "#/components/schemas/toggleMaintenanceSchema",
               },
             },
           },
-          "description": "maintenanceSchema",
+          "description": "toggleMaintenanceSchema",
           "required": true,
         },
         "responses": {
           "204": {
             "description": "This response has no body.",
           },
+          "400": {
+            "description": "The request data does not match what we expect.",
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+          },
         },
+        "summary": "Enabled/disabled maintenance mode",
         "tags": [
           "Maintenance",
         ],

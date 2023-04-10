@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { Box, Button, Divider, Typography, useTheme } from '@mui/material';
 import { IChangeRequest } from '../../changeRequest.types';
 import { useNavigate } from 'react-router-dom';
@@ -12,6 +12,8 @@ import {
     UpdateCount,
 } from '../ChangeRequestSidebar';
 import { CloudCircle } from '@mui/icons-material';
+import { AddCommentField } from '../../ChangeRequestOverview/ChangeRequestComments/AddCommentField';
+import { useAuthUser } from '../../../../hooks/api/getters/useAuth/useAuthUser';
 
 const SubmitChangeRequestButton: FC<{ onClick: () => void; count: number }> = ({
     onClick,
@@ -25,11 +27,13 @@ const SubmitChangeRequestButton: FC<{ onClick: () => void; count: number }> = ({
 export const EnvironmentChangeRequest: FC<{
     environmentChangeRequest: IChangeRequest;
     onClose: () => void;
-    onReview: (id: number) => void;
+    onReview: (id: number, comment?: string) => void;
     onDiscard: (id: number) => void;
 }> = ({ environmentChangeRequest, onClose, onReview, onDiscard, children }) => {
     const theme = useTheme();
     const navigate = useNavigate();
+    const [commentText, setCommentText] = useState('');
+    const { user } = useAuthUser();
 
     return (
         <Box
@@ -74,6 +78,16 @@ export const EnvironmentChangeRequest: FC<{
                 You request changes for these feature toggles:
             </Typography>
             {children}
+            <ConditionallyRender
+                condition={environmentChangeRequest?.state === 'Draft'}
+                show={
+                    <AddCommentField
+                        user={user}
+                        commentText={commentText}
+                        onTypeComment={setCommentText}
+                    ></AddCommentField>
+                }
+            ></ConditionallyRender>
             <Box sx={{ display: 'flex', mt: 3 }}>
                 <ConditionallyRender
                     condition={environmentChangeRequest?.state === 'Draft'}
@@ -81,7 +95,10 @@ export const EnvironmentChangeRequest: FC<{
                         <>
                             <SubmitChangeRequestButton
                                 onClick={() =>
-                                    onReview(environmentChangeRequest.id)
+                                    onReview(
+                                        environmentChangeRequest.id,
+                                        commentText
+                                    )
                                 }
                                 count={changesCount(environmentChangeRequest)}
                             />

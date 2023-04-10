@@ -11,6 +11,7 @@ export const publicSignupTokensSchema = {
     properties: {
         tokens: {
             type: 'array',
+            description: 'An array of all the public signup tokens',
             items: {
                 $ref: '#/components/schemas/publicSignupTokenSchema',
             },

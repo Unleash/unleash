@@ -11,7 +11,9 @@ export const publicSignupTokenUpdateSchema = {
             format: 'date-time',
         },
         enabled: {
+            description: `Whether the token is active or not.`,
             type: 'boolean',
+            exanmple: true,
         },
     },
     components: {},

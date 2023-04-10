@@ -13,7 +13,7 @@ import {
 } from '../ChangeRequestSidebar';
 import { CloudCircle } from '@mui/icons-material';
 import { AddCommentField } from '../../ChangeRequestOverview/ChangeRequestComments/AddCommentField';
-import { useAuthUser } from '../../../../hooks/api/getters/useAuth/useAuthUser';
+import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 
 const SubmitChangeRequestButton: FC<{ onClick: () => void; count: number }> = ({
     onClick,

@@ -8,7 +8,6 @@ import { projectSchema } from './project-schema';
 import NotFoundError from '../error/notfound-error';
 import {
     DEFAULT_PROJECT,
-    FEATURE_ENVIRONMENT_ENABLED,
     FeatureToggle,
     IAccountStore,
     IEnvironmentStore,
@@ -54,7 +53,7 @@ import { arraysHaveSameItems } from '../util';
 import { GroupService } from './group-service';
 import { IGroupModelWithProjectRole, IGroupRole } from 'lib/types/group';
 import { FavoritesService } from './favorites-service';
-import { TimeToProduction } from '../read-models/time-to-production/time-to-production';
+import { calculateAverageTimeToProd } from '../features/feature-toggle/time-to-production/time-to-production';
 import { IProjectStatsStore } from 'lib/types/stores/project-stats-store-type';
 import { uniqueByKey } from '../util/unique';
 
@@ -688,20 +687,6 @@ export default class ProjectService {
     }
 
     async getStatusUpdates(projectId: string): Promise<ICalculateStatus> {
-        // Get all features for project with type release
-        // todo: remove after release of the improved query
-        const features = await this.featureToggleStore.getAll({
-            type: 'release',
-            project: projectId,
-        });
-
-        // todo: remove after release of the improved query
-        const archivedFeatures = await this.featureToggleStore.getAll({
-            archived: true,
-            type: 'release',
-            project: projectId,
-        });
-
         const dateMinusThirtyDays = subDays(new Date(), 30).toISOString();
         const dateMinusSixtyDays = subDays(new Date(), 60).toISOString();
 
@@ -759,56 +744,9 @@ export default class ProjectService {
                 ]),
             ]);
 
-        // Get all project environments with type of production
-        // todo: remove after release of the improved query
-        const productionEnvironments =
-            await this.environmentStore.getProjectEnvironments(projectId, {
-                type: 'production',
-            });
-
-        // Get all events for features that correspond to feature toggle environment ON
-        // Filter out events that are not a production evironment
-        // todo: remove after release of the improved query
-        const allFeatures = [...features, ...archivedFeatures];
-
-        // todo: remove after release of the improved query
-        const eventsData = await this.eventStore.query([
-            {
-                op: 'forFeatures',
-                parameters: {
-                    features: allFeatures.map((feature) => feature.name),
-                    environments: productionEnvironments.map((env) => env.name),
-                    type: FEATURE_ENVIRONMENT_ENABLED,
-                    projectId,
-                },
-            },
-        ]);
-
-        // todo: remove after release of the improved query
-        const timeToProduction = new TimeToProduction(
-            allFeatures,
-            productionEnvironments,
-            eventsData,
+        const avgTimeToProdCurrentWindow = calculateAverageTimeToProd(
+            await this.projectStatsStore.getTimeToProdDates(projectId),
         );
-
-        const avgTimeToProdCurrentWindowFast =
-            TimeToProduction.calculateAverageTimeToProd(
-                await this.projectStatsStore.getTimeToProdDates(projectId),
-            );
-        const avgTimeToProdCurrentWindowSlow =
-            timeToProduction.calculateAverageTimeToProd();
-
-        const avgTimeToProdCurrentWindow = this.flagResolver.isEnabled(
-            'projectStatusApiImprovements',
-        )
-            ? avgTimeToProdCurrentWindowFast
-            : avgTimeToProdCurrentWindowSlow;
-
-        if (avgTimeToProdCurrentWindowFast != avgTimeToProdCurrentWindowSlow) {
-            this.logger.warn(
-                `Lead time calculation difference, old ${avgTimeToProdCurrentWindowSlow}, new ${avgTimeToProdCurrentWindowFast}`,
-            );
-        }
 
         const projectMembersAddedCurrentWindow =
             await this.store.getMembersCountByProjectAfterDate(

@@ -45,11 +45,13 @@ The configuration of a new Project is now available. the following input is avai
 
 ![A project creation form. The form fields are labeled "project ID", "name", and "description". The "Create" button is highlighted.](/img/projects_save_new_project.png)
 
-| Item         | Description                        |
-| ------------ | ---------------------------------- |
-| Project Id   | Id for this Project                |
-| Project name | The name of the Project.           |
-| Description  | A short description of the project |
+| Item               | Description                                                                                 |
+|--------------------|---------------------------------------------------------------------------------------------|
+| Project Id         | Id for this Project                                                                         |
+| Project name       | The name of the Project.                                                                    |
+| Description        | A short description of the project                                                          |
+| Mode               | The project [collaboration mode](/reference/project-collaboration-mode.md)                  |
+| Default Stickiness | The default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy                                                                 |
 
 ## Deleting an existing project {#deleting-an-existing-project}
 

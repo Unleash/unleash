@@ -116,7 +116,7 @@ class FeatureController extends Controller {
                     summary: 'Get all tags for a feature.',
                     description:
                         'Retrieves all the tags for a feature name. If the feature does not exist it returns an empty list.',
-                    tags: ['Tags'],
+                    tags: ['Features'],
                     operationId: 'listTags',
                     responses: {
                         200: createResponseSchema('tagsSchema'),
@@ -136,7 +136,7 @@ class FeatureController extends Controller {
                     summary: 'Adds a tag to a feature.',
                     description:
                         'Adds a tag to a feature if the feature and tag type exist in the system. The operation is idempotent, so adding an existing tag will result in a successful response.',
-                    tags: ['Tags'],
+                    tags: ['Features'],
                     operationId: 'addTag',
                     requestBody: createRequestSchema('tagSchema'),
                     responses: {
@@ -157,7 +157,7 @@ class FeatureController extends Controller {
                     summary: 'Updates multiple tags for a feature.',
                     description:
                         'Receives a list of tags to add and a list of tags to remove that are mandatory but can be empty. All tags under addedTags are first added to the feature and then all tags under removedTags are removed from the feature.',
-                    tags: ['Tags'],
+                    tags: ['Features'],
                     operationId: 'updateTags',
                     requestBody: createRequestSchema('updateTagsSchema'),
                     responses: {
@@ -179,7 +179,7 @@ class FeatureController extends Controller {
                     summary: 'Removes a tag from a feature.',
                     description:
                         'Removes a tag from a feature if it exists. If the feature exist and the tag does not, it returns a successful response.',
-                    tags: ['Tags'],
+                    tags: ['Features'],
                     operationId: 'removeTag',
                     responses: {
                         200: emptyResponse,

@@ -29,7 +29,10 @@ import {
     createResponseSchema,
     resourceCreatedResponseSchema,
 } from '../../openapi/util/create-response-schema';
-import { emptyResponse } from '../../openapi/util/standard-responses';
+import {
+    emptyResponse,
+    getStandardResponses,
+} from '../../openapi/util/standard-responses';
 import { UpdateTagsSchema } from '../../openapi/spec/update-tags-schema';
 
 const version = 1;
@@ -110,9 +113,15 @@ class FeatureController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
+                    summary: 'Get all tags for a feature.',
+                    description:
+                        'Retrieves all the tags for a feature name. If the feature does not exist it returns an empty list.',
                     tags: ['Features'],
                     operationId: 'listTags',
-                    responses: { 200: createResponseSchema('tagsSchema') },
+                    responses: {
+                        200: createResponseSchema('tagsSchema'),
+                        ...getStandardResponses(401),
+                    },
                 }),
             ],
         });
@@ -124,11 +133,13 @@ class FeatureController extends Controller {
             handler: this.addTag,
             middleware: [
                 openApiService.validPath({
+                    description: 'Add tags to a feature.',
                     tags: ['Features'],
                     operationId: 'addTag',
                     requestBody: createRequestSchema('tagSchema'),
                     responses: {
                         201: resourceCreatedResponseSchema('tagSchema'),
+                        ...getStandardResponses(400, 401, 403, 404),
                     },
                 }),
             ],

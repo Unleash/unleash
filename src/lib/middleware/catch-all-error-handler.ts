@@ -2,7 +2,7 @@ import { ErrorRequestHandler } from 'express';
 import { LogProvider } from '../logger';
 import { handleErrors } from '../routes/util';
 
-export const debugErrorHandler = (
+export const catchAllErrorHandler = (
     logProvider: LogProvider,
 ): ErrorRequestHandler => {
     const logger = logProvider('/debug-error-handler.ts');

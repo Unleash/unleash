@@ -9,27 +9,45 @@ export const clientMetricsEnvSchema = {
     properties: {
         featureName: {
             type: 'string',
+            description: 'Name of the feature checked by the SDK',
+            example: 'my.special.feature',
         },
         appName: {
+            description: 'The name of the application the SDK is being used in',
             type: 'string',
+            example: 'accounting',
         },
         environment: {
+            description: 'Which environment the SDK is being used in',
             type: 'string',
+            example: 'development',
         },
         timestamp: {
+            description: 'The time window these metrics are valid for',
+            example: '1926-05-08T12:00:00.000Z',
             $ref: '#/components/schemas/dateSchema',
         },
         yes: {
+            description: 'How many times the toggle evaluated to true',
             type: 'number',
+            example: 974,
         },
         no: {
+            description: 'How many times the toggle evaluated to false',
             type: 'number',
+            example: 50,
         },
         variants: {
+            description: 'How many times each variant was returned',
             type: 'object',
             additionalProperties: {
                 type: 'integer',
                 minimum: 0,
+            },
+            example: {
+                variantA: 15,
+                variantB: 25,
+                variantC: 5,
             },
         },
     },

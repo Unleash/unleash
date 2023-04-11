@@ -17,6 +17,7 @@ import { emptyResponse } from '../../openapi/util/standard-responses';
 import { BulkMetricsSchema } from '../../openapi/spec/bulk-metrics-schema';
 import ClientMetricsServiceV2 from '../../services/client-metrics/metrics-service-v2';
 import { clientMetricsEnvBulkSchema } from '../../services/client-metrics/schema';
+import { TokenStringListSchema } from '../../openapi';
 
 export default class EdgeController extends Controller {
     private readonly logger: Logger;
@@ -59,10 +60,12 @@ export default class EdgeController extends Controller {
             middleware: [
                 this.openApiService.validPath({
                     tags: ['Edge'],
+                    summary:
+                        'Accepts a list of tokens, returns tokens that are valid and which projects they can access',
+                    description:
+                        'Send a list of tokens, only returns the valid ones',
                     operationId: 'getValidTokens',
-                    requestBody: createRequestSchema(
-                        'validateEdgeTokensSchema',
-                    ),
+                    requestBody: createRequestSchema('tokenStringListSchema'),
                     responses: {
                         200: createResponseSchema('validateEdgeTokensSchema'),
                     },
@@ -78,6 +81,8 @@ export default class EdgeController extends Controller {
             middleware: [
                 this.openApiService.validPath({
                     tags: ['Edge'],
+                    summary:
+                        'Accepts batched metrics from Edge, for insertion into our metrics storage',
                     operationId: 'bulkMetrics',
                     requestBody: createRequestSchema('bulkMetricsSchema'),
                     responses: {
@@ -89,12 +94,10 @@ export default class EdgeController extends Controller {
     }
 
     async getValidTokens(
-        req: RequestBody<ValidateEdgeTokensSchema>,
+        req: RequestBody<TokenStringListSchema>,
         res: Response<ValidateEdgeTokensSchema>,
     ): Promise<void> {
-        const tokens = await this.edgeService.getValidTokens(
-            req.body.tokens as string[],
-        );
+        const tokens = await this.edgeService.getValidTokens(req.body.tokens);
         this.openApiService.respondWithValidation<ValidateEdgeTokensSchema>(
             200,
             res,

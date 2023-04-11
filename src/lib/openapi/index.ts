@@ -133,6 +133,7 @@ import {
     importTogglesSchema,
     importTogglesValidateSchema,
     importTogglesValidateItemSchema,
+    tokenStringListSchema,
 } from './spec';
 import { IServerOption } from '../types';
 import { mapValues, omitKeys } from '../util';
@@ -265,6 +266,7 @@ export const schemas = {
     tagTypesSchema,
     tagWithVersionSchema,
     tokenUserSchema,
+    tokenStringListSchema,
     uiConfigSchema,
     updateApiTokenSchema,
     updateFeatureSchema,

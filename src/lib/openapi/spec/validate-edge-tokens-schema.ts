@@ -9,12 +9,7 @@ export const validateEdgeTokensSchema = {
     properties: {
         tokens: {
             type: 'array',
-            items: {
-                anyOf: [
-                    { $ref: '#/components/schemas/edgeTokenSchema' },
-                    { type: 'string' },
-                ],
-            },
+            items: { $ref: '#/components/schemas/edgeTokenSchema' },
         },
     },
     components: {

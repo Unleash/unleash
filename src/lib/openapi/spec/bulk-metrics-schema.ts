@@ -6,6 +6,7 @@ import { clientMetricsEnvSchema } from './client-metrics-env-schema';
 export const bulkMetricsSchema = {
     $id: '#/components/schemas/bulkMetricsSchema',
     type: 'object',
+    required: ['applications', 'metrics'],
     properties: {
         applications: {
             type: 'array',

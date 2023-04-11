@@ -13,7 +13,10 @@ import {
 import ClientInstanceService from '../../services/client-metrics/instance-service';
 import EdgeService from '../../services/edge-service';
 import { OpenApiService } from '../../services/openapi-service';
-import { emptyResponse } from '../../openapi/util/standard-responses';
+import {
+    emptyResponse,
+    getStandardResponses,
+} from '../../openapi/util/standard-responses';
 import { BulkMetricsSchema } from '../../openapi/spec/bulk-metrics-schema';
 import ClientMetricsServiceV2 from '../../services/client-metrics/metrics-service-v2';
 import { clientMetricsEnvBulkSchema } from '../../services/client-metrics/schema';
@@ -68,6 +71,7 @@ export default class EdgeController extends Controller {
                     requestBody: createRequestSchema('tokenStringListSchema'),
                     responses: {
                         200: createResponseSchema('validateEdgeTokensSchema'),
+                        ...getStandardResponses(400),
                     },
                 }),
             ],
@@ -87,6 +91,7 @@ export default class EdgeController extends Controller {
                     requestBody: createRequestSchema('bulkMetricsSchema'),
                     responses: {
                         202: emptyResponse,
+                        ...getStandardResponses(400),
                     },
                 }),
             ],

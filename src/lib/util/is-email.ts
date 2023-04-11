@@ -1,6 +1,6 @@
 // Email address matcher.
 // eslint-disable-next-line no-useless-escape
-const matcher = /.+\@.+\..+/;
+const matcher = /.[^\n\r@\u2028\u2029]*@.+\..+/;
 
 /**
  * Loosely validate an email address.

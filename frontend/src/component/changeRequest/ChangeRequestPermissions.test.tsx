@@ -73,6 +73,10 @@ const setupOtherRoutes = (feature: string) => {
         version: 1,
         tags: [],
     });
+    testServerRoute(server, `api/admin/tag-types`, {
+        tagTypes: [],
+        version: 1,
+    });
     testServerRoute(server, `api/admin/tags/simple`, {
         version: 1,
         tags: [],

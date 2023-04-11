@@ -3,7 +3,10 @@ import { AccessProviderMock } from '../component/providers/AccessProvider/Access
 import { useChangeRequestsEnabled } from './useChangeRequestsEnabled';
 import { FC } from 'react';
 import { testServerRoute, testServerSetup } from '../utils/testServer';
-import { SKIP_CHANGE_REQUEST } from '../component/providers/AccessProvider/permissions';
+import {
+    SKIP_CHANGE_REQUEST,
+    ADMIN,
+} from '../component/providers/AccessProvider/permissions';
 
 const project = 'project';
 const environment = 'production';
@@ -36,12 +39,12 @@ testServerRoute(server, '/api/admin/ui-config', {
     },
 });
 
-test('SKIP_CHANGE_REQUEST disabled change request mode', async () => {
+test('SKIP_CHANGE_REQUEST disables change request mode', async () => {
     render(
         <AccessProviderMock
             permissions={[
                 {
-                    permission: 'irrelevant',
+                    permission: ADMIN,
                     project,
                     environment,
                 },

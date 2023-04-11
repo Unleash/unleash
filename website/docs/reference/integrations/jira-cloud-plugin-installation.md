@@ -2,13 +2,6 @@
 title: Jira Cloud Integration - Installation
 ---
 
-> The Jira Cloud Plugin is part of Unleash Enterprise.
-
-With the Unleash Jira Cloud Plugin you can create new feature toggles in Unleash from a Jira issue as well as link
-existing toggles to Jira issues.
-
-The plugin also shows you current status of connected toggles.
-
 ## Prerequisites
 
 ### Jira Cloud
@@ -34,8 +27,6 @@ For Unleash Enterprise we recommend [Service Tokens](https://docs.getunleash.io/
 You will need a Jira admin user.
 
 ## Installation
-
-The [Jira server plugin is available in the Atlassian marketplace](https://unleash-david.atlassian.net/jira/marketplace/discover/app/unleash-for-jira-cloud).
 
 If you have an Unleash enterprise license you're welcome to reach out to us at sales@getunleash.io for a free plugin license, otherwise you'll need to try the plugin for 30 days free or purchase a license through the marketplace.
 

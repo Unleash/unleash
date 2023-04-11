@@ -2,10 +2,7 @@
 title: Jira Cloud Integration - Usage
 ---
 
-> The Jira Cloud Plugin is part of Unleash Enterprise.
-
-With the Unleash Jira Cloud Plugin you can create new feature toggles in Unleash from a Jira issue as well as link
-existing toggles to Jira issues.
+With the Unleash Jira Cloud Plugin you can create, view and manage Unleash feature toggles directly from a Jira issue.
 
 The plugin also shows you current status of connected toggles.
 

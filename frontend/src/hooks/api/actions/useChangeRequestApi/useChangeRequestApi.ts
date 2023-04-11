@@ -52,7 +52,10 @@ export const useChangeRequestApi = () => {
     const changeState = async (
         project: string,
         changeRequestId: number,
-        payload: { state: 'Approved' | 'Applied' | 'Cancelled' | 'In review' }
+        payload: {
+            state: 'Approved' | 'Applied' | 'Cancelled' | 'In review';
+            comment?: string;
+        }
     ) => {
         trackEvent('change_request', {
             props: {

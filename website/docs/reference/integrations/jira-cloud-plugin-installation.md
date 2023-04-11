@@ -43,7 +43,7 @@ If you have an Unleash enterprise license you're welcome to reach out to us at s
 
 ## Configuring the plugin {#configure-plugin}
 
-After the plugin has been installed, each project's project settings in Jira will have a menu entry link called "Unleash Project Settings" under the "Apps" menu section.
+After the plugin has been installed, each project's settings page in Jira will have a menu entry link called "Unleash Project Settings" under the "Apps" menu section.
 
 ![Jira Cloud - Project settings link](/img/jira_cloud_project_settings_link.png)
 

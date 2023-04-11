@@ -27,6 +27,7 @@ import patMiddleware from './middleware/pat-middleware';
 import { Knex } from 'knex';
 import maintenanceMiddleware from './middleware/maintenance-middleware';
 import { unless } from './middleware/unless-middleware';
+import { debugErrorHandler } from './middleware/debug-error-handler';
 
 export default async function getApp(
     config: IUnleashConfig,
@@ -174,6 +175,8 @@ export default async function getApp(
 
     if (process.env.NODE_ENV !== 'production') {
         app.use(errorHandler());
+    } else {
+        app.use(debugErrorHandler(config.getLogger));
     }
 
     app.get(`${baseUriPath}`, (req, res) => {

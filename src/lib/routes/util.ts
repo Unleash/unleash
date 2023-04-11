@@ -40,6 +40,8 @@ export const handleErrors: (
             return res.status(400).json(error).end();
         case 'BadDataError':
             return res.status(400).json(error).end();
+        case 'BadRequestError':
+            return res.status(400).json(error).end();
         case 'OwaspValidationError':
             return res.status(400).json(error).end();
         case 'PasswordUndefinedError':

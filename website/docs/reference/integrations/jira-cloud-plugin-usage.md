@@ -11,7 +11,7 @@ The plugin also shows you current status of connected toggles.
 
 ## Using the plugin
 
-To use the plugin, you'll need to create an issue or use an existing one. Once the issue is saved and you open up the Issue panel, you'll be greeted with a button to activate the Unleash plugin for that issue.
+To use the plugin, you'll need to create an issue or use an existing one. Once the issue is saved and you open up the issue panel, you'll be greeted with a button to activate the Unleash plugin for that issue.
 
 ![Jira Cloud - Activate Unleash Panel Button](/img/jira_cloud_activate_unleash_panel_button.png)
 

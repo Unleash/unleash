@@ -27,12 +27,14 @@ export interface IStrategyConfig {
     segments?: number[];
     parameters?: { [key: string]: string };
     sortOrder?: number;
+    title?: string;
 }
 export interface IFeatureStrategy {
     id: string;
     featureName: string;
     projectId: string;
     environment: string;
+    strategyTitle?: string;
     strategyName: string;
     parameters: { [key: string]: string };
     sortOrder?: number;

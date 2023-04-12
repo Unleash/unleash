@@ -9,6 +9,7 @@ import { UG_USERS_ID } from 'utils/testIds';
 import { caseInsensitiveSearch } from 'utils/search';
 import { useServiceAccounts } from 'hooks/api/getters/useServiceAccounts/useServiceAccounts';
 import { IServiceAccount } from 'interfaces/service-account';
+import { Combo } from 'component/common/Combo/Combo';
 
 const StyledOption = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -101,7 +102,7 @@ export const GroupFormUsersSelect: VFC<IGroupFormUsersSelectProps> = ({
 
     return (
         <StyledGroupFormUsersSelect>
-            <Autocomplete
+            <Combo
                 data-testid={UG_USERS_ID}
                 size="small"
                 multiple

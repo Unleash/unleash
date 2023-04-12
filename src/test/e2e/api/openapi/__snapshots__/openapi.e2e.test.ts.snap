@@ -4094,7 +4094,7 @@ Stats are divided into current and previous **windows**.
           ],
           "description": "segment description",
           "name": "segment name",
-          "project": "optional project name",
+          "project": "optional project id",
         },
         "properties": {
           "constraints": {

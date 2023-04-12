@@ -74,7 +74,7 @@ export const FeatureStrategyCreate = () => {
             forceRefreshCache(feature);
             ref.current = feature;
         }
-    }, [feature]);
+    }, [feature.name]);
 
     useEffect(() => {
         if (strategyDefinition) {

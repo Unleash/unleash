@@ -525,7 +525,12 @@ describe('Interacting with features using project IDs that belong to other proje
             rootRole: RoleName.ADMIN,
         });
         await app.services.projectService.createProject(
-            { name: otherProject, id: otherProject, mode: 'open' },
+            {
+                name: otherProject,
+                id: otherProject,
+                mode: 'open',
+                defaultStickiness: 'clientId',
+            },
             dummyAdmin,
         );
 

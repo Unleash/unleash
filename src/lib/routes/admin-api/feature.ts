@@ -29,7 +29,10 @@ import {
     createResponseSchema,
     resourceCreatedResponseSchema,
 } from '../../openapi/util/create-response-schema';
-import { emptyResponse } from '../../openapi/util/standard-responses';
+import {
+    emptyResponse,
+    getStandardResponses,
+} from '../../openapi/util/standard-responses';
 import { UpdateTagsSchema } from '../../openapi/spec/update-tags-schema';
 
 const version = 1;
@@ -110,9 +113,15 @@ class FeatureController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
+                    summary: 'Get all tags for a feature.',
+                    description:
+                        'Retrieves all the tags for a feature name. If the feature does not exist it returns an empty list.',
                     tags: ['Features'],
                     operationId: 'listTags',
-                    responses: { 200: createResponseSchema('tagsSchema') },
+                    responses: {
+                        200: createResponseSchema('tagsSchema'),
+                        ...getStandardResponses(401),
+                    },
                 }),
             ],
         });
@@ -124,11 +133,15 @@ class FeatureController extends Controller {
             handler: this.addTag,
             middleware: [
                 openApiService.validPath({
+                    summary: 'Adds a tag to a feature.',
+                    description:
+                        'Adds a tag to a feature if the feature and tag type exist in the system. The operation is idempotent, so adding an existing tag will result in a successful response.',
                     tags: ['Features'],
                     operationId: 'addTag',
                     requestBody: createRequestSchema('tagSchema'),
                     responses: {
                         201: resourceCreatedResponseSchema('tagSchema'),
+                        ...getStandardResponses(400, 401, 403, 404),
                     },
                 }),
             ],
@@ -141,11 +154,15 @@ class FeatureController extends Controller {
             handler: this.updateTags,
             middleware: [
                 openApiService.validPath({
+                    summary: 'Updates multiple tags for a feature.',
+                    description:
+                        'Receives a list of tags to add and a list of tags to remove that are mandatory but can be empty. All tags under addedTags are first added to the feature and then all tags under removedTags are removed from the feature.',
                     tags: ['Features'],
                     operationId: 'updateTags',
                     requestBody: createRequestSchema('updateTagsSchema'),
                     responses: {
                         200: resourceCreatedResponseSchema('tagsSchema'),
+                        ...getStandardResponses(400, 401, 403, 404),
                     },
                 }),
             ],
@@ -159,9 +176,15 @@ class FeatureController extends Controller {
             handler: this.removeTag,
             middleware: [
                 openApiService.validPath({
+                    summary: 'Removes a tag from a feature.',
+                    description:
+                        'Removes a tag from a feature. If the feature exists but the tag does not, it returns a successful response.',
                     tags: ['Features'],
                     operationId: 'removeTag',
-                    responses: { 200: emptyResponse },
+                    responses: {
+                        200: emptyResponse,
+                        ...getStandardResponses(404),
+                    },
                 }),
             ],
         });

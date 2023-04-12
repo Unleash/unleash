@@ -20,6 +20,20 @@ export const updateTagsSchema = {
             },
         },
     },
+    example: {
+        addedTags: [
+            {
+                value: 'tag-to-add',
+                type: 'simple',
+            },
+        ],
+        removedTags: [
+            {
+                value: 'tag-to-remove',
+                type: 'simple',
+            },
+        ],
+    },
     components: {
         schemas: {
             tagSchema,

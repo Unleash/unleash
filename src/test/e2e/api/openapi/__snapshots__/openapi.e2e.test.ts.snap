@@ -5626,7 +5626,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/features/{featureName}/tags/{type}/{value}": {
       "delete": {
-        "description": "Removes a tag from a feature if it exists. If the feature exist and the tag does not, it returns a successful response.",
+        "description": "Removes a tag from a feature. If the feature exists but the tag does not, it returns a successful response.",
         "operationId": "removeTag",
         "parameters": [
           {

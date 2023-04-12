@@ -13,7 +13,7 @@ import { SegmentService } from '../../../lib/services/segment-service';
 import { GroupService } from '../../../lib/services/group-service';
 import { FavoritesService } from '../../../lib/services';
 import { FeatureEnvironmentEvent } from '../../../lib/types/events';
-import { subDays } from 'date-fns';
+import { addDays, subDays } from 'date-fns';
 import { ChangeRequestAccessReadModel } from '../../../lib/features/change-request-access-service/sql-change-request-access-read-model';
 
 let stores;
@@ -1308,6 +1308,94 @@ test('should calculate average time to production', async () => {
 
     const result = await projectService.getStatusUpdates(project.id);
     expect(result.updates.avgTimeToProdCurrentWindow).toBe(11.4);
+});
+
+test('should calculate average time to production ignoring some items', async () => {
+    const project = {
+        id: 'average-time-to-prod-corner-cases',
+        name: 'average-time-to-prod',
+        mode: 'open' as const,
+    };
+    const makeEvent = (featureName: string) => ({
+        enabled: true,
+        project: project.id,
+        featureName,
+        environment: 'default',
+        createdBy: 'Fredrik',
+        tags: [],
+    });
+
+    await projectService.createProject(project, user.id);
+    await stores.environmentStore.create({
+        name: 'customEnv',
+        type: 'development',
+    });
+    await environmentService.addEnvironmentToProject('customEnv', project.id);
+
+    // actual toggle we take for calculations
+    const toggle = { name: 'main-toggle' };
+    await featureToggleService.createFeatureToggle(project.id, toggle, user);
+    await updateFeature(toggle.name, {
+        created_at: subDays(new Date(), 20),
+    });
+    await stores.eventStore.store(
+        new FeatureEnvironmentEvent(makeEvent(toggle.name)),
+    );
+    // ignore events added after first enabled
+    await updateEventCreatedAt(addDays(new Date(), 1), toggle.name);
+    await stores.eventStore.store(
+        new FeatureEnvironmentEvent(makeEvent(toggle.name)),
+    );
+
+    // ignore toggles enabled in non-prod envs
+    const devToggle = { name: 'dev-toggle' };
+    await featureToggleService.createFeatureToggle(project.id, devToggle, user);
+    await stores.eventStore.store(
+        new FeatureEnvironmentEvent({
+            ...makeEvent(devToggle.name),
+            environment: 'customEnv',
+        }),
+    );
+
+    // ignore toggles from other projects
+    const otherProjectToggle = { name: 'other-project' };
+    await featureToggleService.createFeatureToggle(
+        'default',
+        otherProjectToggle,
+        user,
+    );
+    await stores.eventStore.store(
+        new FeatureEnvironmentEvent(makeEvent(otherProjectToggle.name)),
+    );
+
+    // ignore non-release toggles
+    const nonReleaseToggle = { name: 'permission-toggle', type: 'permission' };
+    await featureToggleService.createFeatureToggle(
+        project.id,
+        nonReleaseToggle,
+        user,
+    );
+    await stores.eventStore.store(
+        new FeatureEnvironmentEvent(makeEvent(nonReleaseToggle.name)),
+    );
+
+    // ignore toggles with events before toggle creation time
+    const previouslyDeleteToggle = { name: 'previously-deleted' };
+    await featureToggleService.createFeatureToggle(
+        project.id,
+        previouslyDeleteToggle,
+        user,
+    );
+    await stores.eventStore.store(
+        new FeatureEnvironmentEvent(makeEvent(previouslyDeleteToggle.name)),
+    );
+    await updateEventCreatedAt(
+        subDays(new Date(), 30),
+        previouslyDeleteToggle.name,
+    );
+
+    const result = await projectService.getStatusUpdates(project.id);
+    expect(result.updates.avgTimeToProdCurrentWindow).toBe(20);
 });
 
 test('should get correct amount of features created in current and past window', async () => {

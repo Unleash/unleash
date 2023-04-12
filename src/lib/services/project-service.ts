@@ -8,7 +8,6 @@ import { projectSchema } from './project-schema';
 import NotFoundError from '../error/notfound-error';
 import {
     DEFAULT_PROJECT,
-    FEATURE_ENVIRONMENT_ENABLED,
     FeatureToggle,
     IAccountStore,
     IEnvironmentStore,
@@ -54,7 +53,7 @@ import { arraysHaveSameItems } from '../util';
 import { GroupService } from './group-service';
 import { IGroupModelWithProjectRole, IGroupRole } from 'lib/types/group';
 import { FavoritesService } from './favorites-service';
-import { TimeToProduction } from '../read-models/time-to-production/time-to-production';
+import { calculateAverageTimeToProd } from '../features/feature-toggle/time-to-production/time-to-production';
 import { IProjectStatsStore } from 'lib/types/stores/project-stats-store-type';
 import { uniqueByKey } from '../util/unique';
 
@@ -688,42 +687,32 @@ export default class ProjectService {
     }
 
     async getStatusUpdates(projectId: string): Promise<ICalculateStatus> {
-        // Get all features for project with type release
-        const features = await this.featureToggleStore.getAll({
-            type: 'release',
-            project: projectId,
-        });
-
-        const archivedFeatures = await this.featureToggleStore.getAll({
-            archived: true,
-            type: 'release',
-            project: projectId,
-        });
-
         const dateMinusThirtyDays = subDays(new Date(), 30).toISOString();
         const dateMinusSixtyDays = subDays(new Date(), 60).toISOString();
 
-        const [createdCurrentWindow, createdPastWindow] = await Promise.all([
-            await this.featureToggleStore.getByDate({
+        const [
+            createdCurrentWindow,
+            createdPastWindow,
+            archivedCurrentWindow,
+            archivedPastWindow,
+        ] = await Promise.all([
+            await this.featureToggleStore.countByDate({
                 project: projectId,
                 dateAccessor: 'created_at',
                 date: dateMinusThirtyDays,
             }),
-            await this.featureToggleStore.getByDate({
+            await this.featureToggleStore.countByDate({
                 project: projectId,
                 dateAccessor: 'created_at',
                 range: [dateMinusSixtyDays, dateMinusThirtyDays],
             }),
-        ]);
-
-        const [archivedCurrentWindow, archivedPastWindow] = await Promise.all([
-            await this.featureToggleStore.getByDate({
+            await this.featureToggleStore.countByDate({
                 project: projectId,
                 archived: true,
                 dateAccessor: 'archived_at',
                 date: dateMinusThirtyDays,
             }),
-            await this.featureToggleStore.getByDate({
+            await this.featureToggleStore.countByDate({
                 project: projectId,
                 archived: true,
                 dateAccessor: 'archived_at',
@@ -755,33 +744,8 @@ export default class ProjectService {
                 ]),
             ]);
 
-        // Get all project environments with type of production
-        const productionEnvironments =
-            await this.environmentStore.getProjectEnvironments(projectId, {
-                type: 'production',
-            });
-
-        // Get all events for features that correspond to feature toggle environment ON
-        // Filter out events that are not a production evironment
-
-        const allFeatures = [...features, ...archivedFeatures];
-
-        const eventsData = await this.eventStore.query([
-            {
-                op: 'forFeatures',
-                parameters: {
-                    features: allFeatures.map((feature) => feature.name),
-                    environments: productionEnvironments.map((env) => env.name),
-                    type: FEATURE_ENVIRONMENT_ENABLED,
-                    projectId,
-                },
-            },
-        ]);
-
-        const currentWindowTimeToProdReadModel = new TimeToProduction(
-            allFeatures,
-            productionEnvironments,
-            eventsData,
+        const avgTimeToProdCurrentWindow = calculateAverageTimeToProd(
+            await this.projectStatsStore.getTimeToProdDates(projectId),
         );
 
         const projectMembersAddedCurrentWindow =
@@ -793,16 +757,14 @@ export default class ProjectService {
         return {
             projectId,
             updates: {
-                avgTimeToProdCurrentWindow:
-                    currentWindowTimeToProdReadModel.calculateAverageTimeToProd(),
-                createdCurrentWindow: createdCurrentWindow.length,
-                createdPastWindow: createdPastWindow.length,
-                archivedCurrentWindow: archivedCurrentWindow.length,
-                archivedPastWindow: archivedPastWindow.length,
-                projectActivityCurrentWindow: projectActivityCurrentWindow,
-                projectActivityPastWindow: projectActivityPastWindow,
-                projectMembersAddedCurrentWindow:
-                    projectMembersAddedCurrentWindow,
+                avgTimeToProdCurrentWindow,
+                createdCurrentWindow,
+                createdPastWindow,
+                archivedCurrentWindow,
+                archivedPastWindow,
+                projectActivityCurrentWindow,
+                projectActivityPastWindow,
+                projectMembersAddedCurrentWindow,
             },
         };
     }

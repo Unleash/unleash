@@ -372,7 +372,7 @@ export interface IProject {
     updatedAt?: Date;
     changeRequestsEnabled?: boolean;
     mode: ProjectMode;
-    defaultStickiness?: string;
+    defaultStickiness: string;
 }
 
 export interface ICustomRole {

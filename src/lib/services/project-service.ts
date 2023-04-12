@@ -798,13 +798,12 @@ export default class ProjectService {
                 : Promise.resolve(false),
             this.projectStatsStore.getProjectStats(projectId),
         ]);
-
         return {
             stats: projectStats,
             name: project.name,
             description: project.description,
             mode: project.mode,
-            defaultStickiness: project.defaultStickiness || 'default',
+            defaultStickiness: project.defaultStickiness,
             health: project.health || 0,
             favorite: favorite,
             updatedAt: project.updatedAt,

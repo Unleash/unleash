@@ -33,7 +33,7 @@ const COLUMNS = [
     'updated_at',
 ];
 const TABLE = 'projects';
-const SETTINGS_COLUMNS = ['project_mode'];
+const SETTINGS_COLUMNS = ['project_mode', 'default_stickiness'];
 const SETTINGS_TABLE = 'project_settings';
 
 export interface IEnvironmentProjectLink {
@@ -531,6 +531,7 @@ class ProjectStore implements IProjectStore {
             health: row.health ?? 100,
             updatedAt: row.updated_at || new Date(),
             mode: row.project_mode || 'open',
+            defaultStickiness: row.default_stickiness || 'default',
         };
     }
 }

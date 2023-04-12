@@ -15,7 +15,7 @@ The plugin also shows you current status of connected toggles.
 
 - [Jira **data center**](https://www.atlassian.com/enterprise/data-center/jira), v8.0 or higher
 
-For Jira Cloud, [see the Jira Cloud plugin](/integrations/jira_cloud_plugin_installation)
+For Jira Cloud, refer to the [Jira Cloud plugin](/integrations/jira_cloud_plugin_installation)
 
 ### Unleash
 

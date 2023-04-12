@@ -761,14 +761,20 @@ exports[`should serve the OpenAPI spec 1`] = `
               "SEMVER_GT",
               "SEMVER_LT",
             ],
+            "example": "IN",
             "type": "string",
           },
           "value": {
             "description": "The context value that should be used for constraint evaluation. Use this property instead of \`values\` for properties that only accept single values.",
+            "example": "my-app",
             "type": "string",
           },
           "values": {
             "description": "The context values that should be used for constraint evaluation. Use this property instead of \`value\` for properties that accept multiple values.",
+            "example": [
+              "my-app",
+              "my-other-app",
+            ],
             "items": {
               "type": "string",
             },
@@ -2397,6 +2403,7 @@ exports[`should serve the OpenAPI spec 1`] = `
               "SEMVER_GT",
               "SEMVER_LT",
             ],
+            "example": "IN",
             "type": "string",
           },
           "result": {
@@ -2405,10 +2412,15 @@ exports[`should serve the OpenAPI spec 1`] = `
           },
           "value": {
             "description": "The context value that should be used for constraint evaluation. Use this property instead of \`values\` for properties that only accept single values.",
+            "example": "my-app",
             "type": "string",
           },
           "values": {
             "description": "The context values that should be used for constraint evaluation. Use this property instead of \`value\` for properties that accept multiple values.",
+            "example": [
+              "my-app",
+              "my-other-app",
+            ],
             "items": {
               "type": "string",
             },
@@ -3455,6 +3467,7 @@ Stats are divided into current and previous **windows**.
         "additionalProperties": false,
         "properties": {
           "constraints": {
+            "description": "List of constraints that determine which users are part of the segment",
             "items": {
               "$ref": "#/components/schemas/constraintSchema",
             },
@@ -4068,8 +4081,24 @@ Stats are divided into current and previous **windows**.
         "type": "object",
       },
       "upsertSegmentSchema": {
+        "example": {
+          "constraints": [
+            {
+              "contextName": "environment",
+              "operator": "IN",
+              "values": [
+                "production",
+                "staging",
+              ],
+            },
+          ],
+          "description": "segment description",
+          "name": "segment name",
+          "project": "optional project name",
+        },
         "properties": {
           "constraints": {
+            "description": "List of constraints that determine which users will be part of the segment",
             "items": {
               "$ref": "#/components/schemas/constraintSchema",
             },
@@ -4083,6 +4112,7 @@ Stats are divided into current and previous **windows**.
             "type": "string",
           },
           "project": {
+            "description": "Project from where this segment will be accessible. If none is defined the segment will be global (i.e. accessible from any project).",
             "nullable": true,
             "type": "string",
           },

@@ -47,7 +47,7 @@ export const Combo = <
             {...props}
             disableListWrap
             ListboxComponent={ListboxComponent}
-        ></Autocomplete>
+        />
     );
 };
 

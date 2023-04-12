@@ -4,6 +4,7 @@ import { StrategySchema } from './strategy-schema';
 test('strategySchema', () => {
     const data: StrategySchema = {
         description: '',
+        title: '',
         name: '',
         displayName: '',
         editable: false,

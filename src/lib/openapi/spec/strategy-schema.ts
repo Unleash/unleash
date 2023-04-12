@@ -13,6 +13,9 @@ export const strategySchema = {
         'parameters',
     ],
     properties: {
+        title: {
+            type: 'string',
+        },
         name: {
             type: 'string',
         },

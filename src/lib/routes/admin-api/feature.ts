@@ -178,7 +178,7 @@ class FeatureController extends Controller {
                 openApiService.validPath({
                     summary: 'Removes a tag from a feature.',
                     description:
-                        'Removes a tag from a feature if it exists. If the feature exist and the tag does not, it returns a successful response.',
+                        'Removes a tag from a feature. If the feature exists but the tag does not, it returns a successful response.',
                     tags: ['Features'],
                     operationId: 'removeTag',
                     responses: {

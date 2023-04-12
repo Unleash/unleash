@@ -40,6 +40,15 @@ Admin, client and front-end tokens contain the following pieces of information:
 
 Personal access tokens follow their own special format, and only contain an optional description for the token and an expiry date.
 
+
+### API token visibility
+
+:::info project-level visibility
+
+Project-level visibility and access to API tokens was introduced in Unleash 4.22.
+
+:::
+
 ### Admin tokens
 
 **Admin tokens** grant _full read and write access_ to all resources in the Unleash server API. Admin tokens have access to all projects, all environments, and all global resources (find out more about [resources in the RBAC document](../reference/rbac.md#core-principles)).
@@ -54,13 +63,6 @@ Do **not** use admin tokens for:
 -   [Client SDKs](../reference/sdks/index.md): You will _not_ be able to read toggle data from multiple environments. Use [client tokens](#client-tokens) instead.
 
 Support for scoped admin tokens with more fine-grained permissions is currently in the planning stage.
-
-
-### API token visibility
-
-:::info project-level visibility
-
-Project-level visibility and access to API tokens was introduced in Unleash 4.22.
 
 :::
 

@@ -31,7 +31,7 @@ export const upsertSegmentSchema = {
     example: {
         name: 'segment name',
         description: 'segment description',
-        project: 'optional project name',
+        project: 'optional project id',
         constraints: [
             {
                 contextName: 'environment',

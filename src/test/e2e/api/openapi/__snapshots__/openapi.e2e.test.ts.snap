@@ -761,14 +761,20 @@ exports[`should serve the OpenAPI spec 1`] = `
               "SEMVER_GT",
               "SEMVER_LT",
             ],
+            "example": "IN",
             "type": "string",
           },
           "value": {
             "description": "The context value that should be used for constraint evaluation. Use this property instead of \`values\` for properties that only accept single values.",
+            "example": "my-app",
             "type": "string",
           },
           "values": {
             "description": "The context values that should be used for constraint evaluation. Use this property instead of \`value\` for properties that accept multiple values.",
+            "example": [
+              "my-app",
+              "my-other-app",
+            ],
             "items": {
               "type": "string",
             },
@@ -2397,6 +2403,7 @@ exports[`should serve the OpenAPI spec 1`] = `
               "SEMVER_GT",
               "SEMVER_LT",
             ],
+            "example": "IN",
             "type": "string",
           },
           "result": {
@@ -2405,10 +2412,15 @@ exports[`should serve the OpenAPI spec 1`] = `
           },
           "value": {
             "description": "The context value that should be used for constraint evaluation. Use this property instead of \`values\` for properties that only accept single values.",
+            "example": "my-app",
             "type": "string",
           },
           "values": {
             "description": "The context values that should be used for constraint evaluation. Use this property instead of \`value\` for properties that accept multiple values.",
+            "example": [
+              "my-app",
+              "my-other-app",
+            ],
             "items": {
               "type": "string",
             },
@@ -3455,6 +3467,7 @@ Stats are divided into current and previous **windows**.
         "additionalProperties": false,
         "properties": {
           "constraints": {
+            "description": "List of constraints that determine which users are part of the segment",
             "items": {
               "$ref": "#/components/schemas/constraintSchema",
             },
@@ -3693,11 +3706,20 @@ Stats are divided into current and previous **windows**.
       },
       "tagSchema": {
         "additionalProperties": false,
+        "example": {
+          "type": "simple",
+          "value": "tag-value",
+        },
         "properties": {
           "type": {
+            "default": "simple",
+            "maxLength": 50,
+            "minLength": 2,
             "type": "string",
           },
           "value": {
+            "maxLength": 50,
+            "minLength": 2,
             "type": "string",
           },
         },
@@ -4006,6 +4028,20 @@ Stats are divided into current and previous **windows**.
       },
       "updateTagsSchema": {
         "additionalProperties": false,
+        "example": {
+          "addedTags": [
+            {
+              "type": "simple",
+              "value": "tag-to-add",
+            },
+          ],
+          "removedTags": [
+            {
+              "type": "simple",
+              "value": "tag-to-remove",
+            },
+          ],
+        },
         "properties": {
           "addedTags": {
             "items": {
@@ -4068,8 +4104,24 @@ Stats are divided into current and previous **windows**.
         "type": "object",
       },
       "upsertSegmentSchema": {
+        "example": {
+          "constraints": [
+            {
+              "contextName": "environment",
+              "operator": "IN",
+              "values": [
+                "production",
+                "staging",
+              ],
+            },
+          ],
+          "description": "segment description",
+          "name": "segment name",
+          "project": "optional project id",
+        },
         "properties": {
           "constraints": {
+            "description": "List of constraints that determine which users will be part of the segment",
             "items": {
               "$ref": "#/components/schemas/constraintSchema",
             },
@@ -4083,6 +4135,7 @@ Stats are divided into current and previous **windows**.
             "type": "string",
           },
           "project": {
+            "description": "Project from where this segment will be accessible. If none is defined the segment will be global (i.e. accessible from any project).",
             "nullable": true,
             "type": "string",
           },
@@ -5444,6 +5497,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/features/{featureName}/tags": {
       "get": {
+        "description": "Retrieves all the tags for a feature name. If the feature does not exist it returns an empty list.",
         "operationId": "listTags",
         "parameters": [
           {
@@ -5466,12 +5520,17 @@ If the provided project does not exist, the list of events will be empty.",
             },
             "description": "tagsSchema",
           },
+          "401": {
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
         },
+        "summary": "Get all tags for a feature.",
         "tags": [
           "Features",
         ],
       },
       "post": {
+        "description": "Adds a tag to a feature if the feature and tag type exist in the system. The operation is idempotent, so adding an existing tag will result in a successful response.",
         "operationId": "addTag",
         "parameters": [
           {
@@ -5514,12 +5573,26 @@ If the provided project does not exist, the list of events will be empty.",
               },
             },
           },
+          "400": {
+            "description": "The request data does not match what we expect.",
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+          },
+          "404": {
+            "description": "The requested resource was not found.",
+          },
         },
+        "summary": "Adds a tag to a feature.",
         "tags": [
           "Features",
         ],
       },
       "put": {
+        "description": "Receives a list of tags to add and a list of tags to remove that are mandatory but can be empty. All tags under addedTags are first added to the feature and then all tags under removedTags are removed from the feature.",
         "operationId": "updateTags",
         "parameters": [
           {
@@ -5562,7 +5635,20 @@ If the provided project does not exist, the list of events will be empty.",
               },
             },
           },
+          "400": {
+            "description": "The request data does not match what we expect.",
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+          },
+          "404": {
+            "description": "The requested resource was not found.",
+          },
         },
+        "summary": "Updates multiple tags for a feature.",
         "tags": [
           "Features",
         ],
@@ -5570,6 +5656,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/features/{featureName}/tags/{type}/{value}": {
       "delete": {
+        "description": "Removes a tag from a feature. If the feature exists but the tag does not, it returns a successful response.",
         "operationId": "removeTag",
         "parameters": [
           {
@@ -5601,7 +5688,11 @@ If the provided project does not exist, the list of events will be empty.",
           "200": {
             "description": "This response has no body.",
           },
+          "404": {
+            "description": "The requested resource was not found.",
+          },
         },
+        "summary": "Removes a tag from a feature.",
         "tags": [
           "Features",
         ],

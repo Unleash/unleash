@@ -19,6 +19,8 @@ export const segmentSchema = {
         },
         constraints: {
             type: 'array',
+            description:
+                'List of constraints that determine which users are part of the segment',
             items: {
                 $ref: '#/components/schemas/constraintSchema',
             },

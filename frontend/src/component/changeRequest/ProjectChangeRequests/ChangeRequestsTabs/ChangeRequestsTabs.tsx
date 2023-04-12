@@ -108,7 +108,7 @@ export const ChangeRequestsTabs = ({
             {
                 Header: 'By',
                 accessor: 'createdBy',
-                maxWidth: 50,
+                maxWidth: 100,
                 canSort: false,
                 Cell: AvatarCell,
                 align: 'center',

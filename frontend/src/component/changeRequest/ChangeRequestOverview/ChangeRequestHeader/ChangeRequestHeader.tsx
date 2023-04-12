@@ -45,6 +45,12 @@ export const ChangeRequestHeader: FC<{ changeRequest: IChangeRequest }> = ({
                         />
                     </Tooltip>
                 </Box>
+                <Typography
+                    variant="body2"
+                    sx={theme => ({ marginLeft: theme.spacing(0.5) })}
+                >
+                    {changeRequest?.createdBy?.username}
+                </Typography>
                 <Box sx={theme => ({ marginLeft: theme.spacing(1.5) })}>
                     <StyledCard variant="outlined">
                         <Typography variant="body2" sx={{ lineHeight: 1 }}>

@@ -1,9 +1,8 @@
 import { FromSchema } from 'json-schema-to-ts';
 
-export const maintenanceSchema = {
-    $id: '#/components/schemas/maintenanceSchema',
+export const toggleMaintenanceSchema = {
+    $id: '#/components/schemas/toggleMaintenanceSchema',
     type: 'object',
-    additionalProperties: false,
     required: ['enabled'],
     properties: {
         enabled: {
@@ -14,4 +13,6 @@ export const maintenanceSchema = {
     components: {},
 } as const;
 
-export type MaintenanceSchema = FromSchema<typeof maintenanceSchema>;
+export type ToggleMaintenanceSchema = FromSchema<
+    typeof toggleMaintenanceSchema
+>;

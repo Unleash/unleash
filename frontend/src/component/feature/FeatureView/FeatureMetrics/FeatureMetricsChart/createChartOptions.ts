@@ -2,10 +2,11 @@ import { ILocationSettings } from 'hooks/useLocationSettings';
 import 'chartjs-adapter-date-fns';
 import { ChartOptions, defaults } from 'chart.js';
 import { IFeatureMetricsRaw } from 'interfaces/featureToggle';
-import theme from 'themes/theme';
 import { formatDateHM } from 'utils/formatDate';
+import { Theme } from '@mui/material/styles/createTheme';
 
 export const createChartOptions = (
+    theme: Theme,
     metrics: IFeatureMetricsRaw[],
     hoursBack: number,
     locationSettings: ILocationSettings
@@ -18,6 +19,7 @@ export const createChartOptions = (
             mode: 'index',
             intersect: false,
         },
+        color: theme.palette.text.secondary,
         plugins: {
             tooltip: {
                 backgroundColor: theme.palette.background.paper,
@@ -56,6 +58,7 @@ export const createChartOptions = (
                     size: 16,
                     weight: '400',
                 },
+                color: theme.palette.text.primary,
             },
         },
         scales: {
@@ -64,10 +67,15 @@ export const createChartOptions = (
                 title: {
                     display: true,
                     text: 'Number of requests',
+                    color: theme.palette.text.secondary,
                 },
                 // min: 0,
                 suggestedMin: 0,
-                ticks: { precision: 0 },
+                ticks: { precision: 0, color: theme.palette.text.secondary },
+                grid: {
+                    color: theme.palette.divider,
+                    borderColor: theme.palette.divider,
+                },
             },
             x: {
                 type: 'time',
@@ -76,6 +84,7 @@ export const createChartOptions = (
                 ticks: {
                     callback: (_, i, data) =>
                         formatDateHM(data[i].value, locationSettings.locale),
+                    color: theme.palette.text.secondary,
                 },
             },
         },

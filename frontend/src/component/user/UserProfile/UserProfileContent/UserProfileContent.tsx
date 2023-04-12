@@ -123,13 +123,15 @@ export const UserProfileContent = ({
 
                 <StyledDivider />
 
-                <StyledLogoutButton
-                    variant="outlined"
-                    color="primary"
-                    href={`${basePath}/logout`}
-                >
-                    Log out
-                </StyledLogoutButton>
+                <form method="POST" action={`${basePath}/logout`}>
+                    <StyledLogoutButton
+                        type="submit"
+                        variant="outlined"
+                        color="primary"
+                    >
+                        Log out
+                    </StyledLogoutButton>
+                </form>
             </StyledPaper>
         }
     />

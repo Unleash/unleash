@@ -1,7 +1,6 @@
 import { Box, styled, Typography } from '@mui/material';
-import { HelpOutline } from '@mui/icons-material';
-import { HtmlTooltip } from '../../../common/HtmlTooltip/HtmlTooltip';
-import React, { FC } from 'react';
+import { FC } from 'react';
+import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 
 const StyledTitle = styled(Typography)(({ theme }) => ({
     fontWeight: theme.fontWeight.bold,
@@ -13,8 +12,9 @@ const StyledDescription = styled(Typography)(({ theme }) => ({
 }));
 
 export const CollaborationModeTooltip: FC = () => (
-    <HtmlTooltip
-        title={
+    <HelpIcon
+        htmlTooltip
+        tooltip={
             <>
                 <Box>
                     <StyledTitle>open: </StyledTitle>
@@ -31,9 +31,5 @@ export const CollaborationModeTooltip: FC = () => (
                 </Box>
             </>
         }
-        arrow
-        describeChild
-    >
-        <HelpOutline />
-    </HtmlTooltip>
+    />
 );

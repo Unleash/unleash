@@ -7,7 +7,7 @@ export const SeatCostWarning: VFC = () => {
     const { users } = useUsers();
     const { isBillingUsers, seats, planUsers } = useUsersPlan(users);
 
-    if (!isBillingUsers) {
+    if (!isBillingUsers || planUsers.length < seats) {
         return null;
     }
 

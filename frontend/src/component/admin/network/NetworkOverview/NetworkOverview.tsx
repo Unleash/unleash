@@ -10,12 +10,17 @@ import {
     RequestsPerSecondSchemaDataResultItem,
 } from 'openapi';
 import logoIcon from 'assets/icons/logoBg.svg';
+import logoWhiteIcon from 'assets/icons/logoWhiteBg.svg';
 import { formatAssetPath } from 'utils/formatPath';
+import { useThemeMode } from 'hooks/useThemeMode';
 
 const StyledMermaid = styled(Mermaid)(({ theme }) => ({
     '#mermaid .node rect': {
         fill: theme.palette.secondary.light,
         stroke: theme.palette.secondary.border,
+    },
+    '#mermaid .unleash-logo': {
+        padding: theme.spacing(1),
     },
 }));
 
@@ -79,6 +84,7 @@ const toGraphData = (metrics?: RequestsPerSecondSchema) => {
 
 export const NetworkOverview = () => {
     usePageTitle('Network - Overview');
+    const { themeMode } = useThemeMode();
     const { metrics } = useInstanceMetrics();
     const apps = useMemo(() => {
         return toGraphData(metrics);
@@ -89,8 +95,8 @@ export const NetworkOverview = () => {
         subgraph _[ ]
         direction BT
             Unleash(<img src='${formatAssetPath(
-                logoIcon
-            )}' width='60' height='60' /><br/>Unleash)
+                themeMode === 'dark' ? logoWhiteIcon : logoIcon
+            )}' width='72' height='72' class='unleash-logo'/><br/>Unleash)
             ${apps
                 .map(
                     ({ label, reqs, type }, i) =>

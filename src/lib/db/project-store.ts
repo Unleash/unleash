@@ -391,14 +391,12 @@ class ProjectStore implements IProjectStore {
     }
 
     async getProjectsByUser(userId: number): Promise<string[]> {
-        const members = await this.db
+        const projects = await this.db
             .from((db) => {
                 db.select('project')
                     .from('role_user')
                     .leftJoin('roles', 'role_user.role_id', 'roles.id')
-                    .where('type', 'root')
-                    .andWhere('name', 'Editor')
-                    .andWhere('user_id', userId)
+                    .where('user_id', userId)
                     .union((queryBuilder) => {
                         queryBuilder
                             .select('project')
@@ -413,7 +411,7 @@ class ProjectStore implements IProjectStore {
                     .as('query');
             })
             .pluck('project');
-        return members;
+        return projects;
     }
 
     async getMembersCountByProject(projectId: string): Promise<number> {

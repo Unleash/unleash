@@ -56,7 +56,7 @@ const Toast = ({ title, text, type, confetti }: IToast) => {
     };
 
     return (
-        <div className={styles.container}>
+        <div className={classnames(styles.container, 'dropdown-outline')}>
             <div className={styles.innerContainer}>
                 <div className={styles.confettiContainer}>
                     {confetti && renderConfetti()}

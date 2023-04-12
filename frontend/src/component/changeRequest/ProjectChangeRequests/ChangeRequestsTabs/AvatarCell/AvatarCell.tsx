@@ -1,6 +1,6 @@
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
-import { Box, styled, Typography } from '@mui/material';
+import { styled, Typography } from '@mui/material';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',

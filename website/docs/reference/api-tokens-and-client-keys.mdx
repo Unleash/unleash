@@ -57,11 +57,17 @@ Support for scoped admin tokens with more fine-grained permissions is currently 
 
 
 ### API token visibility
+
 :::info project-level visibility
+
 Project-level visibility and access to API tokens was introduced in Unleash 4.22.
+
 :::
+
 By default, only admin users can create API tokens, and only admins can see their values.
+
 However, any [client](#client-tokens client tokens) and [front-end tokens](#front-end-tokens) that are applicable to a project, will also be visible to any members of that project that have the `READ_PROJECT_API_TOKEN` permission (all project members by default).
+
 Similarly, any project members with the `CREATE_PROJECT_API_TOKEN` permission can also create client and front-end tokens for that specific project ([how to create project API tokens](../how-to/how-to-create-project-api-tokens.mdx)).
 
 Use personal access tokens to:

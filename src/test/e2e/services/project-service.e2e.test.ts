@@ -1315,6 +1315,7 @@ test('should calculate average time to production ignoring some items', async ()
         id: 'average-time-to-prod-corner-cases',
         name: 'average-time-to-prod',
         mode: 'open' as const,
+        defaultStickiness: 'clientId',
     };
     const makeEvent = (featureName: string) => ({
         enabled: true,

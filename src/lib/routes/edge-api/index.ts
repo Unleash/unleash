@@ -63,14 +63,15 @@ export default class EdgeController extends Controller {
             middleware: [
                 this.openApiService.validPath({
                     tags: ['Edge'],
-                    summary: 'Filter a list of tokens returning only the valid ones',
+                    summary:
+                        'Filter a list of tokens returning only the valid ones',
                     description:
                         'Accepts a list of tokens, and returns those that are valid with the projects they can access',
                     operationId: 'getValidTokens',
                     requestBody: createRequestSchema('tokenStringListSchema'),
                     responses: {
                         200: createResponseSchema('validateEdgeTokensSchema'),
-                        ...getStandardResponses(400),
+                        ...getStandardResponses(400, 413, 415),
                     },
                 }),
             ],
@@ -84,13 +85,13 @@ export default class EdgeController extends Controller {
             middleware: [
                 this.openApiService.validPath({
                     tags: ['Edge'],
-                    summary:
-                        'Accepts batched metrics from Edge, for insertion into our metrics storage',
+                    summary: 'Receive metrics from Edge',
+                    description: `This operation accepts batched metrics from Edge. Metrics will be inserted into Unleash's metrics storage`,
                     operationId: 'bulkMetrics',
                     requestBody: createRequestSchema('bulkMetricsSchema'),
                     responses: {
                         202: emptyResponse,
-                        ...getStandardResponses(400),
+                        ...getStandardResponses(400, 413, 415),
                     },
                 }),
             ],

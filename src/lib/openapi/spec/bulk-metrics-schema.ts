@@ -7,6 +7,8 @@ export const bulkMetricsSchema = {
     $id: '#/components/schemas/bulkMetricsSchema',
     type: 'object',
     required: ['applications', 'metrics'],
+    description:
+        'A batch of metrics accumulated by Edge (or other compatible applications). Includes both application registrations as well usage metrics from clients',
     properties: {
         applications: {
             type: 'array',

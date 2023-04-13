@@ -25,12 +25,24 @@ const conflictResponse = {
         'The provided resource can not be created or updated because it would conflict with the current state of the resource or with an already existing resource, respectively.',
 } as const;
 
+const tooBigResponse = {
+    description:
+        'The body POSTed was too large. By default we only accept bodies of 100kB or less',
+} as const;
+
+const wrongContentTypeResponse = {
+    description:
+        'The provided resource does not accept requests with this content-type',
+} as const;
+
 const standardResponses = {
     400: badRequestResponse,
     401: unauthorizedResponse,
     403: forbiddenResponse,
     404: notFoundResponse,
     409: conflictResponse,
+    413: tooBigResponse,
+    415: wrongContentTypeResponse,
 } as const;
 
 type StandardResponses = typeof standardResponses;

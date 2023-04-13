@@ -4,8 +4,9 @@ import { FromSchema } from 'json-schema-to-ts';
 export const clientMetricsEnvSchema = {
     $id: '#/components/schemas/clientMetricsEnvSchema',
     type: 'object',
-    required: ['featureName', 'appName'],
+    required: ['featureName', 'appName', 'environment'],
     additionalProperties: true,
+    description: 'Used for reporting feature evaluation results from SDKs',
     properties: {
         featureName: {
             type: 'string',
@@ -23,7 +24,8 @@ export const clientMetricsEnvSchema = {
             example: 'development',
         },
         timestamp: {
-            description: 'The time window these metrics are valid for',
+            description:
+                'The start of the time window these metrics are valid for. The window is 1 hour wide',
             example: '1926-05-08T12:00:00.000Z',
             $ref: '#/components/schemas/dateSchema',
         },

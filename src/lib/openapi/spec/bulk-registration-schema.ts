@@ -4,7 +4,8 @@ import { dateSchema } from './date-schema';
 export const bulkRegistrationSchema = {
     $id: '#/components/schemas/bulkRegistrationSchema',
     type: 'object',
-    required: ['appName', 'instanceId'],
+    required: ['appName', 'instanceId', 'environment'],
+    description: `An application registration. Defines the format POSTed by our server-side SDKs when they're starting up`,
     properties: {
         connectVia: {
             type: 'array',
@@ -31,29 +32,30 @@ export const bulkRegistrationSchema = {
             example: 'Ingress load balancer',
         },
         environment: {
-            description: 'Which environment is the application running in',
+            description: 'Which environment the application is running in',
             type: 'string',
             example: 'development',
         },
         instanceId: {
-            description: 'A unique identifier for the application',
+            description:
+                'A [(somewhat) unique identifier](https://docs.getunleash.io/reference/sdks/node#advanced-usage) for the application',
             type: 'string',
-            example: 'Random UUID',
+            example: 'application-name-dacb1234',
         },
         interval: {
             description:
-                'How often (in seconds) does the application refresh its features',
+                'How often (in seconds) the application refreshes its features',
             type: 'number',
             example: 10,
         },
         started: {
-            description: 'When did the application start',
+            description: 'The application started at',
             example: '1952-03-11T12:00:00.000Z', //GNU Douglas Adams
             $ref: '#/components/schemas/dateSchema',
         },
         strategies: {
             description:
-                'Which [strategies](https://docs.getunleash.io/reference/activation-strategies) are enabled in the application',
+                'Enabled [strategies](https://docs.getunleash.io/reference/activation-strategies) in the application',
             type: 'array',
             example: ['standard', 'gradualRollout'],
             items: {

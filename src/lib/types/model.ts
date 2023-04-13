@@ -27,20 +27,20 @@ export interface IStrategyConfig {
     segments?: number[];
     parameters?: { [key: string]: string };
     sortOrder?: number;
-    title?: string;
+    title?: string | null;
 }
 export interface IFeatureStrategy {
     id: string;
     featureName: string;
     projectId: string;
     environment: string;
-    title?: string;
     strategyName: string;
     parameters: { [key: string]: string };
     sortOrder?: number;
     constraints: IConstraint[];
     createdAt?: Date;
     segments?: number[];
+    title?: string | null;
 }
 
 export interface FeatureToggleDTO {

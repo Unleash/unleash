@@ -8,12 +8,13 @@ import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useCh
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
 
-const StyledBox = styled(Box)(() => ({
+const StyledBox = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'row',
     width: '100%',
     '& > div': { width: '100%' },
     justifyContent: 'space-between',
+    marginBottom: theme.spacing(1),
 }));
 
 export const StyledHeader = styled(Typography)(({ theme }) => ({
@@ -83,7 +84,7 @@ export const ChangeRequestTitle: FC<{
                         <Button
                             variant="contained"
                             color="primary"
-                            sx={theme => ({ marginLeft: theme.spacing(4) })}
+                            sx={theme => ({ marginLeft: theme.spacing(2) })}
                             onClick={() => saveTitle()}
                         >
                             Save

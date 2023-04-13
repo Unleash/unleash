@@ -44,7 +44,7 @@ const ChangeRequestHeader = styled(Box)(({ theme }) => ({
 }));
 
 const ChangeRequestContent = styled(Box)(({ theme }) => ({
-    padding: theme.spacing(0, 3, 3, 3),
+    padding: theme.spacing(3, 3, 3, 3),
     border: '2px solid',
     mb: 5,
     borderColor: theme.palette.divider,

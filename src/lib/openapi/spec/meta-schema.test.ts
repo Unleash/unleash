@@ -1,33 +1,198 @@
 import { schemas } from '..';
-import Ajv from 'ajv';
+import Ajv, { Schema } from 'ajv';
 
 const ajv = new Ajv();
 
-const openApiMetaSchema = {
-    type: 'object',
-    properties: {
-        description: { type: 'string' },
-    },
-    required: ['description'],
+type SchemaNames = keyof typeof schemas;
+type Rule = {
+    name: string;
+    match?: (
+        schemaName: string,
+        schema: typeof schemas[SchemaNames],
+    ) => boolean;
+    metaSchema: Schema;
+    knownExceptions?: string[];
 };
 
-describe('OpenAPI schemas meta validation', () => {
-    let countErrors = 0;
-    Object.entries(schemas).forEach(([name, schema]) => {
-        it(`${name} should be valid`, () => {
-            const validateMetaSchema = ajv.compile(openApiMetaSchema);
-            validateMetaSchema(schema);
-            countErrors += validateMetaSchema.errors?.length ?? 0;
-            // expect(validateMetaSchema.errors).toBeNull(); // commented until we fix all schemas
-            if (validateMetaSchema.errors?.length) {
-                // this function outputs instead of failing the test
-                console.error(
-                    `${name} has the following errors: ${JSON.stringify(
-                        validateMetaSchema.errors,
-                    )}`,
-                );
-            }
-        });
+const metaRules: Rule[] = [
+    {
+        name: 'should have a type',
+        metaSchema: {
+            type: 'object',
+            properties: {
+                type: { type: 'string', enum: ['object', 'array'] },
+            },
+            required: ['type'],
+        },
+        knownExceptions: ['dateSchema'],
+    },
+    {
+        name: 'should have an $id',
+        metaSchema: {
+            type: 'object',
+            properties: {
+                $id: { type: 'string' },
+            },
+            required: ['$id'],
+        },
+    },
+    {
+        name: 'should have a description',
+        metaSchema: {
+            type: 'object',
+            properties: {
+                description: { type: 'string' },
+            },
+            required: ['description'],
+        },
+        knownExceptions: [
+            'adminFeaturesQuerySchema',
+            'addonParameterSchema',
+            'addonSchema',
+            'addonsSchema',
+            'addonTypeSchema',
+            'apiTokenSchema',
+            'apiTokensSchema',
+            'applicationSchema',
+            'applicationsSchema',
+            'batchFeaturesSchema',
+            'batchStaleSchema',
+            'bulkRegistrationSchema',
+            'bulkMetricsSchema',
+            'changePasswordSchema',
+            'clientApplicationSchema',
+            'clientFeatureSchema',
+            'clientFeaturesQuerySchema',
+            'clientFeaturesSchema',
+            'clientMetricsSchema',
+            'clientMetricsEnvSchema',
+            'cloneFeatureSchema',
+            'contextFieldSchema',
+            'contextFieldsSchema',
+            'createApiTokenSchema',
+            'createFeatureSchema',
+            'createFeatureStrategySchema',
+            'createInvitedUserSchema',
+            'createUserSchema',
+            'dateSchema',
+            'edgeTokenSchema',
+            'emailSchema',
+            'environmentsSchema',
+            'eventSchema',
+            'eventsSchema',
+            'exportResultSchema',
+            'exportQuerySchema',
+            'featureEnvironmentMetricsSchema',
+            'featureEventsSchema',
+            'featureMetricsSchema',
+            'featureSchema',
+            'featuresSchema',
+            'featureStrategySchema',
+            'featureStrategySegmentSchema',
+            'featureTagSchema',
+            'featureTypeSchema',
+            'featureTypesSchema',
+            'featureUsageSchema',
+            'featureVariantsSchema',
+            'feedbackSchema',
+            'groupSchema',
+            'groupsSchema',
+            'groupUserModelSchema',
+            'healthCheckSchema',
+            'healthOverviewSchema',
+            'healthReportSchema',
+            'idSchema',
+            'instanceAdminStatsSchema',
+            'legalValueSchema',
+            'loginSchema',
+            'maintenanceSchema',
+            'toggleMaintenanceSchema',
+            'meSchema',
+            'nameSchema',
+            'overrideSchema',
+            'parametersSchema',
+            'passwordSchema',
+            'patchesSchema',
+            'patchSchema',
+            'patSchema',
+            'patsSchema',
+            'permissionSchema',
+            'playgroundSegmentSchema',
+            'playgroundStrategySchema',
+            'profileSchema',
+            'projectEnvironmentSchema',
+            'proxyClientSchema',
+            'proxyFeatureSchema',
+            'proxyFeaturesSchema',
+            'publicSignupTokenCreateSchema',
+            'publicSignupTokenSchema',
+            'publicSignupTokensSchema',
+            'publicSignupTokenUpdateSchema',
+            'pushVariantsSchema',
+            'resetPasswordSchema',
+            'requestsPerSecondSchema',
+            'requestsPerSecondSegmentedSchema',
+            'roleSchema',
+            'segmentSchema',
+            'setStrategySortOrderSchema',
+            'setUiConfigSchema',
+            'sortOrderSchema',
+            'splashSchema',
+            'stateSchema',
+            'strategiesSchema',
+            'strategySchema',
+            'tagsBulkAddSchema',
+            'tagSchema',
+            'tagTypeSchema',
+            'tagTypesSchema',
+            'tagWithVersionSchema',
+            'tokenUserSchema',
+            'uiConfigSchema',
+            'updateApiTokenSchema',
+            'updateFeatureSchema',
+            'updateFeatureStrategySchema',
+            'updateTagTypeSchema',
+            'updateUserSchema',
+            'updateTagsSchema',
+            'upsertContextFieldSchema',
+            'upsertSegmentSchema',
+            'upsertStrategySchema',
+            'userSchema',
+            'usersGroupsBaseSchema',
+            'usersSchema',
+            'usersSearchSchema',
+            'validateEdgeTokensSchema',
+            'validatePasswordSchema',
+            'validateTagTypeSchema',
+            'variantSchema',
+            'variantsSchema',
+            'versionSchema',
+            'importTogglesSchema',
+            'importTogglesValidateSchema',
+            'importTogglesValidateItemSchema',
+        ],
+    },
+];
+
+describe.each(metaRules)('OpenAPI schemas $name', (rule) => {
+    const validateMetaSchema = ajv.compile(rule.metaSchema);
+
+    // test all schemas agaisnt the rule
+    Object.entries(schemas).forEach(([schemaName, schema]) => {
+        if (!rule.match || rule.match(schemaName, schema)) {
+            it(`${schemaName}`, () => {
+                validateMetaSchema(schema);
+
+                // note: whenever you resolve an exception please remove it from the list
+                if (rule.knownExceptions?.includes(schemaName)) {
+                    console.warn(
+                        `${schemaName} is a known exception to rule "${rule.name}" that should be fixed`,
+                    );
+                    expect(validateMetaSchema.errors).not.toBeNull();
+                } else {
+                    expect(validateMetaSchema.errors).toBeNull();
+                }
+            });
+        }
     });
-    expect(countErrors).toBeLessThanOrEqual(125); // current number of schema errors
 });

@@ -34,7 +34,7 @@ export interface IFeatureStrategy {
     featureName: string;
     projectId: string;
     environment: string;
-    strategyTitle?: string;
+    title?: string;
     strategyName: string;
     parameters: { [key: string]: string };
     sortOrder?: number;

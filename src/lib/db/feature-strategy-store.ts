@@ -31,7 +31,7 @@ const COLUMNS = [
     'project_name',
     'environment',
     'strategy_name',
-    'strategy_title',
+    'title',
     'parameters',
     'constraints',
     'created_at',
@@ -56,7 +56,7 @@ interface IFeatureStrategiesTable {
     feature_name: string;
     project_name: string;
     environment: string;
-    strategy_title?: string;
+    title?: string;
     strategy_name: string;
     parameters: object;
     constraints: string;
@@ -78,7 +78,7 @@ function mapRow(row: IFeatureStrategiesTable): IFeatureStrategy {
         projectId: row.project_name,
         environment: row.environment,
         strategyName: row.strategy_name,
-        strategyTitle: row.strategy_title,
+        title: row.title,
         parameters: mapValues(row.parameters || {}, ensureStringValue),
         constraints: (row.constraints as unknown as IConstraint[]) || [],
         createdAt: row.created_at,
@@ -93,7 +93,7 @@ function mapInput(input: IFeatureStrategy): IFeatureStrategiesTable {
         project_name: input.projectId,
         environment: input.environment,
         strategy_name: input.strategyName,
-        strategy_title: input.strategyTitle,
+        title: input.title,
         parameters: input.parameters,
         constraints: JSON.stringify(input.constraints || []),
         created_at: input.createdAt,
@@ -102,10 +102,10 @@ function mapInput(input: IFeatureStrategy): IFeatureStrategiesTable {
 }
 
 interface StrategyUpdate {
-    strategy_title: string;
     strategy_name: string;
     parameters: object;
     constraints: string;
+    title?: string;
 }
 
 function mapStrategyUpdate(
@@ -119,7 +119,7 @@ function mapStrategyUpdate(
         update.parameters = input.parameters;
     }
     if (input.title !== null) {
-        update.strategy_title = input.title;
+        update.title = input.title;
     }
     update.constraints = JSON.stringify(input.constraints || []);
     return update;

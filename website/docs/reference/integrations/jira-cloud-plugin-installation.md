@@ -20,7 +20,7 @@ For Jira Data Center, check out the [Jira Server plugin](jira-server-plugin-inst
 
 You will need an Unleash admin to configure an admin API token. (Unleash Open Source)
 
-For Unleash Enterprise we recommend [Service Tokens](https://docs.getunleash.io/how-to/how-to-create-service-accounts), this is also a requirement for integrating with Change Requests
+For Unleash Enterprise we recommend using a [service account](../service-accounts.md). Service accounts are also required to integrate with [Change Requests](../change-requests.mdx)
 
 ### Jira
 

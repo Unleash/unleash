@@ -1603,18 +1603,6 @@ exports[`should serve the OpenAPI spec 1`] = `
         "properties": {
           "constraints": {
             "description": "A list of the constraints attached to the strategy",
-            "example": [
-              {
-                "caseInsensitive": false,
-                "contextName": "appName",
-                "inverted": false,
-                "operator": "IN",
-                "values": [
-                  "1",
-                  "2",
-                ],
-              },
-            ],
             "items": {
               "$ref": "#/components/schemas/constraintSchema",
             },
@@ -1637,16 +1625,13 @@ exports[`should serve the OpenAPI spec 1`] = `
           },
           "parameters": {
             "$ref": "#/components/schemas/parametersSchema",
-            "description": "An object containing the parameters for the strategy",
-            "example": {
-              "groupId": "some_new",
-              "rollout": "25",
-              "stickiness": "sessionId",
-            },
           },
           "segments": {
             "description": "A list of segment ids attached to the strategy",
-            "example": "[1,2]",
+            "example": [
+              1,
+              2,
+            ],
             "items": {
               "type": "number",
             },
@@ -1654,7 +1639,7 @@ exports[`should serve the OpenAPI spec 1`] = `
           },
           "sortOrder": {
             "description": "The order of the strategy in the list",
-            "example": "9999",
+            "example": 9999,
             "type": "number",
           },
           "title": {
@@ -3724,6 +3709,7 @@ Stats are divided into current and previous **windows**.
       },
       "strategySchema": {
         "additionalProperties": false,
+        "description": "The [activation strategy](https://docs.getunleash.io/reference/activation-strategies) schema",
         "properties": {
           "deprecated": {
             "description": "",

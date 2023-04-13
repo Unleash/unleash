@@ -1,17 +1,5 @@
-import { IUnleashConfig } from '../types/option';
-import { IFlagResolver, IUnleashStores } from '../types';
-import { Logger } from '../logger';
-import BadDataError from '../error/bad-data-error';
-import NameExistsError from '../error/name-exists-error';
-import InvalidOperationError from '../error/invalid-operation-error';
-import { FOREIGN_KEY_VIOLATION } from '../error/db-error';
 import {
-    constraintSchema,
-    featureMetadataSchema,
-    nameSchema,
-    variantsArraySchema,
-} from '../schema/feature-schema';
-import {
+    EnvironmentVariantEvent,
     FEATURE_UPDATED,
     FeatureArchivedEvent,
     FeatureChangeProjectEvent,
@@ -25,17 +13,30 @@ import {
     FeatureStrategyRemoveEvent,
     FeatureStrategyUpdateEvent,
     FeatureVariantEvent,
-    EnvironmentVariantEvent,
-} from '../types/events';
+    IEventStore,
+    IFeatureTagStore,
+    IFeatureToggleStore,
+    IFlagResolver,
+    IProjectStore,
+    IUnleashConfig,
+    IUnleashStores,
+} from '../types';
+import { Logger } from '../logger';
+import BadDataError from '../error/bad-data-error';
+import NameExistsError from '../error/name-exists-error';
+import InvalidOperationError from '../error/invalid-operation-error';
+import { FOREIGN_KEY_VIOLATION } from '../error';
+import {
+    constraintSchema,
+    featureMetadataSchema,
+    nameSchema,
+    variantsArraySchema,
+} from '../schema/feature-schema';
 import NotFoundError from '../error/notfound-error';
 import {
     FeatureConfigurationClient,
     IFeatureStrategiesStore,
 } from '../types/stores/feature-strategies-store';
-import { IEventStore } from '../types/stores/event-store';
-import { IProjectStore } from '../types/stores/project-store';
-import { IFeatureTagStore } from '../types/stores/feature-tag-store';
-import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
 import {
     FeatureToggle,
     FeatureToggleDTO,
@@ -600,6 +601,7 @@ class FeatureToggleService {
      * @param id - strategy id
      * @param context - Which context does this strategy live in (projectId, featureName, environment)
      * @param createdBy - Which user does this strategy belong to
+     * @param user
      */
     async deleteStrategy(
         id: string,
@@ -691,6 +693,7 @@ class FeatureToggleService {
      * @param featureName
      * @param archived - return archived or non archived toggles
      * @param projectId - provide if you're requesting the feature in the context of a specific project.
+     * @param userId
      */
     async getFeature({
         featureName,
@@ -1009,6 +1012,7 @@ class FeatureToggleService {
             constraints: strategy.constraints || [],
             parameters: strategy.parameters,
             segments: [],
+            title: strategy.title,
         };
 
         if (segments && segments.length > 0) {

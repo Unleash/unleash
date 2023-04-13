@@ -21,7 +21,7 @@ export const createFeatureStrategySchema = {
         sortOrder: {
             type: 'number',
             description: 'The order of the strategy in the list',
-            example: '9999',
+            example: 9999,
         },
         constraints: {
             type: 'array',

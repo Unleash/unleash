@@ -2,6 +2,8 @@ import { FromSchema } from 'json-schema-to-ts';
 
 export const strategySchema = {
     $id: '#/components/schemas/strategySchema',
+    description:
+        'The [activation strategy](https://docs.getunleash.io/reference/activation-strategies) schema',
     type: 'object',
     additionalProperties: false,
     required: [

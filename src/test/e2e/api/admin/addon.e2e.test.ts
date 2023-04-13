@@ -266,13 +266,13 @@ describe('missing descriptions', () => {
     });
 
     test('updating an addon without touching `description` keeps the original value', async () => {
-        await app.request
+        const { body } = await app.request
             .post('/api/admin/addons')
             .send(addonWithoutDescription);
 
         const newUrl = 'http://localhost:4242/newUrl';
         return app.request
-            .put('/api/admin/addons')
+            .put(`/api/admin/addons/${body.id}`)
             .send({ ...addonWithoutDescription, parameters: { url: newUrl } })
             .expect((res) => {
                 expect(res.body.description).toBeNull();

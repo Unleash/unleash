@@ -11,7 +11,7 @@ export const edgeTokenSchema = {
     properties: {
         projects: {
             description:
-                'Since a token can have access to multiple projects, but that is represented with a `[]` in the token, this can be used to expand the []',
+                'The list of projects this token has access to. If the token has access to specific projects they will be listed here. If the token has access to all projects it will be represented as [`*`]',
             type: 'array',
             items: {
                 type: 'string',
@@ -19,7 +19,7 @@ export const edgeTokenSchema = {
             example: ['developerexperience', 'enterprisegrowth'],
         },
         type: {
-            description: `Unleash supports three different types of API tokens ([ADMIN](https://docs.getunleash.io/reference/api-tokens-and-client-keys#admin-tokens), [CLIENT](https://docs.getunleash.io/reference/api-tokens-and-client-keys#client-tokens), [FRONTEND](https://docs.getunleash.io/reference/api-tokens-and-client-keys#front-end-tokens)). They all have varying access, so when validating a token it's important to know what kind you're dealing with`,
+            description: `The [API token](https://docs.getunleash.io/reference/api-tokens-and-client-keys#api-tokens)'s **type**. Unleash supports three different types of API tokens ([ADMIN](https://docs.getunleash.io/reference/api-tokens-and-client-keys#admin-tokens), [CLIENT](https://docs.getunleash.io/reference/api-tokens-and-client-keys#client-tokens), [FRONTEND](https://docs.getunleash.io/reference/api-tokens-and-client-keys#front-end-tokens)). They all have varying access, so when validating a token it's important to know what kind you're dealing with`,
             type: 'string',
             enum: Object.values(ApiTokenType),
             example: 'client',

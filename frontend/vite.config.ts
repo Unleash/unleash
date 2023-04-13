@@ -71,6 +71,9 @@ export default mergeConfig(
         esbuild: {
             logOverride: { 'this-is-undefined-in-esm': 'silent' },
         },
+        define: {
+            global: 'window',
+        },
     }),
     vitestConfig
 );

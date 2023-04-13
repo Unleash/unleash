@@ -134,6 +134,7 @@ export default class StrategyStore implements IStrategyStore {
             name: data.name,
             description: data.description,
             parameters: JSON.stringify(data.parameters),
+            title: data.title,
         };
     }
 

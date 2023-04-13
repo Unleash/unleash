@@ -204,3 +204,54 @@ test('can update a exiting strategy with deprecated', async () => {
         .set('Content-Type', 'application/json')
         .expect(200);
 });
+
+test('can create a strategy with a title', async () => {
+    await app.request
+        .post('/api/admin/strategies')
+        .send({
+            name: 'myCustomStrategyWithTitle',
+            description: 'Best strategy ever.',
+            parameters: [],
+            title: 'This is the best strategy ever',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(201);
+
+    const { body: strategy } = await app.request.get(
+        '/api/admin/strategies/myCustomStrategyWithTitle',
+    );
+
+    expect(strategy.title).toBe('This is the best strategy ever');
+
+    strategy.description = 'A new desc';
+
+    return app.request
+        .put('/api/admin/strategies/myCustomStrategyWithTitle')
+        .send(strategy)
+        .set('Content-Type', 'application/json')
+        .expect(200);
+});
+
+test('can update a strategy with a title', async () => {
+    await app.request
+        .post('/api/admin/strategies')
+        .send({
+            name: 'myCustomStrategy2',
+            description: 'Best strategy ever.',
+            parameters: [],
+        })
+        .set('Content-Type', 'application/json')
+        .expect(201);
+
+    const { body: strategy } = await app.request.get(
+        '/api/admin/strategies/myCustomStrategy2',
+    );
+
+    strategy.title = 'This is the best strategy ever';
+
+    return app.request
+        .put('/api/admin/strategies/myCustomStrategy2')
+        .send(strategy)
+        .set('Content-Type', 'application/json')
+        .expect(200);
+});

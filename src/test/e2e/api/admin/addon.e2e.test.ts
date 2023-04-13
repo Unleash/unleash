@@ -1,5 +1,5 @@
 import dbInit from '../../helpers/database-init';
-import { setupApp } from '../../helpers/test-helper';
+import { setupAppWithCustomConfig } from '../../helpers/test-helper';
 import getLogger from '../../../fixtures/no-logger';
 
 const MASKED_VALUE = '*****';
@@ -9,7 +9,13 @@ let db;
 
 beforeAll(async () => {
     db = await dbInit('addon_api_serial', getLogger);
-    app = await setupApp(db.stores);
+    app = await setupAppWithCustomConfig(db.stores, {
+        experimental: {
+            flags: {
+                strictSchemaValidation: true,
+            },
+        },
+    });
 });
 
 afterAll(async () => {

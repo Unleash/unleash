@@ -64,9 +64,9 @@ export default class EdgeController extends Controller {
                 this.openApiService.validPath({
                     tags: ['Edge'],
                     summary:
-                        'Filter a list of tokens returning only the valid ones',
+                        'Check which tokens are valid',
                     description:
-                        'Accepts a list of tokens, and returns those that are valid with the projects they can access',
+                        'This operation accepts a list of tokens to validate. Unleash will validate each token you provide. For each valid token you provide, Unleash will return the token along with its type and which projects it has access to.',
                     operationId: 'getValidTokens',
                     requestBody: createRequestSchema('tokenStringListSchema'),
                     responses: {
